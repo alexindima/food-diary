@@ -46,10 +46,9 @@ are cleared or recreated before a retry or follow-up transaction. When inbox or
 outbox completion is persisted after such a rollback, require provider-backed
 coverage proving that only the intended completion state reaches the database.
 
-Task-brief impact selection and the standalone command normally use the exact
-SQLite projection. On a cold checkout without TypeScript prerequisites, the
-read-only facade automatically uses the committed JSON baseline unless SQLite
-was explicitly required. Runtime accepts the measured fresh-process
-reader-load cost in exchange for one production query mechanism; the loaded
-reader is cached across tool-script scopes. Telemetry separates fresh-process
-p50/p95 from warmed p50/p95 so that tradeoff cannot be hidden by a single average.
+SQLite is the only compiled-index query provider. Generated JSON snapshots remain
+inputs for the sole Node projection writer and reviewable Git artifacts. Queries
+validate exact source hashes, select bounded records in SQL, and report explicit
+recovery errors when preparation fails. Backend-only preparation works without
+TypeScript; frontend code-graph discovery requires the locked npm dependencies.
+Direct behavior tests cover identity, selection, scope, freshness and output bounds.

@@ -24,12 +24,10 @@ $cases = @(
     [pscustomobject]@{ ChangedPath = @('FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts'); MinimumSymbols = 0; MinimumFrontendSymbols = 1 }
 )
 $sqlRoundTrips = [Collections.Generic.List[double]]::new()
-$jsonRoundTrips = [Collections.Generic.List[double]]::new()
-$sqlEndToEnd = [Collections.Generic.List[double]]::new()
-$jsonEndToEnd = [Collections.Generic.List[double]]::new()
-$reducedCases = 0
-$caseIndex = 0
 
+$sqlEndToEnd = [Collections.Generic.List[double]]::new()
+
+$reducedCases = 0
 function ConvertTo-FunctionalJson([object]$Value) {
     $functional = [ordered]@{}
     foreach ($property in $Value.PSObject.Properties) {
@@ -46,29 +44,15 @@ foreach ($case in $cases) {
         Format = 'Json'
         Limit = 12
     }
-    if (($caseIndex % 2) -eq 0) {
-        $jsonStopwatch = [Diagnostics.Stopwatch]::StartNew()
-        $json = & $diffTool @arguments -CompiledIndexSource Json | ConvertFrom-Json
-        $jsonStopwatch.Stop()
-        $sqlStopwatch = [Diagnostics.Stopwatch]::StartNew()
-        $sqlite = & $diffTool @arguments | ConvertFrom-Json
-        $sqlStopwatch.Stop()
-    } else {
-        $sqlStopwatch = [Diagnostics.Stopwatch]::StartNew()
-        $sqlite = & $diffTool @arguments | ConvertFrom-Json
-        $sqlStopwatch.Stop()
-        $jsonStopwatch = [Diagnostics.Stopwatch]::StartNew()
-        $json = & $diffTool @arguments -CompiledIndexSource Json | ConvertFrom-Json
-        $jsonStopwatch.Stop()
-    }
+    $sqlStopwatch = [Diagnostics.Stopwatch]::StartNew()
+    $sqlite = & $diffTool @arguments | ConvertFrom-Json
+    $sqlStopwatch.Stop()
 
     if ([string]$sqlite.compiledIndex.source -ne 'sqlite-compiled-index' -or
         [string]$sqlite.compiledIndex.selectionMode -ne 'changed-paths') {
         throw "$($changedPaths -join ', '): default diff route did not use changed-path SQLite selection."
     }
-    if ((ConvertTo-FunctionalJson $sqlite) -cne (ConvertTo-FunctionalJson $json)) {
-        throw "$($changedPaths -join ', '): SQLite/JSON diff-context parity failed."
-    }
+
     if (@($sqlite.changedSymbols).Count -lt [int]$case.MinimumSymbols) {
         throw "$($changedPaths -join ', '): diff-context parity was vacuous; expected at least $($case.MinimumSymbols) changed C# symbol(s)."
     }
@@ -80,10 +64,8 @@ foreach ($case in $cases) {
         $reducedCases++
     }
     $sqlRoundTrips.Add([double]$sqlite.compiledIndex.roundTripDurationMs)
-    $jsonRoundTrips.Add([double]$json.compiledIndex.roundTripDurationMs)
+
     $sqlEndToEnd.Add($sqlStopwatch.Elapsed.TotalMilliseconds)
-    $jsonEndToEnd.Add($jsonStopwatch.Elapsed.TotalMilliseconds)
-    $caseIndex++
 }
 
 if ($reducedCases -ne $cases.Count) {
@@ -112,7 +94,6 @@ function Get-Median([Collections.Generic.List[double]]$Durations) {
     return $ordered[$middle]
 }
 $sqlMedian = [Math]::Round((Get-Median $sqlRoundTrips), 2)
-$jsonMedian = [Math]::Round((Get-Median $jsonRoundTrips), 2)
+
 $sqlEndToEndMedian = [Math]::Round((Get-Median $sqlEndToEnd), 2)
-$jsonEndToEndMedian = [Math]::Round((Get-Median $jsonEndToEnd), 2)
-Write-Host "LLM Wiki diff-context SQL parity passed: $($cases.Count)/$($cases.Count) cases; median data load SQL=${sqlMedian}ms/JSON=${jsonMedian}ms; median end-to-end SQL=${sqlEndToEndMedian}ms/JSON=${jsonEndToEndMedian}ms; candidate reduction=$reducedCases/$($cases.Count)."
+Write-Host 'LLM Wiki DiffContext SQLite behavior checks passed.'

@@ -5,7 +5,7 @@ param(
     [string]$Format = 'Text',
     [ValidateRange(1, 100)]
     [int]$Limit = 30,
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [switch]$IncludeDiagnostics
 )
@@ -22,48 +22,18 @@ $groups = [ordered]@{}
 $diagnostics = $null
 $querySupplied = -not [string]::IsNullOrWhiteSpace($Query)
 $behavioralQuery = $querySupplied -and $Query -match '(?i)retry|resilien|timeout|cancellation|idempoten|duplicate|deduplic|replay|outbox|concurren'
-if ($CompiledIndexSource -eq 'Sqlite') {
-    . (Join-Path $PSScriptRoot 'LlmWikiInProcessSqlite.ps1')
-    $reader = Initialize-LlmWikiInProcessSqlite -Projection runtime
-    $resultJson = [LlmWiki.SqliteReader.CompiledIndexReader]::QueryRuntime(
-        $repositoryRoot,
-        $Query,
-        $Limit,
-        [bool]($IncludeDiagnostics -or $querySupplied),
-        [double]$reader.loadDurationMs)
-    $result = $resultJson | ConvertFrom-Json
-    foreach ($property in $result.PSObject.Properties) {
-        if ($property.Name -eq '_diagnostics') { $diagnostics = $property.Value }
-        else { $groups[$property.Name] = @($property.Value) }
-    }
-} else {
-    $topologyRaw = Get-Content -LiteralPath $topologyPath -Raw
-    $topology = $topologyRaw | ConvertFrom-Json
-    $groups = [ordered]@{
-        composeServices = @($topology.composeServices)
-        hostedServices = @($topology.hostedServices)
-        httpClients = @($topology.httpClients)
-        webhooks = @($topology.webhooks)
-        recurringJobRegistrations = @($topology.recurringJobRegistrations)
-        networkPolicies = @($topology.networkPolicies)
-    }
-    $candidateRecords = 0
-    foreach ($key in @($groups.Keys)) {
-        $candidateRecords += @($groups[$key]).Count
-        if (-not [string]::IsNullOrWhiteSpace($Query)) {
-            $groups[$key] = @($groups[$key] | Where-Object { ($_ | ConvertTo-Json -Compress) -match [regex]::Escape($Query) })
-        }
-        $groups[$key] = @($groups[$key] | Select-Object -First $Limit)
-    }
-    $returnedRecords = 0
-    foreach ($key in @($groups.Keys)) { $returnedRecords += @($groups[$key]).Count }
-    $sourceBytes = [Text.Encoding]::UTF8.GetByteCount($topologyRaw)
-    $diagnostics = [pscustomobject][ordered]@{
-        source = 'json-baseline'; reader = 'powershell-json'; readerLoadDurationMs = 0; sqlDurationMs = $null
-        scannedRecords = @($topology.composeServices).Count + @($topology.hostedServices).Count + @($topology.httpClients).Count + @($topology.webhooks).Count + @($topology.recurringJobRegistrations).Count + @($topology.networkPolicies).Count
-        candidateRecords = $candidateRecords; returnedRecords = $returnedRecords; sourceHash = $null
-        sourceBytesVerified = $sourceBytes; sourceBytesMaterialized = $sourceBytes
-    }
+. (Join-Path $PSScriptRoot 'LlmWikiInProcessSqlite.ps1')
+$reader = Initialize-LlmWikiInProcessSqlite -Projection runtime
+$resultJson = [LlmWiki.SqliteReader.CompiledIndexReader]::QueryRuntime(
+    $repositoryRoot,
+    $Query,
+    $Limit,
+    [bool]($IncludeDiagnostics -or $querySupplied),
+    [double]$reader.loadDurationMs)
+$result = $resultJson | ConvertFrom-Json
+foreach ($property in $result.PSObject.Properties) {
+    if ($property.Name -eq '_diagnostics') { $diagnostics = $property.Value }
+    else { $groups[$property.Name] = @($property.Value) }
 }
 $returnedRecords = 0
 foreach ($key in @($groups.Keys)) { $returnedRecords += @($groups[$key]).Count }

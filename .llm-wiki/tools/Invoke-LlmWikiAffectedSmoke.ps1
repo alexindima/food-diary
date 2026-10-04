@@ -197,20 +197,20 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             & (Join-Path $toolsRoot 'Test-LlmWikiIntentOwnership.ps1')
             if (-not $?) { exit 1 }
         }
-        'json-cold-checkout' {
-            & (Join-Path $toolsRoot 'Test-LlmWikiJsonColdCheckout.ps1')
+        'sqlite-cold-checkout' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiSqliteColdCheckout.ps1')
             if (-not $?) { exit 1 }
         }
         'trace-output' {
             & (Join-Path $toolsRoot 'Test-LlmWikiTraceOutput.ps1')
             if (-not $?) { exit 1 }
-            & (Join-Path $toolsRoot 'Test-LlmWikiFrontendTraceSqlParity.ps1')
+            & (Join-Path $toolsRoot 'Test-LlmWikiFrontendTraceQueries.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiQualityRisk.ps1')
             if (-not $?) { exit 1 }
         }
         'task-baseline' {
-            & (Join-Path $toolsRoot 'Test-LlmWikiDiffContextSqlParity.ps1')
+            & (Join-Path $toolsRoot 'Test-LlmWikiDiffContextQueries.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiTaskBaseline.ps1')
             if (-not $?) { exit 1 }
@@ -228,27 +228,27 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'backend-contract-query' {
-            & (Join-Path $toolsRoot 'Test-LlmWikiBackendContractSqlParity.ps1')
+            & (Join-Path $toolsRoot 'Test-LlmWikiBackendContractQueries.ps1')
             if (-not $?) { exit 1 }
         }
         'frontend-contract-query' {
-            & (Join-Path $toolsRoot 'Test-LlmWikiFrontendContractSqlParity.ps1')
+            & (Join-Path $toolsRoot 'Test-LlmWikiFrontendContractQueries.ps1')
             if (-not $?) { exit 1 }
-            & (Join-Path $toolsRoot 'Test-LlmWikiFrontendRuntimeOwnerSqlParity.ps1')
+            & (Join-Path $toolsRoot 'Test-LlmWikiFrontendRuntimeOwnerQueries.ps1')
             if (-not $?) { exit 1 }
         }
         'sensitive-data-query' {
-            & (Join-Path $toolsRoot 'Test-LlmWikiSensitiveDataSqlParity.ps1')
+            & (Join-Path $toolsRoot 'Test-LlmWikiSensitiveDataQueries.ps1')
             if (-not $?) { exit 1 }
         }
         'domain-data-query' {
-            & (Join-Path $toolsRoot 'Test-LlmWikiDomainDataSqlParity.ps1')
+            & (Join-Path $toolsRoot 'Test-LlmWikiDomainDataQueries.ps1')
             if (-not $?) { exit 1 }
         }
         'standalone-index-migration' {
             & (Join-Path $toolsRoot 'Test-LlmWikiStandaloneIndexRoutes.ps1')
             if (-not $?) { exit 1 }
-            & (Join-Path $toolsRoot 'Test-LlmWikiRuntimeArchitectureSqlParity.ps1')
+            & (Join-Path $toolsRoot 'Test-LlmWikiRuntimeArchitectureQueries.ps1')
             if (-not $?) { exit 1 }
         }
         'git-paths' {
@@ -322,7 +322,7 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'query-cache' {
-            & (Join-Path $toolsRoot 'Test-LlmWikiTaskBriefSqlParity.ps1')
+            & (Join-Path $toolsRoot 'Test-LlmWikiTaskBriefQueries.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiQueryCache.ps1')
             if (-not $?) { exit 1 }
@@ -358,9 +358,9 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'context-retrieval' {
-            & (Join-Path $toolsRoot 'Test-LlmWikiCompiledIndexSqlParity.ps1')
+            & (Join-Path $toolsRoot 'Test-LlmWikiCompiledIndexQueries.ps1')
             if (-not $?) { exit 1 }
-            & (Join-Path $toolsRoot 'Test-LlmWikiSqlContextShadow.ps1')
+            & (Join-Path $toolsRoot 'Test-LlmWikiContextRanking.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiContextCache.ps1')
             if (-not $?) { exit 1 }
@@ -391,7 +391,7 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiReviewReport.ps1')
             if (-not $?) { exit 1 }
-            & (Join-Path $toolsRoot 'Test-LlmWikiImpactSimulationSqlParity.ps1')
+            & (Join-Path $toolsRoot 'Test-LlmWikiImpactSimulationQueries.ps1')
             if (-not $?) { exit 1 }
         }
         'tool-contract' {

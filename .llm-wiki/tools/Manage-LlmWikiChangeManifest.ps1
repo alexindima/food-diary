@@ -6,7 +6,7 @@ param(
     [string]$Path = '.artifacts/llm-wiki/change-manifest.json',
     [string]$Objective,
     [string]$BaseRef = 'HEAD',
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [string]$HeadRef,
     [string[]]$ChangedPath,

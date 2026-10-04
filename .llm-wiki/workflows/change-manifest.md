@@ -32,18 +32,12 @@ Initialize after the intended scope is understood:
 
 The manifest snapshots risk, modules, implementation phases, required checks, review obligations, test scenarios, generated actions, rollout flags, and a SHA-256 plan fingerprint.
 
-Manifest initialization compiles the task brief once and passes that exact
-snapshot into implementation planning, keeping its fingerprint and obligations
-internally consistent.
-The manifest records `compiledIndexSource` and reuses that source for later
-validation. Pass `-CompiledIndexSource Json` when the governed baseline must be
-compiled without the SQLite projection; the manifest must not silently switch
-back to the default source.
-When explicit allowed/excluded patterns are supplied, planned paths are limited
-to the current product delta accepted by that boundary. Generated Wiki indexes,
-review receipts, and out-of-scope dirty files do not become planned work.
-For lightweight planning before manifest initialization, `brief -ProposedPath`
-offers the same path-based classification without creating manifest state.
+SQLite is the only compiled-index query provider. Generated JSON snapshots remain
+inputs for the sole Node projection writer and reviewable Git artifacts. Queries
+validate exact source hashes, select bounded records in SQL, and report explicit
+recovery errors when preparation fails. Backend-only preparation works without
+TypeScript; frontend code-graph discovery requires the locked npm dependencies.
+Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 Validate repeatedly as the diff evolves:
 

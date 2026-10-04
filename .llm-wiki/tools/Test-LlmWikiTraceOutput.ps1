@@ -76,13 +76,8 @@ try {
     [IO.File]::WriteAllText((Join-Path $invalidRoot 'frontend-contract-index.json'), '{"schemaVersion":0,"components":[],"apiCalls":[],"consumerEdges":[]}', [Text.UTF8Encoding]::new($false))
     $sourceSelectionError = $null
     try { & $frontendTraceScript -Query Old -IndexRoot $invalidRoot 2>&1 | Out-Null } catch { $sourceSelectionError = $_.Exception.Message }
-    if ($sourceSelectionError -notmatch 'require explicit -CompiledIndexSource Json' -or $sourceSelectionError -notmatch 'never falls back') {
+    if ($sourceSelectionError -notmatch 'Custom JSON query indexes are unsupported') {
         throw "Frontend trace accepted a custom JSON root without explicit source selection: $sourceSelectionError"
-    }
-    $schemaError = $null
-    try { & $frontendTraceScript -Query Old -IndexRoot $invalidRoot -CompiledIndexSource Json 2>&1 | Out-Null } catch { $schemaError = $_.Exception.Message }
-    if ($schemaError -notmatch 'unsupported schemaVersion.*expected 1' -or $schemaError -notmatch 'update -AffectedOnly') {
-        throw "Frontend trace did not provide an actionable stale-schema diagnostic: $schemaError"
     }
 } finally { Remove-Item -LiteralPath $invalidRoot -Recurse -Force -ErrorAction SilentlyContinue }
 

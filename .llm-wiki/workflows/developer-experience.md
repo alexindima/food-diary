@@ -139,15 +139,12 @@ multi-megabyte PowerShell JSON parses during routing regressions and MCP queries
 Missing or stale projections stop the route explicitly; JSON is available only
 when a caller requests the diagnostic baseline.
 
-On a cold checkout without the TypeScript package under `node_modules`, the
-`start`, `brief`, `develop`, `research`, `diff`, `journeys`, `design`,
-`test-plan`, `topology`, `privacy`, and `security` facades automatically select
-the committed read-only JSON baseline unless the caller explicitly requires
-SQLite. The source selection is propagated through nested research, brief,
-diff, test-plan, and implementation-plan calls. This keeps first-run backend
-planning usable without building the code graph; the cold-checkout regression
-replaces the graph entrypoint with a failing stub and exercises the composed
-planning facades.
+SQLite is the only compiled-index query provider. Generated JSON snapshots remain
+inputs for the sole Node projection writer and reviewable Git artifacts. Queries
+validate exact source hashes, select bounded records in SQL, and report explicit
+recovery errors when preparation fails. Backend-only preparation works without
+TypeScript; frontend code-graph discovery requires the locked npm dependencies.
+Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 The Development MCP keeps an additional bounded in-memory cache for successful
 read-only Wiki results. Planned paths and trace candidates define a scoped
@@ -200,7 +197,7 @@ edges are followed inside the same process, and the command reports source,
 candidate/returned counts, source hash, SQL time, and full round-trip time.
 The broader frontend trace now uses the same process boundary for frontend symbols,
 routes, component contracts, selector consumers, API calls, and source traversal.
-JSON remains a committed generation and parity source, but normal `trace` calls no
+JSON remains a committed generation and Git-review source, but `trace` calls no
 longer materialize both indexes in PowerShell.
 Impact simulation likewise reuses a minimal frontend feature catalog from the
 change packet's existing compiled-context round trip. Normal simulation no

@@ -65,7 +65,7 @@ $wikiText = Get-Content (Join-Path $PSScriptRoot '../wiki.ps1') -Raw
 $coldGuardLine = ($wikiText -split '\r?\n' | Where-Object { $_ -match '^\s*\$includesColdCheckoutGuard =' })
 foreach ($case in @(
     @{ groups = @('code-graph'); expected = $false },
-    @{ groups = @('json-cold-checkout', 'read-only-isolation', 'read-only-retrieval'); expected = $true }
+    @{ groups = @('sqlite-cold-checkout', 'read-only-isolation', 'read-only-retrieval'); expected = $true }
 )) {
     $smokeGroups = $case.groups
     Invoke-Expression $coldGuardLine
@@ -127,7 +127,7 @@ if ([string]$fullFocusedPlan.parallelGroups[0] -ne 'adaptive-evals') {
 if ([string]$fullFocusedPlan.parallelGroups[1] -ne 'code-graph-core') {
     throw 'The long code-graph lane must start in the first worker batch.'
 }
-foreach ($group in @('read-only-isolation', 'json-cold-checkout')) {
+foreach ($group in @('read-only-isolation', 'sqlite-cold-checkout')) {
     if (@($fullFocusedPlan.parallelGroups) -notcontains $group) { throw "Private fixture group is not parallel: $group" }
 }
 if (@($fullFocusedPlan.serialGroups) -notcontains 'read-only-retrieval' -or @($fullFocusedPlan.groups) -contains 'read-only-guard') {
@@ -171,12 +171,12 @@ $graphTestCalls = @(
         $clause.Item2.FindAll({ param($node) $node -is [Management.Automation.Language.StringConstantExpressionAst] -and $node.Value -match '^Test-LlmWiki.*\.ps1$' }, $true) | ForEach-Object Value
     }
 )
-$requiredGraphTests = @('Test-LlmWikiRoslynExtractor.ps1', 'Test-LlmWikiTypeScriptExtractor.ps1', 'Test-LlmWikiCodeGraph.ps1', 'Test-LlmWikiTraceOutput.ps1', 'Test-LlmWikiFrontendTraceSqlParity.ps1', 'Test-LlmWikiQualityRisk.ps1')
+$requiredGraphTests = @('Test-LlmWikiRoslynExtractor.ps1', 'Test-LlmWikiTypeScriptExtractor.ps1', 'Test-LlmWikiCodeGraph.ps1', 'Test-LlmWikiTraceOutput.ps1', 'Test-LlmWikiFrontendTraceQueries.ps1', 'Test-LlmWikiQualityRisk.ps1')
 if ($graphTestCalls.Count -ne $requiredGraphTests.Count) { throw 'Canonical graph and trace handlers changed their frozen six-script coverage.' }
 foreach ($name in $requiredGraphTests) {
     if (@($graphTestCalls | Where-Object { $_ -ceq $name }).Count -ne 1) { throw "Graph and trace regression must execute exactly once: $name" }
 }
-$readOnlyGroups = @('json-cold-checkout', 'read-only-isolation', 'read-only-retrieval')
+$readOnlyGroups = @('read-only-isolation', 'read-only-retrieval', 'sqlite-cold-checkout')
 foreach ($scope in @(@{ ChangedPath = @() }, @{ ChangedPath = @('.llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1') })) {
     $legacyPlan = & $planner @scope -RequestedGroup read-only-guard -Plan -Format Json | ConvertFrom-Json
     if (($legacyPlan.groups -join ',') -cne ($readOnlyGroups -join ',')) { throw 'Legacy read-only group no longer selects all four regression scripts.' }

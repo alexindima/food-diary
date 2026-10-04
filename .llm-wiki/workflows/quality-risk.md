@@ -42,12 +42,12 @@ index still measures the Wiki's own non-test PowerShell tools: select them with
 application symbols, a missing direct reference is an investigation lead rather
 than proof that no behavioral coverage exists.
 
-Standalone quality queries already use the SQLite `query_documents` projection;
-the generated JSON is retained as its projection source, not as an automatic
-runtime fallback. Callers can select `-CompiledIndexSource Json` explicitly for
-read-only diagnosis; that response is marked inconclusive because projection
-freshness was not verified. The compiled-index migration report classifies the
-SQLite route as fully migrated alongside task-brief impact selection.
+SQLite is the only compiled-index query provider. Generated JSON snapshots remain
+inputs for the sole Node projection writer and reviewable Git artifacts. Queries
+validate exact source hashes, select bounded records in SQL, and report explicit
+recovery errors when preparation fails. Backend-only preparation works without
+TypeScript; frontend code-graph discovery requires the locked npm dependencies.
+Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 For account linking, cover the success path, provider validation failure, email
 mismatch, identity owned by another user, idempotent retry, and refusal to

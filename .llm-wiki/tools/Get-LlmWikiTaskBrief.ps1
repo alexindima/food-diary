@@ -11,7 +11,7 @@ param(
     [object]$TestPlanInput,
     [object]$RolloutInput,
     [object]$DecisionInput,
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [switch]$SkipQueryCache,
     [ValidateSet('Text', 'Json')]
@@ -45,22 +45,7 @@ if ($cacheEligible) {
         Limit = $Limit
     }
     $cacheArguments.CompiledIndexSource = $CompiledIndexSource
-    $compiledIndexDependencies = if ($CompiledIndexSource -eq 'Json') {
-        @(
-            '.llm-wiki/generated/repository-catalog.json'
-            '.llm-wiki/generated/csharp-symbol-index.json'
-            '.llm-wiki/generated/frontend-index.json'
-            '.llm-wiki/generated/quality-index.json'
-            '.llm-wiki/generated/runtime-topology.json'
-            '.llm-wiki/generated/sensitive-data-index.json'
-            '.llm-wiki/generated/frontend-contract-index.json'
-            '.llm-wiki/generated/domain-data-index.json'
-            '.llm-wiki/generated/backend-contract-index.json'
-            '.llm-wiki/generated/architecture-health-index.json'
-        )
-    } else {
-        @('.artifacts/llm-wiki/code-graph/code-graph.fingerprint')
-    }
+    $compiledIndexDependencies = @('.artifacts/llm-wiki/code-graph/code-graph.fingerprint')
     $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'task-brief' -Arguments $cacheArguments `
         -RelevantPath @($(if (@($ProposedPath).Count -gt 0) { $ProposedPath } else { $ChangedPath })) `
         -DependencyPath @(
@@ -131,57 +116,27 @@ if ($effectivePaths.Count -eq 0 -and -not $broadAssessmentIntent -and -not [stri
     $candidates = [System.Collections.Generic.List[object]]::new()
     $symbolIndex = $null
     $frontendIntentIndex = $null
-    if ($CompiledIndexSource -eq 'Sqlite') {
-        $intentIndexStopwatch = [Diagnostics.Stopwatch]::StartNew()
-        $intentCompiledResult = & (Join-Path $toolsRoot 'Manage-LlmWikiCodeGraph.ps1') `
-            -Action compiled-context `
-            -Query ($intentTokens -join ' ') `
-            -SkipRefresh `
-            -Format Json | ConvertFrom-Json
-        $intentIndexStopwatch.Stop()
-        if (-not [bool]$intentCompiledResult.ready) {
-            throw "SQLite compiled-index projection is unavailable ($($intentCompiledResult.unavailableReason)). Run ./.llm-wiki/wiki.ps1 graph-build and retry."
-        }
-        if (-not ($frontendIntent -and -not $backendIntent)) {
-            $symbolIndex = [pscustomobject]@{ symbols = @($intentCompiledResult.symbols) }
-        }
-        $frontendIntentIndex = [pscustomobject]@{ symbols = @($intentCompiledResult.frontendSymbols) }
-        $intentIndexDiagnostics = [ordered]@{
-            source = [string]$intentCompiledResult.source
-            selectionMode = [string]$intentCompiledResult.selectionMode
-            sqlDurationMs = [double]$intentCompiledResult.durationMs
-            roundTripDurationMs = [Math]::Round($intentIndexStopwatch.Elapsed.TotalMilliseconds, 2)
-            scannedRecords = [int]$intentCompiledResult.scannedRecords
-            candidateRecords = [int]$intentCompiledResult.returnedRecords
-            sourceBytesRead = $null
-            sourceHashes = $intentCompiledResult.sourceHashes
-            reusedForDiff = $false
-        }
-    } else {
-        if (-not ($frontendIntent -and -not $backendIntent)) {
-            $symbolIndexPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
-            if (Test-Path -LiteralPath $symbolIndexPath) {
-                $symbolIndex = Get-Content -LiteralPath $symbolIndexPath -Raw | ConvertFrom-Json
-            }
-        }
-        $frontendIntentIndexPath = Join-Path $wikiRoot 'generated/frontend-index.json'
-        if (Test-Path -LiteralPath $frontendIntentIndexPath) {
-            $intentIndexStopwatch = [Diagnostics.Stopwatch]::StartNew()
-            $frontendIntentIndexRaw = Get-Content -LiteralPath $frontendIntentIndexPath -Raw
-            $frontendIntentIndex = $frontendIntentIndexRaw | ConvertFrom-Json
-            $intentIndexStopwatch.Stop()
-            $intentIndexDiagnostics = [ordered]@{
-                source = 'json-baseline'
-                selectionMode = 'intent'
-                sqlDurationMs = $null
-                roundTripDurationMs = [Math]::Round($intentIndexStopwatch.Elapsed.TotalMilliseconds, 2)
-                scannedRecords = @($frontendIntentIndex.symbols).Count
-                candidateRecords = @($frontendIntentIndex.symbols).Count
-                sourceBytesRead = [Text.Encoding]::UTF8.GetByteCount($frontendIntentIndexRaw)
-                sourceHashes = $null
-                reusedForDiff = $false
-            }
-        }
+    $intentIndexStopwatch = [Diagnostics.Stopwatch]::StartNew()
+    . (Join-Path $toolsRoot 'Ensure-LlmWikiSqliteProjection.ps1')
+    $intentCompiledResult = Invoke-LlmWikiSqliteQuery -Arguments @{ Action = 'compiled-context'; Query = ($intentTokens -join ' ') }
+    $intentIndexStopwatch.Stop()
+    if (-not [bool]$intentCompiledResult.ready) {
+        throw "SQLite compiled-index projection is unavailable ($($intentCompiledResult.unavailableReason)). Run ./.llm-wiki/wiki.ps1 graph-build and retry."
+    }
+    if (-not ($frontendIntent -and -not $backendIntent)) {
+        $symbolIndex = [pscustomobject]@{ symbols = @($intentCompiledResult.symbols) }
+    }
+    $frontendIntentIndex = [pscustomobject]@{ symbols = @($intentCompiledResult.frontendSymbols) }
+    $intentIndexDiagnostics = [ordered]@{
+        source = [string]$intentCompiledResult.source
+        selectionMode = [string]$intentCompiledResult.selectionMode
+        sqlDurationMs = [double]$intentCompiledResult.durationMs
+        roundTripDurationMs = [Math]::Round($intentIndexStopwatch.Elapsed.TotalMilliseconds, 2)
+        scannedRecords = [int]$intentCompiledResult.scannedRecords
+        candidateRecords = [int]$intentCompiledResult.returnedRecords
+        sourceBytesRead = $null
+        sourceHashes = $intentCompiledResult.sourceHashes
+        reusedForDiff = $false
     }
     if ($null -ne $symbolIndex) {
         foreach ($symbol in @($symbolIndex.symbols)) {
@@ -373,82 +328,33 @@ $decision = if ($null -ne $DecisionInput) { $DecisionInput } else {
 $changedPathsForQuality = @($diff.changedPaths)
 $impactStopwatch = [Diagnostics.Stopwatch]::StartNew()
 $impactIndexDiagnostics = $null
-if ($CompiledIndexSource -eq 'Sqlite') {
-    $impactResult = & (Join-Path $toolsRoot 'Manage-LlmWikiCodeGraph.ps1') `
-        -Action task-brief-impact `
-        -ChangedPath $changedPathsForQuality `
-        -SkipRefresh `
-        -Format Json | ConvertFrom-Json
-    $impactStopwatch.Stop()
-    if (-not [bool]$impactResult.ready) {
-        throw "SQLite task-brief impact projection is unavailable ($($impactResult.unavailableReason)). Run ./.llm-wiki/wiki.ps1 graph-build and retry."
-    }
-    $qualityIndex = $impactResult.groups.quality
-    $runtimeTopology = $impactResult.groups.runtime
-    $sensitiveData = $impactResult.groups.sensitiveData
-    $frontendContract = $impactResult.groups.frontendContract
-    $domainData = $impactResult.groups.domainData
-    $backendContract = $impactResult.groups.backendContract
-    $architectureHealth = $impactResult.groups.architectureHealth
-    $impactIndexDiagnostics = [ordered]@{
-        source = [string]$impactResult.source
-        selectionMode = [string]$impactResult.selectionMode
-        sqlDurationMs = [double]$impactResult.durationMs
-        roundTripDurationMs = [Math]::Round($impactStopwatch.Elapsed.TotalMilliseconds, 2)
-        scannedRecords = [int]$impactResult.scannedRecords
-        candidateRecords = [int]$impactResult.candidateRecords
-        returnedRecords = [int]$impactResult.returnedRecords
-        sourceBytesVerified = [int64]$impactResult.sourceBytesVerified
-        sourceBytesMaterialized = [int64]$impactResult.sourceBytesMaterialized
-        sourceHashes = $impactResult.sourceHashes
-    }
-} else {
-    $impactSourceBytesVerified = [int64]0
-    $impactSourceBytesMaterialized = [int64]0
-    function Read-ImpactIndex([string]$RelativePath) {
-        $path = Join-Path $wikiRoot $RelativePath
-        $raw = [System.IO.File]::ReadAllText($path)
-        $rawBytes = [Text.Encoding]::UTF8.GetByteCount($raw)
-        $script:impactSourceBytesVerified += $rawBytes
-        foreach ($changedPath in $changedPathsForQuality) {
-            if ($raw.IndexOf($changedPath, [System.StringComparison]::Ordinal) -ge 0) {
-                $script:impactSourceBytesMaterialized += $rawBytes
-                return $raw | ConvertFrom-Json
-            }
-        }
-        return $null
-    }
-    $qualityIndex = Read-ImpactIndex 'generated/quality-index.json'
-    $runtimeTopology = Read-ImpactIndex 'generated/runtime-topology.json'
-    $sensitiveData = Read-ImpactIndex 'generated/sensitive-data-index.json'
-    $frontendContract = Read-ImpactIndex 'generated/frontend-contract-index.json'
-    $domainData = Read-ImpactIndex 'generated/domain-data-index.json'
-    $backendContract = Read-ImpactIndex 'generated/backend-contract-index.json'
-    if ($null -eq $qualityIndex) { $qualityIndex = [pscustomobject]@{ files = @(); criticalSymbols = @() } }
-    if ($null -eq $runtimeTopology) { $runtimeTopology = [pscustomobject]@{ hostedServices = @(); httpClients = @(); webhooks = @(); recurringJobRegistrations = @(); networkPolicies = @(); composeServices = @() } }
-    if ($null -eq $sensitiveData) { $sensitiveData = [pscustomobject]@{ fields = @(); boundaryFiles = @(); potentialLogging = @(); externalTransfers = @() } }
-    if ($null -eq $frontendContract) { $frontendContract = [pscustomobject]@{ components = @(); apiCalls = @(); translationUsage = @(); consumerEdges = @() } }
-    if ($null -eq $domainData) { $domainData = [pscustomobject]@{ domainTypes = @(); invariants = @(); persistenceMappings = @() } }
-    if ($null -eq $backendContract) { $backendContract = [pscustomobject]@{ contracts = @(); consumerEdges = @() } }
-    $architectureHealthPath = Join-Path $wikiRoot 'generated/architecture-health-index.json'
-    $architectureHealthRaw = [System.IO.File]::ReadAllText($architectureHealthPath)
-    $architectureHealthBytes = [Text.Encoding]::UTF8.GetByteCount($architectureHealthRaw)
-    $impactSourceBytesVerified += $architectureHealthBytes
-    $impactSourceBytesMaterialized += $architectureHealthBytes
-    $architectureHealth = $architectureHealthRaw | ConvertFrom-Json
-    $impactStopwatch.Stop()
-    $impactIndexDiagnostics = [ordered]@{
-        source = 'json-baseline'
-        selectionMode = 'exact-changed-paths'
-        sqlDurationMs = $null
-        roundTripDurationMs = [Math]::Round($impactStopwatch.Elapsed.TotalMilliseconds, 2)
-        scannedRecords = $null
-        candidateRecords = $null
-        returnedRecords = $null
-        sourceBytesVerified = $impactSourceBytesVerified
-        sourceBytesMaterialized = $impactSourceBytesMaterialized
-        sourceHashes = $null
-    }
+$impactResult = & (Join-Path $toolsRoot 'Manage-LlmWikiCodeGraph.ps1') `
+    -Action task-brief-impact `
+    -ChangedPath $changedPathsForQuality `
+    -SkipRefresh `
+    -Format Json | ConvertFrom-Json
+$impactStopwatch.Stop()
+if (-not [bool]$impactResult.ready) {
+    throw "SQLite task-brief impact projection is unavailable ($($impactResult.unavailableReason)). Run ./.llm-wiki/wiki.ps1 graph-build and retry."
+}
+$qualityIndex = $impactResult.groups.quality
+$runtimeTopology = $impactResult.groups.runtime
+$sensitiveData = $impactResult.groups.sensitiveData
+$frontendContract = $impactResult.groups.frontendContract
+$domainData = $impactResult.groups.domainData
+$backendContract = $impactResult.groups.backendContract
+$architectureHealth = $impactResult.groups.architectureHealth
+$impactIndexDiagnostics = [ordered]@{
+    source = [string]$impactResult.source
+    selectionMode = [string]$impactResult.selectionMode
+    sqlDurationMs = [double]$impactResult.durationMs
+    roundTripDurationMs = [Math]::Round($impactStopwatch.Elapsed.TotalMilliseconds, 2)
+    scannedRecords = [int]$impactResult.scannedRecords
+    candidateRecords = [int]$impactResult.candidateRecords
+    returnedRecords = [int]$impactResult.returnedRecords
+    sourceBytesVerified = [int64]$impactResult.sourceBytesVerified
+    sourceBytesMaterialized = [int64]$impactResult.sourceBytesMaterialized
+    sourceHashes = $impactResult.sourceHashes
 }
 $changedQualityFiles = @($qualityIndex.files | Where-Object { $changedPathsForQuality -contains $_.path })
 $changedTestGaps = @(
@@ -552,7 +458,8 @@ $broadAssessmentScopes = @('Api', 'Backend', 'Frontend', 'Database', 'Configurat
 $isBroadAssessment = $broadAssessmentIntent -and $proposedPathCount -eq 0 -and @($diff.changedPaths).Count -eq 0
 $broadAssessmentModules = @()
 if ($isBroadAssessment) {
-    $repositoryCatalog = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/repository-catalog.json') -Raw | ConvertFrom-Json
+    . (Join-Path $toolsRoot 'Ensure-LlmWikiSqliteProjection.ps1')
+    $repositoryCatalog = (Invoke-LlmWikiSqliteQuery -Arguments @{ Action = 'compiled-context'; CompiledMode = 'ChangedPaths'; ChangedPath = @() }).catalog
     $broadAssessmentModules = @(
         @($repositoryCatalog.applicationModules) + @($repositoryCatalog.extractedApplicationModules) |
             Select-Object name, project |

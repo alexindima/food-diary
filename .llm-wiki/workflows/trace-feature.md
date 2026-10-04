@@ -12,7 +12,7 @@ tags:
 sources:
   - .llm-wiki/tools/Find-LlmWikiTrace.ps1
   - .llm-wiki/tools/Find-LlmWikiFrontendTrace.ps1
-  - .llm-wiki/tools/Test-LlmWikiFrontendTraceSqlParity.ps1
+  - .llm-wiki/tools/Test-LlmWikiFrontendTraceQueries.ps1
   - .llm-wiki/tools/Test-LlmWikiTraceOutput.ps1
   - .llm-wiki/tools/code-graph-trace-scope.mjs
   - .llm-wiki/tools/Test-LlmWikiTraceScope.mjs
@@ -86,14 +86,12 @@ consumers plus AI-related facade/service dependencies. It reports consuming
 routes, selector bindings, HTTP calls, and nearby tests. Treat route-to-feature
 matching as navigational evidence and confirm the selected runtime path in source.
 
-The frontend route reads the refreshed SQLite frontend and frontend-contract
-projections by default. Matching, source traversal, contract joins, and route/test
-selection run in one bounded graph process; the functional trace shape remains
-unchanged. Missing or stale projections fail explicitly. Direct diagnostics may
-select `-CompiledIndexSource Json`, and custom `-IndexRoot` fixtures require that
-explicit source; neither path is an automatic fallback. The eight-case parity
-smoke checks exact functional JSON, both normalized source hashes, payload
-reduction, and a required end-to-end improvement.
+SQLite is the only compiled-index query provider. Generated JSON snapshots remain
+inputs for the sole Node projection writer and reviewable Git artifacts. Queries
+validate exact source hashes, select bounded records in SQL, and report explicit
+recovery errors when preparation fails. Backend-only preparation works without
+TypeScript; frontend code-graph discovery requires the locked npm dependencies.
+Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 Semantic source traces follow one same-namespace interface-inheritance hop when
 interface names are unambiguous. Implementation entries expose `viaContract`

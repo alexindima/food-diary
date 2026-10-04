@@ -6,7 +6,7 @@ param(
     [string]$Format = 'Text',
     [ValidateRange(1, 30)]
     [int]$Limit = 10,
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite'
 )
 

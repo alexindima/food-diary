@@ -3,7 +3,7 @@ param(
     [string]$BaseRef = 'HEAD',
     [string]$HeadRef,
     [string[]]$ChangedPath,
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [object]$DiffInput,
     [object]$PolicyInput,

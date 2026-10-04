@@ -6,7 +6,7 @@ param(
     [string[]]$Criterion,
     [string]$WorkspacePath = '.artifacts/llm-wiki/tasks/current',
     [string]$BaseRef = 'HEAD',
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [string]$HeadRef,
     [string[]]$ChangedPath,

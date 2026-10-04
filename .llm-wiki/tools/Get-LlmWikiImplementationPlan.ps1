@@ -5,7 +5,7 @@ param(
     [string[]]$ChangedPath,
     [object]$BriefInput,
     [string]$Objective,
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',

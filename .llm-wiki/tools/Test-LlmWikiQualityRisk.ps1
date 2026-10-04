@@ -17,7 +17,7 @@ foreach ($item in @($result.items)) {
     }
 }
 $jsonResult = & (Join-Path $PSScriptRoot 'Find-LlmWikiQualityRisk.ps1') `
-    -View test-gaps -Limit 2 -CompiledIndexSource Json -Format Json | ConvertFrom-Json
+    -View test-gaps -Limit 2 -CompiledIndexSource Sqlite -Format Json | ConvertFrom-Json
 if (@($jsonResult.items | Where-Object { $_.coverageEvidence.measuredExecutionCoverage -eq 'not-measured' }).Count -ne @($jsonResult.items).Count) {
     throw 'Explicit JSON test-gap output lost its coverage-evidence classification.'
 }

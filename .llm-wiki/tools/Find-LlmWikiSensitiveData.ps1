@@ -9,7 +9,7 @@ param(
     [int]$Limit = 30,
     [switch]$NoImplicitScope,
     [switch]$RepositoryWide,
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [switch]$IncludeDiagnostics,
     [ValidateSet('Text', 'Json')]
@@ -83,91 +83,37 @@ $queryTokens = @(
         Sort-Object -Unique
 )
 $diagnostics = $null
-if ($CompiledIndexSource -eq 'Sqlite') {
-    . (Join-Path $PSScriptRoot 'Ensure-LlmWikiSqliteProjection.ps1')
-    Ensure-LlmWikiSqliteProjection -Category sensitive
-    $sqlResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
-        -Action sensitive-data `
-        -SensitiveDataView $Category `
-        -SensitiveDataFilter:(-not [string]::IsNullOrWhiteSpace($searchInput)) `
-        -Query ($queryTokens -join ';') `
-        -ChangedPath $scopePaths `
-        -Limit $Limit `
-        -SkipRefresh `
-        -Format Json | ConvertFrom-Json
-    if (-not [bool]$sqlResult.ready) {
-        throw "SQLite sensitive-data projection is unavailable ($($sqlResult.unavailableReason)). Run ./.llm-wiki/wiki.ps1 graph-build and retry."
-    }
-    $items = if (-not [string]::IsNullOrWhiteSpace($searchInput)) {
-        @($sqlResult.matches |
-            Sort-Object @{ Expression = 'score'; Descending = $true }, @{ Expression = { $_.item.path } } |
-            Select-Object -ExpandProperty item)
-    } else {
-        @($sqlResult.matches | Select-Object -ExpandProperty item)
-    }
-    $summary = $sqlResult.summary
-    $diagnostics = [ordered]@{
-        source = [string]$sqlResult.source
-        sqlDurationMs = [double]$sqlResult.durationMs
-        scannedRecords = [int]$sqlResult.scannedRecords
-        candidateRecords = [int]$sqlResult.candidateRecords
-        returnedRecords = [int]$sqlResult.returnedRecords
-        sourceHash = [string]$sqlResult.sourceHash
-        sourceBytesVerified = [int64]$sqlResult.sourceBytesVerified
-        sourceBytesMaterialized = [int64]$sqlResult.sourceBytesMaterialized
-    }
+. (Join-Path $PSScriptRoot 'Ensure-LlmWikiSqliteProjection.ps1')
+Ensure-LlmWikiSqliteProjection -Category sensitive
+$sqlResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
+    -Action sensitive-data `
+    -SensitiveDataView $Category `
+    -SensitiveDataFilter:(-not [string]::IsNullOrWhiteSpace($searchInput)) `
+    -Query ($queryTokens -join ';') `
+    -ChangedPath $scopePaths `
+    -Limit $Limit `
+    -SkipRefresh `
+    -Format Json | ConvertFrom-Json
+if (-not [bool]$sqlResult.ready) {
+    throw "SQLite sensitive-data projection is unavailable ($($sqlResult.unavailableReason)). Run ./.llm-wiki/wiki.ps1 graph-build and retry."
+}
+$items = if (-not [string]::IsNullOrWhiteSpace($searchInput)) {
+    @($sqlResult.matches |
+        Sort-Object @{ Expression = 'score'; Descending = $true }, @{ Expression = { $_.item.path } } |
+        Select-Object -ExpandProperty item)
 } else {
-    $indexRaw = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/sensitive-data-index.json') -Raw
-    $index = $indexRaw | ConvertFrom-Json
-    $items = if ($Category -eq 'logging') {
-        @($index.potentialLogging)
-    } elseif ($Category -eq 'boundaries') {
-        @($index.boundaryFiles)
-    } elseif ($Category -eq 'external') {
-        @($index.externalTransfers)
-    } elseif ($Category -eq 'all') {
-        @($index.fields) + @($index.externalTransfers)
-    } else {
-        @($index.fields | Where-Object category -eq $Category)
-    }
-    $candidateRecords = $items.Count
-    if (-not [string]::IsNullOrWhiteSpace($searchInput)) {
-        $items = @(
-            $items |
-                ForEach-Object {
-                    $item = $_
-                    $searchText = $item | ConvertTo-Json -Compress
-                    $matchCount = @($queryTokens | Where-Object {
-                        $searchText -match [regex]::Escape($_)
-                    }).Count
-                    $itemPath = [string]$item.path
-                    $scopeMatch = @($scopePaths | Where-Object {
-                        $scopePath = $_
-                        $scopeDirectory = if ([IO.Path]::HasExtension($scopePath)) { Split-Path -Parent $scopePath } else { $scopePath }
-                        $itemPath -eq $scopePath -or $itemPath.StartsWith("$($scopeDirectory.Replace('\', '/').TrimEnd('/'))/")
-                    }).Count -gt 0
-                    $score = $matchCount + $(if ($scopeMatch) { 20 } else { 0 })
-                    $minimumMatches = if ($scopePaths.Count -gt 0 -and -not $scopeMatch) { 2 } else { 1 }
-                    if ($scopeMatch -or $matchCount -ge $minimumMatches) {
-                        [pscustomobject]@{ item = $item; score = $score; scopeMatch = $scopeMatch }
-                    }
-                } |
-                Sort-Object @{ Expression = 'score'; Descending = $true }, @{ Expression = { $_.item.path } } |
-                Select-Object -ExpandProperty item
-        )
-    }
-    $summary = $index.summary
-    $sourceBytes = [Text.Encoding]::UTF8.GetByteCount($indexRaw)
-    $diagnostics = [ordered]@{
-        source = 'json-baseline'
-        sqlDurationMs = $null
-        scannedRecords = @($index.fields).Count + @($index.boundaryFiles).Count + @($index.potentialLogging).Count + @($index.externalTransfers).Count
-        candidateRecords = $candidateRecords
-        returnedRecords = $items.Count
-        sourceHash = $null
-        sourceBytesVerified = $sourceBytes
-        sourceBytesMaterialized = $sourceBytes
-    }
+    @($sqlResult.matches | Select-Object -ExpandProperty item)
+}
+$summary = $sqlResult.summary
+$diagnostics = [ordered]@{
+    source = [string]$sqlResult.source
+    sqlDurationMs = [double]$sqlResult.durationMs
+    scannedRecords = [int]$sqlResult.scannedRecords
+    candidateRecords = [int]$sqlResult.candidateRecords
+    returnedRecords = [int]$sqlResult.returnedRecords
+    sourceHash = [string]$sqlResult.sourceHash
+    sourceBytesVerified = [int64]$sqlResult.sourceBytesVerified
+    sourceBytesMaterialized = [int64]$sqlResult.sourceBytesMaterialized
 }
 $guidance = @()
 if ($repositoryAssessment) {

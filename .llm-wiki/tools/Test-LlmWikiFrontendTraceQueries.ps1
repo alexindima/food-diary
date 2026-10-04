@@ -18,43 +18,27 @@ $cases = @(
     @{ Query = 'DashboardComponent'; Limit = 1 }
     @{ Query = 'AuthService'; Limit = 1 }
     @{ Query = 'zyxwv no frontend symbol'; Limit = 3 }
+    @{ Query = 'zznosuchfrontendsymbol92841'; Limit = 3 }
 )
 $sqlEndToEnd = [Collections.Generic.List[double]]::new()
-$jsonEndToEnd = [Collections.Generic.List[double]]::new()
+
 $sqlRoute = [Collections.Generic.List[double]]::new()
 $reducedCases = 0
-$caseIndex = 0
-
 foreach ($case in $cases) {
     $arguments = @{ Query = $case.Query; Limit = $case.Limit; Format = 'Json' }
-    if (($caseIndex % 2) -eq 0) {
-        $jsonStopwatch = [Diagnostics.Stopwatch]::StartNew()
-        $json = & $tool @arguments -CompiledIndexSource Json | ConvertFrom-Json
-        $jsonStopwatch.Stop()
-        $sqlStopwatch = [Diagnostics.Stopwatch]::StartNew()
-        $sqlite = & $tool @arguments | ConvertFrom-Json
-        $sqlStopwatch.Stop()
-    } else {
-        $sqlStopwatch = [Diagnostics.Stopwatch]::StartNew()
-        $sqlite = & $tool @arguments | ConvertFrom-Json
-        $sqlStopwatch.Stop()
-        $jsonStopwatch = [Diagnostics.Stopwatch]::StartNew()
-        $json = & $tool @arguments -CompiledIndexSource Json | ConvertFrom-Json
-        $jsonStopwatch.Stop()
-    }
+    $sqlStopwatch = [Diagnostics.Stopwatch]::StartNew()
+    $sqlite = & $tool @arguments | ConvertFrom-Json
+    $sqlStopwatch.Stop()
     if ([string]$sqlite.compiledIndex.source -cne 'sqlite-compiled-trace') {
         throw "$($case.Query): default frontend trace route did not use SQLite."
     }
-    $sqliteFunctional = $sqlite | Select-Object matched, query, traces | ConvertTo-Json -Depth 12 -Compress
-    $jsonFunctional = $json | Select-Object matched, query, traces | ConvertTo-Json -Depth 12 -Compress
-    if ($sqliteFunctional -cne $jsonFunctional) {
-        throw "$($case.Query): SQLite/JSON frontend trace output parity failed."
-    }
+    if (@($sqlite.traces).Count -gt $case.Limit -or [string]$sqlite.query -cne $case.Query) { throw 'Frontend trace lost query identity or output bounds.' }
+    if ($case.Query -eq 'zznosuchfrontendsymbol92841' -and ($sqlite.matched -or @($sqlite.traces).Count)) { throw 'Unknown frontend symbol returned unrelated traces.' }
+    if ($case.Query -in @('AiPhotoPreviewComponent','FrontendObservabilityService','FdUiSelectComponent','DashboardComponent','AuthService') -and
+        (-not $sqlite.matched -or $sqlite.traces[0].symbol.name -cne $case.Query)) { throw "Exact frontend symbol was not ranked first: $($case.Query)" }
     if ([int]$sqlite.compiledIndex.returnedRecords -lt [int]$sqlite.compiledIndex.scannedRecords) { $reducedCases++ }
     $sqlRoute.Add([double]$sqlite.compiledIndex.roundTripDurationMs)
     $sqlEndToEnd.Add($sqlStopwatch.Elapsed.TotalMilliseconds)
-    $jsonEndToEnd.Add($jsonStopwatch.Elapsed.TotalMilliseconds)
-    $caseIndex++
 }
 if ($reducedCases -ne $cases.Count) {
     throw "SQLite frontend trace payload filtering reduced records for only $reducedCases/$($cases.Count) parity cases."
@@ -74,5 +58,4 @@ if ([string]$hashProbe.compiledIndex.sourceHashes.frontend -cne $expectedFronten
 }
 $sqlRouteAverage = [Math]::Round(($sqlRoute | Measure-Object -Average).Average, 2)
 $sqlEndToEndAverage = [Math]::Round(($sqlEndToEnd | Measure-Object -Average).Average, 2)
-$jsonEndToEndAverage = [Math]::Round(($jsonEndToEnd | Measure-Object -Average).Average, 2)
-Write-Host "LLM Wiki frontend trace SQL parity passed: $($cases.Count)/$($cases.Count) cases; SQL route=${sqlRouteAverage}ms; end-to-end SQL=${sqlEndToEndAverage}ms/JSON=${jsonEndToEndAverage}ms; payload reduction=$reducedCases/$($cases.Count)."
+Write-Host 'LLM Wiki FrontendTrace SQLite behavior checks passed.'

@@ -49,18 +49,9 @@ Assert-CriticalTool (
 Assert-CriticalTool (
     $facadeSource -match "Parameters\.ContainsKey\('CompiledIndexSource'\)") `
     'Facade dispatch no longer propagates the selected compiled-index source to compatible tools.'
-Assert-CriticalTool (
-    $facadeSource -match '\$automaticJsonFallbackCommands\s*=\s*@\([^)]*''start''[^)]*''brief''[^)]*''research''') `
-    'Cold-checkout start must select the JSON baseline alongside brief and research.'
-$jsonFallbackCommands = [regex]::Match(
-    $facadeSource,
-    '(?s)\$automaticJsonFallbackCommands\s*=\s*@\((?<commands>.*?)\)')
-Assert-CriticalTool (
-    $jsonFallbackCommands.Success -and
-    $jsonFallbackCommands.Groups['commands'].Value -match "'decision'" -and
-    $jsonFallbackCommands.Groups['commands'].Value -match "'ownership'" -and
-    $jsonFallbackCommands.Groups['commands'].Value -match "'rollout'") `
-    'Cold-checkout planning and architecture facades must select the JSON baseline consistently.'
+Assert-CriticalTool ($facadeSource -notmatch '\$automaticJsonFallbackCommands|CompiledIndexSource\s*=\s*''Json''') `
+    'SQLite-only facade still contains an automatic JSON fallback.'
+Assert-CriticalTool ($facadeSource.Contains("[ValidateSet('Sqlite')]")) 'Facade permits a retired query provider.'
 
 $helpOutput = @(& (Join-Path $PSScriptRoot 'Show-LlmWikiHelp.ps1') -Tier core 6>&1 | ForEach-Object { [string]$_ })
 Assert-CriticalTool ($helpOutput -contains 'Command stability tiers: core, governed, experimental.') 'Registry-backed compact help omitted stability tiers.'
@@ -268,7 +259,7 @@ try {
 }
 
 # LlmWikiInProcessSqlite is referenced explicitly here; its full build/load and
-# SQL parity contract remains exercised by Test-LlmWikiDomainDataSqlParity.ps1.
+# SQL parity contract remains exercised by Test-LlmWikiDomainDataQueries.ps1.
 . (Join-Path $PSScriptRoot 'LlmWikiInProcessSqlite.ps1')
 $sqliteFirst = Initialize-LlmWikiInProcessSqlite
 $sqliteSecond = Initialize-LlmWikiInProcessSqlite

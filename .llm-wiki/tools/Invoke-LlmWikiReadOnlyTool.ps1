@@ -356,11 +356,25 @@ if (-not [string]::IsNullOrWhiteSpace($activeSnapshotRoot)) {
         if (-not (Test-Path -LiteralPath $graphManagerPath -PathType Leaf)) {
             throw "Read-only snapshot is missing its code-graph manager: $graphManagerPath"
         }
-        $graphArguments = @{ Action = 'build'; Format = 'Json' }
-        if ($BackendOnlyRefresh) { $graphArguments.BackendOnlyRefresh = $true }
-        $null = & $graphManagerPath @graphArguments
-        if (-not $? -or ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0)) {
-            throw 'Unable to refresh the SQLite compiled-index projection inside the read-only snapshot.'
+        $graphReady = $false
+        if (Test-Path -LiteralPath (Join-Path $repositoryRoot '.artifacts/llm-wiki/code-graph/code-graph.sqlite') -PathType Leaf) {
+            try {
+                $graphStatus = & $graphManagerPath -Action status -SkipRefresh -Format Json | ConvertFrom-Json
+                $graphReady = [bool]$graphStatus.changeSetFresh -and [int]$graphStatus.searchDocuments -gt 0 -and
+                    ($BackendOnlyRefresh -or [bool]$graphStatus.typescriptProjectionComplete)
+            } catch {
+                # The existing writer can recover a corrupt derived database.
+                # A failed readiness probe must still reach that recovery path.
+                Write-Verbose "SQLite readiness probe failed; preparing the private projection. $($_.Exception.Message)"
+            }
+        }
+        if (-not $graphReady) {
+            $graphArguments = @{ Action = 'build'; Format = 'Json' }
+            if ($BackendOnlyRefresh) { $graphArguments.BackendOnlyRefresh = $true }
+            $null = & $graphManagerPath @graphArguments
+            if (-not $? -or ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0)) {
+                throw 'Unable to refresh the SQLite compiled-index projection inside the read-only snapshot.'
+            }
         }
     }
     Write-ReadOnlyTiming -Stage 'inner-before-tool'

@@ -7,7 +7,7 @@ param(
     [int]$Limit = 30,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [switch]$IncludeDiagnostics
 )
@@ -17,53 +17,20 @@ $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $stopwatch = [Diagnostics.Stopwatch]::StartNew()
 $groups = [ordered]@{}
 $diagnostics = $null
-if ($CompiledIndexSource -eq 'Sqlite') {
-    . (Join-Path $PSScriptRoot 'LlmWikiInProcessSqlite.ps1')
-    $reader = Initialize-LlmWikiInProcessSqlite -Projection architecture-health
-    $resultJson = [LlmWiki.SqliteReader.CompiledIndexReader]::QueryArchitectureHealth(
-        $repositoryRoot,
-        $View,
-        $Query,
-        $Limit,
-        [bool]$IncludeDiagnostics,
-        [double]$reader.loadDurationMs)
-    if ($Format -eq 'Json') { $resultJson; exit 0 }
-    $result = $resultJson | ConvertFrom-Json
-    foreach ($property in $result.PSObject.Properties) {
-        if ($property.Name -eq '_diagnostics') { $diagnostics = $property.Value }
-        else { $groups[$property.Name] = @($property.Value) }
-    }
-} else {
-    $indexRaw = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/architecture-health-index.json') -Raw
-    $index = $indexRaw | ConvertFrom-Json
-    if ($View -in @('all', 'drift')) { $groups.dependencyViolations = @($index.projectDependencyViolations) }
-    if ($View -in @('all', 'allowances')) { $groups.unusedAllowances = @($index.unusedProjectAllowances) }
-    if ($View -in @('all', 'untracked')) { $groups.untrackedProjects = @($index.untrackedProductionProjects) }
-    if ($View -in @('all', 'cycles')) { $groups.moduleCycleNodes = @($index.moduleCycleNodes) }
-    if ($View -in @('all', 'ambiguous')) { $groups.ambiguousContracts = @($index.ambiguousBackendContracts) }
-    if ($View -in @('all', 'dead-candidates')) {
-        $groups.unconsumedBackendContracts = @($index.unconsumedBackendContracts)
-        $groups.selectorUnreferencedComponents = @($index.selectorUnreferencedComponents)
-    }
-    if ($View -in @('all', 'spec-gaps')) { $groups.componentsWithoutSpecs = @($index.componentsWithoutDirectSpecs) }
-    if ($View -in @('all', 'test-gaps')) { $groups.criticalSymbolsWithoutTests = @($index.criticalSymbolsWithoutTestReferences) }
-    if ($View -in @('all', 'debt')) { $groups.debtMarkers = @($index.explicitDebtMarkers) }
-    $candidateRecords = 0
-    foreach ($key in @($groups.Keys)) {
-        $candidateRecords += @($groups[$key]).Count
-        if (-not [string]::IsNullOrWhiteSpace($Query)) {
-            $groups[$key] = @($groups[$key] | Where-Object { ($_ | ConvertTo-Json -Depth 7 -Compress) -match [regex]::Escape($Query) })
-        }
-        $groups[$key] = @($groups[$key] | Select-Object -First $Limit)
-    }
-    $returnedRecords = 0
-    foreach ($key in @($groups.Keys)) { $returnedRecords += @($groups[$key]).Count }
-    $sourceBytes = [Text.Encoding]::UTF8.GetByteCount($indexRaw)
-    $diagnostics = [pscustomobject][ordered]@{
-        source = 'json-baseline'; reader = 'powershell-json'; readerLoadDurationMs = 0; sqlDurationMs = $null
-        scannedRecords = $null; candidateRecords = $candidateRecords; returnedRecords = $returnedRecords; sourceHash = $null
-        sourceBytesVerified = $sourceBytes; sourceBytesMaterialized = $sourceBytes
-    }
+. (Join-Path $PSScriptRoot 'LlmWikiInProcessSqlite.ps1')
+$reader = Initialize-LlmWikiInProcessSqlite -Projection architecture-health
+$resultJson = [LlmWiki.SqliteReader.CompiledIndexReader]::QueryArchitectureHealth(
+    $repositoryRoot,
+    $View,
+    $Query,
+    $Limit,
+    [bool]$IncludeDiagnostics,
+    [double]$reader.loadDurationMs)
+if ($Format -eq 'Json') { $resultJson; exit 0 }
+$result = $resultJson | ConvertFrom-Json
+foreach ($property in $result.PSObject.Properties) {
+    if ($property.Name -eq '_diagnostics') { $diagnostics = $property.Value }
+    else { $groups[$property.Name] = @($property.Value) }
 }
 $stopwatch.Stop()
 if ($Format -eq 'Json') {

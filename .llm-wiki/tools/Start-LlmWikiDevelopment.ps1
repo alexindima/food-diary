@@ -4,7 +4,7 @@ param(
     [string]$BaseRef = 'HEAD',
     [string[]]$ProposedPath,
     [string]$WorkspacePath = '.artifacts/llm-wiki/tasks/current',
-    [ValidateSet('Sqlite', 'Json')][string]$CompiledIndexSource = 'Sqlite',
+    [ValidateSet('Sqlite')][string]$CompiledIndexSource = 'Sqlite',
     [ValidateSet('Text', 'Json')][string]$Format = 'Text',
     [ValidateRange(1, 30)][int]$Limit = 12
 )

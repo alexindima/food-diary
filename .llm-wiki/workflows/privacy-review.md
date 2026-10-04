@@ -12,7 +12,7 @@ sources:
   - .llm-wiki/generated/sensitive-data-index.json
   - .llm-wiki/tools/Find-LlmWikiSensitiveData.ps1
   - .llm-wiki/tools/code-graph.mjs
-  - .llm-wiki/tools/Test-LlmWikiSensitiveDataSqlParity.ps1
+  - .llm-wiki/tools/Test-LlmWikiSensitiveDataQueries.ps1
   - docs/backend/PERSONAL_DATA_LIFECYCLE.md
   - docs/privacy/PRIVACY_RELEASE_CHECKLIST.md
 ---
@@ -46,16 +46,12 @@ than filtered by generic words such as "audit", "project", or "vulnerability".
 The JSON result reports `queryMode`, selection status, candidate/returned counts,
 and an abstention/recovery hint when a focused filter is empty.
 
-The privacy query reads the refreshed SQLite sensitive-data projection by
-default. SQLite selects the requested category and evaluates query/scope
-candidates before transport; PowerShell retains the established final ranking
-and output shape. The source summary and every record keep their source order,
-and a missing or stale normalized source hash fails with the `graph-build`
-recovery command instead of silently parsing JSON. `-CompiledIndexSource Json`
-is an explicit parity baseline only. Diagnostics report scanned, candidate, and
-returned records, SQL and round-trip duration, source bytes verified, and bytes
-materialized. The dedicated 14-case smoke covers all views, aliases, scoped and
-empty results, exact parity, payload reduction, and filtered/unfiltered latency.
+SQLite is the only compiled-index query provider. Generated JSON snapshots remain
+inputs for the sole Node projection writer and reviewable Git artifacts. Queries
+validate exact source hashes, select bounded records in SQL, and report explicit
+recovery errors when preparation fails. Backend-only preparation works without
+TypeScript; frontend code-graph discovery requires the locked npm dependencies.
+Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 For a changed field or flow, review purpose/minimization, consent or lawful
 basis, ownership/authorization, encryption and secret handling, cache/queue/log

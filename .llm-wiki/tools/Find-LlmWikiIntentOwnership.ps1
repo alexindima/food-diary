@@ -6,7 +6,7 @@ param(
     [string]$Format = 'Text',
     [ValidateRange(1, 50)]
     [int]$Limit = 12,
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [string]$SearchFixturePath
 )
@@ -20,7 +20,7 @@ $search = if (-not [string]::IsNullOrWhiteSpace($SearchFixturePath)) {
         -Action search -Query $Query -Limit ([Math]::Min(50, [Math]::Max(20, $Limit * 3))) -SkipRefresh -Format Json | ConvertFrom-Json
 } else {
     & (Join-Path $PSScriptRoot 'Find-LlmWikiContext.ps1') `
-        -Query $Query -CompiledIndexSource Json -SkipQueryCache -Limit ([Math]::Min(50, [Math]::Max(20, $Limit * 3))) -Format Json | ConvertFrom-Json
+        -Query $Query -SkipQueryCache -Limit ([Math]::Min(50, [Math]::Max(20, $Limit * 3))) -Format Json | ConvertFrom-Json
 }
 
 function Get-OptionalPropertyValue([object]$InputObject, [string]$Name, [object]$DefaultValue = $null) {
@@ -107,18 +107,16 @@ function Get-ExplicitModuleOwners([string]$Intent) {
     })
 }
 
-$rawRecords = if ($CompiledIndexSource -eq 'Sqlite') { @($search.records) } else { @($search.candidates) }
+$rawRecords = @($search.records)
 $records = @($rawRecords | ForEach-Object { ConvertTo-NormalizedOwnershipRecord $_ })
 $explicitOwners = @(Get-ExplicitModuleOwners $Query)
-$ranking = if ($CompiledIndexSource -eq 'Sqlite') { $search.rankingSummary } else { $null }
+$ranking = $search.rankingSummary
 $confidence = if ($explicitOwners.Count -eq 1) {
     'high'
 } elseif ($CompiledIndexSource -eq 'Sqlite') {
     if ($null -eq $ranking) { 'low' } else { [string](Get-OptionalPropertyValue $ranking 'confidence' 'low') }
 } else { [string](Get-OptionalPropertyValue $search 'confidence' 'low') }
-$ambiguous = if ($CompiledIndexSource -eq 'Sqlite') {
-    if ($null -eq $ranking) { $true } else { [bool](Get-OptionalPropertyValue $ranking 'ambiguous' $true) }
-} else { -not [bool](Get-OptionalPropertyValue $search 'conclusive' $false) }
+$ambiguous = if ($null -eq $ranking) { $true } else { [bool](Get-OptionalPropertyValue $ranking 'ambiguous' $true) }
 $conclusive = $explicitOwners.Count -eq 1 -or ($records.Count -gt 0 -and $confidence -in @('high', 'medium') -and -not $ambiguous)
 $selected = if ($explicitOwners.Count -eq 1) {
     @()
@@ -153,21 +151,17 @@ $result = [pscustomobject][ordered]@{
     confidence = $confidence
     conclusive = $conclusive
     abstained = -not $conclusive
-    abstentionReason = $(if ($conclusive) { $null } elseif ($records.Count -eq 0) { 'no-indexed-candidates' } elseif ($ambiguous) { $(if ($CompiledIndexSource -eq 'Sqlite') { [string](Get-OptionalPropertyValue $ranking 'ambiguityReason' 'ambiguous-candidates') } else { [string](Get-OptionalPropertyValue $search 'ambiguityReason' 'ambiguous-candidates') }) } else { 'low-confidence' })
+    abstentionReason = $(if ($conclusive) { $null } elseif ($records.Count -eq 0) { 'no-indexed-candidates' } elseif ($ambiguous) { $([string](Get-OptionalPropertyValue $ranking 'ambiguityReason' 'ambiguous-candidates')) } else { 'low-confidence' })
     directModules = @($owners | ForEach-Object { $_.module } | Where-Object { $_ } | Sort-Object -Unique)
     transitivelyImpactedModules = @()
     downstreamModules = @()
     ownershipGuides = @($owners)
     candidates = @($records | Select-Object -First $Limit)
-    index = $(if ($CompiledIndexSource -eq 'Sqlite') {
-        [pscustomobject][ordered]@{
-            source = 'sqlite'
-            fingerprint = Get-OptionalPropertyValue $search 'fingerprint'
-            updatedAtUtc = Get-OptionalPropertyValue $search 'updatedAtUtc'
-            durationMs = Get-OptionalPropertyValue $search 'durationMs' 0
-        }
-    } else {
-        [pscustomobject][ordered]@{ source = 'json-baseline'; compiledIndex = $search.compiledIndex }
+    index = $([pscustomobject][ordered]@{
+        source = 'sqlite'
+        fingerprint = Get-OptionalPropertyValue $search 'fingerprint'
+        updatedAtUtc = Get-OptionalPropertyValue $search 'updatedAtUtc'
+        durationMs = Get-OptionalPropertyValue $search 'durationMs' 0
     })
 }
 

@@ -20,24 +20,22 @@ foreach ($moduleName in @('Billing', 'Products', 'Recipes')) {
         }
     }
 }
-$shadow = & $contextTool `
+$context = & $contextTool `
     -Module Recipes `
     -Query 'Recipe nutrition updater' `
     -ScopePath 'Modules/Recipes/Application' `
     -Limit 12 `
-    -SqlShadow `
+    -SkipQueryCache `
     -Format Json | ConvertFrom-Json
 
-if ($shadow.sqlShadow.authoritative -ne 'json-baseline' -or -not $shadow.sqlShadow.ready) {
-    throw 'SQL context shadow did not preserve legacy JSON authority or report a ready SQLite search projection.'
-}
-$topCandidate = @($shadow.sqlShadow.topCandidates | Select-Object -First 1)
+$topCandidate = @($context.candidates | Select-Object -First 1)
 if ($topCandidate.Count -ne 1 -or $topCandidate[0].path -notmatch 'RecipeNutritionUpdater\.cs$') {
-    throw 'SQL context shadow did not rank RecipeNutritionUpdater first.'
+    throw 'SQLite context did not rank RecipeNutritionUpdater first.'
 }
-if ([int]$shadow.sqlShadow.overlapCount -lt 1) { throw 'SQL context shadow did not overlap the legacy ranked code context.' }
-if ([double]$shadow.sqlShadow.sqlQueryDurationMs -lt 0 -or [double]$shadow.sqlShadow.roundTripDurationMs -lt 0) {
-    throw 'SQL context shadow did not report non-negative query and transport timings.'
+if ($context.compiledIndex.source -ne 'sqlite-search' -or -not $context.compiledIndex.fresh -or
+    @($context.candidates | Where-Object path -notlike 'Modules/Recipes/Application/*').Count -gt 0 -or
+    [double]$context.compiledIndex.sqlDurationMs -lt 0 -or [double]$context.compiledIndex.roundTripDurationMs -lt 0) {
+    throw 'SQLite context lost scope, freshness or non-negative query and transport timings.'
 }
 
-Write-Host "LLM Wiki SQL context shadow passed: indexed=$($shadow.sqlShadow.indexedDocuments), overlap=$($shadow.sqlShadow.overlapCount)/$($shadow.sqlShadow.legacyCandidateCount), SQL=$($shadow.sqlShadow.sqlQueryDurationMs)ms, round-trip=$($shadow.sqlShadow.roundTripDurationMs)ms."
+Write-Host 'LLM Wiki SQLite context ranking passed: exact identity, scope and independently retrieved focused tests.'

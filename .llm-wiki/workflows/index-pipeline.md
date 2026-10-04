@@ -55,14 +55,14 @@ sources:
   - .llm-wiki/tools/LlmWikiCorpusEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
-  - .llm-wiki/tools/Test-LlmWikiImpactSimulationSqlParity.ps1
+  - .llm-wiki/tools/Test-LlmWikiImpactSimulationQueries.ps1
   - .llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1
   - .llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1
   - .llm-wiki/tools/Test-LlmWikiStandaloneIndexRoutes.ps1
   - .llm-wiki/tools/Build-LlmWikiInProcessSqliteReader.ps1
   - .llm-wiki/tools/LlmWikiInProcessSqlite.ps1
   - .llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs
-  - .llm-wiki/tools/Test-LlmWikiDomainDataSqlParity.ps1
+  - .llm-wiki/tools/Test-LlmWikiDomainDataQueries.ps1
   - .llm-wiki/tools/Test-LlmWikiChangedTools.ps1
   - .llm-wiki/tools/Test-LlmWikiStrictAffected.ps1
   - .llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1
@@ -99,7 +99,7 @@ a developer checkout and CI. Module abstraction roots resolve to the sibling
 
 The concurrent-index regression runs its two real pipeline writers in a private
 Git clone. Their lock and matching-result reuse are still tested together, while
-temporary JSON line-ending rewrites cannot race with the parallel parity readers.
+temporary JSON line-ending rewrites cannot race with the parallel SQLite readers.
 The query-cache group depends on graph inputs because it includes task-brief SQL
 parity. No regression groups or assertion thresholds are removed for performance.
 
@@ -174,7 +174,7 @@ to validated concrete groups before requested-group filtering.
 
 `code-graph` is a compatibility alias for `code-graph-core` and `trace-output`.
 The core group retains Roslyn, TypeScript, and graph regressions in the early
-parallel batch. Trace output, frontend SQL parity, and quality-risk checks run
+parallel batch. Trace output, frontend SQL queries, and quality-risk checks run
 once in the serial group after graph writers finish. Full CI selects the same
 37 concrete groups. Local graph changes retain all six checks; the former
 graph-to-trace suppression must not drop the unique quality-risk regression.
@@ -191,15 +191,13 @@ supported diagnostics. `Test-LlmWikiContextOperations.ps1` remains a manual
 structured-explanation, ranking-budget, unseen-draft, and tracked-state check.
 An absent internal caller alone does not make a diagnostic obsolete.
 
-The explicit JSON context baseline computes immutable module path patterns and
-project prefixes once before scoring symbols and registrations. Per-record
-scores and ordering remain unchanged; the context-cache cold and warm SLA
-checks retain their existing limits.
+SQLite context uses one query implementation and exact fingerprinted result
+caching. Cold and warm context-cache SLA checks retain their existing limits.
 
 `read-only-guard` remains a compatibility alias for all four original regression
 scripts. Its `read-only-isolation` child runs the destructive test fixtures in a
 private Git clone and cleans up that clone and its snapshot cache. The already
-private `json-cold-checkout` child can overlap with it in the parallel batch.
+private `sqlite-cold-checkout` child can overlap with it in the parallel batch.
 `read-only-retrieval` retains retrieval and ownership assertions and remains
 serial behind shared code-graph writers. `-MaxConcurrency 1` runs the same child
 groups sequentially for diagnosis; no assertions or receipt checks are skipped.
@@ -229,55 +227,12 @@ common memory-isolation assertion run by every shard. CI uses separate checkout/
 shards sequentially in a shared checkout to avoid contending on the snapshot
 lock; independent CI jobs provide their parallel isolation.
 
-Other groups run serially after that batch. Shared-checkout mutation fixtures and performance-sensitive
-SLA fixtures stay serial, so the context-cache cold-start budget is measured
-without contention from other smoke workers. The legacy `context-bundle` name
-expands to `context-search-evals` (parallel search-quality and Node/.NET parity)
-and `context-retrieval` (serial latency-sensitive checks). Both are included in
-the full catalog; no corpus, assertion or latency threshold is removed.
-Search evaluation builds the graph once, then runs at most two independent
-corpus processes, scheduling larger corpora first. Each corpus keeps its own
-single batch read transaction; its JSON case order and all quality assertions
-remain unchanged. The driver rejects an evaluated corpus that has no registered
-quality assertions. Every raw result and worker stderr log is retained under
-`.artifacts/llm-wiki/context-evaluation/corpus-<pid>-<run-id>-<corpus>.json`
-(stderr uses the additional `.log` suffix). Failures, timeouts and supervisor
-cancellation stop the pool's owned process trees. Use
-`Test-LlmWikiSqlContextEvaluation.ps1 -MaxConcurrency 1` for serial diagnosis;
-the outer smoke runner's `-MaxConcurrency 1` also constrains this nested pool.
-The serial `context-retrieval` group
-owns query-context compiled-index SQLite/JSON parity, payload-reduction,
-source-hash, and transport-envelope checks. The graph-dependent `task-baseline`
-and query-cache groups separately guard exact diff-context and task-brief parity
-plus their latency envelopes. Task-brief parity also verifies that intent context
-is reused by nested diff. Its 13-case compact/full corpus additionally covers
-quality, runtime, sensitive-data, frontend-contract, domain, backend-contract,
-and architecture-health impact records, rejects duplicate loss, compares all
-seven normalized hashes, and measures materialized bytes against the explicit
-JSON baseline. The
-serial `backend-contract-query` group checks
-all seven backend views, while `frontend-contract-query` checks all six frontend
-views. Both guard exact JSON parity, source lineage, payload reduction, and SQL
-latency without automatic fallback.
-The serial `sensitive-data-query` group applies the same contract to all nine
-privacy views with 14 query, category, scope, alias, and empty-result cases. It
-requires a measured filtered and overall improvement and bounds the small fixed
-process cost for unfiltered category listings.
-The serial `standalone-index-migration` group validates the migration report,
-exact parity, and route percentiles for runtime, domain-data, and
-architecture-health. All ten query layers are SQLite-primary and none are
-partial. Runtime deliberately accepts its measured cold-process reader-load cost
-to keep one production query mechanism; warm reuse is measured separately. JSON
-is retained only as a projection source and explicit parity oracle, and failures
-never switch sources.
-The serial `domain-data-query` group separately requires 11-case exact parity,
-source lineage, fail-closed recovery guidance, payload reduction, a warm latency
-improvement, and a bounded cold assembly-load envelope. The graph-build manager
-publishes the fingerprinted reader before dependent smoke workers start.
-The graph-dependent `governed-delivery` group also checks impact-simulation
-frontend feature reuse. Four complete SQL/JSON simulations must preserve exact
-alignment and impact output, reduce the feature payload, add no process round
-trip, and stay inside the end-to-end latency envelope.
+SQLite is the only compiled-index query provider. Generated JSON snapshots remain
+inputs for the sole Node projection writer and reviewable Git artifacts. Queries
+validate exact source hashes, select bounded records in SQL, and report explicit
+recovery errors when preparation fails. Backend-only preparation works without
+TypeScript; frontend code-graph discovery requires the locked npm dependencies.
+Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 Parallel smoke gives every worker a run-local fixture sandbox and redirects
 `TEMP`/`TMP` plus task IDs into that owned run directory. Cleanup validates exact

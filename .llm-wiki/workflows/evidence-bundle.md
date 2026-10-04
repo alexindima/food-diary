@@ -52,9 +52,12 @@ are not committed.
 ./.llm-wiki/wiki.ps1 handoff
 ```
 
-`evidence-init` also accepts `-CompiledIndexSource Sqlite|Json`. A governed task
-passes through the source selected at workspace creation so diff and policy
-discovery remain available in a JSON-only checkout.
+SQLite is the only compiled-index query provider. Generated JSON snapshots remain
+inputs for the sole Node projection writer and reviewable Git artifacts. Queries
+validate exact source hashes, select bounded records in SQL, and report explicit
+recovery errors when preparation fails. Backend-only preparation works without
+TypeScript; frontend code-graph discovery requires the locked npm dependencies.
+Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 `not-applicable` always requires a reason. Use
 `passed-with-known-baseline-failures` only when the check ran and its reason names

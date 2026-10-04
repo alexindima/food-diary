@@ -11,8 +11,8 @@ function Assert-TaskScope([bool]$Condition, [string]$Message) {
 
 $workspacePath = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name 'task-scope'
 $absoluteWorkspacePath = Join-Path $repositoryRoot $workspacePath
-$jsonWorkspacePath = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name 'task-scope-json'
-$absoluteJsonWorkspacePath = Join-Path $repositoryRoot $jsonWorkspacePath
+$sqliteWorkspacePath = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name 'task-scope-sqlite'
+$absoluteSqliteWorkspacePath = Join-Path $repositoryRoot $sqliteWorkspacePath
 $plannedPaths = @('FoodDiary.Application/Users', 'tests/FoodDiary.Application.Tests/Users')
 $changedPaths = @(
     'FoodDiary.Application\Users\Common\UserContextService.cs',
@@ -24,7 +24,7 @@ try {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeManifest.ps1') init `
         -Path "$workspacePath/change-manifest.json" `
         -Objective 'Verify task-local scope and evidence references.' `
-        -CompiledIndexSource Json `
+        -CompiledIndexSource Sqlite `
         -ChangedPath $changedPaths `
         -PlannedPath $plannedPaths `
         -AllowedPath @('^FoodDiary\.Application/Users(?:/.*)?$', '^tests/FoodDiary\.Application\.Tests/Users(?:/.*)?$') `
@@ -32,7 +32,7 @@ try {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiAcceptanceMatrix.ps1') init `
         -Path "$workspacePath/acceptance-matrix.json" `
         -Objective 'Verify task-local scope and evidence references.' `
-        -CompiledIndexSource Json `
+        -CompiledIndexSource Sqlite `
         -ChangedPath $changedPaths `
         -Criterion 'Task paths remain normalized and workspace-local.' `
         -EvidencePath "$workspacePath/evidence.json" | Out-Null
@@ -65,21 +65,21 @@ try {
     }
 
     & (Join-Path $PSScriptRoot 'Initialize-LlmWikiTaskWorkspace.ps1') `
-        -Objective 'Verify JSON-backed governed task initialization.' `
+        -Objective 'Verify SQLite-backed governed task initialization.' `
         -Criterion 'The governed manifest preserves the selected compiled-index source.' `
-        -WorkspacePath $jsonWorkspacePath `
+        -WorkspacePath $sqliteWorkspacePath `
         -BaseRef HEAD `
-        -CompiledIndexSource Json `
+        -CompiledIndexSource Sqlite `
         -PlannedPath @('Modules/Fasting/tests') `
         -AllowedPath @('^Modules/Fasting/tests(?:/.*)?$') | Out-Null
-    $jsonManifest = Get-Content -LiteralPath (Join-Path $absoluteJsonWorkspacePath 'change-manifest.json') -Raw | ConvertFrom-Json
-    Assert-TaskScope ([string]$jsonManifest.compiledIndexSource -ceq 'Json') 'Governed task manifest did not preserve the JSON compiled-index source.'
+    $sqliteManifest = Get-Content -LiteralPath (Join-Path $absoluteSqliteWorkspacePath 'change-manifest.json') -Raw | ConvertFrom-Json
+    Assert-TaskScope ([string]$sqliteManifest.compiledIndexSource -ceq 'Sqlite') 'Governed task manifest did not preserve the SQLite compiled-index source.'
 } finally {
     if (Test-Path -LiteralPath $absoluteWorkspacePath) {
         Remove-Item -LiteralPath $absoluteWorkspacePath -Recurse -Force -ErrorAction SilentlyContinue
     }
-    if (Test-Path -LiteralPath $absoluteJsonWorkspacePath) {
-        Remove-Item -LiteralPath $absoluteJsonWorkspacePath -Recurse -Force -ErrorAction SilentlyContinue
+    if (Test-Path -LiteralPath $absoluteSqliteWorkspacePath) {
+        Remove-Item -LiteralPath $absoluteSqliteWorkspacePath -Recurse -Force -ErrorAction SilentlyContinue
     }
 }
 

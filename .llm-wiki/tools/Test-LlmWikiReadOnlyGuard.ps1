@@ -159,10 +159,28 @@ Get-Content (Join-Path (Get-Location) 'read-only-guard-worktree-smoke.tmp') -Raw
     Copy-Item -LiteralPath $guardPath -Destination (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -Force
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1') -Destination (Join-Path $cleanToolsRoot 'LlmWikiGitPaths.ps1') -Force
     $fakeGraphManagerPath = Join-Path $cleanToolsRoot 'Manage-LlmWikiCodeGraph.ps1'
-    [IO.File]::WriteAllText(
-        $fakeGraphManagerPath,
-        "param([string]`$Action,[string]`$Format)`n`$marker=Join-Path (Resolve-Path (Join-Path `$PSScriptRoot '../..')).Path '.artifacts/llm-wiki/code-graph/prepared.marker'`n`$null=New-Item -ItemType Directory -Path (Split-Path -Parent `$marker) -Force`n[IO.File]::WriteAllText(`$marker,'prepared',[Text.Encoding]::ASCII)`n",
-        [Text.UTF8Encoding]::new($false))
+    $fakeGraphManagerSource = @'
+param([string]$Action,[string]$Format,[switch]$SkipRefresh,[switch]$BackendOnlyRefresh)
+$root = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+$directory = Join-Path $root '.artifacts/llm-wiki/code-graph'
+$marker = Join-Path $directory 'prepared.marker'
+$stale = Join-Path $directory 'force-stale.marker'
+$unavailable = Join-Path $directory 'force-status-failure.marker'
+if ($Action -eq 'status') {
+    if (Test-Path $unavailable) { throw 'Fixture database status is unavailable.' }
+    @{changeSetFresh=(-not (Test-Path $stale));searchDocuments=1;typescriptProjectionComplete=$true} | ConvertTo-Json -Compress
+    return
+}
+if ($Action -ne 'build') { throw 'Unexpected fixture graph action.' }
+$null = New-Item -ItemType Directory -Path $directory -Force
+$count = if (Test-Path $marker) { [int][IO.File]::ReadAllText($marker) } else { 0 }
+[IO.File]::WriteAllText($marker,[string]($count+1),[Text.Encoding]::ASCII)
+[IO.File]::WriteAllText((Join-Path $directory 'code-graph.sqlite'),'fixture',[Text.Encoding]::ASCII)
+Remove-Item -LiteralPath $stale -ErrorAction SilentlyContinue
+Remove-Item -LiteralPath $unavailable -ErrorAction SilentlyContinue
+
+'@
+    [IO.File]::WriteAllText($fakeGraphManagerPath,$fakeGraphManagerSource,[Text.UTF8Encoding]::new($false))
     $cleanSafeTool = Join-Path $cleanToolsRoot 'clean-safe.ps1'
     [IO.File]::WriteAllText($cleanSafeTool, "param([switch]`$Fail)`nif (`$Fail) { exit 7 }`nWrite-Output 'read-only-clean-control'", [Text.UTF8Encoding]::new($false))
     & git -C $cleanRepositoryRoot init --quiet
@@ -276,6 +294,16 @@ if ($StaleExitCode) { $global:LASTEXITCODE = 17 }
     if ('read-only-prepared-control' -notin $preparedOutput -or (Test-Path -LiteralPath (Join-Path $cleanRepositoryRoot '.artifacts/llm-wiki/code-graph/prepared.marker'))) {
         throw 'Read-only guard did not prepare the code graph exclusively inside its stable snapshot.'
     }
+
+    $privateMarker = Join-Path $cleanSnapshotRoot '.artifacts/llm-wiki/code-graph/prepared.marker'
+    $null = & (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $preparedSafeTool -ToolArguments @{ ProposedPath = @('CleanScope') } -PrepareCodeGraph
+    if ([int][IO.File]::ReadAllText($privateMarker) -ne 1) { throw 'Fresh read-only projection was needlessly rebuilt.' }
+    [IO.File]::WriteAllText((Join-Path $cleanSnapshotRoot '.artifacts/llm-wiki/code-graph/force-stale.marker'),'stale',[Text.Encoding]::ASCII)
+    $null = & (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $preparedSafeTool -ToolArguments @{ ProposedPath = @('CleanScope') } -PrepareCodeGraph
+    if ([int][IO.File]::ReadAllText($privateMarker) -ne 2) { throw 'Stale read-only projection was not refreshed once.' }
+    [IO.File]::WriteAllText((Join-Path $cleanSnapshotRoot '.artifacts/llm-wiki/code-graph/force-status-failure.marker'),'unavailable',[Text.Encoding]::ASCII)
+    $null = & (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $preparedSafeTool -ToolArguments @{ ProposedPath = @('CleanScope') } -PrepareCodeGraph
+    if ([int][IO.File]::ReadAllText($privateMarker) -ne 3) { throw 'An unavailable readiness probe prevented private projection recovery.' }
 
     $productOnlyPlan = & (Join-Path $PSScriptRoot 'Invoke-LlmWikiAffectedSmoke.ps1') `
         -ChangedPath 'FoodDiary.Application/Users/Example.cs' `

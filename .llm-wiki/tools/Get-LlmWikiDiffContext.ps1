@@ -4,7 +4,7 @@ param(
     [string]$HeadRef,
     [string[]]$ChangedPath,
     [string[]]$BaselineExcludedPath,
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [switch]$IncludeFrontendFeatures,
     [object]$CompiledIndexInput,
@@ -127,80 +127,52 @@ function Read-IndexWhenPathIsPresent([string]$Path, [string[]]$CandidatePath) {
 }
 $compiledIndexStopwatch = [Diagnostics.Stopwatch]::StartNew()
 $compiledIndexDiagnostics = $null
-if ($CompiledIndexSource -eq 'Sqlite') {
-    $reusedCompiledInput = $null -ne $CompiledIndexInput
-    if ($reusedCompiledInput) {
-        if (-not [bool]$CompiledIndexInput.ready -or
-            [string]$CompiledIndexInput.source -ne 'sqlite-compiled-index' -or
-            [string]$CompiledIndexInput.selectionMode -ne 'context') {
-            throw 'Reused SQLite compiled-index input must be a ready context selection.'
-        }
-        $compiledResult = [pscustomobject]@{
-            ready = $true
-            source = [string]$CompiledIndexInput.source
-            selectionMode = 'changed-paths-reused'
-            catalog = $CompiledIndexInput.catalog
-            symbols = @($CompiledIndexInput.symbols | Where-Object { $changedPaths -contains [string]$_.path })
-            frontendSymbols = @($CompiledIndexInput.frontendSymbols | Where-Object { $changedPaths -contains [string]$_.path })
-            sourceHashes = $CompiledIndexInput.sourceHashes
-            scannedRecords = [int]$CompiledIndexInput.scannedRecords
-            returnedRecords = [int]$CompiledIndexInput.returnedRecords
-            durationMs = 0
-        }
-    } else {
-        $compiledResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
-            -Action compiled-context `
-            -CompiledMode ChangedPaths `
-            -ChangedPath $changedPaths `
-            -IncludeFrontendFeatures:$IncludeFrontendFeatures `
-            -SkipRefresh `
-            -Format Json | ConvertFrom-Json
+$reusedCompiledInput = $null -ne $CompiledIndexInput
+if ($reusedCompiledInput) {
+    if (-not [bool]$CompiledIndexInput.ready -or
+        [string]$CompiledIndexInput.source -ne 'sqlite-compiled-index' -or
+        [string]$CompiledIndexInput.selectionMode -ne 'context') {
+        throw 'Reused SQLite compiled-index input must be a ready context selection.'
     }
-    if (-not [bool]$compiledResult.ready) {
-        throw "SQLite compiled-index projection is unavailable ($($compiledResult.unavailableReason)). Run ./.llm-wiki/wiki.ps1 graph-build and retry."
-    }
-    $catalog = $compiledResult.catalog
-    $symbolIndex = [pscustomobject]@{ symbols = @($compiledResult.symbols) }
-    $frontendIndex = [pscustomobject]@{ symbols = @($compiledResult.frontendSymbols) }
-    $compiledIndexDiagnostics = [ordered]@{
-        source = [string]$compiledResult.source
-        selectionMode = [string]$compiledResult.selectionMode
-        sqlDurationMs = [double]$compiledResult.durationMs
-        scannedRecords = [int]$compiledResult.scannedRecords
-        candidateRecords = [int]$compiledResult.returnedRecords
-        returnedRecords = 0
-        sourceBytesRead = $null
-        sourceHashes = $compiledResult.sourceHashes
-    }
-    if ($IncludeFrontendFeatures) {
-        $compiledIndexDiagnostics['frontendFeatures'] = @($compiledResult.frontendFeatureCatalog)
-        $compiledIndexDiagnostics['sourceBytesVerified'] = $compiledResult.sourceBytesVerified
-    }
-    if ($reusedCompiledInput) {
-        $compiledIndexDiagnostics['reusedFromSelectionMode'] = [string]$CompiledIndexInput.selectionMode
-        $compiledIndexDiagnostics['reusedSqlDurationMs'] = [double]$CompiledIndexInput.durationMs
+    $compiledResult = [pscustomobject]@{
+        ready = $true
+        source = [string]$CompiledIndexInput.source
+        selectionMode = 'changed-paths-reused'
+        catalog = $CompiledIndexInput.catalog
+        symbols = @($CompiledIndexInput.symbols | Where-Object { $changedPaths -contains [string]$_.path })
+        frontendSymbols = @($CompiledIndexInput.frontendSymbols | Where-Object { $changedPaths -contains [string]$_.path })
+        sourceHashes = $CompiledIndexInput.sourceHashes
+        scannedRecords = [int]$CompiledIndexInput.scannedRecords
+        returnedRecords = [int]$CompiledIndexInput.returnedRecords
+        durationMs = 0
     }
 } else {
-    if (-not (Test-Path -LiteralPath $catalogPath -PathType Leaf)) {
-        throw 'Repository catalog is missing. Run Build-LlmWikiCatalog.ps1 first.'
-    }
-    $catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
-    $symbolRead = Read-IndexWhenPathIsPresent $symbolIndexPath $changedPaths
-    $symbolIndex = $symbolRead.index
-    $frontendRead = Read-IndexWhenPathIsPresent $frontendIndexPath $changedPaths
-    $frontendIndex = $frontendRead.index
-    $jsonCandidateCount = $(if ($null -eq $symbolIndex) { 0 } else { @($symbolIndex.symbols).Count }) +
-        $(if ($null -eq $frontendIndex) { 0 } else { @($frontendIndex.symbols).Count })
-    $compiledIndexDiagnostics = [ordered]@{
-        source = 'json-baseline'
-        selectionMode = 'changed-paths'
-        sqlDurationMs = $null
-        scannedRecords = $jsonCandidateCount
-        candidateRecords = $jsonCandidateCount
-        returnedRecords = 0
-        sourceBytesRead = [int64]$symbolRead.bytesRead + [int64]$frontendRead.bytesRead
-        sourceHashes = $null
-    }
+    . (Join-Path $PSScriptRoot 'Ensure-LlmWikiSqliteProjection.ps1')
+    $compiledResult = Invoke-LlmWikiSqliteQuery -Arguments @{ Action = 'compiled-context'; CompiledMode = 'ChangedPaths'; ChangedPath = $changedPaths; IncludeFrontendFeatures = [bool]$IncludeFrontendFeatures }
+}
+if (-not [bool]$compiledResult.ready) {
+    throw "SQLite compiled-index projection is unavailable ($($compiledResult.unavailableReason)). Run ./.llm-wiki/wiki.ps1 graph-build and retry."
+}
+$catalog = $compiledResult.catalog
+$symbolIndex = [pscustomobject]@{ symbols = @($compiledResult.symbols) }
+$frontendIndex = [pscustomobject]@{ symbols = @($compiledResult.frontendSymbols) }
+$compiledIndexDiagnostics = [ordered]@{
+    source = [string]$compiledResult.source
+    selectionMode = [string]$compiledResult.selectionMode
+    sqlDurationMs = [double]$compiledResult.durationMs
+    scannedRecords = [int]$compiledResult.scannedRecords
+    candidateRecords = [int]$compiledResult.returnedRecords
+    returnedRecords = 0
+    sourceBytesRead = $null
+    sourceHashes = $compiledResult.sourceHashes
+}
+if ($IncludeFrontendFeatures) {
+    $compiledIndexDiagnostics['frontendFeatures'] = @($compiledResult.frontendFeatureCatalog)
+    $compiledIndexDiagnostics['sourceBytesVerified'] = $compiledResult.sourceBytesVerified
+}
+if ($reusedCompiledInput) {
+    $compiledIndexDiagnostics['reusedFromSelectionMode'] = [string]$CompiledIndexInput.selectionMode
+    $compiledIndexDiagnostics['reusedSqlDurationMs'] = [double]$CompiledIndexInput.durationMs
 }
 $compiledIndexStopwatch.Stop()
 $compiledIndexDiagnostics['roundTripDurationMs'] = [Math]::Round($compiledIndexStopwatch.Elapsed.TotalMilliseconds, 2)

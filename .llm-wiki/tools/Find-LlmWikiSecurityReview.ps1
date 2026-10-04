@@ -5,7 +5,7 @@ param(
     [string]$Format = 'Text',
     [ValidateRange(1, 50)]
     [int]$Limit = 12,
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite'
 )
 
@@ -72,11 +72,10 @@ foreach ($reviewQuery in $reviewQueries) {
 }
 $contextLeads = @($contextLeadsByPath.Values | Sort-Object rank, @{ Expression = 'score'; Descending = $true }, path | Select-Object -First $Limit)
 
-$quality = Get-Content -LiteralPath $qualityPath -Raw | ConvertFrom-Json
+. (Join-Path $PSScriptRoot 'Ensure-LlmWikiSqliteProjection.ps1')
+$evidence = Invoke-LlmWikiSqliteQuery -Arguments @{ Action = 'security-evidence'; Limit = $Limit }
 $securitySymbolPattern = '(?i)(authenticat|authoriz|access.?token|refresh.?token|tokenhash|secret|apikey|signingkey|password|webhook|securityheader|idempot|deduplic|replay|signature|hmac|csp|cors|ssrf|webpush|upload|dmarc|smtp|ratelimit|rate.?limit|permission|access.?guard)'
-$securityTestSignals = @($quality.criticalSymbols | Where-Object {
-    $_.path -notmatch '^\.llm-wiki/' -and "$($_.name) $($_.path) $($_.role)" -match $securitySymbolPattern
-} | ForEach-Object {
+$securityTestSignals = @($evidence.securityTestSignals | ForEach-Object {
     $classificationText = "$($_.name) $($_.path)".ToLowerInvariant()
     $controlFamily = if ($classificationText -match 'webhook|mailgun|idempot|deduplic|replay|signature|hmac') { 'webhook-authenticity-replay' }
         elseif ($classificationText -match 'webpush|ssrf') { 'outbound-endpoint-validation' }
@@ -101,7 +100,7 @@ $securityTestSignals = @($quality.criticalSymbols | Where-Object {
     }
 } | Sort-Object testReferenceCount, controlFamily, path | Select-Object -First $Limit)
 
-$runtime = Get-Content -LiteralPath $runtimeTopologyPath -Raw | ConvertFrom-Json
+$runtime = $evidence.runtime
 $runtimeEvidence = [pscustomobject][ordered]@{
     webhooks = @($runtime.webhooks | Select-Object -First $Limit)
     networkPolicies = @($runtime.networkPolicies | Select-Object -First $Limit)
@@ -110,7 +109,7 @@ $runtimeEvidence = [pscustomobject][ordered]@{
     } | Select-Object -First $Limit)
 }
 
-$sensitive = Get-Content -LiteralPath $sensitiveDataPath -Raw | ConvertFrom-Json
+$sensitive = $evidence.sensitive
 $privacyEvidence = [pscustomobject][ordered]@{
     summary = $sensitive.summary
     externalTransfers = @($sensitive.externalTransfers | Select-Object -First $Limit)

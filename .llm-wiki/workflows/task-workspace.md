@@ -83,28 +83,12 @@ The command creates:
 - initial review report;
 - workspace descriptor linking every artifact.
 
-Initialization is staged in a temporary sibling directory and moved into place
-only after every artifact succeeds. Existing workspaces are never overwritten.
-With explicit nonempty `-ChangedPath`, no planned paths, and no explicit
-`-HeadRef`, acceptance initialization reuses the packet compiled earlier in the
-same invocation. It validates the objective, resolved base, and exact path scope.
-Before publication, initialization compares repository content snapshots and
-removes staged artifacts if inputs changed. Planned-path and historical-head
-initialization retain independent acceptance packet compilation.
-When no changed paths exist yet, provide `-PlannedPath` for the concrete future
-files plus one or more `-AllowedPath` regular expressions for the wider intended
-scope. Task initialization forwards planned paths into initial packet
-compilation, while the manifest continues to distinguish planned work from the
-actual Git delta.
-`-CompiledIndexSource Sqlite|Json` applies to the whole atomic initialization,
-not only to the first change packet. The initializer forwards the selected
-source to the manifest, acceptance matrix, and evidence bundle, and each
-artifact records it. This keeps a deliberately JSON-backed governed start from
-requiring a SQLite projection partway through workspace creation.
-One `-AllowedPath` value is normalized exactly like multiple values throughout
-the facade, initializer, and manifest. The governed Authentication regression
-executes `design`, `task-start`, and `task-requirements-assess` against a clean
-working tree so abbreviated pre-implementation packets remain supported.
+SQLite is the only compiled-index query provider. Generated JSON snapshots remain
+inputs for the sole Node projection writer and reviewable Git artifacts. Queries
+validate exact source hashes, select bounded records in SQL, and report explicit
+recovery errors when preparation fails. Backend-only preparation works without
+TypeScript; frontend code-graph discovery requires the locked npm dependencies.
+Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 Manifest initialization records only current product paths accepted by the
 allowed/excluded boundary; derived Wiki output never becomes planned product

@@ -5,7 +5,7 @@ param(
     [string[]]$ChangedPath,
     [object]$DiffInput,
     [object]$PolicyInput,
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text'

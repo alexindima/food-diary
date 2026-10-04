@@ -8,7 +8,7 @@ param(
     [string]$Intent,
     [object]$DiffInput,
     [object]$PolicyInput,
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
@@ -195,7 +195,9 @@ foreach ($changedPath in @($effectivePaths | Where-Object {
 
 $frontendContractPath = Join-Path $wikiRoot 'generated/frontend-contract-index.json'
 if (Test-Path -LiteralPath $frontendContractPath) {
-    $frontendContracts = Get-Content -LiteralPath $frontendContractPath -Raw | ConvertFrom-Json
+    . (Join-Path $PSScriptRoot 'Ensure-LlmWikiSqliteProjection.ps1')
+    $frontendImpact = Invoke-LlmWikiSqliteQuery -Arguments @{ Action = 'task-brief-impact'; ChangedPath = @($diff.changedPaths) }
+    $frontendContracts = $frontendImpact.groups.frontendContract
     $changedComponents = @(
         $frontendContracts.components |
             Where-Object { $_.path -in @($diff.changedPaths) -or $_.templatePath -in @($diff.changedPaths) }

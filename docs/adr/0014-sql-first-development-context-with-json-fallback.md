@@ -164,3 +164,19 @@ unchanged and remains available when a caller explicitly needs a backend trace.
 The historical option-3 decision above remains the migration record. This
 amendment removes only the automatic aggregate fallback, not JSON publication
 artifacts or the explicit trace tool.
+
+## Standalone query consolidation: 2026-10-04
+
+The SQLite-only boundary now also applies to PowerShell compiled-index queries and
+planning facades. The explicit JSON query provider and SQL-versus-JSON behavior
+comparisons are retired. Generated JSON remains a reconstructable projection
+input and a Git-review artifact; authored policies, accepted decisions, knowledge
+and source verification remain Git-backed. Existing structured MCP contracts and
+the exact repository/worktree freshness boundary are unchanged.
+
+Direct tests cover expected results, source order, bounded materialization,
+missing/stale inputs and cold-checkout recovery. The graph manager remains the
+sole projection writer. Backend-only preparation requires no TypeScript install;
+frontend code discovery reports its dependency failure explicitly. Native
+Node/.NET ranking consistency and frozen historical evaluation evidence remain
+independent of the retired JSON query path.

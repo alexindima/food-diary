@@ -1,8 +1,10 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('build', 'build-plan', 'status', 'ownership-audit', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query', 'search', 'search-batch', 'compiled-context', 'backend-contract', 'frontend-contract', 'task-brief-impact', 'sensitive-data', 'frontend-runtime-owner', 'frontend-trace')]
+    [ValidateSet('build', 'build-plan', 'status', 'ownership-audit', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query', 'search', 'search-batch', 'compiled-context', 'read-index', 'security-evidence', 'backend-contract', 'frontend-contract', 'task-brief-impact', 'sensitive-data', 'frontend-runtime-owner', 'frontend-trace')]
     [string]$Action = 'status',
     [string]$Query,
+    [ValidateSet('catalog', 'symbols', 'frontend', 'frontend-contract', 'backend-contract', 'architecture-health', 'domain-data', 'configuration', 'quality', 'runtime', 'sensitive-data', 'modules')]
+    [string]$Index,
     [ValidateSet('modules', 'contracts', 'risks', 'tests')]
     [string]$Category = 'modules',
     [string[]]$ChangedPath,
@@ -57,6 +59,7 @@ if (-not [string]::IsNullOrWhiteSpace($ExcludePathPrefix)) { $arguments += "--ex
 if (-not [string]::IsNullOrWhiteSpace($RecordKind)) { $arguments += "--record-kind=$RecordKind" }
 if ($OnlyUnreferenced) { $arguments += '--only-unreferenced=true' }
 if ($Action -eq 'compiled-context') { $arguments += "--compiled-mode=$($CompiledMode.ToLowerInvariant() -replace 'changedpaths', 'changed-paths')" }
+if ($Action -eq 'read-index') { $arguments += "--index=$Index" }
 if ($IncludeFrontendFeatures) { $arguments += '--include-frontend-features=true' }
 if ($Action -eq 'backend-contract') { $arguments += "--view=$BackendContractView" }
 if ($Action -eq 'frontend-contract') { $arguments += "--view=$FrontendContractView" }
@@ -91,7 +94,7 @@ try {
     $OutputEncoding = $previousOutputEncoding
 }
 if ($LASTEXITCODE -ne 0) { throw "Code graph action '$Action' failed with exit code $LASTEXITCODE." }
-if ($Action -eq 'search-batch' -and $Format -eq 'Json') {
+if ($Action -ne 'build' -and $Format -eq 'Json') {
     # Validate transport without materializing thousands of PowerShell objects
     # and serializing them again; the evaluation caller consumes this JSON once.
     $rawJson = $json -join [Environment]::NewLine

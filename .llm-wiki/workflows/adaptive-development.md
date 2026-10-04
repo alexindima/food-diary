@@ -48,9 +48,12 @@ Research exposes canonical `nextActionState` values: `discover`, `assessment-com
 
 For a non-trivial feature, prefer `./.llm-wiki/wiki.ps1 start -Intent <task> [-PlannedPath <paths>]`. It captures the task baseline before discovery, compiles research and a scope-aware acceptance checklist, and creates the governed workspace immediately when the adaptive route requires one and concrete paths are known. Comma- or semicolon-delimited input is normalized into distinct planned paths and the same list is persisted in the manifest, rather than being used only as an allow-list. The checklist covers API/OpenAPI compatibility, migration pairs, notification safety, background-job configuration and direct consumers, frontend states, localization parity, and architecture boundaries only when applicable.
 
-When `start` is called with `-CompiledIndexSource Json`, the selection is
-forwarded through the complete governed-workspace initialization and persisted
-for validation and replanning. It is not a packet-only fallback.
+SQLite is the only compiled-index query provider. Generated JSON snapshots remain
+inputs for the sole Node projection writer and reviewable Git artifacts. Queries
+validate exact source hashes, select bounded records in SQL, and report explicit
+recovery errors when preparation fails. Backend-only preparation works without
+TypeScript; frontend code-graph discovery requires the locked npm dependencies.
+Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 Use `develop` as the read-oriented classifier when automatic workspace creation is not wanted.
 
@@ -340,8 +343,8 @@ inferred path or journey:
 The trace walks template consumers from the rendered component back toward the
 feature entry point. Runtime-owner ranking and its bounded render-chain traversal
 use the current SQLite frontend-contract projection by default; a missing or
-stale projection fails explicitly, and JSON is available only as a direct parity
-baseline. A bounded frontend-only layout change or local interaction
+stale projection triggers bounded preparation or an explicit recovery error.
+A bounded frontend-only layout change or local interaction
 inside an existing component with no route, public component contract, API,
 provider, persistence, privacy, security, configuration, or architecture
 boundary uses the `visual-ui-change` profile: a compact constraint and ownership

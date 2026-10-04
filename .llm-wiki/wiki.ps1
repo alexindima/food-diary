@@ -62,7 +62,7 @@ param(
     [string]$PathPrefix,
     [ValidateSet('Any', 'Api', 'Backend', 'Frontend', 'Database', 'Persistence', 'Tests')]
     [string]$ChangeType = 'Any',
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [switch]$CheckFreshness,
     [switch]$BackendOnlyRefresh,
@@ -370,7 +370,8 @@ if ($Command -in @('verify', 'verify-full') -and $env:CI -ne 'true' -and -not $P
 
 $deltaAwareCommands = @('update', 'repair-verify', 'completion', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'ui-finalize', 'research', 'research-next-question', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'review-affected', 'ownership', 'policy')
 $explicitScopePlanningCommands = @('research', 'research-next-question', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision')
-$readOnlyFacadeCommands = @('research', 'research-next-question', 'context', 'trace', 'packet', 'brief', 'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'topology', 'privacy', 'security', 'ui', 'contracts', 'diff', 'ownership', 'api-compat')
+$standaloneIndexCommands = @('catalog', 'symbols', 'frontend', 'frontend-contract', 'backend-contract', 'architecture-health', 'domain-data', 'configuration', 'quality', 'runtime', 'sensitive-data', 'modules')
+$readOnlyFacadeCommands = @('research', 'research-next-question', 'context', 'trace', 'packet', 'brief', 'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'topology', 'privacy', 'security', 'ui', 'contracts', 'diff', 'ownership', 'api-compat') + $standaloneIndexCommands
 # SQLite-backed read-only facades build their projection only inside the
 # content-addressed temporary snapshot. This keeps the source checkout clean
 # while making a fresh clone immediately usable.
@@ -380,26 +381,7 @@ $compiledIndexReadOnlyCommands = @(
     'implementation-plan', 'plan', 'test-plan', 'decision',
     'rollout', 'topology', 'privacy', 'security', 'ui', 'contracts', 'diff',
     'ownership', 'api-compat'
-)
-$automaticJsonFallbackCommands = @(
-    'start', 'brief', 'develop', 'research', 'diff', 'journeys', 'design', 'test-plan',
-    'decision', 'ownership', 'rollout', 'topology', 'privacy', 'security'
-)
-$compiledIndexSourceWasExplicit = $PSBoundParameters.ContainsKey('CompiledIndexSource')
-$compilerDependencyRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-if (-not [string]::IsNullOrWhiteSpace($env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT) -and
-    -not [string]::IsNullOrWhiteSpace($env:LLM_WIKI_READ_ONLY_SOURCE_ROOT) -and
-    $compilerDependencyRoot -eq [IO.Path]::GetFullPath($env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT)) {
-    $compilerDependencyRoot = [IO.Path]::GetFullPath($env:LLM_WIKI_READ_ONLY_SOURCE_ROOT)
-}
-if (-not $compiledIndexSourceWasExplicit -and
-    $CompiledIndexSource -eq 'Sqlite' -and
-    $Command -in $automaticJsonFallbackCommands -and
-    -not $BackendOnlyRefresh -and $ChangeType -notin @('Api', 'Backend', 'Database', 'Tests') -and
-    -not (Test-Path -LiteralPath (Join-Path $compilerDependencyRoot 'FoodDiary.Web.Client/node_modules/typescript/package.json') -PathType Leaf)) {
-    $CompiledIndexSource = 'Json'
-    Write-Warning "TypeScript prerequisites are unavailable; '$Command' is using the read-only JSON baseline. Pass explicit -CompiledIndexSource Sqlite to require the full compiled graph."
-}
+) + $standaloneIndexCommands
 $wikiToolingPlanningIntent = $Command -in $explicitScopePlanningCommands -and
     -not [string]::IsNullOrWhiteSpace([string]$Objective) -and
     ([string]$Objective) -match '(?i)\b(llm[- ]?wiki|wiki\.ps1|wiki tooling|development mcp)\b'
@@ -456,12 +438,12 @@ function Invoke-WikiTool {
     )
     if ($Name -in $pureIndexedReaders -and $Command -notin $readOnlyFacadeCommands) {
         & $toolPath @ToolArguments
-    } elseif ($Command -in $readOnlyFacadeCommands) {
+    } elseif ($Command -in $readOnlyFacadeCommands -and -not ($Command -in $standaloneIndexCommands -and $Check)) {
         & (Join-Path $toolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') `
             -ToolPath $toolPath `
             -ToolArguments $ToolArguments `
             -PrepareCodeGraph:($Command -in $compiledIndexReadOnlyCommands -and $CompiledIndexSource -eq 'Sqlite') `
-            -BackendOnlyRefresh:($BackendOnlyRefresh -or $ChangeType -in @('Api', 'Backend', 'Database', 'Tests'))
+            -BackendOnlyRefresh:($BackendOnlyRefresh -or $ChangeType -in @('Api', 'Backend', 'Database', 'Tests') -or $Command -in $standaloneIndexCommands)
     } else {
         & $toolPath @ToolArguments
     }
@@ -808,7 +790,7 @@ switch ($Command) {
             $parallelSmokeArguments = @{} + $affectedSmokeArguments
             $effectiveSmokeConcurrency = if ($null -eq $MaxConcurrency) { 4 } else { [int]$MaxConcurrency }
             $parallelSmokeArguments.MaxConcurrency = $effectiveSmokeConcurrency
-            $includesColdCheckoutGuard = $smokeGroups -contains 'read-only-guard' -or $smokeGroups -contains 'json-cold-checkout'
+            $includesColdCheckoutGuard = $smokeGroups -contains 'read-only-guard' -or $smokeGroups -contains 'sqlite-cold-checkout'
             $script:verifyStageExpectedSeconds['affected smoke'] = $(if ($includesColdCheckoutGuard) { 450 } else { 360 })
             $smokeStages = @([pscustomobject]@{
                 Name = 'affected smoke'

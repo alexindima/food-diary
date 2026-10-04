@@ -33,31 +33,14 @@ $cases = @(
     [pscustomobject]@{ View = 'all'; Query = '%_zzzxqv'; Minimum = 0; Expected = 0 }
 )
 $sqlDurations = [Collections.Generic.List[double]]::new()
-$jsonDurations = [Collections.Generic.List[double]]::new()
-$caseIndex = 0
-
 $null = & $queryTool -View invariants -Query weight -Limit 30 -Format Json
-$null = & $queryTool -View invariants -Query weight -Limit 30 -CompiledIndexSource Json -Format Json
+
 foreach ($case in $cases) {
     $arguments = @{ View = $case.View; Query = $case.Query; Limit = 30; Format = 'Json' }
-    if (($caseIndex % 2) -eq 0) {
-        $jsonStopwatch = [Diagnostics.Stopwatch]::StartNew()
-        $json = & $queryTool @arguments -CompiledIndexSource Json | ConvertFrom-Json
-        $jsonStopwatch.Stop()
-        $sqlStopwatch = [Diagnostics.Stopwatch]::StartNew()
-        $sqlite = & $queryTool @arguments | ConvertFrom-Json
-        $sqlStopwatch.Stop()
-    } else {
-        $sqlStopwatch = [Diagnostics.Stopwatch]::StartNew()
-        $sqlite = & $queryTool @arguments | ConvertFrom-Json
-        $sqlStopwatch.Stop()
-        $jsonStopwatch = [Diagnostics.Stopwatch]::StartNew()
-        $json = & $queryTool @arguments -CompiledIndexSource Json | ConvertFrom-Json
-        $jsonStopwatch.Stop()
-    }
-    if (($sqlite | ConvertTo-Json -Depth 12 -Compress) -cne ($json | ConvertTo-Json -Depth 12 -Compress)) {
-        throw "$($case.View)/$($case.Query): in-process SQLite/JSON domain-data parity failed."
-    }
+    $sqlStopwatch = [Diagnostics.Stopwatch]::StartNew()
+    $sqlite = & $queryTool @arguments | ConvertFrom-Json
+    $sqlStopwatch.Stop()
+
     $returnedCount = 0
     foreach ($property in $sqlite.PSObject.Properties) { $returnedCount += @($property.Value).Count }
     if ($returnedCount -lt [int]$case.Minimum) {
@@ -67,13 +50,11 @@ foreach ($case in $cases) {
         throw "$($case.View)/$($case.Query): expected exactly $($case.Expected) record(s), got $returnedCount."
     }
     $sqlDurations.Add($sqlStopwatch.Elapsed.TotalMilliseconds)
-    $jsonDurations.Add($jsonStopwatch.Elapsed.TotalMilliseconds)
-    $caseIndex++
 }
 
 $probeArguments = @{ View = 'all'; Query = 'weight'; Limit = 30; IncludeDiagnostics = $true; Format = 'Json' }
 $probe = & $queryTool @probeArguments | ConvertFrom-Json
-$jsonProbe = & $queryTool @probeArguments -CompiledIndexSource Json | ConvertFrom-Json
+
 $sourceText = [IO.File]::ReadAllText((Join-Path $repositoryRoot '.llm-wiki/generated/domain-data-index.json')).Replace("`r`n", "`n")
 $sourceHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($sourceText))).ToLowerInvariant()
 if ([string]$probe._diagnostics.source -ne 'sqlite-domain-data-in-process' -or
@@ -82,11 +63,6 @@ if ([string]$probe._diagnostics.source -ne 'sqlite-domain-data-in-process' -or
     [int64]$probe._diagnostics.sourceBytesMaterialized -ge [int64]$probe._diagnostics.sourceBytesVerified -or
     [double]$probe._diagnostics.completeCommandDurationMs -lt [double]$probe._diagnostics.sqlDurationMs) {
     throw 'Domain-data in-process SQLite diagnostics are stale or incomplete.'
-}
-if ([string]$jsonProbe._diagnostics.source -ne 'json-baseline' -or
-    [int64]$jsonProbe._diagnostics.sourceBytesMaterialized -ne [int64]$jsonProbe._diagnostics.sourceBytesVerified -or
-    [int64]$jsonProbe._diagnostics.sourceBytesVerified -ne [int64]$probe._diagnostics.sourceBytesVerified) {
-    throw 'Domain-data JSON baseline diagnostics are incomplete.'
 }
 
 $missingRoot = Join-Path ([IO.Path]::GetTempPath()) "llm-wiki-domain-missing-$([guid]::NewGuid().ToString('N'))"
@@ -135,33 +111,4 @@ try {
 }
 
 $warmSqlAverage = [Math]::Round(($sqlDurations | Measure-Object -Average).Average, 2)
-$warmJsonAverage = [Math]::Round(($jsonDurations | Measure-Object -Average).Average, 2)
-
-$pwsh = (Get-Process -Id $PID).Path
-$coldSqlDurations = [Collections.Generic.List[double]]::new()
-$coldJsonDurations = [Collections.Generic.List[double]]::new()
-$coldPairedDeltas = [Collections.Generic.List[double]]::new()
-for ($iteration = 0; $iteration -lt 6; $iteration++) {
-    $measureSqlCold = {
-        & $pwsh -NoProfile -NonInteractive -File $queryTool -View invariants -Query weight -Limit 30 -Format Json | Out-Null
-        if ($LASTEXITCODE -ne 0) { throw 'Cold in-process SQLite domain-data query failed.' }
-    }
-    $measureJsonCold = {
-        & $pwsh -NoProfile -NonInteractive -File $queryTool -View invariants -Query weight -Limit 30 -CompiledIndexSource Json -Format Json | Out-Null
-        if ($LASTEXITCODE -ne 0) { throw 'Cold JSON domain-data query failed.' }
-    }
-    if (($iteration % 2) -eq 0) {
-        $jsonDuration = (Measure-Command $measureJsonCold).TotalMilliseconds
-        $sqlDuration = (Measure-Command $measureSqlCold).TotalMilliseconds
-    } else {
-        $sqlDuration = (Measure-Command $measureSqlCold).TotalMilliseconds
-        $jsonDuration = (Measure-Command $measureJsonCold).TotalMilliseconds
-    }
-    $coldSqlDurations.Add($sqlDuration)
-    $coldJsonDurations.Add($jsonDuration)
-    $coldPairedDeltas.Add($sqlDuration - $jsonDuration)
-}
-$coldSqlMedian = [Math]::Round((@($coldSqlDurations | Sort-Object)[2..3] | Measure-Object -Average).Average, 2)
-$coldJsonMedian = [Math]::Round((@($coldJsonDurations | Sort-Object)[2..3] | Measure-Object -Average).Average, 2)
-$coldPairedDeltaMedian = [Math]::Round((@($coldPairedDeltas | Sort-Object)[2..3] | Measure-Object -Average).Average, 2)
-Write-Host "LLM Wiki domain-data in-process SQL parity passed: $($cases.Count)/$($cases.Count) cases; warm SQL=${warmSqlAverage}ms/JSON=${warmJsonAverage}ms; cold median SQL=${coldSqlMedian}ms/JSON=${coldJsonMedian}ms, paired delta=${coldPairedDeltaMedian}ms; materialized=$($probe._diagnostics.sourceBytesMaterialized)/$($probe._diagnostics.sourceBytesVerified) bytes."
+Write-Host "Domain-data SQLite behavior passed: all views, literal queries, source lineage and missing/stale rejection; average=${warmSqlAverage}ms."

@@ -7,6 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
 import { findLexicalCandidates, findWeightedIdentityCandidates } from './code-graph-candidates.mjs';
 import { searchContextBatch } from './code-graph-batch.mjs';
+import { refreshStandaloneIndexes, queryStandaloneIndex, querySecurityEvidence } from './code-graph-index-query.mjs';
 import { englishMorphologicalVariants } from './code-graph-query-terms.mjs';
 import { findIdentityCandidates } from './code-graph-identity.mjs';
 import { runGraphProcess } from './code-graph-process.mjs';
@@ -41,6 +42,8 @@ function publishGraphDependencyFingerprint(databasePath, result) {
     typedEdges: result.typedEdges,
     contextSearchFingerprint: result.contextSearch?.fingerprint ?? null,
     compiledIndexFingerprint: result.compiledIndexes?.fingerprint ?? null,
+    standaloneIndexFingerprint: sha256(JSON.stringify(result.compiledIndexes?.standaloneIndexes ?? [])),
+    standaloneImplementationFingerprint: sha256(readFileSync(resolve(import.meta.dirname, 'code-graph-index-query.mjs'), 'utf8')),
     contextSearchRankingFingerprint: sha256(contextSearchRankingText),
     rankingImplementationFingerprint: sha256(
       readFileSync(resolve(import.meta.dirname, 'code-graph.mjs'), 'utf8')
@@ -173,7 +176,7 @@ function assertTypeScriptCompilerAvailable() {
   } catch {
     throw new Error(
       'TypeScript extraction prerequisite is missing. Run `npm ci` in FoodDiary.Web.Client for a full graph build, '
-      + 'or use a backend-only Wiki route / explicit `-CompiledIndexSource Json` for read-only diagnostics.',
+      + 'or use graph-build -BackendOnlyRefresh and a backend-only Wiki route.',
     );
   }
 }
@@ -600,6 +603,7 @@ function refreshQueryLayer(database) {
 }
 
 function refreshCompiledIndexes(database) {
+  refreshStandaloneIndexes(database, repositoryRoot);
   const sources = [
     ['repository-catalog', '.llm-wiki/generated/repository-catalog.json'],
     ['csharp-symbols', '.llm-wiki/generated/csharp-symbol-index.json'],
@@ -679,6 +683,7 @@ function refreshCompiledIndexes(database) {
     refreshed,
     indexes,
     records,
+    standaloneIndexes: database.prepare('SELECT index_name indexName, source_path sourcePath, content_hash contentHash FROM standalone_indexes ORDER BY index_name').all(),
     fingerprint: sha256(JSON.stringify(indexes.map((item) => [item.indexName, item.contentHash]))),
   };
 }
@@ -1432,6 +1437,19 @@ function taskBriefImpactContext(database, changedPaths) {
     `).all(...changedBackendContractNames));
   })();
 
+  const changedFrontendComponents = selectByPaths('frontend-contracts', 'component', ['q.path', "json_extract(q.payload_json, '$.templatePath')"]);
+  const frontendComponentNames = [...new Set(changedFrontendComponents.map(item => item.class).filter(Boolean))];
+  const frontendConsumersByKey = new Map();
+  for (const item of selectByPaths('frontend-contracts', 'consumer', ["json_extract(q.payload_json, '$.componentPath')", 'q.path'])) {
+    frontendConsumersByKey.set(`${item.component}\0${item.consumerPath}`, item);
+  }
+  if (frontendComponentNames.length > 0) {
+    const placeholders = frontendComponentNames.map(() => '?').join(',');
+    for (const item of parseRows(database.prepare(`
+      SELECT payload_json payloadJson FROM query_documents WHERE category='frontend-contracts' AND record_kind='consumer'
+        AND json_extract(payload_json,'$.component') COLLATE NOCASE IN (${placeholders}) ORDER BY source_ordinal
+    `).all(...frontendComponentNames))) frontendConsumersByKey.set(`${item.component}\0${item.consumerPath}`, item);
+  }
   const groups = {
     quality: {
       files: selectByPaths('risks', 'file').map(({ recordKind, ...item }) => item),
@@ -1452,10 +1470,10 @@ function taskBriefImpactContext(database, changedPaths) {
       externalTransfers: selectByPaths('sensitive', 'externalTransfer'),
     },
     frontendContract: {
-      components: selectByPaths('frontend-contracts', 'component', ['q.path', "json_extract(q.payload_json, '$.templatePath')"]),
+      components: changedFrontendComponents,
       apiCalls: selectByPaths('frontend-contracts', 'api-call'),
       translationUsage: selectByPaths('frontend-contracts', 'translation'),
-      consumerEdges: selectByPaths('frontend-contracts', 'consumer', ["json_extract(q.payload_json, '$.componentPath')", 'q.path']),
+      consumerEdges: [...frontendConsumersByKey.values()],
     },
     domainData: {
       domainTypes: selectByPaths('domain', 'domainType'),
@@ -2939,6 +2957,10 @@ try {
   else if (action === 'frontend-runtime-owner') result = frontendRuntimeOwnerContext(database, options.query ?? '', (options.path ?? '').split(';').filter(Boolean), Number(options.limit ?? 5));
   else if (action === 'frontend-trace') result = frontendTraceContext(database, options.query ?? '', Number(options.limit ?? 10));
   else if (action === 'compiled-context') result = compiledContext(database, options);
+  else if (action === 'read-index') result = queryStandaloneIndex(database, repositoryRoot, {
+    index: options.index, query: options.query ?? '', limit: Number(options.limit ?? 12),
+  });
+  else if (action === 'security-evidence') result = querySecurityEvidence(database, repositoryRoot, Number(options.limit ?? 12));
   else {
     const currentChangeSet = changeSetSnapshot();
     result = {
@@ -2951,6 +2973,7 @@ try {
     typedEdges: database.prepare('SELECT COUNT(*) count FROM typed_edges').get().count,
     searchDocuments: database.prepare('SELECT COUNT(*) count FROM context_search').get().count,
     queryCategories: database.prepare('SELECT category, COUNT(*) count FROM query_documents GROUP BY category ORDER BY category').all(),
+    querySources: database.prepare("SELECT substr(key,14) category, value contentHash FROM metadata WHERE key LIKE 'query_source:%' ORDER BY key").all(),
     typescriptProjectionComplete: database.prepare("SELECT value FROM metadata WHERE key='typescript_projection_complete'").get()?.value === 'true',
     searchFingerprint: database.prepare("SELECT value FROM metadata WHERE key='context_search_fingerprint'").get()?.value ?? null,
     changeSetFingerprint: database.prepare("SELECT value FROM metadata WHERE key='change_set_fingerprint'").get()?.value ?? null,

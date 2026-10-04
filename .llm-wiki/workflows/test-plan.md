@@ -45,12 +45,12 @@ The result includes the focused `dotnet test` command, the repository XPlat
 coverage command, and a dotCover invocation with an explicit target working
 directory, assembly filters, and integration-test guidance.
 
-When invoked through a task brief or change packet, the test planner reuses the
-already classified diff and policy result instead of rescanning the same paths.
-The selected `CompiledIndexSource` is propagated through nested diff, brief, and
-implementation-plan calls; a cold backend-only checkout therefore remains on
-the JSON baseline instead of unexpectedly requiring SQLite midway through the
-plan.
+SQLite is the only compiled-index query provider. Generated JSON snapshots remain
+inputs for the sole Node projection writer and reviewable Git artifacts. Queries
+validate exact source hashes, select bounded records in SQL, and report explicit
+recovery errors when preparation fails. Backend-only preparation works without
+TypeScript; frontend code-graph discovery requires the locked npm dependencies.
+Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 ```powershell
 ./.llm-wiki/wiki.ps1 test-plan

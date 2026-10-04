@@ -72,8 +72,8 @@ left unchanged by Markdown repair.
 | --- | --- |
 | CLI `context` | May refresh derived SQLite in an isolated source snapshot; backend requests can omit TypeScript. |
 | MCP context | Persistent in-process SQLite reader; fingerprint validation and bounded recovery; no implicit JSON fallback. |
-| `brief`, `research`, `diff`, and selected planning facades | May choose JSON baseline with a warning if TypeScript is absent and no explicit source was requested. |
+| `brief`, `research`, `diff`, and planning facades | SQLite in an isolated source snapshot; explicit backend scopes omit TypeScript, frontend discovery reports missing dependencies. |
 | `health -QualityArea Wiki` | Reports provenance/ownership gaps without repair; missing projection is explicit. |
 | `graph-build`, `repair-verify` | Deliberate writers; repair applies bounded deterministic changes and rechecks. |
 
-For planning callers requiring SQL, specify `-CompiledIndexSource Sqlite`.
+SQLite is the sole compiled-index query provider.

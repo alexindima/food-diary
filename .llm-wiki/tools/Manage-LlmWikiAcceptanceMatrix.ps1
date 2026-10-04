@@ -16,7 +16,7 @@ param(
     [string]$Reason,
     [string]$EvidenceNote,
     [string]$BaseRef = 'HEAD',
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [string]$HeadRef,
     [string[]]$ChangedPath,

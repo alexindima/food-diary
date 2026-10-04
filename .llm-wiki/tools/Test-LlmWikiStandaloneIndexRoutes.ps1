@@ -1,33 +1,15 @@
 [CmdletBinding()]
 param()
-
 $ErrorActionPreference = 'Stop'
 $measurement = & (Join-Path $PSScriptRoot 'Measure-LlmWikiStandaloneIndexRoutes.ps1') -Iterations 2 -Format Json | ConvertFrom-Json
-if ([int]$measurement.schemaVersion -ne 4 -or [int]$measurement.iterations -ne 2) {
-    throw 'Standalone-index telemetry schema is invalid.'
+if ($measurement.schemaVersion -ne 5 -or $measurement.iterations -ne 2 -or @($measurement.measurements).Count -ne 3) { throw 'Invalid SQLite route telemetry schema.' }
+foreach ($name in @('runtime-topology','domain-data','architecture-health')) {
+    $matches = @($measurement.measurements | Where-Object index -eq $name)
+    if ($matches.Count -ne 1) { throw "Missing route telemetry: $name" }
+    $item = $matches[0]
+    if ($item.sourceBytes -le 0 -or $item.coldSampleCount -le 0 -or $item.sqliteColdProcessP50Ms -le 0 -or
+        $item.sqliteColdProcessP95Ms -lt $item.sqliteColdProcessP50Ms -or $item.sqliteWarmP50Ms -le 0 -or
+        $item.sqliteWarmP95Ms -lt $item.sqliteWarmP50Ms -or $item.sqliteRoute -ne 'in-process-exact' -or
+        -not $item.projectionCoverageComplete -or $item.routeDecision -ne 'sqlite-only') { throw "Incomplete SQLite telemetry: $name" }
 }
-if (@($measurement.measurements).Count -ne 3 -or @($measurement.alreadySqlite) -notcontains 'quality-index' -or
-    @($measurement.alreadySqlite) -notcontains 'domain-data') {
-    throw 'Standalone-index telemetry does not cover the expected migration routes.'
-}
-foreach ($item in @($measurement.measurements)) {
-    if ([int64]$item.sourceBytes -le 0 -or [int]$item.coldSampleCount -le 0 -or
-        [double]$item.jsonColdProcessP50Ms -le 0 -or [double]$item.sqliteColdProcessP50Ms -le 0 -or
-        [double]$item.jsonWarmP50Ms -le 0 -or [double]$item.jsonWarmP95Ms -le 0 -or
-        [double]$item.sqliteWarmP50Ms -le 0 -or [double]$item.sqliteWarmP95Ms -le 0 -or
-        [string]::IsNullOrWhiteSpace([string]$item.sqliteRoute) -or
-        [string]::IsNullOrWhiteSpace([string]$item.performanceRecommendation) -or
-        [string]::IsNullOrWhiteSpace([string]$item.routeDecision)) {
-        throw "Standalone-index telemetry is incomplete for $($item.index)."
-    }
-}
-$runtime = @($measurement.measurements | Where-Object index -eq 'runtime-topology' | Select-Object -First 1)
-if ($runtime.Count -ne 1 -or [string]$runtime[0].routeDecision -ne 'keep-in-process-sqlite-for-unified-production-route') {
-    throw 'Runtime topology lost the explicit decision to accept its measured startup tradeoff for one production route.'
-}
-$architecture = @($measurement.measurements | Where-Object index -eq 'architecture-health' | Select-Object -First 1)
-if ($architecture.Count -ne 1 -or -not [bool]$architecture[0].projectionCoverageComplete -or
-    [string]$architecture[0].sqliteRoute -ne 'in-process-exact') {
-    throw 'Architecture-health standalone projection coverage is incomplete.'
-}
-Write-Host 'LLM Wiki standalone-index route telemetry passed: all standalone routes use exact in-process SQLite defaults with explicit cold/warm tradeoff evidence.'
+Write-Host 'Standalone SQLite telemetry passed: all routes, positive cold/warm p50/p95, complete projections.'

@@ -42,11 +42,12 @@ services should not require new project edges. Confirm this through the
 architecture-health index and architecture tests rather than treating a clean
 handler dependency list as sufficient proof.
 
-Task-brief impact and every standalone view read architecture-health records from
-the exact in-process SQLite route. The projection includes allowances, ambiguous
-contracts, and unconsumed contracts. Generated JSON remains only as the source
-projection and explicit parity baseline; the migration report therefore marks
-the query layer fully migrated without claiming the source artifact is removable.
+SQLite is the only compiled-index query provider. Generated JSON snapshots remain
+inputs for the sole Node projection writer and reviewable Git artifacts. Queries
+validate exact source hashes, select bounded records in SQL, and report explicit
+recovery errors when preparation fails. Backend-only preparation works without
+TypeScript; frontend code-graph discovery requires the locked npm dependencies.
+Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 `./.llm-wiki/wiki.ps1 health -HealthView all` returns every health category in
 one response. Use a narrower view when only dependency drift, allowances,

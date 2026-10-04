@@ -8,7 +8,7 @@ param(
     [string[]]$ChangedPath,
     [Alias('PlannedPath')]
     [string[]]$ProposedPath,
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',

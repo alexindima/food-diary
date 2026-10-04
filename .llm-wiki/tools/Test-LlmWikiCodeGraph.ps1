@@ -39,7 +39,7 @@ function Write-CodeGraphRegressionTiming([string]$Phase) {
     Write-Host "Code graph regression '$Phase': $([Math]::Round($phaseTimer.Elapsed.TotalSeconds, 2))s."
     $phaseTimer.Restart()
 }
-& node --test (Join-Path $PSScriptRoot 'code-graph-performance.test.mjs') (Join-Path $PSScriptRoot 'code-graph-candidates.test.mjs')
+& node --test (Join-Path $PSScriptRoot 'code-graph-performance.test.mjs') (Join-Path $PSScriptRoot 'code-graph-candidates.test.mjs') (Join-Path $PSScriptRoot 'code-graph-index-query.test.mjs')
 if ($LASTEXITCODE -ne 0) { throw 'Code graph snapshot/process regression tests failed.' }
 & node --test (Join-Path $PSScriptRoot 'code-graph-snapshot.test.mjs')
 if ($LASTEXITCODE -ne 0) { throw 'Code graph SQLite snapshot regression tests failed.' }
@@ -135,10 +135,12 @@ foreach ($indexPath in @(
         throw "Standalone query route is not reported as SQLite-primary without fallback: $indexPath"
     }
 }
-if ([int]$migration.migratedQueryLayerCount -ne 10 -or [int]$migration.partialQueryLayerCount -ne 0) {
+if ([int]$migration.migratedQueryLayerCount -ne 11 -or [int]$migration.partialQueryLayerCount -ne 0) {
     throw "Compiled-index migration totals are inaccurate: migrated=$($migration.migratedQueryLayerCount), partial=$($migration.partialQueryLayerCount)."
 }
 $compiledCounts = @{}
+if (@($build.compiledIndexes.standaloneIndexes).Count -ne 12) { throw 'Standalone SQLite projection does not cover all twelve index commands.' }
+if (@($migration.indexes | Where-Object { $_.retainedAs -ne 'projection-source-and-git-review-artifact' }).Count -gt 0) { throw 'Migration report still advertises JSON query baselines.' }
 foreach ($record in @($build.compiledIndexes.records)) { $compiledCounts["$($record.indexName)/$($record.recordKind)"] = [int]$record.count }
 if (@($build.compiledIndexes.indexes).Count -ne 3 -or
     [int]$compiledCounts['csharp-symbols/symbol'] -ne @($compiledSource.symbols).Count -or

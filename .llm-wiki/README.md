@@ -3,11 +3,12 @@
 This directory is a compiled navigation and knowledge layer for coding agents.
 It summarizes repository knowledge, but it is not a source of truth.
 
-For a backend checkout without frontend dependencies, use
-`./.llm-wiki/wiki.ps1 graph-build -BackendOnlyRefresh`, then
-`context -Query <question> -ChangeType Backend`. Explicit backend scopes avoid
-the automatic JSON baseline fallback; a broad or frontend request still needs
-the TypeScript projection. Existing explicit JSON readers remain available.
+SQLite is the only compiled-index query provider. Generated JSON snapshots remain
+inputs for the sole Node projection writer and reviewable Git artifacts. Queries
+validate exact source hashes, select bounded records in SQL, and report explicit
+recovery errors when preparation fails. Backend-only preparation works without
+TypeScript; frontend code-graph discovery requires the locked npm dependencies.
+Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 Research exposes a canonical `nextActionState`: `discover`,
 `assessment-complete`, `resolve-question`, `design`, or `implement`.
@@ -146,25 +147,6 @@ inputs. Concurrent runs keep independent progress receipts and logs under
 `.artifacts/llm-wiki/verify-runs/<run-id>`; `verify-progress.json` is only the
 latest-run pointer. CI disables resume by default and never trusts the local
 stage cache.
-
-Repository queries use a derived SQLite layer under `.artifacts/llm-wiki` for
-symbols, typed edges, modules, contracts, tests, and quality risks. The database
-is disposable and incrementally rebuilt from authoritative code, current docs,
-and compiled indexes. MCP change-context and test-plan calls share an immutable
-HEAD/worktree snapshot; the combined `get_development_context` MCP tool runs its
-three read-only queries concurrently against that same snapshot. Exact context
-queries are content-addressed by arguments plus that snapshot, so repeated task
-and orchestration calls reuse the result instead of reparsing the compiled
-indexes. Compiled JSON files remain publication artifacts while any generator
-or compatibility reader still consumes them; migration to SQLite removes
-query-time reads first, starting with cold context discovery, and a file is
-deleted only after a repository consumer scan proves it unused.
-Runtime topology, domain data, and architecture health use exact in-process
-SQLite readers. Runtime accepts a measured cold-process startup cost to keep one
-production query mechanism; its warm path is cached across tool-script scopes.
-JSON files remain projection sources and explicit parity oracles, never automatic
-fallbacks. Quality indexing also measures the Wiki's own non-test PowerShell
-tools and direct regression-script references.
 
 Interactive `context` requests query the SQLite FTS projection and return ranked
 candidates with confidence, ambiguity, and explicit abstention. The CLI facade

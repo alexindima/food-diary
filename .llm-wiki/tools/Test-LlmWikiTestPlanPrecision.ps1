@@ -88,7 +88,7 @@ $moduleTestPlan = & $tool `
     -Intent 'Raise FoodDiary.Modules.Fasting.Domain statement coverage with module-owned contract tests' `
     -ProposedPath 'Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests' `
     -NoBaseline `
-    -CompiledIndexSource Json `
+    -CompiledIndexSource Sqlite `
     -Format Json | ConvertFrom-Json
 if (@($moduleTestPlan.plannedTestProjects) -notcontains $moduleTestProject) {
     throw 'A planned module-owned test directory did not resolve its test project.'
@@ -173,7 +173,7 @@ if (@($sessionJourney.journeys.id) -notcontains 'FD-AUTH') {
 
 $sessionBrief = & (Join-Path $PSScriptRoot 'Get-LlmWikiTaskBrief.ps1') `
     -Intent $sessionIntent `
-    -CompiledIndexSource Json `
+    -CompiledIndexSource Sqlite `
     -SkipQueryCache `
     -SkipTestPlan `
     -Compact `
@@ -193,7 +193,7 @@ if (@($sessionBrief.analysis.inferredPaths) -notcontains 'Modules/Identity/Infra
 $sessionPlan = & $tool `
     -Intent $sessionIntent `
     -NoBaseline `
-    -CompiledIndexSource Json `
+    -CompiledIndexSource Sqlite `
     -Limit 30 `
     -Format Json | ConvertFrom-Json
 $requiredSessionScenarios = @(
@@ -220,7 +220,7 @@ if (-not (Test-Path (Join-Path $repositoryRoot $sessionApplicationProject)) -or
 
 $sessionPrivacy = & (Join-Path $PSScriptRoot 'Find-LlmWikiSensitiveData.ps1') `
     -Query 'refresh token session' `
-    -CompiledIndexSource Json `
+    -CompiledIndexSource Sqlite `
     -Format Json | ConvertFrom-Json
 if (@($sessionPrivacy.handlingGuidance.persistedEvidence).Count -eq 0 -or
     @($sessionPrivacy.handlingGuidance.permissibleResponseMetadata).Count -eq 0 -or

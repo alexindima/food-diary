@@ -7,44 +7,25 @@ if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($repositoryRoot)) { thr
 . (Join-Path $PSScriptRoot 'LlmWikiQueryCache.ps1')
 
 $query = "context-cache-smoke-$([guid]::NewGuid().ToString('N'))"
-$arguments = @{
-    Module = 'Users'
-    Query = $query
-    ScopePath = @()
-    ChangeType = 'Any'
-    CompiledIndexSource = 'Json'
-    Limit = 3
-}
-$entry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'context' -Arguments $arguments `
-    -RelevantPath @('Modules/Users/Application') -DependencyPath @(
-    '.llm-wiki/generated/repository-catalog.json'
-    '.llm-wiki/generated/csharp-symbol-index.json'
-    '.llm-wiki/generated/frontend-index.json'
-    'docs/architecture/backend-modules.json'
-)
-if (Read-LlmWikiQueryCache -Entry $entry) { throw 'Unique context-cache smoke unexpectedly started with a cache hit.' }
-
 $tool = Join-Path $PSScriptRoot 'Find-LlmWikiContext.ps1'
 $firstStopwatch = [Diagnostics.Stopwatch]::StartNew()
-$first = & $tool -Module Users -Query $query -CompiledIndexSource Json -Limit 3 -Format Json
+$first = & $tool -Module Users -Query $query -Limit 3 -Format Json | ConvertFrom-Json
 $firstStopwatch.Stop()
-if (-not (Test-Path -LiteralPath $entry.path -PathType Leaf)) { throw 'Context discovery did not persist its immutable query result.' }
-
 $secondStopwatch = [Diagnostics.Stopwatch]::StartNew()
-$second = & $tool -Module Users -Query $query -CompiledIndexSource Json -Limit 3 -Format Json
+$second = & $tool -Module Users -Query $query -Limit 3 -Format Json | ConvertFrom-Json
 $secondStopwatch.Stop()
-if ([string]$first -cne [string]$second) { throw 'Cached context discovery changed the JSON result.' }
-if ($secondStopwatch.Elapsed.TotalMilliseconds -ge $firstStopwatch.Elapsed.TotalMilliseconds) {
-    throw "Cached context discovery was not faster: cold=$([Math]::Round($firstStopwatch.Elapsed.TotalMilliseconds))ms, warm=$([Math]::Round($secondStopwatch.Elapsed.TotalMilliseconds))ms."
+if (-not $second.cache.hit -or -not $second.cache.storedTimings) { throw 'SQLite query cache did not reuse its immutable result.' }
+foreach ($property in @('candidates','tests','confidence','conclusive','ambiguityReason')) {
+    if (($first.$property | ConvertTo-Json -Depth 12 -Compress) -cne ($second.$property | ConvertTo-Json -Depth 12 -Compress)) { throw "Cached SQLite context changed $property." }
 }
 $coldSlaMilliseconds = 15000
 $warmSlaMilliseconds = 2000
 if ($firstStopwatch.Elapsed.TotalMilliseconds -ge $coldSlaMilliseconds -or
-    $secondStopwatch.Elapsed.TotalMilliseconds -ge $warmSlaMilliseconds) {
-    throw "Context discovery exceeded its SLA: cold=$([Math]::Round($firstStopwatch.Elapsed.TotalMilliseconds))ms (target <$coldSlaMilliseconds ms), warm=$([Math]::Round($secondStopwatch.Elapsed.TotalMilliseconds))ms (target <$warmSlaMilliseconds ms)."
+    $secondStopwatch.Elapsed.TotalMilliseconds -ge $warmSlaMilliseconds -or
+    $secondStopwatch.Elapsed.TotalMilliseconds -ge $firstStopwatch.Elapsed.TotalMilliseconds) {
+    throw "SQLite context-cache SLA failed: cold=$($firstStopwatch.Elapsed.TotalMilliseconds)ms (<$coldSlaMilliseconds), warm=$($secondStopwatch.Elapsed.TotalMilliseconds)ms (<$warmSlaMilliseconds)."
 }
-
-Write-Host "LLM Wiki JSON context-cache smoke passed: cold=$([Math]::Round($firstStopwatch.Elapsed.TotalMilliseconds))ms (<$coldSlaMilliseconds ms), warm=$([Math]::Round($secondStopwatch.Elapsed.TotalMilliseconds))ms (<$warmSlaMilliseconds ms)."
+Write-Host "SQLite context-cache passed: cold=$([Math]::Round($firstStopwatch.Elapsed.TotalMilliseconds))ms, warm=$([Math]::Round($secondStopwatch.Elapsed.TotalMilliseconds))ms."
 
 $compactArguments = @{ Query = 'RefreshTokenCommandHandlerTests'; CompiledIndexSource = 'Sqlite'; Limit = 3; Format = 'Json'; Compact = $true }
 $uncached = & $tool @compactArguments -SkipQueryCache | ConvertFrom-Json

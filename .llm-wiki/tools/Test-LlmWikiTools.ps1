@@ -233,7 +233,7 @@ Assert-Wiki (@($diff.warnings | Where-Object { $_ -match 'migration' }).Count -g
 
 $persistenceOnlyDiff = & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') `
     -ChangedPath 'Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs' `
-    -CompiledIndexSource Json `
+    -CompiledIndexSource Sqlite `
     -Format Json | ConvertFrom-Json
 Assert-Wiki (@($persistenceOnlyDiff.scopes) -contains 'Database') 'Persistence-only diff did not retain database scope.'
 Assert-Wiki (@($persistenceOnlyDiff.warnings | Where-Object { $_ -match 'migration' }).Count -eq 0) 'Persistence-only diff emitted a false migration-pair warning.'

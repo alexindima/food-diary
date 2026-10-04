@@ -15,7 +15,7 @@ param(
     [ValidateRange(1, 30)]
     [int]$Limit = 10,
     [string]$Module,
-    [ValidateSet('Sqlite', 'Json')]
+    [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [switch]$Compact,
     [switch]$SkipHistory
@@ -47,7 +47,7 @@ $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -N
     '.llm-wiki/policies/query-indexes.json'
     '.llm-wiki/policies/workspace-policies.json'
     '.llm-wiki/tools/LlmWikiApplicationModulePaths.ps1'
-    $(if ($CompiledIndexSource -eq 'Sqlite') { '.artifacts/llm-wiki/code-graph/code-graph.fingerprint' } else { '.llm-wiki/generated/repository-catalog.json' })
+    $('.artifacts/llm-wiki/code-graph/code-graph.fingerprint')
 )
 $cachedResearch = Read-LlmWikiQueryCache -Entry $queryCacheEntry
 if ($null -ne $cachedResearch) {
@@ -303,15 +303,6 @@ if (($repositoryAssessmentResearch -or $wikiInternalResearch) -and @($ProposedPa
             diagnostic = $_.Exception.Message
             recoveryCommand = './.llm-wiki/wiki.ps1 graph-build; rerun research with the same -PlannedPath'
         }
-    }
-} elseif (@($ProposedPath).Count -gt 0) {
-    $runtimeFlowEvidence = [pscustomobject][ordered]@{
-        status = 'not-requested-json-baseline'
-        sourcePaths = @($ProposedPath)
-        downstreamConsumers = @()
-        dependencies = @()
-        confidence = 'not-rated'
-        diagnostic = 'Runtime graph expansion is intentionally skipped for the explicit JSON baseline.'
     }
 }
 

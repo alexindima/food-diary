@@ -17,6 +17,7 @@ $indexes = @(
     '.llm-wiki/generated/sensitive-data-index.json',
     '.llm-wiki/generated/domain-data-index.json',
     '.llm-wiki/generated/architecture-health-index.json'
+    '.llm-wiki/generated/configuration-index.json'
 )
 $candidatePaths = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard -- '*.ps1' '*.mjs' '*.md')
 if ($LASTEXITCODE -ne 0) {
@@ -27,6 +28,8 @@ $candidateFiles = @(
         ForEach-Object { Join-Path $repositoryRoot ([string]$_) } |
         Where-Object { Test-Path -LiteralPath $_ -PathType Leaf }
 )
+$consumerSources = @{}
+foreach ($file in $candidateFiles) { $consumerSources[$file] = [IO.File]::ReadAllText($file) }
 $results = foreach ($indexPath in $indexes) {
     $isCatalogOrSymbol = $indexPath -in @(
         '.llm-wiki/generated/repository-catalog.json',
@@ -52,7 +55,7 @@ $results = foreach ($indexPath in $indexes) {
     $fileName = Split-Path -Leaf $indexPath
     $matches = @(
         $candidateFiles |
-            Where-Object { [IO.File]::ReadAllText($_).IndexOf($fileName, [StringComparison]::Ordinal) -ge 0 }
+            Where-Object { $consumerSources[$_].IndexOf($fileName, [StringComparison]::Ordinal) -ge 0 }
     )
     $consumers = @($matches | ForEach-Object {
         [IO.Path]::GetRelativePath($repositoryRoot, [string]$_).Replace('\', '/')
@@ -71,15 +74,16 @@ $results = foreach ($indexPath in $indexes) {
             '.llm-wiki/generated/domain-data-index.json',
             '.llm-wiki/generated/architecture-health-index.json',
             '.llm-wiki/generated/repository-catalog.json',
-            '.llm-wiki/generated/csharp-symbol-index.json'
+            '.llm-wiki/generated/csharp-symbol-index.json',
+            '.llm-wiki/generated/configuration-index.json'
         )) {
             'migrated'
         } else {
             'pending'
         }
-        defaultRoute = if ($isCatalogOrSymbol) { 'sqlite-compiled-index' } elseif ($isFrontend) { 'sqlite-context-diff-task-brief-trace-and-impact-simulation' } elseif ($isBackendContract -or $isFrontendContract) { 'sqlite-query-documents-and-task-brief-impact' } elseif ($isSensitiveData) { 'sqlite-sensitive-data-and-task-brief-impact' } elseif ($isQuality) { 'sqlite-query-documents-and-task-brief-impact' } elseif ($isDomainData) { 'in-process-sqlite-domain-data-and-task-brief-impact' } elseif ($isRuntime) { 'in-process-sqlite-runtime-and-task-brief-impact' } elseif ($isArchitectureHealth) { 'in-process-sqlite-architecture-health-and-task-brief-impact' } else { 'index-specific' }
-        automaticJsonFallback = if ($isCatalogOrSymbol -or $isFrontend -or $isTaskBriefImpact) { $false } else { $null }
-        retainedAs = if ($isFrontend -or $isCatalogOrSymbol -or $isBackendContract -or $isFrontendContract -or $isSensitiveData -or $isDomainData -or $isRuntime -or $isArchitectureHealth) { 'projection-source-and-explicit-parity-baseline' } elseif ($isQuality) { 'projection-source-for-sqlite-query-layer' } else { 'compiled-source' }
+        defaultRoute = if ($isCatalogOrSymbol) { 'sqlite-compiled-index' } elseif ($isFrontend) { 'sqlite-context-diff-task-brief-trace-and-impact-simulation' } elseif ($isBackendContract -or $isFrontendContract) { 'sqlite-query-documents-and-task-brief-impact' } elseif ($isSensitiveData) { 'sqlite-sensitive-data-and-task-brief-impact' } elseif ($isQuality) { 'sqlite-query-documents-and-task-brief-impact' } elseif ($isDomainData) { 'in-process-sqlite-domain-data-and-task-brief-impact' } elseif ($isRuntime) { 'in-process-sqlite-runtime-and-task-brief-impact' } elseif ($isArchitectureHealth) { 'in-process-sqlite-architecture-health-and-task-brief-impact' } else { 'sqlite-standalone-index' }
+        automaticJsonFallback = $false
+        retainedAs = 'projection-source-and-git-review-artifact'
         consumerCount = $consumers.Count
         removable = $consumers.Count -eq 0
         consumers = [string[]]$consumers
@@ -87,7 +91,7 @@ $results = foreach ($indexPath in $indexes) {
 }
 
 $report = [pscustomobject][ordered]@{
-    schemaVersion = 9
+    schemaVersion = 10
     migratedQueryLayerCount = @($results | Where-Object queryLayer -eq 'migrated').Count
     partialQueryLayerCount = @($results | Where-Object queryLayer -eq 'partial').Count
     removableCount = @($results | Where-Object removable).Count

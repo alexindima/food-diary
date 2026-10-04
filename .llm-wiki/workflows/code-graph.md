@@ -6,6 +6,8 @@ status: current
 summary: Query an incremental SQLite symbol and consumer graph as the primary Development MCP code-context route without replacing governed Wiki evidence or committed project knowledge.
 sources:
   - .llm-wiki/tools/code-graph.mjs
+  - .llm-wiki/tools/code-graph-index-query.mjs
+  - .llm-wiki/tools/code-graph-index-query.test.mjs
   - .llm-wiki/tools/code-graph-identity.mjs
   - .llm-wiki/tools/code-graph-query-terms.mjs
   - .llm-wiki/tools/code-graph-performance.test.mjs
@@ -19,19 +21,19 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiInProcessSqliteReader.ps1
   - .llm-wiki/tools/LlmWikiInProcessSqlite.ps1
   - .llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs
-  - .llm-wiki/tools/Test-LlmWikiDomainDataSqlParity.ps1
+  - .llm-wiki/tools/Test-LlmWikiDomainDataQueries.ps1
   - .llm-wiki/tools/Find-LlmWikiContext.ps1
   - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskBrief.ps1
   - .llm-wiki/tools/Get-LlmWikiChangePacket.ps1
   - .llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1
-  - .llm-wiki/tools/Test-LlmWikiImpactSimulationSqlParity.ps1
+  - .llm-wiki/tools/Test-LlmWikiImpactSimulationQueries.ps1
   - .llm-wiki/tools/Find-LlmWikiBackendContract.ps1
-  - .llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1
-  - .llm-wiki/tools/Test-LlmWikiDiffContextSqlParity.ps1
-  - .llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1
-  - .llm-wiki/tools/Test-LlmWikiBackendContractSqlParity.ps1
-  - .llm-wiki/tools/Test-LlmWikiSqlContextShadow.ps1
+  - .llm-wiki/tools/Test-LlmWikiCompiledIndexQueries.ps1
+  - .llm-wiki/tools/Test-LlmWikiDiffContextQueries.ps1
+  - .llm-wiki/tools/Test-LlmWikiTaskBriefQueries.ps1
+  - .llm-wiki/tools/Test-LlmWikiBackendContractQueries.ps1
+  - .llm-wiki/tools/Test-LlmWikiContextRanking.ps1
   - .llm-wiki/policies/context-search-ranking.json
   - .llm-wiki/evals/context-search.json
   - .llm-wiki/evals/context-search-holdout.json
@@ -89,42 +91,12 @@ Each build also publishes
 small sidecar instead of the live SQLite file, avoiding WAL writer/read-lock
 races and a full database scan during cache-key construction.
 
-The same database contains a versioned FTS5 projection named
-`context_search`. It indexes code paths and symbols, compiled module, contract,
-and quality records, Wiki and current documentation, and scoped `AGENTS.md`
-files. `Manage-LlmWikiCodeGraph.ps1 search` queries this projection with
-deterministic path, module, task-type, and source-kind ranking.
-For `search-batch -Format Json`, the PowerShell facade validates and forwards
-the native JSON directly, avoiding an intermediate PowerShell object tree and
-reserialization. The caller still parses the same result schema and rankings.
-PowerShell tools are indexed as code with function symbols and raw source text,
-so operational Wiki commands participate in natural-language retrieval.
-The companion `context_search_features` table stores indexed layer, module,
-role, test, and extension attributes keyed by the FTS row id. These attributes
-are computed during projection refresh and exposed by explain diagnostics;
-each build also checks module/layer ownership against discovered project roots
-and repairs derived drift, even when document content is unchanged. See
-[self-maintenance](self-maintenance.md) for diagnosis and bounded source-link repair.
-These attributes remain available for measured SQL prefilter experiments without weakening
-the broad FTS recall path.
-The database also projects the generated repository catalog and C# symbol index
-into versioned `compiled_indexes` and `compiled_index_records` tables. The
-frontend index is projected into the same tables as ordered feature, symbol,
-route, and localization records.
-`Find-LlmWikiContext.ps1` reads that projection by default, verifies source
-hashes, and returns an error for a missing or stale projection instead of
-silently reading JSON. `-CompiledIndexSource Json` exists only as an explicit
-parity baseline. `Test-LlmWikiCompiledIndexSqlParity.ps1` compares seven
-catalog/symbol-dependent result sections across representative queries, records
-transport timing and candidate reduction, and is part of the `context-bundle`
-smoke group. Diff context selects exact changed-path symbol rows in SQL and its
-task-baseline parity test guards the complete legacy result shape. Task-brief
-intent discovery consumes the same projection and has a separate end-to-end
-parity and latency envelope. `Find-LlmWikiContext.ps1 -SqlShadow` remains a diagnostic
-comparison between the compiled-index result and the broader FTS route and
-reports SQLite query time separately from the PowerShell/Node round trip. The Development MCP aggregate route now uses a
-fresh SQL result as its primary code-scope selection; policy, checks, reviewed
-knowledge, and source claims remain Git-backed.
+SQLite is the only compiled-index query provider. Generated JSON snapshots remain
+inputs for the sole Node projection writer and reviewable Git artifacts. Queries
+validate exact source hashes, select bounded records in SQL, and report explicit
+recovery errors when preparation fails. Backend-only preparation works without
+TypeScript; frontend code-graph discovery requires the locked npm dependencies.
+Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 The public `context` facade delegates graph preparation to the resolver rather
 than eagerly forcing a full graph build. A backend request can therefore create
@@ -148,14 +120,13 @@ Frontend-contract discovery uses the same projection for components, consumer
 edges, API calls, translations, and components without direct specs. Both query
 tools preserve exact group shape and source order, verify source hashes, and fail
 closed instead of silently parsing JSON. Their JSON sources remain committed for
-generation and explicit parity only. Projection freshness normalizes CRLF/LF
+generation and Git review. Projection freshness normalizes CRLF/LF
 before hashing so isolated snapshots and cross-platform checkouts keep identical
 lineage without weakening content validation. Runtime-owner discovery uses a
 specialized query over the same projection: SQL selects the bounded component candidate set, ranks the
 owners, and follows only the selected render chains instead of materializing the
-1.19 MiB source in PowerShell. Its parity smoke compares ten explicit-path,
-query-only, Unicode, and empty-result cases and requires both payload reduction
-and a measured end-to-end improvement over the explicit JSON baseline.
+1.19 MiB source in PowerShell. Its behavior smoke covers explicit paths,
+query-only and Unicode requests, unknown owners, source lineage and bounded payloads.
 
 Task-brief impact analysis uses one fail-closed `task-brief-impact` query over
 quality, runtime, sensitive-data, frontend-contract, domain-data,
@@ -163,8 +134,8 @@ backend-contract, and architecture-health documents. The query verifies the
 normalized hash of every generated source, applies exact changed-path predicates
 in SQLite, and transports only matching payloads plus repository-wide
 architecture violations. Diagnostics distinguish bytes read to verify freshness
-from bytes materialized across the Node/PowerShell boundary. The explicit JSON
-baseline remains available for parity only; the default route never falls back.
+from bytes materialized across the Node/PowerShell boundary. SQLite is the sole
+query route; a failed refresh reports an explicit recovery error.
 Record keys include source ordinals so repeated fields or consumer edges cannot
 be collapsed by the projection's uniqueness constraint.
 
@@ -174,23 +145,23 @@ queries are SQLite-backed through a fingerprinted tooling-only
 `Microsoft.Data.Sqlite` assembly. Graph build publishes it under `.artifacts`,
 and the loader caches the loaded assembly across tool-script scopes. Runtime
 accepts a measured cold-process reader-load cost so production keeps one query
-mechanism. Every runtime and architecture-health view has an exact JSON-parity
-regression; telemetry reports fresh-process and warm p50/p95 separately. No route
+mechanism. Every runtime and architecture-health view has direct behavior
+regressions; telemetry reports fresh-process and warm p50/p95 separately. No route
 silently falls back.
 
 Standalone privacy discovery uses a specialized query over the same sensitive
 documents. Category selection and token/scope matching run before payload
 transport, while the existing PowerShell ordering remains the output contract.
-The projection also stores the generated summary. Its 14-case SQL/JSON parity
+The projection also stores the generated summary. Its direct behavior
 smoke covers all privacy views, aliases, paths, empty guidance, source lineage,
-payload reduction, and separate filtered/unfiltered latency envelopes. The
-default route fails closed and never selects the JSON baseline automatically.
+payload reduction, and separate filtered/unfiltered latency measurements. A
+failed projection refresh reports an explicit recovery error.
 
 Impact simulation requests a minimal `{name, root}` frontend feature catalog in
 the compiled-context call that its change packet already needs. Ordinary diff
 queries do not request or transport this catalog. Alignment therefore avoids a
 separate process and the frontend-index JSON parse while retaining exact output;
-its dedicated parity smoke measures both complete simulation latency and the
+its dedicated behavior smoke measures both complete simulation latency and the
 incremental reuse cost.
 
 General frontend trace also joins the compiled frontend symbol/route records with
@@ -198,8 +169,8 @@ frontend-contract documents in one SQLite process. It preserves the established
 consumer and AI-dependency traversal over current source files while avoiding two
 large PowerShell JSON parses and repeated interpreted scans. The default route
 reports both source hashes, scanned/candidate/returned counts, SQL duration, and
-full round-trip duration; its eight-case smoke requires exact output parity and a
-measurable average improvement.
+full round-trip duration; its behavior smoke checks exact symbol identities,
+unknown symbols, query identity, source lineage and bounded output.
 
 The context facade keeps focused tests available when production candidates fill
 its bounded search window. If the main search finds code but no tests, it runs
@@ -467,15 +438,6 @@ rejects missing queries. Its current diagnostic result is 71/100 top-1,
 95/100 top-10, and 0.8017 MRR; the live gate requires at least 68/100, 94/100,
 and 0.77 respectively, plus cohort minima.
 
-Runtime search data belongs in SQLite: FTS5 owns lexical candidate retrieval,
-compiled records and reconstructable indexes are projected into relational
-tables, and specialized queries filter large generated sources before crossing
-the process boundary. Committed JSON remains appropriate for reviewed policy,
-evaluation corpora, governance state, and explicit parity baselines. The MCP
-loads the ranking policy once per process; moving that policy into SQLite would
-not improve steady-state query latency and would make policy review and Git
-diffs less transparent.
-
 Relocated sources retain their real owner identity. Structural selector aliases
 cover module Providers and Presentation, shared HTTP primitives, shared persistence models,
 shared domain primitives and Shared/Tooling test roots
@@ -583,14 +545,6 @@ Build or incrementally refresh the graph:
 ./.llm-wiki/wiki.ps1 graph-build
 ```
 
-Backend-only query facades may cold-bootstrap the same database without the
-frontend `typescript` package. This reduced refresh is intentionally internal:
-it sets `typescript_projection_complete=false`, so a later frontend or broad
-context query must run a full build before using TypeScript candidates. A full
-build checks for the TypeScript compiler before scanning and fails fast with the
-dependency recovery command. Explicit `-CompiledIndexSource Json` remains a
-diagnostic baseline selected by the caller, never an automatic fallback.
-
 The first build scans tracked and untracked C#, TypeScript, HTML, and project
 files. C# declarations, identifier references, inheritance, method calls,
 object construction, DI, mediator, HTTP, and migration relations are extracted
@@ -672,7 +626,7 @@ writer in the source worktree cannot invalidate a long research query halfway
 through its graph refresh.
 Facade compiler-dependency detection uses the original checkout only when the
 current repository is the active read-only snapshot. This matches the graph's
-dependency resolution and avoids an unnecessary JSON fallback in that snapshot.
+dependency resolution and retains SQLite queries in that snapshot.
 An unrelated cold checkout still falls back to JSON when dependencies are absent;
 an explicit JSON selection is always preserved.
 Fast research requires an explicit module or planned path and returns bounded
@@ -750,3 +704,36 @@ existing 700-rule budget and never follows recursive expansion loops.
 An explicit compound or digit-bearing identifier absent from candidate identities
 marks results `unmatched-query-identifier` and low confidence. This signals weak
 retrieval evidence, not proof that a feature is absent from the repository.
+
+
+## Standalone SQLite queries
+
+All twelve `catalog`, `symbols`, `frontend`, contract, health, domain,
+configuration, quality, runtime, sensitive-data and module-list commands query
+the SQLite projection. `standalone_indexes` records normalized source hashes and
+small headers; ordered section and record tables preserve empty arrays, source
+order and full match counts while transporting only the requested items.
+Configuration queries flatten keys and environment variables during generation.
+Unicode query terms use parameterized literal predicates, including underscores.
+
+The writer refreshes changed snapshots, removes projections for deleted inputs,
+and upgrades the standalone schema under the existing graph build lock and
+transaction. Missing inputs and stale schema versions cannot produce a fresh result.
+Read-only facade calls prepare the projection in their private snapshot; backend
+planning and standalone index commands do not require frontend node_modules.
+Broad or frontend code search still requires TypeScript and reports `npm ci` as
+the recovery action when it is absent.
+
+The PowerShell graph manager validates and forwards native JSON for read actions,
+avoiding a second object tree and serialization. Contract, trace and runtime-owner
+queries attempt the actual bounded query first and prepare once only when needed.
+Security evidence filters and orders records before applying its SQL limit.
+Template changes include downstream consumers of their selected component.
+
+Behavior suites use expected symbols, owners, group shapes, scopes, source hashes,
+empty results, missing/stale projections, read-only isolation and output bounds.
+There is no parallel JSON query implementation or JSON comparison lane. Node/.NET
+ranking consistency and frozen historical evaluation artifacts remain valid
+independent checks. Cold/warm SQLite telemetry reports p50/p95 without a retired
+provider. Latency measurements must distinguish query time from preparation,
+process startup and serialization, and record machine load caveats.

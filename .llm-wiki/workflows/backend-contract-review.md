@@ -12,7 +12,7 @@ sources:
   - .llm-wiki/generated/backend-contract-index.json
   - .llm-wiki/tools/Find-LlmWikiBackendContract.ps1
   - .llm-wiki/tools/code-graph.mjs
-  - .llm-wiki/tools/Test-LlmWikiBackendContractSqlParity.ps1
+  - .llm-wiki/tools/Test-LlmWikiBackendContractQueries.ps1
   - Shared/FoodDiary.Application.Contracts/AGENTS.md
   - Shared/FoodDiary.Audit.Contracts/AGENTS.md
   - Shared/FoodDiary.Authentication.Contracts/AGENTS.md
@@ -39,16 +39,12 @@ For HTTP, message, or client-package boundaries, also review serialized names an
 ./.llm-wiki/wiki.ps1 brief -ChangedPath <contract-path>
 ```
 
-The query command reads the refreshed SQLite `query_documents` projection by
-default. Contract and consumer records preserve their source ordinal, while
-`production`, `tests`, `ambiguous`, and `unconsumed` filters execute in SQL
-before payload transport. A missing or stale projection fails explicitly with
-the `graph-build` recovery command; `-CompiledIndexSource Json` is an explicit
-parity/diagnostic baseline and is never selected automatically. The required
-`backend-contract-query` smoke compares all seven views exactly, verifies the
-source hash and payload reduction, and enforces a latency envelope. Source hash
-comparison normalizes CRLF/LF so the same committed index remains current in an
-isolated cross-platform snapshot.
+SQLite is the only compiled-index query provider. Generated JSON snapshots remain
+inputs for the sole Node projection writer and reviewable Git artifacts. Queries
+validate exact source hashes, select bounded records in SQL, and report explicit
+recovery errors when preparation fails. Backend-only preparation works without
+TypeScript; frontend code-graph discovery requires the locked npm dependencies.
+Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 Credential-bearing account-link commands need an additional security pass:
 confirm current-user scoping, provider-identity uniqueness, email ownership,

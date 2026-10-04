@@ -67,29 +67,12 @@ breadth rather than a confirmed defect or changed-code severity. Its next step
 links topology, privacy, security, architecture health, quality, dependencies,
 journeys, and the repository-assessment test plan.
 
-C# and frontend intent candidates use one refreshed SQLite compiled-context
-selection by default. After the established PowerShell scoring infers paths,
-the nested diff filters that same safe candidate superset to exact C# and
-frontend symbol paths instead of starting a second Node process. This removes
-the direct frontend-index JSON parse without adding a round trip; risk,
-provenance, inferred paths, and downstream planning shapes remain unchanged.
-The `analysis.compiledIndex` diagnostic reports source, selection mode, SQL and
-round-trip duration, scanned/candidate counts, source hashes, direct source
-bytes, and whether the selection was reused for diff. Missing or stale required
-projections fail explicitly; `-CompiledIndexSource Json` exists for parity tests
-and diagnostics only. The query cache keys the selected source and uses the
-graph dependency fingerprint for the SQLite route, preventing SQL and
-JSON-baseline results from colliding.
-
-Risk impact records also use SQLite by default. One `task-brief-impact` action
-selects exact changed-path records from quality, runtime topology, sensitive
-data, frontend contracts, domain data, backend contracts, and architecture
-health. It preserves source order and repeated records, includes the global
-architecture violation sets, and fails if any projected source hash is missing
-or stale. `analysis.impactIndex` reports scanned/candidate/returned records, SQL
-and round-trip timing, all seven hashes, bytes verified for freshness, and bytes
-actually materialized. `-CompiledIndexSource Json` is the explicit full-parse
-baseline, not an automatic fallback.
+SQLite is the only compiled-index query provider. Generated JSON snapshots remain
+inputs for the sole Node projection writer and reviewable Git artifacts. Queries
+validate exact source hashes, select bounded records in SQL, and report explicit
+recovery errors when preparation fails. Backend-only preparation works without
+TypeScript; frontend code-graph discovery requires the locked npm dependencies.
+Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 The brief combines changed scopes, directly affected and downstream modules,
 scoped instructions, relevant wiki pages, focused tests, mandatory checks,

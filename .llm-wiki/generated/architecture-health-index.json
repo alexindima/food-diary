@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 109,
     "routedStandaloneComponents": 67,
     "componentsWithoutDirectSpecs": 129,
-    "criticalSymbolsWithoutTestReferences": 43,
+    "criticalSymbolsWithoutTestReferences": 44,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -5305,6 +5305,16 @@
       "role": "Validator",
       "path": "Modules/Notifications/Infrastructure/Options/WebPushUriValidator.cs",
       "line": 2,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "Find-LlmWikiTraceCandidates",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Find-LlmWikiTraceCandidates.ps1",
+      "line": 1,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

@@ -10,9 +10,9 @@ sources:
   - .llm-wiki/tools/code-graph-identity.mjs
   - .llm-wiki/tools/code-graph-query-terms.mjs
   - .llm-wiki/tools/Ensure-LlmWikiSqliteProjection.ps1
-  - .llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1
-  - .llm-wiki/tools/Test-LlmWikiDiffContextSqlParity.ps1
-  - .llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1
+  - .llm-wiki/tools/Test-LlmWikiCompiledIndexQueries.ps1
+  - .llm-wiki/tools/Test-LlmWikiDiffContextQueries.ps1
+  - .llm-wiki/tools/Test-LlmWikiTaskBriefQueries.ps1
   - .llm-wiki/tools/Build-LlmWikiCatalog.ps1
   - .llm-wiki/evals/context-search-holdout-100.json
   - .llm-wiki/evals/context-search-unseen-20260826.json
@@ -81,13 +81,12 @@ test-oriented SQLite query with the same module, query text, and path scopes.
 Its results populate only `tests`; production ranking and confidence are
 preserved. This prevents a large API surface from hiding focused module tests.
 
-The resolver reads repository-catalog, C# symbol, and frontend feature/symbol/
-route/localization candidates from the local SQLite compiled-index projection
-by default. The graph is refreshed by the resolver inside the
-read-only facade snapshot, and the reader verifies normalized source
-hashes before returning data. A missing or stale projection fails explicitly;
-`-CompiledIndexSource Json` is reserved for parity tests and diagnostics rather
-than automatic fallback.
+SQLite is the only compiled-index query provider. Generated JSON snapshots remain
+inputs for the sole Node projection writer and reviewable Git artifacts. Queries
+validate exact source hashes, select bounded records in SQL, and report explicit
+recovery errors when preparation fails. Backend-only preparation works without
+TypeScript; frontend code-graph discovery requires the locked npm dependencies.
+Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 On a clean checkout, backend-oriented context requests can bootstrap the SQLite
 projection without installing frontend packages. That backend-only refresh
@@ -97,41 +96,28 @@ the full graph refresh. If the TypeScript compiler is unavailable, the full
 refresh fails immediately with an actionable `npm ci` message; it never waits for
 a late parser failure and never silently switches to JSON.
 
-Diff context uses the same projection in `changed-paths` mode. SQLite applies
-the exact changed-path predicate before transporting C# and frontend symbol payloads, while
-catalog-derived modules, projects, and guides retain their previous shape.
-Task-brief intent inference also uses SQLite candidates before applying its
-existing PowerShell scoring, then reuses the same selection for exact nested
-diff filtering. Both commands keep `-CompiledIndexSource Json` as an explicit
-test/diagnostic baseline and never select it automatically.
-
 JSON result callers reuse an exact content-addressed result keyed by the query
 arguments, HEAD, relevant worktree paths, and the selected source dependencies.
-SQLite routes use the graph dependency fingerprint; explicit JSON baselines hash
-their generated source files. For the JSON baseline, `-ScopePath` supplies the explicit cache boundary; `-Module` derives the
-corresponding application project paths through the backend module map, including
-`Modules/<Module>/Application` and supported legacy layouts. Unrelated edits can
-reuse that JSON cache; scoped edits or dependent-index changes invalidate it.
-SQLite context also keys on the complete graph change-set fingerprint, so an
+SQLite routes use the graph dependency fingerprint and exact source dependencies.
+`-Module` derives application paths through the backend module map, including
+`Modules/<Module>/Application` and supported legacy layouts. Context also keys on
+the complete graph change-set fingerprint, so an
 unrelated edit that changes that projection can invalidate its result cache.
 Unchanged orchestration calls avoid querying and transporting catalog/symbol
 records again.
 Text output remains an uncached interactive view.
 
-Required smoke tests compare SQLite and JSON-baseline output for diff and
-task-brief routes and exercise the SQL context route directly. They check
+Required smoke tests check diff, task-brief and context behavior directly. They check
 normalized source hashes, changed-path candidate reduction, multi-scope
 coverage, and bounded SQL/transport overhead. Context coverage includes
 frontend results and test recommendations across frontend-specific queries.
-Task-brief parity excludes only route diagnostics,
-requires exact functional output, proves that the SQLite intent selection is
+Task-brief tests preserve explicit planned paths, prove that SQLite intent selection is
 reused by nested diff, and checks the seven-source impact projection across
 compact and full results. It guards duplicate preservation, normalized source
 hashes, freshness bytes, materialized payload reduction, and end-to-end latency.
 Backend- and frontend-contract query tools apply the same freshness/no-fallback
-contract in specialized SQL views with their own exact parity groups. This
-protects result quality while the remaining build-time and explicit baseline
-JSON consumers migrate incrementally.
+contract in specialized SQL views with direct behavior groups. Generated JSON
+remains only a build input and a Git-review artifact for compiled indexes.
 
 ## Examples
 

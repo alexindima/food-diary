@@ -227,17 +227,17 @@
     {
       "pageId": "workflow-architecture-health-review",
       "pagePath": ".llm-wiki/workflows/architecture-health-review.md",
-      "pageSha256": "862f4a2a551c99d09cec127ca893c0e91e19c0eb8eb36f18d051a3f2d7beedd9",
+      "pageSha256": "20d3e15e2bb4fde9b589aafd6671e66c2285642e4cc94f00ffa9e46457598140",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "61034703c2969c27c8debf6f9cf93c11999ff290ce84448aeae7b7393ae163a0"
+          "path": ".llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1",
+          "sha256": "11531e8fbfa2a2677e4f140e28374d518d6c119f54eb6cc5684ceab0ed84c30e"
         }
       ],
-      "reason": "The regenerated health projection reflects static reference changes from the corpus worker extraction. No project edges or product runtime ownership changed; indirect evaluator coverage remains a navigation lead, not missing execution coverage.",
+      "reason": "Reviewed schema-5 SQLite telemetry after the subprocess argument correction: cold samples use fresh PowerShell processes, warm samples reuse the loaded reader, all three routes expose positive ordered p50/p95 values, and no JSON query comparison remains. The existing query routes and bounds are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "a5bd0d626c79e7403678d772928ea5d4545ffc74",
-      "reviewedAtUtc": "2026-10-04T04:34:01.7662873Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:37:30.0395138Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -275,33 +275,41 @@
       "pageSha256": "23c1a9278403a636f6ec63e87fa3f5afd67333592db3e51c8c24dcb542ed6ec8",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
+          "sha256": "f95543f786a6d29c980598ede659bca657661ff291d112abfc77309fff43022e"
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
+          "sha256": "339342e0bf6788867c8fc2899a69105864495ab3e51e3fc8f4151f03c98cac34"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
+          "sha256": "41e8243a3c0581d8bea51a52304d88c87ba5b1a891d367a315990468a6b7a7bc"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
+          "sha256": "a2faa5b30deae02ebe0f2c2aa645b0f7c3f8599aa9067d28139370df8bf7179a"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:10.3132672Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:04:01.6763957Z"
     },
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "ffc86ca5d362a78c7cb90c56684b7895de854edd1fe0574b26a4cfa2e75c31ae",
+      "pageSha256": "465c986c57525596ffad1b97ac1707292a22f47bf5fa593cd3b7c3849d5f108f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "57e0f0ecc950c8c77618442c457bfbb64bc6091726b2155705e2ab468763590f"
+          "path": ".llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1",
+          "sha256": "11531e8fbfa2a2677e4f140e28374d518d6c119f54eb6cc5684ceab0ed84c30e"
         }
       ],
-      "reason": "Reviewed the immutable module symbol/registration path patterns and project-prefix hoist in the explicit JSON baseline. Score predicates, candidate order, SQL default, fail-closed freshness, cache boundaries and SLA limits are preserved; before/after JSON payloads matched after excluding transport timing, and the complete context-retrieval lane passed.",
+      "reason": "Reviewed schema-5 SQLite telemetry after the subprocess argument correction: cold samples use fresh PowerShell processes, warm samples reuse the loaded reader, all three routes expose positive ordered p50/p95 values, and no JSON query comparison remains. The existing query routes and bounds are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "cc1ee85fdef594addfb3db89bcb0dac6e6f68f56",
-      "reviewedAtUtc": "2026-10-04T10:58:49.1256341Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:37:30.7005359Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -340,13 +348,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "57e0f0ecc950c8c77618442c457bfbb64bc6091726b2155705e2ab468763590f"
+          "sha256": "8cc2f129e13fe4e7ce9ad03041b452dbec8ff56208c32f794cb834684c2860ed"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "339342e0bf6788867c8fc2899a69105864495ab3e51e3fc8f4151f03c98cac34"
         }
       ],
-      "reason": "Reviewed the immutable module symbol/registration path patterns and project-prefix hoist in the explicit JSON baseline. Score predicates, candidate order, SQL default, fail-closed freshness, cache boundaries and SLA limits are preserved; before/after JSON payloads matched after excluding transport timing, and the complete context-retrieval lane passed.",
+      "reason": "Reviewed context source selection and cache boundaries: the shared SQLite ranking reader, exact fingerprints, scoped discovery and isolated read-only snapshots remain authoritative. JSON result serialization remains an artifact format; the alternate compiled-index JSON provider is removed.",
       "baseRef": "HEAD",
-      "gitHead": "cc1ee85fdef594addfb3db89bcb0dac6e6f68f56",
-      "reviewedAtUtc": "2026-10-04T10:58:50.2096396Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:04:03.2228503Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -463,14 +475,14 @@
       "pageSha256": "8b4cb2d28a12dabbacea071dc05d656bf06ccbaec42ac12f5b35408b708a161a",
       "sources": [
         {
-          "path": "docs/adr/README.md",
-          "sha256": "e5d9cb3ca7980b2df78621807a7512c52b7be3cfac1ef267b2797af285e63ae1"
+          "path": ".llm-wiki/tools/Get-LlmWikiDecisionContext.ps1",
+          "sha256": "a679b682737f0316dfcf71c9c3e980b742ae21db68cd40e61860c861a63ffe22"
         }
       ],
-      "reason": "Reviewed current Wiki navigation and guidance against canonical module naming, ADR 0052 and the documented coordinated migration release. The modular-monolith inventory, source authority, accepted ADR lifecycle and evidence limitations remain accurate; this preparation adds no module, route or dependency direction.",
-      "baseRef": "origin/master",
-      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
-      "reviewedAtUtc": "2026-10-03T11:03:28.1650715Z"
+      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "baseRef": "HEAD",
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:04:04.6522834Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -478,14 +490,14 @@
       "pageSha256": "7b325c5dd1cee36772c8e9d61fe14324f25f78f5f320e5521ca050f4080667a6",
       "sources": [
         {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb"
+          "path": ".llm-wiki/tools/Get-LlmWikiRolloutPlan.ps1",
+          "sha256": "5641d2a2878830cd7eb4cfabed28d2d6af5e261776e5f9f0e819bf42e7410b26"
         }
       ],
-      "reason": "Reviewed the two data-access path-pattern changes: current Services/ mail prefixes are included and legacy move paths remain recognized. Dependency and rollout rules, commands and manifest analysis are unchanged.",
+      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
       "baseRef": "HEAD",
-      "gitHead": "755c4ee5bb00ea025c5ad8321db12ec48386e496",
-      "reviewedAtUtc": "2026-10-04T10:05:49.8496388Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:04:06.3257486Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -505,17 +517,17 @@
     {
       "pageId": "workflow-domain-data-review",
       "pagePath": ".llm-wiki/workflows/domain-data-review.md",
-      "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
+      "pageSha256": "3e6c8653055b940700866104a57be1c900a5ae74cd666d7eb0eda5d0109942fd",
       "sources": [
         {
-          "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "5c254aa2904205ee915c3ee1595b0decd621878a4ab55f7fc7b18cac92a235d6"
+          "path": ".llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1",
+          "sha256": "11531e8fbfa2a2677e4f140e28374d518d6c119f54eb6cc5684ceab0ed84c30e"
         }
       ],
-      "reason": "Verified clearing DOB touches owning NutritionProfile and omission preserves existing data; 323 Users domain and 225 application tests passed. Combined backend provider fixtures pass against fresh schema. Existing local database remains on old schema; no reset or reseeding occurred.",
+      "reason": "Reviewed schema-5 SQLite telemetry after the subprocess argument correction: cold samples use fresh PowerShell processes, warm samples reuse the loaded reader, all three routes expose positive ordered p50/p95 values, and no JSON query comparison remains. The existing query routes and bounds are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:42:27.345401Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:37:31.2163795Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -613,14 +625,26 @@
       "pageSha256": "d45851e16e3d49ceca62d5cb5f1eb187c9b829e6a19c634ecd85a6238241dfe8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1",
-          "sha256": "e2ff1eee276599a475ec0da9594f511bcd6d85d9e1dc2ff72fc45684db064303"
+          "path": ".llm-wiki/tools/Get-LlmWikiDecisionContext.ps1",
+          "sha256": "a679b682737f0316dfcf71c9c3e980b742ae21db68cd40e61860c861a63ffe22"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
+          "sha256": "41e8243a3c0581d8bea51a52304d88c87ba5b1a891d367a315990468a6b7a7bc"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiRolloutPlan.ps1",
+          "sha256": "5641d2a2878830cd7eb4cfabed28d2d6af5e261776e5f9f0e819bf42e7410b26"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "a2faa5b30deae02ebe0f2c2aa645b0f7c3f8599aa9067d28139370df8bf7179a"
         }
       ],
-      "reason": "Reviewed current implementation-plan tests: exact coordinated API acceptance remains visible in readiness, another unaccepted break blocks it, and legacy/behavioral result shapes are covered. Implementation phase ordering, current-source path discovery and abbreviated packet normalization remain unchanged.",
+      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
       "baseRef": "HEAD",
-      "gitHead": "028efbba467e3bdece84fe1e43412aead89d2ae5",
-      "reviewedAtUtc": "2026-10-03T21:10:07.7945046Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:04:08.5172823Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -640,29 +664,17 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "b2036095d87b528772ed0a7b0cdab5d4437ab2d3c90cd9ffd38649923bb9c4de",
+      "pageSha256": "b79c719e7d91256dd98925bac93fd34f3a4b6142d9d4f8a5c37ba91c5dafd6ef",
       "sources": [
         {
-          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "8c53c9b4517a8135376858a5b29b160a6330460ed94ef9552ec49e061e572de5"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "84d144525363d00e07e55e3073ffa8d87ebadb34fa7bdea4590c1457d76644e3"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
-          "sha256": "675b8b47e1b4b7bc768e0f247804efcd266bb75a294d75bfb6e2b44ec68375f1"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
-          "sha256": "42e7fab8ba7a98a30a6a0bab0cbcac6a164a32af7211f59632d41286b6e718a4"
+          "path": ".llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1",
+          "sha256": "11531e8fbfa2a2677e4f140e28374d518d6c119f54eb6cc5684ceab0ed84c30e"
         }
       ],
-      "reason": "Reviewed routing and receipt patterns for the new candidate helper and test. All changed paths select focused coverage; code-graph includes the new test. Code-graph, context-retrieval, facade-contract and verification-cache groups passed; the 22 evaluation corpora and policy budgets retain their assertions.",
+      "reason": "Reviewed schema-5 SQLite telemetry after the subprocess argument correction: cold samples use fresh PowerShell processes, warm samples reuse the loaded reader, all three routes expose positive ordered p50/p95 values, and no JSON query comparison remains. The existing query routes and bounds are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
-      "reviewedAtUtc": "2026-10-04T03:27:33.6165695Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:37:32.196947Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -682,17 +694,21 @@
     {
       "pageId": "workflow-integration-scan",
       "pagePath": ".llm-wiki/workflows/integration-scan.md",
-      "pageSha256": "a952661d5073668178342e7b7131b00a3ea21d502dae2ea219a05a41d7094cdb",
+      "pageSha256": "e1815d477bee148fd58c18449a9c38acb874cd72736be66a90aa97417f10244c",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+          "sha256": "b46d920417be2ff559f1663fb4ca1efefdb72f3fd93f3539d2c82a846451a00e"
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
+          "sha256": "a2faa5b30deae02ebe0f2c2aa645b0f7c3f8599aa9067d28139370df8bf7179a"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:23.1544345Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:04:09.4084088Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
@@ -825,13 +841,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "7ff6d34cf2950aedfbb902d388002d83f13c35e6531d1e6f186b325289aaaf47"
+          "sha256": "6c4cd9d5ee6fdfcfd6398dc79f588b570b9f935a59795918d74447a4f1fc6181"
         }
       ],
-      "reason": "Reviewed acceptance init composition: packet reuse requires matching objective, resolved base and explicit paths; full matrix parity and mismatch rejection pass. Mapping, evidence resolution, proof and readiness behavior remain unchanged.",
+      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
       "baseRef": "HEAD",
-      "gitHead": "aeb5847fb77070baf9a676aa773ba77ae09e3ce3",
-      "reviewedAtUtc": "2026-09-09T22:02:27.4617751Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:04:10.4408799Z"
     },
     {
       "pageId": "workflow-quality-risk",
@@ -854,14 +870,26 @@
       "pageSha256": "1684cbe2c98211ca7fd946264d33e15af96696e64ee7ab094b94fc1086af0b85",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-          "sha256": "c8232abe0b30042b156af01acbc49a55669378c5ff9b0dc2466837d5abd1d841"
+          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
+          "sha256": "f95543f786a6d29c980598ede659bca657661ff291d112abfc77309fff43022e"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "6c4cd9d5ee6fdfcfd6398dc79f588b570b9f935a59795918d74447a4f1fc6181"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
+          "sha256": "091fb32324dd228ba39966bd8e18d113231cd6c6aa5d820f9082d8945dfd9cc0"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+          "sha256": "4d7c8d07c7d40ddf7ec171ba92564c9d47f2121bde852d87a898281ee58d2a6c"
         }
       ],
-      "reason": "Validated accepted and unaccepted API readiness plus legacy and behavioral restriction regressions. Empty API collections remain arrays, so absent restrictions no longer become a null warning. Strict completion retains all unrelated dimensions.",
+      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
       "baseRef": "HEAD",
-      "gitHead": "028efbba467e3bdece84fe1e43412aead89d2ae5",
-      "reviewedAtUtc": "2026-10-03T21:06:26.2843835Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:04:11.3249524Z"
     },
     {
       "pageId": "workflow-requirement-intelligence",
@@ -870,13 +898,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "7ff6d34cf2950aedfbb902d388002d83f13c35e6531d1e6f186b325289aaaf47"
+          "sha256": "6c4cd9d5ee6fdfcfd6398dc79f588b570b9f935a59795918d74447a4f1fc6181"
         }
       ],
-      "reason": "Reviewed acceptance init composition: packet reuse requires matching objective, resolved base and explicit paths; full matrix parity and mismatch rejection pass. Mapping, evidence resolution, proof and readiness behavior remain unchanged.",
+      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
       "baseRef": "HEAD",
-      "gitHead": "aeb5847fb77070baf9a676aa773ba77ae09e3ce3",
-      "reviewedAtUtc": "2026-09-09T22:02:28.8736176Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:04:12.2194054Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -884,14 +912,14 @@
       "pageSha256": "3817fa7e8462586fb846f88ff28972cca16744b121049e5776c9cc89043e7e27",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-          "sha256": "c8232abe0b30042b156af01acbc49a55669378c5ff9b0dc2466837d5abd1d841"
+          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
+          "sha256": "f95543f786a6d29c980598ede659bca657661ff291d112abfc77309fff43022e"
         }
       ],
-      "reason": "Reviewed the readiness report after exact release acceptance and empty-collection normalization: accepted findings remain visible, unknown breaks fail, and report/matrix contracts remain unchanged.",
+      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
       "baseRef": "HEAD",
-      "gitHead": "028efbba467e3bdece84fe1e43412aead89d2ae5",
-      "reviewedAtUtc": "2026-10-03T21:06:27.3143848Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:04:13.0999093Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -911,17 +939,17 @@
     {
       "pageId": "workflow-runtime-impact",
       "pagePath": ".llm-wiki/workflows/runtime-impact.md",
-      "pageSha256": "b8e3cbc2020dceeeb6873b8f7bf0a66f6380cb750f367e7753ae9314e9270fc9",
+      "pageSha256": "afc7b952845f0c1daab7be359147c5d79cf308618972038ea92bee91adf411c7",
       "sources": [
         {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb"
+          "path": ".llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1",
+          "sha256": "11531e8fbfa2a2677e4f140e28374d518d6c119f54eb6cc5684ceab0ed84c30e"
         }
       ],
-      "reason": "Only data-access path matching changed. Runtime topology, external integration declarations, workers, delivery behavior and runtime-policy rules are unchanged; current mail paths retain the existing provider-backed review requirement.",
+      "reason": "Reviewed schema-5 SQLite telemetry after the subprocess argument correction: cold samples use fresh PowerShell processes, warm samples reuse the loaded reader, all three routes expose positive ordered p50/p95 values, and no JSON query comparison remains. The existing query routes and bounds are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "755c4ee5bb00ea025c5ad8321db12ec48386e496",
-      "reviewedAtUtc": "2026-10-04T10:05:51.283119Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:37:33.8336875Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -930,13 +958,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "770e639552eb0986eca3e56a0f9f2babdc4ed9a86f35733aa0f7dc105eb3e946"
+          "sha256": "f9e31822ff61bf174116a83817a1bb331eba36f9e77a34ce4900128991834daa"
+        },
+        {
+          "path": ".llm-wiki/tools/Find-LlmWikiSecurityReview.ps1",
+          "sha256": "05debd1f1423d52b707d01c54fe470aeb1870e2f16f0e175f75b02ec0cb7d6e7"
         }
       ],
-      "reason": "Reviewed generated quality projection after integration with master 1976069bd3d397febbff4280c617667288629b0c. Every product quality row matches that committed master exactly; the Wiki patch changes only tooling metrics and navigation. Runtime, sensitive-data handling and product ranking implementations are unchanged by this patch.",
+      "reason": "Rechecked after final affected-index generation: source hashes are current; SQLite-only query selection and the documented evidence boundaries are preserved. Security signals remain navigation evidence with unchanged classification and bounded SQL selection.",
       "baseRef": "HEAD",
-      "gitHead": "6e2a0ee2c1e4eaa477288cca1e3e5541e8c1667a",
-      "reviewedAtUtc": "2026-10-04T13:13:42.4250514Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:06:17.5238572Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -945,13 +977,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-          "sha256": "7fbe087d35b01c5a36cf1d7837aa3ed5e08698a0feaef9eab6c4b5546044137c"
+          "sha256": "41e8243a3c0581d8bea51a52304d88c87ba5b1a891d367a315990468a6b7a7bc"
         }
       ],
-      "reason": "Reviewed final bounded product metadata lookup and PostgreSQL snapshot regression; current ProductType is retained while snapshot nutrition wins. No API, schema, privacy, deployment, or ownership boundary changed beyond the documented extraction.",
+      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
       "baseRef": "HEAD",
-      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
-      "reviewedAtUtc": "2026-09-01T23:39:47.7211957Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:04:15.4784073Z"
     },
     {
       "pageId": "workflow-task-brief",
@@ -1009,13 +1041,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "6ebe8fdda49be99b2847cfcdeb0c7adf6a351ce8990f1a16478ad48fec13e85c"
+          "sha256": "a96eb644887aa12666707da019e0d36366620e5e6936bb07e83f3dfdfc081e30"
         }
       ],
-      "reason": "Reviewed facade verification controls: the complete gate alone publishes full verification and concurrency forwarding does not alter dispatch payloads, lease fingerprints or lifecycle receipt hashes.",
+      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
       "baseRef": "HEAD",
-      "gitHead": "c00b5915692f57b1b4b13746d221918eb0acc198",
-      "reviewedAtUtc": "2026-10-03T06:42:23.9737566Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:04:16.6351724Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1136,18 +1168,14 @@
       "pageSha256": "a4d6f6e45856ad6956a6133f5a9156fdca0a4ab5131c41b49df6ae6204a3aae4",
       "sources": [
         {
-          "path": ".llm-wiki/evals/development-context-practical-holdout.json",
-          "sha256": "32087628aed4632d32687cb6841021d482190574817024ab9036b5c537b877b0"
-        },
-        {
-          "path": ".llm-wiki/evals/development-context-practical.json",
-          "sha256": "7256398389569004e921826d625f0263e970910033b5c16f346563660ee704bf"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "339342e0bf6788867c8fc2899a69105864495ab3e51e3fc8f4151f03c98cac34"
         }
       ],
-      "reason": "Verified moved retrieval fixture targets against current owners; practical cleanup cases now target CleanupLoginEventsCommandHandler. Queries, acceptance thresholds, and recorded baselines unchanged.",
+      "reason": "Reviewed the retrieval gate: frozen corpora and Node/.NET SQLite ranking consistency remain intact. Only retired JSON query comparisons were replaced by direct behavioral expectations; all 37 focused groups remain in the canonical catalog.",
       "baseRef": "HEAD",
-      "gitHead": "d933a3fe157d06c5faf0ae86a3a33fff7f8cf7e4",
-      "reviewedAtUtc": "2026-09-16T05:24:19.8040399Z"
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:04:07.7119398Z"
     },
     {
       "pageId": "workflow.evidence-bundle",

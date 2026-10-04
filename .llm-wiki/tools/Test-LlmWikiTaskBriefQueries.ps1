@@ -27,15 +27,13 @@ $cases = @(
     [pscustomobject]@{ Intent = 'Review a backend command contract'; ProposedPath = @('Modules/Users/Application/Commands/AcceptAiConsent/AcceptAiConsentCommand.cs'); Compact = $false }
 )
 $sqlDurations = [Collections.Generic.List[double]]::new()
-$jsonDurations = [Collections.Generic.List[double]]::new()
+
 $sqliteCandidateRecords = [Collections.Generic.List[int]]::new()
-$jsonSourceBytes = [Collections.Generic.List[int64]]::new()
+
 $sqliteImpactCandidates = [Collections.Generic.List[int]]::new()
 $sqliteImpactBytes = [Collections.Generic.List[int64]]::new()
-$jsonImpactBytes = [Collections.Generic.List[int64]]::new()
-$reusedIntentCases = 0
-$caseIndex = 0
 
+$reusedIntentCases = 0
 function ConvertTo-FunctionalJson($Brief) {
     $copy = $Brief | ConvertTo-Json -Depth 14 | ConvertFrom-Json
     if ($copy.analysis.PSObject.Properties['compiledIndex']) {
@@ -57,25 +55,14 @@ foreach ($case in $cases) {
         SkipTestPlan = $true
         SkipQueryCache = $true
     }
-    if (($caseIndex % 2) -eq 0) {
-        $jsonStopwatch = [Diagnostics.Stopwatch]::StartNew()
-        $json = & $briefTool @arguments -CompiledIndexSource Json | ConvertFrom-Json
-        $jsonStopwatch.Stop()
-        $sqlStopwatch = [Diagnostics.Stopwatch]::StartNew()
-        $sqlite = & $briefTool @arguments | ConvertFrom-Json
-        $sqlStopwatch.Stop()
-    } else {
-        $sqlStopwatch = [Diagnostics.Stopwatch]::StartNew()
-        $sqlite = & $briefTool @arguments | ConvertFrom-Json
-        $sqlStopwatch.Stop()
-        $jsonStopwatch = [Diagnostics.Stopwatch]::StartNew()
-        $json = & $briefTool @arguments -CompiledIndexSource Json | ConvertFrom-Json
-        $jsonStopwatch.Stop()
+    $sqlStopwatch = [Diagnostics.Stopwatch]::StartNew()
+    $sqlite = & $briefTool @arguments | ConvertFrom-Json
+    $sqlStopwatch.Stop()
+    if (@($case.ProposedPath).Count -gt 0 -and
+        ($sqlite.analysis.mode -ne 'planned-paths' -or ($sqlite.change.paths -join ',') -cne ($case.ProposedPath -join ','))) {
+        throw 'Task brief changed an explicit planned scope.'
     }
 
-    if ((ConvertTo-FunctionalJson $sqlite) -cne (ConvertTo-FunctionalJson $json)) {
-        throw "$($case.Intent): SQLite/JSON task-brief parity failed."
-    }
     if ($case.Intent -match '^Audit repository' -and
         ([string]$sqlite.analysis.mode -ne 'broad-assessment' -or @($sqlite.change.directModules).Count -ne 0)) {
         throw "$($case.Intent): broad assessment was incorrectly reduced to a feature module."
@@ -86,46 +73,29 @@ foreach ($case in $cases) {
         @($sqlite.analysis.impactIndex.sourceHashes.PSObject.Properties).Count -ne 7) {
         throw "$($case.Intent): SQLite task-brief impact diagnostics are incomplete."
     }
-    if ([string]$json.analysis.impactIndex.source -ne 'json-baseline' -or
-        [int64]$json.analysis.impactIndex.sourceBytesVerified -le 0 -or
-        [int64]$json.analysis.impactIndex.sourceBytesMaterialized -le 0) {
-        throw "$($case.Intent): explicit JSON task-brief impact baseline did not report materialized bytes."
-    }
-    if ([int64]$sqlite.analysis.impactIndex.sourceBytesVerified -ne [int64]$json.analysis.impactIndex.sourceBytesVerified -or
-        [int64]$sqlite.analysis.impactIndex.sourceBytesMaterialized -ge [int64]$json.analysis.impactIndex.sourceBytesMaterialized) {
-        throw "$($case.Intent): SQLite impact projection did not preserve freshness coverage while reducing materialized JSON bytes. Verified bytes: SQLite=$($sqlite.analysis.impactIndex.sourceBytesVerified), JSON=$($json.analysis.impactIndex.sourceBytesVerified); materialized bytes: SQLite=$($sqlite.analysis.impactIndex.sourceBytesMaterialized), JSON=$($json.analysis.impactIndex.sourceBytesMaterialized)."
-    }
+
     $sqliteImpactCandidates.Add([int]$sqlite.analysis.impactIndex.candidateRecords)
     $sqliteImpactBytes.Add([int64]$sqlite.analysis.impactIndex.sourceBytesMaterialized)
-    $jsonImpactBytes.Add([int64]$json.analysis.impactIndex.sourceBytesMaterialized)
+
     if ($sqlite.analysis.mode -eq 'intent-inferred') {
         if ([string]$sqlite.analysis.compiledIndex.source -ne 'sqlite-compiled-index' -or
             -not [bool]$sqlite.analysis.compiledIndex.reusedForDiff -or
             $null -ne $sqlite.analysis.compiledIndex.sourceBytesRead) {
             throw "$($case.Intent): SQLite task-brief intent route did not reuse the compiled context without direct JSON bytes."
         }
-        if ([string]$json.analysis.compiledIndex.source -ne 'json-baseline' -or
-            [int64]$json.analysis.compiledIndex.sourceBytesRead -le 0) {
-            throw "$($case.Intent): explicit JSON task-brief baseline did not report its source bytes."
-        }
+
         $sqliteCandidateRecords.Add([int]$sqlite.analysis.compiledIndex.candidateRecords)
-        $jsonSourceBytes.Add([int64]$json.analysis.compiledIndex.sourceBytesRead)
+
         $reusedIntentCases++
     }
     $sqlDurations.Add($sqlStopwatch.Elapsed.TotalMilliseconds)
-    $jsonDurations.Add($jsonStopwatch.Elapsed.TotalMilliseconds)
-    $caseIndex++
 }
 
 $sqlAverage = [Math]::Round(($sqlDurations | Measure-Object -Average).Average, 2)
-$jsonAverage = [Math]::Round(($jsonDurations | Measure-Object -Average).Average, 2)
-if ($sqlAverage -ge $jsonAverage) {
-    throw "SQLite task-brief context reuse did not improve average end-to-end latency: SQL=${sqlAverage}ms, JSON=${jsonAverage}ms."
-}
+
 $averageSqlCandidates = [Math]::Round(($sqliteCandidateRecords | Measure-Object -Average).Average, 2)
-$averageJsonBytes = [Math]::Round(($jsonSourceBytes | Measure-Object -Average).Average, 2)
+
 $averageImpactCandidates = [Math]::Round(($sqliteImpactCandidates | Measure-Object -Average).Average, 2)
 $averageSqlImpactBytes = [Math]::Round(($sqliteImpactBytes | Measure-Object -Average).Average, 2)
-$averageJsonImpactBytes = [Math]::Round(($jsonImpactBytes | Measure-Object -Average).Average, 2)
-$averageAvoidedImpactBytes = [Math]::Round($averageJsonImpactBytes - $averageSqlImpactBytes, 2)
-Write-Host "LLM Wiki task-brief SQL parity passed: $($cases.Count)/$($cases.Count) cases; reused=$reusedIntentCases; SQL=${sqlAverage}ms, JSON=${jsonAverage}ms average end-to-end; intent SQL candidates=${averageSqlCandidates}, avoided intent JSON bytes=${averageJsonBytes}; impact SQL candidates=${averageImpactCandidates}, materialized SQL=${averageSqlImpactBytes} vs JSON=${averageJsonImpactBytes} bytes, avoided=${averageAvoidedImpactBytes}."
+
+Write-Host 'LLM Wiki TaskBrief SQLite behavior checks passed.'

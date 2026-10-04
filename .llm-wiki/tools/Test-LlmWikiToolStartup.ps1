@@ -32,15 +32,15 @@ param($ToolPath,$ToolArguments,[switch]$PrepareCodeGraph)
     $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT = $fixtureRoot
     $snapshot = & $facade brief -ChangedPath 'example.cs' -Format Json | ConvertFrom-Json
     if ($snapshot.source -ne 'Sqlite') { throw 'Active snapshot failed to use source compiler dependencies.' }
-    $explicitJson = & $facade brief -ChangedPath 'example.cs' -CompiledIndexSource Json -Format Json | ConvertFrom-Json
-    if ($explicitJson.source -ne 'Json') { throw 'Snapshot overrode the explicit JSON route.' }
-    $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT = Join-Path $fixtureRoot 'another-snapshot'
-    $cold = & $facade brief -ChangedPath 'example.cs' -Format Json -WarningAction SilentlyContinue | ConvertFrom-Json
-    if ($cold.source -ne 'Json') { throw 'Cold checkout inherited dependencies from an unrelated snapshot.' }
-    $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT = $fixtureRoot
-    $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT = Join-Path $fixtureRoot 'missing-dependencies'
-    $missing = & $facade brief -ChangedPath 'example.cs' -Format Json -WarningAction SilentlyContinue | ConvertFrom-Json
-    if ($missing.source -ne 'Json') { throw 'Snapshot without compiler dependencies lost the JSON fallback.' }
+    $legacyRejected = $false
+    try { & $facade brief -ChangedPath 'example.cs' -CompiledIndexSource Json -Format Json | Out-Null } catch { $legacyRejected = $_.Exception.Message -match 'ValidateSet|validation|Sqlite' }
+    if (-not $legacyRejected) { throw 'Facade accepted the retired JSON query provider.' }
+    $global:LASTEXITCODE = 0
+    foreach ($dependency in @('missing-dependencies','another-snapshot')) {
+        $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT = Join-Path $fixtureRoot $dependency
+        $actual = & $facade brief -ChangedPath 'example.cs' -Format Json | ConvertFrom-Json
+        if ($actual.source -ne 'Sqlite') { throw 'Missing dependencies silently changed the query provider.' }
+    }
     $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT = $previousSnapshot
     $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT = $previousSource
 
@@ -55,7 +55,7 @@ param($ToolPath,$ToolArguments,[switch]$PrepareCodeGraph)
             }
             Microsoft.PowerShell.Management\Get-ChildItem @PSBoundParameters
         }
-        $diff = & (Join-Path $PSScriptRoot 'Get-LlmWikiDiffContext.ps1') -ChangedPath '.llm-wiki/index.md' -CompiledIndexSource Json -Format Json | ConvertFrom-Json
+        $diff = & (Join-Path $PSScriptRoot 'Get-LlmWikiDiffContext.ps1') -ChangedPath '.llm-wiki/index.md' -CompiledIndexSource Sqlite -Format Json | ConvertFrom-Json
         $planner = Join-Path $PSScriptRoot 'Get-LlmWikiTestPlan.ps1'
         $baseline = & $planner -DiffInput $diff -Format Json
         foreach ($paths in @(@(''), @('   '), @())) {
