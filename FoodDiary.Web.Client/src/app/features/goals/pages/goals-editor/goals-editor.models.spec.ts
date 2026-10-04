@@ -1,7 +1,15 @@
 import { describe, expect, it } from 'vitest';
 
+import { DAYS_OF_WEEK } from '../../../../shared/models/goals.data';
 import type { MacroPreset } from '../../lib/goals.facade';
-import { applyMacroPreset, areBodyTargetsValid, buildDraftRequest, calculateMacroPercent, type GoalsDraft } from './goals-editor.models';
+import {
+    applyMacroPreset,
+    areBodyTargetsValid,
+    buildDraftRequest,
+    calculateMacroPercent,
+    type GoalsDraft,
+    isGoalsDraftValid,
+} from './goals-editor.models';
 
 const WEIGHT_LIMIT = 500;
 const WAIST_LIMIT = 300;
@@ -18,6 +26,53 @@ const CLASSIC_PRESET: MacroPreset = {
 };
 
 describe('goals page v2 draft calculations', () => {
+    it.each([-1, Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY])(
+        'rejects invalid numeric goals %s in every submitted nutrition field',
+        value => {
+            const draft = createDraft();
+            const invalidDrafts = [
+                { ...draft, calories: value },
+                { ...draft, water: value },
+                ...(['protein', 'fats', 'carbs', 'fiber'] as const).map(key => ({
+                    ...draft,
+                    macros: { ...draft.macros, [key]: value },
+                })),
+                ...DAYS_OF_WEEK.map(day => ({ ...draft, dayCalories: { ...draft.dayCalories, [day.key]: value } })),
+            ];
+
+            for (const invalid of invalidDrafts) {
+                expect(isGoalsDraftValid(invalid)).toBe(false);
+            }
+        },
+    );
+
+    it('permits zero nutrition goals and unset body targets', () => {
+        const draft = createDraft();
+        draft.calories = 0;
+        draft.water = 0;
+        draft.macros = { protein: 0, fats: 0, carbs: 0, fiber: 0 };
+        draft.bodyTargets = { weight: 0, waist: 0 };
+        draft.dayCalories = { ...draft.dayCalories, mondayCalories: 0 };
+
+        expect(isGoalsDraftValid(draft)).toBe(true);
+        expect(buildDraftRequest(draft)).toEqual(
+            expect.objectContaining({
+                dailyCalorieTarget: 0,
+                waterGoal: 0,
+                desiredWeightKg: null,
+                desiredWaistCm: null,
+                mondayCalories: 0,
+            }),
+        );
+    });
+
+    it('keeps canonical body limits in the complete draft validation', () => {
+        const draft = createDraft();
+        expect(isGoalsDraftValid({ ...draft, bodyTargets: { weight: WEIGHT_LIMIT + LIMIT_STEP, waist: 0 } })).toBe(false);
+        expect(isGoalsDraftValid({ ...draft, bodyTargets: { weight: 0, waist: WAIST_LIMIT + LIMIT_STEP } })).toBe(false);
+        expect(isGoalsDraftValid({ ...draft, bodyTargets: { weight: WEIGHT_LIMIT, waist: WAIST_LIMIT } })).toBe(true);
+    });
+
     it.each([
         [0, 0, true],
         [WEIGHT_LIMIT, WAIST_LIMIT, true],

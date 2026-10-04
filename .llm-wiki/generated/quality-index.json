@@ -9850,35 +9850,35 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.models.ts",
-      "nonBlankLines": 79,
-      "decisionPoints": 5,
+      "nonBlankLines": 88,
+      "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.08
+      "structuralRiskScore": 12.26
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.ts",
-      "nonBlankLines": 166,
+      "nonBlankLines": 167,
       "decisionPoints": 13,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 22.82
+      "structuralRiskScore": 22.84
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.ts",
-      "nonBlankLines": 27,
+      "nonBlankLines": 32,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.04
+      "structuralRiskScore": 2.14
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-side-cards.ts",
-      "nonBlankLines": 64,
+      "nonBlankLines": 65,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.28
+      "structuralRiskScore": 4.3
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-summary-card.ts",

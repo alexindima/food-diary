@@ -160,6 +160,40 @@ describe('GoalsPageComponent saving drafts', () => {
     });
 });
 
+describe('GoalsPageComponent numeric validation', () => {
+    beforeEach(setupGoalsPageAsync);
+
+    it.each(['calories', 'protein', 'fiber', 'water'])('rejects a negative %s value before saving and permits correction', async field => {
+        const fixture = createComponent();
+        const element = fixture.nativeElement as HTMLElement;
+        const input = element.querySelector<HTMLInputElement>(`#goals-editor-${field}`);
+        if (input === null) {
+            throw new Error(`Missing ${field} input`);
+        }
+        input.value = '-1';
+        input.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        const handler = TestBed.inject(UnsavedChangesService).getHandler();
+
+        expect(await handler?.save()).toBe(false);
+        expect(facade.saveManuallyAsync).not.toHaveBeenCalled();
+        expect(handler?.hasChanges()).toBe(true);
+        expect(input.getAttribute('aria-invalid')).toBe('true');
+        expect(input.getAttribute('aria-describedby')).toBe(`goals-editor-${field}-error`);
+        expect(element.querySelector(`#goals-editor-${field}-error`)).not.toBeNull();
+        const buttons = element.querySelectorAll<HTMLButtonElement>('fd-unsaved-changes-bar button');
+        expect(buttons[1].disabled).toBe(true);
+
+        input.value = '0';
+        input.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        expect(input.getAttribute('aria-invalid')).toBe('false');
+        expect(element.querySelector(`#goals-editor-${field}-error`)).toBeNull();
+        expect(await handler?.save()).toBe(true);
+        expect(facade.saveManuallyAsync).toHaveBeenCalledTimes(1);
+    });
+});
+
 async function setupGoalsPageAsync(): Promise<void> {
     facade = createFacadeMock();
 

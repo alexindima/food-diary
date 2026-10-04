@@ -8,7 +8,7 @@ import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pi
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import type { BodyTargetKey } from '../../lib/goals.facade';
-import { BODY_TARGET_MAXIMUMS, isBodyTargetValid } from './goals-editor.models';
+import { BODY_TARGET_MAXIMUMS, isBodyTargetValid, isGoalNumberValid } from './goals-editor.models';
 
 const BODY_TARGET_FRACTION_DIGITS = 2;
 const DISPLAY_PRECISION_FACTOR = 100;
@@ -36,6 +36,7 @@ export class GoalsSideCardsComponent {
     }));
 
     protected readonly weightInvalid = computed(() => !isBodyTargetValid('weight', this.bodyTargets().weight));
+    protected readonly waterInvalid = computed(() => !isGoalNumberValid(this.water()));
     protected readonly waistInvalid = computed(() => !isBodyTargetValid('waist', this.bodyTargets().waist));
     protected readonly weightMaximum = computed(() => this.displayMaximum('weight'));
     protected readonly waistMaximum = computed(() => this.displayMaximum('waist'));

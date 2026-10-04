@@ -4,10 +4,21 @@
         <div class="goals-editor-water-target">
             <label class="goals-editor-card__label" for="goals-editor-water">{{ 'GOALS_PAGE.EDITOR.TARGET_VALUE' | translate }}</label>
             <div class="goals-editor-input goals-editor-input--hero">
-                <input id="goals-editor-water" type="number" min="0" [value]="water()" (input)="updateWater($event)" />
+                <input
+                    id="goals-editor-water"
+                    type="number"
+                    min="0"
+                    [attr.aria-invalid]="waterInvalid()"
+                    [attr.aria-describedby]="waterInvalid() ? 'goals-editor-water-error' : null"
+                    [value]="water()"
+                    (input)="updateWater($event)"
+                />
                 <span>{{ 'GENERAL.UNITS.ML' | translate }}</span>
             </div>
         </div>
+        @if (waterInvalid()) {
+            <fd-ui-form-error id="goals-editor-water-error" [error]="'GOALS_PAGE.EDITOR.NUMBER_RANGE' | translate" />
+        }
         <span class="goals-editor-card__label goals-editor-water-quick-label">{{ 'GOALS_PAGE.EDITOR.QUICK_SELECT' | translate }}</span>
         <div class="goals-editor-quick-values">
             @for (value of [2000, 2500, 3000]; track value) {

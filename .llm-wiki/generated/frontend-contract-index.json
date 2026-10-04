@@ -7,8 +7,8 @@
     "outputs": 538,
     "apiCalls": 278,
     "templatesWithTranslations": 346,
-    "translationKeys": 2093,
-    "consumerEdges": 1224,
+    "translationKeys": 2095,
+    "consumerEdges": 1225,
     "consumedComponents": 308,
     "unconsumedComponents": 176
   },
@@ -20535,6 +20535,7 @@
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.html",
       "keys": [
         "GOALS_PAGE.EDITOR.DISCARD",
+        "GOALS_PAGE.EDITOR.INVALID_VALUES",
         "GOALS_PAGE.EDITOR.UNSAVED"
       ]
     },
@@ -20547,6 +20548,7 @@
         "GOALS_PAGE.EDITOR.CALORIES",
         "GOALS_PAGE.EDITOR.CALORIES_HINT",
         "GOALS_PAGE.EDITOR.MACRO_NOTE",
+        "GOALS_PAGE.EDITOR.NUMBER_RANGE",
         "GOALS_PAGE.EDITOR.NUTRITION_HINT",
         "GOALS_PAGE.EDITOR.NUTRITION_TITLE",
         "GOALS_PAGE.EDITOR.OF_CALORIES",
@@ -20563,6 +20565,7 @@
         "GOALS_PAGE.EDITOR.BODY_HINT",
         "GOALS_PAGE.EDITOR.BODY_RANGE",
         "GOALS_PAGE.EDITOR.BODY_TITLE",
+        "GOALS_PAGE.EDITOR.NUMBER_RANGE",
         "GOALS_PAGE.EDITOR.QUICK_SELECT",
         "GOALS_PAGE.EDITOR.TARGET_VALUE",
         "GOALS_PAGE.EDITOR.WATER_TITLE"
@@ -32315,8 +32318,20 @@
       "selector": "fd-ui-form-error",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
       "consumerFeature": "goals",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-side-cards.html",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.html",
       "occurrences": 2,
+      "inputsUsed": [
+        "error"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiFormErrorComponent",
+      "selector": "fd-ui-form-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
+      "consumerFeature": "goals",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-side-cards.html",
+      "occurrences": 3,
       "inputsUsed": [
         "error"
       ],
@@ -41026,6 +41041,8 @@
       "inputsUsed": [
         "discardLabel",
         "message",
+        "saveDisabled",
+        "saveDisabledReason",
         "saveLabel",
         "saving"
       ],

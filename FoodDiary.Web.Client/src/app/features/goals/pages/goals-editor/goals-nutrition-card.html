@@ -25,12 +25,17 @@
                 id="goals-editor-calories"
                 type="number"
                 min="0"
+                [attr.aria-invalid]="caloriesInvalid()"
+                [attr.aria-describedby]="caloriesInvalid() ? 'goals-editor-calories-error' : null"
                 [value]="calories()"
                 (input)="emitNumber($event, value => calories.set(value))"
             /><span>{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
         </div>
     </div>
-    @for (macro of macros(); track macro.key) {
+    @if (caloriesInvalid()) {
+        <fd-ui-form-error id="goals-editor-calories-error" [error]="'GOALS_PAGE.EDITOR.NUMBER_RANGE' | translate" />
+    }
+    @for (macro of editableMacros(); track macro.key) {
         <div class="goals-editor-form-row">
             <div class="goals-editor-form-row__copy">
                 <fd-ui-icon class="goals-editor-form-row__icon" size="sm" [name]="macro.icon" [style.color]="macro.accent" />
@@ -44,6 +49,8 @@
                     type="number"
                     min="0"
                     [id]="`goals-editor-${macro.key}`"
+                    [attr.aria-invalid]="macro.invalid"
+                    [attr.aria-describedby]="macro.invalid ? `goals-editor-${macro.key}-error` : null"
                     [value]="macro.value"
                     (input)="emitNumber($event, value => macroChange.emit({ key: macro.key, value }))"
                 /><span>{{ 'GENERAL.UNITS.G' | translate }}</span>
@@ -54,6 +61,9 @@
                 >
             }
         </div>
+        @if (macro.invalid) {
+            <fd-ui-form-error [id]="`goals-editor-${macro.key}-error`" [error]="'GOALS_PAGE.EDITOR.NUMBER_RANGE' | translate" />
+        }
     }
     <p class="goals-editor-card__note">ⓘ {{ 'GOALS_PAGE.EDITOR.MACRO_NOTE' | translate }}</p>
 </section>

@@ -3274,6 +3274,8 @@
             "QUICK_SELECT": "Quick select",
             "BODY_TITLE": "Body measurements",
             "BODY_RANGE": "Enter a value from 0 to {{max}} {{unit}}. Use 0 to clear the target.",
+            "NUMBER_RANGE": "Enter a number greater than or equal to 0.",
+            "INVALID_VALUES": "Correct the invalid goal values.",
             "BODY_HINT": "Set the body targets you want to track.",
             "CYCLING_HINT": "Use different calorie targets for individual days of the week.",
             "CYCLING_ENABLED_HINT": "Set the calorie target for each day of the week.",

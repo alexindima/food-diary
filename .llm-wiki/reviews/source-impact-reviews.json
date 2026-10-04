@@ -844,13 +844,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ba1d86b10b44d141bd924ed7a0cf67ec6d4005dae445dc6823adae91e3e16ece"
+          "sha256": "d9e1b8766387f37894ef7b318f973ee7eb4434063c9da4703f3d2b7e8cf65d5b"
         }
       ],
-      "reason": "Manual saves clear obsolete queued payloads before submitting the current draft. Three regression cases reproduced old-value writes before the fix and pass afterward; 72 focused tests cover autosave, manual retries and downstream goals/list use. Browser proves network failure retry, edits during in-flight save, discard without writes, persisted reload and restored QA fixture.",
+      "reason": "Four new component regressions fail on the prior code and pass after the draft guard. Tests cover every submitted numeric field with negative/NaN/infinite values, zero/unset body goals, body maxima, manual retry and cycling defaults. 77 focused tests pass. Browser validates linked errors, disable/reenable transitions, discard and mobile/desktop layout; fixture remains unchanged. English and Russian source and compiled dictionaries contain the two new messages.",
       "baseRef": "HEAD",
-      "gitHead": "c50731a18d9d9741f84c51ccae11a427fb669ff0",
-      "reviewedAtUtc": "2026-10-04T19:48:06.4473252Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:13:49.6710190Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -946,13 +946,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ba1d86b10b44d141bd924ed7a0cf67ec6d4005dae445dc6823adae91e3e16ece"
+          "sha256": "d9e1b8766387f37894ef7b318f973ee7eb4434063c9da4703f3d2b7e8cf65d5b"
         }
       ],
-      "reason": "One existing feature facade queue reset only. No authorization, user scoping, transport endpoint, sensitive log, credentials, health data fields or persistence semantics changed. Obsolete manual-save payloads cannot be sent after a newer successful draft. Existing scoped UI and API remain unchanged.",
+      "reason": "Client-side validation of the existing own-user goals draft only. Server authorization, owner scoping, finite/nonnegative checks, persistence, logging, provider sharing and credentials are unchanged. No request is sent for invalid drafts through either the save button or the navigation save handler. Browser validation exploration emitted zero PATCH requests.",
       "baseRef": "HEAD",
-      "gitHead": "c50731a18d9d9741f84c51ccae11a427fb669ff0",
-      "reviewedAtUtc": "2026-10-04T19:48:07.5426103Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:13:51.5537057Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1085,17 +1085,21 @@
     {
       "pageId": "workflow-trace-feature",
       "pagePath": ".llm-wiki/workflows/trace-feature.md",
-      "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
+      "pageSha256": "4e059a263f76810db4c559e2b5599d8599571ccf48d060f6360c6d0e8ec60b48",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "4c3143a9eb38c886bf1ec4d377998a181c6ecb165c6f689ae896bc5af7eb4939"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "afd394e15f9c67be67f27b160895d8c414eae9e26ab6b82659132e0c91b73d7f"
+          "sha256": "7a778901f747924651b6c700085c81a5c5644292fe5db9364be4e5d07fcf76a5"
         }
       ],
-      "reason": "Verified GoalsEditor cycling callbacks use the current draft and preserve the previous facade initialization behavior; saved per-day settings remain intact.",
+      "reason": "Verified editor draft signals flow through the existing GoalsPage manual-save callback and GoalsFacade to the unchanged GoalsService. Validation is checked at both the disabled button and persistAsync handler; existing manual retry and cycling flows remain covered. Updated frontend symbol and contract indexes reflect the two internal predicates, protected computed flags and UI-kit error imports without cross-feature changes.",
       "baseRef": "HEAD",
-      "gitHead": "fed0ab80755c126efa0cd43661f463af6452327b",
-      "reviewedAtUtc": "2026-10-04T18:16:11.7517006Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:13:53.0409226Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1175,17 +1179,17 @@
     {
       "pageId": "workflow.frontend-contract-review",
       "pagePath": ".llm-wiki/workflows/frontend-contract-review.md",
-      "pageSha256": "50e87b590ffcce7d83f4c1061f55f2210470a915e9fc56f3fab959d776a22f34",
+      "pageSha256": "4ac1b340bc0fba5754c6652cf0a6966c2f9bd04b7ec8b896bcd8f9edf130a025",
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "e66ce0e22daf43ed01ea5bc6c096f50120a2ea042f06e0235f21c26d10916fd6"
+          "sha256": "4c3143a9eb38c886bf1ec4d377998a181c6ecb165c6f689ae896bc5af7eb4939"
         }
       ],
-      "reason": "Reviewed recipe import routes and multipart DTOs against current master: the compatibility checker reports 0 breaking changes and 9 additions; 4 host transport tests and 2116 architecture tests pass. AI owns recognition and Recipes saves the editable draft. Full frontend verification passed 5147 tests, with 51 focused tests after the latest master update and prior desktop/mobile visual QA.",
-      "baseRef": "master",
-      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
-      "reviewedAtUtc": "2026-10-04T18:04:11.7839799Z"
+      "reason": "Existing goal component selectors, inputs and outputs remain unchanged. New internal draft predicates match server finite/nonnegative nutrition rules and existing canonical body limits. Six named numeric inputs now expose linked localized error descriptions and aria-invalid; the existing unsaved-change bar receives its existing disabled-state inputs. No endpoint or payload change. 77 focused tests pass; real browser proves all six negative fields blocked, zero correction allowed and body maxima blocked without writes.",
+      "baseRef": "HEAD",
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:13:47.6358033Z"
     },
     {
       "pageId": "workflow.query-context",

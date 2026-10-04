@@ -91,3 +91,14 @@ export function isBodyTargetValid(key: BodyTargetKey, value: number): boolean {
 export function areBodyTargetsValid(targets: Record<BodyTargetKey, number>): boolean {
     return isBodyTargetValid('weight', targets.weight) && isBodyTargetValid('waist', targets.waist);
 }
+
+export function isGoalNumberValid(value: number): boolean {
+    return Number.isFinite(value) && value >= 0;
+}
+
+export function isGoalsDraftValid(draft: GoalsDraft): boolean {
+    return (
+        [draft.calories, draft.water, ...Object.values(draft.macros), ...Object.values(draft.dayCalories)].every(isGoalNumberValid) &&
+        areBodyTargetsValid(draft.bodyTargets)
+    );
+}

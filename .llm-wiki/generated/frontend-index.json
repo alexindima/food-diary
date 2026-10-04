@@ -4161,7 +4161,7 @@
       "role": "Component",
       "selector": "fd-goals-nutrition-card",
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.ts",
-      "line": 18
+      "line": 19
     },
     {
       "name": "GoalsSideCardsComponent",
@@ -7172,8 +7172,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4088,
-      "russianProperties": 4088,
+      "englishProperties": 4090,
+      "russianProperties": 4090,
       "countsMatch": true
     },
     {

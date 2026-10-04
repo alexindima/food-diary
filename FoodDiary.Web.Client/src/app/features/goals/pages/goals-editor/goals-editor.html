@@ -35,6 +35,8 @@
                 [discardLabel]="'GOALS_PAGE.EDITOR.DISCARD' | translate"
                 [saveLabel]="(saving() ? 'GOALS_PAGE.STATUS_SAVING' : 'GOALS_PAGE.EDITOR.SAVE') | translate"
                 [saving]="saving()"
+                [saveDisabled]="!draftValid()"
+                [saveDisabledReason]="draftValid() ? null : ('GOALS_PAGE.EDITOR.INVALID_VALUES' | translate)"
                 (discard)="discard()"
                 (save)="persistAsync()"
             />

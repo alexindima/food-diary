@@ -10,11 +10,11 @@ import { createDayCalories } from '../../lib/goals-state.mapper';
 import { GoalsCyclingRowComponent } from './goals-cycling-row';
 import {
     applyMacroPreset,
-    areBodyTargetsValid,
     buildDraftRequest,
     calculateMacroPercent,
     type GoalsDraft,
     type GoalsMacroDraft,
+    isGoalsDraftValid,
 } from './goals-editor.models';
 import { GoalsNutritionCardComponent } from './goals-nutrition-card';
 import { GoalsSideCardsComponent } from './goals-side-cards';
@@ -52,6 +52,7 @@ export class GoalsEditorComponent {
 
     protected readonly draft = signal<GoalsDraft | null>(null);
     protected readonly dirty = signal(false);
+    protected readonly draftValid = computed(() => isGoalsDraftValid(this.requireDraft()));
     protected readonly macroDrafts = computed(() => {
         const draft = this.draft();
         const calories = draft?.calories ?? this.calories();
@@ -130,7 +131,7 @@ export class GoalsEditorComponent {
             return this.pendingSave;
         }
         const submittedDraft = this.requireDraft();
-        if (!areBodyTargetsValid(submittedDraft.bodyTargets)) {
+        if (!isGoalsDraftValid(submittedDraft)) {
             return false;
         }
         this.pendingSave = this.saveRequest()(buildDraftRequest(submittedDraft))
