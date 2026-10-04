@@ -181,17 +181,21 @@
     {
       "pageId": "workflow-adaptive-development",
       "pagePath": ".llm-wiki/workflows/adaptive-development.md",
-      "pageSha256": "4f28ea95d3a372fbbe73c4de4f4bee2a1dc475842bdf62db6c29ea7e34a47e20",
+      "pageSha256": "bf06c7515995b5983125ae2d8469bc357431d468feed457a4ae9ab443288c4a4",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "abfcc040124fea145f6bf98a8ff9f2537039cf87fcd31dc9ddb3cab81bfb961a"
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "75ba917cefa45d83e45b871b41d27a8e20954bfc5c38ef4147338b624f628234"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
+          "sha256": "a8bb234d92a449d1cddf43929f4a73c018a68e5cf142c70f926cc189bfbe8560"
         }
       ],
-      "reason": "Reviewed snapshot seeding change: SQLite online backup preserves read-only isolation and guards; no adaptive routing change.",
+      "reason": "Reviewed the affected tooling guides against request-local reuse of the freshly checked repository, HEAD and content fingerprint. Normal scoped cache callers preserve their identity; dependency hashing remains independent and module discovery is deferred only for cache hits. Cache regressions and the unchanged latency gate pass. Seven counterbalanced pairs measure median warm context from 1050ms to 595ms; static reference indexes were regenerated and do not represent execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "d474c283b2c99bc94d7f64f253a324cb9d5fff91",
-      "reviewedAtUtc": "2026-09-26T06:03:08.1831257Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:28.8073013Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -233,14 +237,14 @@
       "pageSha256": "58810bcafe9de0e6e09ec7ce44659b61c6c2d807da6b207e95a00aa681b51685",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "8b77a18aa232bc55d6be369bdd6e223695da7638bda63ff1f866ab544749795b"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "07ded0de4f21d053d1dc727689954241f550eeb74bc4fa4c5b3d8e28b7eebf02"
         }
       ],
-      "reason": "Statistics forwards an optional zone through the Meals-owned query to its existing calendar reader. Null remains legacy instant mode; all consumers compile and 33 WeeklyCheckIn tests pass.",
+      "reason": "Reviewed the backend-contract guide: only additive bounded graph-status workspace metadata is introduced. HTTP routes, C# contracts, extraction and consumer selection are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "bd0b317c741192f85e39301b207407b7ce778add",
-      "reviewedAtUtc": "2026-10-04T19:26:52.3268557Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:29.2945254Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -290,14 +294,22 @@
       "pageSha256": "465c986c57525596ffad1b97ac1707292a22f47bf5fa593cd3b7c3849d5f108f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1",
-          "sha256": "11531e8fbfa2a2677e4f140e28374d518d6c119f54eb6cc5684ceab0ed84c30e"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "07ded0de4f21d053d1dc727689954241f550eeb74bc4fa4c5b3d8e28b7eebf02"
+        },
+        {
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "03e5557aed0fa12e809720c2e35b674b414d71adc4e323e37286eb1727bc9fc0"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
+          "sha256": "7799a5d8078a6253348c559552ab4a665fe63b8dc1de5804646b72f2db9e235f"
         }
       ],
-      "reason": "Reviewed schema-5 SQLite telemetry after the subprocess argument correction: cold samples use fresh PowerShell processes, warm samples reuse the loaded reader, all three routes expose positive ordered p50/p95 values, and no JSON query comparison remains. The existing query routes and bounds are unchanged.",
+      "reason": "Reviewed the affected tooling guides against request-local reuse of the freshly checked repository, HEAD and content fingerprint. Normal scoped cache callers preserve their identity; dependency hashing remains independent and module discovery is deferred only for cache hits. Cache regressions and the unchanged latency gate pass. Seven counterbalanced pairs measure median warm context from 1050ms to 595ms; static reference indexes were regenerated and do not represent execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:37:30.7005359Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:29.7450399Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -336,17 +348,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "8cc2f129e13fe4e7ce9ad03041b452dbec8ff56208c32f794cb834684c2860ed"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "339342e0bf6788867c8fc2899a69105864495ab3e51e3fc8f4151f03c98cac34"
+          "sha256": "03e5557aed0fa12e809720c2e35b674b414d71adc4e323e37286eb1727bc9fc0"
         }
       ],
-      "reason": "Reviewed context source selection and cache boundaries: the shared SQLite ranking reader, exact fingerprints, scoped discovery and isolated read-only snapshots remain authoritative. JSON result serialization remains an artifact format; the alternate compiled-index JSON provider is removed.",
+      "reason": "Reviewed affected bundle, impact and maintenance guidance: every context request still probes current source bytes, including same-size edits with unchanged timestamps, and validates dependent files before cache reuse. Ranking, output bounds, ambiguity, snapshot isolation, governed workflows and writer recovery are preserved.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:03.2228503Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:30.3730331Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -490,17 +498,21 @@
     {
       "pageId": "workflow-developer-experience",
       "pagePath": ".llm-wiki/workflows/developer-experience.md",
-      "pageSha256": "f46020d590c232ec013fcb3528b076e33d6f8b001faf48fcbdb60b77155aa409",
+      "pageSha256": "ef6996bd5373a4f25ad072892d14337856ea9365ee9154206096bd3743a9f7c3",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "6ebe8fdda49be99b2847cfcdeb0c7adf6a351ce8990f1a16478ad48fec13e85c"
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "75ba917cefa45d83e45b871b41d27a8e20954bfc5c38ef4147338b624f628234"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
+          "sha256": "a8bb234d92a449d1cddf43929f4a73c018a68e5cf142c70f926cc189bfbe8560"
         }
       ],
-      "reason": "Reviewed verify-full routing against the documented daily commands. Canonical research states, SQLite bootstrap, context caching and task routing remain consistent; publication details are maintained in index-pipeline.",
+      "reason": "Reviewed the affected tooling guides against request-local reuse of the freshly checked repository, HEAD and content fingerprint. Normal scoped cache callers preserve their identity; dependency hashing remains independent and module discovery is deferred only for cache hits. Cache regressions and the unchanged latency gate pass. Seven counterbalanced pairs measure median warm context from 1050ms to 595ms; static reference indexes were regenerated and do not represent execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "c00b5915692f57b1b4b13746d221918eb0acc198",
-      "reviewedAtUtc": "2026-10-03T06:42:21.6288984Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:30.9074539Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -595,17 +607,17 @@
     {
       "pageId": "workflow-impact-simulation",
       "pagePath": ".llm-wiki/workflows/impact-simulation.md",
-      "pageSha256": "b138746ffe0c2db4de0df29997f66f0eb50ed7ecef5835d7f97f6f389a527095",
+      "pageSha256": "afe53d54c25e32851bd4696c4fc162d497360f95a6b31a95aa557991f57dc840",
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "bd5a591deb5c62de0408ce5ed6b47a755d976da1c386cf14b48596b066df5bb0"
+          "sha256": "07ded0de4f21d053d1dc727689954241f550eeb74bc4fa4c5b3d8e28b7eebf02"
         }
       ],
-      "reason": "Reviewed the context-search-only graph edits against the documented compiled-context frontend catalog reuse. No impact-simulation selector, projection payload or alignment behavior was modified.",
+      "reason": "Reviewed affected bundle, impact and maintenance guidance: every context request still probes current source bytes, including same-size edits with unchanged timestamps, and validates dependent files before cache reuse. Ranking, output bounds, ambiguity, snapshot isolation, governed workflows and writer recovery are preserved.",
       "baseRef": "HEAD",
-      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
-      "reviewedAtUtc": "2026-10-04T03:27:32.8745017Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:31.4561656Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -655,14 +667,18 @@
       "pageSha256": "b79c719e7d91256dd98925bac93fd34f3a4b6142d9d4f8a5c37ba91c5dafd6ef",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1",
-          "sha256": "11531e8fbfa2a2677e4f140e28374d518d6c119f54eb6cc5684ceab0ed84c30e"
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "03e5557aed0fa12e809720c2e35b674b414d71adc4e323e37286eb1727bc9fc0"
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "75ba917cefa45d83e45b871b41d27a8e20954bfc5c38ef4147338b624f628234"
         }
       ],
-      "reason": "Reviewed schema-5 SQLite telemetry after the subprocess argument correction: cold samples use fresh PowerShell processes, warm samples reuse the loaded reader, all three routes expose positive ordered p50/p95 values, and no JSON query comparison remains. The existing query routes and bounds are unchanged.",
+      "reason": "Reviewed the affected tooling guides against request-local reuse of the freshly checked repository, HEAD and content fingerprint. Normal scoped cache callers preserve their identity; dependency hashing remains independent and module discovery is deferred only for cache hits. Cache regressions and the unchanged latency gate pass. Seven counterbalanced pairs measure median warm context from 1050ms to 595ms; static reference indexes were regenerated and do not represent execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:37:32.196947Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:31.9716963Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -795,17 +811,17 @@
     {
       "pageId": "workflow-privacy-review",
       "pagePath": ".llm-wiki/workflows/privacy-review.md",
-      "pageSha256": "e6a46b0997c9e9829b351ab97f2487c1fc1414a8887442c5012cc06caebfcc3d",
+      "pageSha256": "b60f38c1d4bb6323e6d9a1128ef46cbe3f2c097c8abd5f71e062f9d48a25997c",
       "sources": [
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "7edac53f8569f6b4a914fa3df788992d2b94fc2acc39487c13693a1e59463f86"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "07ded0de4f21d053d1dc727689954241f550eeb74bc4fa4c5b3d8e28b7eebf02"
         }
       ],
-      "reason": "Reviewed consent, Premium access, opt-in clipboard reading, public URL DNS/IP and redirect checks, body limits, local FFmpeg cleanup and WAV-only provider sharing. All 218 infrastructure tests pass including real media and unsafe URL/ambiguous caption cases. The actual Instagram caption was verified without live OpenAI calls or credential changes.",
-      "baseRef": "master",
-      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
-      "reviewedAtUtc": "2026-10-04T18:04:12.826182Z"
+      "reason": "Reviewed current privacy/security guidance and the local cache path: Node remains the only SQLite writer; tokens are rejected for foreign repositories, scope substitution or stale/invalid fields. No cross-request freshness TTL, query/path telemetry, provider sharing, credentials or application data flow was added. Metadata exposes a path count rather than changed-path payloads.",
+      "baseRef": "HEAD",
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:32.5011191Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -844,13 +860,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ba1d86b10b44d141bd924ed7a0cf67ec6d4005dae445dc6823adae91e3e16ece"
+          "sha256": "0b1427f873f80a6655f047112bbe93d331e8709e9225616f82eaf1c8cd953fa4"
         }
       ],
-      "reason": "Manual saves clear obsolete queued payloads before submitting the current draft. Three regression cases reproduced old-value writes before the fix and pass afterward; 72 focused tests cover autosave, manual retries and downstream goals/list use. Browser proves network failure retry, edits during in-flight save, discard without writes, persisted reload and restored QA fixture.",
+      "reason": "Reviewed the affected tooling guides against request-local reuse of the freshly checked repository, HEAD and content fingerprint. Normal scoped cache callers preserve their identity; dependency hashing remains independent and module discovery is deferred only for cache hits. Cache regressions and the unchanged latency gate pass. Seven counterbalanced pairs measure median warm context from 1050ms to 595ms; static reference indexes were regenerated and do not represent execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "c50731a18d9d9741f84c51ccae11a427fb669ff0",
-      "reviewedAtUtc": "2026-10-04T19:48:06.4473252Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:33.2339933Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -946,13 +962,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ba1d86b10b44d141bd924ed7a0cf67ec6d4005dae445dc6823adae91e3e16ece"
+          "sha256": "0b1427f873f80a6655f047112bbe93d331e8709e9225616f82eaf1c8cd953fa4"
         }
       ],
-      "reason": "One existing feature facade queue reset only. No authorization, user scoping, transport endpoint, sensitive log, credentials, health data fields or persistence semantics changed. Obsolete manual-save payloads cannot be sent after a newer successful draft. Existing scoped UI and API remain unchanged.",
+      "reason": "Reviewed current privacy/security guidance and the local cache path: Node remains the only SQLite writer; tokens are rejected for foreign repositories, scope substitution or stale/invalid fields. No cross-request freshness TTL, query/path telemetry, provider sharing, credentials or application data flow was added. Metadata exposes a path count rather than changed-path payloads.",
       "baseRef": "HEAD",
-      "gitHead": "c50731a18d9d9741f84c51ccae11a427fb669ff0",
-      "reviewedAtUtc": "2026-10-04T19:48:07.5426103Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:33.9504327Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1220,21 +1236,17 @@
     {
       "pageId": "workflow.self-maintenance",
       "pagePath": ".llm-wiki/workflows/self-maintenance.md",
-      "pageSha256": "3374888dc37a3b5d032bdece140d17182fb8fe516c9a90b8286338585858a5b7",
+      "pageSha256": "ac2439518d8645f59d09df790332a1fd4c8c8191dc600990e886eaf41d256186",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "84d144525363d00e07e55e3073ffa8d87ebadb34fa7bdea4590c1457d76644e3"
-        },
-        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "bd5a591deb5c62de0408ce5ed6b47a755d976da1c386cf14b48596b066df5bb0"
+          "sha256": "07ded0de4f21d053d1dc727689954241f550eeb74bc4fa4c5b3d8e28b7eebf02"
         }
       ],
-      "reason": "Reviewed the feature-path fixtures and candidate hydration changes against the sole-writer projection contract. Graph regressions passed, including incremental build, corrupt projection recovery, missing dependency handling and ownership/source maintenance.",
+      "reason": "Reviewed affected bundle, impact and maintenance guidance: every context request still probes current source bytes, including same-size edits with unchanged timestamps, and validates dependent files before cache reuse. Ranking, output bounds, ambiguity, snapshot isolation, governed workflows and writer recovery are preserved.",
       "baseRef": "HEAD",
-      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
-      "reviewedAtUtc": "2026-10-04T03:27:37.2916916Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:34.4730988Z"
     }
   ]
 }

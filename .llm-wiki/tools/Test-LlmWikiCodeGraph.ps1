@@ -23,6 +23,13 @@ if ($PreservedTimestampOnly) {
             $refresh = & $manager build -Format Json | ConvertFrom-Json
             $found = & $manager symbol -Query $name -SkipRefresh -Format Json | ConvertFrom-Json
             $status = & $manager status -SkipRefresh -Format Json | ConvertFrom-Json
+            if (-not $status.currentWorkspace.fresh -or
+                $status.currentWorkspace.fingerprint -cne $status.currentChangeSetFingerprint -or
+                $status.currentWorkspace.head -cne $status.currentChangeSetGitHead -or
+                [IO.Path]::GetFullPath($status.currentWorkspace.repositoryRoot) -cne [IO.Path]::GetFullPath($repositoryRoot) -or
+                $status.currentWorkspace.changedPathCount -lt 1) {
+                throw 'Graph status did not expose the exact verified request-local workspace.'
+            }
             if (-not $status.changeSetFresh -or @($found.symbols | Where-Object name -eq $name).Count -ne 1) {
                 throw 'Graph claimed freshness without extracting a repeated same-size/same-time dirty edit.'
             }

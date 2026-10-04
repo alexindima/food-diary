@@ -1794,11 +1794,11 @@
     },
     {
       "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-      "nonBlankLines": 163,
-      "decisionPoints": 20,
+      "nonBlankLines": 193,
+      "decisionPoints": 28,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 35.26
+      "structuralRiskScore": 47.86
     },
     {
       "path": ".llm-wiki/tools/LlmWikiRequirementCriteria.ps1",

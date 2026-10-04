@@ -4,6 +4,7 @@ kind: workflow
 status: current
 sources:
   - .llm-wiki/tools/Find-LlmWikiContext.ps1
+  - .llm-wiki/tools/LlmWikiQueryCache.ps1
   - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskBrief.ps1
   - .llm-wiki/tools/code-graph.mjs
@@ -24,6 +25,15 @@ sources:
 ---
 
 # Query Repository Context
+
+Each CLI context request probes the live graph status before cache reuse. Its
+bounded `currentWorkspace` token carries the repository identity, Git HEAD,
+content fingerprint, changed-path count and freshness state. The cache key reuses
+this token within that request instead of invoking Git and hashing the same
+workspace again. Dependency hashes are still checked separately; the next
+request performs a new status probe, including same-size edits with preserved
+timestamps. A global token cannot replace a scoped cache snapshot. Module source
+directory discovery runs only on a cache miss.
 
 CLI and MCP context ranking share `FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs`. The CLI adapter restores indexed layer, module, role, and test features while preserving its response shape. Identical concurrent MCP command-cache misses share a bounded gate; cancelling a waiter leaves the running command intact.
 

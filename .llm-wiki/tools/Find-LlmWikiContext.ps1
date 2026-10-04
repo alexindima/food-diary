@@ -22,9 +22,6 @@ $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiQueryCache.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiApplicationModulePaths.ps1')
-$moduleImplementationRoots = if ($Module -match '^[A-Za-z][A-Za-z0-9_]*$') {
-    @((Get-LlmWikiApplicationModuleLayout -RepositoryRoot $repositoryRoot -Module $Module).sourceRoots)
-} else { @() }
 
 if ([string]::IsNullOrWhiteSpace($Module) -and [string]::IsNullOrWhiteSpace($Query)) {
     throw 'Provide -Module, -Query, or both.'
@@ -118,7 +115,7 @@ if ($indexFresh -and $Format -eq 'Json' -and -not $SkipQueryCache) {
     $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'context-sqlite' -Arguments @{
         Module = $Module; Query = $Query; ScopePath = $scopePaths; ChangeType = $ChangeType
         Limit = $Limit; Compact = [bool]$Compact; Fingerprint = [string]$graphStatus.changeSetFingerprint
-    } -DependencyPath @(
+    } -VerifiedWorkspace $graphStatus.currentWorkspace -DependencyPath @(
         '.artifacts/llm-wiki/code-graph/code-graph.fingerprint',
         '.llm-wiki/policies/context-search-ranking.json',
         '.llm-wiki/tools/code-graph.mjs', '.llm-wiki/tools/code-graph-path-layout.mjs',
@@ -134,6 +131,9 @@ if ($indexFresh -and $Format -eq 'Json' -and -not $SkipQueryCache) {
         return
     }
 }
+$moduleImplementationRoots = if ($Module -match '^[A-Za-z][A-Za-z0-9_]*$') {
+    @((Get-LlmWikiApplicationModuleLayout -RepositoryRoot $repositoryRoot -Module $Module).sourceRoots)
+} else { @() }
 $searchLimit = [Math]::Min(100, [Math]::Max(50, $Limit * 4))
 . (Join-Path $PSScriptRoot 'LlmWikiInProcessSqlite.ps1')
 $null = Initialize-LlmWikiInProcessSqlite

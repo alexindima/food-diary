@@ -2963,6 +2963,7 @@ try {
   else if (action === 'security-evidence') result = querySecurityEvidence(database, repositoryRoot, Number(options.limit ?? 12));
   else {
     const currentChangeSet = changeSetSnapshot();
+    const indexedChangeSetFingerprint = database.prepare("SELECT value FROM metadata WHERE key='change_set_fingerprint'").get()?.value ?? null;
     result = {
     action: 'status',
     databasePath,
@@ -2976,11 +2977,18 @@ try {
     querySources: database.prepare("SELECT substr(key,14) category, value contentHash FROM metadata WHERE key LIKE 'query_source:%' ORDER BY key").all(),
     typescriptProjectionComplete: database.prepare("SELECT value FROM metadata WHERE key='typescript_projection_complete'").get()?.value === 'true',
     searchFingerprint: database.prepare("SELECT value FROM metadata WHERE key='context_search_fingerprint'").get()?.value ?? null,
-    changeSetFingerprint: database.prepare("SELECT value FROM metadata WHERE key='change_set_fingerprint'").get()?.value ?? null,
+    changeSetFingerprint: indexedChangeSetFingerprint,
     changeSetGitHead: database.prepare("SELECT value FROM metadata WHERE key='change_set_git_head'").get()?.value ?? null,
     currentChangeSetFingerprint: currentChangeSet.fingerprint,
     currentChangeSetGitHead: currentChangeSet.head,
-    changeSetFresh: database.prepare("SELECT value FROM metadata WHERE key='change_set_fingerprint'").get()?.value === currentChangeSet.fingerprint,
+    currentWorkspace: {
+      repositoryRoot,
+      head: currentChangeSet.head,
+      fingerprint: currentChangeSet.fingerprint,
+      changedPathCount: currentChangeSet.changedPaths.length,
+      fresh: indexedChangeSetFingerprint === currentChangeSet.fingerprint,
+    },
+    changeSetFresh: indexedChangeSetFingerprint === currentChangeSet.fingerprint,
     contextSearchUpdatedAtUtc: database.prepare("SELECT value FROM metadata WHERE key='context_search_updated_at_utc'").get()?.value ?? null,
     compiledIndexes: database.prepare('SELECT index_name indexName, source_path sourcePath, content_hash contentHash FROM compiled_indexes ORDER BY index_name').all(),
     };
