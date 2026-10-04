@@ -165,6 +165,34 @@ describe('ChangePasswordDialogComponent submit', () => {
     });
 });
 
+describe('ChangePasswordDialogComponent exact password values', () => {
+    it.each([true, false])('preserves whitespace when submitting (has password: %s)', async hasPassword => {
+        TestBed.resetTestingModule();
+        configureComponent({ hasPassword });
+        userServiceSpy.changePassword.mockReturnValue(of(true));
+        userServiceSpy.setPassword.mockReturnValue(of(true));
+        const currentPassword = ' oldPass ';
+        const newPassword = ' newPass123 ';
+        component['form'].currentPassword().value.set(currentPassword);
+        component['form'].newPassword().value.set(newPassword);
+        component['form'].confirmPassword().value.set(newPassword);
+        fixture.detectChanges();
+
+        const form = (fixture.nativeElement as HTMLElement).querySelector('form');
+        expect(form).not.toBeNull();
+        form?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        await fixture.whenStable();
+
+        if (hasPassword) {
+            expect(userServiceSpy.changePassword).toHaveBeenCalledWith({ currentPassword, newPassword });
+            expect(userServiceSpy.setPassword).not.toHaveBeenCalled();
+        } else {
+            expect(userServiceSpy.setPassword).toHaveBeenCalledWith({ newPassword });
+            expect(userServiceSpy.changePassword).not.toHaveBeenCalled();
+        }
+    });
+});
+
 describe('ChangePasswordDialogComponent cancel and set password mode', () => {
     it('should not close dialog on cancel while submitting', () => {
         component['isSubmitting'].set(true);
