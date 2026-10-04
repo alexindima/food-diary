@@ -34,6 +34,8 @@ const IN_FLIGHT_CALORIES = 1800;
 const QUEUED_WATER = 2500;
 const RETRY_WATER = 2300;
 const FAILED_SAVE_CALORIES = 1900;
+const FAILED_MANUAL_WATER = 2210;
+const LATEST_MANUAL_WATER = 2220;
 
 let facade: GoalsFacade;
 let goalsService: {
@@ -196,6 +198,41 @@ function registerMacroTests(): void {
 
 function registerManualSaveTests(): void {
     describe('manual save', () => {
+        it.each(['error', 'null'] as const)('keeps the latest manual save after a previous %s response', async failure => {
+            facade.initialize();
+            const failedResponse = failure === 'error' ? throwError(() => new Error('save failed')) : of(null);
+            goalsService.updateGoals
+                .mockReturnValueOnce(failedResponse)
+                .mockReturnValueOnce(of({ waterGoal: LATEST_MANUAL_WATER }));
+
+            expect(await facade.saveManuallyAsync({ waterGoal: FAILED_MANUAL_WATER })).toBe(false);
+            expect(facade.hasAutosaveError()).toBe(true);
+            expect(await facade.saveManuallyAsync({ waterGoal: LATEST_MANUAL_WATER })).toBe(true);
+            await vi.advanceTimersByTimeAsync(AUTOSAVE_DELAY_MS * 2);
+
+            expect(goalsService.updateGoals.mock.calls).toEqual([
+                [{ waterGoal: FAILED_MANUAL_WATER }],
+                [{ waterGoal: LATEST_MANUAL_WATER }],
+            ]);
+            expect(facade.waterValue()).toBe(LATEST_MANUAL_WATER);
+            expect(facade.hasPendingAutosave()).toBe(false);
+            expect(facade.hasAutosaveError()).toBe(false);
+            expect(facade.isSavingGoals()).toBe(false);
+        });
+
+        it('supersedes a queued autosave with the submitted manual value', async () => {
+            facade.initialize();
+            facade.updateWaterValue(FAILED_MANUAL_WATER);
+            goalsService.updateGoals.mockReturnValueOnce(of({ waterGoal: LATEST_MANUAL_WATER }));
+
+            expect(await facade.saveManuallyAsync({ waterGoal: LATEST_MANUAL_WATER })).toBe(true);
+            await vi.advanceTimersByTimeAsync(AUTOSAVE_DELAY_MS * 2);
+
+            expect(goalsService.updateGoals).toHaveBeenCalledExactlyOnceWith({ waterGoal: LATEST_MANUAL_WATER });
+            expect(facade.waterValue()).toBe(LATEST_MANUAL_WATER);
+            expect(facade.hasPendingAutosave()).toBe(false);
+        });
+
         it('applies the saved response when a manual save succeeds', () => {
             goalsService.updateGoals.mockReturnValueOnce(
                 of({

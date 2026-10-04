@@ -306,6 +306,7 @@ export class GoalsFacade {
     }
 
     public async saveManuallyAsync(request: UpdateGoalsRequest): Promise<boolean> {
+        this.autosaveQueue.clearPending();
         this.hasAutosaveError.set(false);
         this.hasPendingAutosave.set(false);
         return new Promise(resolve => {

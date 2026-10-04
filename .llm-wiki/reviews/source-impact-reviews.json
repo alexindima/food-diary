@@ -844,13 +844,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "31e0d8d5b0320a199facf0b48cdbb8d1f79202fcd2c501c6c91bd87b53b20e78"
+          "sha256": "ba1d86b10b44d141bd924ed7a0cf67ec6d4005dae445dc6823adae91e3e16ece"
         }
       ],
-      "reason": "The real four-meal fixture now counts one local day and averages 977 calories. Owner, Statistics, persistence DST and frontend verification cover the regression and legacy default.",
+      "reason": "Manual saves clear obsolete queued payloads before submitting the current draft. Three regression cases reproduced old-value writes before the fix and pass afterward; 72 focused tests cover autosave, manual retries and downstream goals/list use. Browser proves network failure retry, edits during in-flight save, discard without writes, persisted reload and restored QA fixture.",
       "baseRef": "HEAD",
-      "gitHead": "bd0b317c741192f85e39301b207407b7ce778add",
-      "reviewedAtUtc": "2026-10-04T19:26:53.3901849Z"
+      "gitHead": "c50731a18d9d9741f84c51ccae11a427fb669ff0",
+      "reviewedAtUtc": "2026-10-04T19:48:06.4473252Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -946,17 +946,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "31e0d8d5b0320a199facf0b48cdbb8d1f79202fcd2c501c6c91bd87b53b20e78"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "507522f855c0a7a6d172ba77978bfd5530886e202fa51ca2f0061fea45a41e85"
+          "sha256": "ba1d86b10b44d141bd924ed7a0cf67ec6d4005dae445dc6823adae91e3e16ece"
         }
       ],
-      "reason": "Existing user authorization and tenant meal filtering remain unchanged. The supplied IANA zone is bounded to 100 characters and validated before aggregation; no credentials or private-content writes are added.",
+      "reason": "One existing feature facade queue reset only. No authorization, user scoping, transport endpoint, sensitive log, credentials, health data fields or persistence semantics changed. Obsolete manual-save payloads cannot be sent after a newer successful draft. Existing scoped UI and API remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "bd0b317c741192f85e39301b207407b7ce778add",
-      "reviewedAtUtc": "2026-10-04T19:26:56.0138565Z"
+      "gitHead": "c50731a18d9d9741f84c51ccae11a427fb669ff0",
+      "reviewedAtUtc": "2026-10-04T19:48:07.5426103Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
