@@ -21,6 +21,7 @@ $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $absoluteSnapshotPath = Join-Path $repositoryRoot $SnapshotPath
 $absolutePayloadSnapshotPath = Join-Path $repositoryRoot $PayloadSnapshotPath
 . (Join-Path $PSScriptRoot 'LlmWikiApiAcceptance.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 
 function Get-Properties {
     param($Object)
@@ -675,30 +676,35 @@ if ($compareHttpDtos) {
         $httpDtoPaths.Add($HttpDtoPath)
     } else {
         $changedDtoPairs = [System.Collections.Generic.List[object]]::new()
-        $nameStatusLines = @(
-            git -C $repositoryRoot diff --name-status --find-renames --diff-filter=ACMRD $BaseRef -- `
-                'FoodDiary.Presentation.Api/**/*.cs' `
-                'Modules/*/Presentation/**/*.cs' `
-                'Modules/*/Presentation.Contracts/**/*.cs'
-        )
-        if ($LASTEXITCODE -ne 0) { throw "Unable to collect changed HTTP DTO paths from '$BaseRef'." }
-        foreach ($line in $nameStatusLines) {
-            $parts = @([string]$line -split "`t")
-            if ($parts.Count -lt 2) { continue }
-            $status = [string]$parts[0]
-            $beforePath = if ($status -match '^[RC]' -and $parts.Count -ge 3) {
-                [string]$parts[1]
+        $nameStatus = Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @(
+            'diff', '--name-status', '--find-renames', '-z', '--diff-filter=ACMRD', $BaseRef, '--',
+            ':(glob)FoodDiary.Presentation.Api/**/*.cs',
+            ':(glob)Modules/*/Presentation/**/*.cs',
+            ':(glob)Modules/*/Presentation.Contracts/**/*.cs'
+        ) -FailureMessage "Unable to collect changed HTTP DTO paths from '$BaseRef'."
+        # Name/status is an ordered record stream. Path-list helpers sort and dedupe,
+        # which would separate statuses from their paths and collapse repeated statuses.
+        $fields = @($nameStatus.StandardOutput.Split([char]0, [StringSplitOptions]::RemoveEmptyEntries))
+        for ($index = 0; $index -lt $fields.Count;) {
+            $status = [string]$fields[$index++]
+            $paired = $status -match '^[RC]'
+            $pathCount = if ($paired) { 2 } else { 1 }
+            if ($status -notmatch '^[ACMRD][0-9]*$' -or ($index + $pathCount) -gt $fields.Count) { throw 'Malformed Git name/status record for HTTP DTO discovery.' }
+            $firstPath = [string]$fields[$index++]
+            $secondPath = if ($paired) { [string]$fields[$index++] } else { $firstPath }
+            $beforePath = if ($paired) {
+                $firstPath
             } elseif ($status -eq 'A') {
                 ''
             } else {
-                [string]$parts[1]
+                $firstPath
             }
-            $currentPath = if ($status -match '^[RC]' -and $parts.Count -ge 3) {
-                [string]$parts[2]
+            $currentPath = if ($paired) {
+                $secondPath
             } elseif ($status -eq 'D') {
                 ''
             } else {
-                [string]$parts[1]
+                $firstPath
             }
             if ($beforePath -notmatch 'Http(?:Model|Request|Response)\.cs$' -and
                 $currentPath -notmatch 'Http(?:Model|Request|Response)\.cs$') {
@@ -709,16 +715,27 @@ if ($compareHttpDtos) {
                 currentPath = $currentPath
             })
         }
+        $baselinePaths = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+        foreach ($path in @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-tree', '-r', '--name-only', $BaseRef, '--') -FailureMessage "Unable to collect HTTP DTO baseline paths from '$BaseRef'.")) {
+            $null = $baselinePaths.Add($path)
+        }
+        $changedCurrentPaths = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+        foreach ($pair in $changedDtoPairs) { $null = $changedCurrentPaths.Add([string]$pair.currentPath) }
         $moduleRoot = Join-Path $repositoryRoot 'Modules'
-        $currentModuleDtoPaths = @(
-            Get-ChildItem -LiteralPath $moduleRoot -Directory |
+        $presentationRoots = @(
+            if (Test-Path -LiteralPath $moduleRoot -PathType Container) { Get-ChildItem -LiteralPath $moduleRoot -Directory |
                 ForEach-Object {
                     $moduleDirectory = $_.FullName
                     @('Presentation', 'Presentation.Contracts') |
-                        ForEach-Object { Join-Path $moduleDirectory $_ } |
-                        Where-Object { Test-Path -LiteralPath $_ -PathType Container } |
-                        ForEach-Object { Get-ChildItem -LiteralPath $_ -Recurse -File -Filter '*.cs' }
-                } |
+                        ForEach-Object { Join-Path $moduleDirectory $_ }
+                }
+            }
+            Join-Path $repositoryRoot 'FoodDiary.Presentation.Api'
+        )
+        $currentDtoPaths = @(
+            $presentationRoots |
+                Where-Object { Test-Path -LiteralPath $_ -PathType Container } |
+                ForEach-Object { Get-ChildItem -LiteralPath $_ -Recurse -File -Filter '*.cs' } |
                 Where-Object {
                     $_.Name -match 'Http(?:Model|Request|Response)\.cs$' -and
                     $_.FullName -notmatch '[\\/](?:bin|obj)[\\/]'
@@ -726,8 +743,10 @@ if ($compareHttpDtos) {
                 ForEach-Object { $_.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/') } |
                 Sort-Object -Unique
         )
-        foreach ($path in $currentModuleDtoPaths) {
-            if (@($changedDtoPairs | Where-Object currentPath -eq $path).Count -eq 0) {
+        foreach ($path in $currentDtoPaths) {
+            # Existing unchanged DTOs already belong to the baseline. Physical discovery
+            # adds only new files, including unstaged or ignored rename destinations.
+            if (-not $changedCurrentPaths.Contains($path) -and -not $baselinePaths.Contains($path)) {
                 $changedDtoPairs.Add([pscustomobject]@{ beforePath = ''; currentPath = $path })
             }
         }

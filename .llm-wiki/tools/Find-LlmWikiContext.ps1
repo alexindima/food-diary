@@ -628,19 +628,29 @@ $controllerResults = Select-ScoredItems $controllerCandidates
 $symbolResults = @()
 $registrationResults = @()
 if ($null -ne $symbolIndex) {
+    $moduleSymbolPathPattern = $null
+    $moduleRegistrationPathPattern = $null
+    $moduleProjectPathPattern = $null
+    if ($null -ne $matchedModule) {
+        $escapedModuleName = [regex]::Escape([string]$matchedModule.name)
+        $moduleSymbolPathPattern = "/$escapedModuleName/"
+        $moduleRegistrationPathPattern = "/$escapedModuleName(/|\.)"
+        if ($matchedModule.PSObject.Properties['project'] -and -not [string]::IsNullOrWhiteSpace([string]$matchedModule.project)) {
+            $moduleProjectDirectory = (Split-Path -Parent $matchedModule.project).Replace('\', '/')
+            $moduleProjectPathPattern = "$moduleProjectDirectory/*"
+        }
+    }
     $symbolCandidates = [System.Collections.Generic.List[object]]::new()
     foreach ($symbol in $symbolIndex.symbols) {
         $searchable = "$($symbol.name) $($symbol.role) $($symbol.path)"
         $score = Get-SearchScore $searchable $tokens 8 18
         if ($frontendOnlyScope) { $score = 0 } else { $score += Get-ScopeAffinity $symbol.path }
         if ($null -ne $matchedModule) {
-            $modulePathPattern = "/$([regex]::Escape([string]$matchedModule.name))/"
-            if ([string]$symbol.path -match $modulePathPattern) {
+            if ([string]$symbol.path -match $moduleSymbolPathPattern) {
                 $score += 12
             }
-            if ($matchedModule.PSObject.Properties['project'] -and -not [string]::IsNullOrWhiteSpace([string]$matchedModule.project)) {
-                $moduleProjectDirectory = (Split-Path -Parent $matchedModule.project).Replace('\', '/')
-                if ([string]$symbol.path -like "$moduleProjectDirectory/*") {
+            if ($null -ne $moduleProjectPathPattern) {
+                if ([string]$symbol.path -like $moduleProjectPathPattern) {
                     $score += 12
                 }
             }
@@ -664,7 +674,7 @@ if ($null -ne $symbolIndex) {
         $score = Get-SearchScore $searchable $tokens 8 18
         if ($frontendOnlyScope) { $score = 0 } else { $score += Get-ScopeAffinity $registration.path }
         if ($null -ne $matchedModule -and
-            [string]$registration.path -match "/$([regex]::Escape([string]$matchedModule.name))(/|\.)") {
+            [string]$registration.path -match $moduleRegistrationPathPattern) {
             $score += 12
         }
         if ($score -gt 0) {

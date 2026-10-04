@@ -159,10 +159,120 @@ Assert-ApiCompatibility (@($dto.changes.kind) -contains 'added-http-dto-property
 Assert-ApiCompatibility (@($dto.changes.location) -contains 'Synthetic/ExampleHttpRequest.cs::ExampleHttpRequest.center_x') 'Roslyn DTO comparison ignored JsonPropertyName.'
 Assert-ApiCompatibility (@($dto.changes.location | Where-Object { $_ -match '\.failures$' }).Count -eq 0) 'A method-local variable was treated as an HTTP DTO property.'
 
+# Exercise actual Git selection and the real Roslyn parser in an isolated repository.
+# Synthetic snapshot arguments bypass file discovery and cannot catch unchanged DTOs.
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+$repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+$fixtureParent = Join-Path $repositoryRoot '.artifacts/llm-wiki/tests/api-dto-selection'
+$fixtureRoot = Join-Path $fixtureParent ([guid]::NewGuid().ToString('N'))
+$null = New-Item -ItemType Directory -Path $fixtureRoot -Force
+function Invoke-DtoFixtureGit([string[]]$Arguments) {
+    $null = Invoke-LlmWikiGitCommand -RepositoryRoot $fixtureRoot -Arguments $Arguments -FailureMessage 'API DTO fixture Git operation failed.'
+}
+function Write-DtoFixtureFile([string]$Path, [string]$Content) {
+    $absolutePath = Join-Path $fixtureRoot $Path
+    $null = New-Item -ItemType Directory -Path (Split-Path -Parent $absolutePath) -Force
+    [IO.File]::WriteAllText($absolutePath, $Content, [Text.UTF8Encoding]::new($false))
+}
+function Get-DtoFixtureReport {
+    Push-Location $fixtureRoot
+    try {
+        & $fixtureTool -BaseRef HEAD -SnapshotPath 'openapi.json' -PayloadSnapshotPath 'payload.json' -Format Json | ConvertFrom-Json
+    } finally { Pop-Location }
+}
+try {
+    $fixtureTools = Join-Path $fixtureRoot '.llm-wiki/tools'
+    $null = New-Item -ItemType Directory -Path $fixtureTools -Force
+    foreach ($name in @('Test-LlmWikiApiCompatibility.ps1', 'LlmWikiApiAcceptance.ps1', 'LlmWikiGitPaths.ps1')) {
+        Copy-Item -LiteralPath (Join-Path $PSScriptRoot $name) -Destination (Join-Path $fixtureTools $name)
+    }
+    $extractorRoot = Join-Path $fixtureTools 'roslyn-extractor'
+    $null = New-Item -ItemType Directory -Path (Join-Path $extractorRoot 'bin/Release') -Force
+    foreach ($name in @('Program.cs', 'LlmWiki.RoslynExtractor.csproj')) {
+        Copy-Item -LiteralPath (Join-Path $PSScriptRoot "roslyn-extractor/$name") -Destination (Join-Path $extractorRoot $name)
+    }
+    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'roslyn-extractor/bin/Release/net10.0') -Destination (Join-Path $extractorRoot 'bin/Release/net10.0') -Recurse
+    $fixtureTool = Join-Path $fixtureTools 'Test-LlmWikiApiCompatibility.ps1'
+    $moduleDto = 'Modules/Example/Presentation.Contracts/ExampleHttpRequest.cs'
+    $legacyDto = 'FoodDiary.Presentation.Api/LegacyHttpResponse.cs'
+    $unicodeDto = 'Modules/Example/Presentation.Contracts/Папка с пробелом/UnicodeHttpRequest.cs'
+    $originalDto = 'public sealed record ExampleHttpRequest(string Name);'
+    Write-DtoFixtureFile $moduleDto $originalDto
+    Write-DtoFixtureFile $legacyDto 'public sealed record LegacyHttpResponse(string Name);'
+    Write-DtoFixtureFile $unicodeDto 'public sealed record UnicodeHttpRequest(string Name);'
+    Write-DtoFixtureFile 'openapi.json' $baseContract
+    Write-DtoFixtureFile 'payload.json' '{}'
+    Write-DtoFixtureFile '.gitignore' "Logs/`n.llm-wiki/`nbin/`nobj/`n"
+    Invoke-DtoFixtureGit @('init', '--quiet')
+    Invoke-DtoFixtureGit @('config', 'core.autocrlf', 'false')
+    Invoke-DtoFixtureGit @('config', 'core.quotepath', 'true')
+    Invoke-DtoFixtureGit @('add', '--', '.gitignore', 'openapi.json', 'payload.json', $moduleDto, $legacyDto, $unicodeDto)
+    Invoke-DtoFixtureGit @('-c', 'user.name=Wiki Regression', '-c', 'user.email=wiki-regression@example.invalid', 'commit', '--quiet', '-m', 'HTTP DTO selection baseline')
+
+    Write-DtoFixtureFile 'Modules/Example/Presentation/bin/GeneratedHttpRequest.cs' 'public sealed record GeneratedHttpRequest(string Name);'
+    Write-DtoFixtureFile 'Modules/Example/Presentation/obj/GeneratedHttpResponse.cs' 'public sealed record GeneratedHttpResponse(string Name);'
+    $unchanged = Get-DtoFixtureReport
+    Assert-ApiCompatibility (@($unchanged.httpDtoPaths).Count -eq 0 -and @($unchanged.changes).Count -eq 0) 'Unchanged baseline DTOs or generated sources were reported as new API.'
+
+    Write-DtoFixtureFile $moduleDto 'public sealed record ExampleHttpRequest(string Name, string? Details = null);'
+    $modified = Get-DtoFixtureReport
+    Assert-ApiCompatibility (@($modified.httpDtoPaths).Count -eq 1 -and $modified.httpDtoPaths[0] -ceq $moduleDto -and $modified.additiveCount -eq 1 -and $modified.breakingCount -eq 0) "A modified tracked DTO was skipped or unchanged DTOs were reintroduced: $($modified | ConvertTo-Json -Depth 5 -Compress)"
+    Assert-ApiCompatibility ($modified.changes[0].kind -eq 'added-http-dto-property') 'Modified DTO comparison lost property-level evidence.'
+    Write-DtoFixtureFile $moduleDto 'public sealed record ExampleHttpRequest(int Name);'
+    $incompatible = Get-DtoFixtureReport
+    Assert-ApiCompatibility ($incompatible.breakingCount -eq 1 -and $incompatible.changes[0].kind -eq 'changed-http-dto-property') 'Selection optimization hid a breaking tracked DTO type change.'
+    Write-DtoFixtureFile $moduleDto $originalDto
+
+    Write-DtoFixtureFile $legacyDto 'public sealed record LegacyHttpResponse(int Name);'
+    $legacyModification = Get-DtoFixtureReport
+    Assert-ApiCompatibility (@($legacyModification.httpDtoPaths).Count -eq 1 -and $legacyModification.httpDtoPaths[0] -ceq $legacyDto -and $legacyModification.breakingCount -eq 1) 'Tracked DTOs directly in the legacy presentation root were skipped.'
+    Write-DtoFixtureFile $legacyDto 'public sealed record LegacyHttpResponse(string Name);'
+
+    Write-DtoFixtureFile $unicodeDto 'public sealed record UnicodeHttpRequest(int Name);'
+    $unicodeModification = Get-DtoFixtureReport
+    Assert-ApiCompatibility (@($unicodeModification.httpDtoPaths).Count -eq 1 -and $unicodeModification.httpDtoPaths[0] -ceq $unicodeDto -and $unicodeModification.breakingCount -eq 1) 'Quoted Unicode or spaced Git paths hid a breaking tracked DTO change.'
+    Write-DtoFixtureFile $unicodeDto 'public sealed record UnicodeHttpRequest(string Name);'
+
+    $newModuleDto = 'Modules/Example/Presentation/NewHttpRequest.cs'
+    $newLegacyDto = 'FoodDiary.Presentation.Api/NewHttpResponse.cs'
+    Write-DtoFixtureFile $newModuleDto 'public sealed record NewHttpRequest(string Name);'
+    Write-DtoFixtureFile $newLegacyDto 'public sealed record NewHttpResponse(string Name);'
+    $new = Get-DtoFixtureReport
+    Assert-ApiCompatibility (@($new.httpDtoPaths).Count -eq 2 -and $new.httpDtoPaths -contains $newModuleDto -and $new.httpDtoPaths -contains $newLegacyDto -and $new.additiveCount -eq 2) 'Untracked module or legacy DTOs were lost during baseline filtering.'
+    Remove-Item -LiteralPath (Join-Path $fixtureRoot $newModuleDto), (Join-Path $fixtureRoot $newLegacyDto)
+
+    $stagedDestination = 'Modules/Example/Presentation.Contracts/Moved/ExampleHttpRequest.cs'
+    $null = New-Item -ItemType Directory -Path (Split-Path -Parent (Join-Path $fixtureRoot $stagedDestination)) -Force
+    Invoke-DtoFixtureGit @('mv', '--', $moduleDto, $stagedDestination)
+    $stagedRename = Get-DtoFixtureReport
+    Assert-ApiCompatibility (@($stagedRename.httpDtoPaths).Count -eq 1 -and $stagedRename.httpDtoPaths[0] -ceq $stagedDestination -and @($stagedRename.changes).Count -eq 0) 'A staged rename lost identity or was classified as a new DTO.'
+    Invoke-DtoFixtureGit @('mv', '--', $stagedDestination, $moduleDto)
+
+    $ignoredDestination = 'Modules/Example/Presentation.Contracts/Logs/ExampleHttpRequest.cs'
+    Write-DtoFixtureFile $ignoredDestination $originalDto
+    Remove-Item -LiteralPath (Join-Path $fixtureRoot $moduleDto)
+    $ignoredRename = Get-DtoFixtureReport
+    Assert-ApiCompatibility (@($ignoredRename.httpDtoPaths).Count -eq 1 -and $ignoredRename.httpDtoPaths[0] -ceq $ignoredDestination -and @($ignoredRename.changes).Count -eq 0) 'An exact unstaged move into an ignored directory lost identity.'
+
+    Write-DtoFixtureFile $ignoredDestination 'public sealed record ExampleHttpRequest(int Name);'
+    $editedMove = Get-DtoFixtureReport
+    Assert-ApiCompatibility ($editedMove.breakingCount -eq 1 -and @($editedMove.changes.kind) -contains 'removed-http-dto' -and @($editedMove.changes.kind) -contains 'added-http-dto') 'An edited unstaged move was paired without conservative removal/addition review.'
+    Write-DtoFixtureFile $ignoredDestination $originalDto
+    $ambiguousDestination = 'Modules/Example/Presentation.Contracts/Other/ExampleHttpRequest.cs'
+    Write-DtoFixtureFile $ambiguousDestination $originalDto
+    $ambiguousMove = Get-DtoFixtureReport
+    Assert-ApiCompatibility ($ambiguousMove.breakingCount -eq 1 -and @($ambiguousMove.httpDtoPaths).Count -eq 3 -and $ambiguousMove.additiveCount -eq 2) 'Ambiguous unstaged move candidates silently suppressed the removed DTO.'
+} finally {
+    $resolvedFixture = [IO.Path]::GetFullPath($fixtureRoot)
+    $resolvedParent = [IO.Path]::GetFullPath($fixtureParent) + [IO.Path]::DirectorySeparatorChar
+    if (-not $resolvedFixture.StartsWith($resolvedParent, [StringComparison]::OrdinalIgnoreCase)) { throw 'API DTO fixture cleanup escaped its owned parent.' }
+    Remove-Item -LiteralPath $resolvedFixture -Recurse -Force
+}
+
 $toolText = Get-Content -LiteralPath $tool -Raw
 Assert-ApiCompatibility ($toolText -notmatch '\[regex\]::Matches') 'API compatibility still parses C# DTO declarations with regular expressions.'
-Assert-ApiCompatibility ($toolText -match '--name-status --find-renames') 'API compatibility does not preserve DTO identity across physical file moves.'
-Assert-ApiCompatibility ($toolText -match "'Modules/\*/Presentation/\*\*/\*\.cs'") 'API compatibility does not discover module-owned Presentation DTOs.'
+Assert-ApiCompatibility ($toolText.Contains('--name-status') -and $toolText.Contains('--find-renames')) 'API compatibility does not preserve DTO identity across physical file moves.'
+Assert-ApiCompatibility ($toolText.Contains('Modules/*/Presentation/**/*.cs')) 'API compatibility does not discover module-owned Presentation DTOs.'
 Assert-ApiCompatibility ($toolText -match "@\('Presentation', 'Presentation\.Contracts'\)") 'API compatibility does not discover unstaged module-owned Presentation DTOs from physical module roots.'
 Assert-ApiCompatibility ($toolText -match "notmatch '\[\\\\/\]\(\?:bin\|obj\)\[\\\\/\]'") 'API compatibility does not exclude generated module Presentation sources.'
 Assert-ApiCompatibility ($toolText -match 'Pair only exact-content delete/add candidates') 'API compatibility does not conservatively pair exact unstaged DTO moves.'

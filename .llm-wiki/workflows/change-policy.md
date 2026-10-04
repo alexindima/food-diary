@@ -27,6 +27,11 @@ English/Russian localization, EF migration pairs, frontend verification,
 security-sensitive areas, and LLM-Wiki freshness.
 Domain invariant review covers `Modules/<Module>/Domain`, shared domain
 primitives, and the remaining legacy domain projects.
+Data-access review covers module infrastructure and the independent mail-service
+infrastructure under `Services/MailInbox` and `Services/MailRelay`. Legacy mail
+paths still match during extraction diffs. Migration and test paths remain
+excluded from this rule. The focused policy group exercises current real paths
+and positive and negative path cases in its persistence regression.
 Angular TypeScript/templates require public component-contract review. Pure
 CSS/SCSS changes retain rendered visual and accessibility review without
 claiming that selectors, inputs, outputs, translations, or API shape changed.

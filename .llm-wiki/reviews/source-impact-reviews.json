@@ -291,41 +291,17 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "6f015e503e9d7c6e103b85c3e8af25bd64e465643f67f9b352d3e67ac452705e",
+      "pageSha256": "ffc86ca5d362a78c7cb90c56684b7895de854edd1fe0574b26a4cfa2e75c31ae",
       "sources": [
         {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "8f9e30553c3c379d4f69544e53ada732f18bb19369b736c1727831d279a1f8ea"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-identity.mjs",
-          "sha256": "629e217cf9787df54b33cc6feb18e547fb33ab036f3908dca545e9e55b69914a"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "84d144525363d00e07e55e3073ffa8d87ebadb34fa7bdea4590c1457d76644e3"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "bd5a591deb5c62de0408ce5ed6b47a755d976da1c386cf14b48596b066df5bb0"
-        },
-        {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "369615c7acd4dc04490aa09dd1328d59f155d41d7808c89021bf9ebe11d34cfe"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "c75a10b969d2dc603ae7d4108e378cf423b6fcc4d35b459c580143a97795aa14"
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-          "sha256": "6a8e2dece3265a2e43eef497c39d900a03b1723cd1cbacbf3ef9151445cf1717"
+          "sha256": "57e0f0ecc950c8c77618442c457bfbb64bc6091726b2155705e2ab468763590f"
         }
       ],
-      "reason": "Compared the ranking readers and candidate SQL with this page. Bounded hydration retains representations, path diversity and deterministic ordering; exact-count hoisting preserves ambiguity. All 22 corpora, Node/.NET parity and the graph regressions passed. Moved state roles exclude send intent and policy complexity remains 700.",
+      "reason": "Reviewed the immutable module symbol/registration path patterns and project-prefix hoist in the explicit JSON baseline. Score predicates, candidate order, SQL default, fail-closed freshness, cache boundaries and SLA limits are preserved; before/after JSON payloads matched after excluding transport timing, and the complete context-retrieval lane passed.",
       "baseRef": "HEAD",
-      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
-      "reviewedAtUtc": "2026-10-04T03:27:31.7447107Z"
+      "gitHead": "cc1ee85fdef594addfb3db89bcb0dac6e6f68f56",
+      "reviewedAtUtc": "2026-10-04T10:58:49.1256341Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -364,13 +340,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "369615c7acd4dc04490aa09dd1328d59f155d41d7808c89021bf9ebe11d34cfe"
+          "sha256": "57e0f0ecc950c8c77618442c457bfbb64bc6091726b2155705e2ab468763590f"
         }
       ],
-      "reason": "Reviewed removal of the compiled-context branch after an unconditional return. The active in-process SQLite resolver, explicit JSON diagnostic route, scope representation and bundle/cache output contracts remain supported by context-retrieval regressions.",
+      "reason": "Reviewed the immutable module symbol/registration path patterns and project-prefix hoist in the explicit JSON baseline. Score predicates, candidate order, SQL default, fail-closed freshness, cache boundaries and SLA limits are preserved; before/after JSON payloads matched after excluding transport timing, and the complete context-retrieval lane passed.",
       "baseRef": "HEAD",
-      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
-      "reviewedAtUtc": "2026-10-04T03:27:32.2756147Z"
+      "gitHead": "cc1ee85fdef594addfb3db89bcb0dac6e6f68f56",
+      "reviewedAtUtc": "2026-10-04T10:58:50.2096396Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -499,17 +475,17 @@
     {
       "pageId": "workflow-dependency-rollout",
       "pagePath": ".llm-wiki/workflows/dependency-rollout.md",
-      "pageSha256": "341deb4134a3a4273351e8355b742538fe42cfb63d52d5e1d6302b72b129889a",
+      "pageSha256": "7b325c5dd1cee36772c8e9d61fe14324f25f78f5f320e5521ca050f4080667a6",
       "sources": [
         {
-          "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "c66ab27c26e72493a9307e73cf8b4e1a6dbc3359384e51f5211465d7099919c8"
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb"
         }
       ],
-      "reason": "Reviewed manifest addition eslint-import-resolver-typescript as a development-only dependency and check:import-boundaries in verify; lockfile committed and combined npm verify passes. Local API c1e5 requires pending UserNutritionProfiles migration; current browser compatibility proof used API5308 and no local migration was executed.",
+      "reason": "Reviewed the two data-access path-pattern changes: current Services/ mail prefixes are included and legacy move paths remain recognized. Dependency and rollout rules, commands and manifest analysis are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:42:26.3856524Z"
+      "gitHead": "755c4ee5bb00ea025c5ad8321db12ec48386e496",
+      "reviewedAtUtc": "2026-10-04T10:05:49.8496388Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -774,13 +750,13 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "16ee9c03fcd8d89dedbfbca2c44735f095e246894042358a0d71aa5141dcbe43"
+          "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Current Services/MailInbox and Services/MailRelay infrastructure now receives the existing data-access review obligations. The 24-case regression verifies current real repositories/stores, synthetic persistence, exclusions and legacy paths.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:25.8348861Z"
+      "gitHead": "755c4ee5bb00ea025c5ad8321db12ec48386e496",
+      "reviewedAtUtc": "2026-10-04T10:05:47.30425Z"
     },
     {
       "pageId": "workflow-plan-diff-conformance",
@@ -864,13 +840,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "45e43f83325428d28d44353affe7fa1965b0fb511d8a98ec6f16783e92d5bd72"
+          "sha256": "4081f218f3182c2282c0cb226a7613b45e3eb3cafd958bd40ef6928d27b86f8b"
         }
       ],
-      "reason": "Reviewed generated quality signals against current sources and executed validation: 271 focused tests in 41 files and final frontend build passed after all 22 source changes. Earlier full verify passed before the final chart/card changes; static test references are not reported as coverage.",
+      "reason": "Reviewed the quality projection after integration with master 244145b7b. All 6421 product rows across hotspots, files, critical symbols and debt markers match that committed master exactly; only Wiki tooling metrics changed. Static reference signals remain navigation evidence. Runtime, sensitive-data and product ranking implementations are unchanged by this patch.",
       "baseRef": "HEAD",
-      "gitHead": "18a2a5b709c3b0a8a17454829ffaa16adaa64b5d",
-      "reviewedAtUtc": "2026-10-04T10:09:48.9185454Z"
+      "gitHead": "244145b7b817f028874ae09fb0ffad579d671981",
+      "reviewedAtUtc": "2026-10-04T12:33:19.9974232Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -938,14 +914,14 @@
       "pageSha256": "b8e3cbc2020dceeeb6873b8f7bf0a66f6380cb750f367e7753ae9314e9270fc9",
       "sources": [
         {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6c4a6a46f2e73545414bd80ff358c8f6572eff014b11e7ea26150bc14613349d"
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb"
         }
       ],
-      "reason": "Reviewed the topology diff: only the normalized source fingerprint changed for the local shared ranking reader. The affected topology generator check passed and no host, job, provider or registration was introduced.",
+      "reason": "Only data-access path matching changed. Runtime topology, external integration declarations, workers, delivery behavior and runtime-policy rules are unchanged; current mail paths retain the existing provider-backed review requirement.",
       "baseRef": "HEAD",
-      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
-      "reviewedAtUtc": "2026-10-04T03:27:36.1404617Z"
+      "gitHead": "755c4ee5bb00ea025c5ad8321db12ec48386e496",
+      "reviewedAtUtc": "2026-10-04T10:05:51.283119Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -954,13 +930,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "45e43f83325428d28d44353affe7fa1965b0fb511d8a98ec6f16783e92d5bd72"
+          "sha256": "4081f218f3182c2282c0cb226a7613b45e3eb3cafd958bd40ef6928d27b86f8b"
         }
       ],
-      "reason": "Reviewed AuthService and BrowserWindowService changes: refresh rotation stays strict and HttpOnly; named Web Lock only serializes same-origin refresh calls. No additional token persistence or provider sharing. Queued logout and late response tests passed; real two-tab refresh returned 200 twice with maximum concurrency one.",
+      "reason": "Reviewed the quality projection after integration with master 244145b7b. All 6421 product rows across hotspots, files, critical symbols and debt markers match that committed master exactly; only Wiki tooling metrics changed. Static reference signals remain navigation evidence. Runtime, sensitive-data and product ranking implementations are unchanged by this patch.",
       "baseRef": "HEAD",
-      "gitHead": "18a2a5b709c3b0a8a17454829ffaa16adaa64b5d",
-      "reviewedAtUtc": "2026-10-04T10:09:52.8590224Z"
+      "gitHead": "244145b7b817f028874ae09fb0ffad579d671981",
+      "reviewedAtUtc": "2026-10-04T12:33:22.8701861Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1081,14 +1057,14 @@
       "pageSha256": "00873290bae6cba909cc474821519081b25bcc6767c089668d188119c77126c3",
       "sources": [
         {
-          "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "2ad36123335deab4bcc3ea6c4055b0774dd6ad9189e37206fee8717453724f8b"
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb"
         }
       ],
-      "reason": "Checked current TESTING_STRATEGY guidance for the exact coordinated API release: original ancestral baseline and fail-on-unaccepted behavior remain required. Test planner selection and required/recommended/full-regression semantics remain valid.",
+      "reason": "The existing performance-data-access rule and integration-check identity are preserved while current Services/ paths become eligible. Executed persistence regression verifies both selection and the exact required command; planning and ownership logic are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "028efbba467e3bdece84fe1e43412aead89d2ae5",
-      "reviewedAtUtc": "2026-10-03T21:03:02.9353212Z"
+      "gitHead": "755c4ee5bb00ea025c5ad8321db12ec48386e496",
+      "reviewedAtUtc": "2026-10-04T10:05:50.6200728Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1116,13 +1092,13 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "16ee9c03fcd8d89dedbfbca2c44735f095e246894042358a0d71aa5141dcbe43"
+          "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "The planner still derives and integrity-binds its checks from the current policy. Only mail-service data-access path selection changed; check IDs, supersedence and commands are preserved, and both item-ID projections passed consolidated strict-mode regressions.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:38.7280464Z"
+      "gitHead": "755c4ee5bb00ea025c5ad8321db12ec48386e496",
+      "reviewedAtUtc": "2026-10-04T10:05:49.15693Z"
     },
     {
       "pageId": "workflow-verification-telemetry",
@@ -1180,13 +1156,13 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "16ee9c03fcd8d89dedbfbca2c44735f095e246894042358a0d71aa5141dcbe43"
+          "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "The policy now recognizes current mail-service data access; 24 executed positive and negative persistence cases preserve the required check ID and command. Evidence schemas, lineage and receipt validation are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:17.7558166Z"
+      "gitHead": "755c4ee5bb00ea025c5ad8321db12ec48386e496",
+      "reviewedAtUtc": "2026-10-04T10:05:48.2215931Z"
     },
     {
       "pageId": "workflow.frontend-contract-review",
@@ -1209,26 +1185,14 @@
       "pageSha256": "d53e2e063f9732812d7679f0f1542ab9ac898238515a6527d920ac93ed65c4e8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-identity.mjs",
-          "sha256": "629e217cf9787df54b33cc6feb18e547fb33ab036f3908dca545e9e55b69914a"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "bd5a591deb5c62de0408ce5ed6b47a755d976da1c386cf14b48596b066df5bb0"
-        },
-        {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "369615c7acd4dc04490aa09dd1328d59f155d41d7808c89021bf9ebe11d34cfe"
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-          "sha256": "6a8e2dece3265a2e43eef497c39d900a03b1723cd1cbacbf3ef9151445cf1717"
+          "sha256": "57e0f0ecc950c8c77618442c457bfbb64bc6091726b2155705e2ab468763590f"
         }
       ],
-      "reason": "Reviewed Node and shared C# ranking, normalized vocabulary, ambiguity and explicit diagnostic routes. All 22 corpus gates and exact Node/.NET parity passed; context-retrieval protects compiled-index parity, cache behavior and scope recovery. Candidate representation and full-pool confidence are retained.",
+      "reason": "Reviewed the immutable module symbol/registration path patterns and project-prefix hoist in the explicit JSON baseline. Score predicates, candidate order, SQL default, fail-closed freshness, cache boundaries and SLA limits are preserved; before/after JSON payloads matched after excluding transport timing, and the complete context-retrieval lane passed.",
       "baseRef": "HEAD",
-      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
-      "reviewedAtUtc": "2026-10-04T03:27:35.6218025Z"
+      "gitHead": "cc1ee85fdef594addfb3db89bcb0dac6e6f68f56",
+      "reviewedAtUtc": "2026-10-04T10:58:51.3494512Z"
     },
     {
       "pageId": "workflow.review-diff",

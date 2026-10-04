@@ -40,11 +40,11 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-      "nonBlankLines": 1062,
-      "decisionPoints": 154,
+      "nonBlankLines": 1072,
+      "decisionPoints": 156,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 254.24
+      "structuralRiskScore": 257.44
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
@@ -72,11 +72,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-      "nonBlankLines": 435,
-      "decisionPoints": 132,
+      "nonBlankLines": 433,
+      "decisionPoints": 131,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 208.7
+      "structuralRiskScore": 207.16
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
@@ -1002,11 +1002,11 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-      "nonBlankLines": 1062,
-      "decisionPoints": 154,
+      "nonBlankLines": 1072,
+      "decisionPoints": 156,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 254.24
+      "structuralRiskScore": 257.44
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiDomainData.ps1",
@@ -1506,11 +1506,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-      "nonBlankLines": 435,
-      "decisionPoints": 132,
+      "nonBlankLines": 433,
+      "decisionPoints": 131,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 208.7
+      "structuralRiskScore": 207.16
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiContractReferenceExtractor.ps1",
@@ -57580,8 +57580,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Find-LlmWikiQualityRisk.ps1",
       "line": 1,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
         ".llm-wiki/tools/Test-LlmWikiQualityRisk.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
@@ -58641,9 +58642,11 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiGitPaths.ps1",
       "line": 1,
-      "testReferenceCount": 12,
+      "testReferenceCount": 14,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
+        ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
+        ".llm-wiki/tools/Test-LlmWikiApiCompatibilityRegression.ps1",
         ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
         ".llm-wiki/tools/Test-LlmWikiContractConsumers.ps1",
         ".llm-wiki/tools/Test-LlmWikiDependencyManifest.ps1",
@@ -58980,8 +58983,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
       "line": 1,
-      "testReferenceCount": 18,
+      "testReferenceCount": 19,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
         ".llm-wiki/tools/Test-LlmWikiBackendContractSqlParity.ps1",
         ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
         ".llm-wiki/tools/Test-LlmWikiCodeGraphPathTransport.ps1",
@@ -59302,7 +59306,7 @@
       "line": 1,
       "testReferenceCount": 2,
       "testReferences": [
-        ".llm-wiki/tools/Test-LlmWikiModelRoutingItemIds.ps1",
+        ".llm-wiki/tools/Test-LlmWikiCollections.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -59578,8 +59582,8 @@
       "line": 1,
       "testReferenceCount": 3,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiCollections.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1",
-        ".llm-wiki/tools/Test-LlmWikiVerificationPlanItemIds.ps1",
         ".llm-wiki/tools/Test-LlmWikiWorkflowRecovery.ps1"
       ],
       "coverageKind": "direct-symbol-reference",

@@ -30,6 +30,12 @@ sources:
   - FoodDiary.Web.Client/.husky/pre-commit
   - FoodDiary.Web.Client/.husky/pre-push
   - .llm-wiki/policies/affected-smoke-catalog.psd1
+  - .llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1
+  - .llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1
+  - .llm-wiki/tools/Test-LlmWikiCollections.ps1
+  - .llm-wiki/tools/Test-LlmWikiModulePersistencePolicy.ps1
+  - .llm-wiki/tools/Test-LlmWikiContextOperations.ps1
+  - .llm-wiki/tools/Find-LlmWikiContext.ps1
   - .llm-wiki/tools/Get-LlmWikiTestPlan.ps1
   - .llm-wiki/tools/Test-LlmWikiToolStartup.ps1
   - .llm-wiki/tools/LlmWikiModuleTestRoots.ps1
@@ -45,12 +51,10 @@ sources:
   - .llm-wiki/tools/Invoke-LlmWikiContractReferenceExtractor.ps1
   - .llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1
   - .llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1
-  - .llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1
   - .llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1
   - .llm-wiki/tools/LlmWikiCorpusEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
-  - .llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1
   - .llm-wiki/tools/Test-LlmWikiImpactSimulationSqlParity.ps1
   - .llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1
   - .llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1
@@ -167,6 +171,30 @@ priorities, parallel-safety, graph dependencies, and dominance rules. Its
 regression verifies that every tracked Wiki tool maps to a smoke group and that
 every concrete non-fallback group has an execution handler. Catalog aliases expand
 to validated concrete groups before requested-group filtering.
+
+`code-graph` is a compatibility alias for `code-graph-core` and `trace-output`.
+The core group retains Roslyn, TypeScript, and graph regressions in the early
+parallel batch. Trace output, frontend SQL parity, and quality-risk checks run
+once in the serial group after graph writers finish. Full CI selects the same
+37 concrete groups. Local graph changes retain all six checks; the former
+graph-to-trace suppression must not drop the unique quality-risk regression.
+
+The strict-shapes group also checks both model-routing and verification-plan
+item-ID projections under strict mode. Their formerly separate unreferenced
+test scripts have been consolidated into `Test-LlmWikiCollections.ps1` without
+dropping empty, mixed, legacy, duplicate, or normal-object cases. Deleted item-ID
+test paths also select the strict-shapes replacement rather than checking removed
+files through the generic tool contract. The change-policy
+group includes the 24-case module persistence policy regression with current
+real repository paths and the current Services/ mail-service prefix. Linux smoke and development-context evaluation remain
+supported diagnostics. `Test-LlmWikiContextOperations.ps1` remains a manual
+structured-explanation, ranking-budget, unseen-draft, and tracked-state check.
+An absent internal caller alone does not make a diagnostic obsolete.
+
+The explicit JSON context baseline computes immutable module path patterns and
+project prefixes once before scoring symbols and registrations. Per-record
+scores and ordering remain unchanged; the context-cache cold and warm SLA
+checks retain their existing limits.
 
 `read-only-guard` remains a compatibility alias for all four original regression
 scripts. Its `read-only-isolation` child runs the destructive test fixtures in a
