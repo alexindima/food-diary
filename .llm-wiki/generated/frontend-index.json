@@ -4154,7 +4154,7 @@
       "role": "Component",
       "selector": "fd-goals-editor",
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.ts",
-      "line": 36
+      "line": 37
     },
     {
       "name": "GoalsNutritionCardComponent",

@@ -6,6 +6,7 @@ import { UnsavedChangesBarComponent } from '../../../../components/shared/unsave
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../../services/unsaved-changes.service';
 import type { DayCalorieKey, UpdateGoalsRequest } from '../../../../shared/models/goals.data';
 import type { BodyTargetKey, MacroKey, MacroPreset, MacroPresetKey } from '../../lib/goals.facade';
+import { createDayCalories } from '../../lib/goals-state.mapper';
 import { GoalsCyclingRowComponent } from './goals-cycling-row';
 import {
     applyMacroPreset,
@@ -106,7 +107,12 @@ export class GoalsEditorComponent {
     }
 
     protected updateCycling(enabled: boolean): void {
-        this.updateDraft({ cyclingEnabled: enabled });
+        const current = this.requireDraft();
+        const shouldInitializeDays = enabled && current.calories > 0 && Object.values(current.dayCalories).every(value => value === 0);
+        this.updateDraft({
+            cyclingEnabled: enabled,
+            dayCalories: shouldInitializeDays ? createDayCalories(current.calories) : current.dayCalories,
+        });
     }
 
     protected updateDayCalories(change: { key: DayCalorieKey; value: number }): void {

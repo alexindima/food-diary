@@ -844,13 +844,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "33cfa03b2f80b80cf9d2c9f2d4f10e4a2fe69e55063bd01dba788be44d25e0b8"
+          "sha256": "ba51f46a3307aa34385364680c03730da116fd8573f14437bf8250031d96a2d3"
         }
       ],
-      "reason": "The merged solution builds with 0 warnings and 0 errors; all 2828 focused backend tests and 5147 frontend tests pass, plus 51 focused tests after the latest master update. Combined source indexes were rebuilt. Static test references are navigation evidence, not execution coverage.",
-      "baseRef": "master",
-      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
-      "reviewedAtUtc": "2026-10-04T18:04:14.0201975Z"
+      "reason": "79 focused tests passed, including four new cycling regressions; ru desktop and mobile browser checks proved first enable, saving, restoration and date-specific dashboard targets.",
+      "baseRef": "HEAD",
+      "gitHead": "fed0ab80755c126efa0cd43661f463af6452327b",
+      "reviewedAtUtc": "2026-10-04T18:16:08.6413797Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -946,17 +946,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fcd85d3ab957f10d2482a8bf01d6f955b3f143ca4de52aad91b410e11b927e04"
+          "sha256": "75c4ad0543e9ce5f62cb4b3b87c9ce2c651d0b5785e935a5634d7d6d22828e97"
         },
         {
           "path": ".llm-wiki/tools/Find-LlmWikiSecurityReview.ps1",
           "sha256": "05debd1f1423d52b707d01c54fe470aeb1870e2f16f0e175f75b02ec0cb7d6e7"
         }
       ],
-      "reason": "Reviewed the merged Wiki security evidence guide against its SQLite-only compiler and rebuilt quality snapshot. SQL inputs remain parameterized and bounded, current source hashes are validated, and static test-reference leads are explicitly distinguished from executed security coverage. The SQLite fixture contract test passed after combining current master with the migration; application routes, credentials and provider behavior were not edited during this integration.",
+      "reason": "Reviewed the SQLite-only security evidence compiler against the quality snapshot rebuilt with the latest committed goal form fix from master. Bounded parameterized SQL and exact source freshness are preserved; static reference signals remain navigation evidence. Node query fixture contracts, backend/frontend contracts, runtime/architecture SQLite routes, read-only retrieval and workflow recovery checks passed on the same unchanged Wiki engine. The local cache latency limit was not met under variable host CPU load and is recorded separately.",
       "baseRef": "master",
-      "gitHead": "362e17cc0f7acef800542bf688ccc5262f8c753c",
-      "reviewedAtUtc": "2026-10-04T18:19:35.6595787Z"
+      "gitHead": "df21cc7499f9a4af2191ad9d7816e93cdb24455f",
+      "reviewedAtUtc": "2026-10-04T18:40:24.3061000Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1092,18 +1092,14 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "e66ce0e22daf43ed01ea5bc6c096f50120a2ea042f06e0235f21c26d10916fd6"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "66ebb09cf982aa522ce26b16c499417b47772a24569d9a0af48ea140666c9619"
+          "sha256": "afd394e15f9c67be67f27b160895d8c414eae9e26ab6b82659132e0c91b73d7f"
         }
       ],
-      "reason": "Checked the recipe import guide and navigation against combined current sources, including optional clipboard suggestions, video limits, provider configuration, proxy and temporary storage constraints and conditional Instagram video availability. Current master tooling and fixes are preserved; deployment is outside this merge.",
-      "baseRef": "master",
-      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
-      "reviewedAtUtc": "2026-10-04T18:04:19.6901406Z"
+      "reason": "Verified GoalsEditor cycling callbacks use the current draft and preserve the previous facade initialization behavior; saved per-day settings remain intact.",
+      "baseRef": "HEAD",
+      "gitHead": "fed0ab80755c126efa0cd43661f463af6452327b",
+      "reviewedAtUtc": "2026-10-04T18:16:11.7517006Z"
     },
     {
       "pageId": "workflow-verification-planner",
