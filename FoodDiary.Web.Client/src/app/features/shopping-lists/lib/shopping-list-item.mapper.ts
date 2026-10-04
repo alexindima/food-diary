@@ -1,5 +1,6 @@
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
+import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { MeasurementUnit } from '../../../shared/models/product.data';
 import type { ShoppingListItem, ShoppingListItemDto } from '../../../shared/models/shopping-list.data';
 import type { ShoppingListItemViewModel } from './shopping-list-form.types';
@@ -17,14 +18,15 @@ export function buildShoppingListUnitOptions(translate: ShoppingListTranslateFn)
 export function buildShoppingListItemViewModels(
     items: readonly ShoppingListItem[],
     translate: ShoppingListTranslateFn,
+    language: string | null | undefined = 'en',
 ): ShoppingListItemViewModel[] {
     return items.map(item => ({
         ...item,
-        meta: formatShoppingListItemMeta(item, translate),
+        meta: formatShoppingListItemMeta(item, translate, language),
         quantity:
             (item.amount === null || item.amount === undefined) && isTextQuantity(item.note)
                 ? (item.note?.trim() ?? '')
-                : formatShoppingListItemMeta({ ...item, note: null, category: null, sources: [] }, translate),
+                : formatShoppingListItemMeta({ ...item, note: null, category: null, sources: [] }, translate, language),
         detail: formatShoppingListItemMeta(
             {
                 ...item,
@@ -32,16 +34,22 @@ export function buildShoppingListItemViewModels(
                 note: (item.amount === null || item.amount === undefined) && isTextQuantity(item.note) ? null : item.note,
             },
             translate,
+            language,
         ),
     }));
 }
 
-export function formatShoppingListItemMeta(item: ShoppingListItem, translate: ShoppingListTranslateFn): string {
+export function formatShoppingListItemMeta(
+    item: ShoppingListItem,
+    translate: ShoppingListTranslateFn,
+    language: string | null | undefined = 'en',
+): string {
     const parts: string[] = [];
 
     if (item.amount !== null && item.amount !== undefined && !Number.isNaN(item.amount)) {
         const unitLabel = getUnitLabel(item.unit, translate);
-        parts.push(unitLabel !== null ? `${item.amount} ${unitLabel}` : `${item.amount}`);
+        const amount = new Intl.NumberFormat(resolveAppLocale(language), { maximumFractionDigits: 20 }).format(item.amount);
+        parts.push(unitLabel !== null ? `${amount} ${unitLabel}` : amount);
     }
 
     appendTextPart(parts, item.note);
@@ -67,6 +75,14 @@ export function normalizeShoppingListAmount(value: number | null): number | null
     return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
 }
 
+export function normalizeShoppingListUnit(unit: MeasurementUnit | string | null | undefined): MeasurementUnit | string | null {
+    if (unit === null || unit === undefined) {
+        return null;
+    }
+
+    return Object.values(MeasurementUnit).find(value => value.toString() === unit.trim().toUpperCase()) ?? unit;
+}
+
 export function mapShoppingListItemToDto(item: ShoppingListItem, index: number): ShoppingListItemDto {
     return {
         id: isTemporaryId(item.id) ? null : item.id,
@@ -88,7 +104,7 @@ function getUnitLabel(unit: MeasurementUnit | string | null | undefined, transla
         return null;
     }
 
-    const normalizedUnit = Object.values(MeasurementUnit).find(value => value.toString() === unit.trim().toUpperCase());
+    const normalizedUnit = normalizeShoppingListUnit(unit);
     const key = `GENERAL.UNITS.${normalizedUnit ?? unit}`;
     const translated = translate(key);
     return translated === key ? unit : translated;

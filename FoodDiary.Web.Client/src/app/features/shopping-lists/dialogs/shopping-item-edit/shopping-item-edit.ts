@@ -6,7 +6,7 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import type { ShoppingListDraftItem } from '../../lib/shopping-list.facade';
-import { buildShoppingListUnitOptions } from '../../lib/shopping-list-item.mapper';
+import { buildShoppingListUnitOptions, normalizeShoppingListUnit } from '../../lib/shopping-list-item.mapper';
 
 const ITEM_NAME_LIMIT = 256;
 const CATEGORY_LIMIT = 128;
@@ -26,7 +26,12 @@ export class ShoppingItemEditComponent {
     private readonly ref = inject(FdUiDialogRef<ShoppingItemEditComponent, ShoppingListDraftItem>);
     private readonly translate = inject(TranslateService);
     protected readonly isProductLinked = Boolean(this.data.productId);
-    protected readonly draft = signal({ ...this.data, category: this.data.category ?? '', note: this.data.note ?? '' });
+    protected readonly draft = signal<ShoppingItemEditData & { category: string; note: string }>({
+        ...this.data,
+        unit: normalizeShoppingListUnit(this.data.unit),
+        category: this.data.category ?? '',
+        note: this.data.note ?? '',
+    });
     protected readonly fields = form(this.draft, path => {
         required(path.name);
         maxLength(path.name, ITEM_NAME_LIMIT);

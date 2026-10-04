@@ -840,13 +840,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7a543a7accecf71144f8952040de3a93a3a68a5237d79846d5948b71d53e7ca0"
+          "sha256": "60299ab25fb515627d02e510202b4780bacc21326fea794e989eace7da792380"
         }
       ],
-      "reason": "93 focused auth tests pass including server throttling network retry legacy migration and existing cross-tab stale-response coverage; generated risk metrics do not change review procedure.",
+      "reason": "Reviewed bounded mapper and dialog changes plus direct consumers. Seven regression cases cover mixed-case unit display, note-only save, preserved custom units, precision and live locale changes. No ownership or persistence behavior changes.",
       "baseRef": "HEAD",
-      "gitHead": "2cf1e218ba426bd3a9b1f0c58b3b184968abfc84",
-      "reviewedAtUtc": "2026-10-04T15:48:34.8599871Z"
+      "gitHead": "98b1c3b9e8b45207975ec8cc934ae69e1608c6d4",
+      "reviewedAtUtc": "2026-10-04T16:55:52.2676249Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -930,13 +930,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7a543a7accecf71144f8952040de3a93a3a68a5237d79846d5948b71d53e7ca0"
+          "sha256": "60299ab25fb515627d02e510202b4780bacc21326fea794e989eace7da792380"
         }
       ],
-      "reason": "Authoritative refresh rejection is HTTP 401. Temporary failures do not revoke cookies; legacy migration values stay only in transient service memory and clear on successful login refresh or logout; no token logs added.",
+      "reason": "Reviewed generated quality source changes; this patch changes localized presentation and known unit normalization only. Authentication, private data boundaries, API transport, credentials and provider sharing are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "2cf1e218ba426bd3a9b1f0c58b3b184968abfc84",
-      "reviewedAtUtc": "2026-10-04T15:48:37.1105699Z"
+      "gitHead": "98b1c3b9e8b45207975ec8cc934ae69e1608c6d4",
+      "reviewedAtUtc": "2026-10-04T16:55:52.8820875Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
