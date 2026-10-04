@@ -10154,11 +10154,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail-item-preview/meal-detail-item-preview.ts",
-      "nonBlankLines": 21,
+      "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
+      "structuralRiskScore": 0.44
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail-lib/meal-detail.config.ts",
@@ -10186,11 +10186,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail-summary/meal-detail-summary.ts",
-      "nonBlankLines": 29,
+      "nonBlankLines": 30,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.08
+      "structuralRiskScore": 2.1
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.ts",
@@ -10314,11 +10314,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.ts",
-      "nonBlankLines": 223,
+      "nonBlankLines": 224,
       "decisionPoints": 28,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 46.46
+      "structuralRiskScore": 46.48
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/contracts/ai-meal-create.ts",

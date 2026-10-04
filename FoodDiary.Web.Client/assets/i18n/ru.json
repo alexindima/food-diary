@@ -1104,7 +1104,11 @@
         "ITEMS_ONE": "позиция",
         "ITEMS_FEW": "позиции",
         "ITEMS_MANY": "позиций",
-        "ITEMS_OTHER": "позиции"
+        "ITEMS_OTHER": "позиции",
+        "SERVINGS_ONE": "порция",
+        "SERVINGS_FEW": "порции",
+        "SERVINGS_MANY": "порций",
+        "SERVINGS_OTHER": "порции"
     },
     "ADMIN_BILLING": {
         "SUMMARY_ERROR": "Не удалось загрузить сводку биллинга. Обновите страницу для повтора.",

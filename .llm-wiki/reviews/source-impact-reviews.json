@@ -840,13 +840,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4081f218f3182c2282c0cb226a7613b45e3eb3cafd958bd40ef6928d27b86f8b"
+          "sha256": "770e639552eb0986eca3e56a0f9f2babdc4ed9a86f35733aa0f7dc105eb3e946"
         }
       ],
-      "reason": "Reviewed the quality projection after integration with master 244145b7b. All 6421 product rows across hotspots, files, critical symbols and debt markers match that committed master exactly; only Wiki tooling metrics changed. Static reference signals remain navigation evidence. Runtime, sensitive-data and product ranking implementations are unchanged by this patch.",
+      "reason": "Reviewed generated quality projection after integration with master 1976069bd3d397febbff4280c617667288629b0c. Every product quality row matches that committed master exactly; the Wiki patch changes only tooling metrics and navigation. Runtime, sensitive-data handling and product ranking implementations are unchanged by this patch.",
       "baseRef": "HEAD",
-      "gitHead": "244145b7b817f028874ae09fb0ffad579d671981",
-      "reviewedAtUtc": "2026-10-04T12:33:19.9974232Z"
+      "gitHead": "6e2a0ee2c1e4eaa477288cca1e3e5541e8c1667a",
+      "reviewedAtUtc": "2026-10-04T13:13:39.3414878Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -930,13 +930,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4081f218f3182c2282c0cb226a7613b45e3eb3cafd958bd40ef6928d27b86f8b"
+          "sha256": "770e639552eb0986eca3e56a0f9f2babdc4ed9a86f35733aa0f7dc105eb3e946"
         }
       ],
-      "reason": "Reviewed the quality projection after integration with master 244145b7b. All 6421 product rows across hotspots, files, critical symbols and debt markers match that committed master exactly; only Wiki tooling metrics changed. Static reference signals remain navigation evidence. Runtime, sensitive-data and product ranking implementations are unchanged by this patch.",
+      "reason": "Reviewed generated quality projection after integration with master 1976069bd3d397febbff4280c617667288629b0c. Every product quality row matches that committed master exactly; the Wiki patch changes only tooling metrics and navigation. Runtime, sensitive-data handling and product ranking implementations are unchanged by this patch.",
       "baseRef": "HEAD",
-      "gitHead": "244145b7b817f028874ae09fb0ffad579d671981",
-      "reviewedAtUtc": "2026-10-04T12:33:22.8701861Z"
+      "gitHead": "6e2a0ee2c1e4eaa477288cca1e3e5541e8c1667a",
+      "reviewedAtUtc": "2026-10-04T13:13:42.4250514Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

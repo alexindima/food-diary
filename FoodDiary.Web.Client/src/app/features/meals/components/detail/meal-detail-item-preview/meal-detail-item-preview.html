@@ -8,7 +8,7 @@
             <div class="meal-detail__list-row">
                 <span class="fd-ui-body-sm">{{ item.name }}</span>
                 <strong class="fd-ui-body-sm">
-                    {{ item.amount | number: '1.0-1' }}
+                    {{ item.amount | localizedNumber: translateService.currentLang() ?? 'en' : 0 : 1 }}
                     @if (item.unitKey) {
                         {{ item.unitKey | translate }}
                     } @else if (item.unitText) {

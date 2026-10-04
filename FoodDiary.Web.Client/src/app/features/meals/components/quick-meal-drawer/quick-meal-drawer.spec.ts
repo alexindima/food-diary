@@ -1,5 +1,6 @@
 import { computed, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
@@ -91,8 +92,33 @@ describe('QuickMealDrawerComponent state', () => {
 
         expect(component['itemViews']().map(item => ({ name: item.name, amount: item.amount, unitKey: item.unitKey }))).toEqual([
             { name: 'Yogurt', amount: PRODUCT_AMOUNT, unitKey: 'GENERAL.UNITS.G' },
-            { name: 'Soup', amount: RECIPE_SERVINGS, unitKey: 'QUICK_MEAL.SERVINGS' },
+            { name: 'Soup', amount: RECIPE_SERVINGS, unitKey: 'QUICK_MEAL.SERVINGS_OTHER' },
         ]);
+    });
+
+    it.each([
+        { amount: 1, category: 'ONE', label: 'порция', formatted: '1' },
+        { amount: 2, category: 'FEW', label: 'порции', formatted: '2' },
+        { amount: 5, category: 'MANY', label: 'порций', formatted: '5' },
+        { amount: 21, category: 'ONE', label: 'порция', formatted: '21' },
+        { amount: 1.5, category: 'OTHER', label: 'порции', formatted: '1,5' },
+    ])('localizes recipe amount and serving category: $amount', async ({ amount, category, label, formatted }) => {
+        const { component, fixture } = await setupComponentAsync([{ key: 'recipe-1', type: 'recipe', recipe, amount }]);
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('ru', {
+            QUICK_MEAL: { SERVINGS_ONE: 'порция', SERVINGS_FEW: 'порции', SERVINGS_MANY: 'порций', SERVINGS_OTHER: 'порции' },
+        });
+        translate.use('ru');
+        fixture.detectChanges();
+        expect(component['itemViews']()[0].unitKey).toBe(`QUICK_MEAL.SERVINGS_${category}`);
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain(`${formatted} ${label}`);
+
+        translate.setTranslation('en', { QUICK_MEAL: { SERVINGS_ONE: 'serving', SERVINGS_OTHER: 'servings' } });
+        translate.use('en');
+        fixture.detectChanges();
+        const englishCategory = amount === 1 ? 'ONE' : 'OTHER';
+        expect(component['itemViews']()[0].unitKey).toBe(`QUICK_MEAL.SERVINGS_${englishCategory}`);
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain(`${amount} ${amount === 1 ? 'serving' : 'servings'}`);
     });
 
     it('should update details and action commands through quick service', async () => {
