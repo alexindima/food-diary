@@ -8,6 +8,7 @@ import { provideTranslateTesting } from '../../../../testing/translate-testing.m
 import { UnsavedChangesService } from '../../../services/unsaved-changes.service';
 import type { DayCalorieKey } from '../../../shared/models/goals.data';
 import { GoalsFacade, type MacroPreset } from '../lib/goals.facade';
+import { createDayCalories } from '../lib/goals-state.mapper';
 import { GoalsEditorComponent } from './goals-editor/goals-editor';
 import { GoalsPageComponent } from './goals-page';
 
@@ -18,22 +19,12 @@ const FIBER_TARGET = 30;
 const PROTEIN_TARGET = 150;
 const RETRY_WATER_TARGET = 2500;
 const NEWER_WATER_TARGET = 3000;
+const EDITED_CALORIE_TARGET = 2500;
 
 let facade: GoalsFacadeMock;
 
 describe('GoalsPageComponent', () => {
-    beforeEach(async () => {
-        facade = createFacadeMock();
-
-        await TestBed.configureTestingModule({
-            imports: [GoalsPageComponent],
-            providers: [provideTranslateTesting()],
-        })
-            .overrideComponent(GoalsPageComponent, {
-                set: { providers: [{ provide: GoalsFacade, useValue: facade }] },
-            })
-            .compileComponents();
-    });
+    beforeEach(setupGoalsPageAsync);
 
     it('initializes goals and renders the editor as the only goals form', () => {
         const fixture = createComponent();
@@ -62,6 +53,69 @@ describe('GoalsPageComponent', () => {
 
         expect(facade.saveManuallyAsync).toHaveBeenCalledWith(request);
     });
+});
+
+describe('GoalsPageComponent calorie cycling', () => {
+    beforeEach(setupGoalsPageAsync);
+
+    it.each([CALORIE_TARGET, 0])(
+        'initializes an empty cycling week from the %s calorie goal without saving automatically',
+        async calories => {
+            facade.calorieTarget.set(calories);
+            facade.dayCalories.set(createDayCalories(0));
+            const fixture = createComponent();
+            const element = fixture.nativeElement as HTMLElement;
+            const toggle = element.querySelector<HTMLInputElement>('#goals-editor-cycling-enabled');
+            toggle?.dispatchEvent(new Event('change'));
+            fixture.detectChanges();
+            const handler = TestBed.inject(UnsavedChangesService).getHandler();
+
+            const inputs = [...element.querySelectorAll<HTMLInputElement>('fd-goals-cycling-day input')];
+            expect(inputs.map(input => Number(input.value))).toEqual(Array.from({ length: 7 }, () => calories));
+            expect(handler?.hasChanges()).toBe(true);
+            expect(facade.saveManuallyAsync).not.toHaveBeenCalled();
+            expect(await handler?.save()).toBe(true);
+            expect(facade.saveManuallyAsync).toHaveBeenCalledWith(
+                expect.objectContaining({ calorieCyclingEnabled: true, ...createDayCalories(calories) }),
+            );
+        },
+    );
+
+    it('initializes cycling from the unsaved calorie draft and discards the initialization with that draft', () => {
+        facade.dayCalories.set(createDayCalories(0));
+        const fixture = createComponent();
+        const editor = getEditor(fixture);
+        editor['updateCalories'](EDITED_CALORIE_TARGET);
+        editor['updateCycling'](true);
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+        const handler = TestBed.inject(UnsavedChangesService).getHandler();
+
+        expect(element.querySelector<HTMLInputElement>('#goals-editor-cycling-mondayCalories')?.value).toBe(String(EDITED_CALORIE_TARGET));
+        handler?.discard();
+        fixture.detectChanges();
+        expect(handler?.hasChanges()).toBe(false);
+        expect(element.querySelector<HTMLInputElement>('#goals-editor-cycling-enabled')?.checked).toBe(false);
+        expect(element.querySelector('fd-goals-cycling-day')).toBeNull();
+        expect(facade.saveManuallyAsync).not.toHaveBeenCalled();
+    });
+
+    it('preserves a previously configured cycling week, including zero calorie days, when cycling is enabled again', async () => {
+        const days = { ...createDayCalories(0), mondayCalories: CALORIE_TARGET, sundayCalories: EDITED_CALORIE_TARGET };
+        facade.dayCalories.set(days);
+        const fixture = createComponent();
+        const editor = getEditor(fixture);
+        editor['updateCycling'](true);
+        editor['updateCycling'](false);
+        editor['updateCycling'](true);
+
+        expect(await TestBed.inject(UnsavedChangesService).getHandler()?.save()).toBe(true);
+        expect(facade.saveManuallyAsync).toHaveBeenCalledWith(expect.objectContaining({ calorieCyclingEnabled: true, ...days }));
+    });
+});
+
+describe('GoalsPageComponent saving drafts', () => {
+    beforeEach(setupGoalsPageAsync);
 
     it('preserves unsaved goals after failure and permits a successful retry', async () => {
         facade.saveManuallyAsync.mockResolvedValueOnce(false).mockResolvedValueOnce(true);
@@ -105,6 +159,19 @@ describe('GoalsPageComponent', () => {
         expect(facade.saveManuallyAsync).toHaveBeenCalledTimes(1);
     });
 });
+
+async function setupGoalsPageAsync(): Promise<void> {
+    facade = createFacadeMock();
+
+    await TestBed.configureTestingModule({
+        imports: [GoalsPageComponent],
+        providers: [provideTranslateTesting()],
+    })
+        .overrideComponent(GoalsPageComponent, {
+            set: { providers: [{ provide: GoalsFacade, useValue: facade }] },
+        })
+        .compileComponents();
+}
 
 function createComponent(): ComponentFixture<GoalsPageComponent> {
     const fixture = TestBed.createComponent(GoalsPageComponent);
