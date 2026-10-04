@@ -5442,6 +5442,8 @@
         "VIEW_STATISTICS": "View Statistics"
     },
     "WEIGHT_HISTORY": {
+        "DELETE_CONFIRM_TITLE": "Delete weight measurement?",
+        "DELETE_CONFIRM_MESSAGE": "Delete the weight measurement for {{date}}? This action cannot be undone.",
         "SUBTITLE": "Body metrics",
         "TITLE": "Weight history",
         "SUMMARY_TITLE": "Weight overview",
@@ -5578,6 +5580,8 @@
         "GOAL_VALUE_RANGE": "Enter a value greater than zero and no more than {{max}}."
     },
     "WAIST_HISTORY": {
+        "DELETE_CONFIRM_TITLE": "Delete waist measurement?",
+        "DELETE_CONFIRM_MESSAGE": "Delete the waist measurement for {{date}}? This action cannot be undone.",
         "SUBTITLE": "Body measurements",
         "TITLE": "Waist tracking",
         "CHART_TITLE": "Weekly progress",

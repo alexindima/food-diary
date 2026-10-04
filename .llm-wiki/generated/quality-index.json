@@ -13002,11 +13002,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.ts",
-      "nonBlankLines": 192,
-      "decisionPoints": 13,
+      "nonBlankLines": 220,
+      "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.34
+      "structuralRiskScore": 25.4
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-tour.ts",
@@ -13362,11 +13362,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.ts",
-      "nonBlankLines": 198,
-      "decisionPoints": 10,
+      "nonBlankLines": 226,
+      "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.96
+      "structuralRiskScore": 21.02
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-tour.ts",

@@ -5848,7 +5848,7 @@
       "role": "Component",
       "selector": "fd-waist-history-page",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.ts",
-      "line": 58
+      "line": 65
     },
     {
       "name": "WearableService",
@@ -6023,7 +6023,7 @@
       "role": "Component",
       "selector": "fd-weight-history-page",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.ts",
-      "line": 61
+      "line": 68
     },
     {
       "name": "AuthInterceptor",
@@ -7130,8 +7130,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4057,
-      "russianProperties": 4057,
+      "englishProperties": 4061,
+      "russianProperties": 4061,
       "countsMatch": true
     },
     {
