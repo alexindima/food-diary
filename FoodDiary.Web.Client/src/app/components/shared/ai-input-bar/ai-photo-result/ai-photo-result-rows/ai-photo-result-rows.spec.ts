@@ -1,4 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -16,6 +17,21 @@ async function setupAiPhotoResultRowsAsync(): Promise<ComponentFixture<AiPhotoRe
 }
 
 describe('AiPhotoResultRowsComponent', () => {
+    it('reacts to the interface language when formatting row calories', async () => {
+        const fixture = await setupAiPhotoResultRowsAsync();
+        fixture.componentRef.setInput('rows', [
+            { key: 'egg', annotationId: 'egg-0', displayName: 'Egg', amountLabel: '100 g', calories: 1056.4 },
+        ]);
+        const translateService = TestBed.inject(TranslateService);
+        const element = fixture.nativeElement as HTMLElement;
+        translateService.use('ru');
+        fixture.detectChanges();
+        expect(element.querySelector('.ai-photo-result__item-calories')?.textContent.replaceAll('\u00A0', ' ')).toContain('1 056');
+        translateService.use('en');
+        fixture.detectChanges();
+        expect(element.querySelector('.ai-photo-result__item-calories')?.textContent).toContain('1,056');
+    });
+
     it('renders detected rows', async () => {
         const fixture = await setupAiPhotoResultRowsAsync();
         fixture.detectChanges();

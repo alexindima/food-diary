@@ -2782,14 +2782,14 @@
       "role": "Component",
       "selector": "fd-ai-photo-result-rows",
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-rows/ai-photo-result-rows.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "AiPhotoResultComponent",
       "role": "Component",
       "selector": "fd-ai-photo-result",
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts",
-      "line": 74
+      "line": 75
     },
     {
       "name": "PhotoUploadDialogComponent",

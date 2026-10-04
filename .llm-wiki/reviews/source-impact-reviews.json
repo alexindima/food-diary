@@ -840,13 +840,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "60299ab25fb515627d02e510202b4780bacc21326fea794e989eace7da792380"
+          "sha256": "6099b05a456be7da845ba3dd3e4bff7681c57ff64e8f5684e11f43ecd78b4455"
         }
       ],
-      "reason": "Reviewed bounded mapper and dialog changes plus direct consumers. Seven regression cases cover mixed-case unit display, note-only save, preserved custom units, precision and live locale changes. No ownership or persistence behavior changes.",
+      "reason": "Reviewed the bounded formatter replacement and shared language helper reuse. Two rendered regression tests cover total and row formatting in RU/EN and updating with a language change; existing interaction tests remain unchanged. Final focused lint passed.",
       "baseRef": "HEAD",
-      "gitHead": "98b1c3b9e8b45207975ec8cc934ae69e1608c6d4",
-      "reviewedAtUtc": "2026-10-04T16:55:52.2676249Z"
+      "gitHead": "343ad982385be0d06c66edc26590e9d185ef5323",
+      "reviewedAtUtc": "2026-10-04T17:27:58.4766433Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -930,13 +930,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "60299ab25fb515627d02e510202b4780bacc21326fea794e989eace7da792380"
+          "sha256": "6099b05a456be7da845ba3dd3e4bff7681c57ff64e8f5684e11f43ecd78b4455"
         }
       ],
-      "reason": "Reviewed generated quality source changes; this patch changes localized presentation and known unit normalization only. Authentication, private data boundaries, API transport, credentials and provider sharing are unchanged.",
+      "reason": "Reviewed regenerated quality index changes. Formatter replacement does not alter credentials, ownership, authentication, provider sharing, retention or API transport.",
       "baseRef": "HEAD",
-      "gitHead": "98b1c3b9e8b45207975ec8cc934ae69e1608c6d4",
-      "reviewedAtUtc": "2026-10-04T16:55:52.8820875Z"
+      "gitHead": "343ad982385be0d06c66edc26590e9d185ef5323",
+      "reviewedAtUtc": "2026-10-04T17:27:59.7708091Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1072,18 +1072,14 @@
       "pageSha256": "9f24075adfde297cc7bd36d3da8b9034c3a908dc4a5f0920846edb88ecbff363",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "d4cdc8a14e547b8703d2a7efdcf74c753a743f9a08932a082b37974b0e84faad"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "f0db457d51305a3e8bb31527034633a060eeefe0200232cfca7565b710ad65aa"
+          "sha256": "4c568754fe1e3e5d38eb501fa0a354d042fac9697553ff8b9761594b96ff6256"
         }
       ],
-      "reason": "The existing AuthService and AuthInterceptor remain owners; routes API payloads backend contracts cross-tab locking and session version guards are retained.",
+      "reason": "Traced AiInputBar consumers from dashboard and meal add through the same shared AI result component and rows. This change affects only calorie presentation, with the existing formatter and shared language signal; nutrition calculations and request payloads are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "2cf1e218ba426bd3a9b1f0c58b3b184968abfc84",
-      "reviewedAtUtc": "2026-10-04T15:48:39.1493084Z"
+      "gitHead": "343ad982385be0d06c66edc26590e9d185ef5323",
+      "reviewedAtUtc": "2026-10-04T17:28:00.7799751Z"
     },
     {
       "pageId": "workflow-verification-planner",
