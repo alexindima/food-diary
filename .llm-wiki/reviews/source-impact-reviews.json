@@ -26,10 +26,10 @@
           "sha256": "65f2f3407df1ada0aa232000a6b9fed054f452911b97e411d592dcfb59f40637"
         }
       ],
-      "reason": "Reviewed the recipe import guide and repository navigation against combined sources. Link/caption import, optional video speech and browser clipboard suggestions stay owned by existing AI and Recipes features. Runtime FFmpeg, 50 MiB/5 minute media bounds, proxy and temporary-space configuration and conditional Instagram video access are documented. Current master Wiki tooling and existing frontend fixes are preserved.",
+      "reason": "Checked the recipe import guide and navigation against combined current sources, including optional clipboard suggestions, video limits, provider configuration, proxy and temporary storage constraints and conditional Instagram video availability. Current master tooling and fixes are preserved; deployment is outside this merge.",
       "baseRef": "master",
-      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
-      "reviewedAtUtc": "2026-10-04T17:31:02.1300635Z"
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:02.5548865Z"
     },
     {
       "pageId": "module.frontend",
@@ -94,10 +94,10 @@
           "sha256": "e8fd72d24f538b643bf091265a23ff326d4aae9be79aa3bed68c200f30305fa6"
         }
       ],
-      "reason": "Reviewed the recipe import guide and repository navigation against combined sources. Link/caption import, optional video speech and browser clipboard suggestions stay owned by existing AI and Recipes features. Runtime FFmpeg, 50 MiB/5 minute media bounds, proxy and temporary-space configuration and conditional Instagram video access are documented. Current master Wiki tooling and existing frontend fixes are preserved.",
+      "reason": "Checked the recipe import guide and navigation against combined current sources, including optional clipboard suggestions, video limits, provider configuration, proxy and temporary storage constraints and conditional Instagram video availability. Current master tooling and fixes are preserved; deployment is outside this merge.",
       "baseRef": "master",
-      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
-      "reviewedAtUtc": "2026-10-04T17:31:03.4304518Z"
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:03.6493844Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -139,10 +139,10 @@
           "sha256": "65f2f3407df1ada0aa232000a6b9fed054f452911b97e411d592dcfb59f40637"
         }
       ],
-      "reason": "Reviewed the recipe import guide and repository navigation against combined sources. Link/caption import, optional video speech and browser clipboard suggestions stay owned by existing AI and Recipes features. Runtime FFmpeg, 50 MiB/5 minute media bounds, proxy and temporary-space configuration and conditional Instagram video access are documented. Current master Wiki tooling and existing frontend fixes are preserved.",
+      "reason": "Checked the recipe import guide and navigation against combined current sources, including optional clipboard suggestions, video limits, provider configuration, proxy and temporary storage constraints and conditional Instagram video availability. Current master tooling and fixes are preserved; deployment is outside this merge.",
       "baseRef": "master",
-      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
-      "reviewedAtUtc": "2026-10-04T17:31:05.0039641Z"
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:05.0150049Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -207,10 +207,10 @@
           "sha256": "0cd6c023cdab3fd2c177e2cb7ba9c341612314799413cd396f1e6fc45f877688"
         }
       ],
-      "reason": "Reviewed the combined recipe import routes and multipart DTOs against current master. The API checker reports 0 structural breaking changes and 9 additions; all 4 transport contract tests and 2116 architecture tests passed. AI owns recognition contracts and workflow, Recipes retains saves, and frontend recognition fills the reviewed editable draft without changing existing saves. Earlier feature UI verification covered desktop/mobile, clearing uploaded files and multipart payloads.",
+      "reason": "Reviewed recipe import routes and multipart DTOs against current master: the compatibility checker reports 0 breaking changes and 9 additions; 4 host transport tests and 2116 architecture tests pass. AI owns recognition and Recipes saves the editable draft. Full frontend verification passed 5147 tests, with 51 focused tests after the latest master update and prior desktop/mobile visual QA.",
       "baseRef": "master",
-      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
-      "reviewedAtUtc": "2026-10-04T17:31:07.2966620Z"
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:06.5839742Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -226,10 +226,10 @@
           "sha256": "e8fd72d24f538b643bf091265a23ff326d4aae9be79aa3bed68c200f30305fa6"
         }
       ],
-      "reason": "The merged solution builds with 0 warnings and 0 errors. Focused backend suites passed 2828 tests across AI application, infrastructure, presentation, shared presentation, architecture and video HTTP contracts. Generated Wiki indexes were rebuilt from combined master and feature sources. Static symbol references remain navigation evidence; execution evidence is recorded in merge build and test logs.",
+      "reason": "The merged solution builds with 0 warnings and 0 errors; all 2828 focused backend tests and 5147 frontend tests pass, plus 51 focused tests after the latest master update. Combined source indexes were rebuilt. Static test references are navigation evidence, not execution coverage.",
       "baseRef": "master",
-      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
-      "reviewedAtUtc": "2026-10-04T17:31:09.5756182Z"
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:07.7360595Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -241,10 +241,10 @@
           "sha256": "af056824290221d3999c2de4f7e3a705e9414c2e42ee9735550653984f55e153"
         }
       ],
-      "reason": "Reviewed the combined recipe import routes and multipart DTOs against current master. The API checker reports 0 structural breaking changes and 9 additions; all 4 transport contract tests and 2116 architecture tests passed. AI owns recognition contracts and workflow, Recipes retains saves, and frontend recognition fills the reviewed editable draft without changing existing saves. Earlier feature UI verification covered desktop/mobile, clearing uploaded files and multipart payloads.",
+      "reason": "Reviewed recipe import routes and multipart DTOs against current master: the compatibility checker reports 0 breaking changes and 9 additions; 4 host transport tests and 2116 architecture tests pass. AI owns recognition and Recipes saves the editable draft. Full frontend verification passed 5147 tests, with 51 focused tests after the latest master update and prior desktop/mobile visual QA.",
       "baseRef": "master",
-      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
-      "reviewedAtUtc": "2026-10-04T17:31:12.2687341Z"
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:09.3616560Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -474,10 +474,10 @@
           "sha256": "61006c4be46dbeecadede5ec7aa09c38c98cac4915cbd34c58460bc3a922ab3d"
         }
       ],
-      "reason": "Reviewed the recipe import guide and repository navigation against combined sources. Link/caption import, optional video speech and browser clipboard suggestions stay owned by existing AI and Recipes features. Runtime FFmpeg, 50 MiB/5 minute media bounds, proxy and temporary-space configuration and conditional Instagram video access are documented. Current master Wiki tooling and existing frontend fixes are preserved.",
+      "reason": "Checked the recipe import guide and navigation against combined current sources, including optional clipboard suggestions, video limits, provider configuration, proxy and temporary storage constraints and conditional Instagram video availability. Current master tooling and fixes are preserved; deployment is outside this merge.",
       "baseRef": "master",
-      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
-      "reviewedAtUtc": "2026-10-04T17:31:14.3643121Z"
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:10.5284690Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -790,10 +790,10 @@
           "sha256": "7edac53f8569f6b4a914fa3df788992d2b94fc2acc39487c13693a1e59463f86"
         }
       ],
-      "reason": "Reviewed user consent, Premium authorization, clipboard opt-in, URL/IP/redirect/body limits, bounded local FFmpeg processing and cleanup, and WAV-only provider transmission. The merged AI infrastructure suite passed 218 tests with real FFmpeg media cases, including unsafe destination and ambiguity rejection regressions. Public Instagram caption retrieval was verified on the supplied reel; no real OpenAI calls or credential sharing were performed.",
+      "reason": "Reviewed consent, Premium access, opt-in clipboard reading, public URL DNS/IP and redirect checks, body limits, local FFmpeg cleanup and WAV-only provider sharing. All 218 infrastructure tests pass including real media and unsafe URL/ambiguous caption cases. The actual Instagram caption was verified without live OpenAI calls or credential changes.",
       "baseRef": "master",
-      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
-      "reviewedAtUtc": "2026-10-04T17:31:18.6840428Z"
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:12.8261820Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -832,13 +832,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "00e8e4afad9a7fee4555c7d3da0db7536535ea5d9a88f6d73ac46c492bef6a09"
+          "sha256": "33cfa03b2f80b80cf9d2c9f2d4f10e4a2fe69e55063bd01dba788be44d25e0b8"
         }
       ],
-      "reason": "The merged solution builds with 0 warnings and 0 errors. Focused backend suites passed 2828 tests across AI application, infrastructure, presentation, shared presentation, architecture and video HTTP contracts. Generated Wiki indexes were rebuilt from combined master and feature sources. Static symbol references remain navigation evidence; execution evidence is recorded in merge build and test logs.",
+      "reason": "The merged solution builds with 0 warnings and 0 errors; all 2828 focused backend tests and 5147 frontend tests pass, plus 51 focused tests after the latest master update. Combined source indexes were rebuilt. Static test references are navigation evidence, not execution coverage.",
       "baseRef": "master",
-      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
-      "reviewedAtUtc": "2026-10-04T17:31:21.1407628Z"
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:14.0201975Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -910,10 +910,10 @@
           "sha256": "a56ec93a56ef0e5481505248fb30370485626a0d128a836dbdbbc867183a114e"
         }
       ],
-      "reason": "Reviewed the recipe import guide and repository navigation against combined sources. Link/caption import, optional video speech and browser clipboard suggestions stay owned by existing AI and Recipes features. Runtime FFmpeg, 50 MiB/5 minute media bounds, proxy and temporary-space configuration and conditional Instagram video access are documented. Current master Wiki tooling and existing frontend fixes are preserved.",
+      "reason": "Checked the recipe import guide and navigation against combined current sources, including optional clipboard suggestions, video limits, provider configuration, proxy and temporary storage constraints and conditional Instagram video availability. Current master tooling and fixes are preserved; deployment is outside this merge.",
       "baseRef": "master",
-      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
-      "reviewedAtUtc": "2026-10-04T17:31:25.7856858Z"
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:17.0194424Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -922,7 +922,7 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "00e8e4afad9a7fee4555c7d3da0db7536535ea5d9a88f6d73ac46c492bef6a09"
+          "sha256": "33cfa03b2f80b80cf9d2c9f2d4f10e4a2fe69e55063bd01dba788be44d25e0b8"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
@@ -933,10 +933,10 @@
           "sha256": "7edac53f8569f6b4a914fa3df788992d2b94fc2acc39487c13693a1e59463f86"
         }
       ],
-      "reason": "Reviewed user consent, Premium authorization, clipboard opt-in, URL/IP/redirect/body limits, bounded local FFmpeg processing and cleanup, and WAV-only provider transmission. The merged AI infrastructure suite passed 218 tests with real FFmpeg media cases, including unsafe destination and ambiguity rejection regressions. Public Instagram caption retrieval was verified on the supplied reel; no real OpenAI calls or credential sharing were performed.",
+      "reason": "Reviewed consent, Premium access, opt-in clipboard reading, public URL DNS/IP and redirect checks, body limits, local FFmpeg cleanup and WAV-only provider sharing. All 218 infrastructure tests pass including real media and unsafe URL/ambiguous caption cases. The actual Instagram caption was verified without live OpenAI calls or credential changes.",
       "baseRef": "master",
-      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
-      "reviewedAtUtc": "2026-10-04T17:31:28.5630683Z"
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:18.4518354Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1077,13 +1077,13 @@
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "f5852fea5632b7d3f8c48c89066f52e43a4418cf5bb8c73ce869f0161f17c644"
+          "sha256": "66ebb09cf982aa522ce26b16c499417b47772a24569d9a0af48ea140666c9619"
         }
       ],
-      "reason": "Reviewed the recipe import guide and repository navigation against combined sources. Link/caption import, optional video speech and browser clipboard suggestions stay owned by existing AI and Recipes features. Runtime FFmpeg, 50 MiB/5 minute media bounds, proxy and temporary-space configuration and conditional Instagram video access are documented. Current master Wiki tooling and existing frontend fixes are preserved.",
+      "reason": "Checked the recipe import guide and navigation against combined current sources, including optional clipboard suggestions, video limits, provider configuration, proxy and temporary storage constraints and conditional Instagram video availability. Current master tooling and fixes are preserved; deployment is outside this merge.",
       "baseRef": "master",
-      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
-      "reviewedAtUtc": "2026-10-04T17:31:30.5142802Z"
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:19.6901406Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1174,10 +1174,10 @@
           "sha256": "e66ce0e22daf43ed01ea5bc6c096f50120a2ea042f06e0235f21c26d10916fd6"
         }
       ],
-      "reason": "Reviewed the combined recipe import routes and multipart DTOs against current master. The API checker reports 0 structural breaking changes and 9 additions; all 4 transport contract tests and 2116 architecture tests passed. AI owns recognition contracts and workflow, Recipes retains saves, and frontend recognition fills the reviewed editable draft without changing existing saves. Earlier feature UI verification covered desktop/mobile, clearing uploaded files and multipart payloads.",
+      "reason": "Reviewed recipe import routes and multipart DTOs against current master: the compatibility checker reports 0 breaking changes and 9 additions; 4 host transport tests and 2116 architecture tests pass. AI owns recognition and Recipes saves the editable draft. Full frontend verification passed 5147 tests, with 51 focused tests after the latest master update and prior desktop/mobile visual QA.",
       "baseRef": "master",
-      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
-      "reviewedAtUtc": "2026-10-04T17:31:16.6504030Z"
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:11.7839799Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1189,10 +1189,10 @@
           "sha256": "49ecbe7cb4208969497cb732142477a08d0d64f39f4196a4c5803f23fa567378"
         }
       ],
-      "reason": "Reviewed the recipe import guide and repository navigation against combined sources. Link/caption import, optional video speech and browser clipboard suggestions stay owned by existing AI and Recipes features. Runtime FFmpeg, 50 MiB/5 minute media bounds, proxy and temporary-space configuration and conditional Instagram video access are documented. Current master Wiki tooling and existing frontend fixes are preserved.",
+      "reason": "Checked the recipe import guide and navigation against combined current sources, including optional clipboard suggestions, video limits, provider configuration, proxy and temporary storage constraints and conditional Instagram video availability. Current master tooling and fixes are preserved; deployment is outside this merge.",
       "baseRef": "master",
-      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
-      "reviewedAtUtc": "2026-10-04T17:31:23.3913308Z"
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:15.4414345Z"
     },
     {
       "pageId": "workflow.review-diff",

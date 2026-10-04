@@ -1,10 +1,11 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { recalculateEditedAiNutrition } from '../../../../shared/lib/ai-nutrition-edit.utils';
 import {
     buildAiEditableItems,
@@ -58,7 +59,7 @@ type AiPhotoResultDialogState = {
     selector: 'fd-ai-photo-result',
     imports: [
         TranslatePipe,
-        DecimalPipe,
+        LocalizedNumberPipe,
         FdUiHintDirective,
         FdUiButtonComponent,
         AiPhotoPreviewComponent,
@@ -73,6 +74,7 @@ type AiPhotoResultDialogState = {
 })
 export class AiPhotoResultComponent {
     private readonly translateService = inject(TranslateService);
+    protected readonly activeLang = injectCurrentLanguage();
     private readonly dialogState = inject<AiPhotoResultDialogState | null>(FD_UI_DIALOG_DATA, { optional: true });
     private readonly unitOptions = ['g', 'ml', 'pcs'] as const;
 

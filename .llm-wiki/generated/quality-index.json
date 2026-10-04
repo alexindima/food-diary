@@ -7474,19 +7474,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-rows/ai-photo-result-rows.ts",
-      "nonBlankLines": 19,
+      "nonBlankLines": 21,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
+      "structuralRiskScore": 0.42
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts",
-      "nonBlankLines": 335,
+      "nonBlankLines": 337,
       "decisionPoints": 41,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 68.2
+      "structuralRiskScore": 68.24
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/photo-upload-dialog/photo-upload-dialog.ts",

@@ -60,7 +60,7 @@
                     </div>
                     @if (!resolvedIsNutritionLoading() && resolvedNutrition(); as currentNutrition) {
                         <strong class="ai-photo-result__products-calories fd-ui-body-sm">
-                            {{ currentNutrition.calories | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}
+                            {{ currentNutrition.calories | localizedNumber: activeLang() }} {{ 'GENERAL.UNITS.KCAL' | translate }}
                         </strong>
                     }
                 </header>
