@@ -30,6 +30,12 @@ if ($contextEvalGroups -notcontains 'adaptive-evals' -or $contextEvalGroups -not
     throw 'Context-search corpora must run both adaptive evals and the SQL context regression suite.'
 }
 $contextRankingGroups = @(Get-Groups '.llm-wiki/policies/context-search-ranking.json')
+foreach ($poolTool in @('LlmWikiCorpusEvaluation', 'Test-LlmWikiCorpusEvaluation')) {
+    $poolGroups = @(Get-Groups ".llm-wiki/tools/$poolTool.ps1")
+    if ($poolGroups -notcontains 'context-search-evals' -or $poolGroups -notcontains 'context-retrieval' -or $poolGroups -contains 'tool-contract') {
+        throw 'Corpus pool changes must select the existing complete context regression groups.'
+    }
+}
 if ($contextRankingGroups -notcontains 'context-search-evals' -or $contextRankingGroups -notcontains 'context-retrieval') {
     throw 'Context-search ranking policy changes must invalidate the SQL context regression suite.'
 }

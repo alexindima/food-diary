@@ -227,21 +227,17 @@
     {
       "pageId": "workflow-architecture-health-review",
       "pagePath": ".llm-wiki/workflows/architecture-health-review.md",
-      "pageSha256": "f1377bfc80eadd0ff4d6265843c3eb2747177063ec40db6befaa9a8cfc37dabf",
+      "pageSha256": "862f4a2a551c99d09cec127ca893c0e91e19c0eb8eb36f18d051a3f2d7beedd9",
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "9f0e4d0c072f9bbf9fea4b5f4669a081feb97b39c12c4d1e016999e8a4c5b1ae"
-        },
-        {
-          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "c13c4da524c54d360776ca93f97eaf88a8cbe6abc73667e7a1dc846da224f58b"
+          "sha256": "61034703c2969c27c8debf6f9cf93c11999ff290ce84448aeae7b7393ae163a0"
         }
       ],
-      "reason": "Reviewed the architecture-health workflow against the regenerated index and current ProjectDependencyMatrixTests. Existing dependency and cycle guardrails remain enforced, hotspot/removal entries remain candidates rather than deletion authority, and the current audit executed 2116 architecture tests successfully.",
-      "baseRef": "origin/master",
-      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
-      "reviewedAtUtc": "2026-10-03T11:03:26.4933619Z"
+      "reason": "The regenerated health projection reflects static reference changes from the corpus worker extraction. No project edges or product runtime ownership changed; indirect evaluator coverage remains a navigation lead, not missing execution coverage.",
+      "baseRef": "HEAD",
+      "gitHead": "a5bd0d626c79e7403678d772928ea5d4545ffc74",
+      "reviewedAtUtc": "2026-10-04T04:34:01.7662873Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -868,13 +864,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a864f5d72aad30b68544b27919d0db78c50e4b1172207600b6bf7a95e1bc755e"
+          "sha256": "b8f3da4c723e3ae67ba5eb63edc0fd7c11671b0ad607d5cecb4e964283556a2f"
         }
       ],
-      "reason": "Verified generated quality changes against current source line and decision counts for the shared reader and removed unreachable PowerShell code. The affected index check passed; this remains static navigation evidence.",
+      "reason": "The quality projection includes the bounded corpus worker helper and its direct lifecycle tests. Measure-LlmWikiSqlContextEvaluation is now invoked through the helper, so its absent direct test-name reference is an indirect coverage signal; all existing real corpus assertions remain in the driver.",
       "baseRef": "HEAD",
-      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
-      "reviewedAtUtc": "2026-10-04T03:27:35.0282701Z"
+      "gitHead": "a5bd0d626c79e7403678d772928ea5d4545ffc74",
+      "reviewedAtUtc": "2026-10-04T04:34:02.5853629Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -958,21 +954,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a864f5d72aad30b68544b27919d0db78c50e4b1172207600b6bf7a95e1bc755e"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6c4a6a46f2e73545414bd80ff358c8f6572eff014b11e7ea26150bc14613349d"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "8f9e30553c3c379d4f69544e53ada732f18bb19369b736c1727831d279a1f8ea"
+          "sha256": "b8f3da4c723e3ae67ba5eb63edc0fd7c11671b0ad607d5cecb4e964283556a2f"
         }
       ],
-      "reason": "Reviewed the deleted WebPush prefix rule against current and supported alias paths: its retired prefix has no target. Query budgets and security navigation remain intact; state/entity scoring excludes send intent and full retrieval gates passed.",
+      "reason": "Corpus workers process committed public regression fixtures only and persist their existing per-case diagnostic payloads under ignored artifact paths. Worker arguments use ProcessStartInfo.ArgumentList and failure/timeout/cancellation cleanup is tested; security evidence compiler contracts remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
-      "reviewedAtUtc": "2026-10-04T03:27:36.7954048Z"
+      "gitHead": "a5bd0d626c79e7403678d772928ea5d4545ffc74",
+      "reviewedAtUtc": "2026-10-04T04:34:03.3110592Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

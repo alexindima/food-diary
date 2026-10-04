@@ -1,9 +1,10 @@
 [CmdletBinding()]
-param()
+param([ValidateRange(1, 4)][int]$MaxConcurrency = 2)
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-foreach ($corpusFile in Get-ChildItem (Join-Path $PSScriptRoot '../evals') -Filter 'context-search*.json') {
+$corpusFiles = @(Get-ChildItem (Join-Path $PSScriptRoot '../evals') -Filter 'context-search*.json')
+foreach ($corpusFile in $corpusFiles) {
     $corpus = Get-Content -LiteralPath $corpusFile.FullName -Raw | ConvertFrom-Json
     foreach ($case in $corpus.cases) {
         $sourcePaths = @($case.expectedPaths)
@@ -16,74 +17,79 @@ foreach ($corpusFile in Get-ChildItem (Join-Path $PSScriptRoot '../evals') -Filt
         }
     }
 }
-$measure = Join-Path $PSScriptRoot 'Measure-LlmWikiSqlContextEvaluation.ps1'
+. (Join-Path $PSScriptRoot 'LlmWikiCorpusEvaluation.ps1')
+& (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') build -Format Json | Out-Null
+if (-not $?) { throw 'Unable to prepare the context-search evaluation graph.' }
+$pool = Invoke-LlmWikiCorpusEvaluation -RepositoryRoot $repositoryRoot -CorpusPath $corpusFiles.FullName -MaxConcurrency $MaxConcurrency
+$consumedCorpora = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+Write-Host "Evaluated $($pool.CorpusCount) retrieval corpora in $([Math]::Round($pool.DurationSeconds, 2))s (peak workers $($pool.PeakConcurrency))."
 function Invoke-ContextCorpus {
-    param([string]$CorpusPath, [switch]$SkipBuild, [string]$Format)
+    param([string]$CorpusPath)
     $label = if ($CorpusPath) { [IO.Path]::GetFileName($CorpusPath) } else { 'context-search.json' }
-    Write-Host "Evaluating retrieval corpus: $label"
-    & $measure @PSBoundParameters
+    Write-Host "Checking retrieval corpus: $label"
+    if (-not $CorpusPath) { $CorpusPath = Join-Path $PSScriptRoot '../evals/context-search.json' }
+    $path = (Resolve-Path -LiteralPath $CorpusPath).Path
+    if (-not $pool.Evaluations.ContainsKey($path)) { throw "Missing corpus evaluation: $label" }
+    if (-not $consumedCorpora.Add($path)) { throw "Corpus evaluation consumed twice: $label" }
+    $pool.Evaluations[$path]
 }
-$primaryEvaluation = Invoke-ContextCorpus -Format Json | ConvertFrom-Json
+$primaryEvaluation = Invoke-ContextCorpus | ConvertFrom-Json
 $maintenanceCorpus = Join-Path $PSScriptRoot '../evals/context-search-maintenance-regression.json'
-$maintenanceEvaluation = Invoke-ContextCorpus -CorpusPath $maintenanceCorpus -SkipBuild -Format Json | ConvertFrom-Json
+$maintenanceEvaluation = Invoke-ContextCorpus -CorpusPath $maintenanceCorpus | ConvertFrom-Json
 if (-not $maintenanceEvaluation.passed) { throw 'Wiki maintenance retrieval regression failed; inspect the per-case results.' }
 $challengeCorpus = Join-Path $PSScriptRoot '../evals/context-search-holdout.json'
-$challengeEvaluation = Invoke-ContextCorpus -CorpusPath $challengeCorpus -SkipBuild -Format Json | ConvertFrom-Json
+$challengeEvaluation = Invoke-ContextCorpus -CorpusPath $challengeCorpus | ConvertFrom-Json
 $generalizationCorpus = Join-Path $PSScriptRoot '../evals/context-search-generalization.json'
-$generalizationEvaluation = Invoke-ContextCorpus -CorpusPath $generalizationCorpus -SkipBuild -Format Json | ConvertFrom-Json
+$generalizationEvaluation = Invoke-ContextCorpus -CorpusPath $generalizationCorpus | ConvertFrom-Json
 $mailRegressionCorpus = Join-Path $PSScriptRoot '../evals/context-search-mail-regression.json'
-$mailRegressionEvaluation = Invoke-ContextCorpus -CorpusPath $mailRegressionCorpus -SkipBuild -Format Json | ConvertFrom-Json
+$mailRegressionEvaluation = Invoke-ContextCorpus -CorpusPath $mailRegressionCorpus | ConvertFrom-Json
 $validationCorpus = Join-Path $PSScriptRoot '../evals/context-search-validation.json'
-$validationEvaluation = Invoke-ContextCorpus -CorpusPath $validationCorpus -SkipBuild -Format Json | ConvertFrom-Json
+$validationEvaluation = Invoke-ContextCorpus -CorpusPath $validationCorpus | ConvertFrom-Json
 $imageWikiRegressionCorpus = Join-Path $PSScriptRoot '../evals/context-search-image-wiki-regression.json'
-$imageWikiRegressionEvaluation = Invoke-ContextCorpus -CorpusPath $imageWikiRegressionCorpus -SkipBuild -Format Json | ConvertFrom-Json
+$imageWikiRegressionEvaluation = Invoke-ContextCorpus -CorpusPath $imageWikiRegressionCorpus | ConvertFrom-Json
 $businessWikiRegressionCorpus = Join-Path $PSScriptRoot '../evals/context-search-business-wiki-regression.json'
-$businessWikiRegressionEvaluation = Invoke-ContextCorpus -CorpusPath $businessWikiRegressionCorpus -SkipBuild -Format Json | ConvertFrom-Json
+$businessWikiRegressionEvaluation = Invoke-ContextCorpus -CorpusPath $businessWikiRegressionCorpus | ConvertFrom-Json
 $securityRegressionCorpus = Join-Path $PSScriptRoot '../evals/context-search-security-regression.json'
-$securityRegressionEvaluation = Invoke-ContextCorpus -CorpusPath $securityRegressionCorpus -SkipBuild -Format Json | ConvertFrom-Json
+$securityRegressionEvaluation = Invoke-ContextCorpus -CorpusPath $securityRegressionCorpus | ConvertFrom-Json
 $probeCorpus = Join-Path $PSScriptRoot '../evals/context-search-probe.json'
-$probeEvaluation = Invoke-ContextCorpus -CorpusPath $probeCorpus -SkipBuild -Format Json | ConvertFrom-Json
+$probeEvaluation = Invoke-ContextCorpus -CorpusPath $probeCorpus | ConvertFrom-Json
 $probe2Corpus = Join-Path $PSScriptRoot '../evals/context-search-probe-2.json'
-$probe2Evaluation = Invoke-ContextCorpus -CorpusPath $probe2Corpus -SkipBuild -Format Json | ConvertFrom-Json
+$probe2Evaluation = Invoke-ContextCorpus -CorpusPath $probe2Corpus | ConvertFrom-Json
 $probe3Corpus = Join-Path $PSScriptRoot '../evals/context-search-probe-3.json'
-$probe3Evaluation = Invoke-ContextCorpus -CorpusPath $probe3Corpus -SkipBuild -Format Json | ConvertFrom-Json
+$probe3Evaluation = Invoke-ContextCorpus -CorpusPath $probe3Corpus | ConvertFrom-Json
 $probe4Corpus = Join-Path $PSScriptRoot '../evals/context-search-probe-4.json'
-$probe4Evaluation = Invoke-ContextCorpus -CorpusPath $probe4Corpus -SkipBuild -Format Json | ConvertFrom-Json
+$probe4Evaluation = Invoke-ContextCorpus -CorpusPath $probe4Corpus | ConvertFrom-Json
 $probe5Corpus = Join-Path $PSScriptRoot '../evals/context-search-probe-5.json'
-$probe5Evaluation = Invoke-ContextCorpus -CorpusPath $probe5Corpus -SkipBuild -Format Json | ConvertFrom-Json
+$probe5Evaluation = Invoke-ContextCorpus -CorpusPath $probe5Corpus | ConvertFrom-Json
 $probe6Corpus = Join-Path $PSScriptRoot '../evals/context-search-probe-6.json'
-$probe6Evaluation = Invoke-ContextCorpus -CorpusPath $probe6Corpus -SkipBuild -Format Json | ConvertFrom-Json
+$probe6Evaluation = Invoke-ContextCorpus -CorpusPath $probe6Corpus | ConvertFrom-Json
 $probe7Corpus = Join-Path $PSScriptRoot '../evals/context-search-probe-7.json'
-$probe7Evaluation = Invoke-ContextCorpus -CorpusPath $probe7Corpus -SkipBuild -Format Json | ConvertFrom-Json
+$probe7Evaluation = Invoke-ContextCorpus -CorpusPath $probe7Corpus | ConvertFrom-Json
 $retirementHoldoutCorpusPath = Join-Path $PSScriptRoot '../evals/context-search-holdout-100.json'
 $retirementHoldoutCorpus = [IO.File]::ReadAllText(
     (Resolve-Path -LiteralPath $retirementHoldoutCorpusPath).Path,
     [Text.Encoding]::UTF8) | ConvertFrom-Json
 $retirementHoldoutEvaluation = Invoke-ContextCorpus `
     -CorpusPath $retirementHoldoutCorpusPath `
-    -SkipBuild `
-    -Format Json | ConvertFrom-Json
+    | ConvertFrom-Json
 $unseenCorpusPath = Join-Path $PSScriptRoot '../evals/context-search-unseen-20260826.json'
 $unseenEvaluation = Invoke-ContextCorpus `
     -CorpusPath $unseenCorpusPath `
-    -SkipBuild `
-    -Format Json | ConvertFrom-Json
+    | ConvertFrom-Json
 $postFixControlCorpusPath = Join-Path $PSScriptRoot '../evals/context-search-postfix-control-30.json'
 $postFixControlCorpus = [IO.File]::ReadAllText(
     (Resolve-Path -LiteralPath $postFixControlCorpusPath).Path,
     [Text.Encoding]::UTF8) | ConvertFrom-Json
 $postFixControlEvaluation = Invoke-ContextCorpus `
     -CorpusPath $postFixControlCorpusPath `
-    -SkipBuild `
-    -Format Json | ConvertFrom-Json
+    | ConvertFrom-Json
 $postTuneControlCorpusPath = Join-Path $PSScriptRoot '../evals/context-search-posttune-control-30.json'
 $postTuneControlCorpus = [IO.File]::ReadAllText(
     (Resolve-Path -LiteralPath $postTuneControlCorpusPath).Path,
     [Text.Encoding]::UTF8) | ConvertFrom-Json
 $postTuneControlEvaluation = Invoke-ContextCorpus `
     -CorpusPath $postTuneControlCorpusPath `
-    -SkipBuild `
-    -Format Json | ConvertFrom-Json
+    | ConvertFrom-Json
 $controlTop1Rate = ([double]$postFixControlEvaluation.metrics.top1Rate + [double]$postTuneControlEvaluation.metrics.top1Rate) / 2
 $blindTop1Rate = [double]$retirementHoldoutEvaluation.metrics.top1Rate
 if (($controlTop1Rate - $blindTop1Rate) -gt 0.25) {
@@ -99,8 +105,11 @@ if ($normalizationRuleCount -gt 400 -or $rankingRuleCount -gt 400 -or
     throw "Context search exceeded its staged complexity budget or lost generic affinities: normalization=$normalizationRuleCount/400; ranking=$rankingRuleCount/400; combined=$($normalizationRuleCount + $rankingRuleCount)/700."
 }
 $conversationalCorpus = Join-Path $PSScriptRoot '../evals/context-search-conversational.json'
-$conversationalEvaluation = Invoke-ContextCorpus -CorpusPath $conversationalCorpus -SkipBuild -Format Json | ConvertFrom-Json
-$conversationalParaphrases = Invoke-ContextCorpus -CorpusPath (Join-Path $PSScriptRoot '../evals/context-search-conversational-paraphrases.json') -SkipBuild -Format Json | ConvertFrom-Json
+$conversationalEvaluation = Invoke-ContextCorpus -CorpusPath $conversationalCorpus | ConvertFrom-Json
+$conversationalParaphrases = Invoke-ContextCorpus -CorpusPath (Join-Path $PSScriptRoot '../evals/context-search-conversational-paraphrases.json') | ConvertFrom-Json
+if ($consumedCorpora.Count -ne $pool.CorpusCount) {
+    throw 'A context-search corpus was evaluated without being registered in the quality assertions.'
+}
 $allEvaluations = @($mailRegressionEvaluation, $primaryEvaluation, $challengeEvaluation, $generalizationEvaluation, $validationEvaluation, $imageWikiRegressionEvaluation, $securityRegressionEvaluation, $probeEvaluation, $probe2Evaluation, $probe3Evaluation, $probe4Evaluation, $probe5Evaluation, $probe6Evaluation, $probe7Evaluation)
 # Persist per-case rankings before enforcing thresholds so CI failures are actionable.
 $failedEvaluations = @(@($allEvaluations) + @($businessWikiRegressionEvaluation, $conversationalEvaluation, $conversationalParaphrases,

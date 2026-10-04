@@ -354,6 +354,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'context-search-evals' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiCorpusEvaluation.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiSqlContextEvaluation.ps1')
             if (-not $?) { exit 1 }
         }

@@ -52,6 +52,8 @@ sources:
   - .llm-wiki/evals/development-context-bundles.json
   - .llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
+  - .llm-wiki/tools/LlmWikiCorpusEvaluation.ps1
+  - .llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiDevelopmentContextEvaluation.ps1
   - FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs
   - FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs
@@ -301,6 +303,13 @@ The retired locale parser (`be74465^`) wrapped `LanguageCode.TryParse`, now
 exercised by template validation. The AI context service (`78e4b522^`) projected
 language, token limits, and consent; its migrated question names those actual
 fields rather than the former fixture's unsupported subscription-tier claim.
+
+`Test-LlmWikiSqlContextEvaluation.ps1` evaluates all committed corpora through
+a bounded two-process pool after one graph refresh. Independent corpora retain
+their original batch transactions, per-case result order and quality gates;
+the four current Node/.NET parity checks still run after the quality assertions.
+Use `-MaxConcurrency 1` for a serial run. Per-corpus JSON and stderr diagnostics
+are written to `.artifacts/llm-wiki/context-evaluation/` with unique run prefixes.
 
 The primary corpus lives in
 `.llm-wiki/evals/context-search.json` and a separately authored 40-case

@@ -202,6 +202,7 @@ function Start-SmokeGroup([string]$Group) {
     $process.StartInfo.Environment['LLM_WIKI_SMOKE_SANDBOX'] = $sandboxPath
     $process.StartInfo.Environment['LLM_WIKI_SMOKE_TASK_PREFIX'] = "$runId-$Group"
     $process.StartInfo.Environment['LLM_WIKI_SMOKE_CANCEL_PATH'] = $cancelPath
+    $process.StartInfo.Environment['LLM_WIKI_SMOKE_MAX_CONCURRENCY'] = [string]$MaxConcurrency
     # Repository log paths can exceed the Windows SQLite journal path limit.
     # Keep native temporary files in a short, independently owned group scope.
     $temporaryGroupPath = [IO.Path]::GetFullPath((Join-Path $temporaryRunRoot $Group))

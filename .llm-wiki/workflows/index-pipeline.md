@@ -47,6 +47,9 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1
   - .llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1
   - .llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1
+  - .llm-wiki/tools/LlmWikiCorpusEvaluation.ps1
+  - .llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1
+  - .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1
   - .llm-wiki/tools/Test-LlmWikiImpactSimulationSqlParity.ps1
   - .llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1
@@ -190,8 +193,8 @@ checks. Workspace runs governance, migration, export, evidence, and handoff.
 Orchestration initializes two conflicting workspaces and decision/blocker journal
 entries through the normal tools, validates them, then runs the original scheduler
 scenarios independently. Governed remains the complete combined compatibility
-option. A frozen assertion inventory verifies 333 Core, 279 Workspace, and 97
-Orchestration assertions against the original 710-assertion audit, including one
+option. A frozen assertion inventory verifies 335 Core, 279 Workspace, and 97
+Orchestration assertions against the current 712-assertion audit, including one
 common memory-isolation assertion run by every shard. CI uses separate checkout/cache roots and
 `fail-fast: false`; the final gate requires the aggregate matrix result. Local
 `-AuditShard All` remains the default complete sequential audit. Run individual
@@ -204,6 +207,16 @@ without contention from other smoke workers. The legacy `context-bundle` name
 expands to `context-search-evals` (parallel search-quality and Node/.NET parity)
 and `context-retrieval` (serial latency-sensitive checks). Both are included in
 the full catalog; no corpus, assertion or latency threshold is removed.
+Search evaluation builds the graph once, then runs at most two independent
+corpus processes, scheduling larger corpora first. Each corpus keeps its own
+single batch read transaction; its JSON case order and all quality assertions
+remain unchanged. The driver rejects an evaluated corpus that has no registered
+quality assertions. Every raw result and worker stderr log is retained under
+`.artifacts/llm-wiki/context-evaluation/corpus-<pid>-<run-id>-<corpus>.json`
+(stderr uses the additional `.log` suffix). Failures, timeouts and supervisor
+cancellation stop the pool's owned process trees. Use
+`Test-LlmWikiSqlContextEvaluation.ps1 -MaxConcurrency 1` for serial diagnosis;
+the outer smoke runner's `-MaxConcurrency 1` also constrains this nested pool.
 The serial `context-retrieval` group
 owns query-context compiled-index SQLite/JSON parity, payload-reduction,
 source-hash, and transport-envelope checks. The graph-dependent `task-baseline`
