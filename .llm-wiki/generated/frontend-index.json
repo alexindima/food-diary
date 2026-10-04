@@ -4265,7 +4265,7 @@
       "role": "Component",
       "selector": "fd-meal-plan-detail-days",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-sections/meal-plan-detail-days/meal-plan-detail-days.ts",
-      "line": 14
+      "line": 15
     },
     {
       "name": "MealPlanDetailHeaderComponent",
@@ -5924,7 +5924,7 @@
       "role": "Component",
       "selector": "fd-weekly-review-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-review-dialog/weekly-review-dialog.ts",
-      "line": 23
+      "line": 24
     },
     {
       "name": "WeeklyCheckInFacade",
@@ -6064,7 +6064,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 29
+      "line": 30
     },
     {
       "name": "GlobalErrorHandler",

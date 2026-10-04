@@ -31,7 +31,7 @@
                     <span>{{ countLabelKey('DAYS', plan.durationDays) | translate: { count: plan.durationDays } }}</span>
                     <span>{{ countLabelKey('RECIPES', plan.totalRecipes) | translate: { count: plan.totalRecipes } }}</span>
                     <span [hidden]="!plan.targetCaloriesPerDay"
-                        >~{{ plan.targetCaloriesPerDay | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span
+                        >~{{ plan.targetCaloriesPerDay | localizedNumber: language() }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span
                     >
                 </div>
                 @if (plan.isCurated) {

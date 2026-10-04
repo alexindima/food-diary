@@ -51,3 +51,50 @@ describe('EntityCardThumbComponent', () => {
         expect(previewSpy).not.toHaveBeenCalled();
     });
 });
+
+describe('EntityCardThumbComponent image recovery', () => {
+    it('shows an icon after an image error and retries a replacement URL', async () => {
+        const fixture = await setupEntityCardThumbAsync(true);
+        fixture.componentRef.setInput('imageUrl', '/missing-image.webp');
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+        root.querySelector('img')?.dispatchEvent(new Event('error'));
+        fixture.detectChanges();
+
+        expect(root.querySelector('img')).toBeNull();
+        expect(root.querySelector('.entity-card__placeholder-icon')).not.toBeNull();
+        const preview = vi.fn();
+        fixture.componentInstance.preview.subscribe(preview);
+        root.querySelector<HTMLElement>('.entity-card__thumb')?.click();
+        expect(preview).toHaveBeenCalledOnce();
+
+        fixture.componentRef.setInput('imageUrl', '/replacement.webp');
+        fixture.detectChanges();
+        expect(root.querySelector('img')?.getAttribute('src')).toBe('/replacement.webp');
+        expect(root.querySelector('.entity-card__placeholder-icon')).toBeNull();
+    });
+
+    it('retains healthy collage images and shows the fallback when all fail', async () => {
+        const fixture = await setupEntityCardThumbAsync(true);
+        fixture.componentRef.setInput('collage', {
+            images: [
+                { url: '/missing.webp', alt: 'Missing' },
+                { url: '/healthy.webp', alt: 'Healthy' },
+            ],
+            count: 2,
+            hasImages: true,
+        } satisfies EntityCardCollageState);
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+        root.querySelector('img')?.dispatchEvent(new Event('error'));
+        fixture.detectChanges();
+
+        expect(root.querySelectorAll('img')).toHaveLength(1);
+        expect(root.querySelector('img')?.getAttribute('src')).toBe('/healthy.webp');
+        expect(root.querySelector('.entity-card__collage--count-1')).not.toBeNull();
+        root.querySelector('img')?.dispatchEvent(new Event('error'));
+        fixture.detectChanges();
+        expect(root.querySelector('img')).toBeNull();
+        expect(root.querySelector('.entity-card__placeholder-icon')).not.toBeNull();
+    });
+});

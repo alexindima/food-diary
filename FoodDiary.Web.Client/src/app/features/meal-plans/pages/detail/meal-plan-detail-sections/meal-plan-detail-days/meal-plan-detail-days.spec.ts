@@ -1,5 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
@@ -21,6 +22,21 @@ describe('MealPlanDetailDaysComponent', () => {
         expect(textContent).toContain('Omelette');
         expect(textContent).toContain('450');
         expect(textContent).toContain('P:');
+    });
+
+    it('updates large nutrient values when the language changes', () => {
+        const day = createDay();
+        day.meals[0].nutritionItems[0].value = 1500;
+        const fixture = createComponent([day]);
+        const element = getElement(fixture);
+        const translateService = TestBed.inject(TranslateService);
+
+        translateService.use('ru');
+        fixture.detectChanges();
+        expect(element.textContent).toContain('1\u00A0500');
+        translateService.use('en');
+        fixture.detectChanges();
+        expect(element.textContent).toContain('1,500');
     });
 });
 

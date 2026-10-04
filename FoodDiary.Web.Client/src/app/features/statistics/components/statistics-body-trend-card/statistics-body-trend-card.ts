@@ -117,7 +117,7 @@ export class StatisticsBodyTrendCardComponent {
                   {
                       value: goal,
                       label: this.translateService.instant('STATISTICS.DASHBOARD.BODY.CHART_GOAL', {
-                          value: goal,
+                          value: new LocalizedNumberPipe().transform(goal, this.locale(), 0, 1),
                           unit: this.translateService.instant(this.unitKey()),
                       }),
                       color: 'var(--fd-color-text-subtle)',

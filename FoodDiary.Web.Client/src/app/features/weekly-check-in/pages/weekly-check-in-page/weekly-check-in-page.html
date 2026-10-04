@@ -223,7 +223,7 @@
                 <div class="check-in__metric">
                     <fd-ui-icon name="local_fire_department" />
                     <strong
-                        >{{ review.daysLogged > 0 ? (thisWeek()?.avgDailyCalories | number: '1.0-0') : '—' }}
+                        >{{ review.daysLogged > 0 ? (thisWeek()?.avgDailyCalories | localizedNumber: language()) : '—' }}
                         <small>{{ 'GENERAL.UNITS.KCAL' | translate }}</small></strong
                     >
                     <span>{{ 'WEEKLY_CHECK_IN.METRICS.LOGGED_AVERAGE' | translate }}</span>
@@ -231,7 +231,7 @@
                 <div class="check-in__metric">
                     <fd-ui-icon name="fitness_center" />
                     <strong
-                        >{{ review.daysLogged > 0 ? (thisWeek()?.avgProteins | number: '1.0-1') : '—' }}
+                        >{{ review.daysLogged > 0 ? (thisWeek()?.avgProteins | localizedNumber: language() : 0 : 1) : '—' }}
                         <small>{{ 'GENERAL.UNITS.G' | translate }}</small></strong
                     >
                     <span>{{ 'WEEKLY_CHECK_IN.METRICS.PROTEIN' | translate }}</span>
@@ -242,7 +242,7 @@
                         >{{
                             weightChange() === null
                                 ? '—'
-                                : (weightChange() | measurementValue: 'weight' : measurements.system() | number: '1.1-1')
+                                : (weightChange() | measurementValue: 'weight' : measurements.system() | localizedNumber: language() : 1)
                         }}
                         <small>{{ 'weight' | measurementUnit: measurements.system() | translate }}</small></strong
                     >

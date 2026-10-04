@@ -44,6 +44,20 @@ describe('MealPlanListContentComponent', () => {
         expect(element.querySelector('.meal-plan-card')).toBeNull();
     });
 
+    it('updates calorie grouping when the interface language changes', () => {
+        const fixture = createComponent();
+        const element = getElement(fixture);
+        const translateService = TestBed.inject(TranslateService);
+
+        translateService.use('ru');
+        fixture.detectChanges();
+        expect(element.textContent).toContain('~1\u00A0800');
+        expect(element.textContent).not.toContain('1,800');
+        translateService.use('en');
+        fixture.detectChanges();
+        expect(element.textContent).toContain('~1,800');
+    });
+
     /* eslint-disable @typescript-eslint/no-magic-numbers -- Counts cover English and Russian plural boundaries. */
     it.each([
         ['en', 1, 'ONE'],

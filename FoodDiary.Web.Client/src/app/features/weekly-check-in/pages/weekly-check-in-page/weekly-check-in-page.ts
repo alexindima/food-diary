@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -12,6 +11,7 @@ import { firstValueFrom, map } from 'rxjs';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
@@ -30,7 +30,7 @@ import { WEEKLY_CHECK_IN_TOUR } from './weekly-check-in-tour';
         TranslatePipe,
         MeasurementUnitPipe,
         MeasurementValuePipe,
-        DecimalPipe,
+        LocalizedNumberPipe,
         FdUiHintDirective,
         FdUiIconComponent,
         FdUiButtonComponent,

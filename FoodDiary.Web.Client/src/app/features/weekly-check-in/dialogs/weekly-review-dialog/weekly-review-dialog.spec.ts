@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
@@ -55,6 +56,17 @@ describe('WeeklyReviewDialogComponent', () => {
 
         expect(root.querySelectorAll('.weekly-review-dialog__insight')).toHaveLength(EXPECTED_INSIGHT_COUNT);
         expect(root.textContent).toContain('543');
+        expect(root.textContent).toContain('20.2');
+        expect(root.textContent).toContain('1,500');
+
+        const translateService = TestBed.inject(TranslateService);
+        translateService.use('ru');
+        fixture.detectChanges();
+        expect(root.textContent).toContain('20,2');
+        expect(root.textContent).toContain('1\u00A0500');
+        expect(root.textContent).not.toContain('20.2');
+        translateService.use('en');
+        fixture.detectChanges();
         expect(root.textContent).toContain('20.2');
         expect(root.textContent).toContain('1,500');
 

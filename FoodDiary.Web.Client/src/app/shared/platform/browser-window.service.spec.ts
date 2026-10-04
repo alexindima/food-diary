@@ -130,6 +130,51 @@ describe('BrowserWindowService storage events', () => {
     });
 });
 
+describe('BrowserWindowService locks', () => {
+    const originalLocks = Object.getOwnPropertyDescriptor(window.navigator, 'locks');
+
+    afterEach(() => {
+        if (originalLocks !== undefined) {
+            Object.defineProperty(window.navigator, 'locks', originalLocks);
+        } else {
+            Reflect.deleteProperty(window.navigator, 'locks');
+        }
+    });
+
+    it('keeps the operation pending until the browser grants the lock', async () => {
+        let grantLock: (() => void) | undefined;
+        const request = vi.fn(
+            async <T>(_name: string, operation: () => Promise<T>): Promise<T> =>
+                new Promise(resolve => {
+                    grantLock = (): void => {
+                        resolve(operation());
+                    };
+                }),
+        );
+        Object.defineProperty(window.navigator, 'locks', { configurable: true, value: { request } });
+        const operation = vi.fn<() => Promise<string>>().mockResolvedValue('completed');
+        const result = createService(document).runWithLockAsync('shared-session', operation);
+
+        expect(operation).not.toHaveBeenCalled();
+        expect(request).toHaveBeenCalledWith('shared-session', operation);
+        grantLock?.();
+        expect(await result).toBe('completed');
+        expect(operation).toHaveBeenCalledOnce();
+    });
+
+    it('runs normally when the browser has no lock API', async () => {
+        Object.defineProperty(window.navigator, 'locks', { configurable: true, value: undefined });
+        const operation = vi.fn<() => Promise<string>>().mockResolvedValue('fallback');
+        expect(await createService(document).runWithLockAsync('shared-session', operation)).toBe('fallback');
+    });
+
+    it('runs normally when the document has no browser window', async () => {
+        const ownerDocument = document.implementation.createHTMLDocument();
+        const operation = vi.fn<() => Promise<string>>().mockResolvedValue('fallback');
+        expect(await createService(ownerDocument).runWithLockAsync('shared-session', operation)).toBe('fallback');
+    });
+});
+
 function createService(ownerDocument: Document): BrowserWindowService {
     TestBed.configureTestingModule({
         providers: [BrowserWindowService, { provide: DOCUMENT, useValue: ownerDocument }],

@@ -864,13 +864,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b8f3da4c723e3ae67ba5eb63edc0fd7c11671b0ad607d5cecb4e964283556a2f"
+          "sha256": "45e43f83325428d28d44353affe7fa1965b0fb511d8a98ec6f16783e92d5bd72"
         }
       ],
-      "reason": "The quality projection includes the bounded corpus worker helper and its direct lifecycle tests. Measure-LlmWikiSqlContextEvaluation is now invoked through the helper, so its absent direct test-name reference is an indirect coverage signal; all existing real corpus assertions remain in the driver.",
+      "reason": "Reviewed generated quality signals against current sources and executed validation: 271 focused tests in 41 files and final frontend build passed after all 22 source changes. Earlier full verify passed before the final chart/card changes; static test references are not reported as coverage.",
       "baseRef": "HEAD",
-      "gitHead": "a5bd0d626c79e7403678d772928ea5d4545ffc74",
-      "reviewedAtUtc": "2026-10-04T04:34:02.5853629Z"
+      "gitHead": "18a2a5b709c3b0a8a17454829ffaa16adaa64b5d",
+      "reviewedAtUtc": "2026-10-04T10:09:48.9185454Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -954,13 +954,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b8f3da4c723e3ae67ba5eb63edc0fd7c11671b0ad607d5cecb4e964283556a2f"
+          "sha256": "45e43f83325428d28d44353affe7fa1965b0fb511d8a98ec6f16783e92d5bd72"
         }
       ],
-      "reason": "Corpus workers process committed public regression fixtures only and persist their existing per-case diagnostic payloads under ignored artifact paths. Worker arguments use ProcessStartInfo.ArgumentList and failure/timeout/cancellation cleanup is tested; security evidence compiler contracts remain unchanged.",
+      "reason": "Reviewed AuthService and BrowserWindowService changes: refresh rotation stays strict and HttpOnly; named Web Lock only serializes same-origin refresh calls. No additional token persistence or provider sharing. Queued logout and late response tests passed; real two-tab refresh returned 200 twice with maximum concurrency one.",
       "baseRef": "HEAD",
-      "gitHead": "a5bd0d626c79e7403678d772928ea5d4545ffc74",
-      "reviewedAtUtc": "2026-10-04T04:34:03.3110592Z"
+      "gitHead": "18a2a5b709c3b0a8a17454829ffaa16adaa64b5d",
+      "reviewedAtUtc": "2026-10-04T10:09:52.8590224Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1097,17 +1097,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "6158c50bf1bd85e252113a630964fae6eab44f2a9648120541411684e8525a5e"
+          "sha256": "8e92ef70a003ae5a89bdc16b9f23dfc064dcb8c49810b365c695513ef9406eef"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "74d4482668b69123f9a98a1302a94c37ef9214718038bf4d695e9a5df316e240"
+          "sha256": "76d202625b5d29b587985e74e91e0345d3999ce821e4a036ef84250b3fd0e3bd"
         }
       ],
-      "reason": "Reviewed the trace workflow against current frontend feature routes and compiled contracts after published composition boundaries. The documented bounded traversal, explicit missing/stale failures, source confirmation and distinction between navigation evidence and runtime proof remain accurate; this release preparation does not change trace implementations.",
-      "baseRef": "origin/master",
-      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
-      "reviewedAtUtc": "2026-10-03T11:03:31.1085934Z"
+      "reason": "Reviewed feature trace workflow and refreshed frontend indexes: owner and consumer boundaries remain unchanged. Confirmed shared EntityCardThumb is the actual product/recipe/meal card owner; no backend commands or dependency topology changed.",
+      "baseRef": "HEAD",
+      "gitHead": "18a2a5b709c3b0a8a17454829ffaa16adaa64b5d",
+      "reviewedAtUtc": "2026-10-04T10:09:54.6083093Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1195,17 +1195,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "6158c50bf1bd85e252113a630964fae6eab44f2a9648120541411684e8525a5e"
-        },
-        {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "dd7d95bd6c0be878d7ce7eef2f5c21266f0aa0ad0e7cf1566eae136abedcec4c"
+          "sha256": "8e92ef70a003ae5a89bdc16b9f23dfc064dcb8c49810b365c695513ef9406eef"
         }
       ],
-      "reason": "Reviewed the component/API/translation discovery workflow against the refreshed frontend contract index and the new scoped AGENTS requirement for explicit cross-feature contracts with composition-bound implementations. Consumer-aware public inputs/outputs, transient provider credentials, locale pairs, keyboard and error-state guidance remain valid; the completed local frontend verification passed 5052 tests and rendered native audit evidence is retained.",
-      "baseRef": "origin/master",
-      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
-      "reviewedAtUtc": "2026-10-03T11:03:28.8848734Z"
+      "reason": "Reviewed frontend selector/input/output and service contracts: no public payload or API changes; line charts receive existing locale input and number views use the existing localized pipe. Real RU rendering, language-switch unit tests, and build passed.",
+      "baseRef": "HEAD",
+      "gitHead": "18a2a5b709c3b0a8a17454829ffaa16adaa64b5d",
+      "reviewedAtUtc": "2026-10-04T10:09:41.4736817Z"
     },
     {
       "pageId": "workflow.query-context",

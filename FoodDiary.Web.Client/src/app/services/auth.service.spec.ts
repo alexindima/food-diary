@@ -1,12 +1,14 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../environments/environment';
 import { LoginRequest, PasswordResetRequest, RegisterRequest } from '../shared/auth/auth.data';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 import { LocalizationService } from '../shared/i18n/localization.service';
+import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { AuthService } from './auth.service';
 import { NavigationService } from './navigation.service';
 
@@ -122,20 +124,34 @@ describe('logout across tabs', () => {
         expect(sessionEventsSpy.notifySessionEnded).not.toHaveBeenCalled();
     });
 
-    it('ignores a refresh response that arrives after logout in another tab', () => {
+    it('ignores a refresh response that arrives after logout in another tab', async () => {
         authenticateForCrossTabTest(false);
-        const received = vi.fn();
-        service.refreshToken().subscribe(received);
+        const received = firstValueFrom(service.refreshToken());
         const request = httpMock.expectOne(`${authBaseUrl}/refresh`);
         localStorage.removeItem('refreshSession');
         window.dispatchEvent(createSessionRemovalEvent());
 
         request.flush(loginAuthResponse);
 
-        expect(received).toHaveBeenCalledWith(null);
+        expect(await received).toBeNull();
         expect(service.isAuthenticated()).toBe(false);
         expect(service.getToken()).toBeNull();
         expect(localStorage.getItem('refreshSession')).toBeNull();
+    });
+
+    it('does not log out a newer login when an older refresh request fails', async () => {
+        authenticateForCrossTabTest(false);
+        const received = firstValueFrom(service.refreshToken());
+        const request = httpMock.expectOne(`${authBaseUrl}/refresh`);
+        authenticateForCrossTabTest(false);
+
+        request.flush('Unauthorized', { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+
+        expect(await received).toBeNull();
+        expect(service.isAuthenticated()).toBe(true);
+        expect(localStorage.getItem('refreshSession')).toBe('true');
+        expect(sessionEventsSpy.notifySessionEnded).not.toHaveBeenCalled();
+        httpMock.expectNone(`${authBaseUrl}/logout`);
     });
 });
 
@@ -149,6 +165,44 @@ function createSessionRemovalEvent(): StorageEvent {
     Object.defineProperty(event, 'storageArea', { value: localStorage });
     return event;
 }
+
+describe('refresh after a new login', () => {
+    it('does not replace a new user with an older refresh response', async () => {
+        authenticateForCrossTabTest(false);
+        const received = firstValueFrom(service.refreshToken());
+        const request = httpMock.expectOne(`${authBaseUrl}/refresh`);
+        const nextToken = createFakeJwt({ nameid: 'user-456', role: 'User' });
+        service.login(loginRequest).subscribe();
+        httpMock.expectOne(`${authBaseUrl}/login`).flush({
+            ...loginAuthResponse,
+            accessToken: nextToken,
+            user: { ...loginAuthResponse.user, id: 'user-456' },
+        });
+
+        request.flush(loginAuthResponse);
+
+        expect(await received).toBeNull();
+        expect(service.getUserId()).toBe('user-456');
+        expect(service.getToken()).toBe(nextToken);
+    });
+
+    it('keeps the new session refresh shared when the old request completes', async () => {
+        authenticateForCrossTabTest(false);
+        const previous = firstValueFrom(service.refreshToken());
+        const oldRequest = httpMock.expectOne(`${authBaseUrl}/refresh`);
+        authenticateForCrossTabTest(false);
+        const current = firstValueFrom(service.refreshToken());
+        const currentRequest = httpMock.expectOne(`${authBaseUrl}/refresh`);
+
+        oldRequest.flush(loginAuthResponse);
+        expect(await previous).toBeNull();
+        const shared = firstValueFrom(service.refreshToken());
+        httpMock.expectNone(`${authBaseUrl}/refresh`);
+        currentRequest.flush(loginAuthResponse);
+
+        expect(await Promise.all([current, shared])).toEqual([loginFakeToken, loginFakeToken]);
+    });
+});
 
 describe('token management', () => {
     it('should get token from localStorage', () => {
@@ -425,13 +479,10 @@ describe('refreshToken', () => {
         expect(service.isAuthenticated()).toBe(true);
     });
 
-    it('should share a single refresh request across concurrent subscribers', () => {
+    it('should share a single refresh request across concurrent subscribers', async () => {
         localStorage.setItem('refreshToken', 'existing-refresh-token');
         const newToken = createFakeJwt({ sub: 'user-1' });
-        const results: Array<string | null> = [];
-
-        service.refreshToken().subscribe(result => results.push(result));
-        service.refreshToken().subscribe(result => results.push(result));
+        const results = Promise.all([firstValueFrom(service.refreshToken()), firstValueFrom(service.refreshToken())]);
 
         const requests = httpMock.match(`${authBaseUrl}/refresh`);
         expect(requests).toHaveLength(1);
@@ -441,11 +492,53 @@ describe('refreshToken', () => {
             user: { id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
         });
 
-        expect(results).toEqual([newToken, newToken]);
+        expect(await results).toEqual([newToken, newToken]);
         expect(localStorage.getItem('refreshToken')).toBeNull();
         expect(localStorage.getItem('refreshSession')).toBe('true');
     });
+});
 
+describe('queued session refresh', () => {
+    it('waits for the browser lock before sending a refresh request', async () => {
+        localStorage.setItem('refreshSession', 'true');
+        let releaseLock = (): void => {};
+        const gate = new Promise<void>(resolve => {
+            releaseLock = resolve;
+        });
+        vi.spyOn(TestBed.inject(BrowserWindowService), 'runWithLockAsync').mockImplementation(
+            async <T>(_name: string, operation: () => Promise<T>): Promise<T> => gate.then(operation),
+        );
+        const result = firstValueFrom(service.refreshToken());
+        httpMock.expectNone(`${authBaseUrl}/refresh`);
+
+        releaseLock();
+        await gate;
+        httpMock.expectOne(`${authBaseUrl}/refresh`).flush(loginAuthResponse);
+
+        expect(await result).toBe(loginFakeToken);
+    });
+
+    it('does not restore a session logged out while waiting for the browser lock', async () => {
+        authenticateForCrossTabTest(false);
+        let releaseLock = (): void => {};
+        const gate = new Promise<void>(resolve => {
+            releaseLock = resolve;
+        });
+        vi.spyOn(TestBed.inject(BrowserWindowService), 'runWithLockAsync').mockImplementation(
+            async <T>(_name: string, operation: () => Promise<T>): Promise<T> => gate.then(operation),
+        );
+        const result = firstValueFrom(service.refreshToken());
+        localStorage.removeItem('refreshSession');
+        window.dispatchEvent(createSessionRemovalEvent());
+        releaseLock();
+
+        expect(await result).toBeNull();
+        httpMock.expectNone(`${authBaseUrl}/refresh`);
+        expect(service.isAuthenticated()).toBe(false);
+    });
+});
+
+describe('refresh token storage and failure', () => {
     it('should keep rotated refresh tokens out of Web Storage', () => {
         localStorage.setItem('refreshToken', 'existing-refresh-token');
 

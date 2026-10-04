@@ -66,6 +66,7 @@
                         verticalEdgeInset="none"
                         axisValueSuffix=""
                         [axisUnit]="chartUnitKey() | translate"
+                        [locale]="locale()"
                         [axisValueFormatter]="formatChartNumber"
                         [title]="'STATISTICS.DASHBOARD.TREND.TITLE' | translate"
                         [points]="selectedTab() === 'calories' ? calorieLinePoints() : []"
