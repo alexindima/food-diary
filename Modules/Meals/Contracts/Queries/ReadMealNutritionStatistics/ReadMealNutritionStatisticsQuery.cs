@@ -10,4 +10,5 @@ public sealed record ReadMealNutritionStatisticsQuery(
     UserId UserId,
     DateTime DateFrom,
     DateTime DateTo,
-    int QuantizationDays) : IQuery<Result<IReadOnlyList<MealNutritionStatisticsBucket>>>;
+    int QuantizationDays,
+    string? TimeZoneId = null) : IQuery<Result<IReadOnlyList<MealNutritionStatisticsBucket>>>;

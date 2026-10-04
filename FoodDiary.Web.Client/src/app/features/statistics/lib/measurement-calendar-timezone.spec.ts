@@ -49,7 +49,9 @@ describe('measurement calendar dates in the host time zone', () => {
             const expectedLabel = value.split('-').reverse().join('.');
             expect(formatWeightHistoryNumericDate(stored, 'ru')).toBe(expectedLabel);
             expect(formatWaistHistoryNumericDate(stored, 'ru')).toBe(expectedLabel);
-            const request = buildStatisticsSummaryRequest({ start: now, end: now });
+            const zoneId = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const request = buildStatisticsSummaryRequest({ start: now, end: now }, zoneId);
+            expect(request.timeZoneId).toBe(zoneId);
             expect(request.bodyDateFrom).toBe(value);
             expect(request.bodyDateTo).toBe(value);
             expect(new Date(request.dateFrom).getTime()).toBeLessThanOrEqual(now.getTime());

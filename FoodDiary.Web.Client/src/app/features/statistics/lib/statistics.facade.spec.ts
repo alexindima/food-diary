@@ -69,6 +69,9 @@ describe('StatisticsFacade loading', () => {
         TestBed.tick();
 
         expect(statisticsService.getSummary).toHaveBeenCalledOnce();
+        expect(statisticsService.getSummary).toHaveBeenCalledWith(
+            expect.objectContaining({ timeZoneId: new Intl.DateTimeFormat().resolvedOptions().timeZone }),
+        );
         expect(facade.userProfile()).toEqual({ height: USER_HEIGHT_CM });
         expect(facade.chartStatisticsData()?.calories).toEqual([FIRST_TOTAL_CALORIES]);
         expect(facade.hasStatisticsResponse()).toBe(true);

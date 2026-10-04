@@ -1,5 +1,6 @@
 using FluentValidation;
 using FoodDiary.Application.Contracts.Common.Validation;
+using FoodDiary.Modules.Statistics.Application.Common;
 
 namespace FoodDiary.Modules.Statistics.Application.Queries.GetStatistics;
 
@@ -20,12 +21,17 @@ public sealed class GetStatisticsQueryValidator : AbstractValidator<GetStatistic
             .WithMessage("DateFrom must be earlier than or equal to DateTo.");
 
         RuleFor(x => x.DateTo)
-            .Must((query, dateTo) => TemporalRangePolicy.IsInstantPeriodWithinLimit(query.DateFrom, dateTo))
-            .When(x => x.DateFrom <= x.DateTo)
+            .Must((query, dateTo) => StatisticsCalendarRangePolicy.IsPeriodWithinLimit(query.DateFrom, dateTo, query.TimeZoneId))
+            .When(x => x.DateFrom <= x.DateTo && StatisticsCalendarRangePolicy.IsTimeZoneValid(x.TimeZoneId))
             .WithErrorCode("Validation.Invalid")
             .WithMessage($"The period must not exceed {TemporalRangePolicy.MaxPeriodDays} days.");
 
         RuleFor(x => x.QuantizationDays)
             .InclusiveBetween(1, TemporalRangePolicy.MaxQuantizationDays);
+
+        RuleFor(x => x.TimeZoneId)
+            .Must(StatisticsCalendarRangePolicy.IsTimeZoneValid)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Provide a valid calendar time zone.");
     }
 }

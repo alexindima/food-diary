@@ -8226,6 +8226,7 @@
           "Modules/Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj",
           "Modules/Meals/Application.Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
           "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj",
+          "Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj",
           "Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj",
           "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
           "Modules/Meals/Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj",

@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 109,
     "routedStandaloneComponents": 67,
     "componentsWithoutDirectSpecs": 131,
-    "criticalSymbolsWithoutTestReferences": 48,
+    "criticalSymbolsWithoutTestReferences": 47,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -5219,16 +5219,6 @@
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/PreviewAiPrompt/PreviewAiPromptQueryHandler.cs",
       "line": 9,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "ReadMealNutritionStatisticsQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/Meals/Application/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQueryHandler.cs",
-      "line": 8,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

@@ -198,7 +198,7 @@ function interpolateMissingBodyValues(data: Array<number | null>): Array<number 
 }
 
 /** Keep body calendar bounds separate from the UTC instants used for meals. */
-export function buildStatisticsSummaryRequest(range: DateRange): GetStatisticsSummaryDto {
+export function buildStatisticsSummaryRequest(range: DateRange, timeZoneId?: string): GetStatisticsSummaryDto {
     const dateFrom = normalizeStartOfDay(range.start);
     const dateTo = normalizeEndOfDay(range.end);
     return {
@@ -207,5 +207,6 @@ export function buildStatisticsSummaryRequest(range: DateRange): GetStatisticsSu
         bodyDateFrom: formatDateInputValue(range.start),
         bodyDateTo: formatDateInputValue(range.end),
         quantizationDays: getQuantizationDays(dateFrom, dateTo),
+        ...(timeZoneId === undefined ? {} : { timeZoneId }),
     };
 }

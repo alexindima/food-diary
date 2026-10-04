@@ -188,6 +188,54 @@ public sealed class DashboardStatisticsReadServiceTests {
         Assert.Equal(366, result.Value.Count);
     }
 
+    [Theory]
+    [InlineData("Asia/Tbilisi", "2026-10-04", 24)]
+    [InlineData("America/Los_Angeles", "2026-03-08", 23)]
+    [InlineData("America/Los_Angeles", "2026-11-01", 25)]
+    [InlineData("Australia/Lord_Howe", "2026-10-04", 23.5)]
+    [InlineData("Australia/Lord_Howe", "2026-04-05", 24.5)]
+    public async Task CalendarBuckets_CountLocalMealDatesAndKeepVariableLengthDays(string zoneId, string dateText, double hours) {
+        await using FoodDiaryDbContext context = CreateContext();
+        var zone = TimeZoneInfo.FindSystemTimeZoneById(zoneId);
+        var day = DateOnly.ParseExact(dateText, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+        DateTime from = TimeZoneInfo.ConvertTimeToUtc(day.ToDateTime(TimeOnly.MinValue), zone);
+        DateTime nextDay = TimeZoneInfo.ConvertTimeToUtc(day.AddDays(1).ToDateTime(TimeOnly.MinValue), zone);
+        DateTime to = TimeZoneInfo.ConvertTimeToUtc(day.AddDays(2).ToDateTime(TimeOnly.MinValue), zone).AddTicks(-1);
+        Assert.Equal(hours, (nextDay - from).TotalHours);
+        var user = User.Create($"calendar-statistics-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        context.Meals.AddRange(CreateMeal(user.Id, from.AddMinutes(30), 100, 10),
+            CreateMeal(user.Id, nextDay.AddMinutes(-30), 200, 20), CreateMeal(user.Id, nextDay, 400, 40));
+        await context.SaveChangesAsync();
+        var service = new MealNutritionStatisticsReadService(context.Meals);
+
+        Result<IReadOnlyList<MealNutritionStatisticsBucket>> daily = await service.GetStatisticsAsync(user.Id, from, to, 1, CancellationToken.None, zone);
+        Result<IReadOnlyList<MealNutritionStatisticsBucket>> combined = await service.GetStatisticsAsync(user.Id, from, to, 2, CancellationToken.None, zone);
+
+        Assert.True(daily.IsSuccess, daily.Error.Message);
+        Assert.True(combined.IsSuccess, combined.Error.Message);
+        Assert.Collection(daily.Value,
+            first => {
+                Assert.Equal(from, first.DateFrom);
+                Assert.Equal(nextDay.AddTicks(-1), first.DateTo);
+                Assert.Equal(300, first.TotalCalories);
+                Assert.Equal(30, first.AverageProteins);
+                Assert.Equal(2, first.MealCount);
+                Assert.Equal(1, first.TrackedDayCount);
+            },
+            second => {
+                Assert.Equal(nextDay, second.DateFrom);
+                Assert.Equal(to, second.DateTo);
+                Assert.Equal(400, second.TotalCalories);
+                Assert.Equal(1, second.TrackedDayCount);
+            });
+        MealNutritionStatisticsBucket bucket = Assert.Single(combined.Value);
+        Assert.Equal(700, bucket.TotalCalories);
+        Assert.Equal(35, bucket.AverageProteins);
+        Assert.Equal(3, bucket.MealCount);
+        Assert.Equal(2, bucket.TrackedDayCount);
+    }
+
     private static FoodDiaryDbContext CreateContext() {
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))

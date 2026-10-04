@@ -44,7 +44,7 @@ public sealed class StatisticsCalendarDateTests {
         ICurrentUserAccessService access = Substitute.For<ICurrentUserAccessService>();
         access.EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>()).Returns(Task.FromResult<Error?>(null));
         using var cancellation = new CancellationTokenSource();
-        var query = new GetStatisticsSummaryQuery(userId.Value, from, to, 1, day, day);
+        var query = new GetStatisticsSummaryQuery(userId.Value, from, to, 1, day, day, zoneId);
 
         Result<StatisticsSummaryModel> result = await new GetStatisticsSummaryQueryHandler(sender, access).Handle(query, cancellation.Token);
 
@@ -54,7 +54,7 @@ public sealed class StatisticsCalendarDateTests {
             () => Assert.Equal(82, Assert.Single(result.Value.Waist).AverageCircumferenceCm));
         await sender.Received(1).Send(Arg.Is<ReadWeightSummariesQuery>(q => q.UserId == userId && q.DateFrom == calendarDate && q.DateTo == calendarDate), cancellation.Token);
         await sender.Received(1).Send(Arg.Is<ReadWaistSummariesQuery>(q => q.UserId == userId && q.DateFrom == calendarDate && q.DateTo == calendarDate), cancellation.Token);
-        await sender.Received(1).Send(Arg.Is<ReadMealNutritionStatisticsQuery>(q => q.UserId == userId && q.DateFrom == from && q.DateTo == to), cancellation.Token);
+        await sender.Received(1).Send(Arg.Is<ReadMealNutritionStatisticsQuery>(q => q.UserId == userId && q.DateFrom == from && q.DateTo == to && q.TimeZoneId == zoneId), cancellation.Token);
         Assert.True((await new GetStatisticsSummaryQueryValidator().ValidateAsync(query)).IsValid);
     }
 

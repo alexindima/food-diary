@@ -80,7 +80,14 @@ describe('StatisticsService', () => {
         const response = { nutrition: RESPONSE, weight: [], waist: [] };
 
         service
-            .getSummary({ dateFrom, dateTo, quantizationDays: QUANTIZATION_DAYS, bodyDateFrom: '2026-05-01', bodyDateTo: '2026-05-07' })
+            .getSummary({
+                dateFrom,
+                dateTo,
+                quantizationDays: QUANTIZATION_DAYS,
+                bodyDateFrom: '2026-05-01',
+                bodyDateTo: '2026-05-07',
+                timeZoneId: 'Asia/Tbilisi',
+            })
             .subscribe(result => {
                 expect(result).toEqual(response);
             });
@@ -92,6 +99,7 @@ describe('StatisticsService', () => {
         expect(req.request.params.get('quantizationDays')).toBe(String(QUANTIZATION_DAYS));
         expect(req.request.params.get('bodyDateFrom')).toBe('2026-05-01');
         expect(req.request.params.get('bodyDateTo')).toBe('2026-05-07');
+        expect(req.request.params.get('timeZoneId')).toBe('Asia/Tbilisi');
         req.flush(response);
     });
 });

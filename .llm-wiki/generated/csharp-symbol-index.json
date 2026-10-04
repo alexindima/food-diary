@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4402,
-    "symbols": 4334,
+    "sourceFiles": 4403,
+    "symbols": 4335,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2265,
+      "class": 2266,
       "enum": 65,
       "interface": 411,
       "record": 1472,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1784,
+      "Other": 1785,
       "Query": 300,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
@@ -19036,7 +19036,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Meals/Application/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQueryHandler.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "ReadMealsForExportQueryHandler",
@@ -23337,6 +23337,13 @@
       "line": 2
     },
     {
+      "name": "StatisticsCalendarRangePolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Statistics/Application/Common/StatisticsCalendarRangePolicy.cs",
+      "line": 4
+    },
+    {
       "name": "UtcDateNormalizer",
       "kind": "class",
       "role": "Other",
@@ -23418,7 +23425,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Statistics/Application/Queries/GetStatistics/GetStatisticsQueryValidator.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "GetStatisticsSummaryQuery",
@@ -23488,14 +23495,14 @@
       "kind": "record",
       "role": "Query",
       "path": "Modules/Statistics/Presentation/Requests/GetStatisticsHttpQuery.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "GetStatisticsSummaryHttpQuery",
       "kind": "record",
       "role": "Query",
       "path": "Modules/Statistics/Presentation/Requests/GetStatisticsSummaryHttpQuery.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "AggregatedStatisticsHttpResponse",

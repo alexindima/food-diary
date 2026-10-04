@@ -201,7 +201,7 @@ export class StatisticsFacade {
     private loadStatistics(range: DateRange): void {
         const requestId = this.statisticsRequest.begin();
         this.statisticsService
-            .getSummary(buildStatisticsSummaryRequest(range))
+            .getSummary(buildStatisticsSummaryRequest(range, new Intl.DateTimeFormat().resolvedOptions().timeZone))
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: data => {

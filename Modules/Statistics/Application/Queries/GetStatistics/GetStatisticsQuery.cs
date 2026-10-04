@@ -8,5 +8,6 @@ public record GetStatisticsQuery(
     Guid? UserId,
     DateTime DateFrom,
     DateTime DateTo,
-    int QuantizationDays
+    int QuantizationDays,
+    string? TimeZoneId = null
 ) : IQuery<Result<IReadOnlyList<AggregatedStatisticsModel>>>, IUserRequest;

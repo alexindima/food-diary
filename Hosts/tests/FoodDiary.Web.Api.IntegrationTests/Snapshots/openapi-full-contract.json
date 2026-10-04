@@ -17231,6 +17231,13 @@
               "Default": "1",
               "Minimum": 1,
               "Maximum": 366
+            },
+            {
+              "Name": "TimeZoneId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 100
             }
           ],
           "PathParameters": [
@@ -17369,6 +17376,13 @@
               "Default": "1",
               "Minimum": 1,
               "Maximum": 366
+            },
+            {
+              "Name": "TimeZoneId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 100
             }
           ],
           "PathParameters": [

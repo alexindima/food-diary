@@ -71,10 +71,12 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/StatisticsCalendarTransportIntegrationTests.cs`
 - [behavioral-or-text-match] `Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/DiaryStatisticsQueryTests.cs`
 - [behavioral-or-text-match] `Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/LocalStatisticsCalendarTests.cs`
 - [behavioral-or-text-match] `Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Queries/GetStatisticsQueryValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsCalendarDateTests.cs`
+- [behavioral-or-text-match] `Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsCalendarZoneTests.cs`
 - [behavioral-or-text-match] `Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsSummaryFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Support/ResultAssert.cs`

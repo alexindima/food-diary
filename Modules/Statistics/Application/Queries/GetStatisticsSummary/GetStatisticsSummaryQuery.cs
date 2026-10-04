@@ -10,5 +10,6 @@ public sealed record GetStatisticsSummaryQuery(
     DateTime DateTo,
     int QuantizationDays,
     DateOnly? BodyDateFrom = null,
-    DateOnly? BodyDateTo = null
+    DateOnly? BodyDateTo = null,
+    string? TimeZoneId = null
 ) : IQuery<Result<StatisticsSummaryModel>>, IUserRequest;

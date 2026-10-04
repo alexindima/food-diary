@@ -7,14 +7,14 @@ namespace FoodDiary.Modules.Statistics.Presentation.Mappings;
 public static class StatisticsHttpQueryMappings {
     extension(GetStatisticsHttpQuery query) {
         public GetStatisticsQuery ToQuery(Guid userId) {
-            return new GetStatisticsQuery(userId, query.DateFrom, query.DateTo, query.QuantizationDays);
+            return new GetStatisticsQuery(userId, query.DateFrom, query.DateTo, query.QuantizationDays, query.TimeZoneId);
         }
 
     }
 
     extension(GetStatisticsSummaryHttpQuery query) {
         public GetStatisticsSummaryQuery ToSummaryQuery(Guid userId) {
-            return new GetStatisticsSummaryQuery(userId, query.DateFrom, query.DateTo, query.QuantizationDays, query.BodyDateFrom, query.BodyDateTo);
+            return new GetStatisticsSummaryQuery(userId, query.DateFrom, query.DateTo, query.QuantizationDays, query.BodyDateFrom, query.BodyDateTo, query.TimeZoneId);
         }
     }
 }

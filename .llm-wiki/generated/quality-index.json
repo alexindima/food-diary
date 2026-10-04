@@ -5,12 +5,12 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5833,
+    "productionFiles": 5834,
     "wikiToolFiles": 208,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 990,
-    "criticalSymbolsWithTestReferences": 942,
-    "criticalSymbolsWithoutTestReferences": 48,
+    "criticalSymbolsWithTestReferences": 943,
+    "criticalSymbolsWithoutTestReferences": 47,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -12730,11 +12730,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/lib/statistics-data-mapper.ts",
-      "nonBlankLines": 170,
+      "nonBlankLines": 171,
       "decisionPoints": 36,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 57.4
+      "structuralRiskScore": 57.42
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/lib/statistics-export.mapper.ts",
@@ -12778,11 +12778,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/models/statistics.data.ts",
-      "nonBlankLines": 64,
+      "nonBlankLines": 65,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.28
+      "structuralRiskScore": 1.3
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics-tour.ts",
@@ -34210,11 +34210,11 @@
     },
     {
       "path": "Modules/Meals/Application/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQueryHandler.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
+      "nonBlankLines": 20,
+      "decisionPoints": 1,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.24
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.9
     },
     {
       "path": "Modules/Meals/Application/Queries/ReadMealsForExport/ReadMealsForExportQueryHandler.cs",
@@ -34450,11 +34450,11 @@
     },
     {
       "path": "Modules/Meals/Contracts/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQuery.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 12,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.72
+      "structuralRiskScore": 1.74
     },
     {
       "path": "Modules/Meals/Contracts/Queries/ReadMealsForExport/ReadMealsForExportQuery.cs",
@@ -39273,6 +39273,14 @@
       "structuralRiskScore": 0.04
     },
     {
+      "path": "Modules/Statistics/Application/Common/StatisticsCalendarRangePolicy.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.86
+    },
+    {
       "path": "Modules/Statistics/Application/Common/UtcDateNormalizer.cs",
       "nonBlankLines": 13,
       "decisionPoints": 1,
@@ -39346,51 +39354,51 @@
     },
     {
       "path": "Modules/Statistics/Application/Queries/GetStatistics/GetStatisticsQuery.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.22
     },
     {
       "path": "Modules/Statistics/Application/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
-      "nonBlankLines": 58,
-      "decisionPoints": 5,
+      "nonBlankLines": 63,
+      "decisionPoints": 6,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.66
+      "structuralRiskScore": 12.26
     },
     {
       "path": "Modules/Statistics/Application/Queries/GetStatistics/GetStatisticsQueryValidator.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 1,
+      "nonBlankLines": 31,
+      "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.02
+      "structuralRiskScore": 5.62
     },
     {
       "path": "Modules/Statistics/Application/Queries/GetStatisticsSummary/GetStatisticsSummaryQuery.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.26
     },
     {
       "path": "Modules/Statistics/Application/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
-      "nonBlankLines": 74,
-      "decisionPoints": 8,
+      "nonBlankLines": 79,
+      "decisionPoints": 9,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.48
+      "structuralRiskScore": 17.08
     },
     {
       "path": "Modules/Statistics/Application/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryValidator.cs",
-      "nonBlankLines": 31,
-      "decisionPoints": 1,
+      "nonBlankLines": 35,
+      "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.12
+      "structuralRiskScore": 5.7
     },
     {
       "path": "Modules/Statistics/Presentation/Controllers/StatisticsController.cs",
@@ -39442,19 +39450,19 @@
     },
     {
       "path": "Modules/Statistics/Presentation/Requests/GetStatisticsHttpQuery.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "Modules/Statistics/Presentation/Requests/GetStatisticsSummaryHttpQuery.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Statistics/Presentation/Requests/GetStatisticsSummaryHttpQuery.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Statistics/Presentation/Responses/AggregatedStatisticsHttpResponse.cs",
@@ -53616,8 +53624,9 @@
       "role": "QueryHandler",
       "path": "Modules/Statistics/Application/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
       "line": 15,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsCalendarZoneTests.cs",
         "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -53628,9 +53637,10 @@
       "role": "QueryHandler",
       "path": "Modules/Statistics/Application/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
       "line": 19,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsCalendarDateTests.cs",
+        "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsCalendarZoneTests.cs",
         "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsSummaryFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -54384,10 +54394,12 @@
       "name": "ReadMealNutritionStatisticsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Meals/Application/Queries/ReadMealNutritionStatistics/ReadMealNutritionStatisticsQueryHandler.cs",
-      "line": 8,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "line": 10,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/ReadMealNutritionStatisticsQueryHandlerTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -56087,10 +56099,11 @@
       "name": "GetStatisticsQueryValidator",
       "role": "Validator",
       "path": "Modules/Statistics/Application/Queries/GetStatistics/GetStatisticsQueryValidator.cs",
-      "line": 5,
-      "testReferenceCount": 2,
+      "line": 6,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Queries/GetStatisticsQueryValidatorTests.cs",
+        "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsCalendarZoneTests.cs",
         "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -56101,9 +56114,10 @@
       "role": "Validator",
       "path": "Modules/Statistics/Application/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryValidator.cs",
       "line": 6,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsCalendarDateTests.cs",
+        "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsCalendarZoneTests.cs",
         "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/StatisticsSummaryFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",

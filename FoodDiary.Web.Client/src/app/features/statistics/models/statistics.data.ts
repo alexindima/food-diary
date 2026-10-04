@@ -23,6 +23,7 @@ export type GetStatisticsDto = {
     dateFrom: Date | string;
     dateTo: Date | string;
     quantizationDays?: number;
+    timeZoneId?: string;
 };
 
 export type GetStatisticsSummaryDto = GetStatisticsDto & {

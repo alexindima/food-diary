@@ -33,7 +33,12 @@ public sealed class GetStatisticsQueryHandler(
                 Errors.Validation.Invalid(nameof(request.DateFrom), "DateFrom must be earlier than DateTo"));
         }
 
-        if (!TemporalRangePolicy.IsInstantPeriodWithinLimit(request.DateFrom, request.DateTo)) {
+        if (!StatisticsCalendarRangePolicy.IsTimeZoneValid(request.TimeZoneId)) {
+            return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(
+                Errors.Validation.Invalid(nameof(request.TimeZoneId), "Provide a valid calendar time zone."));
+        }
+
+        if (!StatisticsCalendarRangePolicy.IsPeriodWithinLimit(request.DateFrom, request.DateTo, request.TimeZoneId)) {
             return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(
                 Errors.Validation.Invalid(
                     nameof(request.DateTo),
@@ -55,7 +60,8 @@ public sealed class GetStatisticsQueryHandler(
             userId,
             normalizedFrom,
             normalizedTo,
-            request.QuantizationDays),
+            request.QuantizationDays,
+            request.TimeZoneId),
             cancellationToken).ConfigureAwait(false);
 
         if (statisticsResult.IsFailure) {
