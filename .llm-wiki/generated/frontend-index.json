@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1885,
+    "typescriptFiles": 1887,
     "symbols": 722,
     "routes": 106,
     "features": 46,
-    "specs": 671,
+    "specs": 672,
     "localeFiles": 5,
     "roles": {
       "Component": 478,
@@ -611,6 +611,7 @@
       "tests": [
         "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dietologist/dietologist.routes.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/dietologist/lib/client-value-formatting.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard-lib/client-dashboard.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dietologist/pages/clients/dietologist-client-card/dietologist-client-card.spec.ts",
@@ -3698,7 +3699,7 @@
       "role": "Component",
       "selector": "fd-client-dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
-      "line": 126
+      "line": 127
     },
     {
       "name": "ClientDashboardFastingCardComponent",
@@ -3754,7 +3755,7 @@
       "role": "Component",
       "selector": "fd-dietologist-client-card",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/clients/dietologist-client-card/dietologist-client-card.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "DietologistClientsListComponent",
@@ -7129,16 +7130,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4050,
-      "russianProperties": 4050,
+      "englishProperties": 4054,
+      "russianProperties": 4054,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1121,
-      "russianProperties": 1121,
+      "englishProperties": 1122,
+      "russianProperties": 1122,
       "countsMatch": true
     },
     {

@@ -1,6 +1,7 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import type { Observable } from 'rxjs';
@@ -132,6 +133,7 @@ function registerLoadingTests(): void {
 
         expect(component['loading']()).toBe(false);
         expect(component['client']()).toBeNull();
+        expect((fixture.nativeElement as HTMLElement).querySelector('h1')?.textContent).toContain('DIETOLOGIST.CLIENT_DASHBOARD.TITLE');
     });
 
     it('stops loading on request error', () => {
@@ -258,7 +260,7 @@ function registerActionTests(): void {
     });
 
     it('sends recommendation and prepends it to the list', async () => {
-        createComponent('client-1');
+        createComponent('client-1', true);
 
         component['recommendationModel'].set({ text: 'Add protein', templateName: '' });
         component['submitRecommendation']();
@@ -271,7 +273,7 @@ function registerActionTests(): void {
     });
 
     it('prevents native recommendation submit when sending recommendation', async () => {
-        createComponent('client-1');
+        createComponent('client-1', true);
 
         component['recommendationModel'].set({ text: 'Add protein', templateName: '' });
         fixture.detectChanges();
@@ -327,7 +329,7 @@ describe('ClientDashboardComponent template limits', () => {
     });
 
     it('submits a recommendation independently of the optional template name limit', async () => {
-        createComponent('client-1');
+        createComponent('client-1', true);
         component['recommendationModel'].set({ text: 'Add protein', templateName: 'x'.repeat(OVERLONG_TEMPLATE_NAME_LENGTH) });
         fixture.detectChanges();
         const form = (fixture.nativeElement as HTMLElement).querySelector('.client-dashboard__recommendation-form');
@@ -338,7 +340,59 @@ describe('ClientDashboardComponent template limits', () => {
     });
 });
 
-function createComponent(clientId: string): void {
+describe('ClientDashboardComponent recommendation permissions', () => {
+    it.each([
+        'shareProfile',
+        'shareMeals',
+        'shareStatistics',
+        'shareWeight',
+        'shareWaist',
+        'shareGoals',
+        'shareHydration',
+        'shareFasting',
+    ] as const)('explains and blocks sending without %s', async permission => {
+        createComponent('client-1', true);
+        component['client'].update(client =>
+            client === null
+                ? null
+                : {
+                      ...client,
+                      permissions: { ...client.permissions, [permission]: false },
+                  },
+        );
+        component['recommendationModel'].set({ text: 'Add protein', templateName: '' });
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const submit = host.querySelector<HTMLButtonElement>('.client-dashboard__recommendation-form button[type="submit"]');
+        expect(submit?.disabled).toBe(true);
+        expect(host.textContent).toContain('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.PERMISSIONS_REQUIRED');
+        await component['submitRecommendationAsync']();
+        expect(dietologistService.createRecommendation).not.toHaveBeenCalled();
+        expect(component['recommendationModel']().text).toBe('Add protein');
+    });
+});
+
+function createComponent(clientId: string, fullAccess = false): void {
+    if (fullAccess) {
+        dietologistService.getMyClients.mockReturnValueOnce(
+            of([
+                createClient({
+                    userId: clientId,
+                    permissions: {
+                        shareProfile: true,
+                        shareMeals: true,
+                        shareStatistics: true,
+                        shareWeight: true,
+                        shareWaist: true,
+                        shareGoals: true,
+                        shareHydration: true,
+                        shareFasting: true,
+                    },
+                }),
+            ]),
+        );
+    }
     TestBed.configureTestingModule({
         imports: [ClientDashboardComponent],
         providers: [
@@ -358,6 +412,15 @@ function createComponent(clientId: string): void {
             },
         ],
     });
+
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', {
+        GENERAL: {
+            UNITS: { CM: 'cm', KG: 'kg', LB: 'lb', IN: 'in', FT: 'ft', G: 'g', ML: 'ml', KCAL: 'kcal', H: 'h' },
+            NUTRIENTS: { PROTEIN: 'Protein', FAT: 'Fats', CARB: 'Carbs' },
+        },
+    });
+    translate.use('en');
 
     fixture = TestBed.createComponent(ClientDashboardComponent);
     component = fixture.componentInstance;

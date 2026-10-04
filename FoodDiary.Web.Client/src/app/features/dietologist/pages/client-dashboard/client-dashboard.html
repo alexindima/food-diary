@@ -17,7 +17,7 @@
         </div>
         <fd-client-dashboard-header
             data-tour-id="client-dashboard-profile"
-            [show]="client() !== null"
+            [show]="true"
             [title]="clientTitle()"
             [email]="client()?.email ?? ''"
             [chips]="profileChips()"
@@ -198,6 +198,9 @@
                         </div>
                     </section>
                     <form class="client-dashboard__recommendation-form fd-stack fd-gap-sm" [formRoot]="recommendationForm">
+                        <p class="fd-ui-caption" [hidden]="canRecommend()">
+                            {{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.PERMISSIONS_REQUIRED' | translate }}
+                        </p>
                         <fd-ui-textarea
                             [label]="'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.TEXT_LABEL' | translate"
                             [placeholder]="'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.TEXT_PLACEHOLDER' | translate"
@@ -226,8 +229,8 @@
                             <span class="fd-ui-caption"> {{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.LIMIT' | translate }} </span>
                             <fd-ui-button
                                 type="submit"
-                                [disabled]="recommendationForm.text().invalid() || savingRecommendation()"
-                                [disabledReason]="recommendationForm.text().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
+                                [disabled]="recommendationDisabled()"
+                                [disabledReason]="recommendationDisabledReason()"
                             >
                                 {{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SEND' | translate }}
                             </fd-ui-button>

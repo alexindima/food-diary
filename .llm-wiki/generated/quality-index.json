@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5798,
+    "productionFiles": 5799,
     "wikiToolFiles": 208,
     "wikiToolsWithoutTestReferences": 5,
     "criticalSymbols": 985,
@@ -615,12 +615,12 @@
       "structuralRiskScore": 93.34
     },
     {
-      "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard-lib/client-dashboard.mapper.ts",
-      "nonBlankLines": 369,
-      "decisionPoints": 57,
+      "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
+      "nonBlankLines": 670,
+      "decisionPoints": 53,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 92.88
+      "structuralRiskScore": 92.9
     },
     {
       "path": ".llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1",
@@ -693,6 +693,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 89.16
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard-lib/client-dashboard.mapper.ts",
+      "nonBlankLines": 405,
+      "decisionPoints": 54,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 89.1
     },
     {
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
@@ -781,14 +789,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 84.32
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
-      "nonBlankLines": 644,
-      "decisionPoints": 47,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 83.38
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
@@ -9025,6 +9025,14 @@
       "structuralRiskScore": 0.28
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/dietologist/lib/client-value-formatting.ts",
+      "nonBlankLines": 52,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.04
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/lib/dietologist.facade.ts",
       "nonBlankLines": 98,
       "decisionPoints": 0,
@@ -9034,11 +9042,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard-lib/client-dashboard.mapper.ts",
-      "nonBlankLines": 369,
-      "decisionPoints": 57,
+      "nonBlankLines": 405,
+      "decisionPoints": 54,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 92.88
+      "structuralRiskScore": 89.1
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard-tour.ts",
@@ -9050,11 +9058,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
-      "nonBlankLines": 644,
-      "decisionPoints": 47,
+      "nonBlankLines": 670,
+      "decisionPoints": 53,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 83.38
+      "structuralRiskScore": 92.9
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-fasting-card.ts",
@@ -9082,11 +9090,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-meals-card.ts",
-      "nonBlankLines": 17,
-      "decisionPoints": 0,
+      "nonBlankLines": 22,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 1.94
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-metric-list.ts",
@@ -9114,11 +9122,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/clients/dietologist-client-card/dietologist-client-card.ts",
-      "nonBlankLines": 41,
-      "decisionPoints": 2,
+      "nonBlankLines": 38,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.82
+      "structuralRiskScore": 2.26
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/clients/dietologist-clients-lib/dietologist-clients.mapper.ts",

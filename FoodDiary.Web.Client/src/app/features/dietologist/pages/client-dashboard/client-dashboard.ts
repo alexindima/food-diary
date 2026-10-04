@@ -30,6 +30,7 @@ import type {
 } from '../../../../shared/models/dietologist.data';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { RecommendationThreadComponent } from '../../../recommendations/contracts/recommendation-thread';
+import { createClientValueFormatting } from '../../lib/client-value-formatting';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 import {
     buildBodyTiles,
@@ -224,18 +225,38 @@ export class ClientDashboardComponent {
     protected readonly clientTitle = computed(() => {
         const client = this.client();
         if (client === null) {
-            return '';
+            return this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.TITLE');
         }
 
         return getClientDashboardTitle(client) ?? this.translateService.instant('ATTENTION.UNNAMED_CLIENT');
     });
+    private readonly valueFormatting = computed(() =>
+        createClientValueFormatting(this.translateService.currentLang() ?? 'en', key => this.translateService.instant(key)),
+    );
+    protected readonly canRecommend = computed(() => {
+        const client = this.client();
+        return client !== null && Object.values(client.permissions).every(Boolean);
+    });
+    protected readonly recommendationDisabled = computed(
+        () => !this.canRecommend() || this.recommendationForm.text().invalid() || this.savingRecommendation(),
+    );
+    protected readonly recommendationDisabledReason = computed(() => {
+        this.translateService.currentLang();
+        if (!this.canRecommend()) {
+            return this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.PERMISSIONS_REQUIRED');
+        }
+
+        return this.recommendationForm.text().invalid() ? this.translateService.instant('DISABLED_HINTS.FORM_INVALID') : null;
+    });
     protected readonly profileChips = computed(() => {
         const client = this.client();
-        return buildClientProfileChips(client, this.measurements.system()).map(value => this.localizeProfileValue(value, client));
+        return buildClientProfileChips(client, this.measurements.system(), this.valueFormatting()).map(value =>
+            this.localizeProfileValue(value, client),
+        );
     });
     protected readonly profileDetails = computed<ClientProfileDetail[]>(() => {
         const client = this.client();
-        return buildClientProfileDetails(client, this.measurements.system()).map(detail => ({
+        return buildClientProfileDetails(client, this.measurements.system(), this.valueFormatting()).map(detail => ({
             ...detail,
             value: this.localizeProfileValue(detail.value, client),
         }));
@@ -251,26 +272,32 @@ export class ClientDashboardComponent {
         return client !== null && this.shouldLoadDashboardSnapshot(client);
     });
     protected readonly nutritionTiles = computed<ClientMetricTile[]>(() =>
-        this.client()?.permissions.shareStatistics === true ? buildNutritionTiles(this.dashboard()) : [],
+        this.client()?.permissions.shareStatistics === true ? buildNutritionTiles(this.dashboard(), this.valueFormatting()) : [],
     );
     protected readonly bodyTiles = computed<ClientMetricTile[]>(() =>
-        buildBodyTiles(this.dashboard(), this.client()?.permissions, this.measurements.system()),
+        buildBodyTiles(this.dashboard(), this.client()?.permissions, this.measurements.system(), this.valueFormatting()),
     );
-    protected readonly goalTiles = computed<ClientMetricTile[]>(() => buildGoalTiles(this.goals(), this.measurements.system()));
+    protected readonly goalTiles = computed<ClientMetricTile[]>(() =>
+        buildGoalTiles(this.goals(), this.measurements.system(), this.valueFormatting()),
+    );
     protected readonly mealItems = computed<ClientMealView[]>(() =>
-        this.client()?.permissions.shareMeals === true ? buildMealViews(this.dashboard()) : [],
+        this.client()?.permissions.shareMeals === true ? buildMealViews(this.dashboard(), this.valueFormatting()) : [],
     );
     protected readonly weightSummary = computed<ClientBodyMeasurementView | null>(() =>
-        this.client()?.permissions.shareWeight === true ? buildWeightView(this.dashboard(), this.measurements.system()) : null,
+        this.client()?.permissions.shareWeight === true
+            ? buildWeightView(this.dashboard(), this.measurements.system(), this.valueFormatting())
+            : null,
     );
     protected readonly waistSummary = computed<ClientBodyMeasurementView | null>(() =>
-        this.client()?.permissions.shareWaist === true ? buildWaistView(this.dashboard(), this.measurements.system()) : null,
+        this.client()?.permissions.shareWaist === true
+            ? buildWaistView(this.dashboard(), this.measurements.system(), this.valueFormatting())
+            : null,
     );
     protected readonly hydrationSummary = computed<ClientHydrationView | null>(() =>
-        this.client()?.permissions.shareHydration === true ? buildHydrationView(this.dashboard()) : null,
+        this.client()?.permissions.shareHydration === true ? buildHydrationView(this.dashboard(), this.valueFormatting()) : null,
     );
     protected readonly fastingSummary = computed<ClientFastingView | null>(() =>
-        this.client()?.permissions.shareFasting === true ? buildFastingView(this.dashboard()) : null,
+        this.client()?.permissions.shareFasting === true ? buildFastingView(this.dashboard(), this.valueFormatting()) : null,
     );
     protected readonly recommendationItems = computed<ClientRecommendationView[]>(() => buildRecommendationViews(this.recommendations()));
 
@@ -434,7 +461,7 @@ export class ClientDashboardComponent {
 
     private async submitRecommendationAsync(): Promise<void> {
         const client = this.client();
-        if (client === null || this.recommendationForm.text().invalid() || this.savingRecommendation()) {
+        if (client === null || !this.canRecommend() || this.recommendationForm.text().invalid() || this.savingRecommendation()) {
             this.recommendationForm().markAsTouched();
             return;
         }

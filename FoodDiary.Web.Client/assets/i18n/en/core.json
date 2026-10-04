@@ -140,7 +140,8 @@
             "CM": "cm",
             "LB": "lb",
             "FT": "ft",
-            "IN": "in"
+            "IN": "in",
+            "H": "h"
         },
         "TIME": {
             "WEEK_SHORT": "week"

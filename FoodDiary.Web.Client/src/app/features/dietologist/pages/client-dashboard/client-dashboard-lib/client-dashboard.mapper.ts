@@ -1,5 +1,4 @@
 import {
-    centimetersToImperialHeight,
     centimetersToInches,
     kilogramsToPounds,
     type MeasurementSystem,
@@ -9,6 +8,7 @@ import type { ClientSummary, DietologistPermissions } from '../../../../../share
 import type { DietologistClientGoals, DietologistRecommendation } from '../../../../../shared/models/dietologist.data';
 import type { FastingSession } from '../../../../../shared/models/fasting.data';
 import type { Meal } from '../../../../../shared/models/meal.data';
+import { type ClientValueFormatting, DEFAULT_CLIENT_VALUE_FORMATTING, formatClientHeight } from '../../../lib/client-value-formatting';
 
 const PERCENT_MAX = 100;
 const DATE_ONLY_LENGTH = 10;
@@ -73,24 +73,32 @@ export function getClientDashboardTitle(client: ClientSummary): string | null {
     return fullName.length > 0 ? fullName : client.email;
 }
 
-export function buildClientProfileChips(client: ClientSummary | null, system: MeasurementSystem = 'metric'): string[] {
+export function buildClientProfileChips(
+    client: ClientSummary | null,
+    system: MeasurementSystem = 'metric',
+    formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
+): string[] {
     if (client?.permissions.shareProfile !== true) {
         return [];
     }
 
-    return [formatHeight(client.heightCm, system), client.gender, client.activityLevel].filter(
+    return [formatClientHeight(client.heightCm, system, formatting), client.gender, client.activityLevel].filter(
         (value): value is string => value !== null && value.length > 0,
     );
 }
 
-export function buildClientProfileDetails(client: ClientSummary | null, system: MeasurementSystem = 'metric'): ClientProfileDetail[] {
+export function buildClientProfileDetails(
+    client: ClientSummary | null,
+    system: MeasurementSystem = 'metric',
+    formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
+): ClientProfileDetail[] {
     if (client?.permissions.shareProfile !== true) {
         return [];
     }
 
     return [
         { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.EMAIL', value: client.email ?? '-' },
-        { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.HEIGHT', value: formatHeight(client.heightCm, system) ?? '-' },
+        { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.HEIGHT', value: formatClientHeight(client.heightCm, system, formatting) ?? '-' },
         { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.GENDER', value: client.gender ?? '-' },
         { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.ACTIVITY', value: client.activityLevel ?? '-' },
         { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.BIRTH_DATE', value: formatDateOnly(client.birthDate) },
@@ -147,7 +155,10 @@ export function buildClientDashboardSections(client: ClientSummary | null): Clie
     ].filter(section => section.isVisible);
 }
 
-export function buildNutritionTiles(snapshot: DashboardSnapshot | null): ClientMetricTile[] {
+export function buildNutritionTiles(
+    snapshot: DashboardSnapshot | null,
+    formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
+): ClientMetricTile[] {
     if (snapshot === null) {
         return [];
     }
@@ -155,19 +166,19 @@ export function buildNutritionTiles(snapshot: DashboardSnapshot | null): ClientM
     return [
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.CALORIES',
-            value: formatNumber(snapshot.statistics.totalCalories, ' kcal'),
+            value: formatting.number(snapshot.statistics.totalCalories, 'kcal'),
         },
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.PROTEIN',
-            value: formatNumber(snapshot.statistics.averageProteins, ' g'),
+            value: formatting.number(snapshot.statistics.averageProteins, 'g'),
         },
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.FATS',
-            value: formatNumber(snapshot.statistics.averageFats, ' g'),
+            value: formatting.number(snapshot.statistics.averageFats, 'g'),
         },
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.CARBS',
-            value: formatNumber(snapshot.statistics.averageCarbs, ' g'),
+            value: formatting.number(snapshot.statistics.averageCarbs, 'g'),
         },
     ];
 }
@@ -176,6 +187,7 @@ export function buildBodyTiles(
     snapshot: DashboardSnapshot | null,
     permissions?: DietologistPermissions,
     system: MeasurementSystem = 'metric',
+    formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
 ): ClientMetricTile[] {
     if (snapshot === null) {
         return [];
@@ -184,19 +196,19 @@ export function buildBodyTiles(
     return [
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.WEIGHT',
-            value: formatMeasurement(snapshot.weight.latest?.weightKg, system, 'weight'),
+            value: formatMeasurement(snapshot.weight.latest?.weightKg, system, 'weight', formatting),
         },
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.WAIST',
-            value: formatMeasurement(snapshot.waist.latest?.circumferenceCm, system, 'length'),
+            value: formatMeasurement(snapshot.waist.latest?.circumferenceCm, system, 'length', formatting),
         },
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.HYDRATION',
-            value: formatNullableNumber(snapshot.hydration?.totalMl, ' ml'),
+            value: formatNullableNumber(snapshot.hydration?.totalMl, 'ml', formatting),
         },
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.MEALS',
-            value: String(snapshot.meals.total),
+            value: formatting.number(snapshot.meals.total),
         },
     ].filter(tile => {
         if (permissions === undefined) {
@@ -212,7 +224,11 @@ export function buildBodyTiles(
     });
 }
 
-export function buildGoalTiles(goals: DietologistClientGoals | null, system: MeasurementSystem = 'metric'): ClientMetricTile[] {
+export function buildGoalTiles(
+    goals: DietologistClientGoals | null,
+    system: MeasurementSystem = 'metric',
+    formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
+): ClientMetricTile[] {
     if (goals === null) {
         return [];
     }
@@ -220,19 +236,19 @@ export function buildGoalTiles(goals: DietologistClientGoals | null, system: Mea
     return [
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.CALORIE_GOAL',
-            value: formatNullableNumber(goals.dailyCalorieTarget, ' kcal'),
+            value: formatNullableNumber(goals.dailyCalorieTarget, 'kcal', formatting),
         },
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.PROTEIN_GOAL',
-            value: formatNullableNumber(goals.proteinTarget, ' g'),
+            value: formatNullableNumber(goals.proteinTarget, 'g', formatting),
         },
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.WATER_GOAL',
-            value: formatNullableNumber(goals.hydrationGoal ?? goals.waterGoal, ' ml'),
+            value: formatNullableNumber(goals.hydrationGoal ?? goals.waterGoal, 'ml', formatting),
         },
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.DESIRED_WEIGHT',
-            value: formatMeasurement(goals.desiredWeightKg, system, 'weight'),
+            value: formatMeasurement(goals.desiredWeightKg, system, 'weight', formatting),
         },
     ];
 }
@@ -248,7 +264,10 @@ export function buildRecommendationViews(recommendations: DietologistRecommendat
     }));
 }
 
-export function buildMealViews(snapshot: DashboardSnapshot | null): ClientMealView[] {
+export function buildMealViews(
+    snapshot: DashboardSnapshot | null,
+    formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
+): ClientMealView[] {
     if (snapshot === null) {
         return [];
     }
@@ -257,8 +276,8 @@ export function buildMealViews(snapshot: DashboardSnapshot | null): ClientMealVi
         id: meal.id,
         title: formatMealTitle(meal),
         date: meal.date,
-        calories: formatNumber(meal.totalCalories, ' kcal'),
-        macros: `P ${formatNumber(meal.totalProteins, ' g')} / F ${formatNumber(meal.totalFats, ' g')} / C ${formatNumber(meal.totalCarbs, ' g')}`,
+        calories: formatting.number(meal.totalCalories, 'kcal'),
+        macros: formatting.macros(meal.totalProteins, meal.totalFats, meal.totalCarbs),
         itemSummary: formatMealItems(meal),
     }));
 }
@@ -266,6 +285,7 @@ export function buildMealViews(snapshot: DashboardSnapshot | null): ClientMealVi
 export function buildWeightView(
     snapshot: DashboardSnapshot | null,
     system: MeasurementSystem = 'metric',
+    formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
 ): ClientBodyMeasurementView | null {
     if (snapshot?.weight.latest === null || snapshot?.weight.latest === undefined) {
         return null;
@@ -273,37 +293,57 @@ export function buildWeightView(
 
     return {
         date: snapshot.weight.latest.date,
-        value: formatMeasurement(snapshot.weight.latest.weightKg, system, 'weight'),
-        delta: formatMeasurementDelta(snapshot.weight.latest.weightKg, snapshot.weight.previous?.weightKg, system, 'weight'),
+        value: formatMeasurement(snapshot.weight.latest.weightKg, system, 'weight', formatting),
+        delta: formatMeasurementDelta(
+            { current: snapshot.weight.latest.weightKg, previous: snapshot.weight.previous?.weightKg },
+            system,
+            'weight',
+            formatting,
+        ),
     };
 }
 
-export function buildWaistView(snapshot: DashboardSnapshot | null, system: MeasurementSystem = 'metric'): ClientBodyMeasurementView | null {
+export function buildWaistView(
+    snapshot: DashboardSnapshot | null,
+    system: MeasurementSystem = 'metric',
+    formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
+): ClientBodyMeasurementView | null {
     if (snapshot?.waist.latest === null || snapshot?.waist.latest === undefined) {
         return null;
     }
 
     return {
         date: snapshot.waist.latest.date,
-        value: formatMeasurement(snapshot.waist.latest.circumferenceCm, system, 'length'),
-        delta: formatMeasurementDelta(snapshot.waist.latest.circumferenceCm, snapshot.waist.previous?.circumferenceCm, system, 'length'),
+        value: formatMeasurement(snapshot.waist.latest.circumferenceCm, system, 'length', formatting),
+        delta: formatMeasurementDelta(
+            { current: snapshot.waist.latest.circumferenceCm, previous: snapshot.waist.previous?.circumferenceCm },
+            system,
+            'length',
+            formatting,
+        ),
     };
 }
 
-export function buildHydrationView(snapshot: DashboardSnapshot | null): ClientHydrationView | null {
+export function buildHydrationView(
+    snapshot: DashboardSnapshot | null,
+    formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
+): ClientHydrationView | null {
     if (snapshot?.hydration === null || snapshot?.hydration === undefined) {
         return null;
     }
 
     const goal = snapshot.hydration.goalMl;
     return {
-        total: formatNumber(snapshot.hydration.totalMl, ' ml'),
-        goal: goal === null ? null : formatNumber(goal, ' ml'),
+        total: formatting.number(snapshot.hydration.totalMl, 'ml'),
+        goal: goal === null ? null : formatting.number(goal, 'ml'),
         progress: goal === null || goal <= 0 ? null : Math.min(PERCENT_MAX, Math.round((snapshot.hydration.totalMl / goal) * PERCENT_MAX)),
     };
 }
 
-export function buildFastingView(snapshot: DashboardSnapshot | null): ClientFastingView | null {
+export function buildFastingView(
+    snapshot: DashboardSnapshot | null,
+    formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
+): ClientFastingView | null {
     if (snapshot?.currentFastingSession === null || snapshot?.currentFastingSession === undefined) {
         return null;
     }
@@ -313,47 +353,39 @@ export function buildFastingView(snapshot: DashboardSnapshot | null): ClientFast
         status: session.status,
         protocol: formatFastingProtocol(session),
         startedAtUtc: session.startedAtUtc,
-        plannedDuration: formatNumber(session.plannedDurationHours, ' h'),
+        plannedDuration: formatting.number(session.plannedDurationHours, 'h'),
         checkInSummary: formatFastingCheckIn(session),
     };
 }
 
-function formatHeight(value: number | null | undefined, system: MeasurementSystem): string | null {
-    if (value === null || value === undefined) {
-        return null;
-    }
-
-    if (system === 'imperial') {
-        const height = centimetersToImperialHeight(value);
-        return `${height.feet} ft ${height.inches} in`;
-    }
-
-    return `${value} cm`;
-}
-
-function formatMeasurement(value: number | null | undefined, system: MeasurementSystem, kind: 'weight' | 'length'): string {
+function formatMeasurement(
+    value: number | null | undefined,
+    system: MeasurementSystem,
+    kind: 'weight' | 'length',
+    formatting: ClientValueFormatting,
+): string {
     if (value === null || value === undefined) {
         return '-';
     }
 
     const converted = convertMeasurement(value, system, kind);
-    return `${converted} ${measurementUnit(system, kind)}`;
+    return formatting.number(converted, measurementUnit(system, kind), 1);
 }
 
 function formatMeasurementDelta(
-    current: number,
-    previous: number | null | undefined,
+    measurement: { current: number; previous: number | null | undefined },
     system: MeasurementSystem,
     kind: 'weight' | 'length',
+    formatting: ClientValueFormatting,
 ): string | null {
-    if (previous === null || previous === undefined) {
+    if (measurement.previous === null || measurement.previous === undefined) {
         return null;
     }
 
-    const delta = convertMeasurement(current - previous, system, kind);
+    const delta = convertMeasurement(measurement.current - measurement.previous, system, kind);
     const roundedDelta = Math.round(delta * ONE_DECIMAL_PRECISION) / ONE_DECIMAL_PRECISION;
     const normalizedDelta = Math.abs(roundedDelta) < STABLE_DELTA_THRESHOLD ? 0 : roundedDelta;
-    return `${normalizedDelta > 0 ? '+' : ''}${normalizedDelta} ${measurementUnit(system, kind)}`;
+    return `${normalizedDelta > 0 ? '+' : ''}${formatting.number(normalizedDelta, measurementUnit(system, kind), 1)}`;
 }
 
 function convertMeasurement(value: number, system: MeasurementSystem, kind: 'weight' | 'length'): number {
@@ -364,7 +396,7 @@ function convertMeasurement(value: number, system: MeasurementSystem, kind: 'wei
     return kind === 'weight' ? kilogramsToPounds(value) : centimetersToInches(value);
 }
 
-function measurementUnit(system: MeasurementSystem, kind: 'weight' | 'length'): string {
+function measurementUnit(system: MeasurementSystem, kind: 'weight' | 'length'): 'kg' | 'lb' | 'cm' | 'in' {
     if (kind === 'weight') {
         return system === 'imperial' ? 'lb' : 'kg';
     }
@@ -372,12 +404,12 @@ function measurementUnit(system: MeasurementSystem, kind: 'weight' | 'length'): 
     return system === 'imperial' ? 'in' : 'cm';
 }
 
-function formatNullableNumber(value: number | null | undefined, suffix: string): string {
-    return value === null || value === undefined ? '-' : formatNumber(value, suffix);
-}
-
-function formatNumber(value: number, suffix: string): string {
-    return `${Math.round(value)}${suffix}`;
+function formatNullableNumber(
+    value: number | null | undefined,
+    unit: Parameters<ClientValueFormatting['number']>[1],
+    formatting: ClientValueFormatting,
+): string {
+    return value === null || value === undefined ? '-' : formatting.number(value, unit);
 }
 
 function formatDateOnly(value: string | null | undefined): string {

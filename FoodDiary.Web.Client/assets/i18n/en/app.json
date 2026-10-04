@@ -3885,6 +3885,7 @@
                 "SEND": "Send recommendation",
                 "SENT": "Recommendation sent.",
                 "SEND_ERROR": "Failed to send recommendation.",
+                "PERMISSIONS_REQUIRED": "Recommendations are available when the client shares all diary categories. Ask the client to review their sharing settings.",
                 "EMPTY": "No recommendations sent yet.",
                 "READ": "Read",
                 "UNREAD": "Unread"
@@ -3897,7 +3898,10 @@
                 "BIRTH_DATE": "Birth date"
             },
             "MEALS": {
-                "COUNT": "{{count}} meals",
+                "COUNT_ONE": "{{count}} meal",
+                "COUNT_FEW": "{{count}} meals",
+                "COUNT_MANY": "{{count}} meals",
+                "COUNT_OTHER": "{{count}} meals",
                 "EMPTY": "No meals shared for the selected period."
             },
             "BODY": {

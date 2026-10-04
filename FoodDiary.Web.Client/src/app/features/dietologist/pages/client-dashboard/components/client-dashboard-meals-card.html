@@ -3,7 +3,7 @@
         <div class="client-dashboard__section">
             <div class="client-dashboard__section-head fd-row fd-justify-between fd-gap-md">
                 <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.MEALS_TITLE' | translate }}</h2>
-                <span class="fd-ui-caption"> {{ 'DIETOLOGIST.CLIENT_DASHBOARD.MEALS.COUNT' | translate: { count: total() } }} </span>
+                <span class="fd-ui-caption"> {{ countLabelKey() | translate: { count: total() } }} </span>
             </div>
             <div class="client-dashboard__list fd-stack fd-gap-sm">
                 @for (meal of meals(); track meal.id) {
