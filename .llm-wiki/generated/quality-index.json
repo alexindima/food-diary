@@ -7426,11 +7426,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-edit-list/ai-photo-edit-list.ts",
-      "nonBlankLines": 37,
+      "nonBlankLines": 39,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.74
+      "structuralRiskScore": 0.78
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-nutrition-summary/ai-photo-nutrition-summary.ts",

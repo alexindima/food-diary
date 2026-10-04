@@ -840,13 +840,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "770e639552eb0986eca3e56a0f9f2babdc4ed9a86f35733aa0f7dc105eb3e946"
+          "sha256": "60ef9fa3ed936becec4fcee1dbc5de6b9e98105afbb42dfdd5eb6a0211a824ed"
         }
       ],
-      "reason": "Reviewed generated quality projection after integration with master 1976069bd3d397febbff4280c617667288629b0c. Every product quality row matches that committed master exactly; the Wiki patch changes only tooling metrics and navigation. Runtime, sensitive-data handling and product ranking implementations are unchanged by this patch.",
+      "reason": "Accessibility regressions are covered by locale-driven DOM tests; generated counts reflect added tests and do not change review procedure.",
       "baseRef": "HEAD",
-      "gitHead": "6e2a0ee2c1e4eaa477288cca1e3e5541e8c1667a",
-      "reviewedAtUtc": "2026-10-04T13:13:39.3414878Z"
+      "gitHead": "b935b4741040b8f8d9d14748111a81f720580e19",
+      "reviewedAtUtc": "2026-10-04T15:40:17.0506166Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -930,13 +930,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "770e639552eb0986eca3e56a0f9f2babdc4ed9a86f35733aa0f7dc105eb3e946"
+          "sha256": "60ef9fa3ed936becec4fcee1dbc5de6b9e98105afbb42dfdd5eb6a0211a824ed"
         }
       ],
-      "reason": "Reviewed generated quality projection after integration with master 1976069bd3d397febbff4280c617667288629b0c. Every product quality row matches that committed master exactly; the Wiki patch changes only tooling metrics and navigation. Runtime, sensitive-data handling and product ranking implementations are unchanged by this patch.",
+      "reason": "The editor patch changes accessible labels only and does not change private data storage sharing logging or authorization.",
       "baseRef": "HEAD",
-      "gitHead": "6e2a0ee2c1e4eaa477288cca1e3e5541e8c1667a",
-      "reviewedAtUtc": "2026-10-04T13:13:42.4250514Z"
+      "gitHead": "b935b4741040b8f8d9d14748111a81f720580e19",
+      "reviewedAtUtc": "2026-10-04T15:40:18.1966755Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1073,17 +1073,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "8e92ef70a003ae5a89bdc16b9f23dfc064dcb8c49810b365c695513ef9406eef"
+          "sha256": "bc245b2cecc4bd8f0d28ced928be45cb43dbfee3e11926ac401d6dba5afd94c3"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "76d202625b5d29b587985e74e91e0345d3999ce821e4a036ef84250b3fd0e3bd"
+          "sha256": "c86542d3447a26e6ec5a5e8dc3723d7714493ab4a7a3de16197ac99113c930fe"
         }
       ],
-      "reason": "Reviewed feature trace workflow and refreshed frontend indexes: owner and consumer boundaries remain unchanged. Confirmed shared EntityCardThumb is the actual product/recipe/meal card owner; no backend commands or dependency topology changed.",
+      "reason": "Generated frontend navigation reflects label fields and tests; flow ownership and trace tooling remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "18a2a5b709c3b0a8a17454829ffaa16adaa64b5d",
-      "reviewedAtUtc": "2026-10-04T10:09:54.6083093Z"
+      "gitHead": "b935b4741040b8f8d9d14748111a81f720580e19",
+      "reviewedAtUtc": "2026-10-04T15:40:19.4028928Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1171,13 +1171,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "8e92ef70a003ae5a89bdc16b9f23dfc064dcb8c49810b365c695513ef9406eef"
+          "sha256": "bc245b2cecc4bd8f0d28ced928be45cb43dbfee3e11926ac401d6dba5afd94c3"
         }
       ],
-      "reason": "Reviewed frontend selector/input/output and service contracts: no public payload or API changes; line charts receive existing locale input and number views use the existing localized pipe. Real RU rendering, language-switch unit tests, and build passed.",
+      "reason": "Existing editor gains native label associations and correct interpolation; inputs outputs and API consumers remain unchanged; 42 focused tests and Russian browser actions passed.",
       "baseRef": "HEAD",
-      "gitHead": "18a2a5b709c3b0a8a17454829ffaa16adaa64b5d",
-      "reviewedAtUtc": "2026-10-04T10:09:41.4736817Z"
+      "gitHead": "b935b4741040b8f8d9d14748111a81f720580e19",
+      "reviewedAtUtc": "2026-10-04T15:40:15.8182664Z"
     },
     {
       "pageId": "workflow.query-context",

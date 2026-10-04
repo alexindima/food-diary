@@ -2754,7 +2754,7 @@
       "role": "Component",
       "selector": "fd-ai-photo-edit-list",
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-edit-list/ai-photo-edit-list.ts",
-      "line": 18
+      "line": 20
     },
     {
       "name": "AiPhotoNutritionSummaryComponent",

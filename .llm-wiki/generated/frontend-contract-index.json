@@ -7,7 +7,7 @@
     "outputs": 533,
     "apiCalls": 276,
     "templatesWithTranslations": 344,
-    "translationKeys": 2078,
+    "translationKeys": 2079,
     "consumerEdges": 1219,
     "consumedComponents": 306,
     "unconsumedComponents": 176
@@ -22080,7 +22080,10 @@
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-edit-list/ai-photo-edit-list.html",
       "keys": [
         "COMMON.DELETE",
-        "MEAL_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM"
+        "MEAL_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM",
+        "MEAL_MANAGE.PHOTO_AI_DIALOG.AMOUNT_LABEL",
+        "MEAL_MANAGE.PHOTO_AI_DIALOG.NAME_LABEL",
+        "MEAL_MANAGE.PHOTO_AI_DIALOG.UNIT_LABEL"
       ]
     },
     {

@@ -5,6 +5,8 @@ import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui
 
 import type { AiEditItemDrop, AiEditItemUpdate, AiEditUnitOption, EditableAiItem } from '../ai-photo-result-lib/ai-photo-result.types';
 
+let uniqueId = 0;
+
 @Component({
     selector: 'fd-ai-photo-edit-list',
     imports: [DragDropModule, TranslatePipe, FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent],
@@ -17,6 +19,8 @@ import type { AiEditItemDrop, AiEditItemUpdate, AiEditUnitOption, EditableAiItem
 })
 export class AiPhotoEditListComponent {
     private readonly translateService = inject(TranslateService);
+
+    protected readonly controlIdPrefix = `ai-photo-edit-${uniqueId++}`;
 
     public readonly items = input.required<EditableAiItem[]>();
     public readonly unitOptions = input.required<AiEditUnitOption[]>();
