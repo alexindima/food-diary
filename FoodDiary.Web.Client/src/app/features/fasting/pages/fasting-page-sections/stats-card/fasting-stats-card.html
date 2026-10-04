@@ -29,7 +29,7 @@
             >
                 <span class="fasting__stat-label fd-ui-stat-tile__label fd-ui-meta-text">{{ 'FASTING.AVG_DURATION' | translate }}</span>
                 <strong class="fasting__stat-value fd-ui-stat-tile__value fd-ui-metric-lg"
-                    >{{ s.averageDurationHours | number: '1.1-1' }} {{ 'FASTING.HOURS' | translate }}</strong
+                    >{{ s.averageDurationHours | localizedNumber: language() : 1 : 1 }} {{ 'FASTING.HOURS' | translate }}</strong
                 >
             </fd-ui-accent-surface>
         </div>
@@ -53,7 +53,7 @@
                                 {{ 'FASTING.PERSONAL_SUMMARY.COMPLETION_RATE' | translate }}
                             </span>
                             <strong class="fasting__stat-value fasting__stat-value--compact fd-ui-stat-tile__value fd-ui-body">
-                                {{ s.completionRateLast30Days | number: '1.0-1' }}%
+                                {{ s.completionRateLast30Days | localizedNumber: language() : 0 : 1 }}%
                             </strong>
                         </fd-ui-accent-surface>
                         <fd-ui-accent-surface
@@ -66,7 +66,7 @@
                                 {{ 'FASTING.PERSONAL_SUMMARY.CHECK_IN_RATE' | translate }}
                             </span>
                             <strong class="fasting__stat-value fasting__stat-value--compact fd-ui-stat-tile__value fd-ui-body">
-                                {{ s.checkInRateLast30Days | number: '1.0-1' }}%
+                                {{ s.checkInRateLast30Days | localizedNumber: language() : 0 : 1 }}%
                             </strong>
                         </fd-ui-accent-surface>
                     </div>

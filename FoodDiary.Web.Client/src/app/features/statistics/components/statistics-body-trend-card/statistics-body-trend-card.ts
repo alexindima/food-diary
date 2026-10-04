@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
@@ -14,6 +13,8 @@ import { FdUiSegmentedToggleComponent } from 'fd-ui-kit/segmented-toggle/fd-ui-s
 import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs';
 import { merge, startWith } from 'rxjs';
 
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import type {
     StatisticsBodyMetricData,
@@ -27,7 +28,7 @@ const CHART_PADDING_RATIO = 0.2;
 @Component({
     selector: 'fd-statistics-body-trend-card',
     imports: [
-        DecimalPipe,
+        LocalizedNumberPipe,
         RouterLink,
         TranslatePipe,
         FdUiButtonComponent,
@@ -41,6 +42,7 @@ const CHART_PADDING_RATIO = 0.2;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatisticsBodyTrendCardComponent {
+    protected readonly locale = injectCurrentLanguage();
     private readonly translateService = inject(TranslateService);
     private readonly measurements = inject(MeasurementSystemService);
     private readonly translationChange = toSignal(

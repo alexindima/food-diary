@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -28,6 +29,15 @@ describe('StatisticsMealStructureCardComponent', () => {
         const root = fixture.nativeElement as HTMLElement;
         expect(root.querySelectorAll('.statistics-meal-structure-card__bar-segment')).toHaveLength(MEAL_TYPE_COUNT);
         expect(root.textContent).toContain('40%');
+        expect(root.textContent).toContain('3.2');
+
+        const translate = TestBed.inject(TranslateService);
+        translate.use('ru');
+        fixture.detectChanges();
+        expect(root.textContent).toContain('3,2');
+
+        translate.use('en');
+        fixture.detectChanges();
         expect(root.textContent).toContain('3.2');
     });
 });

@@ -17,9 +17,9 @@
                     [ariaLabel]="'STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_CALORIES' | translate"
                 >
                     <div class="statistics-overview-card__ring-center fd-place-center">
-                        <strong class="fd-ui-metric-lg">{{ data().averageCalories | number: '1.0-0' }}</strong>
+                        <strong class="fd-ui-metric-lg">{{ data().averageCalories | localizedNumber: locale() : 0 : 0 }}</strong>
                         <span class="fd-ui-body-sm" [hidden]="!hasEnoughData()"
-                            >/ {{ data().calorieGoal | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span
+                            >/ {{ data().calorieGoal | localizedNumber: locale() : 0 : 0 }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span
                         >
                         <span class="fd-ui-caption fd-ui-text-muted">{{
                             'STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_RECORDED_DAYS' | translate: { count: data().trackedDays }
@@ -31,7 +31,7 @@
                 @if (calorieChangePercent !== null && data().trackedDays >= 3 && data().trackedDays === data().periodDays) {
                     <div class="statistics-overview-card__comparison fd-stack fd-gap-xxs">
                         <strong class="fd-ui-metric-md">
-                            {{ calorieChangePercent > 0 ? '+' : '' }}{{ calorieChangePercent | number: '1.0-0' }}%
+                            {{ calorieChangePercent > 0 ? '+' : '' }}{{ calorieChangePercent | localizedNumber: locale() : 0 : 0 }}%
                         </strong>
                         <span class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.OVERVIEW.VS_GOAL' | translate }}</span>
                     </div>
@@ -54,7 +54,8 @@
                             {{ getNutrientLabelKey(nutrient.key) | translate }}
                         </span>
                         <span class="fd-ui-body-sm">
-                            {{ nutrient.current | number: '1.0-1' }} / {{ nutrient.goal | number: '1.0-1' }}
+                            {{ nutrient.current | localizedNumber: locale() : 0 : 1 }} /
+                            {{ nutrient.goal | localizedNumber: locale() : 0 : 1 }}
                             {{ 'GENERAL.UNITS.G' | translate }}
                         </span>
                     </div>

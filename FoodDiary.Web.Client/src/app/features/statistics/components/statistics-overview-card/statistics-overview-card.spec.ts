@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -21,7 +22,7 @@ describe('StatisticsOverviewCardComponent', () => {
             calorieGoal: 2258,
             calorieChangePercent: -6,
             nutrients: [
-                { key: 'protein', current: 109, goal: 140 },
+                { key: 'protein', current: 109.5, goal: 140 },
                 { key: 'fat', current: 62, goal: 80 },
                 { key: 'carbs', current: 214, goal: 280 },
                 { key: 'fiber', current: 16, goal: 25 },
@@ -34,5 +35,16 @@ describe('StatisticsOverviewCardComponent', () => {
         expect(root.querySelector('.statistics-overview-card__nutrient--protein')).not.toBeNull();
         expect(root.textContent).toContain('1,840');
         expect(root.textContent).toContain('4 / 7');
+
+        const translate = TestBed.inject(TranslateService);
+        translate.use('ru');
+        fixture.detectChanges();
+        expect(root.textContent).toContain('1\u00A0840');
+        expect(root.textContent).toContain('109,5 / 140');
+
+        translate.use('en');
+        fixture.detectChanges();
+        expect(root.textContent).toContain('1,840');
+        expect(root.textContent).toContain('109.5 / 140');
     });
 });

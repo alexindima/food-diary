@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -6,11 +5,12 @@ import { FdUiAccentSurfaceComponent } from 'fd-ui-kit/accent-surface/fd-ui-accen
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { map } from 'rxjs';
 
+import { LocalizedNumberPipe } from '../../../../../shared/i18n/localized-number.pipe';
 import type { FastingStats } from '../../../../../shared/models/fasting.data';
 
 @Component({
     selector: 'fd-fasting-stats-card',
-    imports: [DecimalPipe, TranslatePipe, FdUiAccentSurfaceComponent, FdUiCardComponent],
+    imports: [LocalizedNumberPipe, TranslatePipe, FdUiAccentSurfaceComponent, FdUiCardComponent],
     templateUrl: './fasting-stats-card.html',
     styleUrl: '../../fasting-page/fasting-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,7 +19,7 @@ export class FastingStatsCardComponent {
     public readonly stats = input.required<FastingStats | null>();
 
     private readonly translate = inject(TranslateService);
-    private readonly language = toSignal(this.translate.onLangChange.pipe(map(event => event.lang)), {
+    protected readonly language = toSignal(this.translate.onLangChange.pipe(map(event => event.lang)), {
         initialValue: this.translate.getCurrentLang() ?? 'en',
     });
     protected readonly streakDayUnitKey = computed(

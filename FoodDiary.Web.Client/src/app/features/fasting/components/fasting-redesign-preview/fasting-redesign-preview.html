@@ -14,7 +14,7 @@
                 </span>
                 <strong class="fasting-redesign__time">{{ isActive() ? elapsedFormatted() : protocolLabel() }}</strong>
                 <strong class="fasting-redesign__percent">{{
-                    isActive() ? `${(progress() | number: '1.0-0')}%` : ('FASTING.REDESIGN.SELECTED' | translate)
+                    isActive() ? `${(progress() | localizedNumber: currentLocale() : 0 : 0)}%` : ('FASTING.REDESIGN.SELECTED' | translate)
                 }}</strong>
                 @if (isActive()) {
                     <span class="fasting-redesign__protocol">{{ protocolLabel() }}</span>
@@ -127,7 +127,10 @@
                 <span class="fasting-redesign__metric-icon fasting-redesign__metric-icon--orange"><fd-ui-icon name="schedule" /></span>
                 <span
                     ><small>{{ 'FASTING.REDESIGN.AVERAGE' | translate }}</small
-                    ><strong>{{ stats()?.averageDurationHours ?? 0 | number: '1.1-1' }} {{ 'FASTING.HOURS' | translate }}</strong></span
+                    ><strong
+                        >{{ stats()?.averageDurationHours ?? 0 | localizedNumber: currentLocale() : 1 : 1 }}
+                        {{ 'FASTING.HOURS' | translate }}</strong
+                    ></span
                 >
             </div>
             <div class="fasting-redesign__metric">
@@ -203,7 +206,8 @@
                                 <span>{{ historyTypeLabelKey(item) | translate }} &middot; {{ historyProtocolLabel(item) }}</span>
                             </span>
                             <strong class="fasting-redesign__history-duration">
-                                {{ sessionDurationHours(item) | number: '1.0-1' }} {{ 'FASTING.HOURS' | translate }}
+                                {{ sessionDurationHours(item) | localizedNumber: currentLocale() : 0 : 1 }}
+                                {{ 'FASTING.HOURS' | translate }}
                             </strong>
                             <span
                                 class="fasting-redesign__status"
@@ -247,11 +251,11 @@
                 <div class="fasting-redesign__summary-metrics">
                     <div>
                         <small>{{ 'FASTING.PERSONAL_SUMMARY.COMPLETION_RATE' | translate }}</small>
-                        <strong>{{ stats()?.completionRateLast30Days ?? 0 | number: '1.0-0' }}%</strong>
+                        <strong>{{ stats()?.completionRateLast30Days ?? 0 | localizedNumber: currentLocale() : 0 : 0 }}%</strong>
                     </div>
                     <div>
                         <small>{{ 'FASTING.PERSONAL_SUMMARY.CHECK_IN_RATE' | translate }}</small>
-                        <strong>{{ stats()?.checkInRateLast30Days ?? 0 | number: '1.0-0' }}%</strong>
+                        <strong>{{ stats()?.checkInRateLast30Days ?? 0 | localizedNumber: currentLocale() : 0 : 0 }}%</strong>
                     </div>
                     <div>
                         <small>{{ 'FASTING.PERSONAL_SUMMARY.TOP_SYMPTOM' | translate }}</small>

@@ -3964,7 +3964,7 @@
       "role": "Component",
       "selector": "fd-fasting-history-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-dialog/fasting-history-dialog.ts",
-      "line": 40
+      "line": 41
     },
     {
       "name": "FastingHistoryItemComponent",
@@ -3992,7 +3992,7 @@
       "role": "Component",
       "selector": "fd-fasting-redesign-preview",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
-      "line": 40
+      "line": 49
     },
     {
       "name": "FastingSafetyDialogComponent",
@@ -4006,7 +4006,7 @@
       "role": "Component",
       "selector": "fd-fasting-session-details-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-details-dialog/fasting-session-details-dialog.ts",
-      "line": 42
+      "line": 43
     },
     {
       "name": "FastingTimerCardGroupsComponent",
@@ -5021,7 +5021,7 @@
       "role": "Component",
       "selector": "fd-user-manage-comparison-widgets",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.ts",
-      "line": 45
+      "line": 48
     },
     {
       "name": "UserManageConnectedDevicesComponent",
@@ -5665,7 +5665,7 @@
       "role": "Component",
       "selector": "fd-statistics-body-trend-card",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-body-trend-card/statistics-body-trend-card.ts",
-      "line": 43
+      "line": 44
     },
     {
       "name": "StatisticsDietStabilityCardComponent",
@@ -5679,28 +5679,28 @@
       "role": "Component",
       "selector": "fd-statistics-meal-structure-card",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-meal-structure-card/statistics-meal-structure-card.ts",
-      "line": 15
+      "line": 16
     },
     {
       "name": "StatisticsNutrientBalanceCardComponent",
       "role": "Component",
       "selector": "fd-statistics-nutrient-balance-card",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "StatisticsNutritionTrendCardComponent",
       "role": "Component",
       "selector": "fd-statistics-nutrition-trend-card",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.ts",
-      "line": 69
+      "line": 70
     },
     {
       "name": "StatisticsOverviewCardComponent",
       "role": "Component",
       "selector": "fd-statistics-overview-card",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-overview-card/statistics-overview-card.ts",
-      "line": 19
+      "line": 20
     },
     {
       "name": "StatisticsFacade",

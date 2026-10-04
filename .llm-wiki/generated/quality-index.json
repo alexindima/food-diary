@@ -528,11 +528,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
-      "nonBlankLines": 320,
+      "nonBlankLines": 329,
       "decisionPoints": 64,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 102.4
+      "structuralRiskScore": 102.58
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
@@ -8330,11 +8330,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.ts",
-      "nonBlankLines": 57,
+      "nonBlankLines": 58,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.64
+      "structuralRiskScore": 5.66
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-day.facade.ts",
@@ -9490,11 +9490,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-dialog/fasting-history-dialog.ts",
-      "nonBlankLines": 63,
+      "nonBlankLines": 64,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.76
+      "structuralRiskScore": 2.78
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-item/fasting-history-item.ts",
@@ -9522,11 +9522,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
-      "nonBlankLines": 320,
+      "nonBlankLines": 329,
       "decisionPoints": 64,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 102.4
+      "structuralRiskScore": 102.58
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-safety-dialog/fasting-safety-dialog.ts",
@@ -9538,11 +9538,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-details-dialog/fasting-session-details-dialog.ts",
-      "nonBlankLines": 52,
+      "nonBlankLines": 54,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.04
+      "structuralRiskScore": 1.08
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-groups/fasting-timer-card-groups.ts",
@@ -11482,11 +11482,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.ts",
-      "nonBlankLines": 136,
+      "nonBlankLines": 140,
       "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.72
+      "structuralRiskScore": 20.8
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/connected-devices/user-manage-connected-devices.ts",
@@ -12626,11 +12626,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-body-trend-card/statistics-body-trend-card.ts",
-      "nonBlankLines": 133,
+      "nonBlankLines": 135,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.66
+      "structuralRiskScore": 14.7
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-diet-stability-card/statistics-diet-stability-card.ts",
@@ -12642,35 +12642,35 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-meal-structure-card/statistics-meal-structure-card.ts",
-      "nonBlankLines": 32,
+      "nonBlankLines": 34,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.14
+      "structuralRiskScore": 2.18
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.ts",
-      "nonBlankLines": 22,
+      "nonBlankLines": 24,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
+      "structuralRiskScore": 0.48
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.ts",
-      "nonBlankLines": 296,
+      "nonBlankLines": 298,
       "decisionPoints": 23,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 40.42
+      "structuralRiskScore": 40.46
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-overview-card/statistics-overview-card.ts",
-      "nonBlankLines": 33,
+      "nonBlankLines": 35,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.16
+      "structuralRiskScore": 2.2
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/lib/statistics-dashboard-card.mapper.ts",
@@ -36482,11 +36482,11 @@
     },
     {
       "path": "Modules/Products/Application/Queries/GetProducts/GetProductsQueryHandler.cs",
-      "nonBlankLines": 53,
+      "nonBlankLines": 64,
       "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.56
+      "structuralRiskScore": 4.78
     },
     {
       "path": "Modules/Products/Application/Queries/GetProducts/GetProductsQueryValidator.cs",
@@ -53071,7 +53071,7 @@
       "name": "GetProductsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Products/Application/Queries/GetProducts/GetProductsQueryHandler.cs",
-      "line": 16,
+      "line": 19,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.ReadQueryTests.cs",

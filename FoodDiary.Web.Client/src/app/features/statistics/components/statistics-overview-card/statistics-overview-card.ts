@@ -1,8 +1,9 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent, FdUiIconComponent, FdUiProgressRingComponent } from 'fd-ui-kit';
 
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import type { StatisticsNutrientProgress, StatisticsOverviewData } from '../../models/statistics-dashboard-card.models';
 
 const PERCENT_MAX = 100;
@@ -11,12 +12,13 @@ const MIN_RECORDED_DAYS = 3;
 
 @Component({
     selector: 'fd-statistics-overview-card',
-    imports: [DecimalPipe, TranslatePipe, FdUiCardComponent, FdUiIconComponent, FdUiProgressRingComponent],
+    imports: [LocalizedNumberPipe, TranslatePipe, FdUiCardComponent, FdUiIconComponent, FdUiProgressRingComponent],
     templateUrl: './statistics-overview-card.html',
     styleUrl: './statistics-overview-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatisticsOverviewCardComponent {
+    protected readonly locale = injectCurrentLanguage();
     protected readonly hasEnoughData = computed(
         () => this.data().trackedDays >= MIN_RECORDED_DAYS && this.data().trackedDays === this.data().periodDays,
     );

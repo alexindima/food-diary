@@ -44,7 +44,7 @@ describe('StatisticsBodyTrendCardComponent', () => {
         expect(root.querySelector('fd-ui-line-chart')).not.toBeNull();
         expect(root.querySelector('fd-ui-button')).not.toBeNull();
         expect(root.textContent).toContain('113');
-        expect(root.textContent).toContain('-3');
+        expect(root.textContent).toContain('−3');
 
         const toggle = root.querySelector('fd-ui-segmented-toggle');
         toggle?.dispatchEvent(new CustomEvent('selectedValueChange', { detail: 'waist' }));

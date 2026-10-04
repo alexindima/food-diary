@@ -21038,7 +21038,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Products/Application/Queries/GetProducts/GetProductsQueryHandler.cs",
-      "line": 16
+      "line": 19
     },
     {
       "name": "GetProductsQueryValidator",

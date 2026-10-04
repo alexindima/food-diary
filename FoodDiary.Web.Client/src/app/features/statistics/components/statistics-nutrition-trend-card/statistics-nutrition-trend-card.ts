@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, model, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -20,6 +19,8 @@ import { FdUiSegmentedToggleComponent } from 'fd-ui-kit/segmented-toggle/fd-ui-s
 import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs';
 import { merge, startWith } from 'rxjs';
 
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import type { StatisticsNutritionDay, StatisticsTrendInsight } from '../../models/statistics-dashboard-card.models';
 
@@ -53,7 +54,7 @@ type StatisticsTrendChartMode = 'bars' | 'line';
 @Component({
     selector: 'fd-statistics-nutrition-trend-card',
     imports: [
-        DecimalPipe,
+        LocalizedNumberPipe,
         TranslatePipe,
         FdUiBarChartComponent,
         FdUiCardComponent,
@@ -67,6 +68,7 @@ type StatisticsTrendChartMode = 'bars' | 'line';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatisticsNutritionTrendCardComponent {
+    protected readonly locale = injectCurrentLanguage();
     private readonly translateService = inject(TranslateService);
     private readonly translationChange = toSignal(
         merge(this.translateService.onLangChange, this.translateService.onTranslationChange).pipe(startWith(null)),

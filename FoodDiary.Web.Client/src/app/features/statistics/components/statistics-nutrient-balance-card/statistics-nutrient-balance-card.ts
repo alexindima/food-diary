@@ -1,20 +1,22 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit';
 
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import type { StatisticsNutrientBalanceItem } from '../../models/statistics-dashboard-card.models';
 
 const PERCENT_MAX = 100;
 
 @Component({
     selector: 'fd-statistics-nutrient-balance-card',
-    imports: [DecimalPipe, TranslatePipe, FdUiCardComponent],
+    imports: [LocalizedNumberPipe, TranslatePipe, FdUiCardComponent],
     templateUrl: './statistics-nutrient-balance-card.html',
     styleUrl: './statistics-nutrient-balance-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatisticsNutrientBalanceCardComponent {
+    protected readonly locale = injectCurrentLanguage();
     public readonly items = input.required<readonly StatisticsNutrientBalanceItem[]>();
 
     protected getProgress(item: StatisticsNutrientBalanceItem): number {

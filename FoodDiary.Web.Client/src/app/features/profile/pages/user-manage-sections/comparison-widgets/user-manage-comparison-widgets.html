@@ -205,7 +205,7 @@
                         <span>{{ 'USER_MANAGE.COMPARISON.CURRENT_WEIGHT' | translate }}</span>
                     </span>
                     <strong
-                        >{{ displayedWeight() ?? '—' }}
+                        >{{ (displayedWeight() | localizedNumber: locale() : 0 : 2) || '—' }}
                         @if (displayedWeight() !== null) {
                             {{ measurements.weightUnitKey() | translate }}
                         }
@@ -221,7 +221,7 @@
                         <span>{{ 'USER_MANAGE.COMPARISON.CURRENT_WAIST' | translate }}</span>
                     </span>
                     <strong
-                        >{{ displayedWaist() ?? '—' }}
+                        >{{ (displayedWaist() | localizedNumber: locale() : 0 : 2) || '—' }}
                         @if (displayedWaist() !== null) {
                             {{ measurements.lengthUnitKey() | translate }}
                         }

@@ -22,7 +22,8 @@
                             <span>{{ historyItem.sessionTypeLabel }} &middot; {{ historyItem.protocolDisplay }}</span>
                         </span>
                         <strong class="fasting-history-dialog__duration">
-                            {{ sessionDurationHours(historyItem.session) | number: '1.0-1' }} {{ 'FASTING.HOURS' | translate }}
+                            {{ sessionDurationHours(historyItem.session) | localizedNumber: currentLocale() : 0 : 1 }}
+                            {{ 'FASTING.HOURS' | translate }}
                         </strong>
                         <span
                             class="fasting-history-dialog__status fd-ui-pill"
