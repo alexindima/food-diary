@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using FoodDiary.Development.Mcp.Protocol;
 using FoodDiary.Development.Mcp.Wiki;
@@ -24,30 +25,42 @@ public static class ContextSearchReader {
             connection.Open();
         }
         var features = new Dictionary<string, object>(StringComparer.Ordinal);
-        foreach (WikiContextSearchCandidate candidate in result.Candidates) {
+        if (result.Candidates.Count > 0) {
+            var candidates = result.Candidates.ToDictionary(
+                candidate => (candidate.Path, candidate.RecordType));
             using SqliteCommand command = connection.CreateCommand();
             command.CommandTimeout = 2;
-            command.CommandText = """
-                SELECT s.record_key, s.source_path, s.title, f.layer, f.module, f.role, f.is_test, f.extension
-                FROM context_search s JOIN context_search_features f ON f.context_rowid = s.rowid
-                WHERE s.path = $path AND s.record_type = $type
-                LIMIT 1;
+            string[] paths = [.. result.Candidates.Select(candidate => candidate.Path).Distinct(StringComparer.Ordinal)];
+            string[] parameters = [.. paths.Select((_, index) => "$path" + index.ToString(CultureInfo.InvariantCulture))];
+            command.CommandText = $"""
+                SELECT f.path, f.record_type, s.record_key, s.source_path, s.title,
+                    f.layer, f.module, f.role, f.is_test, f.extension
+                FROM context_search_features f JOIN context_search s ON s.rowid = f.context_rowid
+                WHERE f.path IN ({string.Join(", ", parameters)})
+                ORDER BY f.context_rowid;
                 """;
-            command.Parameters.AddWithValue("$path", candidate.Path);
-            command.Parameters.AddWithValue("$type", candidate.RecordType);
+            for (int index = 0; index < paths.Length; index++) {
+                command.Parameters.AddWithValue(parameters[index], paths[index]);
+            }
             using SqliteDataReader rows = command.ExecuteReader();
-            if (!rows.Read()) {
+            while (rows.Read()) {
+                string path = rows.GetString(0);
+                if (features.ContainsKey(path) || !candidates.TryGetValue((path, rows.GetString(1)), out WikiContextSearchCandidate? candidate)) {
+                    continue;
+                }
+                features[path] = new {
+                    candidate.Rank, candidate.Path, candidate.RecordType, candidate.Category,
+                    candidate.Score, candidate.LexicalRank, candidate.Reasons, candidate.ScoreMargin,
+                    candidate.Confidence, candidate.Ambiguous, candidate.AmbiguityReason,
+                    candidate.SameNameCandidateCount,
+                    recordKey = rows.GetString(2), sourcePath = rows.GetString(3), title = rows.GetString(4),
+                    layer = rows.GetString(5), module = rows.GetString(6), role = rows.GetString(7),
+                    isTest = rows.GetInt32(8) != 0, extension = rows.GetString(9),
+                };
+            }
+            if (features.Count != result.Candidates.Count) {
                 throw new InvalidDataException("Context candidate features are missing.");
             }
-            features[candidate.Path] = new {
-                candidate.Rank, candidate.Path, candidate.RecordType, candidate.Category,
-                candidate.Score, candidate.LexicalRank, candidate.Reasons, candidate.ScoreMargin,
-                candidate.Confidence, candidate.Ambiguous, candidate.AmbiguityReason,
-                candidate.SameNameCandidateCount,
-                recordKey = rows.GetString(0), sourcePath = rows.GetString(1), title = rows.GetString(2),
-                layer = rows.GetString(3), module = rows.GetString(4), role = rows.GetString(5),
-                isTest = rows.GetInt32(6) != 0, extension = rows.GetString(7),
-            };
         }
         return JsonSerializer.Serialize(new {
             result.Ready, result.IndexedDocuments, result.Fingerprint, result.UpdatedAtUtc,

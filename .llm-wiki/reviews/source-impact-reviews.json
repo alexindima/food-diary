@@ -299,21 +299,57 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "61609ea68e7bd9bdb46a37be76122982139a081cef24d8df6d5b394153261bf6",
+      "pageSha256": "6f015e503e9d7c6e103b85c3e8af25bd64e465643f67f9b352d3e67ac452705e",
       "sources": [
         {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "5cfeaaf98118197a82d9f78380870a8133f201ad662f415cf8ec2ffd3c91b599"
+        },
+        {
+          "path": ".llm-wiki/tools/Build-LlmWikiInProcessSqliteReader.ps1",
+          "sha256": "286eceb5808f534724a60ec10c464c9c02b0278a9eb96ce9fe3b548844a5f3c8"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-identity.mjs",
+          "sha256": "1c45da810d73dda3461f58114232685350da96a3197dd69ee8d4118906f09cac"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
+          "sha256": "1c9df4aa32bddbed542bb19e51a9a8b1c950d506f4840beb4f5f1636ae7bb0b7"
+        },
+        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c134a37811e20ccda2c25b22dae8965589b61b8353eb87b1254055f48611ad8c"
+          "sha256": "4478b8349472ca4ee7a4df5753f444d4c4df05bde1266b445dde9a41d8ea9da1"
+        },
+        {
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "28c673c8b5be8d4167de917a59be83f3a47144a049f7960d781146660fa3fcce"
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWiki.SqliteReader/ContextSearchReader.cs",
+          "sha256": "0f1f107a6335bea7e77c1f81781b8a6d34cfb811697eb42b9c4bc014a5caf5cd"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
+          "sha256": "9fc25187ccc28b136b641fc1b407b856531d33058853107744ab9d8275fc5d0b"
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "6ebe8fdda49be99b2847cfcdeb0c7adf6a351ce8990f1a16478ad48fec13e85c"
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
+          "sha256": "9a758eee171e2101f82b2e37fbf6b53a77ee72e27b9234fb4507a8942d479d72"
         },
         {
           "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-          "sha256": "4905d8cadf0f21cd84f22422a6eb8f6baddb3653c3cce0fb375cc4b3f143e06b"
+          "sha256": "2ae54a4943e9b4917c623c05a1076e0d210a2c2ed94463dd48bec8c71523881f"
         }
       ],
-      "reason": "Verified 198 focused tests and the independent 100-case holdout with 100 of 100 top-ten hits and liveRegressionPassed=true. Both new regression tests protect candidate completeness and original record representations; frozen corpora, ranking scores and thresholds are unchanged. Full required hook evaluation will run before push.",
-      "baseRef": "origin/master",
-      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
-      "reviewedAtUtc": "2026-10-03T12:11:44.0951124Z"
+      "reason": "Reviewed merged shared C# ranking, bounded guide and compound recall, snapshot freshness, and the CLI feature adapter against this page. The adapter now hydrates requested path/type features in one parameterized rowid join and retains first-row selection and result order. SQLite ownership, read-only access, fingerprints and ranking remain unchanged. Original nine-case SQL parity passed with mean 2604.35 ms against the unchanged 5000 ms bound; all frozen retrieval corpora and Node/.NET parity passed on the preceding merge commit.",
+      "baseRef": "b7f5812f9173dfb3fbf4c15dc327f6f6d238b7cd",
+      "gitHead": "dbd764eecbe4fc8ef127721a6d0f1e696333ef7b",
+      "reviewedAtUtc": "2026-10-04T00:52:03.1129681Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
