@@ -344,11 +344,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.ts",
-      "nonBlankLines": 690,
+      "nonBlankLines": 692,
       "decisionPoints": 68,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 115.8
+      "structuralRiskScore": 115.84
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
@@ -12050,11 +12050,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.ts",
-      "nonBlankLines": 690,
+      "nonBlankLines": 692,
       "decisionPoints": 68,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 115.8
+      "structuralRiskScore": 115.84
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-nutrition-editor/recipe-nutrition-editor.ts",

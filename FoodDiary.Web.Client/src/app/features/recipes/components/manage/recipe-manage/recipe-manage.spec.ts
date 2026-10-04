@@ -328,11 +328,50 @@ describe('RecipeManageComponent import draft shell', () => {
     });
 
     it('requires pasted text or source URL before applying an import draft', async () => {
-        const { component } = await setupComponentAsync();
+        const { component, facade } = await setupComponentAsync();
 
         component['applyImportDraft']();
 
         expect(component['importErrorKey']()).toBe('RECIPE_MANAGE.IMPORT.EMPTY_ERROR');
+        await component['onCancelAsync']();
+        expect(facade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+        expect(facade.cancelManageAsync).toHaveBeenCalledOnce();
+    });
+});
+
+describe('RecipeManageComponent imported draft navigation', () => {
+    it.each(['text', 'ai'] as const)('keeps the %s draft when discarding is declined', async source => {
+        const { component, facade } = await setupComponentAsync();
+        applyImportedDraft(component, source);
+        facade.confirmDiscardChangesAsync.mockResolvedValueOnce(false);
+
+        await component['onCancelAsync']();
+
+        expect(facade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
+        expect(facade.cancelManageAsync).not.toHaveBeenCalled();
+        expect(component['recipeFormModel']().name).toBe('Imported salad');
+        expect(component['steps'][0]?.description).toBe('Slice cucumber');
+    });
+
+    it.each(['text', 'ai'] as const)('leaves the %s draft only after confirming discard', async source => {
+        const { component, facade } = await setupComponentAsync();
+        applyImportedDraft(component, source);
+
+        await component['onCancelAsync']();
+
+        expect(facade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
+        expect(facade.cancelManageAsync).toHaveBeenCalledOnce();
+    });
+
+    it('leaves an untouched loaded recipe without prompting', async () => {
+        const { component, facade, fixture } = await setupComponentAsync();
+        fixture.componentRef.setInput('recipe', createRecipe());
+        fixture.detectChanges();
+
+        await component['onCancelAsync']();
+
+        expect(facade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+        expect(facade.cancelManageAsync).toHaveBeenCalledOnce();
     });
 });
 
@@ -488,6 +527,25 @@ function createRecipeManageFacadeMock(overrides: Partial<RecipeManageFacadeMock>
     };
 
     return facade;
+}
+
+function applyImportedDraft(component: RecipeManageComponent, source: 'text' | 'ai'): void {
+    if (source === 'text') {
+        component['onImportTextChange']('Imported salad\nIngredients:\nCucumber 100 g\nSteps:\n1. Slice cucumber');
+        component['applyImportDraft']();
+        return;
+    }
+    component['applyRecognizedDraft']({
+        name: 'Imported salad',
+        description: null,
+        ingredients: [{ name: 'Cucumber', amount: '100 g' }],
+        steps: ['Slice cucumber'],
+        servings: 1,
+        prepMinutes: 5,
+        cookMinutes: null,
+        authorNutrition: null,
+        sourceUrl: null,
+    });
 }
 
 function patchValidRecipeBase(component: RecipeManageComponent): void {

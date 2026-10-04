@@ -840,13 +840,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fbe2b6e9beac814745fe8df7b50bb67699eb1c3ed9a72967f3de1079a0995cc5"
+          "sha256": "9bc00200aef99c4241d0255dee0f5e431bf6cbfeb7ba23087a9dbde7a3143bc5"
         }
       ],
-      "reason": "The new provider contract regression fails on both languages before the fix and passes afterwards. Ai.Infrastructure has 217 passing tests, Ai.Application 135, platform Infrastructure 325 and Architecture 2116; solution build has zero warnings/errors. Current vision/text/nutrition preflight tests pass. Static references remain navigation evidence; unrelated frontend/MCP ranking results do not represent affected runtime paths.",
+      "reason": "Confirmed real text-import cancellation lost the draft without a prompt. Four text/AI cancellation tests failed before marking successful imports dirty and pass after the fix. The eight-file focused suite passes 72 tests, including untouched recipe population, invalid imports, submit locking, import mapping and consumers. Desktop text/mobile mocked AI browser checks prove Escape and Stay preserve the draft and only confirmed discard navigates; zero recipe writes and page errors. No template, localization, contract or dependency change.",
       "baseRef": "HEAD",
-      "gitHead": "2a83ec684dfdcd36351a4c0048b032bf75b0ca11",
-      "reviewedAtUtc": "2026-10-04T21:32:48.1122995Z"
+      "gitHead": "a51d15d42d960964d5fd95efce8d08f49e840e30",
+      "reviewedAtUtc": "2026-10-04T21:55:34.4825463Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -942,21 +942,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fbe2b6e9beac814745fe8df7b50bb67699eb1c3ed9a72967f3de1079a0995cc5"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d44c2f784493a2d7884f094f9557695c1e9e05f7a7617c67aa294051c604eb06"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "eee58e42102a3b4994bad250942449f5c5eea33d51125a1867f0e0777650e9fd"
+          "sha256": "9bc00200aef99c4241d0255dee0f5e431bf6cbfeb7ba23087a9dbde7a3143bc5"
         }
       ],
-      "reason": "Reviewed unchanged provider-sharing and untrusted-source boundaries. Actual recipe generation still separates developer instructions from source text, preserves strict JSON schema and sends store=false. Counting excludes unsupported response-only parameters without bypassing quotas or changing HTTP/authentication/SSRF controls. The bounded bug fix introduces no new capability or public API.",
+      "reason": "Only the existing Signal Form dirty state is marked after valid text import and successful AI draft application. onCancelAsync continues to use the same scoped facade and existing discard modal; invalid imports and untouched loaded recipes remain pristine. Premium/consent, import transport, persistence and provider sharing are unchanged. Browser state checks used synthetic input and a scoped fake AI response; no provider call or recipe write occurred.",
       "baseRef": "HEAD",
-      "gitHead": "2a83ec684dfdcd36351a4c0048b032bf75b0ca11",
-      "reviewedAtUtc": "2026-10-04T21:32:49.3353607Z"
+      "gitHead": "a51d15d42d960964d5fd95efce8d08f49e840e30",
+      "reviewedAtUtc": "2026-10-04T21:55:35.5163509Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

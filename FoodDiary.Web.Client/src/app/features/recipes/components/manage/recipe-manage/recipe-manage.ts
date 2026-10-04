@@ -483,6 +483,7 @@ export class RecipeManageComponent {
             comment: draft.comment,
             steps: draft.steps,
         });
+        this.recipeSignalForm().markAsDirty();
         this.stepFormManager.expandedSteps.clear();
         draft.steps.forEach((_, index) => this.stepFormManager.expandedSteps.add(index));
         this.importErrorKey.set(null);
@@ -497,6 +498,7 @@ export class RecipeManageComponent {
                 this.translateService.instant('RECIPE_MANAGE.IMPORT.AUTHOR_NUTRITION'),
             ),
         );
+        this.recipeSignalForm().markAsDirty();
         this.stepFormManager.expandedSteps.clear();
         this.steps.forEach((_, index) => this.stepFormManager.expandedSteps.add(index));
         this.importErrorKey.set(null);
