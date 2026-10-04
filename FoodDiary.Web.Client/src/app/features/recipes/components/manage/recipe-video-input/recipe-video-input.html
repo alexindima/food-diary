@@ -1,0 +1,21 @@
+<div class="fd-stack fd-gap-sm">
+    <fd-ui-checkbox
+        [checked]="enabled()"
+        [label]="'RECIPE_MANAGE.IMPORT.VIDEO_LABEL' | translate"
+        [hint]="'RECIPE_MANAGE.IMPORT.VIDEO_HINT' | translate"
+        [disabled]="busy()"
+        (checkedChange)="enabledChanged.emit($event)"
+    />
+    @if (enabled()) {
+        <label for="recipe-video-file" class="fd-ui-body-sm">{{ 'RECIPE_MANAGE.IMPORT.VIDEO_FILE_LABEL' | translate }}</label>
+        <input
+            #fileInput
+            id="recipe-video-file"
+            type="file"
+            accept="video/mp4,video/webm,.mp4,.webm"
+            [disabled]="busy()"
+            (change)="selectFile(fileInput)"
+        />
+        <p class="fd-ui-body-sm">{{ 'RECIPE_MANAGE.IMPORT.VIDEO_LIMITS' | translate }}</p>
+    }
+</div>

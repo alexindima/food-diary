@@ -5,6 +5,12 @@ using FoodDiary.Modules.Ai.Contracts.Models;
 namespace FoodDiary.Modules.Ai.Application.Abstractions.Common;
 
 public interface IOpenAiFoodService {
+    Task<Result<RecipeImportDraftModel>> ImportRecipeVideoAsync(
+        Stream? video, string? sourceUrl, string? text, UserId userId, string requestId, CancellationToken cancellationToken);
+
+    Task<Result<RecipeImportDraftModel>> ImportRecipeAsync(
+        string? sourceUrl, string? text, UserId userId, string requestId, CancellationToken cancellationToken);
+
     Task<Result<FoodVisionModel>> AnalyzeFoodImageAsync(
         string imageUrl,
         UserId userId,

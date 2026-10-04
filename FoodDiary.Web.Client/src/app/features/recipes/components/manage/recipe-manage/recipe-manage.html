@@ -34,6 +34,10 @@
                 </div>
             }
 
+            @if (isImporting()) {
+                <p class="fd-ui-body-sm" role="status">{{ 'RECIPE_MANAGE.IMPORT.RECOGNIZING' | translate }}</p>
+            }
+
             <fieldset
                 class="recipe-manage__grid fd-grid"
                 [disabled]="isFormLocked()"
@@ -69,6 +73,14 @@
                                     />
                                 </div>
 
+                                <fd-recipe-recognition
+                                    [sourceUrl]="importUrl()"
+                                    [text]="importText()"
+                                    (sourceUrlSuggested)="onImportUrlChange($event)"
+                                    (draftRecognized)="applyRecognizedDraft($event)"
+                                    (busyChanged)="isImporting.set($event)"
+                                />
+
                                 @if (importErrorKey()) {
                                     <div
                                         class="recipe-manage__import-error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm"
@@ -83,7 +95,9 @@
                                         type="button"
                                         variant="secondary"
                                         fill="outline"
-                                        icon="auto_fix_high"
+                                        icon="description"
+                                        [disabled]="importText().trim().length === 0"
+                                        [disabledReason]="'RECIPE_MANAGE.IMPORT.TEXT_REQUIRED' | translate"
                                         (click)="applyImportDraft()"
                                     >
                                         {{ 'RECIPE_MANAGE.IMPORT.APPLY_BUTTON' | translate }}

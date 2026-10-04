@@ -7,6 +7,7 @@ using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
+using FoodDiary.Modules.Ai.Presentation.Recipes.Mappings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,15 @@ namespace FoodDiary.Modules.Ai.Presentation.Controllers;
 [RejectOversizedRequest(PresentationRequestLimits.AiPayloadBytes)]
 [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
 public sealed class AiFoodController(ISender mediator) : AuthorizedController(mediator) {
+    [HttpPost("recipe-import")]
+    [EnableIdempotency(requireKey: true)]
+    [ProducesResponseType<RecipeImportHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
+    public Task<IActionResult> ImportRecipe([FromCurrentUser] Guid userId, [FromBody] RecipeImportHttpRequest request) =>
+        HandleOk(request.ToCommand(userId, GetRequestId()), static draft => draft.ToHttpResponse());
+
     [HttpPost("vision")]
     [EnableIdempotency(requireKey: true)]
     [ProducesResponseType<FoodVisionHttpResponse>(StatusCodes.Status200OK)]

@@ -5,12 +5,12 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5799,
+    "productionFiles": 5833,
     "wikiToolFiles": 208,
     "wikiToolsWithoutTestReferences": 5,
-    "criticalSymbols": 985,
-    "criticalSymbolsWithTestReferences": 942,
-    "criticalSymbolsWithoutTestReferences": 43,
+    "criticalSymbols": 990,
+    "criticalSymbolsWithTestReferences": 943,
+    "criticalSymbolsWithoutTestReferences": 47,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -351,6 +351,14 @@
       "structuralRiskScore": 116.98
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.ts",
+      "nonBlankLines": 690,
+      "decisionPoints": 68,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 115.8
+    },
+    {
       "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
       "nonBlankLines": 345,
       "decisionPoints": 71,
@@ -373,14 +381,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 114.1
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.ts",
-      "nonBlankLines": 672,
-      "decisionPoints": 67,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 113.94
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
@@ -607,6 +607,14 @@
       "structuralRiskScore": 93.82
     },
     {
+      "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeSourceReader.cs",
+      "nonBlankLines": 106,
+      "decisionPoints": 61,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 93.62
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiContextStrategy.ps1",
       "nonBlankLines": 367,
       "decisionPoints": 56,
@@ -679,6 +687,14 @@
       "structuralRiskScore": 91.52
     },
     {
+      "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
+      "nonBlankLines": 494,
+      "decisionPoints": 54,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 90.88
+    },
+    {
       "path": ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
       "nonBlankLines": 282,
       "decisionPoints": 55,
@@ -725,14 +741,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 87.9
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
-      "nonBlankLines": 485,
-      "decisionPoints": 52,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 87.7
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
@@ -805,14 +813,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 82.42
-    },
-    {
-      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs",
-      "nonBlankLines": 292,
-      "decisionPoints": 51,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 82.34
     }
   ],
   "files": [
@@ -3906,11 +3906,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
-      "nonBlankLines": 485,
-      "decisionPoints": 52,
+      "nonBlankLines": 494,
+      "decisionPoints": 54,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 87.7
+      "structuralRiskScore": 90.88
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilterOptions.cs",
@@ -12017,6 +12017,14 @@
       "structuralRiskScore": 26.26
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage-lib/recipe-recognition.mapper.ts",
+      "nonBlankLines": 34,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.18
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage-lib/recipe-step-form.manager.ts",
       "nonBlankLines": 89,
       "decisionPoints": 3,
@@ -12034,11 +12042,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.ts",
-      "nonBlankLines": 672,
-      "decisionPoints": 67,
+      "nonBlankLines": 690,
+      "decisionPoints": 68,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 113.94
+      "structuralRiskScore": 115.8
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-nutrition-editor/recipe-nutrition-editor.ts",
@@ -12047,6 +12055,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 20.6
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.ts",
+      "nonBlankLines": 74,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.98
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.ts",
@@ -12063,6 +12079,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 7
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-video-input/recipe-video-input.ts",
+      "nonBlankLines": 18,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.86
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.ts",
@@ -12247,6 +12271,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.28
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-clipboard-suggestion.ts",
+      "nonBlankLines": 97,
+      "decisionPoints": 20,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 31.94
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-import.facade.ts",
+      "nonBlankLines": 116,
+      "decisionPoints": 24,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 38.32
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-language.utils.ts",
@@ -13562,11 +13602,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/ai-food.service.ts",
-      "nonBlankLines": 41,
-      "decisionPoints": 0,
+      "nonBlankLines": 58,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.82
+      "structuralRiskScore": 5.66
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/export.service.ts",
@@ -14289,6 +14329,14 @@
       "structuralRiskScore": 2
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/shared/models/recipe-import.data.ts",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/shared/models/recipe-lookup.data.ts",
       "nonBlankLines": 12,
       "decisionPoints": 0,
@@ -14391,6 +14439,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 3.46
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/shared/platform/browser-clipboard.service.ts",
+      "nonBlankLines": 47,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.44
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/platform/browser-performance.service.ts",
@@ -17698,11 +17754,11 @@
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/AiErrors.cs",
-      "nonBlankLines": 40,
+      "nonBlankLines": 51,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.3
+      "structuralRiskScore": 2.52
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/AiPromptOverride.cs",
@@ -17834,19 +17890,35 @@
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodClient.cs",
-      "nonBlankLines": 35,
+      "nonBlankLines": 41,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.7
+      "structuralRiskScore": 0.82
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodService.cs",
-      "nonBlankLines": 25,
+      "nonBlankLines": 29,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
+      "structuralRiskScore": 0.58
+    },
+    {
+      "path": "Modules/Ai/Application.Abstractions/Common/IRecipeSourceReader.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Ai/Application.Abstractions/Common/IRecipeVideoProcessor.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/OpenAiFoodClientResponse.cs",
@@ -17858,6 +17930,22 @@
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/ProductImageAnalysis.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Ai/Application.Abstractions/Common/RecipeAudio.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Ai/Application.Abstractions/Common/RecipeSource.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17959,6 +18047,54 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.18
+    },
+    {
+      "path": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommand.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommandHandler.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 8.92
+    },
+    {
+      "path": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommandValidator.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 8.72
+    },
+    {
+      "path": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommand.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommandHandler.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 8.84
+    },
+    {
+      "path": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommandValidator.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 8.72
     },
     {
       "path": "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommand.cs",
@@ -18169,12 +18305,28 @@
       "structuralRiskScore": 0.6
     },
     {
+      "path": "Modules/Ai/Application/Services/OpenAiFoodService.RecipeImport.cs",
+      "nonBlankLines": 70,
+      "decisionPoints": 19,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 29.9
+    },
+    {
+      "path": "Modules/Ai/Application/Services/OpenAiFoodService.RecipeVideoImport.cs",
+      "nonBlankLines": 51,
+      "decisionPoints": 10,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 16.02
+    },
+    {
       "path": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
-      "nonBlankLines": 212,
+      "nonBlankLines": 214,
       "decisionPoints": 29,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 47.74
+      "structuralRiskScore": 47.78
     },
     {
       "path": "Modules/Ai/Contracts/Commands/ProcessNextFoodRecognition/ProcessNextFoodRecognitionCommand.cs",
@@ -18321,6 +18473,22 @@
       "structuralRiskScore": 0.1
     },
     {
+      "path": "Modules/Ai/Contracts/Models/RecipeImportDraftModel.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Ai/Contracts/Models/RecipeImportIngredientModel.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
       "path": "Modules/Ai/Contracts/Queries/GetAiPromptRevisions/GetAiPromptRevisionsQuery.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -18418,11 +18586,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/AiProviderRegistration.cs",
-      "nonBlankLines": 33,
+      "nonBlankLines": 58,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.66
+      "structuralRiskScore": 1.16
     },
     {
       "path": "Modules/Ai/Infrastructure/AssemblyInfo.cs",
@@ -18498,11 +18666,19 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Options/OpenAiOptions.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 3,
+      "nonBlankLines": 23,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.9
+      "structuralRiskScore": 6.46
+    },
+    {
+      "path": "Modules/Ai/Infrastructure/Providers/Options/RecipeVideoOptions.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/AiPromptPreviewRenderer.cs",
@@ -18519,6 +18695,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 19.02
+    },
+    {
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.RecipeImport.cs",
+      "nonBlankLines": 94,
+      "decisionPoints": 22,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 34.88
+    },
+    {
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.RecipeTranscription.cs",
+      "nonBlankLines": 48,
+      "decisionPoints": 10,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.96
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
@@ -18543,6 +18735,30 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 6.64
+    },
+    {
+      "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeSourceReader.cs",
+      "nonBlankLines": 106,
+      "decisionPoints": 61,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 93.62
+    },
+    {
+      "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeSourceTextExtractor.cs",
+      "nonBlankLines": 97,
+      "decisionPoints": 31,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 48.44
+    },
+    {
+      "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoProcessor.cs",
+      "nonBlankLines": 209,
+      "decisionPoints": 51,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 80.68
     },
     {
       "path": "Modules/Ai/PersistenceModel/AiPersistenceModelRegistration.cs",
@@ -18650,11 +18866,11 @@
     },
     {
       "path": "Modules/Ai/Presentation/Controllers/AiFoodController.cs",
-      "nonBlankLines": 49,
+      "nonBlankLines": 58,
       "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.48
+      "structuralRiskScore": 4.66
     },
     {
       "path": "Modules/Ai/Presentation/Controllers/AiUsageController.cs",
@@ -18721,6 +18937,38 @@
       "structuralRiskScore": 0.2
     },
     {
+      "path": "Modules/Ai/Presentation/Recipes/Controllers/RecipeVideoImportController.cs",
+      "nonBlankLines": 42,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.84
+    },
+    {
+      "path": "Modules/Ai/Presentation/Recipes/Mappings/RecipeImportHttpMappings.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/Ai/Presentation/Recipes/RecipeVideoAdmissionAttribute.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.98
+    },
+    {
+      "path": "Modules/Ai/Presentation/Recipes/Requests/RecipeVideoImportHttpRequest.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
       "path": "Modules/Ai/Presentation/Requests/FoodNutritionHttpRequest.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
@@ -18751,6 +18999,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Ai/Presentation/Requests/RecipeImportHttpRequest.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Ai/Presentation/Requests/StartFoodRecognitionHttpRequest.cs",
@@ -18807,6 +19063,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Ai/Presentation/Responses/RecipeImportHttpResponse.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Ai/Presentation/Responses/RecipeImportIngredientHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Ai/Presentation/Responses/UserAiUsageHttpResponse.cs",
@@ -48531,6 +48803,26 @@
       "coveredThrough": []
     },
     {
+      "name": "ImportRecipeCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommandHandler.cs",
+      "line": 9,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "ImportRecipeVideoCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommandHandler.cs",
+      "line": 9,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "IngestMailRelayDeliveryEventCommandHandler",
       "role": "CommandHandler",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandHandler.cs",
@@ -50353,7 +50645,7 @@
       "name": "AiFoodController",
       "role": "Controller",
       "path": "Modules/Ai/Presentation/Controllers/AiFoodController.cs",
-      "line": 24,
+      "line": 25,
       "testReferenceCount": 3,
       "testReferences": [
         "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/AiFoodControllerTests.cs",
@@ -51226,6 +51518,18 @@
       "testReferences": [
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ContentReportRecipeLikeControllerTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "RecipeVideoImportController",
+      "role": "Controller",
+      "path": "Modules/Ai/Presentation/Recipes/Controllers/RecipeVideoImportController.cs",
+      "line": 25,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/RecipeVideoImportTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -55995,6 +56299,26 @@
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "ImportRecipeCommandValidator",
+      "role": "Validator",
+      "path": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommandValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "ImportRecipeVideoCommandValidator",
+      "role": "Validator",
+      "path": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommandValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
       "coveredThrough": []
     },
     {
