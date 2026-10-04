@@ -246,21 +246,17 @@
     {
       "pageId": "workflow-backend-contract-review",
       "pagePath": ".llm-wiki/workflows/backend-contract-review.md",
-      "pageSha256": "14a83629e95da88f013662bc6611a57344eedb43e1168f25a7c374bb93d7439e",
+      "pageSha256": "52be8a48ec499b41e8472c39f82fb3388dbfa39f980d56d8f870f89aaceb54eb",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "0fe16c566ce4e9bdc785cd066b976ff79e680e69b88cf96f82649b242757e5c6"
-        },
-        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c134a37811e20ccda2c25b22dae8965589b61b8353eb87b1254055f48611ad8c"
+          "sha256": "bd5a591deb5c62de0408ce5ed6b47a755d976da1c386cf14b48596b066df5bb0"
         }
       ],
-      "reason": "Reviewed the catalog-only transport boundary repair and the regenerated full OpenAPI snapshot. The compatibility report flags 36 schema-name/reference changes and zero behavioral restrictions; explicit normalization of the ten transport type names proves all 274 endpoints and 358 original schemas have identical complete wire shapes. Both 16-test PostgreSQL Swagger runs passed, including verification without snapshot rewriting. Admin roles, body size limits, idempotency and error statuses are preserved.",
-      "baseRef": "origin/master",
-      "gitHead": "5d96fe1c36fef2b2476cd0ca3182de569b3646ef",
-      "reviewedAtUtc": "2026-10-03T15:10:00.392028Z"
+      "reason": "Reviewed the graph diff: changes are confined to context candidate selection and scoring; backend-contract query-document selection, normalized lineage and consumer ordering retain their documented implementation.",
+      "baseRef": "HEAD",
+      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
+      "reviewedAtUtc": "2026-10-04T03:27:31.1626328Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -303,53 +299,37 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "5cfeaaf98118197a82d9f78380870a8133f201ad662f415cf8ec2ffd3c91b599"
-        },
-        {
-          "path": ".llm-wiki/tools/Build-LlmWikiInProcessSqliteReader.ps1",
-          "sha256": "286eceb5808f534724a60ec10c464c9c02b0278a9eb96ce9fe3b548844a5f3c8"
+          "sha256": "8f9e30553c3c379d4f69544e53ada732f18bb19369b736c1727831d279a1f8ea"
         },
         {
           "path": ".llm-wiki/tools/code-graph-identity.mjs",
-          "sha256": "1c45da810d73dda3461f58114232685350da96a3197dd69ee8d4118906f09cac"
+          "sha256": "629e217cf9787df54b33cc6feb18e547fb33ab036f3908dca545e9e55b69914a"
         },
         {
           "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "1c9df4aa32bddbed542bb19e51a9a8b1c950d506f4840beb4f5f1636ae7bb0b7"
+          "sha256": "84d144525363d00e07e55e3073ffa8d87ebadb34fa7bdea4590c1457d76644e3"
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4478b8349472ca4ee7a4df5753f444d4c4df05bde1266b445dde9a41d8ea9da1"
+          "sha256": "bd5a591deb5c62de0408ce5ed6b47a755d976da1c386cf14b48596b066df5bb0"
         },
         {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "28c673c8b5be8d4167de917a59be83f3a47144a049f7960d781146660fa3fcce"
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWiki.SqliteReader/ContextSearchReader.cs",
-          "sha256": "0f1f107a6335bea7e77c1f81781b8a6d34cfb811697eb42b9c4bc014a5caf5cd"
+          "sha256": "369615c7acd4dc04490aa09dd1328d59f155d41d7808c89021bf9ebe11d34cfe"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "9fc25187ccc28b136b641fc1b407b856531d33058853107744ab9d8275fc5d0b"
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "6ebe8fdda49be99b2847cfcdeb0c7adf6a351ce8990f1a16478ad48fec13e85c"
+          "sha256": "c75a10b969d2dc603ae7d4108e378cf423b6fcc4d35b459c580143a97795aa14"
         },
         {
           "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-          "sha256": "9a758eee171e2101f82b2e37fbf6b53a77ee72e27b9234fb4507a8942d479d72"
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-          "sha256": "2ae54a4943e9b4917c623c05a1076e0d210a2c2ed94463dd48bec8c71523881f"
+          "sha256": "6a8e2dece3265a2e43eef497c39d900a03b1723cd1cbacbf3ef9151445cf1717"
         }
       ],
-      "reason": "Reviewed merged shared C# ranking, bounded guide and compound recall, snapshot freshness, and the CLI feature adapter against this page. The adapter now hydrates requested path/type features in one parameterized rowid join and retains first-row selection and result order. SQLite ownership, read-only access, fingerprints and ranking remain unchanged. Original nine-case SQL parity passed with mean 2604.35 ms against the unchanged 5000 ms bound; all frozen retrieval corpora and Node/.NET parity passed on the preceding merge commit.",
-      "baseRef": "b7f5812f9173dfb3fbf4c15dc327f6f6d238b7cd",
-      "gitHead": "dbd764eecbe4fc8ef127721a6d0f1e696333ef7b",
-      "reviewedAtUtc": "2026-10-04T00:52:03.1129681Z"
+      "reason": "Compared the ranking readers and candidate SQL with this page. Bounded hydration retains representations, path diversity and deterministic ordering; exact-count hoisting preserves ambiguity. All 22 corpora, Node/.NET parity and the graph regressions passed. Moved state roles exclude send intent and policy complexity remains 700.",
+      "baseRef": "HEAD",
+      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
+      "reviewedAtUtc": "2026-10-04T03:27:31.7447107Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -384,17 +364,17 @@
     {
       "pageId": "workflow-context-bundles",
       "pagePath": ".llm-wiki/workflows/context-bundles.md",
-      "pageSha256": "37270c5801c9218b051ae3eb03fb2a1f13120593112aacf3a91145de9944e30f",
+      "pageSha256": "6905a9cfcb2c8ed64f714f760c972c46d47fa98b70bb6db940780fa6be0b34e0",
       "sources": [
         {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "b5b86a5e1e53732d57e63ace76ade3d43e761aa009bab59ff720e0071b8d4c97"
+          "sha256": "369615c7acd4dc04490aa09dd1328d59f155d41d7808c89021bf9ebe11d34cfe"
         }
       ],
-      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
+      "reason": "Reviewed removal of the compiled-context branch after an unconditional return. The active in-process SQLite resolver, explicit JSON diagnostic route, scope representation and bundle/cache output contracts remain supported by context-retrieval regressions.",
       "baseRef": "HEAD",
-      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
-      "reviewedAtUtc": "2026-09-19T13:02:14.4555673Z"
+      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
+      "reviewedAtUtc": "2026-10-04T03:27:32.2756147Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -643,17 +623,17 @@
     {
       "pageId": "workflow-impact-simulation",
       "pagePath": ".llm-wiki/workflows/impact-simulation.md",
-      "pageSha256": "995df7b3f6ad527c4094a25bf33831f1c30fae3ebff5aa469fa92f71f02bab43",
+      "pageSha256": "b138746ffe0c2db4de0df29997f66f0eb50ed7ecef5835d7f97f6f389a527095",
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c134a37811e20ccda2c25b22dae8965589b61b8353eb87b1254055f48611ad8c"
+          "sha256": "bd5a591deb5c62de0408ce5ed6b47a755d976da1c386cf14b48596b066df5bb0"
         }
       ],
-      "reason": "Reviewed the context-search workflow against both implementations: retain the original lexical records, then fill the existing distinct-path budget with the best record for missing paths. Materialized SQL keeps only paths, row ids and ranks before loading selected payloads. Query-context documentation now describes this behavior; generic graph traversal is unchanged.",
-      "baseRef": "origin/master",
-      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
-      "reviewedAtUtc": "2026-10-03T12:11:45.1042593Z"
+      "reason": "Reviewed the context-search-only graph edits against the documented compiled-context frontend catalog reuse. No impact-simulation selector, projection payload or alignment behavior was modified.",
+      "baseRef": "HEAD",
+      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
+      "reviewedAtUtc": "2026-10-04T03:27:32.8745017Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -688,17 +668,29 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "fe774ed8067f265672ee7a60614a941021605e090f88e4946a41a7750a30ded7",
+      "pageSha256": "b2036095d87b528772ed0a7b0cdab5d4437ab2d3c90cd9ffd38649923bb9c4de",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "2d424426220623a205365776ecd76c865fc0363771cb213f44db1512ec7ca32f"
+          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
+          "sha256": "8c53c9b4517a8135376858a5b29b160a6330460ed94ef9552ec49e061e572de5"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
+          "sha256": "84d144525363d00e07e55e3073ffa8d87ebadb34fa7bdea4590c1457d76644e3"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
+          "sha256": "675b8b47e1b4b7bc768e0f247804efcd266bb75a294d75bfb6e2b44ec68375f1"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
+          "sha256": "42e7fab8ba7a98a30a6a0bab0cbcac6a164a32af7211f59632d41286b6e718a4"
         }
       ],
-      "reason": "Reviewed frontend diagnostics and verification references: 4388 app tests and all configured coverage thresholds pass; all six changed specs pass ESLint and formatting. CI now prefers coverage errors after actual failed-suite/test summaries. YAML parsing and Git Bash syntax checks pass; index stages, regression catalogs, aggregate job requirements and report generation remain unchanged.",
+      "reason": "Reviewed routing and receipt patterns for the new candidate helper and test. All changed paths select focused coverage; code-graph includes the new test. Code-graph, context-retrieval, facade-contract and verification-cache groups passed; the 22 evaluation corpora and policy budgets retain their assertions.",
       "baseRef": "HEAD",
-      "gitHead": "b29fd6ed46efb4768933ad383bef8272f9269b1f",
-      "reviewedAtUtc": "2026-10-03T19:05:43.3233216Z"
+      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
+      "reviewedAtUtc": "2026-10-04T03:27:33.6165695Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -827,25 +819,17 @@
     {
       "pageId": "workflow-privacy-review",
       "pagePath": ".llm-wiki/workflows/privacy-review.md",
-      "pageSha256": "78aa14b84fb0cb0d89ccb14af14b45659440ebc5989802a96986908f26653657",
+      "pageSha256": "e6a46b0997c9e9829b351ab97f2487c1fc1414a8887442c5012cc06caebfcc3d",
       "sources": [
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "bfa8d2ec4ae50dd97a288cf818580749b8a5105d525d401f0effa9e2457376cd"
-        },
-        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c134a37811e20ccda2c25b22dae8965589b61b8353eb87b1254055f48611ad8c"
-        },
-        {
-          "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
-          "sha256": "6330dab6637de63631bf9483203b491a13a29c65869465325b95a273dc980fe7"
+          "sha256": "bd5a591deb5c62de0408ce5ed6b47a755d976da1c386cf14b48596b066df5bb0"
         }
       ],
-      "reason": "Catalog DTOs retain the exact existing IDs, descriptions, nutrition and ingredient/image fields; no new data storage, disclosure, credentials, authorization rule or provider call was added. Recipe null lists reach the existing validation and environment-specific image assets remain governed by the unchanged application handler.",
-      "baseRef": "origin/master",
-      "gitHead": "5d96fe1c36fef2b2476cd0ca3182de569b3646ef",
-      "reviewedAtUtc": "2026-10-03T15:10:01.233236Z"
+      "reason": "Reviewed the narrowed SQL hydration and query-invariant scoring changes. They operate on the existing local source projection; writer ownership, read-only reader contracts and bounded aggregate telemetry are unaffected by the patch.",
+      "baseRef": "HEAD",
+      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
+      "reviewedAtUtc": "2026-10-04T03:27:34.2676286Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -880,17 +864,17 @@
     {
       "pageId": "workflow-quality-risk",
       "pagePath": ".llm-wiki/workflows/quality-risk.md",
-      "pageSha256": "8b137046034f8df511332cf41dfd2b96a888804b14e546cee7cc5f9213ab68d0",
+      "pageSha256": "dbd36d63ae9d1040c3109338697cf6d695253c471be5e57a8d2820b71007d10c",
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "eba5cbac9c215a25410592ebfb73832c7d21bcdaafd3e63e026bb3e198694e3d"
+          "sha256": "a864f5d72aad30b68544b27919d0db78c50e4b1172207600b6bf7a95e1bc755e"
         }
       ],
-      "reason": "Checked the regenerated quality index for the new API acceptance helper and regressions. Hotspots and direct name references remain navigation evidence, with no claim of execution coverage.",
+      "reason": "Verified generated quality changes against current source line and decision counts for the shared reader and removed unreachable PowerShell code. The affected index check passed; this remains static navigation evidence.",
       "baseRef": "HEAD",
-      "gitHead": "028efbba467e3bdece84fe1e43412aead89d2ae5",
-      "reviewedAtUtc": "2026-10-03T21:03:00.3048868Z"
+      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
+      "reviewedAtUtc": "2026-10-04T03:27:35.0282701Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -955,32 +939,40 @@
     {
       "pageId": "workflow-runtime-impact",
       "pagePath": ".llm-wiki/workflows/runtime-impact.md",
-      "pageSha256": "be8e261d7fdfddf0e283cb15cc99ec689bba8876b0f76794a40a01cdaea52b0d",
+      "pageSha256": "b8e3cbc2020dceeeb6873b8f7bf0a66f6380cb750f367e7753ae9314e9270fc9",
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "5f26558fa7e520a23cc34952f0581a1b069ee80cb1ced8edf92c29797c6fb473"
+          "sha256": "6c4a6a46f2e73545414bd80ff358c8f6572eff014b11e7ea26150bc14613349d"
         }
       ],
-      "reason": "Existing presentation guidance already requires owner HTTP requests, responses and mappings. The two catalog controllers now follow it without changing application ownership or command behavior; exact shared runtime assertions include the previously added read-budget interceptor and durable receipt table. Reviewed current owning guides and retained existing full-origin review context.",
-      "baseRef": "origin/master",
-      "gitHead": "5d96fe1c36fef2b2476cd0ca3182de569b3646ef",
-      "reviewedAtUtc": "2026-10-03T15:10:03.0267844Z"
+      "reason": "Reviewed the topology diff: only the normalized source fingerprint changed for the local shared ranking reader. The affected topology generator check passed and no host, job, provider or registration was introduced.",
+      "baseRef": "HEAD",
+      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
+      "reviewedAtUtc": "2026-10-04T03:27:36.1404617Z"
     },
     {
       "pageId": "workflow-security-review",
       "pagePath": ".llm-wiki/workflows/security-review.md",
-      "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
+      "pageSha256": "f935366d43c011c5187443833e00da2994b5092dff5b60dc6cbd0759390944bf",
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "eba5cbac9c215a25410592ebfb73832c7d21bcdaafd3e63e026bb3e198694e3d"
+          "sha256": "a864f5d72aad30b68544b27919d0db78c50e4b1172207600b6bf7a95e1bc755e"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "6c4a6a46f2e73545414bd80ff358c8f6572eff014b11e7ea26150bc14613349d"
+        },
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "8f9e30553c3c379d4f69544e53ada732f18bb19369b736c1727831d279a1f8ea"
         }
       ],
-      "reason": "Reviewed the regenerated quality index and dependency security findings. The compiler still supplies leads rather than security verdicts; concrete dependency fixes are validated separately with boundary reproductions and controls.",
+      "reason": "Reviewed the deleted WebPush prefix rule against current and supported alias paths: its retired prefix has no target. Query budgets and security navigation remain intact; state/entity scoring excludes send intent and full retrieval gates passed.",
       "baseRef": "HEAD",
-      "gitHead": "028efbba467e3bdece84fe1e43412aead89d2ae5",
-      "reviewedAtUtc": "2026-10-03T21:03:01.8760717Z"
+      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
+      "reviewedAtUtc": "2026-10-04T03:27:36.7954048Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1230,17 +1222,29 @@
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "73398eac6a1d8c10dbe85c604fb373d402b3bc6ca4103419751c0b4b8d9cd8e5",
+      "pageSha256": "d53e2e063f9732812d7679f0f1542ab9ac898238515a6527d920ac93ed65c4e8",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "25f1dab8cd716a2f40200f0ed4ebe81fdddbd2bf8753d53d8f39089b09b18d78"
+          "path": ".llm-wiki/tools/code-graph-identity.mjs",
+          "sha256": "629e217cf9787df54b33cc6feb18e547fb33ab036f3908dca545e9e55b69914a"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "bd5a591deb5c62de0408ce5ed6b47a755d976da1c386cf14b48596b066df5bb0"
+        },
+        {
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "369615c7acd4dc04490aa09dd1328d59f155d41d7808c89021bf9ebe11d34cfe"
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
+          "sha256": "6a8e2dece3265a2e43eef497c39d900a03b1723cd1cbacbf3ef9151445cf1717"
         }
       ],
-      "reason": "Checked regenerated repository catalog against final pure combined tree and renamed feature/shared ownership. Global generated indexes are taken from isolated combined source, excluding unrelated shared-workspace WIP.",
+      "reason": "Reviewed Node and shared C# ranking, normalized vocabulary, ambiguity and explicit diagnostic routes. All 22 corpus gates and exact Node/.NET parity passed; context-retrieval protects compiled-index parity, cache behavior and scope recovery. Candidate representation and full-pool confidence are retained.",
       "baseRef": "HEAD",
-      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:42:35.0100976Z"
+      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
+      "reviewedAtUtc": "2026-10-04T03:27:35.6218025Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1260,17 +1264,21 @@
     {
       "pageId": "workflow.self-maintenance",
       "pagePath": ".llm-wiki/workflows/self-maintenance.md",
-      "pageSha256": "cadd8bca273e3bef459485ab3b121062598993e9a4dd7122021bbc670ba74bef",
+      "pageSha256": "3374888dc37a3b5d032bdece140d17182fb8fe516c9a90b8286338585858a5b7",
       "sources": [
         {
+          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
+          "sha256": "84d144525363d00e07e55e3073ffa8d87ebadb34fa7bdea4590c1457d76644e3"
+        },
+        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c134a37811e20ccda2c25b22dae8965589b61b8353eb87b1254055f48611ad8c"
+          "sha256": "bd5a591deb5c62de0408ce5ed6b47a755d976da1c386cf14b48596b066df5bb0"
         }
       ],
-      "reason": "Reviewed the context-search workflow against both implementations: retain the original lexical records, then fill the existing distinct-path budget with the best record for missing paths. Materialized SQL keeps only paths, row ids and ranks before loading selected payloads. Query-context documentation now describes this behavior; generic graph traversal is unchanged.",
-      "baseRef": "origin/master",
-      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
-      "reviewedAtUtc": "2026-10-03T12:11:49.6269867Z"
+      "reason": "Reviewed the feature-path fixtures and candidate hydration changes against the sole-writer projection contract. Graph regressions passed, including incremental build, corrupt projection recovery, missing dependency handling and ownership/source maintenance.",
+      "baseRef": "HEAD",
+      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
+      "reviewedAtUtc": "2026-10-04T03:27:37.2916916Z"
     }
   ]
 }

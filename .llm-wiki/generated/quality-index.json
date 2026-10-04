@@ -16,11 +16,11 @@
   "hotspots": [
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-      "nonBlankLines": 1734,
+      "nonBlankLines": 1732,
       "decisionPoints": 453,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 714.18
+      "structuralRiskScore": 714.14
     },
     {
       "path": ".llm-wiki/wiki.ps1",
@@ -40,11 +40,11 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-      "nonBlankLines": 1090,
-      "decisionPoints": 155,
+      "nonBlankLines": 1062,
+      "decisionPoints": 154,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 256.3
+      "structuralRiskScore": 254.24
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
@@ -1002,11 +1002,11 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-      "nonBlankLines": 1090,
-      "decisionPoints": 155,
+      "nonBlankLines": 1062,
+      "decisionPoints": 154,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 256.3
+      "structuralRiskScore": 254.24
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiDomainData.ps1",
@@ -2826,11 +2826,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-      "nonBlankLines": 1734,
+      "nonBlankLines": 1732,
       "decisionPoints": 453,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 714.18
+      "structuralRiskScore": 714.14
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",

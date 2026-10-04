@@ -39,7 +39,7 @@ function Write-CodeGraphRegressionTiming([string]$Phase) {
     Write-Host "Code graph regression '$Phase': $([Math]::Round($phaseTimer.Elapsed.TotalSeconds, 2))s."
     $phaseTimer.Restart()
 }
-& node --test (Join-Path $PSScriptRoot 'code-graph-performance.test.mjs')
+& node --test (Join-Path $PSScriptRoot 'code-graph-performance.test.mjs') (Join-Path $PSScriptRoot 'code-graph-candidates.test.mjs')
 if ($LASTEXITCODE -ne 0) { throw 'Code graph snapshot/process regression tests failed.' }
 & node --test (Join-Path $PSScriptRoot 'code-graph-snapshot.test.mjs')
 if ($LASTEXITCODE -ne 0) { throw 'Code graph SQLite snapshot regression tests failed.' }

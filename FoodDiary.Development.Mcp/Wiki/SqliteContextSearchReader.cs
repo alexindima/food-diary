@@ -515,6 +515,16 @@ public sealed class SqliteContextSearchReader {
         HashSet<string> terms = new(rankingTerms, StringComparer.Ordinal);
         bool requestsGuidance = RequestsGuidance(rankingTerms);
         HashSet<string> directTerms = new(directQueryTerms, StringComparer.Ordinal);
+        StructuralRoleBoost[] applicableStructuralRoleBoosts = [.. (policy.StructuralRoleBoosts ?? []).Where(boost => {
+            HashSet<string> eligibleTerms = boost.DirectOnly ? directTerms : terms;
+            return (boost.ChangeTypes is not { Length: > 0 } || boost.ChangeTypes.Any(value =>
+                    string.Equals(value, changeType, StringComparison.OrdinalIgnoreCase))) &&
+                boost.ExcludedQueryTerms?.Any(term => eligibleTerms.Contains(term.ToLowerInvariant())) != true &&
+                (boost.QueryTerms?.Count(term => eligibleTerms.Contains(term.ToLowerInvariant())) ?? 0) >= boost.MinimumMatches;
+        })];
+        bool requestsDomainRole = applicableStructuralRoleBoosts.Any(boost =>
+            boost.QueryTerms?.Any(term => policy.GenericAffinities.DomainIntentTerms.Contains(term, StringComparer.Ordinal)) != true &&
+            boost.PathPrefixes?.Any(prefix => NormalizePath(prefix).StartsWith("fooddiary.domain/", StringComparison.OrdinalIgnoreCase)) == true);
         var directTermVariants = directTerms.ToDictionary(term => term, GetEnglishMorphologicalVariants, StringComparer.Ordinal);
         bool explicitlyRequestsTest = terms.Contains("test");
         bool explicitlyRequestsMcp = McpIntent.IsMatch(query);
@@ -556,7 +566,7 @@ public sealed class SqliteContextSearchReader {
             string normalizedPath = NormalizePath(candidate.Path).ToLowerInvariant();
             bool domainIntent = policy.GenericAffinities.DomainIntentTerms.Any(term => terms.Contains(term.ToLowerInvariant()));
             string[] selectorPaths = [.. GetRankingPathIdentities(normalizedPath).Where(selectorPath =>
-                string.Equals(selectorPath, normalizedPath, StringComparison.Ordinal) || domainIntent ||
+                string.Equals(selectorPath, normalizedPath, StringComparison.Ordinal) || domainIntent || requestsDomainRole ||
                 !selectorPath.StartsWith("fooddiary.domain/", StringComparison.Ordinal))];
             bool isTest = TestPath.IsMatch(normalizedPath);
             string fileName = Path.GetFileName(NormalizePath(candidate.Path));
@@ -868,12 +878,8 @@ public sealed class SqliteContextSearchReader {
                     reasons.Add($"ranking policy {boost.Id}");
                 }
             }
-            foreach (StructuralRoleBoost boost in policy.StructuralRoleBoosts ?? []) {
-                bool matchesChangeType = boost.ChangeTypes is null ||
-                    boost.ChangeTypes.Length == 0 ||
-                    boost.ChangeTypes.Any(candidateChangeType =>
-                        string.Equals(candidateChangeType, changeType, StringComparison.OrdinalIgnoreCase));
-                if (!matchesChangeType || (boost.ExcludeTests && isTest) ||
+            foreach (StructuralRoleBoost boost in applicableStructuralRoleBoosts) {
+                if ((boost.ExcludeTests && isTest) ||
                     (boost.RecordTypes is { Length: > 0 } && !boost.RecordTypes.Any(recordType =>
                         string.Equals(recordType, candidate.RecordType, StringComparison.OrdinalIgnoreCase))) ||
                     (boost.PathPrefixes is { Length: > 0 } && !boost.PathPrefixes.Any(prefix =>
@@ -884,13 +890,6 @@ public sealed class SqliteContextSearchReader {
                         normalizedPath.EndsWith(suffix.ToLowerInvariant(), StringComparison.Ordinal)))) {
                     continue;
                 }
-                HashSet<string> eligibleQueryTerms = boost.DirectOnly ? directTerms : terms;
-                if (boost.ExcludedQueryTerms?.Any(term =>
-                    eligibleQueryTerms.Contains(term.ToLowerInvariant())) == true) {
-                    continue;
-                }
-                int queryMatches = boost.QueryTerms?.Count(term =>
-                    eligibleQueryTerms.Contains(term.ToLowerInvariant())) ?? 0;
                 string eligibleIdentity = boost.IdentityScope?.ToLowerInvariant() switch {
                     "file" => searchableFileRoleIdentity,
                     "identity" => searchableIdentity,
@@ -904,8 +903,7 @@ public sealed class SqliteContextSearchReader {
                 string[] queryIdentityMatches = [.. affinityQueryTerms.Where(term =>
                     term.Length >= minimumAffinityTermLength &&
                     eligibleIdentity.Contains(term, StringComparison.Ordinal))];
-                if (queryMatches < boost.MinimumMatches ||
-                    candidateMatches < boost.MinimumCandidateMatches ||
+                if (candidateMatches < boost.MinimumCandidateMatches ||
                     queryIdentityMatches.Length < boost.MinimumQueryIdentityMatches) {
                     continue;
                 }
@@ -1097,6 +1095,7 @@ public sealed class SqliteContextSearchReader {
         bool requestsMultipleLayers = policy.ConfidenceCalibration.MultiLayerQueryPattern is { Length: > 0 } pattern &&
             Regex.IsMatch(query, pattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant,
                 TimeSpan.FromMilliseconds(100));
+        int exactCount = result.Count(item => ExactFileIdentity(item.Path, query));
         List<WikiContextSearchCandidate> decorated = [.. result.Select((candidate, index) => {
             int? scoreMargin = index + 1 < result.Count
                 ? candidate.Score - result[index + 1].Score
@@ -1108,7 +1107,6 @@ public sealed class SqliteContextSearchReader {
                 policy.ConfidenceCalibration.DocumentationRecordTypes.Any(recordType =>
                     string.Equals(recordType, candidate.RecordType, StringComparison.OrdinalIgnoreCase));
             bool exact = ExactFileIdentity(candidate.Path, query);
-            int exactCount = result.Count(item => ExactFileIdentity(item.Path, query));
             bool multiLayerRequest = requestsMultipleLayers && !exact;
             bool ambiguous = multiLayerRequest || unmatchedIdentifier || (exact && exactCount > 1) || (!exact && (recordTypeMismatch || (scoreMargin is not null &&
                 scoreMargin <= policy.ConfidenceCalibration.AmbiguityMaximumMargin)));

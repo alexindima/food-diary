@@ -344,34 +344,6 @@ if ($CompiledIndexSource -eq 'Sqlite') {
     foreach ($record in @($records | Select-Object -First $Limit)) { Write-Host " - #$($record.rank) [$($record.confidence)] $($record.path) score=$($record.score)" }
     return
 
-    $compiledResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
-        -Action compiled-context `
-        -Query $Query `
-        -Module $Module `
-        -ChangedPath $scopePaths `
-        -SkipRefresh `
-        -Format Json | ConvertFrom-Json
-    if (-not [bool]$compiledResult.ready) {
-        throw "SQLite compiled-index projection is unavailable ($($compiledResult.unavailableReason)). Run ./.llm-wiki/wiki.ps1 graph-build and retry."
-    }
-    $catalog = $compiledResult.catalog
-    $symbolIndex = [pscustomobject]@{
-        symbols = @($compiledResult.symbols)
-        dependencyInjectionRegistrations = @($compiledResult.dependencyInjectionRegistrations)
-    }
-    $frontendIndex = [pscustomobject]@{
-        features = @($compiledResult.frontendFeatures)
-        symbols = @($compiledResult.frontendSymbols)
-        routes = @($compiledResult.frontendRoutes)
-        localization = @($compiledResult.frontendLocalization)
-    }
-    $compiledIndexDiagnostics = [ordered]@{
-        source = [string]$compiledResult.source
-        sqlDurationMs = [double]$compiledResult.durationMs
-        scannedRecords = [int]$compiledResult.scannedRecords
-        returnedRecords = [int]$compiledResult.returnedRecords
-        sourceHashes = $compiledResult.sourceHashes
-    }
 } else {
     $catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
     $symbolIndex = if (Test-Path -LiteralPath $symbolIndexPath) {

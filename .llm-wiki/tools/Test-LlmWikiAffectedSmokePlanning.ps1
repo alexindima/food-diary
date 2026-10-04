@@ -55,7 +55,8 @@ foreach ($case in @(
     Invoke-Expression $coldGuardLine
     if ($includesColdCheckoutGuard -ne $case.expected) { throw 'Expanded cold-checkout groups lost their verification time budget.' }
 }
-foreach ($path in @('.llm-wiki/tools/wiki-markdown-links.mjs', '.llm-wiki/tools/code-graph-maintenance-recovery.test.mjs')) {
+foreach ($path in @('.llm-wiki/tools/wiki-markdown-links.mjs', '.llm-wiki/tools/code-graph-maintenance-recovery.test.mjs',
+    '.llm-wiki/tools/code-graph-candidates.mjs', '.llm-wiki/tools/code-graph-candidates.test.mjs')) {
     if (@(Get-Groups $path) -notcontains 'code-graph') { throw "Maintenance dependency has no focused coverage: $path" }
 }
 $parallelRunnerText = Get-Content -LiteralPath $parallelRunner -Raw

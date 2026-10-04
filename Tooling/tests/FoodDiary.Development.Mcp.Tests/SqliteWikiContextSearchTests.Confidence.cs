@@ -4,6 +4,39 @@ using Microsoft.Data.Sqlite;
 namespace FoodDiary.Development.Mcp.Tests;
 
 public sealed partial class SqliteWikiContextSearchTests {
+    [Theory]
+    [InlineData("astral orchard session", "Backend", true)]
+    [InlineData("refresh astral orchard session", "Backend", false)]
+    [InlineData("calculate astral orchard progress", "Backend", false)]
+    [InlineData("send astral orchard session reminder", "Backend", false)]
+    [InlineData("отправить напоминание о прогрессе astral orchard", "Backend", false)]
+    [InlineData("astral orchard session", "Any", false)]
+    public async Task SearchAsync_MovedDomainEntitiesRetainApplicableStateRolesAsync(string query, string changeType, bool stateRole) {
+        await using var connection = new SqliteConnection($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            DELETE FROM context_search_identity;
+            INSERT INTO context_search VALUES
+                ('code','entity','Modules/Astral/Domain/Entities/AstralOrchardSession.cs','entity','csharp',
+                    'AstralOrchardSession','astral orchard session progress'),
+                ('code','migration','FoodDiary.Infrastructure/Migrations/AddAstralOrchardSession.cs','migration','csharp',
+                    'AddAstralOrchardSession','astral orchard session progress');
+            INSERT INTO context_search_identity(rowid,path,title) SELECT rowid,path,title FROM context_search;
+            """;
+        await command.ExecuteNonQueryAsync();
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            query, 10, changeType, module: null, scopePaths: null, CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+        Assert.True(result.Ready);
+        WikiContextSearchCandidate entity = Assert.Single(result.Candidates, candidate => candidate.Path.StartsWith("Modules/Astral/", StringComparison.Ordinal));
+        Assert.Equal(stateRole, entity.Reasons.Any(reason => reason.StartsWith("structural role domain-state-entity-role", StringComparison.Ordinal)));
+        if (stateRole) {
+            Assert.Equal(entity.Path, result.Candidates[0].Path);
+        }
+    }
+
     [Fact]
     public async Task SearchAsync_RecallsCompoundSubjectsWithDistinctPathsDespiteDuplicateRows() {
         string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");

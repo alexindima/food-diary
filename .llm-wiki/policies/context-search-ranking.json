@@ -175,7 +175,8 @@
     "профил": ["profile"],
     "проекц": ["projection"],
     "реализац": ["implementation"],
-    "список|покуп": ["shopping","list"],
+    "покуп": ["shopping","list"],
+    "список|списк": ["list","collection"],
     "энергозатрат": ["tdee"],
     "зависим": ["dependency","graph"],
     "вес": ["weight"],
@@ -231,7 +232,7 @@
     "контроллер": ["controller","http","endpoint"],
     "принима|принят": ["receive"],
     "уведомлен": ["notification"],
-    "платеж|платёж|оплат": ["billing","payment"],
+    "платеж|платёж|оплат|биллинг": ["billing","payment"],
     "провайдер|поставщик": ["provider"],
     "пересчит": ["recalculate","calculate","updater"],
     "рецепт": ["recipe"],
@@ -457,13 +458,6 @@
       "queryTerms": ["mailgun", "webhook", "replay", "idempotency"],
       "minimumMatches": 2,
       "pathPrefixes": ["Services/MailRelay/"],
-      "score": 300
-    },
-    {
-      "id": "webpush-network-security",
-      "queryTerms": ["webpush", "ssrf", "dns", "endpoint", "connectcallback"],
-      "minimumMatches": 2,
-      "pathPrefixes": ["FoodDiary.Integrations/Services/WebPush"],
       "score": 300
     },
     {
@@ -3638,7 +3632,7 @@
       "recordTypes": ["code"],
       "pathPrefixes": ["FoodDiary.Domain/Entities/"],
       "pathSuffixes": [".cs"],
-      "excludedQueryTerms": ["processor", "outbox", "write", "refresh", "reader", "service", "client", "calculate", "start", "award", "achievement"],
+      "excludedQueryTerms": ["processor", "outbox", "write", "refresh", "reader", "service", "client", "calculate", "start", "award", "achievement", "send"],
       "excludeTests": true
     },
     {

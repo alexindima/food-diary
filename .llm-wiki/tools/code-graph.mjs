@@ -5,6 +5,7 @@ import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writ
 import { basename, dirname, extname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
+import { findLexicalCandidates, findWeightedIdentityCandidates } from './code-graph-candidates.mjs';
 import { searchContextBatch } from './code-graph-batch.mjs';
 import { englishMorphologicalVariants } from './code-graph-query-terms.mjs';
 import { findIdentityCandidates } from './code-graph-identity.mjs';
@@ -2216,36 +2217,7 @@ function searchContext(database, query, limit, filters = {}, batchState) {
   }
   const match = terms.map((term) => `"${term.replaceAll('"', '""')}"*`).join(' OR ');
   const candidateLimit = Number(contextSearchRanking.candidatePoolLimit ?? 500);
-  const candidates = database.prepare(`
-    WITH lexical_matches AS MATERIALIZED (
-      SELECT context_search.path, context_search.rowid sourceOrdinal,
-        bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexicalRank
-      FROM context_search
-      JOIN context_search_features features ON features.context_rowid = context_search.rowid
-      WHERE context_search MATCH ?
-    ), initial_candidates AS MATERIALIZED (
-      SELECT * FROM lexical_matches ORDER BY lexicalRank, path, sourceOrdinal LIMIT ?
-    ), distinct_paths AS (
-      SELECT sourceOrdinal, path, lexicalRank,
-        ROW_NUMBER() OVER (PARTITION BY path ORDER BY lexicalRank, sourceOrdinal) pathOrdinal
-      FROM lexical_matches
-    ), distinct_candidates AS (
-      SELECT sourceOrdinal FROM distinct_paths WHERE pathOrdinal = 1 ORDER BY lexicalRank, path LIMIT ?
-    ), pooled_candidates AS (
-      SELECT 0 poolOrdinal, * FROM initial_candidates
-      UNION ALL
-      SELECT 1 poolOrdinal, lexical_matches.* FROM lexical_matches
-      JOIN distinct_candidates USING (sourceOrdinal)
-      WHERE lexical_matches.path NOT IN (SELECT path FROM initial_candidates)
-    )
-    SELECT context_search.record_type recordType, record_key recordKey, context_search.path, source_path sourcePath,
-      category, title, features.layer, features.module, features.role, features.is_test isTest,
-      features.extension, pooled_candidates.lexicalRank
-    FROM pooled_candidates
-    JOIN context_search ON context_search.rowid = sourceOrdinal
-    JOIN context_search_features features ON features.context_rowid = sourceOrdinal
-    ORDER BY poolOrdinal, lexicalRank, pooled_candidates.path, sourceOrdinal
-  `).all(match, candidateLimit, candidateLimit);
+  const candidates = findLexicalCandidates(database, match, candidateLimit);
   // Prefix expansion already matches every longer inflection; counting it again
   // overweights common words and can crowd a second subject out of the pool.
   const identityMatch = terms.filter(term => !terms.some(other => other !== term && term.startsWith(other))).flatMap((term) => {
@@ -2253,16 +2225,7 @@ function searchContext(database, query, limit, filters = {}, batchState) {
     return [`path : "${escaped}"*`, `title : "${escaped}"*`];
   }).join(' OR ');
   const identityLimit = Number(contextSearchRanking.identityCandidatePoolLimit ?? 100);
-  const identityCandidates = database.prepare(`
-    SELECT context_search.record_type recordType, record_key recordKey, context_search.path, source_path sourcePath,
-      category, title, features.layer, features.module, features.role, features.is_test isTest,
-      features.extension, bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexicalRank
-    FROM context_search
-    JOIN context_search_features features ON features.context_rowid = context_search.rowid
-    WHERE context_search MATCH ?
-    ORDER BY lexicalRank, context_search.path
-    LIMIT ?
-  `).all(identityMatch, identityLimit);
+  const identityCandidates = findWeightedIdentityCandidates(database, identityMatch, identityLimit);
   const candidateIndexes = new Map(candidates.map((item, index) => [
     `${item.recordType}\0${item.recordKey}\0${item.path}`,
     index,
@@ -2369,6 +2332,9 @@ function searchContext(database, query, limit, filters = {}, batchState) {
     .filter((boost) => boostMatchesChangeType(boost) && boostMatchesQuery(boost));
   const applicableStructuralRoleBoosts = (contextSearchRanking.structuralRoleBoosts ?? [])
     .filter((boost) => boostMatchesChangeType(boost) && boostMatchesQuery(boost, 0));
+  const requestsDomainRole = applicableStructuralRoleBoosts.some(boost =>
+    !(boost.queryTerms ?? []).some(term => (contextSearchRanking.genericAffinities?.domainIntentTerms ?? []).includes(term)) &&
+    (boost.pathPrefixes ?? []).some(prefix => prefix.replaceAll('\\', '/').toLowerCase().startsWith('fooddiary.domain/')));
   const applicablePathBoosts = (contextSearchRanking.pathBoosts ?? [])
     .filter((boost) => boostMatchesQuery(boost));
   const conversation = contextSearchRanking.conversationalAffinity;
@@ -2400,7 +2366,7 @@ function searchContext(database, query, limit, filters = {}, batchState) {
     const domainIntent = (contextSearchRanking.genericAffinities?.domainIntentTerms ?? [])
       .some(term => boostTerms.includes(String(term).toLowerCase()));
     const selectorPaths = rankingPathIdentities(path).filter(selectorPath =>
-      selectorPath === normalizedPath || domainIntent || !selectorPath.startsWith('fooddiary.domain/'));
+      selectorPath === normalizedPath || domainIntent || requestsDomainRole || !selectorPath.startsWith('fooddiary.domain/'));
     const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/i.test(path);
     const fileName = basename(path);
     const isExplicitTestCandidate = isTest ||
@@ -2768,6 +2734,7 @@ function searchContext(database, query, limit, filters = {}, batchState) {
     const key = basename(String(item.path ?? '')).toLowerCase();
     fileNameCounts.set(key, (fileNameCounts.get(key) ?? 0) + 1);
   }
+  const exactCount = records.filter(candidate => exactFileIdentity(candidate.path, query)).length;
   const decoratedRecords = selectedRecords.map((item, index) => {
     const originalIndex = item.rank - 1;
     const nextScore = records[originalIndex + 1]?.score;
@@ -2785,7 +2752,6 @@ function searchContext(database, query, limit, filters = {}, batchState) {
     const recordTypeMismatch = implementationChangeTypes.includes(changeType)
       && documentationRecordTypes.includes(String(item.recordType ?? '').toLowerCase());
     const exact = exactFileIdentity(item.path, query);
-    const exactCount = records.filter(candidate => exactFileIdentity(candidate.path, query)).length;
     const multiLayerRequest = !exact && Boolean(confidenceCalibration.multiLayerQueryPattern)
       && new RegExp(confidenceCalibration.multiLayerQueryPattern, 'iu').test(query);
     const ambiguous = multiLayerRequest || unmatchedIdentifier || (exact && exactCount > 1) || (!exact && ((scoreMargin !== null && scoreMargin <= ambiguityMaximumMargin) || recordTypeMismatch));
