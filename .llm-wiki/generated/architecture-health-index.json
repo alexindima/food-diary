@@ -12,8 +12,8 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 109,
     "routedStandaloneComponents": 67,
-    "componentsWithoutDirectSpecs": 129,
-    "criticalSymbolsWithoutTestReferences": 44,
+    "componentsWithoutDirectSpecs": 131,
+    "criticalSymbolsWithoutTestReferences": 48,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -4687,6 +4687,70 @@
       "specPath": null
     },
     {
+      "class": "RecipeRecognitionComponent",
+      "selector": "fd-recipe-recognition",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.html",
+      "inputs": [
+        {
+          "name": "sourceUrl",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "text",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "draftRecognized",
+          "type": "RecipeImportResult"
+        },
+        {
+          "name": "sourceUrlSuggested",
+          "type": "string"
+        },
+        {
+          "name": "busyChanged",
+          "type": "boolean"
+        }
+      ],
+      "specPath": null
+    },
+    {
+      "class": "RecipeVideoInputComponent",
+      "selector": "fd-recipe-video-input",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-video-input/recipe-video-input.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-video-input/recipe-video-input.html",
+      "inputs": [
+        {
+          "name": "enabled",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "busy",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "enabledChanged",
+          "type": "boolean"
+        },
+        {
+          "name": "fileSelected",
+          "type": "File | null"
+        }
+      ],
+      "specPath": null
+    },
+    {
       "class": "AiInputActionBarComponent",
       "selector": "fd-ai-input-action-bar",
       "feature": "shared",
@@ -4944,6 +5008,26 @@
       "name": "ImportAdminDailyAdvicesCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvices/ImportAdminDailyAdvicesCommandHandler.cs",
+      "line": 9,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "ImportRecipeCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommandHandler.cs",
+      "line": 9,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "ImportRecipeVideoCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommandHandler.cs",
       "line": 9,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -5255,6 +5339,26 @@
       "role": "Validator",
       "path": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQueryValidator.cs",
       "line": 5,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "ImportRecipeCommandValidator",
+      "role": "Validator",
+      "path": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommandValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "ImportRecipeVideoCommandValidator",
+      "role": "Validator",
+      "path": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommandValidator.cs",
+      "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

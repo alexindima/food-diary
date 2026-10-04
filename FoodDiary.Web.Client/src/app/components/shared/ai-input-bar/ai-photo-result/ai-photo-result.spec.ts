@@ -72,6 +72,28 @@ async function setupAiPhotoResultAsync(): Promise<AiPhotoResultTestContext> {
     return { component, fixture, translateService };
 }
 
+describe('AiPhotoResultComponent localization', () => {
+    it('formats total and item calories with the active language and updates them when it changes', async () => {
+        const { fixture, translateService } = await setupAiPhotoResultAsync();
+        fixture.componentRef.setInput('nutrition', {
+            ...NUTRITION,
+            calories: 2052.4,
+            items: [{ ...NUTRITION.items[0], calories: 1056.4 }],
+        });
+        const element = fixture.nativeElement as HTMLElement;
+        for (const [language, total, item] of [
+            ['ru', '2 052', '1 056'],
+            ['en', '2,052', '1,056'],
+            ['ru', '2 052', '1 056'],
+        ]) {
+            translateService.use(language);
+            fixture.detectChanges();
+            expect(element.querySelector('.ai-photo-result__products-calories')?.textContent.replaceAll('\u00A0', ' ')).toContain(total);
+            expect(element.querySelector('.ai-photo-result__item-calories')?.textContent.replaceAll('\u00A0', ' ')).toContain(item);
+        }
+    });
+});
+
 describe('AiPhotoResultComponent view models', () => {
     it('keeps the products panel visible while an image is being analyzed', async () => {
         const { fixture } = await setupAiPhotoResultAsync();

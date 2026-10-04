@@ -1,6 +1,9 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import enTranslations from '../../../../../../../assets/i18n/en/app.json';
+import ruTranslations from '../../../../../../../assets/i18n/ru/app.json';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { EditableAiItem } from '../ai-photo-result-lib/ai-photo-result.types';
 import { AiPhotoEditListComponent } from './ai-photo-edit-list';
@@ -62,5 +65,24 @@ describe('AiPhotoEditListComponent', () => {
 
         expect(removeSpy).toHaveBeenCalledWith(0);
         expect(addSpy).toHaveBeenCalledOnce();
+    });
+});
+
+describe('AiPhotoEditListComponent accessibility', () => {
+    it.each([
+        ['en', enTranslations, ['Name', 'Amount', 'Unit'], 'Remove Apple from analysis'],
+        ['ru', ruTranslations, ['Название', 'Количество', 'Единица'], 'Удалить Apple из анализа'],
+    ] as const)('labels editor controls and interpolates the product name in %s', async (language, translations, labels, removeLabel) => {
+        const fixture = await setupAiPhotoEditListAsync();
+        const translateService = TestBed.inject(TranslateService);
+        translateService.setTranslation(language, translations);
+        translateService.use(language);
+        fixture.detectChanges();
+
+        const element = fixture.nativeElement as HTMLElement;
+        const controls = Array.from(element.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input, select'));
+        const controlLabels = controls.map(control => control.labels?.item(0).textContent.trim());
+        expect(controlLabels).toEqual(labels);
+        expect(element.querySelector('.ai-photo-result__edit-remove button')?.getAttribute('aria-label')).toBe(removeLabel);
     });
 });

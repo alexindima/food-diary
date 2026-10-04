@@ -563,7 +563,7 @@ describe('refresh token storage and failure', () => {
         expect(navigationServiceSpy.navigateToAuthAsync).toHaveBeenCalledWith('login');
     });
 
-    it('should logout on refresh failure', () => {
+    it('should logout on unauthorized refresh rejection', async () => {
         localStorage.setItem('refreshToken', 'expired-token');
 
         service.refreshToken().subscribe(result => {
@@ -573,7 +573,91 @@ describe('refresh token storage and failure', () => {
         const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
         req.flush('Unauthorized', { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
+        httpMock.expectOne(`${authBaseUrl}/logout`).flush(null);
+        await vi.waitFor(() => {
+            expect(navigationServiceSpy.navigateToAuthAsync).toHaveBeenCalledWith('login');
+        });
+
         expect(navigationServiceSpy.navigateToAuthAsync).toHaveBeenCalledWith('login');
+    });
+});
+
+describe('temporary refresh failures', () => {
+    it.each([HttpStatusCode.TooManyRequests, HttpStatusCode.InternalServerError, HttpStatusCode.ServiceUnavailable])(
+        'preserves the current session and permits retry after HTTP %s',
+        async status => {
+            authenticateForCrossTabTest(false);
+            const failed = firstValueFrom(service.refreshToken());
+            httpMock.expectOne(`${authBaseUrl}/refresh`).flush(null, { status, statusText: 'Temporary failure' });
+
+            expect(await failed).toBeNull();
+            expect(service.isAuthenticated()).toBe(true);
+            expect(service.getUserId()).toBe(loginAuthResponse.user.id);
+            expect(localStorage.getItem('refreshSession')).toBe('true');
+            expect(sessionEventsSpy.notifySessionEnded).not.toHaveBeenCalled();
+            httpMock.expectNone(`${authBaseUrl}/logout`);
+
+            const retried = firstValueFrom(service.refreshToken());
+            httpMock.expectOne(`${authBaseUrl}/refresh`).flush(loginAuthResponse);
+            expect(await retried).toBe(loginFakeToken);
+        },
+    );
+
+    it('preserves the session after a network error', async () => {
+        authenticateForCrossTabTest(false);
+        const failed = firstValueFrom(service.refreshToken());
+        httpMock.expectOne(`${authBaseUrl}/refresh`).error(new ProgressEvent('error'));
+
+        expect(await failed).toBeNull();
+        expect(service.isAuthenticated()).toBe(true);
+        expect(service.getToken()).toBe(loginFakeToken);
+        expect(localStorage.getItem('refreshSession')).toBe('true');
+        httpMock.expectNone(`${authBaseUrl}/logout`);
+    });
+});
+
+describe('legacy refresh retry', () => {
+    it('keeps a migration token only in memory until a retry succeeds', async () => {
+        localStorage.setItem('refreshToken', 'legacy-migration-token');
+        const failed = firstValueFrom(service.refreshToken());
+        httpMock.expectOne(`${authBaseUrl}/refresh`).flush(null, {
+            status: HttpStatusCode.ServiceUnavailable,
+            statusText: 'Temporary failure',
+        });
+
+        expect(await failed).toBeNull();
+        expect(localStorage.getItem('refreshToken')).toBeNull();
+        expect(localStorage.getItem('refreshSession')).toBe('true');
+        httpMock.expectNone(`${authBaseUrl}/logout`);
+
+        const retried = firstValueFrom(service.refreshToken());
+        const request = httpMock.expectOne(`${authBaseUrl}/refresh`);
+        expect(request.request.body).toEqual({ refreshToken: 'legacy-migration-token' });
+        request.flush(loginAuthResponse);
+        expect(await retried).toBe(loginFakeToken);
+
+        const rotated = firstValueFrom(service.refreshToken());
+        const rotatedRequest = httpMock.expectOne(`${authBaseUrl}/refresh`);
+        expect(rotatedRequest.request.body).toEqual({});
+        rotatedRequest.flush(loginAuthResponse);
+        expect(await rotated).toBe(loginFakeToken);
+    });
+
+    it('discards a pending migration token when a new account signs in', async () => {
+        localStorage.setItem('refreshToken', 'previous-account-token');
+        const failed = firstValueFrom(service.refreshToken());
+        httpMock.expectOne(`${authBaseUrl}/refresh`).flush(null, {
+            status: HttpStatusCode.ServiceUnavailable,
+            statusText: 'Temporary failure',
+        });
+        await failed;
+        authenticateForCrossTabTest(false);
+
+        const refreshed = firstValueFrom(service.refreshToken());
+        const request = httpMock.expectOne(`${authBaseUrl}/refresh`);
+        expect(request.request.body).toEqual({});
+        request.flush(loginAuthResponse);
+        expect(await refreshed).toBe(loginFakeToken);
     });
 });
 

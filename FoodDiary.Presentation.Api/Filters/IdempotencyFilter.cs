@@ -62,7 +62,7 @@ public sealed class IdempotencyFilter(
         }
 
         string cacheKey = ComputeCacheKey(context, idempotencyKey);
-        string requestHash = ComputeRequestHash(context);
+        string requestHash = await ComputeRequestHashAsync(context, context.HttpContext.RequestAborted).ConfigureAwait(false);
         IdempotencyRequestContext.SetRequest(context.HttpContext, cacheKey, requestHash);
         IdempotencyRequestContext.SetRetention(context.HttpContext, _options.ResponseTtl);
         IdempotencyReservation reservation = await idempotencyStore
@@ -514,8 +514,17 @@ public sealed class IdempotencyFilter(
         return userId.ToString("D");
     }
 
-    private static string ComputeRequestHash(ActionExecutingContext context) {
+    private static async Task<string> ComputeRequestHashAsync(ActionExecutingContext context, CancellationToken cancellationToken) {
         var payload = new SortedDictionary<string, object?>(context.ActionArguments, StringComparer.Ordinal);
+        foreach ((string key, object? value) in context.ActionArguments) {
+            if (value is IFormFile file) {
+                Stream stream = file.OpenReadStream();
+                await using (stream.ConfigureAwait(false)) {
+                    byte[] digest = await SHA256.HashDataAsync(stream, cancellationToken).ConfigureAwait(false);
+                    payload[key] = new { file.Length, ContentHash = Convert.ToHexString(digest) };
+                }
+            }
+        }
         string serialized = JsonSerializer.Serialize(new {
             context.HttpContext.Request.Method,
             Path = context.HttpContext.Request.Path.Value ?? string.Empty,

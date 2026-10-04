@@ -73,16 +73,11 @@ export class AuthInterceptor implements HttpInterceptor {
 
     private refreshRequest(req: HttpRequest<unknown>, next: HttpHandler, error: unknown): Observable<HttpEvent<unknown>> {
         return this.authService.refreshToken().pipe(
-            catchError((refreshError: unknown) => {
-                void this.authService.onLogoutAsync(true);
-                return throwError(() => refreshError);
-            }),
             switchMap(accessToken => {
                 if (accessToken !== null && accessToken.trim().length > 0) {
                     const newRequest = req.clone({ headers: req.headers.set('Authorization', `Bearer ${accessToken}`) });
                     return next.handle(newRequest);
                 }
-                void this.authService.onLogoutAsync(true);
                 return throwError(() => error);
             }),
         );

@@ -2,6 +2,7 @@ import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { type FieldTree, form, required } from '@angular/forms/signals';
 import { provideRouter } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -139,5 +140,19 @@ describe('ShoppingListItemsPanelComponent', () => {
         expect(element.querySelector<HTMLInputElement>('.shopping-list__quick-add-input input')?.placeholder).toBe(
             'SHOPPING_LIST.ADD_ITEM_NAME_PLACEHOLDER',
         );
+    });
+});
+
+describe('ShoppingListItemsPanelComponent localization', () => {
+    it('updates fractional quantities when the interface language changes', async () => {
+        const { fixture } = await setupItemsPanelAsync([{ ...CHECKED_ITEM, amount: 2.5, isChecked: false }]);
+        const translateService = TestBed.inject(TranslateService);
+        const element = fixture.nativeElement as HTMLElement;
+        translateService.use('ru');
+        fixture.detectChanges();
+        expect(element.querySelector('.shopping-list__item-quantity')?.textContent).toBe('2,5 l');
+        translateService.use('en');
+        fixture.detectChanges();
+        expect(element.querySelector('.shopping-list__item-quantity')?.textContent).toBe('2.5 l');
     });
 });

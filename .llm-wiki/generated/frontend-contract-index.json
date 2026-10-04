@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 483,
-    "componentsWithoutDirectSpecs": 129,
-    "inputs": 1553,
-    "outputs": 533,
-    "apiCalls": 276,
-    "templatesWithTranslations": 344,
-    "translationKeys": 2078,
-    "consumerEdges": 1219,
-    "consumedComponents": 306,
+    "components": 485,
+    "componentsWithoutDirectSpecs": 131,
+    "inputs": 1557,
+    "outputs": 538,
+    "apiCalls": 278,
+    "templatesWithTranslations": 346,
+    "translationKeys": 2093,
+    "consumerEdges": 1224,
+    "consumedComponents": 308,
     "unconsumedComponents": 176
   },
   "components": [
@@ -11068,6 +11068,40 @@
       "specPath": null
     },
     {
+      "class": "RecipeRecognitionComponent",
+      "selector": "fd-recipe-recognition",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.html",
+      "inputs": [
+        {
+          "name": "sourceUrl",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "text",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "draftRecognized",
+          "type": "RecipeImportResult"
+        },
+        {
+          "name": "sourceUrlSuggested",
+          "type": "string"
+        },
+        {
+          "name": "busyChanged",
+          "type": "boolean"
+        }
+      ],
+      "specPath": null
+    },
+    {
       "class": "RecipeSelectDialogComponent",
       "selector": "fd-recipe-select-dialog",
       "feature": "recipes",
@@ -11302,6 +11336,36 @@
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-steps-list/recipe-steps-list.spec.ts"
+    },
+    {
+      "class": "RecipeVideoInputComponent",
+      "selector": "fd-recipe-video-input",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-video-input/recipe-video-input.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-video-input/recipe-video-input.html",
+      "inputs": [
+        {
+          "name": "enabled",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "busy",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "enabledChanged",
+          "type": "boolean"
+        },
+        {
+          "name": "fileSelected",
+          "type": "File | null"
+        }
+      ],
+      "specPath": null
     },
     {
       "class": "RecommendationThreadComponent",
@@ -17432,7 +17496,7 @@
       "responseType": "AuthResponse",
       "urlExpression": "'login'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 144,
+      "line": 147,
       "publicMethod": "login",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17444,7 +17508,7 @@
       "responseType": "AuthResponse",
       "urlExpression": "'register'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 153,
+      "line": 156,
       "publicMethod": "register",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17456,7 +17520,7 @@
       "responseType": "void",
       "urlExpression": "'verify-email'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 167,
+      "line": 170,
       "publicMethod": "verifyEmail",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17468,7 +17532,7 @@
       "responseType": "void",
       "urlExpression": "'verify-email/resend'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 176,
+      "line": 179,
       "publicMethod": "resendEmailVerification",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17480,7 +17544,7 @@
       "responseType": "AuthResponse",
       "urlExpression": "'restore'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 182,
+      "line": 185,
       "publicMethod": "restoreAccount",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17492,7 +17556,7 @@
       "responseType": "AuthResponse",
       "urlExpression": "'google'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 195,
+      "line": 198,
       "publicMethod": "loginWithGoogle",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17504,7 +17568,7 @@
       "responseType": "User",
       "urlExpression": "'google/link'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 204,
+      "line": 207,
       "publicMethod": "linkGoogle",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17516,7 +17580,7 @@
       "responseType": "void",
       "urlExpression": "'telegram/unlink'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 210,
+      "line": 213,
       "publicMethod": "unlinkTelegram",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17528,7 +17592,7 @@
       "responseType": "void",
       "urlExpression": "'telegram/backup-email'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 214,
+      "line": 217,
       "publicMethod": "requestTelegramBackupEmail",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17540,7 +17604,7 @@
       "responseType": "{ authorizationUrl: string }",
       "urlExpression": "'telegram/backup-email/oidc/start'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 218,
+      "line": 221,
       "publicMethod": "startTelegramBackupEmail",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17552,7 +17616,7 @@
       "responseType": "void",
       "urlExpression": "'telegram/backup-email/oidc/complete'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 222,
+      "line": 225,
       "publicMethod": "completeTelegramBackupEmail",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17564,7 +17628,7 @@
       "responseType": "void",
       "urlExpression": "'password-reset/request'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 226,
+      "line": 229,
       "publicMethod": "requestPasswordReset",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17576,7 +17640,7 @@
       "responseType": "AuthResponse",
       "urlExpression": "'password-reset/confirm'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 233,
+      "line": 236,
       "publicMethod": "confirmPasswordReset",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17588,7 +17652,7 @@
       "responseType": "AdminSsoStartResponse",
       "urlExpression": "'admin-sso/start'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 242,
+      "line": 245,
       "publicMethod": "startAdminSso",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17600,7 +17664,7 @@
       "responseType": "AuthResponse",
       "urlExpression": "'refresh'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 280,
+      "line": 287,
       "publicMethod": "refreshSessionAsync",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17612,7 +17676,7 @@
       "responseType": "void",
       "urlExpression": "'logout'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 306,
+      "line": 315,
       "publicMethod": "onLogoutAsync",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17624,7 +17688,7 @@
       "responseType": "{ accessToken: string }",
       "urlExpression": "'impersonation/exchange'",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 456,
+      "line": 466,
       "publicMethod": "captureImpersonationCodeFromQueryAsync",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -17645,10 +17709,34 @@
     {
       "feature": "shell",
       "method": "POST",
+      "responseType": "RecipeImportResult",
+      "urlExpression": "`${this.baseUrl}/food/recipe-import`",
+      "path": "FoodDiary.Web.Client/src/app/shared/api/ai-food.service.ts",
+      "line": 25,
+      "publicMethod": "importRecipe",
+      "transport": "HttpClient",
+      "baseUrlExpression": "environment.apiUrls.ai",
+      "resolvedUrlExpression": "`${this.baseUrl}/food/recipe-import`"
+    },
+    {
+      "feature": "shell",
+      "method": "POST",
+      "responseType": "RecipeImportResult",
+      "urlExpression": "`${this.baseUrl}/food/recipe-import/video`",
+      "path": "FoodDiary.Web.Client/src/app/shared/api/ai-food.service.ts",
+      "line": 39,
+      "publicMethod": "importRecipeVideo",
+      "transport": "HttpClient",
+      "baseUrlExpression": "environment.apiUrls.ai",
+      "resolvedUrlExpression": "`${this.baseUrl}/food/recipe-import/video`"
+    },
+    {
+      "feature": "shell",
+      "method": "POST",
       "responseType": "FoodVisionResponse",
       "urlExpression": "`${this.baseUrl}/food/text`",
       "path": "FoodDiary.Web.Client/src/app/shared/api/ai-food.service.ts",
-      "line": 28,
+      "line": 47,
       "publicMethod": "parseFoodText",
       "transport": "HttpClient",
       "baseUrlExpression": "environment.apiUrls.ai",
@@ -17660,7 +17748,7 @@
       "responseType": "FoodNutritionResponse",
       "urlExpression": "`${this.baseUrl}/food/nutrition`",
       "path": "FoodDiary.Web.Client/src/app/shared/api/ai-food.service.ts",
-      "line": 34,
+      "line": 53,
       "publicMethod": "calculateNutrition",
       "transport": "HttpClient",
       "baseUrlExpression": "environment.apiUrls.ai",
@@ -17672,7 +17760,7 @@
       "responseType": "UserAiUsageResponse",
       "urlExpression": "`${this.baseUrl}/usage/me`",
       "path": "FoodDiary.Web.Client/src/app/shared/api/ai-food.service.ts",
-      "line": 40,
+      "line": 59,
       "publicMethod": "getUsageSummary",
       "transport": "HttpClient",
       "baseUrlExpression": "environment.apiUrls.ai",
@@ -21747,9 +21835,11 @@
         "DISABLED_HINTS.STEPS_INVALID",
         "PRODUCT_MANAGE.CANCEL_BUTTON",
         "RECIPE_MANAGE.IMPORT.APPLY_BUTTON",
+        "RECIPE_MANAGE.IMPORT.RECOGNIZING",
         "RECIPE_MANAGE.IMPORT.SUBTITLE",
         "RECIPE_MANAGE.IMPORT.TEXT_LABEL",
         "RECIPE_MANAGE.IMPORT.TEXT_PLACEHOLDER",
+        "RECIPE_MANAGE.IMPORT.TEXT_REQUIRED",
         "RECIPE_MANAGE.IMPORT.TITLE",
         "RECIPE_MANAGE.IMPORT.URL_LABEL",
         "RECIPE_MANAGE.IMPORT.URL_PLACEHOLDER",
@@ -21765,6 +21855,21 @@
         "RECIPE_MANAGE.NUTRITION_GROUP_TITLE",
         "RECIPE_MANAGE.NUTRITION_MODE.ARIA",
         "RECIPE_MANAGE.NUTRITION_SCALE_MODE.ARIA"
+      ]
+    },
+    {
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.html",
+      "keys": [
+        "RECIPE_MANAGE.IMPORT.CLIPBOARD_FOUND",
+        "RECIPE_MANAGE.IMPORT.CLIPBOARD_HINT",
+        "RECIPE_MANAGE.IMPORT.CLIPBOARD_LABEL",
+        "RECIPE_MANAGE.IMPORT.CLIPBOARD_UNAVAILABLE",
+        "RECIPE_MANAGE.IMPORT.DISMISS",
+        "RECIPE_MANAGE.IMPORT.PASTE_LINK",
+        "RECIPE_MANAGE.IMPORT.RECOGNIZE",
+        "RECIPE_MANAGE.IMPORT.RECOGNIZING",
+        "RECIPE_MANAGE.IMPORT.USE_LINK"
       ]
     },
     {
@@ -21796,6 +21901,16 @@
       "keys": [
         "RECIPE_MANAGE.ADD_STEP",
         "RECIPE_MANAGE.STEPS_SECTION_TITLE"
+      ]
+    },
+    {
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-video-input/recipe-video-input.html",
+      "keys": [
+        "RECIPE_MANAGE.IMPORT.VIDEO_FILE_LABEL",
+        "RECIPE_MANAGE.IMPORT.VIDEO_HINT",
+        "RECIPE_MANAGE.IMPORT.VIDEO_LABEL",
+        "RECIPE_MANAGE.IMPORT.VIDEO_LIMITS"
       ]
     },
     {
@@ -22080,7 +22195,10 @@
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-edit-list/ai-photo-edit-list.html",
       "keys": [
         "COMMON.DELETE",
-        "MEAL_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM"
+        "MEAL_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM",
+        "MEAL_MANAGE.PHOTO_AI_DIALOG.AMOUNT_LABEL",
+        "MEAL_MANAGE.PHOTO_AI_DIALOG.NAME_LABEL",
+        "MEAL_MANAGE.PHOTO_AI_DIALOG.UNIT_LABEL"
       ]
     },
     {
@@ -28887,6 +29005,24 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.html",
+      "occurrences": 4,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason",
+        "fill",
+        "icon",
+        "loading",
+        "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.html",
       "occurrences": 4,
       "inputsUsed": [
@@ -30660,6 +30796,40 @@
       "occurrences": 4,
       "inputsUsed": [],
       "outputsHandled": []
+    },
+    {
+      "component": "FdUiCheckboxComponent",
+      "selector": "fd-ui-checkbox",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "checked",
+        "disabled",
+        "hint",
+        "label"
+      ],
+      "outputsHandled": [
+        "checkedChange"
+      ]
+    },
+    {
+      "component": "FdUiCheckboxComponent",
+      "selector": "fd-ui-checkbox",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-video-input/recipe-video-input.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "checked",
+        "disabled",
+        "hint",
+        "label"
+      ],
+      "outputsHandled": [
+        "checkedChange"
+      ]
     },
     {
       "component": "FdUiCheckboxComponent",
@@ -40221,6 +40391,23 @@
       ]
     },
     {
+      "component": "RecipeRecognitionComponent",
+      "selector": "fd-recipe-recognition",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "sourceUrl",
+        "text"
+      ],
+      "outputsHandled": [
+        "busyChanged",
+        "draftRecognized",
+        "sourceUrlSuggested"
+      ]
+    },
+    {
       "component": "RecipeSelectDialogComponent",
       "selector": "fd-recipe-select-dialog",
       "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog.ts",
@@ -40293,6 +40480,22 @@
         "stepImageChange",
         "stepPhotosChange",
         "stepTitleChange"
+      ]
+    },
+    {
+      "component": "RecipeVideoInputComponent",
+      "selector": "fd-recipe-video-input",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-video-input/recipe-video-input.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "busy",
+        "enabled"
+      ],
+      "outputsHandled": [
+        "enabledChanged",
+        "fileSelected"
       ]
     },
     {

@@ -22,18 +22,14 @@
       "pageSha256": "2d76f3b5a011cedacee04e17c3814e1adb42c22493cd93cbb52f0c7607e67ded",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "5426200344d5903cdacc4a110d566064a97bd33544c138eaac405d8526e44c86"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "27ac6dc291bdc38d4e2ca38b9c8ee530e2e20e43501fbd73f5cac16bed089e8d"
+          "path": "docs/README.md",
+          "sha256": "65f2f3407df1ada0aa232000a6b9fed054f452911b97e411d592dcfb59f40637"
         }
       ],
-      "reason": "Reviewed current Wiki navigation and guidance against canonical module naming, ADR 0052 and the documented coordinated migration release. The modular-monolith inventory, source authority, accepted ADR lifecycle and evidence limitations remain accurate; this preparation adds no module, route or dependency direction.",
-      "baseRef": "origin/master",
-      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
-      "reviewedAtUtc": "2026-10-03T11:03:24.1496182Z"
+      "reason": "Checked the recipe import guide and navigation against combined current sources, including optional clipboard suggestions, video limits, provider configuration, proxy and temporary storage constraints and conditional Instagram video availability. Current master tooling and fixes are preserved; deployment is outside this merge.",
+      "baseRef": "master",
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:02.5548865Z"
     },
     {
       "pageId": "module.frontend",
@@ -91,21 +87,17 @@
     {
       "pageId": "system.architecture",
       "pagePath": ".llm-wiki/system/architecture.md",
-      "pageSha256": "a117d247a9688c0818128f024603c7e5d162b651923b78dde41cc969485a734e",
+      "pageSha256": "d0fe45b8fb3d5ca4937ec2898e3099d50e3b920c9ccea9fff512a8bc6a618de2",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "e86448d0be0d4b5af379b2bf739fc3fc4d0e86af0cfed79b29d3f15eb2375c85"
-        },
-        {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "00c090e0b67f768bc1165703457a6d24efc0f1e93e8eb554b0644a7b9e34b64b"
+          "sha256": "e8fd72d24f538b643bf091265a23ff326d4aae9be79aa3bed68c200f30305fa6"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
-      "baseRef": "HEAD",
-      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:45.930669Z"
+      "reason": "Checked the recipe import guide and navigation against combined current sources, including optional clipboard suggestions, video limits, provider configuration, proxy and temporary storage constraints and conditional Instagram video availability. Current master tooling and fixes are preserved; deployment is outside this merge.",
+      "baseRef": "master",
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:03.6493844Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -143,14 +135,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "docs/adr/README.md",
-          "sha256": "e5d9cb3ca7980b2df78621807a7512c52b7be3cfac1ef267b2797af285e63ae1"
+          "path": "docs/README.md",
+          "sha256": "65f2f3407df1ada0aa232000a6b9fed054f452911b97e411d592dcfb59f40637"
         }
       ],
-      "reason": "Reviewed current Wiki navigation and guidance against canonical module naming, ADR 0052 and the documented coordinated migration release. The modular-monolith inventory, source authority, accepted ADR lifecycle and evidence limitations remain accurate; this preparation adds no module, route or dependency direction.",
-      "baseRef": "origin/master",
-      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
-      "reviewedAtUtc": "2026-10-03T11:03:24.9554042Z"
+      "reason": "Checked the recipe import guide and navigation against combined current sources, including optional clipboard suggestions, video limits, provider configuration, proxy and temporary storage constraints and conditional Instagram video availability. Current master tooling and fixes are preserved; deployment is outside this merge.",
+      "baseRef": "master",
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:05.0150049Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -204,25 +196,21 @@
     {
       "pageId": "workflow-api-compatibility",
       "pagePath": ".llm-wiki/workflows/api-compatibility.md",
-      "pageSha256": "c5747176a573b53e13b209f21f97593fe4af4eedbe2d4b2cb27b92c539689ea6",
+      "pageSha256": "6e6ace9a3ed3b5cc55eeeb62d895581342cb6f0c37181d14283e16f69fdcb6c7",
       "sources": [
         {
-          "path": ".llm-wiki/policies/api-compatibility-acceptance.json",
-          "sha256": "64d2cdcbaf568cc3037feef85ad9d5121c4a1cfc367761928dd82f37ace7c142"
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "sha256": "8881fe8e5d509e83ddd5de8655b90410d09f81cf9248ef6d5439a33f4cbd3b0f"
         },
         {
-          "path": ".llm-wiki/tools/LlmWikiApiAcceptance.ps1",
-          "sha256": "83c988ea091e87fa0f8e8b748692c9b4715bd82fb87b3381a0736de415038791"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
-          "sha256": "fe2920df5318b16fd7db32e23e72b7d878429c67836f143877ada0dfb6d73adb"
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+          "sha256": "0cd6c023cdab3fd2c177e2cb7ba9c341612314799413cd396f1e6fc45f877688"
         }
       ],
-      "reason": "Reviewed the exact e56eecf coordinated client release approved by the user: both snapshot fingerprints and all 20 identities are recorded; synthetic comparisons cannot inherit approval; new breaks still fail. The workflow now documents the explicit rollout and unchanged successful ancestral CI baseline.",
-      "baseRef": "HEAD",
-      "gitHead": "028efbba467e3bdece84fe1e43412aead89d2ae5",
-      "reviewedAtUtc": "2026-10-03T21:02:54.5714473Z"
+      "reason": "Reviewed recipe import routes and multipart DTOs against current master: the compatibility checker reports 0 breaking changes and 9 additions; 4 host transport tests and 2116 architecture tests pass. AI owns recognition and Recipes saves the editable draft. Full frontend verification passed 5147 tests, with 51 focused tests after the latest master update and prior desktop/mobile visual QA.",
+      "baseRef": "master",
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:06.5839742Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -245,14 +233,14 @@
       "pageSha256": "52be8a48ec499b41e8472c39f82fb3388dbfa39f980d56d8f870f89aaceb54eb",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "bd5a591deb5c62de0408ce5ed6b47a755d976da1c386cf14b48596b066df5bb0"
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "af056824290221d3999c2de4f7e3a705e9414c2e42ee9735550653984f55e153"
         }
       ],
-      "reason": "Reviewed the graph diff: changes are confined to context candidate selection and scoring; backend-contract query-document selection, normalized lineage and consumer ordering retain their documented implementation.",
-      "baseRef": "HEAD",
-      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
-      "reviewedAtUtc": "2026-10-04T03:27:31.1626328Z"
+      "reason": "Reviewed recipe import routes and multipart DTOs against current master: the compatibility checker reports 0 breaking changes and 9 additions; 4 host transport tests and 2116 architecture tests pass. AI owns recognition and Recipes saves the editable draft. Full frontend verification passed 5147 tests, with 51 focused tests after the latest master update and prior desktop/mobile visual QA.",
+      "baseRef": "master",
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:09.361656Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -810,14 +798,14 @@
       "pageSha256": "e6a46b0997c9e9829b351ab97f2487c1fc1414a8887442c5012cc06caebfcc3d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "bd5a591deb5c62de0408ce5ed6b47a755d976da1c386cf14b48596b066df5bb0"
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "7edac53f8569f6b4a914fa3df788992d2b94fc2acc39487c13693a1e59463f86"
         }
       ],
-      "reason": "Reviewed the narrowed SQL hydration and query-invariant scoring changes. They operate on the existing local source projection; writer ownership, read-only reader contracts and bounded aggregate telemetry are unaffected by the patch.",
-      "baseRef": "HEAD",
-      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
-      "reviewedAtUtc": "2026-10-04T03:27:34.2676286Z"
+      "reason": "Reviewed consent, Premium access, opt-in clipboard reading, public URL DNS/IP and redirect checks, body limits, local FFmpeg cleanup and WAV-only provider sharing. All 218 infrastructure tests pass including real media and unsafe URL/ambiguous caption cases. The actual Instagram caption was verified without live OpenAI calls or credential changes.",
+      "baseRef": "master",
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:12.826182Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -856,13 +844,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "770e639552eb0986eca3e56a0f9f2babdc4ed9a86f35733aa0f7dc105eb3e946"
+          "sha256": "33cfa03b2f80b80cf9d2c9f2d4f10e4a2fe69e55063bd01dba788be44d25e0b8"
         }
       ],
-      "reason": "Reviewed generated quality projection after integration with master 1976069bd3d397febbff4280c617667288629b0c. Every product quality row matches that committed master exactly; the Wiki patch changes only tooling metrics and navigation. Runtime, sensitive-data handling and product ranking implementations are unchanged by this patch.",
-      "baseRef": "HEAD",
-      "gitHead": "6e2a0ee2c1e4eaa477288cca1e3e5541e8c1667a",
-      "reviewedAtUtc": "2026-10-04T13:13:39.3414878Z"
+      "reason": "The merged solution builds with 0 warnings and 0 errors; all 2828 focused backend tests and 5147 frontend tests pass, plus 51 focused tests after the latest master update. Combined source indexes were rebuilt. Static test references are navigation evidence, not execution coverage.",
+      "baseRef": "master",
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:14.0201975Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -958,17 +946,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f9e31822ff61bf174116a83817a1bb331eba36f9e77a34ce4900128991834daa"
+          "sha256": "fcd85d3ab957f10d2482a8bf01d6f955b3f143ca4de52aad91b410e11b927e04"
         },
         {
           "path": ".llm-wiki/tools/Find-LlmWikiSecurityReview.ps1",
           "sha256": "05debd1f1423d52b707d01c54fe470aeb1870e2f16f0e175f75b02ec0cb7d6e7"
         }
       ],
-      "reason": "Rechecked after final affected-index generation: source hashes are current; SQLite-only query selection and the documented evidence boundaries are preserved. Security signals remain navigation evidence with unchanged classification and bounded SQL selection.",
-      "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:06:17.5238572Z"
+      "reason": "Reviewed the merged Wiki security evidence guide against its SQLite-only compiler and rebuilt quality snapshot. SQL inputs remain parameterized and bounded, current source hashes are validated, and static test-reference leads are explicitly distinguished from executed security coverage. The SQLite fixture contract test passed after combining current master with the migration; application routes, credentials and provider behavior were not edited during this integration.",
+      "baseRef": "master",
+      "gitHead": "362e17cc0f7acef800542bf688ccc5262f8c753c",
+      "reviewedAtUtc": "2026-10-04T18:19:35.6595787Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1105,17 +1093,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "8e92ef70a003ae5a89bdc16b9f23dfc064dcb8c49810b365c695513ef9406eef"
+          "sha256": "e66ce0e22daf43ed01ea5bc6c096f50120a2ea042f06e0235f21c26d10916fd6"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "76d202625b5d29b587985e74e91e0345d3999ce821e4a036ef84250b3fd0e3bd"
+          "sha256": "66ebb09cf982aa522ce26b16c499417b47772a24569d9a0af48ea140666c9619"
         }
       ],
-      "reason": "Reviewed feature trace workflow and refreshed frontend indexes: owner and consumer boundaries remain unchanged. Confirmed shared EntityCardThumb is the actual product/recipe/meal card owner; no backend commands or dependency topology changed.",
-      "baseRef": "HEAD",
-      "gitHead": "18a2a5b709c3b0a8a17454829ffaa16adaa64b5d",
-      "reviewedAtUtc": "2026-10-04T10:09:54.6083093Z"
+      "reason": "Checked the recipe import guide and navigation against combined current sources, including optional clipboard suggestions, video limits, provider configuration, proxy and temporary storage constraints and conditional Instagram video availability. Current master tooling and fixes are preserved; deployment is outside this merge.",
+      "baseRef": "master",
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:19.6901406Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1199,13 +1187,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "8e92ef70a003ae5a89bdc16b9f23dfc064dcb8c49810b365c695513ef9406eef"
+          "sha256": "e66ce0e22daf43ed01ea5bc6c096f50120a2ea042f06e0235f21c26d10916fd6"
         }
       ],
-      "reason": "Reviewed frontend selector/input/output and service contracts: no public payload or API changes; line charts receive existing locale input and number views use the existing localized pipe. Real RU rendering, language-switch unit tests, and build passed.",
-      "baseRef": "HEAD",
-      "gitHead": "18a2a5b709c3b0a8a17454829ffaa16adaa64b5d",
-      "reviewedAtUtc": "2026-10-04T10:09:41.4736817Z"
+      "reason": "Reviewed recipe import routes and multipart DTOs against current master: the compatibility checker reports 0 breaking changes and 9 additions; 4 host transport tests and 2116 architecture tests pass. AI owns recognition and Recipes saves the editable draft. Full frontend verification passed 5147 tests, with 51 focused tests after the latest master update and prior desktop/mobile visual QA.",
+      "baseRef": "master",
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:11.7839799Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1213,14 +1201,14 @@
       "pageSha256": "d53e2e063f9732812d7679f0f1542ab9ac898238515a6527d920ac93ed65c4e8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "57e0f0ecc950c8c77618442c457bfbb64bc6091726b2155705e2ab468763590f"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "49ecbe7cb4208969497cb732142477a08d0d64f39f4196a4c5803f23fa567378"
         }
       ],
-      "reason": "Reviewed the immutable module symbol/registration path patterns and project-prefix hoist in the explicit JSON baseline. Score predicates, candidate order, SQL default, fail-closed freshness, cache boundaries and SLA limits are preserved; before/after JSON payloads matched after excluding transport timing, and the complete context-retrieval lane passed.",
-      "baseRef": "HEAD",
-      "gitHead": "cc1ee85fdef594addfb3db89bcb0dac6e6f68f56",
-      "reviewedAtUtc": "2026-10-04T10:58:51.3494512Z"
+      "reason": "Checked the recipe import guide and navigation against combined current sources, including optional clipboard suggestions, video limits, provider configuration, proxy and temporary storage constraints and conditional Instagram video availability. Current master tooling and fixes are preserved; deployment is outside this merge.",
+      "baseRef": "master",
+      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
+      "reviewedAtUtc": "2026-10-04T18:04:15.4414345Z"
     },
     {
       "pageId": "workflow.review-diff",

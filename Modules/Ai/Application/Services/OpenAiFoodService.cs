@@ -8,13 +8,15 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Ai.Application.Services;
 
-public sealed class OpenAiFoodService(
+public sealed partial class OpenAiFoodService(
     IOpenAiFoodClient openAiFoodClient,
     IAiQuotaRepository aiQuotaRepository,
     IUserAiProfileReadService userProfileReadService,
     TimeProvider dateTimeProvider,
     IAiPromptProvider aiPromptProvider,
-    TimeSpan? overallOperationTimeout = null)
+    TimeSpan? overallOperationTimeout = null,
+    IRecipeSourceReader? recipeSourceReader = null,
+    IRecipeVideoProcessor? recipeVideoProcessor = null)
     : IOpenAiFoodService {
     private static readonly TimeSpan DefaultOverallOperationTimeout = TimeSpan.FromSeconds(60);
     private static readonly TimeSpan ReservationLifetime = TimeSpan.FromMinutes(15);

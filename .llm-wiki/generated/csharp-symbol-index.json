@@ -8,22 +8,22 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4375,
-    "symbols": 4307,
-    "interfaceImplementationLinks": 195,
+    "sourceFiles": 4402,
+    "symbols": 4334,
+    "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2250,
+      "class": 2265,
       "enum": 65,
-      "interface": 409,
-      "record": 1462,
+      "interface": 411,
+      "record": 1472,
       "record struct": 121
     },
     "roles": {
-      "Command": 227,
-      "CommandHandler": 221,
+      "Command": 229,
+      "CommandHandler": 223,
       "Configuration": 100,
-      "Controller": 110,
+      "Controller": 111,
       "Entity": 102,
       "Event": 19,
       "Factory": 14,
@@ -31,17 +31,17 @@
       "LookupRepository": 3,
       "Mapper": 8,
       "Mapping": 4,
-      "Options": 70,
-      "Other": 1771,
+      "Options": 71,
+      "Other": 1784,
       "Query": 300,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 99,
-      "Request": 164,
-      "Response": 240,
-      "Service": 166,
-      "Validator": 233,
+      "Request": 166,
+      "Response": 242,
+      "Service": 168,
+      "Validator": 235,
       "ValueObject": 115,
       "WriteRepository": 47
     }
@@ -4955,6 +4955,20 @@
       "line": 6
     },
     {
+      "name": "IRecipeSourceReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Ai/Application.Abstractions/Common/IRecipeSourceReader.cs",
+      "line": 4
+    },
+    {
+      "name": "IRecipeVideoProcessor",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Ai/Application.Abstractions/Common/IRecipeVideoProcessor.cs",
+      "line": 4
+    },
+    {
       "name": "OpenAiFoodClientResponse",
       "kind": "record",
       "role": "Response",
@@ -4966,6 +4980,20 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Ai/Application.Abstractions/Common/ProductImageAnalysis.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeAudio",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Application.Abstractions/Common/RecipeAudio.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeSource",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Application.Abstractions/Common/RecipeSource.cs",
       "line": 2
     },
     {
@@ -5044,6 +5072,48 @@
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/DeleteFoodRecognition/DeleteFoodRecognitionCommandHandler.cs",
       "line": 6
+    },
+    {
+      "name": "ImportRecipeCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ImportRecipeCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommandHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "ImportRecipeCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "ImportRecipeVideoCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "ImportRecipeVideoCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommandHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "ImportRecipeVideoCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommandValidator.cs",
+      "line": 4
     },
     {
       "name": "ParseFoodTextCommand",
@@ -5235,6 +5305,20 @@
       "line": 10
     },
     {
+      "name": "OpenAiFoodService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Ai/Application/Services/OpenAiFoodService.RecipeImport.cs",
+      "line": 8
+    },
+    {
+      "name": "OpenAiFoodService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Ai/Application/Services/OpenAiFoodService.RecipeVideoImport.cs",
+      "line": 10
+    },
+    {
       "name": "ProcessNextFoodRecognitionCommand",
       "kind": "record",
       "role": "Command",
@@ -5361,6 +5445,20 @@
       "line": 2
     },
     {
+      "name": "RecipeImportDraftModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Models/RecipeImportDraftModel.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeImportIngredientModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Models/RecipeImportIngredientModel.cs",
+      "line": 2
+    },
+    {
       "name": "GetAiPromptRevisionsQuery",
       "kind": "record",
       "role": "Query",
@@ -5449,7 +5547,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/AiProviderRegistration.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "AiQuotaTelemetry",
@@ -5515,6 +5613,13 @@
       "line": 2
     },
     {
+      "name": "RecipeVideoOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Modules/Ai/Infrastructure/Providers/Options/RecipeVideoOptions.cs",
+      "line": 2
+    },
+    {
       "name": "AiPromptPreviewRenderer",
       "kind": "class",
       "role": "Other",
@@ -5536,6 +5641,20 @@
       "line": 18
     },
     {
+      "name": "OpenAiFoodClient",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.RecipeImport.cs",
+      "line": 7
+    },
+    {
+      "name": "OpenAiFoodClient",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.RecipeTranscription.cs",
+      "line": 9
+    },
+    {
       "name": "OpenAiProductLabelRequest",
       "kind": "class",
       "role": "Request",
@@ -5548,6 +5667,27 @@
       "role": "Factory",
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiRequestFactory.cs",
       "line": 5
+    },
+    {
+      "name": "RecipeSourceReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeSourceReader.cs",
+      "line": 8
+    },
+    {
+      "name": "RecipeSourceTextExtractor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeSourceTextExtractor.cs",
+      "line": 6
+    },
+    {
+      "name": "RecipeVideoProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoProcessor.cs",
+      "line": 14
     },
     {
       "name": "AiPersistenceModelRegistration",
@@ -5638,7 +5778,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Ai/Presentation/Controllers/AiFoodController.cs",
-      "line": 24
+      "line": 25
     },
     {
       "name": "AiUsageController",
@@ -5697,6 +5837,34 @@
       "line": 2
     },
     {
+      "name": "RecipeVideoImportController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Ai/Presentation/Recipes/Controllers/RecipeVideoImportController.cs",
+      "line": 25
+    },
+    {
+      "name": "RecipeImportHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Presentation/Recipes/Mappings/RecipeImportHttpMappings.cs",
+      "line": 9
+    },
+    {
+      "name": "RecipeVideoAdmissionAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Presentation/Recipes/RecipeVideoAdmissionAttribute.cs",
+      "line": 9
+    },
+    {
+      "name": "RecipeVideoImportHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Ai/Presentation/Recipes/Requests/RecipeVideoImportHttpRequest.cs",
+      "line": 2
+    },
+    {
       "name": "FoodNutritionHttpRequest",
       "kind": "record",
       "role": "Request",
@@ -5723,6 +5891,13 @@
       "role": "Query",
       "path": "Modules/Ai/Presentation/Requests/ListFoodRecognitionsHttpQuery.cs",
       "line": 4
+    },
+    {
+      "name": "RecipeImportHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Ai/Presentation/Requests/RecipeImportHttpRequest.cs",
+      "line": 2
     },
     {
       "name": "StartFoodRecognitionHttpRequest",
@@ -5771,6 +5946,20 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Ai/Presentation/Responses/ProductLabelHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeImportHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Ai/Presentation/Responses/RecipeImportHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeImportIngredientHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Ai/Presentation/Responses/RecipeImportIngredientHttpResponse.cs",
       "line": 2
     },
     {
@@ -31095,10 +31284,38 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IOpenAiFoodClient",
+      "interfacePath": "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodClient.cs",
+      "implementation": "OpenAiFoodClient",
+      "implementationPath": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.RecipeImport.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IOpenAiFoodClient",
+      "interfacePath": "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodClient.cs",
+      "implementation": "OpenAiFoodClient",
+      "implementationPath": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.RecipeTranscription.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IOpenAiFoodService",
       "interfacePath": "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodService.cs",
       "implementation": "OpenAiFoodService",
       "implementationPath": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IOpenAiFoodService",
+      "interfacePath": "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodService.cs",
+      "implementation": "OpenAiFoodService",
+      "implementationPath": "Modules/Ai/Application/Services/OpenAiFoodService.RecipeImport.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IOpenAiFoodService",
+      "interfacePath": "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodService.cs",
+      "implementation": "OpenAiFoodService",
+      "implementationPath": "Modules/Ai/Application/Services/OpenAiFoodService.RecipeVideoImport.cs",
       "confidence": "naming-convention"
     },
     {
@@ -31242,10 +31459,24 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IRecipeSourceReader",
+      "interfacePath": "Modules/Ai/Application.Abstractions/Common/IRecipeSourceReader.cs",
+      "implementation": "RecipeSourceReader",
+      "implementationPath": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeSourceReader.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IRecipeUsageQuery",
       "interfacePath": "Modules/Recipes/Application.Abstractions/Common/IRecipeUsageQuery.cs",
       "implementation": "RecipeUsageQuery",
       "implementationPath": "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IRecipeVideoProcessor",
+      "interfacePath": "Modules/Ai/Application.Abstractions/Common/IRecipeVideoProcessor.cs",
+      "implementation": "RecipeVideoProcessor",
+      "implementationPath": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoProcessor.cs",
       "confidence": "naming-convention"
     },
     {

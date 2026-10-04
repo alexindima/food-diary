@@ -15,6 +15,7 @@ import { createCollectionTouchedState } from '../../../../../shared/lib/collecti
 import { MANUAL_NUTRITION_MAX_CALORIES, MANUAL_NUTRITION_MAX_NUTRIENT } from '../../../../../shared/lib/nutrition.constants';
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
 import type { Recipe, RecipeDto } from '../../../../../shared/models/recipe.data';
+import type { RecipeImportResult } from '../../../../../shared/models/recipe-import.data';
 import { LocalizedTourDefinitionService } from '../../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
 import { detectRecipeLanguage, hasSubstantiallyChangedRecipeText, recipeLanguageText } from '../../../lib/recipe-language.utils';
@@ -32,8 +33,10 @@ import {
     RECIPE_TEXT_NAME_MAX_LENGTH,
 } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeNutritionFormManager } from '../recipe-manage-lib/recipe-nutrition-form.manager';
+import { mapRecognizedRecipe } from '../recipe-manage-lib/recipe-recognition.mapper';
 import { RecipeStepFormManager } from '../recipe-manage-lib/recipe-step-form.manager';
 import { RecipeNutritionEditorComponent } from '../recipe-nutrition-editor/recipe-nutrition-editor';
+import { RecipeRecognitionComponent } from '../recipe-recognition/recipe-recognition';
 import {
     type RecipeStepListItem,
     RecipeStepsListComponent,
@@ -60,6 +63,7 @@ import { RECIPE_MANAGE_TOUR } from './recipe-manage-tour';
         RecipeBasicInfoComponent,
         RecipeNutritionEditorComponent,
         RecipeStepsListComponent,
+        RecipeRecognitionComponent,
     ],
     templateUrl: './recipe-manage.html',
     styleUrls: ['./recipe-manage.scss'],
@@ -91,7 +95,8 @@ export class RecipeManageComponent {
     protected readonly photosUploading = signal(false);
     protected readonly anyPhotosUploading = computed(() => this.photosUploading() || this.stepPhotosUploading());
     protected readonly isSubmitting = computed(() => this.recipeManageFacade.isSubmitting() || this.checkingPublication());
-    protected readonly isFormLocked = computed(() => this.isSubmitting() || this.checkingLanguage());
+    protected readonly isImporting = signal(false);
+    protected readonly isFormLocked = computed(() => this.isSubmitting() || this.checkingLanguage() || this.isImporting());
     protected readonly stepsTouched = this.stepsTouchedState.touched;
     protected readonly importUrl = signal('');
     protected readonly importText = signal('');
@@ -480,6 +485,20 @@ export class RecipeManageComponent {
         });
         this.stepFormManager.expandedSteps.clear();
         draft.steps.forEach((_, index) => this.stepFormManager.expandedSteps.add(index));
+        this.importErrorKey.set(null);
+        this.updateSummaryFromCurrentForm();
+    }
+
+    protected applyRecognizedDraft(draft: RecipeImportResult): void {
+        this.patchRecipeFormModel(
+            mapRecognizedRecipe(
+                draft,
+                this.translateService.instant('RECIPE_MANAGE.IMPORT.SOURCE_LABEL'),
+                this.translateService.instant('RECIPE_MANAGE.IMPORT.AUTHOR_NUTRITION'),
+            ),
+        );
+        this.stepFormManager.expandedSteps.clear();
+        this.steps.forEach((_, index) => this.stepFormManager.expandedSteps.add(index));
         this.importErrorKey.set(null);
         this.updateSummaryFromCurrentForm();
     }

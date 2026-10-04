@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1614,
+    "candidateFields": 1616,
     "credential": 156,
     "identity": 175,
-    "health": 747,
+    "health": 749,
     "financial": 132,
     "privateContent": 404,
-    "boundaryFiles": 211,
+    "boundaryFiles": 212,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -2504,6 +2504,13 @@
     },
     {
       "category": "health",
+      "name": "AuthorNutrition",
+      "type": "string?",
+      "path": "Modules/Ai/Contracts/Models/RecipeImportDraftModel.cs",
+      "line": 11
+    },
+    {
+      "category": "health",
       "name": "NutritionJson",
       "type": "string?",
       "path": "Modules/Ai/PersistenceModel/FoodRecognitionJob.cs",
@@ -2550,6 +2557,13 @@
       "type": "decimal?",
       "path": "Modules/Ai/Presentation/Responses/ProductLabelHttpResponse.cs",
       "line": 5
+    },
+    {
+      "category": "health",
+      "name": "AuthorNutrition",
+      "type": "string?",
+      "path": "Modules/Ai/Presentation/Responses/RecipeImportHttpResponse.cs",
+      "line": 6
     },
     {
       "category": "health",
@@ -11605,6 +11619,13 @@
         "privateContent"
       ],
       "fieldCount": 2
+    },
+    {
+      "path": "Modules/Ai/Presentation/Responses/RecipeImportHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
     },
     {
       "path": "Modules/Billing/Presentation/Responses/BillingOverviewHttpResponse.cs",

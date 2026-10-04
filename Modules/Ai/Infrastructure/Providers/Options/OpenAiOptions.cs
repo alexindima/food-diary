@@ -7,6 +7,7 @@ public sealed class OpenAiOptions {
     public string VisionModel { get; init; } = "gpt-5-mini";
     public string VisionFallbackModel { get; init; } = "gpt-4o";
     public string TextModel { get; init; } = "gpt-5-mini";
+    public string TranscriptionModel { get; init; } = "gpt-transcribe";
     public int MaxOutputTokens { get; init; } = 4096;
 
     public static bool HasVisionFallbackWhenVisionModelConfigured(OpenAiOptions options) {
@@ -23,4 +24,7 @@ public sealed class OpenAiOptions {
 
     public static bool HasValidMaxOutputTokens(OpenAiOptions options) =>
         options.MaxOutputTokens is >= 1 and <= 32768;
+
+    public static bool HasTranscriptionModelWhenApiKeyConfigured(OpenAiOptions options) =>
+        string.IsNullOrWhiteSpace(options.ApiKey) || !string.IsNullOrWhiteSpace(options.TranscriptionModel);
 }

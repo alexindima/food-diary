@@ -13,7 +13,7 @@
             </span>
             @if (item.calories !== null) {
                 <strong class="ai-photo-result__item-calories fd-ui-body-sm">
-                    {{ item.calories | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}
+                    {{ item.calories | localizedNumber: activeLang() }} {{ 'GENERAL.UNITS.KCAL' | translate }}
                 </strong>
             }
         </button>

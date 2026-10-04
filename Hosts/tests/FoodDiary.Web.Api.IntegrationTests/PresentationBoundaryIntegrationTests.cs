@@ -1512,7 +1512,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         return client;
     }
 
-    private static string BuildFocusedOpenApiSnapshot(JsonElement root) {
+    internal static string BuildFocusedOpenApiSnapshot(JsonElement root) {
         string[] selectedPaths = [
             "/api/v{version}/auth/register",
             "/api/v{version}/auth/login",
@@ -1587,7 +1587,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         return JsonSerializer.Serialize(snapshot, IndentedJsonOptions);
     }
 
-    private static string BuildFullOpenApiSnapshot(JsonElement root) {
+    internal static string BuildFullOpenApiSnapshot(JsonElement root) {
         JsonElement paths = root.GetProperty("paths");
         EndpointSnapshot[] endpoints = [.. paths.EnumerateObject()
             .Select(property => CreateEndpointSnapshot(paths, property.Name, includePathParameters: true))
@@ -2006,7 +2006,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         return await client.SendAsync(request).ConfigureAwait(false);
     }
 
-    private static async Task AssertSnapshotAsync(string snapshotFileName, string actual) {
+    internal static async Task AssertSnapshotAsync(string snapshotFileName, string actual) {
         string snapshotPath = SnapshotPathResolver.GetPath(snapshotFileName);
         if (string.Equals(Environment.GetEnvironmentVariable("UPDATE_CONTRACT_SNAPSHOTS"), "1", StringComparison.Ordinal)) {
             await File.WriteAllTextAsync(snapshotPath, actual.ReplaceLineEndings("\n")).ConfigureAwait(false);

@@ -125,7 +125,7 @@ describe('AuthInterceptor refresh flow', () => {
         retryReq.flush(responseData);
     });
 
-    it('should logout on refresh failure', () => {
+    it('leaves session invalidation to AuthService when refresh fails', () => {
         authServiceSpy.getToken.mockReturnValue('expired-token');
         authServiceSpy.refreshToken.mockReturnValue(throwError(() => new Error('Refresh failed')));
 
@@ -141,10 +141,10 @@ describe('AuthInterceptor refresh flow', () => {
         const req = httpTesting.expectOne('/api/data');
         req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
-        expect(authServiceSpy.onLogoutAsync).toHaveBeenCalledWith(true);
+        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
     });
 
-    it('should logout when refresh returns null token', () => {
+    it('propagates the original error without invalidating the session when refresh returns null', () => {
         authServiceSpy.getToken.mockReturnValue('expired-token');
         authServiceSpy.refreshToken.mockReturnValue(of(null));
 
@@ -157,7 +157,7 @@ describe('AuthInterceptor refresh flow', () => {
         const req = httpTesting.expectOne('/api/data');
         req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
-        expect(authServiceSpy.onLogoutAsync).toHaveBeenCalledWith(true);
+        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
     });
 });
 

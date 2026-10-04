@@ -20,9 +20,19 @@ export class ShoppingMergePreviewComponent {
     protected readonly rows = this.data.map(group => ({
         name: group.after.name,
         before: group.before
-            .map(item => formatShoppingListItemMeta({ ...item, category: null, sources: [] }, key => this.translate.instant(key)))
+            .map(item =>
+                formatShoppingListItemMeta(
+                    { ...item, category: null, sources: [] },
+                    key => this.translate.instant(key),
+                    this.translate.getCurrentLang(),
+                ),
+            )
             .join(' + '),
-        after: formatShoppingListItemMeta({ ...group.after, category: null, sources: [] }, key => this.translate.instant(key)),
+        after: formatShoppingListItemMeta(
+            { ...group.after, category: null, sources: [] },
+            key => this.translate.instant(key),
+            this.translate.getCurrentLang(),
+        ),
         id: group.after.id,
     }));
     protected close(confirmed = false): void {

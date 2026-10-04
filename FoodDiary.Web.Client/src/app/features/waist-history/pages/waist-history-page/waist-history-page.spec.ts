@@ -7,6 +7,7 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { ConfirmDeleteDialogComponent } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import { NavigationService } from '../../../../services/navigation.service';
 import { UserService } from '../../../../shared/api/user.service';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
@@ -192,11 +193,41 @@ describe('Waist history page composition', () => {
                 providers: [{ provide: WaistHistoryFacade, useValue: facade }],
             }),
         );
+        if (action === 'remove') {
+            open.mockReturnValueOnce({ afterClosed: () => of(true) });
+        }
         closed.next(action === undefined ? undefined : { action, entry: ENTRY });
         expect(remove).toHaveBeenCalledTimes(action === 'remove' ? 1 : 0);
         expect(facade.isEditing()).toBe(action === 'edit');
     });
 });
+describe('Measurement deletion confirmation', () => {
+    it.each([true, false, undefined])('deletes a measurement only after confirmation: %s', confirmed => {
+        const { component, open } = context;
+        const confirmation = new Subject<boolean | undefined>();
+        open.mockReturnValueOnce({ afterClosed: () => confirmation });
+        const remove = vi.spyOn(TestBed.inject(WaistEntriesService), 'remove');
+        component['deleteEntry'](ENTRY);
+        expect(open.mock.calls[0]?.[0]).toBe(ConfirmDeleteDialogComponent);
+        expect(open.mock.calls[0]?.[1]).toMatchObject({ data: { title: 'WAIST_HISTORY.DELETE_CONFIRM_TITLE' } });
+        expect(remove).not.toHaveBeenCalled();
+        confirmation.next(confirmed);
+        confirmation.next(true);
+        expect(remove).toHaveBeenCalledTimes(confirmed === true ? 1 : 0);
+    });
+
+    it('does not delete when the page closes before confirmation', () => {
+        const { component, fixture, open } = context;
+        const confirmation = new Subject<boolean>();
+        open.mockReturnValueOnce({ afterClosed: () => confirmation });
+        const remove = vi.spyOn(TestBed.inject(WaistEntriesService), 'remove');
+        component['deleteEntry'](ENTRY);
+        fixture.destroy();
+        confirmation.next(true);
+        expect(remove).not.toHaveBeenCalled();
+    });
+});
+
 describe('History page periods and KPI states', () => {
     it.each([null, 'invalid', '2026-06-20'])('shows latest measurement month safely for %s', date => {
         const { component, facade } = context;

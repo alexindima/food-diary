@@ -1,17 +1,24 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiCardComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { take } from 'rxjs';
 
+import {
+    ConfirmDeleteDialogComponent,
+    type ConfirmDeleteDialogData,
+} from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { PeriodFilterComponent } from '../../../../components/shared/period-filter/period-filter';
 import { NavigationService } from '../../../../services/navigation.service';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
-import { measurementMonthRange } from '../../../../shared/lib/measurement-date.utils';
+import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
+import { measurementMonthRange, toMeasurementDateIso } from '../../../../shared/lib/measurement-date.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import type { WeightEntry } from '../../../../shared/models/weight-entry.data';
@@ -67,6 +74,8 @@ export class WeightHistoryPageComponent {
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly viewportService = inject(ViewportService);
     private readonly dialogService = inject(FdUiDialogService);
+    private readonly translateService = inject(TranslateService);
+    private readonly destroyRef = inject(DestroyRef);
 
     protected readonly selectedRange = this.facade.selectedRange;
     protected readonly currentRange = this.facade.currentRange;
@@ -136,7 +145,26 @@ export class WeightHistoryPageComponent {
     }
 
     protected deleteEntry(entry: WeightEntry): void {
-        this.facade.deleteEntry(entry);
+        const dateIso = toMeasurementDateIso(entry.date);
+        const date =
+            dateIso === null
+                ? entry.date
+                : new Intl.DateTimeFormat(resolveAppLocale(this.locale()), { dateStyle: 'medium', timeZone: 'UTC' }).format(
+                      new Date(dateIso),
+                  );
+        const data: ConfirmDeleteDialogData = {
+            title: this.translateService.instant('WEIGHT_HISTORY.DELETE_CONFIRM_TITLE'),
+            message: this.translateService.instant('WEIGHT_HISTORY.DELETE_CONFIRM_MESSAGE', { date }),
+        };
+        this.dialogService
+            .open<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, { size: 'sm', data })
+            .afterClosed()
+            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+            .subscribe(confirmed => {
+                if (confirmed === true) {
+                    this.facade.deleteEntry(entry);
+                }
+            });
     }
 
     protected openGoalDialog(): void {
