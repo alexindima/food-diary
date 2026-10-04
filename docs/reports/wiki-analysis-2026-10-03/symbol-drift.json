@@ -1,0 +1,258 @@
+{
+  "seconds": 12.3008929,
+  "committedSummary": {
+    "sourceFiles": 4339,
+    "symbols": 4270,
+    "interfaceImplementationLinks": 194,
+    "dependencyInjectionRegistrations": 73,
+    "kinds": {
+      "class": 2229,
+      "enum": 65,
+      "interface": 406,
+      "record": 1449,
+      "record struct": 121
+    },
+    "roles": {
+      "Command": 226,
+      "CommandHandler": 221,
+      "Configuration": 97,
+      "Controller": 110,
+      "Entity": 100,
+      "Event": 19,
+      "Factory": 14,
+      "Handler": 7,
+      "LookupRepository": 3,
+      "Mapper": 8,
+      "Mapping": 4,
+      "Options": 70,
+      "Other": 1750,
+      "Query": 300,
+      "QueryHandler": 215,
+      "ReadModelRepository": 33,
+      "ReadRepository": 39,
+      "Repository": 99,
+      "Request": 160,
+      "Response": 234,
+      "Service": 166,
+      "Validator": 233,
+      "ValueObject": 115,
+      "WriteRepository": 47
+    }
+  },
+  "currentSummary": {
+    "sourceFiles": 4362,
+    "symbols": 4294,
+    "interfaceImplementationLinks": 195,
+    "dependencyInjectionRegistrations": 73,
+    "kinds": {
+      "class": 2247,
+      "enum": 65,
+      "interface": 409,
+      "record": 1452,
+      "record struct": 121
+    },
+    "roles": {
+      "Command": 227,
+      "CommandHandler": 221,
+      "Configuration": 100,
+      "Controller": 110,
+      "Entity": 102,
+      "Event": 19,
+      "Factory": 14,
+      "Handler": 7,
+      "LookupRepository": 3,
+      "Mapper": 8,
+      "Mapping": 4,
+      "Options": 70,
+      "Other": 1768,
+      "Query": 300,
+      "QueryHandler": 215,
+      "ReadModelRepository": 33,
+      "ReadRepository": 39,
+      "Repository": 99,
+      "Request": 160,
+      "Response": 234,
+      "Service": 166,
+      "Validator": 233,
+      "ValueObject": 115,
+      "WriteRepository": 47
+    }
+  },
+  "newTypes": [
+    {
+      "name": "AtomicCommandReceiptCleanupJob",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.JobManager/Services/AtomicCommandReceiptCleanupJob.cs",
+      "line": 6
+    },
+    {
+      "name": "WebPushDeliveryOutcome",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Application.Abstractions/Models/WebPushDeliveryOutcome.cs",
+      "line": 2
+    },
+    {
+      "name": "UserNutritionProfile",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
+      "line": 6
+    },
+    {
+      "name": "UserPreferences",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/UserPreferences.cs",
+      "line": 6
+    },
+    {
+      "name": "AtomicCommandReceiptsUserDataPurgeParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/AtomicCommandReceiptsUserDataPurgeParticipant.cs",
+      "line": 6
+    },
+    {
+      "name": "UserProfileWriteGuardInterceptor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileWriteGuardInterceptor.cs",
+      "line": 9
+    },
+    {
+      "name": "UserNutritionProfileConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserNutritionProfileConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "UserPreferencesConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserPreferencesConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "MailRelayClaimLostException",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayClaimLostException.cs",
+      "line": 2
+    },
+    {
+      "name": "IIdempotentAtomicCommand",
+      "kind": "interface",
+      "role": "Command",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IIdempotentAtomicCommand.cs",
+      "line": 4
+    },
+    {
+      "name": "AtomicOperation",
+      "kind": "record",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/AtomicOperation.cs",
+      "line": 4
+    },
+    {
+      "name": "IAtomicCommandReceiptMaintenance",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IAtomicCommandReceiptMaintenance.cs",
+      "line": 2
+    },
+    {
+      "name": "IReadSnapshotExecutor",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IReadSnapshotExecutor.cs",
+      "line": 2
+    },
+    {
+      "name": "ReadSnapshotBudget",
+      "kind": "record",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/ReadSnapshotBudget.cs",
+      "line": 2
+    },
+    {
+      "name": "CommandExecutionScope",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Runtime/Common/Services/CommandExecutionScope.cs",
+      "line": 4
+    },
+    {
+      "name": "Lease",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Runtime/Common/Services/CommandExecutionScope.cs",
+      "line": 17
+    },
+    {
+      "name": "PersistenceSaveOrder",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Abstractions/PersistenceSaveOrder.cs",
+      "line": 4
+    },
+    {
+      "name": "AtomicCommandReceipt",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/AtomicCommandReceipt.cs",
+      "line": 2
+    },
+    {
+      "name": "AtomicCommandReceiptConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/AtomicCommandReceiptConfiguration.cs",
+      "line": 5
+    },
+    {
+      "name": "AtomicCommandReceiptMaintenance",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/AtomicCommandReceiptMaintenance.cs",
+      "line": 5
+    },
+    {
+      "name": "AtomicResultJsonConverter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/AtomicResultJsonConverter.cs",
+      "line": 6
+    },
+    {
+      "name": "CommitOutcomeUnknownException",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/CommitOutcomeUnknownException.cs",
+      "line": 2
+    },
+    {
+      "name": "EfReadSnapshotExecutor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/EfReadSnapshotExecutor.cs",
+      "line": 8
+    },
+    {
+      "name": "ReadSnapshotBudgetInterceptor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/ReadSnapshotBudgetInterceptor.cs",
+      "line": 5
+    },
+    {
+      "name": "VerifiedTransactionCommit",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/VerifiedTransactionCommit.cs",
+      "line": 8
+    }
+  ]
+}

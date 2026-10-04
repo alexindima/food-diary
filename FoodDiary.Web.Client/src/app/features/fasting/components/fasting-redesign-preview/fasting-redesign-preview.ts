@@ -1,4 +1,4 @@
-import { DatePipe, DecimalPipe, UpperCasePipe } from '@angular/common';
+import { DatePipe, UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -6,6 +6,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiProgressRingComponent } from 'fd-ui-kit/progress-ring/fd-ui-progress-ring';
 
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { buildFastingTimerCardComputedState } from '../../../../shared/lib/fasting-timer-card-state';
 import { HOURS_PER_DAY, MS_PER_HOUR } from '../../../../shared/lib/time.constants';
 import type { FastingSession, FastingStats } from '../../../../shared/models/fasting.data';
@@ -32,7 +33,15 @@ const DEFAULT_CYCLIC_FAST_HOURS = 16;
 
 @Component({
     selector: 'fd-fasting-redesign-preview',
-    imports: [UpperCasePipe, DatePipe, DecimalPipe, TranslatePipe, FdUiButtonComponent, FdUiIconComponent, FdUiProgressRingComponent],
+    imports: [
+        UpperCasePipe,
+        DatePipe,
+        LocalizedNumberPipe,
+        TranslatePipe,
+        FdUiButtonComponent,
+        FdUiIconComponent,
+        FdUiProgressRingComponent,
+    ],
     templateUrl: './fasting-redesign-preview.html',
     styleUrl: './fasting-redesign-preview.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

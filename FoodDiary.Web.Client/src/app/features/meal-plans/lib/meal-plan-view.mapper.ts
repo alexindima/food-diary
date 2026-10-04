@@ -99,8 +99,8 @@ function buildDietTypeTranslationKey(dietType: DietType): string {
 function buildMealNutritionItems(meal: MealPlanMeal): MealPlanNutritionItem[] {
     return [
         { unitKey: 'GENERAL.UNITS.KCAL', value: meal.calories, prefix: '' },
-        { unitKey: 'GENERAL.UNITS.G', value: meal.proteins, prefix: 'P: ' },
-        { unitKey: 'GENERAL.UNITS.G', value: meal.fats, prefix: 'F: ' },
-        { unitKey: 'GENERAL.UNITS.G', value: meal.carbs, prefix: 'C: ' },
+        { unitKey: 'GENERAL.UNITS.G', value: meal.proteins, prefix: 'GENERAL.NUTRIENTS.PROTEIN' },
+        { unitKey: 'GENERAL.UNITS.G', value: meal.fats, prefix: 'GENERAL.NUTRIENTS.FAT' },
+        { unitKey: 'GENERAL.UNITS.G', value: meal.carbs, prefix: 'GENERAL.NUTRIENTS.CARB' },
     ].filter((item): item is MealPlanNutritionItem => item.value !== null && item.value !== undefined && item.value > 0);
 }

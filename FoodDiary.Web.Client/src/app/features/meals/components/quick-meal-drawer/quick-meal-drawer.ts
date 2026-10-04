@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -8,6 +7,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { MealDetailsFieldsComponent } from '../../../../components/shared/meal-details-fields/meal-details-fields';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveProductImageUrl } from '../../../../shared/lib/product-image.util';
 import { normalizeProductType } from '../../../../shared/lib/product-type.utils';
 import { resolveRecipeImageUrl } from '../../../../shared/lib/recipe-image.util';
@@ -34,7 +34,7 @@ type QuickMealToggleView = {
 
 @Component({
     selector: 'fd-quick-meal-drawer',
-    imports: [CommonModule, TranslatePipe, FdUiHintDirective, FdUiButtonComponent, MealDetailsFieldsComponent],
+    imports: [LocalizedNumberPipe, TranslatePipe, FdUiHintDirective, FdUiButtonComponent, MealDetailsFieldsComponent],
     templateUrl: './quick-meal-drawer.html',
     styleUrls: ['./quick-meal-drawer.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,7 +52,7 @@ export class QuickMealDrawerComponent {
     protected readonly titleId = `fd-quick-meal-title-${QuickMealDrawerComponent.nextId++}`;
 
     protected readonly items = this.quickService.items;
-    private readonly language = injectCurrentLanguage();
+    protected readonly language = injectCurrentLanguage();
     protected readonly itemsLabelKey = computed(
         () => `QUICK_MEAL.ITEMS_${new Intl.PluralRules(this.language()).select(this.items().length).toUpperCase()}`,
     );
@@ -132,7 +132,8 @@ export class QuickMealDrawerComponent {
             return `GENERAL.UNITS.${item.product?.baseUnit ?? 'G'}`;
         }
 
-        return 'QUICK_MEAL.SERVINGS';
+        const category = new Intl.PluralRules(this.language(), { maximumFractionDigits: 1 }).select(item.amount);
+        return `QUICK_MEAL.SERVINGS_${category.toUpperCase()}`;
     }
 
     protected updateDate(value: string): void {

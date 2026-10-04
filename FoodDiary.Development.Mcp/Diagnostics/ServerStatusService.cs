@@ -50,6 +50,11 @@ public sealed class ServerStatusService(
         bool indexesMatchWorktree = indexFilesPresent && verificationReceipt is not null &&
             string.Equals(verificationReceipt.SourceFingerprint, sourceFingerprint, StringComparison.Ordinal) &&
             string.Equals(verificationReceipt.IndexFingerprint, indexFingerprint, StringComparison.Ordinal);
+        WikiVerificationReceipt? generationReceipt = await WikiVerificationReceipt
+            .ReadAsync(repositoryRoot, cancellationToken, generation: true).ConfigureAwait(false);
+        bool generationMatches = indexFilesPresent && generationReceipt is not null &&
+            string.Equals(generationReceipt.SourceFingerprint, sourceFingerprint, StringComparison.Ordinal) &&
+            string.Equals(generationReceipt.IndexFingerprint, indexFingerprint, StringComparison.Ordinal);
         string currentMcpSourceFingerprint = await DevelopmentMcpSourceFingerprint
             .ComputeAsync(repositoryRoot, cancellationToken)
             .ConfigureAwait(false);
@@ -69,6 +74,14 @@ public sealed class ServerStatusService(
             indexCheckSummary = "Required indexes do not match the latest verified source/index fingerprint receipt.";
         }
         string deepFreshness;
+        string generationFreshness;
+        if (!indexFilesPresent) {
+            generationFreshness = "missing";
+        } else if (generationMatches) {
+            generationFreshness = "verified";
+        } else {
+            generationFreshness = generationReceipt is null ? "unverified" : "stale";
+        }
         if (!indexFilesPresent) {
             deepFreshness = "missing";
         } else if (indexesMatchWorktree) {
@@ -102,7 +115,9 @@ public sealed class ServerStatusService(
             indexCheckSummary,
             indexes,
             queryCache?.CaptureMetrics() ?? new WikiRuntimeTelemetry().Capture(cacheEntries: 0),
-            timeProvider.GetUtcNow());
+            timeProvider.GetUtcNow(),
+            GenerationFreshness: generationFreshness,
+            LastGenerationCheckAtUtc: generationReceipt?.VerifiedAtUtc);
     }
 
     private static bool IsDerivedWikiPath(string path) =>

@@ -30,6 +30,12 @@ sources:
   - FoodDiary.Web.Client/.husky/pre-commit
   - FoodDiary.Web.Client/.husky/pre-push
   - .llm-wiki/policies/affected-smoke-catalog.psd1
+  - .llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1
+  - .llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1
+  - .llm-wiki/tools/Test-LlmWikiCollections.ps1
+  - .llm-wiki/tools/Test-LlmWikiModulePersistencePolicy.ps1
+  - .llm-wiki/tools/Test-LlmWikiContextOperations.ps1
+  - .llm-wiki/tools/Find-LlmWikiContext.ps1
   - .llm-wiki/tools/Get-LlmWikiTestPlan.ps1
   - .llm-wiki/tools/Test-LlmWikiToolStartup.ps1
   - .llm-wiki/tools/LlmWikiModuleTestRoots.ps1
@@ -45,9 +51,10 @@ sources:
   - .llm-wiki/tools/Invoke-LlmWikiContractReferenceExtractor.ps1
   - .llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1
   - .llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1
-  - .llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1
   - .llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1
-  - .llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1
+  - .llm-wiki/tools/LlmWikiCorpusEvaluation.ps1
+  - .llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1
+  - .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiImpactSimulationSqlParity.ps1
   - .llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1
   - .llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1
@@ -81,6 +88,10 @@ sources:
 
 # Run the Staged Index Pipeline
 
+Generators refill free worker slots within each dependency stage rather than waiting for a fixed batch. Catalog and symbol generators enumerate Git-visible inputs before accessing the filesystem. Stage barriers, timeouts, transaction rollback, and every required generator remain in force.
+
+A complete `-Check` records the generation receipt. Only a successful `verify-full` records full verification after that generation still matches the source and index fingerprints and the facade's failure-registry, change-policy, and source-impact gates have passed. The inner regression runner does not publish full verification by itself. `verify-full -MaxConcurrency 2` bounds both generator and regression workers. Affected verification cannot promote its scoped success to the full status. Dirty snapshot guards compare content hashes, and cached clones mutated by a read command are discarded.
+
 Module source areas come from the Git-visible file inventory. Empty legacy
 directories and ignored build outputs must not change generated pages between
 a developer checkout and CI. Module abstraction roots resolve to the sibling
@@ -99,6 +110,8 @@ not require hashing source inputs. Existing receipts still receive full current
 input validation before they can satisfy a command.
 
 Mutable tool-smoke registries are redirected to `.artifacts/llm-wiki` instead of editing canonical knowledge and relying on `finally` restoration. Index updates persist an in-progress transaction snapshot under the Git directory; the next update restores any interrupted transaction whose owner process no longer exists before making new changes.
+
+Smoke logs and explicit fixture sandboxes stay under the run's repository artifacts. Native temporary files use a separate short run/group directory in the system temporary parent, preventing Windows SQLite journal paths from exceeding native limits. `TEMP`, `TMP`, and `TMPDIR` share that group scope. Cleanup verifies the owned parent and exact run name before removing the temporary directory.
 
 Test plans expose `required`, `recommended`, `fullRegression`, and `satisfied`
 command groups. Direct owners remain required. A broad production consumer set
@@ -159,6 +172,30 @@ regression verifies that every tracked Wiki tool maps to a smoke group and that
 every concrete non-fallback group has an execution handler. Catalog aliases expand
 to validated concrete groups before requested-group filtering.
 
+`code-graph` is a compatibility alias for `code-graph-core` and `trace-output`.
+The core group retains Roslyn, TypeScript, and graph regressions in the early
+parallel batch. Trace output, frontend SQL parity, and quality-risk checks run
+once in the serial group after graph writers finish. Full CI selects the same
+37 concrete groups. Local graph changes retain all six checks; the former
+graph-to-trace suppression must not drop the unique quality-risk regression.
+
+The strict-shapes group also checks both model-routing and verification-plan
+item-ID projections under strict mode. Their formerly separate unreferenced
+test scripts have been consolidated into `Test-LlmWikiCollections.ps1` without
+dropping empty, mixed, legacy, duplicate, or normal-object cases. Deleted item-ID
+test paths also select the strict-shapes replacement rather than checking removed
+files through the generic tool contract. The change-policy
+group includes the 24-case module persistence policy regression with current
+real repository paths and the current Services/ mail-service prefix. Linux smoke and development-context evaluation remain
+supported diagnostics. `Test-LlmWikiContextOperations.ps1` remains a manual
+structured-explanation, ranking-budget, unseen-draft, and tracked-state check.
+An absent internal caller alone does not make a diagnostic obsolete.
+
+The explicit JSON context baseline computes immutable module path patterns and
+project prefixes once before scoring symbols and registrations. Per-record
+scores and ordering remain unchanged; the context-cache cold and warm SLA
+checks retain their existing limits.
+
 `read-only-guard` remains a compatibility alias for all four original regression
 scripts. Its `read-only-isolation` child runs the destructive test fixtures in a
 private Git clone and cleans up that clone and its snapshot cache. The already
@@ -184,8 +221,8 @@ checks. Workspace runs governance, migration, export, evidence, and handoff.
 Orchestration initializes two conflicting workspaces and decision/blocker journal
 entries through the normal tools, validates them, then runs the original scheduler
 scenarios independently. Governed remains the complete combined compatibility
-option. A frozen assertion inventory verifies 333 Core, 279 Workspace, and 97
-Orchestration assertions against the original 710-assertion audit, including one
+option. A frozen assertion inventory verifies 335 Core, 279 Workspace, and 97
+Orchestration assertions against the current 712-assertion audit, including one
 common memory-isolation assertion run by every shard. CI uses separate checkout/cache roots and
 `fail-fast: false`; the final gate requires the aggregate matrix result. Local
 `-AuditShard All` remains the default complete sequential audit. Run individual
@@ -198,6 +235,16 @@ without contention from other smoke workers. The legacy `context-bundle` name
 expands to `context-search-evals` (parallel search-quality and Node/.NET parity)
 and `context-retrieval` (serial latency-sensitive checks). Both are included in
 the full catalog; no corpus, assertion or latency threshold is removed.
+Search evaluation builds the graph once, then runs at most two independent
+corpus processes, scheduling larger corpora first. Each corpus keeps its own
+single batch read transaction; its JSON case order and all quality assertions
+remain unchanged. The driver rejects an evaluated corpus that has no registered
+quality assertions. Every raw result and worker stderr log is retained under
+`.artifacts/llm-wiki/context-evaluation/corpus-<pid>-<run-id>-<corpus>.json`
+(stderr uses the additional `.log` suffix). Failures, timeouts and supervisor
+cancellation stop the pool's owned process trees. Use
+`Test-LlmWikiSqlContextEvaluation.ps1 -MaxConcurrency 1` for serial diagnosis;
+the outer smoke runner's `-MaxConcurrency 1` also constrains this nested pool.
 The serial `context-retrieval` group
 owns query-context compiled-index SQLite/JSON parity, payload-reduction,
 source-hash, and transport-envelope checks. The graph-dependent `task-baseline`
@@ -367,10 +414,10 @@ marker before copying the rollback tree, prefer the last completed-stage
 checkpoint for recoverable interruptions, and prune stale markerless or partial
 transactions that cannot be restored safely.
 
-The pre-commit hook runs the affected compiled-index freshness check when staged
-source or Wiki generator inputs change. This catches a final TS/test edit made
-after index generation before the stale artifacts can reach CI. CSS/SCSS-only
-commits skip the compiled-index check because no compiled index reads stylesheets.
+The pre-commit hook runs `git diff --cached --check`. The pre-push hook runs the
+affected compiled-index freshness check for the pushed change set, followed by
+the applicable frontend and backend checks. Full Wiki regression remains a
+separate local/CI gate. Stylesheets do not select compiled-index generators.
 
 Adaptive routing regression, adaptive experience/lifecycle regression, the
 integration-scan contract, and three deterministic eval shards are independent
@@ -437,11 +484,11 @@ architecture-health analytics during feature iteration; the ordinary affected
 update/verify refreshes them once at publication finalization.
 After a cache miss that proves an output current, check mode refreshes the
 receipt as well. Consequently a manual verify pays the cold computation once
-and the pre-commit freshness check can reuse that exact content-addressed proof;
+and the pre-push freshness check can reuse that exact content-addressed proof;
 a later source edit still invalidates it.
 The affected pipeline also records a tool-set-specific aggregate receipt over
 all relevant repository inputs and compiled outputs. This lets an immediately
-following pre-commit freshness check return after one native hash pass instead
+following pre-push freshness check return after one native hash pass instead
 of replaying uncached catalog, symbol, domain, sensitive-data, and module-page
 generators. Strict affected verification and CI do not request this reuse.
 
@@ -453,8 +500,8 @@ not rerun the generators. If the worktree changed while it waited, it performs
 its own atomic update normally. The focused concurrency regression launches two
 real domain-index updates and requires the second process to take the reuse path.
 
-Git hooks isolate .NET outputs under PID-specific
-`.artifacts/pre-commit/<pid>` and `.artifacts/pre-push/<pid>` directories. Their
+The pre-push hook isolates .NET outputs under the PID-specific
+`.artifacts/pre-push/<pid>` directory. Its
 cleanup removes only the current hook's directory plus invalid nested
 `.artifacts` folders; it does not delete `.artifacts/llm-wiki`, another hook's
 build outputs, or another development session's task-scoped artifacts. This

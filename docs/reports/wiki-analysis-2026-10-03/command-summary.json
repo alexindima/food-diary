@@ -1,0 +1,65 @@
+[
+  {
+    "name": "brief-json-facade",
+    "firstSeconds": 27.364,
+    "warmMeanSeconds": 2.21,
+    "lastSeconds": 1.999,
+    "outputCharacters": 2992
+  },
+  {
+    "name": "context-json-direct",
+    "firstSeconds": 35.862,
+    "warmMeanSeconds": 1.069,
+    "lastSeconds": 1.041,
+    "outputCharacters": 22446
+  },
+  {
+    "name": "context-json-facade",
+    "firstSeconds": 41.549,
+    "warmMeanSeconds": 2.556,
+    "lastSeconds": 2.485,
+    "outputCharacters": 23153
+  },
+  {
+    "name": "context-sqlite-direct",
+    "firstSeconds": 3.143,
+    "warmMeanSeconds": 2.13,
+    "lastSeconds": 2.071,
+    "outputCharacters": 33146
+  },
+  {
+    "name": "context-sqlite-facade",
+    "firstSeconds": 4.368,
+    "warmMeanSeconds": 3.378,
+    "lastSeconds": 3.447,
+    "outputCharacters": 33853
+  },
+  {
+    "name": "facade-help",
+    "firstSeconds": 1.363,
+    "warmMeanSeconds": 0.979,
+    "lastSeconds": 0.959,
+    "outputCharacters": 823
+  },
+  {
+    "name": "graph-no-change",
+    "firstSeconds": 4.645,
+    "warmMeanSeconds": 4.496,
+    "lastSeconds": 4.365,
+    "outputCharacters": 3422
+  },
+  {
+    "name": "process-empty",
+    "firstSeconds": 0.875,
+    "warmMeanSeconds": 0.375,
+    "lastSeconds": 0.351,
+    "outputCharacters": 0
+  },
+  {
+    "name": "research-json-facade",
+    "firstSeconds": 12.703,
+    "warmMeanSeconds": 2.08,
+    "lastSeconds": 2.093,
+    "outputCharacters": 7597
+  }
+]

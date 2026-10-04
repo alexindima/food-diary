@@ -148,6 +148,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         'change-policy' {
             & (Join-Path $toolsRoot 'Test-LlmWikiChangePolicy.ps1')
             if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiModulePersistencePolicy.ps1')
+            if (-not $?) { exit 1 }
         }
         'workspace-policy' {
             & (Join-Path $toolsRoot 'Test-LlmWikiWorkspacePolicyCache.ps1')
@@ -213,16 +215,12 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             & (Join-Path $toolsRoot 'Test-LlmWikiTaskBaseline.ps1')
             if (-not $?) { exit 1 }
         }
-        'code-graph' {
+        'code-graph-core' {
             & (Join-Path $toolsRoot 'Test-LlmWikiRoslynExtractor.ps1')
             if ($LASTEXITCODE -ne 0) { throw "Roslyn extractor smoke failed with exit code $LASTEXITCODE." }
             & (Join-Path $toolsRoot 'Test-LlmWikiTypeScriptExtractor.ps1')
             if ($LASTEXITCODE -ne 0) { throw "TypeScript extractor smoke failed with exit code $LASTEXITCODE." }
             & (Join-Path $toolsRoot 'Test-LlmWikiCodeGraph.ps1')
-            if (-not $?) { exit 1 }
-            & (Join-Path $toolsRoot 'Test-LlmWikiTraceOutput.ps1')
-            if (-not $?) { exit 1 }
-            & (Join-Path $toolsRoot 'Test-LlmWikiFrontendTraceSqlParity.ps1')
             if (-not $?) { exit 1 }
         }
         'api-compatibility' {
@@ -354,6 +352,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'context-search-evals' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiCorpusEvaluation.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiSqlContextEvaluation.ps1')
             if (-not $?) { exit 1 }
         }

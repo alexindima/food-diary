@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -7,6 +6,8 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-shell';
 
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { MS_PER_HOUR } from '../../../../shared/lib/time.constants';
 import type { FastingCheckIn, FastingSession } from '../../../../shared/models/fasting.data';
 import type { FastingCheckInViewModel } from '../../lib/fasting-page.types';
@@ -27,7 +28,7 @@ export type FastingSessionDetailsDialogData = {
 @Component({
     selector: 'fd-fasting-session-details-dialog',
     imports: [
-        DecimalPipe,
+        LocalizedNumberPipe,
         TranslatePipe,
         FdUiButtonComponent,
         FdUiDialogFooterDirective,
@@ -40,6 +41,7 @@ export type FastingSessionDetailsDialogData = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FastingSessionDetailsDialogComponent {
+    protected readonly locale = injectCurrentLanguage();
     protected readonly data = inject<FastingSessionDetailsDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<FastingSessionDetailsDialogComponent, void>>(FdUiDialogRef);
 

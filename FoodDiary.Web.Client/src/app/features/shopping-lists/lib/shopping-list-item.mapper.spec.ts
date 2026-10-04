@@ -8,6 +8,7 @@ import {
     formatShoppingListItemMeta,
     mapShoppingListItemToDto,
     normalizeShoppingListAmount,
+    normalizeShoppingListUnit,
     rebuildShoppingListSortOrder,
 } from './shopping-list-item.mapper';
 
@@ -39,6 +40,21 @@ describe('shopping-list-item.mapper', () => {
 
     it('should format item meta with amount, localized unit and category', () => {
         expect(formatShoppingListItemMeta(ITEM, translate)).toBe('2 ml - Dairy');
+    });
+
+    it.each([
+        ['ru', '2,51234 ml'],
+        ['en', '2.51234 ml'],
+    ])('formats fractional amounts in %s without discarding their precision', (language, expected) => {
+        const item = { ...ITEM, amount: 2.51234, category: null };
+        expect(formatShoppingListItemMeta(item, translate, language)).toBe(expected);
+        expect(buildShoppingListItemViewModels([item], translate, language)[0].quantity).toBe(expected);
+    });
+
+    it('preserves custom and missing units when normalizing persisted values', () => {
+        expect(normalizeShoppingListUnit('pack')).toBe('pack');
+        expect(normalizeShoppingListUnit(null)).toBeNull();
+        expect(normalizeShoppingListUnit(undefined)).toBeNull();
     });
 
     it('should fall back to raw unit when translation is missing', () => {

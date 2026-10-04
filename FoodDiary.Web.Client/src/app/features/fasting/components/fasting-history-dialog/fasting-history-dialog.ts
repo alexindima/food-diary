@@ -1,4 +1,4 @@
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, type Signal, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -9,6 +9,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-shell';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { MS_PER_HOUR } from '../../../../shared/lib/time.constants';
 import type { FastingSession } from '../../../../shared/models/fasting.data';
 import type { FastingHistorySessionViewModel } from '../../lib/fasting-page.types';
@@ -26,7 +27,7 @@ export type FastingHistoryDialogData = {
     selector: 'fd-fasting-history-dialog',
     imports: [
         DatePipe,
-        DecimalPipe,
+        LocalizedNumberPipe,
         TranslatePipe,
         FdUiButtonComponent,
         FdUiDialogFooterDirective,

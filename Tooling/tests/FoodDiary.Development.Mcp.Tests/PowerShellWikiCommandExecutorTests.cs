@@ -122,6 +122,7 @@ public sealed class PowerShellWikiCommandExecutorTests {
         Assert.True(new[] { "verified", "unverified", "stale" }.Contains(result.DeepFreshness, StringComparer.Ordinal));
         Assert.Matches("^[a-f0-9]{64}$", result.IndexFingerprint);
         Assert.Equal(result.IndexesMatchWorktree, string.Equals(result.DeepFreshness, "verified", StringComparison.Ordinal));
+        Assert.True(new[] { "verified", "unverified", "stale" }.Contains(result.GenerationFreshness, StringComparer.Ordinal));
         Assert.Equal(Environment.ProcessId, result.RuntimeIdentity.ProcessId);
         Assert.Equal("startup-head", result.RuntimeIdentity.RepositoryHeadAtStartup);
         Assert.False(result.RunningCodeMatchesRepositoryHead);

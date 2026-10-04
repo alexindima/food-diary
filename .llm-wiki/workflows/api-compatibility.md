@@ -13,6 +13,8 @@ sources:
   - Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json
   - Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs
   - .llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1
+  - .llm-wiki/tools/Test-LlmWikiApiCompatibilityRegression.ps1
+  - .llm-wiki/tools/LlmWikiGitPaths.ps1
   - .llm-wiki/tools/LlmWikiApiAcceptance.ps1
   - .llm-wiki/policies/api-compatibility-acceptance.json
 ---
@@ -105,3 +107,16 @@ provenance and complement rather than replace runtime serialization snapshots.
 DTO declarations are parsed by the repository Roslyn extractor, including
 attribute-based serialized names; method locals and comments cannot become
 false HTTP properties.
+
+DTO selection compares tracked changes with the requested Git baseline.
+Git glob pathspecs include both root-level and nested presentation DTOs.
+An ordered NUL-delimited name/status stream preserves Unicode and spaced paths,
+including repeated statuses and rename pairs, without Git's display quoting.
+Physical discovery supplements that diff with files absent from the baseline, including
+unstaged module and legacy presentation DTOs and ignored move destinations.
+An unchanged baseline DTO is neither parsed again nor reported as newly added.
+Generated `bin` and `obj` sources remain excluded. Staged renames preserve
+identity; unstaged delete/add pairs are matched only when exactly one candidate
+has identical content. Edited or ambiguous moves retain conservative removal
+and addition findings. The regression exercises these cases in a real isolated
+Git repository with the production Roslyn parser.

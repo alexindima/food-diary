@@ -26,10 +26,10 @@
           "sha256": "65f2f3407df1ada0aa232000a6b9fed054f452911b97e411d592dcfb59f40637"
         }
       ],
-      "reason": "docs/README.md now links the recipe import guide. The knowledge entrypoint still correctly identifies architecture and documentation as authoritative sources; its routing prose needs no change.",
-      "baseRef": "HEAD",
-      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
-      "reviewedAtUtc": "2026-10-04T11:30:34.0248266Z"
+      "reason": "Reviewed the recipe import guide and repository navigation against combined sources. Link/caption import, optional video speech and browser clipboard suggestions stay owned by existing AI and Recipes features. Runtime FFmpeg, 50 MiB/5 minute media bounds, proxy and temporary-space configuration and conditional Instagram video access are documented. Current master Wiki tooling and existing frontend fixes are preserved.",
+      "baseRef": "master",
+      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
+      "reviewedAtUtc": "2026-10-04T17:31:02.1300635Z"
     },
     {
       "pageId": "module.frontend",
@@ -94,10 +94,10 @@
           "sha256": "e8fd72d24f538b643bf091265a23ff326d4aae9be79aa3bed68c200f30305fa6"
         }
       ],
-      "reason": "Reviewed module placement and ownership against current code: AI owns transient recipe drafts, Recipes still owns saves, HTTP mapping stays in Presentation, and new project references are limited to AI test consumers. Video processing adds a local FFmpeg runtime dependency without a production module edge or migration.",
-      "baseRef": "HEAD",
-      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
-      "reviewedAtUtc": "2026-10-04T14:40:29.3038890Z"
+      "reason": "Reviewed the recipe import guide and repository navigation against combined sources. Link/caption import, optional video speech and browser clipboard suggestions stay owned by existing AI and Recipes features. Runtime FFmpeg, 50 MiB/5 minute media bounds, proxy and temporary-space configuration and conditional Instagram video access are documented. Current master Wiki tooling and existing frontend fixes are preserved.",
+      "baseRef": "master",
+      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
+      "reviewedAtUtc": "2026-10-04T17:31:03.4304518Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -139,10 +139,10 @@
           "sha256": "65f2f3407df1ada0aa232000a6b9fed054f452911b97e411d592dcfb59f40637"
         }
       ],
-      "reason": "The documentation index adds the recipe import guide, and repository-catalog adds the new recipe files. No retrieval tool, ranking rule, projection schema or knowledge authority changes. Verified current guide links and source identities; the knowledge and query workflow guidance remains accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
-      "reviewedAtUtc": "2026-10-04T11:36:32.1636575Z"
+      "reason": "Reviewed the recipe import guide and repository navigation against combined sources. Link/caption import, optional video speech and browser clipboard suggestions stay owned by existing AI and Recipes features. Runtime FFmpeg, 50 MiB/5 minute media bounds, proxy and temporary-space configuration and conditional Instagram video access are documented. Current master Wiki tooling and existing frontend fixes are preserved.",
+      "baseRef": "master",
+      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
+      "reviewedAtUtc": "2026-10-04T17:31:05.0039641Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -196,7 +196,7 @@
     {
       "pageId": "workflow-api-compatibility",
       "pagePath": ".llm-wiki/workflows/api-compatibility.md",
-      "pageSha256": "c5747176a573b53e13b209f21f97593fe4af4eedbe2d4b2cb27b92c539689ea6",
+      "pageSha256": "6e6ace9a3ed3b5cc55eeeb62d895581342cb6f0c37181d14283e16f69fdcb6c7",
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
@@ -207,44 +207,44 @@
           "sha256": "0cd6c023cdab3fd2c177e2cb7ba9c341612314799413cd396f1e6fc45f877688"
         }
       ],
-      "reason": "Reviewed the additive text/video import endpoints, form fields, draft response mappings, Premium access, required idempotency and existing error contracts. The final full snapshot only adds the import routes and schemas; compatibility reports zero structural breaks. Backend and frontend consumers retain the existing draft/save boundary.",
-      "baseRef": "HEAD",
-      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
-      "reviewedAtUtc": "2026-10-04T14:40:31.1728998Z"
+      "reason": "Reviewed the combined recipe import routes and multipart DTOs against current master. The API checker reports 0 structural breaking changes and 9 additions; all 4 transport contract tests and 2116 architecture tests passed. AI owns recognition contracts and workflow, Recipes retains saves, and frontend recognition fills the reviewed editable draft without changing existing saves. Earlier feature UI verification covered desktop/mobile, clearing uploaded files and multipart payloads.",
+      "baseRef": "master",
+      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
+      "reviewedAtUtc": "2026-10-04T17:31:07.2966620Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
       "pagePath": ".llm-wiki/workflows/architecture-health-review.md",
-      "pageSha256": "f1377bfc80eadd0ff4d6265843c3eb2747177063ec40db6befaa9a8cfc37dabf",
+      "pageSha256": "862f4a2a551c99d09cec127ca893c0e91e19c0eb8eb36f18d051a3f2d7beedd9",
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "f34d98991a7150f40a4b3a71b67c4860b2db0edc084ab24ed1cedf385049796a"
+          "sha256": "373cff6f12578bbb49bcb09775252775213233751b6693cd2ab8842b407ade81"
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
           "sha256": "e8fd72d24f538b643bf091265a23ff326d4aae9be79aa3bed68c200f30305fa6"
         }
       ],
-      "reason": "Reviewed refreshed catalog, contract, topology and quality navigation against final source. Executed AI application/infrastructure tests and real local FFmpeg tests support the feature; desktop/mobile mocked UI verifies multipart upload, draft application and file reset. Runtime rollout requires the API FFmpeg image, temporary-space limit and narrow Nginx route together; no deployment was performed.",
-      "baseRef": "HEAD",
-      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
-      "reviewedAtUtc": "2026-10-04T14:40:32.7204357Z"
+      "reason": "The merged solution builds with 0 warnings and 0 errors. Focused backend suites passed 2828 tests across AI application, infrastructure, presentation, shared presentation, architecture and video HTTP contracts. Generated Wiki indexes were rebuilt from combined master and feature sources. Static symbol references remain navigation evidence; execution evidence is recorded in merge build and test logs.",
+      "baseRef": "master",
+      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
+      "reviewedAtUtc": "2026-10-04T17:31:09.5756182Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
       "pagePath": ".llm-wiki/workflows/backend-contract-review.md",
-      "pageSha256": "14a83629e95da88f013662bc6611a57344eedb43e1168f25a7c374bb93d7439e",
+      "pageSha256": "52be8a48ec499b41e8472c39f82fb3388dbfa39f980d56d8f870f89aaceb54eb",
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "23f6f2b765ca635c920aacd50182a87b308e6ac9167f70bd3ed77d120b104fca"
+          "sha256": "af056824290221d3999c2de4f7e3a705e9414c2e42ee9735550653984f55e153"
         }
       ],
-      "reason": "Reviewed the additive text/video import endpoints, form fields, draft response mappings, Premium access, required idempotency and existing error contracts. The final full snapshot only adds the import routes and schemas; compatibility reports zero structural breaks. Backend and frontend consumers retain the existing draft/save boundary.",
-      "baseRef": "HEAD",
-      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
-      "reviewedAtUtc": "2026-10-04T14:40:35.0409143Z"
+      "reason": "Reviewed the combined recipe import routes and multipart DTOs against current master. The API checker reports 0 structural breaking changes and 9 additions; all 4 transport contract tests and 2116 architecture tests passed. AI owns recognition contracts and workflow, Recipes retains saves, and frontend recognition fills the reviewed editable draft without changing existing saves. Earlier feature UI verification covered desktop/mobile, clearing uploaded files and multipart payloads.",
+      "baseRef": "master",
+      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
+      "reviewedAtUtc": "2026-10-04T17:31:12.2687341Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -283,21 +283,17 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "61609ea68e7bd9bdb46a37be76122982139a081cef24d8df6d5b394153261bf6",
+      "pageSha256": "ffc86ca5d362a78c7cb90c56684b7895de854edd1fe0574b26a4cfa2e75c31ae",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c134a37811e20ccda2c25b22dae8965589b61b8353eb87b1254055f48611ad8c"
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-          "sha256": "4905d8cadf0f21cd84f22422a6eb8f6baddb3653c3cce0fb375cc4b3f143e06b"
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "57e0f0ecc950c8c77618442c457bfbb64bc6091726b2155705e2ab468763590f"
         }
       ],
-      "reason": "Verified 198 focused tests and the independent 100-case holdout with 100 of 100 top-ten hits and liveRegressionPassed=true. Both new regression tests protect candidate completeness and original record representations; frozen corpora, ranking scores and thresholds are unchanged. Full required hook evaluation will run before push.",
-      "baseRef": "origin/master",
-      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
-      "reviewedAtUtc": "2026-10-03T12:11:44.0951124Z"
+      "reason": "Reviewed the immutable module symbol/registration path patterns and project-prefix hoist in the explicit JSON baseline. Score predicates, candidate order, SQL default, fail-closed freshness, cache boundaries and SLA limits are preserved; before/after JSON payloads matched after excluding transport timing, and the complete context-retrieval lane passed.",
+      "baseRef": "HEAD",
+      "gitHead": "cc1ee85fdef594addfb3db89bcb0dac6e6f68f56",
+      "reviewedAtUtc": "2026-10-04T10:58:49.1256341Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -332,17 +328,17 @@
     {
       "pageId": "workflow-context-bundles",
       "pagePath": ".llm-wiki/workflows/context-bundles.md",
-      "pageSha256": "37270c5801c9218b051ae3eb03fb2a1f13120593112aacf3a91145de9944e30f",
+      "pageSha256": "6905a9cfcb2c8ed64f714f760c972c46d47fa98b70bb6db940780fa6be0b34e0",
       "sources": [
         {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "b5b86a5e1e53732d57e63ace76ade3d43e761aa009bab59ff720e0071b8d4c97"
+          "sha256": "57e0f0ecc950c8c77618442c457bfbb64bc6091726b2155705e2ab468763590f"
         }
       ],
-      "reason": "Reviewed self-maintenance completeness and deterministic Markdown destination repair, scoped compact selection, project identity coverage, and locked snapshot reuse against current implementation and regression fixtures.",
+      "reason": "Reviewed the immutable module symbol/registration path patterns and project-prefix hoist in the explicit JSON baseline. Score predicates, candidate order, SQL default, fail-closed freshness, cache boundaries and SLA limits are preserved; before/after JSON payloads matched after excluding transport timing, and the complete context-retrieval lane passed.",
       "baseRef": "HEAD",
-      "gitHead": "1ea521ec8eea5ec5f093d6fb301de6caad090f5b",
-      "reviewedAtUtc": "2026-09-19T13:02:14.4555673Z"
+      "gitHead": "cc1ee85fdef594addfb3db89bcb0dac6e6f68f56",
+      "reviewedAtUtc": "2026-10-04T10:58:50.2096396Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -471,32 +467,32 @@
     {
       "pageId": "workflow-dependency-rollout",
       "pagePath": ".llm-wiki/workflows/dependency-rollout.md",
-      "pageSha256": "341deb4134a3a4273351e8355b742538fe42cfb63d52d5e1d6302b72b129889a",
+      "pageSha256": "7b325c5dd1cee36772c8e9d61fe14324f25f78f5f320e5521ca050f4080667a6",
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
           "sha256": "61006c4be46dbeecadede5ec7aa09c38c98cac4915cbd34c58460bc3a922ab3d"
         }
       ],
-      "reason": "Reviewed module placement and ownership against current code: AI owns transient recipe drafts, Recipes still owns saves, HTTP mapping stays in Presentation, and new project references are limited to AI test consumers. Video processing adds a local FFmpeg runtime dependency without a production module edge or migration.",
-      "baseRef": "HEAD",
-      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
-      "reviewedAtUtc": "2026-10-04T14:40:36.7704762Z"
+      "reason": "Reviewed the recipe import guide and repository navigation against combined sources. Link/caption import, optional video speech and browser clipboard suggestions stay owned by existing AI and Recipes features. Runtime FFmpeg, 50 MiB/5 minute media bounds, proxy and temporary-space configuration and conditional Instagram video access are documented. Current master Wiki tooling and existing frontend fixes are preserved.",
+      "baseRef": "master",
+      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
+      "reviewedAtUtc": "2026-10-04T17:31:14.3643121Z"
     },
     {
       "pageId": "workflow-developer-experience",
       "pagePath": ".llm-wiki/workflows/developer-experience.md",
-      "pageSha256": "6ce828816cde0b981b3efd7f436989473d6aa51c138829a521116fc5e5ff8020",
+      "pageSha256": "f46020d590c232ec013fcb3528b076e33d6f8b001faf48fcbdb60b77155aa409",
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "ca8b5cb7798f96cf4a1d87712ce3b9cd6447ea2dbe9c19872c0d8decb08cdaf0"
+          "sha256": "6ebe8fdda49be99b2847cfcdeb0c7adf6a351ce8990f1a16478ad48fec13e85c"
         }
       ],
-      "reason": "Reviewed Markdown literal preservation and reference validation with reproductions; verified freshness reasons and conditional recovery guidance; checked expanded cold-checkout timeout routing and persistent smoke timings including graph prewarm.",
+      "reason": "Reviewed verify-full routing against the documented daily commands. Canonical research states, SQLite bootstrap, context caching and task routing remain consistent; publication details are maintained in index-pipeline.",
       "baseRef": "HEAD",
-      "gitHead": "fe89ce19163b22e8af6ee99ccafbc88300579ef3",
-      "reviewedAtUtc": "2026-09-20T01:16:31.9245862Z"
+      "gitHead": "c00b5915692f57b1b4b13746d221918eb0acc198",
+      "reviewedAtUtc": "2026-10-03T06:42:21.6288984Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -591,17 +587,17 @@
     {
       "pageId": "workflow-impact-simulation",
       "pagePath": ".llm-wiki/workflows/impact-simulation.md",
-      "pageSha256": "995df7b3f6ad527c4094a25bf33831f1c30fae3ebff5aa469fa92f71f02bab43",
+      "pageSha256": "b138746ffe0c2db4de0df29997f66f0eb50ed7ecef5835d7f97f6f389a527095",
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c134a37811e20ccda2c25b22dae8965589b61b8353eb87b1254055f48611ad8c"
+          "sha256": "bd5a591deb5c62de0408ce5ed6b47a755d976da1c386cf14b48596b066df5bb0"
         }
       ],
-      "reason": "Reviewed the context-search workflow against both implementations: retain the original lexical records, then fill the existing distinct-path budget with the best record for missing paths. Materialized SQL keeps only paths, row ids and ranks before loading selected payloads. Query-context documentation now describes this behavior; generic graph traversal is unchanged.",
-      "baseRef": "origin/master",
-      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
-      "reviewedAtUtc": "2026-10-03T12:11:45.1042593Z"
+      "reason": "Reviewed the context-search-only graph edits against the documented compiled-context frontend catalog reuse. No impact-simulation selector, projection payload or alignment behavior was modified.",
+      "baseRef": "HEAD",
+      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
+      "reviewedAtUtc": "2026-10-04T03:27:32.8745017Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -636,17 +632,29 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "fe774ed8067f265672ee7a60614a941021605e090f88e4946a41a7750a30ded7",
+      "pageSha256": "b2036095d87b528772ed0a7b0cdab5d4437ab2d3c90cd9ffd38649923bb9c4de",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "2d424426220623a205365776ecd76c865fc0363771cb213f44db1512ec7ca32f"
+          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
+          "sha256": "8c53c9b4517a8135376858a5b29b160a6330460ed94ef9552ec49e061e572de5"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
+          "sha256": "84d144525363d00e07e55e3073ffa8d87ebadb34fa7bdea4590c1457d76644e3"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
+          "sha256": "675b8b47e1b4b7bc768e0f247804efcd266bb75a294d75bfb6e2b44ec68375f1"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
+          "sha256": "42e7fab8ba7a98a30a6a0bab0cbcac6a164a32af7211f59632d41286b6e718a4"
         }
       ],
-      "reason": "Reviewed frontend diagnostics and verification references: 4388 app tests and all configured coverage thresholds pass; all six changed specs pass ESLint and formatting. CI now prefers coverage errors after actual failed-suite/test summaries. YAML parsing and Git Bash syntax checks pass; index stages, regression catalogs, aggregate job requirements and report generation remain unchanged.",
+      "reason": "Reviewed routing and receipt patterns for the new candidate helper and test. All changed paths select focused coverage; code-graph includes the new test. Code-graph, context-retrieval, facade-contract and verification-cache groups passed; the 22 evaluation corpora and policy budgets retain their assertions.",
       "baseRef": "HEAD",
-      "gitHead": "b29fd6ed46efb4768933ad383bef8272f9269b1f",
-      "reviewedAtUtc": "2026-10-03T19:05:43.3233216Z"
+      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
+      "reviewedAtUtc": "2026-10-04T03:27:33.6165695Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -734,13 +742,13 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "16ee9c03fcd8d89dedbfbca2c44735f095e246894042358a0d71aa5141dcbe43"
+          "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Current Services/MailInbox and Services/MailRelay infrastructure now receives the existing data-access review obligations. The 24-case regression verifies current real repositories/stores, synthetic persistence, exclusions and legacy paths.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:25.8348861Z"
+      "gitHead": "755c4ee5bb00ea025c5ad8321db12ec48386e496",
+      "reviewedAtUtc": "2026-10-04T10:05:47.30425Z"
     },
     {
       "pageId": "workflow-plan-diff-conformance",
@@ -775,17 +783,17 @@
     {
       "pageId": "workflow-privacy-review",
       "pagePath": ".llm-wiki/workflows/privacy-review.md",
-      "pageSha256": "78aa14b84fb0cb0d89ccb14af14b45659440ebc5989802a96986908f26653657",
+      "pageSha256": "e6a46b0997c9e9829b351ab97f2487c1fc1414a8887442c5012cc06caebfcc3d",
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
           "sha256": "7edac53f8569f6b4a914fa3df788992d2b94fc2acc39487c13693a1e59463f86"
         }
       ],
-      "reason": "Generated inventories now include the recipe source HTTP client and recipe text provider boundary. Source inspected: consent precedes fetching/provider calls; clipboard suggestions are opt-in; recognition is explicit; source connections reject private/special DNS addresses; deadlines, body and redirect bounds apply; factory request loggers and provider response storage are disabled. Mocked tests validate the controls without claiming live Instagram or production security evidence. Existing inventory review limitations remain accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
-      "reviewedAtUtc": "2026-10-04T11:36:42.5386882Z"
+      "reason": "Reviewed user consent, Premium authorization, clipboard opt-in, URL/IP/redirect/body limits, bounded local FFmpeg processing and cleanup, and WAV-only provider transmission. The merged AI infrastructure suite passed 218 tests with real FFmpeg media cases, including unsafe destination and ambiguity rejection regressions. Public Instagram caption retrieval was verified on the supplied reel; no real OpenAI calls or credential sharing were performed.",
+      "baseRef": "master",
+      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
+      "reviewedAtUtc": "2026-10-04T17:31:18.6840428Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -820,17 +828,17 @@
     {
       "pageId": "workflow-quality-risk",
       "pagePath": ".llm-wiki/workflows/quality-risk.md",
-      "pageSha256": "8b137046034f8df511332cf41dfd2b96a888804b14e546cee7cc5f9213ab68d0",
+      "pageSha256": "dbd36d63ae9d1040c3109338697cf6d695253c471be5e57a8d2820b71007d10c",
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "33e05f3dbf230ab98534d4e822ff5d91a330bfcef7cd9cf78b068852129c6d29"
+          "sha256": "00e8e4afad9a7fee4555c7d3da0db7536535ea5d9a88f6d73ac46c492bef6a09"
         }
       ],
-      "reason": "The bounded caption selection fix adds four regression cases: page recipe over a recommended post, Open Graph over generic site metadata, duplicate identical captions, and refusal of ambiguous captions. All 218 AI infrastructure tests passed with real FFmpeg media tests enabled; the fresh reel request contained the expected title, ingredients and method. Static quality references remain navigation evidence, not execution coverage.",
-      "baseRef": "HEAD",
-      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
-      "reviewedAtUtc": "2026-10-04T16:45:15.5644359Z"
+      "reason": "The merged solution builds with 0 warnings and 0 errors. Focused backend suites passed 2828 tests across AI application, infrastructure, presentation, shared presentation, architecture and video HTTP contracts. Generated Wiki indexes were rebuilt from combined master and feature sources. Static symbol references remain navigation evidence; execution evidence is recorded in merge build and test logs.",
+      "baseRef": "master",
+      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
+      "reviewedAtUtc": "2026-10-04T17:31:21.1407628Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -895,40 +903,40 @@
     {
       "pageId": "workflow-runtime-impact",
       "pagePath": ".llm-wiki/workflows/runtime-impact.md",
-      "pageSha256": "be8e261d7fdfddf0e283cb15cc99ec689bba8876b0f76794a40a01cdaea52b0d",
+      "pageSha256": "b8e3cbc2020dceeeb6873b8f7bf0a66f6380cb750f367e7753ae9314e9270fc9",
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "78cce29d93889e6d94226a0b781204c06c554397050e54cd231c792dbe46cad6"
+          "sha256": "a56ec93a56ef0e5481505248fb30370485626a0d128a836dbdbbc867183a114e"
         }
       ],
-      "reason": "Only HTML text selection changed. Current source retains the existing bounded public HTTPS client, DNS connection checks, redirects, timeouts and cancellation; no new runtime registration, worker, job, retry or configuration was introduced. The actual reel returned HTTP 200 and the correct caption after the fix, while video extraction still reported Ai.RecipeVideoUnavailable because no supported video URL was exposed.",
-      "baseRef": "HEAD",
-      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
-      "reviewedAtUtc": "2026-10-04T16:45:17.2592125Z"
+      "reason": "Reviewed the recipe import guide and repository navigation against combined sources. Link/caption import, optional video speech and browser clipboard suggestions stay owned by existing AI and Recipes features. Runtime FFmpeg, 50 MiB/5 minute media bounds, proxy and temporary-space configuration and conditional Instagram video access are documented. Current master Wiki tooling and existing frontend fixes are preserved.",
+      "baseRef": "master",
+      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
+      "reviewedAtUtc": "2026-10-04T17:31:25.7856858Z"
     },
     {
       "pageId": "workflow-security-review",
       "pagePath": ".llm-wiki/workflows/security-review.md",
-      "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
+      "pageSha256": "f935366d43c011c5187443833e00da2994b5092dff5b60dc6cbd0759390944bf",
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "33e05f3dbf230ab98534d4e822ff5d91a330bfcef7cd9cf78b068852129c6d29"
+          "sha256": "00e8e4afad9a7fee4555c7d3da0db7536535ea5d9a88f6d73ac46c492bef6a09"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "78cce29d93889e6d94226a0b781204c06c554397050e54cd231c792dbe46cad6"
+          "sha256": "a56ec93a56ef0e5481505248fb30370485626a0d128a836dbdbbc867183a114e"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
           "sha256": "7edac53f8569f6b4a914fa3df788992d2b94fc2acc39487c13693a1e59463f86"
         }
       ],
-      "reason": "Reviewed the changed untrusted HTML boundary: page metadata prevents recommended post substitution, and multiple distinct embedded captions without page metadata now fail rather than choosing an unrelated source. Source and media network bounds, public DNS/IP validation and provider prompt separation remain unchanged. The 218-test infrastructure run includes existing unsafe URL, private destination, redirect and size checks; this receipt records bounded source review evidence, not a repository security audit.",
-      "baseRef": "HEAD",
-      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
-      "reviewedAtUtc": "2026-10-04T16:45:19.6880776Z"
+      "reason": "Reviewed user consent, Premium authorization, clipboard opt-in, URL/IP/redirect/body limits, bounded local FFmpeg processing and cleanup, and WAV-only provider transmission. The merged AI infrastructure suite passed 218 tests with real FFmpeg media cases, including unsafe destination and ambiguity rejection regressions. Public Instagram caption retrieval was verified on the supplied reel; no real OpenAI calls or credential sharing were performed.",
+      "baseRef": "master",
+      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
+      "reviewedAtUtc": "2026-10-04T17:31:28.5630683Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -997,21 +1005,17 @@
     {
       "pageId": "workflow-task-dispatch-receipts",
       "pagePath": ".llm-wiki/workflows/task-dispatch-receipts.md",
-      "pageSha256": "70d6be88b293deccf4d573fc9bede72453bc9e17b6a0215335058e6e7746afc3",
+      "pageSha256": "e796ff74731a2dda404ebab68170be7eaccc7c57268fc23f141a91c228e1a49f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDispatchMetrics.ps1",
-          "sha256": "0e43e46d416f56357dfe0079897e4a678e4c1be6de59c222726e7ef1660fc137"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
-          "sha256": "4b494860416229ffc50057a8d78b84ff98712134bc1ed246bf2aaa839474f1a5"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "6ebe8fdda49be99b2847cfcdeb0c7adf6a351ce8990f1a16478ad48fec13e85c"
         }
       ],
-      "reason": "Metrics preserve deserialized date timezone when converting to UTC; strict-mode regression covers terminal dates across midnight with positive and negative offsets. Receipt lifecycle and scheduler registry reuse remain unchanged.",
+      "reason": "Reviewed facade verification controls: the complete gate alone publishes full verification and concurrency forwarding does not alter dispatch payloads, lease fingerprints or lifecycle receipt hashes.",
       "baseRef": "HEAD",
-      "gitHead": "f99ac78e7703560d7fde0cf0023a9c046186dd46",
-      "reviewedAtUtc": "2026-09-23T00:11:54.9929254Z"
+      "gitHead": "c00b5915692f57b1b4b13746d221918eb0acc198",
+      "reviewedAtUtc": "2026-10-03T06:42:23.9737566Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1053,14 +1057,14 @@
       "pageSha256": "00873290bae6cba909cc474821519081b25bcc6767c089668d188119c77126c3",
       "sources": [
         {
-          "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "2ad36123335deab4bcc3ea6c4055b0774dd6ad9189e37206fee8717453724f8b"
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb"
         }
       ],
-      "reason": "Checked current TESTING_STRATEGY guidance for the exact coordinated API release: original ancestral baseline and fail-on-unaccepted behavior remain required. Test planner selection and required/recommended/full-regression semantics remain valid.",
+      "reason": "The existing performance-data-access rule and integration-check identity are preserved while current Services/ paths become eligible. Executed persistence regression verifies both selection and the exact required command; planning and ownership logic are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "028efbba467e3bdece84fe1e43412aead89d2ae5",
-      "reviewedAtUtc": "2026-10-03T21:03:02.9353212Z"
+      "gitHead": "755c4ee5bb00ea025c5ad8321db12ec48386e496",
+      "reviewedAtUtc": "2026-10-04T10:05:50.6200728Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1069,17 +1073,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "0eca1971207ba50e987d48ffd1d8f15e919b28286e7f7342fd6b778b639dc4f6"
+          "sha256": "e66ce0e22daf43ed01ea5bc6c096f50120a2ea042f06e0235f21c26d10916fd6"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "e63831200e488d85101763697ce072a154547e1346a9aa566958afbd3ff10327"
+          "sha256": "f5852fea5632b7d3f8c48c89066f52e43a4418cf5bb8c73ce869f0161f17c644"
         }
       ],
-      "reason": "Reviewed module placement and ownership against current code: AI owns transient recipe drafts, Recipes still owns saves, HTTP mapping stays in Presentation, and new project references are limited to AI test consumers. Video processing adds a local FFmpeg runtime dependency without a production module edge or migration.",
-      "baseRef": "HEAD",
-      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
-      "reviewedAtUtc": "2026-10-04T14:40:49.4751017Z"
+      "reason": "Reviewed the recipe import guide and repository navigation against combined sources. Link/caption import, optional video speech and browser clipboard suggestions stay owned by existing AI and Recipes features. Runtime FFmpeg, 50 MiB/5 minute media bounds, proxy and temporary-space configuration and conditional Instagram video access are documented. Current master Wiki tooling and existing frontend fixes are preserved.",
+      "baseRef": "master",
+      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
+      "reviewedAtUtc": "2026-10-04T17:31:30.5142802Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1088,13 +1092,13 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "16ee9c03fcd8d89dedbfbca2c44735f095e246894042358a0d71aa5141dcbe43"
+          "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "The planner still derives and integrity-binds its checks from the current policy. Only mail-service data-access path selection changed; check IDs, supersedence and commands are preserved, and both item-ID projections passed consolidated strict-mode regressions.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:38.7280464Z"
+      "gitHead": "755c4ee5bb00ea025c5ad8321db12ec48386e496",
+      "reviewedAtUtc": "2026-10-04T10:05:49.15693Z"
     },
     {
       "pageId": "workflow-verification-telemetry",
@@ -1152,13 +1156,13 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "16ee9c03fcd8d89dedbfbca2c44735f095e246894042358a0d71aa5141dcbe43"
+          "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "The policy now recognizes current mail-service data access; 24 executed positive and negative persistence cases preserve the required check ID and command. Evidence schemas, lineage and receipt validation are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:17.7558166Z"
+      "gitHead": "755c4ee5bb00ea025c5ad8321db12ec48386e496",
+      "reviewedAtUtc": "2026-10-04T10:05:48.2215931Z"
     },
     {
       "pageId": "workflow.frontend-contract-review",
@@ -1167,58 +1171,62 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "0eca1971207ba50e987d48ffd1d8f15e919b28286e7f7342fd6b778b639dc4f6"
+          "sha256": "e66ce0e22daf43ed01ea5bc6c096f50120a2ea042f06e0235f21c26d10916fd6"
         }
       ],
-      "reason": "Reviewed the additive text/video import endpoints, form fields, draft response mappings, Premium access, required idempotency and existing error contracts. The final full snapshot only adds the import routes and schemas; compatibility reports zero structural breaks. Backend and frontend consumers retain the existing draft/save boundary.",
-      "baseRef": "HEAD",
-      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
-      "reviewedAtUtc": "2026-10-04T14:40:38.8416113Z"
+      "reason": "Reviewed the combined recipe import routes and multipart DTOs against current master. The API checker reports 0 structural breaking changes and 9 additions; all 4 transport contract tests and 2116 architecture tests passed. AI owns recognition contracts and workflow, Recipes retains saves, and frontend recognition fills the reviewed editable draft without changing existing saves. Earlier feature UI verification covered desktop/mobile, clearing uploaded files and multipart payloads.",
+      "baseRef": "master",
+      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
+      "reviewedAtUtc": "2026-10-04T17:31:16.6504030Z"
     },
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "6bccd8bdcf6c576b79d1108c24854771966f9eb514ac64c21f689d852b162a36",
+      "pageSha256": "d53e2e063f9732812d7679f0f1542ab9ac898238515a6527d920ac93ed65c4e8",
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "34d2d86209b620793f8b423a3a0a14061d3cbe9236b895547cc681e6a84c7197"
+          "sha256": "49ecbe7cb4208969497cb732142477a08d0d64f39f4196a4c5803f23fa567378"
         }
       ],
-      "reason": "Reviewed module placement and ownership against current code: AI owns transient recipe drafts, Recipes still owns saves, HTTP mapping stays in Presentation, and new project references are limited to AI test consumers. Video processing adds a local FFmpeg runtime dependency without a production module edge or migration.",
-      "baseRef": "HEAD",
-      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
-      "reviewedAtUtc": "2026-10-04T14:40:43.1952738Z"
+      "reason": "Reviewed the recipe import guide and repository navigation against combined sources. Link/caption import, optional video speech and browser clipboard suggestions stay owned by existing AI and Recipes features. Runtime FFmpeg, 50 MiB/5 minute media bounds, proxy and temporary-space configuration and conditional Instagram video access are documented. Current master Wiki tooling and existing frontend fixes are preserved.",
+      "baseRef": "master",
+      "gitHead": "cc2e4f599ecad8213af1ebb6dcea091f0b7ee314",
+      "reviewedAtUtc": "2026-10-04T17:31:23.3913308Z"
     },
     {
       "pageId": "workflow.review-diff",
       "pagePath": ".llm-wiki/workflows/review-diff.md",
-      "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
+      "pageSha256": "7a7a54c7bf5c73c0b94be81d974d8734405b72a7e2468ec3001ba05c475133db",
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "ca8b5cb7798f96cf4a1d87712ce3b9cd6447ea2dbe9c19872c0d8decb08cdaf0"
+          "sha256": "6ebe8fdda49be99b2847cfcdeb0c7adf6a351ce8990f1a16478ad48fec13e85c"
         }
       ],
-      "reason": "Reviewed Markdown literal preservation and reference validation with reproductions; verified freshness reasons and conditional recovery guidance; checked expanded cold-checkout timeout routing and persistent smoke timings including graph prewarm.",
+      "reason": "Reviewed final receipt ordering: the documented matching generation and complete verify-full requirement still holds, now including the existing source-impact and change-policy gates before publication.",
       "baseRef": "HEAD",
-      "gitHead": "fe89ce19163b22e8af6ee99ccafbc88300579ef3",
-      "reviewedAtUtc": "2026-09-20T01:16:32.1703529Z"
+      "gitHead": "c00b5915692f57b1b4b13746d221918eb0acc198",
+      "reviewedAtUtc": "2026-10-03T06:42:22.3898133Z"
     },
     {
       "pageId": "workflow.self-maintenance",
       "pagePath": ".llm-wiki/workflows/self-maintenance.md",
-      "pageSha256": "cadd8bca273e3bef459485ab3b121062598993e9a4dd7122021bbc670ba74bef",
+      "pageSha256": "3374888dc37a3b5d032bdece140d17182fb8fe516c9a90b8286338585858a5b7",
       "sources": [
         {
+          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
+          "sha256": "84d144525363d00e07e55e3073ffa8d87ebadb34fa7bdea4590c1457d76644e3"
+        },
+        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c134a37811e20ccda2c25b22dae8965589b61b8353eb87b1254055f48611ad8c"
+          "sha256": "bd5a591deb5c62de0408ce5ed6b47a755d976da1c386cf14b48596b066df5bb0"
         }
       ],
-      "reason": "Reviewed the context-search workflow against both implementations: retain the original lexical records, then fill the existing distinct-path budget with the best record for missing paths. Materialized SQL keeps only paths, row ids and ranks before loading selected payloads. Query-context documentation now describes this behavior; generic graph traversal is unchanged.",
-      "baseRef": "origin/master",
-      "gitHead": "bd695bbd5755337f4c961e2f258aa4844a417ca0",
-      "reviewedAtUtc": "2026-10-03T12:11:49.6269867Z"
+      "reason": "Reviewed the feature-path fixtures and candidate hydration changes against the sole-writer projection contract. Graph regressions passed, including incremental build, corrupt projection recovery, missing dependency handling and ownership/source maintenance.",
+      "baseRef": "HEAD",
+      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
+      "reviewedAtUtc": "2026-10-04T03:27:37.2916916Z"
     }
   ]
 }

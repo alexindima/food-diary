@@ -1,6 +1,6 @@
 :host {
     --fd-segmented-toggle-active-background: var(--fd-bg-brand-tint-strong);
-    --fd-segmented-toggle-active-color: var(--fd-color-primary-600);
+    --fd-segmented-toggle-active-color: var(--fd-color-primary-800);
     --fd-segmented-toggle-active-shadow: var(--fd-shadow-ring-inset-brand-strong);
     --fd-segmented-toggle-item-min-width: 64px;
     --fd-segmented-toggle-item-min-width-sm: 58px;
@@ -66,7 +66,7 @@
         transform 0.2s ease;
 
     &:hover {
-        color: var(--fd-color-primary-600);
+        color: var(--fd-color-primary-800);
     }
 
     &:where(:focus-visible) {

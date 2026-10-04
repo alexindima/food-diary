@@ -3,7 +3,7 @@
     [title]="(data.sensitive ? 'CYCLE_TRACKING.SENSITIVE_EXPORT_TITLE' : 'CYCLE_TRACKING.EXPORT_CYCLE') | translate"
     [dismissible]="false"
 >
-    <form class="fd-stack fd-gap-md" [formRoot]="exportForm">
+    <form class="fd-stack fd-gap-md" [formRoot]="exportForm" (submit)="submit($event)">
         <p class="fd-ui-body-sm">{{ 'CYCLE_TRACKING.EXPORT_RANGE_HINT' | translate }}</p>
         <fd-ui-date-input [label]="'CYCLE_TRACKING.EXPORT_FROM' | translate" [formField]="exportForm.dateFrom" />
         <fd-ui-date-input [label]="'CYCLE_TRACKING.EXPORT_TO' | translate" [formField]="exportForm.dateTo" />
@@ -22,7 +22,7 @@
             <fd-ui-button type="button" variant="secondary" fill="outline" (click)="cancel()">{{
                 'COMMON.CANCEL' | translate
             }}</fd-ui-button>
-            <fd-ui-button type="submit" appearance="brand-action" (click)="submit()">{{
+            <fd-ui-button type="submit" appearance="brand-action">{{
                 (data.sensitive ? 'CYCLE_TRACKING.SENSITIVE_EXPORT_CONFIRM' : 'CYCLE_TRACKING.EXPORT_CYCLE') | translate
             }}</fd-ui-button>
         </div>

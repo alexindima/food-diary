@@ -54,6 +54,17 @@ describe('FastingStatsCardComponent', () => {
         expect(element.textContent).toContain(`${COMPLETION_RATE}%`);
         expect(element.textContent).toContain(`${CHECK_IN_RATE}%`);
         expect(element.textContent).toContain('FASTING.CHECK_IN.SYMPTOMS.HEADACHE');
+
+        const translate = TestBed.inject(TranslateService);
+        translate.use('ru');
+        fixture.detectChanges();
+        expect(element.textContent).toContain('17,5');
+        expect(element.textContent).toContain('62,5%');
+
+        translate.use('en');
+        fixture.detectChanges();
+        expect(element.textContent).toContain('17.5');
+        expect(element.textContent).toContain('62.5%');
     });
 
     it('hides personal summary when no personal data is available', () => {

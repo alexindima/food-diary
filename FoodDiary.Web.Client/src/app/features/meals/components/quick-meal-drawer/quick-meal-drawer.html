@@ -54,7 +54,7 @@
                             <div class="quick-meal__info fd-grid fd-gap-xxs">
                                 <div class="quick-meal__name fd-ui-action-text">{{ itemView.name }}</div>
                                 <div class="quick-meal__meta fd-ui-body-sm">
-                                    {{ 'QUICK_MEAL.AMOUNT' | translate }}: {{ itemView.amount | number: '1.0-1' }}
+                                    {{ 'QUICK_MEAL.AMOUNT' | translate }}: {{ itemView.amount | localizedNumber: language() : 0 : 1 }}
                                     {{ itemView.unitKey | translate }}
                                 </div>
                             </div>

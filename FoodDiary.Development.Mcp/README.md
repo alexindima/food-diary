@@ -3,6 +3,25 @@
 Local, read-only stdio MCP server that exposes stable `.llm-wiki/wiki.ps1`
 analysis entrypoints without replacing repository source-of-truth checks.
 
+CLI context selection and MCP share `Wiki/SqliteContextSearchReader.cs`; the
+existing CLI reader project links that source and the two result contracts.
+Node remains the only SQLite writer. CLI output retains candidate features
+from the indexed feature table. Ranking confidence expresses separation
+between candidates; a request for both frontend and backend is explicitly
+ambiguous and requires inspection of both parts.
+
+Identical concurrent command cache misses share a bounded execution gate.
+Cancelling a waiter does not cancel the running command; if its owner cancels
+or fails, a remaining waiter retries through the same timeout safeguards.
+Queries and path payloads are not written to telemetry.
+
+Server status distinguishes `generationFreshness` (complete generator check)
+from `deepFreshness` (verification receipt) and the search result's `fresh`
+(exact graph snapshot). `lastGenerationCheckAtUtc` identifies the last complete
+generator check. Missing evidence remains unverified. Only `verify-full` records
+the full verification receipt after a matching complete generation check;
+affected checks retain their scoped result without promoting that state.
+
 ## PowerShell prerequisite
 
 Wiki commands require PowerShell 7 (`pwsh`) on the launching process's `PATH`.
@@ -172,6 +191,12 @@ Development-context `retrievalAssessment` distinguishes ranked candidates, an
 ambiguous leader, a low-confidence leader, and unavailable fresh retrieval.
 `retrievalWarnings` makes weak evidence explicit without treating it as an
 execution failure or proof that a requested feature exists or is absent.
+
+Explicit guidance questions recall long agent guides by named subjects in
+their body, with a bounded candidate pool, before applying the shared ranking.
+No provider names or evaluation case IDs are embedded in the rule.
+Requests covering both frontend and backend report `multi-layer-request` with
+low confidence because one ranked file cannot establish both flows.
 
 Conversation-style questions use shared bounded subject and layer affinity in
 Node and .NET. An unmatched explicit identifier lowers candidate confidence with

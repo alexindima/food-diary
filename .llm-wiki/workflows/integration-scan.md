@@ -18,6 +18,8 @@ sources:
 
 # Integration scan
 
+Research readiness now derives from one canonical next action. An Assessment can finish without an implementation design requirement, while blocking implementation questions and required design retain their own states. Integration scan remains a bounded composition of those existing sources.
+
 Use the scanner for cross-layer, API, provider, external-data, asynchronous,
 `critical`, or `architectural` work:
 

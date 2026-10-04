@@ -17,7 +17,7 @@
         <div class="weekly-review-dialog__metric">
             <fd-ui-icon name="local_fire_department" />
             <strong
-                >{{ data.review.daysLogged > 0 ? (data.week.avgDailyCalories | number: '1.0-0') : '—' }}
+                >{{ data.review.daysLogged > 0 ? (data.week.avgDailyCalories | localizedNumber: language()) : '—' }}
                 {{ 'GENERAL.UNITS.KCAL' | translate }}</strong
             >
             <span>{{ 'WEEKLY_CHECK_IN.METRICS.LOGGED_AVERAGE' | translate }}</span>
@@ -25,7 +25,7 @@
         <div class="weekly-review-dialog__metric">
             <fd-ui-icon name="fitness_center" />
             <strong
-                >{{ data.review.daysLogged > 0 ? (data.week.avgProteins | number: '1.0-1') : '—' }}
+                >{{ data.review.daysLogged > 0 ? (data.week.avgProteins | localizedNumber: language() : 0 : 1) : '—' }}
                 {{ 'GENERAL.UNITS.G' | translate }}</strong
             >
             <span>{{ 'WEEKLY_CHECK_IN.METRICS.PROTEIN' | translate }}</span>
@@ -33,7 +33,7 @@
         <div class="weekly-review-dialog__metric">
             <fd-ui-icon name="water_drop" />
             <strong
-                >{{ data.week.totalHydrationMl > 0 ? (data.week.avgDailyHydrationMl | number: '1.0-0') : '—' }}
+                >{{ data.week.totalHydrationMl > 0 ? (data.week.avgDailyHydrationMl | localizedNumber: language()) : '—' }}
                 {{ 'GENERAL.UNITS.ML' | translate }}</strong
             >
             <span>{{ 'WEEKLY_CHECK_IN.REPORT.WATER' | translate }}</span>

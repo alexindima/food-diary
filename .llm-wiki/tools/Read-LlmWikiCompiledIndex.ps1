@@ -4,6 +4,7 @@ param(
     [ValidateSet('catalog', 'symbols', 'frontend', 'frontend-contract', 'backend-contract', 'architecture-health', 'domain-data', 'configuration', 'quality', 'runtime', 'sensitive-data', 'modules')]
     [string]$Index,
     [string]$Query,
+    [switch]$CheckFreshness,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [ValidateRange(1, 50)]
@@ -101,6 +102,11 @@ if ($Index -eq 'modules') {
     }
 }
 
+if ($CheckFreshness) {
+    $publication = & (Join-Path $PSScriptRoot 'Write-LlmWikiIndexVerificationReceipt.ps1') -ReceiptKind Status | ConvertFrom-Json
+    $result | Add-Member -NotePropertyName publication -NotePropertyValue $publication
+    $result.freshness = "generation=$($publication.generation.state); verification=$($publication.verification.state); graph snapshot is checked separately"
+}
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 20; return }
 Write-Host "Compiled index '$Index' (read-only): $($result.sourcePath)"
 Write-Host "Freshness: $($result.freshness)"

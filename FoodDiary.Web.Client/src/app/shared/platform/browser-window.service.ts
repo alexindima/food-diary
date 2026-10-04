@@ -19,6 +19,11 @@ export class BrowserWindowService {
         return this.getWindow() !== null;
     }
 
+    public async runWithLockAsync<T>(name: string, operation: () => Promise<T>): Promise<T> {
+        const locks = this.getWindow()?.navigator.locks;
+        return locks === undefined ? operation() : locks.request(name, operation);
+    }
+
     public async copyTextAsync(text: string): Promise<void> {
         const clipboard = this.getWindow()?.navigator.clipboard;
         if (clipboard === undefined) {

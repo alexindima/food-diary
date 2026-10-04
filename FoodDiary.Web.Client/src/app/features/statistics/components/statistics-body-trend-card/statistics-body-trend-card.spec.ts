@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -44,7 +45,16 @@ describe('StatisticsBodyTrendCardComponent', () => {
         expect(root.querySelector('fd-ui-line-chart')).not.toBeNull();
         expect(root.querySelector('fd-ui-button')).not.toBeNull();
         expect(root.textContent).toContain('113');
-        expect(root.textContent).toContain('-3');
+        expect(root.textContent).toContain('−3');
+
+        const translateService = TestBed.inject(TranslateService);
+        translateService.use('ru');
+        fixture.detectChanges();
+        expect(root.querySelector('.fd-ui-line-chart__y-axis')?.textContent).toMatch(/\d,\d/);
+        expect(root.querySelector('.fd-ui-line-chart__y-axis')?.textContent).not.toMatch(/\d\.\d/);
+        translateService.use('en');
+        fixture.detectChanges();
+        expect(root.querySelector('.fd-ui-line-chart__y-axis')?.textContent).toMatch(/\d\.\d/);
 
         const toggle = root.querySelector('fd-ui-segmented-toggle');
         toggle?.dispatchEvent(new CustomEvent('selectedValueChange', { detail: 'waist' }));

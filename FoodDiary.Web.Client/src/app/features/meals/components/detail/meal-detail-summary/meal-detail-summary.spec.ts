@@ -1,5 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -14,6 +15,29 @@ const DEFAULT_TOTAL_CALORIES = 500;
 const DEFAULT_UNKNOWN_QUALITY_SCORE = 50;
 
 describe('MealDetailSummaryComponent', () => {
+    it('updates calories, macros and item amounts when the language changes', async () => {
+        const values = { calories: 1234, protein: 6.5, amount: 50.5 };
+        const { fixture } = await setupComponentAsync({
+            meal: createMeal({ totalCalories: values.calories }),
+            macroSummaryBlocks: [
+                { labelKey: 'NUTRIENTS.PROTEINS', value: values.protein, unitKey: 'GENERAL.UNITS.G', color: '#111', percent: 40 },
+            ],
+            itemPreview: [{ name: 'Oats', amount: values.amount, unitKey: 'PRODUCT_AMOUNT_UNITS.G', unitText: null }],
+        });
+        const translate = TestBed.inject(TranslateService);
+        translate.use('en');
+        fixture.detectChanges();
+        expect(getFixtureText(fixture)).toContain('1,234');
+        expect(getFixtureText(fixture)).toContain('6.5');
+        expect(getFixtureText(fixture)).toContain('50.5');
+
+        translate.use('ru');
+        fixture.detectChanges();
+        expect(getFixtureText(fixture)).toContain('1\u00A0234');
+        expect(getFixtureText(fixture)).toContain('6,5');
+        expect(getFixtureText(fixture)).toContain('50,5');
+    });
+
     it('should compute calories and quality hint from meal', async () => {
         const { component, fixture } = await setupComponentAsync({
             meal: createMeal({ qualityScore: QUALITY_SCORE, qualityGrade: 'green' }),

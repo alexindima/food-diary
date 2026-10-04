@@ -30,6 +30,22 @@ if ($contextEvalGroups -notcontains 'adaptive-evals' -or $contextEvalGroups -not
     throw 'Context-search corpora must run both adaptive evals and the SQL context regression suite.'
 }
 $contextRankingGroups = @(Get-Groups '.llm-wiki/policies/context-search-ranking.json')
+foreach ($consumer in @('Manage-LlmWikiModelRouting', 'Manage-LlmWikiVerificationPlan')) {
+    if (@(Get-Groups ".llm-wiki/tools/$consumer.ps1") -notcontains 'strict-shapes') { throw "Item-ID consumer lost its collection regression: $consumer" }
+}
+foreach ($retired in @('Test-LlmWikiModelRoutingItemIds', 'Test-LlmWikiVerificationPlanItemIds')) {
+    $retiredGroups = @(Get-Groups ".llm-wiki/tools/$retired.ps1")
+    if ($retiredGroups -notcontains 'strict-shapes' -or $retiredGroups -contains 'tool-contract') { throw "Retired item-ID test must select its replacement rather than require a deleted file: $retired" }
+}
+if (@(Get-Groups '.llm-wiki/tools/Test-LlmWikiModulePersistencePolicy.ps1') -notcontains 'change-policy') { throw 'Module persistence policy regression is no longer selected by its owning group.' }
+$gitPathGroups = @(Get-Groups '.llm-wiki/tools/LlmWikiGitPaths.ps1')
+if ($gitPathGroups -notcontains 'git-paths' -or $gitPathGroups -notcontains 'api-compatibility') { throw 'Git path changes must retain API baseline selection regressions.' }
+foreach ($poolTool in @('LlmWikiCorpusEvaluation', 'Test-LlmWikiCorpusEvaluation')) {
+    $poolGroups = @(Get-Groups ".llm-wiki/tools/$poolTool.ps1")
+    if ($poolGroups -notcontains 'context-search-evals' -or $poolGroups -notcontains 'context-retrieval' -or $poolGroups -contains 'tool-contract') {
+        throw 'Corpus pool changes must select the existing complete context regression groups.'
+    }
+}
 if ($contextRankingGroups -notcontains 'context-search-evals' -or $contextRankingGroups -notcontains 'context-retrieval') {
     throw 'Context-search ranking policy changes must invalidate the SQL context regression suite.'
 }
@@ -55,8 +71,10 @@ foreach ($case in @(
     Invoke-Expression $coldGuardLine
     if ($includesColdCheckoutGuard -ne $case.expected) { throw 'Expanded cold-checkout groups lost their verification time budget.' }
 }
-foreach ($path in @('.llm-wiki/tools/wiki-markdown-links.mjs', '.llm-wiki/tools/code-graph-maintenance-recovery.test.mjs')) {
-    if (@(Get-Groups $path) -notcontains 'code-graph') { throw "Maintenance dependency has no focused coverage: $path" }
+foreach ($path in @('.llm-wiki/tools/wiki-markdown-links.mjs', '.llm-wiki/tools/code-graph-maintenance-recovery.test.mjs',
+    '.llm-wiki/tools/code-graph-candidates.mjs', '.llm-wiki/tools/code-graph-candidates.test.mjs')) {
+    $maintenanceGroups = @(Get-Groups $path)
+    if ($maintenanceGroups -notcontains 'code-graph-core' -or $maintenanceGroups -notcontains 'trace-output') { throw "Maintenance dependency has no graph and trace coverage: $path" }
 }
 $parallelRunnerText = Get-Content -LiteralPath $parallelRunner -Raw
 $plannerText = Get-Content -LiteralPath $planner -Raw
@@ -106,7 +124,7 @@ if (@($fullFocusedPlan.groups) -contains 'full-tools' -or @($fullFocusedPlan.gro
 if ([string]$fullFocusedPlan.parallelGroups[0] -ne 'adaptive-evals') {
     throw 'The focused scheduler must start the longest adaptive eval lane first.'
 }
-if ([string]$fullFocusedPlan.parallelGroups[1] -ne 'code-graph') {
+if ([string]$fullFocusedPlan.parallelGroups[1] -ne 'code-graph-core') {
     throw 'The long code-graph lane must start in the first worker batch.'
 }
 foreach ($group in @('read-only-isolation', 'json-cold-checkout')) {
@@ -121,7 +139,7 @@ if (@($fullFocusedPlan.serialGroups) -notcontains 'context-retrieval' -or @($ful
 if (@($fullFocusedPlan.serialGroups) -notcontains 'trace-output') {
     throw 'Trace-output snapshot creation must not race the parallel code-graph writer.'
 }
-if (@($fullFocusedPlan.parallelGroups) -notcontains 'code-graph') {
+if (@($fullFocusedPlan.parallelGroups) -notcontains 'code-graph-core') {
     throw 'The code-graph smoke must remain in the parallel batch ahead of trace-output snapshot creation.'
 }
 $productGroups = @(Get-Groups 'FoodDiary.Application/Users/Example.cs')
@@ -135,6 +153,28 @@ if (@($forcedPlan.groups) -notcontains 'strict-shapes') {
 $contextAlias = & $planner -ChangedPath @() -RequestedGroup context-bundle -Plan -Format Json | ConvertFrom-Json
 if (($contextAlias.groups -join ',') -cne 'context-retrieval,context-search-evals') {
     throw 'Legacy context-bundle alias must retain both quality and isolated retrieval checks.'
+}
+$graphGroups = @('code-graph-core', 'trace-output')
+foreach ($scope in @(@{ ChangedPath = @() }, @{ ChangedPath = @('.llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1', '.llm-wiki/tools/Find-LlmWikiQualityRisk.ps1') })) {
+    $graphAlias = & $planner @scope -RequestedGroup code-graph -Plan -Format Json | ConvertFrom-Json
+    if (($graphAlias.groups -join ',') -cne ($graphGroups -join ',')) { throw 'Legacy code-graph alias lost graph, trace, or unique quality-risk checks.' }
+}
+if ($fullFocusedPlan.groupCount -ne 37 -or @($fullFocusedPlan.groups) -contains 'code-graph') { throw 'Full focused planning must select the 37 canonical groups without replaying the graph alias.' }
+$parseErrors = $null
+$plannerAst = [Management.Automation.Language.Parser]::ParseInput($plannerText, [ref]$null, [ref]$parseErrors)
+if (@($parseErrors).Count -gt 0) { throw 'Affected-smoke execution handlers do not parse.' }
+$executionSwitch = $plannerAst.Find({ param($node) $node -is [Management.Automation.Language.SwitchStatementAst] -and $node.Condition.Extent.Text -eq '$group' }, $true)
+if ($null -eq $executionSwitch) { throw 'Affected-smoke group execution switch was not found.' }
+$graphTestCalls = @(
+    foreach ($clause in $executionSwitch.Clauses) {
+        if ($clause.Item1.Value -notin $graphGroups) { continue }
+        $clause.Item2.FindAll({ param($node) $node -is [Management.Automation.Language.StringConstantExpressionAst] -and $node.Value -match '^Test-LlmWiki.*\.ps1$' }, $true) | ForEach-Object Value
+    }
+)
+$requiredGraphTests = @('Test-LlmWikiRoslynExtractor.ps1', 'Test-LlmWikiTypeScriptExtractor.ps1', 'Test-LlmWikiCodeGraph.ps1', 'Test-LlmWikiTraceOutput.ps1', 'Test-LlmWikiFrontendTraceSqlParity.ps1', 'Test-LlmWikiQualityRisk.ps1')
+if ($graphTestCalls.Count -ne $requiredGraphTests.Count) { throw 'Canonical graph and trace handlers changed their frozen six-script coverage.' }
+foreach ($name in $requiredGraphTests) {
+    if (@($graphTestCalls | Where-Object { $_ -ceq $name }).Count -ne 1) { throw "Graph and trace regression must execute exactly once: $name" }
 }
 $readOnlyGroups = @('json-cold-checkout', 'read-only-isolation', 'read-only-retrieval')
 foreach ($scope in @(@{ ChangedPath = @() }, @{ ChangedPath = @('.llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1') })) {

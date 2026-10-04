@@ -1,8 +1,8 @@
-import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 
+import { LocalizedNumberPipe } from '../../../../../shared/i18n/localized-number.pipe';
 import { normalizeQualityScore } from '../../../../../shared/lib/quality-score.utils';
 import type { Meal } from '../../../../../shared/models/meal.data';
 import { MealDetailItemPreviewComponent } from '../meal-detail-item-preview/meal-detail-item-preview';
@@ -11,12 +11,13 @@ import type { MealDetailItemPreview, MealMacroBlock, MealSatietyMeta } from '../
 
 @Component({
     selector: 'fd-meal-detail-summary',
-    imports: [DecimalPipe, TranslatePipe, FdUiHintDirective, MealDetailItemPreviewComponent],
+    imports: [LocalizedNumberPipe, TranslatePipe, FdUiHintDirective, MealDetailItemPreviewComponent],
     templateUrl: './meal-detail-summary.html',
     styleUrl: '../meal-detail/meal-detail.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MealDetailSummaryComponent {
+    protected readonly translateService = inject(TranslateService);
     public readonly meal = input.required<Meal>();
     public readonly macroSummaryBlocks = input.required<readonly MealMacroBlock[]>();
     public readonly preMealSatietyMeta = input.required<MealSatietyMeta>();

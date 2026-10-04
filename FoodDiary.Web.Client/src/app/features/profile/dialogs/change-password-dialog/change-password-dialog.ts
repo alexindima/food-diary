@@ -108,8 +108,8 @@ export class ChangePasswordDialogComponent {
         }
 
         const value = this.formModel();
-        const currentPassword = value.currentPassword.trim();
-        const newPassword = value.newPassword.trim();
+        const currentPassword = value.currentPassword;
+        const newPassword = value.newPassword;
 
         this.isSubmitting.set(true);
         this.passwordError.set(null);

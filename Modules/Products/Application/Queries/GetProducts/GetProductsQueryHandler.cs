@@ -11,12 +11,16 @@ using FoodDiary.Modules.Products.Application.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Queries.ReadFavoriteProductOverview;
 
 namespace FoodDiary.Modules.Products.Application.Queries.GetProducts;
 
 public sealed class GetProductsQueryHandler(
     IProductOverviewReadService productOverviewReadService,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    ISender sender)
     : IQueryHandler<GetProductsQuery, Result<PagedResponse<ProductModel>>> {
     public async Task<Result<PagedResponse<ProductModel>>> Handle(
         GetProductsQuery query,
@@ -47,9 +51,16 @@ public sealed class GetProductsQueryHandler(
                 query.HasImage),
             cancellationToken).ConfigureAwait(false);
 
+        FavoriteProductOverviewModel favorites = items.Count == 0
+            ? new([], [], 0)
+            : await sender.Send(new ReadFavoriteProductOverviewQuery(userId, [.. items.Select(product => product.Id)]), cancellationToken).ConfigureAwait(false);
+        var favoritesByProductId = favorites.Items.ToDictionary(favorite => favorite.ProductId);
         int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
         var response = new PagedResponse<ProductModel>(
-            items.Select(product => product.ToModel()).ToList(),
+            items.Select(product => {
+                FavoriteProductModel? favorite = favoritesByProductId.GetValueOrDefault(product.Id.Value);
+                return product.ToModel(favorite is not null, favorite?.Id);
+            }).ToList(),
             pageNumber,
             pageSize,
             totalPages,

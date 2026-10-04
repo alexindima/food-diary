@@ -1,18 +1,20 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit';
 
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
+import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import type { StatisticsMealStructureData, StatisticsMealStructureItem } from '../../models/statistics-dashboard-card.models';
 
 @Component({
     selector: 'fd-statistics-meal-structure-card',
-    imports: [DecimalPipe, TranslatePipe, FdUiCardComponent],
+    imports: [LocalizedNumberPipe, TranslatePipe, FdUiCardComponent],
     templateUrl: './statistics-meal-structure-card.html',
     styleUrl: './statistics-meal-structure-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatisticsMealStructureCardComponent {
+    protected readonly locale = injectCurrentLanguage();
     public readonly data = input.required<StatisticsMealStructureData>();
 
     protected getLabelKey(item: StatisticsMealStructureItem): string {

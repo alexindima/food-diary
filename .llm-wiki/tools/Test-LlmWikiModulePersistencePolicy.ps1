@@ -7,11 +7,14 @@ $evaluator = Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1'
 $cases = @(
     @{ path = 'Modules/Products/Infrastructure/Persistence/Products/ProductRepository.cs'; expected = $true; exists = $true }
     @{ path = 'Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeRepository.cs'; expected = $true; exists = $true }
-    @{ path = 'Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardReadService.cs'; expected = $true; exists = $true }
+    @{ path = 'Modules/Products/Infrastructure/Persistence/Products/ProductSnapshotReadService.cs'; expected = $true; exists = $true }
     @{ path = 'Modules/Products/Infrastructure/Services/ProductLookupReadService.cs'; expected = $true; exists = $false }
     @{ path = 'Modules/Recipes/Infrastructure/Repositories/RecipeRows.cs'; expected = $true; exists = $false }
-    @{ path = 'FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs'; expected = $true; exists = $true }
+    @{ path = 'Modules/Users/Infrastructure/Persistence/Users/UserRepository.cs'; expected = $true; exists = $true }
     @{ path = 'Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs'; expected = $true; exists = $true }
+    @{ path = 'Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.cs'; expected = $true; exists = $true }
+    @{ path = 'Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Persistence/IncomingRows.cs'; expected = $true; exists = $false }
+    @{ path = 'MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs'; expected = $true; exists = $false }
     @{ path = 'Modules/Products/Domain/ProductRepository.cs'; expected = $false; exists = $false }
     @{ path = 'Modules/Products/Application/ProductReadService.cs'; expected = $false; exists = $false }
     @{ path = 'Modules/Products/Contracts/ProductStore.cs'; expected = $false; exists = $false }
@@ -23,6 +26,9 @@ $cases = @(
     @{ path = 'Modules/Products/Nested/Infrastructure/Persistence/ProductRepository.cs'; expected = $false; exists = $false }
     @{ path = 'FoodDiary.Infrastructure/Migrations/ProductRepository.cs'; expected = $false; exists = $false }
     @{ path = 'Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Migrations/InboundMailStore.cs'; expected = $false; exists = $false }
+    @{ path = 'Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Migrations/MailRelayQueueStore.cs'; expected = $false; exists = $false }
+    @{ path = 'Services/MailRelay/FoodDiary.MailRelay.Infrastructure/tests/MailRelayQueueStore.cs'; expected = $false; exists = $false }
+    @{ path = 'Services/MailInbox/FoodDiary.MailInbox.Application/Services/NpgsqlInboundMailStore.cs'; expected = $false; exists = $false }
 )
 
 foreach ($case in $cases) {

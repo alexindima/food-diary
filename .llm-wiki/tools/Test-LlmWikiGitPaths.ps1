@@ -82,6 +82,17 @@ try {
     $overlayPaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $overlayRepository -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'Unable to enumerate the isolated workspace overlay.')
     if ($overlayFixtureName -notin $overlayPaths) { throw '-HeadRef HEAD overlay enumeration omitted an untracked working-tree path.' }
     if (-not (Test-LlmWikiWorkspaceHeadRef HEAD)) { throw 'HEAD was not recognized as a workspace-overlay head reference.' }
+    $null = New-Item -ItemType Directory -Path (Join-Path $overlayRepository 'folder with spaces') -Force
+    $null = New-Item -ItemType Directory -Path (Join-Path $overlayRepository 'node_modules') -Force
+    [IO.File]::WriteAllText((Join-Path $overlayRepository $unicodePath), 'public class NewSource {}')
+    [IO.File]::WriteAllText((Join-Path $overlayRepository '.gitignore'), "node_modules/`n")
+    [IO.File]::WriteAllText((Join-Path $overlayRepository 'node_modules/ignored.cs'), 'ignored')
+    Remove-Item -LiteralPath (Join-Path $overlayRepository 'tracked.md')
+    $inventory = @(Get-LlmWikiSourceInventory -RepositoryRoot $overlayRepository)
+    if ($unicodePath -notin $inventory -or $overlayFixtureName -notin $inventory -or
+        'tracked.md' -in $inventory -or 'node_modules/ignored.cs' -in $inventory) {
+        throw 'Source inventory lost an untracked Unicode source or included ignored/deleted files.'
+    }
 } finally {
     Remove-Item -LiteralPath $overlayRepository -Recurse -Force -ErrorAction SilentlyContinue
 }

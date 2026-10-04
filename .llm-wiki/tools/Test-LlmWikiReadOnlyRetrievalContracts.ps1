@@ -20,6 +20,10 @@ $context = & $facade context -Query 'RenewDueSubscriptionsCommandHandler' -Forma
 Assert-Retrieval ([bool]$context.conclusive -and -not [bool]$context.abstained) 'Grounded context query did not report a conclusive result.'
 Assert-Retrieval ($context.candidates[0].path -eq 'Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs') 'Grounded context query lost its expected top candidate.'
 Assert-Retrieval (-not [string]::IsNullOrWhiteSpace([string]$context.confidence)) 'Context query omitted calibrated confidence.'
+Assert-Retrieval (-not [string]::IsNullOrWhiteSpace([string]$context.candidates[0].layer) -and
+    -not [string]::IsNullOrWhiteSpace([string]$context.candidates[0].role)) 'Shared CLI reader lost indexed candidate features.'
+$multiLayer = & $facade context -Query 'Find both frontend and backend for requesting an image upload URL' -Format Json -Limit 5 | ConvertFrom-Json
+Assert-Retrieval ($multiLayer.abstained -and $multiLayer.ambiguityReason -eq 'multi-layer-request') 'One candidate incorrectly concluded a request for two layers.'
 
 $ownership = & $facade ownership -Query 'subscription checkout payment webhook renewal and financial state' -Format Json -Limit 5 | ConvertFrom-Json
 Assert-Retrieval ([bool]$ownership.conclusive -and @($ownership.ownershipGuides).Count -gt 0) 'Intent ownership returned an empty successful result.'

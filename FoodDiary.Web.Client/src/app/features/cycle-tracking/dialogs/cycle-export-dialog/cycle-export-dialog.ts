@@ -46,7 +46,8 @@ export class CycleExportDialogComponent {
         this.attempted() && this.exportForm.currentPassword().invalid() ? 'FORM_ERRORS.REQUIRED' : null,
     );
 
-    protected submit(): void {
+    protected submit(event: Event): void {
+        event.preventDefault();
         this.attempted.set(true);
         this.exportForm().markAsTouched();
         if (this.exportForm().invalid() || this.rangeError() !== null) {

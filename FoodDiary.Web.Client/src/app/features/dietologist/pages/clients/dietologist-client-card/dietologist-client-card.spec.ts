@@ -1,5 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -42,6 +43,19 @@ describe('DietologistClientCardComponent', () => {
 
         expect(getHost(fixture).textContent).toContain('5 ft 11 in');
     });
+
+    it('updates height units when the language changes', () => {
+        const fixture = createComponent();
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('ru', { GENERAL: { UNITS: { CM: 'см', FT: 'фут', IN: 'дюйм' } } });
+        translate.use('ru');
+        fixture.detectChanges();
+
+        expect(getHost(fixture).textContent).toContain('180 см');
+        TestBed.inject(MeasurementSystemService).setSystem('imperial');
+        fixture.detectChanges();
+        expect(getHost(fixture).textContent).toContain('5 фут 11 дюйм');
+    });
 });
 
 function createComponent(): ComponentFixture<DietologistClientCardComponent> {
@@ -49,6 +63,10 @@ function createComponent(): ComponentFixture<DietologistClientCardComponent> {
         imports: [DietologistClientCardComponent],
         providers: [provideTranslateTesting()],
     });
+
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', { GENERAL: { UNITS: { CM: 'cm', FT: 'ft', IN: 'in' } } });
+    translate.use('en');
 
     const fixture = TestBed.createComponent(DietologistClientCardComponent);
     fixture.componentRef.setInput('item', createViewModel());

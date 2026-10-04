@@ -13,6 +13,8 @@ import { FdUiMenuTriggerDirective } from 'fd-ui-kit/menu/fd-ui-menu-trigger.dire
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
+import { injectCurrentLanguage } from '../../../../../shared/i18n/inject-current-language';
+import { LocalizedNumberPipe } from '../../../../../shared/i18n/localized-number.pipe';
 import { MeasurementSystemService } from '../../../../../shared/measurements/measurement-system.service';
 import type { ActivityLevelOption, Gender } from '../../../../../shared/models/user.data';
 import type { AppThemeName, AppUiStyleName } from '../../../../../theme/app-theme.config';
@@ -27,6 +29,7 @@ const ISO_DATE_LENGTH = 10;
         FormField,
         RouterLink,
         TranslatePipe,
+        LocalizedNumberPipe,
         FdUiCardComponent,
         FdUiDateInputComponent,
         FdUiIconComponent,
@@ -43,6 +46,7 @@ const ISO_DATE_LENGTH = 10;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageComparisonWidgetsComponent {
+    protected readonly locale = injectCurrentLanguage();
     protected readonly latestBirthDate = new Date();
     protected readonly measurements = inject(MeasurementSystemService);
     protected readonly avatarClearRequest = signal(0);

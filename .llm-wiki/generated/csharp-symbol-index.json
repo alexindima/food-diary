@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4401,
-    "symbols": 4333,
+    "sourceFiles": 4402,
+    "symbols": 4334,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2264,
+      "class": 2265,
       "enum": 65,
       "interface": 411,
       "record": 1472,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1783,
+      "Other": 1784,
       "Query": 300,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
@@ -349,11 +349,18 @@
       "line": 9
     },
     {
+      "name": "SqliteContextSearchReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
+      "line": 9
+    },
+    {
       "name": "SqliteWikiContextSearch",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "line": 10
+      "line": 6
     },
     {
       "name": "WikiCommandRequest",
@@ -21220,7 +21227,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Products/Application/Queries/GetProducts/GetProductsQueryHandler.cs",
-      "line": 16
+      "line": 19
     },
     {
       "name": "GetProductsQueryValidator",

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-03",
+  "baseline": "c1e5a7716abd9206d9e1dba9164f28a2c1f78e5a",
+  "branch": "codex/wiki-analysis",
+  "os": "Microsoft Windows 10.0.26200",
+  "pwsh": "7.6.5",
+  "node": "v26.2.0",
+  "dotnet": "10.0.102",
+  "typescript": "6.0.3",
+  "graphBackendFirstSeconds": 56.6078392,
+  "graphFullExtensionSeconds": 18.6076569,
+  "pageLintSeconds": 3.6772358,
+  "pageLintPassed": true,
+  "pageCount": 120,
+  "baselineIndexCheckPassed": false,
+  "indexFailureTools": [
+    "Build-LlmWikiCatalog.ps1",
+    "Build-LlmWikiSymbolIndex.ps1"
+  ],
+  "symbolCheckSecondsWithFourWorkers": 44.83,
+  "symbolGeneratorStandaloneSeconds": 12.3008929,
+  "selectedEvaluatedCases": 431,
+  "availableCorpusCases": 898,
+  "availableCorpora": 22,
+  "missingCorpusTargets": 0,
+  "implementationChanges": false,
+  "measurementNotes": [
+    "First query means absent result cache; SQLite graph was already built.",
+    "Warm value is the arithmetic mean of repetitions 2 and 3.",
+    "Each repetition uses a new pwsh process.",
+    "Durations are one Windows machine; no production or CI timing claims.",
+    "Quality observations use the baseline committed projections; they are existing regression corpora, not newly blind data.",
+    "Standalone symbol generation and pipeline timing differ in concurrency and cache state; this is not a controlled speedup experiment.",
+    "Raw logs and diagnostic generators remain in .artifacts/wiki-analysis."
+  ],
+  "affectedVerification": {
+    "passed": true,
+    "selectedStages": 7,
+    "selectedGenerators": 0,
+    "selectedSmokeGroups": 0,
+    "seconds": 92.94,
+    "scope": "docs/reports/wiki-analysis-2026-10-03.md",
+    "fullIndexFreshnessEstablished": false
+  },
+  "reportValidation": {
+    "links": true,
+    "encoding": true,
+    "scriptSyntax": true,
+    "whitespace": true,
+    "isolatedGuardReproducedTwice": true
+  }
+}

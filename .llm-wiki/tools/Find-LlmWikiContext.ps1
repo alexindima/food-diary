@@ -179,6 +179,8 @@ if ($CompiledIndexSource -eq 'Sqlite') {
             '.llm-wiki/policies/context-search-ranking.json',
             '.llm-wiki/tools/code-graph.mjs', '.llm-wiki/tools/code-graph-path-layout.mjs',
             '.llm-wiki/tools/Find-LlmWikiContext.ps1'
+            'FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs'
+            '.llm-wiki/tools/LlmWiki.SqliteReader/ContextSearchReader.cs'
         )
         $cachedContext = Read-LlmWikiQueryCache -Entry $queryCacheEntry
         if ($null -ne $cachedContext) {
@@ -189,15 +191,12 @@ if ($CompiledIndexSource -eq 'Sqlite') {
         }
     }
     $searchLimit = [Math]::Min(100, [Math]::Max(50, $Limit * 4))
-    $sqlResult = & $graphManager `
-        -Action search `
-        -Query $searchText `
-        -Module $Module `
-        -ChangedPath $scopePaths `
-        -ChangeType $ChangeType `
-        -Limit $searchLimit `
-        -SkipRefresh `
-        -Format Json | ConvertFrom-Json
+    . (Join-Path $PSScriptRoot 'LlmWikiInProcessSqlite.ps1')
+    $null = Initialize-LlmWikiInProcessSqlite
+    $sqlResult = [LlmWiki.SqliteReader.ContextSearchReader]::Search(
+        $repositoryRoot, $searchText, $searchLimit, $ChangeType, $Module,
+        [string[]]$scopePaths, [string]$graphStatus.currentChangeSetFingerprint
+    ) | ConvertFrom-Json
     if (-not [bool]$sqlResult.ready) {
         throw 'SQLite search index is unavailable. Run ./.llm-wiki/wiki.ps1 graph-build and retry.'
     }
@@ -221,15 +220,10 @@ if ($CompiledIndexSource -eq 'Sqlite') {
     # API/production ranking can fill the bounded candidate window before any
     # tests appear. Retrieve test context independently without reranking code.
     if ($testRecords.Count -eq 0 -and $records.Count -gt 0 -and $ChangeType -ne 'Tests') {
-        $testSearch = & $graphManager `
-            -Action search `
-            -Query $searchText `
-            -Module $Module `
-            -ChangedPath $scopePaths `
-            -ChangeType Tests `
-            -Limit $searchLimit `
-            -SkipRefresh `
-            -Format Json | ConvertFrom-Json
+        $testSearch = [LlmWiki.SqliteReader.ContextSearchReader]::Search(
+            $repositoryRoot, $searchText, $searchLimit, 'Tests', $Module,
+            [string[]]$scopePaths, [string]$graphStatus.currentChangeSetFingerprint
+        ) | ConvertFrom-Json
         if (-not [bool]$testSearch.ready) {
             throw 'SQLite test context index is unavailable. Run ./.llm-wiki/wiki.ps1 graph-build and retry.'
         }
@@ -350,34 +344,6 @@ if ($CompiledIndexSource -eq 'Sqlite') {
     foreach ($record in @($records | Select-Object -First $Limit)) { Write-Host " - #$($record.rank) [$($record.confidence)] $($record.path) score=$($record.score)" }
     return
 
-    $compiledResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
-        -Action compiled-context `
-        -Query $Query `
-        -Module $Module `
-        -ChangedPath $scopePaths `
-        -SkipRefresh `
-        -Format Json | ConvertFrom-Json
-    if (-not [bool]$compiledResult.ready) {
-        throw "SQLite compiled-index projection is unavailable ($($compiledResult.unavailableReason)). Run ./.llm-wiki/wiki.ps1 graph-build and retry."
-    }
-    $catalog = $compiledResult.catalog
-    $symbolIndex = [pscustomobject]@{
-        symbols = @($compiledResult.symbols)
-        dependencyInjectionRegistrations = @($compiledResult.dependencyInjectionRegistrations)
-    }
-    $frontendIndex = [pscustomobject]@{
-        features = @($compiledResult.frontendFeatures)
-        symbols = @($compiledResult.frontendSymbols)
-        routes = @($compiledResult.frontendRoutes)
-        localization = @($compiledResult.frontendLocalization)
-    }
-    $compiledIndexDiagnostics = [ordered]@{
-        source = [string]$compiledResult.source
-        sqlDurationMs = [double]$compiledResult.durationMs
-        scannedRecords = [int]$compiledResult.scannedRecords
-        returnedRecords = [int]$compiledResult.returnedRecords
-        sourceHashes = $compiledResult.sourceHashes
-    }
 } else {
     $catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
     $symbolIndex = if (Test-Path -LiteralPath $symbolIndexPath) {
@@ -662,19 +628,29 @@ $controllerResults = Select-ScoredItems $controllerCandidates
 $symbolResults = @()
 $registrationResults = @()
 if ($null -ne $symbolIndex) {
+    $moduleSymbolPathPattern = $null
+    $moduleRegistrationPathPattern = $null
+    $moduleProjectPathPattern = $null
+    if ($null -ne $matchedModule) {
+        $escapedModuleName = [regex]::Escape([string]$matchedModule.name)
+        $moduleSymbolPathPattern = "/$escapedModuleName/"
+        $moduleRegistrationPathPattern = "/$escapedModuleName(/|\.)"
+        if ($matchedModule.PSObject.Properties['project'] -and -not [string]::IsNullOrWhiteSpace([string]$matchedModule.project)) {
+            $moduleProjectDirectory = (Split-Path -Parent $matchedModule.project).Replace('\', '/')
+            $moduleProjectPathPattern = "$moduleProjectDirectory/*"
+        }
+    }
     $symbolCandidates = [System.Collections.Generic.List[object]]::new()
     foreach ($symbol in $symbolIndex.symbols) {
         $searchable = "$($symbol.name) $($symbol.role) $($symbol.path)"
         $score = Get-SearchScore $searchable $tokens 8 18
         if ($frontendOnlyScope) { $score = 0 } else { $score += Get-ScopeAffinity $symbol.path }
         if ($null -ne $matchedModule) {
-            $modulePathPattern = "/$([regex]::Escape([string]$matchedModule.name))/"
-            if ([string]$symbol.path -match $modulePathPattern) {
+            if ([string]$symbol.path -match $moduleSymbolPathPattern) {
                 $score += 12
             }
-            if ($matchedModule.PSObject.Properties['project'] -and -not [string]::IsNullOrWhiteSpace([string]$matchedModule.project)) {
-                $moduleProjectDirectory = (Split-Path -Parent $matchedModule.project).Replace('\', '/')
-                if ([string]$symbol.path -like "$moduleProjectDirectory/*") {
+            if ($null -ne $moduleProjectPathPattern) {
+                if ([string]$symbol.path -like $moduleProjectPathPattern) {
                     $score += 12
                 }
             }
@@ -698,7 +674,7 @@ if ($null -ne $symbolIndex) {
         $score = Get-SearchScore $searchable $tokens 8 18
         if ($frontendOnlyScope) { $score = 0 } else { $score += Get-ScopeAffinity $registration.path }
         if ($null -ne $matchedModule -and
-            [string]$registration.path -match "/$([regex]::Escape([string]$matchedModule.name))(/|\.)") {
+            [string]$registration.path -match $moduleRegistrationPathPattern) {
             $score += 12
         }
         if ($score -gt 0) {

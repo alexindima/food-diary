@@ -62,8 +62,7 @@ export class ShoppingListItemsPanelComponent {
         return buildShoppingListUnitOptions(key => this.translateService.instant(key));
     });
     protected readonly itemViewModels = computed(() => {
-        this.activeLang();
-        return buildShoppingListItemViewModels(this.items(), key => this.translateService.instant(key));
+        return buildShoppingListItemViewModels(this.items(), key => this.translateService.instant(key), this.activeLang());
     });
     protected readonly isItemFormInvalid = computed(() => this.itemForm()().invalid());
 

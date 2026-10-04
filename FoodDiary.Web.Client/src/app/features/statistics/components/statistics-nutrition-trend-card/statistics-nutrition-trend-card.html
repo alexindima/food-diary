@@ -66,6 +66,7 @@
                         verticalEdgeInset="none"
                         axisValueSuffix=""
                         [axisUnit]="chartUnitKey() | translate"
+                        [locale]="locale()"
                         [axisValueFormatter]="formatChartNumber"
                         [title]="'STATISTICS.DASHBOARD.TREND.TITLE' | translate"
                         [points]="selectedTab() === 'calories' ? calorieLinePoints() : []"
@@ -105,7 +106,8 @@
                             [class.statistics-nutrition-trend-card__insight-value--positive]="insight.tone === 'positive'"
                             [class.statistics-nutrition-trend-card__insight-value--negative]="insight.tone === 'negative'"
                         >
-                            {{ insight.value > 0 ? '+' : '' }}{{ insight.value | number: '1.0-1' }}{{ insight.unitKey | translate }}
+                            {{ insight.value > 0 ? '+' : '' }}{{ insight.value | localizedNumber: locale() : 0 : 1
+                            }}{{ insight.unitKey | translate }}
                         </strong>
                     } @else if (insight.key !== 'completeness') {
                         <strong class="fd-ui-stat-value fd-ui-text-muted">—</strong>

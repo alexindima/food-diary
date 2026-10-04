@@ -413,7 +413,10 @@
         "ITEMS_MANY": "items",
         "ITEMS_OTHER": "items",
         "AMOUNT": "Amount",
-        "SERVINGS": "servings",
+        "SERVINGS_ONE": "serving",
+        "SERVINGS_FEW": "servings",
+        "SERVINGS_MANY": "servings",
+        "SERVINGS_OTHER": "servings",
         "EDIT": "Edit",
         "SAVE": "Save",
         "SAVING": "Saving...",
@@ -981,7 +984,7 @@
         "ADD_ACTION": "Add",
         "TEXT_PREVIEW_LABEL": "Source request",
         "PHOTO_PREVIEW_ALT": "Photo analysis preview",
-        "REMOVE_AI_ITEM": "Remove {name} from analysis",
+        "REMOVE_AI_ITEM": "Remove {{name}} from analysis",
         "CREATE_MEAL_ERROR": "Could not log this meal. Your AI result is still here, please try again.",
         "EMPTY_ITEMS_ERROR": "Keep at least one recognized item before logging the meal.",
         "TEXT_ERROR_PREMIUM": "Text and voice recognition are available for Premium users.",
@@ -2065,6 +2068,8 @@
         }
     },
     "WEIGHT_HISTORY": {
+        "DELETE_CONFIRM_TITLE": "Delete weight measurement?",
+        "DELETE_CONFIRM_MESSAGE": "Delete the weight measurement for {{date}}? This action cannot be undone.",
         "SUBTITLE": "Body metrics",
         "TITLE": "Weight history",
         "SUMMARY_TITLE": "Weight overview",
@@ -2201,6 +2206,8 @@
         "GOAL_VALUE_RANGE": "Enter a value greater than zero and no more than {{max}}."
     },
     "WAIST_HISTORY": {
+        "DELETE_CONFIRM_TITLE": "Delete waist measurement?",
+        "DELETE_CONFIRM_MESSAGE": "Delete the waist measurement for {{date}}? This action cannot be undone.",
         "SUBTITLE": "Body measurements",
         "TITLE": "Waist tracking",
         "CHART_TITLE": "Weekly progress",
@@ -3911,6 +3918,7 @@
                 "SEND": "Send recommendation",
                 "SENT": "Recommendation sent.",
                 "SEND_ERROR": "Failed to send recommendation.",
+                "PERMISSIONS_REQUIRED": "Recommendations are available when the client shares all diary categories. Ask the client to review their sharing settings.",
                 "EMPTY": "No recommendations sent yet.",
                 "READ": "Read",
                 "UNREAD": "Unread"
@@ -3923,7 +3931,10 @@
                 "BIRTH_DATE": "Birth date"
             },
             "MEALS": {
-                "COUNT": "{{count}} meals",
+                "COUNT_ONE": "{{count}} meal",
+                "COUNT_FEW": "{{count}} meals",
+                "COUNT_MANY": "{{count}} meals",
+                "COUNT_OTHER": "{{count}} meals",
                 "EMPTY": "No meals shared for the selected period."
             },
             "BODY": {

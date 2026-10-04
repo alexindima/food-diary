@@ -15,6 +15,10 @@ if ($research.workflow.confidenceDimensions.blockerCount -ne 'high') { throw 'Ex
 if ($research.workflow.confidenceDimensions.implementationScope -ne 'not-required') { throw 'Read-only assessment incorrectly rated an implementation scope.' }
 if (@($research.workflow.confidenceReasons).Count -lt 3) { throw 'Research confidence does not explain each dimension.' }
 if ($research.readiness.designCheckpoint -ne 'not-required') { throw 'Read-only assessment incorrectly requires a design checkpoint.' }
+if ($research.workflow.requiresDesign -or $research.workflow.requiresDecisionCheckpoint -or $research.readiness.readyToImplement) {
+    throw 'Read-only assessment returned contradictory implementation requirements.'
+}
+if ($research.nextActionState -ne 'assessment-complete') { throw 'Grounded assessment did not expose its canonical next-action state.' }
 
 $compactJson = & (Join-Path $PSScriptRoot 'Get-LlmWikiResearchPacket.ps1') `
     -Objective 'Extract Dietologist application module into a separate project' `

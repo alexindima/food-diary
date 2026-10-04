@@ -1,5 +1,9 @@
 [CmdletBinding()]
-param()
+param(
+    [ValidateSet('Generation', 'Verification', 'Status')]
+    [string]$ReceiptKind = 'Verification',
+    [switch]$CompletedFullVerification
+)
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
@@ -84,10 +88,44 @@ try {
 } finally { $indexHash.Dispose() }
 
 $gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve the Git directory for the Wiki index verification receipt.').Lines[0].Trim()
-$receiptPath = Join-Path $gitDirectory 'llm-wiki/index-verification.json'
+$generationReceiptPath = Join-Path $gitDirectory 'llm-wiki/index-generation.json'
+if ($ReceiptKind -eq 'Status') {
+    $states = [ordered]@{ schemaVersion = 1; gitHead = $head; sourceFingerprint = $sourceFingerprint; indexFingerprint = $indexFingerprint }
+    foreach ($kind in @('generation', 'verification')) {
+        $path = Join-Path $gitDirectory "llm-wiki/index-$kind.json"
+        $saved = if (Test-Path -LiteralPath $path -PathType Leaf) {
+            try { Get-Content -LiteralPath $path -Raw | ConvertFrom-Json } catch { $null }
+        } else { $null }
+        $states[$kind] = [ordered]@{
+            state = if ($null -eq $saved) { 'unverified' }
+                elseif ([string]$saved.sourceFingerprint -ceq $sourceFingerprint -and [string]$saved.indexFingerprint -ceq $indexFingerprint) { 'verified' }
+                else { 'stale' }
+            checkedAtUtc = if ($null -ne $saved) { $saved.verifiedAtUtc } else { $null }
+        }
+    }
+    $states | ConvertTo-Json -Depth 4
+    return
+}
+if ($ReceiptKind -eq 'Verification') {
+    if (-not $CompletedFullVerification) {
+        Write-Host 'Selected verification passed; full verification status is unchanged. Run wiki.ps1 verify-full for the full gate.'
+        return
+    }
+    $generationReceipt = if (Test-Path -LiteralPath $generationReceiptPath -PathType Leaf) {
+        try { Get-Content -LiteralPath $generationReceiptPath -Raw | ConvertFrom-Json } catch { $null }
+    } else { $null }
+    if ($null -eq $generationReceipt -or
+        [string]$generationReceipt.sourceFingerprint -cne $sourceFingerprint -or
+        [string]$generationReceipt.indexFingerprint -cne $indexFingerprint) {
+        Write-Host 'Selected verification passed; full index generation remains unverified. Run Invoke-LlmWikiIndexPipeline.ps1 -Check before recording a full verification receipt.'
+        return
+    }
+}
+$receiptPath = if ($ReceiptKind -eq 'Generation') { $generationReceiptPath } else { Join-Path $gitDirectory 'llm-wiki/index-verification.json' }
 $null = New-Item -ItemType Directory -Path (Split-Path -Parent $receiptPath) -Force
 $receipt = [ordered]@{
     schemaVersion = 1
+    kind = $ReceiptKind.ToLowerInvariant()
     gitHead = $head
     sourceFingerprint = $sourceFingerprint
     indexFingerprint = $indexFingerprint
@@ -96,4 +134,4 @@ $receipt = [ordered]@{
 $temporaryPath = "$receiptPath.$PID.tmp"
 [IO.File]::WriteAllText($temporaryPath, (($receipt | ConvertTo-Json) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
 Move-Item -LiteralPath $temporaryPath -Destination $receiptPath -Force
-Write-Host "Wiki index verification receipt recorded for $($head.Substring(0, 10))."
+Write-Host "Wiki index $($ReceiptKind.ToLowerInvariant()) receipt recorded for $($head.Substring(0, 10))."

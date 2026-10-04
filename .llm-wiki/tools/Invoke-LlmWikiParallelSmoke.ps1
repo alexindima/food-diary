@@ -171,6 +171,12 @@ if (@($groups | Where-Object { $_ -in $graphDependentGroups }).Count -gt 0) {
 
 $wrapper = Join-Path $PSScriptRoot 'Invoke-LlmWikiObservedStage.ps1'
 $shellPath = [IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
+$temporaryParent = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\', '/')
+$temporaryRunRoot = [IO.Path]::GetFullPath((Join-Path $temporaryParent "fd-wiki-smoke-$runId"))
+if (-not $temporaryRunRoot.StartsWith(($temporaryParent + [IO.Path]::DirectorySeparatorChar), [StringComparison]::OrdinalIgnoreCase)) {
+    throw 'Smoke temporary directory escaped its parent.'
+}
+$null = New-Item -ItemType Directory -Path $temporaryRunRoot -Force
 
 function Start-SmokeGroup([string]$Group) {
     $arguments = [ordered]@{
@@ -196,8 +202,17 @@ function Start-SmokeGroup([string]$Group) {
     $process.StartInfo.Environment['LLM_WIKI_SMOKE_SANDBOX'] = $sandboxPath
     $process.StartInfo.Environment['LLM_WIKI_SMOKE_TASK_PREFIX'] = "$runId-$Group"
     $process.StartInfo.Environment['LLM_WIKI_SMOKE_CANCEL_PATH'] = $cancelPath
-    $process.StartInfo.Environment['TEMP'] = $sandboxPath
-    $process.StartInfo.Environment['TMP'] = $sandboxPath
+    $process.StartInfo.Environment['LLM_WIKI_SMOKE_MAX_CONCURRENCY'] = [string]$MaxConcurrency
+    # Repository log paths can exceed the Windows SQLite journal path limit.
+    # Keep native temporary files in a short, independently owned group scope.
+    $temporaryGroupPath = [IO.Path]::GetFullPath((Join-Path $temporaryRunRoot $Group))
+    if (-not $temporaryGroupPath.StartsWith(($temporaryRunRoot + [IO.Path]::DirectorySeparatorChar), [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'Smoke group temporary directory escaped its run scope.'
+    }
+    $null = New-Item -ItemType Directory -Path $temporaryGroupPath -Force
+    $process.StartInfo.Environment['TEMP'] = $temporaryGroupPath
+    $process.StartInfo.Environment['TMP'] = $temporaryGroupPath
+    $process.StartInfo.Environment['TMPDIR'] = $temporaryGroupPath
     if (-not $process.Start()) { throw "Unable to start focused smoke group '$Group'." }
     [pscustomobject]@{
         Group = $Group
@@ -261,6 +276,12 @@ try {
     } else {
         Write-Warning "Focused smoke logs preserved after failure: $runRoot"
     }
+    $resolvedTemporaryRoot = [IO.Path]::GetFullPath($temporaryRunRoot)
+    if (-not $resolvedTemporaryRoot.StartsWith(($temporaryParent + [IO.Path]::DirectorySeparatorChar), [StringComparison]::OrdinalIgnoreCase) -or
+        [IO.Path]::GetFileName($resolvedTemporaryRoot) -cne "fd-wiki-smoke-$runId") {
+        throw "Refusing to clean an unowned smoke temporary directory: $resolvedTemporaryRoot"
+    }
+    Remove-Item -LiteralPath $resolvedTemporaryRoot -Recurse -Force -ErrorAction SilentlyContinue
     $taskSandboxRoot = [IO.Path]::GetFullPath((Join-Path $repositoryRoot '.artifacts/llm-wiki/tasks'))
     if (Test-Path -LiteralPath $taskSandboxRoot -PathType Container) {
         foreach ($taskSandbox in Get-ChildItem -LiteralPath $taskSandboxRoot -Directory -Filter ".smoke-$runId-*" -ErrorAction SilentlyContinue) {

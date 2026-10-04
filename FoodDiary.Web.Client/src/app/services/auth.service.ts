@@ -1,5 +1,6 @@
+import { HttpStatusCode } from '@angular/common/http';
 import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
-import { catchError, finalize, firstValueFrom, map, type Observable, of, shareReplay, tap } from 'rxjs';
+import { catchError, defer, finalize, firstValueFrom, from, map, type Observable, of, shareReplay, tap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import type {
@@ -14,6 +15,7 @@ import type { GoogleLoginRequest } from '../shared/auth/google-auth.data';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { fallbackApiError, rethrowApiError } from '../shared/lib/api-error.utils';
+import { getNumberProperty } from '../shared/lib/unknown-value.utils';
 import type { User } from '../shared/models/user.data';
 import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { ThemeService } from '../shared/theme/theme.service';
@@ -24,6 +26,7 @@ import { NavigationService } from './navigation.service';
 import { TokenStorageService } from './token-storage.service';
 
 const TOKEN_EXPIRATION_LEEWAY_SECONDS = 30;
+const AUTH_REFRESH_LOCK_NAME = 'fooddiary.auth.refresh';
 
 @Service()
 export class AuthService extends ApiService {
@@ -42,6 +45,7 @@ export class AuthService extends ApiService {
     private readonly emailConfirmedSignal = signal<boolean | null>(this.tokenStorage.loadEmailConfirmed());
     private readonly mustChangePasswordSignal = signal<boolean>(this.tokenStorage.loadMustChangePassword() ?? false);
     private refreshInFlight$: Observable<string | null> | null = null;
+    private pendingLegacyRefreshToken: string | null = null;
     private sessionRestorePromise: Promise<void> | null = null;
     private readonly authReadySignal = signal(false);
     private sessionVersion = 0;
@@ -251,26 +255,15 @@ export class AuthService extends ApiService {
             return of(null);
         }
 
-        const legacyRefreshToken = this.tokenStorage.consumeLegacyRefreshToken();
-        const request = legacyRefreshToken === null ? {} : { refreshToken: legacyRefreshToken };
         const refreshVersion = this.sessionVersion;
-        const refreshRequest$ = this.post<AuthResponse>('refresh', request).pipe(
-            map(response => {
-                if (refreshVersion !== this.sessionVersion) {
-                    return null;
-                }
-                const accessToken = response.accessToken;
-                if (accessToken.length > 0) {
-                    this.applyAuthenticatedSession(response);
-                }
-                return accessToken;
-            }),
-            catchError((error: unknown) => {
-                void this.onLogoutAsync(true);
-                return fallbackApiError('refreshToken error', error, null);
-            }),
+        // Refresh cookies are shared by tabs, so their rotation must also be shared.
+        const refreshRequest$ = defer(() =>
+            from(this.browserWindow.runWithLockAsync(AUTH_REFRESH_LOCK_NAME, async () => this.refreshSessionAsync(refreshVersion))),
+        ).pipe(
             finalize(() => {
-                this.refreshInFlight$ = null;
+                if (this.refreshInFlight$ === refreshRequest$) {
+                    this.refreshInFlight$ = null;
+                }
             }),
             shareReplay(1),
         );
@@ -279,10 +272,45 @@ export class AuthService extends ApiService {
         return refreshRequest$;
     }
 
+    private async refreshSessionAsync(refreshVersion: number): Promise<string | null> {
+        if (refreshVersion !== this.sessionVersion || !this.tokenStorage.hasRefreshSession()) {
+            return null;
+        }
+
+        this.pendingLegacyRefreshToken ??= this.tokenStorage.consumeLegacyRefreshToken();
+        const legacyRefreshToken = this.pendingLegacyRefreshToken;
+        if (legacyRefreshToken !== null) {
+            this.tokenStorage.markRefreshSession();
+        }
+        const request = legacyRefreshToken === null ? {} : { refreshToken: legacyRefreshToken };
+        return firstValueFrom(
+            this.post<AuthResponse>('refresh', request).pipe(
+                map(response => {
+                    if (refreshVersion !== this.sessionVersion) {
+                        return null;
+                    }
+                    const accessToken = response.accessToken;
+                    if (accessToken.length > 0) {
+                        this.applyAuthenticatedSession(response);
+                    }
+                    return accessToken;
+                }),
+                catchError((error: unknown) => {
+                    if (refreshVersion === this.sessionVersion && getNumberProperty(error, 'status') === HttpStatusCode.Unauthorized) {
+                        void this.onLogoutAsync(true);
+                    }
+                    return fallbackApiError('refreshToken error', error, null);
+                }),
+            ),
+        );
+    }
+
     public async onLogoutAsync(redirectToAuth = false): Promise<void> {
         this.sessionVersion++;
-        if (this.tokenStorage.hasRefreshSession()) {
-            const legacyRefreshToken = this.tokenStorage.consumeLegacyRefreshToken();
+        const hasRefreshSession = this.tokenStorage.hasRefreshSession();
+        const legacyRefreshToken = this.pendingLegacyRefreshToken ?? this.tokenStorage.consumeLegacyRefreshToken();
+        this.pendingLegacyRefreshToken = null;
+        if (hasRefreshSession) {
             const request = legacyRefreshToken === null ? {} : { refreshToken: legacyRefreshToken };
             await firstValueFrom(this.post<void>('logout', request).pipe(catchError(() => of(undefined))));
         }
@@ -324,6 +352,8 @@ export class AuthService extends ApiService {
     }
 
     private onLogin(authResponse: AuthResponse, rememberMe: boolean): void {
+        this.sessionVersion++;
+        this.refreshInFlight$ = null;
         this.sessionEvents.notifyAuthenticated();
         this.applyAuthenticatedSession(authResponse, rememberMe);
     }
@@ -333,6 +363,7 @@ export class AuthService extends ApiService {
     }
 
     private applyAuthenticatedSession(authResponse: AuthResponse, rememberMe?: boolean): void {
+        this.pendingLegacyRefreshToken = null;
         this.tokenStorage.setToken(authResponse.accessToken, rememberMe);
         this.tokenStorage.markRefreshSession();
         this.authTokenSignal.set(authResponse.accessToken);

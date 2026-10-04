@@ -64,10 +64,21 @@ public sealed partial class SqliteWikiContextSearchTests : IDisposable {
     [InlineData("Which failed browser HTTP calls are retried?", "retry")]
     [InlineData("Где сервер получает сводку веса пользователя?", "weight")]
     [InlineData("Where are the verified boundaries and identities?", "verify")]
+    [InlineData("репозиторий биллинга", "billing")]
+    [InlineData("списка записей", "collection")]
     public async Task SearchAsync_NormalizesConversationalInflections(string query, string expectedTerm) {
         WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
             query, 10, "Any", module: null, scopePaths: null, CancellationToken.None, expectedChangeSetFingerprint: "fixture-change-set");
         Assert.Contains(expectedTerm, result.QueryTerms, StringComparer.Ordinal);
+    }
+
+    [Fact]
+    public async Task SearchAsync_GenericRussianListDoesNotImplyShoppingAsync() {
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            "список входящих писем", 10, "Any", module: null, scopePaths: null, CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+        Assert.Contains("list", result.QueryTerms, StringComparer.Ordinal);
+        Assert.DoesNotContain("shopping", result.QueryTerms, StringComparer.Ordinal);
     }
 
     [Theory]

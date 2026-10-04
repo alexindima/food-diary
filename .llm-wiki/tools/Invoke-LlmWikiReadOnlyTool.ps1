@@ -2,7 +2,8 @@
 param(
     [Parameter(Mandatory)][string]$ToolPath,
     [hashtable]$ToolArguments = @{},
-    [switch]$PrepareCodeGraph
+    [switch]$PrepareCodeGraph,
+    [switch]$BackendOnlyRefresh
 )
 
 $ErrorActionPreference = 'Stop'
@@ -59,7 +60,12 @@ function Get-WorkspaceOverlayPaths {
 
     $normalizedRelevantPaths = @($RelevantPath | Where-Object { $_ } | ForEach-Object { ([string]$_).Replace('\', '/').TrimEnd('/') } | Sort-Object -Unique)
     $pathspecs = @(if ($normalizedRelevantPaths.Count -gt 0) {
-        @($normalizedRelevantPaths + @('.llm-wiki') | Sort-Object -Unique)
+        @($normalizedRelevantPaths + @(
+            '.llm-wiki', 'Directory.Build.props', 'Directory.Packages.props',
+            'FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs',
+            'FoodDiary.Development.Mcp/Protocol/WikiContextSearchResult.cs',
+            'FoodDiary.Development.Mcp/Protocol/WikiContextSearchCandidate.cs'
+        ) | Sort-Object -Unique)
     } else {
         @()
     })
@@ -115,6 +121,12 @@ function Select-RelevantOverlayPath {
     return @($WorkspacePath | Where-Object {
         $candidate = ([string]$_).Replace('\', '/').TrimEnd('/')
         if ($candidate.StartsWith('.llm-wiki/', [StringComparison]::OrdinalIgnoreCase)) { return $true }
+        if ($candidate -in @(
+            'Directory.Build.props', 'Directory.Packages.props',
+            'FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs',
+            'FoodDiary.Development.Mcp/Protocol/WikiContextSearchResult.cs',
+            'FoodDiary.Development.Mcp/Protocol/WikiContextSearchCandidate.cs'
+        )) { return $true }
         foreach ($scope in $normalizedScopes) {
             if ($candidate -eq $scope -or
                 $candidate.StartsWith("$scope/", [StringComparison]::OrdinalIgnoreCase) -or
@@ -242,12 +254,21 @@ function Remove-StaleReadOnlySnapshots {
 function Get-GuardState {
     param([Parameter(Mandatory)][string]$RepositoryRoot)
 
-    $status = @((Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('status', '--porcelain=v1', '--untracked-files=all') -FailureMessage 'Unable to capture read-only snapshot state.').Lines)
-    $status = @($status | Sort-Object)
-    # The command runs in an isolated detached clone. Git status detects tracked
-    # edits and untracked files without re-hashing every compiled index on every
-    # query; ignored local cache changes cannot affect the source worktree.
-    return [pscustomobject]@{ status = $status; hashes = [ordered]@{} }
+    $statusOutput = Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @(
+        'status', '--porcelain=v1', '-z', '--no-renames', '--untracked-files=all'
+    ) -FailureMessage 'Unable to capture read-only snapshot state.'
+    # NUL records preserve Unicode, spaces, and newlines. Disabling rename
+    # folding gives one status record per old/new path and avoids another diff.
+    $status = @($statusOutput.StandardOutput.Split([char]0, [StringSplitOptions]::RemoveEmptyEntries) | Sort-Object)
+    # Status detects newly dirty paths, but cannot detect another edit to an
+    # already dirty overlay. Hash only that overlay, not every published index.
+    $hashes = [Collections.Specialized.OrderedDictionary]::new([StringComparer]::Ordinal)
+    foreach ($record in $status) {
+        if ($record.Length -lt 4 -or $record[2] -ne ' ') { throw 'Malformed Git status record in read-only guard.' }
+        $relativePath = ConvertTo-LlmWikiRepositoryPath $record.Substring(3)
+        $hashes[$relativePath] = Get-FileHashOrMissing (Join-Path $RepositoryRoot $relativePath)
+    }
+    return [pscustomobject]@{ status = $status; hashes = $hashes }
 }
 
 function Compare-GuardState {
@@ -257,11 +278,12 @@ function Compare-GuardState {
         [Parameter(Mandatory)][object]$After
     )
 
-    $mutated = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
-    if (($Before.status -join "`n") -cne ($After.status -join "`n")) {
-        foreach ($relativePath in @(Get-WorkspaceOverlayPaths -RepositoryRoot $RepositoryRoot)) { $null = $mutated.Add($relativePath) }
+    $mutated = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    $allHashPaths = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    foreach ($path in @($Before.hashes.Keys) + @($After.hashes.Keys)) { $null = $allHashPaths.Add([string]$path) }
+    if (($Before.status -join [char]0) -cne ($After.status -join [char]0)) {
+        foreach ($relativePath in $allHashPaths) { $null = $mutated.Add($relativePath) }
     }
-    $allHashPaths = @(@($Before.hashes.Keys) + @($After.hashes.Keys) | Sort-Object -Unique)
     foreach ($relativePath in $allHashPaths) {
         $beforeHash = if ($Before.hashes.Contains($relativePath)) { [string]$Before.hashes[$relativePath] } else { '<missing>' }
         $afterHash = if ($After.hashes.Contains($relativePath)) { [string]$After.hashes[$relativePath] } else { '<missing>' }
@@ -334,7 +356,9 @@ if (-not [string]::IsNullOrWhiteSpace($activeSnapshotRoot)) {
         if (-not (Test-Path -LiteralPath $graphManagerPath -PathType Leaf)) {
             throw "Read-only snapshot is missing its code-graph manager: $graphManagerPath"
         }
-        $null = & $graphManagerPath -Action build -Format Json
+        $graphArguments = @{ Action = 'build'; Format = 'Json' }
+        if ($BackendOnlyRefresh) { $graphArguments.BackendOnlyRefresh = $true }
+        $null = & $graphManagerPath @graphArguments
         if (-not $? -or ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0)) {
             throw 'Unable to refresh the SQLite compiled-index projection inside the read-only snapshot.'
         }
@@ -482,7 +506,8 @@ try {
         & (Join-Path $snapshotRoot '.llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1') `
             -ToolPath $snapshotToolPath `
             -ToolArguments $ToolArguments `
-            -PrepareCodeGraph:$PrepareCodeGraph
+            -PrepareCodeGraph:$PrepareCodeGraph `
+            -BackendOnlyRefresh:$BackendOnlyRefresh
         Write-ReadOnlyTiming -Stage 'outer-inner-complete'
     } catch {
         if ($_.Exception.Message -like '*modified its isolated snapshot*') { $removeSnapshot = $true }

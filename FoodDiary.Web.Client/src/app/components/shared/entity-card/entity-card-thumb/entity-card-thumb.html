@@ -1,7 +1,7 @@
 <div
     class="entity-card__thumb fd-place-center"
     [class.entity-card__thumb--placeholder]="isPlaceholder()"
-    [class.entity-card__thumb--has-image]="!!imageUrl() || collage().hasImages"
+    [class.entity-card__thumb--has-image]="hasVisibleImage()"
     [class.entity-card__thumb--previewable]="hasPreviewImage()"
     [fdUiHint]="previewInteraction().hint"
     [fdUiHintDisabled]="!hasPreviewImage()"
@@ -15,12 +15,19 @@
     @if (hasPreviewImage()) {
         <span class="entity-card__zoom" aria-hidden="true"><fd-ui-icon name="zoom_in" size="sm" /></span>
     }
-    @if (imageUrl(); as imageSrc) {
-        <img width="96" height="96" [attr.src]="imageSrc" [alt]="imageAlt()" />
-    } @else if (collage().hasImages) {
-        <div [class]="`entity-card__collage entity-card__collage--count-${collage().count}`">
-            @for (image of collage().images; track image.url) {
-                <img class="entity-card__collage-image" width="96" height="96" [attr.src]="image.url" [alt]="image.alt" />
+    @if (visibleImageUrl(); as imageSrc) {
+        <img width="96" height="96" [attr.src]="imageSrc" [alt]="imageAlt()" (error)="markImageUnavailable(imageSrc)" />
+    } @else if (visibleCollageImages().length > 0) {
+        <div [class]="`entity-card__collage entity-card__collage--count-${visibleCollageImages().length}`">
+            @for (image of visibleCollageImages(); track image.url) {
+                <img
+                    class="entity-card__collage-image"
+                    width="96"
+                    height="96"
+                    [attr.src]="image.url"
+                    [alt]="image.alt"
+                    (error)="markImageUnavailable(image.url)"
+                />
             }
         </div>
     } @else {

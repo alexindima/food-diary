@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 294,
-    "documentationPages": 215
+    "documentationPages": 216
   },
   "dotnet": {
     "projects": [
@@ -15899,6 +15899,7 @@
       "docs/reports/mailinbox-audit-20260905.md",
       "docs/reports/marketing-module-extraction-wiki-findings.md",
       "docs/reports/usda-wiki-first-extraction-report.md",
+      "docs/reports/wiki-analysis-2026-10-03.md",
       "docs/security/THREAT_MODEL.md",
       "docs/testing/coverage-115-module-mapping.md"
     ]

@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -7,19 +6,20 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 import { map } from 'rxjs';
 
+import { LocalizedNumberPipe } from '../../../../../../shared/i18n/localized-number.pipe';
 import { FdCardHoverDirective } from '../../../../../../shared/ui/card-hover.directive';
 import type { MealPlanCardViewModel } from '../../../../lib/meal-plan-view.mapper';
 
 @Component({
     selector: 'fd-meal-plan-list-content',
-    imports: [FdUiButtonComponent, DecimalPipe, TranslatePipe, FdUiIconComponent, FdUiLoaderComponent, FdCardHoverDirective],
+    imports: [FdUiButtonComponent, LocalizedNumberPipe, TranslatePipe, FdUiIconComponent, FdUiLoaderComponent, FdCardHoverDirective],
     templateUrl: './meal-plan-list-content.html',
     styleUrl: '../../meal-plans-list-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MealPlanListContentComponent {
     private readonly translate = inject(TranslateService);
-    private readonly language = toSignal(this.translate.onLangChange.pipe(map(event => event.lang)), {
+    protected readonly language = toSignal(this.translate.onLangChange.pipe(map(event => event.lang)), {
         initialValue: this.translate.getCurrentLang() ?? 'en',
     });
     public readonly isLoading = input.required<boolean>();

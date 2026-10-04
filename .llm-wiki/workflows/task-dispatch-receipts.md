@@ -25,6 +25,8 @@ sources:
 
 # Task dispatch receipts
 
+The added backend-bootstrap and publication-freshness facade switches do not enter dispatch payloads or lease fingerprints. Full verification status is written only by the complete `verify-full` gate; a scoped verification result remains scoped.
+
 The scheduler proposes work; a dispatch receipt records that an agent actually
 accepted it. `task-dispatch-start` atomically acquires a task lease and writes a
 receipt containing the workspace, owner, lane, lease identifier, and current

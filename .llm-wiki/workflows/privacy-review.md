@@ -19,6 +19,8 @@ sources:
 
 # Review sensitive data lifecycle
 
+Context CLI and MCP share a read-only ranking core; Node alone writes the local source-derived SQLite graph. Command coalescing retains no query payload in telemetry and does not cancel an owner when a waiter cancels. Publication receipt states do not replace privacy source review.
+
 ```powershell
 ./.llm-wiki/wiki.ps1 privacy -PrivacyCategory credential
 ./.llm-wiki/wiki.ps1 privacy -PrivacyCategory logging

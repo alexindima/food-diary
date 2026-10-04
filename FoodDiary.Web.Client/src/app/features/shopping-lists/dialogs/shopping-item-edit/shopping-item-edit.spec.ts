@@ -7,6 +7,33 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { ShoppingItemEditComponent } from './shopping-item-edit';
 
 describe('shopping item editing', () => {
+    it.each([
+        ['Ml', 'ML'],
+        ['Pcs', 'PCS'],
+        [' g ', 'G'],
+    ])('displays and retains persisted unit %s when saving another field', async (persistedUnit, selectedUnit) => {
+        const ref = { close: vi.fn() };
+        await TestBed.configureTestingModule({
+            imports: [ShoppingItemEditComponent],
+            providers: [
+                provideTranslateTesting(),
+                { provide: FdUiDialogRef, useValue: ref },
+                {
+                    provide: FD_UI_DIALOG_DATA,
+                    useValue: { name: 'Oats', amount: 150, unit: persistedUnit, category: null, note: null },
+                },
+            ],
+        }).compileComponents();
+        const fixture = TestBed.createComponent(ShoppingItemEditComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelector('fd-ui-select button')?.textContent).toContain(`GENERAL.UNITS.${selectedUnit}`);
+        fixture.componentInstance['draft'].update(value => ({ ...value, note: 'Keep the original unit' }));
+        fixture.componentInstance['save'](new Event('submit'));
+        expect(ref.close).toHaveBeenCalledWith(expect.objectContaining({ unit: selectedUnit, note: 'Keep the original unit' }));
+    });
+
     it.each([null, 'product-1'])('keeps product identity fixed only for linked items (%s)', async productId => {
         const ref = { close: vi.fn() };
         await TestBed.configureTestingModule({

@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 109,
     "routedStandaloneComponents": 67,
     "componentsWithoutDirectSpecs": 131,
-    "criticalSymbolsWithoutTestReferences": 46,
+    "criticalSymbolsWithoutTestReferences": 47,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -5428,6 +5428,16 @@
       "name": "LlmWikiResearchPrimitives",
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiResearchPrimitives.ps1",
+      "line": 1,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "Measure-LlmWikiSqlContextEvaluation",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1",
       "line": 1,
       "testReferenceCount": 0,
       "testReferences": [],

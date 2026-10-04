@@ -12,6 +12,8 @@ sources:
 
 # Review Change Context
 
+`verify` reports its selected stages; only `verify-full` can record full verification after a matching complete generation check. Review the publication state separately from graph freshness, and reconcile affected Wiki narratives when their declared sources change.
+
 Use the diff context command before implementation handoff or PR review:
 
 ```powershell

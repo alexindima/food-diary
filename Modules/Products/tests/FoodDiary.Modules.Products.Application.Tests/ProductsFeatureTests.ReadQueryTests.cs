@@ -13,10 +13,54 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Application.Models;
 using FluentValidation.Results;
 using FoodDiary.Application.Contracts.Common.Models;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Queries.ReadFavoriteProductOverview;
 
 namespace FoodDiary.Modules.Products.Application.Tests;
 
 public partial class ProductsFeatureTests {
+
+    private static ISender CreateProductFavoritesSender() {
+        ISender sender = Substitute.For<ISender>();
+        sender.Send(Arg.Any<ReadFavoriteProductOverviewQuery>(), Arg.Any<CancellationToken>())
+            .Returns(new FavoriteProductOverviewModel([], [], 0));
+        return sender;
+    }
+
+    [Fact]
+    public async Task GetProductsQueryHandler_PreservesFavoriteStateForTheAuthenticatedProductPage() {
+        var user = User.Create("favorite-product-page@example.com", "hash");
+        Product favoriteProduct = CreateProduct(user.Id, "Favorite oats");
+        Product ordinaryProduct = CreateProduct(user.Id, "Ordinary oats");
+        var favoriteId = Guid.NewGuid();
+        var favorite = new FavoriteProductModel(Id: favoriteId, ProductId: favoriteProduct.Id.Value, Name: null,
+            CreatedAtUtc: DateTime.UtcNow, ProductName: favoriteProduct.Name, Brand: null, Barcode: null,
+            Comment: null, ImageUrl: null, CaloriesPerBase: 80, ProteinsPerBase: 5, FatsPerBase: 2,
+            CarbsPerBase: 10, FiberPerBase: 1, AlcoholPerBase: 0, QualityScore: 50, QualityGrade: "C",
+            IsOwnedByCurrentUser: true, BaseUnit: "G", PreferredPortionAmount: 100, DefaultPortionAmount: 100);
+        ISender sender = CreateProductFavoritesSender();
+        sender.Send(Arg.Any<ReadFavoriteProductOverviewQuery>(), Arg.Any<CancellationToken>())
+            .Returns(new FavoriteProductOverviewModel([favorite], [], 1));
+        var handler = new GetProductsQueryHandler(
+            new OverviewProductReadService([(favoriteProduct, 0), (ordinaryProduct, 0)]),
+            new StubUserRepository(user), sender);
+        using var cancellation = new CancellationTokenSource();
+
+        PagedResponse<ProductModel> response = ResultAssert.Success(await handler.Handle(
+            new GetProductsQuery(user.Id.Value, 1, 10, Search: "oats", IncludePublic: true), cancellation.Token));
+
+        ProductModel favoriteItem = Assert.Single(response.Data, item => item.Id == favoriteProduct.Id.Value);
+        ProductModel ordinaryItem = Assert.Single(response.Data, item => item.Id == ordinaryProduct.Id.Value);
+        Assert.Multiple(
+            () => Assert.True(favoriteItem.IsFavorite),
+            () => Assert.Equal(favoriteId, favoriteItem.FavoriteProductId),
+            () => Assert.False(ordinaryItem.IsFavorite),
+            () => Assert.Null(ordinaryItem.FavoriteProductId));
+        await sender.Received(1).Send(Arg.Is<ReadFavoriteProductOverviewQuery>(query =>
+            query.UserId == user.Id && query.PreviewLimit == 0 && query.ProductIds.Count == 2 &&
+            query.ProductIds.Contains(favoriteProduct.Id) && query.ProductIds.Contains(ordinaryProduct.Id)), cancellation.Token);
+    }
 
     [Fact]
     public async Task GetProductsOverviewQueryValidator_WithEmptyUserId_Fails() {
@@ -40,7 +84,7 @@ public partial class ProductsFeatureTests {
 
     [Fact]
     public async Task GetProductsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetProductsQueryHandler(new OverviewProductReadService(), new StubUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new GetProductsQueryHandler(new OverviewProductReadService(), new StubUserRepository(User.Create("user@example.com", "hash")), CreateProductFavoritesSender());
         var query = new GetProductsQuery(UserId: null, 1, 10, Search: null, IncludePublic: true);
 
         Result<PagedResponse<ProductModel>> result = await handler.Handle(query, CancellationToken.None);
@@ -81,7 +125,7 @@ public partial class ProductsFeatureTests {
             productType: ProductType.Dairy,
             visibility: Visibility.Private);
         var repository = new OverviewProductReadService([(owned, 4), (supplement, 2)]);
-        var handler = new GetProductsQueryHandler(repository, new StubUserRepository(user));
+        var handler = new GetProductsQueryHandler(repository, new StubUserRepository(user), CreateProductFavoritesSender());
 
         Result<PagedResponse<ProductModel>> result = await handler.Handle(
             new GetProductsQuery(user.Id.Value, Page: 0, Limit: 0, Search: "ignored", IncludePublic: true, ProductTypes: ["fruit", "Fruit", "invalid"]),
@@ -99,7 +143,7 @@ public partial class ProductsFeatureTests {
     [Fact]
     public async Task GetProductsQueryHandler_WithExtremePaging_ClampsBeforeCreatingResponse() {
         var user = User.Create("products-extreme-page@example.com", "hash");
-        var handler = new GetProductsQueryHandler(new OverviewProductReadService(), new StubUserRepository(user));
+        var handler = new GetProductsQueryHandler(new OverviewProductReadService(), new StubUserRepository(user), CreateProductFavoritesSender());
 
         Result<PagedResponse<ProductModel>> result = await handler.Handle(
             new GetProductsQuery(user.Id.Value, int.MaxValue, int.MaxValue, Search: null, IncludePublic: true),
@@ -158,7 +202,7 @@ public partial class ProductsFeatureTests {
     public async Task GetProductsQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-product@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetProductsQueryHandler(new OverviewProductReadService(), new StubUserRepository(user));
+        var handler = new GetProductsQueryHandler(new OverviewProductReadService(), new StubUserRepository(user), CreateProductFavoritesSender());
 
         Result<PagedResponse<ProductModel>> result = await handler.Handle(
             new GetProductsQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true),

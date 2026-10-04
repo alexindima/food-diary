@@ -38,7 +38,7 @@ describe('meal plan view mapper', () => {
             mealTypeKey: 'MEAL_PLANS.MEAL_TYPE.BREAKFAST',
             nutritionItems: [
                 { unitKey: 'GENERAL.UNITS.KCAL', value: 450, prefix: '' },
-                { unitKey: 'GENERAL.UNITS.G', value: 30, prefix: 'P: ' },
+                { unitKey: 'GENERAL.UNITS.G', value: 30, prefix: 'GENERAL.NUTRIENTS.PROTEIN' },
             ],
         });
     });

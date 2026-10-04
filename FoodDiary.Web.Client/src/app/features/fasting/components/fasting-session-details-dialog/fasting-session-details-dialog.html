@@ -7,7 +7,7 @@
             </div>
             <div>
                 <small>{{ 'FASTING.REDESIGN.DURATION_LABEL' | translate }}</small>
-                <strong>{{ durationHours() | number: '1.0-1' }} {{ 'FASTING.HOURS' | translate }}</strong>
+                <strong>{{ durationHours() | localizedNumber: locale() : 0 : 1 }} {{ 'FASTING.HOURS' | translate }}</strong>
             </div>
             <div>
                 <small>{{ 'FASTING.REDESIGN.STATUS_LABEL' | translate }}</small>

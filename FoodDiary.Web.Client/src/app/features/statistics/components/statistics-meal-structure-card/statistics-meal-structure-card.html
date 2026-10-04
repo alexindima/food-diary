@@ -6,7 +6,9 @@
     @if (data().totalCalories > 0) {
         <div class="statistics-meal-structure-card__bar-heading">
             <span class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.DISTRIBUTION' | translate }}</span>
-            <strong class="fd-ui-stat-value"> {{ data().totalCalories | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }} </strong>
+            <strong class="fd-ui-stat-value">
+                {{ data().totalCalories | localizedNumber: locale() : 0 : 0 }} {{ 'GENERAL.UNITS.KCAL' | translate }}
+            </strong>
         </div>
         <div
             class="statistics-meal-structure-card__bar"
@@ -40,7 +42,7 @@
                     >
                     <span class="fd-ui-body-sm" role="cell">{{ item.percentage }}%</span>
                     <span class="fd-ui-body-sm" role="cell"
-                        >{{ item.calories | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span
+                        >{{ item.calories | localizedNumber: locale() : 0 : 0 }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span
                     >
                 </div>
             }
@@ -58,7 +60,7 @@
             </div>
             <div class="fd-stack fd-gap-xxs">
                 <span class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.MEALS_PER_DAY' | translate }}</span>
-                <strong class="fd-ui-metric-md">{{ data().averageMealsPerDay | number: '1.1-1' }}</strong>
+                <strong class="fd-ui-metric-md">{{ data().averageMealsPerDay | localizedNumber: locale() : 1 : 1 }}</strong>
             </div>
         </div>
     } @else {

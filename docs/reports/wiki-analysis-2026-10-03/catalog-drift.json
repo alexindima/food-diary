@@ -1,0 +1,35 @@
+{
+  "newDocumentation": [
+    "docs/adr/0052-backend-transaction-and-delivery-reliability.md"
+  ],
+  "changedProjects": [
+    {
+      "path": "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj",
+      "before": [
+        "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+        "Shared/FoodDiary.Audit.PersistenceModel/FoodDiary.Audit.PersistenceModel.csproj",
+        "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
+        "Shared/FoodDiary.Email.PersistenceModel/FoodDiary.Email.PersistenceModel.csproj",
+        "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
+        "Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj",
+        "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
+        "Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj",
+        "Shared/FoodDiary.Outbox.PersistenceModel/FoodDiary.Outbox.PersistenceModel.csproj",
+        "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj"
+      ],
+      "after": [
+        "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+        "Shared/FoodDiary.Audit.PersistenceModel/FoodDiary.Audit.PersistenceModel.csproj",
+        "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
+        "Shared/FoodDiary.Email.PersistenceModel/FoodDiary.Email.PersistenceModel.csproj",
+        "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
+        "Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj",
+        "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
+        "Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj",
+        "Shared/FoodDiary.Outbox.PersistenceModel/FoodDiary.Outbox.PersistenceModel.csproj",
+        "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj",
+        "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
+      ]
+    }
+  ]
+}

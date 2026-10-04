@@ -24,8 +24,12 @@
                 <strong class="statistics-nutrient-balance-card__label fd-ui-action-text" role="cell">
                     <i aria-hidden="true"></i>{{ getLabelKey(item) | translate }}
                 </strong>
-                <span class="fd-ui-body-sm" role="cell">{{ item.current | number: '1.0-1' }} {{ 'GENERAL.UNITS.G' | translate }}</span>
-                <span class="fd-ui-body-sm" role="cell">{{ item.goal | number: '1.0-1' }} {{ 'GENERAL.UNITS.G' | translate }}</span>
+                <span class="fd-ui-body-sm" role="cell"
+                    >{{ item.current | localizedNumber: locale() : 0 : 1 }} {{ 'GENERAL.UNITS.G' | translate }}</span
+                >
+                <span class="fd-ui-body-sm" role="cell"
+                    >{{ item.goal | localizedNumber: locale() : 0 : 1 }} {{ 'GENERAL.UNITS.G' | translate }}</span
+                >
                 <span class="statistics-nutrient-balance-card__completion" role="cell">
                     <span
                         class="statistics-nutrient-balance-card__progress fd-ui-progress-track"

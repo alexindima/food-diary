@@ -18,18 +18,23 @@ public sealed class WikiQueryCache(
         string snapshotFingerprint,
         string command,
         IReadOnlyList<string> arguments,
-        out WikiCommandResult? result) {
+        out WikiCommandResult? result,
+        bool recordMetrics = true) {
         string key = CreateKey(snapshotFingerprint, command, arguments);
         if (_entries.TryGetValue(key, out CacheEntry? entry)) {
             if (timeProvider.GetUtcNow() - entry.CreatedAtUtc <= EntryLifetime) {
-                telemetry.RecordCacheHit();
+                if (recordMetrics) {
+                    telemetry.RecordCacheHit();
+                }
                 result = entry.Result;
                 return true;
             }
             _entries.TryRemove(key, out _);
         }
 
-        telemetry.RecordCacheMiss();
+        if (recordMetrics) {
+            telemetry.RecordCacheMiss();
+        }
         result = null;
         return false;
     }
