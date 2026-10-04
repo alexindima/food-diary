@@ -1,38 +1,41 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { of, Subject, throwError } from 'rxjs';
+import { type Observable, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AiFoodFacade } from '../../../shared/lib/ai-food.facade';
 import type { FoodNutritionResponse, FoodVisionItem, FoodVisionResponse } from '../../../shared/models/ai.data';
 import { AiInputBarFacade } from './ai-input-bar.facade';
 
-describe('AiInputBarFacade', () => {
-    const item: FoodVisionItem = { nameEn: 'Apple', amount: 100, unit: 'g', confidence: 1 };
-    const nutrition: FoodNutritionResponse = {
-        calories: 52,
-        protein: 0.3,
-        fat: 0.2,
-        carbs: 14,
-        fiber: 2.4,
-        alcohol: 0,
-        items: [],
-    };
-    const aiFoodFacade = {
-        parseFoodText: vi.fn(() => of({ items: [item] })),
-        analyzeFoodImage: vi.fn(() => of({ items: [item] })),
-        calculateNutrition: vi.fn(() => of(nutrition)),
-    };
-    let facade: AiInputBarFacade;
+const item: FoodVisionItem = { nameEn: 'Apple', amount: 100, unit: 'g', confidence: 1 };
+const nutrition: FoodNutritionResponse = {
+    calories: 52,
+    protein: 0.3,
+    fat: 0.2,
+    carbs: 14,
+    fiber: 2.4,
+    alcohol: 0,
+    items: [],
+};
+const aiFoodFacade = {
+    parseFoodText: vi.fn(() => of({ items: [item] })),
+    analyzeFoodImage: vi.fn(() => of({ items: [item] })),
+    calculateNutrition: vi.fn(() => of(nutrition)),
+    resumeRecognition: vi.fn((): Observable<FoodVisionResponse> =>
+        of({ items: [item], recognition: { id: 'job-1', nutrition, errorCode: null } }),
+    ),
+};
+let facade: AiInputBarFacade;
 
-    beforeEach(() => {
-        vi.clearAllMocks();
-        TestBed.configureTestingModule({
-            providers: [AiInputBarFacade, { provide: AiFoodFacade, useValue: aiFoodFacade }],
-        });
-        facade = TestBed.inject(AiInputBarFacade);
+beforeEach(() => {
+    vi.clearAllMocks();
+    TestBed.configureTestingModule({
+        providers: [AiInputBarFacade, { provide: AiFoodFacade, useValue: aiFoodFacade }],
     });
+    facade = TestBed.inject(AiInputBarFacade);
+});
 
+describe('AiInputBarFacade', () => {
     it('runs text recognition and nutrition as one state transition', () => {
         facade.analyzeText('apple');
 
@@ -82,5 +85,31 @@ describe('AiInputBarFacade', () => {
         expect(facade.text.errorKey()).toBeNull();
         expect(facade.text.results()).toEqual([]);
         expect(facade.text.nutrition()).toBeNull();
+    });
+});
+
+describe('AiInputBarFacade saved photo results', () => {
+    it('resumes a saved photo without starting another analysis or nutrition calculation', () => {
+        facade.resumePhoto('job-1');
+
+        expect(aiFoodFacade.resumeRecognition).toHaveBeenCalledWith('job-1');
+        expect(aiFoodFacade.analyzeFoodImage).not.toHaveBeenCalled();
+        expect(aiFoodFacade.calculateNutrition).not.toHaveBeenCalled();
+        expect(facade.photo.nutrition()).toBe(nutrition);
+        expect(facade.photo.results()).toEqual([item]);
+    });
+
+    it('cancels polling a resumed photo when the result is dismissed', () => {
+        const pending = new Subject<FoodVisionResponse>();
+        aiFoodFacade.resumeRecognition.mockReturnValueOnce(pending);
+        facade.resumePhoto('job-1');
+        expect(facade.photo.analyzing()).toBe(true);
+
+        facade.clear(facade.photo);
+        pending.next({ items: [item] });
+
+        expect(pending.observed).toBe(false);
+        expect(facade.photo.results()).toEqual([]);
+        expect(aiFoodFacade.calculateNutrition).not.toHaveBeenCalled();
     });
 });

@@ -215,17 +215,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "1da7dcf44b81818c655d3e9b674ab9dacbbb7192d22f93c7ac6e56cfa7e7f95e"
-        },
-        {
-          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "8c180504fe3711e436ac3d23cc3f786deced3843177c7b3675f5b3f0ed0b10b0"
+          "sha256": "c1aa6efa61fde52919ee1b00d677c965c6464c48a62a6e5b23b3a2b03d740312"
         }
       ],
-      "reason": "The affected architecture health index is regenerated, its check passes, and no production project-reference or ownership boundary changes.",
+      "reason": "Reviewed the shared food history dialog and AI input facade dependencies. Existing feature consumers and public inputs/outputs are preserved. The added dialog uses public UI-kit primitives, shared recognition models and the existing facade; it introduces no cross-feature import, root state or direct component HTTP client. Strict frontend dependency and import checks pass; 108 focused tests and RU/EN rendered evidence pass.",
       "baseRef": "HEAD",
-      "gitHead": "bd0b317c741192f85e39301b207407b7ce778add",
-      "reviewedAtUtc": "2026-10-04T19:26:51.2281615Z"
+      "gitHead": "6ad66ee140e1581d3173c78010516337415dce68",
+      "reviewedAtUtc": "2026-10-04T20:56:27.0702929Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -844,13 +840,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d9e1b8766387f37894ef7b318f973ee7eb4434063c9da4703f3d2b7e8cf65d5b"
+          "sha256": "5e51dadbd4ed39f0e10c7192bc18ba4beff9212a937af34de55fa22496270173"
         }
       ],
-      "reason": "Four new component regressions fail on the prior code and pass after the draft guard. Tests cover every submitted numeric field with negative/NaN/infinite values, zero/unset body goals, body maxima, manual retry and cycling defaults. 77 focused tests pass. Browser validates linked errors, disable/reenable transitions, discard and mobile/desktop layout; fixture remains unchanged. English and Russian source and compiled dictionaries contain the two new messages.",
+      "reason": "Verified shared food input consumers and restored saved meal photo history through shared UI and existing owner-authenticated GET requests. No API shape, provider, queue, persistence or feature boundary change. 108 focused tests pass; real RU/EN mobile and desktop browser checks cover saved results with zero new AI requests, loading, empty, retry, cancellation and keyboard focus. New photo reanalysis retains Premium and consent checks. Current workflow instructions remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
-      "reviewedAtUtc": "2026-10-04T20:13:49.6710190Z"
+      "gitHead": "6ad66ee140e1581d3173c78010516337415dce68",
+      "reviewedAtUtc": "2026-10-04T20:55:25.3703190Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -946,13 +942,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d9e1b8766387f37894ef7b318f973ee7eb4434063c9da4703f3d2b7e8cf65d5b"
+          "sha256": "5e51dadbd4ed39f0e10c7192bc18ba4beff9212a937af34de55fa22496270173"
         }
       ],
-      "reason": "Client-side validation of the existing own-user goals draft only. Server authorization, owner scoping, finite/nonnegative checks, persistence, logging, provider sharing and credentials are unchanged. No request is sent for invalid drafts through either the save button or the navigation save handler. Browser validation exploration emitted zero PATCH requests.",
+      "reason": "Verified shared food input consumers and restored saved meal photo history through shared UI and existing owner-authenticated GET requests. No API shape, provider, queue, persistence or feature boundary change. 108 focused tests pass; real RU/EN mobile and desktop browser checks cover saved results with zero new AI requests, loading, empty, retry, cancellation and keyboard focus. New photo reanalysis retains Premium and consent checks. Current workflow instructions remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
-      "reviewedAtUtc": "2026-10-04T20:13:51.5537057Z"
+      "gitHead": "6ad66ee140e1581d3173c78010516337415dce68",
+      "reviewedAtUtc": "2026-10-04T20:55:26.9784031Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1089,17 +1085,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "4c3143a9eb38c886bf1ec4d377998a181c6ecb165c6f689ae896bc5af7eb4939"
+          "sha256": "00ef3fdcd2f16178361d78ab7d67820f3efe708fccb0ffdf266a4d0596d73486"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "7a778901f747924651b6c700085c81a5c5644292fe5db9364be4e5d07fcf76a5"
+          "sha256": "c42832f74bcfeba7c8d7255b37f89b0297892fbdce99f995941b8ce23dbbb0ef"
         }
       ],
-      "reason": "Verified editor draft signals flow through the existing GoalsPage manual-save callback and GoalsFacade to the unchanged GoalsService. Validation is checked at both the disabled button and persistAsync handler; existing manual retry and cycling flows remain covered. Updated frontend symbol and contract indexes reflect the two internal predicates, protected computed flags and UI-kit error imports without cross-feature changes.",
+      "reason": "Verified shared food input consumers and restored saved meal photo history through shared UI and existing owner-authenticated GET requests. No API shape, provider, queue, persistence or feature boundary change. 108 focused tests pass; real RU/EN mobile and desktop browser checks cover saved results with zero new AI requests, loading, empty, retry, cancellation and keyboard focus. New photo reanalysis retains Premium and consent checks. Current workflow instructions remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
-      "reviewedAtUtc": "2026-10-04T20:13:53.0409226Z"
+      "gitHead": "6ad66ee140e1581d3173c78010516337415dce68",
+      "reviewedAtUtc": "2026-10-04T20:55:28.7324332Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1183,13 +1179,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "4c3143a9eb38c886bf1ec4d377998a181c6ecb165c6f689ae896bc5af7eb4939"
+          "sha256": "00ef3fdcd2f16178361d78ab7d67820f3efe708fccb0ffdf266a4d0596d73486"
         }
       ],
-      "reason": "Existing goal component selectors, inputs and outputs remain unchanged. New internal draft predicates match server finite/nonnegative nutrition rules and existing canonical body limits. Six named numeric inputs now expose linked localized error descriptions and aria-invalid; the existing unsaved-change bar receives its existing disabled-state inputs. No endpoint or payload change. 77 focused tests pass; real browser proves all six negative fields blocked, zero correction allowed and body maxima blocked without writes.",
+      "reason": "Verified shared food input consumers and restored saved meal photo history through shared UI and existing owner-authenticated GET requests. No API shape, provider, queue, persistence or feature boundary change. 108 focused tests pass; real RU/EN mobile and desktop browser checks cover saved results with zero new AI requests, loading, empty, retry, cancellation and keyboard focus. New photo reanalysis retains Premium and consent checks. Current workflow instructions remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
-      "reviewedAtUtc": "2026-10-04T20:13:47.6358033Z"
+      "gitHead": "6ad66ee140e1581d3173c78010516337415dce68",
+      "reviewedAtUtc": "2026-10-04T20:55:29.9474376Z"
     },
     {
       "pageId": "workflow.query-context",

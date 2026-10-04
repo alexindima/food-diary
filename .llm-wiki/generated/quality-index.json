@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5834,
+    "productionFiles": 5835,
     "wikiToolFiles": 208,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 990,
@@ -759,6 +759,14 @@
       "structuralRiskScore": 85.48
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.ts",
+      "nonBlankLines": 406,
+      "decisionPoints": 51,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 84.62
+    },
+    {
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
       "nonBlankLines": 177,
       "decisionPoints": 54,
@@ -805,14 +813,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 81.14
-    },
-    {
-      "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoProcessor.cs",
-      "nonBlankLines": 209,
-      "decisionPoints": 51,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 80.68
     }
   ],
   "files": [
@@ -7386,11 +7386,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.facade.ts",
-      "nonBlankLines": 179,
+      "nonBlankLines": 185,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.08
+      "structuralRiskScore": 14.2
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.mapper.ts",
@@ -7402,11 +7402,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.ts",
-      "nonBlankLines": 374,
-      "decisionPoints": 42,
+      "nonBlankLines": 406,
+      "decisionPoints": 51,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 70.48
+      "structuralRiskScore": 84.62
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.types.ts",
@@ -7687,6 +7687,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 3.6
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history-dialog.ts",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.ts",

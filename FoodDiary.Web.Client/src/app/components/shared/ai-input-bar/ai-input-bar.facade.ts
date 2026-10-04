@@ -33,9 +33,17 @@ export class AiInputBarFacade {
     }
 
     public analyzePhoto(assetId: string): void {
+        this.runPhotoAnalysis(this.aiFoodFacade.analyzeFoodImage({ imageAssetId: assetId }));
+    }
+
+    public resumePhoto(id: string): void {
+        this.runPhotoAnalysis(this.aiFoodFacade.resumeRecognition(id));
+    }
+
+    private runPhotoAnalysis(request$: Observable<FoodVisionResponse>): void {
         this.runAnalysis(
             this.photo,
-            this.aiFoodFacade.analyzeFoodImage({ imageAssetId: assetId }),
+            request$,
             {
                 premium: 'MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM',
                 quota: 'MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA',

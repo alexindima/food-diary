@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1898,
-    "symbols": 727,
+    "typescriptFiles": 1900,
+    "symbols": 728,
     "routes": 106,
     "features": 46,
-    "specs": 676,
+    "specs": 677,
     "localeFiles": 5,
     "roles": {
-      "Component": 480,
+      "Component": 481,
       "Directive": 12,
       "Facade": 82,
       "Other": 20,
@@ -2747,7 +2747,7 @@
       "role": "Component",
       "selector": "fd-ai-input-bar",
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.ts",
-      "line": 45
+      "line": 47
     },
     {
       "name": "AiPhotoDetailsPanelComponent",
@@ -2930,6 +2930,13 @@
       "selector": "fd-favorites-section",
       "path": "FoodDiary.Web.Client/src/app/components/shared/favorites-section/favorites-section.ts",
       "line": 11
+    },
+    {
+      "name": "FoodRecognitionHistoryDialogComponent",
+      "role": "Component",
+      "selector": "fd-food-recognition-history-dialog",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history-dialog.ts",
+      "line": 15
     },
     {
       "name": "FoodRecognitionHistoryComponent",

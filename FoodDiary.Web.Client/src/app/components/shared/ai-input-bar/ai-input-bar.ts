@@ -23,9 +23,11 @@ import { NavigationService } from '../../../services/navigation.service';
 import { LocalizationService } from '../../../shared/i18n/localization.service';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { UserFacade } from '../../../shared/lib/user.facade';
+import type { FoodRecognitionJob } from '../../../shared/models/food-recognition.data';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
 import { SpeechRecognitionService } from '../../../shared/platform/speech-recognition.service';
 import { AiConsentDialogComponent } from '../ai-consent-dialog/ai-consent-dialog';
+import { FoodRecognitionHistoryDialogComponent } from '../food-recognition-history/food-recognition-history-dialog';
 import { ImageUploadFieldComponent } from '../image-upload-field/image-upload-field';
 import { PremiumRequiredDialogComponent } from '../premium-required-dialog/premium-required-dialog';
 import { AiInputBarFacade } from './ai-input-bar.facade';
@@ -53,6 +55,7 @@ export class AiInputBarComponent {
     private readonly speechRecognition = inject(SpeechRecognitionService);
     private readonly photoUploadField = viewChild(ImageUploadFieldComponent);
     private readonly photoDialogRef = signal<FdUiDialogRef<AiPhotoResultComponent> | null>(null);
+    private readonly historyDialogRef = signal<FdUiDialogRef<FoodRecognitionHistoryDialogComponent, FoodRecognitionJob> | null>(null);
 
     public readonly isProcessing = input<boolean>(false);
     public readonly clearToken = input(0);
@@ -107,6 +110,9 @@ export class AiInputBarComponent {
     );
 
     public constructor() {
+        this.destroyRef.onDestroy(() => {
+            this.historyDialogRef()?.close();
+        });
         effect(() => {
             const clearToken = this.clearToken();
             untracked(() => {
@@ -206,6 +212,30 @@ export class AiInputBarComponent {
         this.photoUploadField()?.openFilePicker();
     }
 
+    protected openRecognitionHistory(): void {
+        if (this.isDisabled() || this.historyDialogRef() !== null) {
+            return;
+        }
+        const dialogRef = this.fdDialogService.open<FoodRecognitionHistoryDialogComponent, never, FoodRecognitionJob>(
+            FoodRecognitionHistoryDialogComponent,
+            { preset: 'list', size: 'lg' },
+        );
+        this.historyDialogRef.set(dialogRef);
+        dialogRef
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(job => {
+                this.historyDialogRef.set(null);
+                if (job !== undefined && job.isProductLabel !== true && !this.isDisabled()) {
+                    this.dismissTextResult();
+                    this.dismissPhotoResult();
+                    this.photoSelection.set({ assetId: job.imageAssetId, url: job.imageUrl });
+                    this.openPhotoResultDialog();
+                    this.recognition.resumePhoto(job.id);
+                }
+            });
+    }
+
     protected onPhotoSelected(selection: ImageSelection | null): void {
         if (selection?.assetId === null || selection?.assetId === undefined) {
             return;
@@ -292,9 +322,12 @@ export class AiInputBarComponent {
         this.recognition.setEditResult(this.recognition.photo, result.items, result.nutrition);
     }
 
-    protected onPhotoReanalyze(): void {
+    protected async onPhotoReanalyzeAsync(): Promise<void> {
         const assetId = this.photoSelection()?.assetId;
-        if (assetId === null || assetId === undefined || this.photoIsAnalyzing()) {
+        if (assetId === null || assetId === undefined || this.isDisabled() || !this.ensurePremium()) {
+            return;
+        }
+        if (!(await this.ensureAiConsentAsync()) || this.photoSelection()?.assetId !== assetId || this.isDisabled()) {
             return;
         }
 
@@ -366,7 +399,7 @@ export class AiInputBarComponent {
             this.onPhotoEditApplied(result);
         });
         component?.reanalyzeRequested.subscribe(() => {
-            this.onPhotoReanalyze();
+            void this.onPhotoReanalyzeAsync();
         });
         this.photoDialogRef.set(dialogRef);
         dialogRef

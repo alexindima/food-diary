@@ -10,7 +10,7 @@
     "moduleHotspotReviewCandidates": 3,
     "ambiguousBackendContracts": 2,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 109,
+    "selectorUnreferencedComponents": 110,
     "routedStandaloneComponents": 67,
     "componentsWithoutDirectSpecs": 131,
     "criticalSymbolsWithoutTestReferences": 47,
@@ -907,6 +907,14 @@
       "path": "FoodDiary.Web.Client/src/app/components/shared/daily-progress-card/daily-progress-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/components/shared/daily-progress-card/daily-progress-card.html",
       "specPath": "FoodDiary.Web.Client/src/app/components/shared/daily-progress-card/daily-progress-card.spec.ts"
+    },
+    {
+      "class": "FoodRecognitionHistoryDialogComponent",
+      "selector": "fd-food-recognition-history-dialog",
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history-dialog.html",
+      "specPath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history-dialog.spec.ts"
     },
     {
       "class": "NotificationsDialogComponent",

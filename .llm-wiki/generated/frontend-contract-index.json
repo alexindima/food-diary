@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 485,
+    "components": 486,
     "componentsWithoutDirectSpecs": 131,
     "inputs": 1557,
     "outputs": 538,
     "apiCalls": 278,
-    "templatesWithTranslations": 346,
+    "templatesWithTranslations": 347,
     "translationKeys": 2095,
-    "consumerEdges": 1225,
+    "consumerEdges": 1227,
     "consumedComponents": 308,
-    "unconsumedComponents": 176
+    "unconsumedComponents": 177
   },
   "components": [
     {
@@ -12566,6 +12566,16 @@
       "specPath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.spec.ts"
     },
     {
+      "class": "FoodRecognitionHistoryDialogComponent",
+      "selector": "fd-food-recognition-history-dialog",
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history-dialog.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history-dialog.spec.ts"
+    },
+    {
       "class": "HeaderActionsOverflowComponent",
       "selector": "fd-header-actions-overflow",
       "feature": "shared",
@@ -22181,6 +22191,7 @@
         "AI_INPUT_BAR.ADD_ACTION",
         "AI_INPUT_BAR.PHOTO_TITLE",
         "AI_INPUT_BAR.SHORT_PLACEHOLDER",
+        "AI_RECOGNITION.SHOW_RECENT",
         "DISABLED_HINTS.OPERATION_BUSY",
         "MEAL_LIST.VOICE_MIC_TITLE",
         "MEAL_LIST.VOICE_PLACEHOLDER"
@@ -22325,6 +22336,14 @@
       "path": "FoodDiary.Web.Client/src/app/components/shared/entity-card/entity-card-body/entity-card-body.html",
       "keys": [
         "GENERAL.UNITS.KCAL"
+      ]
+    },
+    {
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history-dialog.html",
+      "keys": [
+        "AI_RECOGNITION.RETENTION",
+        "AI_RECOGNITION.SHOW_RECENT"
       ]
     },
     {
@@ -26624,7 +26643,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.html",
-      "occurrences": 3,
+      "occurrences": 4,
       "inputsUsed": [
         "ariaLabel",
         "disabled",
@@ -26632,6 +26651,7 @@
         "fill",
         "icon",
         "iconSize",
+        "type",
         "variant"
       ],
       "outputsHandled": []
@@ -31343,6 +31363,19 @@
       "occurrences": 1,
       "inputsUsed": [
         "closeAriaLabel",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiDialogComponent",
+      "selector": "fd-ui-dialog",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "subtitle",
         "title"
       ],
       "outputsHandled": []
@@ -37577,6 +37610,21 @@
       "occurrences": 1,
       "inputsUsed": [],
       "outputsHandled": []
+    },
+    {
+      "component": "FoodRecognitionHistoryComponent",
+      "selector": "fd-food-recognition-history",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "screen"
+      ],
+      "outputsHandled": [
+        "backToRecognition",
+        "recognitionSelected"
+      ]
     },
     {
       "component": "FoodRecognitionHistoryComponent",

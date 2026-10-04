@@ -63,6 +63,18 @@
     }
 </div>
 
+<fd-ui-button
+    type="button"
+    icon="history"
+    variant="secondary"
+    fill="text"
+    [disabled]="isDisabled()"
+    [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+    (click)="openRecognitionHistory()"
+>
+    {{ 'AI_RECOGNITION.SHOW_RECENT' | translate }}
+</fd-ui-button>
+
 @if (hasTextResult()) {
     <fd-ai-photo-result
         class="ai-input-bar__result-panel"

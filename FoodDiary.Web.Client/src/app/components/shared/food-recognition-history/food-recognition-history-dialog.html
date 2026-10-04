@@ -1,0 +1,3 @@
+<fd-ui-dialog [title]="'AI_RECOGNITION.SHOW_RECENT' | translate" [subtitle]="'AI_RECOGNITION.RETENTION' | translate">
+    <fd-food-recognition-history [screen]="true" (recognitionSelected)="dialogRef.close($event)" (backToRecognition)="dialogRef.close()" />
+</fd-ui-dialog>

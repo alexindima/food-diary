@@ -2,7 +2,7 @@ import { HttpStatusCode } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { NEVER, type Observable, of, throwError } from 'rxjs';
+import { NEVER, type Observable, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
@@ -14,6 +14,8 @@ import { AiFoodFacade } from '../../../shared/lib/ai-food.facade';
 import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
 import { UserFacade } from '../../../shared/lib/user.facade';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
+import type { FoodRecognitionJob } from '../../../shared/models/food-recognition.data';
+import { FoodRecognitionHistoryDialogComponent } from '../food-recognition-history/food-recognition-history-dialog';
 import { AiInputBarComponent } from './ai-input-bar';
 import type { AiInputBarMealDetails, AiInputBarResult } from './ai-input-bar.types';
 import { AiPhotoResultComponent } from './ai-photo-result/ai-photo-result';
@@ -46,12 +48,26 @@ const MEAL_DETAILS: AiInputBarMealDetails = {
     time: '09:30',
     comment: 'Breakfast',
 };
+const RECENT_JOB: FoodRecognitionJob = {
+    id: 'job-1',
+    imageAssetId: 'asset-1',
+    imageUrl: 'https://example.com/photo.jpg',
+    description: null,
+    status: 'Succeeded',
+    createdOnUtc: '2026-05-17T00:00:00Z',
+    updatedOnUtc: '2026-05-17T00:00:00Z',
+    vision: { items: VISION_ITEMS },
+    nutrition: NUTRITION,
+    errorCode: null,
+    nutritionErrorCode: null,
+};
 
 type AiInputBarTestContext = {
     aiFoodService: {
         analyzeFoodImage: ReturnType<typeof vi.fn>;
         calculateNutrition: ReturnType<typeof vi.fn>;
         parseFoodText: ReturnType<typeof vi.fn>;
+        resumeRecognition: ReturnType<typeof vi.fn>;
     };
     component: AiInputBarComponent;
     dialogService: {
@@ -76,6 +92,9 @@ async function setupAiInputBarAsync(
         parseFoodText: vi.fn().mockReturnValue(of({ items: VISION_ITEMS })),
         analyzeFoodImage: vi.fn().mockReturnValue(of({ items: VISION_ITEMS })),
         calculateNutrition: vi.fn().mockReturnValue(of(NUTRITION)),
+        resumeRecognition: vi
+            .fn()
+            .mockReturnValue(of({ items: VISION_ITEMS, recognition: { id: RECENT_JOB.id, nutrition: NUTRITION, errorCode: null } })),
     };
     const aiConsentAcceptedAt: string | null =
         options.aiConsentAcceptedAt === undefined ? '2026-05-17T00:00:00Z' : options.aiConsentAcceptedAt;
@@ -89,8 +108,13 @@ async function setupAiInputBarAsync(
         open: vi.fn(
             (
                 component: unknown,
-            ): { afterClosed: () => Observable<boolean>; componentInstance?: null; componentRef?: null; close?: () => void } =>
-                component === AiPhotoResultComponent
+            ): {
+                afterClosed: () => Observable<boolean | FoodRecognitionJob | undefined>;
+                componentInstance?: null;
+                componentRef?: null;
+                close?: () => void;
+            } =>
+                component === AiPhotoResultComponent || component === FoodRecognitionHistoryDialogComponent
                     ? { componentInstance: null, componentRef: null, close: vi.fn(), afterClosed: () => NEVER }
                     : { afterClosed: () => of(true) },
         ),
@@ -126,6 +150,20 @@ async function setupAiInputBarAsync(
     fixture.componentRef.setInput('mode', mode);
     return { aiFoodService, component, dialogService, fixture, navigationService, userFacade };
 }
+
+describe('AiInputBarComponent history access', () => {
+    it('opens recent recognitions from the food input', async () => {
+        const { dialogService, fixture } = await setupAiInputBarAsync();
+        fixture.detectChanges();
+        const buttons = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button'));
+        const historyButton = buttons.find(button => button.textContent.includes('AI_RECOGNITION.SHOW_RECENT'));
+
+        expect(historyButton).toBeDefined();
+        historyButton?.click();
+
+        expect(dialogService.open).toHaveBeenCalledOnce();
+    });
+});
 
 describe('AiInputBarComponent text recognition', () => {
     it('provides an accessible name for the text input', async () => {
@@ -259,6 +297,129 @@ describe('AiInputBarComponent access gates and errors', () => {
         expect(component['textErrorKey']()).toBe('AI_INPUT_BAR.TEXT_ERROR_QUOTA');
         expect(component['textIsAnalyzing']()).toBe(false);
         expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
+    });
+});
+
+describe('AiInputBarComponent recognition history', () => {
+    it('resumes stored nutrition without premium, new consent, or another AI request', async () => {
+        const { aiFoodService, component, dialogService, fixture, userFacade } = await setupAiInputBarAsync('create', {
+            isPremium: false,
+            aiConsentAcceptedAt: null,
+        });
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(RECENT_JOB) });
+        fixture.detectChanges();
+        const createSpy = vi.fn();
+        component.mealCreateRequested.subscribe(createSpy);
+
+        component['openRecognitionHistory']();
+
+        expect(dialogService.open).toHaveBeenNthCalledWith(1, FoodRecognitionHistoryDialogComponent, { preset: 'list', size: 'lg' });
+        expect(aiFoodService.resumeRecognition).toHaveBeenCalledWith(RECENT_JOB.id);
+        expect(aiFoodService.analyzeFoodImage).not.toHaveBeenCalled();
+        expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
+        expect(userFacade.getInfoSilently).not.toHaveBeenCalled();
+        expect(userFacade.acceptAiConsent).not.toHaveBeenCalled();
+        expect(component['photoSelection']()).toEqual({ url: RECENT_JOB.imageUrl, assetId: RECENT_JOB.imageAssetId });
+        expect(component['photoNutrition']()).toEqual(NUTRITION);
+        expect(createSpy).not.toHaveBeenCalled();
+
+        component['onPhotoAddToMeal'](MEAL_DETAILS);
+
+        expect(createSpy).toHaveBeenCalledWith(expect.objectContaining({ source: 'Photo', imageAssetId: RECENT_JOB.imageAssetId }));
+    });
+
+    it('preserves the unsubmitted text when history is dismissed', async () => {
+        const { aiFoodService, component, dialogService, fixture } = await setupAiInputBarAsync();
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(undefined) });
+        component['voiceText'].set('unfinished breakfast');
+        fixture.detectChanges();
+
+        component['openRecognitionHistory']();
+
+        expect(component['voiceText']()).toBe('unfinished breakfast');
+        expect(aiFoodService.resumeRecognition).not.toHaveBeenCalled();
+    });
+
+    it('prevents duplicate dialogs and ignores pending history after component destruction', async () => {
+        const { aiFoodService, component, dialogService, fixture } = await setupAiInputBarAsync();
+        const selected = new Subject<FoodRecognitionJob>();
+        const close = vi.fn();
+        dialogService.open.mockReturnValueOnce({ close, afterClosed: () => selected });
+        fixture.detectChanges();
+        component['openRecognitionHistory']();
+        component['openRecognitionHistory']();
+
+        expect(dialogService.open).toHaveBeenCalledOnce();
+        fixture.destroy();
+        selected.next(RECENT_JOB);
+
+        expect(close).toHaveBeenCalledOnce();
+        expect(selected.observed).toBe(false);
+        expect(aiFoodService.resumeRecognition).not.toHaveBeenCalled();
+    });
+
+    it('does not open history while recognition is already processing', async () => {
+        const { component, dialogService, fixture } = await setupAiInputBarAsync();
+        fixture.componentRef.setInput('isProcessing', true);
+        fixture.detectChanges();
+
+        component['openRecognitionHistory']();
+
+        expect(dialogService.open).not.toHaveBeenCalled();
+    });
+
+    it('does not resume a product label as a meal photo', async () => {
+        const { aiFoodService, component, dialogService, fixture } = await setupAiInputBarAsync();
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of({ ...RECENT_JOB, isProductLabel: true }) });
+        fixture.detectChanges();
+
+        component['openRecognitionHistory']();
+
+        expect(aiFoodService.resumeRecognition).not.toHaveBeenCalled();
+    });
+});
+
+describe('AiInputBarComponent saved photo reanalysis', () => {
+    it('requires premium for a new analysis of a stored photo', async () => {
+        const { aiFoodService, component, fixture } = await setupAiInputBarAsync('create', { isPremium: false });
+        component['photoSelection'].set({ url: RECENT_JOB.imageUrl, assetId: RECENT_JOB.imageAssetId });
+        fixture.detectChanges();
+
+        await component['onPhotoReanalyzeAsync']();
+
+        expect(aiFoodService.analyzeFoodImage).not.toHaveBeenCalled();
+    });
+
+    it('preserves the saved result when consent for another analysis is declined', async () => {
+        const { aiFoodService, component, dialogService, fixture, userFacade } = await setupAiInputBarAsync('create', {
+            aiConsentAcceptedAt: null,
+        });
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(false) });
+        component['photoSelection'].set({ url: RECENT_JOB.imageUrl, assetId: RECENT_JOB.imageAssetId });
+        component['photoNutrition'].set(NUTRITION);
+        fixture.detectChanges();
+
+        await component['onPhotoReanalyzeAsync']();
+
+        expect(aiFoodService.analyzeFoodImage).not.toHaveBeenCalled();
+        expect(userFacade.acceptAiConsent).not.toHaveBeenCalled();
+        expect(component['photoNutrition']()).toBe(NUTRITION);
+    });
+
+    it('does not start a new analysis if the photo was dismissed during consent', async () => {
+        const { aiFoodService, component, fixture, userFacade } = await setupAiInputBarAsync('create', {
+            aiConsentAcceptedAt: null,
+        });
+        const user = new Subject<{ aiConsentAcceptedAt: string }>();
+        userFacade.getInfoSilently.mockReturnValueOnce(user);
+        component['photoSelection'].set({ url: RECENT_JOB.imageUrl, assetId: RECENT_JOB.imageAssetId });
+        fixture.detectChanges();
+        const reanalysis = component['onPhotoReanalyzeAsync']();
+        component['dismissPhotoResult']();
+        user.next({ aiConsentAcceptedAt: '2026-05-17T00:00:00Z' });
+        await reanalysis;
+
+        expect(aiFoodService.analyzeFoodImage).not.toHaveBeenCalled();
     });
 });
 
