@@ -42,6 +42,13 @@ test('deferred content hydration preserves records, path diversity, ties and mis
       const initialPaths = new Set(initial.map(row => row.path));
       const expected = [...initial,...distinct(all).slice(0,limit).filter(row => !initialPaths.has(row.path))].map(withoutOrdinal);
       assert.deepEqual(findLexicalCandidates(db,match,limit).map(row => ({...row})),expected);
+      let lexicalSql;
+      findLexicalCandidates({ prepare(sql) { lexicalSql = sql; return db.prepare(sql); } },match,limit);
+      const plan = db.prepare('EXPLAIN QUERY PLAN ' + lexicalSql).all(match,limit,limit);
+      // MATCH scans in the recall CTE are expected; final hydration must use rowid lookups.
+      const sourceReads = plan.filter(row => /(?:SCAN|SEARCH) context_search VIRTUAL TABLE/.test(row.detail));
+      assert.ok(sourceReads.some(row => /INDEX \S+:=$/.test(row.detail)), 'hydrate the bounded pool by FTS rowid');
+      assert.ok(sourceReads.every(row => !/INDEX \S+:$/.test(row.detail)), 'never scan all FTS documents to hydrate candidates');
       const named = 'title : "star"* OR path : "orchard"*';
       assert.deepEqual(findWeightedIdentityCandidates(db,named,limit).map(row => ({...row})),readAll(false,named).slice(0,limit).map(withoutOrdinal));
       const identity = readAll(true,named);

@@ -28,7 +28,8 @@ export function findLexicalCandidates(database, match, limit) {
       category, title, features.layer, features.module, features.role, features.is_test isTest,
       features.extension, pooled_candidates.lexicalRank
     FROM pooled_candidates
-    JOIN context_search ON context_search.rowid = sourceOrdinal
+    -- Keep the bounded pool outermost: an unrestricted FTS scan hydrates every document.
+    CROSS JOIN context_search ON context_search.rowid = sourceOrdinal
     JOIN context_search_features features ON features.context_rowid = sourceOrdinal
     ORDER BY poolOrdinal, lexicalRank, pooled_candidates.path, sourceOrdinal
   `).all(match, limit, limit);

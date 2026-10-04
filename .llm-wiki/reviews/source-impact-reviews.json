@@ -145,6 +145,21 @@
       "reviewedAtUtc": "2026-10-04T18:04:05.0150049Z"
     },
     {
+      "pageId": "system.quality-index",
+      "pagePath": ".llm-wiki/system/quality-index.md",
+      "pageSha256": "5e265616983f522515b757c57ba92a0a8a805fe3d690748587cd94acf09d24f4",
+      "sources": [
+        {
+          "path": ".llm-wiki/generated/quality-index.json",
+          "sha256": "b31e4f5a3501e74d94191909fd58bde1d1ed4805a8552bb6706cad56c7fd05bd"
+        }
+      ],
+      "reason": "Reviewed regenerated quality projection for Wiki candidate SQL and diagnostic runner changes; structural metrics remain navigation evidence and do not replace executed assertions.",
+      "baseRef": "HEAD",
+      "gitHead": "829474ddf40a574626a8b236adb6ca9629439dcb",
+      "reviewedAtUtc": "2026-10-04T22:08:42.855769Z"
+    },
+    {
       "pageId": "system.repository-catalog",
       "pagePath": ".llm-wiki/system/repository-catalog.md",
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
@@ -664,21 +679,29 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "b79c719e7d91256dd98925bac93fd34f3a4b6142d9d4f8a5c37ba91c5dafd6ef",
+      "pageSha256": "9630ea07351d3459079b4fcbe332fd12893fc38afd2c92879bfb4d14221bbc54",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "03e5557aed0fa12e809720c2e35b674b414d71adc4e323e37286eb1727bc9fc0"
+          "path": ".llm-wiki/tools/code-graph-candidates.mjs",
+          "sha256": "d2cd373fcef9fec17df7387baa6819b1c47e6c5e62e957e75694f6d35d4dcdc3"
         },
         {
-          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-          "sha256": "75ba917cefa45d83e45b871b41d27a8e20954bfc5c38ef4147338b624f628234"
+          "path": ".llm-wiki/tools/code-graph-candidates.test.mjs",
+          "sha256": "3d55fb89935cdefd5e463e3e901b9b6a1385e8776243eea123c9ab14a582d52a"
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
+          "sha256": "11f71a3f4f0e9833b0fd873923e9823e7ce2cd53e6bcb660217122c5f7c1fd4c"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
+          "sha256": "8ae97ba76253566461f92c10e75af71eb03e3e8a7c5eee8b96b14a885988e8ee"
         }
       ],
-      "reason": "Reviewed the affected tooling guides against request-local reuse of the freshly checked repository, HEAD and content fingerprint. Normal scoped cache callers preserve their identity; dependency hashing remains independent and module discovery is deferred only for cache hits. Cache regressions and the unchanged latency gate pass. Seven counterbalanced pairs measure median warm context from 1050ms to 595ms; static reference indexes were regenerated and do not represent execution coverage.",
+      "reason": "Confirmed bounded FTS rowid hydration and real query-plan regression; documented optional collect-failures audit with failed exit status, preserved logs and no aggregate success receipt.",
       "baseRef": "HEAD",
-      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
-      "reviewedAtUtc": "2026-10-04T20:51:31.9716963Z"
+      "gitHead": "829474ddf40a574626a8b236adb6ca9629439dcb",
+      "reviewedAtUtc": "2026-10-04T22:04:50.4614997Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -860,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "0b1427f873f80a6655f047112bbe93d331e8709e9225616f82eaf1c8cd953fa4"
+          "sha256": "b31e4f5a3501e74d94191909fd58bde1d1ed4805a8552bb6706cad56c7fd05bd"
         }
       ],
-      "reason": "Reviewed the affected tooling guides against request-local reuse of the freshly checked repository, HEAD and content fingerprint. Normal scoped cache callers preserve their identity; dependency hashing remains independent and module discovery is deferred only for cache hits. Cache regressions and the unchanged latency gate pass. Seven counterbalanced pairs measure median warm context from 1050ms to 595ms; static reference indexes were regenerated and do not represent execution coverage.",
+      "reason": "Reviewed regenerated quality projection for Wiki candidate SQL and diagnostic runner changes; structural metrics remain navigation evidence and do not replace executed assertions.",
       "baseRef": "HEAD",
-      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
-      "reviewedAtUtc": "2026-10-04T20:51:33.2339933Z"
+      "gitHead": "829474ddf40a574626a8b236adb6ca9629439dcb",
+      "reviewedAtUtc": "2026-10-04T22:08:46.6891253Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -962,13 +985,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "0b1427f873f80a6655f047112bbe93d331e8709e9225616f82eaf1c8cd953fa4"
+          "sha256": "b31e4f5a3501e74d94191909fd58bde1d1ed4805a8552bb6706cad56c7fd05bd"
         }
       ],
-      "reason": "Reviewed current privacy/security guidance and the local cache path: Node remains the only SQLite writer; tokens are rejected for foreign repositories, scope substitution or stale/invalid fields. No cross-request freshness TTL, query/path telemetry, provider sharing, credentials or application data flow was added. Metadata exposes a path count rather than changed-path payloads.",
+      "reason": "Reviewed regenerated quality projection for Wiki candidate SQL and diagnostic runner changes; structural metrics remain navigation evidence and do not replace executed assertions.",
       "baseRef": "HEAD",
-      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
-      "reviewedAtUtc": "2026-10-04T20:51:33.9504327Z"
+      "gitHead": "829474ddf40a574626a8b236adb6ca9629439dcb",
+      "reviewedAtUtc": "2026-10-04T22:08:49.0028738Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
