@@ -205,6 +205,7 @@ public sealed partial class OpenAiFoodClient(
         JsonObject inputTokenPayload = JsonSerializer.SerializeToNode(payload) as JsonObject
             ?? throw new InvalidOperationException("OpenAI input token payload must be a JSON object.");
         inputTokenPayload.Remove("max_output_tokens");
+        inputTokenPayload.Remove("store");
         string requestBody = inputTokenPayload.ToJsonString();
         using var request = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/responses/input_tokens");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _options.ApiKey);

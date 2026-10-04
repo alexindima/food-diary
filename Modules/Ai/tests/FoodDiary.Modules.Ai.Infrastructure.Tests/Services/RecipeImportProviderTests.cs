@@ -15,6 +15,34 @@ namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Services;
 [ExcludeFromCodeCoverage]
 [Collection("OpenAI provider")]
 public sealed class RecipeImportProviderTests {
+    [Theory]
+    [InlineData("ru")]
+    [InlineData("en")]
+    public async Task RecipeTokenBudget_PreservesInputAndSchemaWithoutResponseOnlyFields(string language) {
+        const string draft = """
+            {"name":"Salad","description":null,"ingredients":[{"name":"Yoghurt","amount":"180 g"}],"steps":["Mix"],"servings":1,"prepMinutes":5,"cookMinutes":null,"authorNutrition":null,"sourceUrl":null}
+            """;
+        using var handler = new ProviderHandler(draft);
+        using var http = new HttpClient(handler);
+        OpenAiFoodClient client = CreateClient(http);
+
+        AiProviderTokenBudget budget = ResultAssert.Success(await client.GetRecipeImportTokenBudgetAsync(
+            "180g yoghurt; mix", language, CancellationToken.None));
+        ResultAssert.Success(await client.ImportRecipeAsync("180g yoghurt; mix", language, CancellationToken.None));
+
+        using var count = JsonDocument.Parse(handler.CountBody!);
+        using var response = JsonDocument.Parse(handler.Body!);
+        Assert.Multiple(
+            () => Assert.Equal(123, budget.InputTokens),
+            () => Assert.Equal(new OpenAiOptions().MaxOutputTokens, budget.MaximumOutputTokens),
+            () => Assert.False(count.RootElement.TryGetProperty("store", out _)),
+            () => Assert.False(count.RootElement.TryGetProperty("max_output_tokens", out _)),
+            () => Assert.Equal(response.RootElement.GetProperty("input").GetRawText(), count.RootElement.GetProperty("input").GetRawText()),
+            () => Assert.Equal(response.RootElement.GetProperty("text").GetRawText(), count.RootElement.GetProperty("text").GetRawText()),
+            () => Assert.Equal(response.RootElement.GetProperty("model").GetString(), count.RootElement.GetProperty("model").GetString()),
+            () => Assert.False(response.RootElement.GetProperty("store").GetBoolean()));
+    }
+
     [Fact]
     public async Task Provider_UsesSeparateDeveloperInstructionsAndPreservesTextAmounts() {
         const string draft = """
@@ -52,8 +80,19 @@ public sealed class RecipeImportProviderTests {
     [ExcludeFromCodeCoverage]
     private sealed class ProviderHandler(string draft) : HttpMessageHandler {
         public string? Body { get; private set; }
+        public string? CountBody { get; private set; }
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
             Body = await request.Content!.ReadAsStringAsync(cancellationToken);
+            if (string.Equals(request.RequestUri?.AbsolutePath, "/v1/responses/input_tokens", StringComparison.Ordinal)) {
+                CountBody = Body;
+                using var payload = JsonDocument.Parse(Body);
+                bool invalid = payload.RootElement.TryGetProperty("store", out _) || payload.RootElement.TryGetProperty("max_output_tokens", out _);
+                return new HttpResponseMessage(invalid ? HttpStatusCode.BadRequest : HttpStatusCode.OK) {
+                    Content = new StringContent(invalid
+                        ? """{"error":{"type":"invalid_request_error","code":"unknown_parameter"}}"""
+                        : """{"input_tokens":123}""", Encoding.UTF8, "application/json"),
+                };
+            }
             string response = JsonSerializer.Serialize(new {
                 output = new[] { new { type = "message", content = new[] { new { type = "output_text", text = draft }, } }, },
                 usage = new { input_tokens = 20, output_tokens = 10, total_tokens = 30 },

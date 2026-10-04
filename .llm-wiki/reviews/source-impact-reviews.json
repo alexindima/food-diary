@@ -791,17 +791,17 @@
     {
       "pageId": "workflow-privacy-review",
       "pagePath": ".llm-wiki/workflows/privacy-review.md",
-      "pageSha256": "e6a46b0997c9e9829b351ab97f2487c1fc1414a8887442c5012cc06caebfcc3d",
+      "pageSha256": "b60f38c1d4bb6323e6d9a1128ef46cbe3f2c097c8abd5f71e062f9d48a25997c",
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "7edac53f8569f6b4a914fa3df788992d2b94fc2acc39487c13693a1e59463f86"
+          "sha256": "eee58e42102a3b4994bad250942449f5c5eea33d51125a1867f0e0777650e9fd"
         }
       ],
-      "reason": "Reviewed consent, Premium access, opt-in clipboard reading, public URL DNS/IP and redirect checks, body limits, local FFmpeg cleanup and WAV-only provider sharing. All 218 infrastructure tests pass including real media and unsafe URL/ambiguous caption cases. The actual Instagram caption was verified without live OpenAI calls or credential changes.",
-      "baseRef": "master",
-      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
-      "reviewedAtUtc": "2026-10-04T18:04:12.826182Z"
+      "reason": "Inspected the recipe request factory and shared token preflight: only response-only store is omitted from the counting endpoint; actual recognition retains store=false. Input text, language, strict schema and provider destination are preserved by ru/en regression tests. No new personal data, logging, credentials, retention or storage path. Synthetic local browser import now returns 200.",
+      "baseRef": "HEAD",
+      "gitHead": "2a83ec684dfdcd36351a4c0048b032bf75b0ca11",
+      "reviewedAtUtc": "2026-10-04T21:32:47.2464742Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -840,13 +840,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5e51dadbd4ed39f0e10c7192bc18ba4beff9212a937af34de55fa22496270173"
+          "sha256": "fbe2b6e9beac814745fe8df7b50bb67699eb1c3ed9a72967f3de1079a0995cc5"
         }
       ],
-      "reason": "Verified shared food input consumers and restored saved meal photo history through shared UI and existing owner-authenticated GET requests. No API shape, provider, queue, persistence or feature boundary change. 108 focused tests pass; real RU/EN mobile and desktop browser checks cover saved results with zero new AI requests, loading, empty, retry, cancellation and keyboard focus. New photo reanalysis retains Premium and consent checks. Current workflow instructions remain accurate.",
+      "reason": "The new provider contract regression fails on both languages before the fix and passes afterwards. Ai.Infrastructure has 217 passing tests, Ai.Application 135, platform Infrastructure 325 and Architecture 2116; solution build has zero warnings/errors. Current vision/text/nutrition preflight tests pass. Static references remain navigation evidence; unrelated frontend/MCP ranking results do not represent affected runtime paths.",
       "baseRef": "HEAD",
-      "gitHead": "6ad66ee140e1581d3173c78010516337415dce68",
-      "reviewedAtUtc": "2026-10-04T20:55:25.3703190Z"
+      "gitHead": "2a83ec684dfdcd36351a4c0048b032bf75b0ca11",
+      "reviewedAtUtc": "2026-10-04T21:32:48.1122995Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -927,13 +927,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "507522f855c0a7a6d172ba77978bfd5530886e202fa51ca2f0061fea45a41e85"
+          "sha256": "d44c2f784493a2d7884f094f9557695c1e9e05f7a7617c67aa294051c604eb06"
         }
       ],
-      "reason": "The change is a read-query calendar option using the existing resolver and reader; no migrations, jobs, provider sharing, registrations or configuration changes are introduced.",
+      "reason": "No host, DI, background job, queue, persistence or endpoint change. CountInputTokensAsync still uses the existing HttpClient, cancellation token, bounded response reading and failure handling. Exact token preflight, quota reservation and reconciliation remain in the application flow. A real local recipe import returned 200 with a single idempotent POST after restarting the API; readiness is 200.",
       "baseRef": "HEAD",
-      "gitHead": "bd0b317c741192f85e39301b207407b7ce778add",
-      "reviewedAtUtc": "2026-10-04T19:26:55.0952383Z"
+      "gitHead": "2a83ec684dfdcd36351a4c0048b032bf75b0ca11",
+      "reviewedAtUtc": "2026-10-04T21:32:48.5380903Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -942,13 +942,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5e51dadbd4ed39f0e10c7192bc18ba4beff9212a937af34de55fa22496270173"
+          "sha256": "fbe2b6e9beac814745fe8df7b50bb67699eb1c3ed9a72967f3de1079a0995cc5"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "d44c2f784493a2d7884f094f9557695c1e9e05f7a7617c67aa294051c604eb06"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "eee58e42102a3b4994bad250942449f5c5eea33d51125a1867f0e0777650e9fd"
         }
       ],
-      "reason": "Verified shared food input consumers and restored saved meal photo history through shared UI and existing owner-authenticated GET requests. No API shape, provider, queue, persistence or feature boundary change. 108 focused tests pass; real RU/EN mobile and desktop browser checks cover saved results with zero new AI requests, loading, empty, retry, cancellation and keyboard focus. New photo reanalysis retains Premium and consent checks. Current workflow instructions remain accurate.",
+      "reason": "Reviewed unchanged provider-sharing and untrusted-source boundaries. Actual recipe generation still separates developer instructions from source text, preserves strict JSON schema and sends store=false. Counting excludes unsupported response-only parameters without bypassing quotas or changing HTTP/authentication/SSRF controls. The bounded bug fix introduces no new capability or public API.",
       "baseRef": "HEAD",
-      "gitHead": "6ad66ee140e1581d3173c78010516337415dce68",
-      "reviewedAtUtc": "2026-10-04T20:55:26.9784031Z"
+      "gitHead": "2a83ec684dfdcd36351a4c0048b032bf75b0ca11",
+      "reviewedAtUtc": "2026-10-04T21:32:49.3353607Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
