@@ -22,18 +22,14 @@
       "pageSha256": "2d76f3b5a011cedacee04e17c3814e1adb42c22493cd93cbb52f0c7607e67ded",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "5426200344d5903cdacc4a110d566064a97bd33544c138eaac405d8526e44c86"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "27ac6dc291bdc38d4e2ca38b9c8ee530e2e20e43501fbd73f5cac16bed089e8d"
+          "path": "docs/README.md",
+          "sha256": "65f2f3407df1ada0aa232000a6b9fed054f452911b97e411d592dcfb59f40637"
         }
       ],
-      "reason": "Reviewed current Wiki navigation and guidance against canonical module naming, ADR 0052 and the documented coordinated migration release. The modular-monolith inventory, source authority, accepted ADR lifecycle and evidence limitations remain accurate; this preparation adds no module, route or dependency direction.",
-      "baseRef": "origin/master",
-      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
-      "reviewedAtUtc": "2026-10-03T11:03:24.1496182Z"
+      "reason": "docs/README.md now links the recipe import guide. The knowledge entrypoint still correctly identifies architecture and documentation as authoritative sources; its routing prose needs no change.",
+      "baseRef": "HEAD",
+      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
+      "reviewedAtUtc": "2026-10-04T11:30:34.0248266Z"
     },
     {
       "pageId": "module.frontend",
@@ -91,21 +87,17 @@
     {
       "pageId": "system.architecture",
       "pagePath": ".llm-wiki/system/architecture.md",
-      "pageSha256": "a117d247a9688c0818128f024603c7e5d162b651923b78dde41cc969485a734e",
+      "pageSha256": "d0fe45b8fb3d5ca4937ec2898e3099d50e3b920c9ccea9fff512a8bc6a618de2",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "e86448d0be0d4b5af379b2bf739fc3fc4d0e86af0cfed79b29d3f15eb2375c85"
-        },
-        {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "00c090e0b67f768bc1165703457a6d24efc0f1e93e8eb554b0644a7b9e34b64b"
+          "sha256": "e8fd72d24f538b643bf091265a23ff326d4aae9be79aa3bed68c200f30305fa6"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
+      "reason": "Reviewed module placement and ownership against current code: AI owns transient recipe drafts, Recipes still owns saves, HTTP mapping stays in Presentation, and new project references are limited to AI test consumers. Video processing adds a local FFmpeg runtime dependency without a production module edge or migration.",
       "baseRef": "HEAD",
-      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:45.930669Z"
+      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
+      "reviewedAtUtc": "2026-10-04T14:40:29.3038890Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -143,14 +135,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "docs/adr/README.md",
-          "sha256": "e5d9cb3ca7980b2df78621807a7512c52b7be3cfac1ef267b2797af285e63ae1"
+          "path": "docs/README.md",
+          "sha256": "65f2f3407df1ada0aa232000a6b9fed054f452911b97e411d592dcfb59f40637"
         }
       ],
-      "reason": "Reviewed current Wiki navigation and guidance against canonical module naming, ADR 0052 and the documented coordinated migration release. The modular-monolith inventory, source authority, accepted ADR lifecycle and evidence limitations remain accurate; this preparation adds no module, route or dependency direction.",
-      "baseRef": "origin/master",
-      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
-      "reviewedAtUtc": "2026-10-03T11:03:24.9554042Z"
+      "reason": "The documentation index adds the recipe import guide, and repository-catalog adds the new recipe files. No retrieval tool, ranking rule, projection schema or knowledge authority changes. Verified current guide links and source identities; the knowledge and query workflow guidance remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
+      "reviewedAtUtc": "2026-10-04T11:36:32.1636575Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -207,22 +199,18 @@
       "pageSha256": "c5747176a573b53e13b209f21f97593fe4af4eedbe2d4b2cb27b92c539689ea6",
       "sources": [
         {
-          "path": ".llm-wiki/policies/api-compatibility-acceptance.json",
-          "sha256": "64d2cdcbaf568cc3037feef85ad9d5121c4a1cfc367761928dd82f37ace7c142"
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "sha256": "8881fe8e5d509e83ddd5de8655b90410d09f81cf9248ef6d5439a33f4cbd3b0f"
         },
         {
-          "path": ".llm-wiki/tools/LlmWikiApiAcceptance.ps1",
-          "sha256": "83c988ea091e87fa0f8e8b748692c9b4715bd82fb87b3381a0736de415038791"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
-          "sha256": "fe2920df5318b16fd7db32e23e72b7d878429c67836f143877ada0dfb6d73adb"
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+          "sha256": "0cd6c023cdab3fd2c177e2cb7ba9c341612314799413cd396f1e6fc45f877688"
         }
       ],
-      "reason": "Reviewed the exact e56eecf coordinated client release approved by the user: both snapshot fingerprints and all 20 identities are recorded; synthetic comparisons cannot inherit approval; new breaks still fail. The workflow now documents the explicit rollout and unchanged successful ancestral CI baseline.",
+      "reason": "Reviewed the additive text/video import endpoints, form fields, draft response mappings, Premium access, required idempotency and existing error contracts. The final full snapshot only adds the import routes and schemas; compatibility reports zero structural breaks. Backend and frontend consumers retain the existing draft/save boundary.",
       "baseRef": "HEAD",
-      "gitHead": "028efbba467e3bdece84fe1e43412aead89d2ae5",
-      "reviewedAtUtc": "2026-10-03T21:02:54.5714473Z"
+      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
+      "reviewedAtUtc": "2026-10-04T14:40:31.1728998Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -231,17 +219,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "9f0e4d0c072f9bbf9fea4b5f4669a081feb97b39c12c4d1e016999e8a4c5b1ae"
+          "sha256": "f34d98991a7150f40a4b3a71b67c4860b2db0edc084ab24ed1cedf385049796a"
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "c13c4da524c54d360776ca93f97eaf88a8cbe6abc73667e7a1dc846da224f58b"
+          "sha256": "e8fd72d24f538b643bf091265a23ff326d4aae9be79aa3bed68c200f30305fa6"
         }
       ],
-      "reason": "Reviewed the architecture-health workflow against the regenerated index and current ProjectDependencyMatrixTests. Existing dependency and cycle guardrails remain enforced, hotspot/removal entries remain candidates rather than deletion authority, and the current audit executed 2116 architecture tests successfully.",
-      "baseRef": "origin/master",
-      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
-      "reviewedAtUtc": "2026-10-03T11:03:26.4933619Z"
+      "reason": "Reviewed refreshed catalog, contract, topology and quality navigation against final source. Executed AI application/infrastructure tests and real local FFmpeg tests support the feature; desktop/mobile mocked UI verifies multipart upload, draft application and file reset. Runtime rollout requires the API FFmpeg image, temporary-space limit and narrow Nginx route together; no deployment was performed.",
+      "baseRef": "HEAD",
+      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
+      "reviewedAtUtc": "2026-10-04T14:40:32.7204357Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -250,17 +238,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "0fe16c566ce4e9bdc785cd066b976ff79e680e69b88cf96f82649b242757e5c6"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c134a37811e20ccda2c25b22dae8965589b61b8353eb87b1254055f48611ad8c"
+          "sha256": "23f6f2b765ca635c920aacd50182a87b308e6ac9167f70bd3ed77d120b104fca"
         }
       ],
-      "reason": "Reviewed the catalog-only transport boundary repair and the regenerated full OpenAPI snapshot. The compatibility report flags 36 schema-name/reference changes and zero behavioral restrictions; explicit normalization of the ten transport type names proves all 274 endpoints and 358 original schemas have identical complete wire shapes. Both 16-test PostgreSQL Swagger runs passed, including verification without snapshot rewriting. Admin roles, body size limits, idempotency and error statuses are preserved.",
-      "baseRef": "origin/master",
-      "gitHead": "5d96fe1c36fef2b2476cd0ca3182de569b3646ef",
-      "reviewedAtUtc": "2026-10-03T15:10:00.3920280Z"
+      "reason": "Reviewed the additive text/video import endpoints, form fields, draft response mappings, Premium access, required idempotency and existing error contracts. The final full snapshot only adds the import routes and schemas; compatibility reports zero structural breaks. Backend and frontend consumers retain the existing draft/save boundary.",
+      "baseRef": "HEAD",
+      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
+      "reviewedAtUtc": "2026-10-04T14:40:35.0409143Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -491,13 +475,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "c66ab27c26e72493a9307e73cf8b4e1a6dbc3359384e51f5211465d7099919c8"
+          "sha256": "61006c4be46dbeecadede5ec7aa09c38c98cac4915cbd34c58460bc3a922ab3d"
         }
       ],
-      "reason": "Reviewed manifest addition eslint-import-resolver-typescript as a development-only dependency and check:import-boundaries in verify; lockfile committed and combined npm verify passes. Local API c1e5 requires pending UserNutritionProfiles migration; current browser compatibility proof used API5308 and no local migration was executed.",
+      "reason": "Reviewed module placement and ownership against current code: AI owns transient recipe drafts, Recipes still owns saves, HTTP mapping stays in Presentation, and new project references are limited to AI test consumers. Video processing adds a local FFmpeg runtime dependency without a production module edge or migration.",
       "baseRef": "HEAD",
-      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:42:26.3856524Z"
+      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
+      "reviewedAtUtc": "2026-10-04T14:40:36.7704762Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -795,21 +779,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "bfa8d2ec4ae50dd97a288cf818580749b8a5105d525d401f0effa9e2457376cd"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c134a37811e20ccda2c25b22dae8965589b61b8353eb87b1254055f48611ad8c"
-        },
-        {
-          "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
-          "sha256": "6330dab6637de63631bf9483203b491a13a29c65869465325b95a273dc980fe7"
+          "sha256": "7edac53f8569f6b4a914fa3df788992d2b94fc2acc39487c13693a1e59463f86"
         }
       ],
-      "reason": "Catalog DTOs retain the exact existing IDs, descriptions, nutrition and ingredient/image fields; no new data storage, disclosure, credentials, authorization rule or provider call was added. Recipe null lists reach the existing validation and environment-specific image assets remain governed by the unchanged application handler.",
-      "baseRef": "origin/master",
-      "gitHead": "5d96fe1c36fef2b2476cd0ca3182de569b3646ef",
-      "reviewedAtUtc": "2026-10-03T15:10:01.2332360Z"
+      "reason": "Generated inventories now include the recipe source HTTP client and recipe text provider boundary. Source inspected: consent precedes fetching/provider calls; clipboard suggestions are opt-in; recognition is explicit; source connections reject private/special DNS addresses; deadlines, body and redirect bounds apply; factory request loggers and provider response storage are disabled. Mocked tests validate the controls without claiming live Instagram or production security evidence. Existing inventory review limitations remain accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
+      "reviewedAtUtc": "2026-10-04T11:36:42.5386882Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -848,13 +824,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "eba5cbac9c215a25410592ebfb73832c7d21bcdaafd3e63e026bb3e198694e3d"
+          "sha256": "33e05f3dbf230ab98534d4e822ff5d91a330bfcef7cd9cf78b068852129c6d29"
         }
       ],
-      "reason": "Checked the regenerated quality index for the new API acceptance helper and regressions. Hotspots and direct name references remain navigation evidence, with no claim of execution coverage.",
+      "reason": "The bounded caption selection fix adds four regression cases: page recipe over a recommended post, Open Graph over generic site metadata, duplicate identical captions, and refusal of ambiguous captions. All 218 AI infrastructure tests passed with real FFmpeg media tests enabled; the fresh reel request contained the expected title, ingredients and method. Static quality references remain navigation evidence, not execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "028efbba467e3bdece84fe1e43412aead89d2ae5",
-      "reviewedAtUtc": "2026-10-03T21:03:00.3048868Z"
+      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
+      "reviewedAtUtc": "2026-10-04T16:45:15.5644359Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -923,13 +899,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "5f26558fa7e520a23cc34952f0581a1b069ee80cb1ced8edf92c29797c6fb473"
+          "sha256": "78cce29d93889e6d94226a0b781204c06c554397050e54cd231c792dbe46cad6"
         }
       ],
-      "reason": "Existing presentation guidance already requires owner HTTP requests, responses and mappings. The two catalog controllers now follow it without changing application ownership or command behavior; exact shared runtime assertions include the previously added read-budget interceptor and durable receipt table. Reviewed current owning guides and retained existing full-origin review context.",
-      "baseRef": "origin/master",
-      "gitHead": "5d96fe1c36fef2b2476cd0ca3182de569b3646ef",
-      "reviewedAtUtc": "2026-10-03T15:10:03.0267844Z"
+      "reason": "Only HTML text selection changed. Current source retains the existing bounded public HTTPS client, DNS connection checks, redirects, timeouts and cancellation; no new runtime registration, worker, job, retry or configuration was introduced. The actual reel returned HTTP 200 and the correct caption after the fix, while video extraction still reported Ai.RecipeVideoUnavailable because no supported video URL was exposed.",
+      "baseRef": "HEAD",
+      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
+      "reviewedAtUtc": "2026-10-04T16:45:17.2592125Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -938,13 +914,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "eba5cbac9c215a25410592ebfb73832c7d21bcdaafd3e63e026bb3e198694e3d"
+          "sha256": "33e05f3dbf230ab98534d4e822ff5d91a330bfcef7cd9cf78b068852129c6d29"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "78cce29d93889e6d94226a0b781204c06c554397050e54cd231c792dbe46cad6"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "7edac53f8569f6b4a914fa3df788992d2b94fc2acc39487c13693a1e59463f86"
         }
       ],
-      "reason": "Reviewed the regenerated quality index and dependency security findings. The compiler still supplies leads rather than security verdicts; concrete dependency fixes are validated separately with boundary reproductions and controls.",
+      "reason": "Reviewed the changed untrusted HTML boundary: page metadata prevents recommended post substitution, and multiple distinct embedded captions without page metadata now fail rather than choosing an unrelated source. Source and media network bounds, public DNS/IP validation and provider prompt separation remain unchanged. The 218-test infrastructure run includes existing unsafe URL, private destination, redirect and size checks; this receipt records bounded source review evidence, not a repository security audit.",
       "baseRef": "HEAD",
-      "gitHead": "028efbba467e3bdece84fe1e43412aead89d2ae5",
-      "reviewedAtUtc": "2026-10-03T21:03:01.8760717Z"
+      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
+      "reviewedAtUtc": "2026-10-04T16:45:19.6880776Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1085,17 +1069,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "6158c50bf1bd85e252113a630964fae6eab44f2a9648120541411684e8525a5e"
+          "sha256": "0eca1971207ba50e987d48ffd1d8f15e919b28286e7f7342fd6b778b639dc4f6"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "74d4482668b69123f9a98a1302a94c37ef9214718038bf4d695e9a5df316e240"
+          "sha256": "e63831200e488d85101763697ce072a154547e1346a9aa566958afbd3ff10327"
         }
       ],
-      "reason": "Reviewed the trace workflow against current frontend feature routes and compiled contracts after published composition boundaries. The documented bounded traversal, explicit missing/stale failures, source confirmation and distinction between navigation evidence and runtime proof remain accurate; this release preparation does not change trace implementations.",
-      "baseRef": "origin/master",
-      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
-      "reviewedAtUtc": "2026-10-03T11:03:31.1085934Z"
+      "reason": "Reviewed module placement and ownership against current code: AI owns transient recipe drafts, Recipes still owns saves, HTTP mapping stays in Presentation, and new project references are limited to AI test consumers. Video processing adds a local FFmpeg runtime dependency without a production module edge or migration.",
+      "baseRef": "HEAD",
+      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
+      "reviewedAtUtc": "2026-10-04T14:40:49.4751017Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1183,32 +1167,28 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "6158c50bf1bd85e252113a630964fae6eab44f2a9648120541411684e8525a5e"
-        },
-        {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "dd7d95bd6c0be878d7ce7eef2f5c21266f0aa0ad0e7cf1566eae136abedcec4c"
+          "sha256": "0eca1971207ba50e987d48ffd1d8f15e919b28286e7f7342fd6b778b639dc4f6"
         }
       ],
-      "reason": "Reviewed the component/API/translation discovery workflow against the refreshed frontend contract index and the new scoped AGENTS requirement for explicit cross-feature contracts with composition-bound implementations. Consumer-aware public inputs/outputs, transient provider credentials, locale pairs, keyboard and error-state guidance remain valid; the completed local frontend verification passed 5052 tests and rendered native audit evidence is retained.",
-      "baseRef": "origin/master",
-      "gitHead": "bdeceb2dac15d1dd827715f6743e61db59e3fb9d",
-      "reviewedAtUtc": "2026-10-03T11:03:28.8848734Z"
+      "reason": "Reviewed the additive text/video import endpoints, form fields, draft response mappings, Premium access, required idempotency and existing error contracts. The final full snapshot only adds the import routes and schemas; compatibility reports zero structural breaks. Backend and frontend consumers retain the existing draft/save boundary.",
+      "baseRef": "HEAD",
+      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
+      "reviewedAtUtc": "2026-10-04T14:40:38.8416113Z"
     },
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "73398eac6a1d8c10dbe85c604fb373d402b3bc6ca4103419751c0b4b8d9cd8e5",
+      "pageSha256": "6bccd8bdcf6c576b79d1108c24854771966f9eb514ac64c21f689d852b162a36",
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "25f1dab8cd716a2f40200f0ed4ebe81fdddbd2bf8753d53d8f39089b09b18d78"
+          "sha256": "34d2d86209b620793f8b423a3a0a14061d3cbe9236b895547cc681e6a84c7197"
         }
       ],
-      "reason": "Checked regenerated repository catalog against final pure combined tree and renamed feature/shared ownership. Global generated indexes are taken from isolated combined source, excluding unrelated shared-workspace WIP.",
+      "reason": "Reviewed module placement and ownership against current code: AI owns transient recipe drafts, Recipes still owns saves, HTTP mapping stays in Presentation, and new project references are limited to AI test consumers. Video processing adds a local FFmpeg runtime dependency without a production module edge or migration.",
       "baseRef": "HEAD",
-      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:42:35.0100976Z"
+      "gitHead": "6393a2100bb15e318fa613bb1c5a1bee6670e600",
+      "reviewedAtUtc": "2026-10-04T14:40:43.1952738Z"
     },
     {
       "pageId": "workflow.review-diff",

@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1328,
+    "contracts": 1336,
     "ambiguousContracts": 2,
-    "consumerEdges": 10285,
-    "productionConsumerEdges": 5890,
-    "testConsumerEdges": 4395,
-    "consumedContracts": 1328,
+    "consumerEdges": 10341,
+    "productionConsumerEdges": 5927,
+    "testConsumerEdges": 4414,
+    "consumedContracts": 1336,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -13085,6 +13085,40 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "ImportRecipeCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "ImportRecipeVideoCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "IMxResolver",
       "roles": [
         "Other"
@@ -14568,6 +14602,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "IRecipeSourceReader",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IRecipeSourceReader.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "IRecipeUsageQuery",
       "roles": [
         "Query"
@@ -14580,6 +14631,23 @@
       ],
       "definitionPaths": [
         "Modules/Recipes/Application.Abstractions/Common/IRecipeUsageQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IRecipeVideoProcessor",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IRecipeVideoProcessor.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -18802,6 +18870,57 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "RecipeImportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Requests/RecipeImportHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "RecipeImportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Responses/RecipeImportHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "RecipeImportIngredientHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Responses/RecipeImportIngredientHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "RecipeIngredientHttpRequest",
       "roles": [
         "Request"
@@ -18933,6 +19052,23 @@
       ],
       "definitionPaths": [
         "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "RecipeVideoImportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Recipes/Requests/RecipeVideoImportHttpRequest.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -26894,6 +27030,32 @@
         "Modules/Ai/Application.Abstractions/Common/AiQuotaReservationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeImportTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "AiQuotaReservationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/AiQuotaReservationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeVideoImportTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "AiQuotaReservationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/AiQuotaReservationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Persistence/AiQuotaRepositoryTests.cs",
       "isTest": true,
       "referenceCount": 14
@@ -27220,6 +27382,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Web.Api/Swagger/StandardErrorResponsesOperationFilter.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Recipes/RecipeVideoAdmissionAttribute.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57805,6 +57980,32 @@
         "Modules/Ai/Application.Abstractions/Common/IAiPromptProvider.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeImportTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAiPromptProvider",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IAiPromptProvider.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeVideoImportTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAiPromptProvider",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IAiPromptProvider.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/AiPromptProviderTests.cs",
       "isTest": true,
       "referenceCount": 5
@@ -58159,6 +58360,32 @@
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IAiQuotaRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IAiQuotaRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeImportTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IAiQuotaRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IAiQuotaRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeVideoImportTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IAiQuotaRepository",
@@ -62290,6 +62517,32 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -64540,6 +64793,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -67271,6 +67550,32 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
       "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommandHandler.cs",
+      "isTest": false,
       "referenceCount": 1
     },
     {
@@ -90960,6 +91265,97 @@
       "referenceCount": 1
     },
     {
+      "contract": "ImportRecipeCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ImportRecipeCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ImportRecipeCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Recipes/Mappings/RecipeImportHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ImportRecipeVideoCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ImportRecipeVideoCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ImportRecipeVideoCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Recipes/Mappings/RecipeImportHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ImportRecipeVideoCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/RecipeVideoImportTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "IMxResolver",
       "roles": [
         "Other"
@@ -94932,6 +95328,32 @@
         "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodClient.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeImportTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IOpenAiFoodClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeVideoImportTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IOpenAiFoodClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -94972,6 +95394,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOpenAiFoodService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOpenAiFoodService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -104973,6 +105421,58 @@
       "referenceCount": 1
     },
     {
+      "contract": "IRecipeSourceReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IRecipeSourceReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeSourceReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IRecipeSourceReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Infrastructure/AiProviderRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeSourceReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IRecipeSourceReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeSourceReader.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeSourceReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IRecipeSourceReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeImportTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "IRecipeUsageQuery",
       "roles": [
         "Query"
@@ -105023,6 +105523,58 @@
       "consumerPath": "Modules/Recipes/Infrastructure/RecipesModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeVideoProcessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IRecipeVideoProcessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeVideoProcessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IRecipeVideoProcessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Infrastructure/AiProviderRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeVideoProcessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IRecipeVideoProcessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoProcessor.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecipeVideoProcessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IRecipeVideoProcessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeVideoImportTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IRecipeWriteRepository",
@@ -112352,6 +112904,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Recipes/Controllers/RecipeVideoImportController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -114500,6 +115065,19 @@
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/RecipeVideoImportTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "ISender",
@@ -120711,6 +121289,32 @@
         "Modules/Users/Contracts/Common/IUserAiProfileReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeImportTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserAiProfileReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserAiProfileReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeVideoImportTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserAiProfileReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserAiProfileReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecognitionImageHandlerTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -124509,6 +125113,32 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/UsersSecurityReaderOwnershipTests.cs",
       "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommand.cs",
+      "isTest": false,
       "referenceCount": 1
     },
     {
@@ -135273,7 +135903,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodClient.cs",
       "isTest": false,
-      "referenceCount": 3
+      "referenceCount": 5
     },
     {
       "contract": "OpenAiFoodClientResponse",
@@ -135297,9 +135927,61 @@
         "Modules/Ai/Application.Abstractions/Common/OpenAiFoodClientResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Services/OpenAiFoodService.RecipeImport.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OpenAiFoodClientResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/OpenAiFoodClientResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Services/OpenAiFoodService.RecipeVideoImport.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "OpenAiFoodClientResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/OpenAiFoodClientResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
       "isTest": false,
       "referenceCount": 15
+    },
+    {
+      "contract": "OpenAiFoodClientResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/OpenAiFoodClientResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.RecipeImport.cs",
+      "isTest": false,
+      "referenceCount": 6
+    },
+    {
+      "contract": "OpenAiFoodClientResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/OpenAiFoodClientResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.RecipeTranscription.cs",
+      "isTest": false,
+      "referenceCount": 8
     },
     {
       "contract": "OpenAiFoodClientResponse",
@@ -135338,7 +136020,33 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
       "isTest": true,
-      "referenceCount": 15
+      "referenceCount": 17
+    },
+    {
+      "contract": "OpenAiFoodClientResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/OpenAiFoodClientResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeImportTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "OpenAiFoodClientResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/OpenAiFoodClientResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeVideoImportTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "OpenAiFoodClientResponse",
@@ -135352,6 +136060,32 @@
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/OpenAiFoodServiceTests.cs",
       "isTest": true,
       "referenceCount": 36
+    },
+    {
+      "contract": "OpenAiFoodClientResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/OpenAiFoodClientResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/RecipeImportProviderTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "OpenAiFoodClientResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/OpenAiFoodClientResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/RecipeTranscriptionTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "OpenAiProductLabelRequest",
@@ -140788,6 +141522,110 @@
       "referenceCount": 1
     },
     {
+      "contract": "RecipeImportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Requests/RecipeImportHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Controllers/AiFoodController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecipeImportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Requests/RecipeImportHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Recipes/Mappings/RecipeImportHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecipeImportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Responses/RecipeImportHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Controllers/AiFoodController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecipeImportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Responses/RecipeImportHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Recipes/Controllers/RecipeVideoImportController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecipeImportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Responses/RecipeImportHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Recipes/Mappings/RecipeImportHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecipeImportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Responses/RecipeImportHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/RecipeVideoImportTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "RecipeImportIngredientHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Responses/RecipeImportIngredientHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Recipes/Mappings/RecipeImportHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecipeImportIngredientHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Responses/RecipeImportIngredientHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Responses/RecipeImportHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "RecipeIngredientHttpRequest",
       "roles": [
         "Request"
@@ -141240,6 +142078,32 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs",
       "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecipeVideoImportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Recipes/Requests/RecipeVideoImportHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Recipes/Controllers/RecipeVideoImportController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "RecipeVideoImportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Recipes/Requests/RecipeVideoImportHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Recipes/Mappings/RecipeImportHttpMappings.cs",
+      "isTest": false,
       "referenceCount": 1
     },
     {

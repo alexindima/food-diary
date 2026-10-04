@@ -8,19 +8,19 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1885,
-    "symbols": 722,
+    "typescriptFiles": 1896,
+    "symbols": 727,
     "routes": 106,
     "features": 46,
-    "specs": 671,
+    "specs": 675,
     "localeFiles": 5,
     "roles": {
-      "Component": 478,
+      "Component": 480,
       "Directive": 12,
-      "Facade": 81,
+      "Facade": 82,
       "Other": 20,
       "Pipe": 4,
-      "Service": 127
+      "Service": 129
     }
   },
   "features": [
@@ -1190,6 +1190,7 @@
         "PublicStepsComponent",
         "RecipeAddComponent",
         "RecipeBasicInfoComponent",
+        "RecipeClipboardSuggestion",
         "RecipeContainerComponent",
         "RecipeCookModeComponent",
         "RecipeDetailActionResult",
@@ -1200,6 +1201,7 @@
         "RecipeEditComponent",
         "RecipeFavoritesPickerComponent",
         "RecipeFavoritesPickerFacade",
+        "RecipeImportFacade",
         "RecipeLanguageDialogComponent",
         "RecipeListComponent",
         "RecipeListFacade",
@@ -1213,13 +1215,15 @@
         "RecipeNutritionFormManager",
         "RecipePublicationDialogComponent",
         "RecipePublicationService",
+        "RecipeRecognitionComponent",
         "RecipeSelectDialogComponent",
         "RecipeSelectDialogContentComponent",
         "RecipeSelectFacade",
         "RecipeService",
         "RecipeStepCardComponent",
         "RecipeStepFormManager",
-        "RecipeStepsListComponent"
+        "RecipeStepsListComponent",
+        "RecipeVideoInputComponent"
       ],
       "routes": [
         "",
@@ -1245,6 +1249,7 @@
         "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage-lib/recipe-import-draft.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage-lib/recipe-manage-form.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage-lib/recipe-nutrition-form.manager.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage-lib/recipe-recognition.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage-lib/recipe-step-form.manager.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-nutrition-editor/recipe-nutrition-editor.spec.ts",
@@ -1265,7 +1270,9 @@
         "FoodDiary.Web.Client/src/app/features/recipes/lib/public-catalog-favorites.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/public-recipe.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/public-recipes.facade.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-clipboard-suggestion.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-image.util.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-import.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-language.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-list.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-manage.facade.spec.ts",
@@ -5329,7 +5336,7 @@
       "role": "Component",
       "selector": "fd-recipe-manage",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.ts",
-      "line": 69
+      "line": 73
     },
     {
       "name": "RecipeNutritionEditorComponent",
@@ -5337,6 +5344,13 @@
       "selector": "fd-recipe-nutrition-editor",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-nutrition-editor/recipe-nutrition-editor.ts",
       "line": 38
+    },
+    {
+      "name": "RecipeRecognitionComponent",
+      "role": "Component",
+      "selector": "fd-recipe-recognition",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.ts",
+      "line": 17
     },
     {
       "name": "RecipeStepCardComponent",
@@ -5351,6 +5365,13 @@
       "selector": "fd-recipe-steps-list",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-steps-list/recipe-steps-list.ts",
       "line": 38
+    },
+    {
+      "name": "RecipeVideoInputComponent",
+      "role": "Component",
+      "selector": "fd-recipe-video-input",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-video-input/recipe-video-input.ts",
+      "line": 11
     },
     {
       "name": "PublicRecipeCardComponent",
@@ -5463,6 +5484,20 @@
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/public-recipes.facade.ts",
       "line": 12
+    },
+    {
+      "name": "RecipeClipboardSuggestion",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-clipboard-suggestion.ts",
+      "line": 40
+    },
+    {
+      "name": "RecipeImportFacade",
+      "role": "Facade",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-import.facade.ts",
+      "line": 17
     },
     {
       "name": "RecipeListFacade",
@@ -6155,7 +6190,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/ai-food.service.ts",
-      "line": 18
+      "line": 19
     },
     {
       "name": "ExportService",
@@ -6443,6 +6478,13 @@
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/observability/client-telemetry-session.service.ts",
       "line": 10
+    },
+    {
+      "name": "BrowserClipboardService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/platform/browser-clipboard.service.ts",
+      "line": 5
     },
     {
       "name": "BrowserPerformanceService",
@@ -7129,8 +7171,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4050,
-      "russianProperties": 4050,
+      "englishProperties": 4077,
+      "russianProperties": 4077,
       "countsMatch": true
     },
     {

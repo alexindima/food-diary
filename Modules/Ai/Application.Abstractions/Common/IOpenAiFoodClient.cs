@@ -4,6 +4,15 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.Ai.Application.Abstractions.Common;
 
 public interface IOpenAiFoodClient {
+    Task<Result<OpenAiFoodClientResponse<string>>> TranscribeRecipeAudioAsync(
+        RecipeAudio audio, CancellationToken cancellationToken);
+
+    Task<Result<AiProviderTokenBudget>> GetRecipeImportTokenBudgetAsync(
+        string text, string? userLanguage, CancellationToken cancellationToken);
+
+    Task<Result<OpenAiFoodClientResponse<RecipeImportDraftModel>>> ImportRecipeAsync(
+        string text, string? userLanguage, CancellationToken cancellationToken);
+
     Task<Result<AiProviderTokenBudget>> GetAnalyzeFoodImageTokenBudgetAsync(
         string imageUrl,
         string? userLanguage,

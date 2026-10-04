@@ -15,6 +15,7 @@ using Polly.CircuitBreaker;
 namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
+[Collection("OpenAI provider")]
 public sealed class OpenAiFoodServiceTests {
     private const string IntegrationsMeterName = "FoodDiary.Integrations";
     private const string VisionPrompt = "Analyze image. {{languageHint}} {{descriptionHint}}";

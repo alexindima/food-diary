@@ -16,6 +16,22 @@ namespace FoodDiary.Presentation.Api.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class IdempotencyFilterTests {
     [Fact]
+    public async Task OnActionExecutionAsync_UploadHash_UsesFileContents() {
+        var store = new RecordingIdempotencyStore();
+        var filter = new IdempotencyFilter(store);
+        var hashes = new List<string?>();
+        foreach (byte value in new byte[] { 1, 1, 2 }) {
+            await using var stream = new MemoryStream([value]);
+            var file = new FormFile(stream, 0, 1, "video", "same.mp4");
+            DefaultHttpContext http = CreateHttpContext("POST", "/api/v1/video", "upload-key", "upload-user");
+            ActionExecutingContext context = CreateActionExecutingContext(http, new Dictionary<string, object?>(StringComparer.Ordinal) { ["video"] = file }, new EnableIdempotencyAttribute());
+            await filter.OnActionExecutionAsync(context, () => Task.FromResult(new ActionExecutedContext(context, [], new object()) { Result = new OkObjectResult(new { ok = true }) }));
+            hashes.Add(IdempotencyRequestContext.GetRequestHash(http));
+        }
+        Assert.Multiple(() => Assert.Equal(hashes[0], hashes[1], StringComparer.Ordinal), () => Assert.NotEqual(hashes[0], hashes[2], StringComparer.Ordinal));
+    }
+
+    [Fact]
     public async Task OnActionExecutionAsync_WithCompletedPostResponse_ReturnsCachedContent() {
         var store = new InMemoryIdempotencyStore(TimeProvider.System);
         var filter = new IdempotencyFilter(store);

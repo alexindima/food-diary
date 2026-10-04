@@ -16,7 +16,7 @@ using Polly.CircuitBreaker;
 
 namespace FoodDiary.Modules.Ai.Infrastructure.Providers.Services.OpenAi;
 
-public sealed class OpenAiFoodClient(
+public sealed partial class OpenAiFoodClient(
     HttpClient httpClient,
     IOptions<OpenAiOptions> options,
     ILogger<OpenAiFoodClient> logger,

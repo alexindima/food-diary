@@ -12,6 +12,7 @@ import type {
     FoodVisionResponse,
     UserAiUsageResponse,
 } from '../models/ai.data';
+import type { RecipeImportRequest, RecipeImportResult } from '../models/recipe-import.data';
 import { FoodRecognitionService } from './food-recognition.service';
 
 @Service()
@@ -19,6 +20,24 @@ export class AiFoodService {
     private readonly baseUrl = environment.apiUrls.ai;
     private readonly http = inject(HttpClient);
     private readonly recognition = inject(FoodRecognitionService);
+
+    public importRecipe(request: RecipeImportRequest): Observable<RecipeImportResult> {
+        return this.http.post<RecipeImportResult>(`${this.baseUrl}/food/recipe-import`, request, this.createIdempotencyOptions());
+    }
+
+    public importRecipeVideo(request: RecipeImportRequest, video: File | null): Observable<RecipeImportResult> {
+        const body = new FormData();
+        if (request.sourceUrl !== null) {
+            body.append('sourceUrl', request.sourceUrl);
+        }
+        if (request.text !== null) {
+            body.append('text', request.text);
+        }
+        if (video !== null) {
+            body.append('video', video);
+        }
+        return this.http.post<RecipeImportResult>(`${this.baseUrl}/food/recipe-import/video`, body, this.createIdempotencyOptions());
+    }
 
     public analyzeFoodImage(request: FoodVisionRequest): Observable<FoodVisionResponse> {
         return this.recognition.start(request);

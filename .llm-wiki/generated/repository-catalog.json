@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 294,
-    "documentationPages": 214
+    "documentationPages": 215
   },
   "dotnet": {
     "projects": [
@@ -1776,7 +1776,9 @@
           "Modules/Ai/Application.Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
           "Modules/Ai/Contracts/FoodDiary.Modules.Ai.Contracts.csproj",
           "Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj",
-          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj",
+          "Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
         "packageReferences": [
           {
@@ -1813,9 +1815,12 @@
         "isTestProject": true,
         "projectReferences": [
           "Modules/Ai/Application.Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
+          "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj",
           "Modules/Ai/Contracts/FoodDiary.Modules.Ai.Contracts.csproj",
           "Modules/Ai/Presentation/FoodDiary.Modules.Ai.Presentation.csproj",
-          "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj"
+          "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
+          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
         "packageReferences": [
           {
@@ -15742,6 +15747,7 @@
       "docs/adr/README.md",
       "docs/adr/template.md",
       "docs/ai/CODE_REVIEW.md",
+      "docs/ai/RECIPE_IMPORT.md",
       "docs/ai/STATISTICS_MODULE_EXTRACTION_WIKI_REPORT.md",
       "docs/ai/WEARABLES_WIKI_EVIDENCE_REPORT.md",
       "docs/ai/WEEKLY_CHECKIN_EXTRACTION_WIKI_EVALUATION.md",

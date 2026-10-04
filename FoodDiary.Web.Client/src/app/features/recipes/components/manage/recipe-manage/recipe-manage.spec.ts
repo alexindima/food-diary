@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -432,7 +433,7 @@ async function setupComponentAsync(overrides: Partial<RecipeManageFacadeMock> = 
 
     await TestBed.configureTestingModule({
         imports: [RecipeManageComponent],
-        providers: [provideRouter([]), provideTranslateTesting()],
+        providers: [provideRouter([]), provideTranslateTesting(), provideHttpClient()],
     })
         .overrideComponent(RecipeManageComponent, {
             remove: { providers: [RecipeManageFacade] },

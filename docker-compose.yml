@@ -235,7 +235,7 @@ services:
     volumes:
       - api-data-protection-keys:/var/lib/fooddiary/data-protection-keys
     tmpfs:
-      - /tmp:size=32m,mode=1777,nosuid,nodev
+      - /tmp:size=256m,mode=1777,nosuid,nodev
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5000/health/ready >/dev/null || exit 1"]
       interval: 180s

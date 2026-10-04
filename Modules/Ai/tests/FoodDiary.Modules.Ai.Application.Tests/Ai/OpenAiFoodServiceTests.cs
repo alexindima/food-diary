@@ -353,6 +353,15 @@ public sealed class OpenAiFoodServiceTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingOpenAiFoodClient : IOpenAiFoodClient {
+        public Task<Result<OpenAiFoodClientResponse<string>>> TranscribeRecipeAudioAsync(RecipeAudio audio, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<Result<AiProviderTokenBudget>> GetRecipeImportTokenBudgetAsync(string text, string? userLanguage, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<Result<OpenAiFoodClientResponse<RecipeImportDraftModel>>> ImportRecipeAsync(string text, string? userLanguage, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
         private static readonly AiProviderTokenBudget DefaultBudget = new(11, 4_096);
 
         public Result<AiProviderTokenBudget>? CalculateNutritionBudgetResult { get; init; }

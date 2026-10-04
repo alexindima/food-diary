@@ -1,0 +1,61 @@
+<div class="fd-stack fd-gap-md" [attr.aria-busy]="facade.busy()">
+    <fd-recipe-video-input
+        [enabled]="videoMode()"
+        [busy]="facade.busy()"
+        (enabledChanged)="setVideoMode($event)"
+        (fileSelected)="selectVideo($event)"
+    />
+    <fd-ui-checkbox
+        [checked]="clipboard.enabled()"
+        [label]="'RECIPE_MANAGE.IMPORT.CLIPBOARD_LABEL' | translate"
+        [hint]="'RECIPE_MANAGE.IMPORT.CLIPBOARD_HINT' | translate"
+        [disabled]="facade.busy()"
+        (checkedChange)="setClipboardEnabled($event)"
+    />
+    @if (clipboard.suggestion()) {
+        <div class="fd-ui-notice-surface fd-stack fd-gap-sm" role="status">
+            <p class="fd-ui-body-sm">{{ 'RECIPE_MANAGE.IMPORT.CLIPBOARD_FOUND' | translate }}</p>
+            <div class="fd-ui-actions">
+                <fd-ui-button
+                    type="button"
+                    [disabled]="facade.busy()"
+                    [disabledReason]="'RECIPE_MANAGE.IMPORT.RECOGNIZING' | translate"
+                    (click)="acceptSuggestion()"
+                >
+                    {{ 'RECIPE_MANAGE.IMPORT.USE_LINK' | translate }}
+                </fd-ui-button>
+                <fd-ui-button type="button" variant="secondary" fill="outline" (click)="clipboard.dismiss()">
+                    {{ 'RECIPE_MANAGE.IMPORT.DISMISS' | translate }}
+                </fd-ui-button>
+            </div>
+        </div>
+    }
+    @if (clipboard.unavailable()) {
+        <p class="fd-ui-body-sm" role="status">{{ 'RECIPE_MANAGE.IMPORT.CLIPBOARD_UNAVAILABLE' | translate }}</p>
+    }
+    <div class="fd-ui-actions">
+        <fd-ui-button
+            type="button"
+            variant="secondary"
+            fill="outline"
+            [disabled]="facade.busy()"
+            [disabledReason]="'RECIPE_MANAGE.IMPORT.RECOGNIZING' | translate"
+            (click)="pasteAsync()"
+        >
+            {{ 'RECIPE_MANAGE.IMPORT.PASTE_LINK' | translate }}
+        </fd-ui-button>
+        <fd-ui-button type="button" icon="auto_fix_high" [loading]="facade.busy()" (click)="recognizeAsync()">
+            {{ 'RECIPE_MANAGE.IMPORT.RECOGNIZE' | translate }}
+        </fd-ui-button>
+    </div>
+    @if (facade.errorKey()) {
+        <div class="fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm" role="alert">{{ facade.errorKey() | translate }}</div>
+    }
+    @if (reviewKeys().length > 0) {
+        <div class="fd-ui-notice-surface fd-stack fd-gap-sm" role="status">
+            @for (key of reviewKeys(); track key) {
+                <p class="fd-ui-body-sm">{{ key | translate }}</p>
+            }
+        </div>
+    }
+</div>

@@ -42,6 +42,28 @@ afterEach(() => {
 });
 
 describe('AiFoodService', () => {
+    it('sends video as multipart without forcing a JSON content type', () => {
+        const video = new File(['video'], 'recipe.mp4', { type: 'video/mp4' });
+        service.importRecipeVideo({ sourceUrl: null, text: 'caption' }, video).subscribe();
+        const request = httpMock.expectOne(`${BASE_URL}/food/recipe-import/video`);
+        const body = request.request.body as FormData;
+        expect(body.get('video')).toBe(video);
+        expect(body.get('text')).toBe('caption');
+        expect(body.has('sourceUrl')).toBe(false);
+        expect(request.request.headers.has('Content-Type')).toBe(false);
+        expect(request.request.headers.get('Idempotency-Key')).toBeTruthy();
+        request.flush({ name: 'Salad', ingredients: [], steps: [] });
+    });
+    it('uses the recipe draft endpoint and an idempotency key', () => {
+        const body = { sourceUrl: 'https://www.instagram.com/reel/example/', text: null };
+        service.importRecipe(body).subscribe();
+        const request = httpMock.expectOne(`${BASE_URL}/food/recipe-import`);
+        expect(request.request.method).toBe('POST');
+        expect(request.request.body).toEqual(body);
+        expect(request.request.headers.get('Idempotency-Key')).toBeTruthy();
+        request.flush({ name: 'Salad', ingredients: [], steps: [] });
+    });
+
     it('should be created', () => {
         expect(service).toBeTruthy();
     });

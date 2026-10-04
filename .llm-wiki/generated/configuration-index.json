@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "optionTypes": 64,
+    "optionTypes": 65,
     "configurationFiles": 8,
     "configurationKeys": 273,
     "environmentVariables": 188
@@ -545,6 +545,7 @@
         "ApiKey",
         "MaxOutputTokens",
         "TextModel",
+        "TranscriptionModel",
         "VisionFallbackModel",
         "VisionModel"
       ],
@@ -616,6 +617,14 @@
         "WebhookTimestampToleranceSeconds"
       ],
       "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs"
+    },
+    {
+      "type": "RecipeVideoOptions",
+      "section": "RecipeVideo",
+      "properties": [
+        "FfmpegPath"
+      ],
+      "path": "Modules/Ai/Infrastructure/Providers/Options/RecipeVideoOptions.cs"
     },
     {
       "type": "S3Options",

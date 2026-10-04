@@ -25,6 +25,7 @@ This directory contains long-form repository documentation. Keep root-level mark
 ## Backend Operations And Governance
 
 - `backend/AI_RECOGNITION_JOBS.md` - durable photo recognition, recovery, paid-call semantics, and rollout.
+- [Recipe import](ai/RECIPE_IMPORT.md) - importing public recipe links or captions into a reviewable draft and optional clipboard suggestions.
 - `backend/TELEGRAM_CLIENT_RUNBOOK.md` - Telegram client configuration, release order, key recovery and compatible rollback.
 - `backend/TELEGRAM_TEST_STAND.md` - isolated Telegram test environment configuration and pending live acceptance prerequisites.
 
