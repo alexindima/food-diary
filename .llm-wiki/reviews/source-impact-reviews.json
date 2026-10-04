@@ -840,13 +840,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "60ef9fa3ed936becec4fcee1dbc5de6b9e98105afbb42dfdd5eb6a0211a824ed"
+          "sha256": "7a543a7accecf71144f8952040de3a93a3a68a5237d79846d5948b71d53e7ca0"
         }
       ],
-      "reason": "Accessibility regressions are covered by locale-driven DOM tests; generated counts reflect added tests and do not change review procedure.",
+      "reason": "93 focused auth tests pass including server throttling network retry legacy migration and existing cross-tab stale-response coverage; generated risk metrics do not change review procedure.",
       "baseRef": "HEAD",
-      "gitHead": "b935b4741040b8f8d9d14748111a81f720580e19",
-      "reviewedAtUtc": "2026-10-04T15:40:17.0506166Z"
+      "gitHead": "2cf1e218ba426bd3a9b1f0c58b3b184968abfc84",
+      "reviewedAtUtc": "2026-10-04T15:48:34.8599871Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -930,13 +930,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "60ef9fa3ed936becec4fcee1dbc5de6b9e98105afbb42dfdd5eb6a0211a824ed"
+          "sha256": "7a543a7accecf71144f8952040de3a93a3a68a5237d79846d5948b71d53e7ca0"
         }
       ],
-      "reason": "The editor patch changes accessible labels only and does not change private data storage sharing logging or authorization.",
+      "reason": "Authoritative refresh rejection is HTTP 401. Temporary failures do not revoke cookies; legacy migration values stay only in transient service memory and clear on successful login refresh or logout; no token logs added.",
       "baseRef": "HEAD",
-      "gitHead": "b935b4741040b8f8d9d14748111a81f720580e19",
-      "reviewedAtUtc": "2026-10-04T15:40:18.1966755Z"
+      "gitHead": "2cf1e218ba426bd3a9b1f0c58b3b184968abfc84",
+      "reviewedAtUtc": "2026-10-04T15:48:37.1105699Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1073,17 +1073,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "bc245b2cecc4bd8f0d28ced928be45cb43dbfee3e11926ac401d6dba5afd94c3"
+          "sha256": "d4cdc8a14e547b8703d2a7efdcf74c753a743f9a08932a082b37974b0e84faad"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "c86542d3447a26e6ec5a5e8dc3723d7714493ab4a7a3de16197ac99113c930fe"
+          "sha256": "f0db457d51305a3e8bb31527034633a060eeefe0200232cfca7565b710ad65aa"
         }
       ],
-      "reason": "Generated frontend navigation reflects label fields and tests; flow ownership and trace tooling remain unchanged.",
+      "reason": "The existing AuthService and AuthInterceptor remain owners; routes API payloads backend contracts cross-tab locking and session version guards are retained.",
       "baseRef": "HEAD",
-      "gitHead": "b935b4741040b8f8d9d14748111a81f720580e19",
-      "reviewedAtUtc": "2026-10-04T15:40:19.4028928Z"
+      "gitHead": "2cf1e218ba426bd3a9b1f0c58b3b184968abfc84",
+      "reviewedAtUtc": "2026-10-04T15:48:39.1493084Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1171,13 +1171,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "bc245b2cecc4bd8f0d28ced928be45cb43dbfee3e11926ac401d6dba5afd94c3"
+          "sha256": "d4cdc8a14e547b8703d2a7efdcf74c753a743f9a08932a082b37974b0e84faad"
         }
       ],
-      "reason": "Existing editor gains native label associations and correct interpolation; inputs outputs and API consumers remain unchanged; 42 focused tests and Russian browser actions passed.",
+      "reason": "Auth refresh keeps its nullable contract; interceptor delegates invalidation to AuthService. Browser 503 then real 200 retry retains the account; terminal 401 triggers exactly one logout.",
       "baseRef": "HEAD",
-      "gitHead": "b935b4741040b8f8d9d14748111a81f720580e19",
-      "reviewedAtUtc": "2026-10-04T15:40:15.8182664Z"
+      "gitHead": "2cf1e218ba426bd3a9b1f0c58b3b184968abfc84",
+      "reviewedAtUtc": "2026-10-04T15:48:32.8483017Z"
     },
     {
       "pageId": "workflow.query-context",

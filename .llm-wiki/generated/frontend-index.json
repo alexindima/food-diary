@@ -6065,7 +6065,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 30
+      "line": 32
     },
     {
       "name": "GlobalErrorHandler",

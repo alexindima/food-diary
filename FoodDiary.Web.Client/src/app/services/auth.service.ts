@@ -1,3 +1,4 @@
+import { HttpStatusCode } from '@angular/common/http';
 import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
 import { catchError, defer, finalize, firstValueFrom, from, map, type Observable, of, shareReplay, tap } from 'rxjs';
 
@@ -14,6 +15,7 @@ import type { GoogleLoginRequest } from '../shared/auth/google-auth.data';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { fallbackApiError, rethrowApiError } from '../shared/lib/api-error.utils';
+import { getNumberProperty } from '../shared/lib/unknown-value.utils';
 import type { User } from '../shared/models/user.data';
 import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { ThemeService } from '../shared/theme/theme.service';
@@ -43,6 +45,7 @@ export class AuthService extends ApiService {
     private readonly emailConfirmedSignal = signal<boolean | null>(this.tokenStorage.loadEmailConfirmed());
     private readonly mustChangePasswordSignal = signal<boolean>(this.tokenStorage.loadMustChangePassword() ?? false);
     private refreshInFlight$: Observable<string | null> | null = null;
+    private pendingLegacyRefreshToken: string | null = null;
     private sessionRestorePromise: Promise<void> | null = null;
     private readonly authReadySignal = signal(false);
     private sessionVersion = 0;
@@ -274,7 +277,11 @@ export class AuthService extends ApiService {
             return null;
         }
 
-        const legacyRefreshToken = this.tokenStorage.consumeLegacyRefreshToken();
+        this.pendingLegacyRefreshToken ??= this.tokenStorage.consumeLegacyRefreshToken();
+        const legacyRefreshToken = this.pendingLegacyRefreshToken;
+        if (legacyRefreshToken !== null) {
+            this.tokenStorage.markRefreshSession();
+        }
         const request = legacyRefreshToken === null ? {} : { refreshToken: legacyRefreshToken };
         return firstValueFrom(
             this.post<AuthResponse>('refresh', request).pipe(
@@ -289,7 +296,7 @@ export class AuthService extends ApiService {
                     return accessToken;
                 }),
                 catchError((error: unknown) => {
-                    if (refreshVersion === this.sessionVersion) {
+                    if (refreshVersion === this.sessionVersion && getNumberProperty(error, 'status') === HttpStatusCode.Unauthorized) {
                         void this.onLogoutAsync(true);
                     }
                     return fallbackApiError('refreshToken error', error, null);
@@ -300,8 +307,10 @@ export class AuthService extends ApiService {
 
     public async onLogoutAsync(redirectToAuth = false): Promise<void> {
         this.sessionVersion++;
-        if (this.tokenStorage.hasRefreshSession()) {
-            const legacyRefreshToken = this.tokenStorage.consumeLegacyRefreshToken();
+        const hasRefreshSession = this.tokenStorage.hasRefreshSession();
+        const legacyRefreshToken = this.pendingLegacyRefreshToken ?? this.tokenStorage.consumeLegacyRefreshToken();
+        this.pendingLegacyRefreshToken = null;
+        if (hasRefreshSession) {
             const request = legacyRefreshToken === null ? {} : { refreshToken: legacyRefreshToken };
             await firstValueFrom(this.post<void>('logout', request).pipe(catchError(() => of(undefined))));
         }
@@ -354,6 +363,7 @@ export class AuthService extends ApiService {
     }
 
     private applyAuthenticatedSession(authResponse: AuthResponse, rememberMe?: boolean): void {
+        this.pendingLegacyRefreshToken = null;
         this.tokenStorage.setToken(authResponse.accessToken, rememberMe);
         this.tokenStorage.markRefreshSession();
         this.authTokenSignal.set(authResponse.accessToken);
