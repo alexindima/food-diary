@@ -1104,7 +1104,11 @@
         "ITEMS_ONE": "item",
         "ITEMS_FEW": "items",
         "ITEMS_MANY": "items",
-        "ITEMS_OTHER": "items"
+        "ITEMS_OTHER": "items",
+        "SERVINGS_ONE": "serving",
+        "SERVINGS_FEW": "servings",
+        "SERVINGS_MANY": "servings",
+        "SERVINGS_OTHER": "servings"
     },
     "ADMIN_BILLING": {
         "SUMMARY_ERROR": "Unable to load the billing summary. Refresh to retry.",

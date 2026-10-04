@@ -9,7 +9,10 @@
                         <div class="meal-plan-meal__recipe fd-ui-helper-strong">{{ meal.recipeName ?? meal.recipeId }}</div>
                         <div class="meal-plan-meal__nutrition fd-row fd-gap-xs fd-ui-caption-strong">
                             @for (item of meal.nutritionItems; track item.prefix) {
-                                <span>{{ item.prefix }}{{ item.value | localizedNumber: language() }} {{ item.unitKey | translate }}</span>
+                                <span>
+                                    {{ item.prefix | translate }} {{ item.value | localizedNumber: language() }}
+                                    {{ item.unitKey | translate }}
+                                </span>
                             }
                         </div>
                     </div>

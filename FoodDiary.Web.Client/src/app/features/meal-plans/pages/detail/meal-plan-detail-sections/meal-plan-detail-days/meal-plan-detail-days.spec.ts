@@ -21,7 +21,7 @@ describe('MealPlanDetailDaysComponent', () => {
 
         expect(textContent).toContain('Omelette');
         expect(textContent).toContain('450');
-        expect(textContent).toContain('P:');
+        expect(textContent).toContain('GENERAL.NUTRIENTS.PROTEIN');
     });
 
     it('updates large nutrient values when the language changes', () => {
@@ -67,7 +67,7 @@ function createDay(): MealPlanDayViewModel {
                 mealTypeKey: 'MEAL_PLANS.MEAL_TYPE.BREAKFAST',
                 nutritionItems: [
                     { unitKey: 'GENERAL.UNITS.KCAL', value: 450, prefix: '' },
-                    { unitKey: 'GENERAL.UNITS.G', value: 30, prefix: 'P: ' },
+                    { unitKey: 'GENERAL.UNITS.G', value: 30, prefix: 'GENERAL.NUTRIENTS.PROTEIN' },
                 ],
             },
         ],

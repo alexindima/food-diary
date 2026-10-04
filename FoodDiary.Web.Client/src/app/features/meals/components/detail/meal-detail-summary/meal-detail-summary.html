@@ -5,7 +5,9 @@
 />
 
 <section class="meal-detail__overview fd-stack fd-gap-sm">
-    <strong class="meal-detail__hero-value">{{ calories() | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</strong>
+    <strong class="meal-detail__hero-value">
+        {{ calories() | localizedNumber: translateService.currentLang() ?? 'en' }} {{ 'GENERAL.UNITS.KCAL' | translate }}
+    </strong>
     <dl class="meal-detail__macro-summary">
         @for (macro of macroSummaryBlocks(); track macro.labelKey) {
             <div>
@@ -13,7 +15,7 @@
                     <span class="meal-detail__nutrient-dot" aria-hidden="true" [style.background]="macro.color"></span
                     >{{ macro.labelKey | translate }}
                 </dt>
-                <dd>{{ macro.value | number: '1.0-1' }} {{ macro.unitKey | translate }}</dd>
+                <dd>{{ macro.value | localizedNumber: translateService.currentLang() ?? 'en' : 0 : 1 }} {{ macro.unitKey | translate }}</dd>
             </div>
         }
     </dl>
