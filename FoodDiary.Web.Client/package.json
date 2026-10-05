@@ -116,7 +116,7 @@
         "baseline-browser-mapping": "^2.11.27",
         "chrome-launcher": "^1.2.1",
         "concurrently": "^10.0.5",
-        "dependency-cruiser": "^18.2.0",
+        "dependency-cruiser": "^18.5.0",
         "eslint": "^10.11.0",
         "eslint-config-prettier": "^10.1.8",
         "eslint-import-resolver-typescript": "^4.4.5",
