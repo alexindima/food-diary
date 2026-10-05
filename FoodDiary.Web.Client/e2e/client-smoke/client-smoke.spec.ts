@@ -616,7 +616,8 @@ test.describe('deterministic authenticated feature fixtures', () => {
         await page.goto('/meal-plans/plan-1');
 
         await expect(page).toHaveURL(/\/meal-plans\/plan-1$/);
-        await expect(page.getByRole('heading', { name: 'Balanced week', level: 1 })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Meal Plans', level: 1 })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Balanced week', level: 2 })).toBeVisible();
         await expect(page.getByText('Greek yogurt breakfast')).toBeVisible();
         await expect(page.getByRole('button', { name: /Generate shopping list/ })).toBeVisible();
     });
