@@ -248,10 +248,16 @@ function Wait-SmokeBatch([string[]]$BatchGroups, [int]$Concurrency) {
             $running.Remove($item) | Out-Null
             Remove-Item -LiteralPath $item.ArgumentsPath -Force -ErrorAction SilentlyContinue
             if ($exitCode -ne 0) {
+                # Transcripts can omit native child output. Preserve both complete
+                # streams before producing the bounded console tail.
+                $stdoutPath = Join-Path $runRoot "$($item.Group).stdout.log"
+                $stderrPath = Join-Path $runRoot "$($item.Group).stderr.log"
+                [IO.File]::WriteAllText($stdoutPath, $standardOutput, [Text.UTF8Encoding]::new($false))
+                [IO.File]::WriteAllText($stderrPath, $standardError, [Text.UTF8Encoding]::new($false))
                 $tail = @(($standardOutput + [Environment]::NewLine + $standardError) -split '\r?\n' | Where-Object { $_ } | Select-Object -Last 12)
-                $failureMessage = "Focused smoke group '$($item.Group)' failed after ${duration}s. Log: $($item.LogPath)`n$($tail -join [Environment]::NewLine)"
+                $failureMessage = "Focused smoke group '$($item.Group)' failed after ${duration}s. Log: $($item.LogPath). Full stdout: $stdoutPath; stderr: $stderrPath`n$($tail -join [Environment]::NewLine)"
                 if ($CollectFailures) {
-                    $groupFailures.Add([pscustomobject]@{ group = $item.Group; exitCode = $exitCode; logPath = $item.LogPath })
+                    $groupFailures.Add([pscustomobject]@{ group = $item.Group; exitCode = $exitCode; logPath = $item.LogPath; stdoutPath = $stdoutPath; stderrPath = $stderrPath })
                     Write-Warning $failureMessage
                     continue
                 }

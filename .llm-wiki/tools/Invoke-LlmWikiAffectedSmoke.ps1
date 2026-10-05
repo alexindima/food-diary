@@ -364,6 +364,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiContextRanking.ps1')
             if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiContextOperations.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiContextCache.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiWorkflowRecovery.ps1')

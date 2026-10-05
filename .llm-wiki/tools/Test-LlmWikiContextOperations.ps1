@@ -13,6 +13,13 @@ Assert-ContextOperation (@($explanation.candidates[0].reasons).Count -gt 0) 'Con
 $policy = & (Join-Path $PSScriptRoot 'Test-LlmWikiContextRankingPolicy.ps1') -Format Json | ConvertFrom-Json
 Assert-ContextOperation $policy.valid 'Context ranking policy governance is invalid.'
 Assert-ContextOperation ($policy.counts.normalization -le 400 -and $policy.counts.ranking -le 400) 'Context ranking staged budgets are not enforced.'
+$rankingPolicy = Get-Content (Join-Path $repositoryRoot '.llm-wiki/policies/context-search-ranking.json') -Raw | ConvertFrom-Json
+$nonContextRuleCount = @($rankingPolicy.queryTermExpansions.PSObject.Properties).Count + @($rankingPolicy.queryPrefixExpansions.PSObject.Properties).Count
+$boundedPolicy = & (Join-Path $PSScriptRoot 'Test-LlmWikiContextRankingPolicy.ps1') -MaximumNormalizationRules $nonContextRuleCount -Format Json | ConvertFrom-Json
+Assert-ContextOperation (-not $boundedPolicy.valid -and @($boundedPolicy.issues | Where-Object { $_ -like 'normalization=*' }).Count -eq 1) 'Contextual expansions were omitted from the normalization limit.'
+$combinedLimit = $nonContextRuleCount + [int]$policy.counts.ranking
+$boundedCombinedPolicy = & (Join-Path $PSScriptRoot 'Test-LlmWikiContextRankingPolicy.ps1') -MaximumCombinedRules $combinedLimit -Format Json | ConvertFrom-Json
+Assert-ContextOperation (-not $boundedCombinedPolicy.valid -and @($boundedCombinedPolicy.issues | Where-Object { $_ -like 'combined=*' }).Count -eq 1) 'Contextual expansions were omitted from the combined-rule limit.'
 $draftPath = Join-Path $repositoryRoot '.artifacts/llm-wiki/tests/context-unseen-draft.json'
 $draft = & (Join-Path $PSScriptRoot 'New-LlmWikiUnseenContextCorpus.ps1') -Count 20 -OutputPath $draftPath -Force -Format Json | ConvertFrom-Json
 Assert-ContextOperation ($draft.targetCount -eq 20) 'Unseen corpus draft did not select the requested number of targets.'

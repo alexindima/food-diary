@@ -875,13 +875,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "07570db9af04daabf76c2ff8ab73cc483ce0b57cb8b415ddb8dc7a44bd0e93c4"
+          "sha256": "6bcde3e60de814dabfb71b8adc0cf4eafb93af74b0954644229b308e68b39842"
         }
       ],
-      "reason": "Reviewed regenerated quality index: one shared Wiki helper was added with test references, and only changed Wiki structural metrics/references shifted. Product critical symbols without test references remain 47.",
+      "reason": "Reviewed final generated Wiki-only structural metrics and test-reference changes, including complete worker failure logging. Quality-index production ownership, reference semantics and the 47 reference gaps remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5ea8b67a503668422970de6d79c91c886def38f0",
-      "reviewedAtUtc": "2026-10-05T10:50:28.6163701Z"
+      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
+      "reviewedAtUtc": "2026-10-05T13:33:00.3631148Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -977,13 +977,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "07570db9af04daabf76c2ff8ab73cc483ce0b57cb8b415ddb8dc7a44bd0e93c4"
+          "sha256": "6bcde3e60de814dabfb71b8adc0cf4eafb93af74b0954644229b308e68b39842"
+        },
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "97c0546251cd15ba3da3982fc87aa3d4cb1d1ab035ad9acba2dee5b48387ef71"
         }
       ],
-      "reason": "Reviewed quality-index delta and source inventory helper: changes concern repository source enumeration and query timing. Hidden files and directory links retain prior selection behavior; no persistent timestamp freshness cache or provider/data-sharing change was introduced.",
+      "reason": "Reviewed final shared ranking policy and Wiki-only quality metrics. Recovery/parsing normalization and JWT-context terms affect navigation; source authority, freshness, ambiguity and security-evidence limits remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5ea8b67a503668422970de6d79c91c886def38f0",
-      "reviewedAtUtc": "2026-10-05T10:50:29.8161580Z"
+      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
+      "reviewedAtUtc": "2026-10-05T13:33:01.3534280Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

@@ -38,4 +38,32 @@ if ($context.compiledIndex.source -ne 'sqlite-search' -or -not $context.compiled
     throw 'SQLite context lost scope, freshness or non-negative query and transport timings.'
 }
 
-Write-Host 'LLM Wiki SQLite context ranking passed: exact identity, scope and independently retrieved focused tests.'
+$repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+$graphStatus = & $manager status -SkipRefresh -Format Json | ConvertFrom-Json
+$normalizationCases = @(
+    @{ query = 'Где клиент разбирает JWT и извлекает срок истечения токена?'; path = 'FoodDiary.Web.Client/src/app/services/jwt-decoder.service.ts' },
+    @{ query = 'Как клиент выполняет разбор JWT и узнаёт когда токен истекает?'; path = 'FoodDiary.Web.Client/src/app/services/jwt-decoder.service.ts' },
+    @{ query = 'Где браузер перезагружается после ошибки восстановления версии приложения?'; path = 'FoodDiary.Web.Client/src/app/shared/service-worker/app-version-recovery.service.ts' },
+    @{ query = 'Где браузер восстанавливает версию приложения через перезагрузку?'; path = 'FoodDiary.Web.Client/src/app/shared/service-worker/app-version-recovery.service.ts' },
+    @{ query = 'Where does the client parse JWT payload expiration?'; path = 'FoodDiary.Web.Client/src/app/services/jwt-decoder.service.ts' },
+    @{ query = 'Где клиент разбирает настройки версии приложения?'; path = $null }
+)
+foreach ($case in $normalizationCases) {
+    $nodeResult = & $manager search -Query $case.query -Limit 10 -SkipRefresh -Format Json | ConvertFrom-Json
+    $readerResult = [LlmWiki.SqliteReader.ContextSearchReader]::Search(
+        $repositoryRoot, $case.query, 10, 'Any', '', [string[]]@(), [string]$graphStatus.currentChangeSetFingerprint
+    ) | ConvertFrom-Json
+    if (-not $nodeResult.ready -or -not $readerResult.ready -or
+        (@($readerResult.queryTerms) -join "`0") -cne (@($nodeResult.queryTerms) -join "`0") -or
+        (@($readerResult.records.path) -join "`0") -cne (@($nodeResult.records.path) -join "`0")) {
+        throw "Conversational normalization changed Node/SQLite reader parity: $($case.query)"
+    }
+    if ($case.path -and @($readerResult.records | Where-Object { $_.path -ceq $case.path -and $_.rank -le 5 }).Count -ne 1) {
+        throw "Conversational normalization lost the implementation owner: $($case.query)"
+    }
+    if (-not $case.path -and @($readerResult.queryTerms | Where-Object { $_ -in @('decode', 'decoder', 'payload') }).Count -gt 0) {
+        throw 'Ordinary parsing incorrectly acquired JWT decoding context.'
+    }
+}
+
+Write-Host 'LLM Wiki SQLite context ranking passed: exact identity, scope, focused tests and contextual normalization with reader parity.'

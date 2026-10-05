@@ -19,7 +19,8 @@ $policyPath = Join-Path $repositoryRoot '.llm-wiki/policies/context-search-ranki
 $policy = Get-Content -LiteralPath $policyPath -Raw | ConvertFrom-Json
 function Get-Counts($Policy) {
     [pscustomobject][ordered]@{
-        normalization = @($Policy.queryTermExpansions.PSObject.Properties).Count + @($Policy.queryPrefixExpansions.PSObject.Properties).Count
+        normalization = @($Policy.queryTermExpansions.PSObject.Properties).Count +
+            @($Policy.queryPrefixExpansions.PSObject.Properties).Count + @($Policy.queryContextExpansions).Count
         ranking = @($Policy.pathBoosts).Count + @($Policy.identityBoosts).Count + @($Policy.structuralRoleBoosts).Count
     }
 }

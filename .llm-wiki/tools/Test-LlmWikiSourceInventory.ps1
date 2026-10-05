@@ -44,6 +44,8 @@ try {
     }
     Write-InventoryFixture (Join-Path $fixtureRepository 'node_modules/ExcludedConfiguration.cs') 'runtime includes this tree'
     Write-InventoryFixture (Join-Path $fixtureRepository 'docker-compose.yml') "services:`r`n"
+    Write-InventoryFixture (Join-Path $fixtureRepository 'Modules/файл с пробелом.cs') "// Кириллица 😀`rclass Unicode {}`r`n"
+    Write-InventoryFixture (Join-Path $fixtureRepository 'Empty.cs') ''
     $hiddenFile = Join-Path $fixtureRepository '.hidden.cs'
     Write-InventoryFixture $hiddenFile 'hidden'
     if ([IO.Path]::DirectorySeparatorChar -eq '\') {
@@ -77,6 +79,16 @@ try {
     }
     $before = Get-LlmWikiRuntimeTopologyFingerprint -RepositoryRoot $fixtureRepository
     if ($before.sourceFingerprint -cne (Get-ReferenceRuntimeFingerprint)) { throw 'Runtime fingerprint changed from the original normalized-content contract.' }
+    $hasher = [Security.Cryptography.SHA256]::Create()
+    try {
+        foreach ($content in @('', "Кириллица 😀`r`nline`rnext", 'second hash')) {
+            $expectedHash = Get-LlmWikiNormalizedContentHash -Content $content
+            $reusedHash = Get-LlmWikiNormalizedContentHash -Content $content -Hasher $hasher
+            if ($reusedHash -cne $expectedHash) { throw 'Shared SHA256 changed the normalized-content hash.' }
+        }
+        # The caller owns a supplied hasher; the helper must leave it usable.
+        $null = $hasher.ComputeHash([byte[]]@())
+    } finally { $hasher.Dispose() }
     $source = Join-Path $fixtureRepository 'Root.cs'
     $timestamp = [IO.File]::GetLastWriteTimeUtc($source)
     Write-InventoryFixture $source "public class Bravo {}`r`n"

@@ -37,6 +37,8 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiTaskBriefQueries.ps1
   - .llm-wiki/tools/Test-LlmWikiBackendContractQueries.ps1
   - .llm-wiki/tools/Test-LlmWikiContextRanking.ps1
+  - .llm-wiki/tools/Test-LlmWikiContextRankingPolicy.ps1
+  - .llm-wiki/tools/Test-LlmWikiContextOperations.ps1
   - .llm-wiki/policies/context-search-ranking.json
   - .llm-wiki/evals/context-search.json
   - .llm-wiki/evals/context-search-holdout.json
@@ -88,6 +90,15 @@ record counts. The regression compares full and incremental rows and FTS scores,
 including interrupted writes and retry.
 
 CLI context ranking and MCP use the same `SqliteContextSearchReader.cs`, linked into the existing CLI reader project. Node remains the sole writer and the comparison reader for frozen evaluation/parity. Explicit guidance intent recalls long guides by named subjects in their body through a bounded pool. A query requesting both client and server parts reports `multi-layer-request` with low confidence.
+
+Russian recovery and parsing inflections expand through shared policy prefixes.
+Parsing acquires decoding/payload terms only when JWT is also present;
+ordinary parsing keeps its own context. Conversational regressions verify unseen
+inflections against both readers, alongside the unchanged frozen retrieval corpora
+and quality thresholds. Policy governance counts contextual expansions in the
+same normalization and combined-rule budgets as the full retrieval gate.
+The focused context-retrieval group includes these governance checks; changes to
+their tools select both retrieval groups.
 
 Adjacent subject words also receive bounded conjunctive identity recall. That pool keeps one representative per path before applying its limit, so duplicate projections cannot crowd out another file. Newly recalled paths are appended without changing existing candidate order or scores.
 

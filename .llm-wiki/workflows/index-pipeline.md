@@ -100,13 +100,22 @@ Generators refill free worker slots within each dependency stage rather than wai
 
 A complete `-Check` records the generation receipt. Only a successful `verify-full` records full verification after that generation still matches the source and index fingerprints and the facade's failure-registry, change-policy, and source-impact gates have passed. The inner regression runner does not publish full verification by itself. `verify-full -MaxConcurrency 2` bounds outer generator and regression group workers; nested runners retain their own limits. Affected verification cannot promote its scoped success to the full status. Dirty snapshot guards compare content hashes, and cached clones mutated by a read command are discarded.
 
+Failed focused workers retain complete stdout and stderr beside the stage
+transcript as `<group>.stdout.log` and `<group>.stderr.log`. The console still
+prints a bounded tail; collected failure records link all three logs. Native
+compiler/process errors remain available even when PowerShell transcription
+omits them.
+
 Runtime topology and persistence-configuration inventories prune their existing
 excluded directories before recursion, preserving visible untracked sources and
 the default exclusion of hidden files and directory links. The runtime generator
 computes its content fingerprint from the same normalized text it parses, and
 domain/data reads each candidate configuration once. Runtime queries independently
 enumerate and hash current sources on every call, including equal-size edits with
-preserved timestamps. Their complete-command timer includes source verification;
+preserved timestamps. Freshness uses filesystem leaf checks and one request-local
+SHA256 instance; it retains CRLF/lone-CR normalization, sorted path material and
+full content reads without a persistent timestamp cache. Their complete-command
+timer includes source verification;
 SQL and reader-load durations remain separate.
 
 Module source areas come from the Git-visible file inventory. Empty legacy

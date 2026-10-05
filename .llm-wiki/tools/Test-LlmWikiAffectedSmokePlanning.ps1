@@ -44,7 +44,7 @@ foreach ($retired in @('Test-LlmWikiModelRoutingItemIds', 'Test-LlmWikiVerificat
 if (@(Get-Groups '.llm-wiki/tools/Test-LlmWikiModulePersistencePolicy.ps1') -notcontains 'change-policy') { throw 'Module persistence policy regression is no longer selected by its owning group.' }
 $gitPathGroups = @(Get-Groups '.llm-wiki/tools/LlmWikiGitPaths.ps1')
 if ($gitPathGroups -notcontains 'git-paths' -or $gitPathGroups -notcontains 'api-compatibility') { throw 'Git path changes must retain API baseline selection regressions.' }
-foreach ($poolTool in @('LlmWikiCorpusEvaluation', 'Test-LlmWikiCorpusEvaluation')) {
+foreach ($poolTool in @('LlmWikiCorpusEvaluation', 'Test-LlmWikiCorpusEvaluation', 'Test-LlmWikiContextOperations', 'Test-LlmWikiContextRankingPolicy')) {
     $poolGroups = @(Get-Groups ".llm-wiki/tools/$poolTool.ps1")
     if ($poolGroups -notcontains 'context-search-evals' -or $poolGroups -notcontains 'context-retrieval' -or $poolGroups -contains 'tool-contract') {
         throw 'Corpus pool changes must select the existing complete context regression groups.'
@@ -233,6 +233,9 @@ $group = [string]$arguments.RequestedGroup[0]
 [IO.File]::WriteAllText($LogPath, "Executed fixture group: $group")
 if ($group -eq 'first' -and (Test-Path -LiteralPath (Join-Path $fixtureRoot 'fail-first'))) {
     Write-Output 'Expected fixture worker failure.'
+    [Console]::Error.WriteLine('Early native stderr: причина сбоя.')
+    foreach ($line in 1..20) { Write-Output "Later stdout line $line" }
+    foreach ($line in 1..20) { [Console]::Error.WriteLine("Later stderr line $line") }
     exit 7
 }
 exit 0
@@ -260,6 +263,18 @@ exit 0
             }
             $failedTiming = @($timing.groups | Where-Object group -eq 'first')
             if ($failedTiming.Count -ne 1 -or $failedTiming[0].exitCode -ne 7) { throw 'Worker exit code was lost from failure timings.' }
+            $diagnosticRoot = $timingFiles[0].FullName -replace '\.timings\.json$', ''
+            $stdoutPath = Join-Path $diagnosticRoot 'first.stdout.log'
+            $stderrPath = Join-Path $diagnosticRoot 'first.stderr.log'
+            if (-not (Test-Path -LiteralPath $stdoutPath) -or -not (Test-Path -LiteralPath $stderrPath) -or
+                [IO.File]::ReadAllText($stdoutPath) -notmatch 'Expected fixture worker failure\.' -or
+                [IO.File]::ReadAllText($stderrPath) -notmatch 'Early native stderr: причина сбоя\.' -or
+                [IO.File]::ReadAllText($stderrPath) -notmatch 'Later stderr line 20') {
+                throw 'Failure diagnostics lost early native output outside the console tail.'
+            }
+            if ($mode -eq 'collect' -and ($timing.failures[0].stdoutPath -cne $stdoutPath -or $timing.failures[0].stderrPath -cne $stderrPath)) {
+                throw 'Collected failure omitted complete stream locations.'
+            }
             if ($mode -eq 'collect' -and (@($timing.failures).Count -ne 1 -or -not (Test-Path -LiteralPath $timing.failures[0].logPath))) {
                 throw 'Diagnostic smoke did not preserve its failure record and log.'
             }

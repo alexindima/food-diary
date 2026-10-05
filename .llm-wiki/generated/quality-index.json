@@ -56,11 +56,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-      "nonBlankLines": 435,
-      "decisionPoints": 132,
+      "nonBlankLines": 437,
+      "decisionPoints": 133,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 208.7
+      "structuralRiskScore": 210.24
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
@@ -712,11 +712,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
-      "nonBlankLines": 326,
+      "nonBlankLines": 332,
       "decisionPoints": 53,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 88.02
+      "structuralRiskScore": 88.14
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.ts",
@@ -1506,11 +1506,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-      "nonBlankLines": 435,
-      "decisionPoints": 132,
+      "nonBlankLines": 437,
+      "decisionPoints": 133,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 208.7
+      "structuralRiskScore": 210.24
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiContractReferenceExtractor.ps1",
@@ -1578,11 +1578,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
-      "nonBlankLines": 326,
+      "nonBlankLines": 332,
       "decisionPoints": 53,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 88.02
+      "structuralRiskScore": 88.14
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
@@ -1818,11 +1818,11 @@
     },
     {
       "path": ".llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1",
-      "nonBlankLines": 58,
-      "decisionPoints": 3,
+      "nonBlankLines": 68,
+      "decisionPoints": 8,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.66
+      "structuralRiskScore": 15.36
     },
     {
       "path": ".llm-wiki/tools/LlmWikiSmokeSandbox.ps1",

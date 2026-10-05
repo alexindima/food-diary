@@ -12,13 +12,17 @@ function Get-LlmWikiRuntimeTopologySourceFiles {
 }
 
 function Get-LlmWikiNormalizedContentHash {
-    param([AllowEmptyString()][string]$Content)
+    param(
+        [AllowEmptyString()][string]$Content,
+        [Security.Cryptography.SHA256]$Hasher
+    )
 
     $normalized = $Content.Replace("`r`n", "`n").Replace("`r", "`n")
-    $hasher = [Security.Cryptography.SHA256]::Create()
+    $ownsHasher = $null -eq $Hasher
+    if ($ownsHasher) { $Hasher = [Security.Cryptography.SHA256]::Create() }
     try {
-        return ([BitConverter]::ToString($hasher.ComputeHash([Text.Encoding]::UTF8.GetBytes($normalized))) -replace '-', '').ToLowerInvariant()
-    } finally { $hasher.Dispose() }
+        return [BitConverter]::ToString($Hasher.ComputeHash([Text.Encoding]::UTF8.GetBytes($normalized))).Replace('-', '').ToLowerInvariant()
+    } finally { if ($ownsHasher) { $Hasher.Dispose() } }
 }
 
 function Get-LlmWikiRuntimeTopologyFingerprint {
@@ -32,14 +36,19 @@ function Get-LlmWikiRuntimeTopologyFingerprint {
     # no timestamp cache can conceal an equal-size, equal-time content edit.
     if (-not $PSBoundParameters.ContainsKey('SourceHashes')) {
         $SourceHashes = [Collections.Generic.Dictionary[string, string]]::new([StringComparer]::Ordinal)
-        $paths = @(
-            @(Join-Path $RepositoryRoot 'docker-compose.yml') +
-            @(Get-LlmWikiRuntimeTopologySourceFiles -RepositoryRoot $RepositoryRoot | ForEach-Object FullName) |
-            Where-Object { Test-Path -LiteralPath $_ -PathType Leaf }
-        )
-        foreach ($path in $paths) {
-            $SourceHashes[$path] = Get-LlmWikiNormalizedContentHash -Content ([IO.File]::ReadAllText($path))
-        }
+        $hasher = [Security.Cryptography.SHA256]::Create()
+        try {
+            $paths = @(
+                @(Join-Path $RepositoryRoot 'docker-compose.yml') +
+                @(Get-LlmWikiRuntimeTopologySourceFiles -RepositoryRoot $RepositoryRoot | ForEach-Object FullName)
+            )
+            foreach ($path in $paths) {
+                # Filesystem leaf checks avoid invoking a PowerShell provider for
+                # every source, while retaining missing-file behavior.
+                if (-not [IO.File]::Exists($path)) { continue }
+                $SourceHashes[$path] = Get-LlmWikiNormalizedContentHash -Content ([IO.File]::ReadAllText($path)) -Hasher $hasher
+            }
+        } finally { $hasher.Dispose() }
     }
 
     $sourcePaths = @(
@@ -47,15 +56,16 @@ function Get-LlmWikiRuntimeTopologyFingerprint {
         Sort-Object { $_.ToLowerInvariant() } -Unique
     )
     $material = [Text.StringBuilder]::new()
+    $rootPrefixLength = [IO.Path]::GetFullPath($RepositoryRoot).TrimEnd('\', '/').Length + 1
     foreach ($path in $sourcePaths) {
         $hash = $SourceHashes[$path]
-        $relativePath = [IO.Path]::GetFullPath($path).Substring([IO.Path]::GetFullPath($RepositoryRoot).TrimEnd('\', '/').Length + 1).Replace('\', '/')
+        $relativePath = [IO.Path]::GetFullPath($path).Substring($rootPrefixLength).Replace('\', '/')
         $null = $material.Append($relativePath).Append('=').Append($hash).Append("`n")
     }
 
     $hasher = [Security.Cryptography.SHA256]::Create()
     try {
-        $fingerprint = ([BitConverter]::ToString($hasher.ComputeHash([Text.Encoding]::UTF8.GetBytes($material.ToString()))) -replace '-', '').ToLowerInvariant()
+        $fingerprint = [BitConverter]::ToString($hasher.ComputeHash([Text.Encoding]::UTF8.GetBytes($material.ToString()))).Replace('-', '').ToLowerInvariant()
     } finally {
         $hasher.Dispose()
     }
