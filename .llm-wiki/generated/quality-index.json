@@ -12290,11 +12290,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-import.facade.ts",
-      "nonBlankLines": 116,
-      "decisionPoints": 24,
+      "nonBlankLines": 121,
+      "decisionPoints": 25,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 38.32
+      "structuralRiskScore": 39.92
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-language.utils.ts",
@@ -18322,11 +18322,11 @@
     },
     {
       "path": "Modules/Ai/Application/Services/OpenAiFoodService.RecipeVideoImport.cs",
-      "nonBlankLines": 51,
+      "nonBlankLines": 52,
       "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.02
+      "structuralRiskScore": 16.04
     },
     {
       "path": "Modules/Ai/Application/Services/OpenAiFoodService.cs",

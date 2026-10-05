@@ -106,8 +106,13 @@ function videoInputError(sourceUrl: string, text: string, video: File | null): s
 function recipeImportErrorKey(error: unknown): string {
     if (error instanceof HttpErrorResponse) {
         const body: unknown = error.error;
-        if (typeof body === 'object' && body !== null && 'error' in body && body.error === 'Ai.VideoBusy') {
-            return 'RECIPE_MANAGE.IMPORT.VIDEO_BUSY';
+        if (typeof body === 'object' && body !== null && 'error' in body) {
+            if (body.error === 'Ai.InvalidRecipeVideo') {
+                return 'RECIPE_MANAGE.IMPORT.VIDEO_INVALID';
+            }
+            if (body.error === 'Ai.VideoBusy') {
+                return 'RECIPE_MANAGE.IMPORT.VIDEO_BUSY';
+            }
         }
         const key = recipeImportHttpErrors[String(error.status)];
         if (key !== undefined) {

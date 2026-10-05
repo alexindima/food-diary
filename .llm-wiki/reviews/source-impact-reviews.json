@@ -230,13 +230,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "8b77a18aa232bc55d6be369bdd6e223695da7638bda63ff1f866ab544749795b"
+          "sha256": "679816c7f914e6f5dffae926b3ddecff055588103b047ab1d9412297c8ce7dd4"
         }
       ],
-      "reason": "Statistics forwards an optional zone through the Meals-owned query to its existing calendar reader. Null remains legacy instant mode; all consumers compile and 33 WeeklyCheckIn tests pass.",
+      "reason": "Reviewed producer interfaces, controller mappings and the generated diff: only test reference counts changed. No serialized names, parameter types, routes, command markers or DI registrations changed.",
       "baseRef": "HEAD",
-      "gitHead": "bd0b317c741192f85e39301b207407b7ce778add",
-      "reviewedAtUtc": "2026-10-04T19:26:52.3268557Z"
+      "gitHead": "72f048c88aec5eeefd8dce559dfe2c326bcb581b",
+      "reviewedAtUtc": "2026-10-05T00:06:19.5050630Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -840,13 +840,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9bc00200aef99c4241d0255dee0f5e431bf6cbfeb7ba23087a9dbde7a3143bc5"
+          "sha256": "c1e197035aa227bbaf0090428b072650bcc3e3ccbdc0dfa30ff5163f9b3bfeac"
         }
       ],
-      "reason": "Confirmed real text-import cancellation lost the draft without a prompt. Four text/AI cancellation tests failed before marking successful imports dirty and pass after the fix. The eight-file focused suite passes 72 tests, including untouched recipe population, invalid imports, submit locking, import mapping and consumers. Desktop text/mobile mocked AI browser checks prove Escape and Stay preserve the draft and only confirmed discard navigates; zero recipe writes and page errors. No template, localization, contract or dependency change.",
+      "reason": "Reviewed both bounded fixes and regressions: malformed-video guidance uses an existing key; transcription now supplies positive budgets in both directions, and output quota rejection precedes paid calls. All 138 AI application tests and 125 focused frontend tests passed. Static quality ranking and test-reference semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "a51d15d42d960964d5fd95efce8d08f49e840e30",
-      "reviewedAtUtc": "2026-10-04T21:55:34.4825463Z"
+      "gitHead": "72f048c88aec5eeefd8dce559dfe2c326bcb581b",
+      "reviewedAtUtc": "2026-10-05T00:06:21.7798226Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -927,13 +927,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d44c2f784493a2d7884f094f9557695c1e9e05f7a7617c67aa294051c604eb06"
+          "sha256": "8b010c6c1f8e05fcd28f7c4bbe2872dd4ead6339fc8da23b55eaba83b2c351cd"
         }
       ],
-      "reason": "No host, DI, background job, queue, persistence or endpoint change. CountInputTokensAsync still uses the existing HttpClient, cancellation token, bounded response reading and failure handling. Exact token preflight, quota reservation and reconciliation remain in the application flow. A real local recipe import returned 200 with a single idempotent POST after restarting the API; readiness is 200.",
+      "reason": "Reviewed media extraction, two independent quota transactions, hashed transcription idempotency key, three-minute operation deadline, provider non-retry behavior, reconciliation and temporary-file cleanup. Runtime topology changed only its freshness fingerprint; no host, client, job, configuration or deployment boundary changed.",
       "baseRef": "HEAD",
-      "gitHead": "2a83ec684dfdcd36351a4c0048b032bf75b0ca11",
-      "reviewedAtUtc": "2026-10-04T21:32:48.5380903Z"
+      "gitHead": "72f048c88aec5eeefd8dce559dfe2c326bcb581b",
+      "reviewedAtUtc": "2026-10-05T00:06:26.0263786Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -942,13 +942,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9bc00200aef99c4241d0255dee0f5e431bf6cbfeb7ba23087a9dbde7a3143bc5"
+          "sha256": "c1e197035aa227bbaf0090428b072650bcc3e3ccbdc0dfa30ff5163f9b3bfeac"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "8b010c6c1f8e05fcd28f7c4bbe2872dd4ead6339fc8da23b55eaba83b2c351cd"
         }
       ],
-      "reason": "Only the existing Signal Form dirty state is marked after valid text import and successful AI draft application. onCancelAsync continues to use the same scoped facade and existing discard modal; invalid imports and untouched loaded recipes remain pristine. Premium/consent, import transport, persistence and provider sharing are unchanged. Browser state checks used synthetic input and a scoped fake AI response; no provider call or recipe write occurred.",
+      "reason": "Reviewed unchanged consent, caller scoping, HTTPS source validation, video and WAV bounds, request slots and quota repository invariants. The fix preserves strict positive reserves and both user limits, with no new credentials, outbound fields, logs or data retention.",
       "baseRef": "HEAD",
-      "gitHead": "a51d15d42d960964d5fd95efce8d08f49e840e30",
-      "reviewedAtUtc": "2026-10-04T21:55:35.5163509Z"
+      "gitHead": "72f048c88aec5eeefd8dce559dfe2c326bcb581b",
+      "reviewedAtUtc": "2026-10-05T00:06:28.6200084Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

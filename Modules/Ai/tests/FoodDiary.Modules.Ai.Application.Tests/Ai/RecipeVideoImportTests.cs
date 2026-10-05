@@ -42,7 +42,7 @@ public sealed class RecipeVideoImportTests {
         Assert.Equal("https://example.org/video", draft.SourceUrl);
         await _profiles.Received(1).GetAiProfileAsync(_user, Arg.Any<CancellationToken>());
         await _client.Received(1).GetRecipeImportTokenBudgetAsync(Arg.Is<string>(x => x.Contains("180g yoghurt", StringComparison.Ordinal) && x.Contains("pinch of salt", StringComparison.Ordinal)), "ru", Arg.Any<CancellationToken>());
-        await _quota.Received(1).ReconcileAsync(Arg.Is<string>(x => x != RequestId && x.Length == 64), Arg.Is<AiQuotaUsage>(x => x.Operation == "recipe-transcription" && x.TotalTokens == 640), Arg.Any<CancellationToken>());
+        await _quota.Received(1).ReconcileAsync(Arg.Is<string>(x => x != RequestId && x.Length == 64), Arg.Is<AiQuotaUsage>(x => x.Operation == "recipe-transcription" && x.InputTokens == 640 && x.OutputTokens == 640 && x.TotalTokens == 1280), Arg.Any<CancellationToken>());
         await _quota.Received(1).ReconcileAsync(RequestId, Arg.Is<AiQuotaUsage>(x => x.Operation == "recipe-import"), Arg.Any<CancellationToken>());
     }
 
@@ -51,6 +51,47 @@ public sealed class RecipeVideoImportTests {
         OpenAiFoodService service = CreateService();
         _quota.ReserveAsync(Arg.Any<AiQuotaReservationRequest>(), Arg.Any<CancellationToken>()).Returns(AiQuotaReservationStatus.QuotaExceeded);
         ResultAssert.Failure(await service.ImportRecipeVideoAsync(video: null, "https://example.org/video", text: null, _user, RequestId, CancellationToken.None), "Ai.QuotaExceeded");
+        Assert.Empty(_client.ReceivedCalls());
+    }
+
+    [Theory]
+    [InlineData(0.01)]
+    [InlineData(10)]
+    public async Task Video_WithTokenUsage_ReservesBothTokenDirectionsBeforeTranscription(double durationSeconds) {
+        OpenAiFoodService service = CreateService();
+        _video.ExtractAudioAsync(Arg.Any<Stream?>(), Arg.Any<string?>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Success(new RecipeAudio([1, 2], durationSeconds, "https://example.org/video")));
+        _client.TranscribeRecipeAudioAsync(Arg.Any<RecipeAudio>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Success(new OpenAiFoodClientResponse<string>("180g yoghurt", "recipe-transcription", "gpt-transcribe", new AiUsageTokens(1, 1, 2))));
+        _quota.ReserveAsync(Arg.Any<AiQuotaReservationRequest>(), Arg.Any<CancellationToken>()).Returns(call => {
+            AiQuotaReservationRequest reservation = call.Arg<AiQuotaReservationRequest>();
+            Assert.True(reservation.InputTokens > 0);
+            Assert.True(reservation.OutputTokens > 0);
+            return AiQuotaReservationStatus.Acquired;
+        });
+
+        ResultAssert.Success(await service.ImportRecipeVideoAsync(video: null, "https://example.org/video", text: null, _user, RequestId, CancellationToken.None));
+
+        await _quota.Received(1).ReconcileAsync(
+            Arg.Is<string>(x => x != RequestId),
+            Arg.Is<AiQuotaUsage>(x => x.Operation == "recipe-transcription" && x.InputTokens == 1 && x.OutputTokens == 1 && x.TotalTokens == 2),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Video_WithInsufficientOutputQuota_DoesNotTranscribe() {
+        OpenAiFoodService service = CreateService();
+        _profiles.GetAiProfileAsync(_user, Arg.Any<CancellationToken>())
+            .Returns(Result.Success(new UserAiProfileModel(_user, "ru", 10000, 1, HasAcceptedAiConsent: true)));
+        _quota.ReserveAsync(Arg.Any<AiQuotaReservationRequest>(), Arg.Any<CancellationToken>()).Returns(call => {
+            AiQuotaReservationRequest reservation = call.Arg<AiQuotaReservationRequest>();
+            return reservation.InputTokens > reservation.InputTokenLimit || reservation.OutputTokens > reservation.OutputTokenLimit
+                ? AiQuotaReservationStatus.QuotaExceeded
+                : AiQuotaReservationStatus.Acquired;
+        });
+
+        ResultAssert.Failure(await service.ImportRecipeVideoAsync(video: null, "https://example.org/video", text: null, _user, RequestId, CancellationToken.None), "Ai.QuotaExceeded");
+
         Assert.Empty(_client.ReceivedCalls());
     }
 

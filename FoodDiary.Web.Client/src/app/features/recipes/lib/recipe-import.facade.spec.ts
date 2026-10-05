@@ -90,3 +90,20 @@ describe('recipe import', () => {
         expect(facade.errorKey()).toBeNull();
     });
 });
+
+describe('recipe import video validation failures', () => {
+    it.each([
+        ['Ai.InvalidRecipeVideo', 'RECIPE_MANAGE.IMPORT.VIDEO_INVALID'],
+        ['Ai.InvalidRecipeUrl', 'RECIPE_MANAGE.IMPORT.INVALID_ERROR'],
+        ['Ai.RecipeNotFound', 'RECIPE_MANAGE.IMPORT.INVALID_ERROR'],
+        [undefined, 'RECIPE_MANAGE.IMPORT.INVALID_ERROR'],
+    ])('shows the correct guidance for %s', async (code, expectedKey) => {
+        ai.importRecipeVideo.mockReturnValue(throwError(() => new HttpErrorResponse({ status: 400, error: { error: code } })));
+
+        expect(await facade.recognizeAsync('https://example.org/video', '', true)).toBeNull();
+
+        expect(facade.errorKey()).toBe(expectedKey);
+        expect(facade.busy()).toBe(false);
+        expect(ai.importRecipeVideo).toHaveBeenCalledOnce();
+    });
+});

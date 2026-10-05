@@ -27,7 +27,8 @@ public sealed partial class OpenAiFoodService {
             }
             // Audio cannot use the text input-token counter. This is a conservative quota estimate;
             // actual token usage replaces it when the transcription provider reports tokens.
-            var budget = new AiProviderTokenBudget((long)Math.Ceiling(audio.Value.DurationSeconds * 64), 0);
+            long estimatedTokens = (long)Math.Ceiling(audio.Value.DurationSeconds * 64);
+            var budget = new AiProviderTokenBudget(estimatedTokens, estimatedTokens);
             string transcriptionId = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(requestId + ":recipe-transcription")));
             Result reservation = await ReserveAsync(transcriptionId, userId, "recipe-transcription", context.Value, budget, deadline.Token).ConfigureAwait(false);
             if (reservation.IsFailure) {

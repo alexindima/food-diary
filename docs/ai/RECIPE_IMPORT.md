@@ -49,8 +49,10 @@ The full operation has a three-minute deadline. Transcription is not automatical
 retried after a provider/transport failure.
 
 Transcription and recipe parsing have separate idempotent quota reservations. Audio
-uses a conservative estimate of 64 quota units per second because the text token
-counter cannot count audio. Reported token usage replaces the estimate; absent or
+reserves a conservative estimate of 64 quota units per second in each direction:
+input audio and output transcript. Both budgets must be positive, and both user
+limits apply before transcription. The text token counter cannot count audio.
+Reported token usage replaces the estimate; absent or
 duration-only usage retains the estimate and is marked estimated by existing quota
 telemetry. This is an application quota estimate, not a provider billing amount.
 A completed transcription is reconciled even if no speech/recipe is found or the

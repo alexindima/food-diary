@@ -27045,7 +27045,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeVideoImportTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 8
     },
     {
       "contract": "AiQuotaReservationRequest",
@@ -136137,7 +136137,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeVideoImportTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "OpenAiFoodClientResponse",
