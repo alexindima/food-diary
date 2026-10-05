@@ -6,6 +6,8 @@ status: current
 summary: Query an incremental SQLite symbol and consumer graph as the primary Development MCP code-context route without replacing governed Wiki evidence or committed project knowledge.
 sources:
   - .llm-wiki/tools/code-graph.mjs
+  - .llm-wiki/tools/code-graph-context-projection.mjs
+  - .llm-wiki/tools/code-graph-context-projection.test.mjs
   - .llm-wiki/tools/code-graph-index-query.mjs
   - .llm-wiki/tools/code-graph-index-query.test.mjs
   - .llm-wiki/tools/code-graph-identity.mjs
@@ -72,6 +74,17 @@ sources:
 # Local Code Intelligence Graph
 
 Every incremental build hashes dirty source paths even when size and modification time match cached metadata. Unchanged clean paths retain the metadata fast path. Repeated same-size edits to an already dirty file are covered in an isolated snapshot regression. `graph-build -BackendOnlyRefresh` prepares backend navigation without TypeScript prerequisites.
+
+Search projection refresh compares per-record source fingerprints and expands and
+writes only changed records. Canonical dense row IDs retain the same ordering and
+FTS tie breaking as a complete replacement; insertion or removal can therefore
+also rewrite records whose ordinals move. Content, identity and feature mirrors
+and their fingerprint cache commit in the graph writer's existing transaction.
+An absent, invalid or stale cache, changed parser/schema/writer/ownership implementation,
+or incomplete mirrors forces complete replacement. Existing caches upgrade on
+their first refresh. Build diagnostics report the refresh mode and written/deleted
+record counts. The regression compares full and incremental rows and FTS scores,
+including interrupted writes and retry.
 
 CLI context ranking and MCP use the same `SqliteContextSearchReader.cs`, linked into the existing CLI reader project. Node remains the sole writer and the comparison reader for frozen evaluation/parity. Explicit guidance intent recalls long guides by named subjects in their body through a bounded pool. A query requesting both client and server parts reports `multi-layer-request` with low confidence.
 

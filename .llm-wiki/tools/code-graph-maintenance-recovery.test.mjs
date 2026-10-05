@@ -6,7 +6,7 @@ import { resolve, join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { inspectProjectionCompleteness } from './code-graph-maintenance.mjs';
 
-test('ordinary graph build repairs missing metadata despite an unchanged source fingerprint', async () => {
+test('ordinary graph build repairs missing feature and identity mirrors despite an unchanged source fingerprint', async () => {
   const root = resolve(import.meta.dirname, '../..');
   const directory = mkdtempSync(join(root, '.artifacts/llm-wiki/recovery-regression-'));
   const path = join(directory, 'graph.sqlite');
@@ -20,6 +20,12 @@ test('ordinary graph build repairs missing metadata despite an unchanged source 
     let db = new DatabaseSync(path);
     const count = db.prepare('SELECT COUNT(*) count FROM context_search_features').get().count;
     const original = db.prepare('SELECT * FROM context_search_features ORDER BY context_rowid LIMIT 1').get();
+    const originalIdentity = db.prepare('SELECT * FROM context_search_identity WHERE rowid = ?').get(original.context_rowid);
+    db.prepare('DELETE FROM context_search_identity WHERE rowid = ?').run(original.context_rowid);
+    db.close();
+    build();
+    db = new DatabaseSync(path);
+    assert.deepEqual(db.prepare('SELECT * FROM context_search_identity WHERE rowid = ?').get(original.context_rowid), originalIdentity);
     db.prepare('DELETE FROM context_search_features WHERE context_rowid = ?').run(original.context_rowid);
     assert.equal(inspectProjectionCompleteness(db)[0].kind, 'missing-projection-features');
     db.close();
@@ -29,6 +35,7 @@ test('ordinary graph build repairs missing metadata despite an unchanged source 
       assert.equal(inspectProjectionCompleteness(db).length, 0);
       assert.equal(db.prepare('SELECT COUNT(*) count FROM context_search_features').get().count, count);
       assert.deepEqual(db.prepare('SELECT * FROM context_search_features WHERE context_rowid = ?').get(original.context_rowid), original);
+      assert.deepEqual(db.prepare('SELECT * FROM context_search_identity WHERE rowid = ?').get(original.context_rowid), originalIdentity);
     } finally { db.close(); }
   } finally { rmSync(directory, { recursive: true, force: true }); }
 });

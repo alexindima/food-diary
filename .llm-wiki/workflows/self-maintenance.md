@@ -9,6 +9,9 @@ sources:
   - .llm-wiki/tools/wiki-source-maintenance.mjs
   - .llm-wiki/tools/code-graph-performance.test.mjs
   - .llm-wiki/tools/code-graph.mjs
+  - .llm-wiki/tools/code-graph-context-projection.mjs
+  - .llm-wiki/tools/code-graph-context-projection.test.mjs
+  - .llm-wiki/tools/code-graph-maintenance-recovery.test.mjs
   - .llm-wiki/wiki.ps1
   - Modules/Products/FoodQuality/AGENTS.md
 ---
@@ -38,6 +41,12 @@ Missing, duplicate and orphaned feature rows are diagnosed independently of the
 ownership join. Missing metadata forces a full transactional search projection
 rebuild even when source fingerprints match. Unknown project identities remain
 explicit findings; they are never silently omitted from the project inventory.
+
+Ordinary content refreshes retain unchanged search records and update their
+three mirrors together. Missing identity rows or noncanonical row ID ranges
+also invalidate reuse. Invalid record-cache state and parser, schema, writer or ownership
+changes retain the full replacement path; cache publication rolls back with an
+interrupted graph transaction.
 
 Markdown provenance checks examine `sources` and relative links in Wiki pages.
 Only exact-content renames reported by `git diff --find-renames=100% <BaseRef>`
