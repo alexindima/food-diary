@@ -70,7 +70,14 @@ export class RecipeBasicInfoComponent {
     }
 
     protected setPhotos(images: ImageSelection[]): void {
+        const current = this.photos();
+        const changed =
+            current.length !== images.length ||
+            current.some((image, index) => image.url !== images[index]?.url || image.assetId !== images[index]?.assetId);
         this.form()().value.update(value => ({ ...value, images, imageUrl: images[0] ?? null }));
+        if (changed) {
+            this.form()().markAsDirty();
+        }
     }
     protected setCover(image: ImageSelection | null): void {
         if (image !== null) {

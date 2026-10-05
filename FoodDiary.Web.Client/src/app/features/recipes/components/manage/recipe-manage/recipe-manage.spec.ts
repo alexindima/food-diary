@@ -255,6 +255,207 @@ describe('RecipeManageComponent navigation', () => {
     });
 });
 
+const manualRecipeEdits: Array<[string, (component: RecipeManageComponent) => void]> = [
+    [
+        'step description',
+        (component): void => {
+            component['onStepDescriptionChange']({ stepIndex: 0, value: 'Dice vegetables' });
+        },
+    ],
+    [
+        'step title',
+        (component): void => {
+            component['onStepTitleChange']({ stepIndex: 0, value: 'Chop' });
+        },
+    ],
+    [
+        'step photos',
+        (component): void => {
+            component['onStepPhotosChange']({ stepIndex: 0, value: [{ url: '/third.jpg', assetId: 'third' }] });
+        },
+    ],
+    [
+        'step cover',
+        (component): void => {
+            component['onStepImageChange']({ stepIndex: 0, value: { url: '/second.jpg', assetId: 'second' } });
+        },
+    ],
+    [
+        'adding a step',
+        (component): void => {
+            component['addStep']();
+        },
+    ],
+    [
+        'removing a step',
+        (component): void => {
+            component['removeStep'](1);
+        },
+    ],
+    [
+        'adding an ingredient',
+        (component): void => {
+            component['addIngredientToStep'](0);
+        },
+    ],
+    [
+        'removing an ingredient',
+        (component): void => {
+            component['removeIngredientFromStep']({ stepIndex: 0, ingredientIndex: 0 });
+        },
+    ],
+    [
+        'ingredient amount',
+        (component): void => {
+            component['onIngredientAmountChange']({ stepIndex: 0, ingredientIndex: 0, amount: PRODUCT_DEFAULT_AMOUNT });
+        },
+    ],
+    [
+        'text ingredient name',
+        (component): void => {
+            component['onIngredientTextChange']({ stepIndex: 0, ingredientIndex: 0, field: 'textName', value: 'Salt' });
+        },
+    ],
+    [
+        'text ingredient amount',
+        (component): void => {
+            component['onIngredientTextChange']({ stepIndex: 0, ingredientIndex: 0, field: 'amountText', value: 'A pinch' });
+        },
+    ],
+    [
+        'step order',
+        (component): void => {
+            component['onStepDrop']({ previousIndex: 0, currentIndex: 1 });
+        },
+    ],
+    [
+        'nutrition mode',
+        (component): void => {
+            component['onNutritionModeChange'](component['recipeFormModel']().calculateNutritionAutomatically ? 'manual' : 'auto');
+        },
+    ],
+];
+
+describe('RecipeManageComponent manual edit cancellation', () => {
+    it.each(manualRecipeEdits)('preserves %s after choosing to stay', async (_name, edit) => {
+        const { component, facade, fixture } = await setupComponentAsync();
+        prepareRecipeStepEdits(component);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(component['recipeSignalForm']().dirty()).toBe(false);
+        facade.confirmDiscardChangesAsync.mockResolvedValueOnce(false);
+
+        edit(component);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const editedDraft = component['recipeFormModel']();
+        await component['onCancelAsync']();
+
+        expect(facade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
+        expect(facade.cancelManageAsync).not.toHaveBeenCalled();
+        expect(component['recipeFormModel']()).toEqual(editedDraft);
+    });
+
+    it.each(['Product', 'Recipe', 'Text'] as const)('protects a selected %s ingredient', async itemType => {
+        const selection: ItemSelection =
+            itemType === 'Recipe' ? { type: 'Recipe', recipe: createRecipe() } : { type: 'Product', product: createProduct() };
+        const { component, facade } = await setupComponentAsync({ openItemSelectionDialog: vi.fn().mockReturnValue(of(selection)) });
+        prepareRecipeStepEdits(component);
+        facade.applyItemSelection.mockImplementation((control: { patchValue: (value: Partial<IngredientFormValues>) => void }) => {
+            control.patchValue({ foodName: 'Chosen ingredient' });
+        });
+        facade.confirmDiscardChangesAsync.mockResolvedValueOnce(false);
+
+        component['onProductSelectClick']({ stepIndex: 0, ingredientIndex: 0, itemType });
+        await component['onCancelAsync']();
+
+        expect(component['steps'][0]?.ingredients[0]?.foodName).toBe('Chosen ingredient');
+        expect(facade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
+        expect(facade.cancelManageAsync).not.toHaveBeenCalled();
+    });
+
+    it('allows discarding an edited step only after confirmation', async () => {
+        const { component, facade } = await setupComponentAsync();
+        component['onStepDescriptionChange']({ stepIndex: 0, value: 'Dice vegetables' });
+
+        await component['onCancelAsync']();
+
+        expect(facade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
+        expect(facade.cancelManageAsync).toHaveBeenCalledOnce();
+    });
+});
+
+describe('RecipeManageComponent unchanged draft cancellation', () => {
+    it('does not treat expansion and validation touches as edits', async () => {
+        const { component, facade } = await setupComponentAsync();
+        prepareRecipeStepEdits(component);
+        component['toggleStepExpanded'](0);
+        component['onStepFieldBlur']({ stepIndex: 0, field: 'description' });
+        component['onStepFieldBlur']({ stepIndex: 0, ingredientIndex: 0, field: 'amount' });
+        component['onStepFieldBlur']({ stepIndex: 0, ingredientIndex: 0, field: 'foodName' });
+
+        await component['onCancelAsync']();
+
+        expect(facade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+        expect(facade.cancelManageAsync).toHaveBeenCalledOnce();
+    });
+
+    it('does not treat dropping a step in its existing position as an edit', async () => {
+        const { component, facade } = await setupComponentAsync();
+        prepareRecipeStepEdits(component);
+        component['onStepDrop']({ previousIndex: 0, currentIndex: 0 });
+
+        await component['onCancelAsync']();
+
+        expect(facade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+        expect(facade.cancelManageAsync).toHaveBeenCalledOnce();
+    });
+
+    it('does not treat cancelling ingredient selection as an edit', async () => {
+        const { component, facade } = await setupComponentAsync();
+        prepareRecipeStepEdits(component);
+        component['onProductSelectClick']({ stepIndex: 0, ingredientIndex: 0, itemType: 'Product' });
+
+        await component['onCancelAsync']();
+
+        expect(facade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+        expect(facade.cancelManageAsync).toHaveBeenCalledOnce();
+    });
+
+    it('does not treat selecting the current nutrition mode as an edit', async () => {
+        const { component, facade } = await setupComponentAsync();
+        component['onNutritionModeChange'](component['recipeFormModel']().calculateNutritionAutomatically ? 'auto' : 'manual');
+
+        await component['onCancelAsync']();
+
+        expect(facade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+        expect(facade.cancelManageAsync).toHaveBeenCalledOnce();
+    });
+
+    it('does not treat switching the nutrition display scale as an edit', async () => {
+        const { component, facade } = await setupComponentAsync();
+        component['onNutritionScaleModeChange']('portion');
+
+        await component['onCancelAsync']();
+
+        expect(facade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+        expect(facade.cancelManageAsync).toHaveBeenCalledOnce();
+    });
+});
+
+function prepareRecipeStepEdits(component: RecipeManageComponent): void {
+    component['stepFormManager'].addStep({ title: 'Serve', imageUrl: null, description: 'Serve', ingredients: [] });
+    component['stepFormManager'].addIngredientToStep(0);
+    const first = { url: '/first.jpg', assetId: 'first' };
+    const second = { url: '/second.jpg', assetId: 'second' };
+    component['recipeFormModel'].update(value => ({
+        ...value,
+        steps: value.steps.map((step, index) =>
+            index === 0 ? { ...step, title: 'Prep', description: 'Cook', images: [first, second], imageUrl: first } : step,
+        ),
+    }));
+}
+
 describe('RecipeManageComponent duplicate submit guard', () => {
     it('should ignore repeated submit while recipe is submitting', async () => {
         const { component, facade } = await setupComponentAsync();

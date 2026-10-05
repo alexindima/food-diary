@@ -34,7 +34,57 @@ describe('RecipeBasicInfoComponent', () => {
         expect(formModel().images).toEqual([]);
         expect(formModel().imageUrl).toBeNull();
     });
+});
 
+describe('RecipeBasicInfoComponent photo edit state', () => {
+    it('marks the provided form dirty when a photo is added', () => {
+        const { fixture, recipeForm } = setupComponent();
+        const gallery = fixture.debugElement.query(By.directive(ImageGalleryEditorComponent))
+            .componentInstance as ImageGalleryEditorComponent;
+        expect(recipeForm().dirty()).toBe(false);
+
+        gallery.photos.set([{ url: '/first.jpg', assetId: 'first' }]);
+        fixture.detectChanges();
+
+        expect(recipeForm().dirty()).toBe(true);
+    });
+
+    it('marks the provided form dirty when the cover changes', () => {
+        const { fixture, formModel, recipeForm } = setupComponent();
+        const first = { url: '/first.jpg', assetId: 'first' };
+        const second = { url: '/second.jpg', assetId: 'second' };
+        formModel.update(value => ({ ...value, images: [first, second], imageUrl: first }));
+        fixture.detectChanges();
+        expect(recipeForm().dirty()).toBe(false);
+        const gallery = fixture.debugElement.query(By.directive(ImageGalleryEditorComponent))
+            .componentInstance as ImageGalleryEditorComponent;
+
+        gallery.cover.set(second);
+        fixture.detectChanges();
+
+        expect(formModel().imageUrl).toEqual(second);
+        expect(recipeForm().dirty()).toBe(true);
+    });
+
+    it('keeps photo initialization and equivalent photo selections pristine', () => {
+        const { fixture, formModel, recipeForm } = setupComponent();
+        formModel.update(value => ({
+            ...value,
+            images: [{ url: '/first.jpg', assetId: 'first' }],
+            imageUrl: { url: '/first.jpg', assetId: 'first' },
+        }));
+        fixture.detectChanges();
+        const gallery = fixture.debugElement.query(By.directive(ImageGalleryEditorComponent))
+            .componentInstance as ImageGalleryEditorComponent;
+
+        gallery.photos.set([{ assetId: 'first', url: '/first.jpg' }]);
+        fixture.detectChanges();
+
+        expect(recipeForm().dirty()).toBe(false);
+    });
+});
+
+describe('RecipeBasicInfoComponent fields', () => {
     it('refreshes visibility labels after switching language', () => {
         const { component, fixture } = setupComponent();
         const translate = TestBed.inject(TranslateService);

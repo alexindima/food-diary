@@ -171,7 +171,8 @@ export class RecipeManageComponent {
         this.nutritionMode = this.nutritionFormManager.nutritionMode;
 
         this.watchLanguageChanges();
-        this.addStep();
+        this.stepFormManager.addStep();
+        this.updateSummaryFromCurrentForm();
         this.watchSignalFormModelChanges();
         this.nutritionFormManager.initialize();
         effect(() => {
@@ -202,16 +203,19 @@ export class RecipeManageComponent {
 
     protected addStep(): void {
         this.stepFormManager.addStep();
+        this.recipeSignalForm().markAsDirty();
         this.updateSummaryFromCurrentForm();
     }
 
     protected removeStep(index: number): void {
         this.stepFormManager.removeStep(index);
+        this.recipeSignalForm().markAsDirty();
         this.updateSummaryFromCurrentForm();
     }
 
     protected addIngredientToStep(stepIndex: number): void {
         this.stepFormManager.addIngredientToStep(stepIndex);
+        this.recipeSignalForm().markAsDirty();
         this.updateSummaryFromCurrentForm();
     }
 
@@ -221,13 +225,18 @@ export class RecipeManageComponent {
 
     protected removeIngredientFromStep(event: StepIngredientEvent): void {
         this.stepFormManager.removeIngredientFromStep(event);
+        this.recipeSignalForm().markAsDirty();
         this.updateSummaryFromCurrentForm();
     }
 
     protected onStepDrop(event: StepDropEvent): void {
+        if (event.previousIndex === event.currentIndex) {
+            return;
+        }
         const steps = [...this.steps];
         moveItemInArray(steps, event.previousIndex, event.currentIndex);
         this.patchRecipeFormModel({ steps });
+        this.recipeSignalForm().markAsDirty();
         this.updateSummaryFromCurrentForm();
     }
 
@@ -242,6 +251,7 @@ export class RecipeManageComponent {
                 },
                 { type: 'Text', name: '' },
             );
+            this.recipeSignalForm().markAsDirty();
             this.updateSummaryFromCurrentForm();
             return;
         }
@@ -257,6 +267,7 @@ export class RecipeManageComponent {
                 },
                 selection,
             );
+            this.recipeSignalForm().markAsDirty();
             this.updateSummaryFromCurrentForm();
         });
     }
@@ -271,19 +282,23 @@ export class RecipeManageComponent {
             [event.field]: event.value,
             ...(event.field === 'textName' ? { foodName: event.value } : {}),
         });
+        this.recipeSignalForm().markAsDirty();
         this.updateSummaryFromCurrentForm();
     }
 
     protected onStepTitleChange(event: StepFieldEvent<string | null>): void {
         this.patchStep(event.stepIndex, { title: event.value });
+        this.recipeSignalForm().markAsDirty();
     }
 
     protected onStepPhotosChange(event: StepFieldEvent<NonNullable<StepFormValues['images']>>): void {
         this.patchStep(event.stepIndex, { images: event.value, imageUrl: event.value[0] ?? null });
+        this.recipeSignalForm().markAsDirty();
     }
 
     protected onStepImageChange(event: StepFieldEvent<StepFormValues['imageUrl']>): void {
         this.patchStep(event.stepIndex, { imageUrl: event.value });
+        this.recipeSignalForm().markAsDirty();
     }
 
     protected onStepFieldBlur(event: { stepIndex: number; field: 'description' | 'amount' | 'foodName'; ingredientIndex?: number }): void {
@@ -299,6 +314,7 @@ export class RecipeManageComponent {
 
     protected onStepDescriptionChange(event: StepFieldEvent<string>): void {
         this.patchStep(event.stepIndex, { description: event.value });
+        this.recipeSignalForm().markAsDirty();
     }
 
     protected onIngredientAmountChange(event: StepIngredientAmountEvent): void {
@@ -306,14 +322,19 @@ export class RecipeManageComponent {
             { stepIndex: event.stepIndex, ingredientIndex: event.ingredientIndex },
             { amount: event.amount },
         );
+        this.recipeSignalForm().markAsDirty();
         this.updateSummaryFromCurrentForm();
     }
 
     // -- Nutrition mode --
 
     protected onNutritionModeChange(nextMode: string): void {
+        const wasAutomatic = this.recipeFormModel().calculateNutritionAutomatically;
         this.nutritionFormManager.onNutritionModeChange(nextMode);
         this.nutritionFormManager.handleAutoCalculationChange(this.recipeFormModel().calculateNutritionAutomatically);
+        if (wasAutomatic !== this.recipeFormModel().calculateNutritionAutomatically) {
+            this.recipeSignalForm().markAsDirty();
+        }
         this.updateSummaryFromCurrentForm();
     }
 
