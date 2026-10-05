@@ -615,6 +615,14 @@
       "structuralRiskScore": 92.9
     },
     {
+      "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
+      "nonBlankLines": 343,
+      "decisionPoints": 56,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 92.86
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
       "nonBlankLines": 419,
       "decisionPoints": 56,
@@ -709,14 +717,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 88.76
-    },
-    {
-      "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
-      "nonBlankLines": 332,
-      "decisionPoints": 53,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 88.14
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.ts",
@@ -1578,11 +1578,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
-      "nonBlankLines": 332,
-      "decisionPoints": 53,
+      "nonBlankLines": 343,
+      "decisionPoints": 56,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 88.14
+      "structuralRiskScore": 92.86
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",

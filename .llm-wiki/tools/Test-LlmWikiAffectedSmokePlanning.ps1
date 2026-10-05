@@ -203,8 +203,17 @@ $fixtureParent = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\', '
 if (-not $failureFixtureRoot.StartsWith(($fixtureParent + [IO.Path]::DirectorySeparatorChar), [StringComparison]::OrdinalIgnoreCase)) {
     throw 'Smoke failure fixture escaped its temporary parent.'
 }
+$originalNugetScratch = $env:NUGET_SCRATCH
+$originalHttpCache = $env:NUGET_HTTP_CACHE_PATH
+$originalPackages = $env:NUGET_PACKAGES
 try {
-    foreach ($mode in @('fail-fast', 'collect', 'success')) {
+    $env:NUGET_SCRATCH = $null
+    $defaultScratchOutput = @(& dotnet nuget locals temp --list --force-english-output)
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve the NuGet scratch fixture baseline.' }
+    $defaultScratchEntry = @($defaultScratchOutput | Where-Object { $_ -match '^\s*(?:info\s*:\s*)?temp:\s*\S' })
+    if ($defaultScratchEntry.Count -ne 1) { throw 'NuGet scratch fixture baseline is ambiguous.' }
+    $defaultScratch = ($defaultScratchEntry[0] -replace '^\s*(?:info\s*:\s*)?temp:\s*', '').Trim()
+    foreach ($mode in @('fail-fast', 'collect', 'success', 'success-inherited', 'parallel')) {
         $fixture = Join-Path $failureFixtureRoot $mode
         $fixtureTools = Join-Path $fixture '.llm-wiki/tools'
         $null = New-Item -ItemType Directory -Path $fixtureTools -Force
@@ -233,7 +242,17 @@ param($ToolPath, $ArgumentsPath, $StageName, $LogPath)
 $fixtureRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $arguments = Get-Content -LiteralPath $ArgumentsPath -Raw | ConvertFrom-Json
 $group = [string]$arguments.RequestedGroup[0]
-[IO.File]::AppendAllText((Join-Path $fixtureRoot 'attempts.txt'), $group + [Environment]::NewLine)
+if ($env:LLM_WIKI_SMOKE_MAX_CONCURRENCY -eq '2') {
+    [IO.File]::WriteAllText((Join-Path $fixtureRoot "$group.attempt"), $group)
+} else {
+    [IO.File]::AppendAllText((Join-Path $fixtureRoot 'attempts.txt'), $group + [Environment]::NewLine)
+}
+[ordered]@{
+    temp = [IO.Path]::GetTempPath()
+    nugetScratch = $env:NUGET_SCRATCH
+    httpCache = $env:NUGET_HTTP_CACHE_PATH
+    packages = $env:NUGET_PACKAGES
+} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $fixtureRoot "$group.environment.json")
 [IO.File]::WriteAllText($LogPath, "Executed fixture group: $group")
 if ($group -eq 'first' -and (Test-Path -LiteralPath (Join-Path $fixtureRoot 'fail-first'))) {
     Write-Output 'Expected fixture worker failure.'
@@ -244,20 +263,32 @@ if ($group -eq 'first' -and (Test-Path -LiteralPath (Join-Path $fixtureRoot 'fai
 }
 exit 0
 '@)
-        if ($mode -ne 'success') { [IO.File]::WriteAllText((Join-Path $fixture 'fail-first'), '') }
+        if ($mode -in @('fail-fast', 'collect')) { [IO.File]::WriteAllText((Join-Path $fixture 'fail-first'), '') }
+        $env:NUGET_SCRATCH = if ($mode -eq 'success-inherited') { Join-Path $fixture 'inherited scratch' } else { $null }
+        $expectedParentScratch = $env:NUGET_SCRATCH
+        $expectedScratch = if ($mode -eq 'success-inherited') { $env:NUGET_SCRATCH } else { $defaultScratch }
+        if ($mode -eq 'success-inherited') {
+            $null = New-Item -ItemType Directory -Path $expectedScratch -Force
+            [IO.File]::WriteAllText((Join-Path $expectedScratch 'shared-cache.marker'), 'preserve')
+        }
         $fixtureRunner = Join-Path $fixtureTools 'Invoke-LlmWikiParallelSmoke.ps1'
         $shell = [IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
-        $runArguments = @('-NoLogo', '-NoProfile', '-File', $fixtureRunner, '-AllGroups', '-MaxConcurrency', '1')
+        $fixtureConcurrency = if ($mode -eq 'parallel') { '2' } else { '1' }
+        $runArguments = @('-NoLogo', '-NoProfile', '-File', $fixtureRunner, '-AllGroups', '-MaxConcurrency', $fixtureConcurrency)
         if ($mode -ne 'fail-fast') { $runArguments += '-CollectFailures' }
         $fixtureOutput = & $shell @runArguments 2>&1 | Out-String
         $fixtureExitCode = $LASTEXITCODE
-        if (-not (Test-Path -LiteralPath (Join-Path $fixture 'attempts.txt'))) { throw "Smoke fixture '$mode' did not start a worker: $fixtureOutput" }
-        $attempts = @(Get-Content -LiteralPath (Join-Path $fixture 'attempts.txt'))
+        $attempts = @(if ($mode -eq 'parallel') {
+            @(Get-ChildItem -LiteralPath $fixture -Filter '*.attempt' | ForEach-Object { [IO.File]::ReadAllText($_.FullName) })
+        } else {
+            if (-not (Test-Path -LiteralPath (Join-Path $fixture 'attempts.txt'))) { throw "Smoke fixture '$mode' did not start a worker: $fixtureOutput" }
+            @(Get-Content -LiteralPath (Join-Path $fixture 'attempts.txt'))
+        })
         $receipts = @(Get-ChildItem -LiteralPath (Join-Path $fixture 'git-state/llm-wiki/parallel-smoke') -Filter '*.json' -ErrorAction SilentlyContinue)
         $timingFiles = @(Get-ChildItem -LiteralPath (Join-Path $fixture '.artifacts/llm-wiki/parallel-smoke') -Filter '*.timings.json')
         if ($timingFiles.Count -ne 1) { throw "Smoke fixture '$mode' omitted timings: $fixtureOutput" }
         $timing = Get-Content -LiteralPath $timingFiles[0].FullName -Raw | ConvertFrom-Json
-        if ($mode -eq 'success') {
+        if ($mode -in @('success', 'success-inherited', 'parallel')) {
             if ($fixtureExitCode -ne 0 -or -not $timing.completed -or $receipts.Count -ne 1 -or @($timing.failures).Count -ne 0) {
                 throw "Successful diagnostic smoke lost its real success receipt: $fixtureOutput"
             }
@@ -284,9 +315,28 @@ exit 0
             }
         }
         $expectedAttempts = if ($mode -eq 'fail-fast') { 'first' } else { 'first,following,serial' }
-        if (($attempts -join ',') -cne $expectedAttempts) { throw "Smoke fixture '$mode' attempted the wrong groups: $($attempts -join ',')" }
+        $actualAttempts = if ($mode -eq 'parallel') { ($attempts | Sort-Object) -join ',' } else { $attempts -join ',' }
+        if ($actualAttempts -cne $expectedAttempts) { throw "Smoke fixture '$mode' attempted the wrong groups: $($attempts -join ',')" }
+        $workerEnvironments = @($attempts | ForEach-Object { Get-Content -LiteralPath (Join-Path $fixture "$_.environment.json") -Raw | ConvertFrom-Json })
+        if (@($workerEnvironments.temp | Sort-Object -Unique).Count -ne $attempts.Count) { throw 'Workers lost their independent native temporary scopes.' }
+        foreach ($workerEnvironment in $workerEnvironments) {
+            if ($workerEnvironment.nugetScratch -cne $expectedScratch -or
+                [string]$workerEnvironment.httpCache -cne [string]$originalHttpCache -or
+                [string]$workerEnvironment.packages -cne [string]$originalPackages) {
+                throw 'Workers split NuGet coordination or changed the inherited package/HTTP cache.'
+            }
+            if ([string]$workerEnvironment.nugetScratch -like "$($workerEnvironment.temp)*") { throw 'NuGet locks were placed in an independently cleaned worker scope.' }
+            if (Test-Path -LiteralPath $workerEnvironment.temp) { throw 'Owned worker temporary scopes were not cleaned.' }
+        }
+        if ([string]$env:NUGET_SCRATCH -cne [string]$expectedParentScratch) {
+            throw 'Smoke changed its parent NuGet environment.'
+        }
+        if ($mode -eq 'success-inherited' -and -not (Test-Path -LiteralPath (Join-Path $expectedScratch 'shared-cache.marker'))) {
+            throw 'Smoke cleaned the shared NuGet scratch directory.'
+        }
     }
 } finally {
+    $env:NUGET_SCRATCH = $originalNugetScratch
     if (Test-Path -LiteralPath $failureFixtureRoot) {
         $resolvedFixture = (Resolve-Path -LiteralPath $failureFixtureRoot).Path
         if (-not $resolvedFixture.StartsWith(($fixtureParent + [IO.Path]::DirectorySeparatorChar), [StringComparison]::OrdinalIgnoreCase) -or

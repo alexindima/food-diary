@@ -173,6 +173,16 @@ if (@($groups | Where-Object { $_ -in $graphDependentGroups }).Count -gt 0) {
 
 $wrapper = Join-Path $PSScriptRoot 'Invoke-LlmWikiObservedStage.ps1'
 $shellPath = [IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
+# NuGet coordinates shared package/HTTP caches through its scratch directory.
+# Resolve that directory before assigning private TEMP paths to the workers.
+$nugetScratchPath = $env:NUGET_SCRATCH
+if ([string]::IsNullOrWhiteSpace($nugetScratchPath)) {
+    $nugetTemporaryOutput = @(& dotnet nuget locals temp --list --force-english-output)
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve the shared NuGet scratch directory.' }
+    $nugetTemporaryEntries = @($nugetTemporaryOutput | Where-Object { $_ -match '^\s*(?:info\s*:\s*)?temp:\s*\S' })
+    if ($nugetTemporaryEntries.Count -ne 1) { throw 'NuGet did not report one shared scratch directory.' }
+    $nugetScratchPath = ($nugetTemporaryEntries[0] -replace '^\s*(?:info\s*:\s*)?temp:\s*', '').Trim()
+}
 $temporaryParent = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\', '/')
 $temporaryRunRoot = [IO.Path]::GetFullPath((Join-Path $temporaryParent "fd-wiki-smoke-$runId"))
 if (-not $temporaryRunRoot.StartsWith(($temporaryParent + [IO.Path]::DirectorySeparatorChar), [StringComparison]::OrdinalIgnoreCase)) {
@@ -215,6 +225,7 @@ function Start-SmokeGroup([string]$Group) {
     $process.StartInfo.Environment['TEMP'] = $temporaryGroupPath
     $process.StartInfo.Environment['TMP'] = $temporaryGroupPath
     $process.StartInfo.Environment['TMPDIR'] = $temporaryGroupPath
+    $process.StartInfo.Environment['NUGET_SCRATCH'] = $nugetScratchPath
     if (-not $process.Start()) { throw "Unable to start focused smoke group '$Group'." }
     [pscustomobject]@{
         Group = $Group

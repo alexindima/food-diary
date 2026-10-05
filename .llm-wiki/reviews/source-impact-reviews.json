@@ -859,13 +859,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "320695cbe0805cd69e8c6dc63da8751d7daf92c6f3004ab82e59103ebe13f7b5"
+          "sha256": "e94c237e5af1e36a7673e4241343bd15b4dd500b20869d77137e4d81e9f3fdac"
         }
       ],
-      "reason": "Regenerated quality metrics through the owning generator after checkout/cache changes and regression expansion. Product reference-gap counts and the static navigation limitations remain unchanged.",
+      "reason": "Reviewed regenerated Wiki runner complexity metrics after preserving shared NuGet coordination across private native temporary scopes. Product inventory, static test-reference semantics, security discovery limits and review instructions remain accurate; actual worker environment, failure receipts and cleanup regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "11f128fcd387a191b2ae25b0be25345f66268bc8",
-      "reviewedAtUtc": "2026-10-05T18:22:32.2635063Z"
+      "gitHead": "aca49d9a1cf7aca71c3518e12749319b4000fb23",
+      "reviewedAtUtc": "2026-10-05T18:42:23.9896690Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -961,13 +961,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "320695cbe0805cd69e8c6dc63da8751d7daf92c6f3004ab82e59103ebe13f7b5"
+          "sha256": "e94c237e5af1e36a7673e4241343bd15b4dd500b20869d77137e4d81e9f3fdac"
         }
       ],
-      "reason": "Reviewed generated Wiki structural metrics and guard regressions. Dirty overlays still hash exact content and poisoned clones are discarded without modifying source files; no security verdict is inferred from metrics.",
+      "reason": "Reviewed regenerated Wiki runner complexity metrics after preserving shared NuGet coordination across private native temporary scopes. Product inventory, static test-reference semantics, security discovery limits and review instructions remain accurate; actual worker environment, failure receipts and cleanup regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "11f128fcd387a191b2ae25b0be25345f66268bc8",
-      "reviewedAtUtc": "2026-10-05T18:22:33.3436924Z"
+      "gitHead": "aca49d9a1cf7aca71c3518e12749319b4000fb23",
+      "reviewedAtUtc": "2026-10-05T18:42:24.5916190Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

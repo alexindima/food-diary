@@ -107,6 +107,14 @@ prints a bounded tail; collected failure records link all three logs. Native
 compiler/process errors remain available even when PowerShell transcription
 omits them.
 
+Focused workers use short, separately owned native temporary directories, while
+retaining the parent's effective NuGet scratch directory through `NUGET_SCRATCH`.
+An explicit inherited override is preserved; otherwise the runner resolves the
+directory with `dotnet nuget locals temp --list --force-english-output` before
+overriding worker `TEMP`. Shared package and HTTP caches therefore retain common
+NuGet filesystem locks. The runner cleans only its own native temporary scopes;
+it does not clear shared NuGet caches or change package vulnerability auditing.
+
 Runtime topology and persistence-configuration inventories prune their existing
 excluded directories before recursion, preserving visible untracked sources and
 the default exclusion of hidden files and directory links. The runtime generator
