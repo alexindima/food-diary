@@ -11,13 +11,13 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$stopwatch = [Diagnostics.Stopwatch]::StartNew()
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiRuntimeTopologyFingerprint.ps1')
 $topologyPath = Join-Path $wikiRoot 'generated/runtime-topology.json'
 $storedTopology = Get-Content -LiteralPath $topologyPath -Raw | ConvertFrom-Json
 $currentFreshness = Get-LlmWikiRuntimeTopologyFingerprint -RepositoryRoot $repositoryRoot
-$stopwatch = [Diagnostics.Stopwatch]::StartNew()
 $groups = [ordered]@{}
 $diagnostics = $null
 $querySupplied = -not [string]::IsNullOrWhiteSpace($Query)

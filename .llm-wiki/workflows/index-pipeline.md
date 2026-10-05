@@ -51,6 +51,12 @@ sources:
   - .llm-wiki/tools/Invoke-LlmWikiContractReferenceExtractor.ps1
   - .llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1
   - .llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1
+  - .llm-wiki/tools/Build-LlmWikiDomainDataIndex.ps1
+  - .llm-wiki/tools/Build-LlmWikiRuntimeTopology.ps1
+  - .llm-wiki/tools/LlmWikiSourceInventory.ps1
+  - .llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1
+  - .llm-wiki/tools/Find-LlmWikiRuntimeTopology.ps1
+  - .llm-wiki/tools/Test-LlmWikiSourceInventory.ps1
   - .llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1
   - .llm-wiki/tools/code-graph-candidates.mjs
   - .llm-wiki/tools/code-graph-candidates.test.mjs
@@ -92,7 +98,16 @@ sources:
 
 Generators refill free worker slots within each dependency stage rather than waiting for a fixed batch. Catalog and symbol generators enumerate Git-visible inputs before accessing the filesystem. Stage barriers, timeouts, transaction rollback, and every required generator remain in force.
 
-A complete `-Check` records the generation receipt. Only a successful `verify-full` records full verification after that generation still matches the source and index fingerprints and the facade's failure-registry, change-policy, and source-impact gates have passed. The inner regression runner does not publish full verification by itself. `verify-full -MaxConcurrency 2` bounds both generator and regression workers. Affected verification cannot promote its scoped success to the full status. Dirty snapshot guards compare content hashes, and cached clones mutated by a read command are discarded.
+A complete `-Check` records the generation receipt. Only a successful `verify-full` records full verification after that generation still matches the source and index fingerprints and the facade's failure-registry, change-policy, and source-impact gates have passed. The inner regression runner does not publish full verification by itself. `verify-full -MaxConcurrency 2` bounds outer generator and regression group workers; nested runners retain their own limits. Affected verification cannot promote its scoped success to the full status. Dirty snapshot guards compare content hashes, and cached clones mutated by a read command are discarded.
+
+Runtime topology and persistence-configuration inventories prune their existing
+excluded directories before recursion, preserving visible untracked sources and
+the default exclusion of hidden files and directory links. The runtime generator
+computes its content fingerprint from the same normalized text it parses, and
+domain/data reads each candidate configuration once. Runtime queries independently
+enumerate and hash current sources on every call, including equal-size edits with
+preserved timestamps. Their complete-command timer includes source verification;
+SQL and reader-load durations remain separate.
 
 Module source areas come from the Git-visible file inventory. Empty legacy
 directories and ignored build outputs must not change generated pages between

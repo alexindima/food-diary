@@ -875,13 +875,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7556805f70041c0b8c9c98b0c0aaa5f1dc0cdb20422f9b10cd5814e14ee974ed"
+          "sha256": "07570db9af04daabf76c2ff8ab73cc483ce0b57cb8b415ddb8dc7a44bd0e93c4"
         }
       ],
-      "reason": "Reviewed the combined master and Wiki performance change. The generated quality inventory was rebuilt by the normal generator; it retains current master product records and adds the Wiki runner/cache regression references and complexity changes. Quality and security evidence remain static navigation signals, with existing classification, ranking and query contracts preserved. Full post-merge verification follows this integration.",
+      "reason": "Reviewed regenerated quality index: one shared Wiki helper was added with test references, and only changed Wiki structural metrics/references shifted. Product critical symbols without test references remain 47.",
       "baseRef": "HEAD",
-      "gitHead": "973e0384354aa3fb9aa215a9fbabdc90255c69d7",
-      "reviewedAtUtc": "2026-10-05T09:40:21.4524404Z"
+      "gitHead": "5ea8b67a503668422970de6d79c91c886def38f0",
+      "reviewedAtUtc": "2026-10-05T10:50:28.6163701Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -961,14 +961,14 @@
       "pageSha256": "afc7b952845f0c1daab7be359147c5d79cf308618972038ea92bee91adf411c7",
       "sources": [
         {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "8b010c6c1f8e05fcd28f7c4bbe2872dd4ead6339fc8da23b55eaba83b2c351cd"
+          "path": ".llm-wiki/tools/Find-LlmWikiRuntimeTopology.ps1",
+          "sha256": "b55173d65dc80bbff5b11beb87c446e04a344fb3b4517cdc89eb228292ccc90f"
         }
       ],
-      "reason": "Reviewed media extraction, two independent quota transactions, hashed transcription idempotency key, three-minute operation deadline, provider non-retry behavior, reconciliation and temporary-file cleanup. Runtime topology changed only its freshness fingerprint; no host, client, job, configuration or deployment boundary changed.",
+      "reason": "Reviewed runtime query: exact normalized content freshness and bounded SQLite evidence are preserved; complete-command timing now includes source verification. Three counterbalanced query pairs returned identical evidence and freshness.",
       "baseRef": "HEAD",
-      "gitHead": "72f048c88aec5eeefd8dce559dfe2c326bcb581b",
-      "reviewedAtUtc": "2026-10-05T00:06:26.0263786Z"
+      "gitHead": "5ea8b67a503668422970de6d79c91c886def38f0",
+      "reviewedAtUtc": "2026-10-05T10:50:27.5951966Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -977,13 +977,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7556805f70041c0b8c9c98b0c0aaa5f1dc0cdb20422f9b10cd5814e14ee974ed"
+          "sha256": "07570db9af04daabf76c2ff8ab73cc483ce0b57cb8b415ddb8dc7a44bd0e93c4"
         }
       ],
-      "reason": "Reviewed the combined master and Wiki performance change. The generated quality inventory was rebuilt by the normal generator; it retains current master product records and adds the Wiki runner/cache regression references and complexity changes. Quality and security evidence remain static navigation signals, with existing classification, ranking and query contracts preserved. Full post-merge verification follows this integration.",
+      "reason": "Reviewed quality-index delta and source inventory helper: changes concern repository source enumeration and query timing. Hidden files and directory links retain prior selection behavior; no persistent timestamp freshness cache or provider/data-sharing change was introduced.",
       "baseRef": "HEAD",
-      "gitHead": "973e0384354aa3fb9aa215a9fbabdc90255c69d7",
-      "reviewedAtUtc": "2026-10-05T09:40:22.3612124Z"
+      "gitHead": "5ea8b67a503668422970de6d79c91c886def38f0",
+      "reviewedAtUtc": "2026-10-05T10:50:29.8161580Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

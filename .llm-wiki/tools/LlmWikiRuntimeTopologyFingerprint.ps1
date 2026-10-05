@@ -1,27 +1,54 @@
-function Get-LlmWikiRuntimeTopologyFingerprint {
+. (Join-Path $PSScriptRoot 'LlmWikiSourceInventory.ps1')
+
+function Get-LlmWikiRuntimeTopologySourceFiles {
     param([Parameter(Mandatory)][string]$RepositoryRoot)
 
+    Get-LlmWikiSourceFiles -RepositoryRoot $RepositoryRoot -Filter '*.cs' `
+        -ExcludedDirectory @('tests', 'obj', 'bin', '.artifacts', '.llm-wiki', 'TestResults', 'Migrations') |
+        Where-Object {
+            $_.FullName -notmatch '[\\/](tests|obj|bin|\.artifacts|\.llm-wiki|TestResults|Migrations)[\\/]' -and
+            $_.Name -notmatch '\.(Designer|g)\.cs$'
+        }
+}
+
+function Get-LlmWikiNormalizedContentHash {
+    param([AllowEmptyString()][string]$Content)
+
+    $normalized = $Content.Replace("`r`n", "`n").Replace("`r", "`n")
+    $hasher = [Security.Cryptography.SHA256]::Create()
+    try {
+        return ([BitConverter]::ToString($hasher.ComputeHash([Text.Encoding]::UTF8.GetBytes($normalized))) -replace '-', '').ToLowerInvariant()
+    } finally { $hasher.Dispose() }
+}
+
+function Get-LlmWikiRuntimeTopologyFingerprint {
+    param(
+        [Parameter(Mandatory)][string]$RepositoryRoot,
+        [Collections.IDictionary]$SourceHashes
+    )
+
+    # A generator may supply hashes from the same content it just parsed.
+    # Query callers omit them and independently enumerate/read every source;
+    # no timestamp cache can conceal an equal-size, equal-time content edit.
+    if (-not $PSBoundParameters.ContainsKey('SourceHashes')) {
+        $SourceHashes = [Collections.Generic.Dictionary[string, string]]::new([StringComparer]::Ordinal)
+        $paths = @(
+            @(Join-Path $RepositoryRoot 'docker-compose.yml') +
+            @(Get-LlmWikiRuntimeTopologySourceFiles -RepositoryRoot $RepositoryRoot | ForEach-Object FullName) |
+            Where-Object { Test-Path -LiteralPath $_ -PathType Leaf }
+        )
+        foreach ($path in $paths) {
+            $SourceHashes[$path] = Get-LlmWikiNormalizedContentHash -Content ([IO.File]::ReadAllText($path))
+        }
+    }
+
     $sourcePaths = @(
-        @(Join-Path $RepositoryRoot 'docker-compose.yml') +
-        @(Get-ChildItem -LiteralPath $RepositoryRoot -Recurse -File -Filter '*.cs' |
-            Where-Object {
-                $_.FullName -notmatch '[\\/](tests|obj|bin|\.artifacts|\.llm-wiki|TestResults|Migrations)[\\/]' -and
-                $_.Name -notmatch '\.(Designer|g)\.cs$'
-            } |
-            ForEach-Object FullName) |
-        Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } |
+        $SourceHashes.Keys |
         Sort-Object { $_.ToLowerInvariant() } -Unique
     )
     $material = [Text.StringBuilder]::new()
     foreach ($path in $sourcePaths) {
-        $content = [IO.File]::ReadAllText($path).Replace("`r`n", "`n").Replace("`r", "`n")
-        $contentBytes = [Text.Encoding]::UTF8.GetBytes($content)
-        $fileHasher = [Security.Cryptography.SHA256]::Create()
-        try {
-            $hash = ([BitConverter]::ToString($fileHasher.ComputeHash($contentBytes)) -replace '-', '').ToLowerInvariant()
-        } finally {
-            $fileHasher.Dispose()
-        }
+        $hash = $SourceHashes[$path]
         $relativePath = [IO.Path]::GetFullPath($path).Substring([IO.Path]::GetFullPath($RepositoryRoot).TrimEnd('\', '/').Length + 1).Replace('\', '/')
         $null = $material.Append($relativePath).Append('=').Append($hash).Append("`n")
     }

@@ -272,6 +272,14 @@ if ($AffectedOnly) {
             Add-IndexToolWithDependents 'Build-LlmWikiBackendContractIndex.ps1'
         }
 
+        if ('.llm-wiki/tools/LlmWikiSourceInventory.ps1' -in $normalizedChangedPaths) {
+            Add-IndexTool 'Build-LlmWikiDomainDataIndex.ps1'
+            Add-IndexTool 'Build-LlmWikiRuntimeTopology.ps1'
+        }
+        if ('.llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1' -in $normalizedChangedPaths) {
+            Add-IndexTool 'Build-LlmWikiRuntimeTopology.ps1'
+        }
+
         $frontendPaths = @($normalizedChangedPaths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/' })
         if (@($normalizedChangedPaths | Where-Object { $_ -match '^docs/.+\.md$|(^|/)AGENTS\.md$' }).Count -gt 0) {
             Add-IndexToolWithDependents 'Build-LlmWikiCatalog.ps1'

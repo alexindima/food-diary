@@ -5,11 +5,11 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5835,
-    "wikiToolFiles": 208,
+    "productionFiles": 5836,
+    "wikiToolFiles": 209,
     "wikiToolsWithoutTestReferences": 6,
-    "criticalSymbols": 990,
-    "criticalSymbolsWithTestReferences": 943,
+    "criticalSymbols": 991,
+    "criticalSymbolsWithTestReferences": 944,
     "criticalSymbolsWithoutTestReferences": 47,
     "debtMarkers": 12
   },
@@ -48,19 +48,19 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-      "nonBlankLines": 621,
-      "decisionPoints": 135,
+      "nonBlankLines": 628,
+      "decisionPoints": 137,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 216.92
+      "structuralRiskScore": 220.06
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-      "nonBlankLines": 433,
-      "decisionPoints": 131,
+      "nonBlankLines": 435,
+      "decisionPoints": 132,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 207.16
+      "structuralRiskScore": 208.7
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
@@ -858,11 +858,11 @@
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiDomainDataIndex.ps1",
-      "nonBlankLines": 130,
-      "decisionPoints": 17,
+      "nonBlankLines": 132,
+      "decisionPoints": 18,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 30.1
+      "structuralRiskScore": 31.64
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1",
@@ -906,11 +906,11 @@
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiRuntimeTopology.ps1",
-      "nonBlankLines": 243,
+      "nonBlankLines": 242,
       "decisionPoints": 41,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 68.36
+      "structuralRiskScore": 68.34
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiSensitiveDataIndex.ps1",
@@ -1506,11 +1506,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-      "nonBlankLines": 433,
-      "decisionPoints": 131,
+      "nonBlankLines": 435,
+      "decisionPoints": 132,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 207.16
+      "structuralRiskScore": 208.7
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiContractReferenceExtractor.ps1",
@@ -1554,11 +1554,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-      "nonBlankLines": 621,
-      "decisionPoints": 135,
+      "nonBlankLines": 628,
+      "decisionPoints": 137,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 216.92
+      "structuralRiskScore": 220.06
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiMcpCommand.ps1",
@@ -1818,11 +1818,11 @@
     },
     {
       "path": ".llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1",
-      "nonBlankLines": 37,
-      "decisionPoints": 1,
+      "nonBlankLines": 58,
+      "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.24
+      "structuralRiskScore": 7.66
     },
     {
       "path": ".llm-wiki/tools/LlmWikiSmokeSandbox.ps1",
@@ -1831,6 +1831,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 5.76
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiSourceInventory.ps1",
+      "nonBlankLines": 27,
+      "decisionPoints": 5,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 10.04
     },
     {
       "path": ".llm-wiki/tools/LlmWikiTaskAuditHelpers.ps1",
@@ -57613,8 +57621,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Build-LlmWikiDomainDataIndex.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiIndexSelection.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -59175,8 +59184,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 3,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiIndexSelection.ps1",
+        ".llm-wiki/tools/Test-LlmWikiSourceInventory.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -59225,6 +59236,18 @@
         ".llm-wiki/tools/Test-LlmWikiWorkflowMetrics.ps1",
         ".llm-wiki/tools/Test-LlmWikiWorkflowRecovery.ps1",
         ".llm-wiki/tools/Test-LlmWikiWorkspacePolicyCache.ps1"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "LlmWikiSourceInventory",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/LlmWikiSourceInventory.ps1",
+      "line": 1,
+      "testReferenceCount": 1,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiIndexSelection.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

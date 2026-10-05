@@ -25,6 +25,10 @@ foreach ($path in @(
 }
 
 $frontendPlan = Get-IndexPlan '.llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1'
+$sourceInventoryPlan = Get-IndexPlan '.llm-wiki/tools/LlmWikiSourceInventory.ps1'
+Assert-Plan ($sourceInventoryPlan -match 'Build-LlmWikiRuntimeTopology.ps1' -and $sourceInventoryPlan -match 'Build-LlmWikiDomainDataIndex.ps1') 'Shared source inventory change omitted its generators.'
+$runtimeFingerprintPlan = Get-IndexPlan '.llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1'
+Assert-Plan ($runtimeFingerprintPlan -match 'Build-LlmWikiRuntimeTopology.ps1') 'Runtime fingerprint change omitted its generator.'
 foreach ($documentationPath in @('docs/reports/wiki-analysis.md', 'Modules/Hydration/AGENTS.md')) {
     $documentationPlan = Get-IndexPlan $documentationPath
     Assert-Plan ($documentationPlan -match 'Build-LlmWikiCatalog.ps1') "Documentation inventory change omitted catalog: $documentationPath"

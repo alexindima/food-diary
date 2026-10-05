@@ -6,7 +6,15 @@ $manager = Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1'
 $null = & $manager -Action build -Format Json
 $runtimeTool = Join-Path $PSScriptRoot 'Find-LlmWikiRuntimeTopology.ps1'
 foreach ($query in @('', 'MailRelay', 'zznosuchruntime92841')) {
+    $commandTimer = [Diagnostics.Stopwatch]::StartNew()
     $result = & $runtimeTool -Query $query -Limit 30 -IncludeDiagnostics -Format Json | ConvertFrom-Json
+    $commandTimer.Stop()
+    # Allow invocation/serialization overhead, while rejecting a timer that
+    # starts only after the expensive source freshness verification.
+    $missingMs = $commandTimer.Elapsed.TotalMilliseconds - $result._diagnostics.completeCommandDurationMs
+    if ($result._diagnostics.completeCommandDurationMs -le 0 -or $missingMs -gt [Math]::Max(1000, $commandTimer.Elapsed.TotalMilliseconds * 0.35)) {
+        throw 'Runtime complete-command timing omitted source freshness verification.'
+    }
     foreach ($group in @('composeServices','hostedServices','httpClients','webhooks','recurringJobRegistrations','networkPolicies')) {
         if (-not $result.PSObject.Properties[$group] -or @($result.$group).Count -gt 30) { throw "Missing or unbounded runtime group: $group" }
     }

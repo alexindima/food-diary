@@ -246,6 +246,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'standalone-index-migration' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiSourceInventory.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiStandaloneIndexRoutes.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiRuntimeArchitectureQueries.ps1')

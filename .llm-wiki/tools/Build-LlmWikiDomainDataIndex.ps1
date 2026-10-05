@@ -3,6 +3,7 @@ param([switch]$Check)
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiSourceInventory.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $outputPath = Join-Path $wikiRoot 'generated/domain-data-index.json'
@@ -69,15 +70,16 @@ foreach ($root in $domainRoots) {
 
 $persistence = [System.Collections.Generic.List[object]]::new()
 $configurationFiles = @(
-    Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*Configuration.cs' |
+    Get-LlmWikiSourceFiles -RepositoryRoot $repositoryRoot -Filter '*Configuration.cs' `
+        -ExcludedDirectory @('Migrations', 'node_modules', 'bin', 'obj', '.artifacts', 'TestResults') |
         Where-Object {
-            $_.FullName -notmatch '[\\/](Migrations|node_modules|bin|obj|\.artifacts|TestResults)[\\/]' -and
-            [System.IO.File]::ReadAllText($_.FullName) -match 'IEntityTypeConfiguration|EntityTypeBuilder'
+            $_.FullName -notmatch '[\\/](Migrations|node_modules|bin|obj|\.artifacts|TestResults)[\\/]'
         } |
         Sort-Object FullName
 )
 foreach ($file in $configurationFiles) {
     $content = [System.IO.File]::ReadAllText($file.FullName)
+    if ($content -notmatch 'IEntityTypeConfiguration|EntityTypeBuilder') { continue }
     $path = ConvertTo-RepositoryPath $file.FullName
     $entityMatch = [regex]::Match($content, '(?:IEntityTypeConfiguration|EntityTypeBuilder)<(?<entity>[A-Za-z_][A-Za-z0-9_.]*)>')
     if (-not $entityMatch.Success) { continue }

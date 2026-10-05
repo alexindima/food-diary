@@ -30,6 +30,10 @@ if ($contextEvalGroups -notcontains 'adaptive-evals' -or $contextEvalGroups -not
     throw 'Context-search corpora must run both adaptive evals and the SQL context regression suite.'
 }
 $contextRankingGroups = @(Get-Groups '.llm-wiki/policies/context-search-ranking.json')
+foreach ($inventoryTool in @('LlmWikiSourceInventory', 'Test-LlmWikiSourceInventory')) {
+    $inventoryGroups = @(Get-Groups ".llm-wiki/tools/$inventoryTool.ps1")
+    if ($inventoryGroups -notcontains 'standalone-index-migration' -or $inventoryGroups -notcontains 'domain-data-query') { throw 'Source inventory changes omitted runtime or domain/data regressions.' }
+}
 foreach ($consumer in @('Manage-LlmWikiModelRouting', 'Manage-LlmWikiVerificationPlan')) {
     if (@(Get-Groups ".llm-wiki/tools/$consumer.ps1") -notcontains 'strict-shapes') { throw "Item-ID consumer lost its collection regression: $consumer" }
 }

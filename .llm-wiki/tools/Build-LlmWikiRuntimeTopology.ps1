@@ -50,13 +50,10 @@ function Get-SourceWindow {
 }
 
 $sourceFiles = @(
-    Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.cs' |
-        Where-Object {
-            $_.FullName -notmatch '[\\/](tests|obj|bin|\.artifacts|\.llm-wiki|TestResults|Migrations)[\\/]' -and
-            $_.Name -notmatch '\.(Designer|g)\.cs$'
-        } |
+    Get-LlmWikiRuntimeTopologySourceFiles -RepositoryRoot $repositoryRoot |
         Sort-Object { Get-LlmWikiOrdinalSortKey $_.FullName }
 )
+$sourceHashes = [Collections.Generic.Dictionary[string, string]]::new([StringComparer]::Ordinal)
 $hostedServices = [System.Collections.Generic.List[object]]::new()
 $httpClients = [System.Collections.Generic.List[object]]::new()
 $webhooks = [System.Collections.Generic.List[object]]::new()
@@ -65,6 +62,7 @@ $networkPolicies = [System.Collections.Generic.List[object]]::new()
 
 foreach ($file in $sourceFiles) {
     $content = [System.IO.File]::ReadAllText($file.FullName)
+    $sourceHashes[$file.FullName] = Get-LlmWikiNormalizedContentHash -Content $content
     $path = ConvertTo-RepositoryPath $file.FullName
     foreach ($match in [regex]::Matches(
         $content,
@@ -171,6 +169,7 @@ $composeServices = [System.Collections.Generic.List[object]]::new()
 $composePath = Join-Path $repositoryRoot 'docker-compose.yml'
 if (Test-Path -LiteralPath $composePath) {
     $compose = Get-Content -LiteralPath $composePath -Raw
+    $sourceHashes[$composePath] = Get-LlmWikiNormalizedContentHash -Content $compose
     $servicesMatch = [regex]::Match($compose, '(?ms)^services:\s*\r?\n(?<body>.*?)(?=^[a-zA-Z0-9_-]+:\s*(?:\r?\n|$)|\z)')
     $servicesBody = if ($servicesMatch.Success) { $servicesMatch.Groups['body'].Value } else { '' }
     foreach ($match in [regex]::Matches($servicesBody, '(?ms)^  (?<name>[a-zA-Z0-9_-]+):\r?\n(?<body>.*?)(?=^  [a-zA-Z0-9_-]+:|\z)')) {
@@ -218,7 +217,7 @@ if (Test-Path -LiteralPath $composePath) {
 
 $result = [ordered]@{
     schemaVersion = 1
-    freshness = Get-LlmWikiRuntimeTopologyFingerprint -RepositoryRoot $repositoryRoot
+    freshness = Get-LlmWikiRuntimeTopologyFingerprint -RepositoryRoot $repositoryRoot -SourceHashes $sourceHashes
     summary = [ordered]@{
         composeServices = $composeServices.Count
         hostedServices = @($hostedServices | Sort-Object { Get-LlmWikiOrdinalSortKey "$($_.name)`0$($_.path)" } -Unique).Count
