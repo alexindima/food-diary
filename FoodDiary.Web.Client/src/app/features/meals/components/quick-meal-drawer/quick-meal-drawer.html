@@ -64,6 +64,8 @@
                                     variant="secondary"
                                     fill="text"
                                     icon="edit"
+                                    [disabled]="isSaving() || editingItemKey() !== null"
+                                    [loading]="editingItemKey() === itemView.item.key"
                                     [fdUiHint]="'MEAL_MANAGE.MANUAL_ITEM_EDIT' | translate"
                                     [ariaLabel]="'MEAL_MANAGE.MANUAL_ITEM_EDIT_NAMED' | translate: { name: itemView.name }"
                                     (click)="edit(itemView.item)"
@@ -123,6 +125,8 @@
                     [fullWidth]="true"
                     [ariaLabel]="'QUICK_MEAL.SAVE_ARIA' | translate"
                     [loading]="isSaving()"
+                    [disabled]="editingItemKey() !== null"
+                    [disabledReason]="editingItemKey() !== null ? ('COMMON.LOADING' | translate) : null"
                     (click)="save()"
                 >
                     {{ 'QUICK_MEAL.SAVE' | translate }}

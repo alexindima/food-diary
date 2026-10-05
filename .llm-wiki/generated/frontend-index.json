@@ -4420,7 +4420,7 @@
       "role": "Component",
       "selector": "fd-quick-meal-drawer",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.ts",
-      "line": 42
+      "line": 48
     },
     {
       "name": "MealFavoritesPickerComponent",

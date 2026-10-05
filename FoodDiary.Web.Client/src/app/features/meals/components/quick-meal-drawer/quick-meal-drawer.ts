@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { firstValueFrom } from 'rxjs';
 
 import { MealDetailsFieldsComponent } from '../../../../components/shared/meal-details-fields/meal-details-fields';
@@ -32,6 +33,11 @@ type QuickMealToggleView = {
     labelKey: string;
 };
 
+type QuickMealEditOperation = {
+    item: QuickMealItem;
+    dialogRef?: FdUiDialogRef<MealManualItemDialogComponent, MealItemFormValues | null>;
+};
+
 @Component({
     selector: 'fd-quick-meal-drawer',
     imports: [LocalizedNumberPipe, TranslatePipe, FdUiHintDirective, FdUiButtonComponent, MealDetailsFieldsComponent],
@@ -43,9 +49,11 @@ export class QuickMealDrawerComponent {
     private static nextId = 0;
 
     private readonly quickService = inject(QuickMealService);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly mealManageFacade = inject(MealManageFacade);
     private readonly fallbackImage = 'assets/images/stubs/receipt.png';
+    private activeEdit: QuickMealEditOperation | undefined;
 
     public readonly forceShow = input(false);
     public readonly layout = input<'fixed' | 'inline'>('fixed');
@@ -59,6 +67,7 @@ export class QuickMealDrawerComponent {
     protected readonly details = this.quickService.details;
     protected readonly hasItems = this.quickService.hasItems;
     protected readonly isSaving = this.quickService.isSaving;
+    protected readonly editingItemKey = signal<string | null>(null);
     protected readonly isDetailsExpanded = signal(false);
     protected readonly isCollapsed = signal(false);
 
@@ -99,6 +108,9 @@ export class QuickMealDrawerComponent {
     );
 
     public constructor() {
+        this.destroyRef.onDestroy(() => {
+            this.cancelEdit();
+        });
         let hadItems = this.hasItems();
         effect(() => {
             const hasItems = this.hasItems();
@@ -173,47 +185,76 @@ export class QuickMealDrawerComponent {
     }
 
     protected edit(item: QuickMealItem): void {
-        void this.openEditDialogAsync(item);
+        if (this.activeEdit !== undefined || this.isSaving() || !this.items().includes(item)) {
+            return;
+        }
+        const operation: QuickMealEditOperation = { item };
+        this.activeEdit = operation;
+        this.editingItemKey.set(item.key);
+        void this.openEditDialogAsync(operation);
     }
 
     protected remove(key: string): void {
+        if (this.activeEdit?.item.key === key) {
+            this.cancelEdit();
+        }
         this.quickService.removeItem(key);
     }
 
     protected clear(): void {
+        this.cancelEdit();
         this.quickService.clear();
     }
 
     protected save(): void {
+        if (this.activeEdit !== undefined) {
+            return;
+        }
         this.quickService.saveDraft();
     }
 
     private resetUiState(): void {
+        this.cancelEdit();
         this.isCollapsed.set(false);
         this.isDetailsExpanded.set(false);
     }
 
-    private async openEditDialogAsync(item: QuickMealItem): Promise<void> {
-        const dialogItem = await this.createDialogItemAsync(item);
-        const result = await firstValueFrom(
-            this.fdDialogService
-                .open<MealManualItemDialogComponent, MealManualItemDialogData, MealItemFormValues | null>(MealManualItemDialogComponent, {
-                    preset: 'form',
-                    data: { item: dialogItem },
-                })
-                .afterClosed(),
-        );
-
-        if (result === null || result === undefined) {
-            return;
+    private async openEditDialogAsync(operation: QuickMealEditOperation): Promise<void> {
+        try {
+            const dialogItem = await this.createDialogItemAsync(operation.item);
+            if (!this.isCurrentEdit(operation)) {
+                return;
+            }
+            operation.dialogRef = this.fdDialogService.open<
+                MealManualItemDialogComponent,
+                MealManualItemDialogData,
+                MealItemFormValues | null
+            >(MealManualItemDialogComponent, { preset: 'form', data: { item: dialogItem } });
+            const result = await firstValueFrom(operation.dialogRef.afterClosed());
+            if (result === null || result === undefined || !this.isCurrentEdit(operation)) {
+                return;
+            }
+            const updatedItem = this.toQuickMealItem(result);
+            if (updatedItem !== null) {
+                this.quickService.updateItem(operation.item.key, updatedItem);
+            }
+        } finally {
+            if (this.activeEdit === operation) {
+                this.activeEdit = undefined;
+                this.editingItemKey.set(null);
+            }
         }
+    }
 
-        const updatedItem = this.toQuickMealItem(result);
-        if (updatedItem === null) {
-            return;
-        }
+    private isCurrentEdit(operation: QuickMealEditOperation): boolean {
+        return this.activeEdit === operation && !this.destroyRef.destroyed && !this.isSaving() && this.items().includes(operation.item);
+    }
 
-        this.quickService.updateItem(item.key, updatedItem);
+    private cancelEdit(): void {
+        const operation = this.activeEdit;
+        this.activeEdit = undefined;
+        this.editingItemKey.set(null);
+        operation?.dialogRef?.close(null);
     }
 
     private async createDialogItemAsync(item: QuickMealItem): Promise<MealItemFormValues> {

@@ -2,7 +2,7 @@ import { computed, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of } from 'rxjs';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
@@ -18,6 +18,7 @@ import { QuickMealDrawerComponent } from './quick-meal-drawer';
 const PRODUCT_AMOUNT = 150;
 const RECIPE_SERVINGS = 2;
 const RECIPE_GRAMS = 300;
+const UPDATED_RECIPE_SERVINGS = 5;
 const PRE_MEAL_SATIETY_LEVEL = 3;
 const DEFAULT_SATIETY_LEVEL = 5;
 
@@ -167,7 +168,7 @@ describe('QuickMealDrawerComponent edit', () => {
         ]);
         mockEditDialogResult(createItemValue(MealSourceType.Product, product, null, PRODUCT_AMOUNT));
 
-        component['edit']({ key: 'product-product-1', type: 'product', product, amount: PRODUCT_AMOUNT });
+        component['edit'](quickService.items()[0]);
         await flushPromisesAsync();
 
         expect(quickService.updateItem).toHaveBeenCalledWith('product-product-1', {
@@ -185,7 +186,7 @@ describe('QuickMealDrawerComponent edit', () => {
         mealManageFacade.resolveRecipeServingsToGramsAsync.mockResolvedValue(RECIPE_GRAMS);
         mockEditDialogResult(createItemValue(MealSourceType.Recipe, null, recipe, RECIPE_GRAMS));
 
-        component['edit']({ key: 'recipe-recipe-1', type: 'recipe', recipe, amount: RECIPE_SERVINGS });
+        component['edit'](quickService.items()[0]);
         await flushPromisesAsync();
 
         expect(mealManageFacade.resolveRecipeServingsToGramsAsync).toHaveBeenCalledWith(recipe, RECIPE_SERVINGS);
@@ -196,6 +197,171 @@ describe('QuickMealDrawerComponent edit', () => {
             recipe,
             amount: RECIPE_SERVINGS,
         });
+    });
+});
+
+describe('QuickMealDrawerComponent pending edits', () => {
+    it('blocks duplicate preparation and saving while keeping draft cancellation available', async () => {
+        const { component, fixture, mealManageFacade, quickService } = await setupComponentAsync([createRecipeDraftItem()]);
+        const weight = deferRecipeWeight(mealManageFacade);
+        const item = quickService.items()[0];
+        component['edit'](item);
+        component['edit'](item);
+        component['save']();
+        fixture.detectChanges();
+
+        const root = fixture.nativeElement as HTMLElement;
+        expect(root.querySelector<HTMLButtonElement>('.quick-meal__item-action button')?.disabled).toBe(true);
+        expect(root.querySelector<HTMLButtonElement>('.quick-meal__save button')?.disabled).toBe(true);
+        expect(root.querySelectorAll<HTMLButtonElement>('.quick-meal__header-action button')[1].disabled).toBe(false);
+        expect(mealManageFacade.resolveRecipeServingsToGramsAsync).toHaveBeenCalledTimes(1);
+        expect(quickService.saveDraft).not.toHaveBeenCalled();
+
+        root.querySelectorAll<HTMLButtonElement>('.quick-meal__header-action button')[1].click();
+        weight.next(RECIPE_GRAMS);
+        await flushPromisesAsync();
+        expect(vi.spyOn(TestBed.inject(FdUiDialogService), 'open')).not.toHaveBeenCalled();
+        expect(quickService.items()).toEqual([]);
+    });
+
+    it('keeps one edit operation until its dialog closes and allows another afterward', async () => {
+        const { component, quickService, mealManageFacade } = await setupComponentAsync([createRecipeDraftItem()]);
+        const { closed } = mockPendingEditDialog();
+        const item = quickService.items()[0];
+        component['edit'](item);
+        await flushPromisesAsync();
+        component['edit'](item);
+        expect(vi.spyOn(TestBed.inject(FdUiDialogService), 'open')).toHaveBeenCalledTimes(1);
+        expect(mealManageFacade.resolveRecipeServingsToGramsAsync).toHaveBeenCalledTimes(1);
+
+        closed.next(null);
+        await flushPromisesAsync();
+        component['edit'](item);
+        await flushPromisesAsync();
+        expect(vi.spyOn(TestBed.inject(FdUiDialogService), 'open')).toHaveBeenCalledTimes(2);
+        closed.next(null);
+        await flushPromisesAsync();
+    });
+
+    it('does not open a prepared editor after its item was removed', async () => {
+        const { component, quickService, mealManageFacade } = await setupComponentAsync([createRecipeDraftItem()]);
+        const weight = deferRecipeWeight(mealManageFacade);
+        const item = quickService.items()[0];
+        component['edit'](item);
+        component['remove'](item.key);
+        weight.next(RECIPE_GRAMS);
+        await flushPromisesAsync();
+
+        expect(vi.spyOn(TestBed.inject(FdUiDialogService), 'open')).not.toHaveBeenCalled();
+        expect(quickService.items()).toEqual([]);
+        expect(quickService.updateItem).not.toHaveBeenCalled();
+    });
+});
+
+describe('QuickMealDrawerComponent draft changes during editing', () => {
+    it('rejects preparation for an item replaced with the same key', async () => {
+        const { component, quickService, mealManageFacade } = await setupComponentAsync([createRecipeDraftItem()]);
+        const weight = deferRecipeWeight(mealManageFacade);
+        const item = quickService.items()[0];
+        component['edit'](item);
+        quickService.items.set([{ ...item, amount: item.amount + 1 }]);
+        weight.next(RECIPE_GRAMS);
+        await flushPromisesAsync();
+
+        expect(vi.spyOn(TestBed.inject(FdUiDialogService), 'open')).not.toHaveBeenCalled();
+        expect(quickService.updateItem).not.toHaveBeenCalled();
+        expect(quickService.items()[0].amount).toBe(item.amount + 1);
+    });
+
+    it('does not let a canceled preparation release a newer edit operation', async () => {
+        const { component, quickService, mealManageFacade } = await setupComponentAsync([createRecipeDraftItem()]);
+        const first = new Subject<number>();
+        const second = new Subject<number>();
+        mealManageFacade.resolveRecipeServingsToGramsAsync
+            .mockReturnValueOnce(firstValueFrom(first))
+            .mockReturnValueOnce(firstValueFrom(second));
+        component['edit'](quickService.items()[0]);
+        component['clear']();
+        const replacement = createRecipeDraftItem();
+        quickService.items.set([replacement]);
+        component['edit'](replacement);
+        first.next(RECIPE_GRAMS);
+        await flushPromisesAsync();
+        component['edit'](replacement);
+        expect(mealManageFacade.resolveRecipeServingsToGramsAsync).toHaveBeenCalledTimes(2);
+        expect(vi.spyOn(TestBed.inject(FdUiDialogService), 'open')).not.toHaveBeenCalled();
+
+        mockEditDialogResult(null);
+        second.next(RECIPE_GRAMS);
+        await flushPromisesAsync();
+        expect(vi.spyOn(TestBed.inject(FdUiDialogService), 'open')).toHaveBeenCalledTimes(1);
+    });
+
+    it('cancels pending preparation when the shared draft is reset', async () => {
+        const { component, fixture, quickService, mealManageFacade } = await setupComponentAsync([createRecipeDraftItem()]);
+        const weight = deferRecipeWeight(mealManageFacade);
+        component['edit'](quickService.items()[0]);
+        quickService.items.set([]);
+        fixture.detectChanges();
+        weight.next(RECIPE_GRAMS);
+        await flushPromisesAsync();
+
+        expect(vi.spyOn(TestBed.inject(FdUiDialogService), 'open')).not.toHaveBeenCalled();
+        expect(quickService.updateItem).not.toHaveBeenCalled();
+    });
+});
+
+describe('QuickMealDrawerComponent edit ownership', () => {
+    it('does not open a pending editor after the drawer is destroyed', async () => {
+        const { component, fixture, quickService, mealManageFacade } = await setupComponentAsync([createRecipeDraftItem()]);
+        const weight = deferRecipeWeight(mealManageFacade);
+        component['edit'](quickService.items()[0]);
+        fixture.destroy();
+        weight.next(RECIPE_GRAMS);
+        await flushPromisesAsync();
+
+        expect(vi.spyOn(TestBed.inject(FdUiDialogService), 'open')).not.toHaveBeenCalled();
+        expect(quickService.updateItem).not.toHaveBeenCalled();
+    });
+
+    it('closes an active editor when its drawer is destroyed', async () => {
+        const { component, fixture, quickService } = await setupComponentAsync([createRecipeDraftItem()]);
+        const { close } = mockPendingEditDialog();
+        component['edit'](quickService.items()[0]);
+        await flushPromisesAsync();
+        fixture.destroy();
+        await flushPromisesAsync();
+
+        expect(close).toHaveBeenCalledWith(null);
+        expect(quickService.updateItem).not.toHaveBeenCalled();
+    });
+
+    it('does not apply a dialog result to a replaced draft item', async () => {
+        const { component, quickService } = await setupComponentAsync([createRecipeDraftItem()]);
+        const { closed } = mockPendingEditDialog();
+        const original = quickService.items()[0];
+        component['edit'](original);
+        await flushPromisesAsync();
+        quickService.items.set([{ ...original, amount: UPDATED_RECIPE_SERVINGS }]);
+        closed.next(createItemValue(MealSourceType.Recipe, null, recipe, RECIPE_GRAMS));
+        await flushPromisesAsync();
+
+        expect(quickService.updateItem).not.toHaveBeenCalled();
+        expect(quickService.items()[0].amount).toBe(UPDATED_RECIPE_SERVINGS);
+    });
+
+    it('blocks editing while the draft is saving', async () => {
+        const { component, fixture, quickService, mealManageFacade } = await setupComponentAsync([createRecipeDraftItem()]);
+        quickService.isSaving.set(true);
+        component['edit'](quickService.items()[0]);
+        fixture.detectChanges();
+        await flushPromisesAsync();
+
+        expect(vi.spyOn(TestBed.inject(FdUiDialogService), 'open')).not.toHaveBeenCalled();
+        expect(mealManageFacade.resolveRecipeServingsToGramsAsync).not.toHaveBeenCalled();
+        expect((fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.quick-meal__item-action button')?.disabled).toBe(
+            true,
+        );
     });
 });
 
@@ -218,7 +384,7 @@ async function setupComponentAsync(items: QuickMealItem[]): Promise<{
                 {
                     provide: FdUiDialogService,
                     useValue: {
-                        open: vi.fn().mockReturnValue({ afterClosed: () => of(true) }),
+                        open: vi.fn().mockReturnValue({ afterClosed: () => of(null), close: vi.fn() }),
                     },
                 },
             ],
@@ -252,7 +418,9 @@ function createQuickMealServiceMock(items: QuickMealItem[]): QuickMealServiceMoc
         hasItems: computed(() => itemSignal().length > 0),
         isSaving: signal(false),
         items: itemSignal,
-        removeItem: vi.fn(),
+        removeItem: vi.fn((key: string) => {
+            itemSignal.update(current => current.filter(item => item.key !== key));
+        }),
         saveDraft: vi.fn(),
         updateDetails: vi.fn(),
         updateItem: vi.fn(),
@@ -272,7 +440,29 @@ async function flushPromisesAsync(): Promise<void> {
 }
 
 function mockEditDialogResult(item: MealItemFormValues | null): void {
-    TestBed.inject(FdUiDialogService).open = vi.fn().mockReturnValue({ afterClosed: () => of(item) });
+    TestBed.inject(FdUiDialogService).open = vi.fn().mockReturnValue({ afterClosed: () => of(item), close: vi.fn() });
+}
+
+function createRecipeDraftItem(): QuickMealItem {
+    return { key: 'recipe-recipe-1', type: 'recipe', recipe, amount: RECIPE_SERVINGS };
+}
+
+function deferRecipeWeight(facade: MealManageFacadeMock): Subject<number> {
+    const weight = new Subject<number>();
+    facade.resolveRecipeServingsToGramsAsync.mockReturnValue(firstValueFrom(weight));
+    return weight;
+}
+
+function mockPendingEditDialog(): {
+    closed: Subject<MealItemFormValues | null>;
+    close: ReturnType<typeof vi.fn>;
+} {
+    const closed = new Subject<MealItemFormValues | null>();
+    const close = vi.fn(() => {
+        closed.next(null);
+    });
+    TestBed.inject(FdUiDialogService).open = vi.fn().mockReturnValue({ afterClosed: () => closed, close });
+    return { closed, close };
 }
 
 function createItemValue(

@@ -20861,6 +20861,7 @@
       "feature": "meals",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.html",
       "keys": [
+        "COMMON.LOADING",
         "MEAL_MANAGE.MANUAL_ITEM_EDIT",
         "MEAL_MANAGE.MANUAL_ITEM_EDIT_NAMED",
         "QUICK_MEAL.AMOUNT",
@@ -28161,6 +28162,8 @@
       "inputsUsed": [
         "appearance",
         "ariaLabel",
+        "disabled",
+        "disabledReason",
         "fill",
         "fullWidth",
         "icon",
