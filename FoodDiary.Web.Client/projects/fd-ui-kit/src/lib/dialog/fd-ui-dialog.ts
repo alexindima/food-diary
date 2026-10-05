@@ -7,6 +7,7 @@ import {
     computed,
     contentChild,
     DestroyRef,
+    effect,
     type ElementRef,
     inject,
     input,
@@ -16,6 +17,7 @@ import {
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
+import { FD_UI_DIALOG_DISMISSAL_LOCK } from './fd-ui-dialog.tokens';
 import { FD_UI_DIALOG_DATA } from './fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from './fd-ui-dialog-footer.directive';
 import { FdUiDialogHeaderDirective } from './fd-ui-dialog-header.directive';
@@ -32,6 +34,7 @@ export type FdUiDialogData = {
     closeAriaLabel?: string;
     size?: FdUiDialogSize;
     dismissible?: boolean;
+    disableClose?: boolean;
     bodyScrollInset?: FdUiDialogBodyScrollInset;
 };
 
@@ -47,6 +50,7 @@ export class FdUiDialogComponent {
     private readonly injectedData = inject<FdUiDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
     private readonly destroyRef = inject(DestroyRef);
     private readonly document = inject(DOCUMENT);
+    private readonly acquireDismissalLock = inject(FD_UI_DIALOG_DISMISSAL_LOCK, { optional: true });
 
     protected readonly dialogTitleId = `fd-dialog-title-${nextDialogId++}`;
 
@@ -63,6 +67,9 @@ export class FdUiDialogComponent {
     public readonly dismissible = input(this.injectedData?.dismissible ?? true, {
         transform: booleanAttribute,
     });
+    public readonly disableClose = input(this.injectedData?.disableClose ?? false, {
+        transform: booleanAttribute,
+    });
 
     protected readonly showHeader = computed(() => Boolean(this.title() ?? this.subtitle() ?? this.dismissible()));
     protected readonly hasCustomHeader = computed(() => Boolean(this.headerSlot()));
@@ -75,6 +82,14 @@ export class FdUiDialogComponent {
     );
 
     public constructor() {
+        effect(onCleanup => {
+            if (this.disableClose()) {
+                const release = this.acquireDismissalLock?.();
+                if (release !== undefined) {
+                    onCleanup(release);
+                }
+            }
+        });
         afterNextRender(() => {
             const body = this.body()?.nativeElement;
 
@@ -103,6 +118,8 @@ export class FdUiDialogComponent {
     }
 
     protected close(result?: unknown): void {
-        this.dialogRef?.close(result);
+        if (!this.disableClose()) {
+            this.dialogRef?.close(result);
+        }
     }
 }

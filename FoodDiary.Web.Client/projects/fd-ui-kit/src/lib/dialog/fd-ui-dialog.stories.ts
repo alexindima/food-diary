@@ -23,11 +23,12 @@ For dialog selection rules, presets, and sizing guidance, see Foundation/Dialogs
         subtitle: { control: 'text' },
         size: { control: 'select', options: ['sm', 'md', 'lg', 'xl'] },
         dismissible: { control: 'boolean' },
+        disableClose: { control: 'boolean' },
     },
     render: args => ({
         props: args,
         template: `
-            <fd-ui-dialog-shell [title]="title" [subtitle]="subtitle" [size]="size" [dismissible]="dismissible">
+            <fd-ui-dialog-shell [title]="title" [subtitle]="subtitle" [size]="size" [dismissible]="dismissible" [disableClose]="disableClose">
                 <p style="margin: 0; color: #666;">Dialog body content goes here. This demonstrates the dialog shell without the overlay.</p>
                 <div fdUiDialogFooter style="display: flex; gap: var(--fd-space-xs); justify-content: flex-end;">
                     <fd-ui-button variant="secondary" fill="outline">Cancel</fd-ui-button>
@@ -82,6 +83,16 @@ export const NonDismissible: Story = {
         title: 'Confirm Action',
         size: 'sm',
         dismissible: false,
+    },
+};
+
+export const PendingOperation: Story = {
+    args: {
+        title: 'Saving changes',
+        subtitle: 'Wait for the current operation to finish',
+        size: 'md',
+        dismissible: true,
+        disableClose: true,
     },
 };
 

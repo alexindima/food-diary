@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { type FdUiDialogBodyScrollInset, FdUiDialogComponent, type FdUiDialogSize } from '../dialog/fd-ui-dialog';
 
@@ -17,4 +17,5 @@ export class FdUiDialogShellComponent {
     public readonly size = input<FdUiDialogSize>('md');
     public readonly bodyScrollInset = input<FdUiDialogBodyScrollInset>('default');
     public readonly dismissible = input(true);
+    public readonly disableClose = input(false, { transform: booleanAttribute });
 }

@@ -5,7 +5,7 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { inject, PLATFORM_ID, Service, type StaticProvider } from '@angular/core';
 
 import type { FdUiDialogSize } from './fd-ui-dialog';
-import { FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY } from './fd-ui-dialog.tokens';
+import { FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY, FD_UI_DIALOG_DISMISSAL_LOCK } from './fd-ui-dialog.tokens';
 import { FdUiDialogRef } from './fd-ui-dialog-ref';
 
 export type FdUiDialogPreset = 'confirm' | 'form' | 'list' | 'detail' | 'fullscreen';
@@ -56,7 +56,11 @@ export class FdUiDialogService {
             scrollStrategy: config.scrollStrategy ?? this.overlay.scrollStrategies.block(),
             providers: cdkDialogRef => {
                 const wrappedRef = new FdUiDialogRef<T, R>(cdkDialogRef);
-                return [{ provide: FdUiDialogRef, useValue: wrappedRef }, ...baseProviders] as StaticProvider[];
+                return [
+                    { provide: FdUiDialogRef, useValue: wrappedRef },
+                    { provide: FD_UI_DIALOG_DISMISSAL_LOCK, useValue: () => wrappedRef.acquireDismissalLock() },
+                    ...baseProviders,
+                ] as StaticProvider[];
             },
         };
 

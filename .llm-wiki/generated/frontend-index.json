@@ -1704,7 +1704,7 @@
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog-ref.ts",
-      "line": 5
+      "line": 12
     },
     {
       "name": "FdUiDialogService",
@@ -1718,7 +1718,7 @@
       "role": "Component",
       "selector": "fd-ui-dialog",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
-      "line": 45
+      "line": 48
     },
     {
       "name": "FdUiEmojiPickerComponent",

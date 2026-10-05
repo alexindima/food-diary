@@ -3,6 +3,13 @@ import type { OverlayRef } from '@angular/cdk/overlay';
 import type { ComponentRef } from '@angular/core';
 import type { Observable } from 'rxjs';
 
+type DialogDismissalState = {
+    configuredDisableClose: boolean | undefined;
+    locks: Set<symbol>;
+};
+
+const dismissalStates = new WeakMap<object, DialogDismissalState>();
+
 export class FdUiDialogRef<T = unknown, R = unknown> {
     public constructor(private readonly dialogRef: DialogRef<R, T>) {}
 
@@ -27,7 +34,32 @@ export class FdUiDialogRef<T = unknown, R = unknown> {
     }
 
     public set disableClose(value: boolean | undefined) {
-        this.dialogRef.disableClose = value;
+        this.dismissalState.configuredDisableClose = value;
+        this.updateDismissalState();
+    }
+
+    public acquireDismissalLock(): () => void {
+        const lock = Symbol();
+        this.dismissalState.locks.add(lock);
+        this.updateDismissalState();
+        return () => {
+            this.dismissalState.locks.delete(lock);
+            this.updateDismissalState();
+        };
+    }
+
+    private get dismissalState(): DialogDismissalState {
+        let state = dismissalStates.get(this.dialogRef);
+        if (state === undefined) {
+            state = { configuredDisableClose: this.dialogRef.disableClose, locks: new Set() };
+            dismissalStates.set(this.dialogRef, state);
+        }
+        return state;
+    }
+
+    private updateDismissalState(): void {
+        const state = this.dismissalState;
+        this.dialogRef.disableClose = state.locks.size > 0 || state.configuredDisableClose;
     }
 
     public get backdropClick(): Observable<MouseEvent> {

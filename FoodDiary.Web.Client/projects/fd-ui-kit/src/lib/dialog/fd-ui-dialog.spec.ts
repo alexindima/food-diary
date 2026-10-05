@@ -6,6 +6,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
 import { FdUiDialogComponent, type FdUiDialogData } from './fd-ui-dialog';
+import { FD_UI_DIALOG_DISMISSAL_LOCK } from './fd-ui-dialog.tokens';
 import { FdUiDialogHeaderDirective } from './fd-ui-dialog-header.directive';
 
 @Component({
@@ -27,7 +28,7 @@ type DialogTestContext = {
     fixture: ComponentFixture<FdUiDialogComponent>;
 };
 
-function createDialogComponent(data: FdUiDialogData): DialogTestContext {
+function createDialogComponent(data: FdUiDialogData, dismissalLock?: () => () => void): DialogTestContext {
     const dialogRefSpy = { close: vi.fn() };
 
     TestBed.configureTestingModule({
@@ -36,6 +37,7 @@ function createDialogComponent(data: FdUiDialogData): DialogTestContext {
             provideTranslateTesting(),
             { provide: FD_UI_DIALOG_DATA, useValue: data },
             { provide: FdUiDialogRef, useValue: dialogRefSpy },
+            ...(dismissalLock === undefined ? [] : [{ provide: FD_UI_DIALOG_DISMISSAL_LOCK, useValue: dismissalLock }]),
         ],
     });
 
@@ -125,6 +127,40 @@ describe('FdUiDialogComponent dismiss button', () => {
         const closeBtn = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.fd-ui-dialog__close-button');
 
         expect(closeBtn?.getAttribute('aria-label')).toBe('Закрыть диалог');
+    });
+});
+
+describe('FdUiDialogComponent pending-operation dismissal', () => {
+    it('blocks dismissal while pending and releases it when the operation settles', () => {
+        const release = vi.fn<() => void>();
+        const lock = vi.fn<() => () => void>().mockReturnValue(release);
+        const { component, fixture, dialogRefSpy } = createDialogComponent({ title: 'Saving', disableClose: true }, lock);
+        const button = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.fd-ui-dialog__close-button');
+        expect(lock).toHaveBeenCalledOnce();
+        expect(button?.disabled).toBe(true);
+        button?.click();
+        component['close']();
+        expect(dialogRefSpy.close).not.toHaveBeenCalled();
+        fixture.componentRef.setInput('disableClose', false);
+        fixture.detectChanges();
+        expect(release).toHaveBeenCalledOnce();
+        expect(button?.disabled).toBe(false);
+        button?.click();
+        expect(dialogRefSpy.close).toHaveBeenCalledOnce();
+    });
+
+    it('releases a pending-operation lock when the wrapper is destroyed', () => {
+        const release = vi.fn<() => void>();
+        const { fixture } = createDialogComponent({ disableClose: true }, () => release);
+        fixture.destroy();
+        expect(release).toHaveBeenCalledOnce();
+    });
+
+    it('keeps the hidden-button setting independent from the dismissal policy', () => {
+        const lock = vi.fn<() => () => void>();
+        const { fixture } = createDialogComponent({ dismissible: false }, lock);
+        expect(lock).not.toHaveBeenCalled();
+        expect((fixture.nativeElement as HTMLElement).querySelector('.fd-ui-dialog__close-button')).toBeNull();
     });
 });
 

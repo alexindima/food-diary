@@ -475,9 +475,12 @@ Header slot for `fd-ui-entity-card`.
 
 Dialog wrapper used with `FdUiDialogService`.
 
+Use `[disableClose]="busy()"` to prevent Escape, backdrop clicks, and the built-in close button from dismissing a pending operation. The guard releases when the input becomes false or the wrapper is destroyed, preserving any `disableClose` policy set through the dialog service or ref. Explicit `dialogRef.close(result)` remains available for successful operations. `dismissible` controls visibility of the built-in close button.
+
 **Inputs**
 
 - `dismissible?: boolean`
+- `disableClose?: boolean`
 - `size?: 'sm' | 'md' | 'lg' | 'xl'`
 - `bodyScrollInset?: 'default' | 'edge'`
 
@@ -508,9 +511,12 @@ Dialog wrapper used with `FdUiDialogService`.
 
 Layout wrapper for dialog content.
 
+`disableClose` forwards the same dismissal guard to its dialog wrapper.
+
 **Inputs**
 
 - `dismissible?: boolean`
+- `disableClose?: boolean`
 - `flush?: boolean`
 - `size?: 'sm' | 'md' | 'lg' | 'xl'`
 - `bodyScrollInset?: 'default' | 'edge'`

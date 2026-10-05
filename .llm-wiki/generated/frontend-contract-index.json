@@ -3,7 +3,7 @@
   "summary": {
     "components": 486,
     "componentsWithoutDirectSpecs": 131,
-    "inputs": 1557,
+    "inputs": 1559,
     "outputs": 538,
     "apiCalls": 278,
     "templatesWithTranslations": 347,
@@ -4951,6 +4951,11 @@
           "name": "dismissible",
           "type": "",
           "required": false
+        },
+        {
+          "name": "disableClose",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [],
@@ -4990,6 +4995,11 @@
         },
         {
           "name": "dismissible",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "disableClose",
           "type": "",
           "required": false
         }
@@ -31174,6 +31184,7 @@
       "inputsUsed": [
         "bodyScrollInset",
         "closeAriaLabel",
+        "disableClose",
         "dismissible",
         "size",
         "subtitle",
@@ -32013,6 +32024,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/meal-favorites-picker/meal-favorites-picker.html",
       "occurrences": 1,
       "inputsUsed": [
+        "disableClose",
         "dismissible",
         "size",
         "title"
@@ -32027,6 +32039,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.html",
       "occurrences": 1,
       "inputsUsed": [
+        "disableClose",
         "dismissible",
         "size",
         "title"
@@ -32041,6 +32054,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-favorites-picker/recipe-favorites-picker.html",
       "occurrences": 1,
       "inputsUsed": [
+        "disableClose",
         "dismissible",
         "size",
         "title"

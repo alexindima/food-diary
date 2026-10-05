@@ -1,4 +1,4 @@
-<fd-ui-dialog-shell size="md" [title]="'RECIPE_FAVORITES.TITLE' | translate" [dismissible]="!busy()">
+<fd-ui-dialog-shell size="md" [title]="'RECIPE_FAVORITES.TITLE' | translate" [dismissible]="!busy()" [disableClose]="busy()">
     <div class="fd-stack fd-gap-md">
         <fd-ui-input [label]="'RECIPE_FAVORITES.SEARCH' | translate" [maxLength]="200" [disabled]="busy()" (valueChange)="search($event)" />
         <div aria-live="polite" [hidden]="!facade.loading() && !facade.failed() && facade.items().length > 0">

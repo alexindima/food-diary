@@ -118,3 +118,63 @@ describe('FdUiDialogRef', () => {
         expect(afterClosedSpy).toHaveBeenCalledWith('confirmed');
     });
 });
+
+describe('FdUiDialogRef dismissal locks', () => {
+    it.each([true, false, undefined])('restores the configured policy %s after release', policy => {
+        const mock = createDialogRefMock();
+        mock.disableClose = policy;
+        const { ref } = createRef(mock);
+        const release = ref.acquireDismissalLock();
+        expect(mock.disableClose).toBe(true);
+        release();
+        expect(mock.disableClose).toBe(policy);
+    });
+
+    it('keeps independent locks active and releases each only once', () => {
+        const { ref, mock } = createRef();
+        const first = ref.acquireDismissalLock();
+        const second = ref.acquireDismissalLock();
+        first();
+        first();
+        expect(mock.disableClose).toBe(true);
+        second();
+        expect(mock.disableClose).toBe(false);
+    });
+
+    it.each([true, false])('preserves a changed ref policy %s while locked', policy => {
+        const { ref, mock } = createRef();
+        const release = ref.acquireDismissalLock();
+        ref.disableClose = policy;
+        expect(mock.disableClose).toBe(true);
+        release();
+        expect(mock.disableClose).toBe(policy);
+    });
+
+    it('shares dismissal state between provider and returned wrappers', () => {
+        const { ref, mock } = createRef();
+        const returned = createRef(mock).ref;
+        const release = ref.acquireDismissalLock();
+        returned.disableClose = true;
+        release();
+        expect(returned.disableClose).toBe(true);
+        const nextRelease = returned.acquireDismissalLock();
+        ref.disableClose = false;
+        expect(mock.disableClose).toBe(true);
+        nextRelease();
+        expect(mock.disableClose).toBe(false);
+    });
+
+    it('allows an intentional close while dismissal is locked', () => {
+        const { ref, mock } = createRef();
+        ref.acquireDismissalLock();
+        ref.close('saved');
+        expect(mock.close).toHaveBeenCalledWith('saved', undefined);
+    });
+
+    it('keeps separate dialogs independent', () => {
+        const first = createRef();
+        const second = createRef();
+        first.ref.acquireDismissalLock();
+        expect(second.ref.disableClose).toBe(false);
+    });
+});
