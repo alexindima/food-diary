@@ -55,6 +55,7 @@
             fill="solid"
             icon="check"
             [disabled]="!canSave()"
+            [loading]="isLoadingRecipeAmount()"
             [disabledReason]="'MEAL_MANAGE.MANUAL_ITEM_SAVE_DISABLED' | translate"
             (click)="save()"
         >

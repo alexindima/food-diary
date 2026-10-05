@@ -8,7 +8,7 @@
     "apiCalls": 278,
     "templatesWithTranslations": 347,
     "translationKeys": 2095,
-    "consumerEdges": 1227,
+    "consumerEdges": 1228,
     "consumedComponents": 308,
     "unconsumedComponents": 177
   },
@@ -20809,7 +20809,7 @@
       "feature": "meals",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.html",
       "keys": [
-        "DISABLED_HINTS.FORM_INVALID",
+        "COMMON.LOADING",
         "MEAL_MANAGE.SUBTITLE",
         "MEAL_MANAGE.TOUR.START_TOUR",
         "PRODUCT_MANAGE.CANCEL_BUTTON"
@@ -28115,6 +28115,7 @@
         "disabledReason",
         "fill",
         "icon",
+        "loading",
         "type",
         "variant"
       ],
@@ -35264,6 +35265,16 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/loader/fd-ui-loader.ts",
       "consumerFeature": "meal-plans",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plan-list-sections/meal-plan-list-content/meal-plan-list-content.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiLoaderComponent",
+      "selector": "fd-ui-loader",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/loader/fd-ui-loader.ts",
+      "consumerFeature": "meals",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.html",
       "occurrences": 1,
       "inputsUsed": [],
       "outputsHandled": []

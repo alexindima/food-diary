@@ -2,7 +2,7 @@ import { inject, Service } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, forkJoin, map, type Observable, of } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -18,7 +18,13 @@ import type {
 } from '../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import { calculateCalorieMismatchWarning, roundNutrient } from '../../../../shared/lib/nutrition-form.utils';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
-import { type Meal, type MealAiSessionManageDto, type MealManageDto, MealSourceType } from '../../../../shared/models/meal.data';
+import {
+    type Meal,
+    type MealAiSessionManageDto,
+    type MealItem,
+    type MealManageDto,
+    MealSourceType,
+} from '../../../../shared/models/meal.data';
 import type { Product } from '../../../../shared/models/product.data';
 import type { Recipe } from '../../../../shared/models/recipe.data';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
@@ -135,6 +141,35 @@ export class MealManageFacade {
         sourceType: MealSourceType = MealSourceType.Product,
     ): MealItemFormValues {
         return createMealItemValue(product, recipe, amount, sourceType);
+    }
+
+    public prepareMealItems(items: readonly MealItem[]): Observable<MealItemFormValues[]> {
+        if (items.length === 0) {
+            return of([this.createMealItem()]);
+        }
+
+        return forkJoin(
+            items.map(item => {
+                const recipe = item.sourceType === MealSourceType.Recipe ? (item.recipe ?? null) : null;
+                const amount =
+                    recipe !== null
+                        ? this.recipeWeight
+                              .loadServingWeight(recipe)
+                              .pipe(map(() => this.convertRecipeServingsToGrams(recipe, item.amount)))
+                        : of(item.amount);
+
+                return amount.pipe(
+                    map(value =>
+                        this.createMealItem(
+                            item.sourceType === MealSourceType.Product ? (item.product ?? null) : null,
+                            recipe,
+                            value,
+                            item.sourceType,
+                        ),
+                    ),
+                );
+            }),
+        );
     }
 
     public createMealItemValue(

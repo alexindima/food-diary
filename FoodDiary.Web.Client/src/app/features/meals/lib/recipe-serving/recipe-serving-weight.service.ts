@@ -53,6 +53,11 @@ export class RecipeServingWeightService {
         return servingsAmount;
     }
 
+    public hasServingWeight(recipe: Recipe | null): boolean {
+        const weight = recipe?.id !== undefined ? this.cache.get(recipe.id) : null;
+        return weight !== null && weight !== undefined && Number.isFinite(weight) && weight > 0;
+    }
+
     public convertGramsToServings(recipe: Recipe | null, grams: number): number {
         const servingWeight = recipe?.id !== undefined && recipe.id.length > 0 ? this.cache.get(recipe.id) : null;
         if (servingWeight !== null && servingWeight !== undefined && servingWeight > 0) {

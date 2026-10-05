@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormField, min, required } from '@angular/forms/signals';
+import { disabled, form, FormField, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -52,7 +52,12 @@ export class MealManualItemDialogComponent {
     private readonly translateService = inject(TranslateService);
 
     protected readonly showPicker = signal(this.data.item.product === null && this.data.item.recipe === null);
+    protected readonly isLoadingRecipeAmount = signal(false);
+    private readonly usesRecipeGrams = signal(this.recipeWeight.hasServingWeight(this.data.item.recipe));
     protected readonly amountLabel = computed(() => {
+        if (this.recipe() !== null && !this.usesRecipeGrams()) {
+            return this.translateService.instant('MEAL_MANAGE.AMOUNT_LABEL_RECIPE_SERVINGS');
+        }
         const unit = this.product()?.baseUnit ?? 'G';
         return `${this.translateService.instant('MEAL_MANAGE.ADD_ITEM_ROW.AMOUNT')} (${this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${unit.toUpperCase()}`)})`;
     });
@@ -63,6 +68,7 @@ export class MealManualItemDialogComponent {
     private readonly sourceTouched = signal(false);
     protected readonly amountModel = signal<number | null>(this.data.item.amount);
     protected readonly amount = form(this.amountModel, path => {
+        disabled(path, { when: () => this.isLoadingRecipeAmount() });
         required(path);
         min(path, MIN_AMOUNT);
     });
@@ -109,9 +115,12 @@ export class MealManualItemDialogComponent {
         return 'search';
     });
 
-    protected readonly amountPlaceholderKey = computed(() =>
-        this.sourceType() === MealSourceType.Recipe ? 'MEAL_MANAGE.AMOUNT_PLACEHOLDER_RECIPE' : 'MEAL_MANAGE.AMOUNT_PLACEHOLDER_PRODUCT',
-    );
+    protected readonly amountPlaceholderKey = computed(() => {
+        if (this.sourceType() !== MealSourceType.Recipe) {
+            return 'MEAL_MANAGE.AMOUNT_PLACEHOLDER_PRODUCT';
+        }
+        return this.usesRecipeGrams() ? 'MEAL_MANAGE.AMOUNT_PLACEHOLDER_RECIPE' : 'MEAL_MANAGE.AMOUNT_PLACEHOLDER_RECIPE_SERVINGS';
+    });
 
     protected readonly sourceError = computed(() => {
         if (!this.sourceTouched() || this.product() !== null || this.recipe() !== null) {
@@ -138,7 +147,9 @@ export class MealManualItemDialogComponent {
         return this.translateService.instant('FORM_ERRORS.UNKNOWN');
     });
 
-    protected readonly canSave = computed(() => (this.product() !== null || this.recipe() !== null) && !this.amount().invalid());
+    protected readonly canSave = computed(
+        () => !this.isLoadingRecipeAmount() && (this.product() !== null || this.recipe() !== null) && !this.amount().invalid(),
+    );
 
     protected onSourceTypeChange(value: string): void {
         const nextSourceType = value === RECIPE_SOURCE_VALUE ? MealSourceType.Recipe : MealSourceType.Product;
@@ -148,6 +159,8 @@ export class MealManualItemDialogComponent {
         }
 
         this.servingWeightSubscription?.unsubscribe();
+        this.isLoadingRecipeAmount.set(false);
+        this.usesRecipeGrams.set(false);
         this.sourceType.set(nextSourceType);
         this.sourceTypeValue.set(this.toSourceTypeValue(nextSourceType));
         this.sourceTouched.set(false);
@@ -171,6 +184,8 @@ export class MealManualItemDialogComponent {
     private applySelection(selection: Exclude<ItemSelection, { type: 'Text' }>): void {
         this.showPicker.set(false);
         this.servingWeightSubscription?.unsubscribe();
+        this.isLoadingRecipeAmount.set(false);
+        this.usesRecipeGrams.set(false);
         if (selection.type === 'Product') {
             this.sourceType.set(MealSourceType.Product);
             this.sourceTypeValue.set(PRODUCT_SOURCE_VALUE);
@@ -189,17 +204,24 @@ export class MealManualItemDialogComponent {
     }
 
     private loadRecipeAmount(recipe: Recipe): void {
+        this.isLoadingRecipeAmount.set(true);
         this.servingWeightSubscription = this.recipeWeight
             .loadServingWeight(recipe)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(servingWeight => {
-                if (servingWeight !== null && Number.isFinite(servingWeight) && servingWeight > 0 && this.amountModel() === 1) {
+                const hasWeight = servingWeight !== null && Number.isFinite(servingWeight) && servingWeight > 0;
+                this.usesRecipeGrams.set(hasWeight);
+                if (hasWeight && this.amountModel() === 1) {
                     this.amount().value.set(servingWeight);
                 }
+                this.isLoadingRecipeAmount.set(false);
             });
     }
 
     protected save(): void {
+        if (this.isLoadingRecipeAmount()) {
+            return;
+        }
         this.sourceTouched.set(true);
         this.amount().markAsTouched();
 

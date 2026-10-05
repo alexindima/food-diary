@@ -4392,7 +4392,7 @@
       "role": "Component",
       "selector": "fd-meal-manage-form",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
-      "line": 104
+      "line": 99
     },
     {
       "name": "MealManualItemDialogComponent",
@@ -4518,7 +4518,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/manage/meal-manage.facade.ts",
-      "line": 39
+      "line": 45
     },
     {
       "name": "QuickMealService",
@@ -7179,8 +7179,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4090,
-      "russianProperties": 4090,
+      "englishProperties": 4093,
+      "russianProperties": 4093,
       "countsMatch": true
     },
     {

@@ -21,8 +21,9 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
+import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, type Subscription } from 'rxjs';
 
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
@@ -40,13 +41,7 @@ import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared
 import { patchSignalFormModel } from '../../../../shared/lib/signal-form-model.utils';
 import { getRecordProperty, getStringProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { NutrientData } from '../../../../shared/models/charts.data';
-import {
-    type Meal,
-    type MealAiSessionManageDto,
-    type MealItem,
-    type MealManageDto,
-    MealSourceType,
-} from '../../../../shared/models/meal.data';
+import { type Meal, type MealAiSessionManageDto, type MealManageDto, MealSourceType } from '../../../../shared/models/meal.data';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { MEAL_MANAGE_MIN_ITEM_AMOUNT } from '../../lib/manage/meal-manage.config';
@@ -70,7 +65,6 @@ import {
     createMealManageFormValue,
     findReusableEmptyMealItemIndex,
     getDateInputValue,
-    getMealItemInitialAmount,
     getTimeInputValue,
     hasSelectedMealItems,
 } from './meal-manage-lib/meal-manage-form.mapper';
@@ -91,6 +85,7 @@ const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType'] as const;
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
+        FdUiLoaderComponent,
         PageBodyComponent,
         PageHeaderComponent,
         FdPageContainerDirective,
@@ -127,7 +122,9 @@ export class MealManageFormComponent {
     });
     protected readonly globalError = signal<string | null>(null);
     protected readonly isSubmitting = signal(false);
-    protected readonly isSubmitDisabled = computed(() => this.isSubmitting() || !this.hasSelectedItems());
+    protected readonly isLoadingRecipeAmounts = signal(false);
+    protected readonly isBusy = computed(() => this.isSubmitting() || this.isLoadingRecipeAmounts());
+    protected readonly isSubmitDisabled = computed(() => this.isBusy() || !this.hasSelectedItems());
     protected readonly aiSessions = signal<MealAiSessionManageDto[]>([]);
     private readonly itemsTouchedState = createCollectionTouchedState({
         hasItems: () => this.hasSelectedItems(),
@@ -255,11 +252,12 @@ export class MealManageFormComponent {
     }
 
     private watchMealInput(): void {
-        effect(() => {
+        effect(onCleanup => {
             const meal = this.meal();
             untracked(() => {
                 if (meal === null) {
                     this.populatedMeal = null;
+                    this.isLoadingRecipeAmounts.set(false);
                     return;
                 }
 
@@ -268,8 +266,10 @@ export class MealManageFormComponent {
                 }
 
                 this.populatedMeal = meal;
-                this.populateForm(meal);
-                this.updateSummary();
+                const subscription = this.populateForm(meal);
+                onCleanup(() => {
+                    subscription.unsubscribe();
+                });
             });
         });
     }
@@ -487,7 +487,7 @@ export class MealManageFormComponent {
     // --- Submit ---
 
     protected async onSubmitAsync(): Promise<void> {
-        if (this.isSubmitting()) {
+        if (this.isBusy()) {
             return;
         }
 
@@ -567,33 +567,19 @@ export class MealManageFormComponent {
         this.selectedMealType.set(mealType);
     }
 
-    private populateForm(meal: Meal): void {
+    private populateForm(meal: Meal): Subscription {
+        this.isLoadingRecipeAmounts.set(true);
         const patch = buildMealManageFormPatchValue(meal);
-        this.patchMealFormModel(patch);
+        this.patchMealFormModel({ ...patch, items: [] });
         this.aiSessions.set(meal.aiSessions ?? []);
-
-        if (meal.items.length === 0) {
-            this.patchMealFormModel({ items: [this.mealManageFacade.createMealItem()] });
-            return;
-        }
-
-        this.patchMealFormModel({
-            items: meal.items.map(item => this.createMealItemFromMeal(item)),
-        });
-    }
-
-    private createMealItemFromMeal(item: MealItem): MealItemFormValues {
-        const sourceType = item.sourceType;
-        const initialAmount = getMealItemInitialAmount(item, value =>
-            this.mealManageFacade.convertRecipeServingsToGrams(value.recipe ?? null, value.amount),
-        );
-
-        return this.mealManageFacade.createMealItem(
-            sourceType === MealSourceType.Product ? (item.product ?? null) : null,
-            sourceType === MealSourceType.Recipe ? (item.recipe ?? null) : null,
-            initialAmount,
-            sourceType,
-        );
+        return this.mealManageFacade
+            .prepareMealItems(meal.items)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(items => {
+                this.patchMealFormModel({ items });
+                this.isLoadingRecipeAmounts.set(false);
+                this.updateSummary();
+            });
     }
 
     private updateSummary(): void {

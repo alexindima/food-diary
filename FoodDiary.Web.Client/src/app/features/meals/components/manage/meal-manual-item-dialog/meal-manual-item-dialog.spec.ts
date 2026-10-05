@@ -25,6 +25,7 @@ class ItemSelectStub {
 
 const PRODUCT_DEFAULT_PORTION_AMOUNT = 125;
 const RECIPE_SERVING_WEIGHT = 80;
+const RECIPE_FALLBACK_SERVINGS = 1.5;
 
 type DialogSetup = {
     component: MealManualItemDialogComponent;
@@ -101,7 +102,9 @@ describe('MealManualItemDialogComponent save', () => {
     });
 });
 
-async function setupComponentAsync(values: Partial<{ product: Product; recipe: Recipe; amount: number }> = {}): Promise<DialogSetup> {
+async function setupComponentAsync(
+    values: Partial<{ product: Product; recipe: Recipe; amount: number; servingWeightAvailable: boolean }> = {},
+): Promise<DialogSetup> {
     const item = createItemValue(values);
     const dialogRef = { close: vi.fn() };
     const fdDialogService = {
@@ -119,6 +122,7 @@ async function setupComponentAsync(values: Partial<{ product: Product; recipe: R
                 provide: RecipeServingWeightService,
                 useValue: {
                     loadServingWeight: vi.fn().mockReturnValue(of(RECIPE_SERVING_WEIGHT)),
+                    hasServingWeight: vi.fn().mockReturnValue(values.servingWeightAvailable ?? true),
                 },
             },
         ],
@@ -188,6 +192,39 @@ function createRecipe(): Recipe {
 }
 
 describe('MealManualItemDialogComponent asynchronous serving weight', () => {
+    it.each([RECIPE_SERVING_WEIGHT, null])('blocks amount editing and save until weight resolves to %s', async servingWeight => {
+        const { component, fixture, dialogRef } = await setupComponentAsync();
+        const weight = new Subject<number | null>();
+        vi.spyOn(TestBed.inject(RecipeServingWeightService), 'loadServingWeight').mockReturnValue(weight);
+        component['onRecipeSelected'](createRecipe());
+        fixture.detectChanges();
+        const amountInput = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('input[type="number"]');
+        expect(component['canSave']()).toBe(false);
+        expect(amountInput?.disabled).toBe(true);
+        component['save']();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+
+        weight.next(servingWeight);
+        fixture.detectChanges();
+        expect(component['canSave']()).toBe(true);
+        expect(amountInput?.disabled).toBe(false);
+        expect(component['amountModel']()).toBe(servingWeight ?? 1);
+        expect(component['amountPlaceholderKey']()).toBe(
+            servingWeight === null ? 'MEAL_MANAGE.AMOUNT_PLACEHOLDER_RECIPE_SERVINGS' : 'MEAL_MANAGE.AMOUNT_PLACEHOLDER_RECIPE',
+        );
+        if (servingWeight === null) {
+            expect(component['amountLabel']()).toBe('MEAL_MANAGE.AMOUNT_LABEL_RECIPE_SERVINGS');
+        }
+    });
+    it('labels an existing recipe in servings when no weight is available', async () => {
+        const { component } = await setupComponentAsync({
+            recipe: createRecipe(),
+            amount: RECIPE_FALLBACK_SERVINGS,
+            servingWeightAvailable: false,
+        });
+        expect(component['amountLabel']()).toBe('MEAL_MANAGE.AMOUNT_LABEL_RECIPE_SERVINGS');
+        expect(component['amountModel']()).toBe(RECIPE_FALLBACK_SERVINGS);
+    });
     it.each(['product', 'amount', 'destroy'] as const)('does not overwrite newer state after %s', async action => {
         const { component, fixture } = await setupComponentAsync();
         const weight = new Subject<number | null>();

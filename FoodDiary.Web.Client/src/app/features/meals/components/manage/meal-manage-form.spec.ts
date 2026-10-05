@@ -13,6 +13,7 @@ import {
     createEmptyRecipeSnapshot,
     type Meal,
     type MealAiSessionManageDto,
+    type MealItem,
     type MealManageDto,
     MealSourceType,
 } from '../../../../shared/models/meal.data';
@@ -25,6 +26,7 @@ const PRODUCT_AMOUNT = 150;
 const TOTAL_CALORIES = 300;
 const UPDATED_TOTAL_CALORIES = 450;
 const NORMALIZED_SATIETY_LEVEL = 5;
+const STALE_RECIPE_AMOUNT = 999;
 const EMPTY_TOTALS: NutritionTotals = {
     calories: 0,
     proteins: 0,
@@ -39,13 +41,14 @@ type MealManageFacadeMock = {
     buildManualNutritionPatchFromTotals: ReturnType<typeof vi.fn>;
     buildNutritionSummaryStateFromValues: ReturnType<typeof vi.fn>;
     convertRecipeGramsToServings: ReturnType<typeof vi.fn>;
-    convertRecipeServingsToGrams: ReturnType<typeof vi.fn>;
+    convertRecipeServingsToGrams: ReturnType<typeof vi.fn<MealManageFacade['convertRecipeServingsToGrams']>>;
     configureItemType: ReturnType<typeof vi.fn>;
     confirmDiscardChangesAsync: ReturnType<typeof vi.fn>;
-    createMealItem: ReturnType<typeof vi.fn>;
+    createMealItem: ReturnType<typeof vi.fn<MealManageFacade['createMealItem']>>;
     ensurePremiumAccess: ReturnType<typeof vi.fn>;
     getManualNutritionTotalsFromValue: ReturnType<typeof vi.fn>;
     openEditAiPhotoSessionDialogAsync: ReturnType<typeof vi.fn>;
+    prepareMealItems: ReturnType<typeof vi.fn>;
     removeAiSession: ReturnType<typeof vi.fn>;
     replaceAiSession: ReturnType<typeof vi.fn>;
     showSuccessToastAndRedirectAsync: ReturnType<typeof vi.fn>;
@@ -436,7 +439,7 @@ async function setupComponentAsync(): Promise<MealManageFormSetup> {
 }
 
 function createMealManageFacadeMock(): MealManageFacadeMock {
-    return {
+    const facade: MealManageFacadeMock = {
         addAiSession: vi.fn((_sessions: MealAiSessionManageDto[], session: MealAiSessionManageDto) => [session]),
         buildManualNutritionPatchFromTotals: vi.fn((totals: NutritionTotals) => ({
             manualCalories: totals.calories,
@@ -455,6 +458,7 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
         ensurePremiumAccess: vi.fn().mockReturnValue(true),
         getManualNutritionTotalsFromValue: vi.fn().mockReturnValue(EMPTY_TOTALS),
         openEditAiPhotoSessionDialogAsync: vi.fn().mockResolvedValue(null),
+        prepareMealItems: vi.fn(),
         removeAiSession: vi.fn((sessions: MealAiSessionManageDto[], index: number) =>
             sessions.filter((_session, currentIndex) => currentIndex !== index),
         ),
@@ -462,6 +466,23 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
         showSuccessToastAndRedirectAsync: vi.fn().mockResolvedValue(void 0),
         submitMealAsync: vi.fn().mockResolvedValue(null),
     };
+    facade.prepareMealItems.mockImplementation((items: MealItem[]) =>
+        of(
+            items.length === 0
+                ? [facade.createMealItem()]
+                : items.map(item =>
+                      createMealItemValue(
+                          item.sourceType === MealSourceType.Product ? (item.product ?? null) : null,
+                          item.sourceType === MealSourceType.Recipe ? (item.recipe ?? null) : null,
+                          item.sourceType === MealSourceType.Recipe
+                              ? facade.convertRecipeServingsToGrams(item.recipe ?? null, item.amount)
+                              : item.amount,
+                          item.sourceType,
+                      ),
+                  ),
+        ),
+    );
+    return facade;
 }
 
 function createNutritionSummaryState(): MealNutritionSummaryState {
@@ -500,6 +521,57 @@ function createMeal(overrides: Partial<Meal> = {}): Meal {
         ...overrides,
     };
 }
+
+describe('MealManageForm recipe amount loading', () => {
+    it('keeps a cold recipe editor unavailable until its weight has loaded', async () => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        const prepared = new Subject<MealItemFormValues[]>();
+        mealManageFacade.prepareMealItems.mockReturnValue(prepared);
+        const recipe = { ...createEmptyRecipeSnapshot(), id: 'r', name: 'Soup' };
+        const original = createMeal({ items: [{ id: 'i', mealId: 'meal-1', amount: 2, sourceType: MealSourceType.Recipe, recipe }] });
+        fixture.componentRef.setInput('meal', original);
+        fixture.detectChanges();
+        const nativeElement = fixture.nativeElement as HTMLElement;
+        const formElement = nativeElement.querySelector('form');
+
+        expect(component['isLoadingRecipeAmounts']()).toBe(true);
+        expect(component['isSubmitDisabled']()).toBe(true);
+        expect(formElement?.style.display).toBe('none');
+        expect(nativeElement.querySelector('fd-page-body [role="status"]')?.getAttribute('aria-label')).toBe('COMMON.LOADING');
+        await component['onSubmitAsync']();
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+
+        prepared.next([createMealItemValue(null, recipe, PRODUCT_AMOUNT, MealSourceType.Recipe)]);
+        fixture.detectChanges();
+        expect(component['isLoadingRecipeAmounts']()).toBe(false);
+        expect(component['mealFormModel']().items[0].amount).toBe(PRODUCT_AMOUNT);
+        expect(component['mealSignalForm']().dirty()).toBe(false);
+        expect(formElement?.style.display).toBe('');
+        await component['onCancelAsync']();
+        expect(mealManageFacade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+    });
+    it.each(['refresh', 'reset', 'destroy'] as const)('ignores an obsolete recipe weight response after %s', async action => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        const prepared = new Subject<MealItemFormValues[]>();
+        mealManageFacade.prepareMealItems.mockReturnValueOnce(prepared);
+        fixture.componentRef.setInput('meal', createMeal());
+        fixture.detectChanges();
+
+        if (action === 'destroy') {
+            fixture.destroy();
+        } else {
+            fixture.componentRef.setInput('meal', action === 'reset' ? null : createMeal({ comment: 'Newer meal' }));
+            fixture.detectChanges();
+        }
+        const currentItems = component['mealFormModel']().items;
+        prepared.next([createMealItemValue(null, createEmptyRecipeSnapshot(), STALE_RECIPE_AMOUNT, MealSourceType.Recipe)]);
+        expect(prepared.observed).toBe(false);
+        expect(component['mealFormModel']().items).toEqual(currentItems);
+        if (action !== 'destroy') {
+            expect(component['isLoadingRecipeAmounts']()).toBe(false);
+        }
+    });
+});
 
 describe('MealManageForm existing meal editing', () => {
     it.each([false, true])('submits an existing product meal and preserves entered values on failure=%s', async fail => {

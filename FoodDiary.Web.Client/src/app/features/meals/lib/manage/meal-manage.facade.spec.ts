@@ -1,23 +1,26 @@
 import { TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { of, throwError } from 'rxjs';
+import { firstValueFrom, type Observable, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
+import { RecipeLookupService } from '../../../../shared/api/recipe-lookup.service';
 import {
     createEmptyProductSnapshot,
     createEmptyRecipeSnapshot,
     type Meal,
     type MealAiSessionManageDto,
+    type MealItem,
     type MealManageDto,
     MealSourceType,
 } from '../../../../shared/models/meal.data';
+import type { RecipeLookup } from '../../../../shared/models/recipe-lookup.data';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MealService } from '../../api/meal.service';
-import type { MealFormValues } from '../../components/manage/meal-manage-lib/meal-manage.types';
+import type { MealFormValues, MealItemFormValues } from '../../components/manage/meal-manage-lib/meal-manage.types';
 import { RecipeServingWeightService } from '../recipe-serving/recipe-serving-weight.service';
 import { MealManageFacade } from './meal-manage.facade';
 
@@ -89,6 +92,11 @@ const AI_RECOGNITION_SESSIONS: MealAiSessionManageDto[] = [
 ];
 const DECIMAL_MANUAL_CALORIES = 12.5;
 const MANUAL_CALORIES = 100;
+const COLD_RECIPE_TOTAL_CALORIES = 370;
+const COLD_RECIPE_SERVINGS = 3;
+const COLD_MEAL_SERVINGS = 1.5;
+const COLD_MEAL_GRAMS = 50;
+const COLD_MEAL_CALORIES = 185;
 const MANUAL_PROTEINS = 20;
 const MANUAL_FATS = 10;
 const MANUAL_CARBS = 15;
@@ -570,3 +578,98 @@ function registerProductPortionBoundaryTests(): void {
         expect(selected?.amount).toBe(1);
     });
 }
+
+function setupColdFacade(lookupResult: Observable<RecipeLookup>): { facade: MealManageFacade; getById: ReturnType<typeof vi.fn> } {
+    const getById = vi.fn().mockReturnValue(lookupResult);
+    TestBed.configureTestingModule({
+        providers: [
+            provideTranslateTesting(),
+            MealManageFacade,
+            RecipeServingWeightService,
+            { provide: RecipeLookupService, useValue: { getById } },
+            { provide: MealService, useValue: {} },
+            { provide: AuthService, useValue: {} },
+            { provide: NavigationService, useValue: {} },
+            { provide: FdUiDialogService, useValue: {} },
+            { provide: FdUiToastService, useValue: {} },
+        ],
+    });
+    return { facade: TestBed.inject(MealManageFacade), getById };
+}
+
+describe('MealManageFacade cold recipe amount loading', () => {
+    const recipe = {
+        ...createEmptyRecipeSnapshot(),
+        id: 'cold-recipe',
+        name: 'Porridge',
+        servings: 1,
+        totalCalories: COLD_RECIPE_TOTAL_CALORIES / COLD_RECIPE_SERVINGS,
+    };
+    const recipeItem: MealItem = { id: 'item', mealId: 'meal', sourceType: MealSourceType.Recipe, recipe, amount: COLD_MEAL_SERVINGS };
+    const lookup: RecipeLookup = {
+        id: recipe.id,
+        servings: COLD_RECIPE_SERVINGS,
+        steps: [{ ingredients: [{ amount: 100, productBaseUnit: 'G' }] }],
+    };
+
+    it('loads the full recipe before converting the meal snapshot and preserves its nutrition', async () => {
+        const { facade: coldFacade, getById } = setupColdFacade(of(lookup));
+        const items = await firstValueFrom(coldFacade.prepareMealItems([recipeItem]));
+        expect(getById).toHaveBeenCalledWith(recipe.id);
+        expect(items[0]).toMatchObject({ recipe, amount: COLD_MEAL_GRAMS });
+        expect(coldFacade.convertRecipeGramsToServings(recipe, COLD_MEAL_GRAMS)).toBe(COLD_MEAL_SERVINGS);
+        const values = { ...createNutritionFormValue(true), items };
+        expect(coldFacade.buildNutritionSummaryStateFromValues(values, [], CALORIE_MISMATCH_THRESHOLD).summaryTotals.calories).toBe(
+            COLD_MEAL_CALORIES,
+        );
+        expect(TestBed.inject(RecipeServingWeightService).hasServingWeight(recipe)).toBe(true);
+    });
+
+    it('waits for an asynchronous lookup and cancels it when initialization is abandoned', () => {
+        const pendingLookup = new Subject<RecipeLookup>();
+        const { facade: coldFacade } = setupColdFacade(pendingLookup);
+        const prepared = vi.fn();
+        const subscription = coldFacade.prepareMealItems([recipeItem]).subscribe(prepared);
+        expect(prepared).not.toHaveBeenCalled();
+        expect(pendingLookup.observed).toBe(true);
+        subscription.unsubscribe();
+        pendingLookup.next(lookup);
+        pendingLookup.complete();
+        expect(prepared).not.toHaveBeenCalled();
+        expect(pendingLookup.observed).toBe(false);
+    });
+
+    it.each(['missing weight', 'lookup failure'] as const)('keeps servings and snapshot nutrition on %s', async reason => {
+        const result = reason === 'lookup failure' ? throwError(() => new Error('offline')) : of({ ...lookup, steps: [] });
+        const { facade: coldFacade } = setupColdFacade(result);
+        const items = await firstValueFrom(coldFacade.prepareMealItems([recipeItem]));
+        expect(items[0]).toMatchObject({ recipe, amount: COLD_MEAL_SERVINGS });
+        expect(coldFacade.convertRecipeGramsToServings(recipe, COLD_MEAL_SERVINGS)).toBe(COLD_MEAL_SERVINGS);
+        expect(
+            coldFacade.buildNutritionSummaryStateFromValues({ ...createNutritionFormValue(true), items }, [], CALORIE_MISMATCH_THRESHOLD)
+                .summaryTotals.calories,
+        ).toBe(COLD_MEAL_CALORIES);
+        expect(TestBed.inject(RecipeServingWeightService).hasServingWeight(recipe)).toBe(false);
+    });
+
+    it('preserves product quantities and item order when mixed with recipes', async () => {
+        const { facade: coldFacade } = setupColdFacade(of(lookup));
+        const product = createNutritionProduct();
+        const productItem: MealItem = { id: 'product-item', mealId: 'meal', sourceType: MealSourceType.Product, product, amount: 125 };
+        const items = await firstValueFrom(coldFacade.prepareMealItems([productItem, recipeItem]));
+        expect(items).toEqual([
+            expect.objectContaining({ product, amount: 125, recipe: null }),
+            expect.objectContaining({ recipe, amount: COLD_MEAL_GRAMS, product: null }),
+        ]);
+    });
+
+    it('does not fetch recipes for empty or product-only meals', async () => {
+        const { facade: coldFacade, getById } = setupColdFacade(of(lookup));
+        expect(await firstValueFrom(coldFacade.prepareMealItems([]))).toHaveLength(1);
+        const product = createNutritionProduct();
+        const productItem: MealItem = { id: 'p', mealId: 'meal', sourceType: MealSourceType.Product, product, amount: 125 };
+        const items: MealItemFormValues[] = await firstValueFrom(coldFacade.prepareMealItems([productItem]));
+        expect(items[0]).toMatchObject({ product, amount: 125 });
+        expect(getById).not.toHaveBeenCalled();
+    });
+});

@@ -86,7 +86,11 @@ export class MealItemsListComponent {
         }
 
         if (this.isRecipeItem(index)) {
-            return this.translateService.instant('PRODUCT_AMOUNT_UNITS.G');
+            return this.translateService.instant(
+                this.recipeWeight.hasServingWeight(this.getItem(index)?.recipe ?? null)
+                    ? 'PRODUCT_AMOUNT_UNITS.G'
+                    : 'MEAL_MANAGE.AMOUNT_UNIT_SERVINGS',
+            );
         }
 
         return null;
@@ -215,7 +219,9 @@ export class MealItemsListComponent {
             return unit !== undefined ? this.translateService.instant(`GENERAL.UNITS.${unit.toUpperCase()}`) : null;
         }
 
-        return this.translateService.instant('GENERAL.UNITS.G');
+        return this.translateService.instant(
+            this.recipeWeight.hasServingWeight(item.recipe) ? 'GENERAL.UNITS.G' : 'MEAL_MANAGE.AMOUNT_UNIT_SERVINGS',
+        );
     }
 }
 

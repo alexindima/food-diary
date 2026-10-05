@@ -15,8 +15,8 @@
             [ariaLabel]="(meal() !== null ? 'MEAL_MANAGE.SAVE_BUTTON' : 'MEAL_MANAGE.ADD_BUTTON') | translate"
             [fdUiHint]="(meal() !== null ? 'MEAL_MANAGE.SAVE_BUTTON' : 'MEAL_MANAGE.ADD_BUTTON') | translate"
             [disabled]="isSubmitDisabled()"
-            [disabledReason]="'DISABLED_HINTS.FORM_INVALID' | translate"
-            [loading]="isSubmitting()"
+            [disabledReason]="(isLoadingRecipeAmounts() ? 'COMMON.LOADING' : 'DISABLED_HINTS.FORM_INVALID') | translate"
+            [loading]="isBusy()"
             (click)="manageForm.requestSubmit()"
         />
         <fd-ui-button
@@ -32,7 +32,18 @@
     </fd-page-header>
 
     <fd-page-body>
-        <form #manageForm class="meal-manage__form fd-stack fd-gap-lg" [formRoot]="mealSignalForm" [attr.aria-busy]="isSubmitting()">
+        @if (isLoadingRecipeAmounts()) {
+            <div role="status" [attr.aria-label]="'COMMON.LOADING' | translate">
+                <fd-ui-loader aria-hidden="true" />
+            </div>
+        }
+        <form
+            #manageForm
+            class="meal-manage__form fd-stack fd-gap-lg"
+            [formRoot]="mealSignalForm"
+            [attr.aria-busy]="isBusy()"
+            [style.display]="isLoadingRecipeAmounts() ? 'none' : null"
+        >
             @let generalErrors = generalFieldErrors();
             <div class="meal-manage__grid fd-grid">
                 <div class="meal-manage__column meal-manage__column--primary fd-stack">
