@@ -101,6 +101,24 @@ function Copy-WorkspaceOverlay {
     }
 }
 
+function Test-CommonReadOnlyOverlayPath([string]$Path) {
+    $candidate = $Path.Replace('\', '/').TrimEnd('/')
+    return $candidate.StartsWith('.llm-wiki/', [StringComparison]::OrdinalIgnoreCase) -or $candidate -in @(
+        'Directory.Build.props', 'Directory.Packages.props',
+        'FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs',
+        'FoodDiary.Development.Mcp/Protocol/WikiContextSearchResult.cs',
+        'FoodDiary.Development.Mcp/Protocol/WikiContextSearchCandidate.cs'
+    )
+}
+
+function Get-ReadOnlySnapshotSlotScope {
+    param([string[]]$OverlayPath, [string[]]$RequestedScope)
+    # HEAD plus common inputs describes the same checkout for every scope.
+    # Product overlays retain separate slots; content hashes still validate reuse.
+    if (@($OverlayPath | Where-Object { -not (Test-CommonReadOnlyOverlayPath $_) }).Count -eq 0) { return @() }
+    return @($RequestedScope | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+}
+
 function Select-RelevantOverlayPath {
     param(
         [Parameter(Mandatory)][AllowEmptyCollection()][string[]]$WorkspacePath,
@@ -120,13 +138,7 @@ function Select-RelevantOverlayPath {
     if ($normalizedScopes.Count -eq 0) { return @($WorkspacePath) }
     return @($WorkspacePath | Where-Object {
         $candidate = ([string]$_).Replace('\', '/').TrimEnd('/')
-        if ($candidate.StartsWith('.llm-wiki/', [StringComparison]::OrdinalIgnoreCase)) { return $true }
-        if ($candidate -in @(
-            'Directory.Build.props', 'Directory.Packages.props',
-            'FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs',
-            'FoodDiary.Development.Mcp/Protocol/WikiContextSearchResult.cs',
-            'FoodDiary.Development.Mcp/Protocol/WikiContextSearchCandidate.cs'
-        )) { return $true }
+        if (Test-CommonReadOnlyOverlayPath $candidate) { return $true }
         foreach ($scope in $normalizedScopes) {
             if ($candidate -eq $scope -or
                 $candidate.StartsWith("$scope/", [StringComparison]::OrdinalIgnoreCase) -or
@@ -413,7 +425,8 @@ Write-ReadOnlyTiming -Stage 'outer-overlay-ready'
 $snapshotContentFingerprint = Get-ReadOnlySnapshotFingerprint -RepositoryRoot $sourceRepositoryRoot -OverlayPath $overlayPaths
 # Serialize reuse within one HEAD/scope slot. New edits refresh its overlay,
 # avoiding a full checkout per keystroke while other scopes retain concurrency.
-$snapshotFingerprint = Get-ReadOnlySnapshotFingerprint -RepositoryRoot $sourceRepositoryRoot -OverlayPath @($requestedScopePaths) -SlotKey
+$slotScope = @(Get-ReadOnlySnapshotSlotScope -OverlayPath $overlayPaths -RequestedScope $requestedScopePaths)
+$snapshotFingerprint = Get-ReadOnlySnapshotFingerprint -RepositoryRoot $sourceRepositoryRoot -OverlayPath $slotScope -SlotKey
 Write-ReadOnlyTiming -Stage 'outer-fingerprint-ready'
 $snapshotRoot = Join-Path $snapshotParent $snapshotFingerprint
 $readyPath = Join-Path $snapshotParent "$snapshotFingerprint.ready"

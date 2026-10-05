@@ -199,18 +199,18 @@
       "pageSha256": "bf06c7515995b5983125ae2d8469bc357431d468feed457a4ae9ab443288c4a4",
       "sources": [
         {
-          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-          "sha256": "75ba917cefa45d83e45b871b41d27a8e20954bfc5c38ef4147338b624f628234"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+          "sha256": "9543a3370e140089b861f60159829cacf9424529cc498c8cb6a629333280678b"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
-          "sha256": "a8bb234d92a449d1cddf43929f4a73c018a68e5cf142c70f926cc189bfbe8560"
+          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
+          "sha256": "f6889b5f4074c63a7102ba36bbe79071d726f06dc8ffb384f52962420f0426c6"
         }
       ],
-      "reason": "Reviewed the affected tooling guides against request-local reuse of the freshly checked repository, HEAD and content fingerprint. Normal scoped cache callers preserve their identity; dependency hashing remains independent and module discovery is deferred only for cache hits. Cache regressions and the unchanged latency gate pass. Seven counterbalanced pairs measure median warm context from 1050ms to 595ms; static reference indexes were regenerated and do not represent execution coverage.",
+      "reason": "Confirmed exact source hashes, scoped product overlays, clone mutation rejection and empty planned scopes remain authoritative. Common-input-only scopes can reuse identical exclusively locked checkouts.",
       "baseRef": "HEAD",
-      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
-      "reviewedAtUtc": "2026-10-04T20:51:28.8073013Z"
+      "gitHead": "11f128fcd387a191b2ae25b0be25345f66268bc8",
+      "reviewedAtUtc": "2026-10-05T18:22:29.4000807Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -302,33 +302,17 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "0b38f18991e2060a96abf528329722d24f97567809e796b16d99b6bfb2c420ac",
+      "pageSha256": "0ac679ef2682cda58904cad9b5fd081e1541eb5c061f16522ae55dc1bd030f6f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-context-projection.mjs",
-          "sha256": "5a243e38926bddf04aec7ccd1ad903e0e5ee78a476e63d9d39287810ab971237"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-context-projection.test.mjs",
-          "sha256": "2507430dbd19d7d85b8fd6b23bf713169e6e0139b472ac573de86740a0b44b12"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-maintenance.mjs",
-          "sha256": "44f305954c59613348776401ad650df6c959c361f36a97d45a63664fe3f238eb"
-        },
-        {
           "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "95e5bb441bba5cc7538a4ed0f879160e2555a02ac77e2b0cfeb785e9663c7487"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
+          "sha256": "6e3f4bc2a888ef592ba681885709e934fa07db9e3a996569bc0b8a85ed106aa8"
         }
       ],
-      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
+      "reason": "Reviewed batch regression changes: the read transaction, one count per batch, complete ordering, next-batch visibility and reader ranking policy remain unchanged; temporary page-cache targets are restored after failures.",
       "baseRef": "HEAD",
-      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
-      "reviewedAtUtc": "2026-10-05T08:37:20.6035894Z"
+      "gitHead": "11f128fcd387a191b2ae25b0be25345f66268bc8",
+      "reviewedAtUtc": "2026-10-05T18:22:30.1974551Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -875,13 +859,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6bcde3e60de814dabfb71b8adc0cf4eafb93af74b0954644229b308e68b39842"
+          "sha256": "320695cbe0805cd69e8c6dc63da8751d7daf92c6f3004ab82e59103ebe13f7b5"
         }
       ],
-      "reason": "Reviewed final generated Wiki-only structural metrics and test-reference changes, including complete worker failure logging. Quality-index production ownership, reference semantics and the 47 reference gaps remain unchanged.",
+      "reason": "Regenerated quality metrics through the owning generator after checkout/cache changes and regression expansion. Product reference-gap counts and the static navigation limitations remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T13:33:00.3631148Z"
+      "gitHead": "11f128fcd387a191b2ae25b0be25345f66268bc8",
+      "reviewedAtUtc": "2026-10-05T18:22:32.2635063Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -977,17 +961,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6bcde3e60de814dabfb71b8adc0cf4eafb93af74b0954644229b308e68b39842"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "97c0546251cd15ba3da3982fc87aa3d4cb1d1ab035ad9acba2dee5b48387ef71"
+          "sha256": "320695cbe0805cd69e8c6dc63da8751d7daf92c6f3004ab82e59103ebe13f7b5"
         }
       ],
-      "reason": "Reviewed final shared ranking policy and Wiki-only quality metrics. Recovery/parsing normalization and JWT-context terms affect navigation; source authority, freshness, ambiguity and security-evidence limits remain unchanged.",
+      "reason": "Reviewed generated Wiki structural metrics and guard regressions. Dirty overlays still hash exact content and poisoned clones are discarded without modifying source files; no security verdict is inferred from metrics.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T13:33:01.3534280Z"
+      "gitHead": "11f128fcd387a191b2ae25b0be25345f66268bc8",
+      "reviewedAtUtc": "2026-10-05T18:22:33.3436924Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1262,30 +1242,14 @@
       "pageSha256": "891ba091baab5bb5ebac52ec2d8482eba48976374cc43486fa4fbbe800d24fa2",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-context-projection.mjs",
-          "sha256": "5a243e38926bddf04aec7ccd1ad903e0e5ee78a476e63d9d39287810ab971237"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-context-projection.test.mjs",
-          "sha256": "2507430dbd19d7d85b8fd6b23bf713169e6e0139b472ac573de86740a0b44b12"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-maintenance.mjs",
-          "sha256": "44f305954c59613348776401ad650df6c959c361f36a97d45a63664fe3f238eb"
-        },
-        {
           "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "95e5bb441bba5cc7538a4ed0f879160e2555a02ac77e2b0cfeb785e9663c7487"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
+          "sha256": "6e3f4bc2a888ef592ba681885709e934fa07db9e3a996569bc0b8a85ed106aa8"
         }
       ],
-      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
+      "reason": "Reviewed expanded batch/cache regression tests. Maintenance ownership, repair, projection completeness and sole Node-writer behavior are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
-      "reviewedAtUtc": "2026-10-05T08:37:25.6783599Z"
+      "gitHead": "11f128fcd387a191b2ae25b0be25345f66268bc8",
+      "reviewedAtUtc": "2026-10-05T18:22:31.1644281Z"
     }
   ]
 }

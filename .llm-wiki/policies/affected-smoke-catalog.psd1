@@ -49,6 +49,7 @@
         @{ When = 'adaptive-evals'; Remove = @('adaptive-routing', 'adaptive-experience') }
     )
     AdditionalMatches = @(
+        @{ Pattern = '^\.llm-wiki/tools/code-graph-batch\.mjs$'; Groups = @('context-bundle') }
         @{ Pattern = '^\.llm-wiki/tools/(LlmWikiSourceInventory|Test-LlmWikiSourceInventory)\.ps1$'; Groups = @('domain-data-query') }
         @{ Pattern = '^\.llm-wiki/tools/LlmWikiGitPaths\.ps1$'; Groups = @('api-compatibility') }
         @{ Pattern = '^\.llm-wiki/tools/(Manage-LlmWikiModelRouting|Manage-LlmWikiVerificationPlan)\.ps1$'; Groups = @('strict-shapes') }

@@ -25,6 +25,7 @@ sources:
   - .llm-wiki/tools/code-graph-snapshot.mjs
   - .llm-wiki/tools/code-graph-snapshot.test.mjs
   - .llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1
+  - .llm-wiki/tools/Test-LlmWikiReadOnlyOverlayPaths.ps1
   - .llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1
   - scripts/Clean-NestedDotnetArtifacts.ps1
   - FoodDiary.Web.Client/.husky/pre-commit
@@ -128,6 +129,20 @@ Git clone. Their lock and matching-result reuse are still tested together, while
 temporary JSON line-ending rewrites cannot race with the parallel SQLite readers.
 The query-cache group depends on graph inputs because it includes task-brief SQL
 parity. No regression groups or assertion thresholds are removed for performance.
+
+Read-only queries whose overlays contain only common Wiki, build and CLI-reader
+inputs share one exclusively locked checkout for the same HEAD. Their scope does
+not change that checkout's contents. Product edits keep separate scope slots;
+every reuse still verifies current overlay hashes and required tool contents,
+and mutation detection discards a poisoned clone. The cold-checkout regression
+therefore builds an empty private graph once for backend planning and the twelve
+indexes, while the source checkout remains without a database or frontend packages.
+
+Context-search batches use a connection-local 64 MiB SQLite page-cache target to
+avoid repeatedly reading the same FTS pages. SQLite allocates pages on demand;
+concurrent corpus workers each have their own cache. The batch restores the prior
+setting after success or failure and retains one read transaction, complete case
+coverage, deterministic ordering, and next-batch visibility of committed writes.
 
 Tool startup checks already loaded helper functions directly, without triggering
 PowerShell module discovery. Test planning ignores empty proposed paths instead

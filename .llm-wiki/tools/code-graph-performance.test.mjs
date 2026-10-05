@@ -246,19 +246,23 @@ test('batch metadata and rows share one snapshot; next batch sees committed chan
   try {
     reader.exec('PRAGMA journal_mode=WAL; CREATE VIRTUAL TABLE context_search USING fts5(body); INSERT INTO context_search VALUES (\'first\')');
     let countReads = 0;
+    const originalCacheSize = reader.prepare('PRAGMA cache_size').get().cache_size;
     const observed = {
       exec: sql => reader.exec(sql),
-      prepare: sql => { countReads++; return reader.prepare(sql); },
+      prepare: sql => { if (sql.includes('COUNT(*)')) countReads++; return reader.prepare(sql); },
     };
     const first = searchContextBatch(observed, [{ query: 'a', limit: 10 }, { query: 'b' }], (db, query, limit, filters, state) => {
+      assert.equal(reader.prepare('PRAGMA cache_size').get().cache_size, -65536);
       if (query === 'a') writer.exec("INSERT INTO context_search VALUES ('second')");
       return { count: state.indexedDocuments, rows: reader.prepare('SELECT body FROM context_search').all().length, limit };
     });
     assert.deepEqual(first.results, [{ count: 1, rows: 1, limit: 10 }, { count: 1, rows: 1, limit: 20 }]);
     assert.equal(countReads, 1);
+    assert.equal(reader.prepare('PRAGMA cache_size').get().cache_size, originalCacheSize);
     assert.equal(searchContextBatch(reader, [{}], (db, q, l, f, state) => state.indexedDocuments).results[0], 2);
     const failure = new Error('original search error');
     assert.throws(() => searchContextBatch(reader, [{}], () => { throw failure; }), error => error === failure);
+    assert.equal(reader.prepare('PRAGMA cache_size').get().cache_size, originalCacheSize);
     assert.equal(searchContextBatch(reader, [{}], (db, q, l, f, state) => state.indexedDocuments).results[0], 2);
   } finally {
     writer.close(); reader.close(); rmSync(root, { recursive: true, force: true });
@@ -278,8 +282,27 @@ test('snapshot cleanup cannot hide the original search failure', () => {
   const cleanup = new Error('rollback failed');
   const database = {
     exec: sql => { if (sql === 'ROLLBACK') throw cleanup; },
-    prepare: () => ({ get: () => ({ count: 0 }) }),
+    prepare: () => ({ get: () => ({ count: 0, cache_size: -2000 }) }),
   };
   assert.throws(() => searchContextBatch(database, [{}], () => { throw original; }),
     error => error === original && error.rollbackError === cleanup);
+});
+
+test('batch restores custom cache settings and reports restoration failures without losing search errors', () => {
+  const reader = new DatabaseSync(':memory:');
+  try {
+    reader.exec('CREATE VIRTUAL TABLE context_search USING fts5(body); PRAGMA cache_size=123');
+    searchContextBatch(reader, [], () => assert.fail('empty batch must not search'));
+    assert.equal(reader.prepare('PRAGMA cache_size').get().cache_size, 123);
+    const original = new Error('search failed');
+    const restoration = new Error('cache restore failed');
+    const database = {
+      prepare: sql => reader.prepare(sql),
+      exec: sql => { if (sql.includes('cache_size = 123')) throw restoration; reader.exec(sql); },
+    };
+    assert.throws(() => searchContextBatch(database, [{}], () => { throw original; }),
+      error => error === original && error.cacheRestoreError === restoration);
+    reader.exec('PRAGMA cache_size=123');
+    assert.throws(() => searchContextBatch(database, [], () => {}), error => error === restoration);
+  } finally { reader.close(); }
 });

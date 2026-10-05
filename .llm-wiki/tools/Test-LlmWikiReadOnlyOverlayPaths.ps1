@@ -13,6 +13,13 @@ $overlayFunction = $guardAst.Find({
     $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'Get-WorkspaceOverlayPaths'
 }, $false)
 . ([scriptblock]::Create($overlayFunction.Extent.Text))
+foreach ($name in @('Test-CommonReadOnlyOverlayPath', 'Get-ReadOnlySnapshotSlotScope')) {
+    $function = $guardAst.Find({
+        param($node)
+        $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $name
+    }, $false)
+    . ([scriptblock]::Create($function.Extent.Text))
+}
 $selectorFunction = $guardAst.Find({
     param($node)
     $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'Select-RelevantOverlayPath'
@@ -23,6 +30,18 @@ if (($scopeAlias -join ',') -ne 'alpha/file.cs,.llm-wiki/note.md') { throw 'Cont
 $readerPath = 'FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs'
 $readerOverlay = @(Select-RelevantOverlayPath -WorkspacePath @($readerPath, 'other/file.cs') -Arguments @{ ScopePath = @('alpha') })
 if ($readerOverlay.Count -ne 1 -or $readerOverlay[0] -ne $readerPath) { throw 'Scoped snapshots omitted shared CLI reader inputs.' }
+foreach ($overlay in @(@(), @('.llm-wiki/note.md', 'Directory.Build.props', $readerPath))) {
+    if (@(Get-ReadOnlySnapshotSlotScope -OverlayPath $overlay -RequestedScope @('alpha')).Count -ne 0) {
+        throw 'Identical HEAD/common overlays unnecessarily retained a separate scope slot.'
+    }
+}
+foreach ($path in @('alpha/file.cs', 'alpha/deleted.cs', 'alpha/new.cs', 'other/file.cs', '.llm-wiki-other/file.cs')) {
+    $slot = @(Get-ReadOnlySnapshotSlotScope -OverlayPath @('.llm-wiki/note.md', $path) -RequestedScope @('alpha'))
+    if (($slot -join ',') -cne 'alpha') { throw "Product overlay '$path' lost scope isolation." }
+}
+if (@(Get-ReadOnlySnapshotSlotScope -OverlayPath @('alpha/file.cs') -RequestedScope @()).Count -ne 0) {
+    throw 'An unscoped product overlay introduced a null/empty slot path.'
+}
 $fixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'read-only-overlay-paths'
 try {
     $unicodeName = -join @([char]0x0444, [char]0x0430, [char]0x0439, [char]0x043B)

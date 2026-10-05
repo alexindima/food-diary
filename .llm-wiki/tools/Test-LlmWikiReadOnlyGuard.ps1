@@ -119,7 +119,8 @@ Start-Sleep -Milliseconds 750
         $message = $_.Exception.Message
     }
     Wait-Job -Job $writerJob -Timeout 125 | Out-Null
-    Receive-Job -Job $writerJob -ErrorAction Stop | Out-Null
+    try { Receive-Job -Job $writerJob -ErrorAction Stop | Out-Null }
+    catch { throw "Concurrent-writer fixture failed: $_. Isolated mutation guard result: '$message'" }
     if ($message -notlike '*modified its isolated snapshot*No source files were restored or overwritten*') {
         throw "Read-only guard did not reject isolated source mutation safely. Observed='$message'"
     }
@@ -182,7 +183,16 @@ Remove-Item -LiteralPath $unavailable -ErrorAction SilentlyContinue
 '@
     [IO.File]::WriteAllText($fakeGraphManagerPath,$fakeGraphManagerSource,[Text.UTF8Encoding]::new($false))
     $cleanSafeTool = Join-Path $cleanToolsRoot 'clean-safe.ps1'
-    [IO.File]::WriteAllText($cleanSafeTool, "param([switch]`$Fail)`nif (`$Fail) { exit 7 }`nWrite-Output 'read-only-clean-control'", [Text.UTF8Encoding]::new($false))
+    [IO.File]::WriteAllText($cleanSafeTool, @'
+param([switch]$Fail, [switch]$Probe)
+if ($Fail) { exit 7 }
+if ($Probe) {
+    $root = (Get-Location).Path
+    @{ root = $root; overlay = [IO.File]::ReadAllText((Join-Path $root 'CleanScope/overlay.txt')); foreignExists = (Test-Path -LiteralPath (Join-Path $root 'foreign-overlay.txt')) } | ConvertTo-Json -Compress
+    return
+}
+Write-Output 'read-only-clean-control'
+'@, [Text.UTF8Encoding]::new($false))
     & git -C $cleanRepositoryRoot init --quiet
     & git -C $cleanRepositoryRoot config user.email 'wiki-smoke@example.invalid'
     & git -C $cleanRepositoryRoot config user.name 'Wiki Smoke'
@@ -241,6 +251,14 @@ if ($StaleExitCode) { $global:LASTEXITCODE = 17 }
         Select-Object -First 1
     if (-not $cleanReadyFile) { throw 'Read-only guard did not publish the clean snapshot readiness marker.' }
     $cleanSnapshotRoot = Join-Path $cleanSnapshotParent $cleanReadyFile.BaseName
+    $sharedMarker = Join-Path $cleanSnapshotRoot '.git/shared-scope.marker'
+    [IO.File]::WriteAllText($sharedMarker, 'same-checkout', [Text.Encoding]::ASCII)
+    $null = & (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $cleanSafeTool -ToolArguments @{ ProposedPath = @('OtherCleanScope') }
+    $null = & (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $cleanSafeTool -ToolArguments @{}
+    if (@(Get-ChildItem -LiteralPath $cleanSnapshotParent -Filter '*.ready' -File).Count -ne 1 -or
+        -not (Test-Path -LiteralPath $sharedMarker)) {
+        throw 'Clean scopes and unscoped queries did not reuse one identical private checkout.'
+    }
     $cachedGuardPath = Join-Path $cleanSnapshotRoot '.llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1'
     $cachedManagerPath = Join-Path $cleanSnapshotRoot '.llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1'
     $cachedManagerLf = [IO.File]::ReadAllText($cachedManagerPath).Replace("`r`n", "`n").Replace("`r", "`n")
@@ -255,20 +273,30 @@ if ($StaleExitCode) { $global:LASTEXITCODE = 17 }
         throw 'Read-only guard rebuilt a valid cached snapshot solely because Git normalized text-file line endings.'
     }
 
-    $reuseIdentity = Join-Path $cleanSnapshotRoot '.git/checkout-reuse.marker'
-    [IO.File]::WriteAllText($reuseIdentity, 'same-clone', [Text.Encoding]::ASCII)
+    $reuseIdentity = $null
+    $dirtySnapshotRoot = $null
     $scopeDirectory = Join-Path $cleanRepositoryRoot 'CleanScope'
     $null = New-Item -ItemType Directory -Path $scopeDirectory -Force
     $overlayFile = Join-Path $scopeDirectory 'overlay.txt'
     foreach ($content in @('first edit', 'second edit')) {
         [IO.File]::WriteAllText($overlayFile, $content, [Text.Encoding]::ASCII)
-        $null = & (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $cleanSafeTool -ToolArguments @{ ProposedPath = @('CleanScope') }
+        [IO.File]::WriteAllText((Join-Path $cleanRepositoryRoot 'foreign-overlay.txt'), 'foreign-source', [Text.Encoding]::ASCII)
+        $probe = & (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $cleanSafeTool -ToolArguments @{ ProposedPath = @('CleanScope'); Probe = $true } | ConvertFrom-Json
+        if ($probe.foreignExists -or $probe.overlay -cne $content -or $probe.root -ceq $cleanSnapshotRoot) {
+            throw 'A product overlay reused the common slot or included a foreign scope edit.'
+        }
+        if (-not $dirtySnapshotRoot) {
+            $dirtySnapshotRoot = $probe.root
+            $reuseIdentity = Join-Path $dirtySnapshotRoot '.git/checkout-reuse.marker'
+            [IO.File]::WriteAllText($reuseIdentity, 'same-clone', [Text.Encoding]::ASCII)
+        }
         if (-not (Test-Path -LiteralPath $reuseIdentity) -or
-            [IO.File]::ReadAllText((Join-Path $cleanSnapshotRoot 'CleanScope/overlay.txt')) -cne $content) {
+            $probe.root -cne $dirtySnapshotRoot) {
             throw 'Changed overlay was not applied to the existing locked checkout.'
         }
     }
     Remove-Item -LiteralPath $overlayFile -Force
+    Remove-Item -LiteralPath (Join-Path $cleanRepositoryRoot 'foreign-overlay.txt') -Force
     $null = & (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $cleanSafeTool -ToolArguments @{ ProposedPath = @('CleanScope') }
     if (Test-Path -LiteralPath (Join-Path $cleanSnapshotRoot 'CleanScope/overlay.txt')) { throw 'Snapshot retained an obsolete untracked overlay file.' }
 
