@@ -34,6 +34,11 @@ patch. Specific architectural roles still need definitions: a new unknown role
 is reported instead of silently being treated as application code. Products
 FoodQuality is a pure domain formula according to its owning guide.
 
+Each writer or checker pass normalizes project roots once and reuses file-path
+matches within that pass. The resolver preserves inventory order and path case
+and separator handling. Its cache is local to the current inventory, so a later
+pass discovers project moves and newly added projects without stale matches.
+
 Each graph build checks ownership and transactionally repairs mismatched derived
 rows even when document-content fingerprints are unchanged. This repairs corrupt
 metadata without changing application sources. Repeating repair is idempotent.

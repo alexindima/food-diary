@@ -1,5 +1,17 @@
 import { inspectProjectionCompleteness } from './code-graph-maintenance.mjs';
 
+// Both lookups use existing file_id indexes. Read source features only when a
+// code record is rendered, including on full rebuilds, without hydrating maps
+// of every token and symbol in the repository.
+export function createContextSourceReader(database) {
+  const symbols = database.prepare('SELECT name FROM symbols WHERE file_id = ? ORDER BY name');
+  const tokens = database.prepare('SELECT token FROM file_tokens WHERE file_id = ? ORDER BY token');
+  return {
+    symbols: fileId => symbols.all(fileId).map(row => row.name),
+    tokens: fileId => tokens.all(fileId).map(row => row.token),
+  };
+}
+
 // The graph writer owns the transaction. Cache state is published with the
 // projection, so a failed write cannot make a later refresh skip missing rows.
 export function replaceContextSearchRecords(database, records, { fingerprint, environmentFingerprint }, writeRecord) {

@@ -2,7 +2,36 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { test } from 'node:test';
-import { replaceContextSearchRecords } from './code-graph-context-projection.mjs';
+import { createContextSourceReader, replaceContextSearchRecords } from './code-graph-context-projection.mjs';
+
+test('indexed source reads preserve duplicate symbols, binary ordering, empty files and live file changes', () => {
+  const db = new DatabaseSync(':memory:');
+  try {
+    db.exec(`CREATE TABLE symbols(file_id INTEGER,name TEXT);
+      CREATE INDEX ix_symbols_file ON symbols(file_id);
+      CREATE TABLE file_tokens(file_id INTEGER,token TEXT,PRIMARY KEY(file_id,token)) WITHOUT ROWID;
+      INSERT INTO symbols VALUES (1,'z'),(1,'Alpha'),(2,'unrelated'),(1,'Alpha'),(1,'alpha'),(1,'ёж');
+      INSERT INTO file_tokens VALUES (1,'z'),(2,'unrelated'),(1,'Alpha'),(1,'alpha'),(1,'ёж');`);
+    const reader = createContextSourceReader(db);
+    assert.deepEqual(reader.symbols(1), ['Alpha', 'Alpha', 'alpha', 'z', 'ёж']);
+    assert.deepEqual(reader.tokens(1), ['Alpha', 'alpha', 'z', 'ёж']);
+    assert.deepEqual(reader.symbols(3), []);
+    assert.deepEqual(reader.tokens(3), []);
+    // A reader must not reuse a prior empty result after the writer changes a file.
+    db.prepare('INSERT INTO file_tokens VALUES (?,?)').run(3, 'новый');
+    assert.deepEqual(reader.tokens(3), ['новый']);
+    db.prepare('DELETE FROM symbols WHERE file_id=?').run(1);
+    assert.deepEqual(reader.symbols(1), []);
+    const statements = [];
+    const observed = createContextSourceReader({ prepare(sql) { statements.push(sql); return db.prepare(sql); } });
+    assert.deepEqual(observed.tokens(2), ['unrelated']);
+    for (const sql of statements) {
+      const plan = db.prepare('EXPLAIN QUERY PLAN ' + sql).all(1).map(row => row.detail).join('\n');
+      assert.match(plan, /SEARCH .* (?:INDEX|PRIMARY KEY).*file_id=\?/);
+      assert.doesNotMatch(plan, /SCAN (?:symbols|file_tokens)/);
+    }
+  } finally { db.close(); }
+});
 
 const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const fixture = () => {

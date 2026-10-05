@@ -253,13 +253,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "22d224672a48c1ec5288dd75248c9826a6cd5efa8640a8ccf037c1718c92c570"
+          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
         }
       ],
-      "reason": "Reviewed incremental FTS refresh and writer implementation invalidation: full and incremental records retain canonical ordinals and retrieval behavior; all mirrors and cache commit atomically, with complete recovery for incomplete or invalid state.",
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
       "baseRef": "HEAD",
-      "gitHead": "7e1d0d26ea5b35cb42f0a0f7335a5f5d13d4a72e",
-      "reviewedAtUtc": "2026-10-05T08:03:32.7938559Z"
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:21.4666807Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -306,29 +306,33 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "98f6f140898c292aa0e06b903110c17aac26e19183f84f00ab60e44aac12d3f7",
+      "pageSha256": "0b38f18991e2060a96abf528329722d24f97567809e796b16d99b6bfb2c420ac",
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph-context-projection.mjs",
-          "sha256": "adc529c51958073dad5ef0bc2b1fe834b87db8bd87d57892afc79aca672bdf28"
+          "sha256": "5a243e38926bddf04aec7ccd1ad903e0e5ee78a476e63d9d39287810ab971237"
         },
         {
           "path": ".llm-wiki/tools/code-graph-context-projection.test.mjs",
-          "sha256": "a93f6ee3f13afa7f52b60c59e79a7b40007484ce5d845be79f7eee35c5568495"
+          "sha256": "2507430dbd19d7d85b8fd6b23bf713169e6e0139b472ac573de86740a0b44b12"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-maintenance.mjs",
+          "sha256": "44f305954c59613348776401ad650df6c959c361f36a97d45a63664fe3f238eb"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
+          "sha256": "95e5bb441bba5cc7538a4ed0f879160e2555a02ac77e2b0cfeb785e9663c7487"
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "22d224672a48c1ec5288dd75248c9826a6cd5efa8640a8ccf037c1718c92c570"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "f865b4eb40a8e89c99513f186f8ac69540bd8222c2fd2498f94917df4f2ee819"
+          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
         }
       ],
-      "reason": "Reviewed incremental FTS refresh and writer implementation invalidation: full and incremental records retain canonical ordinals and retrieval behavior; all mirrors and cache commit atomically, with complete recovery for incomplete or invalid state.",
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
       "baseRef": "HEAD",
-      "gitHead": "7e1d0d26ea5b35cb42f0a0f7335a5f5d13d4a72e",
-      "reviewedAtUtc": "2026-10-05T08:03:32.1211110Z"
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:20.6035894Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -630,13 +634,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "22d224672a48c1ec5288dd75248c9826a6cd5efa8640a8ccf037c1718c92c570"
+          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
         }
       ],
-      "reason": "Reviewed incremental FTS refresh and writer implementation invalidation: full and incremental records retain canonical ordinals and retrieval behavior; all mirrors and cache commit atomically, with complete recovery for incomplete or invalid state.",
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
       "baseRef": "HEAD",
-      "gitHead": "7e1d0d26ea5b35cb42f0a0f7335a5f5d13d4a72e",
-      "reviewedAtUtc": "2026-10-05T08:03:33.5196890Z"
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:22.5932749Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -686,26 +690,14 @@
       "pageSha256": "9630ea07351d3459079b4fcbe332fd12893fc38afd2c92879bfb4d14221bbc54",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-candidates.mjs",
-          "sha256": "d2cd373fcef9fec17df7387baa6819b1c47e6c5e62e957e75694f6d35d4dcdc3"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-candidates.test.mjs",
-          "sha256": "3d55fb89935cdefd5e463e3e901b9b6a1385e8776243eea123c9ab14a582d52a"
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
-          "sha256": "11f71a3f4f0e9833b0fd873923e9823e7ce2cd53e6bcb660217122c5f7c1fd4c"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
-          "sha256": "8ae97ba76253566461f92c10e75af71eb03e3e8a7c5eee8b96b14a885988e8ee"
+          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
+          "sha256": "95e5bb441bba5cc7538a4ed0f879160e2555a02ac77e2b0cfeb785e9663c7487"
         }
       ],
-      "reason": "Confirmed bounded FTS rowid hydration and real query-plan regression; documented optional collect-failures audit with failed exit status, preserved logs and no aggregate success receipt.",
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
       "baseRef": "HEAD",
-      "gitHead": "829474ddf40a574626a8b236adb6ca9629439dcb",
-      "reviewedAtUtc": "2026-10-04T22:04:50.4614997Z"
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:23.5115603Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -842,13 +834,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "22d224672a48c1ec5288dd75248c9826a6cd5efa8640a8ccf037c1718c92c570"
+          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
         }
       ],
-      "reason": "Reviewed incremental FTS refresh and writer implementation invalidation: full and incremental records retain canonical ordinals and retrieval behavior; all mirrors and cache commit atomically, with complete recovery for incomplete or invalid state.",
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
       "baseRef": "HEAD",
-      "gitHead": "7e1d0d26ea5b35cb42f0a0f7335a5f5d13d4a72e",
-      "reviewedAtUtc": "2026-10-05T08:03:34.3068930Z"
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:24.2580728Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1237,13 +1229,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "22d224672a48c1ec5288dd75248c9826a6cd5efa8640a8ccf037c1718c92c570"
+          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
         }
       ],
-      "reason": "Reviewed incremental FTS refresh and writer implementation invalidation: full and incremental records retain canonical ordinals and retrieval behavior; all mirrors and cache commit atomically, with complete recovery for incomplete or invalid state.",
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
       "baseRef": "HEAD",
-      "gitHead": "7e1d0d26ea5b35cb42f0a0f7335a5f5d13d4a72e",
-      "reviewedAtUtc": "2026-10-05T08:03:35.1653252Z"
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:24.9750072Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1263,29 +1255,33 @@
     {
       "pageId": "workflow.self-maintenance",
       "pagePath": ".llm-wiki/workflows/self-maintenance.md",
-      "pageSha256": "451e4e2830e745a0b058ab5d0a347376461e4071c9093bcfc035a3580db6831d",
+      "pageSha256": "891ba091baab5bb5ebac52ec2d8482eba48976374cc43486fa4fbbe800d24fa2",
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph-context-projection.mjs",
-          "sha256": "adc529c51958073dad5ef0bc2b1fe834b87db8bd87d57892afc79aca672bdf28"
+          "sha256": "5a243e38926bddf04aec7ccd1ad903e0e5ee78a476e63d9d39287810ab971237"
         },
         {
           "path": ".llm-wiki/tools/code-graph-context-projection.test.mjs",
-          "sha256": "a93f6ee3f13afa7f52b60c59e79a7b40007484ce5d845be79f7eee35c5568495"
+          "sha256": "2507430dbd19d7d85b8fd6b23bf713169e6e0139b472ac573de86740a0b44b12"
         },
         {
-          "path": ".llm-wiki/tools/code-graph-maintenance-recovery.test.mjs",
-          "sha256": "64c737b5ac67cb948216cc30eac6369358f68a4785fee95a55ffa1d35d459804"
+          "path": ".llm-wiki/tools/code-graph-maintenance.mjs",
+          "sha256": "44f305954c59613348776401ad650df6c959c361f36a97d45a63664fe3f238eb"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
+          "sha256": "95e5bb441bba5cc7538a4ed0f879160e2555a02ac77e2b0cfeb785e9663c7487"
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "22d224672a48c1ec5288dd75248c9826a6cd5efa8640a8ccf037c1718c92c570"
+          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
         }
       ],
-      "reason": "Reviewed incremental FTS refresh and writer implementation invalidation: full and incremental records retain canonical ordinals and retrieval behavior; all mirrors and cache commit atomically, with complete recovery for incomplete or invalid state.",
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
       "baseRef": "HEAD",
-      "gitHead": "7e1d0d26ea5b35cb42f0a0f7335a5f5d13d4a72e",
-      "reviewedAtUtc": "2026-10-05T08:03:35.8998071Z"
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:25.6783599Z"
     }
   ]
 }

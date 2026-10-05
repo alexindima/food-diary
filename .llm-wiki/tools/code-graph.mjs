@@ -10,9 +10,9 @@ import { searchContextBatch } from './code-graph-batch.mjs';
 import { refreshStandaloneIndexes, queryStandaloneIndex, querySecurityEvidence } from './code-graph-index-query.mjs';
 import { englishMorphologicalVariants } from './code-graph-query-terms.mjs';
 import { findIdentityCandidates } from './code-graph-identity.mjs';
-import { replaceContextSearchRecords } from './code-graph-context-projection.mjs';
+import { createContextSourceReader, replaceContextSearchRecords } from './code-graph-context-projection.mjs';
 import { runGraphProcess } from './code-graph-process.mjs';
-import { discoverProjectOwnership, projectOwnership, inspectProjectionOwnership, inspectProjectionCompleteness } from './code-graph-maintenance.mjs';
+import { discoverProjectOwnership, createProjectOwnershipResolver, inspectProjectionOwnership, inspectProjectionCompleteness } from './code-graph-maintenance.mjs';
 import { traceCandidateMatchesScope } from './code-graph-trace-scope.mjs';
 import { applicationRoleIdentity, completeFileIdentityMatches, compoundModuleMention, contextPathOwnership, exactFileIdentity, directIdentifierTermMatchesMinimum, hyphenatedIdentifierTerms, implicitImplementationIntent, isModuleEntryPointQuery, rankingModuleIdentity, rankingPathIdentities, testIdentityWeights } from './code-graph-path-layout.mjs';
 
@@ -936,20 +936,20 @@ function expandSearchText(value) {
   return expanded === text ? text : `${text} ${expanded}`;
 }
 
-function contextDocumentPaths() {
-  return repositoryPaths().filter((path) =>
+function contextDocumentPaths(paths) {
+  return paths.filter((path) =>
     /(^|\/)AGENTS\.md$/i.test(path)
     || /^\.llm-wiki\/.+\.md$/i.test(path)
     || /^docs\/.+\.md$/i.test(path));
 }
 
-function contextSearchFeatures(path, recordType, projects = []) {
+function contextSearchFeatures(path, recordType, resolveOwner) {
   const normalized = String(path ?? '').replaceAll('\\', '/');
   const lower = normalized.toLowerCase();
   const fileName = basename(lower);
   const extension = extname(lower);
   const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/i.test(normalized);
-  const project = projectOwnership(normalized, projects);
+  const project = resolveOwner(normalized);
   const { layer, module } = project && project.layer !== 'unknown' ? project : contextPathOwnership(normalized);
   const rolePatterns = [
     ['handler', /handler\.[^.]+$/], ['validator', /validator(?:tests?)?\.[^.]+$/],
@@ -966,13 +966,15 @@ function contextSearchFeatures(path, recordType, projects = []) {
 }
 
 function refreshContextSearch(database) {
-  const ownershipProjects = discoverProjectOwnership(repositoryPaths());
-  const files = database.prepare('SELECT path, language, content_hash contentHash FROM files ORDER BY path').all();
+  const paths = repositoryPaths();
+  const ownershipProjects = discoverProjectOwnership(paths);
+  const resolveOwner = createProjectOwnershipResolver(ownershipProjects);
+  const files = database.prepare('SELECT id, path, language, content_hash contentHash FROM files ORDER BY path').all();
   const queryDocuments = database.prepare(`
     SELECT category, record_key recordKey, path, source_path sourcePath, record_kind recordKind, payload_json payloadJson
     FROM query_documents ORDER BY category, record_key, path
   `).all();
-  const documentation = contextDocumentPaths().flatMap((path) => {
+  const documentation = contextDocumentPaths(paths).flatMap((path) => {
     const absolutePath = resolve(repositoryRoot, path);
     if (!existsSync(absolutePath)) return [];
     const text = readFileSync(absolutePath, 'utf8');
@@ -1006,16 +1008,7 @@ function refreshContextSearch(database) {
     return { refreshed: false, documents: existingCount, fingerprint };
   }
 
-  const symbolsByPath = new Map();
-  for (const row of database.prepare('SELECT f.path, s.name FROM symbols s JOIN files f ON f.id=s.file_id ORDER BY f.path, s.name').all()) {
-    if (!symbolsByPath.has(row.path)) symbolsByPath.set(row.path, []);
-    symbolsByPath.get(row.path).push(row.name);
-  }
-  const tokensByPath = new Map();
-  for (const row of database.prepare('SELECT f.path, t.token FROM file_tokens t JOIN files f ON f.id=t.file_id ORDER BY f.path, t.token').all()) {
-    if (!tokensByPath.has(row.path)) tokensByPath.set(row.path, []);
-    tokensByPath.get(row.path).push(row.token);
-  }
+  const sourceReader = createContextSourceReader(database);
 
   const insertIdentity = database.prepare('INSERT INTO context_search_identity(rowid, path, title) VALUES (?, ?, ?)');
   const insert = database.prepare(`
@@ -1029,7 +1022,7 @@ function refreshContextSearch(database) {
   const insertContextRecord = (rowId, recordType, recordKey, path, sourcePath, category, title, body) => {
     insert.run(rowId, recordType, recordKey, path, sourcePath, category, title, body);
     insertIdentity.run(rowId, path, title);
-    const features = contextSearchFeatures(path, recordType, ownershipProjects);
+    const features = contextSearchFeatures(path, recordType, resolveOwner);
     insertFeatures.run(rowId, recordType, path, features.layer, features.module,
       features.role, features.isTest, features.extension);
   };
@@ -1038,7 +1031,7 @@ function refreshContextSearch(database) {
       const file = record.source;
       const sourceBody = ['powershell', 'json', 'yaml', 'configuration'].includes(file.language)
         ? readFileSync(resolve(repositoryRoot, file.path), 'utf8')
-        : (tokensByPath.get(file.path) ?? []).join(' ');
+        : sourceReader.tokens(file.id).join(' ');
       const synopsis = file.language === 'powershell'
         ? sourceBody.match(/\.SYNOPSIS\s*\r?\n([\s\S]*?)(?=\r?\n\s*\.[A-Z]|#>)/i)?.[1]?.trim() ?? '' : '';
       insertContextRecord(
@@ -1048,7 +1041,7 @@ function refreshContextSearch(database) {
         file.path,
         file.path,
         file.language,
-        expandSearchText((symbolsByPath.get(file.path) ?? []).join(' ') + (synopsis ? `\n${synopsis}` : '')),
+        expandSearchText(sourceReader.symbols(file.id).join(' ') + (synopsis ? `\n${synopsis}` : '')),
         expandSearchText(sourceBody));
     } else if (record.kind === 'query-document') {
       const item = record.source;

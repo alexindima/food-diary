@@ -6,6 +6,7 @@ status: current
 summary: Query an incremental SQLite symbol and consumer graph as the primary Development MCP code-context route without replacing governed Wiki evidence or committed project knowledge.
 sources:
   - .llm-wiki/tools/code-graph.mjs
+  - .llm-wiki/tools/code-graph-maintenance.mjs
   - .llm-wiki/tools/code-graph-context-projection.mjs
   - .llm-wiki/tools/code-graph-context-projection.test.mjs
   - .llm-wiki/tools/code-graph-index-query.mjs
@@ -98,6 +99,12 @@ The experimental graph stores reconstructable code intelligence in
 `.artifacts/llm-wiki/code-graph/code-graph.sqlite`. It is a local cache and is
 never committed. Human-reviewed policy, acceptance, evidence, journeys, and
 architecture documentation remain JSON or Markdown sources in Git.
+
+Source symbols and tokens are read through their existing `file_id` indexes
+only when a code record is rendered. Partial refreshes therefore avoid loading
+source features for unchanged files; full refreshes retain the same symbol and
+token ordering, including duplicate symbol names and empty files. Each refresh
+uses one Git path inventory for project roots and documentation paths.
 
 Each build also publishes
 `.artifacts/llm-wiki/code-graph/code-graph.fingerprint`. Query caches hash this
