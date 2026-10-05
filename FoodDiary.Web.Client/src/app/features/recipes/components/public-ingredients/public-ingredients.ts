@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, model, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, model, output, untracked } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
@@ -49,7 +49,9 @@ export class PublicIngredientsComponent {
     public constructor() {
         effect(() => {
             if (this.shoppingMessage() === 'PUBLIC_RECIPES.SHOPPING_ERROR') {
-                this.toast.error(this.translate.instant('PUBLIC_RECIPES.SHOPPING_ERROR'));
+                untracked(() => {
+                    this.toast.error(this.translate.instant('PUBLIC_RECIPES.SHOPPING_ERROR'));
+                });
             }
         });
     }

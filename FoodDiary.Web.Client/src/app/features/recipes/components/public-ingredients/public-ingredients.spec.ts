@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -84,6 +85,37 @@ describe('public ingredient quantities', () => {
 
 const DEFAULT_LIMIT = 50;
 const LARGE_RECIPE_SERVINGS = 80;
+
+it('shows shopping errors once and only repeats them for a new failed attempt', () => {
+    TestBed.configureTestingModule({
+        imports: [PublicIngredientsComponent],
+        providers: [provideRouter([]), provideTranslateTesting()],
+    });
+    const toast = TestBed.inject(FdUiToastService);
+    const originalError = toast.error.bind(toast);
+    const boundedRef = toast.info('Existing notification', { duration: 0 });
+    const showError = vi.spyOn(toast, 'error');
+    // Allow the real state update once so a broken effect cannot loop indefinitely.
+    showError.mockImplementation(message => (showError.mock.calls.length === 1 ? originalError(message, { duration: 0 }) : boundedRef));
+    const recipe = publicRecipeFixture();
+    const fixture = TestBed.createComponent(PublicIngredientsComponent);
+    fixture.componentRef.setInput('recipe', recipe);
+    fixture.componentRef.setInput('servings', recipe.servings);
+    fixture.componentRef.setInput('shoppingMessage', 'PUBLIC_RECIPES.SHOPPING_ERROR');
+    fixture.detectChanges();
+
+    expect(showError).toHaveBeenCalledOnce();
+    toast.info('Unrelated notification', { duration: 0 });
+    fixture.detectChanges();
+    expect(showError).toHaveBeenCalledOnce();
+
+    fixture.componentRef.setInput('shoppingMessage', null);
+    fixture.detectChanges();
+    fixture.componentRef.setInput('shoppingMessage', 'PUBLIC_RECIPES.SHOPPING_ERROR');
+    fixture.detectChanges();
+    expect(showError).toHaveBeenCalledTimes(2);
+});
+
 it.each([2, LARGE_RECIPE_SERVINGS])('limits servings while preserving larger original recipes (%s)', original => {
     TestBed.configureTestingModule({
         imports: [PublicIngredientsComponent],

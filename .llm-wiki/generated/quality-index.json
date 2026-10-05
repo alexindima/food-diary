@@ -12122,11 +12122,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-ingredients/public-ingredients.ts",
-      "nonBlankLines": 119,
+      "nonBlankLines": 121,
       "decisionPoints": 18,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 29.38
+      "structuralRiskScore": 29.42
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-navigation/public-navigation.ts",
