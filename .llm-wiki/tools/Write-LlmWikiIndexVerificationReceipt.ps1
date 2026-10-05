@@ -30,13 +30,13 @@ function Get-GitBlobHashes([string[]]$Paths) {
     # stable, but that ProcessStartInfo property exists only on .NET 5+ (PowerShell 7+);
     # on Windows PowerShell 5.1 the default StreamWriter encoding can also inject a stray
     # UTF-8 preamble into the stream once its internal buffer first flushes, corrupting the
-    # path git reads at that boundary. Redirecting through temp files instead of a live pipe
-    # sidesteps both problems and behaves identically on every PowerShell/.NET runtime.
+    # path git reads at that boundary. Use a BOM-free file without a trailing newline
+    # so Unix Start-Process redirection cannot append an extra empty path record.
     $stdinPath = [IO.Path]::GetTempFileName()
     $stdoutPath = [IO.Path]::GetTempFileName()
     $stderrPath = [IO.Path]::GetTempFileName()
     try {
-        [IO.File]::WriteAllText($stdinPath, (($Paths -join "`n") + "`n"), [Text.UTF8Encoding]::new($false))
+        [IO.File]::WriteAllText($stdinPath, ($Paths -join "`n"), [Text.UTF8Encoding]::new($false))
         $process = Start-Process -FilePath 'git' -ArgumentList 'hash-object', '--stdin-paths' `
             -WorkingDirectory $repositoryRoot -RedirectStandardInput $stdinPath `
             -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath `

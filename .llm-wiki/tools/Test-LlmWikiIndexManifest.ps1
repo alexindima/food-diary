@@ -44,11 +44,34 @@ try {
     [IO.File]::WriteAllText((Join-Path $fixture '.llm-wiki/policies/query-indexes.json'), '{"schemaVersion":1,"paths":[".llm-wiki/generated/index.json"]}')
     [IO.File]::WriteAllText((Join-Path $fixture '.llm-wiki/generated/index.json'), '{}')
     [IO.File]::WriteAllText((Join-Path $fixture 'source.cs'), 'public class Original {}')
+    [IO.File]::WriteAllBytes((Join-Path $fixture 'empty.bin'), [byte[]]@())
+    $sourceFixturePaths = @('source.cs', 'empty.bin')
+    # Windows PowerShell 5.1 loads BOM-free scripts through the ANSI code page.
+    $unicodePathSegment = [string][char]0x043F + [char]0x0443 + [char]0x0442 + [char]0x044C
+    foreach ($index in 1..64) {
+        $path = 'source ' + ($unicodePathSegment * 12) + " $index.cs"
+        $sourceFixturePaths += $path
+        [IO.File]::WriteAllText((Join-Path $fixture $path), "// $unicodePathSegment $index", [Text.UTF8Encoding]::new($false))
+    }
     & git -C $fixture add .
     & git -C $fixture -c user.name='Wiki Tests' -c user.email='wiki@example.invalid' commit --quiet -m baseline
+    $expectedPaths = @(@(
+        '.llm-wiki/policies/query-indexes.json'
+        '.llm-wiki/tools/Write-LlmWikiIndexVerificationReceipt.ps1'
+        '.llm-wiki/tools/LlmWikiGitPaths.ps1'
+    ) + $sourceFixturePaths | Sort-Object -Unique)
+    if ([Text.Encoding]::UTF8.GetByteCount($expectedPaths -join "`n") -le 4096) { throw 'Source hashing fixture must cross a native stdin buffer boundary.' }
+    # Independent argv hashing must match the production redirected-file batch.
+    $expectedHashes = @(& git -C $fixture hash-object -- $expectedPaths)
+    if ($LASTEXITCODE -ne 0 -or $expectedHashes.Count -ne $expectedPaths.Count) { throw 'Native source hash reference failed.' }
+    $expectedEntries = for ($index = 0; $index -lt $expectedPaths.Count; $index++) { "$($expectedPaths[$index]):$($expectedHashes[$index])" }
+    $sha = [Security.Cryptography.SHA256]::Create()
+    try { $expectedFingerprint = ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes(($expectedEntries -join "`n") + "`n"))) -replace '-', '').ToLowerInvariant() }
+    finally { $sha.Dispose() }
     $writer = Join-Path $fixtureTools 'Write-LlmWikiIndexVerificationReceipt.ps1'
     & $writer
     $status = & $writer -ReceiptKind Status | ConvertFrom-Json
+    if ($status.sourceFingerprint -cne $expectedFingerprint) { throw 'Publication source hashes differ from the complete native argv reference.' }
     if ($status.verification.state -ne 'unverified') { throw 'A partial verify issued a full verification receipt.' }
     & $writer -ReceiptKind Generation
     & $writer
@@ -57,11 +80,24 @@ try {
     & $writer -CompletedFullVerification
     $status = & $writer -ReceiptKind Status | ConvertFrom-Json
     if ($status.generation.state -ne 'verified' -or $status.verification.state -ne 'verified') { throw 'Publication states did not recognize matching content.' }
+    $untrackedPath = Join-Path $fixture "$unicodePathSegment untracked.cs"
+    [IO.File]::WriteAllText($untrackedPath, '// untracked', [Text.UTF8Encoding]::new($false))
+    $status = & $writer -ReceiptKind Status | ConvertFrom-Json
+    if ($status.generation.state -ne 'stale' -or $status.verification.state -ne 'stale') { throw 'Publication fingerprints ignored an untracked Unicode source.' }
+    Remove-Item -LiteralPath $untrackedPath -Force
+    Remove-Item -LiteralPath (Join-Path $fixture 'empty.bin') -Force
+    $status = & $writer -ReceiptKind Status | ConvertFrom-Json
+    if ($status.generation.state -ne 'stale' -or $status.verification.state -ne 'stale') { throw 'Publication fingerprints ignored a deleted source.' }
+    [IO.File]::WriteAllBytes((Join-Path $fixture 'empty.bin'), [byte[]]@())
+    $status = & $writer -ReceiptKind Status | ConvertFrom-Json
+    if ($status.sourceFingerprint -cne $expectedFingerprint -or $status.generation.state -ne 'verified' -or $status.verification.state -ne 'verified') { throw 'Restoring identical source contents did not recover matching publication states.' }
+    $sourceTimestamp = [IO.File]::GetLastWriteTimeUtc((Join-Path $fixture 'source.cs'))
     [IO.File]::WriteAllText((Join-Path $fixture 'source.cs'), 'public class Modified {}')
+    [IO.File]::SetLastWriteTimeUtc((Join-Path $fixture 'source.cs'), $sourceTimestamp)
     & $writer -CompletedFullVerification
     $status = & $writer -ReceiptKind Status | ConvertFrom-Json
     if ($status.generation.state -ne 'stale' -or $status.verification.state -ne 'stale') { throw 'A partial verify hid stale generation.' }
 } finally {
     Remove-Item -LiteralPath $fixture -Recurse -Force -ErrorAction SilentlyContinue
 }
-Write-Host 'Wiki publication receipt regression passed: partial, generated, verified and stale states remain distinct.'
+Write-Host 'Wiki publication receipt regression passed: native Unicode/empty-file hashes, untracked/deleted sources, preserved-timestamp edits and distinct publication states.'
