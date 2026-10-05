@@ -4,6 +4,7 @@ param()
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiCorpusEvaluation.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiProcess.ps1')
 $fixtureParent = [IO.Path]::GetFullPath((Join-Path $repositoryRoot '.artifacts/llm-wiki/corpus-pool-tests'))
 $fixtureRoot = Join-Path $fixtureParent ([guid]::NewGuid().ToString('N'))
 $null = New-Item -ItemType Directory -Path $fixtureRoot -Force
@@ -34,9 +35,9 @@ function Assert-FixtureProcessesStopped([string[]]$Paths) {
         $state = [IO.File]::ReadAllText($statePath) | ConvertFrom-Json
         foreach ($ownedId in @($state.worker, $state.child) | Where-Object { $_ }) {
             $process = $null
-            try { $process = [Diagnostics.Process]::GetProcessById([int]$ownedId) } catch { continue }
+            try { $process = [Diagnostics.Process]::GetProcessById([int]$ownedId) } catch [ArgumentException] { continue }
             try {
-                if (-not $process.HasExited) { throw "Owned fixture process $ownedId survived pool failure." }
+                if (-not (Wait-LlmWikiProcessTermination -Process $process)) { throw "Owned fixture process $ownedId survived pool failure." }
             } finally { $process.Dispose() }
         }
     }

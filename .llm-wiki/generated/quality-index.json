@@ -1770,11 +1770,11 @@
     },
     {
       "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
-      "nonBlankLines": 41,
-      "decisionPoints": 8,
+      "nonBlankLines": 71,
+      "decisionPoints": 18,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.82
+      "structuralRiskScore": 30.42
     },
     {
       "path": ".llm-wiki/tools/LlmWikiProjectLookup.ps1",
@@ -59109,9 +59109,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
       "line": 1,
-      "testReferenceCount": 4,
+      "testReferenceCount": 5,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
+        ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
         ".llm-wiki/tools/Test-LlmWikiFullResume.ps1",
         ".llm-wiki/tools/Test-LlmWikiProcess.ps1",
         ".llm-wiki/tools/Test-LlmWikiToolStartup.ps1"

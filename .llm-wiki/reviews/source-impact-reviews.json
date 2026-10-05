@@ -302,33 +302,17 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "0b38f18991e2060a96abf528329722d24f97567809e796b16d99b6bfb2c420ac",
+      "pageSha256": "0ac679ef2682cda58904cad9b5fd081e1541eb5c061f16522ae55dc1bd030f6f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-context-projection.mjs",
-          "sha256": "5a243e38926bddf04aec7ccd1ad903e0e5ee78a476e63d9d39287810ab971237"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-context-projection.test.mjs",
-          "sha256": "2507430dbd19d7d85b8fd6b23bf713169e6e0139b472ac573de86740a0b44b12"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-maintenance.mjs",
-          "sha256": "44f305954c59613348776401ad650df6c959c361f36a97d45a63664fe3f238eb"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "95e5bb441bba5cc7538a4ed0f879160e2555a02ac77e2b0cfeb785e9663c7487"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
+          "path": ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
+          "sha256": "eff28ecb416b3624cd5f0de9a8f2bb203a52efd7021d4b439a4ade4ae61b5287"
         }
       ],
-      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
+      "reason": "Reviewed current corpus pool, ordered case coverage and failure/timeout/cancellation cleanup against LlmWikiCorpusEvaluation.ps1 and Test-LlmWikiCorpusEvaluation.ps1. Retrieval identity, thresholds and corpus scheduling are unchanged. Controlled Linux subreaper diagnostics reproduce a terminated zombie reported alive by HasExited; updated process termination checks pass all three failure paths and retain rejection of a live descendant.",
       "baseRef": "HEAD",
-      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
-      "reviewedAtUtc": "2026-10-05T08:37:20.6035894Z"
+      "gitHead": "d618f4b90cfc9b8b86854ead921110cee2935023",
+      "reviewedAtUtc": "2026-10-05T21:58:54.0190701Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -683,17 +667,21 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "9630ea07351d3459079b4fcbe332fd12893fc38afd2c92879bfb4d14221bbc54",
+      "pageSha256": "2e9dd8106543f7a3b09cec154c061aba14fff8f24034038422139eeda81c43cd",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "95e5bb441bba5cc7538a4ed0f879160e2555a02ac77e2b0cfeb785e9663c7487"
+          "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
+          "sha256": "8f6cfdbac46c6086c78909bf2d4506b294bb650458fd2fa01bb62368844d0946"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
+          "sha256": "eff28ecb416b3624cd5f0de9a8f2bb203a52efd7021d4b439a4ade4ae61b5287"
         }
       ],
-      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
+      "reason": "Reviewed dependency-aware generation, owned process cleanup and focused verification contracts against LlmWikiProcess.ps1, Test-LlmWikiProcess.ps1 and the corpus regression. Kill-tree behavior remains the same; the new bounded termination observer recognizes Linux defunct states while rejecting a live process. Windows PowerShell 7/5.1 and controlled Linux checks passed; quality-index metrics were regenerated and source/index transaction behavior remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
-      "reviewedAtUtc": "2026-10-05T08:37:23.5115603Z"
+      "gitHead": "d618f4b90cfc9b8b86854ead921110cee2935023",
+      "reviewedAtUtc": "2026-10-05T21:58:55.5996565Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -875,13 +863,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6bcde3e60de814dabfb71b8adc0cf4eafb93af74b0954644229b308e68b39842"
+          "sha256": "47836e9316cd615750132b36b0c287854904cf5affbf1b41bb4148a47f36996a"
         }
       ],
-      "reason": "Reviewed final generated Wiki-only structural metrics and test-reference changes, including complete worker failure logging. Quality-index production ownership, reference semantics and the 47 reference gaps remain unchanged.",
+      "reason": "Compared the regenerated quality-index diff with the three changed process scripts: only LlmWikiProcess.ps1 line/branch metrics and its corpus-test navigation reference changed. Critical symbol counts and the distinction between test references and executed coverage remain valid. Controlled Linux and Windows execution evidence is kept outside the compiled navigation index.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T13:33:00.3631148Z"
+      "gitHead": "d618f4b90cfc9b8b86854ead921110cee2935023",
+      "reviewedAtUtc": "2026-10-05T22:00:49.3842662Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -977,17 +965,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6bcde3e60de814dabfb71b8adc0cf4eafb93af74b0954644229b308e68b39842"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "97c0546251cd15ba3da3982fc87aa3d4cb1d1ab035ad9acba2dee5b48387ef71"
+          "sha256": "47836e9316cd615750132b36b0c287854904cf5affbf1b41bb4148a47f36996a"
         }
       ],
-      "reason": "Reviewed final shared ranking policy and Wiki-only quality metrics. Recovery/parsing normalization and JWT-context terms affect navigation; source authority, freshness, ambiguity and security-evidence limits remain unchanged.",
+      "reason": "Reviewed the new termination observer and its quality-index metrics against the current security-review workflow. The observer reads only the numeric PID stat record for an already-owned Process object and returns termination state; it does not expand kill targets or read process environments, credentials or private payloads. Source and risk navigation claims remain valid and live-process rejection has execution evidence.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T13:33:01.3534280Z"
+      "gitHead": "d618f4b90cfc9b8b86854ead921110cee2935023",
+      "reviewedAtUtc": "2026-10-05T22:00:51.7046364Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

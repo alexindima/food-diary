@@ -5,6 +5,7 @@ $tempRoot = Join-Path ([IO.Path]::GetTempPath()) ("llm-wiki-process-" + [guid]::
 $pidPath = Join-Path $tempRoot 'grandchild.pid'
 $childScript = Join-Path $tempRoot 'child.ps1'
 $process = $null
+$grandchild = $null
 try {
     $null = New-Item -ItemType Directory -Path $tempRoot -Force
     @"
@@ -17,13 +18,19 @@ Start-Sleep -Seconds 120
     while (-not (Test-Path -LiteralPath $pidPath) -and [DateTime]::UtcNow -lt $deadline) { Start-Sleep -Milliseconds 50 }
     if (-not (Test-Path -LiteralPath $pidPath)) { throw 'Grandchild process did not start.' }
     $grandchildId = [int](Get-Content -LiteralPath $pidPath -Raw)
+    $grandchild = [Diagnostics.Process]::GetProcessById($grandchildId)
+    if (Wait-LlmWikiProcessTermination -Process $grandchild -WaitMilliseconds 100) {
+        throw 'Termination check accepted a live grandchild before cleanup.'
+    }
     Stop-LlmWikiProcessTree -Process $process
-    Start-Sleep -Milliseconds 150
-    $grandchildAlive = $false
-    try { $grandchildAlive = -not ([Diagnostics.Process]::GetProcessById($grandchildId)).HasExited } catch { $grandchildAlive = $false }
-    if ($grandchildAlive) { throw "Grandchild process $grandchildId survived process-tree termination." }
-    Write-Host 'LLM Wiki process-tree smoke passed: timed-out descendants are terminated.'
+    if (-not (Wait-LlmWikiProcessTermination -Process $grandchild)) { throw "Grandchild process $grandchildId survived process-tree termination." }
+    Write-Host 'LLM Wiki process-tree smoke passed: live descendants are rejected and terminated descendants are recognized.'
 } finally {
     if ($process -and -not $process.HasExited) { Stop-LlmWikiProcessTree -Process $process }
+    if ($grandchild) { $grandchild.Dispose() }
+    $tempParent = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\', '/')
+    if ([IO.Path]::GetDirectoryName([IO.Path]::GetFullPath($tempRoot)) -ne $tempParent) {
+        throw 'Process fixture cleanup escaped its temporary directory.'
+    }
     if (Test-Path -LiteralPath $tempRoot) { Remove-Item -LiteralPath $tempRoot -Recurse -Force }
 }
