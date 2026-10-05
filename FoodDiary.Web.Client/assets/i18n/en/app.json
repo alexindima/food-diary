@@ -31,7 +31,6 @@
         "ENABLE_FASTING_NOTIFICATIONS": "Enable fasting notifications first.",
         "ACCOUNT_ACTION_BUSY": "Finish the current account action first.",
         "OPERATION_BUSY": "Finish the current operation first.",
-        "COOLDOWN_ACTIVE": "Wait for the cooldown to finish.",
         "FASTING_BUSY": "Finish the current fasting update first.",
         "FASTING_REDUCE_UNAVAILABLE": "Choose fewer hours than the time remaining in this fast."
     },
@@ -405,33 +404,6 @@
     },
     "RECIPE_CARD": {
         "ADD_TO_MEAL": "Add to meal"
-    },
-    "QUICK_MEAL": {
-        "TITLE": "Meal draft",
-        "ITEMS_ONE": "item",
-        "ITEMS_FEW": "items",
-        "ITEMS_MANY": "items",
-        "ITEMS_OTHER": "items",
-        "AMOUNT": "Amount",
-        "SERVINGS_ONE": "serving",
-        "SERVINGS_FEW": "servings",
-        "SERVINGS_MANY": "servings",
-        "SERVINGS_OTHER": "servings",
-        "EDIT": "Edit",
-        "SAVE": "Save",
-        "SAVING": "Saving...",
-        "ADDED_PRODUCT": "Product added to draft",
-        "ADDED_RECIPE": "Recipe added to draft",
-        "SAVE_SUCCESS": "Meal saved",
-        "SAVE_ERROR": "Failed to save meal",
-        "PREVIEW_EMPTY": "Add products or recipes — they will appear here",
-        "CLEAR": "Clear draft",
-        "COLLAPSE": "Collapse draft",
-        "EXPAND": "Expand draft",
-        "REMOVE_ITEM": "Remove item",
-        "REMOVE_ITEM_NAMED": "Remove {{name}} from draft",
-        "EDIT_ARIA": "Open meal draft editor",
-        "SAVE_ARIA": "Save meal draft"
     },
     "RECIPE_BADGE": {
         "MY": "My recipe",
@@ -1885,25 +1857,6 @@
         "GOAL_LABEL": "Daily goal",
         "REMAINING_LABEL": "Remaining",
         "MACRO_TITLE": "Macro summary",
-        "DAY_SUMMARY": {
-            "PULSE_PREVIOUS": "Previous insight",
-            "PULSE_NEXT": "Next insight",
-            "BALANCE_LEFT": "remaining",
-            "BALANCE_OVER": "over goal",
-            "HELP_TITLE": "How to read the shape",
-            "PULSE_CALORIES": "Daily calories",
-            "PULSE_EMPTY_TEXT": "Add the first meal for this day",
-            "PULSE_EMPTY_TITLE": "No meals recorded yet",
-            "PULSE_TITLE": "Daily pulse",
-            "PETAL_LEGEND": "Inner ring = calorie progress. Dashed outline = 100% of nutrient goals. Above 100%, growth is compressed and capped. Double marker = 250% or more.",
-            "OF_GOAL": "of {{value}} kcal",
-            "TITLE": "Day summary",
-            "GOAL_MARKER": "Nutrient goal",
-            "CALORIE_PROGRESS": "Daily calorie progress",
-            "REMAINING": "{{value}} {{unit}} remaining",
-            "EXCEEDED_BY": "Exceeded by {{value}} {{unit}}",
-            "TARGET_REACHED": "Target reached"
-        },
         "MOTIVATION_TITLE": "Stay motivated",
         "MEALS_SUBTITLE": "Meal log",
         "MEALS_TITLE": "Today's meals",
@@ -2065,9 +2018,14 @@
         "TITLE_FOR_DATE_SHORT": "{{ date }}",
         "INITIAL_SETUP": {
             "TITLE": "Start with a quick setup",
-            "HINT": "Until you set up your profile and goals, calorie, nutrient and water targets are starting values, not personal recommendations. Confirm your age, height, sex and activity, then choose your goals. You can already record your first meal.",
-            "PROFILE": "Set up profile",
-            "GOALS": "Choose goals"
+            "HINT": "Follow the steps in order to personalize your diary. Starting targets are not a personal recommendation. You can record meals straight away.",
+            "PROFILE": "1. Set up profile",
+            "GOALS": "3. Choose goals",
+            "WEIGHT": "2. Record current weight",
+            "PROFILE_HINT": "Enter your birth date, height, sex and usual physical activity in your profile.",
+            "WEIGHT_HINT": "Record your current weight in Weight history. Your target weight is a separate profile field.",
+            "GOALS_HINT": "Choose calorie, nutrient and water goals. Presets change the protein, fat and carbohydrate balance; you can enter all values manually.",
+            "DONE": "Done"
         }
     },
     "WEIGHT_HISTORY": {
@@ -2650,7 +2608,9 @@
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         },
-        "CONSENT_REQUIRED": "Consent to storing cycle entries is required to start tracking."
+        "CONSENT_REQUIRED": "Consent to storing cycle entries is required to start tracking.",
+        "CLEAR_DAY_TITLE": "Clear this day’s entries?",
+        "CLEAR_DAY_MESSAGE": "Notes, symptoms, bleeding entries and fertility data for this day will be deleted. They cannot be restored automatically."
     },
     "FASTING": {
         "REQUEST_ERROR": "Could not complete this action. Check your connection and try again.",
@@ -2730,7 +2690,8 @@
             "DAY_5": "Fri",
             "DAY_6": "Sat",
             "DAY_7": "Sun",
-            "PAST_TARGET": "The planned end time has passed. Check whether this session should be ended."
+            "PAST_TARGET": "The planned end time has passed. Check whether this session should be ended.",
+            "WELLBEING_SYMPTOMS": "Symptoms recorded"
         },
         "LOADING": "Loading fasting data...",
         "TOUR": {
@@ -2866,6 +2827,7 @@
         },
         "DAYS": "days",
         "HOURS": "h",
+        "MINUTES": "min",
         "H": "h",
         "NO_STATS": "No statistics yet.",
         "HISTORY_TITLE": "Recent history",
@@ -2994,6 +2956,7 @@
             }
         },
         "BADGE_COMPLETED": "Completed",
+        "BADGE_ENDED_EARLY": "Ended before the target",
         "BADGE_ACTIVE": "In progress",
         "BADGE_INTERRUPTED": "Interrupted",
         "BADGE_SKIPPED": "Skipped",
@@ -3013,7 +2976,7 @@
         "LONGEST_STREAK": "Longest streak",
         "TOTAL_MEALS": "Meals logged",
         "WEEKLY_ADHERENCE": "Weekly adherence",
-        "HEALTH_SCORE_TITLE": "Health score",
+        "HEALTH_SCORE_TITLE": "Diary consistency",
         "HEALTH_SCORE_HINT": "Based on logging consistency, goal adherence, and activity",
         "BADGES_TITLE": "Badges",
         "NO_BADGES": "No badges available yet.",
@@ -3060,8 +3023,8 @@
             "START_TOUR": "Show achievements tour",
             "STATS_TITLE": "Progress stats",
             "STATS_DESCRIPTION": "Review streaks, logged meals, and weekly adherence at a glance.",
-            "HEALTH_SCORE_TITLE": "Health score",
-            "HEALTH_SCORE_DESCRIPTION": "This score combines consistency, goal adherence, and activity signals.",
+            "HEALTH_SCORE_TITLE": "Diary consistency",
+            "HEALTH_SCORE_DESCRIPTION": "Based on diary consistency, following your goals, and recorded activity.",
             "BADGES_TITLE": "Badges",
             "BADGES_DESCRIPTION": "Earn badges as you build consistent nutrition habits.",
             "BALANCE_LEFT": "remaining",
@@ -3696,7 +3659,11 @@
         "ERROR_SHOPPING_LIST": "Could not create the shopping list. Please try again.",
         "RETRY": "Try again",
         "DETAIL_UNAVAILABLE": "This meal plan is unavailable or could not be loaded. Return to the list and try again.",
-        "RESET_FILTER": "Show all plans"
+        "RESET_FILTER": "Show all plans",
+        "ADD_TO_DIARY": "Add to diary",
+        "DIARY_HINT": "Choose a meal you ate. Check the servings, date and meal type in the draft, then save the entry.",
+        "FINISH_DRAFT": "Save or clear your current meal draft first.",
+        "ERROR_ADD_MEAL": "Could not add this meal. The recipe may be unavailable. Try again."
     },
     "QUALITY": {
         "GREEN": "Nutrient-dense",
@@ -3923,7 +3890,7 @@
                 "SEND": "Send recommendation",
                 "SENT": "Recommendation sent.",
                 "SEND_ERROR": "Failed to send recommendation.",
-                "PERMISSIONS_REQUIRED": "Recommendations are available when the client shares all diary categories. Ask the client to review their sharing settings.",
+                "PERMISSIONS_REQUIRED": "The client has not shared any data categories yet. Ask them to review their sharing settings.",
                 "EMPTY": "No recommendations sent yet.",
                 "READ": "Read",
                 "UNREAD": "Unread"
@@ -4100,7 +4067,7 @@
         "ERROR_DECLINE": "Failed to decline the invitation."
     },
     "AI_RECOGNITION": {
-        "EMPTY_TITLE": "No recognitions yet",
+        "EMPTY_TITLE": "No photo recognitions yet",
         "EMPTY_DESCRIPTION": "Your recent recognition tasks and results will appear here.",
         "EMPTY_BACK": "Back to recognition",
         "RETENTION_HELP": "About result retention",
@@ -4117,14 +4084,14 @@
         "DELETE_ERROR": "Could not delete the result. Please try again.",
         "DELETED": "Result deleted.",
         "LOAD_ERROR": "Could not load recent recognitions. Please try again.",
-        "SHOW_RECENT": "Recent recognitions",
+        "SHOW_RECENT": "Photo recognition history",
         "STATUS": {
             "Failed": "Interrupted or failed",
             "Succeeded": "Ready",
             "Queued": "Queued",
             "Running": "Recognizing"
         },
-        "EMPTY": "No recent recognitions",
+        "EMPTY": "No recent photo recognitions",
         "BACKGROUND_HINT": "Recognition continues if you close this window. Recent results are available for 7 days."
     },
     "GOAL_HISTORY_PAGING": {
@@ -4157,7 +4124,8 @@
         "KCAL": "kcal",
         "ADD": "Add",
         "ADDING": "Adding meal…",
-        "ADD_ERROR": "Could not add the meal. Please try again."
+        "ADD_ERROR": "Could not add the meal. Please try again.",
+        "MEAL_TYPE": "Meal type for adding favorites"
     },
     "RECIPE_FAVORITES": {
         "REMOVED": "Removed from favorites",

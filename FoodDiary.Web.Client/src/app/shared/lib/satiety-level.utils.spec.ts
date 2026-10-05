@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_SATIETY_LEVEL, MAX_SATIETY_LEVEL, MIN_SATIETY_LEVEL, normalizeSatietyLevel } from './satiety-level.utils';
+import { MAX_SATIETY_LEVEL, MIN_SATIETY_LEVEL, normalizeSatietyLevel } from './satiety-level.utils';
 
 const CURRENT_SCALE_VALUE = 4;
 const LEGACY_SCALE_VALUE = 8;
@@ -8,11 +8,11 @@ const LEGACY_SCALE_RESULT = 4;
 const HIGH_LEGACY_SCALE_VALUE = 20;
 
 describe('satiety level utils', () => {
-    it('uses default for missing, invalid, or non-positive values', () => {
-        expect(normalizeSatietyLevel(null)).toBe(DEFAULT_SATIETY_LEVEL);
-        expect(normalizeSatietyLevel(void 0)).toBe(DEFAULT_SATIETY_LEVEL);
-        expect(normalizeSatietyLevel(Number.NaN)).toBe(DEFAULT_SATIETY_LEVEL);
-        expect(normalizeSatietyLevel(0)).toBe(DEFAULT_SATIETY_LEVEL);
+    it('preserves unanswered ratings instead of inventing a middle score', () => {
+        expect(normalizeSatietyLevel(null)).toBeNull();
+        expect(normalizeSatietyLevel(void 0)).toBeNull();
+        expect(normalizeSatietyLevel(Number.NaN)).toBeNull();
+        expect(normalizeSatietyLevel(0)).toBeNull();
     });
 
     it('keeps current scale values inside allowed range', () => {

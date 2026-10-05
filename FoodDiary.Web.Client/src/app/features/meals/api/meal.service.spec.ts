@@ -197,7 +197,7 @@ describe('MealService create', () => {
 
         const req = httpMock.expectOne(`${BASE_URL}/`);
         expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual(createData);
+        expect(req.request.body).toEqual({ ...createData, preMealSatietyLevel: 0, postMealSatietyLevel: 0 });
         req.flush(MOCK_MEAL_DTO);
     });
 
@@ -234,7 +234,7 @@ describe('MealService update', () => {
 
         const req = httpMock.expectOne(`${BASE_URL}/m1`);
         expect(req.request.method).toBe('PATCH');
-        expect(req.request.body).toEqual(updateData);
+        expect(req.request.body).toEqual({ ...updateData, preMealSatietyLevel: 0, postMealSatietyLevel: 0 });
         req.flush(MOCK_MEAL_DTO);
     });
 

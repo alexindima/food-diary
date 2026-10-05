@@ -1,19 +1,23 @@
 import { afterRenderEffect, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, viewChildren } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiDialogShellComponent, FdUiInputComponent, FdUiPaginationComponent } from 'fd-ui-kit';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 import { debounceTime, distinctUntilChanged, finalize, map, type Observable, Subject } from 'rxjs';
 
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
+import { type MealTypeOption,normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import type { FavoriteMeal } from '../../../../shared/models/meal.data';
 import { FavoriteMealRowComponent } from '../../components/favorite-meal-row/favorite-meal-row';
+import { buildMealTypeSelectOptions } from '../../components/manage/meal-manage-lib/meal-manage-options.mapper';
 import { MealFavoritesPickerFacade } from '../../lib/favorites/meal-favorites-picker.facade';
 
 const SEARCH_DEBOUNCE_MS = 300;
 
 export type MealFavoritesPickerData = {
-    repeat: (favorite: FavoriteMeal) => Observable<boolean>;
+    repeat: (favorite: FavoriteMeal, mealType: MealTypeOption) => Observable<boolean>;
     remove: (favorite: FavoriteMeal) => Observable<boolean>;
     restore: (favorite: FavoriteMeal) => Observable<boolean>;
 };
@@ -25,6 +29,7 @@ export type MealFavoritesPickerData = {
         FdUiButtonComponent,
         FdUiDialogShellComponent,
         FdUiInputComponent,
+        FdUiSelectComponent,
         FdUiPaginationComponent,
         FavoriteMealRowComponent,
     ],
@@ -34,6 +39,13 @@ export type MealFavoritesPickerData = {
     providers: [MealFavoritesPickerFacade],
 })
 export class MealFavoritesPickerComponent {
+    private readonly translateService = inject(TranslateService);
+    private readonly language = injectCurrentLanguage();
+    protected readonly selectedMealType = signal<MealTypeOption>(resolveMealTypeByTime(new Date()));
+    protected readonly mealTypeOptions = computed(() => {
+        this.language();
+        return buildMealTypeSelectOptions(this.translateService);
+    });
     protected readonly facade = inject(MealFavoritesPickerFacade);
     protected readonly savingId = signal<string | null>(null);
     protected readonly removingId = signal<string | null>(null);
@@ -54,6 +66,13 @@ export class MealFavoritesPickerComponent {
     private readonly ref = inject(FdUiDialogRef<MealFavoritesPickerComponent, boolean>);
     private readonly destroyRef = inject(DestroyRef);
     private readonly searches = new Subject<string>();
+
+    protected changeMealType(value: string | number | null): void {
+        const mealType = normalizeMealType(typeof value === 'string' ? value : null);
+        if (mealType !== null) {
+            this.selectedMealType.set(mealType);
+        }
+    }
 
     public constructor() {
         this.facade.load();
@@ -176,7 +195,7 @@ export class MealFavoritesPickerComponent {
         this.savingId.set(item.id);
         this.saveFailed.set(false);
         this.data
-            .repeat(item)
+            .repeat(item, this.selectedMealType())
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
                 finalize(() => {

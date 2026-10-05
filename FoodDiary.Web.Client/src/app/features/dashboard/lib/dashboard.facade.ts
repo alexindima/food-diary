@@ -1,4 +1,4 @@
-import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -48,6 +48,7 @@ export class DashboardFacade {
     private readonly mealService = inject(MEAL_ACTIONS);
     private readonly navigationService = inject(NavigationService);
     private readonly invalidation = inject(NutritionDataInvalidationService);
+    private observedDashboardVersion = this.invalidation.dashboardVersion();
     private readonly favoriteMealService = inject(FAVORITE_MEAL_ACTIONS);
     private readonly toastService = inject(FdUiToastService);
     public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set());
@@ -195,6 +196,18 @@ export class DashboardFacade {
     public readonly placeholderLabel = placeholderLabel;
 
     public constructor() {
+        effect(() => {
+            const version = this.invalidation.dashboardVersion();
+            if (version === this.observedDashboardVersion) {
+                return;
+            }
+            this.observedDashboardVersion = version;
+            untracked(() => {
+                if (this.initialized()) {
+                    this.loadDashboardSnapshot(false);
+                }
+            });
+        });
         this.localDay.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             if (this.followsToday && this.initialized()) {
                 this.setSelectedDate();
@@ -208,6 +221,7 @@ export class DashboardFacade {
         }
 
         this.followsToday = date === undefined;
+        this.observedDashboardVersion = this.invalidation.dashboardVersion();
         this.selectedDate.set(normalizeDate(date ?? this.localDay.refresh()));
         this.initialized.set(true);
         this.loadDashboardSnapshot();

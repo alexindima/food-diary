@@ -374,7 +374,27 @@ export class CycleTrackingPageComponent {
     }
 
     protected clearDay(date: string): void {
-        this.facade.clearDay(date);
+        if (this.isSavingDay() || this.clearingDayDate() !== null || this.confirmingPeriodStartDate() !== null) {
+            return;
+        }
+        this.dialogService
+            .open(FdUiConfirmDialogComponent, {
+                size: 'sm',
+                data: {
+                    title: this.translateService.instant('CYCLE_TRACKING.CLEAR_DAY_TITLE'),
+                    message: this.translateService.instant('CYCLE_TRACKING.CLEAR_DAY_MESSAGE'),
+                    confirmLabel: this.translateService.instant('CYCLE_TRACKING.CLEAR_DAY'),
+                    danger: true,
+                },
+            })
+            .afterClosed()
+            .pipe(
+                filter((confirmed): confirmed is true => confirmed === true),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => {
+                this.facade.clearDay(date);
+            });
     }
 
     protected confirmPeriodStart(date: string): void {

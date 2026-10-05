@@ -2,8 +2,6 @@ import { describe, expect, it } from 'vitest';
 
 import { buildMealManageDtoFromAiResult } from './ai-meal-result.mapper';
 
-const DEFAULT_SATIETY_LEVEL = 3;
-
 describe('buildMealManageDtoFromAiResult', () => {
     it('maps photo asset to both meal image and AI session image', () => {
         const dto = buildMealManageDtoFromAiResult(
@@ -35,8 +33,8 @@ describe('buildMealManageDtoFromAiResult', () => {
         expect(dto.imageUrl).toBe('https://example.com/photo.jpg');
         expect(dto.isNutritionAutoCalculated).toBe(true);
         expect(dto.manualCalories).toBeUndefined();
-        expect(dto.preMealSatietyLevel).toBe(DEFAULT_SATIETY_LEVEL);
-        expect(dto.postMealSatietyLevel).toBe(DEFAULT_SATIETY_LEVEL);
+        expect(dto.preMealSatietyLevel).toBeNull();
+        expect(dto.postMealSatietyLevel).toBeNull();
         expect(dto.aiSessions?.[0].imageAssetId).toBe('asset-1');
         expect(dto.aiSessions?.[0].imageUrl).toBe('https://example.com/photo.jpg');
     });

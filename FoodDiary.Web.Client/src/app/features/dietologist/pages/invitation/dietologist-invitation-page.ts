@@ -5,7 +5,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
-import { catchError, EMPTY, finalize, type Observable, of, switchMap } from 'rxjs';
+import { catchError, distinctUntilChanged, EMPTY, filter, finalize, map, type Observable, of, switchMap, takeUntil, tap } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -63,7 +63,23 @@ export class DietologistInvitationPageComponent {
             .subscribe(() => {
                 this.currentLanguage.set(this.resolveCurrentLanguage());
             });
-        this.loadInvitation();
+        this.route.paramMap
+            .pipe(
+                map(params => params.get('invitationId')),
+                distinctUntilChanged(),
+                tap(() => {
+                    this.invitation.set(null);
+                    this.errorMessage.set(null);
+                    this.isSubmitting.set(false);
+                    this.state.set('loading');
+                }),
+                switchMap(invitationId => this.loadInvitation(invitationId)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(invitation => {
+                this.invitation.set(invitation);
+                this.state.set(this.resolveState(invitation.status));
+            });
     }
 
     protected accept(): void {
@@ -78,6 +94,7 @@ export class DietologistInvitationPageComponent {
             .acceptInvitationForCurrentUser(invitationId)
             .pipe(
                 switchMap(() => this.authService.refreshToken().pipe(catchError(() => of(null)))),
+                takeUntil(this.invitationChanged(invitationId)),
                 finalize(() => {
                     this.isSubmitting.set(false);
                 }),
@@ -104,6 +121,7 @@ export class DietologistInvitationPageComponent {
         this.dietologistFacade
             .declineInvitationForCurrentUser(invitationId)
             .pipe(
+                takeUntil(this.invitationChanged(invitationId)),
                 finalize(() => {
                     this.isSubmitting.set(false);
                 }),
@@ -127,28 +145,24 @@ export class DietologistInvitationPageComponent {
         void this.navigationService.navigateToHomeAsync();
     }
 
-    private loadInvitation(): void {
-        const invitationId = this.route.snapshot.paramMap.get('invitationId');
+    private invitationChanged(invitationId: string): Observable<unknown> {
+        return this.route.paramMap.pipe(filter(params => params.get('invitationId') !== invitationId));
+    }
+
+    private loadInvitation(invitationId: string | null): Observable<DietologistInvitationForCurrentUser> {
         if (invitationId === null || invitationId.length === 0) {
             this.state.set('error');
             this.errorMessage.set(this.translateService.instant('DIETOLOGIST_INVITATION.ERROR_INVALID'));
-            return;
+            return EMPTY;
         }
 
-        this.state.set('loading');
-        this.dietologistFacade
-            .getInvitationForCurrentUser(invitationId)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: invitation => {
-                    this.invitation.set(invitation);
-                    this.state.set(this.resolveState(invitation.status));
-                },
-                error: () => {
-                    this.state.set('error');
-                    this.errorMessage.set(this.translateService.instant('DIETOLOGIST_INVITATION.ERROR_LOAD'));
-                },
-            });
+        return this.dietologistFacade.getInvitationForCurrentUser(invitationId).pipe(
+            catchError(() => {
+                this.state.set('error');
+                this.errorMessage.set(this.translateService.instant('DIETOLOGIST_INVITATION.ERROR_LOAD'));
+                return EMPTY;
+            }),
+        );
     }
 
     private resolveState(status: string): InvitationPageState {

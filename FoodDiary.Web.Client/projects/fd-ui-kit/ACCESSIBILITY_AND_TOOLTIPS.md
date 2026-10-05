@@ -7,6 +7,7 @@ This document defines the baseline rules for accessible names, icon-only actions
 - Keep interactive UI understandable without guesswork.
 - Make icon-only actions safe for keyboard and screen reader users.
 - Use tooltips as a helper layer, not as the only source of meaning.
+- Tooltip hosts and overlay panes must use `pointer-events: none` so they cannot intercept clicks on nearby controls.
 - Keep repeated patterns consistent across the client apps.
 
 ## Core Rule

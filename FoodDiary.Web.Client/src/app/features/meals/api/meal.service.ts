@@ -88,14 +88,14 @@ export class MealService extends ApiService {
     }
 
     public create(data: MealManageDto): Observable<Meal> {
-        return this.post<MealResponseDto>('', data).pipe(
+        return this.post<MealResponseDto>('', this.toMealRequest(data)).pipe(
             map(response => this.mapMeal(response)),
             catchError((error: unknown) => rethrowApiError('Create meal error', error)),
         );
     }
 
     public update(id: string, data: MealManageDto): Observable<Meal> {
-        return this.patch<MealResponseDto>(id, data).pipe(
+        return this.patch<MealResponseDto>(id, this.toMealRequest(data)).pipe(
             map(response => this.mapMeal(response)),
             catchError((error: unknown) => rethrowApiError('Update meal error', error)),
         );
@@ -103,6 +103,14 @@ export class MealService extends ApiService {
 
     public deleteById(id: string): Observable<void> {
         return this.delete<void>(id).pipe(catchError((error: unknown) => rethrowApiError('Delete meal error', error)));
+    }
+
+    private toMealRequest(data: MealManageDto): MealManageDto {
+        return {
+            ...data,
+            preMealSatietyLevel: normalizeSatietyLevel(data.preMealSatietyLevel) ?? 0,
+            postMealSatietyLevel: normalizeSatietyLevel(data.postMealSatietyLevel) ?? 0,
+        };
     }
 
     public repeat(id: string, targetDate: string, mealType?: string): Observable<Meal> {

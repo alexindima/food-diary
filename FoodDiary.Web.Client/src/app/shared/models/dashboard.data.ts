@@ -8,7 +8,7 @@ import type { DashboardLayoutSettings } from './user.data';
 import type { WaistEntrySummaryPoint } from './waist-entry.data';
 import type { WeightEntrySummaryPoint } from './weight-entry.data';
 
-export type DashboardSnapshot = {
+export type DashboardSnapshot<TMeal = Meal> = {
     date: string;
     dateTo: string;
     dailyGoal: number;
@@ -17,7 +17,7 @@ export type DashboardSnapshot = {
     weeklyCalories: WeeklyCaloriesPoint[];
     weight: DashboardWeight;
     waist: DashboardWaist;
-    meals: DashboardMeals;
+    meals: DashboardMeals<TMeal>;
     hydration?: HydrationDaily | null;
     advice?: DailyAdvice | null;
     currentFastingSession?: FastingSession | null;
@@ -62,8 +62,8 @@ export type DashboardWaist = {
     desiredWaistCm: number | null;
 };
 
-export type DashboardMeals = {
-    items: Meal[];
+export type DashboardMeals<TMeal = Meal> = {
+    items: TMeal[];
     total: number;
 };
 

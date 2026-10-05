@@ -15,6 +15,15 @@
                                 </span>
                             }
                         </div>
+                        <fd-ui-button
+                            variant="secondary"
+                            fill="outline"
+                            [loading]="addingMealId() === meal.id"
+                            [disabled]="addingMealId() !== null || hasMealDraft()"
+                            [disabledReason]="(hasMealDraft() ? 'MEAL_PLANS.FINISH_DRAFT' : 'DISABLED_HINTS.OPERATION_BUSY') | translate"
+                            (click)="addMeal.emit(meal)"
+                            >{{ 'MEAL_PLANS.ADD_TO_DIARY' | translate }}</fd-ui-button
+                        >
                     </div>
                 }
             </div>

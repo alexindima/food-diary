@@ -140,7 +140,7 @@ internal sealed partial class DiaryPdfGenerator {
         FormatNumber(EffectiveFats(meal), 1, report.Culture),
         FormatNumber(EffectiveCarbs(meal), 1, report.Culture),
         FormatNumber(EffectiveFiber(meal), 1, report.Culture),
-        string.Create(CultureInfo.InvariantCulture, $"{meal.PreMealSatietyLevel}/{meal.PostMealSatietyLevel}"),
+        $"{FormatSatietyLevel(meal.PreMealSatietyLevel)}/{FormatSatietyLevel(meal.PostMealSatietyLevel)}",
         string.IsNullOrWhiteSpace(meal.Comment) ? "" : Truncate(meal.Comment, 90),
     ];
 
@@ -244,7 +244,9 @@ internal sealed partial class DiaryPdfGenerator {
                     row.RelativeItem().Height(4).Background(color);
                 }
             });
-            column.Item().Text(string.Create(CultureInfo.InvariantCulture, $"{level}/5")).FontSize(7).FontColor(TextColor);
+            column.Item().Text(level > 0 ? string.Create(CultureInfo.InvariantCulture, $"{level}/5") : "—").FontSize(7).FontColor(TextColor);
         });
     }
+
+    private static string FormatSatietyLevel(int level) => level > 0 ? level.ToString(CultureInfo.InvariantCulture) : "—";
 }

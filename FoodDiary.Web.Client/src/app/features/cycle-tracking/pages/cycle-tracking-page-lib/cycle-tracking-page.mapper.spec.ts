@@ -227,6 +227,14 @@ describe('cycle tracking overview mapper', () => {
     });
 });
 
+describe('cycle tracking without menstrual episodes', () => {
+    it('does not invent a cycle day from the observation start without a period', () => {
+        const view = buildCycleOverviewView({ ...CYCLE, menstrualEpisodes: [] }, 'en-US', new Date('2026-04-16T12:00:00Z'));
+        expect(view?.cycleDayNumber).toBeNull();
+        expect(view?.days.every(day => day.cycleDayNumber === null)).toBe(true);
+    });
+});
+
 describe('cycle tracking prediction mapper', () => {
     it('builds prediction labels using UTC dates', () => {
         const view = buildCyclePredictionView(

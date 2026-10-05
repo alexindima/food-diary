@@ -10,6 +10,26 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.Fasting.Application.Tests;
 
 public partial class FastingFeatureTests {
+    [Fact]
+    public async Task GetFastingStats_WithEarlyCompletion_DoesNotCountTargetOrStreak() {
+        var userId = UserId.New();
+        var repository = new InMemoryFastingOccurrenceRepository();
+        var occurrence = FastingOccurrence.Create(
+            FastingPlanId.New(), userId, FastingOccurrenceKind.FastDay, FixedNow.AddMinutes(-2), 1, 16);
+        occurrence.Complete(FixedNow);
+        repository.StoredOccurrences.Add(occurrence);
+        var handler = new GetFastingStatsQueryHandler(
+            new FastingAnalyticsService(repository, new InMemoryFastingCheckInRepository()),
+            CreateCurrentUserAccessService(userId), new FixedDateTimeProvider());
+
+        Result<FastingStatsModel> result = await handler.Handle(new GetFastingStatsQuery(userId.Value), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(0, result.Value.TotalCompleted);
+        Assert.Equal(0, result.Value.CurrentStreak);
+        Assert.Equal(0, result.Value.CompletionRateLast30Days);
+    }
+
     [Theory]
     [InlineData(new int[] { 0, 0, 1, 2 }, 3)]
     [InlineData(new int[] { 1, 1, 2, 3 }, 3)]

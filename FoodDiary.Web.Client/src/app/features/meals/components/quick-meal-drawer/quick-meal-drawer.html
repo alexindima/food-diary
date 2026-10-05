@@ -88,6 +88,12 @@
             }
 
             <div class="quick-meal__details fd-grid fd-gap-xs">
+                <fd-ui-select
+                    [label]="'MEAL_MANAGE.MEAL_TYPE_LABEL' | translate"
+                    [options]="mealTypeOptions()"
+                    [value]="details().mealType ?? null"
+                    (valueChange)="updateMealType($event)"
+                />
                 <fd-ui-button
                     class="quick-meal__details-toggle"
                     variant="secondary"

@@ -74,6 +74,10 @@ export class EmailVerificationPendingComponent {
         this.sendVerificationEmail(false);
     }
 
+    protected async onUseAnotherEmailAsync(): Promise<void> {
+        await this.authService.onLogoutAsync(true);
+    }
+
     private sendVerificationEmail(isAutomatic: boolean): void {
         this.isSending.set(true);
         if (!isAutomatic) {

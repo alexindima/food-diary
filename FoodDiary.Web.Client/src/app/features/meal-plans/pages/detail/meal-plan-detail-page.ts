@@ -12,6 +12,7 @@ import { LocalizedTourDefinitionService } from '../../../../shared/tours/localiz
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { MealPlanFacade } from '../../lib/meal-plan.facade';
 import { buildMealPlanDetailView } from '../../lib/meal-plan-view.mapper';
+import type { MealPlanMeal } from '../../models/meal-plan.data';
 import { MealPlanDetailDaysComponent } from './meal-plan-detail-sections/meal-plan-detail-days/meal-plan-detail-days';
 import { MealPlanDetailHeaderComponent } from './meal-plan-detail-sections/meal-plan-detail-header/meal-plan-detail-header';
 import { MEAL_PLAN_DETAIL_TOUR } from './meal-plan-detail-tour';
@@ -63,6 +64,10 @@ export class MealPlanDetailPageComponent {
             return;
         }
         this.facade.generateShoppingList(plan.id, () => void this.router.navigate(['/shopping-lists']));
+    }
+
+    protected addMealToDiary(meal: MealPlanMeal): void {
+        this.facade.addMealToDiary(meal, () => void this.router.navigate(['/dashboard']));
     }
 
     protected goBack(): void {

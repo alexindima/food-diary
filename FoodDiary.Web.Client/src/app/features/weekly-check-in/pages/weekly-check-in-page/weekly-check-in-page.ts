@@ -140,7 +140,7 @@ export class WeeklyCheckInPageComponent {
 
         this.dialogService.open<WeeklyReviewDialogComponent, WeeklyReviewDialogData>(WeeklyReviewDialogComponent, {
             preset: 'detail',
-            data: { review, week },
+            data: { review, week, goal: this.weeklyGoal() },
         });
     }
 

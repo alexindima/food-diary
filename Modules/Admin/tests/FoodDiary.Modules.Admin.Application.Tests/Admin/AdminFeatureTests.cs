@@ -480,6 +480,7 @@ public partial class AdminFeatureTests {
             StringComparer.Ordinal);
 
         public List<UserRoleAuditEvent> RoleAuditEvents { get; } = [];
+        public FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models.WeightEntryModel? LatestWeight { get; init; }
         public int UpdateCallCount { get; private set; }
 
         public Task<User?> GetByEmailAsync(string? email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -554,6 +555,7 @@ public partial class AdminFeatureTests {
         }
 
         public override Task<TResponse> Send<TResponse>(global::FoodDiary.Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
+            FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadLatestWeightEntry.ReadLatestWeightEntryQuery => (Task<TResponse>)(object)Task.FromResult(LatestWeight),
             GetFilteredUsersForAdministrationQuery r => (Task<TResponse>)(object)GetFilteredPagedAsync(r.Search, r.Page, r.Limit, r.Status, r.Filter, cancellationToken),
             GetUserForAdministrationQuery r => (Task<TResponse>)(object)GetByIdIncludingDeletedForRequestAsync(r.UserId, cancellationToken),
             GetUsersForAdministrationQuery r => (Task<TResponse>)(object)GetPagedForRequestAsync(r.Search, r.Page, r.Limit, r.Status, cancellationToken),

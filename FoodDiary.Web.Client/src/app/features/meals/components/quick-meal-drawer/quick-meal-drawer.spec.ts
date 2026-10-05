@@ -140,7 +140,7 @@ describe('QuickMealDrawerComponent state', () => {
         expect(quickService.updateDetails).toHaveBeenCalledWith({ time: '08:30' });
         expect(quickService.updateDetails).toHaveBeenCalledWith({ comment: 'Breakfast' });
         expect(quickService.updateDetails).toHaveBeenCalledWith({ preMealSatietyLevel: PRE_MEAL_SATIETY_LEVEL });
-        expect(quickService.updateDetails).not.toHaveBeenCalledWith({ postMealSatietyLevel: null });
+        expect(quickService.updateDetails).toHaveBeenCalledWith({ postMealSatietyLevel: null });
         expect(quickService.removeItem).toHaveBeenCalledWith('product-product-1');
         expect(quickService.clear).toHaveBeenCalled();
         expect(quickService.saveDraft).toHaveBeenCalled();

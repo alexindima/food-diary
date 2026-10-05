@@ -89,6 +89,24 @@ describe('Dashboard midnight rollover', () => {
     });
 });
 
+describe('Dashboard live updates', () => {
+    it('refreshes the selected day after a meal is saved elsewhere without resetting the page', () => {
+        const { facade, dashboardService } = setupFacade();
+        facade.initialize(new Date(TEST_YEAR, 2, SELECTED_DAY));
+        TestBed.tick();
+        expect(dashboardService.getSnapshotSilentlyStrict).not.toHaveBeenCalled();
+
+        TestBed.inject(NutritionDataInvalidationService).reportMealMutation();
+        TestBed.tick();
+
+        expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ date: new Date(Date.UTC(TEST_YEAR, 2, SELECTED_DAY)) }),
+        );
+        expect(facade.selectedDate()).toEqual(new Date(TEST_YEAR, 2, SELECTED_DAY));
+        expect(facade.isLoading()).toBe(false);
+    });
+});
+
 describe('Dashboard meal details', () => {
     it('opens the detail dialog and navigates only when Edit is selected', async () => {
         const { facade, snapshot } = setupFacade();
@@ -784,7 +802,7 @@ function setupFacade(): {
             DashboardFacade,
             DashboardLocalDayFacade,
             { provide: NavigationService, useValue: { navigateToMealEditAsync: vi.fn() } },
-            { provide: NutritionDataInvalidationService, useValue: { reportMealMutation: vi.fn() } },
+            NutritionDataInvalidationService,
             { provide: MealService, useValue: { repeat: vi.fn(), deleteById: vi.fn() } },
             { provide: FavoriteMealService, useValue: { add: vi.fn(), remove: vi.fn(), getLookupPage: vi.fn() } },
             { provide: FdUiToastService, useValue: { error: vi.fn() } },
@@ -797,6 +815,7 @@ function setupFacade(): {
         ],
     });
 
+    vi.spyOn(TestBed.inject(NutritionDataInvalidationService), 'reportMealMutation');
     return {
         facade: TestBed.inject(DashboardFacade),
         dashboardService,

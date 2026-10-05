@@ -218,6 +218,7 @@ export class FdUiHintDirective {
 
         const portal = new ComponentPortal(FdUiHintOverlayComponent);
         const ref = this.overlayRef.attach(portal);
+        this.overlayRef.overlayElement.style.pointerEvents = 'none';
         ref.setInput('tooltipId', this.tooltipId);
         ref.setInput('contentContext', this.fdUiHintContext());
 

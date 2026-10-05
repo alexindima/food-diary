@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1336,
     "ambiguousContracts": 2,
-    "consumerEdges": 10352,
-    "productionConsumerEdges": 5929,
-    "testConsumerEdges": 4423,
+    "consumerEdges": 10354,
+    "productionConsumerEdges": 5930,
+    "testConsumerEdges": 4424,
     "consumedContracts": 1336,
     "unconsumedContracts": 0
   },
@@ -47322,7 +47322,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FastingFeatureTests.Stats.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "GetFastingStatsQuery",
@@ -140022,6 +140022,19 @@
         "Modules/BodyMetrics/Contracts/WeightEntries/Queries/ReadLatestWeightEntry/ReadLatestWeightEntryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminUser/GetAdminUserQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ReadLatestWeightEntryQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Contracts/WeightEntries/Queries/ReadLatestWeightEntry/ReadLatestWeightEntryQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Application/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -140038,6 +140051,19 @@
       "consumerPath": "Modules/BodyMetrics/Application/WeightEntries/Queries/ReadLatestWeightEntry/ReadLatestWeightEntryQueryHandler.cs",
       "isTest": false,
       "referenceCount": 2
+    },
+    {
+      "contract": "ReadLatestWeightEntryQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Contracts/WeightEntries/Queries/ReadLatestWeightEntry/ReadLatestWeightEntryQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "ReadLatestWeightEntryQuery",

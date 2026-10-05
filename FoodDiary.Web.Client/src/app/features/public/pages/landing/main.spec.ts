@@ -219,7 +219,7 @@ describe('MainComponent', () => {
         });
 
         expect(routerMock.navigate).not.toHaveBeenCalled();
-        expect(navigationServiceMock.navigateToHomeAsync).toHaveBeenCalled();
+        expect(navigationServiceMock.navigateToHomeAsync).not.toHaveBeenCalled();
     });
 });
 

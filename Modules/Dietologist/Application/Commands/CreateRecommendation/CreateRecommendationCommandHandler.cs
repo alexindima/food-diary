@@ -50,7 +50,7 @@ public sealed class CreateRecommendationCommandHandler(
             return Result.Failure<RecommendationModel>(accessResult.Error);
         }
 
-        Error? permissionError = DietologistAccessPolicy.EnsureAllPermissions(accessResult.Value);
+        Error? permissionError = DietologistAccessPolicy.EnsureRecommendationPermission(accessResult.Value);
         if (permissionError is not null) {
             return Result.Failure<RecommendationModel>(permissionError);
         }

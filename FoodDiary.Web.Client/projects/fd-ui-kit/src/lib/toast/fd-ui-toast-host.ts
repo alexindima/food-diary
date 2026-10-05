@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 
 import {
     type FdUiToastHorizontalPosition,
@@ -21,6 +21,7 @@ type FdUiToastViewport = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiToastHostComponent {
+    public readonly closeLabel = input('Close notification');
     private readonly toastService = inject(FdUiToastService);
 
     protected readonly viewports = computed<FdUiToastViewport[]>(() => {

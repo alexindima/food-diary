@@ -53,8 +53,8 @@ public sealed class Meal : AggregateRoot<MealId> {
         string? comment = null,
         string? imageUrl = null,
         ImageAssetId? imageAssetId = null,
-        int preMealSatietyLevel = 3,
-        int postMealSatietyLevel = 3) {
+        int preMealSatietyLevel = 0,
+        int postMealSatietyLevel = 0) {
         EnsureUserId(userId);
         if (mealType.HasValue) {
             DomainGuard.Defined(mealType.Value, nameof(mealType));
@@ -262,8 +262,8 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     public void UpdateSatietyLevels(int? preMealLevel, int? postMealLevel) {
-        int normalizedPre = NormalizeSatietyLevel(preMealLevel ?? 3);
-        int normalizedPost = NormalizeSatietyLevel(postMealLevel ?? 3);
+        int normalizedPre = NormalizeSatietyLevel(preMealLevel ?? 0);
+        int normalizedPost = NormalizeSatietyLevel(postMealLevel ?? 0);
         MealDetailsState state = GetDetailsState();
 
         if (state.PreMealSatietyLevel == normalizedPre && state.PostMealSatietyLevel == normalizedPost) {
@@ -333,7 +333,8 @@ public sealed class Meal : AggregateRoot<MealId> {
 
     private static int NormalizeSatietyLevel(int level) {
         if (level == 0) {
-            return 3;
+            // Zero represents an unanswered rating in the existing storage and wire contract.
+            return 0;
         }
 
         return level is < 1 or > 5

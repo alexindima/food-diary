@@ -81,15 +81,43 @@ describe('client dashboard mapper', () => {
     });
 });
 
+describe('client dashboard wire projection', () => {
+    it('renders product and recipe names from the actual dashboard wire response', () => {
+        const snapshot = {
+            meals: {
+                items: [
+                    {
+                        id: 'meal-1',
+                        mealType: 'Lunch',
+                        date: '',
+                        totalCalories: 500,
+                        totalProteins: 30,
+                        totalFats: 10,
+                        totalCarbs: 40,
+                        items: [
+                            { productName: 'Рис', productBaseUnit: 'G', amount: 150 },
+                            { recipeName: 'Салат', recipeId: 'recipe-1', amount: 2 },
+                        ],
+                    },
+                ],
+            },
+        };
+        const labels: Record<string, string> = { 'MEAL_TYPES.LUNCH': 'Обед', 'GENERAL.UNITS.G': 'г', 'QUICK_MEAL.SERVINGS_FEW': 'порции' };
+        const view = buildMealViews(snapshot as never, undefined, key => labels[key] ?? key, 'ru')[0];
+        expect(view.title).toBe('Обед');
+        expect(view.itemSummary).toBe('Рис — 150 г, Салат — 2 порции');
+    });
+});
+
 describe('client dashboard detail mapper', () => {
     it('maps shared dashboard details for meals, body, hydration and fasting', () => {
         const snapshot = createDashboardSnapshot();
 
         expect(buildMealViews(snapshot as never)[0]).toEqual(
             expect.objectContaining({
-                title: 'Lunch',
+                title: 'MEAL_TYPES.LUNCH',
                 calories: '640 kcal',
-                itemSummary: 'Chicken',
+                itemSummary: 'Chicken — 150 GENERAL.UNITS.G',
             }),
         );
         expect(buildWeightView(snapshot as never)?.delta).toBe('+1.2 kg');
@@ -169,7 +197,7 @@ function createDashboardSnapshot(): unknown {
                     totalProteins: 42,
                     totalFats: 22,
                     totalCarbs: 64,
-                    items: [{ id: 'item-1', mealId: 'meal-1', amount: 150, product: { name: 'Chicken' } }],
+                    items: [{ id: 'item-1', mealId: 'meal-1', amount: 150, sourceType: 'Product', product: { name: 'Chicken' } }],
                 },
             ],
             total: 1,

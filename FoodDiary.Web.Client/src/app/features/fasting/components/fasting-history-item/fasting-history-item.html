@@ -14,8 +14,8 @@
         </div>
         <div
             class="fasting__history-badge fd-ui-pill fd-ui-pill--compact fd-ui-meta-text"
-            [class.fasting__history-badge--completed]="session.status === 'Completed'"
-            [class.fasting__history-badge--interrupted]="session.status === 'Interrupted'"
+            [class.fasting__history-badge--completed]="item.badgeKey === 'FASTING.BADGE_COMPLETED'"
+            [class.fasting__history-badge--interrupted]="session.status === 'Interrupted' || item.badgeKey === 'FASTING.BADGE_ENDED_EARLY'"
             [class.fasting__history-badge--skipped]="session.status === 'Skipped'"
             [class.fasting__history-badge--postponed]="session.status === 'Postponed'"
         >

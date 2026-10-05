@@ -601,12 +601,12 @@ function registerFavoritesPickerWiringTests(context: TestContext): void {
             data: {
                 remove: (item: FavoriteMeal) => Observable<boolean>;
                 restore: (item: FavoriteMeal) => Observable<boolean>;
-                repeat: (item: FavoriteMeal) => Observable<boolean>;
+                repeat: (item: FavoriteMeal, mealType: string) => Observable<boolean>;
             };
         };
         options.data.remove(favorite).subscribe();
         options.data.restore(favorite).subscribe();
-        options.data.repeat(favorite).subscribe();
+        options.data.repeat(favorite, 'DINNER').subscribe();
         expect(context.mockFavoriteMealService.remove).toHaveBeenCalledWith('favorite-1');
         expect(context.mockFavoriteMealService.restore).toHaveBeenCalledWith('favorite-1');
         expect(context.mockMealService.repeat).toHaveBeenCalledWith('meal-1', expect.any(String), expect.any(String));

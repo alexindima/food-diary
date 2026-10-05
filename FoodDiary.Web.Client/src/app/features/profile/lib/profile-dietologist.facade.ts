@@ -112,13 +112,16 @@ export class ProfileDietologistFacade {
     }
 
     public updateDietologistPermission(controlName: DietologistPermissionControlName, nextValue: boolean): void {
-        if (!this.hasDietologistRelationship() || this.isSavingDietologistPermissions()) {
+        if (this.isSavingDietologist()) {
             return;
         }
 
         const previousPermissions = getDietologistPermissions(this.dietologistFormModel());
         this.dietologistForm[controlName]().value.set(nextValue);
-        this.persistDietologistPermissions(previousPermissions);
+        this.updateDietologistPermissionsState();
+        if (this.hasDietologistRelationship()) {
+            this.persistDietologistPermissions(previousPermissions);
+        }
     }
 
     public onDietologistPermissionChangeRequest(change: DietologistPermissionChange): void {

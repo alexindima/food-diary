@@ -16,10 +16,7 @@ const TUESDAY_MIDDAY_START = '2026-08-11T11:00:00';
 const TUESDAY_MIDDAY_END = '2026-08-11T12:00:00';
 const TUESDAY_AFTERNOON_START = '2026-08-11T13:00:00';
 const TUESDAY_AFTERNOON_END = '2026-08-11T14:00:00';
-const COMPLETED_SESSION_COUNT = 2;
-const TEST_SESSION_COUNT = 3;
-const PERCENT_MULTIPLIER = 100;
-const EXPECTED_TUESDAY_PROGRESS = (COMPLETED_SESSION_COUNT / TEST_SESSION_COUNT) * PERCENT_MULTIPLIER;
+const EXPECTED_TUESDAY_PROGRESS = TEST_PROGRESS_PERCENT;
 
 // eslint-disable-next-line max-lines-per-function -- protocol and weekly-calendar scenarios share the same required-input setup.
 describe('FastingRedesignPreviewComponent', () => {
@@ -72,6 +69,12 @@ describe('FastingRedesignPreviewComponent', () => {
         expect(component['isPastTarget']()).toBe(false);
     });
 
+    it('labels an early ending and shows short sessions in minutes', () => {
+        const early = createSession({ status: 'Completed', startedAtUtc: '2026-10-05T08:00:00Z', endedAtUtc: '2026-10-05T08:01:00Z' });
+        expect(component['historyStatusKey'](early)).toBe('FASTING.BADGE_ENDED_EARLY');
+        expect(component['sessionDurationView'](early)).toEqual({ value: 1, unitKey: 'FASTING.MINUTES' });
+    });
+
     it('describes an intermittent fast and its upcoming eating window', () => {
         fixture.componentRef.setInput('session', createSession());
 
@@ -98,6 +101,11 @@ describe('FastingRedesignPreviewComponent', () => {
         fixture.componentRef.setInput('session', createSession({ moodLevel: 5 }));
 
         expect(component['wellbeingKey']()).toBe('FASTING.REDESIGN.WELLBEING_EMPTY');
+    });
+
+    it('shows recorded symptoms instead of calling the wellbeing steady', () => {
+        fixture.componentRef.setInput('session', createSession({ symptoms: ['dizziness'], hungerLevel: 3, energyLevel: 3, moodLevel: 3 }));
+        expect(component['wellbeingKey']()).toBe('FASTING.REDESIGN.WELLBEING_SYMPTOMS');
     });
 
     it('calculates wellbeing from all check-in dimensions', () => {

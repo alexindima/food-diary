@@ -20,7 +20,6 @@ import { LocalizedDatePipe } from '../../../../shared/i18n/localized-date.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue, normalizeEndOfLocalDay, parseLocalDateInputValue } from '../../../../shared/lib/local-date.utils';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
-import type { DashboardSnapshot } from '../../../../shared/models/dashboard.data';
 import type {
     ClientSummary,
     ClientTask,
@@ -32,6 +31,7 @@ import { LocalizedTourDefinitionService } from '../../../../shared/tours/localiz
 import { RecommendationThreadComponent } from '../../../recommendations/contracts/recommendation-thread';
 import { createClientValueFormatting } from '../../lib/client-value-formatting';
 import { DietologistFacade } from '../../lib/dietologist.facade';
+import type { DietologistDashboardSnapshot } from '../../lib/dietologist-dashboard.data';
 import {
     buildBodyTiles,
     buildClientDashboardSections,
@@ -139,7 +139,7 @@ export class ClientDashboardComponent {
 
     protected readonly periodPresetDays = PERIOD_PRESET_DAYS;
     protected readonly client = signal<ClientSummary | null>(null);
-    protected readonly dashboard = signal<DashboardSnapshot | null>(null);
+    protected readonly dashboard = signal<DietologistDashboardSnapshot | null>(null);
     protected readonly goals = signal<DietologistClientGoals | null>(null);
     protected readonly recommendations = signal<DietologistRecommendation[]>([]);
     protected readonly recommendationTemplates = signal<RecommendationTemplate[]>([]);
@@ -235,7 +235,7 @@ export class ClientDashboardComponent {
     );
     protected readonly canRecommend = computed(() => {
         const client = this.client();
-        return client !== null && Object.values(client.permissions).every(Boolean);
+        return client !== null && Object.values(client.permissions).some(Boolean);
     });
     protected readonly recommendationDisabled = computed(
         () => !this.canRecommend() || this.recommendationForm.text().invalid() || this.savingRecommendation(),
@@ -269,7 +269,7 @@ export class ClientDashboardComponent {
     });
     protected readonly hasPeriodFilterPermission = computed(() => {
         const client = this.client();
-        return client !== null && this.shouldLoadDashboardSnapshot(client);
+        return client !== null && this.shouldLoadDietologistDashboardSnapshot(client);
     });
     protected readonly nutritionTiles = computed<ClientMetricTile[]>(() =>
         this.client()?.permissions.shareStatistics === true ? buildNutritionTiles(this.dashboard(), this.valueFormatting()) : [],
@@ -281,7 +281,9 @@ export class ClientDashboardComponent {
         buildGoalTiles(this.goals(), this.measurements.system(), this.valueFormatting()),
     );
     protected readonly mealItems = computed<ClientMealView[]>(() =>
-        this.client()?.permissions.shareMeals === true ? buildMealViews(this.dashboard(), this.valueFormatting()) : [],
+        this.client()?.permissions.shareMeals === true
+            ? buildMealViews(this.dashboard(), this.valueFormatting(), key => this.translateService.instant(key), this.translateService.currentLang() ?? 'en')
+            : [],
     );
     protected readonly weightSummary = computed<ClientBodyMeasurementView | null>(() =>
         this.client()?.permissions.shareWeight === true
@@ -573,7 +575,7 @@ export class ClientDashboardComponent {
     }
 
     private loadClientDetails(client: ClientSummary): Observable<{
-        dashboard: DashboardSnapshot | null;
+        dashboard: DietologistDashboardSnapshot | null;
         goals: DietologistClientGoals | null;
         recommendations: DietologistRecommendation[];
         tasks: ClientTask[];
@@ -583,8 +585,8 @@ export class ClientDashboardComponent {
         this.sectionLoadError.set(null);
 
         return forkJoin({
-            dashboard: this.shouldLoadDashboardSnapshot(client)
-                ? this.loadDashboardSnapshot(client, language).pipe(this.handleSectionLoadError<DashboardSnapshot, null>(null))
+            dashboard: this.shouldLoadDietologistDashboardSnapshot(client)
+                ? this.loadDietologistDashboardSnapshot(client, language).pipe(this.handleSectionLoadError<DietologistDashboardSnapshot, null>(null))
                 : of(null),
             goals: client.permissions.shareGoals
                 ? this.dietologistFacade.getClientGoals(client.userId).pipe(this.handleSectionLoadError<DietologistClientGoals, null>(null))
@@ -615,7 +617,7 @@ export class ClientDashboardComponent {
 
     private async reloadDashboardAsync(client: ClientSummary): Promise<void> {
         const reloadSequence = ++this.dashboardReloadSequence;
-        if (!this.shouldLoadDashboardSnapshot(client)) {
+        if (!this.shouldLoadDietologistDashboardSnapshot(client)) {
             this.dashboard.set(null);
             return;
         }
@@ -623,8 +625,8 @@ export class ClientDashboardComponent {
         this.detailsLoading.set(true);
         this.sectionLoadError.set(null);
         const result = await firstValueFrom(
-            this.loadDashboardSnapshot(client, resolveTranslateLanguage(this.translateService))
-                .pipe(this.handleSectionLoadError<DashboardSnapshot, null>(null))
+            this.loadDietologistDashboardSnapshot(client, resolveTranslateLanguage(this.translateService))
+                .pipe(this.handleSectionLoadError<DietologistDashboardSnapshot, null>(null))
                 .pipe(takeUntilDestroyed(this.destroyRef)),
         );
 
@@ -636,7 +638,7 @@ export class ClientDashboardComponent {
         this.detailsLoading.set(false);
     }
 
-    private loadDashboardSnapshot(client: ClientSummary, language: string): Observable<DashboardSnapshot> {
+    private loadDietologistDashboardSnapshot(client: ClientSummary, language: string): Observable<DietologistDashboardSnapshot> {
         const period = this.getSelectedPeriodValue();
         return this.dietologistFacade.getClientDashboard(client.userId, {
             dateFrom: period.dateFrom,
@@ -646,7 +648,7 @@ export class ClientDashboardComponent {
         });
     }
 
-    private shouldLoadDashboardSnapshot(client: ClientSummary): boolean {
+    private shouldLoadDietologistDashboardSnapshot(client: ClientSummary): boolean {
         return (
             client.permissions.shareStatistics ||
             client.permissions.shareMeals ||

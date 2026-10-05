@@ -190,6 +190,17 @@ describe('FastingPageComponent history labels', () => {
         expect(component['getHistoryAccentColor']({ ...createSession(), status: 'Active' })).toBe('var(--fd-color-slate-400)');
     });
 
+    it('distinguishes an early ending from reaching the planned duration', () => {
+        const early = {
+            ...createSession(),
+            status: 'Completed' as const,
+            startedAtUtc: '2026-10-05T08:00:00Z',
+            endedAtUtc: '2026-10-05T09:00:00Z',
+        };
+        expect(component['getHistoryBadgeKey'](early.status, early)).toBe('FASTING.BADGE_ENDED_EARLY');
+        expect(component['getHistoryAccentColor'](early)).toBe('var(--fd-color-orange-500)');
+    });
+
     it('builds protocol display for cyclic, custom, and adjusted sessions', () => {
         expect(
             component['getHistoryProtocolDisplay']({

@@ -646,17 +646,27 @@ function toLocalDateKey(value: Date): string {
     return `${value.getFullYear()}-${month}-${day}`;
 }
 
-function resolveCycleStartDateKey(cycle: CycleResponse, todayDateKey: string): string {
+function resolveCycleStartDateKey(cycle: CycleResponse, todayDateKey: string): string | null {
+    if (
+        cycle.mode !== CYCLE_TRACKING_MODE_PERIOD_TRACKING &&
+        cycle.mode !== CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE &&
+        cycle.mode !== CYCLE_TRACKING_MODE_PERIMENOPAUSE
+    ) {
+        return null;
+    }
     const latestEpisode = [...(cycle.menstrualEpisodes ?? [])]
         .map(episode => toDateKey(episode.startDate))
         .filter(dateKey => dateKey.length > 0 && dateKey <= todayDateKey)
         .sort((left, right) => right.localeCompare(left))
         .at(0);
 
-    return latestEpisode ?? toDateKey(cycle.trackingStartDate);
+    return latestEpisode ?? null;
 }
 
-function calculateCycleDayNumber(startDateKey: string, dateKey: string, averageCycleLength: number): number | null {
+function calculateCycleDayNumber(startDateKey: string | null, dateKey: string, averageCycleLength: number): number | null {
+    if (startDateKey === null) {
+        return null;
+    }
     const startTime = Date.parse(`${startDateKey}T00:00:00.000Z`);
     const dateTime = Date.parse(`${dateKey}T00:00:00.000Z`);
     if (Number.isNaN(startTime) || Number.isNaN(dateTime)) {

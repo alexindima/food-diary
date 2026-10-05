@@ -42,6 +42,9 @@
                 {{ 'AUTH.VERIFY_PENDING.RESEND' | translate }}
             </fd-ui-button>
         </div>
+        <fd-ui-button type="button" variant="secondary" fill="outline" [fullWidth]="true" (click)="onUseAnotherEmailAsync()">
+            {{ 'AUTH.VERIFY_PENDING.USE_ANOTHER_EMAIL' | translate }}
+        </fd-ui-button>
         @if (resendCooldownSeconds() > 0) {
             <div class="email-verify-pending__cooldown fd-ui-caption">
                 {{ 'AUTH.VERIFY_PENDING.RESEND_COOLDOWN' | translate: { seconds: resendCooldownSeconds() } }}

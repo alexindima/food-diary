@@ -33,7 +33,14 @@
                 <p role="alert">{{ errorKey | translate }}</p>
             }
 
-            <fd-meal-plan-detail-days data-tour-id="meal-plan-detail-days" [days]="plan.days" />
+            <p class="fd-ui-caption">{{ 'MEAL_PLANS.DIARY_HINT' | translate }}</p>
+            <fd-meal-plan-detail-days
+                data-tour-id="meal-plan-detail-days"
+                [days]="plan.days"
+                [addingMealId]="facade.addingMealId()"
+                [hasMealDraft]="facade.hasMealDraft()"
+                (addMeal)="addMealToDiary($event)"
+            />
         } @else {
             <div class="fd-stack fd-align-center fd-gap-sm">
                 <p role="status">{{ 'MEAL_PLANS.DETAIL_UNAVAILABLE' | translate }}</p>

@@ -2,14 +2,21 @@ import { computed, DestroyRef, effect, inject, Injectable, resource, signal } fr
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize, firstValueFrom } from 'rxjs';
 
+import { normalizeMealType } from '../../../shared/lib/meal-type.util';
 import type { PageOf } from '../../../shared/models/page-of.data';
+import { QuickMealService } from '../../meals/contracts/quick-meal';
+import { RECIPE_LOOKUP } from '../../recipes/contracts/recipe-lookup';
 import { MealPlanService } from '../api/meal-plan.service';
-import type { DietType, MealPlan, MealPlanSummary } from '../models/meal-plan.data';
+import type { DietType, MealPlan, MealPlanMeal, MealPlanSummary } from '../models/meal-plan.data';
 
 @Injectable()
 export class MealPlanFacade {
     private readonly destroyRef = inject(DestroyRef);
     private readonly service = inject(MealPlanService);
+    private readonly recipeLookup = inject(RECIPE_LOOKUP);
+    private readonly quickMeal = inject(QuickMealService);
+    public readonly hasMealDraft = this.quickMeal.hasItems;
+    public readonly addingMealId = signal<string | null>(null);
     private readonly selectedPlanId = signal<string | null>(null);
 
     public readonly dietTypeFilter = signal<DietType | null>(null);
@@ -71,6 +78,32 @@ export class MealPlanFacade {
 
     public loadPlan(id: string): void {
         this.selectedPlanId.set(id);
+    }
+
+    public addMealToDiary(meal: MealPlanMeal, onSuccess: () => void): void {
+        if (this.addingMealId() !== null || this.hasMealDraft()) {
+            return;
+        }
+        this.addingMealId.set(meal.id);
+        this.actionErrorKey.set(null);
+        this.recipeLookup
+            .getById(meal.recipeId)
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => { this.addingMealId.set(null); }),
+            )
+            .subscribe({
+                next: recipe => {
+                    if (recipe === null || this.hasMealDraft()) {
+                        this.actionErrorKey.set('MEAL_PLANS.ERROR_ADD_MEAL');
+                        return;
+                    }
+                    this.quickMeal.addRecipe(recipe, meal.servings);
+                    this.quickMeal.updateDetails({ mealType: normalizeMealType(meal.mealType) ?? 'OTHER' });
+                    onSuccess();
+                },
+                error: () => { this.actionErrorKey.set('MEAL_PLANS.ERROR_ADD_MEAL'); },
+            });
     }
 
     public adopt(id: string, onSuccess: () => void): void {

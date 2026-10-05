@@ -4,7 +4,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiEmojiPickerComponent, type FdUiEmojiPickerOption, type FdUiEmojiPickerValue } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker';
 import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS, type FdUiSatietyScaleLevel } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale';
 
-import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../shared/lib/satiety-level.utils';
+import { normalizeSatietyLevel } from '../../../shared/lib/satiety-level.utils';
 
 @Component({
     selector: 'fd-meal-satiety-fields',
@@ -18,8 +18,8 @@ export class MealSatietyFieldsComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly languageVersion = signal(0);
 
-    public readonly preMealSatietyLevel = model<number | null>(DEFAULT_SATIETY_LEVEL);
-    public readonly postMealSatietyLevel = model<number | null>(DEFAULT_SATIETY_LEVEL);
+    public readonly preMealSatietyLevel = model<number | null>(null);
+    public readonly postMealSatietyLevel = model<number | null>(null);
     public readonly labelBeforeKey = input('MEAL_DETAILS.SATIETY_BEFORE');
     public readonly labelAfterKey = input('MEAL_DETAILS.SATIETY_AFTER');
     public readonly pickerSize = input<'sm' | 'md'>('sm');
@@ -39,7 +39,7 @@ export class MealSatietyFieldsComponent {
     }
 
     protected onSatietyLevelChange(kind: 'before' | 'after', value: FdUiEmojiPickerValue | null): void {
-        if (typeof value !== 'number') {
+        if (value !== null && typeof value !== 'number') {
             return;
         }
 
@@ -77,6 +77,9 @@ export class MealSatietyFieldsComponent {
 
     private getSatietyLevelMeta(kind: 'before' | 'after', value: number | null): { label: string; description: string } {
         const normalizedValue = normalizeSatietyLevel(value);
+        if (normalizedValue === null) {
+            return { label: this.translateService.instant('MEAL_DETAILS.SATIETY_UNANSWERED'), description: '' };
+        }
         const levels = kind === 'before' ? DEFAULT_HUNGER_LEVELS : DEFAULT_SATIETY_LEVELS;
         const config = levels.find(level => level.value === normalizedValue);
         return {

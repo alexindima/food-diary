@@ -250,7 +250,7 @@ describe('AiPhotoResultComponent meal details', () => {
             time: '08:30',
             comment: 'Breakfast',
             preMealSatietyLevel: 5,
-            postMealSatietyLevel: 3,
+            postMealSatietyLevel: null,
         });
     });
 });

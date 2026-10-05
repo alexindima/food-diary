@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1646,
+    "productionProjectEdges": 1647,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
     "moduleCycleNodes": 0,
     "backendBusinessModules": 34,
-    "moduleHotspotReviewCandidates": 3,
+    "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 2,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 110,
@@ -52,8 +52,8 @@
     {
       "module": "Admin",
       "fanIn": 0,
-      "fanOut": 7,
-      "level": "informational",
+      "fanOut": 8,
+      "level": "review-candidate",
       "role": "orchestrator"
     },
     {
@@ -64,15 +64,15 @@
       "role": "aggregate-owner"
     },
     {
-      "module": "Notifications",
+      "module": "BodyMetrics",
       "fanIn": 5,
       "fanOut": 1,
       "level": "informational",
       "role": "aggregate-owner"
     },
     {
-      "module": "BodyMetrics",
-      "fanIn": 4,
+      "module": "Notifications",
+      "fanIn": 5,
       "fanOut": 1,
       "level": "informational",
       "role": "aggregate-owner"
@@ -3797,7 +3797,13 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/toast/fd-ui-toast-host.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/toast/fd-ui-toast-host.html",
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "closeLabel",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": null
     },

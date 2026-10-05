@@ -142,12 +142,12 @@ export class MealListComponent {
                 data: {
                     remove: (favorite: FavoriteMeal) => this.mealListFacade.removeFavoriteRequest(favorite),
                     restore: (favorite: FavoriteMeal) => this.mealListFacade.restoreFavoriteRequest(favorite),
-                    repeat: (favorite: FavoriteMeal) => {
+                    repeat: (favorite: FavoriteMeal, mealType: string) => {
                         const date = new Date();
                         return this.mealListFacade.repeatMeal(
                             favorite.mealId,
                             date.toISOString(),
-                            resolveMealTypeByTime(date),
+                            mealType,
                             this.structuredFilters,
                         );
                     },

@@ -37,7 +37,7 @@ import {
     MANUAL_NUTRITION_MAX_NUTRIENT,
 } from '../../../../shared/lib/nutrition.constants';
 import { calculateMacroBarState, checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
-import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
+import { normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
 import { patchSignalFormModel } from '../../../../shared/lib/signal-form-model.utils';
 import { getRecordProperty, getStringProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { NutrientData } from '../../../../shared/models/charts.data';
@@ -133,8 +133,8 @@ export class MealManageFormComponent {
     });
     protected readonly itemsTouched = this.itemsTouchedState.touched;
     protected readonly nutritionMode = signal<NutritionMode>('auto');
-    protected readonly preMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
-    protected readonly postMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
+    protected readonly preMealSatietyLevel = signal<number | null>(null);
+    protected readonly postMealSatietyLevel = signal<number | null>(null);
     protected readonly selectedMealType = signal<string | null>(null);
     protected readonly nutritionWarning = signal<CalorieMismatchWarning | null>(null);
     protected readonly generalFieldErrors = computed<MealGeneralFieldErrors>(() => {
