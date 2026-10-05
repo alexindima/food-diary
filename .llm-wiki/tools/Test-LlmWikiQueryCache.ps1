@@ -45,7 +45,60 @@ try {
     if ($dependencyChanged.missReason -cne 'dependent Wiki indexes changed') { throw "Scoped cache reported the wrong dependency miss reason: $($dependencyChanged.missReason)" }
     $differentArguments = Get-LlmWikiQueryCacheEntry -RepositoryRoot $tempRoot -Namespace test -Arguments @{ Intent = 'different request' }
     if ($differentArguments.fingerprint -ceq $changed.fingerprint) { throw 'Changed arguments did not invalidate the query cache.' }
+
+    function Get-VerifiedTestWorkspace {
+        $snapshot = Get-LlmWikiChangeSetSnapshot -RepositoryRoot $tempRoot
+        [pscustomobject]@{
+            repositoryRoot = $tempRoot
+            head = $snapshot.head
+            fingerprint = $snapshot.fingerprint
+            changedPathCount = @($snapshot.changedPaths).Count
+            fresh = $true
+        }
+    }
+    $verifiedWorkspace = Get-VerifiedTestWorkspace
+    $ordinary = Get-LlmWikiQueryCacheEntry -RepositoryRoot $tempRoot -Namespace verified-test -Arguments $arguments -DependencyPath 'dependency.txt'
+    $originalSnapshotFunction = (Get-Item Function:\Get-LlmWikiChangeSetSnapshot).ScriptBlock
+    try {
+        function Get-LlmWikiChangeSetSnapshot { throw 'A verified request repeated its workspace scan.' }
+        $verified = Get-LlmWikiQueryCacheEntry -RepositoryRoot $tempRoot -Namespace verified-test -Arguments $arguments -DependencyPath 'dependency.txt' -VerifiedWorkspace $verifiedWorkspace
+        if ($verified.fingerprint -cne $ordinary.fingerprint -or $verified.workspacePathCount -ne $ordinary.workspacePathCount) { throw 'Request-local reuse changed the cache identity or workspace diagnostics.' }
+        Write-LlmWikiQueryCache -Entry $verified -Content '{"value":3}'
+        if ((Read-LlmWikiQueryCache -Entry $verified) -cne '{"value":3}') { throw 'Request-local workspace reuse lost a cached result.' }
+    } finally {
+        Set-Item Function:\Get-LlmWikiChangeSetSnapshot -Value $originalSnapshotFunction
+    }
+    foreach ($scenario in @('different-repository', 'scoped', 'stale', 'string-freshness', 'invalid-fingerprint', 'negative-count', 'missing-head')) {
+        $candidate = $verifiedWorkspace | Select-Object *
+        $candidateArguments = @{ RepositoryRoot=$tempRoot; Namespace='verified-test'; Arguments=$arguments; VerifiedWorkspace=$candidate }
+        switch ($scenario) {
+            'different-repository' { $candidate.repositoryRoot = [IO.Path]::GetTempPath() }
+            'scoped' { $candidateArguments.RelevantPath = 'source.txt' }
+            'stale' { $candidate.fresh = $false }
+            'string-freshness' { $candidate.fresh = 'false' }
+            'invalid-fingerprint' { $candidate.fingerprint = 'invalid' }
+            'negative-count' { $candidate.changedPathCount = -1 }
+            'missing-head' { $candidate.PSObject.Properties.Remove('head') }
+        }
+        $rejected = $false
+        try { $null = Get-LlmWikiQueryCacheEntry @candidateArguments } catch { $rejected = $true }
+        if (-not $rejected) { throw "Unsafe request-local workspace was accepted: $scenario" }
+    }
+    $sourcePath = Join-Path $tempRoot 'source.txt'
+    $sourceTimestamp = [IO.File]::GetLastWriteTimeUtc($sourcePath)
+    [IO.File]::WriteAllText($sourcePath, 'six', [Text.UTF8Encoding]::new($false))
+    [IO.File]::SetLastWriteTimeUtc($sourcePath, $sourceTimestamp)
+    $nextRequest = Get-LlmWikiQueryCacheEntry -RepositoryRoot $tempRoot -Namespace verified-test -Arguments $arguments -DependencyPath 'dependency.txt' -VerifiedWorkspace (Get-VerifiedTestWorkspace)
+    if ($nextRequest.fingerprint -ceq $verified.fingerprint -or (Read-LlmWikiQueryCache -Entry $nextRequest)) { throw 'A new request reused context after a same-size/same-time source edit.' }
+    [IO.File]::WriteAllText((Join-Path $tempRoot 'dependency.txt'), 'three', [Text.UTF8Encoding]::new($false))
+    $nextDependency = Get-LlmWikiQueryCacheEntry -RepositoryRoot $tempRoot -Namespace verified-test -Arguments $arguments -DependencyPath 'dependency.txt' -VerifiedWorkspace (Get-VerifiedTestWorkspace)
+    if ($nextDependency.dependencyFingerprint -ceq $nextRequest.dependencyFingerprint) { throw 'Workspace reuse skipped dependency validation.' }
     Write-Host 'LLM Wiki query-cache smoke passed: exact reuse, idempotent stale removal, scoped invalidation, dependency lineage, and miss diagnostics work.'
+    Write-Host 'Request-local workspace reuse passed: one scan, repository/scope/staleness guards, repeated content edits and independent dependency hashing.'
 } finally {
-    if (Test-Path -LiteralPath $tempRoot) { Remove-Item -LiteralPath $tempRoot -Recurse -Force }
+    $resolvedTempRoot = [IO.Path]::GetFullPath($tempRoot)
+    $temporaryParent = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd([IO.Path]::DirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
+    if (-not $resolvedTempRoot.StartsWith($temporaryParent, [StringComparison]::OrdinalIgnoreCase) -or
+        [IO.Path]::GetFileName($resolvedTempRoot) -notmatch '^llm-wiki-query-cache-[a-f0-9]{32}$') { throw 'Refusing to remove an unexpected query-cache test directory.' }
+    if (Test-Path -LiteralPath $resolvedTempRoot) { Remove-Item -LiteralPath $resolvedTempRoot -Recurse -Force }
 }

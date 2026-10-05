@@ -4,6 +4,7 @@ param(
     [string[]]$ChangedPath,
     [string[]]$RequestedGroup,
     [switch]$AllGroups,
+    [switch]$CollectFailures,
     [switch]$NoCache,
     [ValidateRange(1, 8)]
     [int]$MaxConcurrency = 4,
@@ -103,6 +104,7 @@ $null = New-Item -ItemType Directory -Path $runRoot -Force
 $cancelPath = Join-Path $runRoot 'cancel.requested.json'
 $stopwatch = [Diagnostics.Stopwatch]::StartNew()
 $groupTimings = [Collections.Generic.List[object]]::new()
+$groupFailures = [Collections.Generic.List[object]]::new()
 $prewarmSeconds = 0.0
 $worktreeBaseline = @((Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('status', '--porcelain=v1', '--untracked-files=all') -FailureMessage 'Unable to capture the pre-smoke worktree state.').Lines)
 
@@ -246,10 +248,16 @@ function Wait-SmokeBatch([string[]]$BatchGroups, [int]$Concurrency) {
             $running.Remove($item) | Out-Null
             Remove-Item -LiteralPath $item.ArgumentsPath -Force -ErrorAction SilentlyContinue
             if ($exitCode -ne 0) {
+                $tail = @(($standardOutput + [Environment]::NewLine + $standardError) -split '\r?\n' | Where-Object { $_ } | Select-Object -Last 12)
+                $failureMessage = "Focused smoke group '$($item.Group)' failed after ${duration}s. Log: $($item.LogPath)`n$($tail -join [Environment]::NewLine)"
+                if ($CollectFailures) {
+                    $groupFailures.Add([pscustomobject]@{ group = $item.Group; exitCode = $exitCode; logPath = $item.LogPath })
+                    Write-Warning $failureMessage
+                    continue
+                }
                 Request-SmokeCancellation @($running.ToArray()) "group-failed:$($item.Group)"
                 foreach ($active in @($running.ToArray())) { $active.Process.Dispose() }
-                $tail = @(($standardOutput + [Environment]::NewLine + $standardError) -split '\r?\n' | Where-Object { $_ } | Select-Object -Last 12)
-                throw "Focused smoke group '$($item.Group)' failed after ${duration}s. Log: $($item.LogPath)`n$($tail -join [Environment]::NewLine)"
+                throw $failureMessage
             }
             Write-Host "Parallel affected smoke passed: $($item.Group) (${duration}s)"
         }
@@ -261,6 +269,9 @@ $completed = $false
 try {
     Wait-SmokeBatch $parallelGroups $MaxConcurrency
     foreach ($group in $serialGroups) { Wait-SmokeBatch @($group) 1 }
+    if ($groupFailures.Count -gt 0) {
+        throw "Focused smoke failed in $($groupFailures.Count) group(s): $($groupFailures.group -join ', '). No aggregate success receipt will be published."
+    }
     $completed = $true
 } finally {
     $timingPath = Join-Path (Split-Path -Parent $runRoot) "$runId.timings.json"
@@ -269,6 +280,7 @@ try {
         durationSeconds = [Math]::Round($stopwatch.Elapsed.TotalSeconds, 2)
         prewarmSeconds = $prewarmSeconds; maxConcurrency = $MaxConcurrency
         groups = @($groupTimings.ToArray() | Sort-Object durationSeconds -Descending)
+        failures = @($groupFailures.ToArray())
     } | ConvertTo-Json -Depth 5) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
     Write-Host "Smoke timings (including graph prewarm): $timingPath"
     if ($completed) {

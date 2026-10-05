@@ -91,7 +91,22 @@ export function projectOwnership(path, projects) {
   return projects.find(project => normalized.startsWith(project.root.toLowerCase()));
 }
 
+// A resolver belongs to one inventory pass. Preserve first-match order and the
+// original project objects without retaining a cache across project moves.
+export function createProjectOwnershipResolver(projects) {
+  const roots = projects.map(project => ({ root: project.root.toLowerCase(), project }));
+  const owners = new Map();
+  return path => {
+    const normalized = path.replaceAll('\\', '/').toLowerCase();
+    if (!owners.has(normalized)) {
+      owners.set(normalized, roots.find(item => normalized.startsWith(item.root))?.project);
+    }
+    return owners.get(normalized);
+  };
+}
+
 export function inspectProjectionOwnership(database, projects, repair = false) {
+  const resolveOwner = createProjectOwnershipResolver(projects);
   const rows = database.prepare(`SELECT search.rowid id, search.path, features.module, features.layer
     FROM context_search search LEFT JOIN context_search_features features ON features.context_rowid = search.rowid`).all();
   const findings = inspectProjectionCompleteness(database);
@@ -102,7 +117,7 @@ export function inspectProjectionOwnership(database, projects, repair = false) {
   const repairs = [];
   for (const row of rows) {
     if (row.module === null || row.layer === null) continue;
-    const owner = projectOwnership(row.path, projects);
+    const owner = resolveOwner(row.path);
     if (!owner || owner.layer === 'unknown' || (row.module === owner.module && row.layer === owner.layer)) continue;
     repairs.push({ id: row.id, module: owner.module, layer: owner.layer });
     findings.push({ kind: 'projection-ownership-drift', path: row.path, project: owner.project,
@@ -119,7 +134,7 @@ export function inspectProjectionOwnership(database, projects, repair = false) {
   }
   return { checkedProjects: projects.length, checkedRecords: rows.length, findingCount: findings.length,
     fingerprint: createHash('sha256').update(JSON.stringify(rows.map(row => {
-      const owner = repair && projectOwnership(row.path, projects);
+      const owner = repair && resolveOwner(row.path);
       return [row.path, owner && owner.layer !== 'unknown' ? owner.module : row.module,
         owner && owner.layer !== 'unknown' ? owner.layer : row.layer];
     }).sort((a, b) => a[0].localeCompare(b[0])))).digest('hex'),

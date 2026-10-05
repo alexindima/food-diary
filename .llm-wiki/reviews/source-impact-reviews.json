@@ -145,6 +145,21 @@
       "reviewedAtUtc": "2026-10-04T18:04:05.0150049Z"
     },
     {
+      "pageId": "system.quality-index",
+      "pagePath": ".llm-wiki/system/quality-index.md",
+      "pageSha256": "5e265616983f522515b757c57ba92a0a8a805fe3d690748587cd94acf09d24f4",
+      "sources": [
+        {
+          "path": ".llm-wiki/generated/quality-index.json",
+          "sha256": "b31e4f5a3501e74d94191909fd58bde1d1ed4805a8552bb6706cad56c7fd05bd"
+        }
+      ],
+      "reason": "Reviewed regenerated quality projection for Wiki candidate SQL and diagnostic runner changes; structural metrics remain navigation evidence and do not replace executed assertions.",
+      "baseRef": "HEAD",
+      "gitHead": "829474ddf40a574626a8b236adb6ca9629439dcb",
+      "reviewedAtUtc": "2026-10-04T22:08:42.855769Z"
+    },
+    {
       "pageId": "system.repository-catalog",
       "pagePath": ".llm-wiki/system/repository-catalog.md",
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
@@ -181,17 +196,21 @@
     {
       "pageId": "workflow-adaptive-development",
       "pagePath": ".llm-wiki/workflows/adaptive-development.md",
-      "pageSha256": "4f28ea95d3a372fbbe73c4de4f4bee2a1dc475842bdf62db6c29ea7e34a47e20",
+      "pageSha256": "bf06c7515995b5983125ae2d8469bc357431d468feed457a4ae9ab443288c4a4",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "abfcc040124fea145f6bf98a8ff9f2537039cf87fcd31dc9ddb3cab81bfb961a"
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "75ba917cefa45d83e45b871b41d27a8e20954bfc5c38ef4147338b624f628234"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
+          "sha256": "a8bb234d92a449d1cddf43929f4a73c018a68e5cf142c70f926cc189bfbe8560"
         }
       ],
-      "reason": "Reviewed snapshot seeding change: SQLite online backup preserves read-only isolation and guards; no adaptive routing change.",
+      "reason": "Reviewed the affected tooling guides against request-local reuse of the freshly checked repository, HEAD and content fingerprint. Normal scoped cache callers preserve their identity; dependency hashing remains independent and module discovery is deferred only for cache hits. Cache regressions and the unchanged latency gate pass. Seven counterbalanced pairs measure median warm context from 1050ms to 595ms; static reference indexes were regenerated and do not represent execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "d474c283b2c99bc94d7f64f253a324cb9d5fff91",
-      "reviewedAtUtc": "2026-09-26T06:03:08.1831257Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:28.8073013Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -229,14 +248,14 @@
       "pageSha256": "58810bcafe9de0e6e09ec7ce44659b61c6c2d807da6b207e95a00aa681b51685",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "679816c7f914e6f5dffae926b3ddecff055588103b047ab1d9412297c8ce7dd4"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
         }
       ],
-      "reason": "Reviewed producer interfaces, controller mappings and the generated diff: only test reference counts changed. No serialized names, parameter types, routes, command markers or DI registrations changed.",
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
       "baseRef": "HEAD",
-      "gitHead": "72f048c88aec5eeefd8dce559dfe2c326bcb581b",
-      "reviewedAtUtc": "2026-10-05T00:06:19.5050630Z"
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:21.4666807Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -283,17 +302,33 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "465c986c57525596ffad1b97ac1707292a22f47bf5fa593cd3b7c3849d5f108f",
+      "pageSha256": "0b38f18991e2060a96abf528329722d24f97567809e796b16d99b6bfb2c420ac",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1",
-          "sha256": "11531e8fbfa2a2677e4f140e28374d518d6c119f54eb6cc5684ceab0ed84c30e"
+          "path": ".llm-wiki/tools/code-graph-context-projection.mjs",
+          "sha256": "5a243e38926bddf04aec7ccd1ad903e0e5ee78a476e63d9d39287810ab971237"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-context-projection.test.mjs",
+          "sha256": "2507430dbd19d7d85b8fd6b23bf713169e6e0139b472ac573de86740a0b44b12"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-maintenance.mjs",
+          "sha256": "44f305954c59613348776401ad650df6c959c361f36a97d45a63664fe3f238eb"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
+          "sha256": "95e5bb441bba5cc7538a4ed0f879160e2555a02ac77e2b0cfeb785e9663c7487"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
         }
       ],
-      "reason": "Reviewed schema-5 SQLite telemetry after the subprocess argument correction: cold samples use fresh PowerShell processes, warm samples reuse the loaded reader, all three routes expose positive ordered p50/p95 values, and no JSON query comparison remains. The existing query routes and bounds are unchanged.",
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:37:30.7005359Z"
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:20.6035894Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -332,17 +367,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "8cc2f129e13fe4e7ce9ad03041b452dbec8ff56208c32f794cb834684c2860ed"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "339342e0bf6788867c8fc2899a69105864495ab3e51e3fc8f4151f03c98cac34"
+          "sha256": "03e5557aed0fa12e809720c2e35b674b414d71adc4e323e37286eb1727bc9fc0"
         }
       ],
-      "reason": "Reviewed context source selection and cache boundaries: the shared SQLite ranking reader, exact fingerprints, scoped discovery and isolated read-only snapshots remain authoritative. JSON result serialization remains an artifact format; the alternate compiled-index JSON provider is removed.",
+      "reason": "Reviewed affected bundle, impact and maintenance guidance: every context request still probes current source bytes, including same-size edits with unchanged timestamps, and validates dependent files before cache reuse. Ranking, output bounds, ambiguity, snapshot isolation, governed workflows and writer recovery are preserved.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:03.2228503Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:30.3730331Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -486,17 +517,21 @@
     {
       "pageId": "workflow-developer-experience",
       "pagePath": ".llm-wiki/workflows/developer-experience.md",
-      "pageSha256": "f46020d590c232ec013fcb3528b076e33d6f8b001faf48fcbdb60b77155aa409",
+      "pageSha256": "ef6996bd5373a4f25ad072892d14337856ea9365ee9154206096bd3743a9f7c3",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "6ebe8fdda49be99b2847cfcdeb0c7adf6a351ce8990f1a16478ad48fec13e85c"
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "75ba917cefa45d83e45b871b41d27a8e20954bfc5c38ef4147338b624f628234"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
+          "sha256": "a8bb234d92a449d1cddf43929f4a73c018a68e5cf142c70f926cc189bfbe8560"
         }
       ],
-      "reason": "Reviewed verify-full routing against the documented daily commands. Canonical research states, SQLite bootstrap, context caching and task routing remain consistent; publication details are maintained in index-pipeline.",
+      "reason": "Reviewed the affected tooling guides against request-local reuse of the freshly checked repository, HEAD and content fingerprint. Normal scoped cache callers preserve their identity; dependency hashing remains independent and module discovery is deferred only for cache hits. Cache regressions and the unchanged latency gate pass. Seven counterbalanced pairs measure median warm context from 1050ms to 595ms; static reference indexes were regenerated and do not represent execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "c00b5915692f57b1b4b13746d221918eb0acc198",
-      "reviewedAtUtc": "2026-10-03T06:42:21.6288984Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:30.9074539Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -591,17 +626,17 @@
     {
       "pageId": "workflow-impact-simulation",
       "pagePath": ".llm-wiki/workflows/impact-simulation.md",
-      "pageSha256": "b138746ffe0c2db4de0df29997f66f0eb50ed7ecef5835d7f97f6f389a527095",
+      "pageSha256": "afe53d54c25e32851bd4696c4fc162d497360f95a6b31a95aa557991f57dc840",
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "bd5a591deb5c62de0408ce5ed6b47a755d976da1c386cf14b48596b066df5bb0"
+          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
         }
       ],
-      "reason": "Reviewed the context-search-only graph edits against the documented compiled-context frontend catalog reuse. No impact-simulation selector, projection payload or alignment behavior was modified.",
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
       "baseRef": "HEAD",
-      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
-      "reviewedAtUtc": "2026-10-04T03:27:32.8745017Z"
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:22.5932749Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -648,17 +683,17 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "b79c719e7d91256dd98925bac93fd34f3a4b6142d9d4f8a5c37ba91c5dafd6ef",
+      "pageSha256": "9630ea07351d3459079b4fcbe332fd12893fc38afd2c92879bfb4d14221bbc54",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1",
-          "sha256": "11531e8fbfa2a2677e4f140e28374d518d6c119f54eb6cc5684ceab0ed84c30e"
+          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
+          "sha256": "95e5bb441bba5cc7538a4ed0f879160e2555a02ac77e2b0cfeb785e9663c7487"
         }
       ],
-      "reason": "Reviewed schema-5 SQLite telemetry after the subprocess argument correction: cold samples use fresh PowerShell processes, warm samples reuse the loaded reader, all three routes expose positive ordered p50/p95 values, and no JSON query comparison remains. The existing query routes and bounds are unchanged.",
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:37:32.196947Z"
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:23.5115603Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -794,14 +829,14 @@
       "pageSha256": "b60f38c1d4bb6323e6d9a1128ef46cbe3f2c097c8abd5f71e062f9d48a25997c",
       "sources": [
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "eee58e42102a3b4994bad250942449f5c5eea33d51125a1867f0e0777650e9fd"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
         }
       ],
-      "reason": "Inspected the recipe request factory and shared token preflight: only response-only store is omitted from the counting endpoint; actual recognition retains store=false. Input text, language, strict schema and provider destination are preserved by ru/en regression tests. No new personal data, logging, credentials, retention or storage path. Synthetic local browser import now returns 200.",
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
       "baseRef": "HEAD",
-      "gitHead": "2a83ec684dfdcd36351a4c0048b032bf75b0ca11",
-      "reviewedAtUtc": "2026-10-04T21:32:47.2464742Z"
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:24.2580728Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -840,13 +875,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c1e197035aa227bbaf0090428b072650bcc3e3ccbdc0dfa30ff5163f9b3bfeac"
+          "sha256": "7556805f70041c0b8c9c98b0c0aaa5f1dc0cdb20422f9b10cd5814e14ee974ed"
         }
       ],
-      "reason": "Reviewed both bounded fixes and regressions: malformed-video guidance uses an existing key; transcription now supplies positive budgets in both directions, and output quota rejection precedes paid calls. All 138 AI application tests and 125 focused frontend tests passed. Static quality ranking and test-reference semantics remain unchanged.",
+      "reason": "Reviewed the combined master and Wiki performance change. The generated quality inventory was rebuilt by the normal generator; it retains current master product records and adds the Wiki runner/cache regression references and complexity changes. Quality and security evidence remain static navigation signals, with existing classification, ranking and query contracts preserved. Full post-merge verification follows this integration.",
       "baseRef": "HEAD",
-      "gitHead": "72f048c88aec5eeefd8dce559dfe2c326bcb581b",
-      "reviewedAtUtc": "2026-10-05T00:06:21.7798226Z"
+      "gitHead": "973e0384354aa3fb9aa215a9fbabdc90255c69d7",
+      "reviewedAtUtc": "2026-10-05T09:40:21.4524404Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -942,17 +977,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c1e197035aa227bbaf0090428b072650bcc3e3ccbdc0dfa30ff5163f9b3bfeac"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "8b010c6c1f8e05fcd28f7c4bbe2872dd4ead6339fc8da23b55eaba83b2c351cd"
+          "sha256": "7556805f70041c0b8c9c98b0c0aaa5f1dc0cdb20422f9b10cd5814e14ee974ed"
         }
       ],
-      "reason": "Reviewed unchanged consent, caller scoping, HTTPS source validation, video and WAV bounds, request slots and quota repository invariants. The fix preserves strict positive reserves and both user limits, with no new credentials, outbound fields, logs or data retention.",
+      "reason": "Reviewed the combined master and Wiki performance change. The generated quality inventory was rebuilt by the normal generator; it retains current master product records and adds the Wiki runner/cache regression references and complexity changes. Quality and security evidence remain static navigation signals, with existing classification, ranking and query contracts preserved. Full post-merge verification follows this integration.",
       "baseRef": "HEAD",
-      "gitHead": "72f048c88aec5eeefd8dce559dfe2c326bcb581b",
-      "reviewedAtUtc": "2026-10-05T00:06:28.6200084Z"
+      "gitHead": "973e0384354aa3fb9aa215a9fbabdc90255c69d7",
+      "reviewedAtUtc": "2026-10-05T09:40:22.3612124Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1194,17 +1225,17 @@
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "c2adcbbc6c3f4b5eb20f796ca07d7b8dc13f4734c2a5f954d1743f8616520854",
+      "pageSha256": "f9ddf22db2cc07f9109f6b518b296525846afc0f92e94ac0b443f5bf8ea4b89a",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "b535170f37bb5227d06739c551bedd584364e96177b98405ddc7dbb0631f724a"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
         }
       ],
-      "reason": "Affected catalog, symbol, contract and module indexes were regenerated from the current sources; the runtime owner remains MealNutritionStatisticsReadService.",
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
       "baseRef": "HEAD",
-      "gitHead": "bd0b317c741192f85e39301b207407b7ce778add",
-      "reviewedAtUtc": "2026-10-04T19:26:54.2365412Z"
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:24.9750072Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1224,21 +1255,33 @@
     {
       "pageId": "workflow.self-maintenance",
       "pagePath": ".llm-wiki/workflows/self-maintenance.md",
-      "pageSha256": "3374888dc37a3b5d032bdece140d17182fb8fe516c9a90b8286338585858a5b7",
+      "pageSha256": "891ba091baab5bb5ebac52ec2d8482eba48976374cc43486fa4fbbe800d24fa2",
       "sources": [
         {
+          "path": ".llm-wiki/tools/code-graph-context-projection.mjs",
+          "sha256": "5a243e38926bddf04aec7ccd1ad903e0e5ee78a476e63d9d39287810ab971237"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-context-projection.test.mjs",
+          "sha256": "2507430dbd19d7d85b8fd6b23bf713169e6e0139b472ac573de86740a0b44b12"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-maintenance.mjs",
+          "sha256": "44f305954c59613348776401ad650df6c959c361f36a97d45a63664fe3f238eb"
+        },
+        {
           "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "84d144525363d00e07e55e3073ffa8d87ebadb34fa7bdea4590c1457d76644e3"
+          "sha256": "95e5bb441bba5cc7538a4ed0f879160e2555a02ac77e2b0cfeb785e9663c7487"
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "bd5a591deb5c62de0408ce5ed6b47a755d976da1c386cf14b48596b066df5bb0"
+          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
         }
       ],
-      "reason": "Reviewed the feature-path fixtures and candidate hydration changes against the sole-writer projection contract. Graph regressions passed, including incremental build, corrupt projection recovery, missing dependency handling and ownership/source maintenance.",
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
       "baseRef": "HEAD",
-      "gitHead": "b3dcf535f37ba674c9175289fc2ce6cab906c0b3",
-      "reviewedAtUtc": "2026-10-04T03:27:37.2916916Z"
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:25.6783599Z"
     }
   ]
 }

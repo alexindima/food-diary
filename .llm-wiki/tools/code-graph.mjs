@@ -10,8 +10,9 @@ import { searchContextBatch } from './code-graph-batch.mjs';
 import { refreshStandaloneIndexes, queryStandaloneIndex, querySecurityEvidence } from './code-graph-index-query.mjs';
 import { englishMorphologicalVariants } from './code-graph-query-terms.mjs';
 import { findIdentityCandidates } from './code-graph-identity.mjs';
+import { createContextSourceReader, replaceContextSearchRecords } from './code-graph-context-projection.mjs';
 import { runGraphProcess } from './code-graph-process.mjs';
-import { discoverProjectOwnership, projectOwnership, inspectProjectionOwnership, inspectProjectionCompleteness } from './code-graph-maintenance.mjs';
+import { discoverProjectOwnership, createProjectOwnershipResolver, inspectProjectionOwnership, inspectProjectionCompleteness } from './code-graph-maintenance.mjs';
 import { traceCandidateMatchesScope } from './code-graph-trace-scope.mjs';
 import { applicationRoleIdentity, completeFileIdentityMatches, compoundModuleMention, contextPathOwnership, exactFileIdentity, directIdentifierTermMatchesMinimum, hyphenatedIdentifierTerms, implicitImplementationIntent, isModuleEntryPointQuery, rankingModuleIdentity, rankingPathIdentities, testIdentityWeights } from './code-graph-path-layout.mjs';
 
@@ -935,20 +936,20 @@ function expandSearchText(value) {
   return expanded === text ? text : `${text} ${expanded}`;
 }
 
-function contextDocumentPaths() {
-  return repositoryPaths().filter((path) =>
+function contextDocumentPaths(paths) {
+  return paths.filter((path) =>
     /(^|\/)AGENTS\.md$/i.test(path)
     || /^\.llm-wiki\/.+\.md$/i.test(path)
     || /^docs\/.+\.md$/i.test(path));
 }
 
-function contextSearchFeatures(path, recordType, projects = []) {
+function contextSearchFeatures(path, recordType, resolveOwner) {
   const normalized = String(path ?? '').replaceAll('\\', '/');
   const lower = normalized.toLowerCase();
   const fileName = basename(lower);
   const extension = extname(lower);
   const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/i.test(normalized);
-  const project = projectOwnership(normalized, projects);
+  const project = resolveOwner(normalized);
   const { layer, module } = project && project.layer !== 'unknown' ? project : contextPathOwnership(normalized);
   const rolePatterns = [
     ['handler', /handler\.[^.]+$/], ['validator', /validator(?:tests?)?\.[^.]+$/],
@@ -965,92 +966,103 @@ function contextSearchFeatures(path, recordType, projects = []) {
 }
 
 function refreshContextSearch(database) {
-  const ownershipProjects = discoverProjectOwnership(repositoryPaths());
-  const files = database.prepare('SELECT path, language, content_hash contentHash FROM files ORDER BY path').all();
+  const paths = repositoryPaths();
+  const ownershipProjects = discoverProjectOwnership(paths);
+  const resolveOwner = createProjectOwnershipResolver(ownershipProjects);
+  const files = database.prepare('SELECT id, path, language, content_hash contentHash FROM files ORDER BY path').all();
   const queryDocuments = database.prepare(`
     SELECT category, record_key recordKey, path, source_path sourcePath, record_kind recordKind, payload_json payloadJson
     FROM query_documents ORDER BY category, record_key, path
   `).all();
-  const documentation = contextDocumentPaths().flatMap((path) => {
+  const documentation = contextDocumentPaths(paths).flatMap((path) => {
     const absolutePath = resolve(repositoryRoot, path);
     if (!existsSync(absolutePath)) return [];
     const text = readFileSync(absolutePath, 'utf8');
     return [{ path, text, contentHash: sha256(text) }];
   });
-  const fingerprint = sha256(JSON.stringify({
+  const environmentFingerprint = sha256(JSON.stringify({
     schema: contextSearchSchemaVersion,
+    parserVersion,
+    writerImplementation: sha256(readFileSync(import.meta.filename, 'utf8')),
     ownershipProjects,
     ownershipImplementation: sha256(readFileSync(resolve(import.meta.dirname, 'code-graph-maintenance.mjs'), 'utf8')),
-    files: files.map((item) => [item.path, item.contentHash]),
-    queryDocuments: queryDocuments.map((item) => [item.category, item.recordKey, item.path, sha256(item.payloadJson)]),
-    documentation: documentation.map((item) => [item.path, item.contentHash]),
+    projectionImplementation: sha256(readFileSync(resolve(import.meta.dirname, 'code-graph-context-projection.mjs'), 'utf8')),
   }));
+  const records = [
+    ...files.map(file => ({ kind: 'code', source: file,
+      fingerprint: sha256(JSON.stringify(['code', file.path, file.language, file.contentHash])) })),
+    ...queryDocuments.map(item => ({ kind: 'query-document', source: item,
+      fingerprint: sha256(JSON.stringify(['query-document', item.category, item.recordKey, item.path,
+        item.sourcePath, item.recordKind, sha256(item.payloadJson)])) })),
+    ...documentation.map(item => ({ kind: 'documentation', source: item,
+      fingerprint: sha256(JSON.stringify(['documentation', item.path, item.contentHash])) })),
+  ];
+  const fingerprint = sha256(JSON.stringify({ environmentFingerprint, records: records.map(record => record.fingerprint) }));
   const metadata = database.prepare("SELECT value FROM metadata WHERE key='context_search_fingerprint'").get()?.value;
-  const existingCount = database.prepare('SELECT COUNT(*) count FROM context_search').get().count;
-  if (metadata === fingerprint && existingCount > 0 && inspectProjectionCompleteness(database).length === 0) {
+  const existing = database.prepare('SELECT COUNT(*) count, MIN(rowid) first, MAX(rowid) last FROM context_search').get();
+  const existingCount = existing.count;
+  const identity = database.prepare('SELECT COUNT(*) count, MIN(rowid) first, MAX(rowid) last FROM context_search_identity').get();
+  if (metadata === fingerprint && existingCount > 0 && existing.first === 1 && existing.last === existingCount
+      && identity.count === existingCount && identity.first === 1 && identity.last === existingCount
+      && inspectProjectionCompleteness(database).length === 0) {
     return { refreshed: false, documents: existingCount, fingerprint };
   }
 
-  const symbolsByPath = new Map();
-  for (const row of database.prepare('SELECT f.path, s.name FROM symbols s JOIN files f ON f.id=s.file_id ORDER BY f.path, s.name').all()) {
-    if (!symbolsByPath.has(row.path)) symbolsByPath.set(row.path, []);
-    symbolsByPath.get(row.path).push(row.name);
-  }
-  const tokensByPath = new Map();
-  for (const row of database.prepare('SELECT f.path, t.token FROM file_tokens t JOIN files f ON f.id=t.file_id ORDER BY f.path, t.token').all()) {
-    if (!tokensByPath.has(row.path)) tokensByPath.set(row.path, []);
-    tokensByPath.get(row.path).push(row.token);
-  }
+  const sourceReader = createContextSourceReader(database);
 
-  database.exec('DELETE FROM context_search_features; DELETE FROM context_search_identity; DELETE FROM context_search');
   const insertIdentity = database.prepare('INSERT INTO context_search_identity(rowid, path, title) VALUES (?, ?, ?)');
   const insert = database.prepare(`
-    INSERT INTO context_search(record_type, record_key, path, source_path, category, title, body)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO context_search(rowid, record_type, record_key, path, source_path, category, title, body)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `);
   const insertFeatures = database.prepare(`
     INSERT INTO context_search_features(context_rowid, record_type, path, layer, module, role, is_test, extension)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `);
-  const insertContextRecord = (recordType, recordKey, path, sourcePath, category, title, body) => {
-    const result = insert.run(recordType, recordKey, path, sourcePath, category, title, body);
-    insertIdentity.run(result.lastInsertRowid, path, title);
-    const features = contextSearchFeatures(path, recordType, ownershipProjects);
-    insertFeatures.run(result.lastInsertRowid, recordType, path, features.layer, features.module,
+  const insertContextRecord = (rowId, recordType, recordKey, path, sourcePath, category, title, body) => {
+    insert.run(rowId, recordType, recordKey, path, sourcePath, category, title, body);
+    insertIdentity.run(rowId, path, title);
+    const features = contextSearchFeatures(path, recordType, resolveOwner);
+    insertFeatures.run(rowId, recordType, path, features.layer, features.module,
       features.role, features.isTest, features.extension);
   };
-  for (const file of files) {
-    const sourceBody = ['powershell', 'json', 'yaml', 'configuration'].includes(file.language)
-      ? readFileSync(resolve(repositoryRoot, file.path), 'utf8')
-      : (tokensByPath.get(file.path) ?? []).join(' ');
-    const synopsis = file.language === 'powershell'
-      ? sourceBody.match(/\.SYNOPSIS\s*\r?\n([\s\S]*?)(?=\r?\n\s*\.[A-Z]|#>)/i)?.[1]?.trim() ?? '' : '';
-    insertContextRecord(
-      'code',
-      file.path,
-      file.path,
-      file.path,
-      file.language,
-      expandSearchText((symbolsByPath.get(file.path) ?? []).join(' ') + (synopsis ? `\n${synopsis}` : '')),
-      expandSearchText(sourceBody));
-  }
-  for (const item of queryDocuments) {
-    insertContextRecord(
-      'query-document',
-      item.recordKey,
-      item.path || item.sourcePath,
-      item.sourcePath,
-      item.category,
-      expandSearchText(item.recordKey),
-      expandSearchText(item.payloadJson));
-  }
-  for (const item of documentation) {
-    const recordType = /(^|\/)AGENTS\.md$/i.test(item.path)
-      ? 'agent-guide'
-      : item.path.startsWith('.llm-wiki/') ? 'wiki-page' : 'documentation';
-    const title = item.text.match(/^#{1,3}\s+(.+)$/m)?.[1] ?? item.path;
-    insertContextRecord(recordType, item.path, item.path, item.path, recordType, expandSearchText(title), expandSearchText(item.text));
-  }
+  const replacement = replaceContextSearchRecords(database, records, { fingerprint, environmentFingerprint }, (record, rowId) => {
+    if (record.kind === 'code') {
+      const file = record.source;
+      const sourceBody = ['powershell', 'json', 'yaml', 'configuration'].includes(file.language)
+        ? readFileSync(resolve(repositoryRoot, file.path), 'utf8')
+        : sourceReader.tokens(file.id).join(' ');
+      const synopsis = file.language === 'powershell'
+        ? sourceBody.match(/\.SYNOPSIS\s*\r?\n([\s\S]*?)(?=\r?\n\s*\.[A-Z]|#>)/i)?.[1]?.trim() ?? '' : '';
+      insertContextRecord(
+        rowId,
+        'code',
+        file.path,
+        file.path,
+        file.path,
+        file.language,
+        expandSearchText(sourceReader.symbols(file.id).join(' ') + (synopsis ? `\n${synopsis}` : '')),
+        expandSearchText(sourceBody));
+    } else if (record.kind === 'query-document') {
+      const item = record.source;
+      insertContextRecord(
+        rowId,
+        'query-document',
+        item.recordKey,
+        item.path || item.sourcePath,
+        item.sourcePath,
+        item.category,
+        expandSearchText(item.recordKey),
+        expandSearchText(item.payloadJson));
+    } else {
+      const item = record.source;
+      const recordType = /(^|\/)AGENTS\.md$/i.test(item.path)
+        ? 'agent-guide'
+        : item.path.startsWith('.llm-wiki/') ? 'wiki-page' : 'documentation';
+      const title = item.text.match(/^#{1,3}\s+(.+)$/m)?.[1] ?? item.path;
+      insertContextRecord(rowId, recordType, item.path, item.path, item.path, recordType, expandSearchText(title), expandSearchText(item.text));
+    }
+  });
   database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)')
     .run('context_search_fingerprint', fingerprint);
   database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)')
@@ -1059,6 +1071,7 @@ function refreshContextSearch(database) {
     refreshed: true,
     documents: database.prepare('SELECT COUNT(*) count FROM context_search').get().count,
     fingerprint,
+    ...replacement,
   };
 }
 
@@ -2963,6 +2976,7 @@ try {
   else if (action === 'security-evidence') result = querySecurityEvidence(database, repositoryRoot, Number(options.limit ?? 12));
   else {
     const currentChangeSet = changeSetSnapshot();
+    const indexedChangeSetFingerprint = database.prepare("SELECT value FROM metadata WHERE key='change_set_fingerprint'").get()?.value ?? null;
     result = {
     action: 'status',
     databasePath,
@@ -2976,11 +2990,18 @@ try {
     querySources: database.prepare("SELECT substr(key,14) category, value contentHash FROM metadata WHERE key LIKE 'query_source:%' ORDER BY key").all(),
     typescriptProjectionComplete: database.prepare("SELECT value FROM metadata WHERE key='typescript_projection_complete'").get()?.value === 'true',
     searchFingerprint: database.prepare("SELECT value FROM metadata WHERE key='context_search_fingerprint'").get()?.value ?? null,
-    changeSetFingerprint: database.prepare("SELECT value FROM metadata WHERE key='change_set_fingerprint'").get()?.value ?? null,
+    changeSetFingerprint: indexedChangeSetFingerprint,
     changeSetGitHead: database.prepare("SELECT value FROM metadata WHERE key='change_set_git_head'").get()?.value ?? null,
     currentChangeSetFingerprint: currentChangeSet.fingerprint,
     currentChangeSetGitHead: currentChangeSet.head,
-    changeSetFresh: database.prepare("SELECT value FROM metadata WHERE key='change_set_fingerprint'").get()?.value === currentChangeSet.fingerprint,
+    currentWorkspace: {
+      repositoryRoot,
+      head: currentChangeSet.head,
+      fingerprint: currentChangeSet.fingerprint,
+      changedPathCount: currentChangeSet.changedPaths.length,
+      fresh: indexedChangeSetFingerprint === currentChangeSet.fingerprint,
+    },
+    changeSetFresh: indexedChangeSetFingerprint === currentChangeSet.fingerprint,
     contextSearchUpdatedAtUtc: database.prepare("SELECT value FROM metadata WHERE key='context_search_updated_at_utc'").get()?.value ?? null,
     compiledIndexes: database.prepare('SELECT index_name indexName, source_path sourcePath, content_hash contentHash FROM compiled_indexes ORDER BY index_name').all(),
     };

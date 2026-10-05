@@ -52,6 +52,8 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1
   - .llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1
   - .llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1
+  - .llm-wiki/tools/code-graph-candidates.mjs
+  - .llm-wiki/tools/code-graph-candidates.test.mjs
   - .llm-wiki/tools/LlmWikiCorpusEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
@@ -569,3 +571,17 @@ graph prewarm, total wall time, and group durations sorted by cost. Parallel
 group times overlap and must not be summed as elapsed time. Timing summaries
 survive successful sandbox cleanup; aggregate cache hits retain the prior
 receipt duration and do not execute a new run.
+
+To profile the complete focused catalog even when a regression fails, run
+`./.llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1 -AllGroups -CollectFailures`.
+This diagnostic mode continues through the remaining parallel and serial groups,
+records failed exit codes and log paths in the timing summary, and still fails
+the overall run without publishing an aggregate success receipt. Normal
+verification retains fail-fast behavior. Existing successful group caches remain
+available; use `-NoCache` only when fresh execution of every group is necessary.
+
+Lexical search hydrates its bounded candidate pool using FTS rowid lookups.
+An explicit SQLite `CROSS JOIN` keeps that pool outside the FTS content reader;
+otherwise the planner can scan and hydrate the complete document table before
+joining the limited results. The candidate regression checks the actual query
+plan as well as records, ranking ties, path diversity and missing-feature rows.

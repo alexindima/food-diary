@@ -9,7 +9,52 @@ import { runGraphProcess } from './code-graph-process.mjs';
 import { englishMorphologicalVariants } from './code-graph-query-terms.mjs';
 import { findIdentityCandidates } from './code-graph-identity.mjs';
 import { contextPathOwnership, exactFileIdentity } from './code-graph-path-layout.mjs';
-import { discoverProjectOwnership, projectOwnership, inspectProjectionOwnership, repairWikiReferences } from './code-graph-maintenance.mjs';
+import { createProjectOwnershipResolver, discoverProjectOwnership, projectOwnership, inspectProjectionOwnership, repairWikiReferences } from './code-graph-maintenance.mjs';
+
+test('pass-local root lookup preserves first-match order, path normalization and unknown results', () => {
+  const projects = discoverProjectOwnership([
+    'Area/FoodDiary.Modules.Identity.Domain.csproj',
+    'Area/Nested/FoodDiary.Modules.Identity.PersistenceModel.csproj',
+    'Area/Nested/FoodDiary.Modules.Identity.Application.csproj',
+    'AreaExtra/FoodDiary.Modules.Ai.Domain.csproj',
+    'Unknown/Future.Component.csproj',
+    'Юникод/FoodDiary.Modules.Ai.Domain.csproj',
+  ]);
+  for (const inventory of [projects, projects.toReversed(), []]) {
+    const lookup = createProjectOwnershipResolver(inventory);
+    for (const path of ['Area/Nested/Token.cs', 'AREA\\NESTED\\Token.cs', 'Area/Token.cs',
+      'AreaExtra/Token.cs', 'AreaElse/Token.cs', 'Unknown/File.cs', 'ЮНИКОД/Файл.cs', '', 'NoMatch.cs']) {
+      assert.strictEqual(lookup(path), projectOwnership(path, inventory));
+      assert.strictEqual(lookup(path), projectOwnership(path, inventory));
+    }
+  }
+  // Rootless projects and roots without a trailing slash keep legacy prefix semantics.
+  const inventory = [{ root: 'area', project: 'prefix' }, { root: '', project: 'fallback' }];
+  const lookup = createProjectOwnershipResolver(inventory);
+  assert.strictEqual(lookup('AreaExtra/File.cs'), inventory[0]);
+  assert.strictEqual(lookup('Unrelated.cs'), inventory[1]);
+});
+
+test('a fresh maintenance pass does not reuse matches or misses after a project move', () => {
+  const db = new DatabaseSync(':memory:');
+  const inventory = discoverProjectOwnership(['Original/FoodDiary.Modules.Identity.Domain.csproj']);
+  const lookup = createProjectOwnershipResolver(inventory);
+  assert.equal(lookup('Moved/Token.cs'), undefined);
+  assert.strictEqual(lookup('Original/Token.cs'), inventory[0]);
+  inventory[0].root = 'Moved/';
+  try {
+    db.exec(`CREATE TABLE context_search(path); CREATE TABLE context_search_features(context_rowid, module, layer);
+      INSERT INTO context_search VALUES ('Moved/Token.cs');
+      INSERT INTO context_search_features VALUES (1, 'other', 'other');`);
+    assert.strictEqual(createProjectOwnershipResolver(inventory)('Moved/Token.cs'), inventory[0]);
+    const result = inspectProjectionOwnership(db, inventory, true);
+    assert.equal(result.repairedRecords, 1);
+    assert.equal(inspectProjectionOwnership(db, inventory).fingerprint, result.fingerprint);
+    inventory.splice(0, 1, ...discoverProjectOwnership(['Moved/FoodDiary.Modules.Ai.Application.csproj']));
+    assert.equal(inspectProjectionOwnership(db, inventory, true).repairedRecords, 1);
+    assert.deepEqual({ ...db.prepare('SELECT module,layer FROM context_search_features').get() }, { module: 'Ai', layer: 'application' });
+  } finally { db.close(); }
+});
 
 test('maintenance detects missing, orphaned and duplicate feature rows without pretending repair succeeded', () => {
   const db = new DatabaseSync(':memory:');

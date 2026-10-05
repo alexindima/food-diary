@@ -186,4 +186,92 @@ foreach ($scope in @(@{ ChangedPath = @() }, @{ ChangedPath = @('.llm-wiki/tools
     }
 }
 
-Write-Host 'LLM Wiki affected-smoke planning regression passed: local routing never falls back to full-tools.'
+# Exercise the actual runner with tiny subprocess workers, independently of the
+# repository catalog's expensive suites. A diagnostic run must never turn a
+# failed worker into an aggregate success receipt.
+$failureFixtureRoot = Join-Path ([IO.Path]::GetTempPath()) "fd-wiki-smoke-failures-$([guid]::NewGuid().ToString('N'))"
+$failureFixtureRoot = [IO.Path]::GetFullPath($failureFixtureRoot)
+$fixtureParent = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\', '/')
+if (-not $failureFixtureRoot.StartsWith(($fixtureParent + [IO.Path]::DirectorySeparatorChar), [StringComparison]::OrdinalIgnoreCase)) {
+    throw 'Smoke failure fixture escaped its temporary parent.'
+}
+try {
+    foreach ($mode in @('fail-fast', 'collect', 'success')) {
+        $fixture = Join-Path $failureFixtureRoot $mode
+        $fixtureTools = Join-Path $fixture '.llm-wiki/tools'
+        $null = New-Item -ItemType Directory -Path $fixtureTools -Force
+        $null = New-Item -ItemType Directory -Path (Join-Path $fixture '.llm-wiki/policies') -Force
+        Copy-Item -LiteralPath $parallelRunner -Destination $fixtureTools
+        Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'LlmWikiProcess.ps1') -Destination $fixtureTools
+        [IO.File]::WriteAllText((Join-Path $fixture '.llm-wiki/policies/affected-smoke-catalog.psd1'), @'
+@{ Groups = @(
+    @{ Id = 'first'; IncludeInAll = $true; Priority = 3; ParallelSafe = $true; GraphDependent = $false },
+    @{ Id = 'following'; IncludeInAll = $true; Priority = 2; ParallelSafe = $true; GraphDependent = $false },
+    @{ Id = 'serial'; IncludeInAll = $true; Priority = 1; ParallelSafe = $false; GraphDependent = $false }
+) }
+'@)
+        [IO.File]::WriteAllText((Join-Path $fixtureTools 'LlmWikiGitPaths.ps1'), @'
+function Invoke-LlmWikiGitCommand {
+    param($RepositoryRoot, $Arguments, $FailureMessage)
+    [pscustomobject]@{ Lines = @(if ($Arguments[0] -eq 'rev-parse') { Join-Path $RepositoryRoot 'git-state' }) }
+}
+'@)
+        [IO.File]::WriteAllText((Join-Path $fixtureTools 'Get-LlmWikiVerificationStageFingerprint.ps1'), @'
+param($Stage, $Arguments, $Format)
+'fixture-fingerprint'
+'@)
+        [IO.File]::WriteAllText((Join-Path $fixtureTools 'Invoke-LlmWikiObservedStage.ps1'), @'
+param($ToolPath, $ArgumentsPath, $StageName, $LogPath)
+$fixtureRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+$arguments = Get-Content -LiteralPath $ArgumentsPath -Raw | ConvertFrom-Json
+$group = [string]$arguments.RequestedGroup[0]
+[IO.File]::AppendAllText((Join-Path $fixtureRoot 'attempts.txt'), $group + [Environment]::NewLine)
+[IO.File]::WriteAllText($LogPath, "Executed fixture group: $group")
+if ($group -eq 'first' -and (Test-Path -LiteralPath (Join-Path $fixtureRoot 'fail-first'))) {
+    Write-Output 'Expected fixture worker failure.'
+    exit 7
+}
+exit 0
+'@)
+        if ($mode -ne 'success') { [IO.File]::WriteAllText((Join-Path $fixture 'fail-first'), '') }
+        $fixtureRunner = Join-Path $fixtureTools 'Invoke-LlmWikiParallelSmoke.ps1'
+        $shell = [IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
+        $runArguments = @('-NoLogo', '-NoProfile', '-File', $fixtureRunner, '-AllGroups', '-MaxConcurrency', '1')
+        if ($mode -ne 'fail-fast') { $runArguments += '-CollectFailures' }
+        $fixtureOutput = & $shell @runArguments 2>&1 | Out-String
+        $fixtureExitCode = $LASTEXITCODE
+        if (-not (Test-Path -LiteralPath (Join-Path $fixture 'attempts.txt'))) { throw "Smoke fixture '$mode' did not start a worker: $fixtureOutput" }
+        $attempts = @(Get-Content -LiteralPath (Join-Path $fixture 'attempts.txt'))
+        $receipts = @(Get-ChildItem -LiteralPath (Join-Path $fixture 'git-state/llm-wiki/parallel-smoke') -Filter '*.json' -ErrorAction SilentlyContinue)
+        $timingFiles = @(Get-ChildItem -LiteralPath (Join-Path $fixture '.artifacts/llm-wiki/parallel-smoke') -Filter '*.timings.json')
+        if ($timingFiles.Count -ne 1) { throw "Smoke fixture '$mode' omitted timings: $fixtureOutput" }
+        $timing = Get-Content -LiteralPath $timingFiles[0].FullName -Raw | ConvertFrom-Json
+        if ($mode -eq 'success') {
+            if ($fixtureExitCode -ne 0 -or -not $timing.completed -or $receipts.Count -ne 1 -or @($timing.failures).Count -ne 0) {
+                throw "Successful diagnostic smoke lost its real success receipt: $fixtureOutput"
+            }
+        } else {
+            if ($fixtureExitCode -eq 0 -or $timing.completed -or $receipts.Count -ne 0) {
+                throw "Failed smoke fixture '$mode' incorrectly published success: $fixtureOutput"
+            }
+            $failedTiming = @($timing.groups | Where-Object group -eq 'first')
+            if ($failedTiming.Count -ne 1 -or $failedTiming[0].exitCode -ne 7) { throw 'Worker exit code was lost from failure timings.' }
+            if ($mode -eq 'collect' -and (@($timing.failures).Count -ne 1 -or -not (Test-Path -LiteralPath $timing.failures[0].logPath))) {
+                throw 'Diagnostic smoke did not preserve its failure record and log.'
+            }
+        }
+        $expectedAttempts = if ($mode -eq 'fail-fast') { 'first' } else { 'first,following,serial' }
+        if (($attempts -join ',') -cne $expectedAttempts) { throw "Smoke fixture '$mode' attempted the wrong groups: $($attempts -join ',')" }
+    }
+} finally {
+    if (Test-Path -LiteralPath $failureFixtureRoot) {
+        $resolvedFixture = (Resolve-Path -LiteralPath $failureFixtureRoot).Path
+        if (-not $resolvedFixture.StartsWith(($fixtureParent + [IO.Path]::DirectorySeparatorChar), [StringComparison]::OrdinalIgnoreCase) -or
+            [IO.Path]::GetFileName($resolvedFixture) -notmatch '^fd-wiki-smoke-failures-[a-f0-9]{32}$') {
+            throw "Refusing to clean an unowned smoke failure fixture: $resolvedFixture"
+        }
+        Remove-Item -LiteralPath $resolvedFixture -Recurse -Force
+    }
+}
+
+Write-Host 'LLM Wiki affected-smoke planning regression passed: focused routing and failure-preserving diagnostics.'

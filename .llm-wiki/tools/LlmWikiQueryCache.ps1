@@ -28,12 +28,42 @@ function Get-LlmWikiQueryCacheEntry {
         [Parameter(Mandatory)][string]$Namespace,
         [Parameter(Mandatory)][hashtable]$Arguments,
         [string[]]$RelevantPath,
-        [string[]]$DependencyPath
+        [string[]]$DependencyPath,
+        [pscustomobject]$VerifiedWorkspace
     )
 
-    $snapshot = Get-LlmWikiChangeSetSnapshot -RepositoryRoot $RepositoryRoot -RelevantPath $RelevantPath
+    # Only reuse a status probe captured during this request. This is not a
+    # cross-request freshness cache, and a global probe cannot stand in for a scope.
+    if ($null -ne $VerifiedWorkspace) {
+        if (@($RelevantPath | Where-Object { $_ }).Count -gt 0) {
+            throw 'A verified global workspace cannot replace a scoped query-cache snapshot.'
+        }
+        foreach ($property in @('repositoryRoot', 'head', 'fingerprint', 'changedPathCount', 'fresh')) {
+            if ($null -eq $VerifiedWorkspace.PSObject.Properties[$property]) {
+                throw "Verified query-cache workspace is missing '$property'."
+            }
+        }
+        $pathComparison = if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) { [StringComparison]::OrdinalIgnoreCase } else { [StringComparison]::Ordinal }
+        $root = [IO.Path]::GetFullPath($RepositoryRoot).TrimEnd([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar)
+        if (-not [IO.Path]::IsPathRooted([string]$VerifiedWorkspace.repositoryRoot) -or
+            -not [string]::Equals($root, [IO.Path]::GetFullPath([string]$VerifiedWorkspace.repositoryRoot).TrimEnd([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar), $pathComparison)) {
+            throw 'Verified query-cache workspace belongs to a different repository.'
+        }
+        if ($VerifiedWorkspace.fresh -isnot [bool] -or -not $VerifiedWorkspace.fresh -or
+            [string]$VerifiedWorkspace.head -notmatch '^[a-fA-F0-9]{40}$' -or
+            [string]$VerifiedWorkspace.fingerprint -notmatch '^[a-fA-F0-9]{64}$' -or
+            [string]$VerifiedWorkspace.changedPathCount -notmatch '^\d+$') {
+            throw 'Verified query-cache workspace is stale or invalid.'
+        }
+        $snapshot = $VerifiedWorkspace
+        $workspacePathCount = [int]$VerifiedWorkspace.changedPathCount
+        $relevantPaths = @()
+    } else {
+        $snapshot = Get-LlmWikiChangeSetSnapshot -RepositoryRoot $RepositoryRoot -RelevantPath $RelevantPath
+        $workspacePathCount = @($snapshot.changedPaths).Count
+        $relevantPaths = @($snapshot.relevantPaths)
+    }
     $head = [string]$snapshot.head
-    $workspacePaths = [string[]]@($snapshot.changedPaths)
     $argumentJson = [ordered]@{}
     foreach ($key in @($Arguments.Keys | Sort-Object)) {
         $value = $Arguments[$key]
@@ -85,8 +115,8 @@ function Get-LlmWikiQueryCacheEntry {
         dependencyFingerprint = $dependencyFingerprint
         argumentFingerprint = $argumentFingerprint
         missReason = $missReason
-        workspacePathCount = $workspacePaths.Count
-        relevantPaths = @($snapshot.relevantPaths)
+        workspacePathCount = $workspacePathCount
+        relevantPaths = $relevantPaths
     }
 }
 
