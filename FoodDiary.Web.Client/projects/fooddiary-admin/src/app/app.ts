@@ -78,7 +78,7 @@ export class AppComponent {
         void this.router.navigateByUrl(path);
     }
     protected readonly pageHeader = computed(() =>
-        ['/users', '/email-templates', '/lessons', '/ai-prompts'].includes(this.currentPath())
+        ['/users', '/email-templates', '/lessons', '/ai-prompts'].includes(this.currentSection())
             ? null
             : (ADMIN_PAGE_HEADERS[this.currentSection()] ?? null),
     );

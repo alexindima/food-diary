@@ -65,9 +65,11 @@ export class RecipeStepCardComponent {
     public readonly isExpanded = input.required<boolean>();
     public readonly busy = input(false);
     public readonly dragDisabled = input.required<boolean>();
+    public readonly canMoveDown = input(false);
 
     public readonly fieldBlur = output<{ field: 'description' | 'amount' | 'foodName'; ingredientIndex?: number }>();
     public readonly removeStep = output();
+    public readonly moveStep = output<-1 | 1>();
     public readonly toggleExpanded = output();
     public readonly addIngredient = output();
     public readonly removeIngredient = output<number>();
@@ -234,6 +236,13 @@ export class RecipeStepCardComponent {
 
     protected onRemoveStep(): void {
         this.removeStep.emit();
+    }
+
+    protected onMoveStep(direction: -1 | 1): void {
+        if (this.busy() || this.uploading() || (direction === -1 ? this.isFirst() : !this.canMoveDown())) {
+            return;
+        }
+        this.moveStep.emit(direction);
     }
 
     protected onToggleExpanded(): void {

@@ -3,6 +3,7 @@ import { DestroyRef, inject, Injectable, signal, type WritableSignal } from '@an
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, type Observable, of, type Subscription } from 'rxjs';
 
+import { AI_CONSENT_ERROR_KEY, isAiConsentRequiredError } from '../../../shared/lib/ai-consent-error.utils';
 import { AiFoodFacade } from '../../../shared/lib/ai-food.facade';
 import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem, FoodVisionResponse } from '../../../shared/models/ai.data';
@@ -122,11 +123,13 @@ export class AiInputBarFacade {
                 catchError((error: unknown) => {
                     const status = getNumberProperty(error, 'status');
                     state.errorKey.set(
-                        status === HttpStatusCode.Forbidden
-                            ? errorKeys.premium
-                            : status === HttpStatusCode.TooManyRequests
-                              ? errorKeys.quota
-                              : errorKeys.generic,
+                        isAiConsentRequiredError(error)
+                            ? AI_CONSENT_ERROR_KEY
+                            : status === HttpStatusCode.Forbidden
+                              ? errorKeys.premium
+                              : status === HttpStatusCode.TooManyRequests
+                                ? errorKeys.quota
+                                : errorKeys.generic,
                     );
                     return of(null);
                 }),

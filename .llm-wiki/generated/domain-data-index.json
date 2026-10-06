@@ -6,7 +6,7 @@
     "valueObjects": 93,
     "invariants": 533,
     "persistenceMappings": 96,
-    "indexes": 176,
+    "indexes": 177,
     "relationships": 39
   },
   "domainTypes": [
@@ -6113,6 +6113,7 @@
         "e => e.Category)",
         "e => e.ImageAssetId)",
         "e => e.Name)",
+        "e => e.UsdaFdcId)",
         "e => new { e.UserId, e.CreatedOnUtc })",
         "e => new { e.Visibility, e.CreatedOnUtc })"
       ],

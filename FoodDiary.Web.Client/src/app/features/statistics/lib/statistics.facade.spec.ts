@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
@@ -158,6 +159,27 @@ describe('StatisticsFacade export', () => {
 
         expect(exportService.exportDiary).toHaveBeenCalledTimes(1);
         expect(facade.exportingFormat()).toBe('pdf');
+    });
+
+    it('reports HTTP export failure and resets it only when a new retry is accepted', () => {
+        const failedExport = new Subject<void>();
+        const retriedExport = new Subject<void>();
+        exportService.exportDiary.mockReturnValueOnce(failedExport).mockReturnValueOnce(retriedExport);
+
+        facade.exportDiary('csv');
+        failedExport.error(new HttpErrorResponse({ status: 422, statusText: 'Unprocessable Entity' }));
+        expect(facade.exportError()).toBe(true);
+        expect(facade.exportingFormat()).toBeNull();
+
+        facade.exportDiary('pdf');
+        expect(facade.exportError()).toBe(false);
+        expect(facade.exportingFormat()).toBe('pdf');
+        facade.exportDiary('csv');
+        expect(exportService.exportDiary).toHaveBeenCalledTimes(2);
+        retriedExport.next();
+        retriedExport.complete();
+        expect(facade.exportingFormat()).toBeNull();
+        expect(facade.exportError()).toBe(false);
     });
 });
 

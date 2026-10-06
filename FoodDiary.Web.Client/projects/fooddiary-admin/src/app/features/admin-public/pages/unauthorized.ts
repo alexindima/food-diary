@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
 import { environment } from '../../../../environments/environment';
@@ -8,7 +9,7 @@ import { AdminAuthService } from '../../admin-auth/contracts/admin-session';
 
 @Component({
     selector: 'fd-admin-unauthorized',
-    imports: [FdUiButtonComponent],
+    imports: [FdUiButtonComponent, TranslatePipe],
     templateUrl: './unauthorized.html',
     styleUrl: './unauthorized.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,6 +22,7 @@ export class UnauthorizedComponent {
 
     protected readonly reason: string | null;
     protected readonly returnUrl: string;
+    protected readonly rateLimited = computed(() => this.reason === 'unauthenticated' && this.authService.ssoRateLimited());
 
     public constructor() {
         this.reason = this.route.snapshot.queryParamMap.get('reason');

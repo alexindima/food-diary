@@ -31,6 +31,7 @@ public sealed class UsdaController(ISender mediator) : AuthorizedController(medi
         HandleOk(UsdaHttpMappings.ToQuery(fdcId), static value => value.ToHttpResponse());
 
     [HttpPut("products/{productId:guid}/link")]
+    [EnableRateLimiting(PresentationPolicyNames.FoodDataRateLimitPolicyName)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public Task<IActionResult> LinkProduct(
         [FromCurrentUser] Guid userId,
@@ -48,6 +49,7 @@ public sealed class UsdaController(ISender mediator) : AuthorizedController(medi
     [HttpGet("daily-micronutrients")]
     [EnableRateLimiting(PresentationPolicyNames.FoodDataRateLimitPolicyName)]
     [ProducesResponseType<DailyMicronutrientSummaryHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
     public Task<IActionResult> GetDailyMicronutrients(
         [FromCurrentUser] Guid userId,
         [FromQuery] DateTime date) =>

@@ -18,13 +18,15 @@ describe('ProductListOffSectionComponent', () => {
 
     it('should emit opened open food facts products', async () => {
         const product = createOffProduct();
-        const { component } = await setupComponentAsync({ products: [product] });
+        const { component, fixture } = await setupComponentAsync({ products: [product] });
         const handler = vi.fn();
         component['productOpen'].subscribe(handler);
 
-        component['productOpen'].emit(product);
+        const row = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.product-list__off-card');
+        row?.click();
 
         expect(handler).toHaveBeenCalledWith(product);
+        expect(handler).toHaveBeenCalledOnce();
     });
 
     it('should render loading state without products', async () => {

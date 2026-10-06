@@ -1,11 +1,15 @@
 import { inject, Service } from '@angular/core';
-import { catchError, type Observable } from 'rxjs';
+import { catchError, map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import type { DailyMicronutrientSummary, UsdaFood, UsdaFoodDetail } from '../../../shared/models/usda.data';
+import type { DailyMicronutrientSummary, Micronutrient, UsdaFood, UsdaFoodDetail } from '../../../shared/models/usda.data';
 import { USDA_SEARCH_LIMIT } from './usda-api.tokens';
+
+type UsdaFoodDetailHttpResponse = Omit<UsdaFoodDetail, 'nutrients'> & {
+    nutrients: Array<Omit<Micronutrient, 'amountPer100g'> & { amountPer100G: number }>;
+};
 
 @Service()
 export class UsdaService extends ApiService {
@@ -20,7 +24,14 @@ export class UsdaService extends ApiService {
     }
 
     public getFoodDetail(fdcId: number): Observable<UsdaFoodDetail> {
-        return this.get<UsdaFoodDetail>(`foods/${fdcId}`).pipe(
+        return this.get<UsdaFoodDetailHttpResponse>(`foods/${fdcId}`).pipe(
+            map(detail => ({
+                ...detail,
+                nutrients: detail.nutrients.map(({ amountPer100G, ...nutrient }) => ({
+                    ...nutrient,
+                    amountPer100g: amountPer100G,
+                })),
+            })),
             catchError((error: unknown) => rethrowApiError('Get USDA food detail error', error)),
         );
     }

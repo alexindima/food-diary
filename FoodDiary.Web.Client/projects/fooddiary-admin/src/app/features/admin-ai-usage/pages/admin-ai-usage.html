@@ -39,7 +39,7 @@
         @for (group of breakdowns(); track group.title) {
             <fd-ui-card
                 ><h2>{{ group.title | translate }}</h2>
-                <div class="table-scroll">
+                <div class="table-scroll" role="region" tabindex="0" [attr.aria-label]="group.title | translate">
                     <table>
                         <thead>
                             <tr>
@@ -69,7 +69,7 @@
         }
         <fd-ui-card
             ><h2>{{ 'ADMIN_AI.USERS' | translate }}</h2>
-            <div class="table-scroll">
+            <div class="table-scroll" role="region" tabindex="0" [attr.aria-label]="'ADMIN_AI.USERS' | translate">
                 <table>
                     <thead>
                         <tr>

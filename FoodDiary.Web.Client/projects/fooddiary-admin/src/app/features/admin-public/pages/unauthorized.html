@@ -1,11 +1,16 @@
 <section class="unauthorized fd-grid fd-gap-md">
-    <h1>Access denied</h1>
-    <p>
-        @if (reason === 'unauthenticated') {
-            Your admin session is missing or expired.
-        } @else {
-            You do not have permission to access this area.
-        }
-    </p>
+    @if (rateLimited()) {
+        <h1>{{ 'ADMIN_AUTH.RATE_LIMITED_TITLE' | translate }}</h1>
+        <p role="alert">{{ 'ADMIN_AUTH.RATE_LIMITED_MESSAGE' | translate }}</p>
+    } @else {
+        <h1>Access denied</h1>
+        <p>
+            @if (reason === 'unauthenticated') {
+                Your admin session is missing or expired.
+            } @else {
+                You do not have permission to access this area.
+            }
+        </p>
+    }
     <fd-ui-button type="button" (click)="goToLogin()">Go to login</fd-ui-button>
 </section>

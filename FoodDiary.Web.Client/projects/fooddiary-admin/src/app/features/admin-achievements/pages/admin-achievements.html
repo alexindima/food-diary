@@ -8,6 +8,8 @@
         </div>
         @if (isLoading()) {
             <p>{{ 'ADMIN_ACHIEVEMENTS.LOADING' | translate }}</p>
+        } @else if (loadFailed()) {
+            <fd-admin-load-error (retry)="load()" />
         } @else {
             @for (definition of pageItems(); track definition.id) {
                 <!-- Rich definition cards retain a semantic button; fd-ui-button is intended for action labels. -->

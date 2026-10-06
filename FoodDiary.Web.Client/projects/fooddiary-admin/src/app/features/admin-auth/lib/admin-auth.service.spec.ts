@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -131,6 +131,36 @@ describe('AdminAuthService SSO exchange', () => {
 
         await expect(resultPromise).resolves.toBe('/users?page=2');
         expect(sessionStorage.getItem('adminSsoCode')).toBe('return-code');
+    });
+});
+
+describe('AdminAuthService SSO rate feedback', () => {
+    it.each([HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden])(
+        'clears a prior throttling hint when the next response is %s',
+        async status => {
+            const limited = service.exchangeSsoCodeAsync('limited-code');
+            httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`).flush({}, { status: 429, statusText: 'Too Many Requests' });
+            await expect(limited).resolves.toBe(false);
+            expect(service.ssoRateLimited()).toBe(true);
+
+            const denied = service.exchangeSsoCodeAsync('denied-code');
+            expect(service.ssoRateLimited()).toBe(false);
+            httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`).flush({}, { status, statusText: 'Denied' });
+            await expect(denied).resolves.toBe(false);
+            expect(service.ssoRateLimited()).toBe(false);
+        },
+    );
+
+    it('clears a throttling hint on a new successful exchange', async () => {
+        const limited = service.exchangeSsoCodeAsync('limited-code');
+        httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`).flush({}, { status: 429, statusText: 'Too Many Requests' });
+        await limited;
+        expect(service.ssoRateLimited()).toBe(true);
+
+        const recovered = service.exchangeSsoCodeAsync('recovered-code');
+        httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`).flush({ accessToken: createToken({ role: 'Admin' }) });
+        await expect(recovered).resolves.toBe(true);
+        expect(service.ssoRateLimited()).toBe(false);
     });
 });
 

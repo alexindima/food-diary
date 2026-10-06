@@ -14,6 +14,7 @@
                         appearance="inline-edit"
                         [value]="step().title.value"
                         [placeholder]="titleDisplay()"
+                        [ariaLabel]="'RECIPE_MANAGE.EDIT_STEP_TITLE' | translate"
                         (valueChange)="onStepTitleInput($event)"
                         (focusout)="onStepTitleBlur()"
                     />
@@ -45,6 +46,18 @@
                 />
                 <fd-ui-menu #stepMenu>
                     <fd-ui-menu-item (itemClick)="toggleStepTitleEdit()">{{ 'RECIPE_MANAGE.EDIT_STEP_TITLE' | translate }}</fd-ui-menu-item>
+                    <fd-ui-menu-item
+                        [disabled]="busy() || uploading() || isFirst()"
+                        [disabledReason]="(isFirst() ? 'DISABLED_HINTS.FIRST_STEP' : 'DISABLED_HINTS.OPERATION_BUSY') | translate"
+                        (itemClick)="onMoveStep(-1)"
+                        >{{ 'RECIPE_MANAGE.MOVE_STEP_UP' | translate }}</fd-ui-menu-item
+                    >
+                    <fd-ui-menu-item
+                        [disabled]="busy() || uploading() || !canMoveDown()"
+                        [disabledReason]="(!canMoveDown() ? 'DISABLED_HINTS.LAST_STEP' : 'DISABLED_HINTS.OPERATION_BUSY') | translate"
+                        (itemClick)="onMoveStep(1)"
+                        >{{ 'RECIPE_MANAGE.MOVE_STEP_DOWN' | translate }}</fd-ui-menu-item
+                    >
                     <fd-ui-menu-item
                         class="fd-ui-menu-item--danger"
                         [disabled]="isFirst()"

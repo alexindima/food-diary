@@ -1,5 +1,5 @@
 <fd-ui-dialog size="md" bodyScrollInset="edge" [title]="'TDEE_DIALOG.TITLE' | translate" [dismissible]="!isApplying()">
-    <div class="tdee-dialog fd-stack fd-gap-md">
+    <div class="tdee-dialog fd-stack fd-gap-md" tabindex="0" role="region" [attr.aria-label]="'TDEE_DIALOG.TITLE' | translate">
         <fd-tdee-insight-dialog-summary
             [insight]="insight"
             [stateKey]="stateKey"

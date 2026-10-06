@@ -4,7 +4,9 @@ import { form, FormField, maxLength, min, required } from '@angular/forms/signal
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
+import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
@@ -38,6 +40,8 @@ const DEFAULT_SORT_ORDER = 0;
     imports: [
         TranslatePipe,
         FdUiCheckboxComponent,
+        FdUiDialogComponent,
+        FdUiDialogFooterDirective,
         DecimalPipe,
         FormField,
         FdUiInputComponent,

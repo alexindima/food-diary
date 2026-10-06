@@ -1,6 +1,7 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
+    afterRenderEffect,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -11,6 +12,7 @@ import {
     type ElementRef,
     inject,
     input,
+    Renderer2,
     signal,
     viewChild,
 } from '@angular/core';
@@ -50,6 +52,7 @@ export class FdUiDialogComponent {
     private readonly injectedData = inject<FdUiDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
     private readonly destroyRef = inject(DestroyRef);
     private readonly document = inject(DOCUMENT);
+    private readonly renderer = inject(Renderer2);
     private readonly acquireDismissalLock = inject(FD_UI_DIALOG_DISMISSAL_LOCK, { optional: true });
 
     protected readonly dialogTitleId = `fd-dialog-title-${nextDialogId++}`;
@@ -57,7 +60,12 @@ export class FdUiDialogComponent {
     private readonly footerSlot = contentChild(FdUiDialogFooterDirective, { descendants: true });
     private readonly headerSlot = contentChild(FdUiDialogHeaderDirective, { descendants: true });
     private readonly body = viewChild<ElementRef<HTMLElement>>('body');
+    private readonly root = viewChild<ElementRef<HTMLElement>>('dialogRoot');
+    private readonly customHeader = viewChild<ElementRef<HTMLElement>>('customHeader');
     private readonly isBodyScrollable = signal(false);
+    private containerHasExplicitName: boolean | undefined;
+
+    protected readonly usesOverlayContainer = Boolean(this.dialogRef?.id);
 
     public readonly title = input<string | undefined>(this.injectedData?.title);
     public readonly subtitle = input<string | undefined>(this.injectedData?.subtitle);
@@ -82,6 +90,14 @@ export class FdUiDialogComponent {
     );
 
     public constructor() {
+        afterRenderEffect({
+            write: () => {
+                const heading = this.hasCustomHeader()
+                    ? this.customHeader()?.nativeElement.querySelector<HTMLElement>('h1, h2, h3, h4, h5, h6, [role="heading"]')
+                    : this.document.getElementById(this.dialogTitleId);
+                this.syncAccessibleName(heading ?? null, this.title());
+            },
+        });
         effect(onCleanup => {
             if (this.disableClose()) {
                 const release = this.acquireDismissalLock?.();
@@ -115,6 +131,41 @@ export class FdUiDialogComponent {
                 mutationObserver.disconnect();
             });
         });
+    }
+
+    private syncAccessibleName(heading: HTMLElement | null, title: string | undefined): void {
+        const container = this.usesOverlayContainer ? this.document.getElementById(this.dialogRef?.id ?? '') : this.root()?.nativeElement;
+        if (container === null || container === undefined) {
+            return;
+        }
+        if (this.hasExplicitAccessibleName(container)) {
+            return;
+        }
+        this.writeAccessibleName(container, heading, title);
+    }
+
+    private hasExplicitAccessibleName(container: HTMLElement): boolean {
+        if (!this.usesOverlayContainer) {
+            return false;
+        }
+        this.containerHasExplicitName ??= container.hasAttribute('aria-label') || container.hasAttribute('aria-labelledby');
+        return this.containerHasExplicitName;
+    }
+
+    private writeAccessibleName(container: HTMLElement, heading: HTMLElement | null, title: string | undefined): void {
+        if (heading !== null) {
+            const headingId = heading.id.length > 0 ? heading.id : this.dialogTitleId;
+            this.renderer.setAttribute(heading, 'id', headingId);
+            this.renderer.setAttribute(container, 'aria-labelledby', headingId);
+            this.renderer.removeAttribute(container, 'aria-label');
+        } else {
+            this.renderer.removeAttribute(container, 'aria-labelledby');
+            if (title !== undefined && title.length > 0) {
+                this.renderer.setAttribute(container, 'aria-label', title);
+            } else {
+                this.renderer.removeAttribute(container, 'aria-label');
+            }
+        }
     }
 
     protected close(result?: unknown): void {

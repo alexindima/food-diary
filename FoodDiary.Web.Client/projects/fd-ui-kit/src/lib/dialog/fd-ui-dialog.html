@@ -1,6 +1,11 @@
-<div role="dialog" aria-modal="true" [attr.aria-labelledby]="title() ? dialogTitleId : null" [class]="hostClass()">
+<section
+    #dialogRoot
+    [attr.role]="usesOverlayContainer ? null : 'dialog'"
+    [attr.aria-modal]="usesOverlayContainer ? null : 'true'"
+    [class]="hostClass()"
+>
     @if (hasCustomHeader()) {
-        <header class="fd-ui-dialog__header fd-ui-dialog__header--custom">
+        <header #customHeader class="fd-ui-dialog__header fd-ui-dialog__header--custom">
             <ng-content select="[fdUiDialogHeader]" />
         </header>
     } @else if (showBuiltInHeader()) {
@@ -34,4 +39,4 @@
     <footer class="fd-ui-dialog__footer">
         <ng-content select="[fdUiDialogFooter]" />
     </footer>
-</div>
+</section>

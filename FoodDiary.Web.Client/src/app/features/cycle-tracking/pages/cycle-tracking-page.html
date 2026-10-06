@@ -49,6 +49,7 @@
     <fd-page-body>
         <fd-ui-inline-alert
             class="cycle-tracking__export-error"
+            role="alert"
             severity="danger"
             [hidden]="!exportError()"
             [message]="exportError() | translate"

@@ -40,6 +40,7 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product> {
         builder.Property(e => e.ProductType).HasDefaultValue(ProductType.Unknown);
         builder.HasIndex(e => new { e.UserId, e.CreatedOnUtc });
         builder.HasIndex(e => new { e.Visibility, e.CreatedOnUtc });
+        builder.HasIndex(e => e.UsdaFdcId);
         builder.HasIndex(e => e.Name)
             .HasMethod("gin")
             .HasOperators("gin_trgm_ops");

@@ -125,6 +125,31 @@ function setupComponent(
     return { component: fixture.componentInstance, fixture };
 }
 
+describe('Recipe step menu accessibility', () => {
+    it('names the step title editor', () => {
+        const { component, fixture } = setupComponent();
+        component['toggleStepTitleEdit']();
+        fixture.detectChanges();
+        const input = (fixture.nativeElement as HTMLElement).querySelector('.recipe-step-card__title-input input');
+        expect(input?.getAttribute('aria-label')).toBe('RECIPE_MANAGE.EDIT_STEP_TITLE');
+    });
+
+    it('only moves steps with an available destination while uploads are idle', () => {
+        const { component, fixture } = setupComponent();
+        const moved = vi.fn();
+        component.moveStep.subscribe(moved);
+        component['onMoveStep'](-1);
+        component['onMoveStep'](1);
+        expect(moved).not.toHaveBeenCalled();
+        fixture.componentRef.setInput('canMoveDown', true);
+        component['onMoveStep'](1);
+        expect(moved).toHaveBeenCalledWith(1);
+        fixture.componentRef.setInput('busy', true);
+        component['onMoveStep'](1);
+        expect(moved).toHaveBeenCalledOnce();
+    });
+});
+
 function createStepCardState(step: StepFormValues): RecipeStepCardState {
     return {
         title: { value: step.title, error: null },

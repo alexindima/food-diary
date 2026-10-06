@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { firstValueFrom, of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { RecipeLookupService } from '../../../../shared/api/recipe-lookup.service';
@@ -13,12 +13,14 @@ const FIRST_AMOUNT = 100;
 const SECOND_AMOUNT = 200;
 const TOTAL_WEIGHT = 300;
 const SERVING_WEIGHT = 150;
+const UPDATED_WEIGHT = 400;
 
 let service: RecipeServingWeightService;
 let recipeLookupService: { getById: ReturnType<typeof vi.fn> };
 
 describe('RecipeServingWeightService', () => {
-    it('should compute serving weight from recipe steps and cache conversions', () => {
+    registerIncompleteMassTests();
+    it('should compute serving weight from complete gram ingredient snapshots and cache conversions', () => {
         setupService();
         const recipe = createRecipe();
 
@@ -102,6 +104,66 @@ describe('RecipeServingWeightService', () => {
     });
 });
 
+function registerIncompleteMassTests(): void {
+    it.each(['ML', 'Pcs', null])('keeps servings when a gram ingredient is mixed with %s without a mass conversion', unit => {
+        setupService({
+            id: 'recipe-1',
+            servings: SERVINGS,
+            steps: [
+                {
+                    ingredients: [
+                        { amount: FIRST_AMOUNT, productBaseUnit: 'G' },
+                        { amount: SECOND_AMOUNT, productBaseUnit: unit },
+                    ],
+                },
+            ],
+        });
+        const recipe = createRecipe({
+            steps: [
+                {
+                    id: 'mixed-step',
+                    stepNumber: 1,
+                    instruction: '',
+                    ingredients: [
+                        { id: 'gram-item', amount: FIRST_AMOUNT, productBaseUnit: 'G' },
+                        { id: 'unknown-item', amount: SECOND_AMOUNT, productBaseUnit: unit },
+                    ],
+                },
+            ],
+        });
+        service.loadServingWeight(recipe).subscribe(weight => {
+            expect(weight).toBeNull();
+        });
+        expect(service.hasServingWeight(recipe)).toBe(false);
+        expect(service.convertServingsToGrams(recipe, SERVINGS)).toBe(SERVINGS);
+    });
+}
+
+describe('Recipe serving weight after recipe changes', () => {
+    it('refreshes the cached mass when ingredient amounts and serving count change', async () => {
+        setupService();
+        const original = createRecipe();
+        service.loadServingWeight(original).subscribe();
+        const changed = createRecipe({
+            servings: 1,
+            steps: [{ ...original.steps[0], ingredients: [{ ...original.steps[0].ingredients[0], amount: UPDATED_WEIGHT }] }],
+        });
+        expect(await firstValueFrom(service.loadServingWeight(changed))).toBe(UPDATED_WEIGHT);
+        expect(service.convertServingsToGrams(changed, 1)).toBe(UPDATED_WEIGHT);
+    });
+
+    it('stops offering grams when a cached gram recipe gains an ingredient without known mass', async () => {
+        setupService(createUnsupportedRecipeLookup());
+        service.loadServingWeight(createRecipe()).subscribe();
+        const changed = createRecipe({
+            steps: [{ id: 'changed', stepNumber: 1, instruction: '', ingredients: [{ id: 'pcs', amount: 1, productBaseUnit: 'Pcs' }] }],
+        });
+        expect(await firstValueFrom(service.loadServingWeight(changed))).toBeNull();
+        expect(service.hasServingWeight(changed)).toBe(false);
+        expect(service.convertServingsToGrams(changed, 1)).toBe(1);
+    });
+});
+
 function setupService(lookup: RecipeLookup | null = null, shouldFail = false): void {
     recipeLookupService = {
         getById: vi.fn().mockReturnValue(shouldFail ? throwError(() => new Error('fail')) : of(lookup ?? createRecipeLookup())),
@@ -131,7 +193,7 @@ function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
                 instruction: '',
                 ingredients: [
                     { id: 'i1', amount: FIRST_AMOUNT, productBaseUnit: MeasurementUnit.G },
-                    { id: 'i2', amount: SECOND_AMOUNT, productBaseUnit: MeasurementUnit.ML },
+                    { id: 'i2', amount: SECOND_AMOUNT, productBaseUnit: MeasurementUnit.G },
                 ],
             },
         ],
@@ -147,7 +209,7 @@ function createRecipeLookup(): RecipeLookup {
             {
                 ingredients: [
                     { amount: FIRST_AMOUNT, productBaseUnit: 'G' },
-                    { amount: SECOND_AMOUNT, productBaseUnit: 'ML' },
+                    { amount: SECOND_AMOUNT, productBaseUnit: 'G' },
                 ],
             },
         ],

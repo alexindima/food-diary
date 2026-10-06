@@ -98,12 +98,15 @@ const EXPECTED_ROUNDED_USDA_PROTEIN = 12.3;
 const PORTION_AMOUNT = 50;
 const BASE_CALORIES = 100;
 const PORTION_CALORIES = 50;
+const MILK_CALORIES_PER_BASE = 60;
+const MILK_LARGE_PORTION_AMOUNT = 500;
+const MILK_ORIGINAL_PORTION_CALORIES = 150;
 
 type ProductManageFacadeMock = {
     ensurePremiumAccess: ReturnType<typeof vi.fn>;
     confirmDiscardChangesAsync: ReturnType<typeof vi.fn>;
     deleteProductAsync: ReturnType<typeof vi.fn>;
-    submitProductAsync: ReturnType<typeof vi.fn>;
+    submitProductAsync: ReturnType<typeof vi.fn<ProductManageFacade['submitProductAsync']>>;
 };
 
 type ProductExternalFoodFacadeMock = {
@@ -377,6 +380,60 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
     });
 });
 
+describe('ProductManageFormComponent stored source synchronization', () => {
+    it('clears a committed source after retry saves a different source in create mode', async () => {
+        const { component, productManageFacade, externalFoodFacade } = await setupComponentAsync();
+        const savedProduct = { ...PRODUCT, usdaFdcId: USDA_FDC_ID };
+        productManageFacade.submitProductAsync.mockImplementation(
+            async (...args: Parameters<ProductManageFacade['submitProductAsync']>) => {
+                await args[3]?.(savedProduct);
+                return { product: savedProduct, error: null };
+            },
+        );
+        fillValidProductForm(component);
+
+        await component['onSubmitAsync']();
+
+        expect(externalFoodFacade.unlinkUsdaProduct).toHaveBeenCalledWith(savedProduct.id);
+        expect(externalFoodFacade.linkUsdaProduct).not.toHaveBeenCalled();
+    });
+
+    it('does not relink a source that the returned saved product already contains', async () => {
+        const { component, productManageFacade, externalFoodFacade } = await setupComponentAsync();
+        const savedProduct = { ...PRODUCT, usdaFdcId: USDA_FDC_ID };
+        productManageFacade.submitProductAsync.mockImplementation(
+            async (...args: Parameters<ProductManageFacade['submitProductAsync']>) => {
+                await args[3]?.(savedProduct);
+                return { product: savedProduct, error: null };
+            },
+        );
+        fillValidProductForm(component);
+        patchProductForm(component, { usdaFdcId: USDA_FDC_ID });
+
+        await component['onSubmitAsync']();
+
+        expect(externalFoodFacade.linkUsdaProduct).not.toHaveBeenCalled();
+        expect(externalFoodFacade.unlinkUsdaProduct).not.toHaveBeenCalled();
+    });
+
+    it('links a selected source when the saved product is still unlinked', async () => {
+        const { component, productManageFacade, externalFoodFacade } = await setupComponentAsync();
+        productManageFacade.submitProductAsync.mockImplementation(
+            async (...args: Parameters<ProductManageFacade['submitProductAsync']>) => {
+                await args[3]?.({ ...PRODUCT, usdaFdcId: null });
+                return { product: PRODUCT, error: null };
+            },
+        );
+        fillValidProductForm(component);
+        patchProductForm(component, { usdaFdcId: USDA_FDC_ID });
+
+        await component['onSubmitAsync']();
+
+        expect(externalFoodFacade.linkUsdaProduct).toHaveBeenCalledWith(PRODUCT.id, USDA_FDC_ID);
+        expect(externalFoodFacade.unlinkUsdaProduct).not.toHaveBeenCalled();
+    });
+});
+
 describe('ProductManageFormComponent page-mode output lifecycle', () => {
     it('should not emit saved product after submit navigates away', async () => {
         const { component, productManageFacade } = await setupComponentAsync();
@@ -554,6 +611,93 @@ describe('ProductManageFormComponent cancel delete and nutrition behavior', () =
     });
 });
 
+describe('Product invalid portion mode transitions', () => {
+    it('preserves base nutrition when leaving portion mode before an invalid quantity is restored', async () => {
+        const { component, productManageFacade } = await setupComponentAsync();
+        patchProductForm(component, { name: 'Milk', defaultPortionAmount: 250, caloriesPerBase: 60 });
+        component['onNutritionModeChange']('portion');
+        component['productForm'].defaultPortionAmount().value.set(0);
+        component['onNutritionModeChange']('base');
+        expect(productValues(component).caloriesPerBase).toBe(MILK_CALORIES_PER_BASE);
+        component['productForm'].defaultPortionAmount().value.set(MILK_LARGE_PORTION_AMOUNT);
+        await component['onSubmitAsync']();
+        expect(productManageFacade.submitProductAsync.mock.calls[0][1]).toMatchObject({ caloriesPerBase: 60, defaultPortionAmount: 500 });
+    });
+
+    it('rescales base nutrition when a valid amount is restored after entering portion mode with zero', async () => {
+        const { component, fixture, productManageFacade } = await setupComponentAsync();
+        patchProductForm(component, { name: 'Milk', defaultPortionAmount: 0, caloriesPerBase: 60 });
+        component['onNutritionModeChange']('portion');
+        component['productForm'].defaultPortionAmount().value.set(MILK_LARGE_PORTION_AMOUNT);
+        fixture.detectChanges();
+        expect(productValues(component)).toMatchObject({ caloriesPerBase: 300 });
+        await component['onSubmitAsync']();
+        expect(productManageFacade.submitProductAsync.mock.calls[0][1]).toMatchObject({ caloriesPerBase: 60, defaultPortionAmount: 500 });
+    });
+});
+
+describe('Product portion edits', () => {
+    it('rescales the displayed portion and saves the same per-base nutrition when default quantity changes', async () => {
+        const { component, fixture, productManageFacade } = await setupComponentAsync();
+        fixture.componentRef.setInput('product', {
+            ...PRODUCT,
+            baseUnit: MeasurementUnit.ML,
+            defaultPortionAmount: 250,
+            caloriesPerBase: 60,
+            proteinsPerBase: 3,
+            fatsPerBase: 2,
+            carbsPerBase: 7,
+        });
+        fixture.detectChanges();
+        component['onNutritionModeChange']('portion');
+        component['productForm'].defaultPortionAmount().value.set(MILK_LARGE_PORTION_AMOUNT);
+        fixture.detectChanges();
+        expect(productValues(component)).toMatchObject({ caloriesPerBase: 300, proteinsPerBase: 15, fatsPerBase: 10, carbsPerBase: 35 });
+        await component['onSubmitAsync']();
+        expect(productManageFacade.submitProductAsync.mock.calls[0][1]).toMatchObject({
+            defaultPortionAmount: 500,
+            caloriesPerBase: 60,
+            proteinsPerBase: 3,
+            fatsPerBase: 2,
+            carbsPerBase: 7,
+        });
+    });
+
+    it('retains the last valid display basis through an invalid zero quantity and an immediate mode switch', async () => {
+        const { component, fixture } = await setupComponentAsync();
+        patchProductForm(component, { name: 'Milk', defaultPortionAmount: 250, caloriesPerBase: 60 });
+        component['onNutritionModeChange']('portion');
+        component['productForm'].defaultPortionAmount().value.set(0);
+        fixture.detectChanges();
+        component['productForm'].defaultPortionAmount().value.set(MILK_LARGE_PORTION_AMOUNT);
+        component['onNutritionModeChange']('base');
+        expect(productValues(component).caloriesPerBase).toBe(MILK_CALORIES_PER_BASE);
+    });
+
+    it('adopts recognized portion values without rescaling them from the previous product basis', async () => {
+        const { component, fixture, productManageFacade } = await setupComponentAsync();
+        patchProductForm(component, { name: 'Old product', defaultPortionAmount: 100, caloriesPerBase: 100 });
+        component['onNutritionModeChange']('portion');
+        component['applyAiResult']({
+            name: 'Recognized milk',
+            image: null,
+            baseUnit: MeasurementUnit.ML,
+            baseAmount: 250,
+            caloriesPerBase: 150,
+            proteinsPerBase: 7.5,
+            fatsPerBase: 5,
+            carbsPerBase: 17.5,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+        });
+        fixture.detectChanges();
+        expect(productValues(component).caloriesPerBase).toBe(MILK_ORIGINAL_PORTION_CALORIES);
+        component['productForm'].defaultPortionAmount().value.set(MILK_LARGE_PORTION_AMOUNT);
+        await component['onSubmitAsync']();
+        expect(productManageFacade.submitProductAsync.mock.calls[0][1]).toMatchObject({ defaultPortionAmount: 500, caloriesPerBase: 60 });
+    });
+});
+
 describe('Product recognition integration', () => {
     it('applies recognized portion values and asks before discarding them', async () => {
         const { component, fixture, productManageFacade } = await setupComponentAsync();
@@ -652,7 +796,9 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
                 useValue: tourService,
             },
         ],
-    }).compileComponents();
+    })
+        .overrideComponent(ProductManageFormComponent, { remove: { providers: [ProductManageFacade] } })
+        .compileComponents();
 
     const fixture = TestBed.createComponent(ProductManageFormComponent);
     return {
@@ -672,7 +818,7 @@ function createProductManageFacadeMock(): ProductManageFacadeMock {
         ensurePremiumAccess: vi.fn().mockReturnValue(true),
         confirmDiscardChangesAsync: vi.fn().mockResolvedValue(true),
         deleteProductAsync: vi.fn().mockResolvedValue('deleted'),
-        submitProductAsync: vi.fn().mockResolvedValue({ product: null, error: null }),
+        submitProductAsync: vi.fn<ProductManageFacade['submitProductAsync']>().mockResolvedValue({ product: null, error: null }),
     };
 }
 

@@ -1,6 +1,5 @@
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Products.Domain.Entities;
-using FoodDiary.Modules.Usda.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,10 +20,7 @@ internal static class ProductsCrossModuleRelationships {
             .WithMany()
             .HasForeignKey(e => e.UserId);
 
-        modelBuilder.Entity<Product>().HasOne<UsdaFood>()
-            .WithMany()
-            .HasForeignKey(e => e.UsdaFdcId)
-            .IsRequired(false)
-            .OnDelete(DeleteBehavior.SetNull);
+        // FDC identifiers can refer to live branded foods outside the locally seeded SR Legacy subset.
+        // The USDA owner validates these external identifiers before linking them to an owned product.
     }
 }

@@ -59,6 +59,7 @@ export class StatisticsFacade {
     public readonly hasLoadError = computed(() => this.statisticsRequest.error() !== null);
     public readonly hasBodyLoadError = this.hasLoadError;
     public readonly exportingFormat = signal<ExportFormat | null>(null);
+    public readonly exportError = signal(false);
     public readonly chartStatisticsData = computed(() => this.statisticsRequest.data()?.statistics ?? null);
     public readonly weightSummaryPoints = computed(() => this.statisticsRequest.data()?.weight ?? []);
     public readonly waistSummaryPoints = computed(() => this.statisticsRequest.data()?.waist ?? []);
@@ -164,6 +165,7 @@ export class StatisticsFacade {
             return;
         }
 
+        this.exportError.set(false);
         this.exportingFormat.set(format);
         this.exportService
             .exportDiary(
@@ -181,7 +183,11 @@ export class StatisticsFacade {
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe();
+            .subscribe({
+                error: () => {
+                    this.exportError.set(true);
+                },
+            });
     }
 
     private loadAllData(): void {

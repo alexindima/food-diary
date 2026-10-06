@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { form, FormField } from '@angular/forms/signals';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCheckboxComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -25,6 +26,7 @@ type AdminUserFormModel = {
         FdUiCheckboxComponent,
         CommonModule,
         FormField,
+        TranslatePipe,
         FdUiButtonComponent,
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
@@ -40,6 +42,7 @@ export class AdminUserEditDialogComponent {
 
     protected readonly roles = ['Admin', 'Premium', 'Support', 'Dietologist'];
     protected readonly isSaving = signal(false);
+    protected readonly saveFailed = signal(false);
     protected readonly languages: ReadonlyArray<{ value: 'en' | 'ru'; label: string }> = [
         { value: 'en', label: 'English' },
         { value: 'ru', label: 'Russian' },
@@ -75,13 +78,14 @@ export class AdminUserEditDialogComponent {
         }
 
         this.isSaving.set(true);
+        this.saveFailed.set(false);
         this.usersService.updateUser(this.user.id, payload).subscribe({
             next: () => {
                 this.dialogRef.close(true);
             },
             error: () => {
                 this.isSaving.set(false);
-                this.dialogRef.close(false);
+                this.saveFailed.set(true);
             },
         });
     }

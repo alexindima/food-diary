@@ -24,6 +24,7 @@ const meta: Meta<FdUiDialogShellComponent> = {
 Visual reference for dialog shell composition and shared size variants.
 
 For dialog selection rules, presets, and sizing guidance, see Foundation/Dialogs in Storybook.
+Service-opened dialogs expose one named CDK dialog; custom headers should contain a heading or provide a title. Explicit service ariaLabel/ariaLabelledBy values take precedence.
                 `,
             },
         },

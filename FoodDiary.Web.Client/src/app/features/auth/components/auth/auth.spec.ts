@@ -36,7 +36,7 @@ type AuthComponentTestContext = {
     dialogRefSpy: { close: ReturnType<typeof vi.fn> };
 };
 
-function createComponent(mode = 'login'): AuthComponentTestContext {
+function createComponent(mode = 'login', renderTemplate = false): AuthComponentTestContext {
     const authFlowFacadeSpy = {
         login: vi.fn(),
         register: vi.fn(),
@@ -88,7 +88,7 @@ function createComponent(mode = 'login'): AuthComponentTestContext {
     });
     TestBed.overrideComponent(AuthComponent, {
         set: {
-            template: '',
+            ...(renderTemplate ? {} : { template: '' }),
             providers: [AuthFormManager, { provide: AuthGoogleManager, useValue: googleManagerSpy }],
         },
     });
@@ -107,6 +107,14 @@ function createComponent(mode = 'login'): AuthComponentTestContext {
 beforeEach(() => {
     TestBed.resetTestingModule();
 });
+
+function loginInput(element: HTMLElement, type: 'email' | 'password'): HTMLInputElement {
+    const input = element.querySelector<HTMLInputElement>(`input[type="${type}"]`);
+    if (input === null) {
+        throw new Error(`The rendered login ${type} input is missing.`);
+    }
+    return input;
+}
 
 describe('AuthComponent tabs', () => {
     it('preserves Mini App launch data when opening Telegram authentication', () => {
@@ -129,6 +137,65 @@ describe('AuthComponent tabs', () => {
         expect(component['showPasswordReset']()).toBe(false);
         expect(component['passwordResetSent']()).toBe(false);
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/'], { queryParams: { auth: 'register' } });
+    });
+});
+
+describe('AuthComponent rendered login', () => {
+    it.each([
+        ['invalidCredentials', 'FORM_ERRORS.INVALID_CREDENTIALS'],
+        ['rateLimited', 'FORM_ERRORS.RATE_LIMITED'],
+        ['accountDeleted', 'AUTH.LOGIN.ACCOUNT_DELETED'],
+    ])('keeps a fast %s response visible until credentials are edited', async (result, errorKey) => {
+        const { authFlowFacadeSpy, component, fixture } = createComponent('login', true);
+        const element = fixture.nativeElement as HTMLElement;
+        component['loginModel'].set({ email: 'user@example.com', password: 'password123', rememberMe: false });
+        fixture.detectChanges();
+        await fixture.whenStable();
+        authFlowFacadeSpy.login.mockReturnValue(of(result));
+
+        await submit(component['loginForm']);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(element.querySelector('[role="alert"]')?.textContent).toContain(errorKey);
+        expect(component['showRestoreAction']()).toBe(result === 'accountDeleted');
+
+        const emailInput = loginInput(element, 'email');
+        emailInput.value = 'edited@example.com';
+        emailInput.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(element.querySelector('[role="alert"]')).toBeNull();
+        expect(component['showRestoreAction']()).toBe(false);
+    });
+
+    it.each([
+        ['invalidCredentials', 'FORM_ERRORS.INVALID_CREDENTIALS'],
+        ['rateLimited', 'FORM_ERRORS.RATE_LIMITED'],
+        ['accountDeleted', 'AUTH.LOGIN.ACCOUNT_DELETED'],
+    ])('keeps a fast %s error after native autofill without input events', async (result, errorKey) => {
+        const { authFlowFacadeSpy, component, fixture } = createComponent('login', true);
+        const element = fixture.nativeElement as HTMLElement;
+        loginInput(element, 'email').value = 'autofilled@example.com';
+        loginInput(element, 'password').value = 'autofilled-password123';
+        authFlowFacadeSpy.login.mockReturnValue(of(result));
+
+        await submit(component['loginForm']);
+
+        expect(authFlowFacadeSpy.login).toHaveBeenCalledWith({
+            email: 'autofilled@example.com',
+            password: 'autofilled-password123',
+            rememberMe: false,
+        });
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(element.querySelector('[role="alert"]')?.textContent).toContain(errorKey);
+        loginInput(element, 'email').value = 'edited-autofill@example.com';
+        loginInput(element, 'email').dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(element.querySelector('[role="alert"]')).toBeNull();
     });
 });
 

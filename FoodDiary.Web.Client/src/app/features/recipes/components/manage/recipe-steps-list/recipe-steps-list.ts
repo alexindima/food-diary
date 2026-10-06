@@ -93,6 +93,24 @@ export class RecipeStepsListComponent {
         this.removeStep.emit(index);
     }
 
+    protected onMoveStep(previousIndex: number, direction: -1 | 1): void {
+        const currentIndex = previousIndex + direction;
+        if (currentIndex < 0 || currentIndex >= this.steps().length || this.uploadingSteps().size > 0) {
+            return;
+        }
+        this.onStepDrop({ previousIndex, currentIndex });
+        afterNextRender(
+            () => {
+                const steps = this.element.nativeElement.querySelectorAll('fd-recipe-step-card');
+                if (currentIndex >= steps.length) {
+                    return;
+                }
+                steps.item(currentIndex).querySelector<HTMLButtonElement>('fd-ui-button[aria-haspopup="menu"] button')?.focus();
+            },
+            { injector: this.injector },
+        );
+    }
+
     protected onAddStep(): void {
         this.addStep.emit();
         afterNextRender(

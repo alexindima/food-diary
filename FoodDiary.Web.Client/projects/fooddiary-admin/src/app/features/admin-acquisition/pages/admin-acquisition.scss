@@ -43,6 +43,11 @@
     &__table-scroll {
         max-width: 100%;
         overflow-x: auto;
+
+        &:where(:focus-visible) {
+            outline: var(--fd-outline-focus);
+            outline-offset: calc(0px - var(--fd-border-width-strong));
+        }
     }
 
     &__table {

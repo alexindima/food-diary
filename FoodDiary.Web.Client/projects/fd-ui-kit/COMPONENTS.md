@@ -481,6 +481,8 @@ Header slot for `fd-ui-entity-card`.
 
 Dialog wrapper used with `FdUiDialogService`.
 
+Service-opened dialogs expose one dialog role on the CDK container. The wrapper associates that container with its visible heading, including an `h1`–`h6` or `[role="heading"]` inside a custom header. A supplied `title` provides the accessible name when a custom header has no heading. Explicit service `ariaLabel` and `ariaLabelledBy` values take precedence. Standalone wrappers retain their own dialog role and modal semantics. Supply a heading, title, or explicit service name for every dialog.
+
 Use `[disableClose]="busy()"` to prevent Escape, backdrop clicks, and the built-in close button from dismissing a pending operation. The guard releases when the input becomes false or the wrapper is destroyed, preserving any `disableClose` policy set through the dialog service or ref. Explicit `dialogRef.close(result)` remains available for successful operations. `dismissible` controls visibility of the built-in close button.
 
 **Inputs**

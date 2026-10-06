@@ -94,6 +94,7 @@ fd-fasting-active-basic-controls {
     }
 
     &__protocol-group-title {
+        color: var(--fd-color-text-strong);
         text-align: center;
 
         .fasting-controls-host--setup & {

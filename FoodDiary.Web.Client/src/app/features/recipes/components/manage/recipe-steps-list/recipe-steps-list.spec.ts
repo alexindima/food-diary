@@ -101,6 +101,28 @@ function setupComponent(expandedSteps: ReadonlySet<number>): {
     return { component: fixture.componentInstance, fixture };
 }
 
+describe('Recipe step keyboard movement', () => {
+    it('routes the second-step menu movement through the existing reorder contract', () => {
+        const { component, fixture } = setupComponent(new Set([0, 1]));
+        const moved = vi.fn();
+        component.stepDrop.subscribe(moved);
+        const second = fixture.debugElement.queryAll(By.directive(RecipeStepCardComponent))[1].componentInstance as RecipeStepCardComponent;
+        second.moveStep.emit(-1);
+        expect(moved).toHaveBeenCalledWith({ previousIndex: 1, currentIndex: 0 });
+    });
+
+    it('keeps boundary moves and uploading steps in their current order', () => {
+        const { component } = setupComponent(new Set([0, 1]));
+        const moved = vi.fn();
+        component.stepDrop.subscribe(moved);
+        component['onMoveStep'](0, -1);
+        component['onMoveStep'](1, 1);
+        component['onPhotosUploading'](0, true);
+        component['onMoveStep'](1, -1);
+        expect(moved).not.toHaveBeenCalled();
+    });
+});
+
 function createRecipeStepListItem(step: StepFormValues = createRecipeStepValue()): RecipeStepListItem {
     return {
         state: {

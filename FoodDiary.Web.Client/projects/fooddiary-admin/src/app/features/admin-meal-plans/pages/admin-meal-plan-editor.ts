@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { applyEach, form, FormField, FormRoot, max, maxLength, min, pattern, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiCheckboxComponent, FdUiInputComponent, FdUiSelectComponent, FdUiTextareaComponent } from 'fd-ui-kit';
-import { finalize } from 'rxjs';
+import { finalize, type Subscription } from 'rxjs';
 
 import { AdminMealPlansFacade } from '../lib/admin-meal-plans.facade';
 import {
@@ -54,6 +54,7 @@ export class AdminMealPlanEditorComponent {
     private readonly api = inject(AdminMealPlansFacade);
     private readonly destroyRef = inject(DestroyRef);
     private readonly translate = inject(TranslateService);
+    private recipeRequest?: Subscription;
     protected readonly saving = signal(false);
     protected readonly error = signal<string | null>(null);
     protected readonly recipes = signal<CatalogRecipe[]>([]);
@@ -162,7 +163,8 @@ export class AdminMealPlanEditorComponent {
     }
 
     protected searchRecipes(): void {
-        this.api
+        this.recipeRequest?.unsubscribe();
+        this.recipeRequest = this.api
             .recipes(this.recipeSearch())
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({

@@ -247,7 +247,42 @@ describe('recipe manage edit mapping', () => {
             manualAlcohol: RECIPE.totalAlcohol,
         });
     });
+});
 
+describe('recipe snapshot unit casing', () => {
+    it.each([
+        ['Ml', MeasurementUnit.ML],
+        ['Pcs', MeasurementUnit.PCS],
+        ['ML', MeasurementUnit.ML],
+        ['PCS', MeasurementUnit.PCS],
+    ])('preserves API snapshot unit %s as %s when reopening the recipe editor', (unit, expectedUnit) => {
+        const step = mapRecipeStepToFormValue(
+            {
+                id: 'unit-step',
+                stepNumber: 1,
+                title: null,
+                instruction: 'Mix',
+                imageUrl: null,
+                imageAssetId: null,
+                ingredients: [
+                    {
+                        id: 'unit-ingredient',
+                        amount: PRODUCT_AMOUNT,
+                        productId: 'product-unit',
+                        productName: 'Milk',
+                        productBaseUnit: unit,
+                        productBaseAmount: DEFAULT_BASE_AMOUNT,
+                    },
+                ],
+            },
+            { selectIngredient: 'Select ingredient', unknownProduct: 'Unknown product' },
+        );
+        expect(step.ingredients[0]?.food?.baseUnit).toBe(expectedUnit);
+        expect(step.ingredients[0]?.amount).toBe(PRODUCT_AMOUNT);
+    });
+});
+
+describe('recipe ingredient edit mapping', () => {
     it('should map recipe step ingredients to product and nested recipe form values', () => {
         const step = mapRecipeStepToFormValue(
             {

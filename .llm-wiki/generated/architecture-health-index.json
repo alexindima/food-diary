@@ -10,9 +10,9 @@
     "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 2,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 110,
+    "selectorUnreferencedComponents": 111,
     "routedStandaloneComponents": 67,
-    "componentsWithoutDirectSpecs": 130,
+    "componentsWithoutDirectSpecs": 129,
     "criticalSymbolsWithoutTestReferences": 46,
     "explicitDebtMarkers": 12
   },
@@ -507,6 +507,14 @@
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-details-dialog/fasting-session-details-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-details-dialog/fasting-session-details-dialog.html",
       "specPath": null
+    },
+    {
+      "class": "FastingSessionManagementDialogComponent",
+      "selector": "fd-fasting-session-management-dialog",
+      "feature": "fasting",
+      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-management-dialog/fasting-session-management-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-management-dialog/fasting-session-management-dialog.html",
+      "specPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-management-dialog/fasting-session-management-dialog.spec.ts"
     },
     {
       "class": "FastingStatsCardComponent",
@@ -1359,16 +1367,6 @@
       "feature": "admin-lessons",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "AdminLessonsComponent",
-      "selector": "fd-admin-lessons",
-      "feature": "admin-lessons",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.html",
       "inputs": [],
       "outputs": [],
       "specPath": null

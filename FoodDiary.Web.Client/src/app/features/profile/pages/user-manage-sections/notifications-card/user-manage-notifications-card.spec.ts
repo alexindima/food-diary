@@ -68,6 +68,10 @@ describe('UserManageNotificationsCardComponent status state', () => {
         expect(component['pushNotificationsHintKey']()).toBe('USER_MANAGE.NOTIFICATIONS_BLOCKED_HINT');
 
         fixture.componentRef.setInput('pushNotificationsSupported', false);
+        fixture.detectChanges();
+        expect(component['pushNotificationsDeviceStatusKey']()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_UNSUPPORTED');
+        expect(component['pushNotificationsHintKey']()).toBe('USER_MANAGE.NOTIFICATIONS_UNSUPPORTED_HINT');
+
         fixture.componentRef.setInput('notificationPermission', 'unsupported');
         fixture.detectChanges();
         expect(component['pushNotificationsDeviceStatusKey']()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_UNSUPPORTED');

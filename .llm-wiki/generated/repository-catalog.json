@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 294,
-    "documentationPages": 216
+    "documentationPages": 217
   },
   "dotnet": {
     "projects": [
@@ -15747,6 +15747,7 @@
       "docs/adr/0050-public-recipe-read-boundary-and-ssr.md",
       "docs/adr/0051-canonical-project-namespaces.md",
       "docs/adr/0052-backend-transaction-and-delivery-reliability.md",
+      "docs/adr/0053-live-usda-reference-identifiers.md",
       "docs/adr/README.md",
       "docs/adr/template.md",
       "docs/ai/CODE_REVIEW.md",

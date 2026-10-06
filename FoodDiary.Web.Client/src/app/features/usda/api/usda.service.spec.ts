@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { USDA_NUTRIENT_IDS } from '../../../shared/lib/usda-nutrient.constants';
 import type { DailyMicronutrientSummary, UsdaFood, UsdaFoodDetail } from '../../../shared/models/usda.data';
 import { UsdaService } from './usda.service';
 import { USDA_SEARCH_LIMIT } from './usda-api.tokens';
@@ -13,6 +14,8 @@ const DEFAULT_SEARCH_LIMIT = 20;
 const CUSTOM_SEARCH_LIMIT = 5;
 const FDC_ID = 17_000;
 const PRODUCT_ID = 'product-1';
+const ENERGY_AMOUNT = 203;
+const PROTEIN_AMOUNT = 1.35;
 const FOOD: UsdaFood = {
     fdcId: FDC_ID,
     description: 'Apple',
@@ -93,6 +96,41 @@ describe('UsdaService foods', () => {
         const req = httpMock.expectOne(`${BASE_URL}/foods/${FDC_ID}`);
         expect(req.request.method).toBe('GET');
         req.flush(FOOD_DETAIL);
+    });
+
+    it('maps the API nutrient amount spelling to finite food-detail values', () => {
+        const wireNutrients = [
+            {
+                nutrientId: USDA_NUTRIENT_IDS.energy,
+                name: 'Energy',
+                unit: 'kcal',
+                amountPer100G: ENERGY_AMOUNT,
+                dailyValue: null,
+                percentDailyValue: null,
+            },
+            {
+                nutrientId: USDA_NUTRIENT_IDS.protein,
+                name: 'Protein',
+                unit: 'g',
+                amountPer100G: PROTEIN_AMOUNT,
+                dailyValue: null,
+                percentDailyValue: null,
+            },
+        ];
+
+        service.getFoodDetail(FDC_ID).subscribe(detail => {
+            expect(detail).toEqual({
+                ...FOOD_DETAIL,
+                nutrients: [
+                    { ...wireNutrients[0], amountPer100G: undefined, amountPer100g: ENERGY_AMOUNT },
+                    { ...wireNutrients[1], amountPer100G: undefined, amountPer100g: PROTEIN_AMOUNT },
+                ],
+            });
+            expect(detail.nutrients.every(nutrient => Number.isFinite(nutrient.amountPer100g))).toBe(true);
+            expect(detail.nutrients.every(nutrient => !('amountPer100G' in nutrient))).toBe(true);
+        });
+
+        httpMock.expectOne(`${BASE_URL}/foods/${FDC_ID}`).flush({ ...FOOD_DETAIL, nutrients: wireNutrients });
     });
 });
 

@@ -1,5 +1,5 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { inject, PLATFORM_ID, Service, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
@@ -16,6 +16,8 @@ export class AdminAuthService {
     private readonly platformId = inject(PLATFORM_ID);
     private readonly isBrowser = isPlatformBrowser(this.platformId);
     private readonly tokenSignal = signal<string | null>(this.getToken());
+    private readonly ssoRateLimitedSignal = signal(false);
+    public readonly ssoRateLimited = this.ssoRateLimitedSignal.asReadonly();
 
     public getToken(): string | null {
         return this.localStorageRef?.getItem('authToken') ?? this.sessionStorageRef?.getItem('authToken') ?? null;
@@ -111,6 +113,7 @@ export class AdminAuthService {
     }
 
     public async exchangeSsoCodeAsync(code: string): Promise<boolean> {
+        this.ssoRateLimitedSignal.set(false);
         try {
             const response = await firstValueFrom(
                 this.http.post<AuthenticationResponse>(`${this.authUrl}/admin-sso/exchange`, { code }, { withCredentials: true }),
@@ -123,7 +126,8 @@ export class AdminAuthService {
             this.localStorageRef?.setItem('authToken', response.accessToken);
             this.localStorageRef?.removeItem('refreshToken');
             return true;
-        } catch {
+        } catch (error: unknown) {
+            this.ssoRateLimitedSignal.set(error instanceof HttpErrorResponse && error.status === Number(HttpStatusCode.TooManyRequests));
             return false;
         }
     }

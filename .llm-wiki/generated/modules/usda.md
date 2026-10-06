@@ -81,6 +81,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaProviderBudgetTests.cs`
+- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaProviderReferenceTests.cs`
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaQueryHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Domain.Tests/HealthAreaScoreBoundaryTests.cs`
@@ -94,6 +96,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Infrastructure.Tests/Services/UsdaFoodDetailCacheTests.cs`
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Infrastructure.Tests/Services/UsdaFoodSearchServiceTests.cs`
 - [presentation] `Modules/Usda/tests/FoodDiary.Modules.Usda.Presentation.Tests/UsdaHttpMappingsTests.cs`
+- [presentation] `Modules/Usda/tests/FoodDiary.Modules.Usda.Presentation.Tests/UsdaProviderPolicyTests.cs`
+- [integration] `Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UsdaReferenceMigrationIntegrationTests.cs`
 - [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/UsdaModuleExtractionTests.cs`
 
 ## Working Rule

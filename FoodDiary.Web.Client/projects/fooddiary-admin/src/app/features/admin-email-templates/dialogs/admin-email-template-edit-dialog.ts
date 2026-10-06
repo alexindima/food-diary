@@ -55,6 +55,7 @@ export class AdminEmailTemplateEditDialogComponent {
 
     protected readonly isNew = (this.data as AdminEmailTemplate & { isNew?: boolean }).isNew === true;
     protected readonly isSaving = signal(false);
+    protected readonly saveFailed = signal(false);
     protected readonly isSendingTest = signal(false);
     protected readonly testSendStatus = signal<'idle' | 'sent' | 'failed'>('idle');
     protected readonly previewMode = signal<'html' | 'text'>('html');
@@ -136,6 +137,7 @@ export class AdminEmailTemplateEditDialogComponent {
         }
 
         this.isSaving.set(true);
+        this.saveFailed.set(false);
         const value = this.formModel();
         const key = value.key.trim();
         const locale = value.locale.trim();
@@ -152,6 +154,7 @@ export class AdminEmailTemplateEditDialogComponent {
             this.isSaving.set(false);
             this.dialogRef.close(true);
         } catch {
+            this.saveFailed.set(true);
             this.isSaving.set(false);
         }
     }

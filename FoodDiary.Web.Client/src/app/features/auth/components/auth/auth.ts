@@ -26,6 +26,7 @@ import { NavigationService } from '../../../../services/navigation.service';
 import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
 import type { GoogleLoginRequest } from '../../models/google-auth.data';
 import { TelegramEntryButtonComponent } from '../telegram-entry-button/telegram-entry-button';
+import type { LoginFormValues } from './auth-lib/auth.types';
 import { buildAdminUnauthorizedUrl, normalizeAdminReturnUrl } from './auth-lib/auth-admin-return-url.utils';
 import { startSecondsCountdown } from './auth-lib/auth-countdown.utils';
 import { AuthFlowFacade, type AuthLoginResult, type AuthRegisterResult } from './auth-lib/auth-flow.facade';
@@ -109,6 +110,7 @@ export class AuthComponent {
     private returnUrl: string | null = null;
     private adminReturnUrl: string | null = null;
     private pendingGoogleLinkCredential: string | null = null;
+    private failedLoginValues: LoginFormValues | null = null;
 
     public constructor() {
         this.formManager.configureSubmissionActions({
@@ -140,8 +142,11 @@ export class AuthComponent {
 
     private subscribeFormChanges(): void {
         effect(() => {
-            this.loginModel();
-            this.clearGlobalError();
+            const values = this.loginModel();
+            const failed = this.failedLoginValues;
+            if (values.email !== failed?.email || values.password !== failed.password || values.rememberMe !== failed.rememberMe) {
+                this.clearGlobalError();
+            }
             this.updateLoginAutofillState();
         });
         effect(() => {
@@ -221,7 +226,8 @@ export class AuthComponent {
 
         this.isSubmitting.set(true);
 
-        const result = await firstValueFrom(this.authFlowFacade.login(this.loginModel()));
+        const loginValues = this.loginModel();
+        const result = await firstValueFrom(this.authFlowFacade.login(loginValues));
         this.isSubmitting.set(false);
         if (result === 'success') {
             if (this.pendingGoogleLinkCredential !== null) {
@@ -233,6 +239,7 @@ export class AuthComponent {
             return;
         }
 
+        this.failedLoginValues = loginValues;
         this.handleLoginResult(result);
     }
 
@@ -485,6 +492,7 @@ export class AuthComponent {
     }
 
     private clearGlobalError(): void {
+        this.failedLoginValues = null;
         this.globalError.set(null);
         this.showRestoreAction.set(false);
     }
@@ -498,11 +506,11 @@ export class AuthComponent {
 
         const fields = getLoginAutofillFieldValues(form);
 
-        this.loginModel.update(value => ({
-            ...value,
-            email: fields.email.length > 0 ? fields.email : value.email,
-            password: fields.password.length > 0 ? fields.password : value.password,
-        }));
+        this.loginModel.update(value => {
+            const email = fields.email.length > 0 ? fields.email : value.email;
+            const password = fields.password.length > 0 ? fields.password : value.password;
+            return email === value.email && password === value.password ? value : { ...value, email, password };
+        });
     }
 
     private startLoginAutofillDetection(): void {

@@ -114,6 +114,20 @@ describe('product AI recognition helpers', () => {
     });
 });
 
+describe('product recognition consent failures', () => {
+    it('distinguishes a queued label consent failure from ordinary paid-access403', () => {
+        expect(mapAiRecognitionErrorKey({ status: HttpStatusCode.Forbidden, error: { code: 'Ai.ConsentRequired', terminal: true } })).toBe(
+            'AI_RECOGNITION.ERROR_CONSENT',
+        );
+        expect(mapAiRecognitionErrorKey({ status: HttpStatusCode.Forbidden, error: { error: 'Ai.ConsentRequired' } })).toBe(
+            'AI_RECOGNITION.ERROR_CONSENT',
+        );
+        expect(mapAiRecognitionErrorKey({ status: HttpStatusCode.Forbidden, error: { error: 'Other.Forbidden' } })).toBe(
+            'PRODUCT_AI_DIALOG.ERROR_PREMIUM',
+        );
+    });
+});
+
 describe('product recognition quantities and review validation', () => {
     it('converts liters to milliliters consistently for provider input and reviewed quantity', () => {
         const items = [{ ...ITEMS[1], amount: 0.5, unit: 'liter' }];

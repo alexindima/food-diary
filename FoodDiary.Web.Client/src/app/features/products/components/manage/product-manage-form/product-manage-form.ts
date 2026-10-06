@@ -74,7 +74,7 @@ import { ProductNutritionEditorComponent } from '../product-nutrition-editor/pro
     templateUrl: './product-manage-form.html',
     styleUrls: ['./product-manage-form.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [ProductNameSearchFacade],
+    providers: [ProductNameSearchFacade, ProductManageFacade],
     imports: [
         TranslatePipe,
         FdUiHintDirective,
@@ -155,12 +155,14 @@ export class ProductManageFormComponent {
     );
     protected nutritionMode: NutritionMode = 'base';
     private previousBaseUnit = this.productFormModel().baseUnit;
+    private nutritionPortionBasis: number | null = null;
 
     public constructor() {
         this.bindFormEffects();
     }
 
     private bindFormEffects(): void {
+        this.bindPortionNutritionEffect();
         effect(() => {
             const unit = this.productFormModel().baseUnit;
             if (unit === this.previousBaseUnit) {
@@ -192,6 +194,30 @@ export class ProductManageFormComponent {
             this.productFormModel();
             this.clearGlobalError();
         });
+    }
+
+    private bindPortionNutritionEffect(): void {
+        effect(() => {
+            const portionAmount = getProductControlNumberValue(this.productFormModel().defaultPortionAmount);
+            untracked(() => {
+                this.synchronizePortionNutrition(portionAmount);
+            });
+        });
+    }
+
+    private synchronizePortionNutrition(portionAmount = getProductControlNumberValue(this.productFormModel().defaultPortionAmount)): void {
+        if (this.nutritionMode !== 'portion') {
+            this.nutritionPortionBasis = null;
+            return;
+        }
+        if (!Number.isFinite(portionAmount) || portionAmount <= 0) {
+            return;
+        }
+        const previousBasis = this.nutritionPortionBasis;
+        this.nutritionPortionBasis = portionAmount;
+        if (previousBasis !== portionAmount && previousBasis !== null && previousBasis > 0) {
+            this.convertNutritionControls(portionAmount / previousBasis);
+        }
     }
 
     private applyPrefillIfNeeded(prefill: ProductManagePrefill | null): void {
@@ -374,6 +400,7 @@ export class ProductManageFormComponent {
             return null;
         }
 
+        this.synchronizePortionNutrition();
         this.productForm().markAsTouched();
 
         if (this.hasCurrentPortionNutritionWarning() || this.productForm().invalid()) {
@@ -385,14 +412,13 @@ export class ProductManageFormComponent {
         const productData = buildProductData(currentValues, this.nutritionMode);
         const product = this.product() ?? null;
         const nextUsdaFdcId = currentValues.usdaFdcId;
-        const previousUsdaFdcId = product?.usdaFdcId ?? null;
 
         try {
             const result = await this.productManageFacade.submitProductAsync(
                 product,
                 productData,
                 this.shouldSkipPostSaveRedirect(),
-                async savedProduct => this.syncUsdaLinkAsync(savedProduct, nextUsdaFdcId, previousUsdaFdcId),
+                async savedProduct => this.syncUsdaLinkAsync(savedProduct, nextUsdaFdcId, savedProduct.usdaFdcId ?? null),
             );
             this.handleSubmitResult(result);
             return result.product;
@@ -402,6 +428,7 @@ export class ProductManageFormComponent {
     }
 
     protected onNutritionModeChange(nextMode: string): void {
+        this.synchronizePortionNutrition();
         const resolvedMode: NutritionMode = nextMode === 'portion' ? 'portion' : 'base';
         if (resolvedMode === this.nutritionMode) {
             return;
@@ -409,7 +436,11 @@ export class ProductManageFormComponent {
 
         const values = this.productFormModel();
         const baseAmount = getDefaultProductBaseAmount(values.baseUnit);
-        const portionAmount = getProductControlNumberValue(values.defaultPortionAmount);
+        const currentPortionAmount = getProductControlNumberValue(values.defaultPortionAmount);
+        const portionAmount =
+            Number.isFinite(currentPortionAmount) && currentPortionAmount > 0
+                ? currentPortionAmount
+                : (this.nutritionPortionBasis ?? baseAmount);
 
         if (portionAmount > 0) {
             const factor = resolvedMode === 'portion' ? portionAmount / baseAmount : baseAmount / portionAmount;
@@ -417,6 +448,7 @@ export class ProductManageFormComponent {
         }
 
         this.nutritionMode = resolvedMode;
+        this.nutritionPortionBasis = resolvedMode === 'portion' && portionAmount > 0 ? portionAmount : null;
     }
 
     protected startProductManageTour(force = true): void {
@@ -473,6 +505,7 @@ export class ProductManageFormComponent {
     private populateForm(product: Product): void {
         this.patchProductForm(buildProductFormPatch(product));
         this.nutritionMode = 'base';
+        this.nutritionPortionBasis = null;
     }
 
     private applyAiResult(result: ProductAiRecognitionResult): void {
@@ -486,6 +519,7 @@ export class ProductManageFormComponent {
         }
         this.productForm().markAsDirty();
         this.nutritionMode = 'portion';
+        this.nutritionPortionBasis = getProductControlNumberValue(this.productFormModel().defaultPortionAmount);
     }
 
     private handleSubmitError(error: unknown): void {

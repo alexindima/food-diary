@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FdUiButtonComponent } from 'fd-ui-kit';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminMealPlansFacade } from '../lib/admin-meal-plans.facade';
-import type { CatalogPlan } from '../models/admin-meal-plan.data';
+import type { CatalogPlan, CatalogRecipe } from '../models/admin-meal-plan.data';
 import { AdminMealPlanEditorComponent } from './admin-meal-plan-editor';
 
 describe('AdminMealPlanEditorComponent', () => {
@@ -64,5 +64,29 @@ describe('AdminMealPlanEditorComponent', () => {
         fixture.detectChanges();
         expect(api.save).not.toHaveBeenCalled();
         expect((fixture.nativeElement as HTMLElement).textContent).toContain('ADMIN_MEAL_PLANS.INCOMPLETE');
+    });
+
+    it('keeps the latest recipe search and selected recipes when earlier requests finish late', () => {
+        const fixture = TestBed.createComponent(AdminMealPlanEditorComponent);
+        fixture.componentRef.setInput('plan', plan);
+        fixture.detectChanges();
+        const earlier = new Subject<CatalogRecipe[]>();
+        const latest = new Subject<CatalogRecipe[]>();
+        api.recipes.mockReturnValueOnce(earlier).mockReturnValueOnce(latest);
+        const component = fixture.componentInstance;
+        component['recipeSearch'].set('old search');
+        component['searchRecipes']();
+        component['recipeSearch'].set('new search');
+        component['searchRecipes']();
+        latest.next([{ id: 'latest-id', name: 'Latest recipe', servings: 1 }]);
+        earlier.next([{ id: 'stale-id', name: 'Stale recipe', servings: 1 }]);
+        earlier.error(new Error('stale failure'));
+
+        expect(component['recipeOptions']()).toEqual([
+            { value: 'recipe-id', label: 'Rice' },
+            { value: 'latest-id', label: 'Latest recipe' },
+        ]);
+        expect(component['error']()).toBeNull();
+        expect(api.recipes).toHaveBeenLastCalledWith('new search');
     });
 });

@@ -24,6 +24,15 @@ describe('resolveServingsUnitKey', () => {
 });
 
 describe('resolveIngredientUnitKey', () => {
+    it.each([
+        ['Ml', 'ML'],
+        ['Pcs', 'PCS'],
+        ['ML', 'ML'],
+        ['PCS', 'PCS'],
+    ])('resolves API unit %s through the canonical locale key %s', (unit, canonical) => {
+        expect(resolveIngredientUnitKey({ productBaseUnit: unit, amount: 1 })).toBe(`GENERAL.UNITS.${canonical}`);
+    });
+
     it('uses portions for nested recipes and measurement units for products', () => {
         expect(resolveIngredientUnitKey({ nestedRecipeId: 'recipe', amount: HALF })).toBe('RECIPE_DETAIL.SUMMARY.SERVINGS_FEW');
         expect(resolveIngredientUnitKey({ productBaseUnit: 'G', amount: 1 })).toBe('GENERAL.UNITS.G');

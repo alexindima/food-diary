@@ -12,6 +12,7 @@ import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
 import { AdminCatalogFilterComponent, matchesAdminCatalog } from '../../../shared/catalog/admin-catalog-filter';
+import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { adminPage } from '../../../shared/period/admin-query';
 import { AdminAchievementsFacade } from '../lib/admin-achievements.facade';
 import type {
@@ -39,6 +40,7 @@ const EMPTY_MODEL: CreateAdminAchievementDefinitionRequest = {
     imports: [
         FdUiCheckboxComponent,
         AdminCatalogFilterComponent,
+        AdminLoadErrorComponent,
         FdUiPaginationComponent,
         FormField,
         FormRoot,
@@ -60,6 +62,7 @@ export class AdminAchievementsComponent {
     protected readonly editingId = signal<string | null>(null);
     protected readonly editingVersion = signal<number | null>(null);
     protected readonly isLoading = signal(false);
+    protected readonly loadFailed = signal(false);
     protected readonly isSaving = signal(false);
     protected readonly error = signal<string | null>(null);
     protected readonly metricOptions: Array<FdUiSelectOption<AchievementMetric>> = [
@@ -123,6 +126,7 @@ export class AdminAchievementsComponent {
     }
 
     protected load(): void {
+        this.loadFailed.set(false);
         this.isLoading.set(true);
         this.facade
             .getAll()
@@ -133,7 +137,7 @@ export class AdminAchievementsComponent {
                     this.isLoading.set(false);
                 },
                 error: () => {
-                    this.error.set('ADMIN_ACHIEVEMENTS.ERRORS.LOAD');
+                    this.loadFailed.set(true);
                     this.isLoading.set(false);
                 },
             });

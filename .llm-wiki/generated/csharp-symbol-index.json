@@ -584,7 +584,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Composition/ProductsCrossModuleRelationships.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "RecentItemsCrossModuleRelationships",
@@ -23691,7 +23691,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Usda/Application/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "UnlinkProductFromUsdaFoodCommand",

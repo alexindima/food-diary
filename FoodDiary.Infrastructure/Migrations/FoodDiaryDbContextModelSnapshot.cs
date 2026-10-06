@@ -5752,11 +5752,6 @@ namespace FoodDiary.Infrastructure.Migrations
                         .HasForeignKey("ImageAssetId")
                         .OnDelete(DeleteBehavior.ClientNoAction);
 
-                    b.HasOne("FoodDiary.Modules.Usda.Domain.Entities.UsdaFood", null)
-                        .WithMany()
-                        .HasForeignKey("UsdaFdcId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("FoodDiary.Modules.Users.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")

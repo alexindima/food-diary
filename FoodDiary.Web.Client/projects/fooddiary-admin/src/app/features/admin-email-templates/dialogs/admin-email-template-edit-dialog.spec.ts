@@ -140,15 +140,27 @@ describe('AdminEmailTemplateEditDialogComponent saving', () => {
         expect(service.upsert).toHaveBeenCalledOnce();
     });
 
-    it('should stop saving on error without closing true', async () => {
-        const { component, service } = await setupEmailTemplateDialogAsync();
+    it('shows a save error, preserves the draft and allows retry', async () => {
+        const { component, service, fixture, dialogRef } = await setupEmailTemplateDialogAsync();
         service.upsert.mockReturnValueOnce(throwError(() => new Error('save failed')));
+        component['formModel'].update(value => ({ ...value, subject: 'Unsaved draft' }));
 
         component['onSave']();
 
         await vi.waitFor(() => {
             expect(component['isSaving']()).toBe(false);
         });
+        fixture.detectChanges();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent).toContain('ADMIN_TEMPLATES.SAVE_ERROR');
+        expect(component['formModel']().subject).toBe('Unsaved draft');
+
+        component['onSave']();
+        await vi.waitFor(() => {
+            expect(dialogRef.close).toHaveBeenCalledWith(true);
+        });
+        expect(component['saveFailed']()).toBe(false);
+        expect(service.upsert).toHaveBeenLastCalledWith('email_verification', 'en', expect.objectContaining({ subject: 'Unsaved draft' }));
     });
 });
 

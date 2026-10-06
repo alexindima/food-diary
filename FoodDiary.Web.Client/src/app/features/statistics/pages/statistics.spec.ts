@@ -24,6 +24,7 @@ type StatisticsFacadeMock = {
     dashboardCardsView: ReturnType<typeof signal<StatisticsDashboardCardsView>>;
     customRangeForm: FieldTree<{ range: { start: Date | null; end: Date | null } | null }>;
     exportDiary: ReturnType<typeof vi.fn>;
+    exportError: ReturnType<typeof signal<boolean>>;
     exportingFormat: ReturnType<typeof signal<ExportFormat | null>>;
     hasBodyData: ReturnType<typeof signal<boolean>>;
     hasBodyLoadError: ReturnType<typeof signal<boolean>>;
@@ -84,6 +85,7 @@ function createStatisticsFacadeMock(): StatisticsFacadeMock {
         hasStatisticsResponse: signal(true),
         hasBodyData: signal(false),
         exportingFormat: signal(null),
+        exportError: signal(false),
         initialize: vi.fn(),
         changeRange: vi.fn(),
         changeNutritionTab: vi.fn(),
@@ -165,6 +167,18 @@ describe('StatisticsComponent', () => {
 
         expect(facade.reload).toHaveBeenCalledOnce();
         expect(facade.exportDiary).toHaveBeenCalledWith('csv');
+    });
+
+    it('shows an accessible export alert only while the facade reports a failed download', async () => {
+        const { facade, fixture } = await setupStatisticsAsync();
+        const alert = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('fd-ui-inline-alert[role="alert"]');
+        expect(alert?.hidden).toBe(true);
+        facade.exportError.set(true);
+        fixture.detectChanges();
+        expect(alert?.hidden).toBe(false);
+        facade.exportError.set(false);
+        fixture.detectChanges();
+        expect(alert?.hidden).toBe(true);
     });
 
     it('keeps cards mounted and overlays each dependent card while refreshing', async () => {

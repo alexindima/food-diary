@@ -371,6 +371,46 @@ describe('FastingRedesignPreviewComponent notes', () => {
     });
 });
 
+describe('FastingRedesignPreviewComponent active management action', () => {
+    it.each(['Extended', 'Cyclic'] as const)('opens management for %s without ending the session', async planType => {
+        await TestBed.configureTestingModule({
+            imports: [FastingRedesignPreviewComponent],
+            providers: [provideTranslateTesting()],
+        }).compileComponents();
+        const fixture = TestBed.createComponent(FastingRedesignPreviewComponent);
+        for (const [name, value] of Object.entries({
+            session: createSession({ planType }),
+            stats: null,
+            history: [],
+            elapsedFormatted: '01:00:00',
+            remainingFormatted: '15:00:00',
+            progressPercent: TEST_PROGRESS_PERCENT,
+            now: new Date('2026-08-11T16:00:00Z'),
+            selectedDurationHours: INTERMITTENT_HOURS,
+        })) {
+            fixture.componentRef.setInput(name, value);
+        }
+        fixture.detectChanges();
+        const management = vi.fn();
+        const ending = vi.fn();
+        fixture.componentInstance.sessionManagementRequested.subscribe(management);
+        fixture.componentInstance.manageRequested.subscribe(ending);
+        const host = fixture.nativeElement as HTMLElement;
+        const action = [...host.querySelectorAll<HTMLButtonElement>('button')].find(button =>
+            button.textContent.includes('FASTING.REDESIGN.MANAGE'),
+        );
+
+        expect(action).toBeDefined();
+        action?.click();
+        expect(management).toHaveBeenCalledTimes(1);
+        expect(ending).not.toHaveBeenCalled();
+
+        fixture.componentRef.setInput('session', createSession());
+        fixture.detectChanges();
+        expect(action?.parentElement?.parentElement?.hidden).toBe(true);
+    });
+});
+
 function createSession(overrides: Partial<FastingSession> = {}): FastingSession {
     return {
         id: 'session-1',

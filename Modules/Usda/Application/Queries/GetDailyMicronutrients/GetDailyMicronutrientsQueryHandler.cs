@@ -14,7 +14,9 @@ namespace FoodDiary.Modules.Usda.Application.Queries.GetDailyMicronutrients;
 public sealed class GetDailyMicronutrientsQueryHandler(
     IUsdaMealNutritionReadService mealProductNutritionReadService,
     IUsdaFoodReadModelRepository usdaFoodRepository,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    IUsdaFoodSearchService provider,
+    TimeProvider timeProvider)
     : IQueryHandler<GetDailyMicronutrientsQuery, Result<DailyMicronutrientSummaryModel>> {
     public async Task<Result<DailyMicronutrientSummaryModel>> Handle(
         GetDailyMicronutrientsQuery query,
@@ -33,6 +35,8 @@ public sealed class GetDailyMicronutrientsQueryHandler(
             cancellationToken).ConfigureAwait(false);
     }
     public const int MaximumProductItemsPerDay = 1000;
+    public const int MaximumProviderFoodsPerRequest = 20;
+    private static readonly TimeSpan ProviderLookupBudget = TimeSpan.FromSeconds(15);
 
     private async Task<Result<DailyMicronutrientSummaryModel>> GetDailySummaryAsync(
         UserId userId,
@@ -72,6 +76,22 @@ public sealed class GetDailyMicronutrientsQueryHandler(
             .GetDailyReferenceValueReadModelsAsync(cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
+        int[] providerFdcIds = [.. fdcIds.Where(fdcId => !nutrientsByFdcId.ContainsKey(fdcId))];
+        if (providerFdcIds.Length > MaximumProviderFoodsPerRequest) {
+            return Result.Failure<DailyMicronutrientSummaryModel>(
+                UsdaErrors.ProviderLookupLimitExceeded(MaximumProviderFoodsPerRequest));
+        }
+        if (providerFdcIds.Length > 0) {
+            using var budget = new CancellationTokenSource(ProviderLookupBudget, timeProvider);
+            using var lookupCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, budget.Token);
+            try {
+                nutrientsByFdcId = await ResolveProviderNutrientsAsync(providerFdcIds, nutrientsByFdcId, lookupCancellation.Token).ConfigureAwait(false);
+                lookupCancellation.Token.ThrowIfCancellationRequested();
+            } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested && budget.IsCancellationRequested) {
+                return Result.Failure<DailyMicronutrientSummaryModel>(UsdaErrors.ProviderLookupTimedOut());
+            }
+        }
+
         Dictionary<int, AggregatedNutrient> aggregated = AggregateNutrients(linkedItems, nutrientsByFdcId);
         List<DailyMicronutrientModel> nutrientModels = BuildNutrientModels(aggregated, dailyValues);
         var nutrientAmounts = aggregated.ToDictionary(static kvp => kvp.Key, static kvp => kvp.Value.Total);
@@ -84,6 +104,29 @@ public sealed class GetDailyMicronutrientsQueryHandler(
             totalProductCount,
             nutrientModels,
             healthScores.ToModel()));
+    }
+
+    private async Task<IReadOnlyDictionary<int, IReadOnlyList<UsdaNutrientReadModel>>> ResolveProviderNutrientsAsync(
+        IReadOnlyList<int> fdcIds,
+        IReadOnlyDictionary<int, IReadOnlyList<UsdaNutrientReadModel>> localNutrients,
+        CancellationToken cancellationToken) {
+        var resolved = localNutrients.ToDictionary(static item => item.Key, static item => item.Value);
+        foreach (int fdcId in fdcIds) {
+            if (resolved.ContainsKey(fdcId)) {
+                continue;
+            }
+            UsdaFoodDetailModel? detail = await provider.GetFoodDetailAsync(fdcId, cancellationToken).ConfigureAwait(false);
+            if (detail is null || detail.FdcId != fdcId) {
+                continue;
+            }
+            resolved[fdcId] = detail.Nutrients
+                .Where(static nutrient => double.IsFinite(nutrient.AmountPer100G) && nutrient.AmountPer100G >= 0)
+                .GroupBy(static nutrient => nutrient.NutrientId)
+                .Select(static group => group.First())
+                .Select(static nutrient => new UsdaNutrientReadModel(nutrient.NutrientId, nutrient.Name, nutrient.Unit, nutrient.AmountPer100G))
+                .ToList();
+        }
+        return resolved;
     }
 
     private static Dictionary<int, AggregatedNutrient> AggregateNutrients(

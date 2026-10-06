@@ -54,6 +54,7 @@ import {
     FastingSessionDetailsDialogComponent,
     type FastingSessionDetailsDialogData,
 } from '../../components/fasting-session-details-dialog/fasting-session-details-dialog';
+import { FastingSessionManagementDialogComponent } from '../../components/fasting-session-management-dialog/fasting-session-management-dialog';
 import { FastingFacade } from '../../lib/fasting.facade';
 import {
     FASTING_ENERGY_EMOJI_SCALE,
@@ -231,6 +232,18 @@ export class FastingPageComponent {
 
         this.dialogService.open<FastingProtocolDialogComponent, void, void>(FastingProtocolDialogComponent, {
             preset: 'detail',
+            providers: [{ provide: FastingFacade, useValue: this.facade }],
+        });
+    }
+
+    protected openActiveSessionManagement(): void {
+        if (!this.isActive() || this.currentSession()?.planType === 'Intermittent') {
+            return;
+        }
+
+        this.dialogService.open<FastingSessionManagementDialogComponent, void, void>(FastingSessionManagementDialogComponent, {
+            preset: 'detail',
+            ariaLabel: this.translateService.instant('FASTING.REDESIGN.MANAGE'),
             providers: [{ provide: FastingFacade, useValue: this.facade }],
         });
     }

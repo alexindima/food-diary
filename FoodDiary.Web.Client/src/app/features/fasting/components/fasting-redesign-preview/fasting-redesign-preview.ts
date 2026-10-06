@@ -57,12 +57,14 @@ export class FastingRedesignPreviewComponent {
     public readonly startRequested = output();
     public readonly checkInRequested = output();
     public readonly manageRequested = output();
+    public readonly sessionManagementRequested = output();
     public readonly protocolSettingsRequested = output();
     public readonly historyRequested = output();
     public readonly sessionDetailsRequested = output<FastingSession>();
     public readonly alertDismissRequested = output<string>();
 
     protected readonly isActive = computed(() => this.session()?.endedAtUtc === null);
+    protected readonly canManageSession = computed(() => this.isActive() && this.session()?.planType !== 'Intermittent');
     protected readonly isPastTarget = computed(() => {
         const target = this.targetAt();
         return this.isActive() && this.session()?.planType !== 'Cyclic' && target !== null && this.now().getTime() > target.getTime();

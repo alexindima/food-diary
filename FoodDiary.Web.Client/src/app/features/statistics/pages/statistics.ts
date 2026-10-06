@@ -2,7 +2,14 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
-import { FdUiHintDirective, FdUiIconComponent, FdUiMenuComponent, FdUiMenuItemComponent, FdUiMenuTriggerDirective } from 'fd-ui-kit';
+import {
+    FdUiHintDirective,
+    FdUiIconComponent,
+    FdUiInlineAlertComponent,
+    FdUiMenuComponent,
+    FdUiMenuItemComponent,
+    FdUiMenuTriggerDirective,
+} from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiEmptyStateComponent } from 'fd-ui-kit/empty-state/fd-ui-empty-state';
 
@@ -32,6 +39,7 @@ import { STATISTICS_TOUR } from './statistics-tour';
         TranslatePipe,
         FdUiHintDirective,
         FdUiIconComponent,
+        FdUiInlineAlertComponent,
         FdUiMenuComponent,
         FdUiMenuItemComponent,
         FdUiMenuTriggerDirective,
@@ -77,6 +85,7 @@ export class StatisticsComponent {
     protected readonly hasStatisticsData = this.facade.hasStatisticsData;
     protected readonly hasBodyData = this.facade.hasBodyData;
     protected readonly exportingFormat = this.facade.exportingFormat;
+    protected readonly exportError = this.facade.exportError;
     protected readonly dashboardCardsView = this.facade.dashboardCardsView;
 
     protected changeRange(value: unknown): void {

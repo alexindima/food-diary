@@ -1,4 +1,5 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -68,6 +69,13 @@ const request: CreateProductRequest = {
     visibility: ProductVisibility.Private,
 };
 
+@Component({
+    template: '',
+    providers: [ProductManageFacade],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ProductManageScopeHost {}
+
 let facade: ProductManageFacade;
 let productService: { create: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn>; deleteById: ReturnType<typeof vi.fn> };
 let dialogService: { open: ReturnType<typeof vi.fn> };
@@ -126,6 +134,97 @@ beforeEach(() => {
     });
 
     facade = TestBed.inject(ProductManageFacade);
+});
+
+describe('ProductManageFacade partial-save retry', () => {
+    it('updates the created product with current values when post-save synchronization is retried', async () => {
+        const syncError = new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable });
+        const afterSave = vi
+            .fn()
+            .mockRejectedValueOnce(syncError)
+            .mockResolvedValue(void 0);
+        const editedRequest = { ...request, name: 'Corrected product' };
+
+        const initial = await facade.submitProductAsync(null, request, false, afterSave);
+        const retry = await facade.submitProductAsync(null, editedRequest, false, afterSave);
+
+        expect(initial).toEqual({ product, error: syncError });
+        expect(retry).toEqual({ product, error: null });
+        expect(productService.create).toHaveBeenCalledOnce();
+        expect(productService.update).toHaveBeenCalledWith(product.id, expect.objectContaining(editedRequest));
+        expect(afterSave).toHaveBeenCalledTimes(2);
+
+        await facade.submitProductAsync(null, request, true);
+        expect(productService.create).toHaveBeenCalledTimes(2);
+    });
+
+    it('retries creation when no product was saved', async () => {
+        productService.create.mockReturnValueOnce(throwError(() => new Error('Unavailable'))).mockReturnValueOnce(of(product));
+
+        const initial = await facade.submitProductAsync(null, request, true);
+        const retry = await facade.submitProductAsync(null, request, true);
+
+        expect(initial.product).toBeNull();
+        expect(retry.product).toBe(product);
+        expect(productService.create).toHaveBeenCalledTimes(2);
+        expect(productService.update).not.toHaveBeenCalled();
+    });
+
+    it('updates the saved product when a post-save redirect failed', async () => {
+        navigationService.navigateToProductListAsync.mockRejectedValueOnce(new Error('Navigation unavailable'));
+
+        await facade.submitProductAsync(null, request, false);
+        await facade.submitProductAsync(null, request, false);
+
+        expect(productService.create).toHaveBeenCalledOnce();
+        expect(productService.update).toHaveBeenCalledWith(product.id, expect.any(Object));
+    });
+
+    it('keeps the existing edited product id when synchronization fails and is retried', async () => {
+        const afterSave = vi
+            .fn()
+            .mockRejectedValueOnce(new Error('Sync unavailable'))
+            .mockResolvedValue(void 0);
+
+        await facade.submitProductAsync(product, request, false, afterSave);
+        await facade.submitProductAsync(product, request, false, afterSave);
+
+        expect(productService.create).not.toHaveBeenCalled();
+        expect(productService.update).toHaveBeenCalledTimes(2);
+        expect(productService.update.mock.calls.every(([id]) => id === product.id)).toBe(true);
+    });
+});
+
+describe('ProductManageFacade scope lifecycle', () => {
+    it('isolates partial saves in component scopes and releases a destroyed scope during synchronization', async () => {
+        const firstScope = TestBed.createComponent(ProductManageScopeHost);
+        const firstFacade = firstScope.debugElement.injector.get(ProductManageFacade);
+        let rejectSync!: (reason: Error) => void;
+        const synchronization = new Promise<void>((_resolve, reject) => {
+            rejectSync = reject;
+        });
+        let onSynchronizationStarted!: () => void;
+        const started = new Promise<void>(resolve => {
+            onSynchronizationStarted = resolve;
+        });
+        const firstSave = firstFacade.submitProductAsync(null, request, true, async () => {
+            onSynchronizationStarted();
+            await synchronization;
+        });
+        await started;
+        firstScope.destroy();
+        rejectSync(new Error('Sync unavailable'));
+        await firstSave;
+
+        const nextScope = TestBed.createComponent(ProductManageScopeHost);
+        const nextFacade = nextScope.debugElement.injector.get(ProductManageFacade);
+        await nextFacade.submitProductAsync(null, request, true);
+
+        expect(nextFacade).not.toBe(firstFacade);
+        expect(productService.create).toHaveBeenCalledTimes(2);
+        expect(productService.update).not.toHaveBeenCalled();
+        nextScope.destroy();
+    });
 });
 
 describe('ProductManageFacade submit', () => {

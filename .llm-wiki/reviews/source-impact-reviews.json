@@ -139,14 +139,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "docs/README.md",
-          "sha256": "65f2f3407df1ada0aa232000a6b9fed054f452911b97e411d592dcfb59f40637"
+          "path": "docs/adr/README.md",
+          "sha256": "aea3400da4c2f3892203b59365fa5506089193718e113db3ccfe6a634c9a89f2"
         }
       ],
-      "reason": "Checked the recipe import guide and navigation against combined current sources, including optional clipboard suggestions, video limits, provider configuration, proxy and temporary storage constraints and conditional Instagram video availability. Current master tooling and fixes are preserved; deployment is outside this merge.",
-      "baseRef": "master",
-      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
-      "reviewedAtUtc": "2026-10-04T18:04:05.0150049Z"
+      "reason": "Expanded release QA verifies current authentication and nutrition behavior, external USDA references and bounded provider resolution, schema migration and rollback, fasting controls, export feedback, locale pairs, dialog names and native keyboard navigation through actual local browser scenarios and focused plus full regression checks.",
+      "baseRef": "HEAD",
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T13:13:05.8850730Z"
     },
     {
       "pageId": "system.quality-index",
@@ -199,22 +199,18 @@
       "pageSha256": "bf06c7515995b5983125ae2d8469bc357431d468feed457a4ae9ab443288c4a4",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "fbe8a5248a4151d39ca9472eeb142d2f52668ea96784b594f7ef1b196423a4ca"
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "75ba917cefa45d83e45b871b41d27a8e20954bfc5c38ef4147338b624f628234"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
-          "sha256": "16f301e05306a584f9bcecaf20216dd4bf1b64e4a7292c0b8ad5c16dcb98129a"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-          "sha256": "0e82df197b653e62d8e4857137c84150a67fb746d04c1de74795d208177b663e"
+          "sha256": "a8bb234d92a449d1cddf43929f4a73c018a68e5cf142c70f926cc189bfbe8560"
         }
       ],
-      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
-      "baseRef": "master",
-      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
-      "reviewedAtUtc": "2026-10-06T10:21:12.9535594Z"
+      "reason": "Reviewed the affected tooling guides against request-local reuse of the freshly checked repository, HEAD and content fingerprint. Normal scoped cache callers preserve their identity; dependency hashing remains independent and module discovery is deferred only for cache hits. Cache regressions and the unchanged latency gate pass. Seven counterbalanced pairs measure median warm context from 1050ms to 595ms; static reference indexes were regenerated and do not represent execution coverage.",
+      "baseRef": "HEAD",
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:28.8073013Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -223,13 +219,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "fd2e664f4d9599779cd975ce59888c1d881dbcf0c7eaecf89197e99540f95d34"
+          "sha256": "6e847581ed28f2df7433f16acc02717da29e8470e910f87060553da7161fb765"
         }
       ],
-      "reason": "Release QA: current owner code, DTO consumers, canonical actual OpenAPI (275 endpoints/365 schemas), native PostgreSQL deletion and migration fixtures, readonly Paddle pricing, local SMTP delivery, keyboard/contrast checks and focused tests reviewed; no production access or deployment.",
+      "reason": "Combined expanded local QA source freeze reviewed: user access precedes USDA provider calls, indexed external identifiers and nullable HTTP response preserved, lookup deadlines and rate admission bounded, native clean/upgrade/rollback/bundle verified, actual browser source-link recovery and CRUD/export/keyboard/locale/responsive scenarios passed; current reviewed21-file admin batch restores drafts and correct search ordering.",
       "baseRef": "HEAD",
-      "gitHead": "31a7be7e74da295faf4f41d9d193588ebd42358f",
-      "reviewedAtUtc": "2026-10-06T07:00:25.9814645Z"
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T14:21:56.9945320Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -238,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "a2302e269599f02d6c8a8c344c3cd2aa39c48c39ed684d34ab160034b2d0a58f"
+          "sha256": "f6ff1021733ab4d52a6777eace027f018465841232d8897f8871e101924de367"
         }
       ],
-      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
-      "baseRef": "master",
-      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
-      "reviewedAtUtc": "2026-10-06T10:21:13.6997121Z"
+      "reason": "Expanded release QA verifies current authentication and nutrition behavior, external USDA references and bounded provider resolution, schema migration and rollback, fasting controls, export feedback, locale pairs, dialog names and native keyboard navigation through actual local browser scenarios and focused plus full regression checks.",
+      "baseRef": "HEAD",
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T13:13:06.0693791Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -252,14 +248,14 @@
       "pageSha256": "58810bcafe9de0e6e09ec7ce44659b61c6c2d807da6b207e95a00aa681b51685",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "962ba48f14cfef1b46bca9f2221331a2a024c1fa145803a0b2acbce218dfbcf5"
         }
       ],
-      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
-      "baseRef": "master",
-      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
-      "reviewedAtUtc": "2026-10-06T10:21:14.4139808Z"
+      "reason": "Combined expanded local QA source freeze reviewed: user access precedes USDA provider calls, indexed external identifiers and nullable HTTP response preserved, lookup deadlines and rate admission bounded, native clean/upgrade/rollback/bundle verified, actual browser source-link recovery and CRUD/export/keyboard/locale/responsive scenarios passed; current reviewed21-file admin batch restores drafts and correct search ordering.",
+      "baseRef": "HEAD",
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T14:21:58.0760588Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -478,14 +474,14 @@
       "pageSha256": "8b4cb2d28a12dabbacea071dc05d656bf06ccbaec42ac12f5b35408b708a161a",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDecisionContext.ps1",
-          "sha256": "a679b682737f0316dfcf71c9c3e980b742ae21db68cd40e61860c861a63ffe22"
+          "path": "docs/adr/README.md",
+          "sha256": "aea3400da4c2f3892203b59365fa5506089193718e113db3ccfe6a634c9a89f2"
         }
       ],
-      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "reason": "Expanded release QA verifies current authentication and nutrition behavior, external USDA references and bounded provider resolution, schema migration and rollback, fasting controls, export feedback, locale pairs, dialog names and native keyboard navigation through actual local browser scenarios and focused plus full regression checks.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:04.6522834Z"
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T13:13:06.8216281Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -528,13 +524,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "46c9ec1ad569bf51619af5252ea1e856f9ada5857ec5844286311a09200aaa0f"
+          "sha256": "fc21f636780417f3ce9138efdb30dddad1af9f5c7d53804ff6c9a9fb4954d84a"
         }
       ],
-      "reason": "Reviewed the intentional read-only Admin BodyMetrics dependency and synchronized architecture allowlists. The architecture-health review workflow remains accurate; the complete 2116-test architecture suite passed.",
+      "reason": "Expanded release QA verifies current authentication and nutrition behavior, external USDA references and bounded provider resolution, schema migration and rollback, fasting controls, export feedback, locale pairs, dialog names and native keyboard navigation through actual local browser scenarios and focused plus full regression checks.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:06:12.0305359Z"
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T13:13:07.0369215Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -618,13 +614,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
+          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
         }
       ],
-      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
-      "baseRef": "master",
-      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
-      "reviewedAtUtc": "2026-10-06T10:21:15.1555894Z"
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
+      "baseRef": "HEAD",
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:22.5932749Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -821,14 +817,14 @@
       "pageSha256": "b60f38c1d4bb6323e6d9a1128ef46cbe3f2c097c8abd5f71e062f9d48a25997c",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "5a0725a1434680dd97583189c6c2871ac5c5613b0be8b11e13108116c6157371"
         }
       ],
-      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
-      "baseRef": "master",
-      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
-      "reviewedAtUtc": "2026-10-06T10:21:15.9785685Z"
+      "reason": "Reviewed privacy/security workflow pages after derived-index refresh. Permission changes retain accepted relationship checks, shared categories stay individually scoped, Admin weight is a read-only contract and no credential, provider or retention behavior changed. These are navigation receipts rather than a security audit.",
+      "baseRef": "HEAD",
+      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
+      "reviewedAtUtc": "2026-10-05T15:08:54.9376932Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -867,13 +863,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7897399cc5f454e43f35daa827b4a9111b661d69515b4ecf62533772b0681de5"
+          "sha256": "5b85cba8da665f89595d2c8a5d4ddbd6cb995edc3c1d82ab4456227f8b872ba2"
         }
       ],
-      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
-      "baseRef": "master",
-      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
-      "reviewedAtUtc": "2026-10-06T10:21:17.0172354Z"
+      "reason": "Combined expanded local QA source freeze reviewed: user access precedes USDA provider calls, indexed external identifiers and nullable HTTP response preserved, lookup deadlines and rate admission bounded, native clean/upgrade/rollback/bundle verified, actual browser source-link recovery and CRUD/export/keyboard/locale/responsive scenarios passed; current reviewed21-file admin batch restores drafts and correct search ordering.",
+      "baseRef": "HEAD",
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T14:21:59.6967361Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -954,13 +950,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "ac7eb1be718ed8e640f48c854764247f5d19f58796da64f0b4873c464deda54b"
+          "sha256": "6e2ad202245692b16d2a6cf07360e253347498924ee5e13e64235da8a9c63f8f"
         }
       ],
-      "reason": "Only readonly Paddle price preview added to client; scheduler/webhook/provider credentials unchanged. Actual local SMTP and S3 workflows verified, main pending non-QA email queue untouched. Native migration changes exact default HTML only.",
+      "reason": "Combined expanded local QA source freeze reviewed: user access precedes USDA provider calls, indexed external identifiers and nullable HTTP response preserved, lookup deadlines and rate admission bounded, native clean/upgrade/rollback/bundle verified, actual browser source-link recovery and CRUD/export/keyboard/locale/responsive scenarios passed; current reviewed21-file admin batch restores drafts and correct search ordering.",
       "baseRef": "HEAD",
-      "gitHead": "31a7be7e74da295faf4f41d9d193588ebd42358f",
-      "reviewedAtUtc": "2026-10-06T07:11:35.3900705Z"
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T14:22:00.2303664Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -969,13 +965,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7897399cc5f454e43f35daa827b4a9111b661d69515b4ecf62533772b0681de5"
+          "sha256": "5b85cba8da665f89595d2c8a5d4ddbd6cb995edc3c1d82ab4456227f8b872ba2"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "6e2ad202245692b16d2a6cf07360e253347498924ee5e13e64235da8a9c63f8f"
         }
       ],
-      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
-      "baseRef": "master",
-      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
-      "reviewedAtUtc": "2026-10-06T10:21:18.5740654Z"
+      "reason": "Combined expanded local QA source freeze reviewed: user access precedes USDA provider calls, indexed external identifiers and nullable HTTP response preserved, lookup deadlines and rate admission bounded, native clean/upgrade/rollback/bundle verified, actual browser source-link recovery and CRUD/export/keyboard/locale/responsive scenarios passed; current reviewed21-file admin batch restores drafts and correct search ordering.",
+      "baseRef": "HEAD",
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T14:22:01.0371441Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1112,13 +1112,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "4c5ab89e62b013e872edb5e0d72207c87c1cd4aa6144670033df2fc26cb80bd1"
+          "sha256": "cc8e4c0d95326d022e1a1e35159915d6a7d80c52b4b55c7a55236a26711c19df"
+        },
+        {
+          "path": ".llm-wiki/generated/frontend-index.json",
+          "sha256": "958560c8d3a206f05a9e75a4c8784154cbfd2de19eead387ecca3249d0777c64"
         }
       ],
-      "reason": "Reviewed regenerated frontend contract navigation: generated consumer evidence now matches committed app templates rather than ignored Playwright trace resources. Backend/frontend trace providers and scoped selection code are unchanged; full merged verification including trace-output passed.",
-      "baseRef": "master",
-      "gitHead": "bc52df2265bb6ce403372f060805c3d6f91805c5",
-      "reviewedAtUtc": "2026-10-06T10:57:03.6185623Z"
+      "reason": "Combined expanded local QA source freeze reviewed: user access precedes USDA provider calls, indexed external identifiers and nullable HTTP response preserved, lookup deadlines and rate admission bounded, native clean/upgrade/rollback/bundle verified, actual browser source-link recovery and CRUD/export/keyboard/locale/responsive scenarios passed; current reviewed21-file admin batch restores drafts and correct search ordering.",
+      "baseRef": "HEAD",
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T14:22:01.7325665Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1202,13 +1206,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "4c5ab89e62b013e872edb5e0d72207c87c1cd4aa6144670033df2fc26cb80bd1"
+          "sha256": "cc8e4c0d95326d022e1a1e35159915d6a7d80c52b4b55c7a55236a26711c19df"
         }
       ],
-      "reason": "Reviewed canonical frontend contract regeneration after current-master integration: removed 96 consumer edges pointing to ignored Playwright test-results HTML resources, preserving all 486 component declarations, 278 API calls and real template contracts. Full merged Wiki verification passed across 37 groups and 12 generators; SQLite selection/freshness routes remain unchanged.",
-      "baseRef": "master",
-      "gitHead": "bc52df2265bb6ce403372f060805c3d6f91805c5",
-      "reviewedAtUtc": "2026-10-06T10:57:02.6169467Z"
+      "reason": "Combined expanded local QA source freeze reviewed: user access precedes USDA provider calls, indexed external identifiers and nullable HTTP response preserved, lookup deadlines and rate admission bounded, native clean/upgrade/rollback/bundle verified, actual browser source-link recovery and CRUD/export/keyboard/locale/responsive scenarios passed; current reviewed21-file admin batch restores drafts and correct search ordering.",
+      "baseRef": "HEAD",
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T14:21:58.8375519Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1216,14 +1220,14 @@
       "pageSha256": "f9ddf22db2cc07f9109f6b518b296525846afc0f92e94ac0b443f5bf8ea4b89a",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "f4239851436d392316bf634723d2f359f0c7b8f7bea292435eb3991c7603ba9d"
         }
       ],
-      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
-      "baseRef": "master",
-      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
-      "reviewedAtUtc": "2026-10-06T10:21:17.7080583Z"
+      "reason": "Expanded release QA verifies current authentication and nutrition behavior, external USDA references and bounded provider resolution, schema migration and rollback, fasting controls, export feedback, locale pairs, dialog names and native keyboard navigation through actual local browser scenarios and focused plus full regression checks.",
+      "baseRef": "HEAD",
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T13:13:08.1795711Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1246,18 +1250,30 @@
       "pageSha256": "891ba091baab5bb5ebac52ec2d8482eba48976374cc43486fa4fbbe800d24fa2",
       "sources": [
         {
+          "path": ".llm-wiki/tools/code-graph-context-projection.mjs",
+          "sha256": "5a243e38926bddf04aec7ccd1ad903e0e5ee78a476e63d9d39287810ab971237"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-context-projection.test.mjs",
+          "sha256": "2507430dbd19d7d85b8fd6b23bf713169e6e0139b472ac573de86740a0b44b12"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-maintenance.mjs",
+          "sha256": "44f305954c59613348776401ad650df6c959c361f36a97d45a63664fe3f238eb"
+        },
+        {
           "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "6e3f4bc2a888ef592ba681885709e934fa07db9e3a996569bc0b8a85ed106aa8"
+          "sha256": "95e5bb441bba5cc7538a4ed0f879160e2555a02ac77e2b0cfeb785e9663c7487"
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
+          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
         }
       ],
-      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
-      "baseRef": "master",
-      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
-      "reviewedAtUtc": "2026-10-06T10:21:19.3725666Z"
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
+      "baseRef": "HEAD",
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:25.6783599Z"
     }
   ]
 }

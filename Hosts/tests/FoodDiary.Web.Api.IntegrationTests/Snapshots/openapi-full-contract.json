@@ -17475,7 +17475,8 @@
             "200",
             "401",
             "429",
-            "500"
+            "500",
+            "502"
           ],
           "SuccessResponses": [
             {
@@ -17690,6 +17691,7 @@
             "401",
             "403",
             "413",
+            "429",
             "500"
           ],
           "PathParameters": [
@@ -32207,6 +32209,13 @@
           "Type": "integer",
           "Format": "int32",
           "Nullable": false
+        },
+        {
+          "Name": "usdaFdcId",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": true
         },
         {
           "Name": "visibility",

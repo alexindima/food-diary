@@ -84,12 +84,12 @@ export class UserManageNotificationsCardComponent {
             return 'USER_MANAGE.NOTIFICATIONS_DISABLED_HINT';
         }
 
-        if (this.notificationPermission() === 'denied') {
-            return 'USER_MANAGE.NOTIFICATIONS_BLOCKED_HINT';
-        }
-
         if (!this.pushNotificationsSupported()) {
             return 'USER_MANAGE.NOTIFICATIONS_UNSUPPORTED_HINT';
+        }
+
+        if (this.notificationPermission() === 'denied') {
+            return 'USER_MANAGE.NOTIFICATIONS_BLOCKED_HINT';
         }
 
         if (this.pushNotificationsSubscribed()) {

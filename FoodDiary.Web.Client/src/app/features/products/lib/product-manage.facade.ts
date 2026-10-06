@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { inject, Service } from '@angular/core';
+import { DestroyRef, inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -17,14 +17,22 @@ import type { CreateProductRequest, Product, UpdateProductRequest } from '../../
 import { ProductService } from '../api/product.service';
 import type { ProductDeleteResult } from './product-manage.types';
 
-@Service()
+@Injectable()
 export class ProductManageFacade {
+    private readonly destroyRef = inject(DestroyRef);
+    private createdProductForRetry: Product | null = null;
     private readonly productService = inject(ProductService);
     private readonly navigationService = inject(NavigationService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly authService = inject(AuthService);
     private readonly translateService = inject(TranslateService);
     private readonly toastService = inject(FdUiToastService);
+
+    public constructor() {
+        this.destroyRef.onDestroy(() => {
+            this.createdProductForRetry = null;
+        });
+    }
 
     public async confirmDiscardChangesAsync(data: ConfirmDeleteDialogData): Promise<boolean> {
         const confirmed = await firstValueFrom(
@@ -80,17 +88,14 @@ export class ProductManageFacade {
         afterSave?: (product: Product) => Promise<void>,
     ): Promise<{ product: Product | null; error: HttpErrorResponse | null }> {
         try {
-            const isEdit = product !== null;
+            const targetProduct = this.resolveProductForSave(product);
+            const isEdit = targetProduct !== null;
             const savedProduct = isEdit
-                ? await firstValueFrom(this.productService.update(product.id, this.buildUpdateProductRequest(productData)))
+                ? await firstValueFrom(this.productService.update(targetProduct.id, this.buildUpdateProductRequest(productData)))
                 : await firstValueFrom(this.productService.create(productData));
 
-            let afterSaveError: HttpErrorResponse | null = null;
-            try {
-                await afterSave?.(savedProduct);
-            } catch (error) {
-                afterSaveError = this.toHttpErrorResponse(error);
-            }
+            this.rememberCreatedProduct(product, savedProduct);
+            const afterSaveError = await this.runAfterSaveAsync(savedProduct, afterSave);
 
             if (!skipPostSaveRedirect && afterSaveError === null) {
                 this.toastService.success(
@@ -98,10 +103,36 @@ export class ProductManageFacade {
                 );
                 await this.navigationService.navigateToProductListAsync();
             }
+            if (afterSaveError === null) {
+                this.createdProductForRetry = null;
+            }
 
             return { product: savedProduct, error: afterSaveError };
         } catch (error) {
             return { product: null, error: this.toHttpErrorResponse(error) };
+        }
+    }
+
+    private resolveProductForSave(product: Product | null): Product | null {
+        const targetProduct = product ?? this.createdProductForRetry;
+        if (product !== null) {
+            this.createdProductForRetry = null;
+        }
+        return targetProduct;
+    }
+
+    private rememberCreatedProduct(product: Product | null, savedProduct: Product): void {
+        if (product === null && !this.destroyRef.destroyed) {
+            this.createdProductForRetry = savedProduct;
+        }
+    }
+
+    private async runAfterSaveAsync(product: Product, afterSave?: (product: Product) => Promise<void>): Promise<HttpErrorResponse | null> {
+        try {
+            await afterSave?.(product);
+            return null;
+        } catch (error) {
+            return this.toHttpErrorResponse(error);
         }
     }
 

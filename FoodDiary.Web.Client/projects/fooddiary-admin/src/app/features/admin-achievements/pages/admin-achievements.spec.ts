@@ -1,6 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
@@ -55,6 +55,20 @@ describe('AdminAchievementsComponent', () => {
         const keyInput = host.querySelector<HTMLInputElement>('form input');
         expect(keyInput?.disabled).toBe(true);
         expect(host.textContent).toContain('ADMIN_ACHIEVEMENTS.EDIT');
+    });
+
+    it('shows a load error instead of an empty catalog and reloads through Retry', () => {
+        facade.getAll.mockReturnValueOnce(throwError(() => new Error('unavailable')));
+        fixture.componentInstance['load']();
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.definition-list [role="alert"]')?.textContent).toContain('ADMIN_COMMON.LOAD_ERROR');
+        expect(host.querySelector('.definition-list')?.textContent).not.toContain('ADMIN_ACHIEVEMENTS.EMPTY');
+        const retry = [...host.querySelectorAll('button')].find(button => button.textContent.includes('ADMIN_COMMON.RETRY'));
+        retry?.click();
+        fixture.detectChanges();
+        expect(host.querySelector('.definition-list [role="alert"]')).toBeNull();
+        expect(host.querySelector('.definition-card')?.textContent).toContain('20 meals');
     });
 
     it('submits an update with the current version and without the immutable key', () => {

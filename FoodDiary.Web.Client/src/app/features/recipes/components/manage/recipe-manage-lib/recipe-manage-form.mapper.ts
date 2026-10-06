@@ -330,7 +330,7 @@ function buildIngredientProduct(ingredient: RecipeIngredient, unknownProductName
         return null;
     }
 
-    const rawUnit = ingredient.productBaseUnit;
+    const rawUnit = ingredient.productBaseUnit?.toUpperCase();
     const unit = isMeasurementUnit(rawUnit) ? rawUnit : MeasurementUnit.G;
     const baseAmount = ingredient.productBaseAmount ?? DEFAULT_NUTRITION_BASE_AMOUNT;
 

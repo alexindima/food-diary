@@ -1,5 +1,6 @@
 import { HttpStatusCode } from '@angular/common/http';
 
+import { AI_CONSENT_ERROR_KEY, isAiConsentRequiredError } from '../../../../../shared/lib/ai-consent-error.utils';
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
 import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem, ProductLabel } from '../../../../../shared/models/ai.data';
@@ -144,6 +145,9 @@ function getUnitScale(unit: string): number {
 }
 
 export function mapAiRecognitionErrorKey(error: unknown): string {
+    if (isAiConsentRequiredError(error)) {
+        return AI_CONSENT_ERROR_KEY;
+    }
     const status = getNumberProperty(error, 'status');
     if (status === HttpStatusCode.Forbidden) {
         return 'PRODUCT_AI_DIALOG.ERROR_PREMIUM';

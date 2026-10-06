@@ -85,6 +85,9 @@
             [locale]="data.locale"
             (restored)="restoreRevision($event)"
         />
+        @if (saveFailed()) {
+            <p class="fd-ui-error-text" role="alert">{{ 'ADMIN_TEMPLATES.SAVE_ERROR' | translate }}</p>
+        }
         <div fdUiDialogFooter class="actions fd-row fd-gap-sm fd-justify-end">
             <fd-ui-button type="button" variant="secondary" (click)="onCancel()">Cancel</fd-ui-button>
             <fd-ui-button

@@ -22,7 +22,7 @@ public class UsdaFeatureTests {
         IUsdaProductLinkService productLinkService = CreateProductLinkService(product);
         IUsdaFoodRepository usdaRepo = CreateUsdaFoodRepository(usdaFood);
 
-        var handler = new LinkProductToUsdaFoodCommandHandler(productLinkService, usdaRepo, Substitute.For<ICurrentUserAccessService>());
+        var handler = new LinkProductToUsdaFoodCommandHandler(productLinkService, usdaRepo, Substitute.For<ICurrentUserAccessService>(), Substitute.For<IUsdaFoodSearchService>());
         Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(userId.Value, product.Id.Value, 171077),
             CancellationToken.None);
@@ -38,7 +38,7 @@ public class UsdaFeatureTests {
     [Fact]
     public async Task LinkProductToUsdaFood_WhenProductNotFound_ReturnsFailure() {
         var handler = new LinkProductToUsdaFoodCommandHandler(
-            CreateProductLinkService(product: null), CreateUsdaFoodRepository(food: null), Substitute.For<ICurrentUserAccessService>());
+            CreateProductLinkService(product: null), CreateUsdaFoodRepository(food: null), Substitute.For<ICurrentUserAccessService>(), Substitute.For<IUsdaFoodSearchService>());
 
         Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(Guid.NewGuid(), Guid.NewGuid(), 171077),
@@ -53,7 +53,7 @@ public class UsdaFeatureTests {
         var userId = UserId.New();
         var product = Product.Create(userId, "Chicken", MeasurementUnit.G, 100, defaultPortionAmount: null, 165, 31, 3.6, 0, 0, 0);
         var handler = new LinkProductToUsdaFoodCommandHandler(
-            CreateProductLinkService(product), CreateUsdaFoodRepository(food: null), Substitute.For<ICurrentUserAccessService>());
+            CreateProductLinkService(product), CreateUsdaFoodRepository(food: null), Substitute.For<ICurrentUserAccessService>(), Substitute.For<IUsdaFoodSearchService>());
 
         Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(userId.Value, product.Id.Value, 999999),
@@ -79,7 +79,7 @@ public class UsdaFeatureTests {
         var handler = new LinkProductToUsdaFoodCommandHandler(
             productLinkService,
             CreateUsdaFoodRepository(usdaFood),
-            Substitute.For<ICurrentUserAccessService>());
+            Substitute.For<ICurrentUserAccessService>(), Substitute.For<IUsdaFoodSearchService>());
 
         Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(userId.Value, product.Id.Value, usdaFood.FdcId),
@@ -118,7 +118,7 @@ public class UsdaFeatureTests {
     [Fact]
     public async Task LinkProductToUsdaFood_WithNullUserId_ReturnsFailure() {
         var handler = new LinkProductToUsdaFoodCommandHandler(
-            CreateProductLinkService(product: null), CreateUsdaFoodRepository(food: null), Substitute.For<ICurrentUserAccessService>());
+            CreateProductLinkService(product: null), CreateUsdaFoodRepository(food: null), Substitute.For<ICurrentUserAccessService>(), Substitute.For<IUsdaFoodSearchService>());
 
         Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(UserId: null, Guid.NewGuid(), 1), CancellationToken.None);

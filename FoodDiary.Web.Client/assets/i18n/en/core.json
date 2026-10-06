@@ -1,4 +1,8 @@
 {
+    "ADMIN_AUTH": {
+        "RATE_LIMITED_TITLE": "Sign-in is temporarily paused",
+        "RATE_LIMITED_MESSAGE": "There have been too many sign-in requests. Wait a moment and try signing in again."
+    },
     "ADMIN_MODERATION": {
         "STATUS": "Status",
         "TYPE": "Content type",
@@ -28,9 +32,13 @@
         "EMPTY": "No previous revisions recorded."
     },
     "ADMIN_TEMPLATES": {
-        "VARIABLES_HELP": "Variables supported by the current sender are listed below. Use the exact spelling without spaces. Preview values are examples; custom template keys need a matching sender in the application."
+        "VARIABLES_HELP": "Variables supported by the current sender are listed below. Use the exact spelling without spaces. Preview values are examples; custom template keys need a matching sender in the application.",
+        "SAVE_ERROR": "Could not save the template. Your edits are preserved. Try again."
     },
     "ADMIN_LESSONS": {
+        "ACTIONS": "Actions",
+        "CREATE_DIALOG_TITLE": "Create lesson",
+        "EDIT_DIALOG_TITLE": "Edit lesson",
         "PUBLISHED": "Published",
         "PUBLICATION_TITLE": "Publication",
         "PUBLICATION_HELP": "Published lessons appear in the app. Drafts remain available only in administration.",
@@ -240,6 +248,7 @@
         }
     },
     "AUTH": {
+        "DIALOG_TITLE": "Account access",
         "TELEGRAM": {
             "TITLE": "Your diary in Telegram",
             "CONNECTED": "Connected. Use Telegram to sign in or open your diary in the bot.",
@@ -1017,7 +1026,8 @@
         "YES": "Yes",
         "NO": "No",
         "LOGIN_FROM": "Last login from",
-        "LOGIN_TO": "Last login to"
+        "LOGIN_TO": "Last login to",
+        "SAVE_ERROR": "Could not save the account. Your edits are preserved. Try again."
     },
     "ADMIN_PROMPTS": {
         "UNSAVED_TITLE": "Unsaved changes",

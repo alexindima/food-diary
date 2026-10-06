@@ -1,4 +1,5 @@
 import { type DestroyRef, inject, Service } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { Observable } from 'rxjs';
 
@@ -19,6 +20,7 @@ export type PublicAuthDialogRef = {
 @Service()
 export class PublicAuthDialogService {
     private readonly fdDialogService = inject(FdUiDialogService);
+    private readonly translate = inject(TranslateService);
 
     public async openAsync({
         mode,
@@ -34,6 +36,7 @@ export class PublicAuthDialogService {
 
         return this.fdDialogService.open(AuthDialogComponent, {
             preset: 'form',
+            ariaLabel: this.translate.instant('AUTH.DIALOG_TITLE'),
             autoFocus: mode === 'login' ? '#auth-login-email' : '#auth-register-email',
             data: { mode, returnUrl, adminReturnUrl, messageKey },
         });

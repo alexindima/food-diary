@@ -41,6 +41,11 @@
                     <fd-ui-button variant="secondary" fill="text" size="sm" (click)="checkInRequested.emit()">
                         {{ 'FASTING.REDESIGN.CHECK_IN' | translate }}
                     </fd-ui-button>
+                    <div [hidden]="!canManageSession()">
+                        <fd-ui-button variant="secondary" fill="outline" size="sm" (click)="sessionManagementRequested.emit()">
+                            {{ 'FASTING.REDESIGN.MANAGE' | translate }}
+                        </fd-ui-button>
+                    </div>
                 </div>
                 <div class="fasting-redesign__timeline-labels">
                     <span

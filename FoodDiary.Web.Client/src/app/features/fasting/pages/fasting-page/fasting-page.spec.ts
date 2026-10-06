@@ -9,6 +9,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import type { FastingInsights, FastingProtocol, FastingSession, FastingStats } from '../../../../shared/models/fasting.data';
 import type { FastingCheckInChartDialogData } from '../../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog';
+import { FastingSessionManagementDialogComponent } from '../../components/fasting-session-management-dialog/fasting-session-management-dialog';
 import { FastingFacade } from '../../lib/fasting.facade';
 import { FastingPageComponent } from './fasting-page';
 
@@ -170,6 +171,34 @@ describe('FastingPageComponent protocol settings', () => {
         component['openProtocolSettings']();
 
         expect(dialogService.open).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('FastingPageComponent active session controls', () => {
+    beforeEach(createComponentAsync);
+
+    it('opens active management with the page facade without enabling protocol replacement', () => {
+        facade.isActive.set(true);
+        facade.currentSession.set({ ...createSession(), planType: 'Extended' });
+
+        component['openActiveSessionManagement']();
+        component['openProtocolSettings']();
+
+        expect(dialogService.open).toHaveBeenCalledExactlyOnceWith(FastingSessionManagementDialogComponent, {
+            preset: 'detail',
+            ariaLabel: 'FASTING.REDESIGN.MANAGE',
+            providers: [{ provide: FastingFacade, useValue: facade }],
+        });
+        expect(facade.endFasting).not.toHaveBeenCalled();
+    });
+
+    it('does not open duration or cyclic controls for inactive or intermittent sessions', () => {
+        component['openActiveSessionManagement']();
+        facade.isActive.set(true);
+        facade.currentSession.set(createSession());
+        component['openActiveSessionManagement']();
+
+        expect(dialogService.open).not.toHaveBeenCalled();
     });
 });
 

@@ -14,6 +14,6 @@ export function resolveIngredientUnitKey(ingredient: {
         return resolveServingsUnitKey(ingredient.amount);
     }
     return typeof ingredient.productBaseUnit === 'string' && ingredient.productBaseUnit.length > 0
-        ? `GENERAL.UNITS.${ingredient.productBaseUnit}`
+        ? `GENERAL.UNITS.${ingredient.productBaseUnit.toUpperCase()}`
         : null;
 }

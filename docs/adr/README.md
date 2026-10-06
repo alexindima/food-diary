@@ -83,3 +83,4 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 - [0050: Public recipe read boundary and server rendering](0050-public-recipe-read-boundary-and-ssr.md)
 - [0051: Canonical project namespaces](0051-canonical-project-namespaces.md)
 - [0052: Transaction outcomes, delivery ownership and independent user state](0052-backend-transaction-and-delivery-reliability.md)
+- [0053: USDA links support the full provider catalog](0053-live-usda-reference-identifiers.md)

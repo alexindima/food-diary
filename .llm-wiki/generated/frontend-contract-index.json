@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 487,
-    "componentsWithoutDirectSpecs": 130,
-    "inputs": 1569,
-    "outputs": 541,
+    "components": 488,
+    "componentsWithoutDirectSpecs": 129,
+    "inputs": 1570,
+    "outputs": 543,
     "apiCalls": 278,
-    "templatesWithTranslations": 348,
-    "translationKeys": 2120,
-    "consumerEdges": 1235,
+    "templatesWithTranslations": 351,
+    "translationKeys": 2129,
+    "consumerEdges": 1240,
     "consumedComponents": 309,
-    "unconsumedComponents": 177
+    "unconsumedComponents": 178
   },
   "components": [
     {
@@ -433,7 +433,7 @@
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.html",
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.spec.ts"
     },
     {
       "class": "AdminMailInboxComponent",
@@ -3660,6 +3660,10 @@
           "type": ""
         },
         {
+          "name": "sessionManagementRequested",
+          "type": ""
+        },
+        {
           "name": "protocolSettingsRequested",
           "type": ""
         },
@@ -3697,6 +3701,16 @@
       "inputs": [],
       "outputs": [],
       "specPath": null
+    },
+    {
+      "class": "FastingSessionManagementDialogComponent",
+      "selector": "fd-fasting-session-management-dialog",
+      "feature": "fasting",
+      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-management-dialog/fasting-session-management-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-management-dialog/fasting-session-management-dialog.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-management-dialog/fasting-session-management-dialog.spec.ts"
     },
     {
       "class": "FastingSetupControlsComponent",
@@ -11277,6 +11291,11 @@
           "name": "dragDisabled",
           "type": "boolean",
           "required": true
+        },
+        {
+          "name": "canMoveDown",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
@@ -11287,6 +11306,10 @@
         {
           "name": "removeStep",
           "type": ""
+        },
+        {
+          "name": "moveStep",
+          "type": "-1 | 1"
         },
         {
           "name": "toggleExpanded",
@@ -15611,7 +15634,7 @@
       "responseType": "AdminSsoStartResponse",
       "urlExpression": "`${this.authUrl}/admin-sso/start`",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
-      "line": 100,
+      "line": 102,
       "publicMethod": "tryUpgradeToAdminAsync",
       "transport": "HttpClient",
       "baseUrlExpression": null,
@@ -15623,7 +15646,7 @@
       "responseType": "AuthenticationResponse",
       "urlExpression": "`${this.authUrl}/admin-sso/exchange`",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
-      "line": 116,
+      "line": 119,
       "publicMethod": "exchangeSsoCodeAsync",
       "transport": "HttpClient",
       "baseUrlExpression": null,
@@ -18479,7 +18502,7 @@
       "responseType": "UsdaFood[]",
       "urlExpression": "'foods'",
       "path": "FoodDiary.Web.Client/src/app/features/usda/api/usda.service.ts",
-      "line": 17,
+      "line": 21,
       "publicMethod": "searchFoods",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.usda",
@@ -18488,10 +18511,10 @@
     {
       "feature": "usda",
       "method": "GET",
-      "responseType": "UsdaFoodDetail",
+      "responseType": "UsdaFoodDetailHttpResponse",
       "urlExpression": "`foods/${fdcId}`",
       "path": "FoodDiary.Web.Client/src/app/features/usda/api/usda.service.ts",
-      "line": 23,
+      "line": 27,
       "publicMethod": "getFoodDetail",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.usda",
@@ -18503,7 +18526,7 @@
       "responseType": "void",
       "urlExpression": "`products/${productId}/link`",
       "path": "FoodDiary.Web.Client/src/app/features/usda/api/usda.service.ts",
-      "line": 29,
+      "line": 40,
       "publicMethod": "linkProduct",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.usda",
@@ -18515,7 +18538,7 @@
       "responseType": "void",
       "urlExpression": "`products/${productId}/link`",
       "path": "FoodDiary.Web.Client/src/app/features/usda/api/usda.service.ts",
-      "line": 35,
+      "line": 46,
       "publicMethod": "unlinkProduct",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.usda",
@@ -18527,7 +18550,7 @@
       "responseType": "DailyMicronutrientSummary",
       "urlExpression": "'daily-micronutrients'",
       "path": "FoodDiary.Web.Client/src/app/features/usda/api/usda.service.ts",
-      "line": 41,
+      "line": 52,
       "publicMethod": "getDailyMicronutrients",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.usda",
@@ -19112,6 +19135,7 @@
       "feature": "admin-email-templates",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/dialogs/admin-email-template-edit-dialog.html",
       "keys": [
+        "ADMIN_TEMPLATES.SAVE_ERROR",
         "ADMIN_TEMPLATES.VARIABLES_HELP"
       ]
     },
@@ -19136,6 +19160,7 @@
       "feature": "admin-lessons",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.html",
       "keys": [
+        "ADMIN_LESSONS.ACTIONS",
         "ADMIN_LESSONS.COMPLETED",
         "ADMIN_LESSONS.PUBLICATION_TITLE",
         "ADMIN_NAV.LESSONS",
@@ -19294,6 +19319,14 @@
       ]
     },
     {
+      "feature": "admin-public",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-public/pages/unauthorized.html",
+      "keys": [
+        "ADMIN_AUTH.RATE_LIMITED_MESSAGE",
+        "ADMIN_AUTH.RATE_LIMITED_TITLE"
+      ]
+    },
+    {
       "feature": "admin-retention",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-retention/pages/admin-retention.html",
       "keys": [
@@ -19332,6 +19365,13 @@
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-details-body.html",
       "keys": [
         "ADMIN_COMMON.LOADING"
+      ]
+    },
+    {
+      "feature": "admin-users",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-edit-dialog.html",
+      "keys": [
+        "ADMIN_USER.SAVE_ERROR"
       ]
     },
     {
@@ -20402,6 +20442,7 @@
         "FASTING.REDESIGN.CHECK_IN_NOTE",
         "FASTING.REDESIGN.IDLE_TEXT",
         "FASTING.REDESIGN.IDLE_TITLE",
+        "FASTING.REDESIGN.MANAGE",
         "FASTING.REDESIGN.NEXT",
         "FASTING.REDESIGN.NOW",
         "FASTING.REDESIGN.OBSERVATIONS_TITLE",
@@ -20437,6 +20478,13 @@
         "FASTING.REDESIGN.SESSION_NOTE",
         "FASTING.REDESIGN.STATUS_LABEL",
         "FASTING.REDESIGN.WELLBEING_CHART_TITLE"
+      ]
+    },
+    {
+      "feature": "fasting",
+      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-management-dialog/fasting-session-management-dialog.html",
+      "keys": [
+        "FASTING.REDESIGN.MANAGE"
       ]
     },
     {
@@ -22009,6 +22057,8 @@
         "RECIPE_MANAGE.INGREDIENT_NAME",
         "RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER",
         "RECIPE_MANAGE.INGREDIENT_TYPE",
+        "RECIPE_MANAGE.MOVE_STEP_DOWN",
+        "RECIPE_MANAGE.MOVE_STEP_UP",
         "RECIPE_MANAGE.REMOVE_STEP",
         "RECIPE_MANAGE.STEP_ACTIONS",
         "RECIPE_MANAGE.STEP_DESCRIPTION",
@@ -22931,6 +22981,7 @@
         "STATISTICS.CUSTOM_RANGE_TO_LABEL",
         "STATISTICS.DASHBOARD.PREVIEW_TITLE",
         "STATISTICS.EXPORT_CSV",
+        "STATISTICS.EXPORT_FAILED",
         "STATISTICS.EXPORT_MENU_LABEL",
         "STATISTICS.EXPORT_PDF",
         "STATISTICS.LOADING",
@@ -23542,6 +23593,18 @@
         "data"
       ],
       "outputsHandled": []
+    },
+    {
+      "component": "AdminLoadErrorComponent",
+      "selector": "fd-admin-load-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
+      "consumerFeature": "admin-achievements",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": [
+        "retry"
+      ]
     },
     {
       "component": "AdminLoadErrorComponent",
@@ -25601,6 +25664,19 @@
       "selector": "fd-fasting-controls",
       "componentPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/fasting-controls.ts",
       "consumerFeature": "fasting",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-management-dialog/fasting-session-management-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "presentation",
+        "showSetupStartAction"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FastingControlsComponent",
+      "selector": "fd-fasting-controls",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/fasting-controls.ts",
+      "consumerFeature": "fasting",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.html",
       "occurrences": 1,
       "inputsUsed": [],
@@ -25714,6 +25790,7 @@
         "manageRequested",
         "protocolSettingsRequested",
         "sessionDetailsRequested",
+        "sessionManagementRequested",
         "startRequested"
       ]
     },
@@ -27880,7 +27957,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "fasting",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.html",
-      "occurrences": 7,
+      "occurrences": 8,
       "inputsUsed": [
         "fill",
         "icon",
@@ -31393,6 +31470,19 @@
       "component": "FdUiDialogComponent",
       "selector": "fd-ui-dialog",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+      "consumerFeature": "admin-lessons",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "size",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiDialogComponent",
+      "selector": "fd-ui-dialog",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
       "consumerFeature": "admin-mail-inbox",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.html",
       "occurrences": 1,
@@ -32153,6 +32243,19 @@
       "inputsUsed": [
         "size",
         "subtitle",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiDialogShellComponent",
+      "selector": "fd-ui-dialog-shell",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog-shell/fd-ui-dialog-shell.ts",
+      "consumerFeature": "fasting",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-management-dialog/fasting-session-management-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "size",
         "title"
       ],
       "outputsHandled": []
@@ -33930,6 +34033,19 @@
       "outputsHandled": []
     },
     {
+      "component": "FdUiInlineAlertComponent",
+      "selector": "fd-ui-inline-alert",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert.ts",
+      "consumerFeature": "statistics",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "message",
+        "severity"
+      ],
+      "outputsHandled": []
+    },
+    {
       "component": "FdUiInputComponent",
       "selector": "fd-ui-input",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
@@ -35671,7 +35787,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu-item.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.html",
-      "occurrences": 2,
+      "occurrences": 4,
       "inputsUsed": [
         "disabled",
         "disabledReason"

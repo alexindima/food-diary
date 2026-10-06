@@ -40,7 +40,7 @@
     } @else if (loadFailed()) {
         <fd-admin-load-error (retry)="loadLessons()" />
     } @else {
-        <table class="lessons-table">
+        <table class="lessons-table" tabindex="0" [attr.aria-label]="'ADMIN_NAV.LESSONS' | translate">
             <thead>
                 <tr>
                     <th>Title</th>
@@ -52,7 +52,7 @@
                     <th>{{ 'ADMIN_LESSONS.PUBLICATION_TITLE' | translate }}</th>
                     <th>{{ 'ADMIN_LESSONS.COMPLETED' | translate }}</th>
                     <th>Updated</th>
-                    <th></th>
+                    <th>{{ 'ADMIN_LESSONS.ACTIONS' | translate }}</th>
                 </tr>
             </thead>
             <tbody>

@@ -1,5 +1,5 @@
 import { inject, Service } from '@angular/core';
-import { catchError, concatMap, map, type Observable } from 'rxjs';
+import { catchError, concatMap, map, type Observable, of } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
@@ -22,8 +22,32 @@ export class GoalsService extends ApiService {
 
     public updateGoals(request: UpdateGoalsRequest): Observable<GoalsResponse | null> {
         return this.patch<GoalsResponse>('', request).pipe(
-            concatMap(goals => this.userService.getInfoSilently().pipe(map(() => goals))),
             catchError((error: unknown) => fallbackApiError('Update goals error', error, null)),
+            concatMap(goals =>
+                goals === null
+                    ? of(null)
+                    : this.clearBodyTargets(request, goals).pipe(
+                          concatMap(updated => this.userService.getInfoSilently().pipe(map(() => updated))),
+                      ),
+            ),
         );
+    }
+
+    private clearBodyTargets(request: UpdateGoalsRequest, goals: GoalsResponse): Observable<GoalsResponse> {
+        return this.clearWeightTarget(request, goals).pipe(concatMap(updated => this.clearWaistTarget(request, updated)));
+    }
+
+    private clearWeightTarget(request: UpdateGoalsRequest, goals: GoalsResponse): Observable<GoalsResponse> {
+        if (request.desiredWeightKg !== null || goals.desiredWeightKg === null) {
+            return of(goals);
+        }
+        return this.userService.updateWeightGoal(null).pipe(map(result => ({ ...goals, desiredWeightKg: result.desiredWeightKg })));
+    }
+
+    private clearWaistTarget(request: UpdateGoalsRequest, goals: GoalsResponse): Observable<GoalsResponse> {
+        if (request.desiredWaistCm !== null || goals.desiredWaistCm === null) {
+            return of(goals);
+        }
+        return this.userService.updateWaistGoal(null).pipe(map(result => ({ ...goals, desiredWaistCm: result.desiredWaistCm })));
     }
 }

@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1910,
-    "symbols": 730,
+    "typescriptFiles": 1916,
+    "symbols": 731,
     "routes": 106,
     "features": 46,
-    "specs": 681,
+    "specs": 685,
     "localeFiles": 5,
     "roles": {
-      "Component": 482,
+      "Component": 483,
       "Directive": 12,
       "Facade": 83,
       "Other": 20,
@@ -253,7 +253,9 @@
       "routes": [
         ""
       ],
-      "tests": []
+      "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.spec.ts"
+      ]
     },
     {
       "area": "admin",
@@ -689,6 +691,7 @@
         "FastingSafetyDialogComponent",
         "FastingService",
         "FastingSessionDetailsDialogComponent",
+        "FastingSessionManagementDialogComponent",
         "FastingSetupControlsComponent",
         "FastingStatsCardComponent",
         "FastingTimerCardComponent",
@@ -713,6 +716,7 @@
         "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-insights-section/fasting-insights-section.spec.ts",
         "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.spec.ts",
         "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-safety-dialog/fasting-safety-dialog.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-management-dialog/fasting-session-management-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-lib/fasting-timer-card-display.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/fasting/lib/fasting-session-state.spec.ts",
@@ -1170,6 +1174,7 @@
       "routes": [],
       "tests": [
         "FoodDiary.Web.Client/src/app/features/public/components/landing-preview-tour/landing-preview-tour-data.mapper.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/public/lib/public-auth-dialog.service.spec.ts",
         "FoodDiary.Web.Client/src/app/features/public/lib/public-auth-navigation.service.spec.ts",
         "FoodDiary.Web.Client/src/app/features/public/pages/landing/main.spec.ts",
         "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/lib/seo-landing.mapper.spec.ts"
@@ -1723,7 +1728,7 @@
       "role": "Component",
       "selector": "fd-ui-dialog",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
-      "line": 48
+      "line": 50
     },
     {
       "name": "FdUiEmojiPickerComponent",
@@ -2080,7 +2085,7 @@
       "role": "Component",
       "selector": "fd-admin-achievements",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.ts",
-      "line": 55
+      "line": 57
     },
     {
       "name": "AdminAcquisitionService",
@@ -2409,7 +2414,7 @@
       "role": "Component",
       "selector": "fd-admin-lesson-edit-dialog",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.ts",
-      "line": 52
+      "line": 56
     },
     {
       "name": "AdminLessonsFacade",
@@ -2556,7 +2561,7 @@
       "role": "Component",
       "selector": "fd-admin-unauthorized",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-public/pages/unauthorized.ts",
-      "line": 16
+      "line": 17
     },
     {
       "name": "AdminRetentionService",
@@ -2626,7 +2631,7 @@
       "role": "Component",
       "selector": "fd-admin-user-edit-dialog",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-edit-dialog.ts",
-      "line": 36
+      "line": 38
     },
     {
       "name": "AdminUserImpersonationDialogComponent",
@@ -2745,7 +2750,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.facade.ts",
-      "line": 11
+      "line": 12
     },
     {
       "name": "AiInputBarComponent",
@@ -3235,7 +3240,7 @@
       "role": "Component",
       "selector": "fd-auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
-      "line": 55
+      "line": 56
     },
     {
       "name": "TelegramEntryButtonComponent",
@@ -4029,6 +4034,13 @@
       "line": 43
     },
     {
+      "name": "FastingSessionManagementDialogComponent",
+      "role": "Component",
+      "selector": "fd-fasting-session-management-dialog",
+      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-management-dialog/fasting-session-management-dialog.ts",
+      "line": 15
+    },
+    {
       "name": "FastingTimerCardGroupsComponent",
       "role": "Component",
       "selector": "fd-fasting-timer-card-groups",
@@ -4082,7 +4094,7 @@
       "role": "Component",
       "selector": "fd-fasting-page",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page/fasting-page.ts",
-      "line": 85
+      "line": 86
     },
     {
       "name": "GamificationService",
@@ -5195,7 +5207,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/public/lib/public-auth-dialog.service.ts",
-      "line": 20
+      "line": 21
     },
     {
       "name": "PublicAuthNavigationService",
@@ -5776,14 +5788,14 @@
       "role": "Component",
       "selector": "fd-statistics",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.ts",
-      "line": 56
+      "line": 64
     },
     {
       "name": "UsdaService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/usda/api/usda.service.ts",
-      "line": 11
+      "line": 15
     },
     {
       "name": "DailyMicronutrientCardComponent",
@@ -7198,16 +7210,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4086,
-      "russianProperties": 4086,
+      "englishProperties": 4090,
+      "russianProperties": 4090,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1156,
-      "russianProperties": 1156,
+      "englishProperties": 1165,
+      "russianProperties": 1165,
       "countsMatch": true
     },
     {

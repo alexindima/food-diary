@@ -86,12 +86,21 @@ describe('AdminUserEditDialogComponent', () => {
         expect(component['isSaving']()).toBe(true);
     });
 
-    it('should close with false on save failure', () => {
+    it('preserves edits after a failed save, shows the error and allows retry', () => {
         usersService.updateUser.mockReturnValueOnce(throwError(() => new Error('save failed')));
+        component['toggleRole']('Support');
 
         component['save']();
 
-        expect(dialogRef.close).toHaveBeenCalledWith(false);
+        fixture.detectChanges();
+        expect(dialogRef.close).not.toHaveBeenCalled();
         expect(component['isSaving']()).toBe(false);
+        expect(component['hasRole']('Support')).toBe(true);
+        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent).toContain('ADMIN_USER.SAVE_ERROR');
+
+        component['save']();
+        expect(usersService.updateUser).toHaveBeenLastCalledWith('u1', expect.objectContaining({ roles: ['Admin', 'Support'] }));
+        expect(dialogRef.close).toHaveBeenCalledWith(true);
+        expect(component['saveFailed']()).toBe(false);
     });
 });

@@ -73,11 +73,11 @@
         <fd-ui-card>
             <div class="admin-acquisition__section fd-grid fd-gap-sm">
                 <div>
-                    <div class="fd-ui-title-sm">Campaign performance</div>
+                    <div id="acquisition-campaigns-title" class="fd-ui-title-sm">Campaign performance</div>
                     <div class="fd-ui-body-xs fd-ui-text-muted">Only traffic with an explicit utm_campaign is included.</div>
                 </div>
 
-                <div class="admin-acquisition__table-scroll">
+                <div class="admin-acquisition__table-scroll" role="region" tabindex="0" aria-labelledby="acquisition-campaigns-title">
                     <table class="admin-acquisition__table">
                         <thead>
                             <tr>
@@ -115,11 +115,11 @@
         <fd-ui-card>
             <div class="admin-acquisition__section fd-grid fd-gap-sm">
                 <div>
-                    <div class="fd-ui-title-sm">Channel performance</div>
+                    <div id="acquisition-channels-title" class="fd-ui-title-sm">Channel performance</div>
                     <div class="fd-ui-body-xs fd-ui-text-muted">UTM sources, referral hosts, and direct traffic shown together.</div>
                 </div>
 
-                <div class="admin-acquisition__table-scroll">
+                <div class="admin-acquisition__table-scroll" role="region" tabindex="0" aria-labelledby="acquisition-channels-title">
                     <table class="admin-acquisition__table">
                         <thead>
                             <tr>
@@ -162,7 +162,7 @@
             <div class="admin-acquisition__section fd-grid fd-gap-sm">
                 <div class="admin-acquisition__events-heading">
                     <div>
-                        <div class="fd-ui-title-sm">Attribution event log</div>
+                        <div id="acquisition-events-title" class="fd-ui-title-sm">Attribution event log</div>
                         <div class="fd-ui-body-xs fd-ui-text-muted">
                             {{ 'ADMIN_ACQUISITION.EVENT_TOTAL' | translate }}: {{ report()?.eventTotal }}
                         </div>
@@ -216,7 +216,7 @@
                         >{{ 'ADMIN_COMMON.NEXT' | translate }}</fd-ui-button
                     >
                 </div>
-                <div class="admin-acquisition__table-scroll">
+                <div class="admin-acquisition__table-scroll" role="region" tabindex="0" aria-labelledby="acquisition-events-title">
                     <table class="admin-acquisition__table admin-acquisition__table--events">
                         <thead>
                             <tr>

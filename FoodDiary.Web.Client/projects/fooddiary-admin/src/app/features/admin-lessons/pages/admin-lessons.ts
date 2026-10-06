@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signa
 import { toSignal } from '@angular/core/rxjs-interop';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -38,6 +38,7 @@ export class AdminLessonsComponent {
     protected readonly loadFailed = signal(false);
     private readonly lessonsFacade = inject(AdminLessonsFacade);
     private readonly dialogService = inject(FdUiDialogService);
+    private readonly translate = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly document = inject(DOCUMENT);
 
@@ -121,6 +122,7 @@ export class AdminLessonsComponent {
 
         this.dialogService
             .open(AdminLessonEditDialogComponent, {
+                ariaLabel: String(this.translate.instant('ADMIN_LESSONS.CREATE_DIALOG_TITLE')),
                 size: 'lg',
                 panelClass: ['fd-admin-lesson-dialog', 'fd-admin-lesson-dialog--fullscreen'],
                 data: dialogData,
@@ -136,6 +138,7 @@ export class AdminLessonsComponent {
     protected openEdit(lesson: AdminLesson): void {
         this.dialogService
             .open(AdminLessonEditDialogComponent, {
+                ariaLabel: String(this.translate.instant('ADMIN_LESSONS.EDIT_DIALOG_TITLE')),
                 size: 'lg',
                 panelClass: ['fd-admin-lesson-dialog', 'fd-admin-lesson-dialog--fullscreen'],
                 data: lesson,

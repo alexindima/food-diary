@@ -1,7 +1,14 @@
 :host {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--fd-space-md);
     min-width: 0;
+}
+fd-ui-card {
+    min-width: 0;
+}
+:host > .fd-grid:not(.admin-ai-usage) {
+    grid-template-columns: minmax(0, 1fr);
 }
 .admin-ai-usage {
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
@@ -11,6 +18,10 @@ strong {
 }
 .table-scroll {
     overflow-x: auto;
+}
+.table-scroll:where(:focus-visible) {
+    outline: var(--fd-outline-focus);
+    outline-offset: calc(0px - var(--fd-border-width-strong));
 }
 table {
     width: 100%;

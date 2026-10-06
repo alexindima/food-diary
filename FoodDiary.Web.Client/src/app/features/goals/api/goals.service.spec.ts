@@ -10,25 +10,24 @@ import { GoalsService } from './goals.service';
 
 const UPDATED_CALORIE_TARGET = 2500;
 
+let service: GoalsService;
+let httpMock: HttpTestingController;
+const baseUrl = environment.apiUrls.goals;
+
+beforeEach(() => {
+    TestBed.configureTestingModule({
+        providers: [GoalsService, provideHttpClient(), provideHttpClientTesting()],
+    });
+
+    service = TestBed.inject(GoalsService);
+    httpMock = TestBed.inject(HttpTestingController);
+});
+
+afterEach(() => {
+    httpMock.verify();
+});
+
 describe('GoalsService', () => {
-    let service: GoalsService;
-    let httpMock: HttpTestingController;
-
-    const baseUrl = environment.apiUrls.goals;
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [GoalsService, provideHttpClient(), provideHttpClientTesting()],
-        });
-
-        service = TestBed.inject(GoalsService);
-        httpMock = TestBed.inject(HttpTestingController);
-    });
-
-    afterEach(() => {
-        httpMock.verify();
-    });
-
     it('should get goals', () => {
         const mockGoals: GoalsResponse = {
             dailyCalorieTarget: 2000,
@@ -99,5 +98,93 @@ describe('GoalsService', () => {
 
         const req = httpMock.expectOne(`${baseUrl}/`);
         req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+    });
+});
+
+describe('GoalsService body target updates', () => {
+    it('clears explicit null targets sequentially after PATCH and publishes success only after refresh', () => {
+        const next = vi.fn();
+        service.updateGoals({ desiredWeightKg: null, desiredWaistCm: null }).subscribe(next);
+        httpMock.expectNone(`${environment.apiUrls.users}/desired-weight`);
+        httpMock.expectOne(`${baseUrl}/`).flush({ calorieCyclingEnabled: false, desiredWeightKg: 72, desiredWaistCm: 78 });
+        const weight = httpMock.expectOne(`${environment.apiUrls.users}/desired-weight`);
+        expect(weight.request.body).toEqual({ desiredWeightKg: null });
+        httpMock.expectNone(`${environment.apiUrls.users}/desired-waist`);
+        expect(next).not.toHaveBeenCalled();
+        weight.flush({ desiredWeightKg: null });
+        const waist = httpMock.expectOne(`${environment.apiUrls.users}/desired-waist`);
+        expect(waist.request.body).toEqual({ desiredWaistCm: null });
+        waist.flush({ desiredWaistCm: null });
+        expect(next).not.toHaveBeenCalled();
+        httpMock.expectOne(`${environment.apiUrls.users}/info`).flush({ id: 'user-1' });
+        expect(next).toHaveBeenCalledExactlyOnceWith({
+            calorieCyclingEnabled: false,
+            desiredWeightKg: null,
+            desiredWaistCm: null,
+        });
+    });
+
+    it('preserves positive targets and undefined no-op without using clear endpoints', () => {
+        const response: GoalsResponse = { calorieCyclingEnabled: false, desiredWeightKg: 72, desiredWaistCm: 78 };
+        const next = vi.fn();
+        service.updateGoals({ desiredWeightKg: 72 }).subscribe(next);
+        httpMock.expectOne(`${baseUrl}/`).flush(response);
+        httpMock.expectNone(`${environment.apiUrls.users}/desired-weight`);
+        httpMock.expectNone(`${environment.apiUrls.users}/desired-waist`);
+        httpMock.expectOne(`${environment.apiUrls.users}/info`).flush({ id: 'user-1' });
+        expect(next).toHaveBeenCalledExactlyOnceWith(response);
+    });
+
+    it('skips redundant clears for explicit null responses but clears targets omitted from the response', () => {
+        const next = vi.fn();
+        service.updateGoals({ desiredWeightKg: null, desiredWaistCm: null }).subscribe(next);
+        httpMock.expectOne(`${baseUrl}/`).flush({ calorieCyclingEnabled: false, desiredWeightKg: null, desiredWaistCm: null });
+        httpMock.expectNone(`${environment.apiUrls.users}/desired-weight`);
+        httpMock.expectNone(`${environment.apiUrls.users}/desired-waist`);
+        httpMock.expectOne(`${environment.apiUrls.users}/info`).flush({ id: 'user-1' });
+        expect(next).toHaveBeenCalledTimes(1);
+
+        service.updateGoals({ desiredWeightKg: null, desiredWaistCm: null }).subscribe(next);
+        httpMock.expectOne(`${baseUrl}/`).flush({ calorieCyclingEnabled: false });
+        httpMock.expectOne(`${environment.apiUrls.users}/desired-weight`).flush({ desiredWeightKg: null });
+        httpMock.expectOne(`${environment.apiUrls.users}/desired-waist`).flush({ desiredWaistCm: null });
+        httpMock.expectOne(`${environment.apiUrls.users}/info`).flush({ id: 'user-1' });
+        expect(next).toHaveBeenCalledTimes(2);
+    });
+});
+
+describe('GoalsService failed body target updates', () => {
+    it('does not clear targets after a rejected PATCH', () => {
+        const next = vi.fn();
+        service.updateGoals({ desiredWeightKg: null, desiredWaistCm: null }).subscribe(next);
+        httpMock.expectOne(`${baseUrl}/`).flush('Invalid goals', { status: HttpStatusCode.BadRequest, statusText: 'Bad Request' });
+        httpMock.expectNone(`${environment.apiUrls.users}/desired-weight`);
+        httpMock.expectNone(`${environment.apiUrls.users}/desired-waist`);
+        httpMock.expectNone(`${environment.apiUrls.users}/info`);
+        expect(next).toHaveBeenCalledExactlyOnceWith(null);
+    });
+
+    it('propagates clear failure without a success value or profile refresh and allows retry', () => {
+        const request: UpdateGoalsRequest = { desiredWeightKg: null, desiredWaistCm: null };
+        const next = vi.fn();
+        const error = vi.fn();
+        const response: GoalsResponse = { calorieCyclingEnabled: false, desiredWeightKg: 72, desiredWaistCm: 78 };
+        service.updateGoals(request).subscribe({ next, error });
+        httpMock.expectOne(`${baseUrl}/`).flush(response);
+        httpMock.expectOne(`${environment.apiUrls.users}/desired-weight`).flush('Unavailable', {
+            status: HttpStatusCode.InternalServerError,
+            statusText: 'Internal Server Error',
+        });
+        httpMock.expectNone(`${environment.apiUrls.users}/desired-waist`);
+        httpMock.expectNone(`${environment.apiUrls.users}/info`);
+        expect(next).not.toHaveBeenCalled();
+        expect(error).toHaveBeenCalledTimes(1);
+
+        service.updateGoals(request).subscribe(next);
+        httpMock.expectOne(`${baseUrl}/`).flush(response);
+        httpMock.expectOne(`${environment.apiUrls.users}/desired-weight`).flush({ desiredWeightKg: null });
+        httpMock.expectOne(`${environment.apiUrls.users}/desired-waist`).flush({ desiredWaistCm: null });
+        httpMock.expectOne(`${environment.apiUrls.users}/info`).flush({ id: 'user-1' });
+        expect(next).toHaveBeenCalledTimes(1);
     });
 });

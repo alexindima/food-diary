@@ -37,7 +37,10 @@ public static class ProductHttpResponseMappings {
                 model.QualityGrade,
                 model.IsFavorite,
                 model.FavoriteProductId
-            ) { Images = model.Images.Select(image => new ProductImageHttpResponse(image.ImageAssetId, image.ImageUrl)).ToList() };
+            ) {
+                UsdaFdcId = model.UsdaFdcId,
+                Images = model.Images.Select(image => new ProductImageHttpResponse(image.ImageAssetId, image.ImageUrl)).ToList(),
+            };
         }
     }
 

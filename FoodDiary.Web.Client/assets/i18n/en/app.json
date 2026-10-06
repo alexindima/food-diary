@@ -186,6 +186,7 @@
         "EXPORT_MENU_LABEL": "Export",
         "EXPORT_CSV": "CSV",
         "EXPORT_PDF": "PDF",
+        "EXPORT_FAILED": "Could not download the file. Please try again.",
         "NUTRITION_TABS": {
             "CALORIES": "Calories",
             "MACROS": "Macros",
@@ -444,6 +445,8 @@
         "STEPS_SECTION_TITLE": "Cooking steps",
         "STEP_TITLE": "Step {{index}}",
         "STEP_ACTIONS": "Step actions",
+        "MOVE_STEP_UP": "Move step up",
+        "MOVE_STEP_DOWN": "Move step down",
         "EDIT_STEP_TITLE": "Edit step title",
         "STEP_TITLE_LABEL": "Step title",
         "STEP_TITLE_PLACEHOLDER": "Optional step name",
@@ -4091,6 +4094,7 @@
         "ERROR_DECLINE": "Failed to decline the invitation."
     },
     "AI_RECOGNITION": {
+        "ERROR_CONSENT": "Consent to share data with the AI service was missing for this request. Confirm consent and start a new attempt.",
         "EMPTY_TITLE": "No photo recognitions yet",
         "EMPTY_DESCRIPTION": "Your recent recognition tasks and results will appear here.",
         "EMPTY_BACK": "Back to recognition",

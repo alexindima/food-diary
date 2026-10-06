@@ -26,6 +26,9 @@
         <div class="fd-grid fd-gap-xxs">
             <fd-ui-select label="Language" [id]="'admin-user-edit-language'" [formField]="form.language" [options]="[...languages]" />
         </div>
+        @if (saveFailed()) {
+            <p class="fd-ui-error-text" role="alert">{{ 'ADMIN_USER.SAVE_ERROR' | translate }}</p>
+        }
     </div>
 
     <div fdUiDialogFooter>

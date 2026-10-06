@@ -4,6 +4,16 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.Usda.Application.Abstractions.Common;
 
 public static class UsdaErrors {
+    public static Error ProviderLookupLimitExceeded(int limit) => new(
+        "Usda.ProviderLookupLimitExceeded",
+        $"Daily micronutrient summaries support at most {limit.ToString(CultureInfo.InvariantCulture)} distinct provider-only foods per request.",
+        Kind: ErrorKind.RateLimited);
+
+    public static Error ProviderLookupTimedOut() => new(
+        "Usda.ProviderLookupTimedOut",
+        "The USDA provider lookup budget expired. Retry the daily micronutrient request.",
+        Kind: ErrorKind.ExternalFailure);
+
     public static Error DailyMicronutrientItemLimitExceeded(int limit) => new(
         "Usda.DailyMicronutrientItemLimitExceeded",
         $"Daily micronutrient summaries support at most {limit.ToString(CultureInfo.InvariantCulture)} product items.",

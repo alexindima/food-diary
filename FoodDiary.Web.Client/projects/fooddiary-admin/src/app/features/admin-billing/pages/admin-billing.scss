@@ -4,6 +4,14 @@
     max-width: 100%;
 }
 
+.admin-billing {
+    grid-template-columns: minmax(0, 1fr);
+
+    fd-ui-tabs {
+        min-width: 0;
+    }
+}
+
 .admin-billing__error {
     margin: 0;
     color: var(--fd-color-danger-700);

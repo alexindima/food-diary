@@ -89,6 +89,24 @@ describe('AiInputBarFacade', () => {
 });
 
 describe('AiInputBarFacade saved photo results', () => {
+    it('explains missing consent when a saved terminal job returns403 instead of showing a paywall', () => {
+        aiFoodFacade.resumeRecognition.mockReturnValueOnce(
+            throwError(() => ({ status: HttpStatusCode.Forbidden, error: { code: 'Ai.ConsentRequired', terminal: true } })),
+        );
+        facade.resumePhoto('job-with-revoked-consent');
+        expect(facade.photo.errorKey()).toBe('AI_RECOGNITION.ERROR_CONSENT');
+        expect(facade.photo.analyzing()).toBe(false);
+        expect(aiFoodFacade.calculateNutrition).not.toHaveBeenCalled();
+    });
+
+    it('explains an API consent failure using its public error field', () => {
+        aiFoodFacade.parseFoodText.mockReturnValueOnce(
+            throwError(() => ({ status: HttpStatusCode.Forbidden, error: { error: 'Ai.ConsentRequired' } })),
+        );
+        facade.analyzeText('apple');
+        expect(facade.text.errorKey()).toBe('AI_RECOGNITION.ERROR_CONSENT');
+        expect(aiFoodFacade.calculateNutrition).not.toHaveBeenCalled();
+    });
     it('resumes a saved photo without starting another analysis or nutrition calculation', () => {
         facade.resumePhoto('job-1');
 
