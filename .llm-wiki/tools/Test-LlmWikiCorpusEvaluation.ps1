@@ -126,6 +126,9 @@ $count = $results.Count + [int]($source.mode -eq 'count')
     Assert-PoolFailure @($cancelled) 'cancelled by the smoke supervisor'
     Assert-FixtureProcessesStopped @($cancelled)
     Write-Host 'LLM Wiki corpus evaluation pool passed: complete ordered coverage, bounded/serial workers, Unicode diagnostics, failure, timeout and cancellation cleanup.'
+    # Cleanup may tolerate taskkill's already-exited status after asserting that
+    # every owned process stopped; do not expose that status as a test failure.
+    $global:LASTEXITCODE = 0
 } finally {
     $env:LLM_WIKI_SMOKE_MAX_CONCURRENCY = $originalConcurrency
     $env:LLM_WIKI_SMOKE_CANCEL_PATH = $originalCancellation

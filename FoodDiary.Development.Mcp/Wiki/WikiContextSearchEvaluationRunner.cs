@@ -29,16 +29,21 @@ internal static class WikiContextSearchEvaluationRunner {
             cancellationToken).ConfigureAwait(false);
         Validate(corpus);
 
+        IReadOnlyList<WikiContextSearchResult>? batch = search is SqliteWikiContextSearch sqliteSearch
+            ? await sqliteSearch.SearchBatchAsync(
+                [.. corpus!.Cases.Select(item => (item.Query, corpus.DiagnosticLimit, item.ChangeType ?? "Any"))],
+                cancellationToken, expectedChangeSetFingerprint).ConfigureAwait(false)
+            : null;
         List<EvaluationResult> results = [];
         foreach (EvaluationCase evaluationCase in corpus!.Cases) {
-            WikiContextSearchResult searchResult = await search.SearchAsync(
+            WikiContextSearchResult searchResult = batch is null ? await search.SearchAsync(
                 evaluationCase.Query,
                 corpus.DiagnosticLimit,
                 evaluationCase.ChangeType ?? "Any",
                 module: null,
                 scopePaths: null,
                 cancellationToken,
-                expectedChangeSetFingerprint).ConfigureAwait(false);
+                expectedChangeSetFingerprint).ConfigureAwait(false) : batch[results.Count];
             string[] relevantPaths = [.. evaluationCase.ExpectedPaths
                 .Concat(evaluationCase.AcceptedPaths ?? [])
                 .Distinct(StringComparer.OrdinalIgnoreCase)];

@@ -26,6 +26,12 @@ if ($evalGroups -notcontains 'adaptive-evals' -or $evalGroups -contains 'adaptiv
     throw 'Adaptive eval orchestration must not replay the workflow-routing regression group.'
 }
 $contextEvalGroups = @(Get-Groups '.llm-wiki/evals/context-search-unseen-20260826.json')
+$runtimeEvalGroups = @(Get-Groups '.llm-wiki/tools/Measure-LlmWikiRuntimeContextEvaluation.ps1')
+if ($runtimeEvalGroups -notcontains 'context-search-evals' -or $runtimeEvalGroups -notcontains 'context-retrieval') {
+    throw 'The runtime corpus evaluator omitted its context regressions.'
+}
+$frontendInventoryGroups = @(Get-Groups '.llm-wiki/tools/Test-LlmWikiFrontendSourceInventory.ps1')
+if ($frontendInventoryGroups -notcontains 'index-selection') { throw 'Frontend source inventory omitted its index regressions.' }
 if ($contextEvalGroups -notcontains 'adaptive-evals' -or $contextEvalGroups -notcontains 'context-search-evals' -or $contextEvalGroups -notcontains 'context-retrieval') {
     throw 'Context-search corpora must run both adaptive evals and the SQL context regression suite.'
 }

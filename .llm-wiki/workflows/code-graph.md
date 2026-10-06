@@ -6,6 +6,8 @@ status: current
 summary: Query an incremental SQLite symbol and consumer graph as the primary Development MCP code-context route without replacing governed Wiki evidence or committed project knowledge.
 sources:
   - .llm-wiki/tools/code-graph.mjs
+  - Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.Batch.cs
+  - Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.CandidateHydration.cs
   - .llm-wiki/tools/code-graph-inputs.mjs
   - .llm-wiki/tools/code-graph-inputs.test.mjs
   - .llm-wiki/tools/code-graph-maintenance.mjs
@@ -63,6 +65,7 @@ sources:
   - .llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
   - .llm-wiki/tools/LlmWikiCorpusEvaluation.ps1
+  - .llm-wiki/tools/Measure-LlmWikiRuntimeContextEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiDevelopmentContextEvaluation.ps1
   - FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs
@@ -319,9 +322,31 @@ fields rather than the former fixture's unsupported subscription-tier claim.
 `Test-LlmWikiSqlContextEvaluation.ps1` evaluates all committed corpora through
 a bounded two-process pool after one graph refresh. Independent corpora retain
 their original batch transactions, per-case result order and quality gates;
-the four current Node/.NET parity checks still run after the quality assertions.
+the four current Node/.NET parity checks run after the quality assertions through
+the same bounded pool, using the .NET assembly built once by the caller. Its
+default is one .NET worker: the measured Windows CPU-bound comparison showed
+no gain from two. `-RuntimeMaxConcurrency 2` enables an explicit comparative run;
+the outer smoke concurrency limit still caps both pools. Corpus
+identity, case coverage and order are checked for both readers; failure, timeout
+or cancellation stops each remaining worker and its native child processes.
 Use `-MaxConcurrency 1` for a serial run. Per-corpus JSON and stderr diagnostics
 are written to `.artifacts/llm-wiki/context-evaluation/` with unique run prefixes.
+
+The .NET evaluator also batches its corpus in one read-only transaction on a
+private, non-pooled connection. Metadata, document count and the expected
+worktree fingerprint belong to that snapshot; they are never cached across
+corpora. Its on-demand 64 MiB page-cache target avoids repeated FTS cache churn
+and is released with the connection. Candidate ranking and case order are
+unchanged. Tests cover exact individual/batch parity, stale, missing and empty
+projections, concurrent writer consistency, next-batch freshness and cancellation
+cleanup. Interactive searches keep the existing per-request path.
+
+.NET lexical and weighted identity recall use compact paths before hydrating
+FTS documents. The original record pool and extra distinct-path pool retain
+their limits and ordering; final hydration uses rowid lookups with the bounded
+pool outermost. Compact-table absence or a missing/null compact row uses the
+same FTS path evidence, never a JSON provider. Regression cases cover duplicates,
+limits, absent matches and exact pool equality across both SQLite layouts.
 
 The primary corpus lives in
 `.llm-wiki/evals/context-search.json` and a separately authored 40-case

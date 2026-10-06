@@ -4,6 +4,7 @@ kind: system
 status: current
 sources:
   - .llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1
+  - .llm-wiki/tools/LlmWikiGitPaths.ps1
   - FoodDiary.Web.Client/angular.json
   - FoodDiary.Web.Client/AGENTS.md
 ---
@@ -12,6 +13,9 @@ sources:
 
 [`frontend-index.json`](../generated/frontend-index.json) provides deterministic
 Angular workspace discovery:
+
+Discovery uses tracked and new non-ignored Git sources, omits deleted paths,
+and skips dependency, build and test-report trees before walking the filesystem.
 
 - client and admin features;
 - exported TypeScript classes classified as components, directives, pipes,

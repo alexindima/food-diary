@@ -135,7 +135,7 @@
       "reason": "Frontend navigation now documents the Products SDK pilot and links its authoritative guide. The docs index adds that guide; the existing evidence and authority model is unchanged.",
       "baseRef": "HEAD",
       "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
-      "reviewedAtUtc": "2026-10-06T16:55:29.4109400Z"
+      "reviewedAtUtc": "2026-10-06T16:55:29.41094Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -822,13 +822,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "5a0725a1434680dd97583189c6c2871ac5c5613b0be8b11e13108116c6157371"
+          "sha256": "bde33aac0fe4e4ae6e99be233129e8142b3d6149eb84af4b92397cac55e05f80"
         }
       ],
-      "reason": "Reviewed privacy/security workflow pages after derived-index refresh. Permission changes retain accepted relationship checks, shared categories stay individually scoped, Admin weight is a read-only contract and no credential, provider or retention behavior changed. These are navigation receipts rather than a security audit.",
+      "reason": "Reviewed the merged privacy inventory against current master and the Wiki batch reader: the bounded SqliteTransaction keyword evidence is read-only local source indexing, with no query payload in telemetry, persistent data sharing, or new credentials.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:08:54.9376932Z"
+      "gitHead": "75c4520f7907cae0c1e8f23b4ba5597dacb306e8",
+      "reviewedAtUtc": "2026-10-06T17:39:06.9437373Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -867,13 +867,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fab93159f15b793c67d64f0bcbaf0db98a4721a53725cc3f98e85d588a0b3c66"
+          "sha256": "faa3d3d70807adc3ea15ff57274de851d0e87777c53790aa82aa07702cc6d3dc"
         }
       ],
-      "reason": "Reviewed tagged result and totals caches, request identity fencing, page recovery and pending retry regressions. Static test references remain navigation evidence; executed focused and joint checks supply verification separately. The refreshed projection does not change quality-risk semantics.",
+      "reason": "Reviewed the quality projection regenerated from current master plus all four Wiki performance commits. New reader complexity and direct test references match the compact candidate hydration and batch snapshot tests; static references remain navigation rather than executed coverage.",
       "baseRef": "HEAD",
-      "gitHead": "154b78e50e5c35a05cd2e6880e912aca5ff1ae04",
-      "reviewedAtUtc": "2026-10-06T16:00:23.6468485Z"
+      "gitHead": "75c4520f7907cae0c1e8f23b4ba5597dacb306e8",
+      "reviewedAtUtc": "2026-10-06T17:39:07.8622468Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -930,7 +930,7 @@
       "reason": "CI adds a separate SDK check job without removing existing Wiki, formatting, build or test gates. npm verify adds SDK tests and reproducibility. Products HTTP adapters changed; templates, UI copy, state ownership and rendered contracts are unchanged, so existing visual-UI guidance remains applicable when those surfaces change.",
       "baseRef": "HEAD",
       "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
-      "reviewedAtUtc": "2026-10-06T16:55:31.0881070Z"
+      "reviewedAtUtc": "2026-10-06T16:55:31.088107Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -954,13 +954,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6e2ad202245692b16d2a6cf07360e253347498924ee5e13e64235da8a9c63f8f"
+          "sha256": "d688c703ad1041010fff43e3273f4edb8f64c03ace6a0bd7c0d8f48643e2a01c"
         }
       ],
-      "reason": "Combined expanded local QA source freeze reviewed: user access precedes USDA provider calls, indexed external identifiers and nullable HTTP response preserved, lookup deadlines and rate admission bounded, native clean/upgrade/rollback/bundle verified, actual browser source-link recovery and CRUD/export/keyboard/locale/responsive scenarios passed; current reviewed21-file admin batch restores drafts and correct search ordering.",
+      "reason": "Reviewed the runtime projection regenerated after merging current master with Wiki performance changes. Its changed fingerprint reflects the local read-only batch reader; the merge adds no production host, worker, external client or recurring job.",
       "baseRef": "HEAD",
-      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "reviewedAtUtc": "2026-10-06T14:22:00.2303664Z"
+      "gitHead": "75c4520f7907cae0c1e8f23b4ba5597dacb306e8",
+      "reviewedAtUtc": "2026-10-06T17:39:09.7873901Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -969,13 +969,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fab93159f15b793c67d64f0bcbaf0db98a4721a53725cc3f98e85d588a0b3c66"
+          "sha256": "faa3d3d70807adc3ea15ff57274de851d0e87777c53790aa82aa07702cc6d3dc"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "d688c703ad1041010fff43e3273f4edb8f64c03ace6a0bd7c0d8f48643e2a01c"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "bde33aac0fe4e4ae6e99be233129e8142b3d6149eb84af4b92397cac55e05f80"
         }
       ],
-      "reason": "Only frontend navigation state and own-mail read feedback changed in this batch; no authentication authorization provider credential financial sharing or service topology boundary changed. Static quality projection updates do not constitute a security verdict and need no workflow text change.",
+      "reason": "Reviewed the regenerated quality, runtime and privacy navigation against current master and the Wiki reader. Batched queries own a bounded read-only snapshot; candidate hydration remains bounded and telemetry stores only aggregates. Navigation does not replace security validation or executed coverage.",
       "baseRef": "HEAD",
-      "gitHead": "154b78e50e5c35a05cd2e6880e912aca5ff1ae04",
-      "reviewedAtUtc": "2026-10-06T16:00:24.8270904Z"
+      "gitHead": "75c4520f7907cae0c1e8f23b4ba5597dacb306e8",
+      "reviewedAtUtc": "2026-10-06T17:39:10.7891327Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1111,18 +1119,14 @@
       "pageSha256": "4e059a263f76810db4c559e2b5599d8599571ccf48d060f6360c6d0e8ec60b48",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "db3f5cb61b01769c23bd32c4107fc045280db152a46e71ce8adc7244b19af252"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "0cceb2cad3b60d60060d9b90db844a484fa226e4884616da87a0a78f47ceb349"
+          "sha256": "e2be596e45298c71113aec0966720b60037d16ef22a57b4f586ad261224cb03f"
         }
       ],
-      "reason": "New list parsers injection tokens route adapters and specs are discoverable in the refreshed frontend projections. Existing routed consumers and inherited API requests remain compatible; trace routing and its static evidence limits are unchanged.",
+      "reason": "Reviewed the merged frontend inventory against current master including the Products SDK. Git-based discovery excludes three ignored TypeScript configuration files while preserving all 741 symbols, 106 routes, HTTP and frontend-contract evidence; explicit no-match and trace semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "154b78e50e5c35a05cd2e6880e912aca5ff1ae04",
-      "reviewedAtUtc": "2026-10-06T16:00:25.8382259Z"
+      "gitHead": "75c4520f7907cae0c1e8f23b4ba5597dacb306e8",
+      "reviewedAtUtc": "2026-10-06T17:39:11.5040911Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1224,14 +1228,14 @@
       "pageSha256": "f9ddf22db2cc07f9109f6b518b296525846afc0f92e94ac0b443f5bf8ea4b89a",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "f4239851436d392316bf634723d2f359f0c7b8f7bea292435eb3991c7603ba9d"
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
+          "sha256": "6fdff6852b40fc6f83b1b5d60cab1426826c8f5a0008af5f948c5d4e5f2c10a3"
         }
       ],
-      "reason": "Expanded release QA verifies current authentication and nutrition behavior, external USDA references and bounded provider resolution, schema migration and rollback, fasting controls, export feedback, locale pairs, dialog names and native keyboard navigation through actual local browser scenarios and focused plus full regression checks.",
+      "reason": "Reviewed the combined query workflow against the unchanged tested Wiki reader: lexical and identity recall hydrate bounded rowid pools, older or missing compact features retain SQLite compatibility, and exact fingerprint, stale, cancellation and interactive query states remain explicit. The four performance commits are preserved byte-for-byte.",
       "baseRef": "HEAD",
-      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "reviewedAtUtc": "2026-10-06T13:13:08.1795711Z"
+      "gitHead": "75c4520f7907cae0c1e8f23b4ba5597dacb306e8",
+      "reviewedAtUtc": "2026-10-06T17:39:08.8628339Z"
     },
     {
       "pageId": "workflow.review-diff",
