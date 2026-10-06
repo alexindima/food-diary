@@ -1,11 +1,15 @@
-import type { Meta, StoryObj } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
 
+import { FdUiButtonComponent } from '../button/fd-ui-button';
 import { FdUiCardComponent } from './fd-ui-card';
+import { FdUiCardActionsDirective } from './fd-ui-card-actions.directive';
 
 const meta: Meta<FdUiCardComponent> = {
     title: 'Components/Card',
     component: FdUiCardComponent,
     tags: ['autodocs'],
+    decorators: [moduleMetadata({ imports: [FdUiButtonComponent, FdUiCardActionsDirective] })],
     argTypes: {
         title: { control: 'text' },
         meta: { control: 'text' },

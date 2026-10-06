@@ -253,10 +253,10 @@
                     }
                 },
                 "storybook": {
-                    "builder": "@storybook/angular:start-storybook",
+                    "builder": "@storybook/angular-vite:start-storybook",
                     "options": {
                         "configDir": ".storybook",
-                        "browserTarget": "fd-ui-kit:build",
+                        "tsConfig": ".storybook/tsconfig.json",
                         "port": 6006,
                         "styles": [
                             "node_modules/@material-design-icons/font/filled.css",
@@ -266,15 +266,14 @@
                         ],
                         "stylePreprocessorOptions": {
                             "includePaths": ["src/styles", "projects/fd-ui-kit/src/lib"]
-                        },
-                        "compodoc": false
+                        }
                     }
                 },
                 "build-storybook": {
-                    "builder": "@storybook/angular:build-storybook",
+                    "builder": "@storybook/angular-vite:build-storybook",
                     "options": {
                         "configDir": ".storybook",
-                        "browserTarget": "fd-ui-kit:build",
+                        "tsConfig": ".storybook/tsconfig.json",
                         "outputDir": "dist-storybook",
                         "styles": [
                             "node_modules/@material-design-icons/font/filled.css",
@@ -284,8 +283,7 @@
                         ],
                         "stylePreprocessorOptions": {
                             "includePaths": ["src/styles", "projects/fd-ui-kit/src/lib"]
-                        },
-                        "compodoc": false
+                        }
                     }
                 }
             }

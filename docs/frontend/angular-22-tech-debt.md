@@ -1,6 +1,6 @@
-# Angular 22 Migration Tech Debt
+# Angular 22 Tooling Compatibility
 
-This document tracks temporary follow-up work after the Angular 22 upgrade.
+This document records the current tooling compatibility after the Angular 22 upgrade.
 
 ## Current State
 
@@ -12,33 +12,29 @@ This document tracks temporary follow-up work after the Angular 22 upgrade.
 - Angular ESLint packages are on the Angular 22-compatible `22.x` line.
 - Angular template diagnostics for `nullishCoalescingNotNullable` and `optionalChainNotNullable` are enforced as errors.
 - Incremental hydration uses the Angular 22 default behavior and is covered by the client smoke suite.
+- Storybook uses the Vite-based `@storybook/angular-vite` framework; the legacy Angular webpack builder is no longer required.
 
-## Temporary Debt
+## Storybook
 
-### Storybook still needs `@angular-devkit/build-angular`
+`@storybook/angular-vite@10.6.1` supports Angular 22 and TypeScript 6. Both Storybook Angular CLI targets use this framework with `.storybook/tsconfig.json`.
 
-`@storybook/angular@10.5.5` supports Angular 22 (`>=18.0.0 <23.0.0`) and TypeScript 6 (`^4.9.0 || ^5.0.0 || ^6.0.0`). The workspace therefore installs without legacy peer resolution, and the temporary `legacy-peer-deps=true` setting has been removed.
+The framework is currently in preview, with stable support planned for Storybook 11. This workspace accepts that preview status. See the [official Angular Vite framework documentation](https://storybook.js.org/docs/get-started/frameworks/angular-vite).
+
+- `@angular-devkit/build-angular`, `@storybook/angular`, and the Storybook webpack middleware override are removed.
+- `@analogjs/vite-plugin-angular`, Vite, and Sass are explicit dev dependencies.
+- Global styles and SCSS include paths are declared on both Storybook targets; Vite resolves TypeScript path aliases through `resolve.tsconfigPaths`.
+- All stories and preview decorators import the Vite framework.
+- The preview supplies the translation service and loads the existing English assets for components that require localization.
+
+The workspace installs without legacy peer resolution. Storybook builds without the legacy Angular webpack builder, so the Storybook compatibility debt is closed.
+
+## Remaining Compatibility Limit
 
 TypeScript 7 cannot be adopted yet: Angular 22 and the current TypeScript ESLint packages do not support it.
 
-`@angular-devkit/build-angular` is deprecated for application builds in Angular 22, but the current Storybook Angular preview builder still declares it as a required peer dependency and uses its webpack configuration helpers.
-
-Without this dev dependency, `npm run build:storybook` fails with:
-
-```text
-Cannot find module '@angular-devkit/build-angular/package.json'
-```
-
-Keep `@angular-devkit/build-angular` as a dev-only Storybook compatibility dependency until Storybook no longer requires the legacy Angular webpack builder.
-
-Close this when:
-
-- `npm run build:storybook` works without `@angular-devkit/build-angular`.
-- `@angular-devkit/build-angular` is removed from `devDependencies`.
-
 ## Verification Commands
 
-Run these before closing the migration debt:
+Run these when changing the tooling:
 
 ```powershell
 cd FoodDiary.Web.Client
@@ -47,4 +43,7 @@ npm run build
 npm run build:admin
 npm run build:storybook
 npm run test:ci:ui-kit
+npx tsc --project .storybook/tsconfig.json --noEmit
 ```
+
+Also start `npm run storybook` and check that stories render with their styles and translations, controls update the preview, and keyboard interactions work without runtime errors.

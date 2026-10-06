@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
 
 import { fdUiAddLocalDays, fdUiStartOfLocalWeek } from '../date/fd-ui-date.utils';
 import { FdUiWeekPickerComponent } from './fd-ui-week-picker';

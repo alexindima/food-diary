@@ -1,11 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
 
+import { FdUiInputComponent } from '../input/fd-ui-input';
 import { FdUiFormErrorComponent } from './fd-ui-form-error';
 
 const meta: Meta<FdUiFormErrorComponent> = {
     title: 'Components/FormError',
     component: FdUiFormErrorComponent,
     tags: ['autodocs'],
+    decorators: [moduleMetadata({ imports: [FdUiInputComponent] })],
     argTypes: {
         error: { control: 'text', description: 'Error message to display' },
     },

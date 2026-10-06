@@ -1,12 +1,22 @@
-import type { Meta, StoryObj } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
 
+import { FdUiButtonComponent } from '../button/fd-ui-button';
+import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input';
 import { FdUiDialogShellComponent } from '../dialog-shell/fd-ui-dialog-shell';
+import { FdUiInputComponent } from '../input/fd-ui-input';
+import { FdUiDialogFooterDirective } from './fd-ui-dialog-footer.directive';
 import { FdUiDialogHeaderDirective } from './fd-ui-dialog-header.directive';
 
 const meta: Meta<FdUiDialogShellComponent> = {
     title: 'Components/Dialog',
     component: FdUiDialogShellComponent,
     tags: ['autodocs'],
+    decorators: [
+        moduleMetadata({
+            imports: [FdUiButtonComponent, FdUiDateInputComponent, FdUiInputComponent, FdUiDialogFooterDirective],
+        }),
+    ],
     parameters: {
         docs: {
             description: {

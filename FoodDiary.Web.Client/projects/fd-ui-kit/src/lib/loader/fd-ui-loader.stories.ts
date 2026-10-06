@@ -1,11 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
 
+import { FdUiCardComponent } from '../card/fd-ui-card';
 import { FdUiLoaderComponent } from './fd-ui-loader';
 
 const meta: Meta<FdUiLoaderComponent> = {
     title: 'Components/Loader',
     component: FdUiLoaderComponent,
     tags: ['autodocs'],
+    decorators: [moduleMetadata({ imports: [FdUiCardComponent] })],
 };
 
 export default meta;

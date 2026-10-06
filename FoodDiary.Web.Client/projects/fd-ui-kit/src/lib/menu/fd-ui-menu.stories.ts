@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
+import { provideRouter, withDisabledInitialNavigation } from '@angular/router';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { applicationConfig, moduleMetadata } from '@storybook/angular-vite';
 
 import { FdUiButtonComponent } from '../button/fd-ui-button';
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
@@ -13,6 +14,7 @@ const meta: Meta<FdUiMenuComponent> = {
     component: FdUiMenuComponent,
     tags: ['autodocs'],
     decorators: [
+        applicationConfig({ providers: [provideRouter([], withDisabledInitialNavigation())] }),
         moduleMetadata({
             imports: [FdUiMenuItemComponent, FdUiMenuDividerComponent, FdUiMenuTriggerDirective, FdUiButtonComponent, FdUiIconComponent],
         }),

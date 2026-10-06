@@ -124,14 +124,14 @@
       "pageSha256": "1ea0c12ce78af5d45542c40530c4a07ae52fdd0a10b3ab76e7f37e89601f1226",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "dd7d95bd6c0be878d7ce7eef2f5c21266f0aa0ad0e7cf1566eae136abedcec4c"
+          "path": "FoodDiary.Web.Client/angular.json",
+          "sha256": "ace3dbd910be6380b0085a29c778224bf12e43903530c693d85288d17e6fc166"
         }
       ],
-      "reason": "Verified current source folders and renamed shared models/helpers against the regenerated frontend index. Old feature-private imports were replaced with explicit contracts and composition; strict dependency and import-boundary checks passed.",
+      "reason": "Reviewed frontend index and repository catalog guidance against the Angular Vite targets, explicit tsconfig and regenerated deterministic inventories; build commands and public UI contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:42:22.460995Z"
+      "gitHead": "4303e0f849219ddef50a861335783670ae8bcff5",
+      "reviewedAtUtc": "2026-10-06T00:22:19.2570939Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -169,14 +169,14 @@
       "pageSha256": "7368eca730254aab949bddc9e5d05a260ac6f0b1a97793c1a08c7fcb1a68366f",
       "sources": [
         {
-          "path": "docs/architecture/module-dependencies.json",
-          "sha256": "1d5245dc71b27d556527e57c3b7610ee2a3a2278f13c6e77ffd7ebc900db3194"
+          "path": "FoodDiary.Web.Client/angular.json",
+          "sha256": "ace3dbd910be6380b0085a29c778224bf12e43903530c693d85288d17e6fc166"
         }
       ],
-      "reason": "Reviewed architecture, catalog and ownership pages against the additive Admin Application to BodyMetrics Contracts read edge. The graph, project matrix and 2116 architecture tests agree; existing layer and foreign-write guidance remains accurate.",
+      "reason": "Reviewed frontend index and repository catalog guidance against the Angular Vite targets, explicit tsconfig and regenerated deterministic inventories; build commands and public UI contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:06:08.2358939Z"
+      "gitHead": "4303e0f849219ddef50a861335783670ae8bcff5",
+      "reviewedAtUtc": "2026-10-06T00:22:19.9079816Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -588,13 +588,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "ce8024e015f9ba13342bb998165da71486d763af04403f4834f62f03c4f6df76"
+          "sha256": "5a5442b57f4010bdb9c14c4b7844857a904ff9c8fa372e8e3c61109139648b0c"
         }
       ],
-      "reason": "Reviewed the narrow Storybook middleware override against the declared npm scripts and frontend guide: dev-server and production workflows retain their existing commands; dependency patches add no UI copy or interface contract. The Playwright fallback still captures identity, rendered content, errors, interaction and both viewport sizes outside the repository.",
+      "reason": "Reviewed quality-index changes from Storybook imports and verified the existing workflow guidance; Playwright CLI captures rendered Storybook state, console and interaction evidence outside the repository.",
       "baseRef": "HEAD",
-      "gitHead": "028efbba467e3bdece84fe1e43412aead89d2ae5",
-      "reviewedAtUtc": "2026-10-03T20:29:06.8583312Z"
+      "gitHead": "4303e0f849219ddef50a861335783670ae8bcff5",
+      "reviewedAtUtc": "2026-10-06T00:22:20.7398328Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -867,13 +867,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "47836e9316cd615750132b36b0c287854904cf5affbf1b41bb4148a47f36996a"
+          "sha256": "47992f8a1ab6a42be6de799e89657a8fa7e36b2e959d94628413634c32106473"
         }
       ],
-      "reason": "Compared the regenerated quality-index diff with the three changed process scripts: only LlmWikiProcess.ps1 line/branch metrics and its corpus-test navigation reference changed. Critical symbol counts and the distinction between test references and executed coverage remain valid. Controlled Linux and Windows execution evidence is kept outside the compiled navigation index.",
+      "reason": "Reviewed the final quality metrics for Storybook configuration and demo metadata; Playwright CLI verifies story rendering, console and interaction evidence outside the repository, with the full npm verify passing.",
       "baseRef": "HEAD",
-      "gitHead": "d618f4b90cfc9b8b86854ead921110cee2935023",
-      "reviewedAtUtc": "2026-10-05T22:00:49.3842662Z"
+      "gitHead": "4303e0f849219ddef50a861335783670ae8bcff5",
+      "reviewedAtUtc": "2026-10-06T00:25:47.5561495Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -969,13 +969,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "47836e9316cd615750132b36b0c287854904cf5affbf1b41bb4148a47f36996a"
+          "sha256": "47992f8a1ab6a42be6de799e89657a8fa7e36b2e959d94628413634c32106473"
         }
       ],
-      "reason": "Reviewed the new termination observer and its quality-index metrics against the current security-review workflow. The observer reads only the numeric PID stat record for an already-owned Process object and returns termination state; it does not expand kill targets or read process environments, credentials or private payloads. Source and risk navigation claims remain valid and live-process rejection has execution evidence.",
+      "reason": "Only Storybook tooling and demo imports changed; refreshed quality metrics introduce no production security boundary or sensitive data change, and the security-review workflow still treats indexes as navigation evidence.",
       "baseRef": "HEAD",
-      "gitHead": "d618f4b90cfc9b8b86854ead921110cee2935023",
-      "reviewedAtUtc": "2026-10-05T22:00:51.7046364Z"
+      "gitHead": "4303e0f849219ddef50a861335783670ae8bcff5",
+      "reviewedAtUtc": "2026-10-06T00:25:48.8545426Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
