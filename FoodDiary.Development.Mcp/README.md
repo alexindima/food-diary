@@ -103,6 +103,13 @@ opens a new snapshot. Interactive searches retain their per-request connection
 and freshness checks. The `context-search/in-process-sqlite-batch` stage includes
 preparation and cleanup; per-case timings measure search inside the snapshot.
 
+Candidate recall uses the compact projection's path column while sorting FTS
+matches, then reads source documents only for the bounded record/distinct-path
+pools. Weighted identity recall also applies its limit before document reads.
+Minimal SQLite projections without the compact table, and missing compact rows,
+retain their original FTS path evidence. SQL parameters and ranking policy are
+unchanged; interactive and corpus queries share this selection code.
+
 MCP queries request JSON from the Wiki. This enables its snapshot-keyed query
 cache; repeated requests against the same Git HEAD and worktree avoid repeating
 expensive discovery. The MCP adds a bounded two-minute in-memory layer above

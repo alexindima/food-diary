@@ -16,11 +16,11 @@
   "hotspots": [
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-      "nonBlankLines": 1802,
+      "nonBlankLines": 1821,
       "decisionPoints": 465,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 733.54
+      "structuralRiskScore": 733.92
     },
     {
       "path": ".llm-wiki/wiki.ps1",
@@ -2842,11 +2842,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-      "nonBlankLines": 1802,
+      "nonBlankLines": 1821,
       "decisionPoints": 465,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 733.54
+      "structuralRiskScore": 733.92
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",

@@ -7,6 +7,7 @@ summary: Query an incremental SQLite symbol and consumer graph as the primary De
 sources:
   - .llm-wiki/tools/code-graph.mjs
   - Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.Batch.cs
+  - Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.CandidateHydration.cs
   - .llm-wiki/tools/code-graph-inputs.mjs
   - .llm-wiki/tools/code-graph-inputs.test.mjs
   - .llm-wiki/tools/code-graph-maintenance.mjs
@@ -339,6 +340,13 @@ and is released with the connection. Candidate ranking and case order are
 unchanged. Tests cover exact individual/batch parity, stale, missing and empty
 projections, concurrent writer consistency, next-batch freshness and cancellation
 cleanup. Interactive searches keep the existing per-request path.
+
+.NET lexical and weighted identity recall use compact paths before hydrating
+FTS documents. The original record pool and extra distinct-path pool retain
+their limits and ordering; final hydration uses rowid lookups with the bounded
+pool outermost. Compact-table absence or a missing/null compact row uses the
+same FTS path evidence, never a JSON provider. Regression cases cover duplicates,
+limits, absent matches and exact pool equality across both SQLite layouts.
 
 The primary corpus lives in
 `.llm-wiki/evals/context-search.json` and a separately authored 40-case

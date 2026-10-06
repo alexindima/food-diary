@@ -306,29 +306,21 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "06d18ddbd611efb1039159fe331da720a4bd60d8ad1e0636f4530b03b2d982fc",
+      "pageSha256": "bde0fa1a7f96718daca98a7293f37a1c0f358fe0b3938744705470870561280a",
       "sources": [
         {
           "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-          "sha256": "3587dc7f8b280766ae41ed86234a171b70440ccc203f45781077a61b19fd15d4"
+          "sha256": "6fdff6852b40fc6f83b1b5d60cab1426826c8f5a0008af5f948c5d4e5f2c10a3"
         },
         {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-          "sha256": "e438c9fe5230a2b0eaa2566af8610675348c912d7745157ad5df6edd701656c7"
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/WikiContextSearchEvaluationRunner.cs",
-          "sha256": "7a983cfe56d06bb12776421230c848e4284d2efb1a656209b6fc56aeb811532a"
-        },
-        {
-          "path": "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.Batch.cs",
-          "sha256": "678054f828359c350dfda8e926aa3d81fddaa58dd871c3fb20cbf69fc6c0f04f"
+          "path": "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.CandidateHydration.cs",
+          "sha256": "f8053968d9a9d566acc35c9f5bdcb2b8118314cc8112cdf384f8e98c76e93589"
         }
       ],
-      "reason": "Reviewed corpus-scoped read-only transaction, exact 302-case ranking parity, bounded non-pooled page cache, concurrent writer snapshot isolation and cancellation disposal. Interactive queries retain per-request freshness. Runtime inventory changed only its source fingerprint; SqliteTransaction is a syntactic financial candidate, not financial content. Static quality remains navigation evidence.",
-      "baseRef": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
-      "gitHead": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
-      "reviewedAtUtc": "2026-10-06T14:03:42.1883739Z"
+      "reason": "Reviewed compact lexical and weighted-identity recall, bounded rowid document hydration, exact 302-case parity and duplicated/distinct path pool preservation. Minimal SQLite layouts and missing/null compact paths preserve FTS evidence. Interactive paired tests improved while ranking remained identical. Runtime fingerprint and static quality changed without new providers or data sharing.",
+      "baseRef": "dd6092f8c0b0a049451eb0805d8843b7b81eb0f3",
+      "gitHead": "dd6092f8c0b0a049451eb0805d8843b7b81eb0f3",
+      "reviewedAtUtc": "2026-10-06T16:20:01.2822618Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -915,13 +907,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7f840f01f723a88d98aa08bc0c8604ce1df6ff0fb88c0dae3f12bd5229768550"
+          "sha256": "1df8cba99a1b00cd34dbbaf0a72098108c3fa29c7f2cd9c50e6588c2bb93c8e4"
         }
       ],
-      "reason": "Reviewed corpus-scoped read-only transaction, exact 302-case ranking parity, bounded non-pooled page cache, concurrent writer snapshot isolation and cancellation disposal. Interactive queries retain per-request freshness. Runtime inventory changed only its source fingerprint; SqliteTransaction is a syntactic financial candidate, not financial content. Static quality remains navigation evidence.",
-      "baseRef": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
-      "gitHead": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
-      "reviewedAtUtc": "2026-10-06T14:03:44.0022502Z"
+      "reason": "Reviewed compact lexical and weighted-identity recall, bounded rowid document hydration, exact 302-case parity and duplicated/distinct path pool preservation. Minimal SQLite layouts and missing/null compact paths preserve FTS evidence. Interactive paired tests improved while ranking remained identical. Runtime fingerprint and static quality changed without new providers or data sharing.",
+      "baseRef": "dd6092f8c0b0a049451eb0805d8843b7b81eb0f3",
+      "gitHead": "dd6092f8c0b0a049451eb0805d8843b7b81eb0f3",
+      "reviewedAtUtc": "2026-10-06T16:20:02.2095363Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1002,13 +994,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "68aacbe0d951b8b9ad7c8fe1d24fb7eefc62800d8f93fdbcc9719d984664330c"
+          "sha256": "7a1c672190194784347e59d5344053eac6863c50af90b7bd17246b74b2c27b21"
         }
       ],
-      "reason": "Reviewed corpus-scoped read-only transaction, exact 302-case ranking parity, bounded non-pooled page cache, concurrent writer snapshot isolation and cancellation disposal. Interactive queries retain per-request freshness. Runtime inventory changed only its source fingerprint; SqliteTransaction is a syntactic financial candidate, not financial content. Static quality remains navigation evidence.",
-      "baseRef": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
-      "gitHead": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
-      "reviewedAtUtc": "2026-10-06T14:03:45.6047229Z"
+      "reason": "Reviewed compact lexical and weighted-identity recall, bounded rowid document hydration, exact 302-case parity and duplicated/distinct path pool preservation. Minimal SQLite layouts and missing/null compact paths preserve FTS evidence. Interactive paired tests improved while ranking remained identical. Runtime fingerprint and static quality changed without new providers or data sharing.",
+      "baseRef": "dd6092f8c0b0a049451eb0805d8843b7b81eb0f3",
+      "gitHead": "dd6092f8c0b0a049451eb0805d8843b7b81eb0f3",
+      "reviewedAtUtc": "2026-10-06T16:20:03.7809679Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1017,21 +1009,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7f840f01f723a88d98aa08bc0c8604ce1df6ff0fb88c0dae3f12bd5229768550"
+          "sha256": "1df8cba99a1b00cd34dbbaf0a72098108c3fa29c7f2cd9c50e6588c2bb93c8e4"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "68aacbe0d951b8b9ad7c8fe1d24fb7eefc62800d8f93fdbcc9719d984664330c"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "bde33aac0fe4e4ae6e99be233129e8142b3d6149eb84af4b92397cac55e05f80"
+          "sha256": "7a1c672190194784347e59d5344053eac6863c50af90b7bd17246b74b2c27b21"
         }
       ],
-      "reason": "Reviewed corpus-scoped read-only transaction, exact 302-case ranking parity, bounded non-pooled page cache, concurrent writer snapshot isolation and cancellation disposal. Interactive queries retain per-request freshness. Runtime inventory changed only its source fingerprint; SqliteTransaction is a syntactic financial candidate, not financial content. Static quality remains navigation evidence.",
-      "baseRef": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
-      "gitHead": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
-      "reviewedAtUtc": "2026-10-06T14:03:46.4255030Z"
+      "reason": "Reviewed compact lexical and weighted-identity recall, bounded rowid document hydration, exact 302-case parity and duplicated/distinct path pool preservation. Minimal SQLite layouts and missing/null compact paths preserve FTS evidence. Interactive paired tests improved while ranking remained identical. Runtime fingerprint and static quality changed without new providers or data sharing.",
+      "baseRef": "dd6092f8c0b0a049451eb0805d8843b7b81eb0f3",
+      "gitHead": "dd6092f8c0b0a049451eb0805d8843b7b81eb0f3",
+      "reviewedAtUtc": "2026-10-06T16:20:04.7365131Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1273,13 +1261,13 @@
       "sources": [
         {
           "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-          "sha256": "3587dc7f8b280766ae41ed86234a171b70440ccc203f45781077a61b19fd15d4"
+          "sha256": "6fdff6852b40fc6f83b1b5d60cab1426826c8f5a0008af5f948c5d4e5f2c10a3"
         }
       ],
-      "reason": "Reviewed corpus-scoped read-only transaction, exact 302-case ranking parity, bounded non-pooled page cache, concurrent writer snapshot isolation and cancellation disposal. Interactive queries retain per-request freshness. Runtime inventory changed only its source fingerprint; SqliteTransaction is a syntactic financial candidate, not financial content. Static quality remains navigation evidence.",
-      "baseRef": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
-      "gitHead": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
-      "reviewedAtUtc": "2026-10-06T14:03:44.811539Z"
+      "reason": "Reviewed compact lexical and weighted-identity recall, bounded rowid document hydration, exact 302-case parity and duplicated/distinct path pool preservation. Minimal SQLite layouts and missing/null compact paths preserve FTS evidence. Interactive paired tests improved while ranking remained identical. Runtime fingerprint and static quality changed without new providers or data sharing.",
+      "baseRef": "dd6092f8c0b0a049451eb0805d8843b7b81eb0f3",
+      "gitHead": "dd6092f8c0b0a049451eb0805d8843b7b81eb0f3",
+      "reviewedAtUtc": "2026-10-06T16:20:02.9978285Z"
     },
     {
       "pageId": "workflow.review-diff",

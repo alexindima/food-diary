@@ -106,7 +106,7 @@ public sealed class SqliteContextSearchReader {
                     cache.CommandText = "PRAGMA cache_size = -65536;";
                     await cache.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
                     transaction = connection.BeginTransaction(deferred: true);
-                    (string? Fingerprint, string? UpdatedAtUtc, int IndexedDocuments, string? ChangeSetFingerprint, string? GitHead) metadata =
+                    (string? Fingerprint, string? UpdatedAtUtc, int IndexedDocuments, string? ChangeSetFingerprint, string? GitHead, bool HasCompactFeatures) metadata =
                         await ReadMetadataAsync(connection, cancellationToken, transaction).ConfigureAwait(false);
                     batch = new BatchContext(connection, transaction, metadata);
                 }
@@ -131,7 +131,7 @@ public sealed class SqliteContextSearchReader {
     private sealed record BatchContext(
         SqliteConnection Connection,
         SqliteTransaction Transaction,
-        (string? Fingerprint, string? UpdatedAtUtc, int IndexedDocuments, string? ChangeSetFingerprint, string? GitHead) Metadata);
+        (string? Fingerprint, string? UpdatedAtUtc, int IndexedDocuments, string? ChangeSetFingerprint, string? GitHead, bool HasCompactFeatures) Metadata);
 
     private async Task<WikiContextSearchResult> SearchCoreAsync(
         string query, int limit, string changeType, string? module, IReadOnlyList<string>? scopePaths,
@@ -177,7 +177,7 @@ public sealed class SqliteContextSearchReader {
             SqliteConnection connection = batch?.Connection ?? ownedConnection!;
             if (batch is null) { await connection.OpenAsync(cancellationToken).ConfigureAwait(false); }
 
-            (string? fingerprint, string? updatedAtUtc, int indexedDocuments, string? changeSetFingerprint, string? gitHead) =
+            (string? fingerprint, string? updatedAtUtc, int indexedDocuments, string? changeSetFingerprint, string? gitHead, bool hasCompactFeatures) =
                 batch?.Metadata ?? await ReadMetadataAsync(connection, cancellationToken).ConfigureAwait(false);
             if (string.IsNullOrWhiteSpace(fingerprint) ||
                 indexedDocuments == 0 ||
@@ -218,7 +218,7 @@ public sealed class SqliteContextSearchReader {
                 rankingTerms,
                 candidateLimit,
                 policy.IdentityCandidatePoolLimit,
-                cancellationToken, batch?.Transaction).ConfigureAwait(false);
+                cancellationToken, hasCompactFeatures, batch?.Transaction).ConfigureAwait(false);
             WikiContextSearchCandidate[] candidates = Rank(
                 rawCandidates,
                 query,
@@ -266,7 +266,8 @@ public sealed class SqliteContextSearchReader {
         string? UpdatedAtUtc,
         int IndexedDocuments,
         string? ChangeSetFingerprint,
-        string? GitHead)> ReadMetadataAsync(
+        string? GitHead,
+        bool HasCompactFeatures)> ReadMetadataAsync(
         SqliteConnection connection,
         CancellationToken cancellationToken,
         SqliteTransaction? transaction = null) {
@@ -280,21 +281,23 @@ public sealed class SqliteContextSearchReader {
                 (SELECT value FROM metadata WHERE key = 'context_search_updated_at_utc'),
                 (SELECT COUNT(*) FROM context_search),
                 (SELECT value FROM metadata WHERE key = 'change_set_fingerprint'),
-                (SELECT value FROM metadata WHERE key = 'change_set_git_head');
+                (SELECT value FROM metadata WHERE key = 'change_set_git_head'),
+                EXISTS(SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'context_search_features');
             """;
         SqliteDataReader reader = await command
             .ExecuteReaderAsync(cancellationToken)
             .ConfigureAwait(false);
         await using ConfiguredAsyncDisposable readerDisposal = reader.ConfigureAwait(false);
         if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
-            return (null, null, 0, null, null);
+            return (null, null, 0, null, null, false);
         }
         return (
             reader.IsDBNull(0) ? null : reader.GetString(0),
             reader.IsDBNull(1) ? null : reader.GetString(1),
             reader.GetInt32(2),
             reader.IsDBNull(3) ? null : reader.GetString(3),
-            reader.IsDBNull(4) ? null : reader.GetString(4));
+            reader.IsDBNull(4) ? null : reader.GetString(4),
+            reader.GetBoolean(5));
     }
 
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
@@ -307,21 +310,31 @@ public sealed class SqliteContextSearchReader {
         int candidateLimit,
         int identityCandidateLimit,
         CancellationToken cancellationToken,
+        bool hasCompactFeatures,
         SqliteTransaction? transaction = null) {
         string match = string.Join(
             " OR ",
             queryTerms.Select(term => $"\"{term.Replace("\"", "\"\"", StringComparison.Ordinal)}\"*"));
         List<RawCandidate> candidates = [];
+        // The ordinary projection keeps paths outside FTS content so recalling
+        // matches need not materialize every source body before applying limits.
+        // Older/minimal SQLite projections and missing feature rows retain the
+        // same path evidence through the original FTS column.
+        string candidatePath = hasCompactFeatures ? "COALESCE(features.path, context_search.path)" : "context_search.path";
+        string featureJoin = hasCompactFeatures
+            ? "LEFT JOIN context_search_features features ON features.context_rowid = context_search.rowid"
+            : string.Empty;
         {
             SqliteCommand command = connection.CreateCommand();
             command.Transaction = transaction;
             await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
             command.CommandTimeout = 2;
-            command.CommandText = """
+            command.CommandText = $"""
                 WITH lexical_matches AS MATERIALIZED (
-                    SELECT path, rowid source_ordinal,
+                    SELECT {candidatePath} path, context_search.rowid source_ordinal,
                         bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexical_rank
                     FROM context_search
+                    {featureJoin}
                     WHERE context_search MATCH $match
                 ), initial_candidates AS MATERIALIZED (
                     SELECT * FROM lexical_matches ORDER BY lexical_rank, path, source_ordinal LIMIT $limit
@@ -341,7 +354,7 @@ public sealed class SqliteContextSearchReader {
                 SELECT record_type, record_key, context_search.path, source_path,
                     COALESCE(category, ''), COALESCE(title, ''), pooled_candidates.lexical_rank
                 FROM pooled_candidates
-                JOIN context_search ON context_search.rowid = source_ordinal
+                CROSS JOIN context_search ON context_search.rowid = source_ordinal
                 ORDER BY pool_ordinal, lexical_rank, pooled_candidates.path, source_ordinal;
                 """;
             command.Parameters.AddWithValue("$match", match);
@@ -374,14 +387,20 @@ public sealed class SqliteContextSearchReader {
             command.Transaction = transaction;
             await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
             command.CommandTimeout = 2;
-            command.CommandText = """
-                SELECT record_type, record_key, path, source_path,
-                    COALESCE(category, ''), COALESCE(title, ''),
-                    bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexical_rank
-                FROM context_search
-                WHERE context_search MATCH $match
-                ORDER BY lexical_rank, path
-                LIMIT $limit;
+            command.CommandText = $"""
+                WITH recalled AS MATERIALIZED (
+                    SELECT context_search.rowid source_ordinal, {candidatePath} path,
+                        bm25(context_search, 0.0, 0.0, 6.0, 0.0, 0.0, 4.0, 1.0) lexical_rank
+                    FROM context_search
+                    {featureJoin}
+                    WHERE context_search MATCH $match
+                    ORDER BY lexical_rank, path LIMIT $limit
+                )
+                SELECT search.record_type, search.record_key, search.path, search.source_path,
+                    COALESCE(search.category, ''), COALESCE(search.title, ''), recalled.lexical_rank
+                FROM recalled
+                CROSS JOIN context_search search ON search.rowid = source_ordinal
+                ORDER BY lexical_rank, recalled.path;
                 """;
             command.Parameters.AddWithValue("$match", identityMatch);
             command.Parameters.AddWithValue("$limit", identityCandidateLimit);
