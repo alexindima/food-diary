@@ -1112,17 +1112,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "ef57bc8f81999f78a78f33fdeb0a6827d18c535c643b5c5407e63ebbbff177f2"
-        },
-        {
-          "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "2cabfb589bf310c4bf4b25b6c13078c0c5995b074d1a3d9ca1fd6c9bc1d5af42"
+          "sha256": "4c5ab89e62b013e872edb5e0d72207c87c1cd4aa6144670033df2fc26cb80bd1"
         }
       ],
-      "reason": "Current owner code traced for personal plan deletion, public recipe draft save, price preview and image/mail flows; API/nativePG/UI evidence verifies actual boundaries and recipes/products/shopping provenance preserved.",
-      "baseRef": "HEAD",
-      "gitHead": "31a7be7e74da295faf4f41d9d193588ebd42358f",
-      "reviewedAtUtc": "2026-10-06T07:17:34.3631915Z"
+      "reason": "Reviewed regenerated frontend contract navigation: generated consumer evidence now matches committed app templates rather than ignored Playwright trace resources. Backend/frontend trace providers and scoped selection code are unchanged; full merged verification including trace-output passed.",
+      "baseRef": "master",
+      "gitHead": "bc52df2265bb6ce403372f060805c3d6f91805c5",
+      "reviewedAtUtc": "2026-10-06T10:57:03.6185623Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1206,13 +1202,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "ef57bc8f81999f78a78f33fdeb0a6827d18c535c643b5c5407e63ebbbff177f2"
+          "sha256": "4c5ab89e62b013e872edb5e0d72207c87c1cd4aa6144670033df2fc26cb80bd1"
         }
       ],
-      "reason": "Reviewed scoped pricing/draft/delete/crop APIs and en/ru strings; frontend5345 checks passed, actual19routes at desktop+mobile fullAxe0 after semantic fixes, SDK readonly price/error/retry and keyboard matrix verified. Source consumers preserve state ownership.",
-      "baseRef": "HEAD",
-      "gitHead": "31a7be7e74da295faf4f41d9d193588ebd42358f",
-      "reviewedAtUtc": "2026-10-06T07:17:33.1857848Z"
+      "reason": "Reviewed canonical frontend contract regeneration after current-master integration: removed 96 consumer edges pointing to ignored Playwright test-results HTML resources, preserving all 486 component declarations, 278 API calls and real template contracts. Full merged Wiki verification passed across 37 groups and 12 generators; SQLite selection/freshness routes remain unchanged.",
+      "baseRef": "master",
+      "gitHead": "bc52df2265bb6ce403372f060805c3d6f91805c5",
+      "reviewedAtUtc": "2026-10-06T10:57:02.6169467Z"
     },
     {
       "pageId": "workflow.query-context",
