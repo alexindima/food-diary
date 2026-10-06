@@ -100,7 +100,7 @@
             } @else {
                 <div class="fasting-redesign__idle-copy">
                     <span class="fasting-redesign__idle-icon"><fd-ui-icon name="schedule" /></span>
-                    <h3>{{ 'FASTING.REDESIGN.IDLE_TITLE' | translate }}</h3>
+                    <h2>{{ 'FASTING.REDESIGN.IDLE_TITLE' | translate }}</h2>
                     <p>{{ 'FASTING.REDESIGN.IDLE_TEXT' | translate: { protocol: protocolLabel() } }}</p>
                     <fd-ui-button size="lg" [loading]="isStarting()" (click)="startRequested.emit()">
                         {{ 'FASTING.START_FAST' | translate }}
@@ -113,7 +113,7 @@
         </div>
 
         <aside class="fasting-redesign__today" data-tour-id="fasting-stats">
-            <h3>{{ 'FASTING.REDESIGN.TODAY' | translate }}</h3>
+            <h2>{{ 'FASTING.REDESIGN.TODAY' | translate }}</h2>
             <div class="fasting-redesign__metric">
                 <span class="fasting-redesign__metric-icon fasting-redesign__metric-icon--purple"
                     ><fd-ui-icon name="calendar_today"
@@ -172,7 +172,7 @@
 
     <div class="fasting-redesign__lower-grid">
         <section class="fasting-redesign__panel">
-            <h3>{{ 'FASTING.REDESIGN.RHYTHM_TITLE' | translate }}</h3>
+            <h2>{{ 'FASTING.REDESIGN.RHYTHM_TITLE' | translate }}</h2>
             <div class="fasting-redesign__rhythm">
                 @for (day of rhythmDays(); track day.dayKey) {
                     <div class="fasting-redesign__day">
@@ -190,7 +190,7 @@
         </section>
 
         <section class="fasting-redesign__panel fasting-redesign__panel--history" data-tour-id="fasting-history">
-            <h3>{{ 'FASTING.REDESIGN.RECENT_TITLE' | translate }}</h3>
+            <h2>{{ 'FASTING.REDESIGN.RECENT_TITLE' | translate }}</h2>
             <div class="fasting-redesign__history-list">
                 @for (item of recentSessions(); track item.id) {
                     @let duration = sessionDurationView(item);
@@ -243,7 +243,7 @@
     @if (personalSummary() || insights().length > 0) {
         <section class="fasting-redesign__panel fasting-redesign__patterns" data-tour-id="fasting-insights">
             <header class="fasting-redesign__patterns-header">
-                <h3>{{ 'FASTING.PERSONAL_SUMMARY.TITLE' | translate }}</h3>
+                <h2>{{ 'FASTING.PERSONAL_SUMMARY.TITLE' | translate }}</h2>
                 @if (personalSummary()) {
                     <span>{{ 'FASTING.PERSONAL_SUMMARY.WINDOW' | translate }}</span>
                 }
@@ -266,7 +266,7 @@
             }
             @if (insights().length > 0) {
                 <div class="fasting-redesign__observations">
-                    <h4>{{ 'FASTING.REDESIGN.OBSERVATIONS_TITLE' | translate }}</h4>
+                    <h3>{{ 'FASTING.REDESIGN.OBSERVATIONS_TITLE' | translate }}</h3>
                     @for (insight of insights(); track insight.message.id) {
                         <article
                             class="fasting-redesign__observation"

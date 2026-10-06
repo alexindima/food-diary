@@ -24,5 +24,18 @@
         >
             {{ 'MEAL_PLANS.GENERATE_SHOPPING_LIST' | translate }}
         </fd-ui-button>
+        @if (!plan().isCurated) {
+            <fd-ui-button
+                variant="danger"
+                fill="outline"
+                icon="delete"
+                [disabled]="pendingAction() !== null"
+                [disabledReason]="'MEAL_PLANS.ACTION_PENDING' | translate"
+                [loading]="pendingAction() === 'delete'"
+                (click)="deletePlan.emit()"
+            >
+                {{ 'MEAL_PLANS.DELETE_PLAN' | translate }}
+            </fd-ui-button>
+        }
     </div>
 </header>

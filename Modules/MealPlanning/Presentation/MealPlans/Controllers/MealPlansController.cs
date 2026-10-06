@@ -19,6 +19,13 @@ namespace FoodDiary.Modules.MealPlanning.Presentation.MealPlans.Controllers;
 public sealed class MealPlansController(ISender mediator) : AuthorizedController(mediator) {
     private const int MaximumDietTypeLength = 32;
 
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> Delete([FromCurrentUser] Guid userId, Guid id) =>
+        HandleNoContent(userId.ToDeleteMealPlanCommand(id));
+
     [HttpGet]
     [ProducesResponseType<PagedHttpResponse<MealPlanSummaryHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

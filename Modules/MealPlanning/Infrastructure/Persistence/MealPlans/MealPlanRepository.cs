@@ -43,6 +43,19 @@ internal sealed class MealPlanRepository(DbSet<MealPlan> plans, IMealPlanComposi
         return Task.FromResult(plan);
     }
 
+    public async Task<bool> DeletePersonalAsync(MealPlanId id, UserId userId, CancellationToken cancellationToken = default) {
+        MealPlan? plan = await plans.AsTracking()
+            .FirstOrDefaultAsync(value => value.Id == id && value.UserId == userId && !value.IsCurated, cancellationToken)
+            .ConfigureAwait(false);
+        if (plan is null) {
+            return false;
+        }
+
+        cancellationToken.ThrowIfCancellationRequested();
+        plans.Remove(plan);
+        return true;
+    }
+
     public async Task<MealPlan?> GetByIdAsync(
         MealPlanId id,
         bool includeDays = false,

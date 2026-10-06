@@ -49,7 +49,10 @@
             }
         </section>
 
-        <aside class="statistics-body-trend-card__insights" [attr.aria-label]="'STATISTICS.DASHBOARD.BODY.INSIGHTS_TITLE' | translate">
+        <aside
+            class="statistics-body-trend-card__insights"
+            [attr.aria-label]="`${('STATISTICS.DASHBOARD.BODY.TITLE' | translate)}: ${('STATISTICS.DASHBOARD.BODY.INSIGHTS_TITLE' | translate)}`"
+        >
             <h3 class="statistics-body-trend-card__insights-title fd-ui-action-text">
                 {{ 'STATISTICS.DASHBOARD.BODY.INSIGHTS_TITLE' | translate }}
             </h3>

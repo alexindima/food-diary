@@ -32,7 +32,15 @@
         />
 
         @if (showPlans()) {
-            <fd-premium-plans-card data-tour-id="premium-plans" [cards]="planCards()" (checkout)="startCheckoutFromViewAsync($event)" />
+            <fd-premium-plans-card
+                data-tour-id="premium-plans"
+                [cards]="planCards()"
+                [prices]="pricing.prices()"
+                [pricesLoading]="pricing.loading()"
+                [pricesUnavailable]="pricing.unavailable()"
+                (retryPrices)="reloadOverviewAsync()"
+                (checkout)="startCheckoutFromViewAsync($event)"
+            />
         }
 
         <fd-premium-benefits-card data-tour-id="premium-benefits" />

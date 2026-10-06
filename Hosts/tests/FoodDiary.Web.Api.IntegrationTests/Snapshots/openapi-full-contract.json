@@ -13124,6 +13124,33 @@
       "Path": "/api/v{version}/meal-plans/{id}",
       "Operations": [
         {
+          "Method": "delete",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "400",
+            "401",
+            "403",
+            "404",
+            "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        },
+        {
           "Method": "get",
           "HasRequestBody": false,
           "ResponseCodes": [
@@ -24093,6 +24120,18 @@
         },
         {
           "Name": "paddleClientToken",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "paddleMonthlyPriceId",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "paddleYearlyPriceId",
           "Required": false,
           "Type": "string",
           "Nullable": true

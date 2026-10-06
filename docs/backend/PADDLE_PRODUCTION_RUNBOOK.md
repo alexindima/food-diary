@@ -38,6 +38,12 @@ Store all secrets outside the repository. Never copy sandbox values into product
 
 Startup configuration validation intentionally rejects mixed sandbox/live settings.
 
+## Prices before checkout
+
+The authorized billing overview publishes the public Paddle client token and monthly/yearly catalog price IDs only when Paddle checkout is configured and enabled. Premium cards request both quantities of `1` through [Paddle.PricePreview](https://developer.paddle.com/paddle-js/methods/paddle-pricepreview/), without creating a customer, transaction, or checkout. Prices come from each matching line item's formatted total and the preview currency; the monthly/yearly billing cycles must match the configured plan.
+
+Paddle estimates the buyer's location from their IP when no address is supplied. Cards explain that tax, the billing address, and discounts can affect the final checkout total. No price amount is stored in the frontend configuration. A failed or incomplete preview shows an unavailable message with retry; the checkout flow remains available for reviewing the final amount. Before enabling production checkout, verify both card prices against the live catalog and confirm the final amount before purchasing. In a multi-provider deployment, displayed estimates are explicitly labeled as Paddle prices.
+
 ## Paddle dashboard preparation
 
 1. Confirm the legal entity, supported supplier jurisdiction, payout account, tax category, statement descriptor, support email, refund policy, terms, privacy policy, and approved production domain.

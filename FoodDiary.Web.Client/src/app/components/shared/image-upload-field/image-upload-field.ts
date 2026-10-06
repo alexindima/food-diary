@@ -1,5 +1,6 @@
 import { DOCUMENT, NgOptimizedImage } from '@angular/common';
 import {
+    afterRenderEffect,
     ChangeDetectionStrategy,
     Component,
     computed,
@@ -106,6 +107,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
 
     private readonly fileInputRef = viewChild<ElementRef<HTMLInputElement>>('fileInput');
     private readonly cropSurfaceRef = viewChild<ElementRef<HTMLDivElement>>('cropSurface');
+    private readonly cropDialogRef = viewChild<ElementRef<HTMLDialogElement>>('cropDialog');
     protected readonly errorId = createImageUploadId('image-upload-error');
     protected readonly cropTitleId = createImageUploadId('image-upload-crop-title');
     protected readonly cropSubtitleId = createImageUploadId('image-upload-crop-subtitle');
@@ -115,6 +117,10 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     protected readonly isUploading = signal(false);
     protected readonly error = signal<string | null>(null);
     protected readonly isCropping = signal(false);
+    protected readonly isProcessingCrop = signal(false);
+    protected readonly canConfirmCrop = computed(
+        () => this.cropImageBounds() !== null && this.cropSelection() !== null && !this.isProcessingCrop(),
+    );
 
     protected readonly cropPreviewUrl = signal<string | null>(null);
     protected readonly cropImageBounds = signal<CropRect | null>(null);
@@ -132,7 +138,14 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
             this.hasErrorChange.emit(this.error() !== null);
         });
         this.destroyRef.onDestroy(() => {
+            this.cropDialogRef()?.nativeElement.close();
             this.clearPreparationPreview();
+        });
+        afterRenderEffect(() => {
+            const dialog = this.cropDialogRef()?.nativeElement;
+            if (dialog !== undefined && !dialog.open && this.isCropping()) {
+                dialog.showModal();
+            }
         });
         effect(() => {
             const value = this.value();
@@ -270,8 +283,29 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     protected onCropImageLoaded(img: HTMLImageElement): void {
+        if (!this.isCurrentCropImage(img)) {
+            return;
+        }
+        if (img.naturalWidth <= 0 || img.naturalHeight <= 0) {
+            this.failCrop('READ_FAILED');
+            return;
+        }
         this.cropImageElement = img;
+        const dialog = this.cropDialogRef()?.nativeElement;
+        if (dialog !== undefined && !dialog.open) {
+            dialog.showModal();
+        }
         this.initializeCropSelection(img);
+    }
+
+    protected onCropImageFailed(img: HTMLImageElement): void {
+        if (this.isCurrentCropImage(img)) {
+            this.failCrop('READ_FAILED');
+        }
+    }
+
+    private isCurrentCropImage(img: HTMLImageElement): boolean {
+        return this.isCropping() && img.getAttribute('src') === this.cropPreviewUrl();
     }
 
     protected onCropPointerDown(event: PointerEvent, mode: CropInteractionMode): void {
@@ -352,8 +386,11 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     protected cancelCrop(): void {
+        this.cropDialogRef()?.nativeElement.close();
         this.isCropping.set(false);
         this.clearCropState();
+        this.imagePreparationFailed.emit();
+        this.clearPreparationPreview();
     }
 
     protected confirmCrop(): void {
@@ -473,15 +510,25 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     private startCropping(file: File): void {
+        this.clearCropState();
         this.originalFile = file;
         const reader = new FileReader();
         reader.onload = (): void => {
+            if (this.destroyRef.destroyed || this.originalFile !== file) {
+                return;
+            }
             const previewUrl = typeof reader.result === 'string' ? reader.result : null;
+            if (previewUrl === null) {
+                this.failCrop('READ_FAILED');
+                return;
+            }
             this.cropPreviewUrl.set(previewUrl);
-            this.isCropping.set(previewUrl !== null);
+            this.isCropping.set(true);
         };
         reader.onerror = (): void => {
-            this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.READ_FAILED'));
+            if (!this.destroyRef.destroyed && this.originalFile === file) {
+                this.failCrop('READ_FAILED');
+            }
         };
         reader.readAsDataURL(file);
     }
@@ -550,42 +597,57 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     private confirmCropInternal(): void {
         const selection = this.cropSelection();
         const bounds = this.cropImageBounds();
-        if (selection === null || bounds === null || this.cropImageElement === null) {
+        const originalFile = this.originalFile;
+        if (selection === null || bounds === null || this.cropImageElement === null || !this.canConfirmCrop()) {
             return;
         }
 
+        this.isProcessingCrop.set(true);
+        try {
+            const canvas = this.createCropUploadCanvas(selection, bounds, this.cropImageElement);
+            if (canvas === null) {
+                this.failCrop('PROCESSING_FAILED');
+                return;
+            }
+            canvas.toBlob(blob => {
+                this.completeCropUpload(blob, originalFile);
+            }, originalFile?.type ?? 'image/png');
+        } catch {
+            this.failCrop('PROCESSING_FAILED');
+        }
+    }
+
+    private createCropUploadCanvas(selection: CropRect, bounds: CropRect, image: HTMLImageElement): HTMLCanvasElement | null {
         const fixedSize = this.cropSize();
         const canvas = createCroppedCanvas({
             ownerDocument: this.document,
-            image: this.cropImageElement,
+            image,
             selection,
             bounds,
             fixedSize,
             fillBackground: this.originalFile?.type === 'image/jpeg',
         });
-        if (canvas === null) {
-            this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED'));
+        return canvas === null ? null : this.resizeCropCanvasIfNeeded(canvas, fixedSize);
+    }
+
+    private completeCropUpload(blob: Blob | null, originalFile: File | null): void {
+        if (this.destroyRef.destroyed || !this.isCropping() || this.originalFile !== originalFile) {
             return;
         }
-
-        const resizedCanvas = this.resizeCropCanvasIfNeeded(canvas, fixedSize);
-        if (resizedCanvas === null) {
-            this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED'));
+        if (blob === null) {
+            this.failCrop('PROCESSING_FAILED');
             return;
         }
+        const croppedFile = new File([blob], originalFile?.name ?? 'avatar.png', { type: originalFile?.type ?? 'image/png' });
+        this.cropDialogRef()?.nativeElement.close();
+        this.isCropping.set(false);
+        this.clearCropState();
+        this.uploadFile(croppedFile);
+    }
 
-        resizedCanvas.toBlob((blob: Blob | null) => {
-            if (blob === null) {
-                this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED'));
-                return;
-            }
-
-            const fileName = this.originalFile?.name ?? 'avatar.png';
-            const croppedFile = new File([blob], fileName, { type: this.originalFile?.type ?? 'image/png' });
-            this.isCropping.set(false);
-            this.clearCropState();
-            this.uploadFile(croppedFile);
-        }, this.originalFile?.type ?? 'image/png');
+    private failCrop(errorKey: 'READ_FAILED' | 'PROCESSING_FAILED'): void {
+        this.cancelCrop();
+        this.error.set(this.translateService.instant(`IMAGE_UPLOAD_FIELD.ERRORS.${errorKey}`));
     }
 
     private initializeCropSelection(img: HTMLImageElement): void {
@@ -623,6 +685,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     private clearCropState(): void {
+        this.isProcessingCrop.set(false);
         if (this.cropPreviewUrl() !== null) {
             this.cropPreviewUrl.set(null);
         }

@@ -75,7 +75,9 @@ public sealed class StartPremiumTrialCommandHandler(
             CanStartPremiumTrial: false,
             publicConfig.Provider,
             publicConfig.PaddleClientToken,
-            publicConfig.AvailableProviders));
+            publicConfig.AvailableProviders,
+            publicConfig.PaddleMonthlyPriceId,
+            publicConfig.PaddleYearlyPriceId));
     }
 
     private bool IsPaidPremiumActive(BillingSubscriptionOverviewReadModel? subscription) =>

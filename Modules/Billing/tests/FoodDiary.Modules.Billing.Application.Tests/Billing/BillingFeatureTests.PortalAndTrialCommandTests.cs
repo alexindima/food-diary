@@ -153,7 +153,7 @@ public partial class BillingFeatureTests {
         var handler = new StartPremiumTrialCommandHandler(
             userRepository,
             new InMemoryBillingSubscriptionRepository(),
-            new FakeBillingPublicConfigProvider(),
+            new FakeBillingPublicConfigProvider("pri_month", "pri_year"),
             new FixedDateTimeProvider(Now));
 
         Result<BillingOverviewModel> result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
@@ -167,6 +167,8 @@ public partial class BillingFeatureTests {
         Assert.True(result.Value.PremiumTrialActive);
         Assert.True(result.Value.PremiumTrialUsed);
         Assert.False(result.Value.CanStartPremiumTrial);
+        Assert.Equal("pri_month", result.Value.PaddleMonthlyPriceId);
+        Assert.Equal("pri_year", result.Value.PaddleYearlyPriceId);
         Assert.Equal(1, userRepository.UpdateCount);
     }
 

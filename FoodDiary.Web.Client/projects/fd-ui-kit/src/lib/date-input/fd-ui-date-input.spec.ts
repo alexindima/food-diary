@@ -71,6 +71,15 @@ describe('FdUiDateInputComponent', () => {
         const input = requireInputElement('input');
         expect(input.type).toBe('date');
         expect(input.readOnly).toBe(false);
+        expect(input.getAttribute('role')).toBeNull();
+        expect(input.getAttribute('aria-expanded')).toBeNull();
+        expect(input.getAttribute('aria-haspopup')).toBeNull();
+        const picker = requireButtonElement('.fd-ui-date-input__suffix');
+        expect(picker.getAttribute('aria-haspopup')).toBe('dialog');
+        expect(picker.getAttribute('aria-expanded')).toBe('false');
+        picker.click();
+        fixture.detectChanges();
+        expect(picker.getAttribute('aria-expanded')).toBe('true');
         input.value = '1995-06-15';
         input.dispatchEvent(new Event('input'));
         fixture.detectChanges();

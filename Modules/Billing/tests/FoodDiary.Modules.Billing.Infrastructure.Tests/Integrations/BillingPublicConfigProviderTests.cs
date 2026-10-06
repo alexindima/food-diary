@@ -43,7 +43,7 @@ public sealed class BillingPublicConfigProviderTests {
         BillingPublicConfigProvider provider = CreateProvider(
             billing: new BillingOptions { Provider = " paddle " },
             stripe: new StripeOptions(),
-            paddle: ValidPaddleOptions(clientSideToken: " test_paddle-token "),
+            paddle: ValidPaddleOptions(clientSideToken: " test_paddle-token ", monthlyPriceId: " price_monthly ", yearlyPriceId: " price_yearly "),
             yooKassa: new YooKassaOptions());
 
         BillingPublicConfigModel config = provider.GetPublicConfig();
@@ -51,6 +51,8 @@ public sealed class BillingPublicConfigProviderTests {
         Assert.Equal("paddle", config.Provider);
         Assert.Equal([BillingProviderNames.Paddle], config.AvailableProviders);
         Assert.Equal("test_paddle-token", config.PaddleClientToken);
+        Assert.Equal("price_monthly", config.PaddleMonthlyPriceId);
+        Assert.Equal("price_yearly", config.PaddleYearlyPriceId);
     }
 
     [Fact]
@@ -66,6 +68,8 @@ public sealed class BillingPublicConfigProviderTests {
         Assert.Equal("YooKassa", config.Provider);
         Assert.Equal([BillingProviderNames.YooKassa], config.AvailableProviders);
         Assert.Null(config.PaddleClientToken);
+        Assert.Null(config.PaddleMonthlyPriceId);
+        Assert.Null(config.PaddleYearlyPriceId);
     }
 
     [Fact]
@@ -107,14 +111,35 @@ public sealed class BillingPublicConfigProviderTests {
         };
     }
 
-    private static PaddleOptions ValidPaddleOptions(string clientSideToken = "test_paddle-client-token") {
+    [Fact]
+    public void GetPublicConfig_WithPaddleCheckoutDisabled_DoesNotPublishCatalogConfiguration() {
+        BillingPublicConfigProvider provider = CreateProvider(
+            new BillingOptions { Provider = BillingProviderNames.Paddle },
+            new StripeOptions(),
+            ValidPaddleOptions(checkoutEnabled: false),
+            new YooKassaOptions());
+
+        BillingPublicConfigModel config = provider.GetPublicConfig();
+
+        Assert.Empty(config.AvailableProviders);
+        Assert.Null(config.PaddleClientToken);
+        Assert.Null(config.PaddleMonthlyPriceId);
+        Assert.Null(config.PaddleYearlyPriceId);
+    }
+
+    private static PaddleOptions ValidPaddleOptions(
+        string clientSideToken = "test_paddle-client-token",
+        string monthlyPriceId = "pri_month",
+        string yearlyPriceId = "pri_year",
+        bool checkoutEnabled = true) {
         return new PaddleOptions {
             Environment = PaddleOptions.SandboxEnvironment,
             ApiKey = "paddle-api-key",
             ApiBaseUrl = "https://sandbox-api.paddle.com",
             ClientSideToken = clientSideToken,
-            PremiumMonthlyPriceId = "pri_month",
-            PremiumYearlyPriceId = "pri_year",
+            PremiumMonthlyPriceId = monthlyPriceId,
+            PremiumYearlyPriceId = yearlyPriceId,
+            CheckoutEnabled = checkoutEnabled,
             CheckoutUrl = "https://checkout.paddle.com",
         };
     }

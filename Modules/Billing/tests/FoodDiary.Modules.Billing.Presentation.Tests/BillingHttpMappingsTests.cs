@@ -64,7 +64,9 @@ public sealed class BillingHttpMappingsTests {
             CanStartPremiumTrial: false,
             Provider: "paddle",
             PaddleClientToken: "client-token",
-            AvailableProviders: ["paddle", "stripe"]);
+            AvailableProviders: ["paddle", "stripe"],
+            PaddleMonthlyPriceId: "pri_month",
+            PaddleYearlyPriceId: "pri_year");
 
         BillingOverviewHttpResponse response = model.ToHttpResponse();
 
@@ -86,7 +88,9 @@ public sealed class BillingHttpMappingsTests {
             () => Assert.False(response.CanStartPremiumTrial),
             () => Assert.Equal("paddle", response.Provider),
             () => Assert.Equal("client-token", response.PaddleClientToken),
-            () => Assert.Equal(["paddle", "stripe"], response.AvailableProviders));
+            () => Assert.Equal(["paddle", "stripe"], response.AvailableProviders),
+            () => Assert.Equal("pri_month", response.PaddleMonthlyPriceId),
+            () => Assert.Equal("pri_year", response.PaddleYearlyPriceId));
     }
 
     [Fact]

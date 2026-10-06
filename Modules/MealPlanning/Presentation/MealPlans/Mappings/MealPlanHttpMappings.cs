@@ -1,4 +1,5 @@
 using FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.AdoptMealPlan;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.DeleteMealPlan;
 using FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.GenerateShoppingList;
 using FoodDiary.Modules.MealPlanning.Application.MealPlans.Models;
 using FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetMealPlanById;
@@ -9,6 +10,7 @@ namespace FoodDiary.Modules.MealPlanning.Presentation.MealPlans.Mappings;
 
 public static class MealPlanHttpMappings {
     extension(Guid userId) {
+        public DeleteMealPlanCommand ToDeleteMealPlanCommand(Guid planId) => new(userId, planId);
         public GetMealPlansQuery ToQuery(string? dietType, int page, int limit) =>
             new(userId, dietType, page, limit);
         public GetMealPlanByIdQuery ToGetByIdQuery(Guid planId) =>

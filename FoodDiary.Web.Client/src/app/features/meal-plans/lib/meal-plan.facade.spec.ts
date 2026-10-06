@@ -21,6 +21,7 @@ const TARGET_CALORIES = 1800;
 const TOTAL_RECIPES = 21;
 
 type MealPlanServiceMock = {
+    deletePlan: ReturnType<typeof vi.fn>;
     adopt: ReturnType<typeof vi.fn>;
     generateShoppingList: ReturnType<typeof vi.fn>;
     getPage: ReturnType<typeof vi.fn>;
@@ -39,6 +40,7 @@ beforeEach(() => {
     quickMeal.addRecipe.mockReset();
     quickMeal.updateDetails.mockReset();
     mealPlanService = {
+        deletePlan: vi.fn(() => of(void 0)),
         getPage: vi.fn(() => of({ data: [createSummary()], page: 1, limit: PAGE_SIZE, totalPages: 1, totalItems: 1 })),
         getById: vi.fn(() => of(createMealPlan())),
         adopt: vi.fn(() => of(createMealPlan())),
@@ -55,6 +57,40 @@ beforeEach(() => {
     });
 
     facade = TestBed.inject(MealPlanFacade);
+});
+
+describe('MealPlanFacade personal deletion', () => {
+    it('rejects a curated plan and an unrelated selected id before issuing DELETE', async () => {
+        facade.loadPlan('plan-1');
+        await waitForAsync(() => facade.selectedPlan() !== null);
+        facade.deletePlan('plan-1', vi.fn());
+        facade.deletePlan('other', vi.fn());
+        expect(mealPlanService.deletePlan).not.toHaveBeenCalled();
+    });
+
+    it('locks repeated actions while deleting, reports errors and permits retry without losing the plan', async () => {
+        mealPlanService.getById.mockReturnValue(of({ ...createMealPlan(), isCurated: false }));
+        facade.loadPlan('plan-1');
+        await waitForAsync(() => facade.selectedPlan() !== null);
+        const response = new Subject<void>();
+        mealPlanService.deletePlan.mockReturnValueOnce(response);
+        const onSuccess = vi.fn();
+        facade.deletePlan('plan-1', onSuccess);
+        facade.deletePlan('plan-1', onSuccess);
+        facade.generateShoppingList('plan-1', vi.fn());
+        expect(facade.pendingAction()).toBe('delete');
+        expect(mealPlanService.deletePlan).toHaveBeenCalledOnce();
+        expect(mealPlanService.generateShoppingList).not.toHaveBeenCalled();
+        response.error(new Error('Unavailable'));
+        expect(facade.pendingAction()).toBeNull();
+        expect(facade.actionErrorKey()).toBe('MEAL_PLANS.ERROR_DELETE');
+        expect(facade.selectedPlan()?.id).toBe('plan-1');
+        expect(onSuccess).not.toHaveBeenCalled();
+        facade.deletePlan('plan-1', onSuccess);
+        expect(facade.actionErrorKey()).toBeNull();
+        expect(onSuccess).toHaveBeenCalledOnce();
+        await waitForAsync(() => facade.selectedPlan() === null);
+    });
 });
 
 describe('MealPlanFacade', () => {

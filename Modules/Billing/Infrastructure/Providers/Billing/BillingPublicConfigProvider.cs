@@ -15,13 +15,16 @@ public sealed class BillingPublicConfigProvider(
     public BillingPublicConfigModel GetPublicConfig() {
         string provider = billingOptions.Value.Provider?.Trim() ?? string.Empty;
         string[] availableProviders = ResolveAvailableProviders(provider);
+        bool paddleAvailable = availableProviders.Contains(BillingProviderNames.Paddle, StringComparer.OrdinalIgnoreCase);
 
         return new BillingPublicConfigModel(
             provider,
-            availableProviders.Contains(BillingProviderNames.Paddle, StringComparer.OrdinalIgnoreCase)
+            paddleAvailable
                 ? NullIfEmpty(paddleOptions.Value.ClientSideToken)
                 : null,
-            availableProviders);
+            availableProviders,
+            paddleAvailable ? NullIfEmpty(paddleOptions.Value.PremiumMonthlyPriceId) : null,
+            paddleAvailable ? NullIfEmpty(paddleOptions.Value.PremiumYearlyPriceId) : null);
     }
 
     private string[] ResolveAvailableProviders(string provider) {

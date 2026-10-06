@@ -13,7 +13,7 @@
                 #origin="cdkOverlayOrigin"
                 cdkOverlayOrigin
                 class="fd-ui-date-input__control"
-                role="combobox"
+                [attr.role]="allowManualInput() ? null : 'combobox'"
                 [id]="id()"
                 [type]="allowManualInput() ? 'date' : 'text'"
                 [value]="allowManualInput() ? manualValue() : displayValue()"
@@ -25,9 +25,9 @@
                 [attr.aria-describedby]="fieldError() ? `${id()}-error` : null"
                 [attr.aria-invalid]="fieldError() ? 'true' : null"
                 [attr.aria-required]="required()"
-                [attr.aria-controls]="`${id()}-dialog`"
-                [attr.aria-expanded]="isOpen()"
-                [attr.aria-haspopup]="'dialog'"
+                [attr.aria-controls]="allowManualInput() ? null : `${id()}-dialog`"
+                [attr.aria-expanded]="allowManualInput() ? null : isOpen()"
+                [attr.aria-haspopup]="allowManualInput() ? null : 'dialog'"
                 (input)="onManualInput($event)"
                 (click)="!allowManualInput() && openDatePicker()"
                 (keydown)="onInputKeydown($event)"
@@ -46,8 +46,11 @@
             <button
                 type="button"
                 class="fd-ui-date-input__suffix"
+                aria-haspopup="dialog"
                 [disabled]="disabled()"
                 [attr.aria-label]="pickerAriaLabel() ?? label()"
+                [attr.aria-controls]="`${id()}-dialog`"
+                [attr.aria-expanded]="isOpen()"
                 (click)="openDatePicker()"
             >
                 <fd-ui-icon name="calendar_today" />

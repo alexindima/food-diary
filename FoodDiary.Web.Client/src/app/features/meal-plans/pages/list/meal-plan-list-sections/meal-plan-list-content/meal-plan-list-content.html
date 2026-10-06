@@ -25,7 +25,7 @@
                 (keydown.space)="$event.preventDefault(); planOpen.emit(plan.id)"
             >
                 <div class="meal-plan-card__badge fd-ui-pill fd-ui-pill--compact fd-ui-overline">{{ plan.dietTypeKey | translate }}</div>
-                <h3 class="meal-plan-card__name fd-ui-title-sm">{{ plan.name }}</h3>
+                <h2 class="meal-plan-card__name fd-ui-title-sm">{{ plan.name }}</h2>
                 <p class="meal-plan-card__desc fd-ui-body" [hidden]="!plan.description">{{ plan.description }}</p>
                 <div class="meal-plan-card__meta fd-row fd-wrap fd-gap-sm fd-ui-caption-strong">
                     <span>{{ countLabelKey('DAYS', plan.durationDays) | translate: { count: plan.durationDays } }}</span>

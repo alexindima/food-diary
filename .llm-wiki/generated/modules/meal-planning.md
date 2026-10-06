@@ -82,6 +82,7 @@ No literal attribute-routed controller was associated with this module.
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/FeatureErrorContractTests.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/DeleteMealPlanTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/MealPlansFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/MealPlansValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/SaveCatalogMealPlanTests.cs`
@@ -110,7 +111,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [integration] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests/PostgresDatabaseCollection.cs`
 - [integration] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests/PostgresDatabaseFixture.cs`
 - [presentation] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/CatalogMealPlanHttpMappingsTests.cs`
-- [presentation] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/MealPlanHttpMappingsTests.cs`
 
 ## Working Rule
 

@@ -34,6 +34,8 @@ public sealed class DietologistEmailSenderTests {
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
         Assert.Contains("Invitation", getSent().Subject, StringComparison.Ordinal);
+        Assert.Contains("<html lang=\"en\">", getSent().HtmlBody, StringComparison.Ordinal);
+        Assert.Contains("If the button doesn't work", getSent().HtmlBody, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -45,6 +47,8 @@ public sealed class DietologistEmailSenderTests {
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
         Assert.Contains("\u041f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435", getSent().Subject, StringComparison.Ordinal);
+        Assert.Contains("<html lang=\"ru\">", getSent().HtmlBody, StringComparison.Ordinal);
+        Assert.Contains("Если кнопка не работает", getSent().HtmlBody, StringComparison.Ordinal);
     }
 
     [Fact]

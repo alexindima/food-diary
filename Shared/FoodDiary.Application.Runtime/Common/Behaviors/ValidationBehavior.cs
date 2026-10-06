@@ -53,7 +53,7 @@ public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidat
         var error = new Error(
             errorCode,
             errorMessage,
-            Kind: ErrorKindResolver.Resolve(errorCode),
+            Kind: ErrorKindResolver.Resolve(errorCode) ?? ErrorKind.Validation,
             Details: groupedDetails.Count > 0 ? groupedDetails : null);
 
         if (typeof(TResponse) == typeof(Result)) {

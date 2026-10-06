@@ -51,6 +51,14 @@ public sealed class PresentationErrorHttpMapperTests {
         Assert.Equal(StatusCodes.Status400BadRequest, actual);
     }
 
+    [Theory]
+    [InlineData("EqualValidator")]
+    [InlineData("Recipe.UnknownInput")]
+    public void MapStatusCode_ForUnclassifiedValidatorCodeWithValidationKind_ReturnsBadRequest(string code) {
+        var error = new Error(code, "Input did not satisfy the rule.", Kind: ErrorKind.Validation);
+        Assert.Equal(StatusCodes.Status400BadRequest, PresentationErrorHttpMapper.MapStatusCode(error));
+    }
+
     private static Error CreateError(string factoryName) =>
         factoryName switch {
             nameof(CreateTelegramInvalidData) => CreateTelegramInvalidData(),

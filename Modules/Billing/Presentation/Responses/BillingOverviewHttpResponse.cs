@@ -18,4 +18,6 @@ public sealed record BillingOverviewHttpResponse(
     bool CanStartPremiumTrial,
     string Provider,
     string? PaddleClientToken,
-    IReadOnlyList<string> AvailableProviders);
+    IReadOnlyList<string> AvailableProviders,
+    string? PaddleMonthlyPriceId = null,
+    string? PaddleYearlyPriceId = null);

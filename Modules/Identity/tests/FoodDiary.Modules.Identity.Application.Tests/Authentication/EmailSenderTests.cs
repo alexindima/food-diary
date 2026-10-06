@@ -8,8 +8,10 @@ namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public sealed class EmailSenderTests {
-    [Fact]
-    public async Task SendAccountCreated_WithFallback_BuildsCredentialsMessage() {
+    [Theory]
+    [InlineData("en", "en", "Your FoodDiary account is ready", "Temporary password", "Sign in")]
+    [InlineData("ru-RU", "ru", "Ваш аккаунт FoodDiary создан", "Временный пароль", "Войти")]
+    public async Task SendAccountCreated_WithFallback_BuildsCredentialsMessage(string language, string locale, string subject, string passwordLabel, string signInLabel) {
         IEmailOutbox outbox = CreateCapturingOutbox(out Func<SentEmail> getSent);
         var sender = new EmailSender(
             CreateOptions(fromName: ""),
@@ -18,14 +20,17 @@ public sealed class EmailSenderTests {
             outbox);
 
         await sender.SendAccountCreatedAsync(
-            new AccountCreatedMessage("admin@example.com", "Temp-123", "en", ClientOrigin: null),
+            new AccountCreatedMessage("admin@example.com", "Temp-123", language, ClientOrigin: null),
             CancellationToken.None);
 
         Assert.Multiple(
-            () => Assert.Equal("Your FoodDiary account is ready", getSent().Subject),
+            () => Assert.Equal(subject, getSent().Subject),
             () => Assert.Contains("admin@example.com", getSent().Body, StringComparison.Ordinal),
             () => Assert.Contains("Temp-123", getSent().Body, StringComparison.Ordinal),
-            () => Assert.Contains("https://app.example/login", getSent().Body, StringComparison.Ordinal));
+            () => Assert.Contains("https://app.example/login", getSent().Body, StringComparison.Ordinal),
+            () => Assert.Contains($"<html lang=\"{locale}\">", getSent().Body, StringComparison.Ordinal),
+            () => Assert.Contains(passwordLabel, getSent().Body, StringComparison.Ordinal),
+            () => Assert.Contains($">{signInLabel}</a>", getSent().Body, StringComparison.Ordinal));
     }
 
     [Fact]
@@ -74,8 +79,10 @@ public sealed class EmailSenderTests {
         Assert.Equal("outbox failed", exception.Message);
     }
 
-    [Fact]
-    public async Task SendEmailVerification_WithAllowedClientOrigin_UsesFallbackAndTenantOrigin() {
+    [Theory]
+    [InlineData("en-US", "en", "Confirm your email", "If the button doesn't work")]
+    [InlineData("ru-RU", "ru", "Подтвердите email", "Если кнопка не работает")]
+    public async Task SendEmailVerification_WithAllowedClientOrigin_UsesFallbackAndTenantOrigin(string language, string locale, string subject, string copyLinkHint) {
         IEmailTemplateProvider templateProvider = CreateTemplateProvider(out Func<string?> getLastKey, out Func<string?> getLastLocale);
         IEmailOutbox outbox = CreateCapturingOutbox(out Func<SentEmail> getSent);
         var sender = new EmailSender(
@@ -89,15 +96,37 @@ public sealed class EmailSenderTests {
                 "user@example.com",
                 "user 1",
                 "token/value",
-                "en-US",
+                language,
                 "https://TENANT.example/shell"),
             CancellationToken.None);
 
         Assert.Equal("email_verification", getLastKey());
-        Assert.Equal("en", getLastLocale());
+        Assert.Equal(locale, getLastLocale());
         Assert.Equal("user@example.com", getSent().ToEmail);
-        Assert.Equal("Confirm your email", getSent().Subject);
+        Assert.Equal(subject, getSent().Subject);
         Assert.Contains("https://tenant.example/verify-email?userId=user%201&token=token%2Fvalue", getSent().Body, StringComparison.Ordinal);
+        Assert.Contains($"<html lang=\"{locale}\">", getSent().Body, StringComparison.Ordinal);
+        Assert.Contains(copyLinkHint, getSent().Body, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("en", "en", "If the button doesn't work")]
+    [InlineData("ru-RU", "ru", "Если кнопка не работает")]
+    public async Task SendPasswordReset_WithEmptyTemplateHtml_LocalizesFallback(string language, string locale, string copyLinkHint) {
+        Dictionary<(string Key, string Locale), EmailTemplateContent> templates = new() {
+            [("password_reset", locale)] = new("Custom subject", "", "Custom plain text"),
+        };
+        IEmailOutbox outbox = CreateCapturingOutbox(out Func<SentEmail> getSent);
+        var sender = new EmailSender(CreateOptions(), CreateTemplateProvider(templates), CreateSuccessfulTransport(), outbox);
+
+        await sender.SendPasswordResetAsync(new PasswordResetMessage("user@example.com", "user-1", "token", language), CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal("Custom subject", getSent().Subject),
+            () => Assert.Contains($"<html lang=\"{locale}\">", getSent().Body, StringComparison.Ordinal),
+            () => Assert.Contains(copyLinkHint, getSent().Body, StringComparison.Ordinal),
+            () => Assert.Contains("https://app.example/reset-password#userId=user-1&token=token", getSent().Body, StringComparison.Ordinal),
+            () => Assert.Contains(getSent().AlternateViewBodies, body => string.Equals(body, "Custom plain text", StringComparison.Ordinal)));
     }
 
     [Fact]
@@ -131,6 +160,8 @@ public sealed class EmailSenderTests {
         Assert.Equal("user@example.com", getSent().ToEmail);
         Assert.Contains("FoodDiary", getSent().Subject, StringComparison.Ordinal);
         Assert.Contains("MailRelay", getSent().Body, StringComparison.Ordinal);
+        Assert.Contains("<html lang=\"ru\">", getSent().Body, StringComparison.Ordinal);
+        Assert.Contains("Если кнопка не работает", getSent().Body, StringComparison.Ordinal);
         Assert.Contains(getSent().AlternateViewBodies, body => body.Contains("MailRelay", StringComparison.Ordinal));
     }
 
@@ -143,6 +174,7 @@ public sealed class EmailSenderTests {
 
         Assert.Equal("FoodDiary test email", getSent().Subject);
         Assert.Contains("main email dispatch path is working", getSent().Body, StringComparison.Ordinal);
+        Assert.Contains("<html lang=\"en\">", getSent().Body, StringComparison.Ordinal);
     }
 
     [Fact]

@@ -733,6 +733,8 @@ Hunger/satiety scale widget.
 
 Inline alert/banner for actionable warnings, info states, or success notices.
 
+Messages and native text actions use the semantic text color for readable contrast in every theme. Action styles inherit the alert surface and spacing without resetting its host variables. Primary and secondary actions remain named native buttons with visible keyboard focus; severity accents belong to the alert icon and surface.
+
 **Inputs**
 
 - `appearance?: 'alert' | 'notice'`
@@ -788,6 +790,10 @@ Reusable section wrapper for `content`, `loading`, `empty`, and `error` states i
 **Outputs**
 
 - `retry`
+
+#### `fd-ui-sidebar`
+
+The sidebar exposes one navigation landmark named by `brandTitle`. Its visual sections group links inside that landmark, so unnamed sections do not create duplicate navigation landmarks.
 
 #### `fd-ui-menu`, `fd-ui-menu-item`, `fd-ui-menu-trigger`, `fd-ui-menu-divider`
 
@@ -904,4 +910,4 @@ Opening the menu activates an exact matching selected value, with the first opti
 
 In manual mode the label stays above the field, including when empty, so it does not overlap the browser's date entry pattern.
 
-`fd-ui-date-input` accepts `allowManualInput` (default `false`). Set it for distant dates such as birth dates. It uses the native date field for direct keyboard entry and validates min/max before emitting an ISO calendar date; the calendar button remains available. Invalid manual input retains the previous value and emits `manualInputInvalidChange: true`; consumers must use this state to block submission. Correcting or clearing the input emits `false`, and intentional clearing emits a `null` value. The Signal Forms `reset()` control hook clears the invalid draft and restores the model value, including when that value has not changed. Use `latestDate` for an upper bound and `earliestDate` for a lower bound alongside Signal Forms, where `max` and `min` are owned by the field binding. `invalidDateLabel` supplies the localized message for an invalid manual date. Date input and calendar use the current translation language unless a calendar locale is explicitly provided.
+`fd-ui-date-input` accepts `allowManualInput` (default `false`). Set it for distant dates such as birth dates. It uses the native date field for direct keyboard entry and validates min/max before emitting an ISO calendar date; the calendar button remains available. The native date field retains its browser semantics, while the calendar button announces the custom popup and its expanded state. The default read-only text field exposes the combobox role. Invalid manual input retains the previous value and emits `manualInputInvalidChange: true`; consumers must use this state to block submission. Correcting or clearing the input emits `false`, and intentional clearing emits a `null` value. The Signal Forms `reset()` control hook clears the invalid draft and restores the model value, including when that value has not changed. Use `latestDate` for an upper bound and `earliestDate` for a lower bound alongside Signal Forms, where `max` and `min` are owned by the field binding. `invalidDateLabel` supplies the localized message for an invalid manual date. Date input and calendar use the current translation language unless a calendar locale is explicitly provided.

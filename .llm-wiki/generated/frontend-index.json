@@ -8,16 +8,16 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1903,
-    "symbols": 728,
+    "typescriptFiles": 1910,
+    "symbols": 730,
     "routes": 106,
     "features": 46,
-    "specs": 678,
+    "specs": 681,
     "localeFiles": 5,
     "roles": {
-      "Component": 481,
+      "Component": 482,
       "Directive": 12,
-      "Facade": 82,
+      "Facade": 83,
       "Other": 20,
       "Pipe": 4,
       "Service": 129
@@ -962,6 +962,8 @@
         "PremiumBillingFacade",
         "PremiumBillingService",
         "PremiumOverviewCardComponent",
+        "PremiumPlanPriceComponent",
+        "PremiumPlanPricingFacade",
         "PremiumPlansCardComponent"
       ],
       "routes": [
@@ -970,6 +972,8 @@
       "tests": [
         "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.spec.ts",
         "FoodDiary.Web.Client/src/app/features/premium/lib/paddle-checkout.service.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/premium/lib/paddle-price-preview.mapper.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/premium/lib/premium-plan-pricing.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/plans-card/premium-plans-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-lib/premium-access-date.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-lib/premium-access-error.utils.spec.ts",
@@ -2965,7 +2969,7 @@
       "role": "Component",
       "selector": "fd-image-upload-field",
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field.ts",
-      "line": 69
+      "line": 70
     },
     {
       "name": "MealCardComponent",
@@ -4274,7 +4278,7 @@
       "role": "Component",
       "selector": "fd-meal-plan-detail-page",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-page.ts",
-      "line": 38
+      "line": 46
     },
     {
       "name": "MealPlanDetailDaysComponent",
@@ -4603,7 +4607,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/premium/lib/paddle-checkout.service.ts",
-      "line": 47
+      "line": 52
     },
     {
       "name": "PremiumBillingFacade",
@@ -4611,6 +4615,13 @@
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/premium/lib/premium-billing.facade.ts",
       "line": 14
+    },
+    {
+      "name": "PremiumPlanPricingFacade",
+      "role": "Facade",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/features/premium/lib/premium-plan-pricing.facade.ts",
+      "line": 9
     },
     {
       "name": "PremiumAccessBannersComponent",
@@ -4634,18 +4645,25 @@
       "line": 16
     },
     {
+      "name": "PremiumPlanPriceComponent",
+      "role": "Component",
+      "selector": "fd-premium-plan-price",
+      "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/plans-card/premium-plan-price.ts",
+      "line": 14
+    },
+    {
       "name": "PremiumPlansCardComponent",
       "role": "Component",
       "selector": "fd-premium-plans-card",
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/plans-card/premium-plans-card.ts",
-      "line": 15
+      "line": 18
     },
     {
       "name": "PremiumAccessPageComponent",
       "role": "Component",
       "selector": "fd-premium-access-page",
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.ts",
-      "line": 55
+      "line": 57
     },
     {
       "name": "FavoriteProductService",
@@ -7180,8 +7198,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4074,
-      "russianProperties": 4074,
+      "englishProperties": 4086,
+      "russianProperties": 4086,
       "countsMatch": true
     },
     {

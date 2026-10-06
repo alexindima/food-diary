@@ -3384,36 +3384,6 @@
       "specPath": null
     },
     {
-      "class": "FdUiInlineAlertActionsComponent",
-      "selector": "fd-ui-inline-alert-actions",
-      "feature": "fd-ui-kit",
-      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert-actions.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert-actions.html",
-      "inputs": [
-        {
-          "name": "primaryActionLabel",
-          "type": "string | null",
-          "required": false
-        },
-        {
-          "name": "secondaryActionLabel",
-          "type": "string | null",
-          "required": false
-        }
-      ],
-      "outputs": [
-        {
-          "name": "primaryAction",
-          "type": ""
-        },
-        {
-          "name": "secondaryAction",
-          "type": ""
-        }
-      ],
-      "specPath": null
-    },
-    {
       "class": "FdUiInlineAlertComponent",
       "selector": "fd-ui-inline-alert",
       "feature": "fd-ui-kit",
@@ -4272,6 +4242,37 @@
           "type": ""
         }
       ],
+      "specPath": null
+    },
+    {
+      "class": "PremiumPlanPriceComponent",
+      "selector": "fd-premium-plan-price",
+      "feature": "premium",
+      "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/plans-card/premium-plan-price.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/plans-card/premium-plan-price.html",
+      "inputs": [
+        {
+          "name": "plan",
+          "type": "BillingPlan",
+          "required": true
+        },
+        {
+          "name": "price",
+          "type": "PremiumPlanPrice | null",
+          "required": false
+        },
+        {
+          "name": "loading",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "showProvider",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [],
       "specPath": null
     },
     {

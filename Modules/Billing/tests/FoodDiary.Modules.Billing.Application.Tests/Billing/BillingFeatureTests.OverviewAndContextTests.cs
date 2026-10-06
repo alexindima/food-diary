@@ -47,7 +47,7 @@ public partial class BillingFeatureTests {
         GetBillingOverviewQueryHandler handler = CreateBillingOverviewHandler(
             new FakeUserRepository(user),
             new InMemoryBillingSubscriptionRepository(subscription),
-            new FakeBillingPublicConfigProvider(),
+            new FakeBillingPublicConfigProvider("pri_month", "pri_year"),
             new FixedDateTimeProvider(Now));
 
         Result<BillingOverviewModel> result = await handler.Handle(new GetBillingOverviewQuery(user.Id.Value), CancellationToken.None);
@@ -62,6 +62,8 @@ public partial class BillingFeatureTests {
         Assert.Equal(Now.AddYears(1), result.Value.NextBillingAttemptUtc);
         Assert.True(result.Value.RenewalEnabled);
         Assert.False(result.Value.ManageBillingAvailable);
+        Assert.Equal("pri_month", result.Value.PaddleMonthlyPriceId);
+        Assert.Equal("pri_year", result.Value.PaddleYearlyPriceId);
     }
 
     [Fact]

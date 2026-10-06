@@ -1,5 +1,5 @@
 <aside class="fd-ui-sidebar" [class.fd-ui-sidebar--collapsed]="collapsed()">
-    <div class="fd-ui-sidebar__scroll fd-stack fd-gap-md">
+    <nav class="fd-ui-sidebar__scroll fd-stack fd-gap-md" [attr.aria-label]="brandTitle()">
         <div class="fd-ui-sidebar__brand fd-row fd-gap-xs">
             <div class="fd-ui-sidebar__logo fd-place-center">
                 @if (logoMaskStyle(); as maskStyle) {
@@ -51,7 +51,7 @@
         <div class="fd-ui-sidebar__footer">
             <ng-content select="[fdUiSidebarFooter]" />
         </div>
-    </div>
+    </nav>
 
     @if (collapseAriaLabel(); as ariaLabel) {
         <fd-ui-button

@@ -18,6 +18,7 @@ import type {
 } from '../../../../shared/models/billing.models';
 import { PaddleCheckoutService } from '../../lib/paddle-checkout.service';
 import { PremiumBillingFacade } from '../../lib/premium-billing.facade';
+import { PremiumPlanPricingFacade } from '../../lib/premium-plan-pricing.facade';
 import { PremiumAccessPageComponent } from './premium-access-page';
 
 const CHECKOUT_URL = 'https://checkout.example/session';
@@ -59,6 +60,8 @@ let router: RouterMock;
 let routeStub: { snapshot: { queryParamMap: ReturnType<typeof convertToParamMap> } };
 let fakeDocument: FakeDocument;
 let queryParams: Record<string, string>;
+let paddlePreview: ReturnType<typeof vi.fn<PaddleCheckoutService['previewPlanPricesAsync']>>;
+let paddleOpen: ReturnType<typeof vi.fn<PaddleCheckoutService['openTransactionCheckoutAsync']>>;
 
 describe('PremiumAccessPageComponent checkout', () => {
     beforeEach(resetMocks);
@@ -98,6 +101,46 @@ describe('PremiumAccessPageComponent checkout', () => {
         expect(billingService.createCheckoutSession).toHaveBeenCalledTimes(1);
         expect(billingService.createCheckoutSession).toHaveBeenCalledWith('monthly', 'paddle');
         expect(component['checkoutLoadingPlan']()).toBe('monthly');
+    });
+});
+
+describe('PremiumAccessPageComponent prices', () => {
+    beforeEach(resetMocks);
+
+    it('loads visible plan prices from public catalog configuration without creating checkout', async () => {
+        billingService.getOverview.mockReturnValue(
+            of({
+                ...createOverview(),
+                paddleClientToken: 'test_token',
+                paddleMonthlyPriceId: 'pri_month',
+                paddleYearlyPriceId: 'pri_year',
+            }),
+        );
+        const { component } = setupComponent();
+        await settleAsync();
+
+        expect(paddlePreview).toHaveBeenCalledWith(
+            { monthly: 'pri_month', yearly: 'pri_year' },
+            { token: 'test_token', environment: 'sandbox', locale: 'en' },
+        );
+        expect(component['pricing'].prices().monthly?.formattedTotal).toBe('$8.00');
+        expect(billingService.createCheckoutSession).not.toHaveBeenCalled();
+        expect(paddleOpen).not.toHaveBeenCalled();
+    });
+
+    it('does not request catalog prices when plans are hidden for paid Premium', async () => {
+        billingService.getOverview.mockReturnValue(
+            of({
+                ...createOverview(),
+                isPremium: true,
+                paddleClientToken: 'test_token',
+                paddleMonthlyPriceId: 'pri_month',
+                paddleYearlyPriceId: 'pri_year',
+            }),
+        );
+        setupComponent();
+        await settleAsync();
+        expect(paddlePreview).not.toHaveBeenCalled();
     });
 });
 
@@ -212,6 +255,13 @@ describe('PremiumAccessPageComponent checkout return', () => {
 });
 
 function resetMocks(): void {
+    paddlePreview = vi.fn().mockResolvedValue({
+        monthly: { formattedTotal: '$8.00', currencyCode: 'USD' },
+        yearly: { formattedTotal: '$80.00', currencyCode: 'USD' },
+    });
+    paddleOpen = vi.fn(async () => {
+        await waitForAsyncTasksAsync();
+    });
     billingService = {
         getOverview: vi.fn(() => of(createOverview())),
         startPremiumTrial: vi.fn(() => of(createOverview())),
@@ -262,13 +312,13 @@ function setupComponent(): {
 
 function getPremiumAccessPageProviders(): unknown[] {
     return [
+        PremiumPlanPricingFacade,
         { provide: PremiumBillingFacade, useValue: billingService },
         {
             provide: PaddleCheckoutService,
             useValue: {
-                openTransactionCheckoutAsync: vi.fn(async () => {
-                    await waitForAsyncTasksAsync();
-                }),
+                previewPlanPricesAsync: paddlePreview,
+                openTransactionCheckoutAsync: paddleOpen,
             },
         },
         { provide: AuthService, useValue: authService },

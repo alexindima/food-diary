@@ -34,6 +34,10 @@ export class MealPlanService extends ApiService {
             .pipe(catchError((error: unknown) => rethrowApiError('Adopt meal plan error', error)));
     }
 
+    public deletePlan(id: string): Observable<void> {
+        return super.delete<void>(id).pipe(catchError((error: unknown) => rethrowApiError('Delete meal plan error', error)));
+    }
+
     public generateShoppingList(id: string): Observable<ShoppingList> {
         return super
             .post<ShoppingList>(`${id}/shopping-list`, {})

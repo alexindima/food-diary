@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "0e70afb3d5b6cb4d2aac00b3d5f03269e61dcf4fd3defef8ed6d3758b62d0a96"
+          "sha256": "fd2e664f4d9599779cd975ce59888c1d881dbcf0c7eaecf89197e99540f95d34"
         }
       ],
-      "reason": "Reviewed nullable latestWeightKg and latestWeightDate additions and zero unanswered satiety defaults in presentation snapshots. All four API snapshot contract tests pass; no route or field was removed.",
+      "reason": "Release QA: current owner code, DTO consumers, canonical actual OpenAPI (275 endpoints/365 schemas), native PostgreSQL deletion and migration fixtures, readonly Paddle pricing, local SMTP delivery, keyboard/contrast checks and focused tests reviewed; no production access or deployment.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:06:09.1695598Z"
+      "gitHead": "31a7be7e74da295faf4f41d9d193588ebd42358f",
+      "reviewedAtUtc": "2026-10-06T07:00:25.9814645Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "811f49b777ea2232793de30be282e6ae1713d8b9b39d06ca5ac25ca9927bb2fd"
+          "sha256": "1a293e5583a41876d80c5e0d995e4db4d8dafcb019eac7296067e44d2a35a407"
         }
       ],
-      "reason": "Reviewed architecture-health and quality-risk procedures after regenerated navigation indexes. No project references, persistence ownership or public backend contracts changed; 2116 architecture and 11825 backend tests passed. New frontend behavior is covered by executed regression tests and browser evidence, including a 432-state danger-button contrast matrix. Static reference signals remain navigation evidence and no removal candidates were deleted.",
+      "reason": "Reviewed final HTML-only semantic changes and existing owner/service graph. Dependency matrix and all2116 architecture tests pass; no physical project or package graph changes.",
       "baseRef": "HEAD",
-      "gitHead": "ee78095349529338543fc10108f046e62c050aaa",
-      "reviewedAtUtc": "2026-10-06T02:53:16.4354307Z"
+      "gitHead": "31a7be7e74da295faf4f41d9d193588ebd42358f",
+      "reviewedAtUtc": "2026-10-06T07:17:34.9494361Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -249,13 +249,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "1cd4a49c6e5b76122d70df0455fc744041e91f8e40cd4119476ff0db8c46e0b4"
+          "sha256": "92b6f7caa74ed82423603e54450ef994a4410641a8558e37c14ddecee71d6b2f"
         }
       ],
-      "reason": "Reviewed nullable latestWeightKg and latestWeightDate additions and zero unanswered satiety defaults in presentation snapshots. All four API snapshot contract tests pass; no route or field was removed.",
+      "reason": "Release QA: current owner code, DTO consumers, canonical actual OpenAPI (275 endpoints/365 schemas), native PostgreSQL deletion and migration fixtures, readonly Paddle pricing, local SMTP delivery, keyboard/contrast checks and focused tests reviewed; no production access or deployment.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:06:11.3087205Z"
+      "gitHead": "31a7be7e74da295faf4f41d9d193588ebd42358f",
+      "reviewedAtUtc": "2026-10-06T07:00:26.7976496Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -863,13 +863,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ef706dba8a0606b3c5ba5ae627daac1dab13f93f7bccc9c8320d0ee8d2d937ca"
+          "sha256": "a43c6a16f700033548c1432f36d7424fa1323167fa3db20fb1c6f5461ad25612"
         }
       ],
-      "reason": "Two meaningful regressions cover failed image fallback with a single selection emission and new URL retry; 16 focused tests, lint, formatting, component logic, current main build, and real rendered fallback plus accessibility checks passed.",
+      "reason": "Reviewed changed critical runtime validation, DTO binding, provider pricing and image crop failure paths. Focused regressions plus frontend5345/backend11859 checks executed; static test references were not treated as coverage.",
       "baseRef": "HEAD",
-      "gitHead": "37170e338da8be8cd36800520106f863f35335cd",
-      "reviewedAtUtc": "2026-10-06T05:30:54.8424548Z"
+      "gitHead": "31a7be7e74da295faf4f41d9d193588ebd42358f",
+      "reviewedAtUtc": "2026-10-06T07:11:34.8033619Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -950,13 +950,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "dca5abb0ccf44628523cf3b77642d06cfd77100091b03d8a219fc9a0e6a5d160"
+          "sha256": "ac7eb1be718ed8e640f48c854764247f5d19f58796da64f0b4873c464deda54b"
         }
       ],
-      "reason": "Reviewed query-context, runtime-impact and feature-trace pages against regenerated catalog, runtime and frontend indexes. These remain navigation workflows; this UX patch adds no hosts or workers, and declared source hashes are refreshed.",
+      "reason": "Only readonly Paddle price preview added to client; scheduler/webhook/provider credentials unchanged. Actual local SMTP and S3 workflows verified, main pending non-QA email queue untouched. Native migration changes exact default HTML only.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:08:56.8886547Z"
+      "gitHead": "31a7be7e74da295faf4f41d9d193588ebd42358f",
+      "reviewedAtUtc": "2026-10-06T07:11:35.3900705Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -965,13 +965,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ef706dba8a0606b3c5ba5ae627daac1dab13f93f7bccc9c8320d0ee8d2d937ca"
+          "sha256": "a43c6a16f700033548c1432f36d7424fa1323167fa3db20fb1c6f5461ad25612"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "ac7eb1be718ed8e640f48c854764247f5d19f58796da64f0b4873c464deda54b"
         }
       ],
-      "reason": "Thumbnail failure state is local to the modal instance and records only already supplied URLs; no logging, persistence, remote writes, credentials, or ownership changes are introduced.",
+      "reason": "Reviewed current-user plan deletion predicates, unchanged recipe/product/list ownership, private image staging and invalid-content rejection, DTO required/length validation and error classification. Actual foreign DELETE404 and missing like400 verified; no private key exposed or production operation.",
       "baseRef": "HEAD",
-      "gitHead": "37170e338da8be8cd36800520106f863f35335cd",
-      "reviewedAtUtc": "2026-10-06T05:30:55.4403097Z"
+      "gitHead": "31a7be7e74da295faf4f41d9d193588ebd42358f",
+      "reviewedAtUtc": "2026-10-06T07:11:36.070426Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1108,17 +1112,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "53c7feb9ee0e7c7bbd14e37efe51332e2d7dd0664e737796f8bfe9c6f2b6de2c"
+          "sha256": "ef57bc8f81999f78a78f33fdeb0a6827d18c535c643b5c5407e63ebbbff177f2"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "1f2c53bcb54921bf6d61ad61faddf4ed11d3410c80e032ea6765119f2e77d2ec"
+          "sha256": "2cabfb589bf310c4bf4b25b6c13078c0c5995b074d1a3d9ca1fd6c9bc1d5af42"
         }
       ],
-      "reason": "Reviewed existing architecture, frontend contract, quality, security, and trace workflows against current source changes; existing procedures and ownership rules still apply, and UI kit docs now explain selected suggestion focus, keyboard behavior, readable button states, and custom focus contrast.",
+      "reason": "Current owner code traced for personal plan deletion, public recipe draft save, price preview and image/mail flows; API/nativePG/UI evidence verifies actual boundaries and recipes/products/shopping provenance preserved.",
       "baseRef": "HEAD",
-      "gitHead": "ee78095349529338543fc10108f046e62c050aaa",
-      "reviewedAtUtc": "2026-10-06T04:24:19.2364484Z"
+      "gitHead": "31a7be7e74da295faf4f41d9d193588ebd42358f",
+      "reviewedAtUtc": "2026-10-06T07:17:34.3631915Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1202,13 +1206,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "53c7feb9ee0e7c7bbd14e37efe51332e2d7dd0664e737796f8bfe9c6f2b6de2c"
+          "sha256": "ef57bc8f81999f78a78f33fdeb0a6827d18c535c643b5c5407e63ebbbff177f2"
         }
       ],
-      "reason": "Reviewed shared autocomplete selection, changing options, visible versus hidden popup Enter, scrolling, and product picker consumers against current sources and browser behavior; component selectors, inputs, outputs, and backend HTTP contracts remain compatible.",
+      "reason": "Reviewed scoped pricing/draft/delete/crop APIs and en/ru strings; frontend5345 checks passed, actual19routes at desktop+mobile fullAxe0 after semantic fixes, SDK readonly price/error/retry and keyboard matrix verified. Source consumers preserve state ownership.",
       "baseRef": "HEAD",
-      "gitHead": "ee78095349529338543fc10108f046e62c050aaa",
-      "reviewedAtUtc": "2026-10-06T04:24:17.3365891Z"
+      "gitHead": "31a7be7e74da295faf4f41d9d193588ebd42358f",
+      "reviewedAtUtc": "2026-10-06T07:17:33.1857848Z"
     },
     {
       "pageId": "workflow.query-context",
