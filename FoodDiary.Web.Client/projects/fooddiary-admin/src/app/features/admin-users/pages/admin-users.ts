@@ -11,12 +11,13 @@ import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-
 import type { Subscription } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage, adminQueryValue } from '../../../shared/period/admin-query';
 import { AdminUserCreateDialogComponent } from '../dialogs/admin-user-create-dialog';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
-import type { AdminUser, AdminUserStatusFilter } from '../models/admin-user.models';
+import type { AdminUser, AdminUserStatusFilter, PagedResponse } from '../models/admin-user.models';
 import { AdminUsersTableComponent } from './admin-users-table';
 
 const ADMIN_USERS_PAGE_SIZE = 20;
@@ -119,10 +120,7 @@ export class AdminUsersComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: response => {
-                    this.users.set(response.items);
-                    this.totalPages.set(response.totalPages);
-                    this.totalItems.set(response.totalItems);
-                    this.isLoading.set(false);
+                    this.applyUsersPage(response);
                 },
                 error: () => {
                     this.loadFailed.set(true);
@@ -132,6 +130,16 @@ export class AdminUsersComponent {
                     this.isLoading.set(false);
                 },
             });
+    }
+
+    private applyUsersPage(response: PagedResponse<AdminUser>): void {
+        if (restoreAdminPage(this.router, this.route, this.page(), { totalItems: response.totalItems, pageSize: this.limit })) {
+            return;
+        }
+        this.users.set(response.items);
+        this.totalPages.set(response.totalPages);
+        this.totalItems.set(response.totalItems);
+        this.isLoading.set(false);
     }
 
     protected openCreate(): void {

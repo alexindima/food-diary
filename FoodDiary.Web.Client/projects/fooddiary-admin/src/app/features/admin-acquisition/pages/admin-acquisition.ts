@@ -9,6 +9,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import type { Subscription } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { ADMIN_DATE_TEXT_LENGTH, adminPage } from '../../../shared/period/admin-query';
@@ -126,9 +127,7 @@ export class AdminAcquisitionComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: response => {
-                    this.summary.set(response.current);
-                    this.report.set(response);
-                    this.isLoading.set(false);
+                    this.applyReport(response);
                 },
                 error: () => {
                     this.failed.set(true);
@@ -136,6 +135,15 @@ export class AdminAcquisitionComponent {
                     this.isLoading.set(false);
                 },
             });
+    }
+
+    private applyReport(response: MarketingAttributionRange): void {
+        if (restoreAdminPage(this.router, this.route, this.page(), { totalItems: response.eventTotal, pageSize: this.eventPageSize })) {
+            return;
+        }
+        this.summary.set(response.current);
+        this.report.set(response);
+        this.isLoading.set(false);
     }
 
     protected formatAttribution(event: MarketingAttributionRecentEvent): string {

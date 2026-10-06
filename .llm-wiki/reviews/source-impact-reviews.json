@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "f6ff1021733ab4d52a6777eace027f018465841232d8897f8871e101924de367"
+          "sha256": "162aa89f87b61e7fceccd24858a6f237c5093c290a344aa13afa7359cdecf511"
         }
       ],
-      "reason": "Expanded release QA verifies current authentication and nutrition behavior, external USDA references and bounded provider resolution, schema migration and rollback, fasting controls, export feedback, locale pairs, dialog names and native keyboard navigation through actual local browser scenarios and focused plus full regression checks.",
+      "reason": "Feature-owned adapters and page-provided facades retain dependency direction. Pagination helpers are deliberately scoped to each app. No project edge backend graph foreign aggregate write or removal rule changed; refreshed projection does not change this workflow.",
       "baseRef": "HEAD",
-      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "reviewedAtUtc": "2026-10-06T13:13:06.0693791Z"
+      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
+      "reviewedAtUtc": "2026-10-06T17:16:32.1195979Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -863,13 +863,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5b85cba8da665f89595d2c8a5d4ddbd6cb995edc3c1d82ab4456227f8b872ba2"
+          "sha256": "c2b8d6c9b272097f43240975680a76fbb70e9bbd4c5d244fc6c14e5599053079"
         }
       ],
-      "reason": "Combined expanded local QA source freeze reviewed: user access precedes USDA provider calls, indexed external identifiers and nullable HTTP response preserved, lookup deadlines and rate admission bounded, native clean/upgrade/rollback/bundle verified, actual browser source-link recovery and CRUD/export/keyboard/locale/responsive scenarios passed; current reviewed21-file admin batch restores drafts and correct search ordering.",
+      "reason": "Tagged cache identity stale-request page recovery and pending retry boundaries received focused regression and rendered coverage. Static references remain navigation evidence; final npm verify5489 and browser outputs are independent execution proof. Workflow semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "reviewedAtUtc": "2026-10-06T14:21:59.6967361Z"
+      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
+      "reviewedAtUtc": "2026-10-06T17:16:33.7464437Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -965,17 +965,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5b85cba8da665f89595d2c8a5d4ddbd6cb995edc3c1d82ab4456227f8b872ba2"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6e2ad202245692b16d2a6cf07360e253347498924ee5e13e64235da8a9c63f8f"
+          "sha256": "c2b8d6c9b272097f43240975680a76fbb70e9bbd4c5d244fc6c14e5599053079"
         }
       ],
-      "reason": "Combined expanded local QA source freeze reviewed: user access precedes USDA provider calls, indexed external identifiers and nullable HTTP response preserved, lookup deadlines and rate admission bounded, native clean/upgrade/rollback/bundle verified, actual browser source-link recovery and CRUD/export/keyboard/locale/responsive scenarios passed; current reviewed21-file admin batch restores drafts and correct search ordering.",
+      "reason": "This frontend batch changes navigation and own-mail read feedback, with no authentication authorization credential provider sharing service topology or financial operation boundary changes. Refreshed static quality evidence is not a vulnerability verdict; no security workflow text change is needed.",
       "baseRef": "HEAD",
-      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "reviewedAtUtc": "2026-10-06T14:22:01.0371441Z"
+      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
+      "reviewedAtUtc": "2026-10-06T17:16:34.6293278Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1112,17 +1108,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "cc8e4c0d95326d022e1a1e35159915d6a7d80c52b4b55c7a55236a26711c19df"
+          "sha256": "3d57289b5d62f6227fc6ecc9e97fdf70a4a2a92552fddbb0b1a5bf508e66e409"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "958560c8d3a206f05a9e75a4c8784154cbfd2de19eead387ecca3249d0777c64"
+          "sha256": "d9591ac9487d2dd2d04f415d696e89e9951b630fef21a2abbbd3f29b5b6909fa"
         }
       ],
-      "reason": "Combined expanded local QA source freeze reviewed: user access precedes USDA provider calls, indexed external identifiers and nullable HTTP response preserved, lookup deadlines and rate admission bounded, native clean/upgrade/rollback/bundle verified, actual browser source-link recovery and CRUD/export/keyboard/locale/responsive scenarios passed; current reviewed21-file admin batch restores drafts and correct search ordering.",
+      "reason": "Refreshed frontend projections include typed list query adapters parsers tokens and their direct specs, existing routed consumers, optional detail fallback and inherited API calls. Trace routing and static evidence limitations are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "reviewedAtUtc": "2026-10-06T14:22:01.7325665Z"
+      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
+      "reviewedAtUtc": "2026-10-06T17:16:35.4704647Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1206,13 +1202,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "cc8e4c0d95326d022e1a1e35159915d6a7d80c52b4b55c7a55236a26711c19df"
+          "sha256": "3d57289b5d62f6227fc6ecc9e97fdf70a4a2a92552fddbb0b1a5bf508e66e409"
         }
       ],
-      "reason": "Combined expanded local QA source freeze reviewed: user access precedes USDA provider calls, indexed external identifiers and nullable HTTP response preserved, lookup deadlines and rate admission bounded, native clean/upgrade/rollback/bundle verified, actual browser source-link recovery and CRUD/export/keyboard/locale/responsive scenarios passed; current reviewed21-file admin batch restores drafts and correct search ordering.",
+      "reason": "Reviewed optional query-state tokens, page-level providers, selectors and bindings, unchanged public inputs/outputs, EN/RU text and existing transport contracts. Bug detail ID lookup preserves list URL while excluding optional list filters from its request. Executed regression and browser proofs support the changes; workflow text remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "reviewedAtUtc": "2026-10-06T14:21:58.8375519Z"
+      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
+      "reviewedAtUtc": "2026-10-06T17:16:32.9213636Z"
     },
     {
       "pageId": "workflow.query-context",

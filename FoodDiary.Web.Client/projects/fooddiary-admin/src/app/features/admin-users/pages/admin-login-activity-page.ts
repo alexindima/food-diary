@@ -6,11 +6,12 @@ import { FdUiButtonComponent, FdUiInputComponent } from 'fd-ui-kit';
 import type { Subscription } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage, adminQueryValue } from '../../../shared/period/admin-query';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
-import type { AdminUserLoginEvent } from '../models/admin-user.models';
+import type { AdminUserLoginEvent, PagedResponse } from '../models/admin-user.models';
 import { AdminLoginActivitySectionComponent } from './admin-login-activity-section';
 
 const ADMIN_LOGIN_ACTIVITY_PAGE_SIZE = 20;
@@ -103,10 +104,7 @@ export class AdminLoginActivityPageComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: response => {
-                    this.loginEvents.set(response.items);
-                    this.loginEventsTotalPages.set(response.totalPages);
-                    this.loginEventsTotalItems.set(response.totalItems);
-                    this.isLoginEventsLoading.set(false);
+                    this.applyLoginPage(response);
                 },
                 error: () => {
                     this.loadFailed.set(true);
@@ -116,6 +114,21 @@ export class AdminLoginActivityPageComponent {
                     this.isLoginEventsLoading.set(false);
                 },
             });
+    }
+
+    private applyLoginPage(response: PagedResponse<AdminUserLoginEvent>): void {
+        if (
+            restoreAdminPage(this.router, this.route, this.loginEventsPage(), {
+                totalItems: response.totalItems,
+                pageSize: ADMIN_LOGIN_ACTIVITY_PAGE_SIZE,
+            })
+        ) {
+            return;
+        }
+        this.loginEvents.set(response.items);
+        this.loginEventsTotalPages.set(response.totalPages);
+        this.loginEventsTotalItems.set(response.totalItems);
+        this.isLoginEventsLoading.set(false);
     }
 
     private resolveSearchQuery(value: string): string | null {

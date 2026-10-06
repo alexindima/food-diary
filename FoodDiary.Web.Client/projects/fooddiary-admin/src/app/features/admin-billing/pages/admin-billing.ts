@@ -48,13 +48,6 @@ export class AdminBillingComponent {
 
     public constructor() {
         this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
-            const range = adminPeriod(params);
-            if (range === null) {
-                this.billing.clearInvalidPeriod();
-                return;
-            }
-            this.billing.fromDate.set(range.from ?? '');
-            this.billing.toDate.set(range.to ?? '');
             this.billing.search.set(params.get('search') ?? '');
             this.billing.provider.set(params.get('provider') ?? '');
             this.billing.status.set(params.get('status') ?? '');
@@ -62,6 +55,12 @@ export class AdminBillingComponent {
             const tab = params.get('tab');
             this.billing.activeTab.set(tab === 'payments' || tab === 'webhook-events' ? tab : 'subscriptions');
             this.billing.page.set(adminPage(params.get('page')));
+            const range = adminPeriod(params);
+            if (range === null) {
+                this.billing.clearInvalidPeriod();
+                return;
+            }
+            this.billing.setPeriod(range);
             this.billing.load();
         });
     }

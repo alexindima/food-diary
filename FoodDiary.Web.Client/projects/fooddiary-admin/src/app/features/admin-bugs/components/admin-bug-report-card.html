@@ -1,6 +1,6 @@
 <article>
     <h2>
-        <a [routerLink]="['/bugs', report().id]">{{ report().subject || report().id }}</a>
+        <a queryParamsHandling="preserve" [routerLink]="['/bugs', report().id]">{{ report().subject || report().id }}</a>
     </h2>
     <p>
         {{ report().receivedAtUtc | date: 'medium' }} · {{ report().status }} · {{ 'ADMIN_BUGS.ATTEMPTS' | translate }}:

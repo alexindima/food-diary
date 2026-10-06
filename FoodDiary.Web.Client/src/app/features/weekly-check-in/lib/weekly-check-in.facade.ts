@@ -12,17 +12,22 @@ import { buildWeeklyReview } from './weekly-review.mapper';
 const DAYS_PER_WEEK = 7;
 const MONDAY_OFFSET = 6;
 
+type LoadedWeekData = { weekStart: string; data: WeeklyCheckInData };
+
 @Injectable()
 export class WeeklyCheckInFacade {
     private readonly measurements = inject(MeasurementSystemService);
     private readonly service = inject(WeeklyCheckInService);
     private readonly goalService = inject(WeeklyGoalService);
-    private readonly lastLoadedData = signal<WeeklyCheckInData | null>(null);
+    private readonly lastLoadedData = signal<LoadedWeekData | null>(null);
     public readonly selectedWeek = signal(startOfLocalWeek(new Date()));
     private readonly currentWeekStart = startOfLocalWeek(new Date());
     private readonly dataResource = resource({
         params: () => formatLocalDate(this.selectedWeek()),
-        loader: async ({ params }): Promise<WeeklyCheckInData> => firstValueFrom(this.service.getData(params)),
+        loader: async ({ params }): Promise<LoadedWeekData> => ({
+            weekStart: params,
+            data: await firstValueFrom(this.service.getData(params)),
+        }),
     });
     public readonly goalWeekStart = computed(() => addLocalDays(this.selectedWeek(), DAYS_PER_WEEK));
     public readonly isSelectedWeekPast = computed(() => this.selectedWeek().getTime() < this.currentWeekStart.getTime());
@@ -38,7 +43,11 @@ export class WeeklyCheckInFacade {
         loader: async ({ params }): Promise<WeeklyGoal | null> => firstValueFrom(this.goalService.getGoal(params)),
     });
 
-    public readonly data = computed(() => (this.dataResource.hasValue() ? this.dataResource.value() : this.lastLoadedData()));
+    public readonly data = computed(() => {
+        const loaded = this.dataResource.hasValue() ? this.dataResource.value() : this.lastLoadedData();
+        return loaded?.weekStart === formatLocalDate(this.selectedWeek()) ? loaded.data : null;
+    });
+    public readonly hasDataError = computed(() => this.dataResource.error() !== undefined);
     public readonly isLoading = computed(() => this.dataResource.isLoading() && this.data() === null);
     public readonly isRefreshing = computed(() => this.dataResource.isLoading() && this.data() !== null);
 
@@ -81,6 +90,10 @@ export class WeeklyCheckInFacade {
     public reloadGoal(): void {
         this.goalResource.reload();
         this.selectedWeekGoalResource.reload();
+    }
+
+    public retryData(): void {
+        this.dataResource.reload();
     }
 
     public retryNextWeekGoal(): void {

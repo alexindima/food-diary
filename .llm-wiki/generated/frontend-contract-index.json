@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "components": 488,
-    "componentsWithoutDirectSpecs": 129,
+    "componentsWithoutDirectSpecs": 127,
     "inputs": 1570,
     "outputs": 543,
     "apiCalls": 278,
     "templatesWithTranslations": 351,
-    "translationKeys": 2129,
+    "translationKeys": 2130,
     "consumerEdges": 1240,
     "consumedComponents": 309,
     "unconsumedComponents": 178
@@ -316,7 +316,7 @@
         }
       ],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-card.spec.ts"
     },
     {
       "class": "AdminBugsPageComponent",
@@ -453,7 +453,7 @@
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.html",
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.spec.ts"
     },
     {
       "class": "AdminMealPlanEditorComponent",
@@ -19172,6 +19172,7 @@
       "feature": "admin-mail-inbox",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.html",
       "keys": [
+        "ADMIN_COMMON.RETRY",
         "ADMIN_MAIL_INBOX.DMARC_UNVERIFIED_WARNING",
         "ADMIN_MAIL_INBOX.ENVELOPE_FROM",
         "ADMIN_MAIL_INBOX.HEADER_FROM",
@@ -19179,6 +19180,7 @@
         "ADMIN_MAIL_INBOX.LOAD_ERROR",
         "ADMIN_MAIL_INBOX.NO_SUBJECT",
         "ADMIN_MAIL_INBOX.PROVENANCE",
+        "ADMIN_MAIL_INBOX.READ_ERROR",
         "ADMIN_MAIL_INBOX.RELATED_OUTGOING"
       ]
     },
@@ -25522,7 +25524,7 @@
       "componentPath": "FoodDiary.Web.Client/src/app/components/shared/error-state/error-state.ts",
       "consumerFeature": "weekly-check-in",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [],
       "outputsHandled": [
         "retry"
@@ -26543,8 +26545,9 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "admin-mail-inbox",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.html",
-      "occurrences": 3,
+      "occurrences": 4,
       "inputsUsed": [
+        "loading",
         "type",
         "variant"
       ],

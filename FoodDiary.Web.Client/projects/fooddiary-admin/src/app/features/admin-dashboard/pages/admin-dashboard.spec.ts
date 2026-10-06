@@ -1,10 +1,14 @@
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminDashboardService } from '../api/admin-dashboard.service';
 import { AdminDashboardFacade } from '../lib/admin-dashboard.facade';
 import type { AdminDashboardOverview } from '../models/admin-dashboard-overview.data';
+import { AdminDashboardComponent } from './admin-dashboard';
 
 const overview: AdminDashboardOverview = {
     fromUtc: '2026-09-01T00:00:00Z',
@@ -55,5 +59,33 @@ describe('Admin dashboard overview', () => {
         facade.load({ allTime: true });
         old.next({ ...overview, totalUsersNow: 999 });
         expect(facade.overview()?.totalUsersNow).toBe(overview.totalUsersNow);
+    });
+});
+
+describe('dashboard calendar validation', () => {
+    it.each(['2026-02-31', '2026-04-31', '2025-02-29', '2026-13-01'])('blocks impossible calendar date %s before loading', date => {
+        const load = vi.fn();
+        const clear = vi.fn();
+        TestBed.configureTestingModule({
+            imports: [AdminDashboardComponent],
+            providers: [
+                provideRouter([]),
+                provideTranslateTesting(),
+                {
+                    provide: AdminDashboardFacade,
+                    useValue: { load, clear, overview: signal(null), isLoading: signal(false), failed: signal(false) },
+                },
+            ],
+        });
+        const fixture = TestBed.createComponent(AdminDashboardComponent);
+        load.mockClear();
+        fixture.componentInstance['preset'].set('custom');
+        fixture.componentInstance['from'].set(date);
+        fixture.componentInstance['to'].set('2026-10-01');
+        fixture.componentInstance['reload']();
+        fixture.detectChanges();
+        expect(load).not.toHaveBeenCalled();
+        expect(clear).toHaveBeenCalled();
+        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent).toContain('ADMIN_OVERVIEW.INVALID');
     });
 });

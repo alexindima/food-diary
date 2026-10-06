@@ -46,7 +46,7 @@
 
 .mail-read-state--unread {
     background: var(--fd-bg-status-warning);
-    color: var(--fd-color-amber-500);
+    color: var(--fd-color-text-strong);
 }
 
 .mail-fields {
@@ -65,7 +65,7 @@
 
 .mail-verification-warning,
 .dmarc-report__warning {
-    color: var(--fd-color-amber-500);
+    color: var(--fd-color-text-strong);
     font-weight: var(--fd-font-weight-bold);
 }
 
@@ -99,6 +99,11 @@
 
 .dmarc-report__table-wrap {
     overflow-x: auto;
+
+    &:where(:focus-visible) {
+        outline: var(--fd-outline-focus);
+        outline-offset: calc(0px - var(--fd-border-width-strong));
+    }
 }
 
 .dmarc-report__table {

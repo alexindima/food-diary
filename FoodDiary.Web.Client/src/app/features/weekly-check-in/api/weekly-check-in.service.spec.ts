@@ -1,7 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import type { WeeklyCheckInData } from '../models/weekly-check-in.data';
@@ -79,16 +79,18 @@ describe('WeeklyCheckInService', () => {
         req.flush(MOCK_DATA);
     });
 
-    it('returns empty data on error', () => {
-        service.getData('2026-08-10').subscribe(data => {
-            expect(data.thisWeek.totalCalories).toBe(0);
-            expect(data.lastWeek.totalCalories).toBe(0);
-            expect(data.trends.calorieChange).toBe(0);
-            expect(data.trends.weightChange).toBeNull();
-            expect(data.suggestions).toEqual([]);
-        });
+    it('propagates load failure instead of inventing an empty report and supports retry', () => {
+        const next = vi.fn();
+        const error = vi.fn();
+        service.getData('2026-08-10').subscribe({ next, error });
 
         const req = httpMock.expectOne(`${BASE_URL}/?weekStart=2026-08-10`);
         req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+        expect(next).not.toHaveBeenCalled();
+        expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: HttpStatusCode.InternalServerError }));
+
+        service.getData('2026-08-10').subscribe(next);
+        httpMock.expectOne(`${BASE_URL}/?weekStart=2026-08-10`).flush(MOCK_DATA);
+        expect(next).toHaveBeenCalledExactlyOnceWith(MOCK_DATA);
     });
 });

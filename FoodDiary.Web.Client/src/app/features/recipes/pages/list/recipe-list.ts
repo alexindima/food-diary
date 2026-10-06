@@ -37,6 +37,8 @@ import {
     RecipeListResultsComponent,
 } from '../../components/list/recipe-list-sections/recipe-list-results/recipe-list-results';
 import { RecipeFavoritesPickerComponent } from '../../dialogs/recipe-favorites-picker/recipe-favorites-picker';
+import { RECIPE_LIST_QUERY_STATE } from '../../lib/list/recipe-list-query-state';
+import { RecipeListRouteStateFacade } from '../../lib/list/recipe-list-route-state.facade';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
 import type { RecipeCardViewModel } from '../../lib/recipe-list.types';
 import { RECIPE_LIST_TOUR } from './recipe-list-tour';
@@ -61,13 +63,18 @@ import { RECIPE_LIST_TOUR } from './recipe-list-tour';
         FdPageContainerDirective,
         RecipeListResultsComponent,
     ],
-    providers: [RecipeListFacade],
+    providers: [
+        RecipeListFacade,
+        RecipeListRouteStateFacade,
+        { provide: RECIPE_LIST_QUERY_STATE, useExisting: RecipeListRouteStateFacade },
+    ],
 })
 export class RecipeListComponent {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly viewportService = inject(ViewportService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly recipeListFacade = inject(RecipeListFacade);
+    private readonly routeState = inject(RecipeListRouteStateFacade);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly searchDebounceMs = inject(APP_SEARCH_DEBOUNCE_MS);
@@ -128,6 +135,7 @@ export class RecipeListComponent {
     protected readonly isEmptyState = computed(
         () =>
             !this.hasVisibleRecipes() &&
+            this.recipeData.totalItems === 0 &&
             !this.recipeListFacade.hasSearch(this.searchModel().search) &&
             !this.recipeListFacade.hasActiveFilters(false, this.buildRecipeFilters()),
     );
@@ -138,15 +146,7 @@ export class RecipeListComponent {
     );
     protected readonly pageIndex = computed(() => this.currentPageIndex());
     private readonly isMobileSearchOpen = signal(false);
-    protected readonly searchModel = signal<RecipeSearchFormValues>({
-        search: null,
-        onlyMine: true,
-        category: null,
-        maxTotalTime: null,
-        caloriesFrom: null,
-        caloriesTo: null,
-        hasImage: null,
-    });
+    protected readonly searchModel = this.routeState.current;
     protected readonly searchForm = form(this.searchModel);
     protected readonly isDeleting = this.recipeListFacade.isDeleting;
     protected readonly favoriteLoadingIds = this.recipeListFacade.favoriteLoadingIds;
@@ -158,15 +158,15 @@ export class RecipeListComponent {
             }
         });
 
-        this.recipeListFacade.loadInitialOverview(1, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine).subscribe();
+        this.recipeListFacade
+            .loadInitialOverview(this.routeState.initial.page, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine)
+            .subscribe();
 
         toObservable(computed(() => this.searchModel().search))
             .pipe(
                 skip(1),
                 debounceTime(this.searchDebounceMs),
-                switchMap(() =>
-                    this.recipeListFacade.loadRecipes(1, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine),
-                ),
+                switchMap(() => this.loadChangedQuery()),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
@@ -175,9 +175,7 @@ export class RecipeListComponent {
             .pipe(
                 skip(1),
                 distinctUntilChanged(),
-                switchMap(() =>
-                    this.recipeListFacade.loadRecipes(1, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine),
-                ),
+                switchMap(() => this.loadChangedQuery()),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
@@ -344,6 +342,14 @@ export class RecipeListComponent {
             .subscribe();
     }
 
+    private loadChangedQuery(): ReturnType<RecipeListFacade['loadRecipes']> {
+        const filters = this.buildRecipeFilters();
+        const onlyMine = this.searchModel().onlyMine;
+        return this.recipeListFacade.isQueryActive(filters, onlyMine)
+            ? EMPTY
+            : this.recipeListFacade.loadRecipes(1, this.pageSize, filters, onlyMine);
+    }
+
     private buildRecipeFilters(): RecipeFilters {
         const model = this.searchModel();
         return {
@@ -374,13 +380,3 @@ export class RecipeListComponent {
         return value !== null && value !== undefined && value.trim().length > 0;
     }
 }
-
-type RecipeSearchFormValues = {
-    search: string | null;
-    onlyMine: boolean;
-    category: string | null;
-    maxTotalTime: number | null;
-    caloriesFrom: number | null;
-    caloriesTo: number | null;
-    hasImage: boolean | null;
-};

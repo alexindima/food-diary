@@ -7,6 +7,7 @@ import { FdUiButtonComponent, FdUiInputComponent } from 'fd-ui-kit';
 import { catchError, combineLatest, map, of, startWith, Subject, switchMap } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage } from '../../../shared/period/admin-query';
@@ -16,6 +17,7 @@ import type { AdminBugReportPage } from '../models/admin-bug-report';
 
 const SEARCH_MAX_LENGTH = 320;
 const STATUS_MAX_LENGTH = 32;
+const PAGE_SIZE = 25;
 
 @Component({
     selector: 'fd-admin-bugs',
@@ -67,20 +69,17 @@ export class AdminBugsPageComponent {
                     this.detailId.set(path.get('id'));
                     this.page.set(adminPage(query.get('page')));
                     this.formModel.set({ search: query.get('search') ?? '', status: query.get('status') ?? '' });
-                    const period = adminPeriod(query);
+                    const id = this.detailId();
+                    const period = id === null ? adminPeriod(query) : {};
                     if (period === null) {
                         this.loading.set(false);
                         return of(null);
                     }
                     this.loading.set(true);
-                    const params: Record<string, string | number> = { page: this.page(), limit: 25, ...this.formModel() };
-                    const range = adminUtcPeriod(period);
-                    Object.assign(params, range);
-                    const id = this.detailId();
-                    if (id !== null) {
-                        params['id'] = id;
-                        params['page'] = 1;
-                    }
+                    const params: Record<string, string | number> =
+                        id === null
+                            ? { page: this.page(), limit: PAGE_SIZE, ...this.formModel(), ...adminUtcPeriod(period) }
+                            : { page: 1, limit: PAGE_SIZE, id };
                     return this.api.getPage(params).pipe(
                         map(result => result),
                         catchError(() => {
@@ -92,6 +91,13 @@ export class AdminBugsPageComponent {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(result => {
+                if (
+                    result !== null &&
+                    this.detailId() === null &&
+                    restoreAdminPage(this.router, this.route, this.page(), { totalItems: result.totalItems, pageSize: PAGE_SIZE })
+                ) {
+                    return;
+                }
                 this.result.set(result);
                 this.loading.set(false);
             });

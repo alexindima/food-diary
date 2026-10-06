@@ -22,7 +22,10 @@ describe('AdminBugsPageComponent', () => {
             providers: [
                 provideRouter([]),
                 ...provideTranslateTesting(),
-                { provide: ActivatedRoute, useValue: { paramMap: params, queryParamMap: query } },
+                {
+                    provide: ActivatedRoute,
+                    useValue: { paramMap: params, queryParamMap: query, snapshot: { queryParamMap: convertToParamMap({}) } },
+                },
                 { provide: AdminBugsService, useValue: { getPage } },
             ],
         }).compileComponents();
@@ -60,4 +63,39 @@ describe('AdminBugsPageComponent', () => {
         expect(fixture.componentInstance['safePullRequestUrl']('javascript:alert(1)')).toBeNull();
         expect(fixture.componentInstance['safePullRequestUrl']('https://example.test/pull/1')).toBe('https://example.test/pull/1');
     });
+});
+
+it('loads a detail by ID independently of preserved list filters, even if its status or content changed', () => {
+    const getPage = vi
+        .fn()
+        .mockReturnValue(
+            of({ items: [{ id: 'changed-bug', status: 'draft_ready', contentExpired: true }], totalItems: 1, isConfigured: true }),
+        );
+    TestBed.configureTestingModule({
+        imports: [AdminBugsPageComponent],
+        providers: [
+            provideRouter([]),
+            provideTranslateTesting(),
+            {
+                provide: ActivatedRoute,
+                useValue: {
+                    paramMap: of(convertToParamMap({ id: 'changed-bug' })),
+                    queryParamMap: of(
+                        convertToParamMap({
+                            search: 'old text',
+                            status: 'failed',
+                            period: 'custom',
+                            from: '2026-02-31',
+                            to: '2026-10-01',
+                            page: '2',
+                        }),
+                    ),
+                },
+            },
+            { provide: AdminBugsService, useValue: { getPage } },
+        ],
+    });
+    const fixture = TestBed.createComponent(AdminBugsPageComponent);
+    expect(getPage).toHaveBeenCalledWith({ page: 1, limit: 25, id: 'changed-bug' });
+    expect(fixture.componentInstance['result']()?.items[0]?.contentExpired).toBe(true);
 });

@@ -3,11 +3,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { catchError, finalize, firstValueFrom, map, type Observable, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { catchError, EMPTY, filter, finalize, firstValueFrom, map, type Observable, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../shared/lib/paged-data.data';
-import type { FavoriteRecipe, Recipe, RecipeFilters } from '../../../shared/models/recipe.data';
+import type { FavoriteRecipe, Recipe, RecipeFilters, RecipeOverview } from '../../../shared/models/recipe.data';
+import { resolvePaginationPage } from '../../../shared/navigation/pagination-query.utils';
 import { QuickMealService } from '../../meals/contracts/quick-meal';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import { RecipeService } from '../api/recipe.service';
@@ -19,6 +20,8 @@ import {
 } from '../components/list/recipe-list.config';
 import { RecipeListFiltersDialogComponent } from '../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog';
 import type { RecipeListFiltersDialogResult } from '../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.types';
+import { createRecipeListQuery, type RecipeListQuery, recipeListQueryKey, recipeQueryFilters } from './list/recipe-list-query';
+import { RECIPE_LIST_QUERY_STATE } from './list/recipe-list-query-state';
 
 @Injectable()
 export class RecipeListFacade {
@@ -31,6 +34,9 @@ export class RecipeListFacade {
     private readonly quickMealService = inject(QuickMealService);
     private readonly favoriteRecipeService = inject(FavoriteRecipeService);
     private readonly dialogService = inject(FdUiDialogService);
+    private readonly queryState = inject(RECIPE_LIST_QUERY_STATE, { optional: true });
+    private activeRouteQuery: RecipeListQuery | null = null;
+    private requestId = 0;
 
     public readonly pageSize = RECIPE_LIST_PAGE_SIZE;
     public readonly recipeData = new PagedData<Recipe>();
@@ -59,6 +65,32 @@ export class RecipeListFacade {
 
     private readonly searchValue = signal<string | null>(null);
 
+    public constructor() {
+        if (this.queryState !== null) {
+            this.applyRouteQuery(this.queryState.initial);
+            this.queryState.changes
+                .pipe(
+                    filter(
+                        query => this.activeRouteQuery === null || recipeListQueryKey(query) !== recipeListQueryKey(this.activeRouteQuery),
+                    ),
+                    tap(query => {
+                        this.applyRouteQuery(query);
+                    }),
+                    switchMap(query => this.loadRecipes(query.page, this.pageSize, recipeQueryFilters(query), query.onlyMine)),
+                    takeUntilDestroyed(this.destroyRef),
+                )
+                .subscribe();
+        }
+    }
+
+    public isQueryActive(filters: RecipeFilters, onlyMine: boolean): boolean {
+        return (
+            this.activeRouteQuery !== null &&
+            recipeListQueryKey(this.activeRouteQuery) ===
+                recipeListQueryKey(createRecipeListQuery(this.activeRouteQuery.page, filters, onlyMine))
+        );
+    }
+
     public openFilters(data: RecipeListFilterDialogData): Observable<RecipeListFiltersDialogResult | null | undefined> {
         return this.dialogService
             .open<RecipeListFiltersDialogComponent, RecipeListFilterDialogData, RecipeListFiltersDialogResult | null>(
@@ -69,80 +101,118 @@ export class RecipeListFacade {
     }
 
     public loadRecipes(page: number, limit: number, filters: RecipeFilters, onlyMine: boolean): Observable<void> {
+        const query = createRecipeListQuery(page, filters, onlyMine);
+        if (
+            this.queryState !== null &&
+            (this.activeRouteQuery === null || recipeListQueryKey(query) !== recipeListQueryKey(this.activeRouteQuery))
+        ) {
+            this.writeRouteQuery(query);
+            return EMPTY;
+        }
         if (page === 1 && !this.hasSearchValue(filters.search ?? null) && !this.hasActiveFilters(onlyMine, filters)) {
             return this.loadInitialOverview(page, limit, filters, onlyMine);
         }
-        this.filtersActive.set(this.hasActiveFilters(onlyMine, filters));
-        this.cancelLoad.next();
-        this.currentPageIndex.set(page - 1);
-        this.recipeData.setLoading(true);
-        this.searchValue.set(filters.search ?? null);
-        const includePublic = !onlyMine;
-
-        return this.recipeService.queryOverview({ page, limit, filters, includePublic, recentLimit: 1, favoriteLimit: 0 }).pipe(
-            takeUntil(this.cancelLoad),
-            takeUntilDestroyed(this.destroyRef),
-            tap(data => {
-                this.recipeData.setData(data.allRecipes);
-                this.favoriteTotalCount.set(data.favoriteTotalCount);
-                this.recentRecipes.set([]);
-                this.currentPageIndex.set(data.allRecipes.page - 1);
-                this.errorKey.set(null);
-            }),
-            map(() => void 0),
-            catchError((_error: unknown) => {
-                this.recipeData.clearData();
-                this.recentRecipes.set([]);
-                this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
-                return of(void 0);
-            }),
-            finalize(() => {
-                this.recipeData.setLoading(false);
-            }),
-        );
+        return this.readOverview(query, limit, filters, false);
     }
 
     public loadInitialOverview(page: number, limit: number, filters: RecipeFilters, onlyMine: boolean): Observable<void> {
-        this.filtersActive.set(this.hasActiveFilters(onlyMine, filters));
+        return this.readOverview(createRecipeListQuery(page, filters, onlyMine), limit, filters, true);
+    }
+
+    private readOverview(query: RecipeListQuery, limit: number, filters: RecipeFilters, initial: boolean): Observable<void> {
+        this.filtersActive.set(this.hasActiveFilters(query.onlyMine, filters));
         this.cancelLoad.next();
-        this.currentPageIndex.set(page - 1);
+        const requestId = ++this.requestId;
+        let recovering = false;
+        this.currentPageIndex.set(query.page - 1);
         this.recipeData.setLoading(true);
         this.searchValue.set(filters.search ?? null);
-        const includePublic = !onlyMine;
 
         return this.recipeService
             .queryOverview({
-                page,
+                page: query.page,
                 limit,
                 filters,
-                includePublic,
-                recentLimit: RECIPE_LIST_OVERVIEW_RECENT_LIMIT,
-                favoriteLimit: RECIPE_LIST_OVERVIEW_FAVORITE_LIMIT,
+                includePublic: !query.onlyMine,
+                recentLimit: initial ? RECIPE_LIST_OVERVIEW_RECENT_LIMIT : 1,
+                favoriteLimit: initial ? RECIPE_LIST_OVERVIEW_FAVORITE_LIMIT : 0,
             })
             .pipe(
                 takeUntil(this.cancelLoad),
                 takeUntilDestroyed(this.destroyRef),
                 tap(data => {
-                    this.recipeData.setData(data.allRecipes);
-                    this.recentRecipes.set(data.recentItems);
-                    this.favoriteRecipes.set(data.favoriteItems);
+                    if (!this.isCurrentRequest(requestId, query)) {
+                        return;
+                    }
                     this.favoriteTotalCount.set(data.favoriteTotalCount);
-                    this.currentPageIndex.set(data.allRecipes.page - 1);
-                    this.errorKey.set(null);
+                    if (initial) {
+                        this.favoriteRecipes.set(data.favoriteItems);
+                    }
+                    const page = resolvePaginationPage(data.allRecipes.page, data.allRecipes.totalPages);
+                    if (page !== data.allRecipes.page) {
+                        recovering = true;
+                        this.recoverPage({ ...query, page }, filters);
+                        return;
+                    }
+                    if (this.queryState !== null) {
+                        this.writeRouteQuery(query, true);
+                    }
+                    this.acceptOverview(data, initial);
                 }),
                 map(() => void 0),
                 catchError((_error: unknown) => {
+                    if (!this.isCurrentRequest(requestId, query)) {
+                        return of(void 0);
+                    }
                     this.recipeData.clearData();
                     this.recentRecipes.set([]);
-                    this.favoriteRecipes.set([]);
-                    this.favoriteTotalCount.set(0);
+                    if (initial) {
+                        this.favoriteRecipes.set([]);
+                        this.favoriteTotalCount.set(0);
+                    }
                     this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
                     return of(void 0);
                 }),
                 finalize(() => {
-                    this.recipeData.setLoading(false);
+                    if (!recovering && requestId === this.requestId) {
+                        this.recipeData.setLoading(false);
+                    }
                 }),
             );
+    }
+
+    private acceptOverview(data: RecipeOverview, initial: boolean): void {
+        this.recipeData.setData(data.allRecipes);
+        this.recentRecipes.set(initial ? data.recentItems : []);
+        this.currentPageIndex.set(data.allRecipes.page - 1);
+        this.errorKey.set(null);
+    }
+
+    private recoverPage(query: RecipeListQuery, filters: RecipeFilters): void {
+        if (this.queryState !== null) {
+            this.writeRouteQuery(query, true);
+        } else {
+            this.loadRecipes(query.page, this.pageSize, filters, query.onlyMine).subscribe();
+        }
+    }
+
+    private isCurrentRequest(requestId: number, query: RecipeListQuery): boolean {
+        return (
+            requestId === this.requestId &&
+            (this.queryState === null || recipeListQueryKey(query) === recipeListQueryKey(this.queryState.current()))
+        );
+    }
+
+    private writeRouteQuery(query: RecipeListQuery, replaceUrl = false): void {
+        void this.queryState?.writeAsync(query, { replaceUrl }).catch(() => {
+            this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
+            this.recipeData.setLoading(false);
+        });
+    }
+
+    private applyRouteQuery(query: RecipeListQuery): void {
+        this.activeRouteQuery = query;
+        this.currentPageIndex.set(query.page - 1);
     }
 
     public async navigateToAddRecipeAsync(): Promise<void> {

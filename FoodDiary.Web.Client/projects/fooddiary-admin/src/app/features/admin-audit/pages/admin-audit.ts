@@ -8,6 +8,7 @@ import { FdUiButtonComponent, FdUiInputComponent } from 'fd-ui-kit';
 import { catchError, combineLatest, of, startWith, Subject, switchMap } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage } from '../../../shared/period/admin-query';
@@ -17,6 +18,7 @@ import type { AdminAuditPageResult } from '../models/admin-audit';
 const ACTION_MAX_LENGTH = 200;
 const TARGETTYPE_MAX_LENGTH = 100;
 const TARGETID_MAX_LENGTH = 200;
+const PAGE_SIZE = 25;
 
 @Component({
     selector: 'fd-admin-audit',
@@ -95,6 +97,12 @@ export class AdminAuditPageComponent {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(result => {
+                if (
+                    result !== null &&
+                    restoreAdminPage(this.router, this.route, this.page(), { totalItems: result.totalItems, pageSize: PAGE_SIZE })
+                ) {
+                    return;
+                }
                 this.result.set(result);
                 this.loading.set(false);
             });

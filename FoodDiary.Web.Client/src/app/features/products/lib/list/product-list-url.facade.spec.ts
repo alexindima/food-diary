@@ -10,7 +10,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { NavigationService } from '../../../../services/navigation.service';
 import type { PageOf } from '../../../../shared/models/page-of.data';
-import type { Product } from '../../../../shared/models/product.data';
+import type { Product, ProductOverview } from '../../../../shared/models/product.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { QuickMealService } from '../../../meals/contracts/quick-meal';
 import { FavoriteProductService } from '../../api/favorite-product.service';
@@ -20,6 +20,53 @@ import { PRODUCT_LIST_PAGE_SIZE } from '../../components/list/product-list.confi
 import { ProductListFacade } from './product-list.facade';
 import { type ProductListQuery, readProductListQuery } from './product-list-query';
 import { PRODUCT_LIST_QUERY_STATE } from './product-list-query-state';
+
+const DEFAULT_TOTAL_PAGES = 3;
+
+describe('Product list page recovery', () => {
+    it('replaces a stale page with the last result page and preserves ownership and filters', () => {
+        const { facade, changes, products, writeAsync } = setup({ page: '3', onlyMine: 'true', types: 'Fruit', hasImage: 'false' }, true, {
+            totalPages: 2,
+        });
+        expect(writeAsync).toHaveBeenCalledWith(
+            expect.objectContaining({ page: 2, onlyMine: true, productTypes: ['Fruit'], hasImage: false }),
+            { replaceUrl: true },
+        );
+        changes.next(readProductListQuery(convertToParamMap({ page: '2', onlyMine: 'true', types: 'Fruit', hasImage: 'false' })));
+        expect(products.query).toHaveBeenLastCalledWith(
+            2,
+            PRODUCT_LIST_PAGE_SIZE,
+            expect.objectContaining({ productTypes: ['Fruit'], hasImage: false }),
+            false,
+        );
+        expect(facade.currentPageIndex).toBe(1);
+        expect(facade.isEmptyState()).toBe(false);
+    });
+
+    it('corrects a true empty result to page one without a navigation loop', () => {
+        const { facade, changes, writeAsync } = setup({ page: '3' }, true, { totalPages: 0 });
+        expect(writeAsync).toHaveBeenCalledWith(expect.objectContaining({ page: 1 }), { replaceUrl: true });
+        changes.next(readProductListQuery(convertToParamMap({})));
+        expect(writeAsync).toHaveBeenCalledTimes(1);
+        expect(facade.currentPageIndex).toBe(0);
+        expect(facade.isEmptyState()).toBe(true);
+    });
+
+    it('does not let stale page recovery discard text typed before search debounce', () => {
+        const pendingOverview = new Subject<ProductOverview>();
+        const { facade, writeAsync } = setup({ page: '3' }, true, { totalPages: 2, pendingOverview });
+        facade.searchForm.search().value.set('new draft');
+        pendingOverview.next({
+            allProducts: { data: [], page: 3, limit: PRODUCT_LIST_PAGE_SIZE, totalItems: 14, totalPages: 2 },
+            recentItems: [],
+            favoriteItems: [],
+            favoriteTotalCount: 0,
+        });
+        expect(writeAsync).not.toHaveBeenCalled();
+        expect(facade.searchValue()).toBe('new draft');
+        expect(facade.productData.items()).toEqual([]);
+    });
+});
 
 describe('Product list URL ownership', () => {
     it('restores filters and page from the URL in its initial overview', () => {
@@ -102,6 +149,7 @@ describe('Product list URL ownership', () => {
 function setup(
     params: Record<string, string>,
     page = true,
+    options: { totalPages?: number; pendingOverview?: ReturnType<ProductService['queryOverview']> } = {},
 ): {
     facade: ProductListFacade;
     products: {
@@ -114,17 +162,26 @@ function setup(
     const initial = readProductListQuery(convertToParamMap(params));
     const changes = new BehaviorSubject(initial);
     const writeAsync = vi.fn().mockResolvedValue(true);
+    const totalPages = options.totalPages ?? DEFAULT_TOTAL_PAGES;
     const products = {
         query: vi.fn<ProductService['query']>((number: number) =>
-            of({ data: [], page: number, limit: PRODUCT_LIST_PAGE_SIZE, totalPages: 3, totalItems: 0 }),
+            of({ data: [], page: number, limit: PRODUCT_LIST_PAGE_SIZE, totalPages, totalItems: totalPages * PRODUCT_LIST_PAGE_SIZE }),
         ),
-        queryOverview: vi.fn<ProductService['queryOverview']>(() =>
-            of({
-                allProducts: { data: [], page: initial.page, limit: PRODUCT_LIST_PAGE_SIZE, totalPages: 3, totalItems: 0 },
-                recentItems: [],
-                favoriteItems: [],
-                favoriteTotalCount: 0,
-            }),
+        queryOverview: vi.fn<ProductService['queryOverview']>(
+            query =>
+                options.pendingOverview ??
+                of({
+                    allProducts: {
+                        data: [],
+                        page: query.page,
+                        limit: PRODUCT_LIST_PAGE_SIZE,
+                        totalPages,
+                        totalItems: totalPages * PRODUCT_LIST_PAGE_SIZE,
+                    },
+                    recentItems: [],
+                    favoriteItems: [],
+                    favoriteTotalCount: 0,
+                }),
         ),
     };
     TestBed.configureTestingModule({

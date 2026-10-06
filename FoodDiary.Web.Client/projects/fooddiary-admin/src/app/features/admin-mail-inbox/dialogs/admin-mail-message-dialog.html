@@ -25,6 +25,13 @@
                 </div>
             </div>
 
+            @if (readFailed()) {
+                <p class="fd-ui-error-text" role="alert">{{ 'ADMIN_MAIL_INBOX.READ_ERROR' | translate }}</p>
+                <fd-ui-button type="button" [loading]="markingRead()" (click)="retryRead()">{{
+                    'ADMIN_COMMON.RETRY' | translate
+                }}</fd-ui-button>
+            }
+
             <dl class="mail-fields fd-grid fd-gap-sm">
                 <div class="fd-grid fd-gap-xxs">
                     <dt class="fd-ui-helper-strong">{{ 'ADMIN_MAIL_INBOX.HEADER_FROM' | translate }}</dt>
@@ -58,7 +65,7 @@
                     </p>
                     <div class="dmarc-report__header fd-row fd-align-start fd-justify-between fd-gap-md">
                         <div>
-                            <h3 class="fd-ui-body">DMARC report</h3>
+                            <h3 id="mail-dmarc-title" class="fd-ui-body">DMARC report</h3>
                             <p class="fd-ui-body-xs">
                                 {{ report.domain || '-' }} | {{ report.organizationName || '-' }} |
                                 {{ report.dateRangeStartUtc | date: 'mediumDate' }} - {{ report.dateRangeEndUtc | date: 'mediumDate' }}
@@ -66,7 +73,7 @@
                         </div>
                     </div>
 
-                    <div class="dmarc-report__table-wrap">
+                    <div class="dmarc-report__table-wrap" tabindex="0" role="region" aria-labelledby="mail-dmarc-title">
                         <table class="dmarc-report__table">
                             <thead>
                                 <tr>

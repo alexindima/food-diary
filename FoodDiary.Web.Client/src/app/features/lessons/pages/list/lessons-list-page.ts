@@ -15,6 +15,8 @@ import { LocalizedTourDefinitionService } from '../../../../shared/tours/localiz
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { LessonFacade } from '../../lib/lesson.facade';
 import { buildLessonListItems, buildLessonProgress } from '../../lib/lesson-view.mapper';
+import { LESSON_LIST_QUERY_STATE } from '../../lib/list/lesson-list-query-state';
+import { LessonListRouteStateFacade } from '../../lib/list/lesson-list-route-state.facade';
 import { LessonsListFiltersComponent } from './lessons-list-sections/lessons-list-filters/lessons-list-filters';
 import { LessonsListGridComponent } from './lessons-list-sections/lessons-list-grid/lessons-list-grid';
 import { LessonsListProgressComponent } from './lessons-list-sections/lessons-list-progress/lessons-list-progress';
@@ -38,7 +40,7 @@ import { LESSONS_LIST_TOUR } from './lessons-list-tour';
         FdUiLevelIndicatorComponent,
         FdUiPaginationComponent,
     ],
-    providers: [LessonFacade],
+    providers: [LessonFacade, LessonListRouteStateFacade, { provide: LESSON_LIST_QUERY_STATE, useExisting: LessonListRouteStateFacade }],
     templateUrl: './lessons-list-page.html',
     styleUrl: './lessons-list-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

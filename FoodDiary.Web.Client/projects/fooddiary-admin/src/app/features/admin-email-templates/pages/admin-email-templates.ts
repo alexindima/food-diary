@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,6 +10,7 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 
 import { AdminCatalogFilterComponent, matchesAdminCatalog } from '../../../shared/catalog/admin-catalog-filter';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPage } from '../../../shared/period/admin-query';
 import { AdminEmailTemplateEditDialogComponent } from '../dialogs/admin-email-template-edit-dialog';
 import { AdminEmailTemplatesFacade } from '../lib/admin-email-templates.facade';
@@ -69,6 +70,14 @@ export class AdminEmailTemplatesComponent {
     }
 
     public constructor() {
+        effect(() => {
+            if (!this.isLoading() && !this.loadFailed()) {
+                restoreAdminPage(this.router, this.route, this.pageIndex() + 1, {
+                    totalItems: this.filteredItems().length,
+                    pageSize: this.pageSize,
+                });
+            }
+        });
         this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
             this.requestedPage.set(adminPage(params.get('page')) - 1);
         });

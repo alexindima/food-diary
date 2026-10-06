@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, form, FormField, FormRoot, min, pattern, required } from '@angular/forms/signals';
@@ -13,6 +13,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
 import { AdminCatalogFilterComponent, matchesAdminCatalog } from '../../../shared/catalog/admin-catalog-filter';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPage } from '../../../shared/period/admin-query';
 import { AdminAchievementsFacade } from '../lib/admin-achievements.facade';
 import type {
@@ -119,6 +120,14 @@ export class AdminAchievementsComponent {
     }
 
     public constructor() {
+        effect(() => {
+            if (!this.isLoading() && !this.loadFailed()) {
+                restoreAdminPage(this.router, this.route, this.pageIndex() + 1, {
+                    totalItems: this.filteredItems().length,
+                    pageSize: this.pageSize,
+                });
+            }
+        });
         this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
             this.requestedPage.set(adminPage(params.get('page')) - 1);
         });

@@ -4,7 +4,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import type { Subscription } from 'rxjs';
 
-import { adminExclusiveDatePeriod } from '../../../shared/period/admin-period';
+import { restoreAdminPage } from '../../../shared/period/admin-pagination';
+import { adminExclusiveDatePeriod, type AdminPeriod } from '../../../shared/period/admin-period';
 import { adminQueryValue } from '../../../shared/period/admin-query';
 import { AdminBillingService } from '../api/admin-billing.service';
 import type {
@@ -37,6 +38,7 @@ export class AdminBillingFacade {
     private readonly route = inject(ActivatedRoute);
     private loadRequestId = 0;
     private revenueRequest?: Subscription;
+    private periodRange = { from: '', to: '' };
     public readonly revenueFailed = signal(false);
 
     public readonly activeTab = signal<AdminBillingTab>('subscriptions');
@@ -101,6 +103,12 @@ export class AdminBillingFacade {
         this.syncUrl();
     }
 
+    public setPeriod(range: AdminPeriod): void {
+        this.periodRange = { from: range.from ?? '', to: range.to ?? '' };
+        this.fromDate.set(this.periodRange.from);
+        this.toDate.set(this.periodRange.to);
+    }
+
     public resetFilters(): void {
         this.provider.set('');
         this.status.set('');
@@ -108,7 +116,9 @@ export class AdminBillingFacade {
         this.search.set('');
         this.fromDate.set('');
         this.toDate.set('');
-        this.applyFilters();
+        this.page.set(1);
+        this.selectedMetadata.set(null);
+        this.syncUrl(true);
     }
 
     public goToPage(page: number): void {
@@ -120,7 +130,8 @@ export class AdminBillingFacade {
         this.syncUrl();
     }
 
-    private syncUrl(): void {
+    private syncUrl(clearPeriod = false): void {
+        const preservePeriod = !clearPeriod && this.periodRange.from === this.fromDate() && this.periodRange.to === this.toDate();
         void this.router.navigate([], {
             relativeTo: this.route,
             queryParamsHandling: 'merge',
@@ -131,9 +142,13 @@ export class AdminBillingFacade {
                 provider: adminQueryValue(this.provider()),
                 status: adminQueryValue(this.status()),
                 kind: adminQueryValue(this.kind()),
-                period: this.fromDate().length > 0 && this.toDate().length > 0 ? 'custom' : 'all',
-                from: adminQueryValue(this.fromDate()),
-                to: adminQueryValue(this.toDate()),
+                ...(preservePeriod
+                    ? {}
+                    : {
+                          period: this.fromDate().length > 0 && this.toDate().length > 0 ? 'custom' : 'all',
+                          from: adminQueryValue(this.fromDate()),
+                          to: adminQueryValue(this.toDate()),
+                      }),
             },
         });
     }
@@ -231,6 +246,8 @@ export class AdminBillingFacade {
         this.payments.set([]);
         this.webhookEvents.set([]);
         this.totalItems.set(0);
+        this.totalPages.set(1);
+        this.errorMessage.set(null);
         this.isLoading.set(false);
         this.selectedMetadata.set(null);
     }
@@ -250,6 +267,9 @@ export class AdminBillingFacade {
     }
 
     private applyPageData<T>(response: PagedResponse<T>): void {
+        if (restoreAdminPage(this.router, this.route, this.page(), { totalItems: response.totalItems, pageSize: this.limit })) {
+            return;
+        }
         this.totalPages.set(response.totalPages > 0 ? response.totalPages : 1);
         this.totalItems.set(response.totalItems);
         this.isLoading.set(false);

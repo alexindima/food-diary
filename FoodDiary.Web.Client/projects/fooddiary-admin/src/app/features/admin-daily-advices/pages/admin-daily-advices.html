@@ -35,6 +35,6 @@
         } @empty {
             <p>{{ 'ADMIN_DAILY_ADVICES.EMPTY' | translate }}</p>
         }
-        <fd-ui-pagination [length]="advices().length" [pageSize]="pageSize" [pageIndex]="page()" (pageIndexChange)="page.set($event)" />
+        <fd-ui-pagination [length]="advices().length" [pageSize]="pageSize" [pageIndex]="page()" (pageIndexChange)="goToPage($event)" />
     }
 </div>

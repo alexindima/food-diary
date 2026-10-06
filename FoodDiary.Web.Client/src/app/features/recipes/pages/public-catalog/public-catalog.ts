@@ -9,6 +9,7 @@ import { catchError, combineLatest, debounceTime, map, of, skip, startWith, Subj
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import type { PageOf } from '../../../../shared/models/page-of.data';
+import { hasInvalidPaginationPage, readPaginationPage, resolvePaginationPage } from '../../../../shared/navigation/pagination-query.utils';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { PublicRecipeCardComponent } from '../../components/public-card/public-card';
 import { PublicCategoryFilterComponent } from '../../components/public-category-filter/public-category-filter';
@@ -87,25 +88,41 @@ export class PublicRecipeCatalogComponent {
                     this.loading.set(true);
                     this.failed.set(false);
                 }),
-                switchMap(([params]) =>
-                    this.facade
+                switchMap(([params]) => {
+                    const requestedPage = readPaginationPage(params.get('page'));
+                    const filterKey = JSON.stringify(this.filters());
+                    return this.facade
                         .query({
-                            page: this.positiveNumber(params.get('page')) ?? 1,
+                            page: requestedPage,
                             ...this.filters(),
                             maxTotalTime: this.positiveNumber(this.filters().maxTotalTime) ?? undefined,
                             language: this.filters().language === '' ? undefined : this.filters().language,
                         })
                         .pipe(
-                            catchError(() => {
-                                this.failed.set(true);
-                                return of(null);
-                            }),
-                        ),
-                ),
+                            map(result => ({
+                                result,
+                                requestedPage,
+                                filterKey,
+                                invalidPage: hasInvalidPaginationPage(params.get('page')),
+                            })),
+                            catchError(() => of({ result: null, requestedPage, filterKey, invalidPage: false })),
+                        );
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(result => {
-                this.result.set(result);
+            .subscribe(response => {
+                if (response.filterKey !== JSON.stringify(this.filters())) {
+                    return;
+                }
+                if (response.result !== null) {
+                    const page = resolvePaginationPage(response.requestedPage, response.result.totalPages);
+                    if (response.invalidPage || page !== response.requestedPage) {
+                        void this.writePageAsync(page, true);
+                        return;
+                    }
+                }
+                this.failed.set(response.result === null);
+                this.result.set(response.result);
                 this.loading.set(false);
             });
         toObservable(this.filters)
@@ -125,8 +142,12 @@ export class PublicRecipeCatalogComponent {
     }
 
     protected changePage(index: number): void {
+        void this.writePageAsync(index + 1);
+    }
+
+    private async writePageAsync(page: number, replaceUrl = false): Promise<boolean> {
         const filters = this.filters();
-        void this.router.navigate([], {
+        return this.router.navigate([], {
             relativeTo: this.route,
             queryParams: {
                 search: filters.search.trim().length > 0 ? filters.search.trim() : null,
@@ -134,8 +155,9 @@ export class PublicRecipeCatalogComponent {
                 maxTotalTime: this.positiveNumber(filters.maxTotalTime),
                 sortBy: filters.sortBy === 'newest' ? null : filters.sortBy,
                 language: filters.language === '' ? 'all' : filters.language,
-                page: index > 0 ? index + 1 : null,
+                page: page > 1 ? page : null,
             },
+            replaceUrl,
         });
     }
 
@@ -155,6 +177,7 @@ export class PublicRecipeCatalogComponent {
             sortBy: value.sortBy,
             language: String(normalizeRecipeLanguage(this.language())),
         }));
+        this.changePage(0);
     }
 
     private catalogLanguage(value: string | null): string {

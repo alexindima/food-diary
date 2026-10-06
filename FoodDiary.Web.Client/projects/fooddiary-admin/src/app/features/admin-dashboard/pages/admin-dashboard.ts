@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiDateInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
 
+import { validAdminDate } from '../../../shared/period/admin-period';
 import { AdminDashboardContentComponent } from '../components/admin-dashboard-content';
 import { AdminDashboardFacade } from '../lib/admin-dashboard.facade';
 import type { DashboardRange } from '../models/admin-dashboard-overview.data';
@@ -117,9 +118,10 @@ export class AdminDashboardComponent {
     }
 
     private dateValue(value: string | Date | null): string | null {
-        if (value instanceof Date) {
-            return `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}`;
-        }
-        return value !== null && /^\d{4}-\d{2}-\d{2}$/.test(value) && Number.isFinite(Date.parse(value)) ? value : null;
+        const date =
+            value instanceof Date
+                ? `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}`
+                : value;
+        return validAdminDate(date) ? date : null;
     }
 }

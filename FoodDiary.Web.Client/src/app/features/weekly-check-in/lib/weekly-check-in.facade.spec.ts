@@ -128,7 +128,7 @@ describe('WeeklyCheckInFacade (1)', () => {
         expect(facade.suggestionRows()).toEqual([]);
         expect(facade.trendCards().length).toBeGreaterThan(0);
     });
-    it('retains the previous week during refresh and after a failed refresh', async () => {
+    it('does not show another selected week during loading or after a failed request', async () => {
         const { facade, dataService } = setup();
         await settleAsync();
         const previous = facade.data();
@@ -136,17 +136,46 @@ describe('WeeklyCheckInFacade (1)', () => {
         dataService.getData.mockReturnValueOnce(pending);
         facade.selectedWeek.set(new Date(TEST_YEAR, 2, PREVIOUS_MONDAY));
         await settleAsync();
-        expect(facade.isRefreshing()).toBe(true);
-        expect(facade.isLoading()).toBe(false);
-        expect(facade.data()).toEqual(previous);
+        expect(previous).not.toBeNull();
+        expect(facade.isRefreshing()).toBe(false);
+        expect(facade.isLoading()).toBe(true);
+        expect(facade.data()).toBeNull();
         pending.error(new Error('offline'));
         await settleAsync();
         expect(facade.isRefreshing()).toBe(false);
-        expect(facade.data()).toEqual(previous);
+        expect(facade.data()).toBeNull();
+        expect(facade.hasDataError()).toBe(true);
         expect(facade.isSelectedWeekPast()).toBe(true);
         expect(facade.isGoalPeriodClosed()).toBe(false);
         facade.selectedWeek.set(new Date(TEST_YEAR, 2, 2));
         expect(facade.isGoalPeriodClosed()).toBe(true);
+        dataService.getData.mockReturnValueOnce(of(createData(OLD_WEEK_CALORIES)));
+        facade.retryData();
+        await settleAsync();
+        expect(facade.thisWeek()?.totalCalories).toBe(OLD_WEEK_CALORIES);
+        expect(facade.hasDataError()).toBe(false);
+    });
+    it('retains data for a same-week reload and recovers after failure', async () => {
+        const { facade, dataService, goals } = setup();
+        await settleAsync();
+        const previous = facade.data();
+        const pending = new Subject<WeeklyCheckInData>();
+        dataService.getData.mockReturnValueOnce(pending);
+        goals.getGoal.mockClear();
+        facade.retryData();
+        await settleAsync();
+        expect(facade.isRefreshing()).toBe(true);
+        expect(facade.data()).toEqual(previous);
+        pending.error(new Error('offline'));
+        await settleAsync();
+        expect(facade.data()).toEqual(previous);
+        expect(facade.hasDataError()).toBe(true);
+        dataService.getData.mockReturnValueOnce(of(createData(OLD_WEEK_CALORIES)));
+        facade.retryData();
+        await settleAsync();
+        expect(facade.thisWeek()?.totalCalories).toBe(OLD_WEEK_CALORIES);
+        expect(facade.hasDataError()).toBe(false);
+        expect(goals.getGoal).not.toHaveBeenCalled();
     });
 });
 

@@ -10,6 +10,7 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import type { Subscription } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage, adminQueryValue } from '../../../shared/period/admin-query';
@@ -109,6 +110,9 @@ export class AdminModerationComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: response => {
+                    if (restoreAdminPage(this.router, this.route, this.page(), { totalItems: response.totalItems, pageSize: this.limit })) {
+                        return;
+                    }
                     this.reports.set(response.items);
                     this.totalPages.set(response.totalPages);
                     this.totalItems.set(response.totalItems);

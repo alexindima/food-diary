@@ -1,6 +1,7 @@
 import type { ParamMap } from '@angular/router';
 
 import { ProductType } from '../../../../shared/models/product.data';
+import { readPaginationPage } from '../../../../shared/navigation/pagination-query.utils';
 import type { ProductListFilterState } from './product-list.state';
 
 export type ProductListQuery = ProductListFilterState & { search: string | null; page: number };
@@ -8,13 +9,12 @@ export type ProductListQuery = ProductListFilterState & { search: string | null;
 const productTypes = new Set<string>(Object.values(ProductType));
 
 export function readProductListQuery(params: ParamMap): ProductListQuery {
-    const page = Number(params.get('page'));
     const caloriesFrom = readCalories(params.get('caloriesFrom'));
     const caloriesTo = readCalories(params.get('caloriesTo'));
     const hasImage = params.get('hasImage');
     return {
         search: normalizeProductListSearch(params.get('search')),
-        page: Number.isSafeInteger(page) && page > 0 ? page : 1,
+        page: readPaginationPage(params.get('page')),
         onlyMine: params.get('onlyMine') === 'true',
         productTypes: [...new Set(params.getAll('types').flatMap(value => value.split(',')))].filter(isProductType).sort(),
         caloriesFrom: caloriesFrom !== null && caloriesTo !== null && caloriesFrom > caloriesTo ? null : caloriesFrom,

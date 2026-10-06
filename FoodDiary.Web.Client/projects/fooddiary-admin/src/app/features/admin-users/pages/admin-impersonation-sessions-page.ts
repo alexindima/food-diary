@@ -6,11 +6,12 @@ import { FdUiButtonComponent, FdUiInputComponent } from 'fd-ui-kit';
 import type { Subscription } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage, adminQueryValue } from '../../../shared/period/admin-query';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
-import type { AdminImpersonationSession } from '../models/admin-user.models';
+import type { AdminImpersonationSession, PagedResponse } from '../models/admin-user.models';
 import { AdminSessionsSectionComponent } from './admin-sessions-section';
 
 const ADMIN_IMPERSONATION_SESSIONS_PAGE_SIZE = 20;
@@ -105,10 +106,7 @@ export class AdminImpersonationSessionsPageComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: response => {
-                    this.sessions.set(response.items);
-                    this.sessionsTotalPages.set(response.totalPages);
-                    this.sessionsTotalItems.set(response.totalItems);
-                    this.isSessionsLoading.set(false);
+                    this.applySessionsPage(response);
                 },
                 error: () => {
                     this.loadFailed.set(true);
@@ -118,6 +116,21 @@ export class AdminImpersonationSessionsPageComponent {
                     this.isSessionsLoading.set(false);
                 },
             });
+    }
+
+    private applySessionsPage(response: PagedResponse<AdminImpersonationSession>): void {
+        if (
+            restoreAdminPage(this.router, this.route, this.sessionsPage(), {
+                totalItems: response.totalItems,
+                pageSize: ADMIN_IMPERSONATION_SESSIONS_PAGE_SIZE,
+            })
+        ) {
+            return;
+        }
+        this.sessions.set(response.items);
+        this.sessionsTotalPages.set(response.totalPages);
+        this.sessionsTotalItems.set(response.totalItems);
+        this.isSessionsLoading.set(false);
     }
 
     private resolveSearchQuery(value: string): string | null {

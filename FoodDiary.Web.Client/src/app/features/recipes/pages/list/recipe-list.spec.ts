@@ -10,6 +10,8 @@ import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { type FavoriteRecipe, type Recipe, type RecipeFilters, RecipeVisibility } from '../../../../shared/models/recipe.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
+import { createRecipeListQuery } from '../../lib/list/recipe-list-query';
+import { RecipeListRouteStateFacade } from '../../lib/list/recipe-list-route-state.facade';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
 import { RecipeListComponent } from './recipe-list';
 
@@ -41,6 +43,10 @@ beforeEach(() => {
             template: '<div #container></div>',
             providers: [
                 { provide: RecipeListFacade, useValue: facade },
+                {
+                    provide: RecipeListRouteStateFacade,
+                    useValue: { initial: { page: 1 }, current: signal(createRecipeListQuery(1, emptyRecipeFilters(), true)) },
+                },
                 { provide: FdUiDialogService, useValue: dialogService },
             ],
         },
@@ -224,6 +230,7 @@ function createRecipeListFacadeMock(): RecipeListFacadeMock {
         handleDetailActionAsync: vi.fn().mockResolvedValue(void 0),
         hasActiveFilters: vi.fn((onlyMine: boolean) => onlyMine),
         hasSearch: vi.fn((search: string | null) => search !== null && search.length > 0),
+        isQueryActive: vi.fn().mockReturnValue(false),
         hasVisibleRecipes: signal(true),
         isDeleting: signal(false),
         isFavoritesLoadingMore: signal(false),
@@ -369,9 +376,20 @@ describe('RecipeListComponent search and recovery', () => {
     });
 });
 
+it('updates empty collection state through positive, zero and positive result totals', () => {
+    const { component } = setupComponent();
+    vi.spyOn(facade, 'hasVisibleRecipes').mockImplementation(() => facade.recipeData.items().length > 0);
+    expect(component['isEmptyState']()).toBe(false);
+    facade.recipeData.clearData();
+    expect(component['isEmptyState']()).toBe(true);
+    facade.recipeData.setData({ data: [createRecipe()], page: 1, limit: PAGE_SIZE, totalItems: 1, totalPages: 1 });
+    expect(component['isEmptyState']()).toBe(false);
+});
+
 describe('RecipeListComponent presentation state', () => {
     it('distinguishes an empty collection from an empty search result', () => {
         const { component } = setupComponent();
+        facade.recipeData.clearData();
         vi.spyOn(facade, 'hasVisibleRecipes').mockReturnValue(false);
         expect(component['emptyState']()).toBe('empty');
         component['searchForm'].search().value.set('Rice');

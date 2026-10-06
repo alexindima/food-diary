@@ -26,6 +26,10 @@
             [(value)]="selectedWeek"
         />
 
+        <div [hidden]="!hasDataError()">
+            <fd-error-state (retry)="retryData()" />
+        </div>
+
         @if (isLoading()) {
             <div class="check-in__loader fd-ui-body-sm">{{ 'WEEKLY_CHECK_IN.LOADING' | translate }}</div>
         } @else if (review(); as review) {

@@ -833,7 +833,8 @@
         "TYPE_FILTER": "Type",
         "READ_FILTER": "Read state",
         "LOAD_ERROR": "Unable to load the message. Close and try again.",
-        "NO_SUBJECT": "No subject"
+        "NO_SUBJECT": "No subject",
+        "READ_ERROR": "Could not mark the message as read. Please try again."
     },
     "ADMIN_ACHIEVEMENTS": {
         "AWARDED_USERS": "Recipients (retained history)",

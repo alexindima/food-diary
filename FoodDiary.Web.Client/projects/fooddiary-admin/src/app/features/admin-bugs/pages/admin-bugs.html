@@ -5,7 +5,7 @@
     <fd-ui-button type="submit">{{ 'ADMIN_CATALOG.APPLY' | translate }}</fd-ui-button>
 </form>
 @if (detailId()) {
-    <a routerLink="/bugs" queryParamsHandling="merge" [queryParams]="{ page: 1 }">{{ 'ADMIN_BUGS.BACK' | translate }}</a>
+    <a routerLink="/bugs" queryParamsHandling="preserve">{{ 'ADMIN_BUGS.BACK' | translate }}</a>
 }
 @if (loading()) {
     <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>

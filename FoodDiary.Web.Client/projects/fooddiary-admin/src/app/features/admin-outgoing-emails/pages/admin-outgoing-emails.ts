@@ -6,13 +6,16 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiInputComponent, FdUiPaginationComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import type { Subscription } from 'rxjs';
 
+import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage, adminQueryValue } from '../../../shared/period/admin-query';
 import { OutgoingEmailDetailsComponent } from '../components/outgoing-email-details';
 import { OutgoingStatusCountsComponent } from '../components/outgoing-status-counts';
 import { AdminOutgoingEmailsFacade } from '../lib/admin-outgoing-emails.facade';
-import type { OutgoingEmail } from '../models/outgoing-email';
+import type { OutgoingEmail, OutgoingEmailPage } from '../models/outgoing-email';
+
+const PAGE_SIZE = 50;
 
 @Component({
     selector: 'fd-admin-outgoing-emails',
@@ -130,13 +133,7 @@ export class AdminOutgoingEmailsComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: result => {
-                    this.messages.set(result.items);
-                    if (this.route.snapshot.queryParamMap.has('id')) {
-                        this.selected.set(result.items[0] ?? null);
-                    }
-                    this.total.set(result.totalItems);
-                    this.statusCounts.set(result.statusCounts ?? null);
-                    this.loading.set(false);
+                    this.applyMessagePage(result);
                 },
                 error: () => {
                     this.messages.set([]);
@@ -145,6 +142,19 @@ export class AdminOutgoingEmailsComponent {
                     this.loading.set(false);
                 },
             });
+    }
+
+    private applyMessagePage(result: OutgoingEmailPage): void {
+        if (restoreAdminPage(this.router, this.route, this.page(), { totalItems: result.totalItems, pageSize: PAGE_SIZE })) {
+            return;
+        }
+        this.messages.set(result.items);
+        if (this.route.snapshot.queryParamMap.has('id')) {
+            this.selected.set(result.items[0] ?? null);
+        }
+        this.total.set(result.totalItems);
+        this.statusCounts.set(result.statusCounts ?? null);
+        this.loading.set(false);
     }
 
     protected goToPage(index: number): void {

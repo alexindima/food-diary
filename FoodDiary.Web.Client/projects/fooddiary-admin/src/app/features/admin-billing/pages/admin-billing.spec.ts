@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -204,6 +204,43 @@ describe('AdminBillingComponent loading', () => {
 });
 
 describe('AdminBillingComponent filters', () => {
+    it('keeps a relative preset through filters, tab changes and paging; reset clears it', async () => {
+        const { billing, fixture } = await setupBillingAsync();
+        const router = TestBed.inject(Router);
+        await router.navigateByUrl('/?period=7d');
+        await fixture.whenStable();
+        billing.provider.set('Paddle');
+        billing.applyFilters();
+        await fixture.whenStable();
+        expect(new URL(router.url, 'http://localhost').searchParams.get('period')).toBe('7d');
+        billing.goToPage(2);
+        await fixture.whenStable();
+        expect(new URL(router.url, 'http://localhost').searchParams.get('period')).toBe('7d');
+        billing.setTab('payments');
+        await fixture.whenStable();
+        expect(new URL(router.url, 'http://localhost').searchParams.get('period')).toBe('7d');
+        billing.resetFilters();
+        await fixture.whenStable();
+        const params = new URL(router.url, 'http://localhost').searchParams;
+        expect(params.get('period')).toBe('all');
+        expect(params.has('from')).toBe(false);
+        expect(params.has('provider')).toBe(false);
+    });
+
+    it('restores filters and the tab for an invalid range, then reset recovers without requesting invalid dates', async () => {
+        const { billingApi, billing, fixture } = await setupBillingAsync();
+        const router = TestBed.inject(Router);
+        billingApi.getPayments.mockClear();
+        await router.navigateByUrl('/?tab=payments&period=custom&from=2026-02-31&to=2026-10-01&provider=Paddle');
+        await fixture.whenStable();
+        expect(billing.activeTab()).toBe('payments');
+        expect(billing.provider()).toBe('Paddle');
+        expect(billingApi.getPayments).not.toHaveBeenCalled();
+        billing.resetFilters();
+        await fixture.whenStable();
+        expect(billingApi.getPayments).toHaveBeenCalled();
+        expect(new URL(router.url, 'http://localhost').searchParams.get('period')).toBe('all');
+    });
     it('should switch to payments and include kind filter', async () => {
         const { billingApi, billing, fixture } = await setupBillingAsync();
         await fixture.whenStable();

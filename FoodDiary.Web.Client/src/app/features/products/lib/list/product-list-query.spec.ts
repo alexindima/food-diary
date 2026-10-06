@@ -7,6 +7,9 @@ import { productListQueryKey, readProductListQuery, writeProductListQuery } from
 const UPPER_CALORIE_BOUND = 100;
 
 describe('Product list URL query', () => {
+    it('rejects a page outside the API range before loading a bookmarked list', () => {
+        expect(readProductListQuery(convertToParamMap({ page: '999999', search: 'tea' }))).toMatchObject({ page: 1, search: 'tea' });
+    });
     it('round-trips search, filters and pagination with canonical types', () => {
         const query = readProductListQuery(
             convertToParamMap({

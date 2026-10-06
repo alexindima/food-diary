@@ -6,7 +6,8 @@ import type { ProductListQuery } from './product-list-query';
 export type ProductListQueryState = {
     readonly initial: ProductListQuery;
     readonly changes: Observable<ProductListQuery>;
-    writeAsync: (query: ProductListQuery) => Promise<boolean>;
+    writeAsync: (query: ProductListQuery, options?: { replaceUrl?: boolean }) => Promise<boolean>;
+    normalizePageAsync?: (query: ProductListQuery) => Promise<boolean>;
 };
 
 // Only the page provides this capability. Selection dialogs own local filters.

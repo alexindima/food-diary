@@ -16,7 +16,6 @@ export class AdminDailyAdvicesFacade {
     public readonly importing = signal(false);
     public readonly importError = signal<string | null>(null);
     public readonly importResult = signal<AdminDailyAdvicesImportResponse | null>(null);
-    public readonly page = signal(0);
 
     public update(id: string, value: AdminDailyAdviceUpdate): Observable<AdminDailyAdvice> {
         return this.api.update(id, value);
@@ -35,7 +34,6 @@ export class AdminDailyAdvicesFacade {
             .subscribe({
                 next: items => {
                     this.advices.set(items);
-                    this.page.set(0);
                     this.loading.set(false);
                 },
                 error: () => {

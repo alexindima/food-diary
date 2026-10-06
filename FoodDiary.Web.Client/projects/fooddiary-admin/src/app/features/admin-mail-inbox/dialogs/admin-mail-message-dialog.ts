@@ -29,6 +29,8 @@ export class AdminMailMessageDialogComponent {
     private readonly destroyRef = inject(DestroyRef);
     protected readonly selectedMessage = signal<AdminMailInboxMessageDetails | null>(null);
     protected readonly isDetailsLoading = signal(true);
+    protected readonly readFailed = signal(false);
+    protected readonly markingRead = signal(false);
     protected readonly selectedBodyMode = signal<'text' | 'html' | 'raw'>('text');
     protected readonly selectedMessageDetails = computed<AdminMailInboxMessageDetailsViewModel | null>(() => {
         const message = this.selectedMessage();
@@ -65,6 +67,13 @@ export class AdminMailMessageDialogComponent {
     protected setBodyMode(mode: 'text' | 'html' | 'raw'): void {
         this.selectedBodyMode.set(mode);
     }
+
+    protected retryRead(): void {
+        const message = this.selectedMessage();
+        if (message !== null) {
+            this.markMessageRead(message.id);
+        }
+    }
     private loadMessage(): void {
         this.isDetailsLoading.set(true);
         this.selectedBodyMode.set('text');
@@ -100,14 +109,24 @@ export class AdminMailMessageDialogComponent {
     }
 
     private markMessageRead(id: string): void {
+        if (this.markingRead()) {
+            return;
+        }
+        this.markingRead.set(true);
         this.mailInboxFacade
             .markMessageRead(id)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: () => {
+                    this.markingRead.set(false);
+                    this.readFailed.set(false);
                     const readAtUtc = new Date().toISOString();
                     this.data.onRead(id, readAtUtc);
                     this.selectedMessage.update(message => (message?.id === id ? { ...message, readAtUtc } : message));
+                },
+                error: () => {
+                    this.markingRead.set(false);
+                    this.readFailed.set(true);
                 },
             });
     }

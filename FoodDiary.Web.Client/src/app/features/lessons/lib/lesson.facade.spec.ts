@@ -168,7 +168,7 @@ describe('LessonFacade catalogue', () => {
 describe('LessonFacade refresh state', () => {
     beforeEach(setupFacade);
 
-    it('keeps the last loaded page while filters trigger a new request', async () => {
+    it('does not show the previous category while a new category loads', async () => {
         await waitForAsync(() => facade.lessons().length > 0);
         const nextPage = new Subject<LessonPage>();
         lessonService.getAll.mockReturnValue(nextPage);
@@ -176,8 +176,8 @@ describe('LessonFacade refresh state', () => {
         facade.loadLessons('Micronutrients');
         await waitForAsync(() => facade.isLoading());
 
-        expect(facade.lessons()).toEqual([createSummary()]);
-        expect(facade.page().availableCategories).toEqual(['Macronutrients']);
+        expect(facade.lessons()).toEqual([]);
+        expect(facade.page().availableCategories).toEqual([]);
 
         nextPage.next({
             ...createPage(),

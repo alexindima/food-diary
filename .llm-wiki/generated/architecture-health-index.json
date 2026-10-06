@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 111,
     "routedStandaloneComponents": 67,
-    "componentsWithoutDirectSpecs": 129,
+    "componentsWithoutDirectSpecs": 127,
     "criticalSymbolsWithoutTestReferences": 46,
     "explicitDebtMarkers": 12
   },
@@ -322,7 +322,7 @@
       "feature": "admin-mail-inbox",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.html",
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.spec.ts"
     },
     {
       "class": "AdminModerationActionDialogComponent",
@@ -1315,27 +1315,6 @@
       "specPath": null
     },
     {
-      "class": "AdminBugReportCardComponent",
-      "selector": "fd-admin-bug-report-card",
-      "feature": "admin-bugs",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-card.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-card.html",
-      "inputs": [
-        {
-          "name": "report",
-          "type": "AdminBugReport",
-          "required": true
-        },
-        {
-          "name": "pullRequestUrl",
-          "type": "string | null",
-          "required": false
-        }
-      ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
       "class": "AdminCatalogComponent",
       "selector": "fd-admin-catalog",
       "feature": "admin-catalog",
@@ -1367,16 +1346,6 @@
       "feature": "admin-lessons",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "AdminMailMessageDialogComponent",
-      "selector": "fd-admin-mail-message-dialog",
-      "feature": "admin-mail-inbox",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.html",
       "inputs": [],
       "outputs": [],
       "specPath": null

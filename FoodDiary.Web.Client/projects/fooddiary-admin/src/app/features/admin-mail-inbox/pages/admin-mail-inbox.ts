@@ -10,6 +10,7 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 import type { Subscription } from 'rxjs';
 
+import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage } from '../../../shared/period/admin-query';
@@ -147,14 +148,12 @@ export class AdminMailInboxComponent {
     }
 
     private applyPage(response: AdminMailInboxMessagePage): void {
+        if (restoreAdminPage(this.router, this.route, this.page(), { totalItems: response.totalItems, pageSize: this.pageSize })) {
+            return;
+        }
         this.totalItems.set(response.totalItems);
         this.unreadCount.set(response.unreadCount ?? null);
         this.readCount.set(response.readCount ?? null);
-        const lastPage = Math.max(1, Math.ceil(response.totalItems / this.pageSize));
-        if (this.page() > lastPage) {
-            this.goToPage(lastPage - 1);
-            return;
-        }
         this.messages.set(response.items);
         this.isLoading.set(false);
     }

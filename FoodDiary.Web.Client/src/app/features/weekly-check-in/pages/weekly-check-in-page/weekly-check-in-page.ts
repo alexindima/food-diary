@@ -58,6 +58,7 @@ export class WeeklyCheckInPageComponent {
 
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isRefreshing = this.facade.isRefreshing;
+    protected readonly hasDataError = this.facade.hasDataError;
     protected readonly thisWeek = this.facade.thisWeek;
     protected readonly review = this.facade.review;
     protected readonly summaryInsights = computed(
@@ -126,6 +127,10 @@ export class WeeklyCheckInPageComponent {
 
     protected retryNextWeekGoal(): void {
         this.facade.retryNextWeekGoal();
+    }
+
+    protected retryData(): void {
+        this.facade.retryData();
     }
 
     protected retrySelectedWeekGoal(): void {

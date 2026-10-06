@@ -10,6 +10,8 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
+import { MEAL_PLAN_LIST_QUERY_STATE } from '../../lib/list/meal-plan-list-query-state';
+import { MealPlanListRouteStateFacade } from '../../lib/list/meal-plan-list-route-state.facade';
 import { MealPlanFacade } from '../../lib/meal-plan.facade';
 import { buildMealPlanCards } from '../../lib/meal-plan-view.mapper';
 import type { DietType } from '../../models/meal-plan.data';
@@ -30,7 +32,11 @@ import { MEAL_PLANS_LIST_TOUR } from './meal-plans-list-tour';
         MealPlanListFiltersComponent,
         MealPlanListContentComponent,
     ],
-    providers: [MealPlanFacade],
+    providers: [
+        MealPlanFacade,
+        MealPlanListRouteStateFacade,
+        { provide: MEAL_PLAN_LIST_QUERY_STATE, useExisting: MealPlanListRouteStateFacade },
+    ],
     templateUrl: './meal-plans-list-page.html',
     styleUrl: './meal-plans-list-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

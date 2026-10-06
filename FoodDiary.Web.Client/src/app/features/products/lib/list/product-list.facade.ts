@@ -30,7 +30,9 @@ import { NavigationService } from '../../../../services/navigation.service';
 import { resolveProductImageUrl } from '../../../../shared/lib/product-image.util';
 import { RequestPagedData } from '../../../../shared/lib/request-paged-data';
 import { RequestStateController } from '../../../../shared/lib/request-state';
+import type { PageOf } from '../../../../shared/models/page-of.data';
 import { type FavoriteProduct, type Product, ProductFilters, ProductType } from '../../../../shared/models/product.data';
+import { resolvePaginationPage } from '../../../../shared/navigation/pagination-query.utils';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { QuickMealService } from '../../../meals/contracts/quick-meal';
 import { FavoriteProductService } from '../../api/favorite-product.service';
@@ -136,7 +138,9 @@ export class ProductListFacade {
         }),
     );
     public readonly hasActiveFilters = computed(() => this.activeFilterCount() > 0);
-    public readonly isEmptyState = computed(() => !this.hasVisibleProducts() && !this.hasSearchValue() && !this.hasActiveFilters());
+    public readonly isEmptyState = computed(
+        () => this.productData.totalItems === 0 && !this.hasVisibleProducts() && !this.hasSearchValue() && !this.hasActiveFilters(),
+    );
     public readonly allProductsSectionLabelKey = computed(() =>
         this.hasSearchValue() ? 'PRODUCT_LIST.SEARCH_RESULTS' : 'PRODUCT_LIST.ALL_PRODUCTS',
     );
@@ -325,7 +329,7 @@ export class ProductListFacade {
             takeUntil(this.cancelLoad),
             takeUntilDestroyed(this.destroyRef),
             tap(data => {
-                if (!this.productData.succeed(requestId, data)) {
+                if (!this.acceptPage(requestId, query, data)) {
                     return;
                 }
                 this.currentPageIndex = data.page - 1;
@@ -346,6 +350,7 @@ export class ProductListFacade {
         this.cancelLoad.next();
         const requestId = this.productData.begin();
         this.navigationError.set(null);
+        const query = this.currentQuery(this.queryState === null ? 1 : this.currentPageIndex + 1, this.searchValue());
 
         this.searchOpenFoodFacts(this.searchValue());
 
@@ -362,12 +367,15 @@ export class ProductListFacade {
                 takeUntil(this.cancelLoad),
                 takeUntilDestroyed(this.destroyRef),
                 tap(data => {
-                    if (!this.productData.succeed(requestId, data.allProducts)) {
+                    if (!this.isCurrentPageRequest(requestId, query)) {
                         return;
                     }
                     this.recentProducts.set(data.recentItems);
                     this.favorites.set(data.favoriteItems);
                     this.favoriteTotalCount.set(data.favoriteTotalCount);
+                    if (!this.acceptPage(requestId, query, data.allProducts)) {
+                        return;
+                    }
                     this.currentPageIndex = data.allProducts.page - 1;
                 }),
                 map(() => void 0),
@@ -632,6 +640,41 @@ export class ProductListFacade {
             caloriesTo: this.caloriesToFilter(),
             hasImage: this.hasImageFilter(),
         };
+    }
+
+    private acceptPage(requestId: number, query: ProductListQuery, data: PageOf<Product>): boolean {
+        if (!this.isCurrentPageRequest(requestId, query)) {
+            return false;
+        }
+        const page = resolvePaginationPage(data.page, data.totalPages);
+        if (page !== data.page) {
+            if (this.queryState !== null) {
+                this.replaceRouteQuery({ ...query, page });
+            } else {
+                this.loadProducts(page, this.pageSize, query.search).subscribe();
+            }
+            return false;
+        }
+        if (this.queryState !== null) {
+            void this.queryState.normalizePageAsync?.(query).catch(() => {
+                this.navigationError.set('ERRORS.LOAD_FAILED_TITLE');
+            });
+        }
+        return this.productData.succeed(requestId, data);
+    }
+
+    private isCurrentPageRequest(requestId: number, query: ProductListQuery): boolean {
+        return (
+            this.productData.isCurrent(requestId) &&
+            (this.queryState === null ||
+                productListQueryKey(query) === productListQueryKey(this.currentQuery(this.currentPageIndex + 1, this.searchValue())))
+        );
+    }
+
+    private replaceRouteQuery(query: ProductListQuery): void {
+        void this.queryState?.writeAsync(query, { replaceUrl: true }).catch(() => {
+            this.navigationError.set('ERRORS.LOAD_FAILED_TITLE');
+        });
     }
 
     private applyRouteQuery(query: ProductListQuery): void {

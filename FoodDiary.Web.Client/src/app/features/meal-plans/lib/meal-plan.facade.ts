@@ -4,10 +4,13 @@ import { finalize, firstValueFrom } from 'rxjs';
 
 import { normalizeMealType } from '../../../shared/lib/meal-type.util';
 import type { PageOf } from '../../../shared/models/page-of.data';
+import { resolvePaginationPage } from '../../../shared/navigation/pagination-query.utils';
 import { QuickMealService } from '../../meals/contracts/quick-meal';
 import { RECIPE_LOOKUP } from '../../recipes/contracts/recipe-lookup';
 import { MealPlanService } from '../api/meal-plan.service';
 import type { DietType, MealPlan, MealPlanMeal, MealPlanSummary } from '../models/meal-plan.data';
+import { type MealPlanListQuery, mealPlanListQueryKey } from './list/meal-plan-list-query';
+import { MEAL_PLAN_LIST_QUERY_STATE } from './list/meal-plan-list-query-state';
 
 @Injectable()
 export class MealPlanFacade {
@@ -15,19 +18,21 @@ export class MealPlanFacade {
     private readonly service = inject(MealPlanService);
     private readonly recipeLookup = inject(RECIPE_LOOKUP);
     private readonly quickMeal = inject(QuickMealService);
+    private readonly queryState = inject(MEAL_PLAN_LIST_QUERY_STATE, { optional: true });
+    private readonly initialQuery: MealPlanListQuery = this.queryState?.initial ?? { page: 1, dietType: null };
     public readonly hasMealDraft = this.quickMeal.hasItems;
     public readonly addingMealId = signal<string | null>(null);
     private readonly selectedPlanId = signal<string | null>(null);
 
-    public readonly dietTypeFilter = signal<DietType | null>(null);
-    public readonly pageIndex = signal(0);
+    public readonly dietTypeFilter = signal(this.initialQuery.dietType);
+    public readonly pageIndex = signal(this.initialQuery.page - 1);
     public readonly pageSize = 50;
-    private readonly lastLoadedPage = signal<PageOf<MealPlanSummary> | null>(null);
+    private readonly lastLoadedPage = signal<{ dietType: DietType | null; page: PageOf<MealPlanSummary> } | null>(null);
     public readonly pendingAction = signal<'adopt' | 'shopping' | 'delete' | null>(null);
     public readonly actionErrorKey = signal<string | null>(null);
     private readonly plansResource = resource({
-        params: () => ({ dietType: this.dietTypeFilter(), page: this.pageIndex() + 1 }),
-        loader: async ({ params }) => firstValueFrom(this.service.getPage(params.dietType ?? undefined, params.page, this.pageSize)),
+        params: () => this.currentListQuery(),
+        loader: async ({ params }): Promise<{ key: string; page: PageOf<MealPlanSummary> }> => this.loadListPageAsync(params),
     });
     private readonly selectedPlanResource = resource({
         params: () => this.selectedPlanId(),
@@ -40,10 +45,8 @@ export class MealPlanFacade {
         },
     });
 
-    public readonly plans = computed(() => (this.plansResource.hasValue() ? this.plansResource.value().data : []));
-    public readonly totalItems = computed(() =>
-        this.plansResource.hasValue() ? this.plansResource.value().totalItems : (this.lastLoadedPage()?.totalItems ?? 0),
-    );
+    public readonly plans = computed(() => this.currentLoadedPage()?.data ?? []);
+    public readonly totalItems = computed(() => this.currentLoadedPage()?.totalItems ?? this.cachedListPage()?.totalItems ?? 0);
     public readonly isLoading = computed(() => this.plansResource.isLoading());
     public readonly hasLoadError = computed(() => this.plansResource.error() !== undefined);
     public readonly selectedPlan = computed(() =>
@@ -52,14 +55,19 @@ export class MealPlanFacade {
     public readonly isDetailLoading = computed(() => this.selectedPlanResource.isLoading());
 
     public constructor() {
+        this.connectListRoute();
         effect(() => {
-            if (this.plansResource.hasValue()) {
-                this.lastLoadedPage.set(this.plansResource.value());
+            const page = this.currentLoadedPage();
+            if (page !== null) {
+                this.lastLoadedPage.set({ dietType: this.currentListQuery().dietType, page });
             }
         });
     }
 
-    public loadPlans(filter: DietType | null = null): void {
+    public loadPlans(filter?: DietType | null): void {
+        if (filter === undefined) {
+            return;
+        }
         if (filter !== this.dietTypeFilter()) {
             this.pageIndex.set(0);
             this.lastLoadedPage.set(null);
@@ -74,6 +82,60 @@ export class MealPlanFacade {
 
     public retryPlans(): void {
         this.plansResource.reload();
+    }
+
+    private connectListRoute(): void {
+        if (this.queryState === null) {
+            return;
+        }
+        this.queryState.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(query => {
+            this.dietTypeFilter.set(query.dietType);
+            this.pageIndex.set(query.page - 1);
+        });
+        effect(() => {
+            this.writeListQuery({ page: this.pageIndex() + 1, dietType: this.dietTypeFilter() });
+        });
+        void this.queryState.normalizePageAsync().catch(() => {
+            /* Retain the current catalogue if navigation fails. */
+        });
+    }
+
+    private currentListQuery(): MealPlanListQuery {
+        return this.queryState?.current() ?? { page: this.pageIndex() + 1, dietType: this.dietTypeFilter() };
+    }
+
+    private currentLoadedPage(): PageOf<MealPlanSummary> | null {
+        if (!this.plansResource.hasValue()) {
+            return null;
+        }
+        const loaded = this.plansResource.value();
+        return loaded.key === mealPlanListQueryKey(this.currentListQuery()) ? loaded.page : null;
+    }
+
+    private cachedListPage(): PageOf<MealPlanSummary> | null {
+        const loaded = this.lastLoadedPage();
+        return loaded?.dietType === this.currentListQuery().dietType ? loaded.page : null;
+    }
+
+    private async loadListPageAsync(query: MealPlanListQuery): Promise<{ key: string; page: PageOf<MealPlanSummary> }> {
+        const key = mealPlanListQueryKey(query);
+        const page = await firstValueFrom(this.service.getPage(query.dietType ?? undefined, query.page, this.pageSize));
+        if (key === mealPlanListQueryKey(this.currentListQuery())) {
+            const resolved = resolvePaginationPage(query.page, page.totalPages);
+            if (resolved !== query.page) {
+                this.pageIndex.set(resolved - 1);
+                this.writeListQuery({ ...query, page: resolved }, true);
+            }
+        }
+        return { key, page };
+    }
+
+    private writeListQuery(query: MealPlanListQuery, replaceUrl = false): void {
+        if (this.queryState !== null) {
+            void this.queryState.writeAsync(query, { replaceUrl }).catch(() => {
+                /* Keep successful catalogue data on navigation failure. */
+            });
+        }
     }
 
     public loadPlan(id: string): void {

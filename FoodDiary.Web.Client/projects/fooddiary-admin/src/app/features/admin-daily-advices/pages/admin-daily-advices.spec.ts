@@ -1,11 +1,12 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter, Router } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminDailyAdvicesService } from '../api/admin-daily-advices.service';
 import { DAILY_ADVICE_IMPORT_EXAMPLE } from '../lib/daily-advice-import';
-import type { AdminDailyAdvicesImportResponse } from '../models/admin-daily-advice.models';
+import type { AdminDailyAdvice, AdminDailyAdvicesImportResponse } from '../models/admin-daily-advice.models';
 import { AdminDailyAdvicesComponent } from './admin-daily-advices';
 
 describe('daily advices page', () => {
@@ -16,7 +17,11 @@ describe('daily advices page', () => {
         importAdvices.mockReset().mockReturnValue(of({ importedCount: 2, skippedCount: 0 }));
         await TestBed.configureTestingModule({
             imports: [AdminDailyAdvicesComponent],
-            providers: [...provideTranslateTesting(), { provide: AdminDailyAdvicesService, useValue: { getAll, importAdvices } }],
+            providers: [
+                provideRouter([]),
+                ...provideTranslateTesting(),
+                { provide: AdminDailyAdvicesService, useValue: { getAll, importAdvices } },
+            ],
         }).compileComponents();
     });
 
@@ -73,5 +78,41 @@ describe('daily advices page', () => {
         expect((fixture.nativeElement as HTMLElement).querySelector('fd-admin-load-error')).not.toBeNull();
         fixture.componentInstance['loadAdvices']();
         expect(fixture.componentInstance['loadFailed']()).toBe(false);
+    });
+});
+
+describe('daily advices pagination', () => {
+    const getAll = vi.fn();
+    beforeEach(async () => {
+        getAll.mockReset().mockReturnValue(of([]));
+        await TestBed.configureTestingModule({
+            imports: [AdminDailyAdvicesComponent],
+            providers: [provideRouter([]), ...provideTranslateTesting(), { provide: AdminDailyAdvicesService, useValue: { getAll } }],
+        }).compileComponents();
+    });
+
+    it('keeps URL paging on reload and recovers a stale page after the list shrinks', async () => {
+        const items: AdminDailyAdvice[] = Array.from({ length: 26 }, (_, index) => ({
+            id: `advice-${index}`,
+            ru: `Совет ${index}`,
+            en: `Advice ${index}`,
+            weight: 1,
+            tag: null,
+        }));
+        getAll.mockReturnValue(of(items));
+        const router = TestBed.inject(Router);
+        await router.navigateByUrl('/?page=2');
+        const fixture = TestBed.createComponent(AdminDailyAdvicesComponent);
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(fixture.componentInstance['page']()).toBe(1);
+        expect(fixture.componentInstance['pageItems']()[0]?.id).toBe('advice-25');
+        expect(new URL(router.url, 'http://localhost').searchParams.get('page')).toBe('2');
+        getAll.mockReturnValueOnce(of(items.slice(0, 1)));
+        fixture.componentInstance['loadAdvices']();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(fixture.componentInstance['pageItems']()[0]?.id).toBe('advice-0');
+        expect(new URL(router.url, 'http://localhost').searchParams.get('page')).toBe('1');
     });
 });
