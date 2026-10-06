@@ -8,6 +8,7 @@ sources:
   - .llm-wiki/tools/Find-LlmWikiFrontendContract.ps1
   - .llm-wiki/tools/Get-LlmWikiFrontendRuntimeOwner.ps1
   - FoodDiary.Web.Client/AGENTS.md
+  - docs/frontend/API_SDK.md
 ---
 
 # Frontend contract review
@@ -35,6 +36,12 @@ components, services, and navigation. API-call discovery covers direct
 extending `ApiService`. Inherited calls record the owning public method, base
 URL expression, endpoint argument, and combined URL expression, so queries such
 as `linkGoogle` and `google/link` resolve the same call.
+
+For the Products SDK pilot, also follow the feature adapter to the concrete
+generated method and `FoodDiary.Web.Client/api-sdk/products.openapi.json`.
+The SDK carries wire DTOs; application models and response/error normalization
+remain in adapters. Regenerate after API changes and run `npm run sdk:check:api`
+to verify the live contract alongside the usual feature tests and compiler.
 
 Angular signal contracts include typed and inferred `input()` / `output()`
 members, including nested generic types such as `input<readonly Item[]>([])`.

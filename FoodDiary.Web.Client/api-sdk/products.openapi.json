@@ -1,0 +1,1966 @@
+{
+    "components": {
+        "schemas": {
+            "ApiErrorHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "error": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "errors": {
+                        "additionalProperties": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        "nullable": true,
+                        "type": "object"
+                    },
+                    "message": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "traceId": {
+                        "nullable": true,
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "CreateProductHttpRequest": {
+                "additionalProperties": false,
+                "properties": {
+                    "alcoholPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "barcode": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "baseAmount": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "baseUnit": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "brand": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "caloriesPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "carbsPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "category": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "comment": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "defaultPortionAmount": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "description": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "fatsPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "fiberPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "imageAssetId": {
+                        "format": "uuid",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "imageAssetIds": {
+                        "items": {
+                            "format": "uuid",
+                            "type": "string"
+                        },
+                        "nullable": true,
+                        "type": "array"
+                    },
+                    "imageUrl": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "name": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "productType": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "proteinsPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "visibility": {
+                        "nullable": true,
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "FavoriteProductHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "alcoholPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "barcode": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "baseUnit": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "brand": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "caloriesPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "carbsPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "comment": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "createdAtUtc": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "defaultPortionAmount": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "fatsPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "fiberPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "id": {
+                        "format": "uuid",
+                        "type": "string"
+                    },
+                    "imageUrl": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "imageUrls": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true,
+                        "type": "array"
+                    },
+                    "isOwnedByCurrentUser": {
+                        "type": "boolean"
+                    },
+                    "name": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "preferredPortionAmount": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "productId": {
+                        "format": "uuid",
+                        "type": "string"
+                    },
+                    "productName": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "proteinsPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "qualityGrade": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "qualityScore": {
+                        "format": "int32",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "ProductHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "alcoholPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "barcode": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "baseAmount": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "baseUnit": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "brand": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "caloriesPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "carbsPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "category": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "comment": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "defaultPortionAmount": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "description": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "fatsPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "favoriteProductId": {
+                        "format": "uuid",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "fiberPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "id": {
+                        "format": "uuid",
+                        "type": "string"
+                    },
+                    "imageAssetId": {
+                        "format": "uuid",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "imageUrl": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "images": {
+                        "items": {
+                            "$ref": "#/components/schemas/ProductImageHttpResponse"
+                        },
+                        "nullable": true,
+                        "type": "array"
+                    },
+                    "isFavorite": {
+                        "type": "boolean"
+                    },
+                    "isOwnedByCurrentUser": {
+                        "type": "boolean"
+                    },
+                    "name": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "productType": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "proteinsPerBase": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "qualityGrade": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "qualityScore": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "usageCount": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "usdaFdcId": {
+                        "format": "int32",
+                        "nullable": true,
+                        "type": "integer"
+                    },
+                    "visibility": {
+                        "nullable": true,
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ProductHttpResponsePagedHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "data": {
+                        "items": {
+                            "$ref": "#/components/schemas/ProductHttpResponse"
+                        },
+                        "nullable": true,
+                        "type": "array"
+                    },
+                    "limit": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "page": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "totalItems": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "totalPages": {
+                        "format": "int32",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "ProductImageHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "imageAssetId": {
+                        "format": "uuid",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "imageUrl": {
+                        "nullable": true,
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ProductOverviewHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "allProducts": {
+                        "$ref": "#/components/schemas/ProductHttpResponsePagedHttpResponse"
+                    },
+                    "favoriteItems": {
+                        "items": {
+                            "$ref": "#/components/schemas/FavoriteProductHttpResponse"
+                        },
+                        "nullable": true,
+                        "type": "array"
+                    },
+                    "favoriteTotalCount": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "recentItems": {
+                        "items": {
+                            "$ref": "#/components/schemas/ProductHttpResponse"
+                        },
+                        "nullable": true,
+                        "type": "array"
+                    }
+                },
+                "type": "object"
+            },
+            "ProductSearchSuggestionHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "barcode": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "brand": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "caloriesPer100G": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "carbsPer100G": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "category": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "fatsPer100G": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "fiberPer100G": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "imageUrl": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "name": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "proteinsPer100G": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "source": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "usdaFdcId": {
+                        "format": "int32",
+                        "nullable": true,
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "PublicProductHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "alcohol": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "baseAmount": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "baseUnit": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "brand": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "calories": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "carbs": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "description": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "fats": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "fiber": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "id": {
+                        "format": "uuid",
+                        "type": "string"
+                    },
+                    "imageUrl": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "images": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true,
+                        "type": "array"
+                    },
+                    "name": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "proteins": {
+                        "format": "double",
+                        "type": "number"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateProductHttpRequest": {
+                "additionalProperties": false,
+                "properties": {
+                    "alcoholPerBase": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "barcode": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "baseAmount": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "baseUnit": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "brand": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "caloriesPerBase": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "carbsPerBase": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "category": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "clearBarcode": {
+                        "type": "boolean"
+                    },
+                    "clearBrand": {
+                        "type": "boolean"
+                    },
+                    "clearCategory": {
+                        "type": "boolean"
+                    },
+                    "clearComment": {
+                        "type": "boolean"
+                    },
+                    "clearDescription": {
+                        "type": "boolean"
+                    },
+                    "clearImageAssetId": {
+                        "type": "boolean"
+                    },
+                    "clearImageUrl": {
+                        "type": "boolean"
+                    },
+                    "comment": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "defaultPortionAmount": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "description": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "fatsPerBase": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "fiberPerBase": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "imageAssetId": {
+                        "format": "uuid",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "imageAssetIds": {
+                        "items": {
+                            "format": "uuid",
+                            "type": "string"
+                        },
+                        "nullable": true,
+                        "type": "array"
+                    },
+                    "imageUrl": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "name": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "productType": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "proteinsPerBase": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "visibility": {
+                        "nullable": true,
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "Bearer": {
+                "bearerFormat": "JWT",
+                "description": "JWT Authorization header using the Bearer scheme.",
+                "scheme": "bearer",
+                "type": "http"
+            }
+        }
+    },
+    "info": {
+        "title": "FoodDiary Products API",
+        "version": "1.0.0"
+    },
+    "openapi": "3.0.4",
+    "paths": {
+        "/api/v{version}/products": {
+            "get": {
+                "operationId": "queryProducts",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "Page",
+                        "schema": {
+                            "default": 1,
+                            "format": "int32",
+                            "maximum": 10000,
+                            "minimum": 1,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "Limit",
+                        "schema": {
+                            "default": 10,
+                            "format": "int32",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "Search",
+                        "schema": {
+                            "maxLength": 128,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "IncludePublic",
+                        "schema": {
+                            "default": true,
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "ProductTypes",
+                        "schema": {
+                            "maxLength": 256,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "CaloriesFrom",
+                        "schema": {
+                            "format": "double",
+                            "minimum": 0,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "CaloriesTo",
+                        "schema": {
+                            "format": "double",
+                            "minimum": 0,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "HasImage",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductHttpResponsePagedHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductHttpResponsePagedHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductHttpResponsePagedHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": ["Products"]
+            },
+            "post": {
+                "operationId": "createProduct",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Deduplicates retries of this POST request for 24 hours.",
+                        "in": "header",
+                        "name": "Idempotency-Key",
+                        "schema": {
+                            "maxLength": 128,
+                            "minLength": 1,
+                            "pattern": "^[A-Za-z0-9._:-]+$",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateProductHttpRequest"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateProductHttpRequest"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateProductHttpRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Created"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Forbidden"
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Conflict"
+                    },
+                    "413": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Payload Too Large"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Service Unavailable"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": ["Products"]
+            }
+        },
+        "/api/v{version}/products/overview": {
+            "get": {
+                "operationId": "getProductsOverview",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "Page",
+                        "schema": {
+                            "default": 1,
+                            "format": "int32",
+                            "maximum": 10000,
+                            "minimum": 1,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "Limit",
+                        "schema": {
+                            "default": 10,
+                            "format": "int32",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "RecentLimit",
+                        "schema": {
+                            "default": 10,
+                            "format": "int32",
+                            "maximum": 50,
+                            "minimum": 1,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "FavoriteLimit",
+                        "schema": {
+                            "default": 10,
+                            "format": "int32",
+                            "maximum": 50,
+                            "minimum": 0,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "Search",
+                        "schema": {
+                            "maxLength": 128,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "IncludePublic",
+                        "schema": {
+                            "default": true,
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "ProductTypes",
+                        "schema": {
+                            "maxLength": 256,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "CaloriesFrom",
+                        "schema": {
+                            "format": "double",
+                            "minimum": 0,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "CaloriesTo",
+                        "schema": {
+                            "format": "double",
+                            "minimum": 0,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "HasImage",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductOverviewHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductOverviewHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductOverviewHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": ["Products"]
+            }
+        },
+        "/api/v{version}/products/public/{id}": {
+            "get": {
+                "operationId": "getPublicProductById",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PublicProductHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PublicProductHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PublicProductHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [],
+                "tags": ["Products"]
+            }
+        },
+        "/api/v{version}/products/recent": {
+            "get": {
+                "operationId": "getRecentProducts",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "Limit",
+                        "schema": {
+                            "default": 10,
+                            "format": "int32",
+                            "maximum": 50,
+                            "minimum": 1,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "IncludePublic",
+                        "schema": {
+                            "default": true,
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProductHttpResponse"
+                                    },
+                                    "type": "array"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProductHttpResponse"
+                                    },
+                                    "type": "array"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProductHttpResponse"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": ["Products"]
+            }
+        },
+        "/api/v{version}/products/suggestions": {
+            "get": {
+                "operationId": "getProductSuggestions",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "schema": {
+                            "maxLength": 100,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "schema": {
+                            "default": 5,
+                            "format": "int32",
+                            "maximum": 20,
+                            "minimum": 1,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProductSearchSuggestionHttpResponse"
+                                    },
+                                    "type": "array"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProductSearchSuggestionHttpResponse"
+                                    },
+                                    "type": "array"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProductSearchSuggestionHttpResponse"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "429": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": ["Products"]
+            }
+        },
+        "/api/v{version}/products/{id}": {
+            "delete": {
+                "operationId": "deleteProduct",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": ["Products"]
+            },
+            "get": {
+                "operationId": "getProductById",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": ["Products"]
+            },
+            "patch": {
+                "operationId": "updateProduct",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProductHttpRequest"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProductHttpRequest"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProductHttpRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Conflict"
+                    },
+                    "413": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Payload Too Large"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": ["Products"]
+            }
+        },
+        "/api/v{version}/products/{id}/duplicate": {
+            "post": {
+                "operationId": "duplicateProduct",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Deduplicates retries of this POST request for 24 hours.",
+                        "in": "header",
+                        "name": "Idempotency-Key",
+                        "schema": {
+                            "maxLength": 128,
+                            "minLength": 1,
+                            "pattern": "^[A-Za-z0-9._:-]+$",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Conflict"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Service Unavailable"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": ["Products"]
+            }
+        }
+    }
+}

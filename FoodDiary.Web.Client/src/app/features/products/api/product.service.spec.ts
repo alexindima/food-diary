@@ -325,6 +325,25 @@ function createProductRequest(): CreateProductRequest {
 }
 
 describe('Product mutation failures', () => {
+    it('maps generated suggestion DTOs without losing nullable fields or zero nutrition values', () => {
+        const suggestion = { source: 'usda', name: 'Rice', barcode: null, imageUrl: null, caloriesPer100G: 0 };
+        let received: unknown;
+        service.searchSuggestions('rice').subscribe(value => {
+            received = value;
+        });
+        const request = httpMock.expectOne(r => r.url === `${BASE_URL}/suggestions`);
+        expect(request.request.withCredentials).toBe(true);
+        request.flush([suggestion]);
+        expect(received).toEqual([suggestion]);
+    });
+    it('uses the existing suggestion fallback when the wire response cannot become an application model', () => {
+        let received: unknown;
+        service.searchSuggestions('rice').subscribe(value => {
+            received = value;
+        });
+        httpMock.expectOne(r => r.url === `${BASE_URL}/suggestions`).flush([{ source: 'unsupported', name: 'Rice' }]);
+        expect(received).toEqual([]);
+    });
     it.each(['create', 'update', 'delete', 'duplicate'] as const)('propagates %s failure to the caller', action => {
         const payload: CreateProductRequest = { ...MOCK_PRODUCT, productType: ProductType.Meat };
         const result: Observable<unknown> =

@@ -1,6 +1,6 @@
 {
-  "dateLabel": "September 2026",
-  "updatedAt": "September 7, 2026",
+  "dateLabel": "October 2026",
+  "updatedAt": "October 6, 2026",
   "entries": [
     {"id":"dotnet","name":".NET","quadrant":0,"ring":0,"description":"Primary backend platform for APIs, background jobs, and independent MailInbox, MailRelay, and BugTriage services.","reviewedAt":"2026-09-07","evidence":[{"label":"Solution graph","path":"FoodDiary.slnx"},{"label":"Shared package versions","path":"Directory.Packages.props"},{"label":"BugTriage host","path":"Services/BugTriage/FoodDiary.BugTriage.WebApi/Program.cs"}]},
     {"id":"angular","name":"Angular","quadrant":0,"ring":0,"description":"Production web platform for the FoodDiary client, admin application, and shared UI packages.","reviewedAt":"2026-08-25","evidence":[{"label":"Frontend workspace","path":"FoodDiary.Web.Client/package.json"},{"label":"Frontend architecture","path":"docs/frontend/FRONTEND_ARCHITECTURE.md"}]},
@@ -16,6 +16,7 @@
     {"id":"playwright","name":"Playwright","quadrant":2,"ring":0,"description":"Browser-level verification for critical user journeys and visual behavior.","reviewedAt":"2026-08-25","evidence":[{"label":"Frontend workspace","path":"FoodDiary.Web.Client/package.json"},{"label":"E2E documentation","path":"FoodDiary.Web.Client/e2e/README.md"}]},
     {"id":"architecture-tests","name":"Architecture Tests","quadrant":2,"ring":0,"description":"Executable dependency, naming, transaction, and build workflow guardrails, including isolation of MailInbox, MailRelay, and BugTriage.","reviewedAt":"2026-09-07","evidence":[{"label":"Architecture test suite","path":"Tooling/tests/FoodDiary.ArchitectureTests"}]},
     {"id":"contract-snapshots","name":"API Contract Snapshots","quadrant":2,"ring":0,"description":"Swagger-visible routes, payloads, and status codes are protected against accidental drift.","reviewedAt":"2026-08-25","evidence":[{"label":"Contract policy","path":"docs/adr/0005-api-contract-snapshot-policy.md"},{"label":"Snapshot suite","path":"Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots"}]},
-    {"id":"llm-wiki","name":"Repository Knowledge Graph","quadrant":1,"ring":1,"description":"Compiled repository navigation supports research, impact analysis, verification, and governed delivery.","reviewedAt":"2026-08-25","evidence":[{"label":"Wiki index","path":".llm-wiki/index.md"}]}
+    {"id":"llm-wiki","name":"Repository Knowledge Graph","quadrant":1,"ring":1,"description":"Compiled repository navigation supports research, impact analysis, verification, and governed delivery.","reviewedAt":"2026-08-25","evidence":[{"label":"Wiki index","path":".llm-wiki/index.md"}]},
+    {"id":"openapi-sdk","name":"OpenAPI-generated SDK","quadrant":1,"ring":1,"description":"Trial of generated Angular HTTP clients and wire types. The Products pilot uses the SDK for suggestions and deletion, with CI checking the live API contract and reproducible generation. Feature adapters preserve application models and error handling.","reviewedAt":"2026-10-06","evidence":[{"label":"SDK pilot and workflow","path":"docs/frontend/API_SDK.md"},{"label":"Pinned generator","path":"FoodDiary.Web.Client/api-sdk/generator.json"},{"label":"Products adapter","path":"FoodDiary.Web.Client/src/app/features/products/api/product.service.ts"},{"label":"SDK contract checks","path":".github/workflows/ci-tests.yml"}]}
   ]
 }

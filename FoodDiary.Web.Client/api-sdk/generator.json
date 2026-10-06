@@ -1,0 +1,14 @@
+{
+    "version": "7.25.0",
+    "sha256": "41ce4f6b07f196676439d710759fa1ced7a08066d06ff1bf314681470289efae",
+    "additionalProperties": {
+        "ngVersion": "22.2.1",
+        "rxjsVersion": "7.8.2",
+        "tsVersion": "6.0.3",
+        "serviceSuffix": "Sdk",
+        "fileNaming": "kebab-case",
+        "providedIn": "none",
+        "useSingleRequestParameter": true,
+        "hideGenerationTimestamp": true
+    }
+}

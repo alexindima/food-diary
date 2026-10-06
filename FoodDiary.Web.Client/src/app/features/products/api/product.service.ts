@@ -1,8 +1,11 @@
+import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { catchError, map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
+import type { ProductSearchSuggestionHttpResponse } from '../../../shared/api/sdk/generated/model/product-search-suggestion-http-response';
+import { createProductsSdk } from '../../../shared/api/sdk/products-sdk';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type {
@@ -30,6 +33,7 @@ export class ProductService extends ApiService {
     private readonly defaultLimits = inject(PRODUCT_API_LIMITS);
 
     protected readonly baseUrl = environment.apiUrls.products;
+    private readonly sdk = createProductsSdk(this.baseUrl, inject(HttpClient));
 
     public query(page: number, limit: number, filters?: ProductFilters, includePublic = true): Observable<PageOf<Product>> {
         const params: Record<string, string | number | boolean> = { page, limit, includePublic };
@@ -107,9 +111,12 @@ export class ProductService extends ApiService {
     }
 
     public searchSuggestions(search: string, limit?: number): Observable<ProductSearchSuggestion[]> {
-        return this.get<ProductSearchSuggestion[]>('suggestions', { search, limit: limit ?? this.defaultLimits.suggestions }).pipe(
-            catchError((error: unknown) => fallbackApiError('Search product suggestions error', error, [])),
-        );
+        return this.sdk.client
+            .getProductSuggestions({ version: this.sdk.version, search, limit: limit ?? this.defaultLimits.suggestions })
+            .pipe(
+                map(suggestions => suggestions.map(toProductSuggestion)),
+                catchError((error: unknown) => fallbackApiError('Search product suggestions error', error, [])),
+            );
     }
 
     public create(data: CreateProductRequest): Observable<Product> {
@@ -127,7 +134,10 @@ export class ProductService extends ApiService {
     }
 
     public deleteById(id: string): Observable<void> {
-        return this.delete<void>(id).pipe(catchError((error: unknown) => rethrowApiError('Delete product error', error)));
+        return this.sdk.client.deleteProduct({ version: this.sdk.version, id }).pipe(
+            map(() => {}),
+            catchError((error: unknown) => rethrowApiError('Delete product error', error)),
+        );
     }
 
     public duplicate(id: string): Observable<Product> {
@@ -136,4 +146,12 @@ export class ProductService extends ApiService {
             catchError((error: unknown) => rethrowApiError('Duplicate product error', error)),
         );
     }
+}
+
+function toProductSuggestion(response: ProductSearchSuggestionHttpResponse): ProductSearchSuggestion {
+    const { source, name } = response;
+    if (typeof name !== 'string' || (source !== 'openFoodFacts' && source !== 'usda')) {
+        throw new Error('Product suggestion does not match the supported application model.');
+    }
+    return { ...response, source, name };
 }

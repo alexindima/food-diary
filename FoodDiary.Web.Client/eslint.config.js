@@ -1516,6 +1516,7 @@ const localTsPlugin = {
 export default [
     {
         ignores: [
+            'src/app/shared/api/sdk/generated/**',
             '**/node_modules/**',
             '**/dist/**',
             '**/dist-admin/**',

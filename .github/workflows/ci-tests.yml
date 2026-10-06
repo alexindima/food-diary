@@ -231,6 +231,40 @@ jobs:
           file: FoodDiary.TechRadar/Dockerfile
           push: false
 
+  api-sdk:
+    name: Products API SDK contract and generation
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          dotnet-version: 10.0.102
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: FoodDiary.Web.Client/package-lock.json
+      - name: Setup Java for the pinned SDK generator
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Install SDK formatting dependencies
+        working-directory: FoodDiary.Web.Client
+        run: npm ci --ignore-scripts
+      - name: Test SDK contract selection
+        working-directory: FoodDiary.Web.Client
+        run: npm run test:sdk
+      - name: Check live API contract and generated SDK
+        working-directory: FoodDiary.Web.Client
+        run: npm run sdk:check:api
+
   backend-format:
     name: Backend formatting and full solution build
     runs-on: ubuntu-latest
