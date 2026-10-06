@@ -1,6 +1,10 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { inject, PLATFORM_ID, RendererFactory2, Service } from '@angular/core';
 
+import type { BillingPlan } from '../../../shared/models/billing.models';
+import type { PaddlePlanPriceIds, PremiumPlanPrice } from '../models/premium-plan-price';
+import { mapPaddlePlanPrices } from './paddle-price-preview.mapper';
+
 export type PaddleEnvironment = 'sandbox' | 'production';
 
 type PaddleCheckoutEvent = {
@@ -39,6 +43,7 @@ declare global {
             Checkout: {
                 open: (config: { transactionId: string; settings?: PaddleCheckoutSettings }) => void;
             };
+            PricePreview?: (config: { items: Array<{ priceId: string; quantity: number }> }) => Promise<unknown>;
         };
     }
 }
@@ -53,6 +58,28 @@ export class PaddleCheckoutService {
     private scriptLoadPromise: Promise<void> | null = null;
     private initializedToken: string | null = null;
     private initializedEnvironment: PaddleEnvironment | null = null;
+    private initializationPromise: Promise<void> | null = null;
+
+    public async previewPlanPricesAsync(
+        priceIds: PaddlePlanPriceIds,
+        options: PaddleInitOptions,
+    ): Promise<Record<BillingPlan, PremiumPlanPrice>> {
+        await this.initializeAsync(options);
+        const paddle = this.document.defaultView?.Paddle;
+        if (paddle?.PricePreview === undefined) {
+            throw new Error('Paddle price preview is unavailable');
+        }
+
+        const response = await withPaddleTimeoutAsync(
+            paddle.PricePreview({
+                items: [
+                    { priceId: priceIds.monthly, quantity: 1 },
+                    { priceId: priceIds.yearly, quantity: 1 },
+                ],
+            }),
+        );
+        return mapPaddlePlanPrices(response, priceIds);
+    }
 
     public async openTransactionCheckoutAsync(transactionId: string, options: PaddleInitOptions): Promise<void> {
         if (!this.isBrowser) {
@@ -87,6 +114,25 @@ export class PaddleCheckoutService {
             return;
         }
 
+        if (this.initializationPromise !== null) {
+            await this.initializationPromise;
+            if (this.initializedToken === options.token && this.initializedEnvironment === options.environment) {
+                return;
+            }
+        }
+
+        const initialization = this.initializePaddleAsync(options);
+        this.initializationPromise = initialization;
+        try {
+            await initialization;
+        } finally {
+            if (this.initializationPromise === initialization) {
+                this.initializationPromise = null;
+            }
+        }
+    }
+
+    private async initializePaddleAsync(options: PaddleInitOptions): Promise<void> {
         await this.loadScriptAsync();
 
         const paddle = this.document.defaultView?.Paddle;
@@ -162,10 +208,30 @@ export class PaddleCheckoutService {
             this.renderer.appendChild(this.document.head, script);
         });
 
-        return this.scriptLoadPromise;
+        await withPaddleTimeoutAsync(this.scriptLoadPromise).catch(error => {
+            this.scriptLoadPromise = null;
+            const failedScript = this.document.querySelector<HTMLScriptElement>(`script[src="${this.scriptUrl}"]`);
+            failedScript?.remove();
+            throw error;
+        });
     }
 
     private buildSuccessUrl(): string {
         return `${this.document.location.origin}/premium?checkout=success`;
+    }
+}
+
+async function withPaddleTimeoutAsync<T>(operation: Promise<T>): Promise<T> {
+    const requestTimeoutMs = 15000;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    const deadline = new Promise<never>((_, reject) => {
+        timeout = setTimeout(() => {
+            reject(new Error('Paddle request timed out'));
+        }, requestTimeoutMs);
+    });
+    try {
+        return await Promise.race([operation, deadline]);
+    } finally {
+        clearTimeout(timeout);
     }
 }

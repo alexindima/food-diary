@@ -19,7 +19,9 @@ describe('MealPlanDetailHeaderComponent', () => {
         const customFixture = createComponent({ isCurated: false });
 
         expect(getElement(curatedFixture).querySelectorAll('fd-ui-button')).toHaveLength(2);
-        expect(getElement(customFixture).querySelectorAll('fd-ui-button')).toHaveLength(1);
+        expect(getElement(customFixture).querySelectorAll('fd-ui-button')).toHaveLength(2);
+        expect(getElement(curatedFixture).textContent).not.toContain('MEAL_PLANS.DELETE_PLAN');
+        expect(getElement(customFixture).textContent).toContain('MEAL_PLANS.DELETE_PLAN');
     });
 
     it('emits header actions', () => {
@@ -35,6 +37,20 @@ describe('MealPlanDetailHeaderComponent', () => {
 
         expect(adoptPlan).toHaveBeenCalled();
         expect(generateShoppingList).toHaveBeenCalled();
+    });
+
+    it('shows removal progress and disables the native actions while deleting', () => {
+        const fixture = createComponent({ isCurated: false });
+        const deleted = vi.fn();
+        fixture.componentInstance.deletePlan.subscribe(deleted);
+        fixture.componentRef.setInput('pendingAction', 'delete');
+        fixture.detectChanges();
+        const buttons = Array.from(getElement(fixture).querySelectorAll<HTMLButtonElement>('button'));
+        const remove = buttons.find(button => button.textContent.includes('MEAL_PLANS.DELETE_PLAN'));
+        expect(buttons.every(button => button.disabled)).toBe(true);
+        expect(remove?.getAttribute('aria-busy')).toBe('true');
+        remove?.click();
+        expect(deleted).not.toHaveBeenCalled();
     });
 });
 

@@ -185,14 +185,6 @@
         color: var(--fd-color-slate-600);
     }
 
-    &__cropper-backdrop {
-        position: fixed;
-        inset: 0;
-        z-index: var(--fd-z-index-overlay-backdrop);
-        padding: var(--fd-space-md);
-        background: var(--fd-bg-overlay-strong);
-    }
-
     &__cropper {
         position: fixed;
         inset: 50% auto auto 50%;
@@ -200,11 +192,21 @@
         width: min(720px, 100%);
         max-width: calc(100dvw - var(--fd-space-lg));
         max-height: calc(100dvh - var(--fd-space-lg));
+        margin: 0;
         padding: var(--fd-space-card-profile-gap);
+        border: var(--fd-border-muted);
         border-radius: var(--fd-radius-dialog);
         background: var(--fd-bg-surface-raised);
         box-shadow: var(--fd-shadow-xl);
         transform: translate(-50%, -50%);
+
+        &:not([open]) {
+            display: none;
+        }
+
+        &::backdrop {
+            background: var(--fd-bg-overlay-strong);
+        }
     }
 
     &__cropper-title {

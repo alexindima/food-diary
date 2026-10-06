@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output, si
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiAutocompleteComponent, type FdUiAutocompleteOption } from 'fd-ui-kit/autocomplete/fd-ui-autocomplete';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
@@ -30,6 +31,7 @@ const ISO_DATE_LENGTH = 10;
         RouterLink,
         TranslatePipe,
         LocalizedNumberPipe,
+        FdUiAutocompleteComponent,
         FdUiCardComponent,
         FdUiDateInputComponent,
         FdUiIconComponent,
@@ -61,7 +63,9 @@ export class UserManageComparisonWidgetsComponent {
 
     public readonly userFormPatch = output<UserManageAccountFormPatch | UserManageBodyFormPatch>();
     public readonly birthDateInputInvalidChange = output<boolean>();
-    protected readonly timeZoneOptions = computed<Array<FdUiSelectOption<string | null>>>(() => {
+    protected readonly timeZoneQuery = signal<string | null>(null);
+    protected readonly timeZoneValue = computed(() => this.timeZoneQuery() ?? this.userForm().timeZoneId().value());
+    protected readonly timeZoneOptions = computed<Array<FdUiAutocompleteOption<string>>>(() => {
         const selected = this.userForm().timeZoneId().value();
         const available = typeof Intl.supportedValuesOf === 'function' ? Intl.supportedValuesOf('timeZone') : [];
         const zones = new Set(['UTC', ...available]);
@@ -70,6 +74,26 @@ export class UserManageComparisonWidgetsComponent {
         }
         return [...zones].sort().map(value => ({ label: value, value }));
     });
+    protected readonly filteredTimeZoneOptions = computed(() => {
+        const query = (this.timeZoneQuery() ?? '').trim().replaceAll('_', ' ').toLowerCase();
+        return this.timeZoneOptions().filter(option => option.label.replaceAll('_', ' ').toLowerCase().includes(query));
+    });
+
+    protected resetTimeZoneSearch(): void {
+        this.timeZoneQuery.set(null);
+    }
+
+    protected onTimeZoneTouch(): void {
+        this.resetTimeZoneSearch();
+        this.userForm().timeZoneId().markAsTouched();
+    }
+
+    protected onTimeZoneSelected(option: FdUiAutocompleteOption<string>): void {
+        this.resetTimeZoneSearch();
+        if (option.value !== this.userForm().timeZoneId().value()) {
+            this.userFormPatch.emit({ timeZoneId: option.value });
+        }
+    }
 
     protected readonly measurementSystem = this.measurements.system;
 

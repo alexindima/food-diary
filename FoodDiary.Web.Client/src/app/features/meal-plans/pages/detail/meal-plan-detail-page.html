@@ -27,6 +27,7 @@
                 [pendingAction]="facade.pendingAction()"
                 (adoptPlan)="adopt()"
                 (generateShoppingList)="generateShoppingList()"
+                (deletePlan)="confirmDeletePlan()"
             />
 
             @if (facade.actionErrorKey(); as errorKey) {

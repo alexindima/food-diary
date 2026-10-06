@@ -19,7 +19,7 @@
                 <strong class="fd-ui-title-md">{{ data.mealEntriesInPeriod }}</strong>
             </fd-ui-card>
         </div>
-        <div class="retention-table-wrap">
+        <div class="retention-table-wrap" tabindex="0" role="region" aria-labelledby="retention-activity-title">
             <table>
                 <caption>
                     {{
@@ -56,7 +56,7 @@
     <fd-admin-period defaultPeriod="90d" label="ADMIN_RETENTION.COHORT_PERIOD" />
     <p>{{ 'ADMIN_RETENTION.WINDOW_NOTE' | translate }}</p>
     @if (report(); as data) {
-        <div class="retention-table-wrap">
+        <div class="retention-table-wrap" tabindex="0" role="region" aria-labelledby="retention-cohorts-title">
             <table>
                 <caption>
                     {{

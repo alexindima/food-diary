@@ -20,6 +20,7 @@ import { LocalizedTourDefinitionService } from '../../../../shared/tours/localiz
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { PaddleCheckoutService } from '../../lib/paddle-checkout.service';
 import { PremiumBillingFacade } from '../../lib/premium-billing.facade';
+import { PremiumPlanPricingFacade } from '../../lib/premium-plan-pricing.facade';
 import { PremiumAccessBannersComponent } from '../premium-access-sections/access-banners/premium-access-banners';
 import { PremiumBenefitsCardComponent } from '../premium-access-sections/benefits-card/premium-benefits-card';
 import { PremiumOverviewCardComponent } from '../premium-access-sections/overview-card/premium-overview-card';
@@ -39,6 +40,7 @@ import { PREMIUM_ACCESS_TOUR } from './premium-access-tour';
     templateUrl: './premium-access-page.html',
     styleUrls: ['./premium-access-page.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [PremiumPlanPricingFacade],
     imports: [
         FdPageContainerDirective,
         PageBodyComponent,
@@ -58,6 +60,7 @@ export class PremiumAccessPageComponent {
 
     private readonly billingService = inject(PremiumBillingFacade);
     private readonly paddleCheckoutService = inject(PaddleCheckoutService);
+    protected readonly pricing = inject(PremiumPlanPricingFacade);
     private readonly authService = inject(AuthService);
     private readonly toastService = inject(FdUiToastService);
     private readonly translateService = inject(TranslateService);
@@ -145,6 +148,7 @@ export class PremiumAccessPageComponent {
         try {
             const overview = await firstValueFrom(this.billingService.startPremiumTrial());
             this.overview.set(overview);
+            void this.pricing.loadPricesAsync(overview, this.resolveCheckoutLocale());
             await firstValueFrom(this.authService.refreshToken());
             this.toastService.success(this.translateService.instant('PREMIUM_PAGE.BANNERS.TRIAL_STARTED_MESSAGE'));
         } catch (error) {
@@ -232,6 +236,11 @@ export class PremiumAccessPageComponent {
             this.errorMessage.set(this.getErrorMessage(error));
         } finally {
             this.isLoading.set(false);
+        }
+
+        const overview = this.overview();
+        if (overview !== null && this.showPlans() && this.errorMessage() === null) {
+            void this.pricing.loadPricesAsync(overview, this.resolveCheckoutLocale());
         }
     }
 

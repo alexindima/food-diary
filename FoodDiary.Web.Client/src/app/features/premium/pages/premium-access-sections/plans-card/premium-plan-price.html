@@ -1,0 +1,17 @@
+<div class="fd-grid fd-gap-card-header" role="status" aria-live="polite" [attr.aria-busy]="loading()">
+    @if (loading()) {
+        <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
+            {{ 'PREMIUM_PAGE.PLANS.PRICE_LOADING' | translate }}
+        </p>
+    } @else if (price(); as currentPrice) {
+        <p class="premium-access-page__text">
+            <strong class="fd-ui-section-title">{{ currentPrice.formattedTotal }}</strong>
+            <span class="fd-ui-body-sm"> {{ currentPrice.currencyCode }} {{ periodKey() | translate }}</span>
+        </p>
+        @if (showProvider()) {
+            <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
+                {{ 'PREMIUM_PAGE.PLANS.PRICE_PROVIDER' | translate }}
+            </p>
+        }
+    }
+</div>

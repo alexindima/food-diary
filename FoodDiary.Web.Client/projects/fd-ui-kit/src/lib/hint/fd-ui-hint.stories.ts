@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { moduleMetadata } from '@storybook/angular-vite';
 
 import { FdUiButtonComponent } from '../button/fd-ui-button';
 import { FdUiHintDirective } from './fd-ui-hint.directive';

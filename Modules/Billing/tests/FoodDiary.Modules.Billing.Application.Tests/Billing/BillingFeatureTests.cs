@@ -582,9 +582,9 @@ public partial class BillingFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FakeBillingPublicConfigProvider : IBillingPublicConfigProvider {
+    private sealed class FakeBillingPublicConfigProvider(string? monthlyPriceId = null, string? yearlyPriceId = null) : IBillingPublicConfigProvider {
         public BillingPublicConfigModel GetPublicConfig() =>
-            new(BillingProviderNames.Paddle, "test_client_token", [BillingProviderNames.Paddle, BillingProviderNames.YooKassa]);
+            new(BillingProviderNames.Paddle, "test_client_token", [BillingProviderNames.Paddle, BillingProviderNames.YooKassa], monthlyPriceId, yearlyPriceId);
     }
 
     [ExcludeFromCodeCoverage]

@@ -288,3 +288,80 @@ describe('ImageUploadFieldComponent multiple uploads', () => {
         expect(component['isUploading']()).toBe(false);
     });
 });
+
+describe('ImageUploadFieldComponent crop failures', () => {
+    const cropUrl = 'data:image/png;base64,bm90LWFuLWltYWdl';
+
+    it('closes a failed decode, preserves the saved selection and releases the preparation preview', async () => {
+        const { component, fixture, imageUploadService, translateService } = await setupImageUploadFieldAsync();
+        const previousSelection = { url: 'https://example.com/saved-avatar.png', assetId: 'saved-avatar' };
+        const failed = vi.fn();
+        const revokePreview = vi.spyOn(URL, 'revokeObjectURL');
+        vi.spyOn(translateService, 'instant').mockReturnValue('Could not read image');
+        component.imagePreparationFailed.subscribe(failed);
+        component.value.set(previousSelection);
+        fixture.detectChanges();
+        component['emitPreparationPreview'](new File(['broken'], 'broken.png', { type: 'image/png' }));
+        component['cropPreviewUrl'].set(cropUrl);
+        component['isCropping'].set(true);
+        const image = document.createElement('img');
+        image.setAttribute('src', cropUrl);
+
+        component['onCropImageFailed'](image);
+        fixture.detectChanges();
+
+        expect(component.value()).toEqual(previousSelection);
+        expect(component['selection']()).toEqual(previousSelection);
+        expect(component['isCropping']()).toBe(false);
+        expect(component['cropPreviewUrl']()).toBeNull();
+        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent).toContain('Could not read image');
+        expect(failed).toHaveBeenCalledOnce();
+        expect(revokePreview).toHaveBeenCalledWith(PREVIEW_URL);
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+    });
+
+    it('ignores a delayed decode error from a replaced crop image', async () => {
+        const { component } = await setupImageUploadFieldAsync();
+        component['cropPreviewUrl'].set(cropUrl);
+        component['isCropping'].set(true);
+        const oldImage = document.createElement('img');
+        oldImage.setAttribute('src', 'data:image/png;base64,old');
+
+        component['onCropImageFailed'](oldImage);
+
+        expect(component['isCropping']()).toBe(true);
+        expect(component['cropPreviewUrl']()).toBe(cropUrl);
+        expect(component['error']()).toBeNull();
+    });
+
+    it('prevents confirmation until a decoded image and crop bounds are ready', async () => {
+        const { component, imageUploadService } = await setupImageUploadFieldAsync();
+        component['isCropping'].set(true);
+
+        component['confirmCrop']();
+
+        expect(component['canConfirmCrop']()).toBe(false);
+        expect(component['isProcessingCrop']()).toBe(false);
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+    });
+
+    it('reports canvas failures and preserves the saved image instead of leaving the cropper stuck', async () => {
+        const { component, imageUploadService, translateService } = await setupImageUploadFieldAsync();
+        const previousSelection = { url: 'https://example.com/saved-avatar.png', assetId: 'saved-avatar' };
+        vi.spyOn(translateService, 'instant').mockReturnValue('Image processing failed');
+        vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
+        component.value.set(previousSelection);
+        component['isCropping'].set(true);
+        component['cropImageElement'] = document.createElement('img');
+        component['cropImageBounds'].set({ x: 0, y: 0, width: 100, height: 100 });
+        component['cropSelection'].set({ x: 10, y: 10, width: 50, height: 50 });
+
+        component['confirmCrop']();
+
+        expect(component.value()).toEqual(previousSelection);
+        expect(component['isCropping']()).toBe(false);
+        expect(component['isProcessingCrop']()).toBe(false);
+        expect(component['error']()).toBe('Image processing failed');
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+    });
+});

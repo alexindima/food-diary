@@ -6,6 +6,7 @@ using Testcontainers.PostgreSql;
 namespace FoodDiary.BugTriage.Tests;
 
 [Collection("BugTriage initialization environment")]
+[Trait("Category", "Integration")]
 public sealed class ReportStoreTests : IAsyncLifetime {
     [Fact]
     public async Task Journal_FiltersBeforePagingAndRedactsExpiredContentBeforePurge() {

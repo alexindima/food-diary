@@ -41,8 +41,10 @@
                 iconSize="lg"
                 fdUiHintPosition="bottom"
                 [icon]="microphoneIcon()"
+                [ariaPressed]="isListening()"
                 [class.ai-input-bar__action-btn--mic-active]="isListening()"
-                [disabled]="isDisabled()"
+                [disabled]="isMicrophoneDisabled()"
+                [disabledReason]="isMicrophoneDisabled() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
                 [fdUiHint]="'MEAL_LIST.VOICE_MIC_TITLE' | translate"
                 [ariaLabel]="'MEAL_LIST.VOICE_MIC_TITLE' | translate"
                 (click)="toggleMicAsync()"
@@ -62,6 +64,10 @@
         />
     }
 </div>
+
+@if (speechErrorKey(); as errorKey) {
+    <fd-ui-inline-alert severity="danger" role="alert" [message]="errorKey | translate" />
+}
 
 <fd-ui-button
     type="button"

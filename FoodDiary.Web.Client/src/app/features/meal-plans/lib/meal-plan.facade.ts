@@ -23,7 +23,7 @@ export class MealPlanFacade {
     public readonly pageIndex = signal(0);
     public readonly pageSize = 50;
     private readonly lastLoadedPage = signal<PageOf<MealPlanSummary> | null>(null);
-    public readonly pendingAction = signal<'adopt' | 'shopping' | null>(null);
+    public readonly pendingAction = signal<'adopt' | 'shopping' | 'delete' | null>(null);
     public readonly actionErrorKey = signal<string | null>(null);
     private readonly plansResource = resource({
         params: () => ({ dietType: this.dietTypeFilter(), page: this.pageIndex() + 1 }),
@@ -90,7 +90,9 @@ export class MealPlanFacade {
             .getById(meal.recipeId)
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
-                finalize(() => { this.addingMealId.set(null); }),
+                finalize(() => {
+                    this.addingMealId.set(null);
+                }),
             )
             .subscribe({
                 next: recipe => {
@@ -102,7 +104,9 @@ export class MealPlanFacade {
                     this.quickMeal.updateDetails({ mealType: normalizeMealType(meal.mealType) ?? 'OTHER' });
                     onSuccess();
                 },
-                error: () => { this.actionErrorKey.set('MEAL_PLANS.ERROR_ADD_MEAL'); },
+                error: () => {
+                    this.actionErrorKey.set('MEAL_PLANS.ERROR_ADD_MEAL');
+                },
             });
     }
 
@@ -150,6 +154,32 @@ export class MealPlanFacade {
                 },
                 error: () => {
                     this.actionErrorKey.set('MEAL_PLANS.ERROR_SHOPPING_LIST');
+                },
+            });
+    }
+
+    public deletePlan(id: string, onSuccess: () => void): void {
+        const plan = this.selectedPlan();
+        if (plan?.id !== id || plan.isCurated || this.pendingAction() !== null) {
+            return;
+        }
+        this.pendingAction.set('delete');
+        this.actionErrorKey.set(null);
+        this.service
+            .deletePlan(id)
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    this.pendingAction.set(null);
+                }),
+            )
+            .subscribe({
+                next: () => {
+                    this.selectedPlanId.set(null);
+                    onSuccess();
+                },
+                error: () => {
+                    this.actionErrorKey.set('MEAL_PLANS.ERROR_DELETE');
                 },
             });
     }

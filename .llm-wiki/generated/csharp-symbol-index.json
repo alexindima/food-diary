@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4403,
-    "symbols": 4335,
+    "sourceFiles": 4406,
+    "symbols": 4338,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2266,
+      "class": 2268,
       "enum": 65,
       "interface": 411,
-      "record": 1472,
+      "record": 1473,
       "record struct": 121
     },
     "roles": {
-      "Command": 229,
-      "CommandHandler": 223,
+      "Command": 230,
+      "CommandHandler": 224,
       "Configuration": 100,
       "Controller": 111,
       "Entity": 102,
@@ -41,7 +41,7 @@
       "Request": 166,
       "Response": 242,
       "Service": 168,
-      "Validator": 235,
+      "Validator": 236,
       "ValueObject": 115,
       "WriteRepository": 47
     }
@@ -17622,7 +17622,7 @@
       "kind": "interface",
       "role": "WriteRepository",
       "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanWriteRepository.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "MealPlanErrors",
@@ -17783,6 +17783,27 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/MealPlanning/Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "DeleteMealPlanCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/MealPlanning/Application/MealPlans/Commands/DeleteMealPlan/DeleteMealPlanCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteMealPlanCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/MealPlanning/Application/MealPlans/Commands/DeleteMealPlan/DeleteMealPlanCommandHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "DeleteMealPlanCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/MealPlanning/Application/MealPlans/Commands/DeleteMealPlan/DeleteMealPlanCommandValidator.cs",
       "line": 4
     },
     {
@@ -18469,7 +18490,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/MealPlanning/Presentation/MealPlans/Mappings/MealPlanHttpMappings.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "CatalogDayHttpRequest",

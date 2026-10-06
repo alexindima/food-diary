@@ -19,6 +19,8 @@ export type BillingOverview = {
     canStartPremiumTrial: boolean;
     provider: string;
     paddleClientToken: string | null;
+    paddleMonthlyPriceId?: string | null;
+    paddleYearlyPriceId?: string | null;
     availableProviders: BillingProvider[];
 };
 

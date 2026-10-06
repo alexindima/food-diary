@@ -198,7 +198,9 @@ function registerLoadingTests(): void {
 
         expect(dietologistService.getClientDashboard).toHaveBeenCalledWith('client-1', expect.objectContaining({ trendDays: 14 }));
         expect(component['nutritionTiles']()).toEqual([]);
-        expect(component['mealItems']()[0]).toEqual(expect.objectContaining({ id: 'meal-1', title: 'MEAL_TYPES.LUNCH', calories: '640 kcal' }));
+        expect(component['mealItems']()[0]).toEqual(
+            expect.objectContaining({ id: 'meal-1', title: 'MEAL_TYPES.LUNCH', calories: '640 kcal' }),
+        );
         expect(component['bodyTiles']().map(tile => tile.value)).toEqual(['1']);
     });
 }

@@ -84,13 +84,12 @@
     }
     @defer (when isCropping() && cropPreviewUrl()) {
         @if (isCropping() && cropPreviewUrl()) {
-            <div class="image-upload-field__cropper-backdrop fd-place-center" aria-hidden="true"></div>
-            <div
+            <dialog
+                #cropDialog
                 class="image-upload-field__cropper fd-stack fd-gap-md"
-                role="dialog"
-                aria-modal="true"
                 [attr.aria-labelledby]="cropTitleId"
                 [attr.aria-describedby]="cropSubtitleId"
+                (cancel)="cancelCrop(); $event.preventDefault()"
             >
                 <div class="image-upload-field__cropper-header fd-stack fd-gap-xxs">
                     <div class="image-upload-field__cropper-title fd-ui-card-title" [id]="cropTitleId">
@@ -115,6 +114,7 @@
                         [src]="cropPreviewUrl()"
                         [alt]="'IMAGE_PREVIEW.ALT' | translate: { name: label() }"
                         (load)="onCropImageLoaded(cropImage)"
+                        (error)="onCropImageFailed(cropImage)"
                     />
                     @if (cropImageBounds() && cropSelection()) {
                         <div
@@ -152,11 +152,19 @@
                     <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="cancelCrop()">{{
                         'COMMON.CANCEL' | translate
                     }}</fd-ui-button>
-                    <fd-ui-button type="button" variant="primary" icon="check" (click)="confirmCrop()">
+                    <fd-ui-button
+                        type="button"
+                        variant="primary"
+                        icon="check"
+                        [disabled]="cropImageBounds() === null || cropSelection() === null"
+                        [disabledReason]="'IMAGE_UPLOAD_FIELD.PREVIEW_LOADING' | translate"
+                        [loading]="isProcessingCrop()"
+                        (click)="confirmCrop()"
+                    >
                         {{ 'IMAGE_UPLOAD_FIELD.APPLY' | translate }}
                     </fd-ui-button>
                 </div>
-            </div>
+            </dialog>
         }
     }
 </div>

@@ -33,15 +33,18 @@
     }
     &__bar-segment--breakfast {
         background: var(--fd-color-primary-400);
+        color: var(--fd-color-gray-900-static);
     }
     &__bar-segment--lunch {
         background: var(--fd-color-blue-500);
+        color: var(--fd-color-gray-900-static);
     }
     &__bar-segment--dinner {
         background: var(--fd-color-purple-500);
     }
     &__bar-segment--snack {
         background: var(--fd-color-orange-500);
+        color: var(--fd-color-gray-900-static);
     }
     &__bar-segment--other {
         background: var(--fd-color-gray-600);
@@ -124,4 +127,12 @@
             border-left: 0;
         }
     }
+}
+
+:host-context([data-theme='dark']) .statistics-meal-structure-card__bar-segment--breakfast {
+    background: var(--fd-color-primary-500);
+}
+
+:host-context([data-theme='dark']) .statistics-meal-structure-card__row--breakfast {
+    --meal-color: var(--fd-color-primary-500);
 }

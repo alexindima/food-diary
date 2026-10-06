@@ -1,6 +1,6 @@
-import { provideRouter } from '@angular/router';
-import type { Meta, StoryObj } from '@storybook/angular';
-import { applicationConfig } from '@storybook/angular';
+import { provideRouter, withDisabledInitialNavigation } from '@angular/router';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { applicationConfig } from '@storybook/angular-vite';
 
 import { FdUiSidebarComponent } from './fd-ui-sidebar';
 
@@ -10,7 +10,7 @@ const meta: Meta<FdUiSidebarComponent> = {
     tags: ['autodocs'],
     decorators: [
         applicationConfig({
-            providers: [provideRouter([])],
+            providers: [provideRouter([], withDisabledInitialNavigation())],
         }),
     ],
     args: {

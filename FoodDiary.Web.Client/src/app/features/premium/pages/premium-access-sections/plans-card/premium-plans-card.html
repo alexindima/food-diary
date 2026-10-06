@@ -19,6 +19,12 @@
                         </span>
                     }
                     <h3 class="premium-access-page__plan-title fd-ui-card-title">{{ card.titleKey | translate }}</h3>
+                    <fd-premium-plan-price
+                        [plan]="card.plan"
+                        [price]="prices()[card.plan] ?? null"
+                        [loading]="pricesLoading()"
+                        [showProvider]="showProviderChoices()"
+                    />
                     <p class="premium-access-page__text fd-ui-body">{{ card.descriptionKey | translate }}</p>
                 </div>
                 @if (showProviderChoices()) {
@@ -51,4 +57,17 @@
             </article>
         }
     </div>
+    <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm" [hidden]="!hasPrices()">
+        {{ 'PREMIUM_PAGE.PLANS.PRICE_NOTE' | translate }}
+    </p>
+    @if (pricesUnavailable()) {
+        <div class="fd-stack fd-gap-sm">
+            <fd-ui-inline-alert severity="warning" role="alert" [message]="'PREMIUM_PAGE.PLANS.PRICE_UNAVAILABLE' | translate" />
+            <div class="fd-row">
+                <fd-ui-button variant="secondary" fill="outline" (click)="retryPrices.emit()">
+                    {{ 'PREMIUM_PAGE.PLANS.PRICE_RETRY' | translate }}
+                </fd-ui-button>
+            </div>
+        </div>
+    }
 </fd-ui-card>

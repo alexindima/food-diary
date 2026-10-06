@@ -144,12 +144,7 @@ export class MealListComponent {
                     restore: (favorite: FavoriteMeal) => this.mealListFacade.restoreFavoriteRequest(favorite),
                     repeat: (favorite: FavoriteMeal, mealType: string) => {
                         const date = new Date();
-                        return this.mealListFacade.repeatMeal(
-                            favorite.mealId,
-                            date.toISOString(),
-                            mealType,
-                            this.structuredFilters,
-                        );
+                        return this.mealListFacade.repeatMeal(favorite.mealId, date.toISOString(), mealType, this.structuredFilters);
                     },
                 },
             })

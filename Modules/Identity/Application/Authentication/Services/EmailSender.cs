@@ -50,7 +50,8 @@ public sealed class EmailSender(
             message.TemporaryPassword,
             loginLink,
             footer,
-            brand);
+            brand,
+            locale);
         string textFallback = $"{intro}\n\nEmail: {message.ToEmail}\n{(isRu ? "Временный пароль" : "Temporary password")}: {message.TemporaryPassword}\n{(isRu ? "Войти" : "Sign in")}: {loginLink}\n\n{footer}";
 
         try {
@@ -93,13 +94,15 @@ public sealed class EmailSender(
                         intro: EmailVerificationIntroRu,
                         ctaLabel: EmailVerificationCtaRu,
                         ctaLink: link,
-                        footer: IgnoreEmailFooterRu)
+                        footer: IgnoreEmailFooterRu,
+                        locale: locale)
                     : BuildTemplate(
                         title: "Confirm your email",
                         intro: "Thanks for registering in FoodDiary.",
                         ctaLabel: "Confirm email",
                         ctaLink: link,
-                        footer: "If you did not request this, you can ignore this email."),
+                        footer: "If you did not request this, you can ignore this email.",
+                        locale: locale),
                 Text: string.Equals(locale, "ru"
                     , StringComparison.Ordinal)
                     ? $$"""
@@ -131,13 +134,15 @@ public sealed class EmailSender(
                         intro: PasswordResetIntroRu,
                         ctaLabel: PasswordResetCtaRu,
                         ctaLink: link,
-                        footer: IgnoreEmailFooterRu)
+                        footer: IgnoreEmailFooterRu,
+                        locale: locale)
                     : BuildTemplate(
                         title: "Reset your password",
                         intro: "We received a request to reset your FoodDiary password.",
                         ctaLabel: "Reset password",
                         ctaLink: link,
-                        footer: "If you did not request this, you can ignore this email."),
+                        footer: "If you did not request this, you can ignore this email.",
+                        locale: locale),
                 Text: string.Equals(locale, "ru"
                     , StringComparison.Ordinal)
                     ? $$"""
@@ -172,7 +177,7 @@ public sealed class EmailSender(
             await SendAsync(
                 message.ToEmail,
                 subject,
-                BuildTemplate(subject, intro, "FoodDiary", options.FrontendBaseUrl, footer),
+                BuildTemplate(subject, intro, "FoodDiary", options.FrontendBaseUrl, footer, locale),
                 intro + Environment.NewLine + footer,
                 cancellationToken).ConfigureAwait(false);
             ApplicationEmailTelemetry.RecordEmailDispatch("dashboard_test_email", locale, "success");
@@ -305,10 +310,14 @@ public sealed class EmailSender(
         string temporaryPassword,
         string loginLink,
         string footer,
-        string brand) =>
-        $"""
+        string brand,
+        string locale) {
+        bool isRu = string.Equals(locale, "ru", StringComparison.Ordinal);
+        string passwordLabel = isRu ? "Временный пароль" : "Temporary password";
+        string signInLabel = isRu ? "Войти" : "Sign in";
+        return $"""
          <!doctype html>
-         <html lang="en">
+         <html lang="{locale}">
            <body style="margin:0;padding:0;background-color:#f4f6fb;">
              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f4f6fb;padding:32px 16px;">
                <tr>
@@ -319,8 +328,8 @@ public sealed class EmailSender(
                        <td style="padding:28px;font-family:Segoe UI,Arial,sans-serif;color:#0f172a;">
                          <h1 style="margin:0 0 12px;font-size:22px;">{title}</h1>
                          <p style="color:#475569;">{intro}</p>
-                         <p><strong>Email:</strong> {email}<br><strong>Temporary password:</strong> <code>{temporaryPassword}</code></p>
-                         <p><a href="{loginLink}" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#4a90e2;color:#ffffff;text-decoration:none;font-weight:600;">Sign in</a></p>
+                         <p><strong>Email:</strong> {email}<br><strong>{passwordLabel}:</strong> <code>{temporaryPassword}</code></p>
+                         <p><a href="{loginLink}" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#2563eb;color:#ffffff;text-decoration:none;font-weight:600;">{signInLabel}</a></p>
                          <p style="font-size:13px;color:#64748b;">{footer}</p>
                        </td>
                      </tr>
@@ -331,12 +340,16 @@ public sealed class EmailSender(
            </body>
          </html>
          """;
+    }
 
-    private string BuildTemplate(string title, string intro, string ctaLabel, string ctaLink, string footer) {
+    private string BuildTemplate(string title, string intro, string ctaLabel, string ctaLink, string footer, string locale) {
         string brand = string.IsNullOrWhiteSpace(options.FromName) ? "FoodDiary" : options.FromName;
+        string copyLinkHint = string.Equals(locale, "ru", StringComparison.Ordinal)
+            ? "Если кнопка не работает, скопируйте ссылку в браузер:"
+            : "If the button doesn't work, copy and paste this link into your browser:";
         return $"""
                 <!doctype html>
-                <html lang="en">
+                <html lang="{locale}">
                   <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -358,7 +371,7 @@ public sealed class EmailSender(
                                 <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:#475569;">{intro}</p>
                                 <table role="presentation" cellspacing="0" cellpadding="0">
                                   <tr>
-                                    <td style="border-radius:10px;background:#4a90e2;">
+                                    <td style="border-radius:10px;background:#2563eb;">
                                       <a href="{ctaLink}" style="display:inline-block;padding:12px 20px;font-size:15px;color:#ffffff;text-decoration:none;font-weight:600;">
                                         {ctaLabel}
                                       </a>
@@ -369,8 +382,8 @@ public sealed class EmailSender(
                               </td>
                             </tr>
                             <tr>
-                              <td style="padding:16px 28px;background:#f8fafc;color:#94a3b8;font-family:Segoe UI,Arial,sans-serif;font-size:12px;">
-                                If the button doesn't work, copy and paste this link into your browser:<br>
+                              <td style="padding:16px 28px;background:#f8fafc;color:#64748b;font-family:Segoe UI,Arial,sans-serif;font-size:12px;">
+                                {copyLinkHint}<br>
                                 <span style="word-break:break-all;color:#64748b;">{ctaLink}</span>
                               </td>
                             </tr>

@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 @Component({
     selector: 'fd-ui-inline-alert-actions',
     templateUrl: './fd-ui-inline-alert-actions.html',
-    styleUrl: './fd-ui-inline-alert.scss',
+    styleUrl: './fd-ui-inline-alert-actions.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiInlineAlertActionsComponent {

@@ -75,6 +75,17 @@ describe('MealPlanService', () => {
         request.flush(plan);
     });
 
+    it('deletes a personal plan through the owner-scoped endpoint', () => {
+        let completed = false;
+        service.deletePlan('plan-1').subscribe(() => {
+            completed = true;
+        });
+        const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}/plan-1`);
+        expect(request.request.method).toBe('DELETE');
+        request.flush(null, { status: 204, statusText: 'No Content' });
+        expect(completed).toBe(true);
+    });
+
     it('generates shopping list from meal plan', () => {
         const shoppingList = createShoppingList();
 

@@ -2,16 +2,18 @@
     <fd-ui-loader class="product-select__loader" />
 } @else {
     @if (items().length > 0) {
-        <div class="product-select__list fd-stack fd-gap-sm">
+        <div class="product-select__list fd-stack fd-gap-sm" role="list">
             @for (item of items(); track item.product.id) {
-                <button
-                    type="button"
-                    class="product-select__item fd-grid fd-gap-sm fd-align-center"
-                    (click)="productSelected.emit(item.product)"
-                >
+                <div class="product-select__item fd-grid fd-gap-sm fd-align-center" role="listitem">
                     <div class="product-select__thumb fd-place-center">
-                        @if (item.imageUrl) {
-                            <img width="64" height="64" [attr.src]="item.imageUrl" [alt]="item.product.name" />
+                        @if (item.imageUrl && !failedImages().has(item.imageUrl)) {
+                            <img
+                                width="64"
+                                height="64"
+                                [attr.src]="item.imageUrl"
+                                [alt]="item.product.name"
+                                (error)="imageFailed(item.imageUrl)"
+                            />
                         } @else {
                             <fd-ui-icon name="restaurant" />
                         }
@@ -32,11 +34,12 @@
                             variant="primary"
                             fill="solid"
                             size="sm"
-                            [ariaLabel]="'COMMON.ADD' | translate"
+                            [ariaLabel]="`${('COMMON.ADD' | translate)}: ${item.product.name}`"
                             [fdUiHint]="'COMMON.ADD' | translate"
+                            (click)="productSelected.emit(item.product)"
                         />
                     </span>
-                </button>
+                </div>
             }
         </div>
     } @else {

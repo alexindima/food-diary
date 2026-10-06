@@ -1,0 +1,29 @@
+.fd-ui-inline-alert__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--fd-space-inline-alert-actions-gap);
+    margin-top: var(--fd-space-xxs);
+}
+
+.fd-ui-inline-alert__action {
+    appearance: none;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--fd-color-text);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+.fd-ui-inline-alert__action:hover {
+    text-decoration: underline;
+}
+
+.fd-ui-inline-alert__action:where(:focus-visible) {
+    border-radius: var(--fd-radius-xs);
+    outline: var(--fd-outline-focus);
+    outline-offset: var(--fd-outline-offset);
+}

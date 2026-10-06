@@ -5,6 +5,7 @@ using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.MealPlanning.Domain.Enums;
 using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,54 @@ namespace FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerFact]
+    public async Task DeletePersonalPlan_ProtectsForeignAndCuratedAndPreservesRecipesProductsAndShoppingSources() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var owner = User.Create($"plan-delete-owner-{Guid.NewGuid():N}@example.com", "hash");
+        var other = User.Create($"plan-delete-other-{Guid.NewGuid():N}@example.com", "hash");
+        var product = Product.Create(owner.Id, "Rice", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
+        var recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe.Create(owner.Id, "Rice dish", 2);
+        recipe.AddStep(1, "Cook").AddProductIngredient(product.Id, 250);
+        var template = MealPlan.CreateCurated("Template", description: null, DietType.Balanced, durationDays: 1, targetCaloriesPerDay: null);
+        MealPlan personal = template.Adopt(owner.Id);
+        MealPlanDay day = personal.AddDay(1);
+        MealPlanMeal meal = day.AddMeal(MealType.Lunch, recipe.Id, 1);
+        MealPlan foreign = template.Adopt(other.Id);
+        var list = ShoppingList.Create(owner.Id, "Keep this list");
+        ShoppingListItem item = list.AddItem("Rice", product.Id, 250, MeasurementUnit.G, category: null, isChecked: false, 0);
+        item.AddMealPlanSource(personal.Id, meal.Id, recipe.Id, "Lunch", 1, "Lunch", 250, MeasurementUnit.G);
+        context.AddRange(owner, other, product, recipe, template, personal, foreign, list);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var repository = new FoodDiary.Modules.MealPlanning.Infrastructure.Persistence.MealPlans.MealPlanRepository(
+            context.MealPlans, new FoodDiary.ReadModel.Composition.MealPlanning.MealPlanCompositionReader(context));
+
+        Assert.False(await repository.DeletePersonalAsync(foreign.Id, owner.Id));
+        Assert.False(await repository.DeletePersonalAsync(template.Id, owner.Id));
+        Assert.True(await repository.DeletePersonalAsync(personal.Id, owner.Id));
+        Assert.True(await context.MealPlans.AsNoTracking().AnyAsync(plan => plan.Id == personal.Id));
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+
+        ShoppingListItemSource source = await context.Set<ShoppingListItemSource>().SingleAsync(value => value.ShoppingListItemId == item.Id);
+        Assert.Multiple(
+            () => Assert.Equal(personal.Id, source.MealPlanId),
+            () => Assert.Equal(meal.Id, source.MealPlanMealId),
+            () => Assert.Equal(recipe.Id, source.RecipeId));
+        Assert.False(await context.MealPlans.AnyAsync(plan => plan.Id == personal.Id));
+        Assert.False(await context.Set<FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlanDay>().AnyAsync(value => value.Id == day.Id));
+        Assert.False(await context.Set<FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlanMeal>().AnyAsync(value => value.Id == meal.Id));
+        Assert.True(await context.MealPlans.AnyAsync(plan => plan.Id == foreign.Id));
+        Assert.True(await context.MealPlans.AnyAsync(plan => plan.Id == template.Id));
+        Assert.True(await context.Recipes.AnyAsync(value => value.Id == recipe.Id));
+        Assert.True(await context.Products.AnyAsync(value => value.Id == product.Id));
+        Assert.True(await context.ShoppingLists.AnyAsync(value => value.Id == list.Id));
+        using var cancellation = new CancellationTokenSource();
+        await cancellation.CancelAsync();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => repository.DeletePersonalAsync(foreign.Id, other.Id, cancellation.Token));
+        Assert.False(await repository.DeletePersonalAsync(personal.Id, owner.Id));
+    }
+
     [RequiresDockerFact]
     public async Task GetPageSummaryReadModels_FiltersOwnedAndCuratedPlansBeforeCountingAndPaging() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();

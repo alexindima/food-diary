@@ -124,14 +124,14 @@
       "pageSha256": "1ea0c12ce78af5d45542c40530c4a07ae52fdd0a10b3ab76e7f37e89601f1226",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "dd7d95bd6c0be878d7ce7eef2f5c21266f0aa0ad0e7cf1566eae136abedcec4c"
+          "path": "FoodDiary.Web.Client/angular.json",
+          "sha256": "ace3dbd910be6380b0085a29c778224bf12e43903530c693d85288d17e6fc166"
         }
       ],
-      "reason": "Verified current source folders and renamed shared models/helpers against the regenerated frontend index. Old feature-private imports were replaced with explicit contracts and composition; strict dependency and import-boundary checks passed.",
+      "reason": "Reviewed frontend index and repository catalog guidance against the Angular Vite targets, explicit tsconfig and regenerated deterministic inventories; build commands and public UI contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:42:22.460995Z"
+      "gitHead": "4303e0f849219ddef50a861335783670ae8bcff5",
+      "reviewedAtUtc": "2026-10-06T00:22:19.2570939Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -169,14 +169,14 @@
       "pageSha256": "7368eca730254aab949bddc9e5d05a260ac6f0b1a97793c1a08c7fcb1a68366f",
       "sources": [
         {
-          "path": "docs/architecture/module-dependencies.json",
-          "sha256": "1d5245dc71b27d556527e57c3b7610ee2a3a2278f13c6e77ffd7ebc900db3194"
+          "path": "FoodDiary.Web.Client/angular.json",
+          "sha256": "ace3dbd910be6380b0085a29c778224bf12e43903530c693d85288d17e6fc166"
         }
       ],
-      "reason": "Reviewed architecture, catalog and ownership pages against the additive Admin Application to BodyMetrics Contracts read edge. The graph, project matrix and 2116 architecture tests agree; existing layer and foreign-write guidance remains accurate.",
+      "reason": "Reviewed frontend index and repository catalog guidance against the Angular Vite targets, explicit tsconfig and regenerated deterministic inventories; build commands and public UI contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:06:08.2358939Z"
+      "gitHead": "4303e0f849219ddef50a861335783670ae8bcff5",
+      "reviewedAtUtc": "2026-10-06T00:22:19.9079816Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -201,12 +201,20 @@
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
           "sha256": "fbe8a5248a4151d39ca9472eeb142d2f52668ea96784b594f7ef1b196423a4ca"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
+          "sha256": "16f301e05306a584f9bcecaf20216dd4bf1b64e4a7292c0b8ad5c16dcb98129a"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
+          "sha256": "0e82df197b653e62d8e4857137c84150a67fb746d04c1de74795d208177b663e"
         }
       ],
-      "reason": "Reviewed stable read-only slot lock lifetime: queries, automatic pruning and explicit cleanup use one permanent lock identity; clone cleanup now acquires the slot lock before deletion. Busy-clone and stable-lock regression cases pass, and real concurrent partition/mutation guard tests pass. Read-only source isolation and freshness checks are unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "9d7659646103fd1042479f685e28c83669ebdb12",
-      "reviewedAtUtc": "2026-10-06T09:32:17.3002964Z"
+      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
+      "baseRef": "master",
+      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
+      "reviewedAtUtc": "2026-10-06T10:21:12.9535594Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -215,13 +223,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "0e70afb3d5b6cb4d2aac00b3d5f03269e61dcf4fd3defef8ed6d3758b62d0a96"
+          "sha256": "fd2e664f4d9599779cd975ce59888c1d881dbcf0c7eaecf89197e99540f95d34"
         }
       ],
-      "reason": "Reviewed nullable latestWeightKg and latestWeightDate additions and zero unanswered satiety defaults in presentation snapshots. All four API snapshot contract tests pass; no route or field was removed.",
+      "reason": "Release QA: current owner code, DTO consumers, canonical actual OpenAPI (275 endpoints/365 schemas), native PostgreSQL deletion and migration fixtures, readonly Paddle pricing, local SMTP delivery, keyboard/contrast checks and focused tests reviewed; no production access or deployment.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:06:09.1695598Z"
+      "gitHead": "31a7be7e74da295faf4f41d9d193588ebd42358f",
+      "reviewedAtUtc": "2026-10-06T07:00:25.9814645Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -230,13 +238,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "f82d5698b1cc765577d39df7fd5cec690a891a826f4f8c31aeb4363ecd7ab14d"
+          "sha256": "a2302e269599f02d6c8a8c344c3cd2aa39c48c39ed684d34ab160034b2d0a58f"
         }
       ],
-      "reason": "Reviewed current module/project boundary resolution, exact source-content measurement guards, nonempty benchmark records, request-local quality content reuse and removal of the unreferenced legacy scoring helper. Existing source authority, adaptive workflow, removal-evidence requirements and static test-reference/security limitations remain accurate. Quality output matched the old algorithm byte-for-byte on stable inputs; focused regressions passed.",
-      "baseRef": "HEAD",
-      "gitHead": "4ed86c59d8b7b1d42fac6cd480c2e7fb16d026ca",
-      "reviewedAtUtc": "2026-10-06T01:50:02.6899761Z"
+      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
+      "baseRef": "master",
+      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
+      "reviewedAtUtc": "2026-10-06T10:21:13.6997121Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -248,10 +256,10 @@
           "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
         }
       ],
-      "reason": "Reviewed bounded asynchronous graph input reads: eight workers, one stat per unique path, exact Git ordering and dirty-content hashes, draining before writer-lock release, awaited corruption recovery and database disposal. Canonical serial/backend projection records match; source guard, query providers and selection semantics remain intact. Updated cold-checkout prerequisite documentation.",
-      "baseRef": "HEAD",
-      "gitHead": "705e61b5429a86770c7989e7a2cd01bd97bb5c08",
-      "reviewedAtUtc": "2026-10-06T08:51:40.4855344Z"
+      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
+      "baseRef": "master",
+      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
+      "reviewedAtUtc": "2026-10-06T10:21:14.4139808Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -298,29 +306,17 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "319820f26ba55e88efa450b82ed9a8fadd0f9e9a68feb19af0c9ad28147c9f96",
+      "pageSha256": "0ac679ef2682cda58904cad9b5fd081e1541eb5c061f16522ae55dc1bd030f6f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-inputs.mjs",
-          "sha256": "45f061dd451faf95b7878d9fe3956a2dd92109802f65b0e5441925e75db3f1ec"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-inputs.test.mjs",
-          "sha256": "2c25b4f92a485b2ab13592745fe199bf6193563bb0e194dae9ef3fe539a1cee0"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "9bfd3459844484294e75998903484dca760e852168830c4b665e867f2b75f602"
+          "path": ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
+          "sha256": "eff28ecb416b3624cd5f0de9a8f2bb203a52efd7021d4b439a4ade4ae61b5287"
         }
       ],
-      "reason": "Reviewed ordered asynchronous graph input collection, bounded eight-worker reads, exact dirty-file hashes, draining under the build lock, awaited corruption recovery and database disposal. All graph regression assertions passed. The validated missing-TypeScript negative probe now resets its consumed native failure code instead of leaking a false failure to strict callers; no assertion was removed.",
+      "reason": "Reviewed current corpus pool, ordered case coverage and failure/timeout/cancellation cleanup against LlmWikiCorpusEvaluation.ps1 and Test-LlmWikiCorpusEvaluation.ps1. Retrieval identity, thresholds and corpus scheduling are unchanged. Controlled Linux subreaper diagnostics reproduce a terminated zombie reported alive by HasExited; updated process termination checks pass all three failure paths and retain rejection of a live descendant.",
       "baseRef": "HEAD",
-      "gitHead": "705e61b5429a86770c7989e7a2cd01bd97bb5c08",
-      "reviewedAtUtc": "2026-10-06T08:57:09.5519054Z"
+      "gitHead": "d618f4b90cfc9b8b86854ead921110cee2935023",
+      "reviewedAtUtc": "2026-10-05T21:58:54.0190701Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -592,13 +588,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "ce8024e015f9ba13342bb998165da71486d763af04403f4834f62f03c4f6df76"
+          "sha256": "5a5442b57f4010bdb9c14c4b7844857a904ff9c8fa372e8e3c61109139648b0c"
         }
       ],
-      "reason": "Reviewed the narrow Storybook middleware override against the declared npm scripts and frontend guide: dev-server and production workflows retain their existing commands; dependency patches add no UI copy or interface contract. The Playwright fallback still captures identity, rendered content, errors, interaction and both viewport sizes outside the repository.",
+      "reason": "Reviewed quality-index changes from Storybook imports and verified the existing workflow guidance; Playwright CLI captures rendered Storybook state, console and interaction evidence outside the repository.",
       "baseRef": "HEAD",
-      "gitHead": "028efbba467e3bdece84fe1e43412aead89d2ae5",
-      "reviewedAtUtc": "2026-10-03T20:29:06.8583312Z"
+      "gitHead": "4303e0f849219ddef50a861335783670ae8bcff5",
+      "reviewedAtUtc": "2026-10-06T00:22:20.7398328Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -625,10 +621,10 @@
           "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
         }
       ],
-      "reason": "Reviewed bounded asynchronous graph input reads: eight workers, one stat per unique path, exact Git ordering and dirty-content hashes, draining before writer-lock release, awaited corruption recovery and database disposal. Canonical serial/backend projection records match; source guard, query providers and selection semantics remain intact. Updated cold-checkout prerequisite documentation.",
-      "baseRef": "HEAD",
-      "gitHead": "705e61b5429a86770c7989e7a2cd01bd97bb5c08",
-      "reviewedAtUtc": "2026-10-06T08:51:42.3401284Z"
+      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
+      "baseRef": "master",
+      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
+      "reviewedAtUtc": "2026-10-06T10:21:15.1555894Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -675,25 +671,21 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "f8ab74cfc6bb46a83d42034e896a5703955eaef57cba0db5e77f7aeae3073d90",
+      "pageSha256": "2e9dd8106543f7a3b09cec154c061aba14fff8f24034038422139eeda81c43cd",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Clear-LlmWikiReadOnlySnapshotCache.ps1",
-          "sha256": "e0ec944e5a5de5e32d6dea2f134e616be6efefccde2e6b930efdd5a9b050937d"
+          "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
+          "sha256": "8f6cfdbac46c6086c78909bf2d4506b294bb650458fd2fa01bb62368844d0946"
         },
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "fbe8a5248a4151d39ca9472eeb142d2f52668ea96784b594f7ef1b196423a4ca"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyOverlayPaths.ps1",
-          "sha256": "d2771e6862ef04d6772e467bd77a997a609a8c722e165f1948fd3784d5750dc1"
+          "path": ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
+          "sha256": "eff28ecb416b3624cd5f0de9a8f2bb203a52efd7021d4b439a4ade4ae61b5287"
         }
       ],
-      "reason": "Reviewed concurrent cache cleanup race exposed by full verification: preserve per-slot lock files, acquire the lock for clone cleanup, and skip busy clones. Deterministic pruning and actual subprocess cleanup regressions cover both paths; full guard concurrency/mutation coverage passed. Source reads, overlays, retention bounds and frozen audit inventories remain unchanged.",
+      "reason": "Reviewed dependency-aware generation, owned process cleanup and focused verification contracts against LlmWikiProcess.ps1, Test-LlmWikiProcess.ps1 and the corpus regression. Kill-tree behavior remains the same; the new bounded termination observer recognizes Linux defunct states while rejecting a live process. Windows PowerShell 7/5.1 and controlled Linux checks passed; quality-index metrics were regenerated and source/index transaction behavior remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "9d7659646103fd1042479f685e28c83669ebdb12",
-      "reviewedAtUtc": "2026-10-06T09:32:18.1251235Z"
+      "gitHead": "d618f4b90cfc9b8b86854ead921110cee2935023",
+      "reviewedAtUtc": "2026-10-05T21:58:55.5996565Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -833,10 +825,10 @@
           "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
         }
       ],
-      "reason": "Reviewed bounded asynchronous graph input reads: eight workers, one stat per unique path, exact Git ordering and dirty-content hashes, draining before writer-lock release, awaited corruption recovery and database disposal. Canonical serial/backend projection records match; source guard, query providers and selection semantics remain intact. Updated cold-checkout prerequisite documentation.",
-      "baseRef": "HEAD",
-      "gitHead": "705e61b5429a86770c7989e7a2cd01bd97bb5c08",
-      "reviewedAtUtc": "2026-10-06T08:51:43.1951433Z"
+      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
+      "baseRef": "master",
+      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
+      "reviewedAtUtc": "2026-10-06T10:21:15.9785685Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -875,13 +867,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2cd2dd3e6ed9b8ca8dbb235d56afa2492e5a51d3c358fbd6657c924eb96a54cc"
+          "sha256": "7897399cc5f454e43f35daa827b4a9111b661d69515b4ecf62533772b0681de5"
         }
       ],
-      "reason": "Reviewed explicit profile/shard checkout partitions for long Full audits. Source content identity, ordinary common-slot reuse, overlay hashes, mutation rejection and recovery remain intact. Real concurrent subprocess barriers prove distinct private roots; the frozen Full assertion inventory is unchanged. Regenerated metrics preserve static coverage and security-discovery limitations.",
-      "baseRef": "HEAD",
-      "gitHead": "e25269af244b29a8e29ea0707e1594a8deebfe35",
-      "reviewedAtUtc": "2026-10-06T03:00:29.7556828Z"
+      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
+      "baseRef": "master",
+      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
+      "reviewedAtUtc": "2026-10-06T10:21:17.0172354Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -962,13 +954,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "dca5abb0ccf44628523cf3b77642d06cfd77100091b03d8a219fc9a0e6a5d160"
+          "sha256": "ac7eb1be718ed8e640f48c854764247f5d19f58796da64f0b4873c464deda54b"
         }
       ],
-      "reason": "Reviewed query-context, runtime-impact and feature-trace pages against regenerated catalog, runtime and frontend indexes. These remain navigation workflows; this UX patch adds no hosts or workers, and declared source hashes are refreshed.",
+      "reason": "Only readonly Paddle price preview added to client; scheduler/webhook/provider credentials unchanged. Actual local SMTP and S3 workflows verified, main pending non-QA email queue untouched. Native migration changes exact default HTML only.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:08:56.8886547Z"
+      "gitHead": "31a7be7e74da295faf4f41d9d193588ebd42358f",
+      "reviewedAtUtc": "2026-10-06T07:11:35.3900705Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -977,13 +969,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2cd2dd3e6ed9b8ca8dbb235d56afa2492e5a51d3c358fbd6657c924eb96a54cc"
+          "sha256": "7897399cc5f454e43f35daa827b4a9111b661d69515b4ecf62533772b0681de5"
         }
       ],
-      "reason": "Reviewed explicit profile/shard checkout partitions for long Full audits. Source content identity, ordinary common-slot reuse, overlay hashes, mutation rejection and recovery remain intact. Real concurrent subprocess barriers prove distinct private roots; the frozen Full assertion inventory is unchanged. Regenerated metrics preserve static coverage and security-discovery limitations.",
-      "baseRef": "HEAD",
-      "gitHead": "e25269af244b29a8e29ea0707e1594a8deebfe35",
-      "reviewedAtUtc": "2026-10-06T03:00:30.5940552Z"
+      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
+      "baseRef": "master",
+      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
+      "reviewedAtUtc": "2026-10-06T10:21:18.5740654Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1120,17 +1112,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "657db3b90e62d797e9e8162251b68bcb343872d636f527894ac4b39db1afa4bd"
+          "sha256": "ef57bc8f81999f78a78f33fdeb0a6827d18c535c643b5c5407e63ebbbff177f2"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "795e4de0064e515dbbe84d2bc55935028d06c5381944945036886c76453e9c51"
+          "sha256": "2cabfb589bf310c4bf4b25b6c13078c0c5995b074d1a3d9ca1fd6c9bc1d5af42"
         }
       ],
-      "reason": "Reviewed refreshed frontend trace sources after the last helper extraction: fasting page, history dialog and details use the shared duration display, and client meal mappings preserve meal ownership and serving quantities. Existing workflow guidance remains accurate.",
+      "reason": "Current owner code traced for personal plan deletion, public recipe draft save, price preview and image/mail flows; API/nativePG/UI evidence verifies actual boundaries and recipes/products/shopping provenance preserved.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:48:03.0821407Z"
+      "gitHead": "31a7be7e74da295faf4f41d9d193588ebd42358f",
+      "reviewedAtUtc": "2026-10-06T07:17:34.3631915Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1214,13 +1206,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "657db3b90e62d797e9e8162251b68bcb343872d636f527894ac4b39db1afa4bd"
+          "sha256": "ef57bc8f81999f78a78f33fdeb0a6827d18c535c643b5c5407e63ebbbff177f2"
         }
       ],
-      "reason": "Reviewed current contracts after the final fasting duration and Dietologist serving-plural changes: helper inputs preserve existing callers, locale keys exist in EN/RU, and focused fasting/client tests plus rendered mobile state pass.",
+      "reason": "Reviewed scoped pricing/draft/delete/crop APIs and en/ru strings; frontend5345 checks passed, actual19routes at desktop+mobile fullAxe0 after semantic fixes, SDK readonly price/error/retry and keyboard matrix verified. Source consumers preserve state ownership.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:48:00.1880243Z"
+      "gitHead": "31a7be7e74da295faf4f41d9d193588ebd42358f",
+      "reviewedAtUtc": "2026-10-06T07:17:33.1857848Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1232,10 +1224,10 @@
           "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
         }
       ],
-      "reason": "Reviewed bounded asynchronous graph input reads: eight workers, one stat per unique path, exact Git ordering and dirty-content hashes, draining before writer-lock release, awaited corruption recovery and database disposal. Canonical serial/backend projection records match; source guard, query providers and selection semantics remain intact. Updated cold-checkout prerequisite documentation.",
-      "baseRef": "HEAD",
-      "gitHead": "705e61b5429a86770c7989e7a2cd01bd97bb5c08",
-      "reviewedAtUtc": "2026-10-06T08:51:43.962182Z"
+      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
+      "baseRef": "master",
+      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
+      "reviewedAtUtc": "2026-10-06T10:21:17.7080583Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1258,14 +1250,18 @@
       "pageSha256": "891ba091baab5bb5ebac52ec2d8482eba48976374cc43486fa4fbbe800d24fa2",
       "sources": [
         {
+          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
+          "sha256": "6e3f4bc2a888ef592ba681885709e934fa07db9e3a996569bc0b8a85ed106aa8"
+        },
+        {
           "path": ".llm-wiki/tools/code-graph.mjs",
           "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
         }
       ],
-      "reason": "Reviewed bounded asynchronous graph input reads: eight workers, one stat per unique path, exact Git ordering and dirty-content hashes, draining before writer-lock release, awaited corruption recovery and database disposal. Canonical serial/backend projection records match; source guard, query providers and selection semantics remain intact. Updated cold-checkout prerequisite documentation.",
-      "baseRef": "HEAD",
-      "gitHead": "705e61b5429a86770c7989e7a2cd01bd97bb5c08",
-      "reviewedAtUtc": "2026-10-06T08:51:44.7864135Z"
+      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
+      "baseRef": "master",
+      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
+      "reviewedAtUtc": "2026-10-06T10:21:19.3725666Z"
     }
   ]
 }

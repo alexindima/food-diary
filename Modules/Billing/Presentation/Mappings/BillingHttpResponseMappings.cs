@@ -25,7 +25,9 @@ public static class BillingHttpResponseMappings {
                     model.CanStartPremiumTrial,
                     model.Provider,
                     model.PaddleClientToken,
-                    model.AvailableProviders);
+                    model.AvailableProviders,
+                    model.PaddleMonthlyPriceId,
+                    model.PaddleYearlyPriceId);
     }
 
     extension(BillingCheckoutSessionModel model) {

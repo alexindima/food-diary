@@ -17,11 +17,10 @@ public sealed class DietologistEmailSender(
         CancellationToken cancellationToken = default) {
         string link = BuildInvitationLink(message.InvitationId);
         string locale = NormalizeLanguage(message.Language);
-        bool isRu = string.Equals(locale, "ru", StringComparison.Ordinal);
         string clientName = BuildClientName(message.ClientFirstName, message.ClientLastName);
         string brand = string.IsNullOrWhiteSpace(options.FromName) ? "FoodDiary" : options.FromName;
         EmailTemplateContent? template = await templateProvider.GetActiveTemplateAsync(TemplateKey, locale, cancellationToken).ConfigureAwait(false);
-        (string fallbackSubject, string fallbackHtml, string fallbackText) = CreateFallbackContent(isRu, clientName, link, brand);
+        (string fallbackSubject, string fallbackHtml, string fallbackText) = CreateFallbackContent(locale, clientName, link, brand);
 
         string subject = template is null
             ? fallbackSubject
@@ -60,10 +59,11 @@ public sealed class DietologistEmailSender(
     }
 
     private static (string Subject, string Html, string Text) CreateFallbackContent(
-        bool isRu,
+        string locale,
         string clientName,
         string link,
         string brand) {
+        bool isRu = string.Equals(locale, "ru", StringComparison.Ordinal);
         string subject = isRu
             ? "\u041f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435 \u0441\u0442\u0430\u0442\u044c \u0434\u0438\u0435\u0442\u043e\u043b\u043e\u0433\u043e\u043c"
             : "Invitation to become a dietologist";
@@ -80,7 +80,7 @@ public sealed class DietologistEmailSender(
         return (
             subject,
             BuildTemplate(WebUtility.HtmlEncode(subject), WebUtility.HtmlEncode(intro), WebUtility.HtmlEncode(ctaLabel),
-                WebUtility.HtmlEncode(link), WebUtility.HtmlEncode(footer), WebUtility.HtmlEncode(brand)),
+                WebUtility.HtmlEncode(link), WebUtility.HtmlEncode(footer), WebUtility.HtmlEncode(brand), locale),
             $"{intro}\n\n{ctaLabel}: {link}\n\n{footer}");
     }
 
@@ -93,10 +93,13 @@ public sealed class DietologistEmailSender(
             }, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture, TimeSpan.FromSeconds(1));
     }
 
-    private static string BuildTemplate(string title, string intro, string ctaLabel, string ctaLink, string footer, string brand) =>
-        $"""
+    private static string BuildTemplate(string title, string intro, string ctaLabel, string ctaLink, string footer, string brand, string locale) {
+        string copyLinkHint = string.Equals(locale, "ru", StringComparison.Ordinal)
+            ? "Если кнопка не работает, скопируйте ссылку в браузер:"
+            : "If the button doesn't work, copy and paste this link into your browser:";
+        return $"""
          <!doctype html>
-         <html lang="en">
+         <html lang="{locale}">
            <head>
              <meta charset="UTF-8">
              <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -118,7 +121,7 @@ public sealed class DietologistEmailSender(
                          <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:#475569;">{intro}</p>
                          <table role="presentation" cellspacing="0" cellpadding="0">
                            <tr>
-                             <td style="border-radius:10px;background:#4a90e2;">
+                             <td style="border-radius:10px;background:#2563eb;">
                                <a href="{ctaLink}" style="display:inline-block;padding:12px 20px;font-size:15px;color:#ffffff;text-decoration:none;font-weight:600;">
                                  {ctaLabel}
                                </a>
@@ -129,8 +132,8 @@ public sealed class DietologistEmailSender(
                        </td>
                      </tr>
                      <tr>
-                       <td style="padding:16px 28px;background:#f8fafc;color:#94a3b8;font-family:Segoe UI,Arial,sans-serif;font-size:12px;">
-                         If the button doesn't work, copy and paste this link into your browser:<br>
+                       <td style="padding:16px 28px;background:#f8fafc;color:#64748b;font-family:Segoe UI,Arial,sans-serif;font-size:12px;">
+                         {copyLinkHint}<br>
                          <span style="word-break:break-all;color:#64748b;">{ctaLink}</span>
                        </td>
                      </tr>
@@ -141,6 +144,7 @@ public sealed class DietologistEmailSender(
            </body>
          </html>
          """;
+    }
 
     private async Task DispatchAsync(string toEmail, string subject, string htmlBody, string textBody, CancellationToken cancellationToken) {
         var message = new EmailMessage(

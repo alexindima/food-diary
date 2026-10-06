@@ -1,5 +1,5 @@
 import { signal } from '@angular/core';
-import type { Meta, StoryObj } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular-vite';
 
 import { FdUiEmojiPickerComponent } from './fd-ui-emoji-picker';
 

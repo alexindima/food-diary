@@ -453,6 +453,9 @@ public class MealPlansFeatureTests {
         public DietType? LastDietTypeFilter { get; private set; }
         public MealPlan? AddedPlan { get; private set; }
 
+        public Task<bool> DeletePersonalAsync(MealPlanId id, UserId userId, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
         public Task<MealPlan?> GetByIdAsync(MealPlanId id, bool includeDays = false, CancellationToken ct = default) =>
             Task.FromResult(FindById(id));
 

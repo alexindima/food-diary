@@ -73,7 +73,9 @@ public sealed class GetBillingOverviewQueryHandler(
             canStartTrial,
             publicConfig.Provider,
             publicConfig.PaddleClientToken,
-            publicConfig.AvailableProviders));
+            publicConfig.AvailableProviders,
+            publicConfig.PaddleMonthlyPriceId,
+            publicConfig.PaddleYearlyPriceId));
     }
 
     private static bool IsPaidPremiumActive(BillingSubscriptionOverviewReadModel? subscription, DateTime nowUtc) =>

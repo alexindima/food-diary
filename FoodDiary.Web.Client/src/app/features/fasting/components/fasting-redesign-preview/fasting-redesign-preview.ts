@@ -33,14 +33,7 @@ const DEFAULT_CYCLIC_FAST_HOURS = 16;
 
 @Component({
     selector: 'fd-fasting-redesign-preview',
-    imports: [
-        DatePipe,
-        LocalizedNumberPipe,
-        TranslatePipe,
-        FdUiButtonComponent,
-        FdUiIconComponent,
-        FdUiProgressRingComponent,
-    ],
+    imports: [DatePipe, LocalizedNumberPipe, TranslatePipe, FdUiButtonComponent, FdUiIconComponent, FdUiProgressRingComponent],
     templateUrl: './fasting-redesign-preview.html',
     styleUrl: './fasting-redesign-preview.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -354,7 +347,13 @@ function buildRhythmDay(
 
 function getWellbeingScores(session: FastingSession): number[] {
     const scores = session.checkIns.flatMap(checkIn => [checkIn.hungerLevel, checkIn.energyLevel, checkIn.moodLevel]);
-    if (scores.length === 0 && session.checkInAtUtc !== null && session.hungerLevel !== null && session.energyLevel !== null && session.moodLevel !== null) {
+    if (
+        scores.length === 0 &&
+        session.checkInAtUtc !== null &&
+        session.hungerLevel !== null &&
+        session.energyLevel !== null &&
+        session.moodLevel !== null
+    ) {
         scores.push(session.hungerLevel, session.energyLevel, session.moodLevel);
     }
     return scores;

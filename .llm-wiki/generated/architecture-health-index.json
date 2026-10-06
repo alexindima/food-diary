@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 110,
     "routedStandaloneComponents": 67,
-    "componentsWithoutDirectSpecs": 131,
+    "componentsWithoutDirectSpecs": 130,
     "criticalSymbolsWithoutTestReferences": 46,
     "explicitDebtMarkers": 12
   },
@@ -3384,36 +3384,6 @@
       "specPath": null
     },
     {
-      "class": "FdUiInlineAlertActionsComponent",
-      "selector": "fd-ui-inline-alert-actions",
-      "feature": "fd-ui-kit",
-      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert-actions.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert-actions.html",
-      "inputs": [
-        {
-          "name": "primaryActionLabel",
-          "type": "string | null",
-          "required": false
-        },
-        {
-          "name": "secondaryActionLabel",
-          "type": "string | null",
-          "required": false
-        }
-      ],
-      "outputs": [
-        {
-          "name": "primaryAction",
-          "type": ""
-        },
-        {
-          "name": "secondaryAction",
-          "type": ""
-        }
-      ],
-      "specPath": null
-    },
-    {
       "class": "FdUiInlineAlertComponent",
       "selector": "fd-ui-inline-alert",
       "feature": "fd-ui-kit",
@@ -4275,6 +4245,37 @@
       "specPath": null
     },
     {
+      "class": "PremiumPlanPriceComponent",
+      "selector": "fd-premium-plan-price",
+      "feature": "premium",
+      "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/plans-card/premium-plan-price.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/plans-card/premium-plan-price.html",
+      "inputs": [
+        {
+          "name": "plan",
+          "type": "BillingPlan",
+          "required": true
+        },
+        {
+          "name": "price",
+          "type": "PremiumPlanPrice | null",
+          "required": false
+        },
+        {
+          "name": "loading",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "showProvider",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "FavoriteProductRowComponent",
       "selector": "fd-favorite-product-row",
       "feature": "products",
@@ -4373,66 +4374,6 @@
         }
       ],
       "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "UserManageComparisonWidgetsComponent",
-      "selector": "fd-user-manage-comparison-widgets",
-      "feature": "profile",
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
-      "inputs": [
-        {
-          "name": "userForm",
-          "type": "FieldTree<UserFormValues>",
-          "required": true
-        },
-        {
-          "name": "genderOptions",
-          "type": "Array<FdUiSelectOption<Gender | null>>",
-          "required": true
-        },
-        {
-          "name": "languageOptions",
-          "type": "Array<FdUiSelectOption<string | null>>",
-          "required": true
-        },
-        {
-          "name": "themeOptions",
-          "type": "Array<FdUiSelectOption<AppThemeName | null>>",
-          "required": true
-        },
-        {
-          "name": "uiStyleOptions",
-          "type": "Array<FdUiSelectOption<AppUiStyleName | null>>",
-          "required": true
-        },
-        {
-          "name": "activityLevelOptions",
-          "type": "Array<FdUiSelectOption<ActivityLevelOption | null>>",
-          "required": true
-        },
-        {
-          "name": "currentWeight",
-          "type": "number | null",
-          "required": true
-        },
-        {
-          "name": "currentWaist",
-          "type": "number | null",
-          "required": true
-        }
-      ],
-      "outputs": [
-        {
-          "name": "userFormPatch",
-          "type": "UserManageAccountFormPatch | UserManageBodyFormPatch"
-        },
-        {
-          "name": "birthDateInputInvalidChange",
-          "type": "boolean"
-        }
-      ],
       "specPath": null
     },
     {

@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1336,
+    "contracts": 1337,
     "ambiguousContracts": 2,
-    "consumerEdges": 10354,
-    "productionConsumerEdges": 5930,
-    "testConsumerEdges": 4424,
-    "consumedContracts": 1336,
+    "consumerEdges": 10371,
+    "productionConsumerEdges": 5938,
+    "testConsumerEdges": 4433,
+    "consumedContracts": 1337,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -4086,6 +4086,23 @@
       ],
       "definitionPaths": [
         "Modules/Meals/Application/Commands/DeleteMeal/DeleteMealCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "DeleteMealPlanCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application/MealPlans/Commands/DeleteMealPlan/DeleteMealPlanCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -31546,6 +31563,19 @@
       "referenceCount": 4
     },
     {
+      "contract": "ConnectWearableHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Wearables/Presentation/Requests/ConnectWearableHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/PositionalRequestValidationTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
       "contract": "ContentReportHttpResponse",
       "roles": [
         "Response"
@@ -37340,6 +37370,71 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Presentation.Tests/MealHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DeleteMealPlanCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application/MealPlans/Commands/DeleteMealPlan/DeleteMealPlanCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Application/MealPlans/Commands/DeleteMealPlan/DeleteMealPlanCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "DeleteMealPlanCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application/MealPlans/Commands/DeleteMealPlan/DeleteMealPlanCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Application/MealPlans/Commands/DeleteMealPlan/DeleteMealPlanCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DeleteMealPlanCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application/MealPlans/Commands/DeleteMealPlan/DeleteMealPlanCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Presentation/MealPlans/Mappings/MealPlanHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DeleteMealPlanCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application/MealPlans/Commands/DeleteMealPlan/DeleteMealPlanCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/DeleteMealPlanTests.cs",
+      "isTest": true,
+      "referenceCount": 7
+    },
+    {
+      "contract": "DeleteMealPlanCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application/MealPlans/Commands/DeleteMealPlan/DeleteMealPlanCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/MealPlanDeleteControllerTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -63843,6 +63938,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Application/MealPlans/Commands/DeleteMealPlan/DeleteMealPlanCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -64522,6 +64630,19 @@
       "consumerPath": "Shared/tests/FoodDiary.Application.Runtime.Tests/ValidationBehaviorTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Application.Runtime.Tests/ValidationFailureKindTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "ICommandHandler",
@@ -66119,6 +66240,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Application/MealPlans/Commands/DeleteMealPlan/DeleteMealPlanCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -69017,6 +69151,19 @@
         "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Application/MealPlans/Commands/DeleteMealPlan/DeleteMealPlanCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -70539,6 +70686,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/LessonsFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 7
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/DeleteMealPlanTests.cs",
       "isTest": true,
       "referenceCount": 7
     },
@@ -75376,7 +75536,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/EmailSenderTests.cs",
       "isTest": true,
-      "referenceCount": 14
+      "referenceCount": 15
     },
     {
       "contract": "IEmailOutbox",
@@ -87815,6 +87975,19 @@
         "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Application/MealPlans/Commands/DeleteMealPlan/DeleteMealPlanCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMealPlanWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Application/MealPlans/Commands/SaveCatalogMealPlan/SaveCatalogMealPlanCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -87831,6 +88004,19 @@
       "consumerPath": "Modules/MealPlanning/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IMealPlanWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/DeleteMealPlanTests.cs",
+      "isTest": true,
+      "referenceCount": 11
     },
     {
       "contract": "IMealPlanWriteRepository",
@@ -109680,6 +109866,19 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/MealPlanDeleteControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/DeliverTestNotificationCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -115858,6 +116057,19 @@
       "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingDependencyInjectionTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/MealPlanDeleteControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "ISender",
@@ -126646,6 +126858,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Application/MealPlans/Commands/DeleteMealPlan/DeleteMealPlanCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -147627,6 +147852,19 @@
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/ContentReportRecipeLikeControllerTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "SetRecipeLikeStateHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/RecipeCommunity/Presentation/RecipeLikes/Requests/SetRecipeLikeStateHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/PositionalRequestValidationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "SetUserPasswordByAdministratorCommand",

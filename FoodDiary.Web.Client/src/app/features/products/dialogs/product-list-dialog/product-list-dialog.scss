@@ -52,6 +52,7 @@
     }
 
     &__item {
+        position: relative;
         grid-template-columns: auto 1fr auto;
         padding: var(--fd-space-sm) var(--fd-space-md);
         border-radius: var(--fd-radius-card);
@@ -60,6 +61,19 @@
         box-shadow: var(--fd-shadow-sm);
         text-align: left;
         cursor: pointer;
+
+        &:focus-within {
+            outline: var(--fd-outline-focus);
+            outline-offset: var(--fd-outline-offset);
+        }
+    }
+
+    &__action fd-ui-button::after {
+        // Keep the shared action's hit area within this card without nesting controls.
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: var(--fd-radius-card);
     }
 
     &__thumb {
