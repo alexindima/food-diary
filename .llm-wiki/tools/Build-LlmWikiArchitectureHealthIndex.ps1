@@ -4,10 +4,13 @@ param([switch]$Check, [switch]$ReuseUnchangedCheck)
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $outputPath = Join-Path $wikiRoot 'generated/architecture-health-index.json'
 $cachePath = Join-Path $repositoryRoot '.artifacts/llm-wiki/index-cache/architecture-health-index.json'
+$routeInputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', ':(icase)FoodDiary.Web.Client/**/*.routes.ts') -FailureMessage 'Unable to enumerate architecture-health route sources.')
+$routeInputs = @($routeInputs | Where-Object { [IO.File]::Exists((Join-Path $repositoryRoot $_)) })
 $cacheInputs = @(
     '.llm-wiki/generated/repository-catalog.json',
     '.llm-wiki/generated/backend-contract-index.json',
@@ -18,8 +21,9 @@ $cacheInputs = @(
     'Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs',
     '.llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1',
     '.llm-wiki/tools/LlmWikiJson.ps1',
-    '.llm-wiki/tools/LlmWikiIndexCache.ps1'
-)
+    '.llm-wiki/tools/LlmWikiIndexCache.ps1',
+    '.llm-wiki/tools/LlmWikiGitPaths.ps1'
+) + $routeInputs
 $inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $cacheInputs
 if ($ReuseUnchangedCheck -and (Test-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint)) { Write-Host 'Architecture health index cache hit: inputs, generator, and output are unchanged.'; exit 0 }
 $catalog = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/repository-catalog.json') -Raw | ConvertFrom-Json
@@ -155,15 +159,15 @@ $moduleHotspots = @(
 )
 
 $routedFrontendComponents = @(
-    Get-ChildItem -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Web.Client') -Recurse -File -Filter '*.routes.ts' -ErrorAction SilentlyContinue |
+    $routeInputs |
         ForEach-Object {
-            $routeSource = [IO.File]::ReadAllText($_.FullName)
+            $routeSource = [IO.File]::ReadAllText((Join-Path $repositoryRoot $_))
             [regex]::Matches($routeSource, '(?:loadComponent\s*:|component\s*:)[\s\S]{0,240}?\b(?<class>[A-Z][A-Za-z0-9_]*Component)\b') |
                 ForEach-Object { $_.Groups['class'].Value }
         } |
         Sort-Object -Unique
 )
-$referencedFrontendComponents = @($frontendContracts.consumerEdges.component + $routedFrontendComponents | Sort-Object -Unique)
+$referencedFrontendComponents = @(@($frontendContracts.consumerEdges.component) + $routedFrontendComponents | Sort-Object -Unique)
 $selectorUnreferenced = @(
     $frontendContracts.components |
         Where-Object { $_.class -notin $referencedFrontendComponents } |

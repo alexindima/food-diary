@@ -63,6 +63,7 @@ sources:
   - .llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
   - .llm-wiki/tools/LlmWikiCorpusEvaluation.ps1
+  - .llm-wiki/tools/Measure-LlmWikiRuntimeContextEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiDevelopmentContextEvaluation.ps1
   - FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs
@@ -319,7 +320,10 @@ fields rather than the former fixture's unsupported subscription-tier claim.
 `Test-LlmWikiSqlContextEvaluation.ps1` evaluates all committed corpora through
 a bounded two-process pool after one graph refresh. Independent corpora retain
 their original batch transactions, per-case result order and quality gates;
-the four current Node/.NET parity checks still run after the quality assertions.
+the four current Node/.NET parity checks run after the quality assertions through
+the same bounded pool, using the .NET assembly built once by the caller. Corpus
+identity, case coverage and order are checked for both readers; failure, timeout
+or cancellation stops each remaining worker and its native child processes.
 Use `-MaxConcurrency 1` for a serial run. Per-corpus JSON and stderr diagnostics
 are written to `.artifacts/llm-wiki/context-evaluation/` with unique run prefixes.
 

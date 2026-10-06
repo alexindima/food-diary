@@ -121,17 +121,17 @@
     {
       "pageId": "system.frontend-index",
       "pagePath": ".llm-wiki/system/frontend-index.md",
-      "pageSha256": "1ea0c12ce78af5d45542c40530c4a07ae52fdd0a10b3ab76e7f37e89601f1226",
+      "pageSha256": "ffe52aa56bac185d19cfbca9407b7807223ca7f5ad4dcf3e5eb4b37c742c7d5e",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "ace3dbd910be6380b0085a29c778224bf12e43903530c693d85288d17e6fc166"
+          "path": ".llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1",
+          "sha256": "daac836a73c3ac3032e7a985df561ef5def8b174286c79326fa7bdc311356250"
         }
       ],
-      "reason": "Reviewed frontend index and repository catalog guidance against the Angular Vite targets, explicit tsconfig and regenerated deterministic inventories; build commands and public UI contracts remain accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "4303e0f849219ddef50a861335783670ae8bcff5",
-      "reviewedAtUtc": "2026-10-06T00:22:19.2570939Z"
+      "reason": "Reviewed Git source inventory, ignored-artifact stability and route freshness; application symbols, routes and contracts remain unchanged. Runtime corpus checks retain ordered coverage, exact Node/.NET ranking assertions and bounded process cleanup. Quality references remain static navigation evidence.",
+      "baseRef": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T12:36:44.8249094Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -306,17 +306,29 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "0ac679ef2682cda58904cad9b5fd081e1541eb5c061f16522ae55dc1bd030f6f",
+      "pageSha256": "e587bcec15883c72703156fec689d49b7788c46825d0cf9206c6e83b15257e63",
       "sources": [
         {
+          "path": ".llm-wiki/tools/LlmWikiCorpusEvaluation.ps1",
+          "sha256": "66d453aeec23f763369d1b788408ecfe6bf13e4cfd7348fe40c10f560dd51249"
+        },
+        {
+          "path": ".llm-wiki/tools/Measure-LlmWikiRuntimeContextEvaluation.ps1",
+          "sha256": "8119d212e6cf7201f04e723753edb5803c5cdd108578ba93c5599612a0d3d079"
+        },
+        {
           "path": ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
-          "sha256": "eff28ecb416b3624cd5f0de9a8f2bb203a52efd7021d4b439a4ade4ae61b5287"
+          "sha256": "0227d1c7e83505c78a3c9122d36c1aa1021f52c92844227395c00e66cc3379b5"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1",
+          "sha256": "2a0fc5fad63c8551cbbb458bf34fa8ca9db3247d6828b3eed02a15c36051f054"
         }
       ],
-      "reason": "Reviewed current corpus pool, ordered case coverage and failure/timeout/cancellation cleanup against LlmWikiCorpusEvaluation.ps1 and Test-LlmWikiCorpusEvaluation.ps1. Retrieval identity, thresholds and corpus scheduling are unchanged. Controlled Linux subreaper diagnostics reproduce a terminated zombie reported alive by HasExited; updated process termination checks pass all three failure paths and retain rejection of a live descendant.",
-      "baseRef": "HEAD",
-      "gitHead": "d618f4b90cfc9b8b86854ead921110cee2935023",
-      "reviewedAtUtc": "2026-10-05T21:58:54.0190701Z"
+      "reason": "Reviewed Git source inventory, ignored-artifact stability and route freshness; application symbols, routes and contracts remain unchanged. Runtime corpus checks retain ordered coverage, exact Node/.NET ranking assertions and bounded process cleanup. Quality references remain static navigation evidence.",
+      "baseRef": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T12:36:47.3762131Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -671,21 +683,57 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "2e9dd8106543f7a3b09cec154c061aba14fff8f24034038422139eeda81c43cd",
+      "pageSha256": "8c8aff64bfc1811147a58a435a34a10950c1448a9d57bfc50802f9d45ffdbbf7",
       "sources": [
         {
-          "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
-          "sha256": "8f6cfdbac46c6086c78909bf2d4506b294bb650458fd2fa01bb62368844d0946"
+          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
+          "sha256": "63dfd1897c609cbd65e5dae6f446ce68c82cd75af26c237961878f5a760fc167"
+        },
+        {
+          "path": ".llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1",
+          "sha256": "5dc3283631177f3c01ae7a3344d2a31e08f37b30ff2daea47fbf5dc1a1730601"
+        },
+        {
+          "path": ".llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1",
+          "sha256": "c957ac6df715b677edd64b6870a24e774490878fef4d8a0808f332d78f6f6e84"
+        },
+        {
+          "path": ".llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1",
+          "sha256": "daac836a73c3ac3032e7a985df561ef5def8b174286c79326fa7bdc311356250"
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+          "sha256": "81161ed577e9ca88b30f5661e500cc71116f69da30425cef062754e2804ad118"
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiCorpusEvaluation.ps1",
+          "sha256": "66d453aeec23f763369d1b788408ecfe6bf13e4cfd7348fe40c10f560dd51249"
+        },
+        {
+          "path": ".llm-wiki/tools/Measure-LlmWikiRuntimeContextEvaluation.ps1",
+          "sha256": "8119d212e6cf7201f04e723753edb5803c5cdd108578ba93c5599612a0d3d079"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
+          "sha256": "589ba878dd41d42ad8e598cee712da69eabd34943302e381a9cb8505d9e2a501"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
-          "sha256": "eff28ecb416b3624cd5f0de9a8f2bb203a52efd7021d4b439a4ade4ae61b5287"
+          "sha256": "0227d1c7e83505c78a3c9122d36c1aa1021f52c92844227395c00e66cc3379b5"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiFrontendSourceInventory.ps1",
+          "sha256": "c33ca0e14db29289fefaae9fa05649b4743df7d5eda69e546b5d49abc7376bd6"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1",
+          "sha256": "2a0fc5fad63c8551cbbb458bf34fa8ca9db3247d6828b3eed02a15c36051f054"
         }
       ],
-      "reason": "Reviewed dependency-aware generation, owned process cleanup and focused verification contracts against LlmWikiProcess.ps1, Test-LlmWikiProcess.ps1 and the corpus regression. Kill-tree behavior remains the same; the new bounded termination observer recognizes Linux defunct states while rejecting a live process. Windows PowerShell 7/5.1 and controlled Linux checks passed; quality-index metrics were regenerated and source/index transaction behavior remains valid.",
-      "baseRef": "HEAD",
-      "gitHead": "d618f4b90cfc9b8b86854ead921110cee2935023",
-      "reviewedAtUtc": "2026-10-05T21:58:55.5996565Z"
+      "reason": "Reviewed Git source inventory, ignored-artifact stability and route freshness; application symbols, routes and contracts remain unchanged. Runtime corpus checks retain ordered coverage, exact Node/.NET ranking assertions and bounded process cleanup. Quality references remain static navigation evidence.",
+      "baseRef": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T12:36:50.0619184Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -867,13 +915,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7897399cc5f454e43f35daa827b4a9111b661d69515b4ecf62533772b0681de5"
+          "sha256": "1bd2e1fbd1b1af2fee3cc731557cf9f9348c5ac957553a572bf0ef67b3753173"
         }
       ],
-      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
-      "baseRef": "master",
-      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
-      "reviewedAtUtc": "2026-10-06T10:21:17.0172354Z"
+      "reason": "Reviewed Git source inventory, ignored-artifact stability and route freshness; application symbols, routes and contracts remain unchanged. Runtime corpus checks retain ordered coverage, exact Node/.NET ranking assertions and bounded process cleanup. Quality references remain static navigation evidence.",
+      "baseRef": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T12:36:55.0552318Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -969,13 +1017,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7897399cc5f454e43f35daa827b4a9111b661d69515b4ecf62533772b0681de5"
+          "sha256": "1bd2e1fbd1b1af2fee3cc731557cf9f9348c5ac957553a572bf0ef67b3753173"
         }
       ],
-      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
-      "baseRef": "master",
-      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
-      "reviewedAtUtc": "2026-10-06T10:21:18.5740654Z"
+      "reason": "Reviewed Git source inventory, ignored-artifact stability and route freshness; application symbols, routes and contracts remain unchanged. Runtime corpus checks retain ordered coverage, exact Node/.NET ranking assertions and bounded process cleanup. Quality references remain static navigation evidence.",
+      "baseRef": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T12:36:59.3605091Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1111,14 +1159,14 @@
       "pageSha256": "4e059a263f76810db4c559e2b5599d8599571ccf48d060f6360c6d0e8ec60b48",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "4c5ab89e62b013e872edb5e0d72207c87c1cd4aa6144670033df2fc26cb80bd1"
+          "path": ".llm-wiki/generated/frontend-index.json",
+          "sha256": "ef872d37efffe52ec4049db013826607f7fc7dbf64e557feba36e74acf8fc394"
         }
       ],
-      "reason": "Reviewed regenerated frontend contract navigation: generated consumer evidence now matches committed app templates rather than ignored Playwright trace resources. Backend/frontend trace providers and scoped selection code are unchanged; full merged verification including trace-output passed.",
-      "baseRef": "master",
-      "gitHead": "bc52df2265bb6ce403372f060805c3d6f91805c5",
-      "reviewedAtUtc": "2026-10-06T10:57:03.6185623Z"
+      "reason": "Reviewed Git source inventory, ignored-artifact stability and route freshness; application symbols, routes and contracts remain unchanged. Runtime corpus checks retain ordered coverage, exact Node/.NET ranking assertions and bounded process cleanup. Quality references remain static navigation evidence.",
+      "baseRef": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
+      "reviewedAtUtc": "2026-10-06T12:37:02.3209247Z"
     },
     {
       "pageId": "workflow-verification-planner",

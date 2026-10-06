@@ -7,11 +7,11 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
-$frontendRoot = Join-Path $repositoryRoot 'FoodDiary.Web.Client'
 $outputPath = Join-Path $wikiRoot 'generated/frontend-contract-index.json'
 $cachePath = Join-Path $repositoryRoot '.artifacts/llm-wiki/index-cache/frontend-contract-index.json'
-$cacheInputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', 'FoodDiary.Web.Client/**/*.ts', 'FoodDiary.Web.Client/**/*.html') -FailureMessage 'Unable to enumerate frontend-contract cache inputs.')
-$cacheInputs = @($cacheInputs | Where-Object { $_ -notmatch '[\/](node_modules|dist[^\/]*|coverage|\.angular)[\/]' }) + @('.llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1', '.llm-wiki/tools/LlmWikiJson.ps1', '.llm-wiki/tools/LlmWikiIndexCache.ps1')
+$sourceInputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', ':(icase)FoodDiary.Web.Client/**/*.ts', ':(icase)FoodDiary.Web.Client/**/*.html') -FailureMessage 'Unable to enumerate frontend-contract sources.')
+$sourceInputs = @($sourceInputs | Where-Object { $_ -notmatch '[\/](node_modules|dist[^\/]*|coverage|\.angular)[\/]' -and [IO.File]::Exists((Join-Path $repositoryRoot $_)) })
+$cacheInputs = $sourceInputs + @('.llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1', '.llm-wiki/tools/LlmWikiJson.ps1', '.llm-wiki/tools/LlmWikiIndexCache.ps1', '.llm-wiki/tools/LlmWikiGitPaths.ps1')
 $inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $cacheInputs
 if ($ReuseUnchangedCheck -and (Test-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint)) { Write-Host 'Frontend contract index cache hit: inputs, generator, and output are unchanged.'; exit 0 }
 
@@ -34,11 +34,8 @@ $components = [System.Collections.Generic.List[object]]::new()
 $apiCalls = [System.Collections.Generic.List[object]]::new()
 $translationUsage = [System.Collections.Generic.List[object]]::new()
 $tsFiles = @(
-    Get-ChildItem -LiteralPath $frontendRoot -Recurse -File -Filter '*.ts' |
-        Where-Object {
-            $_.FullName -notmatch '[\\/](node_modules|dist[^\\/]*|coverage|\.angular)[\\/]' -and
-            $_.Name -notmatch '\.(spec|test)\.ts$'
-        } |
+    $sourceInputs | Where-Object { $_ -match '\.ts$' -and $_ -notmatch '\.(spec|test)\.ts$' } |
+        ForEach-Object { [IO.FileInfo]::new((Join-Path $repositoryRoot $_)) } |
         Sort-Object { Get-LlmWikiOrdinalSortKey $_.FullName }
 )
 
@@ -156,8 +153,8 @@ foreach ($file in $tsFiles) {
 }
 
 $templateFiles = @(
-    Get-ChildItem -LiteralPath $frontendRoot -Recurse -File -Filter '*.html' |
-        Where-Object { $_.FullName -notmatch '[\\/](node_modules|dist[^\\/]*|coverage|\.angular)[\\/]' } |
+    $sourceInputs | Where-Object { $_ -match '\.html$' } |
+        ForEach-Object { [IO.FileInfo]::new((Join-Path $repositoryRoot $_)) } |
         Sort-Object { Get-LlmWikiOrdinalSortKey $_.FullName }
 )
 $templateContents = @{}

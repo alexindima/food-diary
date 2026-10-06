@@ -54,7 +54,7 @@ function Invoke-LlmWikiCorpusEvaluation {
                 $start.RedirectStandardError = $true
                 $start.StandardOutputEncoding = [Text.UTF8Encoding]::new($false)
                 $start.StandardErrorEncoding = [Text.UTF8Encoding]::new($false)
-                # The caller builds once; every corpus retains its own batch read transaction.
+                # The caller builds once; each evaluator owns its corpus read lifecycle.
                 foreach ($argument in @('-NoLogo', '-NoProfile', '-File', $EvaluatorPath, '-CorpusPath', $corpus.Path, '-SkipBuild', '-Format', 'Json')) {
                     $start.ArgumentList.Add($argument)
                 }

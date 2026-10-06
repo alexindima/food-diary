@@ -53,6 +53,8 @@ sources:
   - .llm-wiki/tools/Invoke-LlmWikiContractReferenceExtractor.ps1
   - .llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1
   - .llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1
+  - .llm-wiki/tools/Test-LlmWikiFrontendSourceInventory.ps1
+  - .llm-wiki/tools/LlmWikiGitPaths.ps1
   - .llm-wiki/tools/Build-LlmWikiDomainDataIndex.ps1
   - .llm-wiki/tools/Build-LlmWikiRuntimeTopology.ps1
   - .llm-wiki/tools/LlmWikiSourceInventory.ps1
@@ -65,6 +67,7 @@ sources:
   - .llm-wiki/tools/LlmWikiCorpusEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
+  - .llm-wiki/tools/Measure-LlmWikiRuntimeContextEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiImpactSimulationQueries.ps1
   - .llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1
   - .llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1
@@ -217,6 +220,13 @@ dependency-aware index pipeline:
 1. Source indexes run concurrently: catalog, C# symbols, frontend, frontend contracts, domain/data, configuration, runtime, and sensitive data.
 2. Backend contracts and quality wait for the symbol index; module pages wait for the catalog.
 3. Architecture health waits for catalog, backend contracts, frontend contracts, and quality.
+
+Frontend symbol and contract generators reuse their Git source inventory for
+both extraction and freshness. Tracked files and new non-ignored files are
+included; deleted paths and ignored dependency, build and test-report trees
+are excluded before filesystem enumeration. Architecture-health uses the same
+Git enumeration for route sources and includes route contents in its receipt,
+so a route-only edit cannot reuse stale consumer evidence.
 
 The module-page generator takes one in-memory snapshot of the relevant C# source
 files, caches area-prefix lookups, and derives host namespace references from
