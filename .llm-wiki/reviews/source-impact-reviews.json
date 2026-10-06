@@ -863,13 +863,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e54a24dc70d49f3ee491d2cdf9dbcab40e0ce9a850830dea2989d0230158d619"
+          "sha256": "ef706dba8a0606b3c5ba5ae627daac1dab13f93f7bccc9c8320d0ee8d2d937ca"
         }
       ],
-      "reason": "Reviewed focus and contrast guidance, integration classification for Docker PostgreSQL tests, and formatting-only changes; focused regression tests, full backend unit and architecture tests, browser smoke tests, and real application scenarios provide execution evidence, while generated test references remain navigation only.",
+      "reason": "Two meaningful regressions cover failed image fallback with a single selection emission and new URL retry; 16 focused tests, lint, formatting, component logic, current main build, and real rendered fallback plus accessibility checks passed.",
       "baseRef": "HEAD",
-      "gitHead": "ee78095349529338543fc10108f046e62c050aaa",
-      "reviewedAtUtc": "2026-10-06T04:24:17.9565198Z"
+      "gitHead": "37170e338da8be8cd36800520106f863f35335cd",
+      "reviewedAtUtc": "2026-10-06T05:30:54.8424548Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -965,13 +965,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e54a24dc70d49f3ee491d2cdf9dbcab40e0ce9a850830dea2989d0230158d619"
+          "sha256": "ef706dba8a0606b3c5ba5ae627daac1dab13f93f7bccc9c8320d0ee8d2d937ca"
         }
       ],
-      "reason": "Reviewed speech consent and owner-scoped cleanup, stale event and destroyed component guards, and bounded doctor access revocation checks returning 403; failures map to safe localized categories without raw provider errors or additional capture, logging, storage, or sharing.",
+      "reason": "Thumbnail failure state is local to the modal instance and records only already supplied URLs; no logging, persistence, remote writes, credentials, or ownership changes are introduced.",
       "baseRef": "HEAD",
-      "gitHead": "ee78095349529338543fc10108f046e62c050aaa",
-      "reviewedAtUtc": "2026-10-06T04:24:18.6069312Z"
+      "gitHead": "37170e338da8be8cd36800520106f863f35335cd",
+      "reviewedAtUtc": "2026-10-06T05:30:55.4403097Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

@@ -6,8 +6,14 @@
             @for (item of items(); track item.product.id) {
                 <div class="product-select__item fd-grid fd-gap-sm fd-align-center" role="listitem">
                     <div class="product-select__thumb fd-place-center">
-                        @if (item.imageUrl) {
-                            <img width="64" height="64" [attr.src]="item.imageUrl" [alt]="item.product.name" />
+                        @if (item.imageUrl && !failedImages().has(item.imageUrl)) {
+                            <img
+                                width="64"
+                                height="64"
+                                [attr.src]="item.imageUrl"
+                                [alt]="item.product.name"
+                                (error)="imageFailed(item.imageUrl)"
+                            />
                         } @else {
                             <fd-ui-icon name="restaurant" />
                         }

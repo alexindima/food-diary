@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -20,4 +20,11 @@ export class ProductListDialogContentComponent {
     public readonly items = input.required<readonly ProductSelectItemViewModel[]>();
 
     public readonly productSelected = output<Product>();
+    protected readonly failedImages = signal<ReadonlySet<string>>(new Set());
+
+    protected imageFailed(url: string | undefined): void {
+        if (url !== undefined) {
+            this.failedImages.update(images => new Set([...images, url]));
+        }
+    }
 }

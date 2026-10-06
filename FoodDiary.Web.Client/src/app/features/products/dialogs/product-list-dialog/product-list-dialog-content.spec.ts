@@ -55,6 +55,41 @@ describe('ProductListDialogContentComponent', () => {
     });
 });
 
+describe('Product picker thumbnail recovery', () => {
+    it('replaces a failed image with the product icon and keeps selection functional', () => {
+        const product = createProduct();
+        const { fixture, component } = setupComponent([{ product, imageUrl: 'https://example.test/unavailable.jpg' }]);
+        const host = fixture.nativeElement as HTMLElement;
+        const selected: Product[] = [];
+        component.productSelected.subscribe(item => selected.push(item));
+        const image = host.querySelector('img');
+        expect(image).not.toBeNull();
+
+        image?.dispatchEvent(new Event('error'));
+        fixture.detectChanges();
+
+        expect(host.querySelector('.product-select__thumb img')).toBeNull();
+        expect(host.querySelector('.product-select__thumb fd-ui-icon')?.textContent).toContain('restaurant');
+        selectionButton(fixture).click();
+        expect(selected).toEqual([product]);
+    });
+
+    it('tries a new image URL for the same product after a thumbnail failure', () => {
+        const product = createProduct();
+        const { fixture } = setupComponent([{ product, imageUrl: 'https://example.test/unavailable.jpg' }]);
+        const host = fixture.nativeElement as HTMLElement;
+        host.querySelector('img')?.dispatchEvent(new Event('error'));
+        fixture.detectChanges();
+        expect(host.querySelector('.product-select__thumb img')).toBeNull();
+
+        fixture.componentRef.setInput('items', [{ product, imageUrl: 'https://example.test/new-image.jpg' }]);
+        fixture.detectChanges();
+
+        expect(host.querySelector('img')?.getAttribute('src')).toBe('https://example.test/new-image.jpg');
+        expect(host.querySelector('.product-select__thumb fd-ui-icon')).toBeNull();
+    });
+});
+
 describe('Product selection accessibility', () => {
     it('exposes one named native button per card without nested interactive controls', () => {
         const { fixture } = setupComponent([{ product: createProduct(), imageUrl: undefined }]);
