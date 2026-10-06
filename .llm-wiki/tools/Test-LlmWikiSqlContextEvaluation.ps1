@@ -1,5 +1,8 @@
 [CmdletBinding()]
-param([ValidateRange(1, 4)][int]$MaxConcurrency = 2)
+param(
+    [ValidateRange(1, 4)][int]$MaxConcurrency = 2,
+    [ValidateRange(1, 4)][int]$RuntimeMaxConcurrency = 1
+)
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
@@ -387,7 +390,7 @@ $runtimeProject = Join-Path $repositoryRoot 'FoodDiary.Development.Mcp/FoodDiary
 if ($LASTEXITCODE -ne 0) { throw 'Unable to build the .NET context-search runtime parity evaluator.' }
 $runtimePool = Invoke-LlmWikiCorpusEvaluation -RepositoryRoot $repositoryRoot `
     -CorpusPath @($retirementHoldoutCorpusPath, $maintenanceCorpus, $unseenCorpusPath, $conversationalCorpus) `
-    -MaxConcurrency $MaxConcurrency -EvaluatorPath (Join-Path $PSScriptRoot 'Measure-LlmWikiRuntimeContextEvaluation.ps1')
+    -MaxConcurrency $RuntimeMaxConcurrency -EvaluatorPath (Join-Path $PSScriptRoot 'Measure-LlmWikiRuntimeContextEvaluation.ps1')
 Write-Host "Evaluated $($runtimePool.CorpusCount) .NET parity corpora in $([Math]::Round($runtimePool.DurationSeconds, 2))s (peak workers $($runtimePool.PeakConcurrency))."
 foreach ($timing in $runtimePool.CorpusTimings) {
     Write-Host "Runtime corpus timing: $($timing.corpus); cases=$($timing.caseCount); seconds=$($timing.durationSeconds)"

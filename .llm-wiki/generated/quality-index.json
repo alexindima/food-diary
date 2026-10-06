@@ -866,11 +866,11 @@
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1",
-      "nonBlankLines": 277,
+      "nonBlankLines": 276,
       "decisionPoints": 33,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 57.04
+      "structuralRiskScore": 57.02
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1",

@@ -306,7 +306,7 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "e587bcec15883c72703156fec689d49b7788c46825d0cf9206c6e83b15257e63",
+      "pageSha256": "79e2b9bc242bb6bf6a201d581c7f30558c836dbd87f1590cc8d3ada118c211c2",
       "sources": [
         {
           "path": ".llm-wiki/tools/LlmWikiCorpusEvaluation.ps1",
@@ -322,13 +322,13 @@
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1",
-          "sha256": "2a0fc5fad63c8551cbbb458bf34fa8ca9db3247d6828b3eed02a15c36051f054"
+          "sha256": "ecc077ad50a8c91bf606c4205cc9bbd076e4d6752cb40ebbb334fddcc1fabab4"
         }
       ],
-      "reason": "Reviewed Git source inventory, ignored-artifact stability and route freshness; application symbols, routes and contracts remain unchanged. Runtime corpus checks retain ordered coverage, exact Node/.NET ranking assertions and bounded process cleanup. Quality references remain static navigation evidence.",
+      "reason": "Reviewed bounded corpus diagnostics and default serial .NET scheduling after a 302-case comparison showed no parallel speed gain; Git frontend inventories preserve application evidence and exclude ignored reports. Updated quality remains navigation evidence.",
       "baseRef": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "reviewedAtUtc": "2026-10-06T12:36:47.3762131Z"
+      "gitHead": "bd04b3da8960e5bea1ecffb6817a1d41e0cc258b",
+      "reviewedAtUtc": "2026-10-06T12:52:10.2784611Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -727,13 +727,13 @@
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1",
-          "sha256": "2a0fc5fad63c8551cbbb458bf34fa8ca9db3247d6828b3eed02a15c36051f054"
+          "sha256": "ecc077ad50a8c91bf606c4205cc9bbd076e4d6752cb40ebbb334fddcc1fabab4"
         }
       ],
-      "reason": "Reviewed Git source inventory, ignored-artifact stability and route freshness; application symbols, routes and contracts remain unchanged. Runtime corpus checks retain ordered coverage, exact Node/.NET ranking assertions and bounded process cleanup. Quality references remain static navigation evidence.",
+      "reason": "Reviewed bounded corpus diagnostics and default serial .NET scheduling after a 302-case comparison showed no parallel speed gain; Git frontend inventories preserve application evidence and exclude ignored reports. Updated quality remains navigation evidence.",
       "baseRef": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "reviewedAtUtc": "2026-10-06T12:36:50.0619184Z"
+      "gitHead": "bd04b3da8960e5bea1ecffb6817a1d41e0cc258b",
+      "reviewedAtUtc": "2026-10-06T12:52:13.0174929Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -915,13 +915,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1bd2e1fbd1b1af2fee3cc731557cf9f9348c5ac957553a572bf0ef67b3753173"
+          "sha256": "943627d5c443ec55e88a9850e1413df2a3204b9dc059ef6fb53d947a02e167e8"
         }
       ],
-      "reason": "Reviewed Git source inventory, ignored-artifact stability and route freshness; application symbols, routes and contracts remain unchanged. Runtime corpus checks retain ordered coverage, exact Node/.NET ranking assertions and bounded process cleanup. Quality references remain static navigation evidence.",
+      "reason": "Reviewed bounded corpus diagnostics and default serial .NET scheduling after a 302-case comparison showed no parallel speed gain; Git frontend inventories preserve application evidence and exclude ignored reports. Updated quality remains navigation evidence.",
       "baseRef": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "reviewedAtUtc": "2026-10-06T12:36:55.0552318Z"
+      "gitHead": "bd04b3da8960e5bea1ecffb6817a1d41e0cc258b",
+      "reviewedAtUtc": "2026-10-06T12:52:16.5786439Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1017,13 +1017,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1bd2e1fbd1b1af2fee3cc731557cf9f9348c5ac957553a572bf0ef67b3753173"
+          "sha256": "943627d5c443ec55e88a9850e1413df2a3204b9dc059ef6fb53d947a02e167e8"
         }
       ],
-      "reason": "Reviewed Git source inventory, ignored-artifact stability and route freshness; application symbols, routes and contracts remain unchanged. Runtime corpus checks retain ordered coverage, exact Node/.NET ranking assertions and bounded process cleanup. Quality references remain static navigation evidence.",
+      "reason": "Reviewed bounded corpus diagnostics and default serial .NET scheduling after a 302-case comparison showed no parallel speed gain; Git frontend inventories preserve application evidence and exclude ignored reports. Updated quality remains navigation evidence.",
       "baseRef": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "reviewedAtUtc": "2026-10-06T12:36:59.3605091Z"
+      "gitHead": "bd04b3da8960e5bea1ecffb6817a1d41e0cc258b",
+      "reviewedAtUtc": "2026-10-06T12:52:18.7759424Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

@@ -321,7 +321,10 @@ fields rather than the former fixture's unsupported subscription-tier claim.
 a bounded two-process pool after one graph refresh. Independent corpora retain
 their original batch transactions, per-case result order and quality gates;
 the four current Node/.NET parity checks run after the quality assertions through
-the same bounded pool, using the .NET assembly built once by the caller. Corpus
+the same bounded pool, using the .NET assembly built once by the caller. Its
+default is one .NET worker: the measured Windows CPU-bound comparison showed
+no gain from two. `-RuntimeMaxConcurrency 2` enables an explicit comparative run;
+the outer smoke concurrency limit still caps both pools. Corpus
 identity, case coverage and order are checked for both readers; failure, timeout
 or cancellation stops each remaining worker and its native child processes.
 Use `-MaxConcurrency 1` for a serial run. Per-corpus JSON and stderr diagnostics
