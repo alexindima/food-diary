@@ -239,14 +239,14 @@
     gap: var(--fd-space-xxs);
 }
 .nutrition-trend__metric--proteins strong {
-    color: var(--fd-color-primary-500);
+    color: var(--fd-color-nutrition-proteins-text);
 }
 .nutrition-trend__metric--fats strong {
-    color: var(--fd-color-orange-500);
+    color: var(--fd-color-nutrition-fats-text);
 }
 .nutrition-trend__metric--carbs strong {
-    color: var(--fd-color-sky-500);
+    color: var(--fd-color-nutrition-carbs-text);
 }
 .nutrition-trend__metric--fiber strong {
-    color: var(--fd-color-rose-500);
+    color: var(--fd-color-nutrition-fiber-text);
 }

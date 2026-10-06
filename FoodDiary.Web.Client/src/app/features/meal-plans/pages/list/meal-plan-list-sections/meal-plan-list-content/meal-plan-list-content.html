@@ -39,6 +39,8 @@
                         <fd-ui-icon name="verified" size="sm" />
                         {{ 'MEAL_PLANS.CURATED' | translate }}
                     </div>
+                } @else {
+                    <div class="fd-ui-pill fd-ui-pill--compact fd-ui-action-text">{{ 'MEAL_PLANS.MY_PLAN' | translate }}</div>
                 }
             </div>
         }

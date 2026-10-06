@@ -46,8 +46,12 @@ beforeEach(() => {
     };
 
     TestBed.configureTestingModule({
-        providers: [MealPlanFacade, { provide: MealPlanService, useValue: mealPlanService },
-            { provide: RECIPE_LOOKUP, useValue: recipeLookup }, { provide: QuickMealService, useValue: quickMeal }],
+        providers: [
+            MealPlanFacade,
+            { provide: MealPlanService, useValue: mealPlanService },
+            { provide: RECIPE_LOOKUP, useValue: recipeLookup },
+            { provide: QuickMealService, useValue: quickMeal },
+        ],
     });
 
     facade = TestBed.inject(MealPlanFacade);

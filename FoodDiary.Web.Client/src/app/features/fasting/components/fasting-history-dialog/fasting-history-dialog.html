@@ -30,7 +30,9 @@
                             class="fasting-history-dialog__status fd-ui-pill"
                             [class.fasting-history-dialog__status--completed]="historyItem.badgeKey === 'FASTING.BADGE_COMPLETED'"
                             [class.fasting-history-dialog__status--active]="historyItem.session.status === 'Active'"
-                            [class.fasting-history-dialog__status--interrupted]="historyItem.session.status === 'Interrupted' || historyItem.badgeKey === 'FASTING.BADGE_ENDED_EARLY'"
+                            [class.fasting-history-dialog__status--interrupted]="
+                                historyItem.session.status === 'Interrupted' || historyItem.badgeKey === 'FASTING.BADGE_ENDED_EARLY'
+                            "
                             [class.fasting-history-dialog__status--skipped]="historyItem.session.status === 'Skipped'"
                             [class.fasting-history-dialog__status--postponed]="historyItem.session.status === 'Postponed'"
                         >

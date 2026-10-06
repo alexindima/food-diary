@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "components": 486,
-    "componentsWithoutDirectSpecs": 131,
+    "componentsWithoutDirectSpecs": 130,
     "inputs": 1562,
     "outputs": 539,
     "apiCalls": 278,
     "templatesWithTranslations": 347,
-    "translationKeys": 2108,
-    "consumerEdges": 1231,
+    "translationKeys": 2113,
+    "consumerEdges": 1233,
     "consumedComponents": 308,
     "unconsumedComponents": 177
   },
@@ -9815,7 +9815,7 @@
           "type": "boolean"
         }
       ],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.spec.ts"
     },
     {
       "class": "UserManageComponent",
@@ -20732,6 +20732,7 @@
       "keys": [
         "GENERAL.UNITS.KCAL",
         "MEAL_PLANS.CURATED",
+        "MEAL_PLANS.MY_PLAN",
         "MEAL_PLANS.RESET_FILTER"
       ]
     },
@@ -21470,6 +21471,8 @@
         "USER_MANAGE.THEME",
         "USER_MANAGE.TIME_ZONE",
         "USER_MANAGE.TIME_ZONE_HINT",
+        "USER_MANAGE.TIME_ZONE_NO_RESULTS",
+        "USER_MANAGE.TIME_ZONE_SEARCH",
         "USER_MANAGE.UI_STYLE",
         "USER_MANAGE.USERNAME"
       ]
@@ -22602,7 +22605,9 @@
       "path": "FoodDiary.Web.Client/src/app/shell/app.html",
       "keys": [
         "COMMON.CLOSE_NOTIFICATION",
-        "COMMON.SKIP_TO_MAIN_CONTENT"
+        "COMMON.SKIP_TO_MAIN_CONTENT",
+        "IMPERSONATION.END_SESSION",
+        "IMPERSONATION.MODE"
       ]
     },
     {
@@ -25894,6 +25899,30 @@
       ]
     },
     {
+      "component": "FdUiAutocompleteComponent",
+      "selector": "fd-ui-autocomplete",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete.ts",
+      "consumerFeature": "profile",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "disabled",
+        "emptyText",
+        "label",
+        "options",
+        "placeholder",
+        "showClear",
+        "size",
+        "suffixIcon",
+        "value"
+      ],
+      "outputsHandled": [
+        "optionSelected",
+        "queryChange",
+        "touch"
+      ]
+    },
+    {
       "component": "FdUiAutocompleteMenuComponent",
       "selector": "fd-ui-autocomplete-menu",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete-menu.ts",
@@ -26691,6 +26720,7 @@
       "occurrences": 4,
       "inputsUsed": [
         "ariaLabel",
+        "ariaPressed",
         "disabled",
         "disabledReason",
         "fill",
@@ -33755,6 +33785,19 @@
       "component": "FdUiInlineAlertComponent",
       "selector": "fd-ui-inline-alert",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "message",
+        "severity"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiInlineAlertComponent",
+      "selector": "fd-ui-inline-alert",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert.ts",
       "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
       "occurrences": 2,
@@ -36904,7 +36947,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
       "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
-      "occurrences": 7,
+      "occurrences": 6,
       "inputsUsed": [
         "label",
         "options",

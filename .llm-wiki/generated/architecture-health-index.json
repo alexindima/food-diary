@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 110,
     "routedStandaloneComponents": 67,
-    "componentsWithoutDirectSpecs": 131,
+    "componentsWithoutDirectSpecs": 130,
     "criticalSymbolsWithoutTestReferences": 47,
     "explicitDebtMarkers": 12
   },
@@ -4373,66 +4373,6 @@
         }
       ],
       "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "UserManageComparisonWidgetsComponent",
-      "selector": "fd-user-manage-comparison-widgets",
-      "feature": "profile",
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
-      "inputs": [
-        {
-          "name": "userForm",
-          "type": "FieldTree<UserFormValues>",
-          "required": true
-        },
-        {
-          "name": "genderOptions",
-          "type": "Array<FdUiSelectOption<Gender | null>>",
-          "required": true
-        },
-        {
-          "name": "languageOptions",
-          "type": "Array<FdUiSelectOption<string | null>>",
-          "required": true
-        },
-        {
-          "name": "themeOptions",
-          "type": "Array<FdUiSelectOption<AppThemeName | null>>",
-          "required": true
-        },
-        {
-          "name": "uiStyleOptions",
-          "type": "Array<FdUiSelectOption<AppUiStyleName | null>>",
-          "required": true
-        },
-        {
-          "name": "activityLevelOptions",
-          "type": "Array<FdUiSelectOption<ActivityLevelOption | null>>",
-          "required": true
-        },
-        {
-          "name": "currentWeight",
-          "type": "number | null",
-          "required": true
-        },
-        {
-          "name": "currentWaist",
-          "type": "number | null",
-          "required": true
-        }
-      ],
-      "outputs": [
-        {
-          "name": "userFormPatch",
-          "type": "UserManageAccountFormPatch | UserManageBodyFormPatch"
-        },
-        {
-          "name": "birthDateInputInvalidChange",
-          "type": "boolean"
-        }
-      ],
       "specPath": null
     },
     {

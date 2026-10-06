@@ -8,7 +8,7 @@ import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 import { debounceTime, distinctUntilChanged, finalize, map, type Observable, Subject } from 'rxjs';
 
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
-import { type MealTypeOption,normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
+import { type MealTypeOption, normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import type { FavoriteMeal } from '../../../../shared/models/meal.data';
 import { FavoriteMealRowComponent } from '../../components/favorite-meal-row/favorite-meal-row';
 import { buildMealTypeSelectOptions } from '../../components/manage/meal-manage-lib/meal-manage-options.mapper';

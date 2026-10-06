@@ -13,6 +13,7 @@ import {
     model,
     output,
     signal,
+    untracked,
     viewChild,
 } from '@angular/core';
 import type { FormValueControl } from '@angular/forms/signals';
@@ -88,6 +89,13 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
 
             this.internalValue.set(value);
             this.queryText.set(this.getDisplayText(value));
+        });
+        effect(() => {
+            const options = this.options();
+            if (untracked(this.isOpen)) {
+                this.activeIndex.set(options.length > 0 ? FIRST_OPTION_INDEX : NO_ACTIVE_OPTION_INDEX);
+                this.scrollActiveOptionIntoView();
+            }
         });
     }
 
@@ -199,9 +207,13 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
                 break;
             }
             case 'Enter': {
-                if (this.isOpen() && this.activeIndex() >= FIRST_OPTION_INDEX) {
+                if (this.shouldOpenOverlay()) {
                     event.preventDefault();
-                    this.selectOption(this.options()[this.activeIndex()]);
+                    const activeIndex = this.activeIndex();
+                    const option = activeIndex < FIRST_OPTION_INDEX ? undefined : this.options().at(activeIndex);
+                    if (option !== undefined) {
+                        this.selectOption(option);
+                    }
                 }
                 break;
             }
@@ -222,7 +234,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
     }
 
     protected onMenuAttached(): void {
-        afterNextRender(() => this.listboxRef()?.nativeElement.scrollTo({ top: 0 }), { injector: this.injector });
+        this.scrollActiveOptionIntoView();
     }
 
     protected getOptionId(index: number): string {
@@ -234,13 +246,16 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
     }
 
     private openMenu(): void {
-        if (this.disabled()) {
+        if (this.disabled() || this.isOpen()) {
             return;
         }
 
         this.overlayMinWidth.set(this.controlWrapRef()?.nativeElement.getBoundingClientRect().width ?? 0);
         this.isOpen.set(true);
-        this.activeIndex.set(this.options().length > 0 ? FIRST_OPTION_INDEX : NO_ACTIVE_OPTION_INDEX);
+        const options = this.options();
+        const selectedValue = this.internalValue() ?? this.value();
+        const selectedIndex = options.findIndex(option => this.isEqual(option.value, selectedValue));
+        this.activeIndex.set(options.length > 0 ? Math.max(selectedIndex, FIRST_OPTION_INDEX) : NO_ACTIVE_OPTION_INDEX);
     }
 
     private moveActive(delta: number): void {
@@ -251,6 +266,23 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
         }
 
         this.activeIndex.update(activeIndex => (activeIndex + delta + options.length) % options.length);
+        this.scrollActiveOptionIntoView();
+    }
+
+    private scrollActiveOptionIntoView(): void {
+        afterNextRender(
+            () => {
+                const listbox = this.listboxRef()?.nativeElement;
+                const activeIndex = this.activeIndex();
+                if (listbox === undefined || activeIndex < FIRST_OPTION_INDEX || !this.isOpen()) {
+                    return;
+                }
+                Array.from(listbox.querySelectorAll<HTMLElement>('[role="option"]'))
+                    .at(activeIndex)
+                    ?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+            },
+            { injector: this.injector },
+        );
     }
 
     private getDisplayText(value: T | null): string {

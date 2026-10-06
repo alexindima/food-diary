@@ -142,9 +142,9 @@
 }
 
 .fd-ui-button--primary.fd-ui-button--solid {
-    --fd-button-background-default: var(--fd-bg-brand);
-    --fd-button-background-hover: linear-gradient(135deg, var(--fd-gradient-brand-hover-start), var(--fd-gradient-brand-hover-end));
-    --fd-button-background-active: var(--fd-bg-brand);
+    --fd-button-background-default: linear-gradient(135deg, var(--fd-color-primary-700), var(--fd-color-primary-800));
+    --fd-button-background-hover: linear-gradient(135deg, var(--fd-color-primary-800), var(--fd-color-primary-900));
+    --fd-button-background-active: linear-gradient(135deg, var(--fd-color-primary-900), var(--fd-color-primary-800));
     --fd-button-background-disabled: var(--fd-color-gray-300);
     border: none;
     --fd-button-text-default: var(--fd-color-on-brand);
@@ -184,8 +184,6 @@
 
 .fd-ui-button--appearance-toolbar.fd-ui-button--primary.fd-ui-button--solid {
     --fd-button-border-width: 0;
-    --fd-button-background-default: var(--fd-bg-brand);
-    --fd-button-text-default: var(--fd-color-white);
     --fd-button-shadow-default: var(--fd-shadow-button-toolbar-solid);
 }
 
@@ -261,7 +259,6 @@
 }
 
 .fd-ui-button--primary.fd-ui-button--solid:where(:has(.fd-ui-button__label:empty)) {
-    --fd-button-text-default: var(--fd-color-on-brand-muted);
     color: var(--fd-button-text-default);
 }
 
@@ -284,6 +281,8 @@
     --fd-button-border-active: var(--fd-button-outline-border-active);
     --fd-button-border-disabled: var(--fd-button-outline-border-disabled);
     --fd-button-text-default: var(--fd-button-outline-text-default);
+    --fd-button-text-hover: var(--fd-button-outline-text-default);
+    --fd-button-text-active: var(--fd-button-outline-text-default);
     --fd-button-text-disabled: var(--fd-button-outline-text-disabled);
 }
 
@@ -298,6 +297,8 @@
     --fd-button-border-active: var(--fd-button-ghost-border-active);
     --fd-button-border-disabled: var(--fd-button-ghost-border-disabled);
     --fd-button-text-default: var(--fd-button-ghost-text-default);
+    --fd-button-text-hover: var(--fd-button-ghost-text-default);
+    --fd-button-text-active: var(--fd-button-ghost-text-default);
     --fd-button-text-disabled: var(--fd-button-ghost-text-disabled);
 }
 
@@ -363,6 +364,8 @@
     --fd-button-border-active: var(--fd-button-danger-border-active);
     --fd-button-border-disabled: var(--fd-button-danger-border-disabled);
     --fd-button-text-default: var(--fd-button-danger-text-default);
+    --fd-button-text-hover: var(--fd-button-danger-text-default);
+    --fd-button-text-active: var(--fd-button-danger-text-default);
     --fd-button-text-disabled: var(--fd-button-danger-text-disabled);
 }
 
@@ -376,6 +379,8 @@
     --fd-button-border-active: var(--fd-button-danger-outline-border-active);
     --fd-button-border-disabled: var(--fd-button-danger-outline-border-disabled);
     --fd-button-text-default: var(--fd-button-danger-outline-text-default);
+    --fd-button-text-hover: var(--fd-button-danger-outline-text-default);
+    --fd-button-text-active: var(--fd-button-danger-outline-text-default);
     --fd-button-text-disabled: var(--fd-button-danger-outline-text-disabled);
 }
 
@@ -389,6 +394,8 @@
     --fd-button-border-active: var(--fd-button-danger-ghost-border-active);
     --fd-button-border-disabled: var(--fd-button-danger-ghost-border-disabled);
     --fd-button-text-default: var(--fd-button-danger-ghost-text-default);
+    --fd-button-text-hover: var(--fd-button-danger-ghost-text-default);
+    --fd-button-text-active: var(--fd-button-danger-ghost-text-default);
     --fd-button-text-disabled: var(--fd-button-danger-ghost-text-disabled);
 }
 

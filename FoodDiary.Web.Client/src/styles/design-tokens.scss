@@ -1807,8 +1807,8 @@ $fd-theme-design-tokens: (
         --fd-color-border-inverse-faint: color-mix(in srgb, var(--fd-color-white) 8%, transparent);
         --fd-color-border-inverse-subtle: color-mix(in srgb, var(--fd-color-white) 12%, transparent);
         --fd-color-border-ai: color-mix(in srgb, var(--fd-color-ai-strong) 18%, var(--fd-color-border));
-        --fd-outline-focus: var(--fd-border-width-strong) solid var(--fd-color-primary-400);
-        --fd-outline-focus-strong: var(--fd-border-width-emphasis) solid color-mix(in srgb, var(--fd-color-primary-500) 40%, transparent);
+        --fd-outline-focus: var(--fd-border-width-strong) solid var(--fd-color-primary-700);
+        --fd-outline-focus-strong: var(--fd-border-width-emphasis) solid var(--fd-color-primary-700);
         --fd-outline-offset: var(--fd-border-width-strong);
         --fd-color-calendar-outside: color-mix(in srgb, var(--fd-color-text-muted) 72%, transparent);
         --fd-color-dialog-scrollbar-thumb: color-mix(in srgb, var(--fd-color-slate-500) 52%, transparent);

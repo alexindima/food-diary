@@ -90,7 +90,9 @@ export class MealPlanFacade {
             .getById(meal.recipeId)
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
-                finalize(() => { this.addingMealId.set(null); }),
+                finalize(() => {
+                    this.addingMealId.set(null);
+                }),
             )
             .subscribe({
                 next: recipe => {
@@ -102,7 +104,9 @@ export class MealPlanFacade {
                     this.quickMeal.updateDetails({ mealType: normalizeMealType(meal.mealType) ?? 'OTHER' });
                     onSuccess();
                 },
-                error: () => { this.actionErrorKey.set('MEAL_PLANS.ERROR_ADD_MEAL'); },
+                error: () => {
+                    this.actionErrorKey.set('MEAL_PLANS.ERROR_ADD_MEAL');
+                },
             });
     }
 

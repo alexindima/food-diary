@@ -234,17 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "8d523abf10ca6c9df1a595a278e75e9b23638a9c2e98d1fe5f156edf658aafb9"
-        },
-        {
-          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "fb444f0ce2c8574d259df3e852ebfa8166bf893cb0d122db701cd01a9b6d597b"
+          "sha256": "811f49b777ea2232793de30be282e6ae1713d8b9b39d06ca5ac25ca9927bb2fd"
         }
       ],
-      "reason": "Reviewed the intentional read-only Admin BodyMetrics dependency and synchronized architecture allowlists. The architecture-health review workflow remains accurate; the complete 2116-test architecture suite passed.",
+      "reason": "Reviewed architecture-health and quality-risk procedures after regenerated navigation indexes. No project references, persistence ownership or public backend contracts changed; 2116 architecture and 11825 backend tests passed. New frontend behavior is covered by executed regression tests and browser evidence, including a 432-state danger-button contrast matrix. Static reference signals remain navigation evidence and no removal candidates were deleted.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:06:10.0711985Z"
+      "gitHead": "ee78095349529338543fc10108f046e62c050aaa",
+      "reviewedAtUtc": "2026-10-06T02:53:16.4354307Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -867,13 +863,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "47992f8a1ab6a42be6de799e89657a8fa7e36b2e959d94628413634c32106473"
+          "sha256": "e54a24dc70d49f3ee491d2cdf9dbcab40e0ce9a850830dea2989d0230158d619"
         }
       ],
-      "reason": "Reviewed the final quality metrics for Storybook configuration and demo metadata; Playwright CLI verifies story rendering, console and interaction evidence outside the repository, with the full npm verify passing.",
+      "reason": "Reviewed focus and contrast guidance, integration classification for Docker PostgreSQL tests, and formatting-only changes; focused regression tests, full backend unit and architecture tests, browser smoke tests, and real application scenarios provide execution evidence, while generated test references remain navigation only.",
       "baseRef": "HEAD",
-      "gitHead": "4303e0f849219ddef50a861335783670ae8bcff5",
-      "reviewedAtUtc": "2026-10-06T00:25:47.5561495Z"
+      "gitHead": "ee78095349529338543fc10108f046e62c050aaa",
+      "reviewedAtUtc": "2026-10-06T04:24:17.9565198Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -969,13 +965,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "47992f8a1ab6a42be6de799e89657a8fa7e36b2e959d94628413634c32106473"
+          "sha256": "e54a24dc70d49f3ee491d2cdf9dbcab40e0ce9a850830dea2989d0230158d619"
         }
       ],
-      "reason": "Only Storybook tooling and demo imports changed; refreshed quality metrics introduce no production security boundary or sensitive data change, and the security-review workflow still treats indexes as navigation evidence.",
+      "reason": "Reviewed speech consent and owner-scoped cleanup, stale event and destroyed component guards, and bounded doctor access revocation checks returning 403; failures map to safe localized categories without raw provider errors or additional capture, logging, storage, or sharing.",
       "baseRef": "HEAD",
-      "gitHead": "4303e0f849219ddef50a861335783670ae8bcff5",
-      "reviewedAtUtc": "2026-10-06T00:25:48.8545426Z"
+      "gitHead": "ee78095349529338543fc10108f046e62c050aaa",
+      "reviewedAtUtc": "2026-10-06T04:24:18.6069312Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1112,17 +1108,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "657db3b90e62d797e9e8162251b68bcb343872d636f527894ac4b39db1afa4bd"
+          "sha256": "53c7feb9ee0e7c7bbd14e37efe51332e2d7dd0664e737796f8bfe9c6f2b6de2c"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "795e4de0064e515dbbe84d2bc55935028d06c5381944945036886c76453e9c51"
+          "sha256": "1f2c53bcb54921bf6d61ad61faddf4ed11d3410c80e032ea6765119f2e77d2ec"
         }
       ],
-      "reason": "Reviewed refreshed frontend trace sources after the last helper extraction: fasting page, history dialog and details use the shared duration display, and client meal mappings preserve meal ownership and serving quantities. Existing workflow guidance remains accurate.",
+      "reason": "Reviewed existing architecture, frontend contract, quality, security, and trace workflows against current source changes; existing procedures and ownership rules still apply, and UI kit docs now explain selected suggestion focus, keyboard behavior, readable button states, and custom focus contrast.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:48:03.0821407Z"
+      "gitHead": "ee78095349529338543fc10108f046e62c050aaa",
+      "reviewedAtUtc": "2026-10-06T04:24:19.2364484Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1206,13 +1202,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "657db3b90e62d797e9e8162251b68bcb343872d636f527894ac4b39db1afa4bd"
+          "sha256": "53c7feb9ee0e7c7bbd14e37efe51332e2d7dd0664e737796f8bfe9c6f2b6de2c"
         }
       ],
-      "reason": "Reviewed current contracts after the final fasting duration and Dietologist serving-plural changes: helper inputs preserve existing callers, locale keys exist in EN/RU, and focused fasting/client tests plus rendered mobile state pass.",
+      "reason": "Reviewed shared autocomplete selection, changing options, visible versus hidden popup Enter, scrolling, and product picker consumers against current sources and browser behavior; component selectors, inputs, outputs, and backend HTTP contracts remain compatible.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:48:00.1880243Z"
+      "gitHead": "ee78095349529338543fc10108f046e62c050aaa",
+      "reviewedAtUtc": "2026-10-06T04:24:17.3365891Z"
     },
     {
       "pageId": "workflow.query-context",

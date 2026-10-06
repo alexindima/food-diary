@@ -13,6 +13,10 @@ section {
     overflow: auto;
     max-height: 28rem;
 
+    &:focus-visible {
+        outline: var(--fd-outline-focus);
+    }
+
     table {
         width: 100%;
         border-collapse: collapse;

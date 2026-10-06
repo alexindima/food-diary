@@ -130,12 +130,20 @@
                     [options]="languageOptions()"
                     (valueChange)="userFormPatch.emit({ language: $event })"
                 />
-                <fd-ui-select
+                <fd-ui-autocomplete
                     size="sm"
-                    [formField]="userForm().timeZoneId"
+                    suffixIcon="expand_more"
+                    [showClear]="false"
+                    [value]="timeZoneValue()"
+                    [disabled]="userForm().timeZoneId().disabled()"
                     [label]="'USER_MANAGE.TIME_ZONE' | translate"
-                    [options]="timeZoneOptions()"
-                    (valueChange)="userFormPatch.emit({ timeZoneId: $event })"
+                    [placeholder]="'USER_MANAGE.TIME_ZONE_SEARCH' | translate"
+                    [emptyText]="'USER_MANAGE.TIME_ZONE_NO_RESULTS' | translate"
+                    [options]="filteredTimeZoneOptions()"
+                    (queryChange)="timeZoneQuery.set($event)"
+                    (optionSelected)="onTimeZoneSelected($event)"
+                    (touch)="onTimeZoneTouch()"
+                    (keydown.escape)="resetTimeZoneSearch()"
                 />
                 <p>{{ 'USER_MANAGE.TIME_ZONE_HINT' | translate }}</p>
                 <fd-ui-select

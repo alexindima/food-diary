@@ -200,7 +200,7 @@
     }
 
     &__percent {
-        color: var(--fd-color-primary-500);
+        color: var(--fd-color-text);
         font-weight: var(--fd-font-weight-bold);
     }
 
@@ -285,7 +285,11 @@
         font-size: var(--fd-text-caption-size);
 
         &--complete {
-            color: var(--fd-color-green-500);
+            color: var(--fd-color-text);
+
+            fd-ui-icon {
+                color: var(--fd-color-green-500);
+            }
         }
     }
 

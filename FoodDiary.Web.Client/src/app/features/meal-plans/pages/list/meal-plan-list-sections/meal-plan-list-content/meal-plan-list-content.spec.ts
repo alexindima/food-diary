@@ -23,8 +23,8 @@ describe('MealPlanListContentComponent', () => {
         expect(element.querySelector('.meal-plan-card')).toBeNull();
     });
 
-    it('renders plan cards and emits opened plan id', () => {
-        const fixture = createComponent({ plans: [createPlanCard()] });
+    it.each([true, false])('distinguishes a card with isCurated=%s and emits its opened plan id', isCurated => {
+        const fixture = createComponent({ plans: [{ ...createPlanCard(), isCurated }] });
         const element = getElement(fixture);
         const planOpen = vi.fn();
         fixture.componentInstance['planOpen'].subscribe(planOpen);
@@ -32,6 +32,8 @@ describe('MealPlanListContentComponent', () => {
         element.querySelector<HTMLElement>('.meal-plan-card')?.click();
 
         expect(element.querySelector('.meal-plan-card__name')?.textContent).toContain('Keto plan');
+        expect(element.textContent).toContain(isCurated ? 'MEAL_PLANS.CURATED' : 'MEAL_PLANS.MY_PLAN');
+        expect(element.textContent).not.toContain(isCurated ? 'MEAL_PLANS.MY_PLAN' : 'MEAL_PLANS.CURATED');
         expect(planOpen).toHaveBeenCalledWith('plan-1');
     });
 

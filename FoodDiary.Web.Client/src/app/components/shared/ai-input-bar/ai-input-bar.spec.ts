@@ -3,7 +3,7 @@ import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { NEVER, type Observable, of, Subject, throwError } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { AuthService } from '../../../services/auth.service';
@@ -15,6 +15,7 @@ import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
 import { UserFacade } from '../../../shared/lib/user.facade';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
 import type { FoodRecognitionJob } from '../../../shared/models/food-recognition.data';
+import { type SpeechRecognitionFailure, SpeechRecognitionService } from '../../../shared/platform/speech-recognition.service';
 import { FoodRecognitionHistoryDialogComponent } from '../food-recognition-history/food-recognition-history-dialog';
 import { AiInputBarComponent } from './ai-input-bar';
 import type { AiInputBarMealDetails, AiInputBarResult } from './ai-input-bar.types';
@@ -82,11 +83,20 @@ type AiInputBarTestContext = {
         getInfoSilently: ReturnType<typeof vi.fn>;
         user: ReturnType<typeof signal<{ aiConsentAcceptedAt: string | null } | null>>;
     };
+    speechRecognition: SpeechRecognitionMock;
+};
+
+type SpeechRecognitionMock = {
+    isSupported: boolean;
+    isListening: ReturnType<typeof signal<boolean>>;
+    start: Mock<SpeechRecognitionService['start']>;
+    stop: Mock<SpeechRecognitionService['stop']>;
+    isOwnedBy: SpeechRecognitionService['isOwnedBy'];
 };
 
 async function setupAiInputBarAsync(
     mode: 'create' | 'emit' = 'emit',
-    options: { aiConsentAcceptedAt?: string | null; isPremium?: boolean } = {},
+    options: { aiConsentAcceptedAt?: string | null; isPremium?: boolean; speechSupported?: boolean } = {},
 ): Promise<AiInputBarTestContext> {
     const aiFoodService = {
         parseFoodText: vi.fn().mockReturnValue(of({ items: VISION_ITEMS })),
@@ -104,6 +114,7 @@ async function setupAiInputBarAsync(
         acceptAiConsent: vi.fn().mockReturnValue(of(void 0)),
     };
     const navigationService = { navigateToPremiumAccessAsync: vi.fn() };
+    const speechRecognition = createSpeechRecognitionMock(options.speechSupported ?? false);
     const dialogService = {
         open: vi.fn(
             (
@@ -142,14 +153,195 @@ async function setupAiInputBarAsync(
                 },
             },
             { provide: FrontendLoggerService, useValue: { warn: vi.fn() } },
+            { provide: SpeechRecognitionService, useValue: speechRecognition },
         ],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(AiInputBarComponent);
     const component = fixture.componentInstance;
     fixture.componentRef.setInput('mode', mode);
-    return { aiFoodService, component, dialogService, fixture, navigationService, userFacade };
+    return { aiFoodService, component, dialogService, fixture, navigationService, userFacade, speechRecognition };
 }
+
+function createSpeechRecognitionMock(isSupported: boolean): SpeechRecognitionMock {
+    const isListening = signal(false);
+    let activeOwner: object | undefined;
+    return {
+        isSupported,
+        isListening,
+        start: vi.fn<SpeechRecognitionService['start']>((_locale, _onTranscript, _onError, owner) => {
+            activeOwner = owner;
+            isListening.set(true);
+            return true;
+        }),
+        stop: vi.fn<SpeechRecognitionService['stop']>(owner => {
+            if (owner === undefined || activeOwner === owner) {
+                isListening.set(false);
+            }
+        }),
+        isOwnedBy: owner => activeOwner === owner,
+    };
+}
+
+function reportSpeechFailure(speech: SpeechRecognitionMock, failure: SpeechRecognitionFailure): void {
+    speech.isListening.set(false);
+    const onError = speech.start.mock.calls.at(-1)?.[2];
+    if (onError === undefined) {
+        throw new Error('Speech error callback was not registered');
+    }
+    onError(failure);
+}
+
+const SPEECH_FAILURE_CASES: Array<[SpeechRecognitionFailure, string]> = [
+    ['microphone-unavailable', 'AI_INPUT_BAR.VOICE_ERROR_MICROPHONE'],
+    ['permission-denied', 'AI_INPUT_BAR.VOICE_ERROR_PERMISSION'],
+    ['network', 'AI_INPUT_BAR.VOICE_ERROR_NETWORK'],
+    ['failed', 'AI_INPUT_BAR.VOICE_ERROR_GENERIC'],
+];
+
+describe('AiInputBarComponent speech feedback', () => {
+    it.each(SPEECH_FAILURE_CASES)('announces a safe %s error without submitting a meal', async (failure, key) => {
+        const { component, fixture, speechRecognition, aiFoodService } = await setupAiInputBarAsync('emit', { speechSupported: true });
+        fixture.detectChanges();
+        await component['toggleMicAsync']();
+
+        reportSpeechFailure(speechRecognition, failure);
+        fixture.detectChanges();
+
+        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent).toContain(key);
+        expect(component['isListening']()).toBe(false);
+        expect(aiFoodService.parseFoodText).not.toHaveBeenCalled();
+    });
+
+    it('explains unsupported voice input and retains the text alternative', async () => {
+        const { component, fixture, speechRecognition } = await setupAiInputBarAsync();
+        fixture.detectChanges();
+
+        await component['toggleMicAsync']();
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain('AI_INPUT_BAR.VOICE_ERROR_UNSUPPORTED');
+        expect(host.querySelector('.ai-input-bar__input')).not.toBeNull();
+        expect(speechRecognition.start).not.toHaveBeenCalled();
+    });
+
+    it('clears a failure on retry and stops normally without an alert', async () => {
+        const { component, fixture, speechRecognition } = await setupAiInputBarAsync('emit', { speechSupported: true });
+        fixture.detectChanges();
+        await component['toggleMicAsync']();
+        reportSpeechFailure(speechRecognition, 'network');
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')).not.toBeNull();
+
+        await component['toggleMicAsync']();
+        fixture.detectChanges();
+
+        expect(component['isListening']()).toBe(true);
+        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')).toBeNull();
+        await component['toggleMicAsync']();
+        fixture.detectChanges();
+        expect(component['isListening']()).toBe(false);
+        expect(speechRecognition.stop).toHaveBeenCalledOnce();
+        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')).toBeNull();
+    });
+});
+
+describe('AiInputBarComponent speech recovery', () => {
+    it('allows manual text after a failure and clears the obsolete speech alert', async () => {
+        const { component, fixture, speechRecognition, aiFoodService } = await setupAiInputBarAsync('emit', { speechSupported: true });
+        fixture.detectChanges();
+        await component['toggleMicAsync']();
+        reportSpeechFailure(speechRecognition, 'permission-denied');
+        fixture.detectChanges();
+        const input = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.ai-input-bar__input');
+        if (input === null) {
+            throw new Error('Meal text input was not rendered');
+        }
+
+        input.value = 'two eggs';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+
+        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')).toBeNull();
+        expect(component['voiceText']()).toBe('two eggs');
+        await component['submitTextAsync']();
+        expect(aiFoodService.parseFoodText).toHaveBeenCalledWith({ text: 'two eggs' });
+    });
+
+    it('clears local speech failure when the parent resets the input', async () => {
+        const { component, fixture, speechRecognition } = await setupAiInputBarAsync('create', { speechSupported: true });
+        fixture.detectChanges();
+        await component['toggleMicAsync']();
+        reportSpeechFailure(speechRecognition, 'failed');
+        fixture.detectChanges();
+
+        fixture.componentRef.setInput('clearToken', 1);
+        fixture.detectChanges();
+
+        expect(component['speechErrorKey']()).toBeNull();
+        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')).toBeNull();
+    });
+
+    it('still submits a successful transcript as voice recognition', async () => {
+        const { component, fixture, speechRecognition, aiFoodService } = await setupAiInputBarAsync('emit', { speechSupported: true });
+        fixture.detectChanges();
+        await component['toggleMicAsync']();
+        const onTranscript = speechRecognition.start.mock.calls[0][1];
+
+        onTranscript('two eggs');
+        await fixture.whenStable();
+
+        expect(aiFoodService.parseFoodText).toHaveBeenCalledWith({ text: 'two eggs' });
+        expect(component['lastTextSource']).toBe('Voice');
+        expect(component['speechErrorKey']()).toBeNull();
+    });
+});
+
+describe('AiInputBarComponent speech ownership', () => {
+    it('disables only another microphone and preserves the owner recording through unrelated cleanup', async () => {
+        const { component, fixture, speechRecognition } = await setupAiInputBarAsync('emit', { speechSupported: true });
+        const otherInput = TestBed.createComponent(AiInputBarComponent);
+        fixture.detectChanges();
+        otherInput.detectChanges();
+        await component['toggleMicAsync']();
+        const owner = speechRecognition.start.mock.calls[0][3];
+        otherInput.detectChanges();
+        const otherHost = otherInput.nativeElement as HTMLElement;
+        const microphone = otherHost.querySelector<HTMLButtonElement>('button[aria-label="MEAL_LIST.VOICE_MIC_TITLE"]');
+        expect(microphone?.disabled).toBe(true);
+        expect(microphone?.getAttribute('title')).toBe('DISABLED_HINTS.OPERATION_BUSY');
+        expect(otherHost.querySelector<HTMLInputElement>('.ai-input-bar__input')?.disabled).toBe(false);
+        expect(otherHost.querySelector<HTMLButtonElement>('button[aria-label="AI_INPUT_BAR.PHOTO_TITLE"]')?.disabled).toBe(false);
+        await otherInput.componentInstance['toggleMicAsync']();
+        expect(speechRecognition.start).toHaveBeenCalledOnce();
+
+        otherInput.destroy();
+
+        expect(speechRecognition.isListening()).toBe(true);
+        expect(component['isListening']()).toBe(true);
+        fixture.destroy();
+        expect(speechRecognition.isListening()).toBe(false);
+        expect(speechRecognition.stop).toHaveBeenLastCalledWith(owner);
+    });
+
+    it('does not start recording after a pending consent check outlives the input', async () => {
+        const { component, fixture, speechRecognition, userFacade } = await setupAiInputBarAsync('emit', {
+            speechSupported: true,
+            aiConsentAcceptedAt: null,
+        });
+        const user = new Subject<{ aiConsentAcceptedAt: string }>();
+        userFacade.getInfoSilently.mockReturnValueOnce(user);
+        fixture.detectChanges();
+        const recording = component['toggleMicAsync']();
+
+        fixture.destroy();
+        user.next({ aiConsentAcceptedAt: '2026-05-17T00:00:00Z' });
+        await recording;
+
+        expect(speechRecognition.start).not.toHaveBeenCalled();
+    });
+});
 
 describe('AiInputBarComponent history access', () => {
     it('opens recent recognitions from the food input', async () => {

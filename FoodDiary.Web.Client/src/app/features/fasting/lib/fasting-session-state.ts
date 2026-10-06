@@ -7,9 +7,7 @@ const DURATION_ROUNDING_FACTOR = 10;
 
 export function getFastingDurationDisplay(session: FastingSession, now = new Date()): { value: number; unitKey: string } {
     const hours = calculateFastingElapsedMs(session, now) / MS_PER_HOUR;
-    return hours < 1
-        ? { value: hours * MINUTES_PER_HOUR, unitKey: 'FASTING.MINUTES' }
-        : { value: hours, unitKey: 'FASTING.HOURS' };
+    return hours < 1 ? { value: hours * MINUTES_PER_HOUR, unitKey: 'FASTING.MINUTES' } : { value: hours, unitKey: 'FASTING.HOURS' };
 }
 
 export function isFastingEndedEarly(session: FastingSession): boolean {

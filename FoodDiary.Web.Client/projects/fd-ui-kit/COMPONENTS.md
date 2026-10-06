@@ -411,6 +411,12 @@ Primary button component.
 
 The native `hidden` attribute on the component host removes the button from layout and keyboard navigation. Bind `[hidden]` when the action should remain mounted while temporarily unavailable.
 
+Danger buttons retain red destructive semantics across themes. Solid fill pairs the darker danger palette with white text; outline and text fills mix the theme's danger and text tokens for readable labels, including hover and active states. Customize these through the existing `--fd-button-danger-*` tokens rather than changing the global danger color.
+
+Primary outline and text fills use the readable primary foreground in each theme, retaining that foreground during hover and active states. Their existing `--fd-button-outline-*` and `--fd-button-ghost-*` tokens remain the styling hooks.
+
+Primary solid fill pairs the theme's primary 700–900 gradient shades with its existing on-brand foreground for readable labels in default, hover, active, and focus states. Toolbar and brand-action appearances share that pair. Global brand gradients and other button variants retain their own styling.
+
 **Inputs**
 
 - `type?: 'button' | 'submit' | 'reset'`
@@ -891,6 +897,8 @@ Textarea supports `[stretch]="true"` to fill an available flex/grid height (for 
 `fd-ui-autocomplete` accepts `suffixIcon` (default `search`); use `expand_more` for searchable category pickers. Existing clear and keyboard behavior is unchanged.
 
 `showClear` (default `true`) controls the autocomplete clear action.
+
+Opening the menu activates an exact matching selected value, with the first option as a fallback for unmatched input. When suggestions change while the menu is open, the first available option becomes active for keyboard selection. Repeated arrow keys continue through the options, keeping the active option in view. Enter with a visible empty-state popup keeps the value unchanged and prevents submitting the enclosing form; when the empty popup is hidden, Enter remains available to the form.
 
 ### Manual calendar date entry
 

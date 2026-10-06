@@ -700,6 +700,8 @@ test.describe('dashboard regression', () => {
                 await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route => route.fulfill(jsonResponse(snapshot)));
                 await page.goto('/dashboard');
                 const card = page.locator('fd-dashboard-fasting-card');
+                // Bring the card below onboarding into view without scrolling its current-day chip.
+                await card.scrollIntoViewIfNeeded();
                 await expect(card.locator('.dashboard-fasting-card__elapsed')).toHaveText(/^01:00:\d{2}$/u);
                 const marker = await dashboardBoundsAsync(card.locator('.dashboard-fasting-card__now'));
                 const timer = await dashboardBoundsAsync(card.locator('.dashboard-fasting-card__elapsed'));

@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent, FdUiInlineAlertComponent } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { firstValueFrom } from 'rxjs';
@@ -25,7 +25,7 @@ import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { UserFacade } from '../../../shared/lib/user.facade';
 import type { FoodRecognitionJob } from '../../../shared/models/food-recognition.data';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
-import { SpeechRecognitionService } from '../../../shared/platform/speech-recognition.service';
+import { type SpeechRecognitionFailure, SpeechRecognitionService } from '../../../shared/platform/speech-recognition.service';
 import { AiConsentDialogComponent } from '../ai-consent-dialog/ai-consent-dialog';
 import { FoodRecognitionHistoryDialogComponent } from '../food-recognition-history/food-recognition-history-dialog';
 import { ImageUploadFieldComponent } from '../image-upload-field/image-upload-field';
@@ -36,12 +36,28 @@ import type { AiInputBarMealDetails, AiInputBarMode, AiInputBarResult, AiRecogni
 import { AiPhotoResultComponent } from './ai-photo-result/ai-photo-result';
 import type { AiPhotoEditApplied } from './ai-photo-result/ai-photo-result-lib/ai-photo-result.types';
 
+const SPEECH_ERROR_KEYS: Record<SpeechRecognitionFailure, string> = {
+    unsupported: 'AI_INPUT_BAR.VOICE_ERROR_UNSUPPORTED',
+    'microphone-unavailable': 'AI_INPUT_BAR.VOICE_ERROR_MICROPHONE',
+    'permission-denied': 'AI_INPUT_BAR.VOICE_ERROR_PERMISSION',
+    network: 'AI_INPUT_BAR.VOICE_ERROR_NETWORK',
+    failed: 'AI_INPUT_BAR.VOICE_ERROR_GENERIC',
+};
+
 @Component({
     selector: 'fd-ai-input-bar',
     templateUrl: './ai-input-bar.html',
     styleUrls: ['./ai-input-bar.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent, AiPhotoResultComponent, ImageUploadFieldComponent],
+    imports: [
+        TranslatePipe,
+        FdUiButtonComponent,
+        FdUiHintDirective,
+        FdUiIconComponent,
+        FdUiInlineAlertComponent,
+        AiPhotoResultComponent,
+        ImageUploadFieldComponent,
+    ],
     providers: [AiInputBarFacade],
 })
 export class AiInputBarComponent {
@@ -53,6 +69,7 @@ export class AiInputBarComponent {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly speechRecognition = inject(SpeechRecognitionService);
+    private readonly speechOwner = {};
     private readonly photoUploadField = viewChild(ImageUploadFieldComponent);
     private readonly photoDialogRef = signal<FdUiDialogRef<AiPhotoResultComponent> | null>(null);
     private readonly historyDialogRef = signal<FdUiDialogRef<FoodRecognitionHistoryDialogComponent, FoodRecognitionJob> | null>(null);
@@ -65,6 +82,7 @@ export class AiInputBarComponent {
     public readonly mealCreateRequested = output<AiInputBarResult>();
 
     protected readonly voiceText = signal('');
+    protected readonly speechErrorKey = signal<string | null>(null);
     protected readonly textSubmittedQuery = signal<string | null>(null);
     protected readonly textIsAnalyzing = this.recognition.text.analyzing;
     protected readonly textResults = this.recognition.text.results;
@@ -74,7 +92,9 @@ export class AiInputBarComponent {
     protected readonly textNutritionErrorKey = this.recognition.text.nutritionErrorKey;
     protected readonly hasTextResult = computed(() => this.textSubmittedQuery() !== null);
     protected readonly isSubmittingMeal = signal(false);
-    protected readonly isListening = this.speechRecognition.isListening;
+    protected readonly isListening = computed(
+        () => this.speechRecognition.isListening() && this.speechRecognition.isOwnedBy(this.speechOwner),
+    );
     protected readonly isSpeechSupported = this.speechRecognition.isSupported;
     private lastTextSource: AiRecognitionSource = 'Text';
 
@@ -103,6 +123,9 @@ export class AiInputBarComponent {
             this.photoIsNutritionLoading() ||
             this.isSubmittingMeal(),
     );
+    protected readonly isMicrophoneDisabled = computed(
+        () => this.isDisabled() || (this.speechRecognition.isListening() && !this.isListening()),
+    );
 
     protected readonly showDetails = computed(() => this.mode() === 'create');
     protected readonly submitLabelKey = computed(() =>
@@ -111,6 +134,7 @@ export class AiInputBarComponent {
 
     public constructor() {
         this.destroyRef.onDestroy(() => {
+            this.speechRecognition.stop(this.speechOwner);
             this.historyDialogRef()?.close();
         });
         effect(() => {
@@ -125,6 +149,7 @@ export class AiInputBarComponent {
 
     protected onTextInput(event: Event): void {
         if (event.target instanceof HTMLInputElement) {
+            this.speechErrorKey.set(null);
             this.voiceText.set(event.target.value);
         }
     }
@@ -151,8 +176,12 @@ export class AiInputBarComponent {
     }
 
     protected async toggleMicAsync(): Promise<void> {
+        if (this.isMicrophoneDisabled()) {
+            return;
+        }
+        this.speechErrorKey.set(null);
         if (this.isListening()) {
-            this.speechRecognition.stop();
+            this.speechRecognition.stop(this.speechOwner);
             return;
         }
 
@@ -164,16 +193,34 @@ export class AiInputBarComponent {
             return;
         }
 
-        if (!this.isSpeechSupported) {
+        if (this.destroyRef.destroyed || this.isMicrophoneDisabled()) {
             return;
         }
 
-        this.speechRecognition.start(resolveAppLocale(this.localizationService.getCurrentLanguage()), transcript => {
-            if (transcript.length > 0) {
-                this.voiceText.set(transcript);
-                void this.submitTextAsync('Voice');
-            }
-        });
+        if (!this.isSpeechSupported) {
+            this.speechErrorKey.set(SPEECH_ERROR_KEYS.unsupported);
+            return;
+        }
+
+        this.speechRecognition.start(
+            resolveAppLocale(this.localizationService.getCurrentLanguage()),
+            this.onSpeechTranscript.bind(this),
+            this.onSpeechError.bind(this),
+            this.speechOwner,
+        );
+    }
+
+    private onSpeechTranscript(transcript: string): void {
+        if (transcript.length > 0 && !this.destroyRef.destroyed) {
+            this.voiceText.set(transcript);
+            void this.submitTextAsync('Voice');
+        }
+    }
+
+    private onSpeechError(failure: SpeechRecognitionFailure): void {
+        if (!this.destroyRef.destroyed) {
+            this.speechErrorKey.set(SPEECH_ERROR_KEYS[failure]);
+        }
     }
 
     protected onTextAddToMeal(details: AiInputBarMealDetails): void {
@@ -339,6 +386,7 @@ export class AiInputBarComponent {
     }
 
     protected clearState(): void {
+        this.speechErrorKey.set(null);
         this.voiceText.set('');
         this.dismissTextResult();
         this.dismissPhotoResult();

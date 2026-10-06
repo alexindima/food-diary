@@ -18,11 +18,13 @@
     <main class="fd-root__main" id="main-content" tabindex="-1">
         @if (usesAuthenticatedShell() && isImpersonating()) {
             <div class="fd-impersonation-banner" role="status" aria-live="polite">
-                <span>Impersonation mode</span>
+                <span>{{ 'IMPERSONATION.MODE' | translate }}</span>
                 @if (impersonationReason()) {
                     <span class="fd-impersonation-banner__reason fd-truncate">{{ impersonationReason() }}</span>
                 }
-                <button type="button" class="fd-impersonation-banner__button" (click)="stopImpersonation()">Exit</button>
+                <button type="button" class="fd-impersonation-banner__button" (click)="stopImpersonation()">
+                    {{ 'IMPERSONATION.END_SESSION' | translate }}
+                </button>
             </div>
         }
         <div class="fd-root__viewport" role="region" tabindex="0" [attr.aria-label]="'COMMON.SKIP_TO_MAIN_CONTENT' | translate">

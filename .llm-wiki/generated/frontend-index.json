@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1902,
+    "typescriptFiles": 1903,
     "symbols": 728,
     "routes": 106,
     "features": 46,
-    "specs": 677,
+    "specs": 678,
     "localeFiles": 5,
     "roles": {
       "Component": 481,
@@ -1123,6 +1123,7 @@
         "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-card/user-manage-billing-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-summary/user-manage-billing-summary.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/connected-devices/user-manage-connected-devices.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-card/user-manage-dietologist-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-permissions/user-manage-dietologist-permissions.spec.ts",
@@ -1592,7 +1593,7 @@
       "role": "Component",
       "selector": "fd-ui-autocomplete",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete.ts",
-      "line": 42
+      "line": 43
     },
     {
       "name": "FdUiBarChartComponent",
@@ -2747,7 +2748,7 @@
       "role": "Component",
       "selector": "fd-ai-input-bar",
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.ts",
-      "line": 47
+      "line": 63
     },
     {
       "name": "AiPhotoDetailsPanelComponent",
@@ -4007,7 +4008,7 @@
       "role": "Component",
       "selector": "fd-fasting-redesign-preview",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
-      "line": 48
+      "line": 41
     },
     {
       "name": "FastingSafetyDialogComponent",
@@ -5036,7 +5037,7 @@
       "role": "Component",
       "selector": "fd-user-manage-comparison-widgets",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.ts",
-      "line": 48
+      "line": 50
     },
     {
       "name": "UserManageConnectedDevicesComponent",
@@ -6520,7 +6521,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/platform/speech-recognition.service.ts",
-      "line": 5
+      "line": 7
     },
     {
       "name": "ViewportService",
@@ -7179,8 +7180,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4063,
-      "russianProperties": 4063,
+      "englishProperties": 4074,
+      "russianProperties": 4074,
       "countsMatch": true
     },
     {

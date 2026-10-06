@@ -422,7 +422,12 @@ function formatDateOnly(value: string | null | undefined): string {
     return value.slice(0, DATE_ONLY_LENGTH);
 }
 
-function formatMealItems(meal: Meal | MealResponseDto, formatting: ClientValueFormatting, translate: (key: string) => string, language: string): string {
+function formatMealItems(
+    meal: Meal | MealResponseDto,
+    formatting: ClientValueFormatting,
+    translate: (key: string) => string,
+    language: string,
+): string {
     const names = meal.items.map(item => formatMealItem(item, formatting, translate, language)).filter(Boolean);
     const resolvedAiIds = new Set(meal.items.map(item => item.sourceAiItemId));
     const aiNames = (meal.aiSessions ?? [])
@@ -451,7 +456,7 @@ function formatMealItem(
 }
 
 function getMealItemName(item: MealItem | MealItemResponseDto): string | null | undefined {
-    return 'sourceType' in item ? item.product?.name ?? item.recipe?.name : item.productName ?? item.recipeName;
+    return 'sourceType' in item ? (item.product?.name ?? item.recipe?.name) : (item.productName ?? item.recipeName);
 }
 
 function getMealItemUnit(item: MealItem | MealItemResponseDto, language: string): string {

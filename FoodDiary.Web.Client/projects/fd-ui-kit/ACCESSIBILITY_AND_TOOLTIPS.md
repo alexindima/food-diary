@@ -12,6 +12,8 @@ This document defines the baseline rules for accessible names, icon-only actions
 
 ## Core Rule
 
+Custom keyboard focus indicators must contrast at least 3:1 with adjacent colors under [WCAG 1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html). Use the existing `--fd-outline-focus` and `--fd-outline-focus-strong` tokens with an opaque theme foreground, retaining their width and offset tokens. Check the indicator against the surface around it; a translucent brand tint alone can lose contrast on light surfaces.
+
 Every interactive element must have a clear accessible name.
 
 That name should come from the most semantic source available, in this order:

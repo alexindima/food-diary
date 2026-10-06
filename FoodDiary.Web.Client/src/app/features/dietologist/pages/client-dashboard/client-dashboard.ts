@@ -282,7 +282,12 @@ export class ClientDashboardComponent {
     );
     protected readonly mealItems = computed<ClientMealView[]>(() =>
         this.client()?.permissions.shareMeals === true
-            ? buildMealViews(this.dashboard(), this.valueFormatting(), key => this.translateService.instant(key), this.translateService.currentLang() ?? 'en')
+            ? buildMealViews(
+                  this.dashboard(),
+                  this.valueFormatting(),
+                  key => this.translateService.instant(key),
+                  this.translateService.currentLang() ?? 'en',
+              )
             : [],
     );
     protected readonly weightSummary = computed<ClientBodyMeasurementView | null>(() =>
@@ -586,7 +591,9 @@ export class ClientDashboardComponent {
 
         return forkJoin({
             dashboard: this.shouldLoadDietologistDashboardSnapshot(client)
-                ? this.loadDietologistDashboardSnapshot(client, language).pipe(this.handleSectionLoadError<DietologistDashboardSnapshot, null>(null))
+                ? this.loadDietologistDashboardSnapshot(client, language).pipe(
+                      this.handleSectionLoadError<DietologistDashboardSnapshot, null>(null),
+                  )
                 : of(null),
             goals: client.permissions.shareGoals
                 ? this.dietologistFacade.getClientGoals(client.userId).pipe(this.handleSectionLoadError<DietologistClientGoals, null>(null))
