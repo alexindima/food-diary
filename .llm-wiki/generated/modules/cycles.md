@@ -16,9 +16,9 @@ sources:
 
 - Origin: extracted-project
 - Extracted project: `Modules/Cycles/Application/FoodDiary.Modules.Cycles.Application.csproj`
-- Business-module dependencies: none observed
+- Business-module dependencies: Meals, Users
 - Abstraction-contract dependencies: Meals, Users
-- Business-module consumers: none observed
+- Business-module consumers: Dashboard, Export
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
@@ -39,7 +39,7 @@ No literal attribute-routed controller was associated with this module.
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: CycleProfile, CycleFactor, CycleConsent, CycleSymptomEntry, CyclePredictionRevision, BleedingEntry, FertilitySignal
 - Public contract files: 25
-- Observed external consumer groups: 2
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

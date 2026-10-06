@@ -16,9 +16,9 @@ sources:
 
 - Origin: extracted-project
 - Extracted project: `Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj`
-- Business-module dependencies: none observed
+- Business-module dependencies: Users
 - Abstraction-contract dependencies: Users
-- Business-module consumers: none observed
+- Business-module consumers: Dashboard, Statistics, WeeklyCheckIn
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
@@ -38,7 +38,7 @@ No literal attribute-routed controller was associated with this module.
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: HydrationEntry
 - Public contract files: 7
-- Observed external consumer groups: 2
+- Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

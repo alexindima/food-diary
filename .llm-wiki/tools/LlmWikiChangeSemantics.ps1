@@ -24,10 +24,10 @@ function Test-LlmWikiPresentationOnlyTemplateDiff([string]$DiffText) {
     $removedSemantic = @($removed | ForEach-Object { ConvertTo-TemplateSemanticLine $_ } | Where-Object { $_ })
     if ($addedSemantic.Count -ne $removedSemantic.Count) { return $false }
 
-    $addedSorted = @($addedSemantic | Sort-Object)
-    $removedSorted = @($removedSemantic | Sort-Object)
-    for ($index = 0; $index -lt $addedSorted.Count; $index++) {
-        if ($addedSorted[$index] -cne $removedSorted[$index]) { return $false }
+    # Relative order carries template structure and conditional scope. A sorted
+    # multiset can hide a button moving out of its enclosing @if block.
+    for ($index = 0; $index -lt $addedSemantic.Count; $index++) {
+        if ($addedSemantic[$index] -cne $removedSemantic[$index]) { return $false }
     }
     return $true
 }
@@ -46,7 +46,7 @@ function Get-LlmWikiPathDiff([string]$RepositoryRoot, [string]$Path) {
 }
 
 function Test-LlmWikiBookkeepingPath([string]$Path) {
-    $normalized = $Path.Replace('\\', '/')
+    $normalized = $Path.Replace('\', '/')
     return $normalized -match '^\.llm-wiki/generated/' -or
         $normalized -eq '.llm-wiki/reviews/source-impact-reviews.json'
 }

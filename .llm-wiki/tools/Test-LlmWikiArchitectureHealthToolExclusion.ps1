@@ -4,6 +4,38 @@ param()
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $indexPath = Join-Path $wikiRoot 'generated/architecture-health-index.json'
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
+$repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+$cacheFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'architecture-cache-drift'
+$fixtureTools = Join-Path $cacheFixture '.llm-wiki/tools'
+try {
+    $null = New-Item -ItemType Directory -Path $fixtureTools -Force
+    $toolNames = @('Build-LlmWikiArchitectureHealthIndex.ps1','LlmWikiJson.ps1','LlmWikiGitPaths.ps1','LlmWikiIndexCache.ps1')
+    foreach ($name in $toolNames) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot $name) -Destination (Join-Path $fixtureTools $name) }
+    & git -C $cacheFixture init --quiet
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to initialize architecture-cache fixture.' }
+    $fixtureOutput = Join-Path $cacheFixture '.llm-wiki/generated/architecture-health-index.json'
+    $fixtureReceipt = Join-Path $cacheFixture '.artifacts/llm-wiki/index-cache/architecture-health-index.json'
+    $null = New-Item -ItemType Directory -Path (Split-Path -Parent $fixtureOutput) -Force
+    $fingerprint = Get-LlmWikiIndexInputFingerprint $cacheFixture @($toolNames | ForEach-Object { ".llm-wiki/tools/$_" })
+    $shell = (Get-Process -Id $PID).Path
+    foreach ($scenario in @('dependencyViolations','untrackedProductionProjects','moduleCycleNodes','clean')) {
+        $summary = [ordered]@{dependencyViolations=0;untrackedProductionProjects=0;moduleCycleNodes=0}
+        if ($scenario -ne 'clean') { $summary[$scenario] = 1 }
+        [IO.File]::WriteAllText($fixtureOutput, ([ordered]@{schemaVersion=1;summary=$summary} | ConvertTo-Json -Depth 4))
+        Write-LlmWikiIndexCache $fixtureReceipt $fixtureOutput $fingerprint
+        $messages = & $shell -NoLogo -NoProfile -File (Join-Path $fixtureTools 'Build-LlmWikiArchitectureHealthIndex.ps1') -Check -ReuseUnchangedCheck
+        $expectedExit = if ($scenario -eq 'clean') { 0 } else { 1 }
+        if ($LASTEXITCODE -ne $expectedExit) { throw "Cached architecture gate returned the wrong result for $scenario`: $($messages -join ' ')" }
+    }
+} finally {
+    $resolvedFixture = [IO.Path]::GetFullPath($cacheFixture)
+    $sandbox = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot $repositoryRoot)).TrimEnd('\','/')
+    if ([IO.Path]::GetDirectoryName($resolvedFixture) -cne $sandbox -or
+        [IO.Path]::GetFileName($resolvedFixture) -notmatch '^architecture-cache-drift-[a-f0-9]{32}$') { throw 'Unsafe architecture-cache fixture cleanup.' }
+    if (Test-Path -LiteralPath $resolvedFixture) { Remove-Item -LiteralPath $resolvedFixture -Recurse -Force }
+}
 
 $index = Get-Content -LiteralPath $indexPath -Raw | ConvertFrom-Json
 $catalog = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/repository-catalog.json') -Raw | ConvertFrom-Json

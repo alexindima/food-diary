@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "evidenceRoot": ".artifacts/wiki-tool-audit-20261006",
+  "findings": [
+    {
+      "status": "fixed-focused-verified",
+      "severity": "warning",
+      "consequence": "A caller failure code 37 became success 0 in both shells; cleanup can also propagate a taskkill race exit.",
+      "location": {
+        "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
+        "endLine": 49,
+        "startLine": 43
+      },
+      "remediation": "Preserve the prior global value or its absence in finally; retain process-tree termination checks.",
+      "kind": "defect",
+      "id": "WTA-001",
+      "evidence": [
+        "reproduction-ps7.jsonl",
+        "reproduction-ps5.jsonl",
+        "after-shared-runtime-ps7.jsonl",
+        "after-shared-runtime-ps5.jsonl",
+        "Test-LlmWikiProcess-ps7.log",
+        "Test-LlmWikiProcess-ps5.log"
+      ],
+      "testGap": "The original process test checked descendant termination but not native state.",
+      "trigger": "Windows cleanup executes taskkill after a caller native command."
+    },
+    {
+      "status": "fixed-focused-verified",
+      "severity": "warning",
+      "consequence": "Shared persisted values receive different hashes even though their content is identical.",
+      "location": {
+        "path": ".llm-wiki/tools/LlmWikiJson.ps1",
+        "endLine": 56,
+        "startLine": 45
+      },
+      "remediation": "Decode real apostrophe escapes without changing escaped literals or ordinary PS7 fingerprints.",
+      "kind": "defect",
+      "id": "WTA-002",
+      "evidence": [
+        "reproduction-ps7.jsonl",
+        "reproduction-ps5.jsonl",
+        "portable-ps7.log",
+        "portable-ps5.log"
+      ],
+      "testGap": "Portable tests covered dates and lint but not cross-serializer fingerprints.",
+      "trigger": "The same apostrophe-bearing JSON value is fingerprinted by PS5 and PS7."
+    },
+    {
+      "status": "fixed-focused-verified",
+      "severity": "warning",
+      "consequence": "IO.EnumerationOptions is unavailable and inventory creation throws before discovering source files.",
+      "location": {
+        "path": ".llm-wiki/tools/LlmWikiSourceInventory.ps1",
+        "endLine": 24,
+        "startLine": 15
+      },
+      "remediation": "Retain the modern path and add a compatible per-directory fallback with exclusions, link safety and explicit I/O failure behavior.",
+      "kind": "defect",
+      "id": "WTA-003",
+      "evidence": [
+        "reproduction-ps5.jsonl",
+        "after-shared-runtime-ps5.jsonl",
+        "Test-LlmWikiSourceInventory-ps7-repeat.log",
+        "Test-LlmWikiSourceInventory-ps5-repeat.log"
+      ],
+      "testGap": "Modern equivalence tests did not execute the helper successfully on legacy .NET Framework.",
+      "trigger": "A standalone source inventory helper runs under Windows PowerShell 5.1."
+    },
+    {
+      "status": "fixed-focused-verified",
+      "severity": "warning",
+      "consequence": "The original escape-casing normalization produced identical hashes for distinct literal values, weakening change detection.",
+      "location": {
+        "path": ".llm-wiki/tools/LlmWikiJson.ps1",
+        "endLine": 61,
+        "startLine": 57
+      },
+      "remediation": "Normalize escape casing only when backslash parity denotes an actual JSON Unicode escape.",
+      "kind": "defect",
+      "id": "WTA-004",
+      "evidence": [
+        "literal-escape-collision-before.json",
+        "portable-ps7.log",
+        "portable-ps5.log"
+      ],
+      "testGap": "No test distinguished escaped Unicode characters from literal backslash-u text.",
+      "trigger": "Literal strings backslash-u-ABCD and backslash-u-abcd are fingerprinted."
+    },
+    {
+      "status": "fixed-focused-verified",
+      "severity": "warning",
+      "consequence": "Retain=5 kept 5 result files but 12 metadata files after 12 writes. Per-argument metadata has no bound and increases directory/storage cost.",
+      "location": {
+        "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+        "endLine": 201,
+        "startLine": 198
+      },
+      "remediation": "Bound optional diagnostic metadata and benchmark one-pass result/metadata retention without changing cache correctness.",
+      "kind": "defect",
+      "id": "WTA-005",
+      "evidence": [
+        "query-cache-reproduction.json",
+        "query-cache-fixed-ps7.log",
+        "query-cache-fixed-ps5.log"
+      ],
+      "testGap": "Query-cache tests do not count retained metadata or stress distinct argument keys.",
+      "trigger": "A namespace receives many distinct query argument fingerprints."
+    },
+    {
+      "status": "fixed-focused-verified",
+      "severity": "warning",
+      "consequence": "Retention throws IOException after the new result is successfully published, turning optional cleanup into a query failure.",
+      "location": {
+        "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+        "endLine": 169,
+        "startLine": 157
+      },
+      "remediation": "Allow atomic cache reads with delete sharing and make retention tolerate transient sharing conflicts; retain explicit publication failures.",
+      "kind": "defect",
+      "id": "WTA-006",
+      "evidence": [
+        "query-cache-reproduction.json",
+        "query-cache-fixed-ps7.log",
+        "query-cache-fixed-ps5.log"
+      ],
+      "testGap": "No leased-reader publication/retention scenario exists in the cache regression.",
+      "trigger": "A concurrent reader holds an old result with FileShare.Read while a new query triggers retention."
+    },
+    {
+      "id": "WTA-007",
+      "severity": "major",
+      "kind": "defect",
+      "status": "fixed-focused-verified",
+      "location": {
+        "endLine": 32,
+        "path": ".llm-wiki/tools/LlmWikiChangeSemantics.ps1",
+        "startLine": 28
+      },
+      "trigger": "A button moves outside an @if block while added/removed normalized lines contain the same multiset.",
+      "consequence": "The old sorted comparison classified the behavioral change as presentation-only and skipped frontend contract regeneration.",
+      "testGap": "Only simple class edits and text changes were covered.",
+      "remediation": "Preserve normalized line sequence; add the conditional-scope regression and single-backslash bookkeeping normalization.",
+      "evidence": [
+        "change-semantics-reproduction.json",
+        "index-selection-fixed.log"
+      ]
+    },
+    {
+      "id": "WTA-008",
+      "severity": "major",
+      "kind": "defect",
+      "status": "fixed-focused-verified",
+      "location": {
+        "endLine": 31,
+        "path": ".llm-wiki/tools/LlmWikiVerificationReceipts.ps1",
+        "startLine": 28
+      },
+      "trigger": "Git core.quotepath quotes a tracked or untracked Unicode filename and its content changes with unchanged size/time.",
+      "consequence": "Text path parsing hashes a missing escaped path instead of the actual file; a previously passed verification receipt can remain valid after source changes.",
+      "testGap": "Receipt tests did not force quoted Unicode path output or equal-time edits.",
+      "remediation": "Use NUL path discovery, include both rename endpoints, test tracked/untracked Unicode content, and restore fixture-overwritten receipt bytes.",
+      "evidence": [
+        "receipt-unicode-reproduction.json",
+        "verification-receipts-fixed.log"
+      ]
+    },
+    {
+      "id": "WTA-009",
+      "severity": "major",
+      "kind": "defect",
+      "status": "fixed-focused-verified",
+      "location": {
+        "endLine": 41,
+        "path": ".llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1",
+        "startLine": 28
+      },
+      "trigger": "Generation writes a matching input/output cache receipt for an architecture index that contains dependency, untracked-project or cycle drift.",
+      "consequence": "The old Check plus Reuse path returned exit 0 before enforcing drift counters.",
+      "testGap": "Cache reuse was not exercised with an explicitly nonzero architectural summary.",
+      "remediation": "Enforce all three drift counters on a cache hit; test each nonzero counter plus clean reuse.",
+      "evidence": [
+        "architecture-cache-reproduction.json",
+        "architecture-cache-fixed.log"
+      ]
+    },
+    {
+      "id": "WTA-010",
+      "severity": "major",
+      "kind": "defect",
+      "status": "fixed-focused-verified",
+      "location": {
+        "endLine": 85,
+        "path": ".llm-wiki/tools/Build-LlmWikiModulePages.ps1",
+        "startLine": 77
+      },
+      "trigger": "A module represented by an extracted application project has declared business dependencies in module-dependencies.json.",
+      "consequence": "The generated page discarded the edges and reported none observed; current Admin, Ai, Billing and other pages were wrong.",
+      "testGap": "Module inventory tests checked project presence but not dependency-line equivalence for each extracted module.",
+      "remediation": "Read declared graph edges for extracted modules and verify every generated dependency line against that graph.",
+      "evidence": [
+        "module-page-dependency-audit.json",
+        "module-pages-fixed.log",
+        "backend-module-model-fixed.log"
+      ]
+    }
+  ]
+}

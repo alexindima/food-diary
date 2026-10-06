@@ -29,6 +29,33 @@ try {
     Remove-LlmWikiQueryCacheFileIfPresent -Path $alreadyRemovedPath
     if (Test-Path -LiteralPath $alreadyRemovedPath) { throw 'Idempotent query-cache removal retained a stale entry.' }
 
+    $retentionDirectory = Join-Path $tempRoot 'retention-cache'
+    foreach ($index in 1..12) {
+        $retentionEntry = [pscustomobject]@{
+            path = Join-Path $retentionDirectory "$index.json"
+            metadataPath = Join-Path $retentionDirectory "latest-$index.meta"
+            head = $first.head; changeSetFingerprint = $first.changeSetFingerprint
+            dependencyFingerprint = $first.dependencyFingerprint; argumentFingerprint = "$index"
+        }
+        Write-LlmWikiQueryCache -Entry $retentionEntry -Content '{}' -Retain 5
+    }
+    if (@(Get-ChildItem -LiteralPath $retentionDirectory -Filter '*.json').Count -ne 5 -or
+        @(Get-ChildItem -LiteralPath $retentionDirectory -Filter '*.meta').Count -ne 5) {
+        throw 'Query-cache retention did not bound both results and diagnostic metadata.'
+    }
+    if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) {
+        $leasedPath = Join-Path $retentionDirectory 'leased.json'
+        [IO.File]::WriteAllText($leasedPath, '{}')
+        [IO.File]::SetLastWriteTimeUtc($leasedPath, [DateTime]::UtcNow.AddDays(-1))
+        $lease = [IO.File]::Open($leasedPath, [IO.FileMode]::Open, [IO.FileAccess]::Read, [IO.FileShare]::Read)
+        try {
+            Write-LlmWikiQueryCache -Entry $retentionEntry -Content '{"published":true}' -Retain 5
+            if ((Read-LlmWikiQueryCache -Entry $retentionEntry) -cne '{"published":true}') { throw 'Retention sharing conflict lost a published result.' }
+        } finally { $lease.Dispose() }
+        Write-LlmWikiQueryCache -Entry $retentionEntry -Content '{"published":true}' -Retain 5
+        if ([IO.File]::Exists($leasedPath)) { throw 'Released cache reader lease prevented later retention cleanup.' }
+    }
+
     [IO.File]::WriteAllText((Join-Path $tempRoot 'unrelated.txt'), 'two', [Text.UTF8Encoding]::new($false))
     $unrelated = Get-LlmWikiQueryCacheEntry -RepositoryRoot $tempRoot -Namespace test -Arguments $arguments -RelevantPath 'source.txt' -DependencyPath 'dependency.txt'
     if ($unrelated.fingerprint -cne $first.fingerprint) { throw 'An unrelated workspace edit invalidated a scoped query cache entry.' }

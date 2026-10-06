@@ -16,7 +16,7 @@ sources:
 
 - Origin: extracted-project
 - Extracted project: `Modules/Wearables/Application/FoodDiary.Modules.Wearables.Application.csproj`
-- Business-module dependencies: none observed
+- Business-module dependencies: Users
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api

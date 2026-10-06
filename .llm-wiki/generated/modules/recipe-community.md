@@ -16,7 +16,7 @@ sources:
 
 - Origin: extracted-project
 - Extracted project: `Modules/RecipeCommunity/Application/FoodDiary.Modules.RecipeCommunity.Application.csproj`
-- Business-module dependencies: none observed
+- Business-module dependencies: Notifications, Recipes, Users
 - Abstraction-contract dependencies: Notifications, Recipes, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api

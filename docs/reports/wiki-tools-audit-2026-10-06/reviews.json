@@ -1,0 +1,1272 @@
+{
+  "schemaVersion": 1,
+  "reviewedFileCount": 124,
+  "reviews": [
+    {
+      "path": ".llm-wiki/tools/Get-LlmWikiContentFingerprint.ps1",
+      "sourceSha256": "2014060080165545c723db6597a0272612bfd7489ac39f43b7160475bc353bd2",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Hashes only explicit sorted paths, with stable file/directory/absent distinctions; no full repository scan.",
+      "reliability": "Rejects rooted and dot-dot paths lexically. Directory entries are identity markers, not recursive content hashes. Physical symlink containment and timestamp-race behavior require call-site validation, not an assumed vulnerability.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiGeneratedArtifacts.ps1",
+      "sourceSha256": "c94bf7ad7f8f6fb2948a5eb7232c08b68f6d77b2bea562ab7b204ac11bf7b643",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Skips semantic parsing when SHA256 is identical and restores only equivalent output bytes; changed JSON incurs two hashes plus parse/serialize comparisons.",
+      "reliability": "Backup-relative paths are derived from enumerated generated files, and replacements preserve canonical original bytes. Needs its caller transaction/lock review; this helper is not itself a concurrency or containment boundary.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiGitPaths.ps1",
+      "sourceSha256": "d50897f3f99f0549fb39d61385fde66f1d5bd2191d4c6381101fe36d32bcc0c2",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Git inventory excludes ignored files before filesystem visits; argument and grep batching are bounded. Generic Git helpers still allocate full stdout/stderr and wait without their own deadline.",
+      "reliability": "NUL parsing, strict exit codes and simultaneous stdout/stderr draining are sound. Windows trailing-backslash argument quoting and standalone timeout behavior need targeted validation before findings.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiIndexCache.ps1",
+      "sourceSha256": "ead15925c18422e67266c4903c9c51714bd941ff3bdbec3b4525ab09db4849e5",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Hashes the entire sorted path set in one Git process using BOM-free UTF-8 temporary streams; avoids thousands of PowerShell hashing calls. Cache receipts verify both input and output digests.",
+      "reliability": "Validates returned hash count and format; supports PS5/PS7 encoding. Start-Process has no local deadline, receipt writes are non-atomic but invalid receipts fail closed, and the process is not explicitly disposed. Duplicate Get-LlmWikiFileSha256 definitions require scope/call-site checks.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiJson.ps1",
+      "sourceSha256": "4df79c53aaad7b30913d08d5622fbd1aee064ca3bcea6a67805a1ddd33258157",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Every parse repeats Get-Command capability discovery and canonical formatting scans characters; measure representative callers before caching capability lookup.",
+      "reliability": "Only genuine Unicode escapes are normalized; literal backslash-u values retain their content and case. Identical apostrophe-bearing values now match across PS5/PS7 while ordinary baseline PS7 hashes remain unchanged. Object property ordering remains significant.",
+      "findings": [
+        "WTA-002",
+        "WTA-004"
+      ],
+      "status": "reviewed-fixed-and-focused-verified"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
+      "sourceSha256": "0274d106cd0d4a9ac4c3c83528997ce55cfc8c4f4bb271f69cfaee97ad3cd2b1",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Windows cleanup makes one CIM query per parent; measure before replacing it with a single owned-tree snapshot.",
+      "reliability": "Preserves the global native exit value and its absence in finally; real owned-process tests pass on PS5/PS7. Existing Linux zombie handling remains. Caller recovery after an already-exited root still needs separate review.",
+      "findings": [
+        "WTA-001"
+      ],
+      "status": "reviewed-fixed-and-focused-verified"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+      "sourceSha256": "5317c39b130e125ed64948d2e3c8456780cf20ea7eaf5c3e9b742d03e7f3d0ea",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Uses a request-owned verified workspace and independent dependency hashes. One directory enumeration now bounds both result and metadata files by Retain; diagnostic growth no longer scales with all historical argument keys.",
+      "reliability": "Read handles allow atomic replacement/delete sharing. Optional retention defers Windows sharing/lock conflicts while publication and unexpected I/O failures remain explicit. PS5/PS7 cache regressions preserve reuse and exact invalidation.",
+      "findings": [
+        "WTA-005",
+        "WTA-006"
+      ],
+      "status": "reviewed-fixed-and-focused-verified"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1",
+      "sourceSha256": "d33c3828c7bcba711840c2afcda5c67bc5071c15a7d93442f63ac49eedd40f19",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Uses one reusable SHA256 for query source content and accepts generator-owned hashes to avoid rereading parsed files. Query callers still scan every C# file, including non-excluded dependency trees; profile with Build-LlmWikiRuntimeTopology before changing that contract.",
+      "reliability": "Normalizes line endings and recomputes content for same-size/time edits. Supplied SourceHashes must come from the current caller pass; missing files are filtered. Source enumeration is now verified on PS5 and PS7.",
+      "findings": [
+        "WTA-003"
+      ],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiSourceInventory.ps1",
+      "sourceSha256": "55a4eecd7c5a0f85418df1b10107f33af074ad609a8d8a41002ab45d3ec80091",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Directory exclusions happen before descent, preventing ignored-tree traversal; the current modern-runtime path should be preserved.",
+      "reliability": "Modern enumeration is retained. The legacy fallback prunes excluded and linked trees before descent, skips hidden entries, keeps non-hidden system files and propagates non-permission I/O failures. Both runtime fixture sets and fingerprints pass.",
+      "findings": [
+        "WTA-003"
+      ],
+      "status": "reviewed-fixed-and-focused-verified"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiGitPaths.ps1",
+      "sourceSha256": "b0640e030ac7af82ce74e878e7160d16271bef708957dfd8d8e1cf34cae3d4cc",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "The 250-file fixture exercises concurrent stream draining; HEAD and immutable-SHA policy are compared.",
+      "reliability": "Covers Unicode, spaces, missing and ignored paths, error exits and overlays; does not exercise trailing backslashes or an intentionally stuck Git executable.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiPortable.ps1",
+      "sourceSha256": "d566e6e58de3d1d5a6a032d3065b04e8e0b5dacfbf641fc331d626027e10191f",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Uses small deterministic JSON values and existing lint suites; no workload-size timing assertion.",
+      "reliability": "Now verifies the baseline PS7 hash on both runtimes, real apostrophe vs literal escapes, escape-case distinctions and date-string preservation. PS5 and PS7 executions both pass.",
+      "findings": [
+        "WTA-002",
+        "WTA-004"
+      ],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiProcess.ps1",
+      "sourceSha256": "2bf72b503ac84327796f290fd2fed9fb3b7291889a485087b5ae181435e5e61c",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "The fixture uses bounded readiness polling and a 120-second owned process; normal completion kills the fixture promptly.",
+      "reliability": "Now checks live and stopped grandchildren plus failure=37, success=0 and absent native exit state. Windows fixture launches are hidden. Both installed Windows shells pass; no Linux execution is claimed.",
+      "findings": [
+        "WTA-001"
+      ],
+      "status": "reviewed-fixed-and-focused-verified"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
+      "sourceSha256": "7e1fff9975ded8618bd20c7b587b01ec6e2dd84f3e395e30fecce1e0b4ba5d9b",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small fixture validates reuse, scoped source/dependency invalidation, same-size/time edits and one-scan token reuse without timing assertions.",
+      "reliability": "Covers malformed cache content, idempotent removal and malformed verified tokens. Retention of diagnostic metadata and cache publication while a reader holds an old file are missing scenarios.",
+      "findings": [
+        "WTA-005",
+        "WTA-006"
+      ],
+      "status": "reviewed-fixed-and-focused-verified"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiSourceInventory.ps1",
+      "sourceSha256": "4caee4fc7b078cb3f9c568062ea29484c23b6c3de88d127d6e6d33881b95f7b2",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Uses small deterministic fixtures and compares inventory and fingerprint equivalence instead of asserting timing.",
+      "reliability": "Checks canonical modern/legacy paths, links, hidden/system files, real Unicode filename code points, same-size/time edits, hasher ownership and normalization. Nonrecursive Directory.Delete fixes legacy junction cleanup; both shells pass after an initial cleanup failure.",
+      "findings": [
+        "WTA-003"
+      ],
+      "status": "reviewed-fixed-and-focused-verified"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj",
+      "sourceSha256": "272b6e5995a429b49a4e5468a9ecad5a7f67319935001f4022014980ac9fa46e",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Only three direct runtime package references; no application/project-reference graph is built by the MCP project itself.",
+      "reliability": "Executable has no apphost, and InternalsVisibleTo is limited to the owning test project. Shared package versions are managed outside this file and need review when changed.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/PowerShellWikiCommandExecutor.cs",
+      "sourceSha256": "513c634bd10b103c4e297911e8d04e534098484779489b0c4b3445cfbe7bfd0d",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Three-slot semaphore bounds live processes and streams are read concurrently with an 8 MiB limit. Requests are serialized before waiting for the gate, and queue time is outside the three-minute execution timeout; evaluate bounded queue admission for high concurrency.",
+      "reliability": "Cancellation and timeout kill the running tree, arguments use ArgumentList/env rather than user command interpolation, and request cleanup runs after acquired paths. Mid-write cancellation in WriteRequestAsync can leave a file before ExecuteAsync enters its finally; reproduce before reporting a defect.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
+      "sourceSha256": "5b536fc8668332c15b6aca45eec3071305aa0437a230ca8a07428441f2ca91ab",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Each graph-sensitive fingerprint probes node and dotnet versions and every stage includes HEAD. Static groups repeat after unrelated merges; any optimization must replace HEAD with scoped clean blob/tree evidence rather than simply dropping it. Consider per-run runtime version reuse after measuring its cost.",
+      "reliability": "NUL-safe rename parsing includes both paths, dirty bytes are hashed, review ledgers are deliberately excluded from smoke while validated separately, and runtime identity is included. Graph-sensitive checks retain the whole-worktree boundary. Malformed Git status and caller argument canonicalization need existing test review.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiSmokeSandbox.ps1",
+      "sourceSha256": "20443a8974f2b13af418079c7f2e8da7e4419d3a556364de7b21912b152f3862",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "PID/GUID-owned fixtures separate test writes from source; sandbox root is repeatedly resolved and created.",
+      "reliability": "Environment override is intentional; directory Name and task-prefix validation should match the sanitized repository-path helper. Relative RepositoryRoot assumptions deserve explicit guards.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiChangeSemantics.ps1",
+      "sourceSha256": "e29301b4a7c727207f27d46039fdb3e8765349ada98b37442135540b4a4c0c90",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Linear normalization replaces unnecessary sorting; class/style-only comparisons retain original line order.",
+      "reliability": "Validated conditional-scope moves previously looked presentation-only; fixed sequence comparison and single-backslash bookkeeping normalization, with focused regression.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiApiAcceptance.ps1",
+      "sourceSha256": "83c988ea091e87fa0f8e8b748692c9b4715bd82fb87b3381a0736de415038791",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small hash-set comparisons; per-snapshot lookup is bounded to exactly two snapshots.",
+      "reliability": "Version/base/snapshot hashes and duplicate identities fail closed. Subset approvals return unaccepted changes separately; inspect the caller gate. HashData/ToHexString require modern runtime.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiApplicationModulePaths.ps1",
+      "sourceSha256": "ae114a6f788697a070149ff288dea8289982e2f2b0b9456f525a46c31e9e5ed7",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Per-module manifest reread can be replaced by pass-owned parsed state when many modules are visited. Only direct project files are enumerated.",
+      "reliability": "Module identifiers are bounded and mappings reject absolute/dot-dot escapes. Physical symlink containment and ordinal case behavior need caller/platform tests.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiChangePacket.ps1",
+      "sourceSha256": "8cdbe70d923f8d6c21f2329165efe84df951783c59e6d3e65a1d50580925e3b2",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Constant-time preferred/legacy objective lookup without filesystem work.",
+      "reliability": "Absent or empty objectives throw explicitly; preferred inputs.objective wins over legacy objective. Whitespace is validated before use.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiChangeSetSnapshot.ps1",
+      "sourceSha256": "fd98002c89f6ebe7c711b56e60741fc4336c8649f651cbb399e76f4e1f3bf2cd",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Scoped Git pathspec batches avoid full inventory; every dirty content is hashed, so repeat calls should reuse only a request-owned snapshot.",
+      "reliability": "No-renames tracks both endpoints; tools/policies remain in scoped identity. Exotic filename delimiter encoding and Linux case-sensitive scope matching need platform validation.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiCollections.ps1",
+      "sourceSha256": "53c4fa8052999296a68fd135a12c51f22f21546c24e6aebd908adaafeea55159",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "SameSet sorts both sides and deduplicates; use hash sets only for measured large sets. Property extraction streams rather than recursively flattening objects.",
+      "reliability": "String coercion and culture/case-insensitive Sort-Object semantics are intentional assumptions requiring caller review; missing properties are skipped, not asserted present.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiDependencyManifest.ps1",
+      "sourceSha256": "6bb1562861597f4a51de5ac375fb7154461caef9f6a811f2a28b269bd8dbb96b",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Single XML parse and direct ItemGroup traversal; reuse the parse in multi-consumer operations.",
+      "reliability": "Missing ItemGroups return an empty reference list, malformed XML propagates. Update and nested Version forms are not read here; verify the dependency scanner contract before extending it.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiImplementationBrief.ps1",
+      "sourceSha256": "1f050fc8c1931ad766d878840cb7ab7460c1afbb710bc61715361146c21e4373",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Fixed list of defaults; no broad I/O or nested source search.",
+      "reliability": "Mutates supplied brief and defaults a null brief to low risk. Ensure callers distinguish optional legacy fields from unavailable research and malformed scalar subobjects.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiIndexTiming.ps1",
+      "sourceSha256": "9643fe8dfd27fc144decef6cc1616a4b5fdb57452649dbcb3065fa7a34af1028",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Keeps five samples per tool/mode and medians avoid outlier domination. Repeated Git-directory lookups and whole timing JSON rewrites can be pass-owned.",
+      "reliability": "Atomic PID temporary replacement is used, but concurrent read-modify-write can lose samples. Timing data is advisory and must not satisfy verification gates.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiModuleTestRoots.ps1",
+      "sourceSha256": "e1183f41372c38c20933f57075cfbe32ab5b3a294ec75b142d0cf31714fab960",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Visits immediate module directories only and returns existing test roots in stable name order.",
+      "reliability": "Rejects module/test reparse points; missing Modules produces no roots. A caller must not interpret empty discovery as executed test coverage.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiProjectLookup.ps1",
+      "sourceSha256": "a0dece7c52715711319306b70ef254414ec835280569dc67d6535f8b13bd49f7",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Caller-owned per-pass cache fills all visited ancestors, avoiding repeated directory walks.",
+      "reliability": "Stops at lexical repository boundary. Multiple projects use unsorted first-match selection, and access errors are treated as absent; ambiguous/project-error behavior needs explicit review.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiRequirementCriteria.ps1",
+      "sourceSha256": "02f9724fcace64ceff3a9dcda5fe7d30e93a8bb8b35c306de5d45ffd0568fad9",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "One small lexical regex counts conjunctions and separators.",
+      "reliability": "Atomicity is a heuristic based on English connectors/punctuation, not a semantic proof. Localized compound criteria and missing policy values should have tests.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiTaskAuditHelpers.ps1",
+      "sourceSha256": "5787a7d19f19091617ce0a47e32b9aa642e3dbbb364766e17d0d4fe2a8e08eab",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small JSON/property/time adapters; auditTime is supplied once by the owning audit script.",
+      "reliability": "Read-Json converts all errors to null, so callers must preserve unavailable vs absent states. UTC parsing uses invariant culture and falls back explicitly.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiVerificationReceipts.ps1",
+      "sourceSha256": "cb1f4e361ea80780e3417f58c9b2c92c3be5912a8acf8aa7eea63c794e4a6247",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "One state hash is shared across all receipt-file checks; future repeated Git-directory resolution can be pass-owned.",
+      "reliability": "Confirmed Unicode false-green fingerprint; now NUL path discovery and no-renames hash real tracked/untracked content. Receipt format/result/state must all match.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiQualityText.ps1",
+      "sourceSha256": "863449f9847523e367aaf28ad2fce1c3af94ae92c28f76b8150f1d109c08178f",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Compiled text routines avoid PowerShell inner loops; reference matching remains names times files and may benefit from compiled multi-pattern matching at large scale.",
+      "reliability": "UTF-8 ordinal path keys are deterministic, path/content lengths are checked. References remain substring navigation evidence, not execution coverage; Add-Type reuses an already loaded type.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiResearchPrimitives.ps1",
+      "sourceSha256": "959070169032ead5a6daca289a56fc6580f686551ec2134efe54eb550fc2e811",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small property/path adapters; SharedPathCount is nested membership work. JsonSafeObject traverses complete nested objects and may need depth/cycle bounds for non-JSON inputs.",
+      "reliability": "Test-RepositoryReadPath rejects rooted paths but not dot-dot, requiring caller boundary review. Grounded questions preserve missing anchors explicitly; arrays retain shape through NoEnumerate.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiInProcessSqlite.ps1",
+      "sourceSha256": "7c8e033e084f80b07132dd9877edbbb73d3183f8ad305d8caa7f52a1b9743c4b",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "AppDomain state reuses loaded reader assemblies and build results; projection freshness runs before reuse.",
+      "reliability": "PS7 requirement is explicit. Assembly names/versions are checked on first load; cached state lacks source-fingerprint revalidation during long-lived sessions. Same-version source changes need restart/conflict handling.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiExtractionPlanning.ps1",
+      "sourceSha256": "dda6ebaeb0fcfbdf98d6c3cc28d8ef8119606809550a4fd9cbc302e8d0d783d4",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Module inference is bounded regex work, but every extraction plan rereads many repository sources for reference discovery. Reuse a pass-owned Git/source scan for multi-module planning.",
+      "reliability": "Mapped project names are escaped, missing module yields null. Manifest paths need common boundary validation; supplemental criteria are planning requirements rather than proof they were executed.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiGitRenames.ps1",
+      "sourceSha256": "dc4c24cfa2e36e8cbfd1724f84d21b35bba36481220fbde94d26b26e1146b4f4",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "One Git rename process and pair matching; duplicate process-launch/quoting logic should use shared Git primitives after parity tests.",
+      "reliability": "Unicode quotepath is disabled, but tab/newline name-status parsing is not NUL-safe. Source/destination directories can broaden destination identity; validate renamed directory cases.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiCorpusEvaluation.ps1",
+      "sourceSha256": "66d453aeec23f763369d1b788408ecfe6bf13e4cfd7348fe40c10f560dd51249",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Longest corpora are scheduled first with a bounded refilling pool and explicit serial outer limit; full worker output is still collected in memory.",
+      "reliability": "Checks exact corpus identity, count and ordered IDs; timeout/cancellation kill owned running workers and report cleanup failures. Queue/worker total budgets and output bounds require realistic workload tests.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiGeneratedArtifacts.ps1",
+      "sourceSha256": "9b5cf50156ae72bc61f8eed38dfb626bb7702e12693f0937f6b853cd3acde0c3",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small formatting/model fixtures isolate semantic no-op behavior without timing assertions.",
+      "reliability": "Tests preserve meaningful JSON differences and canonical backup bytes. Temp cleanup needs the same absolute parent/GUID guard as other owned fixtures before execution.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiIndexFingerprint.ps1",
+      "sourceSha256": "3073bb22f36b8b6df97ee69a45fe2eb528d31495ef5d657f4c427cdd1442ee1c",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small Unicode/order/duplicate/missing/same-time fixture validates Git bulk hashing.",
+      "reliability": "Same-size content changes alter the fingerprint; both empty and missing-only sets agree. Cleanup relies on the smoke-sandbox constructor and needs explicit ownership at deletion.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiVerificationReceipts.ps1",
+      "sourceSha256": "5c9fd347fabdf99680c7ffb1069ee8b04fa48e0e4dbfdbd1ae96116e56e65439",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Runs receipt reuse and evidence import on focused planner data; Unicode hashes are checked in a small owned repository.",
+      "reliability": "Now tests both tracked and untracked equal-time Unicode edits and restores pre-existing receipt bytes. Evidence workspace cleanup is scoped under owned tasks. Both new and existing assertions pass on PS7.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiIndexSelection.ps1",
+      "sourceSha256": "2b129bf527732260ba8a280b5a244b160b7764797e7d0c9292bf5c5b7135dd4e",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Checks planning without generating indexes, and a three-worker signal proves free-slot refill instead of a timing benchmark.",
+      "reliability": "Covers bookkeeping, generator dependencies, required-only tiers, source/test distinctions and conditional-scope semantics. Worker fixtures have deadlines; directory cleanup should explicitly verify owned sandbox paths.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryCache.cs",
+      "sourceSha256": "8b5b826ca62c0388f85d52cf964b45a5db26d8724426cc84f21f780065ae063f",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "128 result entries and 1 MiB admission are bounded, but expired entry removal does not prune insertion-order keys. Validate memory growth and stale key generations under churn.",
+      "reliability": "Length-prefixed key components preserve argument boundaries; TTL uses TimeProvider. Concurrent expired removal may evict a newly replaced entry; this is a cache-hit issue, not stale evidence acceptance.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Tools/ToolExecution.cs",
+      "sourceSha256": "62aaa1708ff66bc9fd1da18e732841c1a4f7c64b1c7e2e263e1deef2199e2df9",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Structured responses serialize once; error mapping is bounded work. Large data sizes are owned by the query/result compaction layer.",
+      "reliability": "Known errors/cancellation stay explicit and IsError reflects failure. Unexpected exception messages are exposed to the local developer; verify they do not contain query/private payloads. Unavailable and low-confidence data stay warnings.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Tools/WikiTools.cs",
+      "sourceSha256": "271f87768308ece52c075c01bde32ce3b06884e3cd9f565e054ccfb214634392",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Compact summaries and raw-output opt-in reduce transport size; five tool entrypoints reuse the query service.",
+      "reliability": "Every tool is marked read-only/idempotent and propagates cancellation. Executed checks are request-scoped, not persisted attestations. Arbitrary intent/query validation belongs to the service; no write tools are exposed.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Infrastructure/DevelopmentMcpSourceFingerprint.cs",
+      "sourceSha256": "5941c4dae7d5ca2911e2c9f69fde238269e62ff8d166e81ead649949fb9d2154",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Reads small MCP/root build inputs once with incremental hashing, but enumerates bin/obj descendants before filtering them. Prune before descent and compare exact file sets.",
+      "reliability": "Cancellation is checked during reads; paths are sorted ordinally and raw bytes are hashed. Symlink traversal and parity with the PowerShell culture sort need dedicated fixtures.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Infrastructure/Get-DevelopmentMcpSourceFingerprint.ps1",
+      "sourceSha256": "e7012d09bbca93a9cf3a6b3b1f11f4dbf390736bcdbacd4fad645e0e829694f1",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Recurses before excluding bin/obj and creates a SHA256 per file; a shared hasher and pruned inventory may reduce launcher work.",
+      "reliability": "Stream disposal is explicit. Relative path hashing mirrors C#, but Sort-Object culture ordering can differ from ordinal ordering for non-ASCII source names; validate before changing persisted identity.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Infrastructure/GitProcessEnvironment.cs",
+      "sourceSha256": "de901ff51f888ae71a4b0827bbd662af3428abf1d0a69e2944a5f5e09b804a1a",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Constant-sized removal of repository-local variables before process launch.",
+      "reliability": "Clears inherited Git repository overrides without clearing credentials or general environment. Count/key injected configuration is disabled; callers must use it for every cross-worktree Git subprocess.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Infrastructure/RepositoryRootResolver.cs",
+      "sourceSha256": "2a06ac4db096925fea30cbb997e70342ae94d025d9f16a951a6e632838e58a2e",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Walks parent directories only until a Wiki entrypoint is found; configured root is constant-time validation.",
+      "reliability": "Configured root is explicit local authority and missing Wiki throws a typed error. Finding wiki.ps1 alone does not prove a usable Git repository; status/snapshot services must validate Git state.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Infrastructure/RepositorySourceFingerprint.cs",
+      "sourceSha256": "5dbdd0adcb70f602252e5d9dad63bffcc8369ea2871fca9f50bb7240a4e777f6",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Three Git processes bulk-hash source files; newline stdin and complete stdout capture can become large.",
+      "reliability": "Git wait has a 30-second linked timeout, but stdin writes and stream reads use only caller cancellation. A blocked stdin write can outlive that deadline. NUL inventory handles Unicode; exotic filename stdin quoting needs tests.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Diagnostics/ServerRuntimeIdentity.cs",
+      "sourceSha256": "db0d61fdbb5d04f9fd909da94b4c7744d40e9ce113680b95790c795ea5f98d6c",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Captures assembly hash/MVID/start time once, avoiding repeated assembly hashing per status query.",
+      "reliability": "Build identity failures produce null evidence; environment overrides are local configuration. Both source identity and actual assembly identity must be interpreted together; missing metadata is not assumed current.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Program.cs",
+      "sourceSha256": "6540496940276328b57804041350c4807c9a868e65ad9322ee4ca81669edd4fd",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Singleton cache/snapshots/telemetry share bounded runtime state; evaluator modes exit before building the server.",
+      "reliability": "Logs go to stderr for stdio integrity, runtime startup captures repository identity, and session lease is disposed around host execution. Failures before the host try rely on process exit for lease release; CLI evaluators use no cancellation token.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshot.cs",
+      "sourceSha256": "f2f59021ecfcf8b64ae3f4a68bc5558243a2870fb0fc1713189a4c10dcc68130",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Immutable snapshot carries HEAD, content fingerprint, changed paths and capture time; capture time is not freshness proof.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/ChangeSets/IChangeSetSnapshotService.cs",
+      "sourceSha256": "38822545cce8b3361fbc9d5897cc3cd1065ab26dda012c5223869a5ee1a0b8f8",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Separate Get and Refresh APIs support whole/scoped snapshots and propagate cancellation; implementations must enforce call-local freshness.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Diagnostics/IServerStatusService.cs",
+      "sourceSha256": "77bb089117fe637e9f3c2f6e462fae5b3a93754e8b78e3561d01f7cccba897d3",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Async status contract propagates cancellation; status must not silently run deep verification.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Diagnostics/ServerStatus.cs",
+      "sourceSha256": "6de659803b714fcd0def1efcd6e6cc515de33276e42d68cb99c21a9a0162a121",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Explicit running-code/worktree/index/generation evidence fields prevent one green status from standing in for all freshness; defaults remain unverified.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Diagnostics/WikiIndexStatus.cs",
+      "sourceSha256": "13b6474f367287ba27a53265db42437e304fd35eb0f58a9774907819e4b6c861",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Existence and last-write time are diagnostic inventory only, not a content freshness claim.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Diagnostics/WikiVerificationReceipt.cs",
+      "sourceSha256": "14ced470e08a90d2e558ef4f9cdc18eaad3823ee7dd60f4eddd9701fee6491a3",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Asynchronous JSON read checks schema; malformed JSON returns no evidence. I/O races propagate and caller matching must verify all fingerprints.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Diagnostics/WikiIndexManifest.cs",
+      "sourceSha256": "2de97b2eca86c216e4113e16e386d2863cffc314c998887a2c4c3adf53006fad",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Schema, nonempty path list and rooted/dot-dot checks reject malformed manifest. Path normalization/dedup and typed unavailable errors are explicit; physical link containment needs caller review.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Protocol/DevelopmentContext.cs",
+      "sourceSha256": "eab7bf29a27c9c8f5ff9d58bcd9ebe1c9a930db81a2f508ec7559551a4cb99ef",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Unavailable/low-confidence/ambiguous assessments remain explicit; compact scope/candidates are bounded and raw payload stripping is deliberate.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Protocol/DevelopmentContextComponentError.cs",
+      "sourceSha256": "60bf6f6209b444c66530c0e5e377f086050082afcff9eeaa1e83f5ed78f6566e",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Component name/code/message preserve partial failure details; messages must remain free of persisted sensitive query data.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Protocol/DevelopmentMcpErrorCodes.cs",
+      "sourceSha256": "05c42298b467c89c2f2781bb80bc5c16ed17886d0e17162e7ba1decec9ca2da7",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Stable codes distinguish unavailable, stale, changed snapshot, invalid range, timeout and cancellation.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Protocol/DevelopmentMcpException.cs",
+      "sourceSha256": "d9ec369a87286507d171d71507cbc099f19c954dcab34d629381bf501e1d6181",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Carries a typed error code and optional inner exception; caller transport must retain classification.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Protocol/DevelopmentMcpResult.cs",
+      "sourceSha256": "4eb57d47848aacbf8fdde967f407f82522e8ac29379b97a69daf671cad874cd8",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Success/data/error fields and ReadOnly default are explicit; constructor does not itself enforce success/error consistency.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Protocol/WikiContextSearchCandidate.cs",
+      "sourceSha256": "668a22121f0b4be1f9ff5c990d001205f951dcd3e3d81b03c80845b2fcbbef25",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Carries score/confidence/margin/ambiguity reasons, with unknown confidence as safe default; read-model construction owns validation.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Protocol/WikiContextSearchResult.cs",
+      "sourceSha256": "e1a321ef88f1a4a8851d8a255473240d768bd589ed0b24eb98db991317d1f0dc",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Ready/Fresh/unavailable reason and exact fingerprints are separate; compaction bounds terms to 24 and candidates to 20 without changing readiness.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/IWikiCommandExecutor.cs",
+      "sourceSha256": "325debad02425f3a0ba7047c6bf0b1bf187db2a012c5029689f1e524cf536fea",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Async command/argument contract propagates cancellation; shell quoting, deadlines and output bounds belong to implementation.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/IWikiContextSearch.cs",
+      "sourceSha256": "abb8a5a74527fe1fa505151f64cadf35ee0bd956bc0a82c62017de2a4ee59d91",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Search receives cancellation and expected change-set fingerprint; all state/limit/scope handling remains in the shared reader.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandRequest.cs",
+      "sourceSha256": "92263c0e71ed4274d59b898efded7065bbf6e2068d4ff11c78ba58d53f56f9a1",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Versioned grouped-argument envelope supports switches/repeated values; bridge validates allowed command parameters.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandStageTiming.cs",
+      "sourceSha256": "ef669c2e7ba7d2e3c1ba73dfae7ec70e37ab390a57ca3274ef55b5c26ba164b8",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Aggregate command/stage percentile model contains no query/path payload; producer must bound cardinality and sample storage.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandTiming.cs",
+      "sourceSha256": "ee66ddc77b3e37251908cdbca4a2ff45fe75b0676b9bab4b9b4154923210f5be",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Aggregate samples and percentile model remains low-cardinality; no source freshness is inferred from latency.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryCacheMetrics.cs",
+      "sourceSha256": "c364bf583fa3ea8971d92190c67be3ee3400601e84ff8ad3e888d7f1bce30ab9",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Counts and rate report result cache behavior; currently do not expose auxiliary insertion-order storage.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiRuntimeMetrics.cs",
+      "sourceSha256": "76f92e83d43d38433c2c6805b5a2d6267cf85d3589e68bd2e199653bbcb0b923",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Aggregates cache/process/queue/timeout/routing metrics; nested producers own retention/cardinality safeguards.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/ContextRoutingOutcome.cs",
+      "sourceSha256": "f19526083385d2c031735d43e5e95211f20ec6c2f51c1e84012529c3c9a54ab4",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Legacy JsonFallback enum value remains for historical telemetry compatibility; runtime must not revive stale JSON fallback.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/ContextRoutingHealth.cs",
+      "sourceSha256": "11e121dbca220aba386ca750d759670592c82297563de547aeff275a13bd01db",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Zero samples do not satisfy retirement readiness; persistence health and sample thresholds are explicit. Dictionary-bearing Empty instance should remain treated as immutable.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Program.Coverage.cs",
+      "sourceSha256": "b2dc174cb3860b5925fea6c4b5c9e92d401047d58f72c0e1f3e91889919f0757",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small record/interface/static declaration; no broad I/O or source scan.",
+      "reliability": "Generated-style Program coverage exclusion only; no execution or performance work is performed here.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Build-LlmWikiConfigurationIndex.ps1",
+      "sourceSha256": "056ea6ec0fc4f1da6e44f6737768bebf421ae2baff2d9bb2efd573dbff7a27c5",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Git-scoped inventory avoids ignored-tree traversal, but all production C# files are reread independently from other generators; reuse a generation-owned content snapshot and newline-offset map.",
+      "reliability": "Only configuration key names are emitted, never values. Malformed JSON fails explicitly. Options extraction and nested key handling are regex/object-shape navigation, not evaluated configuration.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Build-LlmWikiDomainDataIndex.ps1",
+      "sourceSha256": "ef200e65d59610eff9caacabf44b855d37b23a6a3e3fa60f58053b6bf415b3a2",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Domain directories are recursively walked and matching configuration sources read once; line numbers repeatedly allocate/count prefixes. Pre-pruned inventory and pass-owned offset lookup are the main candidates.",
+      "reliability": "Exact source roots and EF configuration patterns bound inference. Declaration/comment and fluent expression regex limitations remain. Generator-owned source reads must stay tied to current projection freshness.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Build-LlmWikiSensitiveDataIndex.ps1",
+      "sourceSha256": "7755d4384e07202a6c8698ee0f9d187de9bd655bfaf0f530f05310a310126f2c",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Whole-repository Force recursion filters excluded trees after visiting them. A forced pre-pruned inventory should preserve hidden/system semantics; prefix line-number scans and category regex passes repeat work.",
+      "reliability": "Stores candidate names/context without values; logging/provider links are explicitly review leads. Ignored hidden trees and generated source membership need differential fixtures before changing scope.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1",
+      "sourceSha256": "daac836a73c3ac3032e7a985df561ef5def8b174286c79326fa7bdc311356250",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Git TS/localization inventory and exact input/output receipts already avoid ignored directories. Feature route/spec assignment loops over every feature; prefix-indexed grouping and shared text/line offsets may reduce cold work.",
+      "reliability": "Exported-class and literal-route extraction is limited navigation. Multiple classes can inherit file-level decorator/selector inference; locale key counts do not prove matching key sets. PS5 source decoding and test.ts membership need verification.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1",
+      "sourceSha256": "c957ac6df715b677edd64b6870a24e774490878fef4d8a0808f332d78f6f6e84",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Reads each TS/template once, uses one selector alternation, and fingerprints discovery. Each API call reparses the source prefix for enclosing method/line; precomputed method/line spans are useful candidates.",
+      "reliability": "Regex does not fully parse nested decorators/generics/attribute expressions, and duplicate selectors overwrite by name. Generated SDK request overloads and component input aliases need targeted completeness fixtures.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1",
+      "sourceSha256": "8a7d8e969567783b63334b410acf5af3b0f3053a81869901e56c38b7f4343c6f",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Cached derived inputs avoid recomputing project/contract joins; dictionaries already replace repeated membership scans. Module fan-in still scans all graph properties per module.",
+      "reliability": "Validated update-cache bypass of drift enforcement; cache hits in Check now enforce all three drift counters. Matrix substring/regex extraction and routed-component suffix heuristics need explicit malformed-input/completeness tests.",
+      "findings": [
+        "WTA-009"
+      ],
+      "status": "reviewed-fixed-and-focused-verified"
+    },
+    {
+      "path": ".llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1",
+      "sourceSha256": "40cce4575a458525966fcdbcf7075551917d6b89a5f34bb9da03825140277049",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Bulk input hashing and Aho-Corasick scanning remove the dominant names-times-files loop; compiled fallback has a per-file regex timeout. Contract grouping/source parsing remains independent across generators.",
+      "reliability": "Definitions are excluded from consumer edges and ambiguity is explicit. Cache inputs omit the Git helper implementation; compiled scanner identity/runtime inputs and swallowed build failures need checks against the caller contract.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1",
+      "sourceSha256": "43af5e60906d05c7958c52267ccccb12d6bc90616fd7fba645304bf45e50f448",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Git-backed source inventory and unchanged-byte preservation are efficient. Registration files are reread and role suffix arrays rebuilt per symbol; pass-owned contents/offsets and compiled type extraction are cold-path candidates.",
+      "reliability": "Naming-convention implementations are clearly labelled; regex can include nested declarations despite top-level description and misses generic registrations. Source decoding/culture order must remain deterministic across runtimes.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Build-LlmWikiInProcessSqliteReader.ps1",
+      "sourceSha256": "286eceb5808f534724a60ec10c464c9c02b0278a9eb96ce9fe3b548844a5f3c8",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Nine-source/runtime fingerprint reuses published output, but GetRelativePath method discovery repeats per file. Builds share fixed intermediate output and lack the build lock used by the contract extractor.",
+      "reliability": "Reuse checks assembly/manifest existence rather than manifest content/dependency integrity. SDK/global.json and builder body are not fingerprint inputs; concurrent or interrupted forced publish can leave stale-ready evidence.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Build-LlmWikiRuntimeTopology.ps1",
+      "sourceSha256": "641f1141a4be3f9cdcee491bf6dac52a37caacbe027938b39fcbc82f131fa320",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Reads each C# file once and passes already computed hashes to the final fingerprint; repeated SHA creation and regex/window scans remain. Inventory may still visit dependency trees intentionally included by its old contract.",
+      "reliability": "Code/YAML signals are explicitly inferred/declarative, not production evidence. Regex class windows can include neighboring types; private access modifiers can trigger IP-policy signals and alternate Compose layouts are not parsed.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
+      "sourceSha256": "36124724fbea34fafdd09cd938f21673198149fa548a064e35176a1390cb188d",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Pass-owned source content and compiled substring scans help; remaining uncovered-symbol by production-file scans and per-tool test substring matching can share a multi-pattern index. One-run propagation order affects inherited-reference work.",
+      "reliability": "Direct/inherited name references remain navigation rather than coverage. Mutable transitive attribution and ignored/cache input membership need fixtures; cache receipts cover exact inputs/output, not executed tests.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
+      "sourceSha256": "103bed516e617cf78fdbff1572ef38d4cb0285d7f118f4a09a6c34748396a4dd",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "One Git inventory feeds projects/controllers/guides/docs; XML and source reads are independent of other generators. Per-match source-prefix line splitting repeats allocations.",
+      "reliability": "Static XML is not evaluated MSBuild and controller discovery omits module presentation roots. The extraction contract advertises literal attributes, but missing current module HTTP surface is a completeness follow-up. Physical project names are kept distinct from assembly names.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Build-LlmWikiModulePages.ps1",
+      "sourceSha256": "a951d14a0b3dedd1210d8e27bb5384f2ac7b4702d48c7492e5790f23d8189f93",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Source texts, areas and host namespace sets are pass-owned, but two contract-consumer calls each rescan repository C# sources and module area loops still scan the whole list.",
+      "reliability": "Validated loss of business edges for extracted modules; pages now use declared graph entries and reject missing entries. Sources/tests are labelled discovery evidence. Direct mapped path validation and legacy contract ownership remain follow-ups.",
+      "findings": [
+        "WTA-010"
+      ],
+      "status": "reviewed-fixed-and-focused-verified"
+    },
+    {
+      "path": ".llm-wiki/tools/Invoke-LlmWikiContractReferenceExtractor.ps1",
+      "sourceSha256": "7e9e37fab6d3b4506e66be43edb7f38aa1be2869c5b793ef402249d05a553e65",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "One compiled scanner, fingerprinted executable and exclusive build lock reduce repeated work. Every call creates five redirected temporary files and polls every 25 ms; no same-source scan sharing across callers.",
+      "reliability": "Build/runtime configuration are not part of executable fingerprint; build itself lacks a local deadline. Shell wrapper path quoting, cmd errorlevel expansion and process disposal need platform fixtures; no query payload belongs in telemetry.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Get-LlmWikiContractConsumers.ps1",
+      "sourceSha256": "b4aa1823abd8fd2cef27dd9293027252769fce07c3a4ce55c71a8427949bedbf",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Default scans every C# source line; matched files are reread and two module-page calls duplicate that scan. Use a shared generation-owned source/reference inventory or graph prefilter with complete recall.",
+      "reliability": "Declaration chooses the first lexical match and owningAssembly is the first path segment, so module-owned contracts can be labelled Modules. Method/access/safety results are heuristic and need accurate project lookup before extraction decisions.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
+      "sourceSha256": "bff2dd154f670121876ae0e31b6b3fddbc21e1b08918f53ed6ddf4080c5dd360",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small cached-drift fixture checks all three counters plus clean reuse before reading real generated projections.",
+      "reliability": "Now rejects false-green cached architecture outcomes, keeps tool/test-support exclusion assertions, and verifies owned fixture cleanup before deletion. Focused PS7 run passed.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/code-graph-batch.mjs",
+      "sourceSha256": "8649c1ae3cbb29bc6d0819210b32578aecca1cfb561b7355649873aaf5788794",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "One read transaction and connection-local 64 MiB target prevent repeated metadata reads/page churn; request count has no explicit exported API bound.",
+      "reliability": "Rollback and cache restoration run in nested finally. Original errors retain cleanup diagnostics; caller must avoid an existing transaction and primitive thrown values.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/code-graph-candidates.mjs",
+      "sourceSha256": "d2cd373fcef9fec17df7387baa6819b1c47e6c5e62e957e75694f6d35d4dcdc3",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Compact feature rows precede bounded document hydration for lexical recall; weighted identity final JOIN planning should receive the same EXPLAIN/bound checks.",
+      "reliability": "Parameters bind MATCH/limits and stable source ordinals preserve ties. Missing compact mirror rows are excluded, so completeness validation belongs to writer/readiness gates.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/code-graph-context-projection.mjs",
+      "sourceSha256": "5a243e38926bddf04aec7ccd1ad903e0e5ee78a476e63d9d39287810ab971237",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Prepared file-id source reads avoid materializing all symbol/token maps. Per-record fingerprints skip unchanged records but dense ordinal moves can rewrite the suffix.",
+      "reliability": "Cache version/environment/fingerprint/count/dense IDs and mirror completeness gate incremental writes. Caller owns the transaction; cache metadata and projection must commit together.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/code-graph-identity.mjs",
+      "sourceSha256": "629e217cf9787df54b33cc6feb18e547fb33ab036f3908dca545e9e55b69914a",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Separate short identity FTS avoids long-body penalties; diverse recall sorts/group-representatives before final rows. Virtual-table JOINs before LIMIT can still hydrate search content.",
+      "reliability": "Bound parameters and rowid tie ordering are explicit. Feature completeness and exact query policy normalization remain caller obligations.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/code-graph-inputs.mjs",
+      "sourceSha256": "45f061dd451faf95b7878d9fe3956a2dd92109802f65b0e5441925e75db3f1ec",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Default eight async file operations preserve Git order and avoid rereading unchanged clean sources; exported concurrency accepts any positive number.",
+      "reliability": "All dispatched reads drain before failure, dirty content is always rehashed, and missing paths are removed. Root-relative Git input authority must prevent traversal/symlink surprises.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/code-graph-process.mjs",
+      "sourceSha256": "0137369dfda850928929d1e54634ab2430512d46e9ad6ae9fb15ba7284f9c25a",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Synchronous process wait blocks the event loop and captures up to 64 MiB; timeout is caller-provided rather than local default.",
+      "reliability": "Both compiler streams and status/signal remain in errors. Callers must prevent sensitive payloads in captured diagnostics and define process-tree cancellation.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/code-graph-query-terms.mjs",
+      "sourceSha256": "b95d24ccc16d974d18c7f03b163ea6d5fd265b4833ea5659e48ffa2a2f452860",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small bounded per-term English stemming; caller deduplication and term caps control expansions.",
+      "reliability": "Keeps legacy plural alternatives and adds common suffixes; semantic over-expansion is a corpus/ranking-policy concern, not proof of a subject match.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/code-graph-snapshot.mjs",
+      "sourceSha256": "c6cdcc34fd0f9416f6e0676d1eb56c31845b0c6cc9ab9ffa2dbf1a459953af25",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Native SQLite backup captures DB/WAL consistently and publishes by rename.",
+      "reliability": "Read-only source is closed and temporary file removed in finally. PID-only temp naming can collide for concurrent same-destination calls within one process; destination/source validity belongs to wrapper.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/code-graph-trace-scope.mjs",
+      "sourceSha256": "512117befa9aba4671fad35eb94de71d425d4a342cd7aaf490be3c6c00b250ea",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Cheap normalized path/language checks run independently from score.",
+      "reliability": "Exact directory/dotted module segments prevent sibling module confusion; pathPrefix intentionally uses startsWith and requires caller understanding of file prefix vs directory boundary.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/code-graph-index-query.mjs",
+      "sourceSha256": "34b319e8e09f70fe0fd5c2fec6a99d00d866b7c9465b733e3cdfed9b55a21f6e",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Changed-source hashes avoid rebuilding unchanged sections, but each status/query reads and hashes whole compiled JSON. COUNT plus SELECT per section scans search_text; FTS or typed indexes need exact result parity.",
+      "reliability": "Source/schema freshness is explicit and limits are bounded. Modules directory hash covers names only; owner transaction must protect refresh. Security signals are bounded navigation, not vulnerability verdicts.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/code-graph-maintenance.mjs",
+      "sourceSha256": "44f305954c59613348776401ad650df6c959c361f36a97d45a63664fe3f238eb",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Pass-owned ownership resolver caches per path; complete record and feature scans remain linear. Project suffix role map is rebuilt for each project identity.",
+      "reliability": "Reference repair requires exact confirmed moves and existing targets. Repair is transactional; missing mirrors remain rebuild obligations. Physical symlink authority and comparator/platform identity need fixtures.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/code-graph-path-layout.mjs",
+      "sourceSha256": "7c34d1fc708a014e069b99fe56f75c5bd538e57d910099dd141e4aec5a68ffd3",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Regex/token routines derive aliases and intent without I/O; testIdentityWeights scans deduplicated path identities for every direct term.",
+      "reliability": "Real path remains first, module/test ownership is distinct from ranking aliases, and neutral intent stays neutral. Node/.NET role/alias/parity corpora must gate every change.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiBackendModuleModel.ps1",
+      "sourceSha256": "0ae2bdde1ea661c79f293fc9f49173d9c97a91027fd274eebd2f187b482ceeae",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Manifest and generated pages are read once; explicit mapped-public-file counts provide independent checks. Regex source-shape assertions supplement behavior rather than timing.",
+      "reliability": "Now verifies every extracted module dependency line against the declared graph. Duplicate keys, ownership counts, path resolver and public-surface invariants are checked; PS7 focused run passes.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/contract-reference-extractor/LlmWiki.ContractReferenceExtractor.csproj",
+      "sourceSha256": "6f0a0c26114e661e587e07f6b8f9cc81b7626d42876eef13ef693fd8d18a3ac0",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Small standalone net10 executable with analyzers disabled for derived tooling; no application project graph.",
+      "reliability": "Target/assembly identity are explicit. SDK/root build configuration must be included in external build reuse identity.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/contract-reference-extractor/Program.cs",
+      "sourceSha256": "809a37ce8cea7d43a6eacb60ba3e9b2b7986d72bbce36c78693d98d7a6d77fd9",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Aho-Corasick traverses each source once, then sorts edges and serializes canonical JSON; complete source/JSON payloads remain memory-resident.",
+      "reliability": "UTF-8 input/output are explicit and boundary matching mirrors the legacy ASCII regex. Contracts/paths are trusted internal input; null/duplicate names and non-ASCII C# identifier boundaries need invalid-input tests.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj",
+      "sourceSha256": "2b5ef242ddf4248ab76025a6c40c8d6f9eb73b3ff225f438841f5f5a6f11cbde",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Standalone Roslyn package executable disables project analyzers and avoids application references.",
+      "reliability": "Package/SDK changes must invalidate the launcher build cache; this XML alone does not prove the compilation context matches a production project.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/roslyn-extractor/Program.cs",
+      "sourceSha256": "0bc7c7de6aaccc2a25ded62e4a2db70e2e68c30c1989a754f8bfba98b75c63f6",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Parses every context tree once, but walks syntax repeatedly, discovers project ancestors per path, and builds compilations per target project. Cache project/namespace metadata per pass and use a combined syntax visitor.",
+      "reliability": "Syntax/semantic identities retain explicit fallback; unresolved compilation diagnostics are not reported. ExpectedNamespace uses project filename instead of evaluated RootNamespace, and HTTP property optionality is a syntactic approximation.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWiki.SqliteReader/LlmWiki.SqliteReader.csproj",
+      "sourceSha256": "e63dfaff6487d26ea8a412c2e81b094c06658152fd1566af65591d0462838c6d",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Links the exact MCP ranking core and protocol records into the existing reader assembly, avoiding duplicate implementations.",
+      "reliability": "Narrow Sqlite reference and copied runtime assemblies are explicit; linked source, package and SDK identities must stay in build fingerprints.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWiki.SqliteReader/ContextSearchReader.cs",
+      "sourceSha256": "0f1f107a6335bea7e77c1f81781b8a6d34cfb811697eb42b9c4bc014a5caf5cd",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Ranks through the shared core then opens another connection for bounded-path features. It hydrates only selected candidate paths, but feature enrichment scans all representations of those paths.",
+      "reliability": "Second connection is not pinned to the same read transaction as ranking, so direct live-root enrichment needs a concurrency/freshness fixture. Missing/duplicate candidate features throw rather than inventing them.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWiki.SqliteReader/CompiledIndexReader.cs",
+      "sourceSha256": "8570aa8a866e05aca79e60a16702886c7b5211d27362cd285878e1b6b0e7cac2",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Runtime/architecture groups use one command, but SQL returns all matching records and per-kind limits are applied in managed code. Move bounds into SQL with exact per-group order parity; diagnostics are already optional.",
+      "reliability": "Read-only connection, source hash and 2-second commands fail on stale projection. Metadata/payload/diagnostic reads are not one transaction; wildcard characters are escaped and groups are fixed code.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
+      "sourceSha256": "a6522c5c8e0905f966425412f681b79b34876cca0eef111279775f552bd3fb10",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Each group has SQL LIMIT, but counts/byte diagnostics and total scan counts run even when diagnostics are off. Skip those computations and consider one bounded multi-group query.",
+      "reliability": "Supported views/limits and LIKE escaping are explicit. Read-only source hash is checked before separate group queries; pin a read transaction to prevent mixed projections during live refresh.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiRuntimeTelemetry.cs",
+      "sourceSha256": "19c2fca6f9f43033aa2fd0bb2eee2e0728a218334a85fa177240a137a3198bfe",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "128 samples per command/stage bound percentile work, but global command/stage key dictionaries have no explicit cardinality cap. Capture sorts bounded windows under locks.",
+      "reliability": "Counters use Interlocked and timing windows are locked. Only aggregate names/timings are stored; callers must keep command/stage labels fixed and not use query/path text.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Diagnostics/ServerStatusService.cs",
+      "sourceSha256": "2867a61d709d184e8c526291437fff693154a4b941a53b0b731f6b2fb957f582",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Status reads source/index/MCP hashes and two receipts every call; Git-directory/head resolution is repeated and per-index 80 KiB buffers allocate repeatedly. Share request-owned discovery and one buffer without weakening content checks.",
+      "reliability": "Generation/verification/running-code freshness are distinct. Multiple reads are not one atomic worktree snapshot; exact HEAD vs content receipt interpretation and filesystem failures need typed-state coverage.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshotService.cs",
+      "sourceSha256": "d1b3c701b0c7d140a6bc9f954f98352b3e2ae8626a892a9503d975041d79c5d0",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Watcher generations, HEAD checks, scope projection and serialized creation avoid many Git scans; scoped projection still hashes all changed relevant bytes each call. Watcher traverses the full root and pending paths can grow during large edits.",
+      "reliability": "NUL status parsing retains destination but skips rename source, and OnChanged does not record RenamedEventArgs.OldFullPath. Scoped moved-out invalidation needs a deterministic fixture. Whole-worktree snapshot reuse assumes watcher delivery/error detection.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiOutputParser.cs",
+      "sourceSha256": "b1bcc2e5270a13b13c6430ae612522cab575422ad498731d61fd9438e99eb569",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Structured JSON is traversed repeatedly for paths, commands and warnings. A single classification pass and cached empty-array/object values may reduce parsing/compaction allocations.",
+      "reliability": "Regex root list excludes Modules and Tools roots, potentially dropping current module scope. Invalid structured JSON becomes text rather than typed parse failure; path validation is not anchored to the whole value. Trace excludes low-confidence candidates explicitly.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandResult.cs",
+      "sourceSha256": "330f69d8797f699aa58aaade1289e54fc2917980ca5557ba440aaa98a62c7aae",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Compaction bounds selected arrays and removes raw output, but clones and serializes another JSON graph and repeatedly constructs empty fallback arrays/objects.",
+      "reliability": "Trace keeps status/warnings/limitations and truncation flags. ChangeContext clears top-level warnings/checks while leaving structured obligations; malformed boolean/path kinds and negative caller limits need robustness checks.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
+      "sourceSha256": "939599153066ceaad5a534cbbd7086c36a1bcf5029bcada4503cc69c11cf1755",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "64 hash-striped gates coalesce identical misses without retaining payload keys; unrelated keys can serialize on a stripe. Development bundle runs brief/test plan concurrently and rechecks snapshots afterward.",
+      "reliability": "Fresh SQLite candidates drive scope and unavailable states remain explicit; no stale JSON fallback. Standalone calls do not perform final snapshot checks, module Presentation/PersistenceModel layer inference is incomplete, and refresh-success telemetry means process completion rather than fresh search readiness.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/ContextRoutingTelemetryStore.cs",
+      "sourceSha256": "aa9e3aa31faafff7ec8461f46db2baec66e0bf109899ab7f9f7c3e01e58cc7da",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Every event synchronously locks, rereads/rewrites up to 1000 events and flushes to disk; high query rates can make telemetry part of interactive latency. Batch aggregate persistence needs contention/recoverability tests.",
+      "reliability": "Named mutex and unique atomic temp files serialize writers; recognized I/O/JSON/timeout failures are reflected in health. Capture trusts persisted event count/content, so valid oversized or malformed envelopes need validation; no query payload is persisted.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/ContextRoutingRetirementEvaluationRunner.cs",
+      "sourceSha256": "62c14f7772f93b85b0035e11200013ddd33677663fca38baf51c5bf1e310249f",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Executes complete bundles serially and stores all results; explicit maximumCases bounds an optional subset and percentile computation is small.",
+      "reliability": "Requires unique valid case IDs, SQLite primary, expected top-ten path and complete bundle; output is written before failure. Null arrays/elements and actual persisted evidence growth need invalid-input tests.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
+      "sourceSha256": "e438c9fe5230a2b0eaa2566af8610675348c912d7745157ad5df6edd701656c7",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Thin adapter reuses the shared reader and one aggregate stopwatch per single/batch operation; batch avoids per-query telemetry writes.",
+      "reliability": "Cancellation/expected fingerprint are propagated and timing is recorded in finally without query data. The adapter delegates all state/limit/transaction enforcement to the linked ranking core.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiContextSearchEvaluationRunner.cs",
+      "sourceSha256": "7a983cfe56d06bb12776421230c848e4284d2efb1a656209b6fc56aeb811532a",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Concrete SQLite batches reuse one read snapshot; fake/interface readers retain sequential evaluation. Metrics store all corpus results and timing arrays.",
+      "reliability": "Schema, limits and duplicate IDs are checked, but null case/criteria arrays and threshold ranges need fixtures. Ready is recorded rather than included in the aggregate passed criterion; caller gates must reject unavailable states independently.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
+      "sourceSha256": "17306d56e4aac811eecd1aab0945808d0b33e9d5efe914698536eb2b2e1b0f43",
+      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "coverage": "full-source-read",
+      "performance": "Runs complete bundles serially and serializes compact context per case; warm timing excludes only the first case. Shared equivalent queries can reuse service cache, but representativeness of warm/cold metrics needs explicit workload controls.",
+      "reliability": "Ranking/scope/named-test/required-path invariants are strict and thresholds explicit. Null/invalid threshold and expected-layer values need validation. HasFocusedChecks treats any nonempty recommended/discovery list as a check, which is planning evidence rather than executed coverage.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    }
+  ]
+}

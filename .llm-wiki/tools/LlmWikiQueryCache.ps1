@@ -125,7 +125,10 @@ function Read-LlmWikiQueryCache {
     param([Parameter(Mandatory)][object]$Entry)
     if (-not (Test-Path -LiteralPath $Entry.path -PathType Leaf)) { return $null }
     try {
-        $content = [IO.File]::ReadAllText($Entry.path, [Text.Encoding]::UTF8)
+        $stream = [IO.File]::Open($Entry.path, [IO.FileMode]::Open, [IO.FileAccess]::Read,
+            ([IO.FileShare]::Read -bor [IO.FileShare]::Delete))
+        $reader = [IO.StreamReader]::new($stream, [Text.Encoding]::UTF8, $true)
+        try { $content = $reader.ReadToEnd() } finally { $reader.Dispose() }
         $null = $content | ConvertFrom-Json -ErrorAction Stop
         return $content
     } catch {
@@ -164,6 +167,11 @@ function Remove-LlmWikiQueryCacheFileIfPresent {
         return
     } catch [IO.DirectoryNotFoundException] {
         return
+    } catch [IO.IOException] {
+        # Retention is optional. An older reader may still hold a Windows lease;
+        # leave that entry for the next pass without failing a published result.
+        if (($_.Exception.GetBaseException().HResult -band 0xffff) -in @(32, 33)) { return }
+        throw
     }
 }
 
@@ -195,8 +203,12 @@ function Write-LlmWikiQueryCache {
         Remove-Item -LiteralPath $temporaryPath -Force -ErrorAction SilentlyContinue
         Remove-Item -LiteralPath $metadataTemporaryPath -Force -ErrorAction SilentlyContinue
     }
-    $staleEntries = @(Get-ChildItem -LiteralPath $directory -Filter '*.json' -File | Sort-Object LastWriteTimeUtc -Descending | Select-Object -Skip $Retain)
-    foreach ($staleEntry in $staleEntries) {
-        Remove-LlmWikiQueryCacheFileIfPresent -Path $staleEntry.FullName
+    $cacheFiles = @(Get-ChildItem -LiteralPath $directory -File | Where-Object { $_.Extension -in @('.json', '.meta') })
+    foreach ($extension in @('.json', '.meta')) {
+        $staleEntries = @($cacheFiles | Where-Object Extension -eq $extension |
+            Sort-Object LastWriteTimeUtc -Descending | Select-Object -Skip $Retain)
+        foreach ($staleEntry in $staleEntries) {
+            Remove-LlmWikiQueryCacheFileIfPresent -Path $staleEntry.FullName
+        }
     }
 }

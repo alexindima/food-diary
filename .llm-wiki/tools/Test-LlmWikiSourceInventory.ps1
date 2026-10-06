@@ -12,10 +12,23 @@ function Write-InventoryFixture([string]$Path, [string]$Content) {
     [IO.File]::WriteAllText($Path, $Content, [Text.UTF8Encoding]::new($false))
 }
 
+function Get-CanonicalReferenceFiles([string]$Filter) {
+    # Legacy Get-ChildItem can follow junctions and hide system entries. The
+    # canonical modern inventory follows neither links nor hidden entries,
+    # and retains the fixture's non-hidden system file on both runtimes.
+    $reference = @(Get-ChildItem -LiteralPath $fixtureRepository -Recurse -File -Filter $Filter |
+        Where-Object { -not $_.FullName.StartsWith($linkedDirectory + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) })
+    $systemPath = Join-Path $fixtureRepository 'system.cs'
+    if ([IO.File]::Exists($systemPath) -and 'system.cs' -like $Filter -and $systemPath -notin $reference.FullName) {
+        $reference += Get-Item -LiteralPath $systemPath -Force
+    }
+    return $reference
+}
+
 function Get-ReferenceRuntimeFingerprint {
     $paths = @(
         @(Join-Path $fixtureRepository 'docker-compose.yml') +
-        @(Get-ChildItem -LiteralPath $fixtureRepository -Recurse -File -Filter '*.cs' |
+        @(Get-CanonicalReferenceFiles '*.cs' |
             Where-Object {
                 $_.FullName -notmatch '[\\/](tests|obj|bin|\.artifacts|\.llm-wiki|TestResults|Migrations)[\\/]' -and
                 $_.Name -notmatch '\.(Designer|g)\.cs$'
@@ -67,7 +80,7 @@ try {
         @{ filter = '*.cs'; excluded = @('tests','obj','bin','.artifacts','.llm-wiki','TestResults','Migrations'); regex = '[\\/](tests|obj|bin|\.artifacts|\.llm-wiki|TestResults|Migrations)[\\/]'; runtime = $true },
         @{ filter = '*Configuration.cs'; excluded = @('Migrations','node_modules','bin','obj','.artifacts','TestResults'); regex = '[\\/](Migrations|node_modules|bin|obj|\.artifacts|TestResults)[\\/]'; runtime = $false }
     )) {
-        $expected = @(Get-ChildItem -LiteralPath $fixtureRepository -Recurse -File -Filter $case.filter |
+        $expected = @(Get-CanonicalReferenceFiles $case.filter |
             Where-Object { $_.FullName -notmatch $case.regex -and (-not $case.runtime -or $_.Name -notmatch '\.(Designer|g)\.cs$') } |
             ForEach-Object FullName | Sort-Object)
         $actual = @(Get-LlmWikiSourceFiles -RepositoryRoot $fixtureRepository -Filter $case.filter -ExcludedDirectory $case.excluded |
@@ -76,6 +89,15 @@ try {
         if (($actual -join "`0") -cne ($expected -join "`0") -or $actual.Count -eq 0) {
             throw "Source inventory changed for $($case.filter): $(Compare-Object $expected $actual | ConvertTo-Json -Compress)"
         }
+        if (@($actual | Where-Object { $_.StartsWith($linkedDirectory + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) }).Count -gt 0) {
+            throw 'Source inventory followed a linked directory outside the repository.'
+        }
+    }
+    $unicodeName = (-join @([char]0x0444, [char]0x0430, [char]0x0439, [char]0x043B)) + '.cs'
+    $unicodeFile = Join-Path $fixtureRepository $unicodeName
+    Write-InventoryFixture $unicodeFile 'canonical Unicode source'
+    if ($unicodeFile -notin @(Get-LlmWikiSourceFiles -RepositoryRoot $fixtureRepository -Filter '*.cs' | ForEach-Object FullName)) {
+        throw 'Source inventory lost a Unicode filename on this runtime.'
     }
     $before = Get-LlmWikiRuntimeTopologyFingerprint -RepositoryRoot $fixtureRepository
     if ($before.sourceFingerprint -cne (Get-ReferenceRuntimeFingerprint)) { throw 'Runtime fingerprint changed from the original normalized-content contract.' }
@@ -116,6 +138,8 @@ try {
 } finally {
     if ([IO.Path]::GetDirectoryName($fixtureRoot) -cne [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\', '/') -or
         [IO.Path]::GetFileName($fixtureRoot) -notmatch '^wiki-source-inventory-[a-f0-9]{32}$') { throw 'Unsafe fixture cleanup path.' }
-    if (Test-Path -LiteralPath $linkedDirectory) { Remove-Item -LiteralPath $linkedDirectory -Force }
+    # Directory.Delete without recursion unlinks the junction/symlink itself;
+    # legacy Remove-Item can throw a NullReferenceException for a junction.
+    if (Test-Path -LiteralPath $linkedDirectory) { [IO.Directory]::Delete($linkedDirectory) }
     if (Test-Path -LiteralPath $fixtureRoot) { Remove-Item -LiteralPath $fixtureRoot -Recurse -Force }
 }

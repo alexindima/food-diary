@@ -204,17 +204,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-          "sha256": "75ba917cefa45d83e45b871b41d27a8e20954bfc5c38ef4147338b624f628234"
+          "sha256": "5317c39b130e125ed64948d2e3c8456780cf20ea7eaf5c3e9b742d03e7f3d0ea"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
-          "sha256": "a8bb234d92a449d1cddf43929f4a73c018a68e5cf142c70f926cc189bfbe8560"
+          "sha256": "7e1fff9975ded8618bd20c7b587b01ec6e2dd84f3e395e30fecce1e0b4ba5d9b"
         }
       ],
-      "reason": "Reviewed the affected tooling guides against request-local reuse of the freshly checked repository, HEAD and content fingerprint. Normal scoped cache callers preserve their identity; dependency hashing remains independent and module discovery is deferred only for cache hits. Cache regressions and the unchanged latency gate pass. Seven counterbalanced pairs measure median warm context from 1050ms to 595ms; static reference indexes were regenerated and do not represent execution coverage.",
+      "reason": "Reviewed Wiki runtime and generator corrections against their sources: exit-state preservation, portable collision-safe JSON hashes, legacy source enumeration, bounded cache metadata and reader leases, ordered template scope, Unicode receipt fingerprints, cached architecture drift enforcement and declared module edges. Focused regressions passed; the report explicitly retains 284 unreviewed files and makes no new wall-time claim. Application HTTP contracts and data ownership are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
-      "reviewedAtUtc": "2026-10-04T20:51:28.8073013Z"
+      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "reviewedAtUtc": "2026-10-06T22:31:23.1270290Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -505,21 +505,21 @@
     {
       "pageId": "workflow-developer-experience",
       "pagePath": ".llm-wiki/workflows/developer-experience.md",
-      "pageSha256": "ef6996bd5373a4f25ad072892d14337856ea9365ee9154206096bd3743a9f7c3",
+      "pageSha256": "f702d51cb0969966de791175e831339c9ad37670e9d6dcc0d07718b04266b23f",
       "sources": [
         {
           "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-          "sha256": "75ba917cefa45d83e45b871b41d27a8e20954bfc5c38ef4147338b624f628234"
+          "sha256": "5317c39b130e125ed64948d2e3c8456780cf20ea7eaf5c3e9b742d03e7f3d0ea"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
-          "sha256": "a8bb234d92a449d1cddf43929f4a73c018a68e5cf142c70f926cc189bfbe8560"
+          "sha256": "7e1fff9975ded8618bd20c7b587b01ec6e2dd84f3e395e30fecce1e0b4ba5d9b"
         }
       ],
-      "reason": "Reviewed the affected tooling guides against request-local reuse of the freshly checked repository, HEAD and content fingerprint. Normal scoped cache callers preserve their identity; dependency hashing remains independent and module discovery is deferred only for cache hits. Cache regressions and the unchanged latency gate pass. Seven counterbalanced pairs measure median warm context from 1050ms to 595ms; static reference indexes were regenerated and do not represent execution coverage.",
+      "reason": "Reviewed Wiki runtime and generator corrections against their sources: exit-state preservation, portable collision-safe JSON hashes, legacy source enumeration, bounded cache metadata and reader leases, ordered template scope, Unicode receipt fingerprints, cached architecture drift enforcement and declared module edges. Focused regressions passed; the report explicitly retains 284 unreviewed files and makes no new wall-time claim. Application HTTP contracts and data ownership are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
-      "reviewedAtUtc": "2026-10-04T20:51:30.9074539Z"
+      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "reviewedAtUtc": "2026-10-06T22:31:23.9707407Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -675,17 +675,53 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "f8ab74cfc6bb46a83d42034e896a5703955eaef57cba0db5e77f7aeae3073d90",
+      "pageSha256": "8c8aff64bfc1811147a58a435a34a10950c1448a9d57bfc50802f9d45ffdbbf7",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "d4a5caecfb6bb5d9eec95ab183f36ef95e3cf2379d35ec8f060e9dd403849ecf"
+          "path": ".llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1",
+          "sha256": "8a7d8e969567783b63334b410acf5af3b0f3053a81869901e56c38b7f4343c6f"
+        },
+        {
+          "path": ".llm-wiki/tools/Build-LlmWikiModulePages.ps1",
+          "sha256": "a951d14a0b3dedd1210d8e27bb5384f2ac7b4702d48c7492e5790f23d8189f93"
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
+          "sha256": "0274d106cd0d4a9ac4c3c83528997ce55cfc8c4f4bb271f69cfaee97ad3cd2b1"
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "5317c39b130e125ed64948d2e3c8456780cf20ea7eaf5c3e9b742d03e7f3d0ea"
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiSourceInventory.ps1",
+          "sha256": "55a4eecd7c5a0f85418df1b10107f33af074ad609a8d8a41002ab45d3ec80091"
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiVerificationReceipts.ps1",
+          "sha256": "cb1f4e361ea80780e3417f58c9b2c92c3be5912a8acf8aa7eea63c794e4a6247"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
+          "sha256": "bff2dd154f670121876ae0e31b6b3fddbc21e1b08918f53ed6ddf4080c5dd360"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiBackendModuleModel.ps1",
+          "sha256": "0ae2bdde1ea661c79f293fc9f49173d9c97a91027fd274eebd2f187b482ceeae"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiPortable.ps1",
+          "sha256": "d566e6e58de3d1d5a6a032d3065b04e8e0b5dacfbf641fc331d626027e10191f"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiSourceInventory.ps1",
+          "sha256": "4caee4fc7b078cb3f9c568062ea29484c23b6c3de88d127d6e6d33881b95f7b2"
         }
       ],
-      "reason": "CI adds a separate SDK check job without removing existing Wiki, formatting, build or test gates. npm verify adds SDK tests and reproducibility. Products HTTP adapters changed; templates, UI copy, state ownership and rendered contracts are unchanged, so existing visual-UI guidance remains applicable when those surfaces change.",
+      "reason": "Reviewed Wiki runtime and generator corrections against their sources: exit-state preservation, portable collision-safe JSON hashes, legacy source enumeration, bounded cache metadata and reader leases, ordered template scope, Unicode receipt fingerprints, cached architecture drift enforcement and declared module edges. Focused regressions passed; the report explicitly retains 284 unreviewed files and makes no new wall-time claim. Application HTTP contracts and data ownership are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
-      "reviewedAtUtc": "2026-10-06T16:55:30.7526292Z"
+      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "reviewedAtUtc": "2026-10-06T22:31:24.9586612Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -867,13 +903,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "faa3d3d70807adc3ea15ff57274de851d0e87777c53790aa82aa07702cc6d3dc"
+          "sha256": "88d0666d9ab15af2d855f6360ea404b5b993ef63cddcb7539947a5199fbd277a"
         }
       ],
-      "reason": "Reviewed the quality projection regenerated from current master plus all four Wiki performance commits. New reader complexity and direct test references match the compact candidate hydration and batch snapshot tests; static references remain navigation rather than executed coverage.",
+      "reason": "Reviewed Wiki runtime and generator corrections against their sources: exit-state preservation, portable collision-safe JSON hashes, legacy source enumeration, bounded cache metadata and reader leases, ordered template scope, Unicode receipt fingerprints, cached architecture drift enforcement and declared module edges. Focused regressions passed; the report explicitly retains 284 unreviewed files and makes no new wall-time claim. Application HTTP contracts and data ownership are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "75c4520f7907cae0c1e8f23b4ba5597dacb306e8",
-      "reviewedAtUtc": "2026-10-06T17:39:07.8622468Z"
+      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "reviewedAtUtc": "2026-10-06T22:31:25.8125515Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -969,21 +1005,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "faa3d3d70807adc3ea15ff57274de851d0e87777c53790aa82aa07702cc6d3dc"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d688c703ad1041010fff43e3273f4edb8f64c03ace6a0bd7c0d8f48643e2a01c"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "bde33aac0fe4e4ae6e99be233129e8142b3d6149eb84af4b92397cac55e05f80"
+          "sha256": "88d0666d9ab15af2d855f6360ea404b5b993ef63cddcb7539947a5199fbd277a"
         }
       ],
-      "reason": "Reviewed the regenerated quality, runtime and privacy navigation against current master and the Wiki reader. Batched queries own a bounded read-only snapshot; candidate hydration remains bounded and telemetry stores only aggregates. Navigation does not replace security validation or executed coverage.",
+      "reason": "Reviewed Wiki runtime and generator corrections against their sources: exit-state preservation, portable collision-safe JSON hashes, legacy source enumeration, bounded cache metadata and reader leases, ordered template scope, Unicode receipt fingerprints, cached architecture drift enforcement and declared module edges. Focused regressions passed; the report explicitly retains 284 unreviewed files and makes no new wall-time claim. Application HTTP contracts and data ownership are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "75c4520f7907cae0c1e8f23b4ba5597dacb306e8",
-      "reviewedAtUtc": "2026-10-06T17:39:10.7891327Z"
+      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "reviewedAtUtc": "2026-10-06T22:31:27.4978524Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1086,32 +1114,32 @@
     {
       "pageId": "workflow-task-workspace",
       "pagePath": ".llm-wiki/workflows/task-workspace.md",
-      "pageSha256": "389153ec6bdaa0031c64a5294d755935731286a3500b49527087672f334804b2",
+      "pageSha256": "bdf105c4622b332968b1b8d2cea3318ee143986eefaea86fa6dfe13171b034a9",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-          "sha256": "c8232abe0b30042b156af01acbc49a55669378c5ff9b0dc2466837d5abd1d841"
+          "path": ".llm-wiki/tools/LlmWikiJson.ps1",
+          "sha256": "4df79c53aaad7b30913d08d5622fbd1aee064ca3bcea6a67805a1ddd33258157"
         }
       ],
-      "reason": "Reviewed the exact API transition acceptance and readiness collection normalization. Strict task completion and evidence requirements still apply; initialization, refresh, sealing and handoff behavior remain unchanged.",
+      "reason": "Reviewed JSON hash compatibility for governed artifacts: ordinary PS7 fingerprints are retained across PS5 serialization, while previously conflated literal Unicode-escape strings now correctly have different hashes. Existing task continuity must still validate current artifact content and require refresh when a genuine fingerprint changes.",
       "baseRef": "HEAD",
-      "gitHead": "028efbba467e3bdece84fe1e43412aead89d2ae5",
-      "reviewedAtUtc": "2026-10-03T21:06:28.3147196Z"
+      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "reviewedAtUtc": "2026-10-06T19:16:46.4091084Z"
     },
     {
       "pageId": "workflow-test-plan",
       "pagePath": ".llm-wiki/workflows/test-plan.md",
-      "pageSha256": "00873290bae6cba909cc474821519081b25bcc6767c089668d188119c77126c3",
+      "pageSha256": "36583b8f66739cd95c1f1cd5544883d0fc2924eef26a80410247f92a70d5967e",
       "sources": [
         {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb"
+          "path": ".llm-wiki/tools/LlmWikiVerificationReceipts.ps1",
+          "sha256": "cb1f4e361ea80780e3417f58c9b2c92c3be5912a8acf8aa7eea63c794e4a6247"
         }
       ],
-      "reason": "The existing performance-data-access rule and integration-check identity are preserved while current Services/ paths become eligible. Executed persistence regression verifies both selection and the exact required command; planning and ownership logic are unchanged.",
+      "reason": "Reviewed Wiki runtime and generator corrections against their sources: exit-state preservation, portable collision-safe JSON hashes, legacy source enumeration, bounded cache metadata and reader leases, ordered template scope, Unicode receipt fingerprints, cached architecture drift enforcement and declared module edges. Focused regressions passed; the report explicitly retains 284 unreviewed files and makes no new wall-time claim. Application HTTP contracts and data ownership are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "755c4ee5bb00ea025c5ad8321db12ec48386e496",
-      "reviewedAtUtc": "2026-10-04T10:05:50.6200728Z"
+      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "reviewedAtUtc": "2026-10-06T22:31:28.2202744Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1228,14 +1256,18 @@
       "pageSha256": "f9ddf22db2cc07f9109f6b518b296525846afc0f92e94ac0b443f5bf8ea4b89a",
       "sources": [
         {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-          "sha256": "6fdff6852b40fc6f83b1b5d60cab1426826c8f5a0008af5f948c5d4e5f2c10a3"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "e7f91bcf39773d6738e34c14027dd94bbf0e357689c473bac66ad228875d31c0"
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "5317c39b130e125ed64948d2e3c8456780cf20ea7eaf5c3e9b742d03e7f3d0ea"
         }
       ],
-      "reason": "Reviewed the combined query workflow against the unchanged tested Wiki reader: lexical and identity recall hydrate bounded rowid pools, older or missing compact features retain SQLite compatibility, and exact fingerprint, stale, cancellation and interactive query states remain explicit. The four performance commits are preserved byte-for-byte.",
+      "reason": "Reviewed Wiki runtime and generator corrections against their sources: exit-state preservation, portable collision-safe JSON hashes, legacy source enumeration, bounded cache metadata and reader leases, ordered template scope, Unicode receipt fingerprints, cached architecture drift enforcement and declared module edges. Focused regressions passed; the report explicitly retains 284 unreviewed files and makes no new wall-time claim. Application HTTP contracts and data ownership are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "75c4520f7907cae0c1e8f23b4ba5597dacb306e8",
-      "reviewedAtUtc": "2026-10-06T17:39:08.8628339Z"
+      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "reviewedAtUtc": "2026-10-06T22:31:26.6936779Z"
     },
     {
       "pageId": "workflow.review-diff",

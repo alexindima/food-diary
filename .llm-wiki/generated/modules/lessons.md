@@ -16,9 +16,9 @@ sources:
 
 - Origin: extracted-project
 - Extracted project: `Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj`
-- Business-module dependencies: none observed
+- Business-module dependencies: Gamification, Users
 - Abstraction-contract dependencies: Gamification, Users
-- Business-module consumers: none observed
+- Business-module consumers: Admin
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
@@ -42,7 +42,7 @@ No literal attribute-routed controller was associated with this module.
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: NutritionLesson, UserLessonProgress
 - Public contract files: 17
-- Observed external consumer groups: 2
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

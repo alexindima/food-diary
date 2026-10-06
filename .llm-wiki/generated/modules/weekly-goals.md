@@ -16,7 +16,7 @@ sources:
 
 - Origin: extracted-project
 - Extracted project: `Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj`
-- Business-module dependencies: none observed
+- Business-module dependencies: Meals, Notifications, Users
 - Abstraction-contract dependencies: Meals, Notifications, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api

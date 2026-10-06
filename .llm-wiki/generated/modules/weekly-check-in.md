@@ -16,7 +16,7 @@ sources:
 
 - Origin: extracted-project
 - Extracted project: `Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj`
-- Business-module dependencies: none observed
+- Business-module dependencies: BodyMetrics, Hydration, Meals, Users
 - Abstraction-contract dependencies: BodyMetrics, Hydration, Meals, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Web.Api

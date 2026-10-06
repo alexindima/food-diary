@@ -18,7 +18,7 @@ sources:
 - Extracted project: `Modules/Marketing/Application/FoodDiary.Modules.Marketing.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: none observed
-- Business-module consumers: none observed
+- Business-module consumers: Billing
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
@@ -39,7 +39,7 @@ No literal attribute-routed controller was associated with this module.
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: MarketingAttributionEvent
 - Public contract files: 19
-- Observed external consumer groups: 3
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

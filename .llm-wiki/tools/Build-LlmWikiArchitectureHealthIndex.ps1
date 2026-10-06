@@ -25,7 +25,22 @@ $cacheInputs = @(
     '.llm-wiki/tools/LlmWikiGitPaths.ps1'
 ) + $routeInputs
 $inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $cacheInputs
-if ($ReuseUnchangedCheck -and (Test-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint)) { Write-Host 'Architecture health index cache hit: inputs, generator, and output are unchanged.'; exit 0 }
+if ($ReuseUnchangedCheck -and (Test-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint)) {
+    # Generation caches the artifact even when it describes drift. Reuse of
+    # unchanged bytes must still enforce the same architectural check contract.
+    if ($Check) {
+        $cachedIndex = Get-Content -LiteralPath $outputPath -Raw | ConvertFrom-Json
+        foreach ($name in @('dependencyViolations', 'untrackedProductionProjects', 'moduleCycleNodes')) {
+            if ($null -eq $cachedIndex.summary.PSObject.Properties[$name]) { throw "Architecture cache is missing '$name'." }
+            if ([int]$cachedIndex.summary.$name -ne 0) {
+                Write-Host "Architecture drift detected in cached index: $name=$($cachedIndex.summary.$name)."
+                exit 1
+            }
+        }
+    }
+    Write-Host 'Architecture health index cache hit: inputs, generator, and output are unchanged.'
+    exit 0
+}
 $catalog = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/repository-catalog.json') -Raw | ConvertFrom-Json
 $backendContracts = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/backend-contract-index.json') -Raw | ConvertFrom-Json
 $frontendContracts = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/frontend-contract-index.json') -Raw | ConvertFrom-Json

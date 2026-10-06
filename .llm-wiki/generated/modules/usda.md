@@ -16,9 +16,9 @@ sources:
 
 - Origin: extracted-project
 - Extracted project: `Modules/Usda/Application/FoodDiary.Modules.Usda.Application.csproj`
-- Business-module dependencies: none observed
+- Business-module dependencies: Users
 - Abstraction-contract dependencies: Users
-- Business-module consumers: none observed
+- Business-module consumers: Meals, Products
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
@@ -42,7 +42,7 @@ No literal attribute-routed controller was associated with this module.
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: DailyReferenceValue, UsdaFood, UsdaFoodNutrient, UsdaFoodPortion, UsdaNutrient
 - Public contract files: 20
-- Observed external consumer groups: 3
+- Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

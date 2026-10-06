@@ -17,8 +17,37 @@ $importReceiptPath = Join-Path $receiptRoot "$(Get-LlmWikiSha256 (Normalize-LlmW
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 $workspace = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name 'verification-receipts'
 $absoluteWorkspace = Join-Path $repositoryRoot $workspace
+$fingerprintFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'receipt-unicode'
+$receiptBackups = @{}
+foreach ($path in @($receiptPath, $planReceiptPath, $importReceiptPath)) {
+    $receiptBackups[$path] = if ([IO.File]::Exists($path)) { ,([IO.File]::ReadAllBytes($path)) } else { $null }
+}
 
 try {
+    & git -C $fingerprintFixture init --quiet
+    & git -C $fingerprintFixture config core.quotepath true
+    [IO.File]::WriteAllText((Join-Path $fingerprintFixture 'baseline.txt'), 'baseline')
+    & git -C $fingerprintFixture add baseline.txt
+    & git -C $fingerprintFixture -c user.name='Wiki Receipt Test' -c user.email='receipt@example.invalid' commit --quiet -m baseline
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to initialize the receipt fingerprint fixture.' }
+    $unicodeName = (-join @([char]0x0444, [char]0x0430, [char]0x0439, [char]0x043B)) + '.cs'
+    $unicodePath = Join-Path $fingerprintFixture $unicodeName
+    foreach ($tracked in @($false, $true)) {
+        [IO.File]::WriteAllText($unicodePath, 'one')
+        if ($tracked) {
+            & git -C $fingerprintFixture add -- $unicodeName
+            & git -C $fingerprintFixture -c user.name='Wiki Receipt Test' -c user.email='receipt@example.invalid' commit --quiet -m unicode
+            [IO.File]::WriteAllText($unicodePath, 'two')
+        }
+        $timestamp = [IO.File]::GetLastWriteTimeUtc($unicodePath)
+        $before = Get-LlmWikiVerificationFingerprint $fingerprintFixture
+        [IO.File]::WriteAllText($unicodePath, $(if ($tracked) { 'six' } else { 'two' }))
+        [IO.File]::SetLastWriteTimeUtc($unicodePath, $timestamp)
+        $after = Get-LlmWikiVerificationFingerprint $fingerprintFixture
+        if ($unicodeName -notin $after.paths -or $before.fingerprint -ceq $after.fingerprint) {
+            throw "Verification fingerprint missed a Unicode content edit: tracked=$tracked"
+        }
+    }
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationReceipts.ps1') Record `
         -RepositoryRoot $repositoryRoot `
         -Command $command `
@@ -93,9 +122,18 @@ try {
         throw 'Known-baseline-failure evidence was not treated as resolved, explicit, lineage-valid evidence.'
     }
 } finally {
-    Remove-Item -LiteralPath $receiptPath -Force -ErrorAction SilentlyContinue
-    Remove-Item -LiteralPath $planReceiptPath -Force -ErrorAction SilentlyContinue
-    Remove-Item -LiteralPath $importReceiptPath -Force -ErrorAction SilentlyContinue
+    foreach ($path in $receiptBackups.Keys) {
+        if ($null -ne $receiptBackups[$path]) { [IO.File]::WriteAllBytes($path, $receiptBackups[$path]) }
+        else { Remove-Item -LiteralPath $path -Force -ErrorAction SilentlyContinue }
+    }
+    $resolvedFixture = [IO.Path]::GetFullPath($fingerprintFixture)
+    $fixtureParent = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot $repositoryRoot)).TrimEnd('\', '/')
+    if ([IO.Path]::GetDirectoryName($resolvedFixture) -cne $fixtureParent -or
+        [IO.Path]::GetFileName($resolvedFixture) -notmatch '^receipt-unicode-[a-f0-9]{32}$') { throw 'Unsafe receipt fixture cleanup path.' }
+    if (Test-Path -LiteralPath $resolvedFixture) { Remove-Item -LiteralPath $resolvedFixture -Recurse -Force }
+    $resolvedWorkspace = [IO.Path]::GetFullPath($absoluteWorkspace)
+    $tasksPrefix = [IO.Path]::GetFullPath((Join-Path $repositoryRoot '.artifacts/llm-wiki/tasks')).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+    if (-not $resolvedWorkspace.StartsWith($tasksPrefix, [StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe receipt evidence cleanup path.' }
     Remove-Item -LiteralPath $absoluteWorkspace -Recurse -Force -ErrorAction SilentlyContinue
 }
 

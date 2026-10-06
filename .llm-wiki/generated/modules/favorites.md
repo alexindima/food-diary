@@ -16,9 +16,9 @@ sources:
 
 - Origin: extracted-project
 - Extracted project: `Modules/Favorites/Application/FoodDiary.Modules.Favorites.Application.csproj`
-- Business-module dependencies: none observed
+- Business-module dependencies: Users
 - Abstraction-contract dependencies: Users
-- Business-module consumers: none observed
+- Business-module consumers: Meals, Products, Recipes
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
@@ -43,7 +43,7 @@ No literal attribute-routed controller was associated with this module.
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: FavoriteMeal, FavoriteProduct, FavoriteRecipe
 - Public contract files: 43
-- Observed external consumer groups: 3
+- Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

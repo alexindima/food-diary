@@ -43,10 +43,20 @@ function Get-LlmWikiJsonFingerprint {
     # Windows PowerShell and PowerShell 7 use different JSON serializers. Normalize
     # HTML-sensitive characters and escape casing before hashing persisted payloads.
     $json = $json.Replace('&', '\u0026').Replace('<', '\u003c').Replace('>', '\u003e')
-    $json = [regex]::Replace(
-        $json,
-        '\\u[0-9A-Fa-f]{4}',
-        { param($match) $match.Value.ToLowerInvariant() })
+    # Retain existing PowerShell 7 fingerprints when Windows PowerShell escapes
+    # apostrophes. An even number of preceding slashes denotes a real Unicode
+    # escape; odd counts belong to a literal backslash-u sequence and stay intact.
+    $json = [regex]::Replace($json, '(\\*)\\u0027', {
+        param($match)
+        $prefix = $match.Groups[1].Value
+        if ($prefix.Length % 2 -eq 0) { return $prefix + "'" }
+        return $match.Value
+    })
+    $json = [regex]::Replace($json, '(\\*)\\u[0-9A-Fa-f]{4}', {
+        param($match)
+        if ($match.Groups[1].Value.Length % 2 -eq 0) { return $match.Value.ToLowerInvariant() }
+        return $match.Value
+    })
 
     $sha = [Security.Cryptography.SHA256]::Create()
     try {

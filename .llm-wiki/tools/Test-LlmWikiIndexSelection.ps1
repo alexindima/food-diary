@@ -4,6 +4,7 @@ param()
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiChangeSemantics.ps1')
 $pipelinePath = Join-Path $PSScriptRoot 'Invoke-LlmWikiIndexPipeline.ps1'
 
 function Get-IndexPlan([string[]]$ChangedPath, [switch]$RequiredOnly) {
@@ -13,6 +14,20 @@ function Get-IndexPlan([string[]]$ChangedPath, [switch]$RequiredOnly) {
 function Assert-Plan([bool]$Condition, [string]$Message) {
     if (-not $Condition) { throw $Message }
 }
+
+$conditionalScopeDiff = @'
+@@ -1,4 +1,4 @@
+-@if (isAdmin) {
+-  <button (click)="deleteItem()">Delete</button>
+-}
+-<p>Content</p>
++<button (click)="deleteItem()">Delete</button>
++@if (isAdmin) {
++  <p>Content</p>
++}
+'@
+Assert-Plan (-not (Test-LlmWikiPresentationOnlyTemplateDiff $conditionalScopeDiff)) 'Changed conditional template scope was treated as presentation-only.'
+Assert-Plan (Test-LlmWikiBookkeepingPath '.llm-wiki\generated\quality-index.json') 'Windows bookkeeping paths were not normalized.'
 
 foreach ($path in @(
     '.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1',

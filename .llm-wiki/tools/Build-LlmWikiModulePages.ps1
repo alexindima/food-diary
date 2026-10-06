@@ -63,6 +63,7 @@ function New-FrontMatter {
 
 $catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
 $boundaryManifest = Get-Content -LiteralPath $boundaryManifestPath -Raw | ConvertFrom-Json
+$moduleGraph = Get-Content -LiteralPath (Join-Path $repositoryRoot 'docs/architecture/module-dependencies.json') -Raw | ConvertFrom-Json
 $allModules = [System.Collections.Generic.List[object]]::new()
 foreach ($graphModule in $catalog.applicationModules) {
     $allModules.Add([pscustomobject]@{
@@ -75,9 +76,11 @@ foreach ($graphModule in $catalog.applicationModules) {
 }
 foreach ($extractedModule in $catalog.extractedApplicationModules) {
     if (@($allModules | Where-Object { $_.name -eq $extractedModule.name }).Count -eq 0) {
+        $graphEntry = $moduleGraph.modules.PSObject.Properties[$extractedModule.name]
+        if ($null -eq $graphEntry) { throw "Extracted module '$($extractedModule.name)' has no declared module dependency graph entry." }
         $allModules.Add([pscustomobject]@{
             name = $extractedModule.name
-            dependencies = @()
+            dependencies = @($graphEntry.Value)
             origin = 'extracted-project'
             project = $extractedModule.project
             boundary = $boundaryManifest.modules.($extractedModule.name)

@@ -24,6 +24,7 @@ if ($duplicateModuleKeys.Count -gt 0) { throw "Backend module manifest contains 
 $manifest = $manifestText | ConvertFrom-Json
 $catalog = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/generated/repository-catalog.json') -Raw | ConvertFrom-Json
 $generatorText = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'Build-LlmWikiModulePages.ps1') -Raw
+$dependencyGraph = Get-Content -LiteralPath (Join-Path $repositoryRoot 'docs/architecture/module-dependencies.json') -Raw | ConvertFrom-Json
 
 if ([int]$manifest.inventory.folderModules + [int]$manifest.inventory.extractedModules -ne [int]$manifest.inventory.totalModules -or
     @($manifest.modules.PSObject.Properties).Count -ne [int]$manifest.inventory.totalModules) {
@@ -38,6 +39,11 @@ foreach ($extractedModule in @($catalog.extractedApplicationModules)) {
         -not (Test-Path -LiteralPath (Join-Path $repositoryRoot $projectPath) -PathType Leaf)) {
         throw "Extracted module '$module' is not represented as an isolated source project."
     }
+    $slug = [regex]::Replace($module, '([a-z0-9])([A-Z])', '$1-$2').ToLowerInvariant()
+    $pagePath = Join-Path $repositoryRoot ".llm-wiki/generated/modules/$slug.md"
+    $expectedDependencies = @($dependencyGraph.modules.$module | Sort-Object { Get-LlmWikiOrdinalSortKey $_ })
+    $expectedLine = '- Business-module dependencies: ' + $(if ($expectedDependencies.Count) { $expectedDependencies -join ', ' } else { 'none observed' })
+    if ($expectedLine -cnotin @(Get-Content -LiteralPath $pagePath)) { throw "Extracted module '$module' page does not preserve its declared business dependencies." }
 }
 $expectedExtractedProjects = @{
     Fasting = 'Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj'

@@ -16,9 +16,9 @@ sources:
 
 - Origin: extracted-project
 - Extracted project: `Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj`
-- Business-module dependencies: none observed
+- Business-module dependencies: Users
 - Abstraction-contract dependencies: Users
-- Business-module consumers: none observed
+- Business-module consumers: Dietologist, Fasting, Identity, RecipeCommunity, WeeklyGoals
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
@@ -41,7 +41,7 @@ No literal attribute-routed controller was associated with this module.
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Notification, WebPushSubscription, NotificationWebPushOutboxMessage
 - Public contract files: 29
-- Observed external consumer groups: 3
+- Observed external consumer groups: 8
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
