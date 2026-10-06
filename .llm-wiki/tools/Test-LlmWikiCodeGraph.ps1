@@ -46,7 +46,7 @@ function Write-CodeGraphRegressionTiming([string]$Phase) {
     Write-Host "Code graph regression '$Phase': $([Math]::Round($phaseTimer.Elapsed.TotalSeconds, 2))s."
     $phaseTimer.Restart()
 }
-& node --test (Join-Path $PSScriptRoot 'code-graph-performance.test.mjs') (Join-Path $PSScriptRoot 'code-graph-candidates.test.mjs') (Join-Path $PSScriptRoot 'code-graph-context-projection.test.mjs') (Join-Path $PSScriptRoot 'code-graph-index-query.test.mjs')
+& node --test (Join-Path $PSScriptRoot 'code-graph-performance.test.mjs') (Join-Path $PSScriptRoot 'code-graph-inputs.test.mjs') (Join-Path $PSScriptRoot 'code-graph-candidates.test.mjs') (Join-Path $PSScriptRoot 'code-graph-context-projection.test.mjs') (Join-Path $PSScriptRoot 'code-graph-index-query.test.mjs')
 if ($LASTEXITCODE -ne 0) { throw 'Code graph snapshot/process regression tests failed.' }
 & node --test (Join-Path $PSScriptRoot 'code-graph-snapshot.test.mjs')
 if ($LASTEXITCODE -ne 0) { throw 'Code graph SQLite snapshot regression tests failed.' }
@@ -346,6 +346,8 @@ try {
     if ($LASTEXITCODE -eq 0 -or ($fullBuildFailure -join "`n") -notmatch 'TypeScript extraction prerequisite is missing') {
         throw 'A full graph build without frontend dependencies did not fail fast with the recovery instruction.'
     }
+    # The checked negative probe must not leak its native exit code to callers.
+    $global:LASTEXITCODE = 0
 } finally {
     $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT = $originalReadOnlySourceRoot
     $cleanupPaths = @(

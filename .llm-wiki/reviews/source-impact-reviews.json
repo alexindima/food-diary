@@ -248,14 +248,14 @@
       "pageSha256": "58810bcafe9de0e6e09ec7ce44659b61c6c2d807da6b207e95a00aa681b51685",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "1cd4a49c6e5b76122d70df0455fc744041e91f8e40cd4119476ff0db8c46e0b4"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
         }
       ],
-      "reason": "Reviewed nullable latestWeightKg and latestWeightDate additions and zero unanswered satiety defaults in presentation snapshots. All four API snapshot contract tests pass; no route or field was removed.",
+      "reason": "Reviewed bounded asynchronous graph input reads: eight workers, one stat per unique path, exact Git ordering and dirty-content hashes, draining before writer-lock release, awaited corruption recovery and database disposal. Canonical serial/backend projection records match; source guard, query providers and selection semantics remain intact. Updated cold-checkout prerequisite documentation.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:06:11.3087205Z"
+      "gitHead": "705e61b5429a86770c7989e7a2cd01bd97bb5c08",
+      "reviewedAtUtc": "2026-10-06T08:51:40.4855344Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -302,17 +302,29 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "0ac679ef2682cda58904cad9b5fd081e1541eb5c061f16522ae55dc1bd030f6f",
+      "pageSha256": "319820f26ba55e88efa450b82ed9a8fadd0f9e9a68feb19af0c9ad28147c9f96",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "6e3f4bc2a888ef592ba681885709e934fa07db9e3a996569bc0b8a85ed106aa8"
+          "path": ".llm-wiki/tools/code-graph-inputs.mjs",
+          "sha256": "45f061dd451faf95b7878d9fe3956a2dd92109802f65b0e5441925e75db3f1ec"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-inputs.test.mjs",
+          "sha256": "2c25b4f92a485b2ab13592745fe199bf6193563bb0e194dae9ef3fe539a1cee0"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
+          "sha256": "9bfd3459844484294e75998903484dca760e852168830c4b665e867f2b75f602"
         }
       ],
-      "reason": "Reviewed latest master integration with common-overlay checkout reuse, connection-local batch page cache and preserved shared NuGet locks. Linux descendant cleanup fixes are retained. Current workflow authority, source hash isolation, static coverage limits and security discovery claims remain accurate; regenerated quality metrics reflect the combined sources.",
-      "baseRef": "master",
-      "gitHead": "b00110c1b945a1586932ba18b0d7c04407b4a89b",
-      "reviewedAtUtc": "2026-10-06T00:18:54.4580053Z"
+      "reason": "Reviewed ordered asynchronous graph input collection, bounded eight-worker reads, exact dirty-file hashes, draining under the build lock, awaited corruption recovery and database disposal. All graph regression assertions passed. The validated missing-TypeScript negative probe now resets its consumed native failure code instead of leaking a false failure to strict callers; no assertion was removed.",
+      "baseRef": "HEAD",
+      "gitHead": "705e61b5429a86770c7989e7a2cd01bd97bb5c08",
+      "reviewedAtUtc": "2026-10-06T08:57:09.5519054Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -614,13 +626,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
+          "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
         }
       ],
-      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
+      "reason": "Reviewed bounded asynchronous graph input reads: eight workers, one stat per unique path, exact Git ordering and dirty-content hashes, draining before writer-lock release, awaited corruption recovery and database disposal. Canonical serial/backend projection records match; source guard, query providers and selection semantics remain intact. Updated cold-checkout prerequisite documentation.",
       "baseRef": "HEAD",
-      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
-      "reviewedAtUtc": "2026-10-05T08:37:22.5932749Z"
+      "gitHead": "705e61b5429a86770c7989e7a2cd01bd97bb5c08",
+      "reviewedAtUtc": "2026-10-06T08:51:42.3401284Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -817,14 +829,14 @@
       "pageSha256": "b60f38c1d4bb6323e6d9a1128ef46cbe3f2c097c8abd5f71e062f9d48a25997c",
       "sources": [
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "5a0725a1434680dd97583189c6c2871ac5c5613b0be8b11e13108116c6157371"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
         }
       ],
-      "reason": "Reviewed privacy/security workflow pages after derived-index refresh. Permission changes retain accepted relationship checks, shared categories stay individually scoped, Admin weight is a read-only contract and no credential, provider or retention behavior changed. These are navigation receipts rather than a security audit.",
+      "reason": "Reviewed bounded asynchronous graph input reads: eight workers, one stat per unique path, exact Git ordering and dirty-content hashes, draining before writer-lock release, awaited corruption recovery and database disposal. Canonical serial/backend projection records match; source guard, query providers and selection semantics remain intact. Updated cold-checkout prerequisite documentation.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:08:54.9376932Z"
+      "gitHead": "705e61b5429a86770c7989e7a2cd01bd97bb5c08",
+      "reviewedAtUtc": "2026-10-06T08:51:43.1951433Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1216,14 +1228,14 @@
       "pageSha256": "f9ddf22db2cc07f9109f6b518b296525846afc0f92e94ac0b443f5bf8ea4b89a",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "b00b223a7694e2eaf46f0a145f455504bfada2c76442c441427f6807b821d5a5"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
         }
       ],
-      "reason": "Reviewed query-context, runtime-impact and feature-trace pages against regenerated catalog, runtime and frontend indexes. These remain navigation workflows; this UX patch adds no hosts or workers, and declared source hashes are refreshed.",
+      "reason": "Reviewed bounded asynchronous graph input reads: eight workers, one stat per unique path, exact Git ordering and dirty-content hashes, draining before writer-lock release, awaited corruption recovery and database disposal. Canonical serial/backend projection records match; source guard, query providers and selection semantics remain intact. Updated cold-checkout prerequisite documentation.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:08:56.3609063Z"
+      "gitHead": "705e61b5429a86770c7989e7a2cd01bd97bb5c08",
+      "reviewedAtUtc": "2026-10-06T08:51:43.962182Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1246,14 +1258,14 @@
       "pageSha256": "891ba091baab5bb5ebac52ec2d8482eba48976374cc43486fa4fbbe800d24fa2",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "6e3f4bc2a888ef592ba681885709e934fa07db9e3a996569bc0b8a85ed106aa8"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
         }
       ],
-      "reason": "Reviewed latest master integration with common-overlay checkout reuse, connection-local batch page cache and preserved shared NuGet locks. Linux descendant cleanup fixes are retained. Current workflow authority, source hash isolation, static coverage limits and security discovery claims remain accurate; regenerated quality metrics reflect the combined sources.",
-      "baseRef": "master",
-      "gitHead": "b00110c1b945a1586932ba18b0d7c04407b4a89b",
-      "reviewedAtUtc": "2026-10-06T00:18:59.4146438Z"
+      "reason": "Reviewed bounded asynchronous graph input reads: eight workers, one stat per unique path, exact Git ordering and dirty-content hashes, draining before writer-lock release, awaited corruption recovery and database disposal. Canonical serial/backend projection records match; source guard, query providers and selection semantics remain intact. Updated cold-checkout prerequisite documentation.",
+      "baseRef": "HEAD",
+      "gitHead": "705e61b5429a86770c7989e7a2cd01bd97bb5c08",
+      "reviewedAtUtc": "2026-10-06T08:51:44.7864135Z"
     }
   ]
 }

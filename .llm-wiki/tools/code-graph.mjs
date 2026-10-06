@@ -12,6 +12,7 @@ import { englishMorphologicalVariants } from './code-graph-query-terms.mjs';
 import { findIdentityCandidates } from './code-graph-identity.mjs';
 import { createContextSourceReader, replaceContextSearchRecords } from './code-graph-context-projection.mjs';
 import { runGraphProcess } from './code-graph-process.mjs';
+import { collectGraphInputs } from './code-graph-inputs.mjs';
 import { discoverProjectOwnership, createProjectOwnershipResolver, inspectProjectionOwnership, inspectProjectionCompleteness } from './code-graph-maintenance.mjs';
 import { traceCandidateMatchesScope } from './code-graph-trace-scope.mjs';
 import { applicationRoleIdentity, completeFileIdentityMatches, compoundModuleMention, contextPathOwnership, exactFileIdentity, directIdentifierTermMatchesMinimum, hyphenatedIdentifierTerms, implicitImplementationIntent, isModuleEntryPointQuery, rankingModuleIdentity, rankingPathIdentities, testIdentityWeights } from './code-graph-path-layout.mjs';
@@ -65,7 +66,7 @@ function graphDependencyFingerprintPath(databasePath) {
     : `${databasePath}.fingerprint`;
 }
 
-function withBuildLock(callback) {
+async function withBuildLock(callback) {
   const lockPath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/build.lock');
   const ownerPath = resolve(lockPath, 'owner.json');
   const ownerToken = randomUUID();
@@ -98,7 +99,7 @@ function withBuildLock(callback) {
     }
   }
   try {
-    return callback();
+    return await callback();
   } finally {
     try {
       const owner = JSON.parse(readFileSync(ownerPath, 'utf8'));
@@ -1075,12 +1076,11 @@ function refreshContextSearch(database) {
   };
 }
 
-function build(database, force = false, skipTypeScript = false) {
+async function build(database, force = false, skipTypeScript = false) {
   const started = performance.now();
   const startingChangeSet = changeSetSnapshot();
   const storedParserVersion = database.prepare("SELECT value FROM metadata WHERE key='parser_version'").get()?.value;
   if (storedParserVersion !== parserVersion) force = true;
-  const knownPaths = new Set(gitPaths().filter((path) => existsSync(resolve(repositoryRoot, path))));
   const existing = new Map(database.prepare('SELECT id, path, size, mtime_ms, content_hash FROM files').all().map((item) => [item.path, item]));
   const deleteFile = database.prepare('DELETE FROM files WHERE id = ?');
   const insertFile = database.prepare('INSERT INTO files(path, language, size, mtime_ms, content_hash) VALUES (?, ?, ?, ?, ?)');
@@ -1088,41 +1088,16 @@ function build(database, force = false, skipTypeScript = false) {
   const insertToken = database.prepare('INSERT OR IGNORE INTO file_tokens(file_id, token) VALUES (?, ?)');
   const insertReference = database.prepare('INSERT OR IGNORE INTO project_references(file_id, target_path) VALUES (?, ?)');
   const insertEdge = database.prepare('INSERT OR IGNORE INTO typed_edges(file_id, kind, target, line, evidence, confidence, target_id) VALUES (?, ?, ?, ?, ?, ?, ?)');
-  let scanned = 0;
   let updated = 0;
-  let unchanged = 0;
   let removed = 0;
   let queryCategoriesRefreshed = 0;
   let compiledIndexes;
   let contextSearch;
-  const candidates = [];
   const dirtyPaths = new Set(startingChangeSet.changedPaths);
-  let verifiedDirtyFiles = 0;
-
-  for (const path of knownPaths) {
-    if (skipTypeScript && languageOf(path) === 'typescript') continue;
-    const absolutePath = resolve(repositoryRoot, path);
-    const stat = statSync(absolutePath);
-    const prior = existing.get(path);
-    const metadataMatches = prior && prior.size === stat.size && Math.abs(prior.mtime_ms - stat.mtimeMs) < 0.001;
-    if (!force && metadataMatches && !dirtyPaths.has(path)) {
-      unchanged += 1;
-      continue;
-    }
-    const text = readFileSync(absolutePath, 'utf8');
-    const contentHash = sha256(text);
-    if (dirtyPaths.has(path)) verifiedDirtyFiles += 1;
-    if (!force && prior && prior.content_hash === contentHash) {
-      if (!metadataMatches) {
-        scanned += 1;
-        candidates.push({ path, stat, prior, text: null, contentHash, metadataOnly: true });
-      }
-      unchanged += 1;
-      continue;
-    }
-    scanned += 1;
-    candidates.push({ path, stat, prior, text, contentHash, metadataOnly: false });
-  }
+  const { knownPaths, candidates, scanned, unchanged, verifiedDirtyFiles } = await collectGraphInputs({
+    repositoryRoot, paths: gitPaths(), previousFiles: existing, dirtyPaths, force,
+    skipRead: path => skipTypeScript && languageOf(path) === 'typescript',
+  });
   const typescriptCandidates = candidates.filter((item) => !item.metadataOnly && languageOf(item.path) === 'typescript');
   if (!skipTypeScript && typescriptCandidates.length > 0) assertTypeScriptCompilerAvailable();
   const roslynResults = extractCSharp(database, candidates.filter((item) => !item.metadataOnly && languageOf(item.path) === 'csharp'), knownPaths);
@@ -2896,12 +2871,12 @@ try {
   }
   let result;
   if (action === 'build') {
-    result = withBuildLock(() => {
+    result = await withBuildLock(async () => {
       let opened = openDatabaseForBuild(databasePath);
       database = opened.database;
       try {
-        const completeBuild = () => {
-          const buildResult = build(database, options.force === 'true', options['skip-typescript'] === 'true');
+        const completeBuild = async () => {
+          const buildResult = await build(database, options.force === 'true', options['skip-typescript'] === 'true');
           const ownership = inspectProjectionOwnership(database, discoverProjectOwnership(repositoryPaths()), true);
           return {
             ...buildResult,
@@ -2912,7 +2887,7 @@ try {
           };
         };
         try {
-          return completeBuild();
+          return await completeBuild();
         } catch (error) {
           if (opened.recoveredFromCorruption || !isDatabaseCorruption(error)) throw error;
           try { database.close(); } finally { database = undefined; }
@@ -2923,7 +2898,7 @@ try {
             quarantinedPaths,
           };
           database = opened.database;
-          return completeBuild();
+          return await completeBuild();
         }
       } finally {
         database?.close();

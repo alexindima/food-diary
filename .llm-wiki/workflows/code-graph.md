@@ -6,6 +6,8 @@ status: current
 summary: Query an incremental SQLite symbol and consumer graph as the primary Development MCP code-context route without replacing governed Wiki evidence or committed project knowledge.
 sources:
   - .llm-wiki/tools/code-graph.mjs
+  - .llm-wiki/tools/code-graph-inputs.mjs
+  - .llm-wiki/tools/code-graph-inputs.test.mjs
   - .llm-wiki/tools/code-graph-maintenance.mjs
   - .llm-wiki/tools/code-graph-context-projection.mjs
   - .llm-wiki/tools/code-graph-context-projection.test.mjs
@@ -18,6 +20,7 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiGraphResearch.ps1
   - .llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1
   - .llm-wiki/tools/Test-LlmWikiCodeGraph.ps1
+  - .llm-wiki/tools/Test-LlmWikiSqliteColdCheckout.ps1
   - .llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1
   - .llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1
   - .llm-wiki/tools/Test-LlmWikiStandaloneIndexRoutes.ps1
@@ -77,6 +80,13 @@ sources:
 # Local Code Intelligence Graph
 
 Every incremental build hashes dirty source paths even when size and modification time match cached metadata. Unchanged clean paths retain the metadata fast path. Repeated same-size edits to an already dirty file are covered in an isolated snapshot regression. `graph-build -BackendOnlyRefresh` prepares backend navigation without TypeScript prerequisites.
+
+Input discovery and source reads use at most eight asynchronous file operations
+per build. Each path is inspected once; candidates and counters are published in
+the original Git inventory order, regardless of completion order. The graph
+writer holds its build lock until all dispatched reads settle, including when
+an input fails. This pass-local scheduling does not weaken content freshness,
+change extraction order, or introduce a persistent source cache.
 
 Search projection refresh compares per-record source fingerprints and expands and
 writes only changed records. Canonical dense row IDs retain the same ordering and
@@ -658,8 +668,9 @@ through its graph refresh.
 Facade compiler-dependency detection uses the original checkout only when the
 current repository is the active read-only snapshot. This matches the graph's
 dependency resolution and retains SQLite queries in that snapshot.
-An unrelated cold checkout still falls back to JSON when dependencies are absent;
-an explicit JSON selection is always preserved.
+An unrelated cold backend checkout builds its private SQLite projection without
+TypeScript dependencies. Frontend discovery with missing TypeScript prerequisites
+fails with an explicit dependency error; it does not switch query providers.
 Fast research requires an explicit module or planned path and returns bounded
 source, dependency, and downstream-consumer evidence. Its boundary report keeps
 the logical module, current project, physical source root, and target-project
