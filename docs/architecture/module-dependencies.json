@@ -4,6 +4,7 @@
   "modules": {
     "Admin": [
       "Ai",
+      "BodyMetrics",
       "ContentReports",
       "DailyAdvices",
       "Gamification",
@@ -158,6 +159,7 @@
   "contractDependencies": {
     "Admin": [
       "Ai",
+      "BodyMetrics",
       "ContentReports",
       "DailyAdvices",
       "Gamification",

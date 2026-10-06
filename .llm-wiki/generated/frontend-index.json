@@ -8,7 +8,7 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1900,
+    "typescriptFiles": 1902,
     "symbols": 728,
     "routes": 106,
     "features": 46,
@@ -2978,7 +2978,7 @@
       "role": "Component",
       "selector": "fd-meal-details-fields",
       "path": "FoodDiary.Web.Client/src/app/components/shared/meal-details-fields/meal-details-fields.ts",
-      "line": 14
+      "line": 16
     },
     {
       "name": "MealSatietyFieldsComponent",
@@ -4007,7 +4007,7 @@
       "role": "Component",
       "selector": "fd-fasting-redesign-preview",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
-      "line": 49
+      "line": 48
     },
     {
       "name": "FastingSafetyDialogComponent",
@@ -4077,7 +4077,7 @@
       "role": "Component",
       "selector": "fd-fasting-page",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page/fasting-page.ts",
-      "line": 84
+      "line": 85
     },
     {
       "name": "GamificationService",
@@ -4119,7 +4119,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/goals/api/goals.service.ts",
-      "line": 10
+      "line": 11
     },
     {
       "name": "CalorieGoalDialogComponent",
@@ -4266,21 +4266,21 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/lib/meal-plan.facade.ts",
-      "line": 10
+      "line": 13
     },
     {
       "name": "MealPlanDetailPageComponent",
       "role": "Component",
       "selector": "fd-meal-plan-detail-page",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-page.ts",
-      "line": 37
+      "line": 38
     },
     {
       "name": "MealPlanDetailDaysComponent",
       "role": "Component",
       "selector": "fd-meal-plan-detail-days",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-sections/meal-plan-detail-days/meal-plan-detail-days.ts",
-      "line": 15
+      "line": 16
     },
     {
       "name": "MealPlanDetailHeaderComponent",
@@ -4420,14 +4420,14 @@
       "role": "Component",
       "selector": "fd-quick-meal-drawer",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.ts",
-      "line": 48
+      "line": 51
     },
     {
       "name": "MealFavoritesPickerComponent",
       "role": "Component",
       "selector": "fd-meal-favorites-picker",
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/meal-favorites-picker/meal-favorites-picker.ts",
-      "line": 36
+      "line": 41
     },
     {
       "name": "MealPhotoEditListComponent",
@@ -4476,7 +4476,7 @@
       "role": "Component",
       "selector": "fd-meal-satiety-level-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.ts",
-      "line": 25
+      "line": 23
     },
     {
       "name": "AiMealCreateFacade",
@@ -4525,7 +4525,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/quick/quick-meal.service.ts",
-      "line": 37
+      "line": 39
     },
     {
       "name": "RecipeServingWeightService",
@@ -5967,7 +5967,7 @@
       "role": "Component",
       "selector": "fd-weekly-review-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/dialogs/weekly-review-dialog/weekly-review-dialog.ts",
-      "line": 24
+      "line": 26
     },
     {
       "name": "WeeklyCheckInFacade",
@@ -7179,16 +7179,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4093,
-      "russianProperties": 4093,
+      "englishProperties": 4063,
+      "russianProperties": 4063,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1122,
-      "russianProperties": 1122,
+      "englishProperties": 1156,
+      "russianProperties": 1156,
       "countsMatch": true
     },
     {

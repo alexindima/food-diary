@@ -1,4 +1,4 @@
-import { DatePipe, UpperCasePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -11,6 +11,7 @@ import { buildFastingTimerCardComputedState } from '../../../../shared/lib/fasti
 import { HOURS_PER_DAY, MS_PER_HOUR } from '../../../../shared/lib/time.constants';
 import type { FastingSession, FastingStats } from '../../../../shared/models/fasting.data';
 import type { FastingMessageViewModel } from '../../lib/fasting-page.types';
+import { getFastingDurationDisplay, isFastingEndedEarly } from '../../lib/fasting-session-state';
 
 type RhythmDay = {
     dayKey: string;
@@ -25,7 +26,6 @@ type FastingFlowView = {
 };
 
 const COMPLETE_PROGRESS = 100;
-const PARTIAL_PROGRESS = 55;
 const GOOD_WELLBEING_LEVEL = 4;
 const RECENT_SESSIONS_LIMIT = 3;
 const RHYTHM_DAY_COUNT = 7;
@@ -34,7 +34,6 @@ const DEFAULT_CYCLIC_FAST_HOURS = 16;
 @Component({
     selector: 'fd-fasting-redesign-preview',
     imports: [
-        UpperCasePipe,
         DatePipe,
         LocalizedNumberPipe,
         TranslatePipe,
@@ -188,16 +187,11 @@ export class FastingRedesignPreviewComponent {
             return 'FASTING.REDESIGN.WELLBEING_EMPTY';
         }
 
-        const checkInScores = session.checkIns.flatMap(checkIn => [checkIn.hungerLevel, checkIn.energyLevel, checkIn.moodLevel]);
-        if (
-            checkInScores.length === 0 &&
-            session.checkInAtUtc !== null &&
-            session.hungerLevel !== null &&
-            session.energyLevel !== null &&
-            session.moodLevel !== null
-        ) {
-            checkInScores.push(session.hungerLevel, session.energyLevel, session.moodLevel);
+        if (session.symptoms.length > 0 || session.checkIns.some(checkIn => checkIn.symptoms.length > 0)) {
+            return 'FASTING.REDESIGN.WELLBEING_SYMPTOMS';
         }
+
+        const checkInScores = getWellbeingScores(session);
         if (checkInScores.length === 0) {
             return 'FASTING.REDESIGN.WELLBEING_EMPTY';
         }
@@ -229,9 +223,12 @@ export class FastingRedesignPreviewComponent {
         });
     }
 
-    protected sessionDurationHours(session: FastingSession): number {
-        const end = session.endedAtUtc === null ? new Date() : new Date(session.endedAtUtc);
-        return Math.max(0, (end.getTime() - new Date(session.startedAtUtc).getTime()) / MS_PER_HOUR);
+    protected readonly sessionDurationView = getFastingDurationDisplay;
+
+    protected readonly historyEndedEarly = isFastingEndedEarly;
+
+    protected historyStatusKey(session: FastingSession): string {
+        return isFastingEndedEarly(session) ? 'FASTING.BADGE_ENDED_EARLY' : `FASTING.BADGE_${session.status.toUpperCase()}`;
     }
 
     protected historyTypeLabelKey(session: FastingSession): string {
@@ -316,6 +313,14 @@ function buildRhythmDays(
     });
 }
 
+function sessionTargetProgress(session: FastingSession): number {
+    if (session.endedAtUtc === null || session.plannedDurationHours <= 0) {
+        return 0;
+    }
+    const duration = new Date(session.endedAtUtc).getTime() - new Date(session.startedAtUtc).getTime();
+    return Math.min(COMPLETE_PROGRESS, Math.max(0, (duration / (session.plannedDurationHours * MS_PER_HOUR)) * COMPLETE_PROGRESS));
+}
+
 function buildRhythmDay(
     index: number,
     sessions: FastingSession[],
@@ -330,8 +335,10 @@ function buildRhythmDay(
         };
     }
 
-    const completedCount = sessions.filter(session => session.status === 'Completed').length;
-    const progress = completedCount === 0 ? PARTIAL_PROGRESS : (completedCount / sessions.length) * COMPLETE_PROGRESS;
+    const completedCount = sessions.filter(
+        session => session.status === 'Completed' && sessionTargetProgress(session) >= COMPLETE_PROGRESS,
+    ).length;
+    const progress = sessions.reduce((sum, session) => sum + sessionTargetProgress(session), 0) / sessions.length;
     const durationLabel =
         sessions.length === 1
             ? formatRhythmProtocol(sessions[0], translate)
@@ -343,6 +350,14 @@ function buildRhythmDay(
         progress,
         completed: completedCount === sessions.length,
     };
+}
+
+function getWellbeingScores(session: FastingSession): number[] {
+    const scores = session.checkIns.flatMap(checkIn => [checkIn.hungerLevel, checkIn.energyLevel, checkIn.moodLevel]);
+    if (scores.length === 0 && session.checkInAtUtc !== null && session.hungerLevel !== null && session.energyLevel !== null && session.moodLevel !== null) {
+        scores.push(session.hungerLevel, session.energyLevel, session.moodLevel);
+    }
+    return scores;
 }
 
 function formatRhythmProtocol(session: FastingSession, translate: (key: string) => string): string {

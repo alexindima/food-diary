@@ -11,11 +11,14 @@ import { MealService } from '../features/meals/api/meal.service';
 import { FAVORITE_MEAL_ACTIONS, MEAL_ACTIONS } from '../features/meals/contracts/meal-actions';
 import { BILLING_ACCOUNT_ACTIONS } from '../features/premium/contracts/billing-account-actions';
 import { PremiumBillingFacade } from '../features/premium/lib/premium-billing.facade';
+import { RecipeService } from '../features/recipes/api/recipe.service';
+import { RECIPE_LOOKUP } from '../features/recipes/contracts/recipe-lookup';
 import { UsdaService } from '../features/usda/api/usda.service';
 import { USDA_PRODUCT_LINK } from '../features/usda/contracts/usda-product-link';
 
 // Bind capabilities to their owning implementation only at the composition root.
 export const FEATURE_ACTION_PROVIDERS: Provider[] = [
+    { provide: RECIPE_LOOKUP, useExisting: RecipeService },
     { provide: MEAL_ACTIONS, useExisting: MealService },
     { provide: FAVORITE_MEAL_ACTIONS, useExisting: FavoriteMealService },
     { provide: HYDRATION_ACTIONS, useExisting: HydrationService },

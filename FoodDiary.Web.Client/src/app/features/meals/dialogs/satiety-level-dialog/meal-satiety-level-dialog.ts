@@ -7,8 +7,6 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiSatietyScaleComponent } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale';
 
-import { DEFAULT_SATIETY_LEVEL } from '../../../../shared/lib/satiety-level.utils';
-
 export type SatietyLevelDialogData = {
     titleKey: string;
     subtitleKey?: string;
@@ -26,7 +24,6 @@ export class MealSatietyLevelDialogComponent {
     protected readonly data = inject<SatietyLevelDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<MealSatietyLevelDialogComponent>>(FdUiDialogRef);
     private readonly translateService = inject(TranslateService);
-    private readonly defaultSatietyLevel = DEFAULT_SATIETY_LEVEL;
 
     protected readonly selectedValue = signal<number | null>(null);
     protected readonly subtitleKey = computed(() => this.data.subtitleKey ?? null);
@@ -36,7 +33,7 @@ export class MealSatietyLevelDialogComponent {
     });
 
     public constructor() {
-        this.selectedValue.set(this.data.value ?? this.defaultSatietyLevel);
+        this.selectedValue.set(this.data.value);
     }
 
     protected onValueSelected(level: number): void {

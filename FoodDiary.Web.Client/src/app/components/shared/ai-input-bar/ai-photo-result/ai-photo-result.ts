@@ -17,7 +17,7 @@ import {
 } from '../../../../shared/lib/ai-photo-edit.utils';
 import { createClientId } from '../../../../shared/lib/client-id.utils';
 import { formatDateInputValue, formatTimeInputValue } from '../../../../shared/lib/local-date.utils';
-import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
+import { normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { AiInputBarMealDetails } from '../ai-input-bar.types';
 import { AiPhotoDetailsPanelComponent } from './ai-photo-details-panel/ai-photo-details-panel';
@@ -118,8 +118,8 @@ export class AiPhotoResultComponent {
     protected readonly detailsDate = signal(this.getDateInputValue(new Date()));
     protected readonly detailsTime = signal(this.getTimeInputValue(new Date()));
     protected readonly detailsComment = signal('');
-    protected readonly preMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
-    protected readonly postMealSatietyLevel = signal<number | null>(DEFAULT_SATIETY_LEVEL);
+    protected readonly preMealSatietyLevel = signal<number | null>(null);
+    protected readonly postMealSatietyLevel = signal<number | null>(null);
     protected readonly editItems = signal<EditableAiItem[]>([]);
     protected readonly resultRows = computed<AiResultRow[]>(() => {
         const nutritionItems = this.resolvedNutrition()?.items ?? [];

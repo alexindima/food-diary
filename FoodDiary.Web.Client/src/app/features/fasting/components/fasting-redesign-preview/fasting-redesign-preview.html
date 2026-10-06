@@ -193,6 +193,7 @@
             <h3>{{ 'FASTING.REDESIGN.RECENT_TITLE' | translate }}</h3>
             <div class="fasting-redesign__history-list">
                 @for (item of recentSessions(); track item.id) {
+                    @let duration = sessionDurationView(item);
                     <div class="fasting-redesign__history-item">
                         <button
                             type="button"
@@ -206,18 +207,18 @@
                                 <span>{{ historyTypeLabelKey(item) | translate }} &middot; {{ historyProtocolLabel(item) }}</span>
                             </span>
                             <strong class="fasting-redesign__history-duration">
-                                {{ sessionDurationHours(item) | localizedNumber: currentLocale() : 0 : 1 }}
-                                {{ 'FASTING.HOURS' | translate }}
+                                {{ duration.value | localizedNumber: currentLocale() : 0 : 1 }}
+                                {{ duration.unitKey | translate }}
                             </strong>
                             <span
                                 class="fasting-redesign__status"
-                                [class.fasting-redesign__status--completed]="item.status === 'Completed'"
+                                [class.fasting-redesign__status--completed]="item.status === 'Completed' && !historyEndedEarly(item)"
                                 [class.fasting-redesign__status--active]="item.status === 'Active'"
-                                [class.fasting-redesign__status--interrupted]="item.status === 'Interrupted'"
+                                [class.fasting-redesign__status--interrupted]="item.status === 'Interrupted' || historyEndedEarly(item)"
                                 [class.fasting-redesign__status--skipped]="item.status === 'Skipped'"
                                 [class.fasting-redesign__status--postponed]="item.status === 'Postponed'"
                             >
-                                {{ `FASTING.BADGE_${(item.status | uppercase)}` | translate }}
+                                {{ historyStatusKey(item) | translate }}
                             </span>
                             <fd-ui-icon name="chevron_right" />
                         </button>

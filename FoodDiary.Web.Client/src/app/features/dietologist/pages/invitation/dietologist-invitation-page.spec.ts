@@ -1,17 +1,19 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, type ParamMap } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { of, throwError } from 'rxjs';
+import { BehaviorSubject, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
+import type { DietologistInvitationForCurrentUser } from '../../../../shared/models/dietologist.data';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 import { DietologistInvitationPageComponent } from './dietologist-invitation-page';
 
 let fixture: ComponentFixture<DietologistInvitationPageComponent>;
 let component: DietologistInvitationPageComponent;
+let routeParams: BehaviorSubject<ParamMap>;
 let dietologistService: {
     acceptInvitationForCurrentUser: ReturnType<typeof vi.fn>;
     declineInvitationForCurrentUser: ReturnType<typeof vi.fn>;
@@ -26,6 +28,7 @@ let authService: {
 };
 
 beforeEach(() => {
+    routeParams = new BehaviorSubject(convertToParamMap({ invitationId: 'inv-1' }));
     dietologistService = {
         getInvitationForCurrentUser: vi.fn(),
         acceptInvitationForCurrentUser: vi.fn(),
@@ -60,6 +63,30 @@ describe('DietologistInvitationPageComponent accepted state', () => {
         expect(component['state']()).toBe('accepted');
         const host = fixture.nativeElement as HTMLElement;
         expect(host.textContent).toContain('DIETOLOGIST_INVITATION.SUCCESS_ACCEPT');
+    });
+});
+
+describe('DietologistInvitationPageComponent route changes', () => {
+    it('loads the new invitation and ignores a late response from the old one', () => {
+        const oldRequest = new Subject<DietologistInvitationForCurrentUser>();
+        const newInvitation: DietologistInvitationForCurrentUser = {
+            invitationId: 'inv-2',
+            clientUserId: 'client-2',
+            clientEmail: 'client2@example.invalid',
+            clientFirstName: 'New',
+            clientLastName: null,
+            status: 'Pending',
+            createdAtUtc: '2026-04-15T00:00:00Z',
+            expiresAtUtc: '2026-04-22T00:00:00Z',
+        };
+        dietologistService.getInvitationForCurrentUser.mockReturnValueOnce(oldRequest).mockReturnValueOnce(of(newInvitation));
+        createComponent();
+        routeParams.next(convertToParamMap({ invitationId: 'inv-2' }));
+        oldRequest.next({ ...newInvitation, invitationId: 'inv-1', status: 'Revoked' });
+        fixture.detectChanges();
+        expect(component['state']()).toBe('ready');
+        expect(component['invitation']()?.invitationId).toBe('inv-2');
+        expect(dietologistService.getInvitationForCurrentUser).toHaveBeenLastCalledWith('inv-2');
     });
 });
 
@@ -127,6 +154,7 @@ function createComponent(): void {
             {
                 provide: ActivatedRoute,
                 useValue: {
+                    paramMap: routeParams.asObservable(),
                     snapshot: {
                         paramMap: convertToParamMap({ invitationId: 'inv-1' }),
                     },

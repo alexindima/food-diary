@@ -22,7 +22,7 @@ public static class DiaryCsvGenerator {
 
             sb.Append(ToDisplayDate(meal.Date, displayOffset).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             sb.Append(',');
-            sb.Append(meal.MealType?.ToString() ?? "");
+            sb.Append(meal.MealType?.ToString() ?? "Other");
             sb.Append(',');
             sb.Append(Math.Round(calories, 1, MidpointRounding.ToEven).ToString(CultureInfo.InvariantCulture));
             sb.Append(',');

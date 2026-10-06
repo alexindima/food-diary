@@ -150,6 +150,7 @@ function registerDisplayTests(): void {
             showWithMouse(context);
 
             expect(tooltipText(context.overlayRoot)).toBe('Notifications');
+            expect(context.overlayRoot.querySelector<HTMLElement>('.fd-ui-hint-panel')?.style.pointerEvents).toBe('none');
             expect(context.trigger.getAttribute('aria-describedby')).toContain('fd-ui-hint-');
         });
 

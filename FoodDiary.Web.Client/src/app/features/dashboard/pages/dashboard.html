@@ -92,9 +92,23 @@
             <section class="fd-stack fd-gap-sm" [attr.aria-label]="'DASHBOARD.INITIAL_SETUP.TITLE' | translate">
                 <h2 class="fd-ui-card-title">{{ 'DASHBOARD.INITIAL_SETUP.TITLE' | translate }}</h2>
                 <p class="fd-ui-body-sm">{{ 'DASHBOARD.INITIAL_SETUP.HINT' | translate }}</p>
+                <ol class="fd-stack fd-gap-sm fd-ui-body-sm">
+                    <li>
+                        {{ 'DASHBOARD.INITIAL_SETUP.PROFILE_HINT' | translate }}
+                        <span [hidden]="!profileSetupComplete()">{{ 'DASHBOARD.INITIAL_SETUP.DONE' | translate }}</span>
+                    </li>
+                    <li>
+                        {{ 'DASHBOARD.INITIAL_SETUP.WEIGHT_HINT' | translate }}
+                        <span [hidden]="!weightSetupComplete()">{{ 'DASHBOARD.INITIAL_SETUP.DONE' | translate }}</span>
+                    </li>
+                    <li>{{ 'DASHBOARD.INITIAL_SETUP.GOALS_HINT' | translate }}</li>
+                </ol>
                 <div class="fd-row fd-wrap fd-gap-sm">
                     <fd-ui-button variant="secondary" fill="outline" (click)="openProfileAsync()">{{
                         'DASHBOARD.INITIAL_SETUP.PROFILE' | translate
+                    }}</fd-ui-button>
+                    <fd-ui-button variant="secondary" fill="outline" (click)="openWeightHistoryAsync()">{{
+                        'DASHBOARD.INITIAL_SETUP.WEIGHT' | translate
                     }}</fd-ui-button>
                     <fd-ui-button variant="secondary" fill="outline" (click)="openGoalsAsync()">{{
                         'DASHBOARD.INITIAL_SETUP.GOALS' | translate

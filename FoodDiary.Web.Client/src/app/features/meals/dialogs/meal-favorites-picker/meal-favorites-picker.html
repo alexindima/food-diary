@@ -1,5 +1,12 @@
 <fd-ui-dialog-shell size="md" [title]="'MEAL_FAVORITES.TITLE' | translate" [dismissible]="!busy()" [disableClose]="busy()">
     <div class="fd-stack fd-gap-md">
+        <fd-ui-select
+            [label]="'MEAL_FAVORITES.MEAL_TYPE' | translate"
+            [options]="mealTypeOptions()"
+            [value]="selectedMealType()"
+            [disabled]="busy()"
+            (valueChange)="changeMealType($event)"
+        />
         <fd-ui-input [label]="'MEAL_FAVORITES.SEARCH' | translate" [maxLength]="200" [disabled]="busy()" (valueChange)="search($event)" />
         <div aria-live="polite" [hidden]="!facade.loading() && !facade.failed() && facade.items().length > 0">
             @if (facade.loading()) {

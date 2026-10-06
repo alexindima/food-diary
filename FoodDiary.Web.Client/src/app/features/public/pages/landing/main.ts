@@ -45,6 +45,10 @@ export class MainComponent {
                 return;
             }
 
+            if (this.authDialogOpen || this.route.snapshot.queryParamMap.has('auth')) {
+                return;
+            }
+
             void this.navigationService.navigateToHomeAsync();
         });
 

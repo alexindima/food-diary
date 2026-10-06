@@ -1,18 +1,18 @@
+import { normalizeMealType } from '../../../../../shared/lib/meal-type.util';
 import {
     centimetersToInches,
     kilogramsToPounds,
     type MeasurementSystem,
 } from '../../../../../shared/measurements/measurement-system.service';
-import type { DashboardSnapshot } from '../../../../../shared/models/dashboard.data';
 import type { ClientSummary, DietologistPermissions } from '../../../../../shared/models/dietologist.data';
 import type { DietologistClientGoals, DietologistRecommendation } from '../../../../../shared/models/dietologist.data';
 import type { FastingSession } from '../../../../../shared/models/fasting.data';
-import type { Meal } from '../../../../../shared/models/meal.data';
+import type { Meal, MealItem, MealItemResponseDto, MealResponseDto } from '../../../../../shared/models/meal.data';
 import { type ClientValueFormatting, DEFAULT_CLIENT_VALUE_FORMATTING, formatClientHeight } from '../../../lib/client-value-formatting';
+import type { DietologistDashboardSnapshot } from '../../../lib/dietologist-dashboard.data';
 
 const PERCENT_MAX = 100;
 const DATE_ONLY_LENGTH = 10;
-const MEAL_ITEM_PREVIEW_LIMIT = 3;
 const STABLE_DELTA_THRESHOLD = 0.05;
 const ONE_DECIMAL_PRECISION = 10;
 
@@ -156,7 +156,7 @@ export function buildClientDashboardSections(client: ClientSummary | null): Clie
 }
 
 export function buildNutritionTiles(
-    snapshot: DashboardSnapshot | null,
+    snapshot: DietologistDashboardSnapshot | null,
     formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
 ): ClientMetricTile[] {
     if (snapshot === null) {
@@ -184,7 +184,7 @@ export function buildNutritionTiles(
 }
 
 export function buildBodyTiles(
-    snapshot: DashboardSnapshot | null,
+    snapshot: DietologistDashboardSnapshot | null,
     permissions?: DietologistPermissions,
     system: MeasurementSystem = 'metric',
     formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
@@ -265,8 +265,10 @@ export function buildRecommendationViews(recommendations: DietologistRecommendat
 }
 
 export function buildMealViews(
-    snapshot: DashboardSnapshot | null,
+    snapshot: DietologistDashboardSnapshot | null,
     formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
+    translate: (key: string) => string = key => key,
+    language = 'en',
 ): ClientMealView[] {
     if (snapshot === null) {
         return [];
@@ -274,16 +276,16 @@ export function buildMealViews(
 
     return snapshot.meals.items.map(meal => ({
         id: meal.id,
-        title: formatMealTitle(meal),
+        title: translate(`MEAL_TYPES.${normalizeMealType(meal.mealType) ?? 'OTHER'}`),
         date: meal.date,
         calories: formatting.number(meal.totalCalories, 'kcal'),
         macros: formatting.macros(meal.totalProteins, meal.totalFats, meal.totalCarbs),
-        itemSummary: formatMealItems(meal),
+        itemSummary: formatMealItems(meal, formatting, translate, language),
     }));
 }
 
 export function buildWeightView(
-    snapshot: DashboardSnapshot | null,
+    snapshot: DietologistDashboardSnapshot | null,
     system: MeasurementSystem = 'metric',
     formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
 ): ClientBodyMeasurementView | null {
@@ -304,7 +306,7 @@ export function buildWeightView(
 }
 
 export function buildWaistView(
-    snapshot: DashboardSnapshot | null,
+    snapshot: DietologistDashboardSnapshot | null,
     system: MeasurementSystem = 'metric',
     formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
 ): ClientBodyMeasurementView | null {
@@ -325,7 +327,7 @@ export function buildWaistView(
 }
 
 export function buildHydrationView(
-    snapshot: DashboardSnapshot | null,
+    snapshot: DietologistDashboardSnapshot | null,
     formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
 ): ClientHydrationView | null {
     if (snapshot?.hydration === null || snapshot?.hydration === undefined) {
@@ -341,7 +343,7 @@ export function buildHydrationView(
 }
 
 export function buildFastingView(
-    snapshot: DashboardSnapshot | null,
+    snapshot: DietologistDashboardSnapshot | null,
     formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
 ): ClientFastingView | null {
     if (snapshot?.currentFastingSession === null || snapshot?.currentFastingSession === undefined) {
@@ -420,26 +422,46 @@ function formatDateOnly(value: string | null | undefined): string {
     return value.slice(0, DATE_ONLY_LENGTH);
 }
 
-function formatMealTitle(meal: Meal): string {
-    const mealType = meal.mealType?.trim();
-    if (mealType !== undefined && mealType.length > 0) {
-        return mealType;
-    }
-
-    const comment = meal.comment?.trim();
-    return comment !== undefined && comment.length > 0 ? comment : '-';
+function formatMealItems(meal: Meal | MealResponseDto, formatting: ClientValueFormatting, translate: (key: string) => string, language: string): string {
+    const names = meal.items.map(item => formatMealItem(item, formatting, translate, language)).filter(Boolean);
+    const resolvedAiIds = new Set(meal.items.map(item => item.sourceAiItemId));
+    const aiNames = (meal.aiSessions ?? [])
+        .flatMap(session => session.items)
+        .filter(item => !resolvedAiIds.has(item.id))
+        .map(
+            item =>
+                `${item.nameLocal ?? item.nameEn} — ${formatting.number(item.amount, undefined, 1)} ${translate(`GENERAL.UNITS.${item.unit.toUpperCase()}`)}`,
+        );
+    const summary = [...names, ...aiNames].join(', ');
+    return summary.length > 0 ? summary : '-';
 }
 
-function formatMealItems(meal: Meal): string {
-    const names = meal.items
-        .map(item => item.product?.name ?? item.recipe?.name ?? null)
-        .filter((value): value is string => value !== null && value.trim().length > 0);
-
-    if (names.length === 0) {
-        return String(meal.items.length);
+function formatMealItem(
+    item: MealItem | MealItemResponseDto,
+    formatting: ClientValueFormatting,
+    translate: (key: string) => string,
+    language: string,
+): string {
+    const name = getMealItemName(item);
+    if ((name?.trim().length ?? 0) === 0) {
+        return '';
     }
+    const unit = getMealItemUnit(item, language);
+    return `${name} — ${formatting.number(item.amount, undefined, 1)} ${translate(unit)}`;
+}
 
-    return names.slice(0, MEAL_ITEM_PREVIEW_LIMIT).join(', ');
+function getMealItemName(item: MealItem | MealItemResponseDto): string | null | undefined {
+    return 'sourceType' in item ? item.product?.name ?? item.recipe?.name : item.productName ?? item.recipeName;
+}
+
+function getMealItemUnit(item: MealItem | MealItemResponseDto, language: string): string {
+    const recipeId = 'sourceType' in item ? item.recipe?.id : item.recipeId;
+    if (Boolean(recipeId)) {
+        const category = new Intl.PluralRules(language, { maximumFractionDigits: 1 }).select(item.amount);
+        return `QUICK_MEAL.SERVINGS_${category.toUpperCase()}`;
+    }
+    const unit = 'sourceType' in item ? item.product?.baseUnit : item.productBaseUnit;
+    return `GENERAL.UNITS.${unit?.toUpperCase() ?? 'G'}`;
 }
 
 function formatFastingProtocol(session: FastingSession): string {

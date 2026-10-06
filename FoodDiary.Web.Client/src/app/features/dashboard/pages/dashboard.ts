@@ -113,9 +113,22 @@ export class DashboardComponent {
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly userFacade = inject(UserFacade);
-    protected readonly needsInitialSetup = computed(() => {
+    protected readonly profileSetupComplete = computed(() => {
         const user = this.userFacade.user();
-        return user !== null && ((user.birthDate ?? null) === null || (user.heightCm ?? 0) <= 0 || (user.gender ?? '') === '');
+        const birthDate = user?.birthDate;
+        return birthDate !== undefined && (user?.heightCm ?? 0) > 0 && Boolean(user?.gender);
+    });
+    protected readonly weightSetupComplete = computed(() => {
+        const weight = this.facade.snapshot()?.weight;
+        return weight !== undefined && weight.latest !== null;
+    });
+    protected readonly needsInitialSetup = computed(() => {
+        return (
+            this.userFacade.user() !== null &&
+            this.facade.hasSnapshot() &&
+            this.facade.isTodaySelected() &&
+            (!this.profileSetupComplete() || !this.weightSetupComplete())
+        );
     });
     protected readonly facade = inject(DashboardFacade);
     protected readonly layout = inject(DashboardLayoutService);

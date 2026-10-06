@@ -4,8 +4,11 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { UserService } from '../../../shared/api/user.service';
 import type { GoalsResponse, UpdateGoalsRequest } from '../../../shared/models/goals.data';
 import { GoalsService } from './goals.service';
+
+const UPDATED_CALORIE_TARGET = 2500;
 
 describe('GoalsService', () => {
     let service: GoalsService;
@@ -81,6 +84,10 @@ describe('GoalsService', () => {
         expect(req.request.method).toBe('PATCH');
         expect(req.request.body).toEqual(request);
         req.flush(mockResponse);
+        const profile = httpMock.expectOne(`${environment.apiUrls.users}/info`);
+        profile.flush({ id: 'user-1', dailyCalorieTarget: 2500, calories: 2500 });
+        expect(TestBed.inject(UserService).user()?.dailyCalorieTarget).toBe(UPDATED_CALORIE_TARGET);
+        expect(TestBed.inject(UserService).user()?.calories).toBe(UPDATED_CALORIE_TARGET);
     });
 
     it('should return null on updateGoals error', () => {

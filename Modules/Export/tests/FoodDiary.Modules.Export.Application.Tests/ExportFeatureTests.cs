@@ -634,7 +634,7 @@ public class ExportFeatureTests {
     }
 
     [Fact]
-    public void CsvGenerator_WithNoMealType_WritesEmptyField() {
+    public void CsvGenerator_WithNoMealType_WritesOther() {
         Meal meal = CreateMeal(mealType: null);
 
         byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)]);
@@ -642,7 +642,7 @@ public class ExportFeatureTests {
 
         Assert.True(lines.Length >= 2);
         string dataLine = lines[1];
-        Assert.Contains(",,", dataLine, StringComparison.Ordinal);
+        Assert.Contains(",Other,", dataLine, StringComparison.Ordinal);
     }
 
     [Fact]

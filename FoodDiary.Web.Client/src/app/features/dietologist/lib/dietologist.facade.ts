@@ -1,7 +1,6 @@
 import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
-import type { DashboardSnapshot } from '../../../shared/models/dashboard.data';
 import type {
     AttentionSignal,
     AttentionSignalSettings,
@@ -20,6 +19,7 @@ import type {
     RecommendationTemplateRequest,
 } from '../../../shared/models/dietologist.data';
 import { type DietologistClientDashboardQuery, DietologistService } from '../api/dietologist.service';
+import type { DietologistDashboardSnapshot } from './dietologist-dashboard.data';
 
 @Service()
 export class DietologistFacade {
@@ -49,7 +49,7 @@ export class DietologistFacade {
         return this.dietologistService.setAttentionSignalState(signal, action, snoozedUntilUtc);
     }
 
-    public getClientDashboard(clientUserId: string, query: DietologistClientDashboardQuery): Observable<DashboardSnapshot> {
+    public getClientDashboard(clientUserId: string, query: DietologistClientDashboardQuery): Observable<DietologistDashboardSnapshot> {
         return this.dietologistService.getClientDashboard(clientUserId, query);
     }
 

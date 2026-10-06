@@ -1,14 +1,16 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 import { firstValueFrom } from 'rxjs';
 
 import { MealDetailsFieldsComponent } from '../../../../components/shared/meal-details-fields/meal-details-fields';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
+import { normalizeMealType } from '../../../../shared/lib/meal-type.util';
 import { resolveProductImageUrl } from '../../../../shared/lib/product-image.util';
 import { normalizeProductType } from '../../../../shared/lib/product-type.utils';
 import { resolveRecipeImageUrl } from '../../../../shared/lib/recipe-image.util';
@@ -17,6 +19,7 @@ import { ProductType } from '../../../../shared/models/product.data';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { type QuickMealItem, QuickMealService } from '../../lib/quick/quick-meal.service';
 import type { MealItemFormValues } from '../manage/meal-manage-lib/meal-manage.types';
+import { buildMealTypeSelectOptions } from '../manage/meal-manage-lib/meal-manage-options.mapper';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from '../manage/meal-manual-item-dialog/meal-manual-item-dialog';
 
 type QuickMealItemView = {
@@ -40,7 +43,7 @@ type QuickMealEditOperation = {
 
 @Component({
     selector: 'fd-quick-meal-drawer',
-    imports: [LocalizedNumberPipe, TranslatePipe, FdUiHintDirective, FdUiButtonComponent, MealDetailsFieldsComponent],
+    imports: [LocalizedNumberPipe, TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiSelectComponent, MealDetailsFieldsComponent],
     templateUrl: './quick-meal-drawer.html',
     styleUrls: ['./quick-meal-drawer.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,6 +52,7 @@ export class QuickMealDrawerComponent {
     private static nextId = 0;
 
     private readonly quickService = inject(QuickMealService);
+    private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly mealManageFacade = inject(MealManageFacade);
@@ -61,6 +65,10 @@ export class QuickMealDrawerComponent {
 
     protected readonly items = this.quickService.items;
     protected readonly language = injectCurrentLanguage();
+    protected readonly mealTypeOptions = computed(() => {
+        this.language();
+        return buildMealTypeSelectOptions(this.translateService);
+    });
     protected readonly itemsLabelKey = computed(
         () => `QUICK_MEAL.ITEMS_${new Intl.PluralRules(this.language()).select(this.items().length).toUpperCase()}`,
     );
@@ -169,18 +177,17 @@ export class QuickMealDrawerComponent {
     }
 
     protected updatePreMealSatietyLevel(value: number | null): void {
-        if (value === null) {
-            return;
-        }
-
         this.quickService.updateDetails({ preMealSatietyLevel: value });
     }
 
-    protected updatePostMealSatietyLevel(value: number | null): void {
-        if (value === null) {
-            return;
+    protected updateMealType(value: string | null): void {
+        const mealType = normalizeMealType(value);
+        if (mealType !== null) {
+            this.quickService.updateDetails({ mealType });
         }
+    }
 
+    protected updatePostMealSatietyLevel(value: number | null): void {
         this.quickService.updateDetails({ postMealSatietyLevel: value });
     }
 

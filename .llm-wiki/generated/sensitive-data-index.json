@@ -6,10 +6,10 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1616,
+    "candidateFields": 1620,
     "credential": 156,
     "identity": 175,
-    "health": 749,
+    "health": 753,
     "financial": 132,
     "privateContent": 404,
     "boundaryFiles": 212,
@@ -2343,6 +2343,20 @@
     },
     {
       "category": "health",
+      "name": "LatestWeightKg",
+      "type": "double?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 58
+    },
+    {
+      "category": "health",
+      "name": "LatestWeightDate",
+      "type": "DateTime?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 59
+    },
+    {
+      "category": "health",
       "name": "Weight",
       "type": "int",
       "path": "Modules/Admin/Presentation/Responses/AdminDailyAdviceGroupHttpResponse.cs",
@@ -2480,6 +2494,20 @@
       "type": "int",
       "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 43
+    },
+    {
+      "category": "health",
+      "name": "LatestWeightKg",
+      "type": "double?",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
+      "line": 55
+    },
+    {
+      "category": "health",
+      "name": "LatestWeightDate",
+      "type": "DateTime?",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
+      "line": 56
     },
     {
       "category": "health",
@@ -4012,7 +4040,7 @@
       "name": "Calories",
       "type": "double",
       "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ReportData.cs",
-      "line": 159
+      "line": 155
     },
     {
       "category": "health",
@@ -11553,7 +11581,7 @@
         "identity",
         "privateContent"
       ],
-      "fieldCount": 24
+      "fieldCount": 26
     },
     {
       "path": "Modules/Admin/Presentation/Responses/AdminUserLoginEventHttpResponse.cs",

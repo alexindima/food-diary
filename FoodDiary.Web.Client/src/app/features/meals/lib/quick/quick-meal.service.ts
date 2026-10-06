@@ -5,7 +5,8 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize, Subject, takeUntil } from 'rxjs';
 
 import { SessionEventsService } from '../../../../shared/auth/session-events.service';
-import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
+import { type MealTypeOption, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
+import { normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
 import type { MealItemManageDto, MealManageDto } from '../../../../shared/models/meal.data';
 import type { Product } from '../../../../shared/models/product.data';
 import type { Recipe } from '../../../../shared/models/recipe.data';
@@ -26,11 +27,12 @@ export type QuickMealItem = {
 };
 
 export type QuickMealDetails = {
+    mealType?: MealTypeOption;
     date: string;
     time: string;
     comment: string;
-    preMealSatietyLevel: number;
-    postMealSatietyLevel: number;
+    preMealSatietyLevel: number | null;
+    postMealSatietyLevel: number | null;
 };
 
 @Service()
@@ -86,7 +88,7 @@ export class QuickMealService {
         this.toastService.success(this.translateService.instant('QUICK_MEAL.ADDED_PRODUCT'));
     }
 
-    public addRecipe(recipe: Recipe): void {
+    public addRecipe(recipe: Recipe, servings = QUICK_MEAL_DEFAULT_ITEM_AMOUNT): void {
         if (recipe.id.length === 0) {
             return;
         }
@@ -97,7 +99,7 @@ export class QuickMealService {
             key,
             type: 'recipe',
             recipe,
-            amount: QUICK_MEAL_DEFAULT_ITEM_AMOUNT,
+            amount: Number.isFinite(servings) && servings > 0 ? servings : QUICK_MEAL_DEFAULT_ITEM_AMOUNT,
         });
 
         if (this.isPreviewMode) {
@@ -300,7 +302,7 @@ export class QuickMealService {
 
         return {
             date: this.getDetailsDateTime(),
-            mealType: undefined,
+            mealType: this.detailsSignal().mealType ?? resolveMealTypeByTime(this.getDetailsDateTime()),
             comment: this.resolveComment(),
             imageUrl: undefined,
             imageAssetId: undefined,
@@ -315,10 +317,11 @@ export class QuickMealService {
         const now = new Date();
         return {
             date: getDateInputValue(now),
+            mealType: resolveMealTypeByTime(now),
             time: getTimeInputValue(now),
             comment: '',
-            preMealSatietyLevel: DEFAULT_SATIETY_LEVEL,
-            postMealSatietyLevel: DEFAULT_SATIETY_LEVEL,
+            preMealSatietyLevel: null,
+            postMealSatietyLevel: null,
         };
     }
 

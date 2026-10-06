@@ -1,5 +1,5 @@
 import { normalizeMealType } from '../../../../../shared/lib/meal-type.util';
-import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../../shared/lib/satiety-level.utils';
+import { normalizeSatietyLevel } from '../../../../../shared/lib/satiety-level.utils';
 import {
     type Meal,
     type MealAiSessionManageDto,
@@ -36,8 +36,8 @@ export function createMealManageFormValue(now = new Date()): MealFormValues {
         manualCarbs: null,
         manualFiber: null,
         manualAlcohol: null,
-        preMealSatietyLevel: DEFAULT_SATIETY_LEVEL,
-        postMealSatietyLevel: DEFAULT_SATIETY_LEVEL,
+        preMealSatietyLevel: null,
+        postMealSatietyLevel: null,
     };
 }
 

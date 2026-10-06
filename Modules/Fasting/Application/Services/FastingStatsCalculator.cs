@@ -11,10 +11,10 @@ internal static class FastingStatsCalculator {
         IReadOnlyList<FastingOccurrenceAnalysis> last30Analyses,
         DateTime nowUtc) {
         var completedOccurrences = allOccurrences
-            .Where(static occurrence => occurrence.Status == FastingOccurrenceStatus.Completed && occurrence.EndedAtUtc.HasValue)
+            .Where(HasReachedTarget)
             .ToList();
         var completedLast30Days = last30Occurrences
-            .Where(static occurrence => occurrence.Status == FastingOccurrenceStatus.Completed && occurrence.EndedAtUtc.HasValue)
+            .Where(HasReachedTarget)
             .ToList();
 
         double averageDuration = completedLast30Days.Count > 0
@@ -37,6 +37,13 @@ internal static class FastingStatsCalculator {
             checkInRate,
             lastCheckInAtUtc,
             GetTopSymptom(last30Analyses));
+    }
+
+    private static bool HasReachedTarget(FastingOccurrenceReadModel occurrence) {
+        return occurrence.Status == FastingOccurrenceStatus.Completed
+            && occurrence.EndedAtUtc.HasValue
+            && occurrence.TargetHours is > 0
+            && (occurrence.EndedAtUtc.Value - occurrence.StartedAtUtc).TotalHours >= occurrence.TargetHours.Value;
     }
 
     private static int CalculateCurrentStreak(IReadOnlyList<FastingOccurrenceReadModel> completedOccurrences, DateTime todayUtcDate) {

@@ -90,14 +90,18 @@
       "pageSha256": "d0fe45b8fb3d5ca4937ec2898e3099d50e3b920c9ccea9fff512a8bc6a618de2",
       "sources": [
         {
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "1d5245dc71b27d556527e57c3b7610ee2a3a2278f13c6e77ffd7ebc900db3194"
+        },
+        {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "8c180504fe3711e436ac3d23cc3f786deced3843177c7b3675f5b3f0ed0b10b0"
+          "sha256": "fb444f0ce2c8574d259df3e852ebfa8166bf893cb0d122db701cd01a9b6d597b"
         }
       ],
-      "reason": "Only the Meals owner test project gains a direct reference to its already-consumed Meals.Contracts read types; the exact matrix reflects that edge and all 2116 architecture tests pass.",
+      "reason": "Reviewed architecture, catalog and ownership pages against the additive Admin Application to BodyMetrics Contracts read edge. The graph, project matrix and 2116 architecture tests agree; existing layer and foreign-write guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "bd0b317c741192f85e39301b207407b7ce778add",
-      "reviewedAtUtc": "2026-10-04T19:26:49.4955606Z"
+      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
+      "reviewedAtUtc": "2026-10-05T15:06:07.4212621Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -162,21 +166,17 @@
     {
       "pageId": "system.repository-catalog",
       "pagePath": ".llm-wiki/system/repository-catalog.md",
-      "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
+      "pageSha256": "7368eca730254aab949bddc9e5d05a260ac6f0b1a97793c1a08c7fcb1a68366f",
       "sources": [
         {
-          "path": "Directory.Build.props",
-          "sha256": "de6204a7f5a4aeac7f9791a9bac3f361870863d612dc271b342bb16c2d09068d"
-        },
-        {
-          "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "5567b1a6c4d114f2b048a2098a81950cd853d07f92fb28c4bb24b69c16fe55f0"
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "1d5245dc71b27d556527e57c3b7610ee2a3a2278f13c6e77ffd7ebc900db3194"
         }
       ],
-      "reason": "Reviewed global analyzer-visible namespace properties and Angular server output/allowed hosts. Refreshed full project and frontend catalog still matches the documented inventory and its limits.",
-      "baseRef": "origin/master",
-      "gitHead": "0829b0369f262189495f602dd6f8d67ea8c99083",
-      "reviewedAtUtc": "2026-09-28T00:19:27.3125031Z"
+      "reason": "Reviewed architecture, catalog and ownership pages against the additive Admin Application to BodyMetrics Contracts read edge. The graph, project matrix and 2116 architecture tests agree; existing layer and foreign-write guidance remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
+      "reviewedAtUtc": "2026-10-05T15:06:08.2358939Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -207,10 +207,10 @@
           "sha256": "f6889b5f4074c63a7102ba36bbe79071d726f06dc8ffb384f52962420f0426c6"
         }
       ],
-      "reason": "Confirmed exact source hashes, scoped product overlays, clone mutation rejection and empty planned scopes remain authoritative. Common-input-only scopes can reuse identical exclusively locked checkouts.",
-      "baseRef": "HEAD",
-      "gitHead": "11f128fcd387a191b2ae25b0be25345f66268bc8",
-      "reviewedAtUtc": "2026-10-05T18:22:29.4000807Z"
+      "reason": "Reviewed latest master integration with common-overlay checkout reuse, connection-local batch page cache and preserved shared NuGet locks. Linux descendant cleanup fixes are retained. Current workflow authority, source hash isolation, static coverage limits and security discovery claims remain accurate; regenerated quality metrics reflect the combined sources.",
+      "baseRef": "master",
+      "gitHead": "b00110c1b945a1586932ba18b0d7c04407b4a89b",
+      "reviewedAtUtc": "2026-10-06T00:18:52.8629783Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "30039d49ca6a93a1371d06fbeed4fe9f6daf49b33450733ae440172b4da0d0cd"
+          "sha256": "0e70afb3d5b6cb4d2aac00b3d5f03269e61dcf4fd3defef8ed6d3758b62d0a96"
         }
       ],
-      "reason": "Both Statistics endpoints add an optional bounded TimeZoneId; live legacy requests retain UTC behavior, two snapshots match, and api-compat reports zero breaking changes.",
+      "reason": "Reviewed nullable latestWeightKg and latestWeightDate additions and zero unanswered satiety defaults in presentation snapshots. All four API snapshot contract tests pass; no route or field was removed.",
       "baseRef": "HEAD",
-      "gitHead": "bd0b317c741192f85e39301b207407b7ce778add",
-      "reviewedAtUtc": "2026-10-04T19:26:50.3944823Z"
+      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
+      "reviewedAtUtc": "2026-10-05T15:06:09.1695598Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -234,13 +234,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "c1aa6efa61fde52919ee1b00d677c965c6464c48a62a6e5b23b3a2b03d740312"
+          "sha256": "8d523abf10ca6c9df1a595a278e75e9b23638a9c2e98d1fe5f156edf658aafb9"
+        },
+        {
+          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "fb444f0ce2c8574d259df3e852ebfa8166bf893cb0d122db701cd01a9b6d597b"
         }
       ],
-      "reason": "Reviewed the shared food history dialog and AI input facade dependencies. Existing feature consumers and public inputs/outputs are preserved. The added dialog uses public UI-kit primitives, shared recognition models and the existing facade; it introduces no cross-feature import, root state or direct component HTTP client. Strict frontend dependency and import checks pass; 108 focused tests and RU/EN rendered evidence pass.",
+      "reason": "Reviewed the intentional read-only Admin BodyMetrics dependency and synchronized architecture allowlists. The architecture-health review workflow remains accurate; the complete 2116-test architecture suite passed.",
       "baseRef": "HEAD",
-      "gitHead": "6ad66ee140e1581d3173c78010516337415dce68",
-      "reviewedAtUtc": "2026-10-04T20:56:27.0702929Z"
+      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
+      "reviewedAtUtc": "2026-10-05T15:06:10.0711985Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -248,14 +252,14 @@
       "pageSha256": "58810bcafe9de0e6e09ec7ce44659b61c6c2d807da6b207e95a00aa681b51685",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "1cd4a49c6e5b76122d70df0455fc744041e91f8e40cd4119476ff0db8c46e0b4"
         }
       ],
-      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
+      "reason": "Reviewed nullable latestWeightKg and latestWeightDate additions and zero unanswered satiety defaults in presentation snapshots. All four API snapshot contract tests pass; no route or field was removed.",
       "baseRef": "HEAD",
-      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
-      "reviewedAtUtc": "2026-10-05T08:37:21.4666807Z"
+      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
+      "reviewedAtUtc": "2026-10-05T15:06:11.3087205Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -309,10 +313,10 @@
           "sha256": "6e3f4bc2a888ef592ba681885709e934fa07db9e3a996569bc0b8a85ed106aa8"
         }
       ],
-      "reason": "Reviewed batch regression changes: the read transaction, one count per batch, complete ordering, next-batch visibility and reader ranking policy remain unchanged; temporary page-cache targets are restored after failures.",
-      "baseRef": "HEAD",
-      "gitHead": "11f128fcd387a191b2ae25b0be25345f66268bc8",
-      "reviewedAtUtc": "2026-10-05T18:22:30.1974551Z"
+      "reason": "Reviewed latest master integration with common-overlay checkout reuse, connection-local batch page cache and preserved shared NuGet locks. Linux descendant cleanup fixes are retained. Current workflow authority, source hash isolation, static coverage limits and security discovery claims remain accurate; regenerated quality metrics reflect the combined sources.",
+      "baseRef": "master",
+      "gitHead": "b00110c1b945a1586932ba18b0d7c04407b4a89b",
+      "reviewedAtUtc": "2026-10-06T00:18:54.4580053Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -523,14 +527,14 @@
       "pageSha256": "3e6c8653055b940700866104a57be1c900a5ae74cd666d7eb0eda5d0109942fd",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1",
-          "sha256": "11531e8fbfa2a2677e4f140e28374d518d6c119f54eb6cc5684ceab0ed84c30e"
+          "path": ".llm-wiki/generated/domain-data-index.json",
+          "sha256": "46c9ec1ad569bf51619af5252ea1e856f9ada5857ec5844286311a09200aaa0f"
         }
       ],
-      "reason": "Reviewed schema-5 SQLite telemetry after the subprocess argument correction: cold samples use fresh PowerShell processes, warm samples reuse the loaded reader, all three routes expose positive ordered p50/p95 values, and no JSON query comparison remains. The existing query routes and bounds are unchanged.",
+      "reason": "Reviewed the intentional read-only Admin BodyMetrics dependency and synchronized architecture allowlists. The architecture-health review workflow remains accurate; the complete 2116-test architecture suite passed.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:37:31.2163795Z"
+      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
+      "reviewedAtUtc": "2026-10-05T15:06:12.0305359Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -667,17 +671,21 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "9630ea07351d3459079b4fcbe332fd12893fc38afd2c92879bfb4d14221bbc54",
+      "pageSha256": "2e9dd8106543f7a3b09cec154c061aba14fff8f24034038422139eeda81c43cd",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "95e5bb441bba5cc7538a4ed0f879160e2555a02ac77e2b0cfeb785e9663c7487"
+          "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
+          "sha256": "8f6cfdbac46c6086c78909bf2d4506b294bb650458fd2fa01bb62368844d0946"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
+          "sha256": "eff28ecb416b3624cd5f0de9a8f2bb203a52efd7021d4b439a4ade4ae61b5287"
         }
       ],
-      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
+      "reason": "Reviewed dependency-aware generation, owned process cleanup and focused verification contracts against LlmWikiProcess.ps1, Test-LlmWikiProcess.ps1 and the corpus regression. Kill-tree behavior remains the same; the new bounded termination observer recognizes Linux defunct states while rejecting a live process. Windows PowerShell 7/5.1 and controlled Linux checks passed; quality-index metrics were regenerated and source/index transaction behavior remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
-      "reviewedAtUtc": "2026-10-05T08:37:23.5115603Z"
+      "gitHead": "d618f4b90cfc9b8b86854ead921110cee2935023",
+      "reviewedAtUtc": "2026-10-05T21:58:55.5996565Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -754,13 +762,13 @@
       "sources": [
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "0d8b146237c607c55ea93f1c0eec449568f47a7d3dc6c17c5ef830a365b7cb0a"
+          "sha256": "1d5245dc71b27d556527e57c3b7610ee2a3a2278f13c6e77ffd7ebc900db3194"
         }
       ],
-      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
+      "reason": "Reviewed architecture, catalog and ownership pages against the additive Admin Application to BodyMetrics Contracts read edge. The graph, project matrix and 2116 architecture tests agree; existing layer and foreign-write guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:17:37.2253137Z"
+      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
+      "reviewedAtUtc": "2026-10-05T15:06:13.5920379Z"
     },
     {
       "pageId": "workflow-performance-observability-review",
@@ -813,14 +821,14 @@
       "pageSha256": "b60f38c1d4bb6323e6d9a1128ef46cbe3f2c097c8abd5f71e062f9d48a25997c",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "5a0725a1434680dd97583189c6c2871ac5c5613b0be8b11e13108116c6157371"
         }
       ],
-      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
+      "reason": "Reviewed privacy/security workflow pages after derived-index refresh. Permission changes retain accepted relationship checks, shared categories stay individually scoped, Admin weight is a read-only contract and no credential, provider or retention behavior changed. These are navigation receipts rather than a security audit.",
       "baseRef": "HEAD",
-      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
-      "reviewedAtUtc": "2026-10-05T08:37:24.2580728Z"
+      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
+      "reviewedAtUtc": "2026-10-05T15:08:54.9376932Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -859,13 +867,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e94c237e5af1e36a7673e4241343bd15b4dd500b20869d77137e4d81e9f3fdac"
+          "sha256": "49e751c7f987cd769935a3c48939b60585912b5537da30e6199084615c1fdbbc"
         }
       ],
-      "reason": "Reviewed regenerated Wiki runner complexity metrics after preserving shared NuGet coordination across private native temporary scopes. Product inventory, static test-reference semantics, security discovery limits and review instructions remain accurate; actual worker environment, failure receipts and cleanup regressions passed.",
-      "baseRef": "HEAD",
-      "gitHead": "aca49d9a1cf7aca71c3518e12749319b4000fb23",
-      "reviewedAtUtc": "2026-10-05T18:42:23.9896690Z"
+      "reason": "Reviewed latest master integration with common-overlay checkout reuse, connection-local batch page cache and preserved shared NuGet locks. Linux descendant cleanup fixes are retained. Current workflow authority, source hash isolation, static coverage limits and security discovery claims remain accurate; regenerated quality metrics reflect the combined sources.",
+      "baseRef": "master",
+      "gitHead": "b00110c1b945a1586932ba18b0d7c04407b4a89b",
+      "reviewedAtUtc": "2026-10-06T00:18:56.4810477Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -945,14 +953,14 @@
       "pageSha256": "afc7b952845f0c1daab7be359147c5d79cf308618972038ea92bee91adf411c7",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiRuntimeTopology.ps1",
-          "sha256": "b55173d65dc80bbff5b11beb87c446e04a344fb3b4517cdc89eb228292ccc90f"
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "dca5abb0ccf44628523cf3b77642d06cfd77100091b03d8a219fc9a0e6a5d160"
         }
       ],
-      "reason": "Reviewed runtime query: exact normalized content freshness and bounded SQLite evidence are preserved; complete-command timing now includes source verification. Three counterbalanced query pairs returned identical evidence and freshness.",
+      "reason": "Reviewed query-context, runtime-impact and feature-trace pages against regenerated catalog, runtime and frontend indexes. These remain navigation workflows; this UX patch adds no hosts or workers, and declared source hashes are refreshed.",
       "baseRef": "HEAD",
-      "gitHead": "5ea8b67a503668422970de6d79c91c886def38f0",
-      "reviewedAtUtc": "2026-10-05T10:50:27.5951966Z"
+      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
+      "reviewedAtUtc": "2026-10-05T15:08:56.8886547Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -961,13 +969,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e94c237e5af1e36a7673e4241343bd15b4dd500b20869d77137e4d81e9f3fdac"
+          "sha256": "49e751c7f987cd769935a3c48939b60585912b5537da30e6199084615c1fdbbc"
         }
       ],
-      "reason": "Reviewed regenerated Wiki runner complexity metrics after preserving shared NuGet coordination across private native temporary scopes. Product inventory, static test-reference semantics, security discovery limits and review instructions remain accurate; actual worker environment, failure receipts and cleanup regressions passed.",
-      "baseRef": "HEAD",
-      "gitHead": "aca49d9a1cf7aca71c3518e12749319b4000fb23",
-      "reviewedAtUtc": "2026-10-05T18:42:24.5916190Z"
+      "reason": "Reviewed latest master integration with common-overlay checkout reuse, connection-local batch page cache and preserved shared NuGet locks. Linux descendant cleanup fixes are retained. Current workflow authority, source hash isolation, static coverage limits and security discovery claims remain accurate; regenerated quality metrics reflect the combined sources.",
+      "baseRef": "master",
+      "gitHead": "b00110c1b945a1586932ba18b0d7c04407b4a89b",
+      "reviewedAtUtc": "2026-10-06T00:18:58.0692467Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1104,17 +1112,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "00ef3fdcd2f16178361d78ab7d67820f3efe708fccb0ffdf266a4d0596d73486"
+          "sha256": "657db3b90e62d797e9e8162251b68bcb343872d636f527894ac4b39db1afa4bd"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "c42832f74bcfeba7c8d7255b37f89b0297892fbdce99f995941b8ce23dbbb0ef"
+          "sha256": "795e4de0064e515dbbe84d2bc55935028d06c5381944945036886c76453e9c51"
         }
       ],
-      "reason": "Verified shared food input consumers and restored saved meal photo history through shared UI and existing owner-authenticated GET requests. No API shape, provider, queue, persistence or feature boundary change. 108 focused tests pass; real RU/EN mobile and desktop browser checks cover saved results with zero new AI requests, loading, empty, retry, cancellation and keyboard focus. New photo reanalysis retains Premium and consent checks. Current workflow instructions remain accurate.",
+      "reason": "Reviewed refreshed frontend trace sources after the last helper extraction: fasting page, history dialog and details use the shared duration display, and client meal mappings preserve meal ownership and serving quantities. Existing workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "6ad66ee140e1581d3173c78010516337415dce68",
-      "reviewedAtUtc": "2026-10-04T20:55:28.7324332Z"
+      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
+      "reviewedAtUtc": "2026-10-05T15:48:03.0821407Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1198,13 +1206,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "00ef3fdcd2f16178361d78ab7d67820f3efe708fccb0ffdf266a4d0596d73486"
+          "sha256": "657db3b90e62d797e9e8162251b68bcb343872d636f527894ac4b39db1afa4bd"
         }
       ],
-      "reason": "Verified shared food input consumers and restored saved meal photo history through shared UI and existing owner-authenticated GET requests. No API shape, provider, queue, persistence or feature boundary change. 108 focused tests pass; real RU/EN mobile and desktop browser checks cover saved results with zero new AI requests, loading, empty, retry, cancellation and keyboard focus. New photo reanalysis retains Premium and consent checks. Current workflow instructions remain accurate.",
+      "reason": "Reviewed current contracts after the final fasting duration and Dietologist serving-plural changes: helper inputs preserve existing callers, locale keys exist in EN/RU, and focused fasting/client tests plus rendered mobile state pass.",
       "baseRef": "HEAD",
-      "gitHead": "6ad66ee140e1581d3173c78010516337415dce68",
-      "reviewedAtUtc": "2026-10-04T20:55:29.9474376Z"
+      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
+      "reviewedAtUtc": "2026-10-05T15:48:00.1880243Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1212,14 +1220,14 @@
       "pageSha256": "f9ddf22db2cc07f9109f6b518b296525846afc0f92e94ac0b443f5bf8ea4b89a",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "b00b223a7694e2eaf46f0a145f455504bfada2c76442c441427f6807b821d5a5"
         }
       ],
-      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
+      "reason": "Reviewed query-context, runtime-impact and feature-trace pages against regenerated catalog, runtime and frontend indexes. These remain navigation workflows; this UX patch adds no hosts or workers, and declared source hashes are refreshed.",
       "baseRef": "HEAD",
-      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
-      "reviewedAtUtc": "2026-10-05T08:37:24.9750072Z"
+      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
+      "reviewedAtUtc": "2026-10-05T15:08:56.3609063Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1246,10 +1254,10 @@
           "sha256": "6e3f4bc2a888ef592ba681885709e934fa07db9e3a996569bc0b8a85ed106aa8"
         }
       ],
-      "reason": "Reviewed expanded batch/cache regression tests. Maintenance ownership, repair, projection completeness and sole Node-writer behavior are unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "11f128fcd387a191b2ae25b0be25345f66268bc8",
-      "reviewedAtUtc": "2026-10-05T18:22:31.1644281Z"
+      "reason": "Reviewed latest master integration with common-overlay checkout reuse, connection-local batch page cache and preserved shared NuGet locks. Linux descendant cleanup fixes are retained. Current workflow authority, source hash isolation, static coverage limits and security discovery claims remain accurate; regenerated quality metrics reflect the combined sources.",
+      "baseRef": "master",
+      "gitHead": "b00110c1b945a1586932ba18b0d7c04407b4a89b",
+      "reviewedAtUtc": "2026-10-06T00:18:59.4146438Z"
     }
   ]
 }

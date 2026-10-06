@@ -3608,7 +3608,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminUser/GetAdminUserQueryHandler.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "GetAdminUserLoginEventsQuery",

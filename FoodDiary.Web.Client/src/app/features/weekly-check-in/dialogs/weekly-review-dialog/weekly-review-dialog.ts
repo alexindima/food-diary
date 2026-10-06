@@ -8,10 +8,12 @@ import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-la
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import type { WeeklyReviewViewModel } from '../../lib/weekly-check-in.types';
 import type { WeekSummary } from '../../models/weekly-check-in.data';
+import type { WeeklyGoal } from '../../models/weekly-goal.data';
 
 export type WeeklyReviewDialogData = {
     review: WeeklyReviewViewModel;
     week: WeekSummary;
+    goal?: WeeklyGoal | null;
 };
 
 @Component({

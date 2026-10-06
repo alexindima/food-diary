@@ -10,9 +10,9 @@ import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-sh
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
-import { MS_PER_HOUR } from '../../../../shared/lib/time.constants';
 import type { FastingSession } from '../../../../shared/models/fasting.data';
 import type { FastingHistorySessionViewModel } from '../../lib/fasting-page.types';
+import { getFastingDurationDisplay } from '../../lib/fasting-session-state';
 
 export type FastingHistoryDialogData = {
     historyItems: Signal<readonly FastingHistorySessionViewModel[]>;
@@ -56,10 +56,7 @@ export class FastingHistoryDialogComponent {
         });
     }
 
-    protected sessionDurationHours(session: FastingSession): number {
-        const end = session.endedAtUtc === null ? new Date() : new Date(session.endedAtUtc);
-        return Math.max(0, (end.getTime() - new Date(session.startedAtUtc).getTime()) / MS_PER_HOUR);
-    }
+    protected readonly sessionDurationView = getFastingDurationDisplay;
 
     protected openSession(session: FastingSession): void {
         this.dialogRef.close();

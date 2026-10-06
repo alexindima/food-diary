@@ -40,6 +40,8 @@
       "language",
       "lastLoginAtUtc",
       "lastName",
+      "latestWeightDate",
+      "latestWeightKg",
       "mondayCalories",
       "mustChangePassword",
       "profileImage",

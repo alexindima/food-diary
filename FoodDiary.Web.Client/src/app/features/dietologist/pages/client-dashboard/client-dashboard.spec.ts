@@ -198,7 +198,7 @@ function registerLoadingTests(): void {
 
         expect(dietologistService.getClientDashboard).toHaveBeenCalledWith('client-1', expect.objectContaining({ trendDays: 14 }));
         expect(component['nutritionTiles']()).toEqual([]);
-        expect(component['mealItems']()[0]).toEqual(expect.objectContaining({ id: 'meal-1', title: 'Lunch', calories: '640 kcal' }));
+        expect(component['mealItems']()[0]).toEqual(expect.objectContaining({ id: 'meal-1', title: 'MEAL_TYPES.LUNCH', calories: '640 kcal' }));
         expect(component['bodyTiles']().map(tile => tile.value)).toEqual(['1']);
     });
 }
@@ -350,7 +350,7 @@ describe('ClientDashboardComponent recommendation permissions', () => {
         'shareGoals',
         'shareHydration',
         'shareFasting',
-    ] as const)('explains and blocks sending without %s', async permission => {
+    ] as const)('allows recommendations when %s is private and other data is shared', async permission => {
         createComponent('client-1', true);
         component['client'].update(client =>
             client === null
@@ -365,11 +365,10 @@ describe('ClientDashboardComponent recommendation permissions', () => {
 
         const host = fixture.nativeElement as HTMLElement;
         const submit = host.querySelector<HTMLButtonElement>('.client-dashboard__recommendation-form button[type="submit"]');
-        expect(submit?.disabled).toBe(true);
-        expect(host.textContent).toContain('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.PERMISSIONS_REQUIRED');
+        expect(submit?.disabled).toBe(false);
+        expect(host.querySelector<HTMLParagraphElement>('.client-dashboard__recommendation-form p')?.hidden).toBe(true);
         await component['submitRecommendationAsync']();
-        expect(dietologistService.createRecommendation).not.toHaveBeenCalled();
-        expect(component['recommendationModel']().text).toBe('Add protein');
+        expect(dietologistService.createRecommendation).toHaveBeenCalledWith('client-1', { text: 'Add protein' });
     });
 });
 

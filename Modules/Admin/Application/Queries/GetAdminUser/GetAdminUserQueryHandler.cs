@@ -9,6 +9,8 @@ using FoodDiary.Modules.Admin.Application.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadLatestWeightEntry;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 
 namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminUser;
 
@@ -26,8 +28,13 @@ public sealed class GetAdminUserQueryHandler(ISender userReadService)
 
         UserId userId = userIdResult.Value;
         UserAdminReadModel? user = await userReadService.Send(new GetUserForAdministrationQuery(UserId: userId), cancellationToken).ConfigureAwait(false);
-        return user is null
-            ? Result.Failure<AdminUserModel>(UserErrors.NotFound(userId))
-            : Result.Success(user.ToAdminModel());
+        if (user is null) {
+            return Result.Failure<AdminUserModel>(UserErrors.NotFound(userId));
+        }
+        WeightEntryModel? latestWeight = await userReadService.Send(new ReadLatestWeightEntryQuery(userId), cancellationToken).ConfigureAwait(false);
+        return Result.Success(user.ToAdminModel() with {
+            LatestWeightKg = latestWeight?.WeightKg,
+            LatestWeightDate = latestWeight?.Date,
+        });
     }
 }

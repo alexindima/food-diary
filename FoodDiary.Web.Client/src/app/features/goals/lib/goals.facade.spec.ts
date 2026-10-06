@@ -201,9 +201,7 @@ function registerManualSaveTests(): void {
         it.each(['error', 'null'] as const)('keeps the latest manual save after a previous %s response', async failure => {
             facade.initialize();
             const failedResponse = failure === 'error' ? throwError(() => new Error('save failed')) : of(null);
-            goalsService.updateGoals
-                .mockReturnValueOnce(failedResponse)
-                .mockReturnValueOnce(of({ waterGoal: LATEST_MANUAL_WATER }));
+            goalsService.updateGoals.mockReturnValueOnce(failedResponse).mockReturnValueOnce(of({ waterGoal: LATEST_MANUAL_WATER }));
 
             expect(await facade.saveManuallyAsync({ waterGoal: FAILED_MANUAL_WATER })).toBe(false);
             expect(facade.hasAutosaveError()).toBe(true);

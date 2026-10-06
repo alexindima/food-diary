@@ -804,6 +804,7 @@ Global top-edge loading bar for long-running background requests.
 #### `fd-ui-toast-host`
 
 Global toast host. Mount once near the app root.
+Pass a translated `closeLabel` for the dismiss button's accessible name.
 
 #### `fd-ui-toast` (service)
 

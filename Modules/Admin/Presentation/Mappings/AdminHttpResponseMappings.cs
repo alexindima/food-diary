@@ -89,7 +89,10 @@ public static class AdminHttpResponseMappings {
                 model.AiOutputTokenLimit,
                 model.AiConsentAcceptedAt,
                 model.MustChangePassword
-            );
+            ) {
+                LatestWeightKg = model.LatestWeightKg,
+                LatestWeightDate = model.LatestWeightDate,
+            };
         }
     }
 

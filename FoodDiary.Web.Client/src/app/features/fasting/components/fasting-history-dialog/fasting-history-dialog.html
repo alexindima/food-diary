@@ -8,6 +8,7 @@
         } @else {
             <div class="fasting-history-dialog__list">
                 @for (historyItem of data.historyItems(); track historyItem.session.id) {
+                    @let duration = sessionDurationView(historyItem.session);
                     <button
                         type="button"
                         class="fasting-history-dialog__row"
@@ -22,14 +23,14 @@
                             <span>{{ historyItem.sessionTypeLabel }} &middot; {{ historyItem.protocolDisplay }}</span>
                         </span>
                         <strong class="fasting-history-dialog__duration">
-                            {{ sessionDurationHours(historyItem.session) | localizedNumber: currentLocale() : 0 : 1 }}
-                            {{ 'FASTING.HOURS' | translate }}
+                            {{ duration.value | localizedNumber: currentLocale() : 0 : 1 }}
+                            {{ duration.unitKey | translate }}
                         </strong>
                         <span
                             class="fasting-history-dialog__status fd-ui-pill"
-                            [class.fasting-history-dialog__status--completed]="historyItem.session.status === 'Completed'"
+                            [class.fasting-history-dialog__status--completed]="historyItem.badgeKey === 'FASTING.BADGE_COMPLETED'"
                             [class.fasting-history-dialog__status--active]="historyItem.session.status === 'Active'"
-                            [class.fasting-history-dialog__status--interrupted]="historyItem.session.status === 'Interrupted'"
+                            [class.fasting-history-dialog__status--interrupted]="historyItem.session.status === 'Interrupted' || historyItem.badgeKey === 'FASTING.BADGE_ENDED_EARLY'"
                             [class.fasting-history-dialog__status--skipped]="historyItem.session.status === 'Skipped'"
                             [class.fasting-history-dialog__status--postponed]="historyItem.session.status === 'Postponed'"
                         >

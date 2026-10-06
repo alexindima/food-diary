@@ -139,7 +139,7 @@ public partial class DietologistFeatureTests {
     }
 
     [Fact]
-    public async Task CreateRecommendation_WhenAnyPermissionIsMissing_ReturnsFailure() {
+    public async Task CreateRecommendation_WithSelectedSharedCategories_Succeeds() {
         var dietologistId = UserId.New();
         var clientId = UserId.New();
         var limitedPermissions = new DietologistPermissions(
@@ -166,9 +166,8 @@ public partial class DietologistFeatureTests {
             new CreateRecommendationCommand(dietologistId.Value, clientId.Value, "Eat more veggies"),
             CancellationToken.None);
 
-        ResultAssert.Failure(result);
-        Assert.Contains("PermissionDenied", result.Error.Code, StringComparison.Ordinal);
-        Assert.Empty(recRepo.Added);
+        ResultAssert.Success(result);
+        Assert.Single(recRepo.Added);
     }
 
     [Fact]

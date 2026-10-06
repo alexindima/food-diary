@@ -48,6 +48,12 @@ public sealed class DailyAdviceGroupPersistenceIntegrationTests(PostgresDatabase
         var reader = new DailyAdviceRepository(context.DailyAdvices);
         IReadOnlyList<DailyAdviceReadModel> projections = await reader.GetAllReadModelsAsync();
         Assert.Equal(2, projections.Count(item => item.GroupId == ru.GroupId));
+        IReadOnlyList<DailyAdviceReadModel> firstGroup = await reader.GetGroupPageReadModelsAsync(1, 1);
+        IReadOnlyList<DailyAdviceReadModel> secondGroup = await reader.GetGroupPageReadModelsAsync(2, 1);
+        Assert.Single(firstGroup.Select(item => item.GroupId).Distinct());
+        Assert.Single(secondGroup.Select(item => item.GroupId).Distinct());
+        Assert.NotEqual(firstGroup[0].GroupId, secondGroup[0].GroupId);
+        Assert.Equal(3, firstGroup.Count + secondGroup.Count);
         Assert.Empty(context.ChangeTracker.Entries());
         IReadOnlyList<DailyAdvice> group = await writer.GetGroupAsync(ru.GroupId);
         Assert.Equal(2, group.Count);

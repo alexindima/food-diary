@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -5,6 +6,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { ShoppingList } from '../../../shared/models/shopping-list.data';
+import { QuickMealService } from '../../meals/contracts/quick-meal';
+import { RECIPE_LOOKUP } from '../../recipes/contracts/recipe-lookup';
 import { MealPlanService } from '../api/meal-plan.service';
 import type { MealPlan, MealPlanSummary } from '../models/meal-plan.data';
 import { MealPlanFacade } from './meal-plan.facade';
@@ -26,9 +29,15 @@ type MealPlanServiceMock = {
 
 let facade: MealPlanFacade;
 let mealPlanService: MealPlanServiceMock;
+const recipeLookup = { getById: vi.fn() };
+const quickMeal = { hasItems: signal(false), addRecipe: vi.fn(), updateDetails: vi.fn() };
 
 beforeEach(() => {
     TestBed.resetTestingModule();
+    recipeLookup.getById.mockReset().mockReturnValue(of({ id: 'recipe-1' }));
+    quickMeal.hasItems.set(false);
+    quickMeal.addRecipe.mockReset();
+    quickMeal.updateDetails.mockReset();
     mealPlanService = {
         getPage: vi.fn(() => of({ data: [createSummary()], page: 1, limit: PAGE_SIZE, totalPages: 1, totalItems: 1 })),
         getById: vi.fn(() => of(createMealPlan())),
@@ -37,13 +46,32 @@ beforeEach(() => {
     };
 
     TestBed.configureTestingModule({
-        providers: [MealPlanFacade, { provide: MealPlanService, useValue: mealPlanService }],
+        providers: [MealPlanFacade, { provide: MealPlanService, useValue: mealPlanService },
+            { provide: RECIPE_LOOKUP, useValue: recipeLookup }, { provide: QuickMealService, useValue: quickMeal }],
     });
 
     facade = TestBed.inject(MealPlanFacade);
 });
 
 describe('MealPlanFacade', () => {
+    it('prepares the selected plan meal with its servings and type before navigating', () => {
+        const onSuccess = vi.fn();
+        facade.addMealToDiary({ id: 'meal-1', recipeId: 'recipe-1', mealType: 'Breakfast', servings: 2, calories: 200 }, onSuccess);
+        expect(quickMeal.addRecipe).toHaveBeenCalledWith({ id: 'recipe-1' }, 2);
+        expect(quickMeal.updateDetails).toHaveBeenCalledWith({ mealType: 'BREAKFAST' });
+        expect(onSuccess).toHaveBeenCalledOnce();
+    });
+    it('preserves an existing diary draft and reports an unavailable recipe', () => {
+        const meal = { id: 'meal-1', recipeId: 'recipe-1', mealType: 'Breakfast', servings: 2, calories: 200 };
+        quickMeal.hasItems.set(true);
+        facade.addMealToDiary(meal, vi.fn());
+        expect(recipeLookup.getById).not.toHaveBeenCalled();
+        quickMeal.hasItems.set(false);
+        recipeLookup.getById.mockReturnValueOnce(of(null));
+        facade.addMealToDiary(meal, vi.fn());
+        expect(quickMeal.addRecipe).not.toHaveBeenCalled();
+        expect(facade.actionErrorKey()).toBe('MEAL_PLANS.ERROR_ADD_MEAL');
+    });
     it('loads meal plans with selected diet type filter', async () => {
         facade.loadPlans('Keto');
 

@@ -71,8 +71,8 @@ public static class DietologistAccessPolicy {
                permissions.ShareFasting;
     }
 
-    public static Error? EnsureAllPermissions(DietologistPermissionsModel permissions) {
-        return permissions is { ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: true, ShareGoals: true, ShareHydration: true, ShareProfile: true, ShareFasting: true }
+    public static Error? EnsureRecommendationPermission(DietologistPermissionsModel permissions) {
+        return HasAnyDashboardPermission(permissions) || permissions.ShareProfile || permissions.ShareGoals
             ? null
             : DietologistErrors.PermissionDenied;
     }

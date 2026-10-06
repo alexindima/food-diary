@@ -119,7 +119,8 @@
         "CONFIRM": "Подтвердить",
         "LOADING": "Загрузка",
         "MORE_ACTIONS": "Ещё действия",
-        "SKIP_TO_MAIN_CONTENT": "Перейти к основному содержимому"
+        "SKIP_TO_MAIN_CONTENT": "Перейти к основному содержимому",
+        "CLOSE_NOTIFICATION": "Закрыть уведомление"
     },
     "PAGINATION": {
         "LABEL": "Пагинация",
@@ -333,7 +334,8 @@
             "RESEND": "Отправить снова",
             "RESENT": "Письмо для подтверждения отправлено.",
             "RESEND_ERROR": "Не удалось отправить письмо. Пожалуйста, попробуйте позже.",
-            "RESEND_COOLDOWN": "Повторная отправка будет доступна через {{ seconds }} сек."
+            "RESEND_COOLDOWN": "Повторная отправка будет доступна через {{ seconds }} сек.",
+            "USE_ANOTHER_EMAIL": "Выйти и использовать другую почту"
         },
         "REQUIRED_PASSWORD_CHANGE": {
             "TITLE": "Установите новый пароль",
@@ -653,9 +655,31 @@
         "MEALS_TITLE": "Сегодняшние приёмы пищи",
         "MEALS_EMPTY": "За выбранную дату пока нет записей.",
         "MEALS_VIEW_ALL": "Открыть все приёмы",
-        "ADD_WITH_AI_BUTTON": "Добавить с ИИ"
+        "ADD_WITH_AI_BUTTON": "Добавить с ИИ",
+        "DAY_SUMMARY": {
+            "PULSE_PREVIOUS": "Предыдущий факт",
+            "PULSE_NEXT": "Следующий факт",
+            "BALANCE_LEFT": "осталось",
+            "BALANCE_OVER": "сверх цели",
+            "HELP_TITLE": "Как читать форму?",
+            "PULSE_CALORIES": "Калории за день",
+            "PULSE_EMPTY_TEXT": "Добавьте первый приём пищи за этот день",
+            "PULSE_EMPTY_TITLE": "Пока нет записей",
+            "PULSE_TITLE": "Пульс дня",
+            "PETAL_LEGEND": "Внутреннее кольцо — прогресс калорий. Пунктир — 100% цели нутриентов. Выше 100% шкала сжата; рост ограничен. Двойная точка — от 250%.",
+            "OF_GOAL": "из {{value}} ккал",
+            "TITLE": "Сводка дня",
+            "GOAL_MARKER": "Цель по нутриенту",
+            "CALORIE_PROGRESS": "Прогресс калорий за день",
+            "REMAINING": "Осталось {{value}} {{unit}}",
+            "EXCEEDED_BY": "Превышено на {{value}} {{unit}}",
+            "TARGET_REACHED": "Цель достигнута"
+        }
     },
     "MEAL_DETAILS": {
+        "HOURS": "Часы",
+        "MINUTES": "Минуты",
+        "SATIETY_UNANSWERED": "Не указано",
         "ADD": "Добавить детали",
         "HIDE": "Скрыть детали",
         "DATE": "Дата",
@@ -666,13 +690,22 @@
     },
     "MEAL_MANAGE": {
         "MANUAL_ITEM_EDIT": "Редактировать ручную позицию",
-        "MANUAL_ITEM_EDIT_NAMED": "Редактировать ручную позицию: {{name}}"
+        "MANUAL_ITEM_EDIT_NAMED": "Редактировать ручную позицию: {{name}}",
+        "MEAL_TYPE_LABEL": "Тип приёма пищи"
     },
     "QUICK_MEAL": {
         "TITLE": "Черновик приёма пищи",
         "ITEMS": "позиций",
-        "AMOUNT": "Количество",
         "SERVINGS": "порций",
+        "ITEMS_ONE": "позиция",
+        "ITEMS_FEW": "позиции",
+        "ITEMS_MANY": "позиций",
+        "ITEMS_OTHER": "позиции",
+        "AMOUNT": "Количество",
+        "SERVINGS_ONE": "порция",
+        "SERVINGS_FEW": "порции",
+        "SERVINGS_MANY": "порций",
+        "SERVINGS_OTHER": "порции",
         "EDIT": "Редактировать",
         "SAVE": "Сохранить",
         "SAVING": "Сохраняем...",
@@ -1225,5 +1258,8 @@
             "SNACK": "Перекус",
             "OTHER": "Другое"
         }
+    },
+    "DISABLED_HINTS": {
+        "COOLDOWN_ACTIVE": "Дождитесь завершения таймера."
     }
 }

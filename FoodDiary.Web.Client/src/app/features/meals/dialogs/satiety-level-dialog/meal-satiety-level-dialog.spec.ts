@@ -43,9 +43,9 @@ describe('MealSatietyLevelDialogComponent', () => {
         expect(component['selectedValue']()).toBe(HIGH_SATIETY);
     });
 
-    it('should initialize with neutral value when data value is null', () => {
+    it('should keep an unanswered value when data value is null', () => {
         createComponent({ titleKey: 'TITLE', value: null });
-        expect(component['selectedValue']()).toBe(LOW_SATIETY);
+        expect(component['selectedValue']()).toBeNull();
     });
 
     it('should update selectedValue on selection', () => {

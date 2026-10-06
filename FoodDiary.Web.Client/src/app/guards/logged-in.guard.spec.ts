@@ -62,14 +62,22 @@ describe('loggedInGuard', () => {
         expect(routerMock.createUrlTree).toHaveBeenCalledWith(['/dashboard']);
     });
 
-    it('should still redirect authenticated user when adminReturnUrl is present', async () => {
+    it('should allow authenticated user to complete the admin sign-in handoff', async () => {
         authServiceMock.isAuthenticated.set(true);
         const adminRedirectState = { url: '/?auth=login&adminReturnUrl=%2F' };
         state = adminRedirectState as RouterStateSnapshot;
 
         const result = await TestBed.runInInjectionContext(async () => loggedInGuard(route, state));
 
+        expect(result).toBe(true);
+        expect(routerMock.createUrlTree).not.toHaveBeenCalled();
+    });
+
+    it.each(['/?adminReturnUrl=%2F', '/?auth=login&adminReturnUrl='])('should redirect an incomplete admin handoff %s', async url => {
+        authServiceMock.isAuthenticated.set(true);
+        const handoffState = { url };
+        state = handoffState as RouterStateSnapshot;
+        const result = await TestBed.runInInjectionContext(async () => loggedInGuard(route, state));
         expect(result).toBe(dashboardUrlTree);
-        expect(routerMock.createUrlTree).toHaveBeenCalledWith(['/dashboard']);
     });
 });

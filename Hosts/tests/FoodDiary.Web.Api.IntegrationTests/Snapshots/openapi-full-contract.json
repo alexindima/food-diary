@@ -23309,6 +23309,20 @@
           "Nullable": true
         },
         {
+          "Name": "latestWeightDate",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
+          "Name": "latestWeightKg",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
           "Name": "mondayCalories",
           "Required": false,
           "Type": "number",

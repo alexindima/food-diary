@@ -126,7 +126,10 @@ export class RecipeListComponent {
         this.recipeListFacade.hasActiveFilters(this.searchModel().onlyMine, this.buildRecipeFilters()),
     );
     protected readonly isEmptyState = computed(
-        () => !this.hasVisibleRecipes() && !this.recipeListFacade.hasSearch(this.searchModel().search) && !this.hasActiveFilters(),
+        () =>
+            !this.hasVisibleRecipes() &&
+            !this.recipeListFacade.hasSearch(this.searchModel().search) &&
+            !this.recipeListFacade.hasActiveFilters(false, this.buildRecipeFilters()),
     );
     protected readonly allRecipesSectionLabelKey = computed(() => this.recipeListFacade.allRecipesSectionLabelKey());
     protected readonly emptyState = computed<RecipeListEmptyState>(() => (this.isEmptyState() ? 'empty' : 'no-results'));
@@ -137,7 +140,7 @@ export class RecipeListComponent {
     private readonly isMobileSearchOpen = signal(false);
     protected readonly searchModel = signal<RecipeSearchFormValues>({
         search: null,
-        onlyMine: false,
+        onlyMine: true,
         category: null,
         maxTotalTime: null,
         caloriesFrom: null,

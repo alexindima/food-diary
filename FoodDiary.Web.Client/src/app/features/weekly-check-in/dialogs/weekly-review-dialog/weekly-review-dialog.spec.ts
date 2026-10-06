@@ -8,10 +8,22 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { WeeklyReviewDialogComponent, type WeeklyReviewDialogData } from './weekly-review-dialog';
 
 const EXPECTED_INSIGHT_COUNT = 3;
+const SAVED_GOAL: NonNullable<WeeklyReviewDialogData['goal']> = {
+    id: 'goal-1',
+    weekStart: '2026-10-05',
+    type: 'DiaryLogging',
+    targetDays: 3,
+    progressDays: 2,
+    isCompleted: false,
+    reminderEnabled: false,
+    reminderTime: null,
+    timeZoneOffsetMinutes: null,
+};
 
 describe('WeeklyReviewDialogComponent', () => {
     it('renders every insight and the selected week metrics', async () => {
         const data: WeeklyReviewDialogData = {
+            goal: SAVED_GOAL,
             review: {
                 daysLogged: 2,
                 hasEnoughData: false,
@@ -55,8 +67,9 @@ describe('WeeklyReviewDialogComponent', () => {
         const root = fixture.nativeElement as HTMLElement;
 
         expect(root.querySelectorAll('.weekly-review-dialog__insight')).toHaveLength(EXPECTED_INSIGHT_COUNT);
+        expect(root.textContent).toContain('WEEKLY_CHECK_IN.GOAL.ACTIVE_TITLE_THREE');
+        expect(root.textContent).not.toContain('WEEKLY_CHECK_IN.FOCUS.LOGGING_DESCRIPTION');
         expect(root.textContent).toContain('543');
-        expect(root.textContent).toContain('20.2');
         expect(root.textContent).toContain('1,500');
 
         const translateService = TestBed.inject(TranslateService);

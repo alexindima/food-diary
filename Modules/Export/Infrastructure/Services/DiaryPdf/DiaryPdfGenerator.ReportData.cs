@@ -70,12 +70,8 @@ internal sealed partial class DiaryPdfGenerator {
             TimeSpan displayOffset = ResolveDisplayOffset(normalizedFrom, timeZoneOffsetMinutes);
             IReadOnlyList<DiaryDay> days = BuildDays(meals, normalizedFrom, normalizedTo, displayOffset, culture);
             MealProjectionReadModel[] orderedMeals = [.. meals.OrderBy(meal => meal.Date)];
-            string firstDayLabel = days.Count > 0
-                ? days[0].Label
-                : normalizedFrom.ToString("yyyy-MM-dd", culture);
-            string lastDayLabel = days.Count > 0
-                ? days[^1].Label
-                : normalizedTo.ToString("yyyy-MM-dd", culture);
+            string firstDayLabel = normalizedFrom.Add(displayOffset).ToString("d MMM yyyy", culture);
+            string lastDayLabel = normalizedTo.Add(displayOffset).ToString("d MMM yyyy", culture);
             return new DiaryReportData(
                 orderedMeals,
                 days,

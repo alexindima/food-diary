@@ -3,9 +3,9 @@ export const MIN_SATIETY_LEVEL = 1;
 export const MAX_SATIETY_LEVEL = 5;
 export const LEGACY_SATIETY_SCALE_FACTOR = 2;
 
-export function normalizeSatietyLevel(value: number | null | undefined): number {
+export function normalizeSatietyLevel(value: number | null | undefined): number | null {
     if (value === null || value === undefined || !Number.isFinite(value) || value <= 0) {
-        return DEFAULT_SATIETY_LEVEL;
+        return null;
     }
 
     if (value > MAX_SATIETY_LEVEL) {

@@ -3,12 +3,12 @@
   "summary": {
     "components": 486,
     "componentsWithoutDirectSpecs": 131,
-    "inputs": 1559,
-    "outputs": 538,
+    "inputs": 1562,
+    "outputs": 539,
     "apiCalls": 278,
     "templatesWithTranslations": 347,
-    "translationKeys": 2095,
-    "consumerEdges": 1228,
+    "translationKeys": 2108,
+    "consumerEdges": 1231,
     "consumedComponents": 308,
     "unconsumedComponents": 177
   },
@@ -6985,7 +6985,13 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/toast/fd-ui-toast-host.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/toast/fd-ui-toast-host.html",
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "closeLabel",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": null
     },
@@ -7739,9 +7745,24 @@
           "name": "days",
           "type": "MealPlanDayViewModel[]",
           "required": true
+        },
+        {
+          "name": "addingMealId",
+          "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "hasMealDraft",
+          "type": "",
+          "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "addMeal",
+          "type": "MealPlanMealViewModel"
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-sections/meal-plan-detail-days/meal-plan-detail-days.spec.ts"
     },
     {
@@ -16349,7 +16370,7 @@
     {
       "feature": "dietologist",
       "method": "GET",
-      "responseType": "DashboardSnapshot",
+      "responseType": "DietologistDashboardSnapshot",
       "urlExpression": "`clients/${clientUserId}/dashboard`",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
       "line": 92,
@@ -16748,7 +16769,7 @@
       "responseType": "GoalsResponse",
       "urlExpression": "''",
       "path": "FoodDiary.Web.Client/src/app/features/goals/api/goals.service.ts",
-      "line": 14,
+      "line": 16,
       "publicMethod": "getGoals",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.goals",
@@ -16760,7 +16781,7 @@
       "responseType": "GoalsResponse",
       "urlExpression": "''",
       "path": "FoodDiary.Web.Client/src/app/features/goals/api/goals.service.ts",
-      "line": 18,
+      "line": 20,
       "publicMethod": "getGoalsStrict",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.goals",
@@ -16772,7 +16793,7 @@
       "responseType": "GoalsResponse",
       "urlExpression": "''",
       "path": "FoodDiary.Web.Client/src/app/features/goals/api/goals.service.ts",
-      "line": 22,
+      "line": 24,
       "publicMethod": "updateGoals",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.goals",
@@ -16928,7 +16949,7 @@
       "responseType": "MealResponseDto",
       "urlExpression": "`${id}/repeat`",
       "path": "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
-      "line": 109,
+      "line": 117,
       "publicMethod": "repeat",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.meals",
@@ -19401,6 +19422,7 @@
         "AUTH.VERIFY_PENDING.RESEND",
         "AUTH.VERIFY_PENDING.RESEND_COOLDOWN",
         "AUTH.VERIFY_PENDING.TITLE",
+        "AUTH.VERIFY_PENDING.USE_ANOTHER_EMAIL",
         "DISABLED_HINTS.COOLDOWN_ACTIVE"
       ]
     },
@@ -19939,10 +19961,15 @@
         "DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS",
         "DASHBOARD.ACTIONS.OPEN_SETTINGS",
         "DASHBOARD.ACTIONS.START_TOUR",
+        "DASHBOARD.INITIAL_SETUP.DONE",
         "DASHBOARD.INITIAL_SETUP.GOALS",
+        "DASHBOARD.INITIAL_SETUP.GOALS_HINT",
         "DASHBOARD.INITIAL_SETUP.HINT",
         "DASHBOARD.INITIAL_SETUP.PROFILE",
+        "DASHBOARD.INITIAL_SETUP.PROFILE_HINT",
         "DASHBOARD.INITIAL_SETUP.TITLE",
+        "DASHBOARD.INITIAL_SETUP.WEIGHT",
+        "DASHBOARD.INITIAL_SETUP.WEIGHT_HINT",
         "DASHBOARD.LOADING",
         "DASHBOARD.SUBTITLE",
         "DISABLED_HINTS.EDIT_LAYOUT_ACTIVE",
@@ -20275,7 +20302,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-dialog/fasting-history-dialog.html",
       "keys": [
         "COMMON.CLOSE",
-        "FASTING.HOURS",
         "FASTING.LOAD_MORE_HISTORY",
         "FASTING.NO_HISTORY",
         "FASTING.REDESIGN.OPEN_SESSION_DETAILS",
@@ -20349,7 +20375,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-details-dialog/fasting-session-details-dialog.html",
       "keys": [
         "COMMON.CLOSE",
-        "FASTING.HOURS",
         "FASTING.REDESIGN.CHECK_INS_TITLE",
         "FASTING.REDESIGN.DURATION_LABEL",
         "FASTING.REDESIGN.NO_CHECK_INS",
@@ -20680,6 +20705,7 @@
         "MEAL_PLANS.BACK",
         "MEAL_PLANS.DETAIL_TOUR.START_TOUR",
         "MEAL_PLANS.DETAIL_UNAVAILABLE",
+        "MEAL_PLANS.DIARY_HINT",
         "MEAL_PLANS.TITLE"
       ]
     },
@@ -20687,6 +20713,7 @@
       "feature": "meal-plans",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-sections/meal-plan-detail-days/meal-plan-detail-days.html",
       "keys": [
+        "MEAL_PLANS.ADD_TO_DIARY",
         "MEAL_PLANS.DAY"
       ]
     },
@@ -20782,6 +20809,8 @@
       "feature": "meals",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-general-info/meal-general-info.html",
       "keys": [
+        "MEAL_DETAILS.HOURS",
+        "MEAL_DETAILS.MINUTES",
         "MEAL_MANAGE.CHOOSE_DATE",
         "MEAL_MANAGE.CHOOSE_TIME",
         "MEAL_MANAGE.COMMENT",
@@ -20864,6 +20893,7 @@
         "COMMON.LOADING",
         "MEAL_MANAGE.MANUAL_ITEM_EDIT",
         "MEAL_MANAGE.MANUAL_ITEM_EDIT_NAMED",
+        "MEAL_MANAGE.MEAL_TYPE_LABEL",
         "QUICK_MEAL.AMOUNT",
         "QUICK_MEAL.CLEAR",
         "QUICK_MEAL.PREVIEW_EMPTY",
@@ -20880,6 +20910,7 @@
       "keys": [
         "MEAL_FAVORITES.LOADING",
         "MEAL_FAVORITES.LOAD_ERROR",
+        "MEAL_FAVORITES.MEAL_TYPE",
         "MEAL_FAVORITES.RETRY",
         "MEAL_FAVORITES.SEARCH",
         "MEAL_FAVORITES.TITLE"
@@ -22570,6 +22601,7 @@
       "feature": "shell",
       "path": "FoodDiary.Web.Client/src/app/shell/app.html",
       "keys": [
+        "COMMON.CLOSE_NOTIFICATION",
         "COMMON.SKIP_TO_MAIN_CONTENT"
       ]
     },
@@ -23068,6 +23100,7 @@
         "GENERAL.UNITS.KCAL",
         "GENERAL.UNITS.ML",
         "WEEKLY_CHECK_IN.FOCUS.TITLE",
+        "WEEKLY_CHECK_IN.GOAL.ACTIVE_COPY",
         "WEEKLY_CHECK_IN.METRICS.DAYS",
         "WEEKLY_CHECK_IN.METRICS.LOGGED_AVERAGE",
         "WEEKLY_CHECK_IN.METRICS.PROTEIN",
@@ -26643,6 +26676,7 @@
         "ariaLabel",
         "fill",
         "icon",
+        "size",
         "type",
         "variant"
       ],
@@ -27116,7 +27150,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "auth",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification-pending/email-verification-pending.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
         "disabled",
         "fill",
@@ -27413,7 +27447,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
-      "occurrences": 8,
+      "occurrences": 9,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -27960,6 +27994,22 @@
         "ariaLabel",
         "fill",
         "icon",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "meal-plans",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-sections/meal-plan-detail-days/meal-plan-detail-days.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason",
+        "fill",
+        "loading",
         "variant"
       ],
       "outputsHandled": []
@@ -36790,6 +36840,39 @@
       "component": "FdUiSelectComponent",
       "selector": "fd-ui-select",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "meals",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "label",
+        "options",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "meals",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/meal-favorites-picker/meal-favorites-picker.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "disabled",
+        "label",
+        "options",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
       "consumerFeature": "products",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-basic-info/product-basic-info.html",
       "occurrences": 3,
@@ -37562,7 +37645,9 @@
       "occurrences": 1,
       "inputsUsed": [
         "error",
+        "hoursLabel",
         "label",
+        "minutesLabel",
         "size"
       ],
       "outputsHandled": []
@@ -37592,7 +37677,9 @@
       "consumerFeature": "shell",
       "consumerPath": "FoodDiary.Web.Client/src/app/shell/app.html",
       "occurrences": 1,
-      "inputsUsed": [],
+      "inputsUsed": [
+        "closeLabel"
+      ],
       "outputsHandled": []
     },
     {
@@ -38537,9 +38624,13 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/detail/meal-plan-detail-page.html",
       "occurrences": 1,
       "inputsUsed": [
-        "days"
+        "addingMealId",
+        "days",
+        "hasMealDraft"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "addMeal"
+      ]
     },
     {
       "component": "MealPlanDetailHeaderComponent",

@@ -564,6 +564,8 @@ public sealed class DiaryPdfGeneratorTests {
             timeZoneOffsetMinutes: 900);
 
         Assert.Equal(2, GetPrivateProperty<int>(report, "DayCount"));
+        Assert.Contains("2026", GetPrivateProperty<string>(report, "PeriodStartLabel"), StringComparison.Ordinal);
+        Assert.Contains("2026", GetPrivateProperty<string>(report, "PeriodEndLabel"), StringComparison.Ordinal);
         Assert.Equal("UTC+06:00", GetPrivateProperty<string>(report, "TimeZoneOffsetLabel"));
         Assert.Equal("Other", InvokePrivateInstance<string>(report, "FormatMealType", (MealType?)null));
         Assert.Equal("Breakfast", InvokePrivateInstance<string>(report, "FormatMealType", (MealType?)MealType.Breakfast));

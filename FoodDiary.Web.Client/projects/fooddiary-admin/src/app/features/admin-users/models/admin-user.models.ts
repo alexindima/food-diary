@@ -9,6 +9,8 @@ export type AdminUser = {
     birthDate?: string | null;
     gender?: string | null;
     weightKg?: number | null;
+    latestWeightKg?: number | null;
+    latestWeightDate?: string | null;
     desiredWeightKg?: number | null;
     desiredWaistCm?: number | null;
     heightCm?: number | null;

@@ -388,13 +388,19 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task GetAdminUserQueryHandler_WithExistingUser_ReturnsAdminModel() {
         User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
-        var handler = new GetAdminUserQueryHandler(new InMemoryUserRepository(user, [RoleNames.Admin]));
+        var recordedDate = new DateTime(2026, 10, 5, 0, 0, 0, DateTimeKind.Utc);
+        var repository = new InMemoryUserRepository(user, [RoleNames.Admin]) {
+            LatestWeight = new FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models.WeightEntryModel(Guid.NewGuid(), user.Id.Value, recordedDate, 78.4),
+        };
+        var handler = new GetAdminUserQueryHandler(repository);
 
         Result<AdminUserModel> result = await handler.Handle(new GetAdminUserQuery(user.Id.Value), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Equal(user.Id.Value, result.Value.Id);
         Assert.Equal("admin@example.com", result.Value.Email);
+        Assert.Equal(78.4, result.Value.LatestWeightKg);
+        Assert.Equal(recordedDate, result.Value.LatestWeightDate);
         Assert.Contains(RoleNames.Admin, result.Value.Roles, StringComparer.Ordinal);
     }
 

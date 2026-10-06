@@ -15,5 +15,5 @@ public sealed record CreateMealHttpRequest(
     double? ManualCarbs = null,
     double? ManualFiber = null,
     double? ManualAlcohol = null,
-    int PreMealSatietyLevel = 3,
-    int PostMealSatietyLevel = 3);
+    int PreMealSatietyLevel = 0,
+    int PostMealSatietyLevel = 0);

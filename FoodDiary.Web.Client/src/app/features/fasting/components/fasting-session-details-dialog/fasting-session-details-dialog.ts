@@ -8,9 +8,9 @@ import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-sh
 
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
-import { MS_PER_HOUR } from '../../../../shared/lib/time.constants';
 import type { FastingCheckIn, FastingSession } from '../../../../shared/models/fasting.data';
 import type { FastingCheckInViewModel } from '../../lib/fasting-page.types';
+import { getFastingDurationDisplay } from '../../lib/fasting-session-state';
 import { FastingCheckInChartComponent } from '../fasting-check-in-chart/fasting-check-in-chart';
 import { FastingHistoryCheckInEntryComponent } from '../fasting-history-check-in-entry/fasting-history-check-in-entry';
 
@@ -45,10 +45,7 @@ export class FastingSessionDetailsDialogComponent {
     protected readonly data = inject<FastingSessionDetailsDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<FastingSessionDetailsDialogComponent, void>>(FdUiDialogRef);
 
-    protected readonly durationHours = computed(() => {
-        const end = this.data.session.endedAtUtc === null ? new Date() : new Date(this.data.session.endedAtUtc);
-        return Math.max(0, (end.getTime() - new Date(this.data.session.startedAtUtc).getTime()) / MS_PER_HOUR);
-    });
+    protected readonly durationDisplay = computed(() => getFastingDurationDisplay(this.data.session));
     protected readonly periodLabel = computed(() =>
         this.data.endedAtLabel === null ? this.data.startedAtLabel : `${this.data.startedAtLabel} → ${this.data.endedAtLabel}`,
     );

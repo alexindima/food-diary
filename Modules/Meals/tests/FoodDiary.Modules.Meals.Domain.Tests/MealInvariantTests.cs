@@ -35,7 +35,7 @@ public class MealInvariantTests {
     }
 
     [Fact]
-    public void Create_WithLegacyZeroSatiety_NormalizesToNeutral() {
+    public void Create_WithUnansweredSatiety_PreservesAbsence() {
         var meal = Meal.Create(
             UserId.New(),
             DateTime.UtcNow,
@@ -43,8 +43,18 @@ public class MealInvariantTests {
             preMealSatietyLevel: 0,
             postMealSatietyLevel: 0);
 
-        Assert.Equal(3, meal.PreMealSatietyLevel);
-        Assert.Equal(3, meal.PostMealSatietyLevel);
+        Assert.Equal(0, meal.PreMealSatietyLevel);
+        Assert.Equal(0, meal.PostMealSatietyLevel);
+    }
+
+    [Fact]
+    public void UpdateSatietyLevels_WithNull_ClearsExistingRatings() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow, preMealSatietyLevel: 2, postMealSatietyLevel: 4);
+
+        meal.UpdateSatietyLevels(preMealLevel: null, postMealLevel: null);
+
+        Assert.Equal(0, meal.PreMealSatietyLevel);
+        Assert.Equal(0, meal.PostMealSatietyLevel);
     }
 
     [Fact]

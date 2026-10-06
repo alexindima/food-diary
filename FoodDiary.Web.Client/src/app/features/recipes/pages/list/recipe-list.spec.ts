@@ -51,16 +51,16 @@ describe('RecipeListComponent initial loading and filters', () => {
     it('loads initial overview on creation', () => {
         setupComponent();
 
-        expect(facade.loadInitialOverview).toHaveBeenCalledWith(1, PAGE_SIZE, emptyRecipeFilters(), false);
+        expect(facade.loadInitialOverview).toHaveBeenCalledWith(1, PAGE_SIZE, emptyRecipeFilters(), true);
     });
 
-    it('reloads recipes when only-mine filter changes', async () => {
+    it('allows including public recipes after initially showing only owned recipes', async () => {
         const { component } = setupComponent();
 
-        component['searchForm'].onlyMine().value.set(true);
+        component['searchForm'].onlyMine().value.set(false);
         await flushPromisesAsync();
 
-        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, emptyRecipeFilters(), true);
+        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, emptyRecipeFilters(), false);
     });
 
     it('applies changed filter dialog result', () => {
@@ -95,7 +95,7 @@ describe('RecipeListComponent detail actions', () => {
         await waitForAsync(() => facade.loadRecipes.mock.calls.length > 0);
 
         expect(facade.loadFavorites).not.toHaveBeenCalled();
-        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, emptyRecipeFilters(), false);
+        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, emptyRecipeFilters(), true);
     });
 
     it('delegates edit action from detail dialog to facade', async () => {
@@ -107,7 +107,7 @@ describe('RecipeListComponent detail actions', () => {
         component['onRecipeClick'](recipe);
         await waitForAsync(() => facade.handleDetailActionAsync.mock.calls.length > 0);
 
-        expect(facade.handleDetailActionAsync).toHaveBeenCalledWith(expect.any(RecipeDetailActionResult), recipe, null, false);
+        expect(facade.handleDetailActionAsync).toHaveBeenCalledWith(expect.any(RecipeDetailActionResult), recipe, null, true);
     });
 });
 
@@ -120,7 +120,7 @@ describe('RecipeListComponent actions', () => {
         component['onPageChange'](SECOND_PAGE_INDEX);
 
         expect(scrollSpy).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
-        expect(facade.loadRecipes).toHaveBeenCalledWith(SECOND_PAGE, PAGE_SIZE, emptyRecipeFilters(), false);
+        expect(facade.loadRecipes).toHaveBeenCalledWith(SECOND_PAGE, PAGE_SIZE, emptyRecipeFilters(), true);
     });
 
     it('opens favorite recipe from favorite entry', () => {
@@ -307,12 +307,12 @@ describe('RecipeListComponent search and recovery', () => {
         component['searchForm'].search().value.set('Rice');
         TestBed.tick();
         await flushPromisesAsync();
-        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, { ...emptyRecipeFilters(), search: 'Rice' }, false);
+        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, { ...emptyRecipeFilters(), search: 'Rice' }, true);
         component['clearSearch']();
         TestBed.tick();
         await flushPromisesAsync();
         expect(component['searchModel']().search).toBe('');
-        expect(facade.loadRecipes).toHaveBeenLastCalledWith(1, PAGE_SIZE, { ...emptyRecipeFilters(), search: '' }, false);
+        expect(facade.loadRecipes).toHaveBeenLastCalledWith(1, PAGE_SIZE, { ...emptyRecipeFilters(), search: '' }, true);
     });
 
     it('does not reload when the filter dialog is cancelled', () => {
@@ -324,7 +324,7 @@ describe('RecipeListComponent search and recovery', () => {
     it('retries loading and delegates new recipe navigation', async () => {
         const { component } = setupComponent();
         component['retryLoad']();
-        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, emptyRecipeFilters(), false);
+        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, emptyRecipeFilters(), true);
         await component['onAddRecipeClickAsync']();
         expect(facade.navigateToAddRecipeAsync).toHaveBeenCalledTimes(1);
     });
@@ -414,7 +414,7 @@ describe('RecipeListComponent presentation state', () => {
     it('does not reload when filters are unchanged', () => {
         const { component } = setupComponent();
         facade.openFilters.mockReturnValue(
-            of({ onlyMine: false, category: null, maxTotalTime: null, caloriesFrom: null, caloriesTo: null, hasImage: null }),
+            of({ onlyMine: true, category: null, maxTotalTime: null, caloriesFrom: null, caloriesTo: null, hasImage: null }),
         );
         component['openFilters']();
         expect(facade.loadRecipes).not.toHaveBeenCalled();

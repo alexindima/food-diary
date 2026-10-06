@@ -56,7 +56,17 @@
 
     <section class="weekly-review-dialog__focus">
         <span class="fd-ui-helper-text">{{ 'WEEKLY_CHECK_IN.FOCUS.TITLE' | translate }}</span>
-        <strong>{{ data.review.focusTitleKey | translate }}</strong>
-        <p class="fd-ui-body-sm">{{ data.review.focusDescriptionKey | translate }}</p>
+        @if (data.goal; as goal) {
+            <strong>{{
+                (goal.targetDays === 3 ? 'WEEKLY_CHECK_IN.GOAL.ACTIVE_TITLE_THREE' : 'WEEKLY_CHECK_IN.GOAL.ACTIVE_TITLE_OTHER')
+                    | translate: { target: goal.targetDays }
+            }}</strong>
+            <p class="fd-ui-body-sm">
+                {{ 'WEEKLY_CHECK_IN.GOAL.ACTIVE_COPY' | translate: { progress: goal.progressDays, target: goal.targetDays } }}
+            </p>
+        } @else {
+            <strong>{{ data.review.focusTitleKey | translate }}</strong>
+            <p class="fd-ui-body-sm">{{ data.review.focusDescriptionKey | translate }}</p>
+        }
     </section>
 </fd-ui-dialog>

@@ -62,6 +62,7 @@ import {
     FASTING_SESSION_CHECK_INS_PAGE_SIZE,
 } from '../../lib/fasting-page.constants';
 import type { FastingCheckInViewModel, FastingHistorySessionViewModel, FastingMessageViewModel } from '../../lib/fasting-page.types';
+import { isFastingEndedEarly } from '../../lib/fasting-session-state';
 import { FASTING_TOUR } from '../fasting-page-lib/fasting-tour';
 
 @Component({
@@ -264,7 +265,7 @@ export class FastingPageComponent {
                     endedAtLabel: session.endedAtUtc === null ? null : this.formatSessionDateLabel(session.endedAtUtc),
                     sessionTypeLabel: this.getHistorySessionTypeLabel(session),
                     protocolDisplay: this.getHistoryProtocolDisplay(session),
-                    badgeKey: this.getHistoryBadgeKey(session.status),
+                    badgeKey: this.getHistoryBadgeKey(session.status, session),
                     checkIns: checkIns.map(checkIn => this.buildCheckInViewModel(checkIn)),
                     chartCheckIns: checkIns,
                 },
@@ -315,6 +316,9 @@ export class FastingPageComponent {
     }
 
     protected getHistoryAccentColor(session: FastingSession): string {
+        if (isFastingEndedEarly(session)) {
+            return 'var(--fd-color-orange-500)';
+        }
         switch (session.status) {
             case 'Completed': {
                 return 'var(--fd-color-green-500)';
@@ -334,7 +338,10 @@ export class FastingPageComponent {
         }
     }
 
-    protected getHistoryBadgeKey(status: FastingSessionStatus): string {
+    protected getHistoryBadgeKey(status: FastingSessionStatus, session?: FastingSession): string {
+        if (session !== undefined && isFastingEndedEarly(session)) {
+            return 'FASTING.BADGE_ENDED_EARLY';
+        }
         switch (status) {
             case 'Completed': {
                 return 'FASTING.BADGE_COMPLETED';
@@ -557,7 +564,7 @@ export class FastingPageComponent {
             accentColor: this.getHistoryAccentColor(session),
             sessionTypeLabel: this.getHistorySessionTypeLabel(session),
             protocolDisplay: this.getHistoryProtocolDisplay(session),
-            badgeKey: this.getHistoryBadgeKey(session.status),
+            badgeKey: this.getHistoryBadgeKey(session.status, session),
             hasCheckIns: checkInCount > 0,
             checkInCount,
             canViewChart: checkInCount > 1,

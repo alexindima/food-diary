@@ -2,7 +2,6 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
-import { DEFAULT_SATIETY_LEVEL } from '../../../shared/lib/satiety-level.utils';
 import { MealDetailsFieldsComponent } from './meal-details-fields';
 
 const INVALID_SATIETY_LEVEL = 99;
@@ -44,7 +43,7 @@ describe('MealDetailsFieldsComponent satiety', () => {
         expect(changes).toEqual(['2026-05-18']);
     });
 
-    it('normalizes invalid satiety values to default', async () => {
+    it('keeps unanswered ratings empty and normalizes legacy ratings', async () => {
         const fixture = await setupMealDetailsFieldsAsync();
         const component = fixture.componentInstance;
         fixture.detectChanges();
@@ -52,7 +51,7 @@ describe('MealDetailsFieldsComponent satiety', () => {
         component['onPreMealSatietyLevelChange'](null);
         component['onPostMealSatietyLevelChange'](INVALID_SATIETY_LEVEL);
 
-        expect(component['preMealSatietyLevel']()).toBe(DEFAULT_SATIETY_LEVEL);
+        expect(component['preMealSatietyLevel']()).toBeNull();
         expect(component['postMealSatietyLevel']()).toBe(MAX_SATIETY_LEVEL);
     });
 });

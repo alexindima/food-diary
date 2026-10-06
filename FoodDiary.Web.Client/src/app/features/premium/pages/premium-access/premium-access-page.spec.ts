@@ -134,7 +134,7 @@ describe('PremiumAccessPageComponent overview and portal', () => {
         await settleAsync();
 
         expect(component['overview']()).toBeNull();
-        expect(component['errorMessage']()).toBe('Network down');
+        expect(component['errorMessage']()).toBe('PREMIUM_PAGE.ERROR_GENERIC');
         expect(component['isLoading']()).toBe(false);
     });
 
@@ -206,7 +206,7 @@ describe('PremiumAccessPageComponent checkout return', () => {
 
         expect(authService.refreshToken).toHaveBeenCalled();
         expect(component['overview']()).toEqual(premiumOverview);
-        expect(component['errorMessage']()).toBe('Network down');
+        expect(component['errorMessage']()).toBe('PREMIUM_PAGE.ERROR_GENERIC');
         expect(component['isLoading']()).toBe(false);
     });
 });

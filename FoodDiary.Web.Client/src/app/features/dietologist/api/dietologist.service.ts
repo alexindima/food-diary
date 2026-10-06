@@ -5,7 +5,6 @@ import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { loadPagedCollection } from '../../../shared/api/load-paged-collection';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
-import type { DashboardSnapshot } from '../../../shared/models/dashboard.data';
 import type {
     AttentionSignal,
     AttentionSignalSettings,
@@ -23,6 +22,7 @@ import type {
     RecommendationTemplate,
     RecommendationTemplateRequest,
 } from '../../../shared/models/dietologist.data';
+import type { DietologistDashboardSnapshot } from '../lib/dietologist-dashboard.data';
 
 const DEFAULT_CLIENT_DASHBOARD_PAGE_SIZE = 5;
 const DEFAULT_CLIENT_DASHBOARD_TREND_DAYS = 14;
@@ -68,7 +68,7 @@ export class DietologistService extends ApiService {
         });
     }
 
-    public getClientDashboard(clientUserId: string, query: DietologistClientDashboardQuery): Observable<DashboardSnapshot> {
+    public getClientDashboard(clientUserId: string, query: DietologistClientDashboardQuery): Observable<DietologistDashboardSnapshot> {
         const {
             dateFrom,
             dateTo,
@@ -89,7 +89,7 @@ export class DietologistService extends ApiService {
             params['locale'] = locale;
         }
 
-        return this.get<DashboardSnapshot>(`clients/${clientUserId}/dashboard`, params);
+        return this.get<DietologistDashboardSnapshot>(`clients/${clientUserId}/dashboard`, params);
     }
 
     public getClientGoals(clientUserId: string): Observable<DietologistClientGoals> {
