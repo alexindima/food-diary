@@ -184,8 +184,18 @@ Remove-Item -LiteralPath $unavailable -ErrorAction SilentlyContinue
     [IO.File]::WriteAllText($fakeGraphManagerPath,$fakeGraphManagerSource,[Text.UTF8Encoding]::new($false))
     $cleanSafeTool = Join-Path $cleanToolsRoot 'clean-safe.ps1'
     [IO.File]::WriteAllText($cleanSafeTool, @'
-param([switch]$Fail, [switch]$Probe)
+param([switch]$Fail, [switch]$Probe, [string]$BarrierPath, [string]$PeerPath)
 if ($Fail) { exit 7 }
+if ($BarrierPath) {
+    [IO.File]::WriteAllText($BarrierPath, (Get-Location).Path)
+    $deadline = [DateTime]::UtcNow.AddSeconds(20)
+    while (-not (Test-Path -LiteralPath $PeerPath)) {
+        if ([DateTime]::UtcNow -ge $deadline) { throw 'Partitioned snapshot peer did not run concurrently.' }
+        Start-Sleep -Milliseconds 50
+    }
+    @{ root = (Get-Location).Path } | ConvertTo-Json -Compress
+    return
+}
 if ($Probe) {
     $root = (Get-Location).Path
     @{ root = $root; overlay = [IO.File]::ReadAllText((Join-Path $root 'CleanScope/overlay.txt')); foreignExists = (Test-Path -LiteralPath (Join-Path $root 'foreign-overlay.txt')) } | ConvertTo-Json -Compress
@@ -346,6 +356,47 @@ if ($StaleExitCode) { $global:LASTEXITCODE = 17 }
         -Format Json | ConvertFrom-Json
     if ($emptyPlan.changedPathCount -ne 0 -or @($emptyPlan.groups).Count -ne 0) {
         throw 'Affected smoke plan did not return a stable empty-groups contract for an empty delta.'
+    }
+    $partitionProcesses = @()
+    try {
+        $coreBarrier = Join-Path $fixtureRoot 'partition-core.started'
+        $workspaceBarrier = Join-Path $fixtureRoot 'partition-workspace.started'
+        $partitionRunner = Join-Path $fixtureRoot 'partition-runner.ps1'
+        [IO.File]::WriteAllText($partitionRunner, @'
+param($Guard, $Tool, $Partition, $Barrier, $Peer)
+& $Guard -ToolPath $Tool -SnapshotPartition "tools-audit-Full:$Partition" -ToolArguments @{ BarrierPath=$Barrier; PeerPath=$Peer }
+'@, [Text.UTF8Encoding]::new($false))
+        foreach ($partition in @('Core', 'Workspace')) {
+            $barrier = if ($partition -eq 'Core') { $coreBarrier } else { $workspaceBarrier }
+            $peer = if ($partition -eq 'Core') { $workspaceBarrier } else { $coreBarrier }
+            $start = [Diagnostics.ProcessStartInfo]::new()
+            $start.FileName = (Get-Process -Id $PID).Path
+            $start.UseShellExecute = $false
+            $start.RedirectStandardOutput = $true
+            $start.RedirectStandardError = $true
+            foreach ($argument in @('-NoLogo', '-NoProfile', '-File', $partitionRunner, (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1'), $cleanSafeTool, $partition, $barrier, $peer)) { $start.ArgumentList.Add($argument) }
+            $process = [Diagnostics.Process]::new()
+            $process.StartInfo = $start
+            $null = $process.Start()
+            $partitionProcesses += [pscustomobject]@{ Process=$process; Output=$process.StandardOutput.ReadToEndAsync(); Error=$process.StandardError.ReadToEndAsync() }
+        }
+        $partitionRoots = @(
+            foreach ($item in $partitionProcesses) {
+                if (-not $item.Process.WaitForExit(45000)) { throw 'Concurrent snapshot partition process timed out.' }
+                $output = $item.Output.GetAwaiter().GetResult()
+                $errors = $item.Error.GetAwaiter().GetResult()
+                if ($item.Process.ExitCode -ne 0) { throw "Concurrent snapshot partition failed: $errors" }
+                ($output | ConvertFrom-Json).root
+            }
+        )
+        if (@($partitionRoots | Sort-Object -Unique).Count -ne 2 -or $partitionRoots -contains $cleanSnapshotRoot) {
+            throw 'Long-running partitions reused each other or the ordinary query checkout.'
+        }
+    } finally {
+        foreach ($item in $partitionProcesses) {
+            if (-not $item.Process.HasExited) { $item.Process.Kill($true) }
+            $item.Process.Dispose()
+        }
     }
 } finally {
     if ($writerJob) {

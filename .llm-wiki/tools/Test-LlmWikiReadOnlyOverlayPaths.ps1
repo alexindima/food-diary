@@ -13,12 +13,23 @@ $overlayFunction = $guardAst.Find({
     $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'Get-WorkspaceOverlayPaths'
 }, $false)
 . ([scriptblock]::Create($overlayFunction.Extent.Text))
-foreach ($name in @('Test-CommonReadOnlyOverlayPath', 'Get-ReadOnlySnapshotSlotScope')) {
+foreach ($name in @('Test-CommonReadOnlyOverlayPath', 'Get-ReadOnlySnapshotSlotScope', 'Get-ReadOnlySnapshotFingerprint', 'Get-FileHashOrMissing')) {
     $function = $guardAst.Find({
         param($node)
         $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $name
     }, $false)
     . ([scriptblock]::Create($function.Extent.Text))
+}
+$defaultSlot = Get-ReadOnlySnapshotFingerprint -RepositoryRoot $repositoryRoot -OverlayPath @() -SlotKey
+$coreSlot = Get-ReadOnlySnapshotFingerprint -RepositoryRoot $repositoryRoot -OverlayPath @() -SlotKey -Partition 'tools-audit-Full:Core'
+$workspaceSlot = Get-ReadOnlySnapshotFingerprint -RepositoryRoot $repositoryRoot -OverlayPath @() -SlotKey -Partition 'tools-audit-Full:Workspace'
+if (@(@($defaultSlot, $coreSlot, $workspaceSlot) | Sort-Object -Unique).Count -ne 3 -or
+    $coreSlot -cne (Get-ReadOnlySnapshotFingerprint -RepositoryRoot $repositoryRoot -OverlayPath @() -SlotKey -Partition 'tools-audit-Full:Core')) {
+    throw 'Audit partitions collided with short queries or lost stable checkout reuse.'
+}
+$sourceIdentity = Get-ReadOnlySnapshotFingerprint -RepositoryRoot $repositoryRoot -OverlayPath @()
+if ($sourceIdentity -cne (Get-ReadOnlySnapshotFingerprint -RepositoryRoot $repositoryRoot -OverlayPath @() -Partition 'tools-audit-Full:Core')) {
+    throw 'Audit partition changed the source content identity.'
 }
 $selectorFunction = $guardAst.Find({
     param($node)

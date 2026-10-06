@@ -2,6 +2,7 @@
 param(
     [Parameter(Mandatory)][string]$ToolPath,
     [hashtable]$ToolArguments = @{},
+    [string]$SnapshotPartition,
     [switch]$PrepareCodeGraph,
     [switch]$BackendOnlyRefresh
 )
@@ -152,13 +153,15 @@ function Get-ReadOnlySnapshotFingerprint {
     param(
         [Parameter(Mandatory)][string]$RepositoryRoot,
         [Parameter(Mandatory)][AllowEmptyCollection()][string[]]$OverlayPath,
-        [switch]$SlotKey
+        [switch]$SlotKey,
+        [string]$Partition
     )
 
     $head = (Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for the isolated read-only snapshot.').Lines[0].Trim()
     $material = [Collections.Generic.List[string]]::new()
     $material.Add('schema=6')
     $material.Add("head=$head")
+    if ($SlotKey -and -not [string]::IsNullOrWhiteSpace($Partition)) { $material.Add("partition=$Partition") }
     foreach ($relativePath in @($OverlayPath | Sort-Object -Unique)) {
         $material.Add($(if ($SlotKey) { "scope=$relativePath" } else { "$relativePath=$(Get-FileHashOrMissing (Join-Path $RepositoryRoot $relativePath))" }))
     }
@@ -426,7 +429,7 @@ $snapshotContentFingerprint = Get-ReadOnlySnapshotFingerprint -RepositoryRoot $s
 # Serialize reuse within one HEAD/scope slot. New edits refresh its overlay,
 # avoiding a full checkout per keystroke while other scopes retain concurrency.
 $slotScope = @(Get-ReadOnlySnapshotSlotScope -OverlayPath $overlayPaths -RequestedScope $requestedScopePaths)
-$snapshotFingerprint = Get-ReadOnlySnapshotFingerprint -RepositoryRoot $sourceRepositoryRoot -OverlayPath $slotScope -SlotKey
+$snapshotFingerprint = Get-ReadOnlySnapshotFingerprint -RepositoryRoot $sourceRepositoryRoot -OverlayPath $slotScope -SlotKey -Partition $SnapshotPartition
 Write-ReadOnlyTiming -Stage 'outer-fingerprint-ready'
 $snapshotRoot = Join-Path $snapshotParent $snapshotFingerprint
 $readyPath = Join-Path $snapshotParent "$snapshotFingerprint.ready"

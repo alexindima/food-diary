@@ -147,7 +147,9 @@ CI log, so slow corpora remain visible without retaining full worker output.
 
 Read-only queries whose overlays contain only common Wiki, build and CLI-reader
 inputs share one exclusively locked checkout for the same HEAD. Their scope does
-not change that checkout's contents. Product edits keep separate scope slots;
+not change that checkout's contents. Long Full audits use explicit profile/shard
+partitions, so independent shards can hold their own private checkout while short
+queries retain common-slot reuse. Product edits keep separate scope slots;
 every reuse still verifies current overlay hashes and required tool contents,
 and mutation detection discards a poisoned clone. The cold-checkout regression
 therefore builds an empty private graph once for backend planning and the twelve

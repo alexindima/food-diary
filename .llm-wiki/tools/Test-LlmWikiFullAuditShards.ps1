@@ -48,6 +48,9 @@ $source = [IO.File]::ReadAllText($tool)
 if (-not $source.Contains('AuditShard = $AuditShard') -or -not $source.Contains('[string]$AuditShard = ''All''')) {
     throw 'Full audit lost shard propagation into the isolated snapshot or the exhaustive default.'
 }
+if (-not $source.Contains('-SnapshotPartition "tools-audit-${Profile}:$AuditShard"')) {
+    throw 'Full audit shards must retain distinct private checkout partitions.'
+}
 foreach ($profile in @('Focused', 'Core')) {
     $rejected = $false
     try { & $tool -Profile $profile -AuditShard Governed | Out-Null }

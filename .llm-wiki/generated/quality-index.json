@@ -128,11 +128,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-      "nonBlankLines": 536,
-      "decisionPoints": 98,
+      "nonBlankLines": 539,
+      "decisionPoints": 99,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 159.72
+      "structuralRiskScore": 161.28
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
@@ -1586,11 +1586,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-      "nonBlankLines": 536,
-      "decisionPoints": 98,
+      "nonBlankLines": 539,
+      "decisionPoints": 99,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 159.72
+      "structuralRiskScore": 161.28
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiSelfMaintenance.ps1",

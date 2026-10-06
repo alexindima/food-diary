@@ -199,14 +199,18 @@
       "pageSha256": "bf06c7515995b5983125ae2d8469bc357431d468feed457a4ae9ab443288c4a4",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
-          "sha256": "16f301e05306a584f9bcecaf20216dd4bf1b64e4a7292c0b8ad5c16dcb98129a"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+          "sha256": "cefc9d904d7624ad7ddc72ccbeb16a6d4f19b5027570593ebd0c8b20c95531d9"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
+          "sha256": "0e82df197b653e62d8e4857137c84150a67fb746d04c1de74795d208177b663e"
         }
       ],
-      "reason": "Reviewed current module/project boundary resolution, exact source-content measurement guards, nonempty benchmark records, request-local quality content reuse and removal of the unreferenced legacy scoring helper. Existing source authority, adaptive workflow, removal-evidence requirements and static test-reference/security limitations remain accurate. Quality output matched the old algorithm byte-for-byte on stable inputs; focused regressions passed.",
+      "reason": "Reviewed explicit profile/shard checkout partitions for long Full audits. Source content identity, ordinary common-slot reuse, overlay hashes, mutation rejection and recovery remain intact. Real concurrent subprocess barriers prove distinct private roots; the frozen Full assertion inventory is unchanged. Regenerated metrics preserve static coverage and security-discovery limitations.",
       "baseRef": "HEAD",
-      "gitHead": "4ed86c59d8b7b1d42fac6cd480c2e7fb16d026ca",
-      "reviewedAtUtc": "2026-10-06T01:50:02.0386837Z"
+      "gitHead": "e25269af244b29a8e29ea0707e1594a8deebfe35",
+      "reviewedAtUtc": "2026-10-06T03:00:28.9518867Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -859,13 +863,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "bf53553efea5bc768b86ef9817d29431f35b20ca10c5b11608f2329a4c8b31d4"
+          "sha256": "2cd2dd3e6ed9b8ca8dbb235d56afa2492e5a51d3c358fbd6657c924eb96a54cc"
         }
       ],
-      "reason": "Reviewed current module/project boundary resolution, exact source-content measurement guards, nonempty benchmark records, request-local quality content reuse and removal of the unreferenced legacy scoring helper. Existing source authority, adaptive workflow, removal-evidence requirements and static test-reference/security limitations remain accurate. Quality output matched the old algorithm byte-for-byte on stable inputs; focused regressions passed.",
+      "reason": "Reviewed explicit profile/shard checkout partitions for long Full audits. Source content identity, ordinary common-slot reuse, overlay hashes, mutation rejection and recovery remain intact. Real concurrent subprocess barriers prove distinct private roots; the frozen Full assertion inventory is unchanged. Regenerated metrics preserve static coverage and security-discovery limitations.",
       "baseRef": "HEAD",
-      "gitHead": "4ed86c59d8b7b1d42fac6cd480c2e7fb16d026ca",
-      "reviewedAtUtc": "2026-10-06T01:50:03.6084296Z"
+      "gitHead": "e25269af244b29a8e29ea0707e1594a8deebfe35",
+      "reviewedAtUtc": "2026-10-06T03:00:29.7556828Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -961,13 +965,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "bf53553efea5bc768b86ef9817d29431f35b20ca10c5b11608f2329a4c8b31d4"
+          "sha256": "2cd2dd3e6ed9b8ca8dbb235d56afa2492e5a51d3c358fbd6657c924eb96a54cc"
         }
       ],
-      "reason": "Reviewed current module/project boundary resolution, exact source-content measurement guards, nonempty benchmark records, request-local quality content reuse and removal of the unreferenced legacy scoring helper. Existing source authority, adaptive workflow, removal-evidence requirements and static test-reference/security limitations remain accurate. Quality output matched the old algorithm byte-for-byte on stable inputs; focused regressions passed.",
+      "reason": "Reviewed explicit profile/shard checkout partitions for long Full audits. Source content identity, ordinary common-slot reuse, overlay hashes, mutation rejection and recovery remain intact. Real concurrent subprocess barriers prove distinct private roots; the frozen Full assertion inventory is unchanged. Regenerated metrics preserve static coverage and security-discovery limitations.",
       "baseRef": "HEAD",
-      "gitHead": "4ed86c59d8b7b1d42fac6cd480c2e7fb16d026ca",
-      "reviewedAtUtc": "2026-10-06T01:50:04.7391039Z"
+      "gitHead": "e25269af244b29a8e29ea0707e1594a8deebfe35",
+      "reviewedAtUtc": "2026-10-06T03:00:30.5940552Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

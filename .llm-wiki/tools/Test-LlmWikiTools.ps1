@@ -17,6 +17,7 @@ if ($Profile -in @('Core', 'Full') -and [string]::IsNullOrWhiteSpace([string]$en
     & (Join-Path $toolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') `
         -ToolPath $PSCommandPath `
         -ToolArguments @{ Profile = $Profile; AuditShard = $AuditShard; MaxConcurrency = $MaxConcurrency } `
+        -SnapshotPartition "tools-audit-${Profile}:$AuditShard" `
         -PrepareCodeGraph
     if (-not $? -or ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0)) { exit 1 }
     return
