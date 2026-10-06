@@ -8,19 +8,19 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1939,
-    "symbols": 734,
+    "typescriptFiles": 1963,
+    "symbols": 741,
     "routes": 106,
     "features": 46,
-    "specs": 697,
+    "specs": 698,
     "localeFiles": 5,
     "roles": {
       "Component": 483,
       "Directive": 12,
       "Facade": 86,
-      "Other": 20,
+      "Other": 25,
       "Pipe": 4,
-      "Service": 129
+      "Service": 131
     }
   },
   "features": [
@@ -4723,7 +4723,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
-      "line": 29
+      "line": 32
     },
     {
       "name": "PublicProductService",
@@ -6292,6 +6292,55 @@
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/recipe-lookup.service.ts",
       "line": 10
+    },
+    {
+      "name": "BaseService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api.base.service.ts",
+      "line": 14
+    },
+    {
+      "name": "ApiModule",
+      "role": "Other",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api.module.ts",
+      "line": 13
+    },
+    {
+      "name": "ProductsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/products.service.ts",
+      "line": 112
+    },
+    {
+      "name": "Configuration",
+      "role": "Other",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/configuration.ts",
+      "line": 37
+    },
+    {
+      "name": "CustomHttpParameterCodec",
+      "role": "Other",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/encoder.ts",
+      "line": 7
+    },
+    {
+      "name": "IdentityHttpParameterCodec",
+      "role": "Other",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/encoder.ts",
+      "line": 21
+    },
+    {
+      "name": "OpenApiHttpParams",
+      "role": "Other",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/query.params.ts",
+      "line": 25
     },
     {
       "name": "UserService",

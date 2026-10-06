@@ -23,36 +23,40 @@
       "sources": [
         {
           "path": "docs/README.md",
-          "sha256": "65f2f3407df1ada0aa232000a6b9fed054f452911b97e411d592dcfb59f40637"
+          "sha256": "15427e5574cf09f4f95ca84a7276b58bdfdb1b574c2cdf190e489dc087e3a7f0"
         }
       ],
-      "reason": "Checked the recipe import guide and navigation against combined current sources, including optional clipboard suggestions, video limits, provider configuration, proxy and temporary storage constraints and conditional Instagram video availability. Current master tooling and fixes are preserved; deployment is outside this merge.",
-      "baseRef": "master",
-      "gitHead": "8d73ec7203c30824b9313d697141f31a1e887b97",
-      "reviewedAtUtc": "2026-10-04T18:04:02.5548865Z"
+      "reason": "Frontend navigation now documents the Products SDK pilot and links its authoritative guide. The docs index adds that guide; the existing evidence and authority model is unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
+      "reviewedAtUtc": "2026-10-06T16:55:28.9914308Z"
     },
     {
       "pageId": "module.frontend",
       "pagePath": ".llm-wiki/modules/frontend.md",
-      "pageSha256": "3f0f747129859099031f12204d44bc86a67e1eae4d93bee832b13448e877e1b2",
+      "pageSha256": "1356ffeeedbac6bb4ccbabc0888224e29bf9b2b89a5747881dcbbf770b89c509",
       "sources": [
         {
-          "path": "docs/frontend/FRONTEND_ARCHITECTURE.md",
-          "sha256": "c7c51d4fe029c71ad148b47c4ada0bb309bf3f2ac58118eec19e114bbaefe282"
+          "path": "docs/frontend/API_SDK.md",
+          "sha256": "a50cad92fa72f64c72390ef30e0d07931e04e174b991ef9a236583562fb176e5"
         },
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "dd7d95bd6c0be878d7ce7eef2f5c21266f0aa0ad0e7cf1566eae136abedcec4c"
+          "sha256": "fce5d9b5b1ac7cf4eb40dd4acca59c6fddddc2caafe30e1da7f72f24a8081498"
         },
         {
-          "path": "FoodDiary.Web.Client/src/app/features/AGENTS.md",
-          "sha256": "a6d97182073a246c9dc9fa52882726d72824b550ffdcee3c3f587716611c33b7"
+          "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
+          "sha256": "38f1d8715fa20a5612200cbc27ec0682c77c604b8786f2f7e8ed3344c997a7be"
+        },
+        {
+          "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/products-sdk.ts",
+          "sha256": "6d4c9c2d9e5441756112e18e0b434fb4acb1f02d1f55fa8324b23a5d3f5ef273"
         }
       ],
-      "reason": "Reviewed frontend ownership against AGENTS and FRONTEND_ARCHITECTURE: pure shared models, capability contracts, composition providers and independent scoped import rules match final code. Combined npm verify passed 5042 tests; no backend ownership moved by the refactor.",
+      "reason": "Frontend navigation now documents the Products SDK pilot and links its authoritative guide. The docs index adds that guide; the existing evidence and authority model is unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "9639b3858dd8b01bc3ff1f32e3871d8710192a34",
-      "reviewedAtUtc": "2026-10-03T04:42:21.50771Z"
+      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
+      "reviewedAtUtc": "2026-10-06T16:55:29.2104245Z"
     },
     {
       "pageId": "module.mail-services",
@@ -124,14 +128,14 @@
       "pageSha256": "1ea0c12ce78af5d45542c40530c4a07ae52fdd0a10b3ab76e7f37e89601f1226",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "ace3dbd910be6380b0085a29c778224bf12e43903530c693d85288d17e6fc166"
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "fce5d9b5b1ac7cf4eb40dd4acca59c6fddddc2caafe30e1da7f72f24a8081498"
         }
       ],
-      "reason": "Reviewed frontend index and repository catalog guidance against the Angular Vite targets, explicit tsconfig and regenerated deterministic inventories; build commands and public UI contracts remain accurate.",
+      "reason": "Frontend navigation now documents the Products SDK pilot and links its authoritative guide. The docs index adds that guide; the existing evidence and authority model is unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "4303e0f849219ddef50a861335783670ae8bcff5",
-      "reviewedAtUtc": "2026-10-06T00:22:19.2570939Z"
+      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
+      "reviewedAtUtc": "2026-10-06T16:55:29.4109400Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -139,14 +143,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "docs/adr/README.md",
-          "sha256": "aea3400da4c2f3892203b59365fa5506089193718e113db3ccfe6a634c9a89f2"
+          "path": "docs/README.md",
+          "sha256": "15427e5574cf09f4f95ca84a7276b58bdfdb1b574c2cdf190e489dc087e3a7f0"
         }
       ],
-      "reason": "Expanded release QA verifies current authentication and nutrition behavior, external USDA references and bounded provider resolution, schema migration and rollback, fasting controls, export feedback, locale pairs, dialog names and native keyboard navigation through actual local browser scenarios and focused plus full regression checks.",
+      "reason": "Frontend navigation now documents the Products SDK pilot and links its authoritative guide. The docs index adds that guide; the existing evidence and authority model is unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "reviewedAtUtc": "2026-10-06T13:13:05.8850730Z"
+      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
+      "reviewedAtUtc": "2026-10-06T16:55:29.6657473Z"
     },
     {
       "pageId": "system.quality-index",
@@ -218,14 +222,14 @@
       "pageSha256": "6e6ace9a3ed3b5cc55eeeb62d895581342cb6f0c37181d14283e16f69fdcb6c7",
       "sources": [
         {
-          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "6e847581ed28f2df7433f16acc02717da29e8470e910f87060553da7161fb765"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "d4a5caecfb6bb5d9eec95ab183f36ef95e3cf2379d35ec8f060e9dd403849ecf"
         }
       ],
-      "reason": "Combined expanded local QA source freeze reviewed: user access precedes USDA provider calls, indexed external identifiers and nullable HTTP response preserved, lookup deadlines and rate admission bounded, native clean/upgrade/rollback/bundle verified, actual browser source-link recovery and CRUD/export/keyboard/locale/responsive scenarios passed; current reviewed21-file admin batch restores drafts and correct search ordering.",
+      "reason": "The new SDK job exports the actual host contract and checks a normalized Products slice plus generated code. Existing snapshot and breaking-change guards stay in place; no production presentation routes or payloads changed. Frontend adapters keep application models and error behavior while consuming generated wire DTOs.",
       "baseRef": "HEAD",
-      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "reviewedAtUtc": "2026-10-06T14:21:56.9945320Z"
+      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
+      "reviewedAtUtc": "2026-10-06T16:55:29.9036294Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -234,13 +238,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "162aa89f87b61e7fceccd24858a6f237c5093c290a344aa13afa7359cdecf511"
+          "sha256": "37e35986d9a0c6007b1e987f3f853014a183d7c6e9a5009777d742fe87bdf200"
         }
       ],
-      "reason": "Feature-owned adapters and page-provided facades retain dependency direction. Pagination helpers are deliberately scoped to each app. No project edge backend graph foreign aggregate write or removal rule changed; refreshed projection does not change this workflow.",
+      "reason": "New route-state adapters remain feature-owned and page-provided, and pagination parsers are deliberately shared within each application. No project reference, backend module, cross-module write capability, or removal policy changed; projection changes do not alter this workflow.",
       "baseRef": "HEAD",
-      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
-      "reviewedAtUtc": "2026-10-06T17:16:32.1195979Z"
+      "gitHead": "154b78e50e5c35a05cd2e6880e912aca5ff1ae04",
+      "reviewedAtUtc": "2026-10-06T16:00:21.0877853Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -583,14 +587,18 @@
       "pageSha256": "2b42317f0646f66ef48a014336e0cd5c11895a45ad80f867af0b849c6192652e",
       "sources": [
         {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "fce5d9b5b1ac7cf4eb40dd4acca59c6fddddc2caafe30e1da7f72f24a8081498"
+        },
+        {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "5a5442b57f4010bdb9c14c4b7844857a904ff9c8fa372e8e3c61109139648b0c"
+          "sha256": "f44d895482f467aeeac8046583a09876820554de10cb70a672cbba975ac9c07c"
         }
       ],
-      "reason": "Reviewed quality-index changes from Storybook imports and verified the existing workflow guidance; Playwright CLI captures rendered Storybook state, console and interaction evidence outside the repository.",
+      "reason": "CI adds a separate SDK check job without removing existing Wiki, formatting, build or test gates. npm verify adds SDK tests and reproducibility. Products HTTP adapters changed; templates, UI copy, state ownership and rendered contracts are unchanged, so existing visual-UI guidance remains applicable when those surfaces change.",
       "baseRef": "HEAD",
-      "gitHead": "4303e0f849219ddef50a861335783670ae8bcff5",
-      "reviewedAtUtc": "2026-10-06T00:22:20.7398328Z"
+      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
+      "reviewedAtUtc": "2026-10-06T16:55:30.4445662Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -667,21 +675,17 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "2e9dd8106543f7a3b09cec154c061aba14fff8f24034038422139eeda81c43cd",
+      "pageSha256": "f8ab74cfc6bb46a83d42034e896a5703955eaef57cba0db5e77f7aeae3073d90",
       "sources": [
         {
-          "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
-          "sha256": "8f6cfdbac46c6086c78909bf2d4506b294bb650458fd2fa01bb62368844d0946"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
-          "sha256": "eff28ecb416b3624cd5f0de9a8f2bb203a52efd7021d4b439a4ade4ae61b5287"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "d4a5caecfb6bb5d9eec95ab183f36ef95e3cf2379d35ec8f060e9dd403849ecf"
         }
       ],
-      "reason": "Reviewed dependency-aware generation, owned process cleanup and focused verification contracts against LlmWikiProcess.ps1, Test-LlmWikiProcess.ps1 and the corpus regression. Kill-tree behavior remains the same; the new bounded termination observer recognizes Linux defunct states while rejecting a live process. Windows PowerShell 7/5.1 and controlled Linux checks passed; quality-index metrics were regenerated and source/index transaction behavior remains valid.",
+      "reason": "CI adds a separate SDK check job without removing existing Wiki, formatting, build or test gates. npm verify adds SDK tests and reproducibility. Products HTTP adapters changed; templates, UI copy, state ownership and rendered contracts are unchanged, so existing visual-UI guidance remains applicable when those surfaces change.",
       "baseRef": "HEAD",
-      "gitHead": "d618f4b90cfc9b8b86854ead921110cee2935023",
-      "reviewedAtUtc": "2026-10-05T21:58:55.5996565Z"
+      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
+      "reviewedAtUtc": "2026-10-06T16:55:30.7526292Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -863,13 +867,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c2b8d6c9b272097f43240975680a76fbb70e9bbd4c5d244fc6c14e5599053079"
+          "sha256": "fab93159f15b793c67d64f0bcbaf0db98a4721a53725cc3f98e85d588a0b3c66"
         }
       ],
-      "reason": "Tagged cache identity stale-request page recovery and pending retry boundaries received focused regression and rendered coverage. Static references remain navigation evidence; final npm verify5489 and browser outputs are independent execution proof. Workflow semantics remain unchanged.",
+      "reason": "Reviewed tagged result and totals caches, request identity fencing, page recovery and pending retry regressions. Static test references remain navigation evidence; executed focused and joint checks supply verification separately. The refreshed projection does not change quality-risk semantics.",
       "baseRef": "HEAD",
-      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
-      "reviewedAtUtc": "2026-10-06T17:16:33.7464437Z"
+      "gitHead": "154b78e50e5c35a05cd2e6880e912aca5ff1ae04",
+      "reviewedAtUtc": "2026-10-06T16:00:23.6468485Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -919,14 +923,14 @@
       "pageSha256": "3817fa7e8462586fb846f88ff28972cca16744b121049e5776c9cc89043e7e27",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "f95543f786a6d29c980598ede659bca657661ff291d112abfc77309fff43022e"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "d4a5caecfb6bb5d9eec95ab183f36ef95e3cf2379d35ec8f060e9dd403849ecf"
         }
       ],
-      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "reason": "CI adds a separate SDK check job without removing existing Wiki, formatting, build or test gates. npm verify adds SDK tests and reproducibility. Products HTTP adapters changed; templates, UI copy, state ownership and rendered contracts are unchanged, so existing visual-UI guidance remains applicable when those surfaces change.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:13.0999093Z"
+      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
+      "reviewedAtUtc": "2026-10-06T16:55:31.0881070Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -965,13 +969,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c2b8d6c9b272097f43240975680a76fbb70e9bbd4c5d244fc6c14e5599053079"
+          "sha256": "fab93159f15b793c67d64f0bcbaf0db98a4721a53725cc3f98e85d588a0b3c66"
         }
       ],
-      "reason": "This frontend batch changes navigation and own-mail read feedback, with no authentication authorization credential provider sharing service topology or financial operation boundary changes. Refreshed static quality evidence is not a vulnerability verdict; no security workflow text change is needed.",
+      "reason": "Only frontend navigation state and own-mail read feedback changed in this batch; no authentication authorization provider credential financial sharing or service topology boundary changed. Static quality projection updates do not constitute a security verdict and need no workflow text change.",
       "baseRef": "HEAD",
-      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
-      "reviewedAtUtc": "2026-10-06T17:16:34.6293278Z"
+      "gitHead": "154b78e50e5c35a05cd2e6880e912aca5ff1ae04",
+      "reviewedAtUtc": "2026-10-06T16:00:24.8270904Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1108,17 +1112,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "3d57289b5d62f6227fc6ecc9e97fdf70a4a2a92552fddbb0b1a5bf508e66e409"
+          "sha256": "db3f5cb61b01769c23bd32c4107fc045280db152a46e71ce8adc7244b19af252"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "d9591ac9487d2dd2d04f415d696e89e9951b630fef21a2abbbd3f29b5b6909fa"
+          "sha256": "0cceb2cad3b60d60060d9b90db844a484fa226e4884616da87a0a78f47ceb349"
         }
       ],
-      "reason": "Refreshed frontend projections include typed list query adapters parsers tokens and their direct specs, existing routed consumers, optional detail fallback and inherited API calls. Trace routing and static evidence limitations are unchanged.",
+      "reason": "New list parsers injection tokens route adapters and specs are discoverable in the refreshed frontend projections. Existing routed consumers and inherited API requests remain compatible; trace routing and its static evidence limits are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
-      "reviewedAtUtc": "2026-10-06T17:16:35.4704647Z"
+      "gitHead": "154b78e50e5c35a05cd2e6880e912aca5ff1ae04",
+      "reviewedAtUtc": "2026-10-06T16:00:25.8382259Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1198,17 +1202,21 @@
     {
       "pageId": "workflow.frontend-contract-review",
       "pagePath": ".llm-wiki/workflows/frontend-contract-review.md",
-      "pageSha256": "4ac1b340bc0fba5754c6652cf0a6966c2f9bd04b7ec8b896bcd8f9edf130a025",
+      "pageSha256": "7518e6f50619dd2b2e178a80bf69fadcadb8530541ab52a1b49adcc061d52453",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "3d57289b5d62f6227fc6ecc9e97fdf70a4a2a92552fddbb0b1a5bf508e66e409"
+          "path": "docs/frontend/API_SDK.md",
+          "sha256": "a50cad92fa72f64c72390ef30e0d07931e04e174b991ef9a236583562fb176e5"
+        },
+        {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "fce5d9b5b1ac7cf4eb40dd4acca59c6fddddc2caafe30e1da7f72f24a8081498"
         }
       ],
-      "reason": "Reviewed optional query-state tokens, page-level providers, selectors and bindings, unchanged public inputs/outputs, EN/RU text and existing transport contracts. Bug detail ID lookup preserves list URL while excluding optional list filters from its request. Executed regression and browser proofs support the changes; workflow text remains accurate.",
+      "reason": "The new SDK job exports the actual host contract and checks a normalized Products slice plus generated code. Existing snapshot and breaking-change guards stay in place; no production presentation routes or payloads changed. Frontend adapters keep application models and error behavior while consuming generated wire DTOs.",
       "baseRef": "HEAD",
       "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
-      "reviewedAtUtc": "2026-10-06T17:16:32.9213636Z"
+      "reviewedAtUtc": "2026-10-06T16:55:30.1543973Z"
     },
     {
       "pageId": "workflow.query-context",
