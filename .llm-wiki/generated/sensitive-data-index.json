@@ -6,11 +6,11 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1620,
+    "candidateFields": 1621,
     "credential": 156,
     "identity": 175,
     "health": 753,
-    "financial": 132,
+    "financial": 133,
     "privateContent": 404,
     "boundaryFiles": 212,
     "potentialLoggingLeads": 1,
@@ -1108,6 +1108,13 @@
       "type": "string",
       "path": "Shared/FoodDiary.Email.Contracts/Email/Common/EmailOptions.cs",
       "line": 11
+    },
+    {
+      "category": "financial",
+      "name": "Transaction",
+      "type": "SqliteTransaction",
+      "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
+      "line": 133
     },
     {
       "category": "financial",

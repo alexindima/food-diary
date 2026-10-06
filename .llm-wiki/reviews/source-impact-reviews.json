@@ -306,29 +306,29 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "79e2b9bc242bb6bf6a201d581c7f30558c836dbd87f1590cc8d3ada118c211c2",
+      "pageSha256": "06d18ddbd611efb1039159fe331da720a4bd60d8ad1e0636f4530b03b2d982fc",
       "sources": [
         {
-          "path": ".llm-wiki/tools/LlmWikiCorpusEvaluation.ps1",
-          "sha256": "66d453aeec23f763369d1b788408ecfe6bf13e4cfd7348fe40c10f560dd51249"
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
+          "sha256": "3587dc7f8b280766ae41ed86234a171b70440ccc203f45781077a61b19fd15d4"
         },
         {
-          "path": ".llm-wiki/tools/Measure-LlmWikiRuntimeContextEvaluation.ps1",
-          "sha256": "8119d212e6cf7201f04e723753edb5803c5cdd108578ba93c5599612a0d3d079"
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
+          "sha256": "e438c9fe5230a2b0eaa2566af8610675348c912d7745157ad5df6edd701656c7"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
-          "sha256": "0227d1c7e83505c78a3c9122d36c1aa1021f52c92844227395c00e66cc3379b5"
+          "path": "FoodDiary.Development.Mcp/Wiki/WikiContextSearchEvaluationRunner.cs",
+          "sha256": "7a983cfe56d06bb12776421230c848e4284d2efb1a656209b6fc56aeb811532a"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1",
-          "sha256": "ecc077ad50a8c91bf606c4205cc9bbd076e4d6752cb40ebbb334fddcc1fabab4"
+          "path": "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.Batch.cs",
+          "sha256": "678054f828359c350dfda8e926aa3d81fddaa58dd871c3fb20cbf69fc6c0f04f"
         }
       ],
-      "reason": "Reviewed bounded corpus diagnostics and default serial .NET scheduling after a 302-case comparison showed no parallel speed gain; Git frontend inventories preserve application evidence and exclude ignored reports. Updated quality remains navigation evidence.",
-      "baseRef": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "gitHead": "bd04b3da8960e5bea1ecffb6817a1d41e0cc258b",
-      "reviewedAtUtc": "2026-10-06T12:52:10.2784611Z"
+      "reason": "Reviewed corpus-scoped read-only transaction, exact 302-case ranking parity, bounded non-pooled page cache, concurrent writer snapshot isolation and cancellation disposal. Interactive queries retain per-request freshness. Runtime inventory changed only its source fingerprint; SqliteTransaction is a syntactic financial candidate, not financial content. Static quality remains navigation evidence.",
+      "baseRef": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
+      "gitHead": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
+      "reviewedAtUtc": "2026-10-06T14:03:42.1883739Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -869,14 +869,14 @@
       "pageSha256": "b60f38c1d4bb6323e6d9a1128ef46cbe3f2c097c8abd5f71e062f9d48a25997c",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "bde33aac0fe4e4ae6e99be233129e8142b3d6149eb84af4b92397cac55e05f80"
         }
       ],
-      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
-      "baseRef": "master",
-      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
-      "reviewedAtUtc": "2026-10-06T10:21:15.9785685Z"
+      "reason": "Reviewed corpus-scoped read-only transaction, exact 302-case ranking parity, bounded non-pooled page cache, concurrent writer snapshot isolation and cancellation disposal. Interactive queries retain per-request freshness. Runtime inventory changed only its source fingerprint; SqliteTransaction is a syntactic financial candidate, not financial content. Static quality remains navigation evidence.",
+      "baseRef": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
+      "gitHead": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
+      "reviewedAtUtc": "2026-10-06T14:03:42.9207118Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -915,13 +915,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "943627d5c443ec55e88a9850e1413df2a3204b9dc059ef6fb53d947a02e167e8"
+          "sha256": "7f840f01f723a88d98aa08bc0c8604ce1df6ff0fb88c0dae3f12bd5229768550"
         }
       ],
-      "reason": "Reviewed bounded corpus diagnostics and default serial .NET scheduling after a 302-case comparison showed no parallel speed gain; Git frontend inventories preserve application evidence and exclude ignored reports. Updated quality remains navigation evidence.",
-      "baseRef": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "gitHead": "bd04b3da8960e5bea1ecffb6817a1d41e0cc258b",
-      "reviewedAtUtc": "2026-10-06T12:52:16.5786439Z"
+      "reason": "Reviewed corpus-scoped read-only transaction, exact 302-case ranking parity, bounded non-pooled page cache, concurrent writer snapshot isolation and cancellation disposal. Interactive queries retain per-request freshness. Runtime inventory changed only its source fingerprint; SqliteTransaction is a syntactic financial candidate, not financial content. Static quality remains navigation evidence.",
+      "baseRef": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
+      "gitHead": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
+      "reviewedAtUtc": "2026-10-06T14:03:44.0022502Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1002,13 +1002,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "ac7eb1be718ed8e640f48c854764247f5d19f58796da64f0b4873c464deda54b"
+          "sha256": "68aacbe0d951b8b9ad7c8fe1d24fb7eefc62800d8f93fdbcc9719d984664330c"
         }
       ],
-      "reason": "Only readonly Paddle price preview added to client; scheduler/webhook/provider credentials unchanged. Actual local SMTP and S3 workflows verified, main pending non-QA email queue untouched. Native migration changes exact default HTML only.",
-      "baseRef": "HEAD",
-      "gitHead": "31a7be7e74da295faf4f41d9d193588ebd42358f",
-      "reviewedAtUtc": "2026-10-06T07:11:35.3900705Z"
+      "reason": "Reviewed corpus-scoped read-only transaction, exact 302-case ranking parity, bounded non-pooled page cache, concurrent writer snapshot isolation and cancellation disposal. Interactive queries retain per-request freshness. Runtime inventory changed only its source fingerprint; SqliteTransaction is a syntactic financial candidate, not financial content. Static quality remains navigation evidence.",
+      "baseRef": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
+      "gitHead": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
+      "reviewedAtUtc": "2026-10-06T14:03:45.6047229Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1017,13 +1017,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "943627d5c443ec55e88a9850e1413df2a3204b9dc059ef6fb53d947a02e167e8"
+          "sha256": "7f840f01f723a88d98aa08bc0c8604ce1df6ff0fb88c0dae3f12bd5229768550"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "68aacbe0d951b8b9ad7c8fe1d24fb7eefc62800d8f93fdbcc9719d984664330c"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "bde33aac0fe4e4ae6e99be233129e8142b3d6149eb84af4b92397cac55e05f80"
         }
       ],
-      "reason": "Reviewed bounded corpus diagnostics and default serial .NET scheduling after a 302-case comparison showed no parallel speed gain; Git frontend inventories preserve application evidence and exclude ignored reports. Updated quality remains navigation evidence.",
-      "baseRef": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "gitHead": "bd04b3da8960e5bea1ecffb6817a1d41e0cc258b",
-      "reviewedAtUtc": "2026-10-06T12:52:18.7759424Z"
+      "reason": "Reviewed corpus-scoped read-only transaction, exact 302-case ranking parity, bounded non-pooled page cache, concurrent writer snapshot isolation and cancellation disposal. Interactive queries retain per-request freshness. Runtime inventory changed only its source fingerprint; SqliteTransaction is a syntactic financial candidate, not financial content. Static quality remains navigation evidence.",
+      "baseRef": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
+      "gitHead": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
+      "reviewedAtUtc": "2026-10-06T14:03:46.4255030Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1264,14 +1272,14 @@
       "pageSha256": "f9ddf22db2cc07f9109f6b518b296525846afc0f92e94ac0b443f5bf8ea4b89a",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc"
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
+          "sha256": "3587dc7f8b280766ae41ed86234a171b70440ccc203f45781077a61b19fd15d4"
         }
       ],
-      "reason": "Reviewed integration of the tested Wiki performance branch with current master: ordered bounded source IO and awaited writer lifecycle, content-based freshness, current logical module discovery, request-local quality source reuse, per-corpus timings, shard partitions and persistent cleanup lock identity. Current-master index and review data were retained as regeneration seeds; query provider, ownership, privacy and failure contracts remain unchanged.",
-      "baseRef": "master",
-      "gitHead": "799fb054f03fe3e988a0cdb50d747b3c1bfb9264",
-      "reviewedAtUtc": "2026-10-06T10:21:17.7080583Z"
+      "reason": "Reviewed corpus-scoped read-only transaction, exact 302-case ranking parity, bounded non-pooled page cache, concurrent writer snapshot isolation and cancellation disposal. Interactive queries retain per-request freshness. Runtime inventory changed only its source fingerprint; SqliteTransaction is a syntactic financial candidate, not financial content. Static quality remains navigation evidence.",
+      "baseRef": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
+      "gitHead": "f0d6aa98aa1733cc07c56a5fd5be44300405a85f",
+      "reviewedAtUtc": "2026-10-06T14:03:44.811539Z"
     },
     {
       "pageId": "workflow.review-diff",

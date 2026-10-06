@@ -33,4 +33,16 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             _telemetry.RecordCommandStage("context-search", "in-process-sqlite", stopwatch.Elapsed);
         }
     }
+
+    internal async Task<IReadOnlyList<WikiContextSearchResult>> SearchBatchAsync(
+        IReadOnlyList<(string Query, int Limit, string ChangeType)> requests,
+        CancellationToken cancellationToken,
+        string? expectedChangeSetFingerprint) {
+        var stopwatch = Stopwatch.StartNew();
+        try {
+            return await _reader.SearchBatchAsync(requests, cancellationToken, expectedChangeSetFingerprint).ConfigureAwait(false);
+        } finally {
+            _telemetry.RecordCommandStage("context-search", "in-process-sqlite-batch", stopwatch.Elapsed);
+        }
+    }
 }

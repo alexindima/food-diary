@@ -6,6 +6,7 @@ status: current
 summary: Query an incremental SQLite symbol and consumer graph as the primary Development MCP code-context route without replacing governed Wiki evidence or committed project knowledge.
 sources:
   - .llm-wiki/tools/code-graph.mjs
+  - Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.Batch.cs
   - .llm-wiki/tools/code-graph-inputs.mjs
   - .llm-wiki/tools/code-graph-inputs.test.mjs
   - .llm-wiki/tools/code-graph-maintenance.mjs
@@ -329,6 +330,15 @@ identity, case coverage and order are checked for both readers; failure, timeout
 or cancellation stops each remaining worker and its native child processes.
 Use `-MaxConcurrency 1` for a serial run. Per-corpus JSON and stderr diagnostics
 are written to `.artifacts/llm-wiki/context-evaluation/` with unique run prefixes.
+
+The .NET evaluator also batches its corpus in one read-only transaction on a
+private, non-pooled connection. Metadata, document count and the expected
+worktree fingerprint belong to that snapshot; they are never cached across
+corpora. Its on-demand 64 MiB page-cache target avoids repeated FTS cache churn
+and is released with the connection. Candidate ranking and case order are
+unchanged. Tests cover exact individual/batch parity, stale, missing and empty
+projections, concurrent writer consistency, next-batch freshness and cancellation
+cleanup. Interactive searches keep the existing per-request path.
 
 The primary corpus lives in
 `.llm-wiki/evals/context-search.json` and a separately authored 40-case

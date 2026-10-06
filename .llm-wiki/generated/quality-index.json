@@ -16,11 +16,11 @@
   "hotspots": [
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-      "nonBlankLines": 1732,
-      "decisionPoints": 453,
+      "nonBlankLines": 1802,
+      "decisionPoints": 465,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 714.14
+      "structuralRiskScore": 733.54
     },
     {
       "path": ".llm-wiki/wiki.ps1",
@@ -2842,19 +2842,19 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-      "nonBlankLines": 1732,
-      "decisionPoints": 453,
+      "nonBlankLines": 1802,
+      "decisionPoints": 465,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 714.14
+      "structuralRiskScore": 733.54
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 31,
+      "nonBlankLines": 42,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
+      "structuralRiskScore": 0.84
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandRequest.cs",
@@ -2890,11 +2890,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiContextSearchEvaluationRunner.cs",
-      "nonBlankLines": 170,
-      "decisionPoints": 16,
+      "nonBlankLines": 175,
+      "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 27.4
+      "structuralRiskScore": 29
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiOutputParser.cs",

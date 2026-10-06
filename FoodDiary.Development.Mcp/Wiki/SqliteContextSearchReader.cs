@@ -66,19 +66,82 @@ public sealed class SqliteContextSearchReader {
     }
 
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-    public async Task<WikiContextSearchResult> SearchAsync(
+    public Task<WikiContextSearchResult> SearchAsync(
         string query,
         int limit,
         string changeType,
         string? module,
         IReadOnlyList<string>? scopePaths,
         CancellationToken cancellationToken,
+        string? expectedChangeSetFingerprint = null) =>
+        SearchCoreAsync(query, limit, changeType, module, scopePaths, cancellationToken, expectedChangeSetFingerprint, batch: null);
+
+    public async Task<IReadOnlyList<WikiContextSearchResult>> SearchBatchAsync(
+        IReadOnlyList<(string Query, int Limit, string ChangeType)> requests,
+        CancellationToken cancellationToken,
         string? expectedChangeSetFingerprint = null) {
+        ArgumentNullException.ThrowIfNull(requests);
+        cancellationToken.ThrowIfCancellationRequested();
+        foreach ((string query, int limit, _) in requests) {
+            ArgumentException.ThrowIfNullOrWhiteSpace(query, nameof(requests));
+            ArgumentOutOfRangeException.ThrowIfLessThan(limit, 1, nameof(requests));
+        }
+        if (requests.Count == 0) { return []; }
+        List<WikiContextSearchResult> results = new(requests.Count);
+        BatchContext? batch = null;
+        SqliteConnection connection = new(new SqliteConnectionStringBuilder {
+            DataSource = _databasePath,
+            Mode = SqliteOpenMode.ReadOnly,
+            Pooling = false,
+            DefaultTimeout = 2,
+        }.ToString());
+        await using ConfiguredAsyncDisposable connectionDisposal = connection.ConfigureAwait(false);
+        SqliteTransaction? transaction = null;
+        try {
+            try {
+                if (File.Exists(_databasePath)) {
+                    await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
+                    SqliteCommand cache = connection.CreateCommand();
+                    await using ConfiguredAsyncDisposable cacheDisposal = cache.ConfigureAwait(false);
+                    cache.CommandText = "PRAGMA cache_size = -65536;";
+                    await cache.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+                    transaction = connection.BeginTransaction(deferred: true);
+                    (string? Fingerprint, string? UpdatedAtUtc, int IndexedDocuments, string? ChangeSetFingerprint, string? GitHead) metadata =
+                        await ReadMetadataAsync(connection, cancellationToken, transaction).ConfigureAwait(false);
+                    batch = new BatchContext(connection, transaction, metadata);
+                }
+            } catch (SqliteException) {
+                // Let the ordinary reader preserve its exact per-query unavailable
+                // states when a batch snapshot cannot be prepared.
+                if (transaction is not null) { await transaction.DisposeAsync().ConfigureAwait(false); }
+                transaction = null;
+                await connection.CloseAsync().ConfigureAwait(false);
+            }
+            foreach ((string query, int limit, string changeType) in requests) {
+                cancellationToken.ThrowIfCancellationRequested();
+                results.Add(await SearchCoreAsync(query, limit, changeType, module: null, scopePaths: null,
+                    cancellationToken, expectedChangeSetFingerprint, batch).ConfigureAwait(false));
+            }
+            return results;
+        } finally {
+            if (transaction is not null) { await transaction.DisposeAsync().ConfigureAwait(false); }
+        }
+    }
+
+    private sealed record BatchContext(
+        SqliteConnection Connection,
+        SqliteTransaction Transaction,
+        (string? Fingerprint, string? UpdatedAtUtc, int IndexedDocuments, string? ChangeSetFingerprint, string? GitHead) Metadata);
+
+    private async Task<WikiContextSearchResult> SearchCoreAsync(
+        string query, int limit, string changeType, string? module, IReadOnlyList<string>? scopePaths,
+        CancellationToken cancellationToken, string? expectedChangeSetFingerprint, BatchContext? batch) {
         ArgumentException.ThrowIfNullOrWhiteSpace(query);
         ArgumentOutOfRangeException.ThrowIfLessThan(limit, 1);
         var stopwatch = Stopwatch.StartNew();
+        SqliteConnection? ownedConnection = null;
         try {
-            if (!File.Exists(_databasePath)) {
+            if (batch is null && !File.Exists(_databasePath)) {
                 return Unavailable("database-missing", stopwatch);
             }
 
@@ -110,12 +173,12 @@ public sealed class SqliteContextSearchReader {
                 Pooling = true,
                 DefaultTimeout = 2,
             }.ToString();
-            SqliteConnection connection = new(connectionString);
-            await using ConfiguredAsyncDisposable connectionDisposal = connection.ConfigureAwait(false);
-            await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
+            ownedConnection = batch is null ? new(connectionString) : null;
+            SqliteConnection connection = batch?.Connection ?? ownedConnection!;
+            if (batch is null) { await connection.OpenAsync(cancellationToken).ConfigureAwait(false); }
 
             (string? fingerprint, string? updatedAtUtc, int indexedDocuments, string? changeSetFingerprint, string? gitHead) =
-                await ReadMetadataAsync(connection, cancellationToken).ConfigureAwait(false);
+                batch?.Metadata ?? await ReadMetadataAsync(connection, cancellationToken).ConfigureAwait(false);
             if (string.IsNullOrWhiteSpace(fingerprint) ||
                 indexedDocuments == 0 ||
                 string.IsNullOrWhiteSpace(changeSetFingerprint) ||
@@ -155,7 +218,7 @@ public sealed class SqliteContextSearchReader {
                 rankingTerms,
                 candidateLimit,
                 policy.IdentityCandidatePoolLimit,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken, batch?.Transaction).ConfigureAwait(false);
             WikiContextSearchCandidate[] candidates = Rank(
                 rawCandidates,
                 query,
@@ -191,6 +254,7 @@ public sealed class SqliteContextSearchReader {
         } catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or JsonException or InvalidDataException) {
             return Unavailable("context-search-configuration-unavailable", stopwatch);
         } finally {
+            if (ownedConnection is not null) { await ownedConnection.DisposeAsync().ConfigureAwait(false); }
             stopwatch.Stop();
 
         }
@@ -204,8 +268,10 @@ public sealed class SqliteContextSearchReader {
         string? ChangeSetFingerprint,
         string? GitHead)> ReadMetadataAsync(
         SqliteConnection connection,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken,
+        SqliteTransaction? transaction = null) {
         SqliteCommand command = connection.CreateCommand();
+        command.Transaction = transaction;
         await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
         command.CommandTimeout = 2;
         command.CommandText = """
@@ -240,13 +306,15 @@ public sealed class SqliteContextSearchReader {
         IReadOnlyList<string> rankingTerms,
         int candidateLimit,
         int identityCandidateLimit,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken,
+        SqliteTransaction? transaction = null) {
         string match = string.Join(
             " OR ",
             queryTerms.Select(term => $"\"{term.Replace("\"", "\"\"", StringComparison.Ordinal)}\"*"));
         List<RawCandidate> candidates = [];
         {
             SqliteCommand command = connection.CreateCommand();
+            command.Transaction = transaction;
             await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
             command.CommandTimeout = 2;
             command.CommandText = """
@@ -303,6 +371,7 @@ public sealed class SqliteContextSearchReader {
                 }));
         {
             SqliteCommand command = connection.CreateCommand();
+            command.Transaction = transaction;
             await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
             command.CommandTimeout = 2;
             command.CommandText = """
@@ -340,6 +409,7 @@ public sealed class SqliteContextSearchReader {
         }
         {
             SqliteCommand command = connection.CreateCommand();
+            command.Transaction = transaction;
             await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
             command.CommandTimeout = 2;
             command.CommandText = """
@@ -373,6 +443,7 @@ public sealed class SqliteContextSearchReader {
             .Take(8)];
         if (compoundPairs.Length > 0) {
             SqliteCommand command = connection.CreateCommand();
+            command.Transaction = transaction;
             await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
             command.CommandTimeout = 2;
             command.CommandText = """
@@ -414,6 +485,7 @@ public sealed class SqliteContextSearchReader {
             : [];
         if (guidanceSubjects.Length > 0) {
             SqliteCommand command = connection.CreateCommand();
+            command.Transaction = transaction;
             await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
             command.CommandTimeout = 2;
             command.CommandText = """
@@ -450,6 +522,7 @@ public sealed class SqliteContextSearchReader {
             List<RawCandidate> runtimeCandidatesToPrepend = [];
             foreach (string suffix in runtimeSuffixes) {
                 SqliteCommand command = connection.CreateCommand();
+                command.Transaction = transaction;
                 await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
                 command.CommandTimeout = 2;
                 command.CommandText = """

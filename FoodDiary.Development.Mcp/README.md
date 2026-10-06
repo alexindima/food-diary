@@ -93,6 +93,16 @@ expand the persisted event envelope with queries, paths, or payloads. ADR 0014
 records the fallback retirement decision. Git-backed source, tests, policies,
 ADRs, and scoped instructions stay authoritative regardless of retrieval route.
 
+The context-search corpus evaluator uses one read-only SQLite transaction per
+corpus. It validates the expected worktree fingerprint against metadata from
+that snapshot and reuses its document count while evaluating the ordered cases.
+Its private, non-pooled connection uses an on-demand page-cache target of 64 MiB
+and is disposed after success, failure or cancellation. Concurrent graph updates
+cannot mix metadata and candidates from different versions; the next corpus
+opens a new snapshot. Interactive searches retain their per-request connection
+and freshness checks. The `context-search/in-process-sqlite-batch` stage includes
+preparation and cleanup; per-case timings measure search inside the snapshot.
+
 MCP queries request JSON from the Wiki. This enables its snapshot-keyed query
 cache; repeated requests against the same Git HEAD and worktree avoid repeating
 expensive discovery. The MCP adds a bounded two-minute in-memory layer above
