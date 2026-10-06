@@ -114,9 +114,10 @@ its isolated read-only snapshot it refreshes a stale graph, using a backend-only
 projection for backend requests and the full TypeScript graph for frontend or
 unscoped requests. Other missing or stale projections stop with an explicit
 recovery action; `graph-build`, `update`, and `verify` remain the deliberate
-general writer/verification paths. Isolated snapshots use Git status to detect
-tracked or untracked mutations without re-hashing every multi-megabyte compiled
-index on each query.
+general writer/verification paths. Isolated snapshots compare Git status and
+content hashes of dirty overlays to detect tracked or untracked mutations,
+including a repeated edit with unchanged status. They avoid re-hashing every
+multi-megabyte compiled index on each query.
 
 The table-driven `catalog`, `symbols`, `frontend`, contract, topology, quality,
 configuration, sensitive-data, architecture-health, and module commands are

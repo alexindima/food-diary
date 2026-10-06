@@ -199,18 +199,14 @@
       "pageSha256": "bf06c7515995b5983125ae2d8469bc357431d468feed457a4ae9ab443288c4a4",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "9543a3370e140089b861f60159829cacf9424529cc498c8cb6a629333280678b"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-          "sha256": "f6889b5f4074c63a7102ba36bbe79071d726f06dc8ffb384f52962420f0426c6"
+          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
+          "sha256": "16f301e05306a584f9bcecaf20216dd4bf1b64e4a7292c0b8ad5c16dcb98129a"
         }
       ],
-      "reason": "Reviewed latest master integration with common-overlay checkout reuse, connection-local batch page cache and preserved shared NuGet locks. Linux descendant cleanup fixes are retained. Current workflow authority, source hash isolation, static coverage limits and security discovery claims remain accurate; regenerated quality metrics reflect the combined sources.",
-      "baseRef": "master",
-      "gitHead": "b00110c1b945a1586932ba18b0d7c04407b4a89b",
-      "reviewedAtUtc": "2026-10-06T00:18:52.8629783Z"
+      "reason": "Reviewed current module/project boundary resolution, exact source-content measurement guards, nonempty benchmark records, request-local quality content reuse and removal of the unreferenced legacy scoring helper. Existing source authority, adaptive workflow, removal-evidence requirements and static test-reference/security limitations remain accurate. Quality output matched the old algorithm byte-for-byte on stable inputs; focused regressions passed.",
+      "baseRef": "HEAD",
+      "gitHead": "4ed86c59d8b7b1d42fac6cd480c2e7fb16d026ca",
+      "reviewedAtUtc": "2026-10-06T01:50:02.0386837Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -234,17 +230,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "8d523abf10ca6c9df1a595a278e75e9b23638a9c2e98d1fe5f156edf658aafb9"
-        },
-        {
-          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "fb444f0ce2c8574d259df3e852ebfa8166bf893cb0d122db701cd01a9b6d597b"
+          "sha256": "f82d5698b1cc765577d39df7fd5cec690a891a826f4f8c31aeb4363ecd7ab14d"
         }
       ],
-      "reason": "Reviewed the intentional read-only Admin BodyMetrics dependency and synchronized architecture allowlists. The architecture-health review workflow remains accurate; the complete 2116-test architecture suite passed.",
+      "reason": "Reviewed current module/project boundary resolution, exact source-content measurement guards, nonempty benchmark records, request-local quality content reuse and removal of the unreferenced legacy scoring helper. Existing source authority, adaptive workflow, removal-evidence requirements and static test-reference/security limitations remain accurate. Quality output matched the old algorithm byte-for-byte on stable inputs; focused regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:06:10.0711985Z"
+      "gitHead": "4ed86c59d8b7b1d42fac6cd480c2e7fb16d026ca",
+      "reviewedAtUtc": "2026-10-06T01:50:02.6899761Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -867,13 +859,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "49e751c7f987cd769935a3c48939b60585912b5537da30e6199084615c1fdbbc"
+          "sha256": "bf53553efea5bc768b86ef9817d29431f35b20ca10c5b11608f2329a4c8b31d4"
         }
       ],
-      "reason": "Reviewed latest master integration with common-overlay checkout reuse, connection-local batch page cache and preserved shared NuGet locks. Linux descendant cleanup fixes are retained. Current workflow authority, source hash isolation, static coverage limits and security discovery claims remain accurate; regenerated quality metrics reflect the combined sources.",
-      "baseRef": "master",
-      "gitHead": "b00110c1b945a1586932ba18b0d7c04407b4a89b",
-      "reviewedAtUtc": "2026-10-06T00:18:56.4810477Z"
+      "reason": "Reviewed current module/project boundary resolution, exact source-content measurement guards, nonempty benchmark records, request-local quality content reuse and removal of the unreferenced legacy scoring helper. Existing source authority, adaptive workflow, removal-evidence requirements and static test-reference/security limitations remain accurate. Quality output matched the old algorithm byte-for-byte on stable inputs; focused regressions passed.",
+      "baseRef": "HEAD",
+      "gitHead": "4ed86c59d8b7b1d42fac6cd480c2e7fb16d026ca",
+      "reviewedAtUtc": "2026-10-06T01:50:03.6084296Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -969,13 +961,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "49e751c7f987cd769935a3c48939b60585912b5537da30e6199084615c1fdbbc"
+          "sha256": "bf53553efea5bc768b86ef9817d29431f35b20ca10c5b11608f2329a4c8b31d4"
         }
       ],
-      "reason": "Reviewed latest master integration with common-overlay checkout reuse, connection-local batch page cache and preserved shared NuGet locks. Linux descendant cleanup fixes are retained. Current workflow authority, source hash isolation, static coverage limits and security discovery claims remain accurate; regenerated quality metrics reflect the combined sources.",
-      "baseRef": "master",
-      "gitHead": "b00110c1b945a1586932ba18b0d7c04407b4a89b",
-      "reviewedAtUtc": "2026-10-06T00:18:58.0692467Z"
+      "reason": "Reviewed current module/project boundary resolution, exact source-content measurement guards, nonempty benchmark records, request-local quality content reuse and removal of the unreferenced legacy scoring helper. Existing source authority, adaptive workflow, removal-evidence requirements and static test-reference/security limitations remain accurate. Quality output matched the old algorithm byte-for-byte on stable inputs; focused regressions passed.",
+      "baseRef": "HEAD",
+      "gitHead": "4ed86c59d8b7b1d42fac6cd480c2e7fb16d026ca",
+      "reviewedAtUtc": "2026-10-06T01:50:04.7391039Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

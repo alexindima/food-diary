@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 110,
     "routedStandaloneComponents": 67,
     "componentsWithoutDirectSpecs": 131,
-    "criticalSymbolsWithoutTestReferences": 47,
+    "criticalSymbolsWithoutTestReferences": 46,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -5429,16 +5429,6 @@
       "coveredThrough": []
     },
     {
-      "name": "LlmWikiContextScoring",
-      "role": "WikiTool",
-      "path": ".llm-wiki/tools/LlmWikiContextScoring.ps1",
-      "line": 1,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "LlmWikiResearchPrimitives",
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiResearchPrimitives.ps1",
@@ -5482,22 +5472,22 @@
   "explicitDebtMarkers": [
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-      "line": 229,
+      "line": 238,
       "marker": "TODO"
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-      "line": 229,
+      "line": 238,
       "marker": "FIXME"
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-      "line": 229,
+      "line": 238,
       "marker": "HACK"
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-      "line": 229,
+      "line": 238,
       "marker": "SuppressMessage"
     },
     {

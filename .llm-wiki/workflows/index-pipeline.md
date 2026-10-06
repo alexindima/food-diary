@@ -138,6 +138,13 @@ temporary JSON line-ending rewrites cannot race with the parallel SQLite readers
 The query-cache group depends on graph inputs because it includes task-brief SQL
 parity. No regression groups or assertion thresholds are removed for performance.
 
+Quality generation reuses source text only within one invocation, retaining exact
+input fingerprinting and identical output records. The retired PowerShell
+context-scoring helper had no consumers; active SQLite ranking remains unchanged.
+The retrieval corpus pool reports complete case counts and per-corpus process
+durations. Successful focused verification forwards those timing lines into the
+CI log, so slow corpora remain visible without retaining full worker output.
+
 Read-only queries whose overlays contain only common Wiki, build and CLI-reader
 inputs share one exclusively locked checkout for the same HEAD. Their scope does
 not change that checkout's contents. Product edits keep separate scope slots;

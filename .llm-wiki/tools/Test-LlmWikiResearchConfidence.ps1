@@ -51,9 +51,19 @@ $testOnlyFlow = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphResearch.ps1') `
     -Limit 20 `
     -Format Json | ConvertFrom-Json
 if (@($testOnlyFlow.dependencies).Count -eq 0) { throw 'Graph-backed runtime-flow evidence did not identify code referenced by the focused test.' }
+if ($testOnlyFlow.boundary.logicalModule -ne 'Admin' -or $testOnlyFlow.boundary.currentProject -ne 'FoodDiary.Modules.Admin.Application.Tests') {
+    throw 'Graph research did not resolve the current module and owning test project.'
+}
 if (@($testOnlyFlow.downstreamConsumers).Count -gt 20 -or @($testOnlyFlow.dependencies).Count -gt 20) { throw 'Graph research did not enforce its public result limit.' }
 if (@($testOnlyFlow.downstreamConsumers.symbols) + @($testOnlyFlow.dependencies.symbols) | Where-Object { $_ -in @('Unit', 'DependencyInjection', 'Result') }) {
     throw 'Graph research exposed generic low-signal symbols.'
+}
+$recipesFlow = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphResearch.ps1') -Objective 'Investigate recipe nutrition consumers' -Module Recipes -Limit 6 -Format Json | ConvertFrom-Json
+if ($recipesFlow.requestedPaths -notcontains 'Modules/Recipes/Application' -or
+    $recipesFlow.boundary.logicalModule -ne 'Recipes' -or
+    $recipesFlow.boundary.currentProject -ne 'FoodDiary.Modules.Recipes.Application' -or
+    $null -ne $recipesFlow.boundary.targetProjectCandidate -or @($recipesFlow.matchedPaths).Count -eq 0) {
+    throw 'Module-only fast research returned an obsolete or empty application boundary.'
 }
 $researchSource = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'Get-LlmWikiResearchPacket.ps1'))
 if ($researchSource -notmatch 'runtimeFlowEvidence' -or $researchSource -notmatch 'Get-LlmWikiGraphResearch') { throw 'Ordinary research no longer attaches graph-backed runtime-flow evidence for PlannedPath.' }

@@ -9,11 +9,10 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiChangeSetSnapshot.ps1')
 $measure = Join-Path $PSScriptRoot 'Measure-LlmWikiSqlContextEvaluation.ps1'
 function Get-WorkspaceFingerprint {
-    $status = (& git -C $repositoryRoot status --porcelain=v1 -z) -join ''
-    $bytes = [Text.Encoding]::UTF8.GetBytes($status)
-    [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($bytes)).ToLowerInvariant()
+    (Get-LlmWikiChangeSetSnapshot -RepositoryRoot $repositoryRoot).fingerprint
 }
 function Get-Percentile([double[]]$Values, [double]$Percentile) {
     if ($Values.Count -eq 0) { return 0.0 }

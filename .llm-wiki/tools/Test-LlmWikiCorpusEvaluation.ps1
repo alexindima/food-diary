@@ -86,6 +86,11 @@ $count = $results.Count + [int]($source.mode -eq 'count')
     $third = New-CorpusFixture '02 последний.json'
     $pool = Invoke-LlmWikiCorpusEvaluation -RepositoryRoot $repositoryRoot -CorpusPath @($third, $first, $second) -EvaluatorPath $evaluator
     if ($pool.CorpusCount -ne 3 -or $pool.PeakConcurrency -ne 2) { throw 'Pool lost a corpus or failed to bound concurrent workers to two.' }
+    if (@($pool.CorpusTimings).Count -ne 3 -or
+        @($pool.CorpusTimings | Where-Object { $_.caseCount -le 0 -or $_.durationSeconds -le 0 }).Count -ne 0 -or
+        @($pool.CorpusTimings.corpus | Sort-Object -Unique).Count -ne 3) {
+        throw 'Corpus telemetry omitted completed workers or their real durations.'
+    }
     foreach ($path in @($first, $second, $third)) {
         $result = $pool.Evaluations[$path] | ConvertFrom-Json
         if ($result.results[0].value -cne 'Вики: поиск и проверка') { throw 'Worker output lost Unicode text.' }

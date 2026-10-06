@@ -35,6 +35,7 @@ function Invoke-LlmWikiCorpusEvaluation {
     $null = New-Item -ItemType Directory -Path $reportRoot -Force
     $running = [Collections.Generic.List[object]]::new()
     $evaluations = [Collections.Generic.Dictionary[string, string]]::new([StringComparer]::OrdinalIgnoreCase)
+    $corpusTimings = [Collections.Generic.List[object]]::new()
     $timer = [Diagnostics.Stopwatch]::StartNew()
     $peak = 0
     $failure = $null
@@ -96,6 +97,12 @@ function Invoke-LlmWikiCorpusEvaluation {
                     throw "Corpus worker changed corpus identity, case coverage or result order: $($worker.Corpus.Name)"
                 }
                 $evaluations.Add($worker.Corpus.Path, $output)
+                $worker.Timer.Stop()
+                $corpusTimings.Add([pscustomobject]@{
+                    corpus = $worker.Corpus.Name
+                    caseCount = $worker.Corpus.Cases
+                    durationSeconds = [Math]::Round($worker.Timer.Elapsed.TotalSeconds, 3)
+                })
                 $running.Remove($worker) | Out-Null
                 $worker.Process.Dispose()
             }
@@ -121,5 +128,6 @@ function Invoke-LlmWikiCorpusEvaluation {
     [pscustomobject]@{
         Evaluations = $evaluations; DurationSeconds = $timer.Elapsed.TotalSeconds
         CorpusCount = $evaluations.Count; PeakConcurrency = $peak; RunId = $runId
+        CorpusTimings = @($corpusTimings | Sort-Object @{ Expression = 'durationSeconds'; Descending = $true }, corpus)
     }
 }

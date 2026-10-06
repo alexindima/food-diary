@@ -277,6 +277,11 @@ function Wait-SmokeBatch([string[]]$BatchGroups, [int]$Concurrency) {
                 throw $failureMessage
             }
             Write-Host "Parallel affected smoke passed: $($item.Group) (${duration}s)"
+            if ($item.Group -eq 'context-search-evals') {
+                foreach ($line in @($standardOutput -split '\r?\n' | Where-Object { $_.StartsWith('Retrieval corpus timing: ', [StringComparison]::Ordinal) })) {
+                    Write-Host $line
+                }
+            }
         }
         if ($running.Count -gt 0) { Start-Sleep -Milliseconds 200 }
     }

@@ -8,14 +8,16 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiApplicationModulePaths.ps1')
 $paths = [string[]]@($ProposedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
 if ($paths.Length -eq 0 -and -not [string]::IsNullOrWhiteSpace($Module)) {
-    $paths = @("FoodDiary.Application/$Module", "FoodDiary.Application.$Module")
+    $paths = @(Get-LlmWikiApplicationModuleLayout -RepositoryRoot $repositoryRoot -Module $Module | ForEach-Object sourceRoots)
 }
 if ($paths.Length -eq 0) {
     $candidate = @([regex]::Matches($Objective, '\b[A-Z][A-Za-z0-9]+\b') | ForEach-Object Value | Select-Object -Last 1)
     $hint = if ($candidate.Count -gt 0) { " The intent suggests '$($candidate[0])', but fast mode will not select a boundary silently." } else { '' }
-    throw "Fast graph research requires an explicit source boundary.$hint Examples: ./.llm-wiki/wiki.ps1 research -Fast -Module Recipes -Query 'Extract Recipes'; ./.llm-wiki/wiki.ps1 research -Fast -PlannedPath 'FoodDiary.Application/Recipes' -Query 'Extract Recipes'."
+    throw "Fast graph research requires an explicit source boundary.$hint Examples: ./.llm-wiki/wiki.ps1 research -Fast -Module Recipes -Query 'Investigate Recipes'; ./.llm-wiki/wiki.ps1 research -Fast -PlannedPath 'Modules/Recipes/Application' -Query 'Investigate Recipes'."
 }
 $manager = Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1'
 $stopwatch = [Diagnostics.Stopwatch]::StartNew()
@@ -29,6 +31,7 @@ function Get-PathAffinity([string]$Path) {
         $scope = $requestedPath.Replace('\', '/').TrimEnd('/')
         if ($normalized -eq $scope -or $normalized.StartsWith("$scope/", [StringComparison]::OrdinalIgnoreCase)) { return 3 }
         $scopeProject = ($scope -split '/', 2)[0]
+        if ($scope -match '^(Modules/[^/]+)(?:/|$)') { $scopeProject = $Matches[1] }
         if ($normalized.StartsWith("$scopeProject/", [StringComparison]::OrdinalIgnoreCase)) { return 2 }
     }
     return 1
@@ -63,11 +66,26 @@ $downstream = [object[]]@(Select-BoundedGraphPath $downstreamCandidates)
 $dependencies = [object[]]@(Select-BoundedGraphPath $dependencyCandidates)
 $logicalModule = if (-not [string]::IsNullOrWhiteSpace($Module)) { $Module } else {
     $firstBoundary = [string]@($paths)[0]
-    $match = [regex]::Match($firstBoundary.Replace('\','/'), '^FoodDiary\.Application(?:/|\.)(?<module>[^/]+)')
+    $match = [regex]::Match($firstBoundary.Replace('\','/'), '^(?:Modules/|FoodDiary\.Application(?:/|\.))(?<module>[^/]+)')
     if ($match.Success) { $match.Groups['module'].Value } else { Split-Path $firstBoundary -Leaf }
 }
 $sourceRoot = [string]@($paths)[0]
 $currentProject = if ($sourceRoot -match '^(?<project>[^/\\]+)[/\\]') { $Matches['project'] } else { $sourceRoot }
+if ($sourceRoot.Replace('\', '/') -match '^Modules/') {
+    $currentProject = $null
+    $boundaryPath = [IO.Path]::GetFullPath((Join-Path $repositoryRoot $sourceRoot))
+    $projectDirectory = if ([IO.File]::Exists($boundaryPath)) { [IO.Path]::GetDirectoryName($boundaryPath) } else { $boundaryPath }
+    while ($projectDirectory -and $projectDirectory.StartsWith(($repositoryRoot + [IO.Path]::DirectorySeparatorChar), [StringComparison]::OrdinalIgnoreCase)) {
+        if ([IO.Directory]::Exists($projectDirectory)) {
+            $projects = @(Get-ChildItem -LiteralPath $projectDirectory -File -Filter '*.csproj')
+            if ($projects.Count -gt 0) {
+                if ($projects.Count -eq 1) { $currentProject = $projects[0].BaseName }
+                break
+            }
+        }
+        $projectDirectory = [IO.Path]::GetDirectoryName($projectDirectory)
+    }
+}
 $targetProjectCandidate = if ($currentProject -eq 'FoodDiary.Application' -and -not [string]::IsNullOrWhiteSpace($logicalModule)) { "FoodDiary.Application.$logicalModule" } else { $null }
 $result = [pscustomobject][ordered]@{
     mode = 'experimental-sqlite-graph'

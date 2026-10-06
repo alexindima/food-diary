@@ -625,10 +625,10 @@ Query the graph:
 ./.llm-wiki/wiki.ps1 graph-symbol -Query RecipeNutritionUpdater
 ./.llm-wiki/wiki.ps1 graph-consumers -Query IRecipeOverviewReadService
 ./.llm-wiki/wiki.ps1 graph-trace -Query RecipeNutritionUpdater
-./.llm-wiki/wiki.ps1 graph-impact -ChangedPath FoodDiary.Application/Recipes
+./.llm-wiki/wiki.ps1 graph-impact -ChangedPath Modules/Recipes/Application
 ./.llm-wiki/wiki.ps1 contract-consumers -Query IRecipeOverviewReadService -Fast
 ./.llm-wiki/wiki.ps1 graph-relations `
-  -PlannedPath FoodDiary.Application/Recipes `
+  -PlannedPath Modules/Recipes/Application `
   -RelationKind mediator-handler,di-service
 ./.llm-wiki/wiki.ps1 graph-coverage
 ```
@@ -638,11 +638,11 @@ Exact backend traces can opt into the graph through the existing facade:
 ```powershell
 ./.llm-wiki/wiki.ps1 trace -Query RecipeNutritionUpdater -Fast
 ./.llm-wiki/wiki.ps1 research `
-  -Intent "Extract Recipes into an isolated application module" `
-  -PlannedPath FoodDiary.Application/Recipes `
+  -Intent "Investigate Recipes consumers and composition dependencies" `
+  -PlannedPath Modules/Recipes/Application `
   -Fast
 ./.llm-wiki/wiki.ps1 test-plan `
-  -PlannedPath FoodDiary.Application/Recipes `
+  -PlannedPath Modules/Recipes/Application/Services/RecipeNutritionUpdater.cs `
   -Fast
 ```
 
@@ -723,6 +723,17 @@ The benchmark uses Recipes as a stable cross-layer scenario. Compare exact
 symbol trace and contract consumers directly; module impact is broader than the
 specialized extraction-readiness analyzer and should be assessed for relevance
 as well as duration.
+
+Benchmark scopes use the current `Modules/Recipes/Application` layout and the
+nutrition updater's exact source path for focused test planning. Every scenario
+reports its actual source-record count and rejects an empty result. Fast research
+resolves module-only requests through the application ownership map and reports
+the enclosing project for a current module path; a broad boundary without one
+enclosing project remains explicitly unresolved.
+
+Context latency and concurrency measurements compare HEAD and content hashes of
+modified, untracked and deleted paths before and after the run. An unchanged Git
+status or preserved file size/timestamp cannot establish source stability.
 
 Conversational source discovery uses bounded subject-name weights and explicit
 frontend/backend intent, with separate transport and Wiki-tool role selection.

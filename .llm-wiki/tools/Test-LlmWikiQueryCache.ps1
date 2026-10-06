@@ -39,6 +39,25 @@ try {
     if ($changed.fingerprint -ceq $first.fingerprint) { throw 'A source edit did not invalidate the query cache.' }
     if ($changed.missReason -cne 'relevant workspace paths changed') { throw "Scoped cache reported the wrong source miss reason: $($changed.missReason)" }
     Write-LlmWikiQueryCache -Entry $changed -Content '{"value":2}'
+    $latencyAst = [Management.Automation.Language.Parser]::ParseFile((Join-Path $PSScriptRoot 'Measure-LlmWikiContextLatency.ps1'), [ref]$null, [ref]$null)
+    $fingerprintFunction = $latencyAst.Find({ param($Node) $Node -is [Management.Automation.Language.FunctionDefinitionAst] -and $Node.Name -eq 'Get-WorkspaceFingerprint' }, $true)
+    & {
+        $repositoryRoot = $tempRoot
+        . ([scriptblock]::Create($fingerprintFunction.Extent.Text))
+        $beforeFingerprint = Get-WorkspaceFingerprint
+        $beforeStatus = (& git -C $tempRoot status --porcelain=v1) -join "`n"
+        $sourcePath = Join-Path $tempRoot 'source.txt'
+        $sourceTimestamp = [IO.File]::GetLastWriteTimeUtc($sourcePath)
+        [IO.File]::WriteAllText($sourcePath, 'six', [Text.UTF8Encoding]::new($false))
+        [IO.File]::SetLastWriteTimeUtc($sourcePath, $sourceTimestamp)
+        $afterFingerprint = Get-WorkspaceFingerprint
+        $afterStatus = (& git -C $tempRoot status --porcelain=v1) -join "`n"
+        if ($beforeStatus -cne $afterStatus -or $beforeFingerprint -ceq $afterFingerprint) {
+            throw 'Context measurement missed changed content with unchanged status, size and timestamp.'
+        }
+        [IO.File]::WriteAllText($sourcePath, 'two', [Text.UTF8Encoding]::new($false))
+        [IO.File]::SetLastWriteTimeUtc($sourcePath, $sourceTimestamp)
+    }
     [IO.File]::WriteAllText((Join-Path $tempRoot 'dependency.txt'), 'two', [Text.UTF8Encoding]::new($false))
     $dependencyChanged = Get-LlmWikiQueryCacheEntry -RepositoryRoot $tempRoot -Namespace test -Arguments $arguments -RelevantPath 'source.txt' -DependencyPath 'dependency.txt'
     if ($dependencyChanged.fingerprint -ceq $changed.fingerprint) { throw 'A dependent index edit did not invalidate the query cache.' }

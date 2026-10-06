@@ -77,6 +77,15 @@ $repositoryFiles = @(
         }
 )
 
+# Content belongs only to this generation. Freshness still hashes every input.
+$sourceContentByPath = [Collections.Generic.Dictionary[string, string]]::new([StringComparer]::Ordinal)
+function Get-QualitySourceText([object]$File) {
+    if (-not $sourceContentByPath.ContainsKey($File.path)) {
+        $sourceContentByPath[$File.path] = [IO.File]::ReadAllText($File.fullPath)
+    }
+    return $sourceContentByPath[$File.path]
+}
+
 $testFiles = @(
     $repositoryFiles |
         Where-Object {
@@ -87,7 +96,7 @@ $testFiles = @(
         ForEach-Object {
             [pscustomobject]@{
                 path = $_.path
-                content = [System.IO.File]::ReadAllText($_.fullPath)
+                content = Get-QualitySourceText $_
             }
         }
 )
@@ -95,7 +104,7 @@ $wikiTestFiles = @(
     $repositoryFiles |
         Where-Object { $_.extension -eq '.ps1' -and $_.path -match '^\.llm-wiki/tools/' -and $_.name -match '^Test-' } |
         ForEach-Object {
-            [pscustomobject]@{ path = $_.path; content = [IO.File]::ReadAllText($_.fullPath) }
+            [pscustomobject]@{ path = $_.path; content = Get-QualitySourceText $_ }
         }
 )
 
@@ -148,7 +157,7 @@ foreach ($tool in $wikiTools) {
 $productionSourceFiles = @(
     $repositoryFiles |
         Where-Object { $_.extension -eq '.cs' -and $_.path -notmatch '(^|/)tests/' } |
-        ForEach-Object { [pscustomobject]@{ path = $_.path; content = [IO.File]::ReadAllText($_.fullPath) } }
+        ForEach-Object { [pscustomobject]@{ path = $_.path; content = Get-QualitySourceText $_ } }
 )
 $consumersByPath = [Collections.Generic.Dictionary[string, Collections.Generic.List[object]]]::new([StringComparer]::OrdinalIgnoreCase)
 foreach ($candidate in $symbolCoverage) {
@@ -204,7 +213,7 @@ $productionFiles = @(
 $fileMetrics = [System.Collections.Generic.List[object]]::new()
 $debtMarkers = [System.Collections.Generic.List[object]]::new()
 foreach ($file in $productionFiles) {
-    $content = [System.IO.File]::ReadAllText($file.fullPath)
+    $content = Get-QualitySourceText $file
     $path = $file.path
     $lineCount = [LlmWiki.QualityText]::CountNonBlankLines($content)
     $decisionCount = [regex]::Matches(

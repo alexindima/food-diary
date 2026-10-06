@@ -9,6 +9,20 @@ function Assert-CriticalTool([bool]$Condition, [string]$Message) {
     if (-not $Condition) { throw $Message }
 }
 
+# An empty JSON envelope is not one successful benchmark result.
+$benchmarkAst = [Management.Automation.Language.Parser]::ParseFile((Join-Path $PSScriptRoot 'Measure-LlmWikiCodeGraph.ps1'), [ref]$null, [ref]$null)
+$measureFunction = $benchmarkAst.Find({ param($Node) $Node -is [Management.Automation.Language.FunctionDefinitionAst] -and $Node.Name -eq 'Measure-Graph' }, $true)
+& {
+    . ([scriptblock]::Create($measureFunction.Extent.Text))
+    $results = [Collections.Generic.List[object]]::new()
+    $rejected = $false
+    try { $null = Measure-Graph 'empty' { [pscustomobject]@{ symbols = @() } } { param($Result) @($Result.symbols).Count } }
+    catch { $rejected = $_.Exception.Message -match 'returned no source records' }
+    Assert-CriticalTool ($rejected -and $results.Count -eq 0) 'Graph benchmark accepted an empty response envelope.'
+    $null = Measure-Graph 'populated' { [pscustomobject]@{ symbols = @('first', 'second') } } { param($Result) @($Result.symbols).Count }
+    Assert-CriticalTool ($results.Count -eq 1 -and $results[0].resultCount -eq 2) 'Graph benchmark counted its envelope instead of source records.'
+}
+
 # Directly inventory the remaining lifecycle/helper tools that quality indexing
 # cannot prove through dynamic facade dispatch. Each entry asserts its stable
 # contract marker, while behavior-heavy tools receive executable checks below.

@@ -11,12 +11,13 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiChangeSetSnapshot.ps1')
 $resolvedCorpus = if ([IO.Path]::IsPathRooted($CorpusPath)) { $CorpusPath } else { Join-Path $repositoryRoot $CorpusPath }
 $corpus = [IO.File]::ReadAllText((Resolve-Path $resolvedCorpus), [Text.Encoding]::UTF8) | ConvertFrom-Json
 $cases = @($corpus.cases)
 if ($cases.Count -eq 0) { throw 'Concurrency corpus is empty.' }
 $manager = (Resolve-Path (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1')).Path
-$gitBefore = @(git -C $repositoryRoot status --porcelain=v1 --untracked-files=all)
+$workspaceBefore = Get-LlmWikiChangeSetSnapshot -RepositoryRoot $repositoryRoot
 $wall = [Diagnostics.Stopwatch]::StartNew()
 $jobs = for ($worker = 0; $worker -lt $Workers; $worker++) {
     $workerCases = for ($index = 0; $index -lt $QueriesPerWorker; $index++) {
@@ -50,7 +51,7 @@ function Get-Percentile([double[]]$Values, [double]$Percentile) {
     if ($Values.Count -eq 0) { return 0 }
     return $Values[[Math]::Min($Values.Count - 1, [Math]::Ceiling($Values.Count * $Percentile) - 1)]
 }
-$gitAfter = @(git -C $repositoryRoot status --porcelain=v1 --untracked-files=all)
+$workspaceAfter = Get-LlmWikiChangeSetSnapshot -RepositoryRoot $repositoryRoot
 $summary = [pscustomobject][ordered]@{
     schemaVersion = 1
     workers = $Workers
@@ -59,7 +60,7 @@ $summary = [pscustomobject][ordered]@{
     throughputPerSecond = [Math]::Round($durations.Count / [Math]::Max($wall.Elapsed.TotalSeconds, 0.001), 2)
     queryP50Ms = [Math]::Round((Get-Percentile $durations 0.50), 2)
     queryP95Ms = [Math]::Round((Get-Percentile $durations 0.95), 2)
-    workspaceStable = (($gitBefore -join "`n") -ceq ($gitAfter -join "`n"))
+    workspaceStable = ($workspaceBefore.fingerprint -ceq $workspaceAfter.fingerprint)
 }
 if ($Format -eq 'Json') { $summary | ConvertTo-Json; return }
 Write-Host "Context concurrency: workers=$Workers, queries=$($summary.queryCount), throughput=$($summary.throughputPerSecond)/s, p50=$($summary.queryP50Ms)ms, p95=$($summary.queryP95Ms)ms, workspace-stable=$($summary.workspaceStable)."

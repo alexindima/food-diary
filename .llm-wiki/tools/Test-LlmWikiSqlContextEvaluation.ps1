@@ -23,6 +23,9 @@ if (-not $?) { throw 'Unable to prepare the context-search evaluation graph.' }
 $pool = Invoke-LlmWikiCorpusEvaluation -RepositoryRoot $repositoryRoot -CorpusPath $corpusFiles.FullName -MaxConcurrency $MaxConcurrency
 $consumedCorpora = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
 Write-Host "Evaluated $($pool.CorpusCount) retrieval corpora in $([Math]::Round($pool.DurationSeconds, 2))s (peak workers $($pool.PeakConcurrency))."
+foreach ($timing in $pool.CorpusTimings) {
+    Write-Host "Retrieval corpus timing: $($timing.corpus); cases=$($timing.caseCount); seconds=$($timing.durationSeconds)"
+}
 function Invoke-ContextCorpus {
     param([string]$CorpusPath)
     $label = if ($CorpusPath) { [IO.Path]::GetFileName($CorpusPath) } else { 'context-search.json' }
