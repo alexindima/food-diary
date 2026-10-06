@@ -261,7 +261,7 @@ function Remove-StaleReadOnlySnapshots {
             }
         } finally {
             if ($pruneLock) { $pruneLock.Dispose() }
-            Remove-Item -LiteralPath $lockPath -Force -ErrorAction SilentlyContinue
+            # Keep the slot's lock identity stable for concurrent waiters/pruners.
         }
     }
 }
@@ -560,7 +560,7 @@ try {
             }
         }
     }
-    Remove-Item -LiteralPath $snapshotLockPath -Force -ErrorAction SilentlyContinue
+    # Unlinking an unlocked file races with a waiter acquiring that same slot.
     Write-ReadOnlyTiming -Stage 'outer-before-prune'
     Remove-StaleReadOnlySnapshots -RepositoryRoot $sourceRepositoryRoot -SnapshotParent $snapshotParent -CurrentFingerprint $snapshotFingerprint
     Write-ReadOnlyTiming -Stage 'outer-complete'

@@ -13,7 +13,7 @@ $overlayFunction = $guardAst.Find({
     $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'Get-WorkspaceOverlayPaths'
 }, $false)
 . ([scriptblock]::Create($overlayFunction.Extent.Text))
-foreach ($name in @('Test-CommonReadOnlyOverlayPath', 'Get-ReadOnlySnapshotSlotScope', 'Get-ReadOnlySnapshotFingerprint', 'Get-FileHashOrMissing')) {
+foreach ($name in @('Test-CommonReadOnlyOverlayPath', 'Get-ReadOnlySnapshotSlotScope', 'Get-ReadOnlySnapshotFingerprint', 'Get-FileHashOrMissing', 'Remove-StaleReadOnlySnapshots')) {
     $function = $guardAst.Find({
         param($node)
         $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $name
@@ -109,6 +109,68 @@ try {
     )
     $actualAll = @(Get-WorkspaceOverlayPaths -RepositoryRoot $fixture -RelevantPath @())
     if (($actualAll -join "`n") -cne ($expectedAll -join "`n")) { throw 'Empty overlay scope must enumerate the complete workspace.' }
+    $cacheFixture = Join-Path $fixture '.artifacts/lock-lifetime'
+    $staleKey = 'a' * 64
+    $currentKey = 'f' * 64
+    $staleRoot = Join-Path $cacheFixture $staleKey
+    $staleLockPath = Join-Path $cacheFixture "$staleKey.lock"
+    $staleReadyPath = Join-Path $cacheFixture "$staleKey.ready"
+    $null = New-Item -ItemType Directory -Path (Join-Path $staleRoot '.git') -Force
+    [IO.File]::WriteAllText($staleReadyPath, 'ready')
+    (Get-Item -LiteralPath $staleReadyPath).LastWriteTimeUtc = [datetime]::UtcNow.AddMinutes(-10)
+    foreach ($recentKey in @(('b' * 64), ('c' * 64))) {
+        [IO.File]::WriteAllText((Join-Path $cacheFixture "$recentKey.ready"), 'recent')
+    }
+    $heldLock = [IO.File]::Open($staleLockPath, 'OpenOrCreate', 'ReadWrite', 'None')
+    try {
+        Remove-StaleReadOnlySnapshots -RepositoryRoot $fixture -SnapshotParent $cacheFixture -CurrentFingerprint $currentKey -Retain 2
+        if (-not (Test-Path -LiteralPath $staleRoot) -or -not (Test-Path -LiteralPath $staleLockPath)) {
+            throw 'Pruning removed a busy snapshot or its live lock identity.'
+        }
+    } finally { $heldLock.Dispose() }
+    Remove-StaleReadOnlySnapshots -RepositoryRoot $fixture -SnapshotParent $cacheFixture -CurrentFingerprint $currentKey -Retain 2
+    if ((Test-Path -LiteralPath $staleRoot) -or (Test-Path -LiteralPath $staleReadyPath) -or
+        -not (Test-Path -LiteralPath $staleLockPath)) {
+        throw 'Pruning must remove the stale clone while retaining its reusable lock identity.'
+    }
+    $clearTools = Join-Path $fixture '.llm-wiki/tools'
+    $null = New-Item -ItemType Directory -Path $clearTools -Force
+    foreach ($tool in @('Clear-LlmWikiReadOnlySnapshotCache.ps1','LlmWikiGitPaths.ps1')) {
+        Copy-Item -LiteralPath (Join-Path $PSScriptRoot $tool) -Destination (Join-Path $clearTools $tool) -Force
+    }
+    $cacheHasher = [Security.Cryptography.SHA256]::Create()
+    try { $cacheHash = $cacheHasher.ComputeHash([Text.Encoding]::UTF8.GetBytes(([IO.Path]::GetFullPath($fixture)).ToLowerInvariant())) }
+    finally { $cacheHasher.Dispose() }
+    $cacheKey = (([BitConverter]::ToString($cacheHash) -replace '-', '').ToLowerInvariant()).Substring(0,16)
+    $tempRoot = if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) {
+        Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::LocalApplicationData)) 'Temp'
+    } else { [IO.Path]::GetTempPath() }
+    $cacheBase = [IO.Path]::GetFullPath((Join-Path $tempRoot 'fooddiary-llm-wiki-read-only'))
+    $ownedCache = [IO.Path]::GetFullPath((Join-Path $cacheBase $cacheKey))
+    $ownedRoot = Join-Path $ownedCache $staleKey
+    $ownedLockPath = Join-Path $ownedCache "$staleKey.lock"
+    try {
+        $null = New-Item -ItemType Directory -Path (Join-Path $ownedRoot '.git') -Force
+        [IO.File]::WriteAllText((Join-Path $ownedCache "$staleKey.ready"), 'ready')
+        $heldLock = [IO.File]::Open($ownedLockPath, 'OpenOrCreate', 'ReadWrite', 'None')
+        $shell = (Get-Process -Id $PID).Path
+        try {
+            $output = & $shell -NoLogo -NoProfile -File (Join-Path $clearTools 'Clear-LlmWikiReadOnlySnapshotCache.ps1') -Retain 0
+            if ($LASTEXITCODE -ne 0 -or ($output -join ' ') -notmatch 'busy=1' -or
+                -not (Test-Path -LiteralPath $ownedRoot) -or -not (Test-Path -LiteralPath $ownedLockPath)) {
+                throw 'Explicit cache cleanup removed a busy clone or its live lock identity.'
+            }
+        } finally { $heldLock.Dispose() }
+        $output = & $shell -NoLogo -NoProfile -File (Join-Path $clearTools 'Clear-LlmWikiReadOnlySnapshotCache.ps1') -Retain 0
+        if ($LASTEXITCODE -ne 0 -or ($output -join ' ') -notmatch 'removed=1' -or
+            (Test-Path -LiteralPath $ownedRoot) -or -not (Test-Path -LiteralPath $ownedLockPath)) {
+            throw 'Explicit cleanup must delete the unlocked clone but preserve its lock identity.'
+        }
+    } finally {
+        $cachePrefix = $cacheBase.TrimEnd('\','/') + [IO.Path]::DirectorySeparatorChar
+        if (-not $ownedCache.StartsWith($cachePrefix,[StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe owned cache fixture cleanup path.' }
+        if (Test-Path -LiteralPath $ownedCache) { Remove-Item -LiteralPath $ownedCache -Recurse -Force }
+    }
     $invalidRepository = Join-Path $fixture 'not-a-repository'
     $null = New-Item -ItemType Directory -Path $invalidRepository -Force
     [IO.File]::WriteAllText((Join-Path $invalidRepository '.git'), 'gitdir: missing', [Text.Encoding]::ASCII)
@@ -124,4 +186,4 @@ try {
     }
     Remove-Item -LiteralPath $resolvedFixture -Recurse -Force -ErrorAction SilentlyContinue
 }
-Write-Host 'LLM Wiki overlay batching regression passed: large argv, exact scoped results, rename source/destination, stable deduplication, Unicode/spaces, empty scope, and Git failures.'
+Write-Host 'LLM Wiki overlay batching and lock lifetime regressions passed: scoped paths, Unicode, renames, Git failures, busy-cache protection, and persistent lock identity after prune/clear.'

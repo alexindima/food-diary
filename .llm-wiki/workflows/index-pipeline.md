@@ -22,6 +22,7 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1
   - .llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1
   - .llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1
+  - .llm-wiki/tools/Clear-LlmWikiReadOnlySnapshotCache.ps1
   - .llm-wiki/tools/code-graph-snapshot.mjs
   - .llm-wiki/tools/code-graph-snapshot.test.mjs
   - .llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1
@@ -154,6 +155,12 @@ every reuse still verifies current overlay hashes and required tool contents,
 and mutation detection discards a poisoned clone. The cold-checkout regression
 therefore builds an empty private graph once for backend planning and the twelve
 indexes, while the source checkout remains without a database or frontend packages.
+
+Slot lock files remain stable coordination points between invocations. Queries,
+automatic pruning and explicit cache cleanup take the same exclusive slot lock
+before touching a private clone. Cleanup removes the clone and ready marker,
+while retaining the small lock file so waiting processes cannot acquire different
+locks for one slot. Busy clones are skipped by both cleanup paths.
 
 Context-search batches use a connection-local 64 MiB SQLite page-cache target to
 avoid repeatedly reading the same FTS pages. SQLite allocates pages on demand;

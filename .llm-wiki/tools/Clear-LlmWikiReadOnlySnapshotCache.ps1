@@ -43,15 +43,6 @@ foreach ($readyFile in @($readyFiles | Select-Object -Skip $Retain)) {
     if (-not $snapshotRoot.StartsWith($snapshotPrefix, [StringComparison]::OrdinalIgnoreCase)) {
         throw "Refusing to clean a read-only snapshot outside its repository cache: $snapshotRoot"
     }
-    if (-not (Test-Path -LiteralPath (Join-Path $snapshotRoot '.git') -PathType Leaf)) {
-        if (Test-Path -LiteralPath $snapshotRoot -PathType Container) {
-            Remove-Item -LiteralPath $snapshotRoot -Recurse -Force
-        }
-        Remove-Item -LiteralPath $readyFile.FullName -Force -ErrorAction SilentlyContinue
-        Remove-Item -LiteralPath (Join-Path $snapshotParent "$fingerprint.lock") -Force -ErrorAction SilentlyContinue
-        $removed++
-        continue
-    }
     $lockPath = Join-Path $snapshotParent "$fingerprint.lock"
     $lock = $null
     try {
@@ -59,6 +50,15 @@ foreach ($readyFile in @($readyFiles | Select-Object -Skip $Retain)) {
             $lock = [IO.File]::Open($lockPath, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
         } catch [IO.IOException] {
             $busy++
+            continue
+        }
+        # Private clones and old worktrees share the same per-slot lock.
+        if (-not (Test-Path -LiteralPath (Join-Path $snapshotRoot '.git') -PathType Leaf)) {
+            if (Test-Path -LiteralPath $snapshotRoot -PathType Container) {
+                Remove-Item -LiteralPath $snapshotRoot -Recurse -Force
+            }
+            Remove-Item -LiteralPath $readyFile.FullName -Force -ErrorAction SilentlyContinue
+            $removed++
             continue
         }
         $previousErrorActionPreference = $ErrorActionPreference
@@ -77,7 +77,7 @@ foreach ($readyFile in @($readyFiles | Select-Object -Skip $Retain)) {
         }
     } finally {
         if ($lock) { $lock.Dispose() }
-        Remove-Item -LiteralPath $lockPath -Force -ErrorAction SilentlyContinue
+        # Retain the lock file so other processes keep one shared lock identity.
     }
 }
 

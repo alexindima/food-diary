@@ -200,17 +200,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "cefc9d904d7624ad7ddc72ccbeb16a6d4f19b5027570593ebd0c8b20c95531d9"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-          "sha256": "0e82df197b653e62d8e4857137c84150a67fb746d04c1de74795d208177b663e"
+          "sha256": "fbe8a5248a4151d39ca9472eeb142d2f52668ea96784b594f7ef1b196423a4ca"
         }
       ],
-      "reason": "Reviewed explicit profile/shard checkout partitions for long Full audits. Source content identity, ordinary common-slot reuse, overlay hashes, mutation rejection and recovery remain intact. Real concurrent subprocess barriers prove distinct private roots; the frozen Full assertion inventory is unchanged. Regenerated metrics preserve static coverage and security-discovery limitations.",
+      "reason": "Reviewed stable read-only slot lock lifetime: queries, automatic pruning and explicit cleanup use one permanent lock identity; clone cleanup now acquires the slot lock before deletion. Busy-clone and stable-lock regression cases pass, and real concurrent partition/mutation guard tests pass. Read-only source isolation and freshness checks are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "e25269af244b29a8e29ea0707e1594a8deebfe35",
-      "reviewedAtUtc": "2026-10-06T03:00:28.9518867Z"
+      "gitHead": "9d7659646103fd1042479f685e28c83669ebdb12",
+      "reviewedAtUtc": "2026-10-06T09:32:17.3002964Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -679,21 +675,25 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "2e9dd8106543f7a3b09cec154c061aba14fff8f24034038422139eeda81c43cd",
+      "pageSha256": "f8ab74cfc6bb46a83d42034e896a5703955eaef57cba0db5e77f7aeae3073d90",
       "sources": [
         {
-          "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
-          "sha256": "8f6cfdbac46c6086c78909bf2d4506b294bb650458fd2fa01bb62368844d0946"
+          "path": ".llm-wiki/tools/Clear-LlmWikiReadOnlySnapshotCache.ps1",
+          "sha256": "e0ec944e5a5de5e32d6dea2f134e616be6efefccde2e6b930efdd5a9b050937d"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
-          "sha256": "eff28ecb416b3624cd5f0de9a8f2bb203a52efd7021d4b439a4ade4ae61b5287"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+          "sha256": "fbe8a5248a4151d39ca9472eeb142d2f52668ea96784b594f7ef1b196423a4ca"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyOverlayPaths.ps1",
+          "sha256": "d2771e6862ef04d6772e467bd77a997a609a8c722e165f1948fd3784d5750dc1"
         }
       ],
-      "reason": "Reviewed dependency-aware generation, owned process cleanup and focused verification contracts against LlmWikiProcess.ps1, Test-LlmWikiProcess.ps1 and the corpus regression. Kill-tree behavior remains the same; the new bounded termination observer recognizes Linux defunct states while rejecting a live process. Windows PowerShell 7/5.1 and controlled Linux checks passed; quality-index metrics were regenerated and source/index transaction behavior remains valid.",
+      "reason": "Reviewed concurrent cache cleanup race exposed by full verification: preserve per-slot lock files, acquire the lock for clone cleanup, and skip busy clones. Deterministic pruning and actual subprocess cleanup regressions cover both paths; full guard concurrency/mutation coverage passed. Source reads, overlays, retention bounds and frozen audit inventories remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "d618f4b90cfc9b8b86854ead921110cee2935023",
-      "reviewedAtUtc": "2026-10-05T21:58:55.5996565Z"
+      "gitHead": "9d7659646103fd1042479f685e28c83669ebdb12",
+      "reviewedAtUtc": "2026-10-06T09:32:18.1251235Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
