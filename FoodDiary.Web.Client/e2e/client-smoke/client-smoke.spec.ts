@@ -78,7 +78,12 @@ const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     { matches: pathname => pathname.endsWith('/recipes/explore'), createResponse: createEmptyProductsPage },
     { matches: pathname => pathname.endsWith('/recipes/public'), createResponse: createEmptyProductsPage },
     { matches: pathname => pathname.endsWith('/recipes/public/categories'), createResponse: () => [] },
-    { matches: pathname => pathname.endsWith('/favorite-recipes'), createResponse: () => [] },
+    {
+        matches: pathname => pathname.endsWith('/recipes/overview'),
+        createResponse: () => ({ recentItems: [], allRecipes: createEmptyProductsPage(), favoriteItems: [], favoriteTotalCount: 0 }),
+    },
+    { matches: pathname => pathname.endsWith('/favorite-recipes'), createResponse: createEmptyProductsPage },
+    { matches: pathname => pathname.endsWith('/favorite-recipes/page'), createResponse: createEmptyProductsPage },
     { matches: pathname => pathname.endsWith('/meal-plans'), createResponse: createEmptyProductsPage },
     { matches: pathname => pathname.endsWith('/shopping-lists/overview'), createResponse: createShoppingListsOverview },
     { matches: pathname => pathname.endsWith('/lessons'), createResponse: () => [] },
@@ -93,6 +98,16 @@ const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     { matches: pathname => pathname.endsWith('/usda/daily-micronutrients'), createResponse: createDailyMicronutrients },
     { matches: pathname => pathname.endsWith('/notifications/unread-count'), createResponse: () => ({ count: 2 }) },
     { matches: pathname => pathname.endsWith('/notifications'), createResponse: () => [] },
+    {
+        matches: pathname => pathname.endsWith('/goals'),
+        createResponse: () => ({ dailyCalorieTarget: 1900, calorieCyclingEnabled: false }),
+    },
+    { matches: pathname => pathname.endsWith('/weekly-goals'), createResponse: () => null },
+    { matches: pathname => pathname.endsWith('/weekly-check-in'), createResponse: createEmptyWeeklyCheckIn },
+    {
+        matches: pathname => pathname.endsWith('/gamification'),
+        createResponse: () => ({ currentStreak: 0, longestStreak: 0, totalMealsLogged: 0, healthScore: 0, weeklyAdherence: 0, badges: [] }),
+    },
     {
         matches: pathname => pathname.endsWith('/dietologist/invitations/invitation-1/current-user'),
         createResponse: createDietologistInvitation,
@@ -874,8 +889,8 @@ test.describe('dashboard regression writes', () => {
         await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route => route.fulfill(jsonResponse(snapshot)));
         await page.route(/\/api\/v1\/hydrations\/?$/u, async route => {
             requests.push(route.request().postDataJSON());
-            snapshot['hydration'] = { goalMl: 2200, totalMl: 1050, entries: [] };
-            await route.fulfill(jsonResponse({ id: 'water-added' }));
+            snapshot['hydration'] = { dateUtc: '2026-04-19T00:00:00.000Z', goalMl: 2200, totalMl: 1050, entries: [] };
+            await route.fulfill(jsonResponse({ id: 'water-added', timestampUtc: '2026-04-19T12:00:00Z', amountMl: 250 }));
         });
         await page.goto('/dashboard');
         await page.locator('fd-dashboard-hydration-block').scrollIntoViewIfNeeded();
@@ -896,7 +911,7 @@ test.describe('dashboard regression writes', () => {
             requests.push(route.request().postDataJSON());
             snapshot['dailyGoal'] = 2100;
             insight['currentCalorieTarget'] = 2100;
-            await route.fulfill(jsonResponse({ dailyCalorieTarget: 2100 }));
+            await route.fulfill(jsonResponse({ dailyCalorieTarget: 2100, calorieCyclingEnabled: false }));
         });
         await page.goto('/dashboard');
         await page.locator('fd-dashboard-tdee-block').scrollIntoViewIfNeeded();
@@ -943,10 +958,12 @@ function createDashboardRegressionSnapshot(): Record<string, unknown> {
         },
         weightTrend: DASHBOARD_WEIGHT_VALUES.map((value, index) => ({
             startDate: `2026-04-${DASHBOARD_TREND_START_DAY + index}`,
+            endDate: `2026-04-${DASHBOARD_TREND_START_DAY + index}`,
             averageWeightKg: value,
         })),
         waistTrend: DASHBOARD_WAIST_VALUES.map((value, index) => ({
             startDate: `2026-04-${DASHBOARD_TREND_START_DAY + index}`,
+            endDate: `2026-04-${DASHBOARD_TREND_START_DAY + index}`,
             averageCircumferenceCm: value,
         })),
         weeklyCalories: Array.from({ length: DASHBOARD_WEEK_DAYS }, (_, index) => ({
@@ -1078,6 +1095,7 @@ function resolveClientApiResponse(pathname: string): unknown {
 function createDashboardSnapshot(): Record<string, unknown> {
     return {
         date: '2026-04-19T00:00:00.000Z',
+        dateTo: '2026-04-19T00:00:00.000Z',
         dailyGoal: 1900,
         weeklyCalorieGoal: 13300,
         statistics: {
@@ -1093,25 +1111,30 @@ function createDashboardSnapshot(): Record<string, unknown> {
         },
         weeklyCalories: [],
         weight: {
-            latest: { date: '2026-04-18T00:00:00.000Z', weight: 72.4 },
-            previous: { date: '2026-04-11T00:00:00.000Z', weight: 72.9 },
-            desired: 68,
+            latest: { date: '2026-04-18T00:00:00.000Z', weightKg: 72.4 },
+            previous: { date: '2026-04-11T00:00:00.000Z', weightKg: 72.9 },
+            desiredWeightKg: 68,
         },
         waist: {
-            latest: { date: '2026-04-18T00:00:00.000Z', circumference: 81 },
-            previous: { date: '2026-04-11T00:00:00.000Z', circumference: 82 },
-            desired: 76,
+            latest: { date: '2026-04-18T00:00:00.000Z', circumferenceCm: 81 },
+            previous: { date: '2026-04-11T00:00:00.000Z', circumferenceCm: 82 },
+            desiredWaistCm: 76,
         },
         meals: {
             items: [],
             total: 0,
         },
         hydration: {
+            dateUtc: '2026-04-19T00:00:00.000Z',
             goalMl: 2200,
             totalMl: 800,
             entries: [],
         },
         advice: {
+            id: 'advice-1',
+            locale: 'en',
+            value: 'Good start for the day.',
+            weight: 1,
             tone: 'supportive',
             title: 'Keep going',
             summary: 'Good start for the day.',
@@ -1129,6 +1152,7 @@ function createDashboardSnapshot(): Record<string, unknown> {
 function createUser(): Record<string, unknown> {
     return {
         id: 'u1',
+        hasPassword: true,
         email: 'user@example.com',
         username: 'alexi',
         language: 'en',
@@ -1355,6 +1379,26 @@ function createEmptyProductsPage(): Record<string, unknown> {
     };
 }
 
+function createEmptyWeeklyCheckIn(): Record<string, unknown> {
+    const week = {
+        totalCalories: 0,
+        avgDailyCalories: 0,
+        avgProteins: 0,
+        avgFats: 0,
+        avgCarbs: 0,
+        mealsLogged: 0,
+        daysLogged: 0,
+        totalHydrationMl: 0,
+        avgDailyHydrationMl: 0,
+    };
+    return {
+        thisWeek: week,
+        lastWeek: week,
+        trends: { calorieChange: 0, proteinChange: 0, fatChange: 0, carbChange: 0, hydrationChange: 0, mealsLoggedChange: 0 },
+        suggestions: [],
+    };
+}
+
 function createOwnedProduct(): Record<string, unknown> {
     return {
         id: 'p1',
@@ -1453,7 +1497,7 @@ function createOwnedRecipe(): Record<string, unknown> {
         name: 'Roasted vegetable bowl',
         description: 'A deterministic recipe used for edit-flow checks.',
         comment: null,
-        category: 'Dinner',
+        category: 'main_courses',
         imageUrl: null,
         imageAssetId: null,
         prepTime: 15,
@@ -1915,7 +1959,7 @@ function createRecipeRedesignFixtures(): { recipe: Record<string, unknown>; favo
         recipeId: 'recipe-1',
         recipeName: 'Roasted vegetable bowl',
         name: null,
-        createdAtUtc: '',
+        createdAtUtc: '2026-07-01T10:00:00.000Z',
         imageUrl: TEST_IMAGE_URLS[0],
         servings: 2,
         totalCalories: 640,
@@ -2024,7 +2068,15 @@ test.describe('product redesign regression', () => {
             await authenticateUserAsync(page);
             await mockAuthenticatedClientApiAsync(page);
             const product = { ...createOwnedProduct(), isFavorite: true, favoriteProductId: 'pf1' };
-            let favorite = { ...product, id: 'pf1', productId: 'p1', productName: 'Greek yogurt', name: null, preferredPortionAmount: 150 };
+            let favorite = {
+                ...product,
+                id: 'pf1',
+                productId: 'p1',
+                productName: 'Greek yogurt',
+                createdAtUtc: '2026-04-19T00:00:00Z',
+                name: null,
+                preferredPortionAmount: 150,
+            };
             let removed = false;
             let requests = 0;
             await page.route('**/api/v1/products/overview**', async route => {

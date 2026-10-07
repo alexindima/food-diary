@@ -1,5 +1,6 @@
 import { expect, type Page, test } from '@playwright/test';
 
+import type { AdminAiUsageSummary } from '../../projects/fooddiary-admin/src/app/features/admin-ai-usage/models/admin-ai-usage.data';
 import type { AdminDashboardOverview } from '../../projects/fooddiary-admin/src/app/features/admin-dashboard/models/admin-dashboard-overview.data';
 
 const DAY_MS = 86_400_000;
@@ -113,7 +114,16 @@ async function mockAdminApiAsync(page: Page): Promise<void> {
     });
 
     await page.route('**/api/v1/admin/ai-usage/summary**', async route => {
-        await route.fulfill(jsonResponse({ totalTokens: 12345, inputTokens: 7000, outputTokens: 5345 }));
+        const summary: AdminAiUsageSummary = {
+            totalTokens: 12345,
+            inputTokens: 7000,
+            outputTokens: 5345,
+            byDay: [],
+            byOperation: [],
+            byModel: [],
+            byUser: [],
+        };
+        await route.fulfill(jsonResponse(summary));
     });
 
     await page.route('**/api/v1/admin/users**', async route => {
