@@ -97,7 +97,7 @@ describe('ProductService query', () => {
             expect(result).toEqual(MOCK_PAGE);
         });
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
+        const req = httpMock.expectOne(r => r.url === BASE_URL && r.method === 'GET');
         expect(req.request.params.get('page')).toBe('1');
         expect(req.request.params.get('limit')).toBe(String(DEFAULT_PAGE_LIMIT));
         expect(req.request.params.get('includePublic')).toBe('true');
@@ -111,7 +111,7 @@ describe('ProductService query', () => {
             expect(result.data.length).toBe(1);
         });
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
+        const req = httpMock.expectOne(r => r.url === BASE_URL && r.method === 'GET');
         expect(req.request.params.get('search')).toBe('chicken');
         expect(req.request.params.get('productTypes')).toBe('Meat,Dairy');
         expect(req.request.params.get('includePublic')).toBe('false');
@@ -123,7 +123,7 @@ describe('ProductService query', () => {
 
         service.query(1, DEFAULT_PAGE_LIMIT, filters).subscribe();
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
+        const req = httpMock.expectOne(r => r.url === BASE_URL && r.method === 'GET');
         expect(req.request.params.has('search')).toBe(false);
         req.flush(MOCK_PAGE);
     });
@@ -137,7 +137,7 @@ describe('ProductService query', () => {
             },
         });
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
+        const req = httpMock.expectOne(r => r.url === BASE_URL && r.method === 'GET');
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
         expect(received).toMatchObject({ status: 500 });
     });
@@ -172,7 +172,7 @@ describe('ProductService mutations', () => {
             expect(result).toEqual(MOCK_PRODUCT);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(BASE_URL);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual(createData);
         req.flush(MOCK_PRODUCT);
@@ -206,7 +206,7 @@ describe('ProductService mutations', () => {
 
         const req = httpMock.expectOne(`${BASE_URL}/p1/duplicate`);
         expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({});
+        expect(req.request.body).toBeNull();
         req.flush(MOCK_PRODUCT);
     });
 });
@@ -414,7 +414,16 @@ describe('ProductService API measurement units', () => {
             .expectOne(request => request.url === `${BASE_URL}/overview`)
             .flush({
                 recentItems: [{ ...MOCK_PRODUCT, baseUnit: 'Ml' }],
-                favoriteItems: [{ ...MOCK_PRODUCT, baseUnit: 'Pcs' }],
+                favoriteItems: [
+                    {
+                        ...MOCK_PRODUCT,
+                        productId: MOCK_PRODUCT.id,
+                        productName: MOCK_PRODUCT.name,
+                        createdAtUtc: '2026-01-01T00:00:00Z',
+                        preferredPortionAmount: 100,
+                        baseUnit: 'Pcs',
+                    },
+                ],
                 favoriteTotalCount: 1,
                 allProducts: { ...MOCK_PAGE, data: [{ ...MOCK_PRODUCT, baseUnit: 'Ml' }] },
             });
@@ -432,7 +441,7 @@ describe('ProductService API measurement units', () => {
             page = value;
         });
         httpMock
-            .expectOne(request => request.url === `${BASE_URL}/`)
+            .expectOne(request => request.url === BASE_URL)
             .flush({
                 ...MOCK_PAGE,
                 data: [{ ...MOCK_PRODUCT, baseUnit: 'Pcs' }],

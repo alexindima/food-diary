@@ -1,12 +1,14 @@
-import { HttpContext, HttpHeaders } from '@angular/common/http';
-import { Service } from '@angular/core';
-import { catchError, type Observable } from 'rxjs';
+import { HttpClient, HttpContext } from '@angular/common/http';
+import { inject, Service } from '@angular/core';
+import { catchError, map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.tokens';
-import { ApiService } from '../../../services/api.service';
+import { WaistEntriesSdk } from '../../../shared/api/sdk/generated/api/waist-entries.service';
+import { waistEntryFromSdk, waistPageSummaryFromSdk, waistSummaryFromSdk } from '../../../shared/api/sdk/measurement-sdk.mapper';
+import { createSdkConnection, sdkRequestOptions } from '../../../shared/api/sdk/sdk-connection';
+import { sdkOptional } from '../../../shared/api/sdk/sdk-response';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import { addOptionalNumberParam, addOptionalStringParam, type ApiQueryParams } from '../../../shared/lib/api-query-params.utils';
 import { MEASUREMENT_HISTORY_FETCH_LIMIT } from '../../../shared/measurements/measurement-history.constants';
 import type {
     CreateWaistEntryPayload,
@@ -20,70 +22,75 @@ import type {
 } from '../../../shared/models/waist-entry.data';
 
 @Service()
-export class WaistEntriesService extends ApiService {
+export class WaistEntriesService {
     protected readonly baseUrl = environment.apiUrls.waists;
+    private readonly sdk = createSdkConnection(WaistEntriesSdk, this.baseUrl, inject(HttpClient));
 
     public getEntries(filters?: WaistEntryFilters): Observable<WaistEntry[]> {
-        const params: ApiQueryParams = {};
-
-        addOptionalStringParam(params, 'dateFrom', filters?.dateFrom);
-        addOptionalStringParam(params, 'dateTo', filters?.dateTo);
-        addOptionalNumberParam(params, 'limit', filters?.limit);
-        addOptionalStringParam(params, 'sort', filters?.sort);
-
-        return this.get<WaistEntry[]>('', params).pipe(
-            catchError((error: unknown) => fallbackApiError('Waist entries fetch error', error, [])),
-        );
+        return this.sdk.client
+            .getWaistEntries({
+                version: this.sdk.version,
+                ...filters,
+                dateFrom: filters?.dateFrom === '' ? undefined : filters?.dateFrom,
+                dateTo: filters?.dateTo === '' ? undefined : filters?.dateTo,
+            })
+            .pipe(
+                map(entries => entries.map(waistEntryFromSdk)),
+                catchError((error: unknown) => fallbackApiError('Waist entries fetch error', error, [])),
+            );
     }
 
     public getHistoryPage(dateTo?: string): Observable<WaistEntry[]> {
-        const params: ApiQueryParams = { limit: MEASUREMENT_HISTORY_FETCH_LIMIT, sort: 'desc' };
-        addOptionalStringParam(params, 'dateTo', dateTo);
-        return this.get<WaistEntry[]>('', params, undefined, new HttpContext().set(SKIP_GLOBAL_LOADING, true));
+        return this.sdk.client
+            .getWaistEntries(
+                { version: this.sdk.version, limit: MEASUREMENT_HISTORY_FETCH_LIMIT, sort: 'desc', dateTo },
+                'body',
+                false,
+                sdkRequestOptions(undefined, new HttpContext().set(SKIP_GLOBAL_LOADING, true)),
+            )
+            .pipe(map(entries => entries.map(waistEntryFromSdk)));
     }
 
     public getLatest(): Observable<WaistEntry | null> {
-        return this.get<WaistEntry | null>('latest').pipe(
+        return this.sdk.client.getWaistEntriesLatest({ version: this.sdk.version }).pipe(
+            map(value => sdkOptional(value, waistEntryFromSdk)),
             catchError((error: unknown) => fallbackApiError('Waist latest fetch error', error, null)),
         );
     }
 
     public create(payload: CreateWaistEntryPayload): Observable<WaistEntry> {
-        const headers = new HttpHeaders({ 'Idempotency-Key': crypto.randomUUID() });
-        return this.post<WaistEntry>('', payload, headers).pipe(
-            catchError((error: unknown) => rethrowApiError('Create waist entry error', error)),
-        );
+        return this.sdk.client
+            .postWaistEntries({ version: this.sdk.version, idempotencyKey: crypto.randomUUID(), createWaistEntryHttpRequest: payload })
+            .pipe(
+                map(waistEntryFromSdk),
+                catchError((error: unknown) => rethrowApiError('Create waist entry error', error)),
+            );
     }
 
     public update(id: string, payload: UpdateWaistEntryPayload): Observable<WaistEntry> {
-        return this.put<WaistEntry>(id, payload).pipe(catchError((error: unknown) => rethrowApiError('Update waist entry error', error)));
+        return this.sdk.client.putWaistEntriesById({ version: this.sdk.version, id, updateWaistEntryHttpRequest: payload }).pipe(
+            map(waistEntryFromSdk),
+            catchError((error: unknown) => rethrowApiError('Update waist entry error', error)),
+        );
     }
 
     public remove(id: string): Observable<void> {
-        return super.delete<void>(id).pipe(catchError((error: unknown) => rethrowApiError('Delete waist entry error', error)));
+        return this.sdk.client.deleteWaistEntriesById({ version: this.sdk.version, id }).pipe(
+            map(() => {}),
+            catchError((error: unknown) => rethrowApiError('Delete waist entry error', error)),
+        );
     }
 
     public getSummary(filters: WaistEntrySummaryFilters): Observable<WaistEntrySummaryPoint[]> {
-        const params: ApiQueryParams = {
-            dateFrom: filters.dateFrom,
-            dateTo: filters.dateTo,
-            quantizationDays: filters.quantizationDays,
-        };
-
-        return this.get<WaistEntrySummaryPoint[]>('summary', params).pipe(
+        return this.sdk.client.getWaistEntriesSummary({ version: this.sdk.version, ...filters }).pipe(
+            map(points => points.map(waistSummaryFromSdk)),
             catchError((error: unknown) => rethrowApiError('Waist summary fetch error', error)),
         );
     }
 
     public getPageSummary(filters: WaistHistoryPageSummaryFilters): Observable<WaistHistoryPageSummary> {
-        const params: ApiQueryParams = {
-            dateFrom: filters.dateFrom,
-            dateTo: filters.dateTo,
-            quantizationDays: filters.quantizationDays,
-            entriesLimit: filters.entriesLimit,
-        };
-
-        return this.get<WaistHistoryPageSummary>('page-summary', params).pipe(
+        return this.sdk.client.getWaistEntriesPageSummary({ version: this.sdk.version, ...filters }).pipe(
+            map(waistPageSummaryFromSdk),
             catchError((error: unknown) => rethrowApiError('Waist history page summary fetch error', error)),
         );
     }

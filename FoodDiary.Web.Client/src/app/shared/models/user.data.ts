@@ -20,7 +20,7 @@ export type User = {
     username?: string;
     firstName?: string;
     lastName?: string;
-    birthDate?: Date;
+    birthDate?: Date | string;
     gender?: string;
     weightKg?: number;
     desiredWeightKg?: number;

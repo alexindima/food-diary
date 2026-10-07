@@ -40,7 +40,7 @@ describe('WaistEntriesService list', () => {
             expect(entries).toEqual([MOCK_ENTRY]);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(BASE_URL);
         expect(req.request.method).toBe('GET');
         req.flush([MOCK_ENTRY]);
     });
@@ -52,7 +52,7 @@ describe('WaistEntriesService list', () => {
             expect(entries).toEqual([MOCK_ENTRY]);
         });
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
+        const req = httpMock.expectOne(r => r.url === BASE_URL);
         expect(req.request.method).toBe('GET');
         expect(req.request.params.get('dateFrom')).toBe('2026-01-01');
         expect(req.request.params.get('dateTo')).toBe('2026-03-01');
@@ -66,7 +66,7 @@ describe('WaistEntriesService list', () => {
             expect(entries).toEqual([MOCK_ENTRY]);
         });
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
+        const req = httpMock.expectOne(r => r.url === BASE_URL);
         expect(req.request.params.keys()).toEqual([]);
         req.flush([MOCK_ENTRY]);
     });
@@ -76,7 +76,7 @@ describe('WaistEntriesService list', () => {
             expect(entries).toEqual([]);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(BASE_URL);
         req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 });
@@ -110,7 +110,7 @@ describe('WaistEntriesService mutations', () => {
             expect(entry).toEqual(MOCK_ENTRY);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(BASE_URL);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual(payload);
         expect(req.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/u);
@@ -205,7 +205,7 @@ describe('Measurement history page requests', () => {
     it.each([undefined, '2026-03-01'])('requests only 21 newest rows up to %s, without global loading', dateTo => {
         const received = vi.fn();
         service.getHistoryPage(dateTo).subscribe(received);
-        const request = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
+        const request = httpMock.expectOne(r => r.url === BASE_URL);
         expect(request.request.params.get('limit')).toBe('21');
         expect(request.request.params.get('sort')).toBe('desc');
         expect(request.request.params.get('dateTo')).toBe(dateTo ?? null);
@@ -217,7 +217,7 @@ describe('Measurement history page requests', () => {
     it('propagates errors so the dialog can retry instead of showing empty history', () => {
         const error = vi.fn();
         service.getHistoryPage().subscribe({ error });
-        httpMock.expectOne(r => r.url === `${BASE_URL}/`).flush({}, { status: 503, statusText: 'Unavailable' });
+        httpMock.expectOne(r => r.url === BASE_URL).flush({}, { status: 503, statusText: 'Unavailable' });
         expect(error).toHaveBeenCalledTimes(1);
     });
 });

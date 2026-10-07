@@ -126,7 +126,7 @@ describe('FavoriteMealService mutations and legacy reads', () => {
             expect(result).toEqual(favoriteMeal);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(BASE_URL);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual({ mealId: 'meal-1', name: 'Lunch' });
         req.flush(favoriteMeal);
@@ -142,7 +142,7 @@ describe('FavoriteMealService mutations and legacy reads', () => {
             },
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(BASE_URL);
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 

@@ -1,52 +1,27 @@
-import { Service } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { inject, Service } from '@angular/core';
 import { catchError, map, type Observable, of } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { ApiService } from '../../../services/api.service';
+import { favoriteMealFromSdk } from '../../../shared/api/sdk/favorite-sdk.mapper';
+import { type GetMealsRequestParams, MealsSdk } from '../../../shared/api/sdk/generated/api/meals.service';
+import { mealFromSdk, mealRequestToSdk } from '../../../shared/api/sdk/meal-sdk.mapper';
+import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
+import { sdkQueryString } from '../../../shared/api/sdk/sdk-query';
+import { requireSdkFields, sdkPage } from '../../../shared/api/sdk/sdk-response';
 import { rethrowApiError } from '../../../shared/lib/api-error.utils';
-import { normalizeMealType } from '../../../shared/lib/meal-type.util';
-import { normalizeSatietyLevel } from '../../../shared/lib/satiety-level.utils';
-import {
-    createEmptyProductSnapshot,
-    createEmptyRecipeSnapshot,
-    type Meal,
-    type MealAiSession,
-    type MealAiSessionResponseDto,
-    type MealFilters,
-    type MealItem,
-    type MealItemResponseDto,
-    type MealManageDto,
-    type MealOverview,
-    type MealResponseDto,
-    MealSourceType,
-} from '../../../shared/models/meal.data';
+import type { Meal, MealFilters, MealManageDto, MealOverview } from '../../../shared/models/meal.data';
 import type { PageOf } from '../../../shared/models/page-of.data';
-import { MeasurementUnit, type Product } from '../../../shared/models/product.data';
-import type { Recipe } from '../../../shared/models/recipe.data';
-import {
-    MEAL_API_DEFAULT_FAVORITE_LIMIT,
-    MEAL_API_DEFAULT_ITEM_AMOUNT,
-    MEAL_API_EMPTY_NUTRITION_VALUE,
-    MEAL_API_NUTRITION_CLOSE_TOLERANCE,
-} from './meal-api.config';
-
-const MEAL_NUTRITION_FIELDS = ['calories', 'proteins', 'fats', 'carbs', 'fiber', 'alcohol'] as const;
-
-type NutritionField = (typeof MEAL_NUTRITION_FIELDS)[number];
-type NutritionTotals = Record<NutritionField, number>;
+import { MEAL_API_DEFAULT_FAVORITE_LIMIT } from './meal-api.config';
 
 @Service()
-export class MealService extends ApiService {
+export class MealService {
     protected readonly baseUrl = environment.apiUrls.meals;
+    private readonly sdk = createSdkConnection(MealsSdk, this.baseUrl, inject(HttpClient));
 
     public query(page: number, limit: number, filters: MealFilters): Observable<PageOf<Meal>> {
-        const params: Record<string, string | number | boolean> = { page, limit };
-        this.applyMealFilters(params, filters);
-        return this.get<PageOf<MealResponseDto>>('', params).pipe(
-            map(pageData => ({
-                ...pageData,
-                data: pageData.data.map(response => this.mapMeal(response)),
-            })),
+        return this.sdk.client.getMeals({ ...this.mealFiltersToSdk(filters), page, limit }).pipe(
+            map(pageData => sdkPage(pageData, response => mealFromSdk(response))),
             catchError((error: unknown) => rethrowApiError('Query meals error', error)),
         );
     }
@@ -57,306 +32,65 @@ export class MealService extends ApiService {
         filters: MealFilters,
         favorites: { limit?: number; include?: boolean } = {},
     ): Observable<MealOverview> {
-        const params: Record<string, string | number | boolean> = {
-            page,
-            limit,
-            favoriteLimit: favorites.limit ?? MEAL_API_DEFAULT_FAVORITE_LIMIT,
-            includeFavorites: favorites.include ?? true,
-            timeZoneId: new Intl.DateTimeFormat().resolvedOptions().timeZone,
-            timeZoneOffsetMinutes: -new Date().getTimezoneOffset(),
-        };
-        this.applyMealFilters(params, filters);
-        return this.get<MealOverview>('overview', params).pipe(
-            map(response => ({
-                allMeals: {
-                    ...response.allMeals,
-                    data: response.allMeals.data.map(item => this.mapMeal(item)),
-                },
-                daySummaries: response.daySummaries ?? [],
-                favoriteItems: response.favoriteItems,
-                favoriteTotalCount: response.favoriteTotalCount,
-            })),
-            catchError((error: unknown) => rethrowApiError('Query meal overview error', error)),
-        );
+        return this.sdk.client
+            .getMealsOverview({
+                ...this.mealFiltersToSdk(filters),
+                page,
+                limit,
+                favoriteLimit: favorites.limit ?? MEAL_API_DEFAULT_FAVORITE_LIMIT,
+                includeFavorites: favorites.include ?? true,
+                timeZoneId: new Intl.DateTimeFormat().resolvedOptions().timeZone,
+                timeZoneOffsetMinutes: -new Date().getTimezoneOffset(),
+            })
+            .pipe(
+                map(response => {
+                    const value = requireSdkFields(response, ['allMeals', 'favoriteItems', 'favoriteTotalCount']);
+                    return {
+                        allMeals: sdkPage(value.allMeals, item => mealFromSdk(item)),
+                        daySummaries: value.daySummaries?.map(day => requireSdkFields(day, ['date', 'totalCalories', 'mealCount'])) ?? [],
+                        favoriteItems: value.favoriteItems.map(favoriteMealFromSdk),
+                        favoriteTotalCount: value.favoriteTotalCount,
+                    };
+                }),
+                catchError((error: unknown) => rethrowApiError('Query meal overview error', error)),
+            );
     }
 
     public getById(id: string): Observable<Meal | null> {
-        return this.get<MealResponseDto>(id).pipe(
-            map(response => this.mapMeal(response)),
+        return this.sdk.client.getMealsById({ version: this.sdk.version, id }).pipe(
+            map(response => mealFromSdk(response)),
             catchError(() => of(null)),
         );
     }
 
     public create(data: MealManageDto): Observable<Meal> {
-        return this.post<MealResponseDto>('', this.toMealRequest(data)).pipe(
-            map(response => this.mapMeal(response)),
+        return this.sdk.client.postMeals({ version: this.sdk.version, createMealHttpRequest: mealRequestToSdk(data) }).pipe(
+            map(response => mealFromSdk(response)),
             catchError((error: unknown) => rethrowApiError('Create meal error', error)),
         );
     }
 
     public update(id: string, data: MealManageDto): Observable<Meal> {
-        return this.patch<MealResponseDto>(id, this.toMealRequest(data)).pipe(
-            map(response => this.mapMeal(response)),
+        return this.sdk.client.patchMealsById({ version: this.sdk.version, id, updateMealHttpRequest: mealRequestToSdk(data) }).pipe(
+            map(response => mealFromSdk(response)),
             catchError((error: unknown) => rethrowApiError('Update meal error', error)),
         );
     }
 
     public deleteById(id: string): Observable<void> {
-        return this.delete<void>(id).pipe(catchError((error: unknown) => rethrowApiError('Delete meal error', error)));
-    }
-
-    private toMealRequest(data: MealManageDto): MealManageDto {
-        return {
-            ...data,
-            preMealSatietyLevel: normalizeSatietyLevel(data.preMealSatietyLevel) ?? 0,
-            postMealSatietyLevel: normalizeSatietyLevel(data.postMealSatietyLevel) ?? 0,
-        };
+        return this.sdk.client
+            .deleteMealsById({ version: this.sdk.version, id })
+            .pipe(catchError((error: unknown) => rethrowApiError('Delete meal error', error)));
     }
 
     public repeat(id: string, targetDate: string, mealType?: string): Observable<Meal> {
-        return this.post<MealResponseDto>(`${id}/repeat`, { targetDate, mealType }).pipe(
-            map(response => this.mapMeal(response)),
+        return this.sdk.client.postMealsByIdRepeat({ version: this.sdk.version, id, repeatMealHttpRequest: { targetDate, mealType } }).pipe(
+            map(response => mealFromSdk(response)),
             catchError((error: unknown) => rethrowApiError('Repeat meal error', error)),
         );
     }
 
-    private applyMealFilters(params: Record<string, string | number | boolean>, filters: MealFilters): void {
-        if (filters.dateFrom !== undefined) {
-            params['dateFrom'] = filters.dateFrom;
-        }
-        if (filters.dateTo !== undefined) {
-            params['dateTo'] = filters.dateTo;
-        }
-        if (filters.mealTypes !== undefined && filters.mealTypes.length > 0) {
-            params['mealTypes'] = filters.mealTypes;
-        }
-        if (filters.caloriesFrom !== undefined) {
-            params['caloriesFrom'] = filters.caloriesFrom;
-        }
-        if (filters.caloriesTo !== undefined) {
-            params['caloriesTo'] = filters.caloriesTo;
-        }
-        if (filters.hasImage !== undefined) {
-            params['hasImage'] = filters.hasImage;
-        }
-        if (filters.hasAiSession !== undefined) {
-            params['hasAiSession'] = filters.hasAiSession;
-        }
-    }
-
-    private mapMeal(response: MealResponseDto): Meal {
-        const isNutritionAutoCalculated = this.resolveIsNutritionAutoCalculated(response);
-
-        return {
-            id: response.id,
-            date: response.date,
-            mealType: normalizeMealType(response.mealType),
-            comment: response.comment,
-            imageUrl: this.toNullable(response.imageUrl),
-            imageAssetId: this.toNullable(response.imageAssetId),
-            totalCalories: response.totalCalories,
-            totalProteins: response.totalProteins,
-            totalFats: response.totalFats,
-            totalCarbs: response.totalCarbs,
-            totalFiber: response.totalFiber,
-            totalAlcohol: response.totalAlcohol,
-            isNutritionAutoCalculated,
-            manualCalories: this.toNullable(response.manualCalories),
-            manualProteins: this.toNullable(response.manualProteins),
-            manualFats: this.toNullable(response.manualFats),
-            manualCarbs: this.toNullable(response.manualCarbs),
-            manualFiber: this.toNullable(response.manualFiber),
-            manualAlcohol: this.toNullable(response.manualAlcohol),
-            preMealSatietyLevel: normalizeSatietyLevel(response.preMealSatietyLevel),
-            postMealSatietyLevel: normalizeSatietyLevel(response.postMealSatietyLevel),
-            qualityScore: this.toNullable(response.qualityScore),
-            qualityGrade: this.toNullable(response.qualityGrade),
-            isFavorite: this.withDefault(response.isFavorite, false),
-            favoriteMealId: this.toNullable(response.favoriteMealId),
-            items: response.items.map(item => this.mapMealItem(item)),
-            aiSessions: this.mapOptionalArray(response.aiSessions, session => this.mapAiSession(session)),
-        };
-    }
-
-    private resolveIsNutritionAutoCalculated(response: MealResponseDto): boolean {
-        const isAuto = response.isNutritionAutoCalculated;
-        if (this.shouldUseServerNutritionAutoCalculated(response, isAuto)) {
-            return isAuto;
-        }
-
-        const aiTotals = this.calculateAiTotals(response);
-        return MEAL_NUTRITION_FIELDS.every(field => this.areClose(this.resolveResponseNutrition(response, field), aiTotals[field]));
-    }
-
-    private shouldUseServerNutritionAutoCalculated(response: MealResponseDto, isAuto: boolean): boolean {
-        return isAuto || response.items.length > 0 || !this.hasAiItems(response);
-    }
-
-    private resolveResponseNutrition(response: MealResponseDto, field: NutritionField): number {
-        const nutrition: NutritionTotals = {
-            calories: response.manualCalories ?? response.totalCalories,
-            proteins: response.manualProteins ?? response.totalProteins,
-            fats: response.manualFats ?? response.totalFats,
-            carbs: response.manualCarbs ?? response.totalCarbs,
-            fiber: response.manualFiber ?? response.totalFiber,
-            alcohol: response.manualAlcohol ?? response.totalAlcohol,
-        };
-
-        return nutrition[field];
-    }
-
-    private hasAiItems(response: MealResponseDto): boolean {
-        return response.aiSessions?.some(session => session.items.length > 0) ?? false;
-    }
-
-    private calculateAiTotals(response: MealResponseDto): NutritionTotals {
-        return (
-            response.aiSessions?.reduce(
-                (totals, session) =>
-                    session.items.reduce(
-                        (sessionTotals, item) => ({
-                            calories: sessionTotals.calories + item.calories,
-                            proteins: sessionTotals.proteins + item.proteins,
-                            fats: sessionTotals.fats + item.fats,
-                            carbs: sessionTotals.carbs + item.carbs,
-                            fiber: sessionTotals.fiber + item.fiber,
-                            alcohol: sessionTotals.alcohol + item.alcohol,
-                        }),
-                        totals,
-                    ),
-                this.createEmptyNutritionTotals(),
-            ) ?? this.createEmptyNutritionTotals()
-        );
-    }
-
-    private areClose(left: number, right: number): boolean {
-        return Math.abs(left - right) <= MEAL_API_NUTRITION_CLOSE_TOLERANCE;
-    }
-
-    private mapMealItem(response: MealItemResponseDto): MealItem {
-        const product =
-            response.productId !== null && response.productId !== undefined && response.productId.length > 0
-                ? this.createProductFromSnapshot(response)
-                : null;
-        const recipe =
-            response.recipeId !== null && response.recipeId !== undefined && response.recipeId.length > 0
-                ? this.createRecipeFromSnapshot(response)
-                : null;
-        const sourceType = product !== null ? MealSourceType.Product : MealSourceType.Recipe;
-
-        return {
-            id: response.id,
-            mealId: response.mealId,
-            amount: response.amount,
-            sourceType,
-            sourceAiItemId: response.sourceAiItemId ?? null,
-            origin: response.origin ?? null,
-            product,
-            recipe,
-        };
-    }
-
-    private createProductFromSnapshot(response: MealItemResponseDto): Product {
-        const base = createEmptyProductSnapshot();
-        return {
-            ...base,
-            id: this.withDefault(response.productId, ''),
-            name: this.withDefault(response.productName, ''),
-            imageUrl: this.toNullable(response.productImageUrl),
-            baseUnit: this.normalizeMeasurementUnit(response.productBaseUnit),
-            baseAmount: this.withDefault(response.productBaseAmount, MEAL_API_DEFAULT_ITEM_AMOUNT),
-            defaultPortionAmount: this.withDefault(response.productBaseAmount, MEAL_API_DEFAULT_ITEM_AMOUNT),
-            caloriesPerBase: this.withDefault(response.productCaloriesPerBase, MEAL_API_EMPTY_NUTRITION_VALUE),
-            proteinsPerBase: this.withDefault(response.productProteinsPerBase, MEAL_API_EMPTY_NUTRITION_VALUE),
-            fatsPerBase: this.withDefault(response.productFatsPerBase, MEAL_API_EMPTY_NUTRITION_VALUE),
-            carbsPerBase: this.withDefault(response.productCarbsPerBase, MEAL_API_EMPTY_NUTRITION_VALUE),
-            fiberPerBase: this.withDefault(response.productFiberPerBase, MEAL_API_EMPTY_NUTRITION_VALUE),
-            alcoholPerBase: this.withDefault(response.productAlcoholPerBase, MEAL_API_EMPTY_NUTRITION_VALUE),
-        };
-    }
-
-    private createRecipeFromSnapshot(response: MealItemResponseDto): Recipe {
-        const base = createEmptyRecipeSnapshot();
-        return {
-            ...base,
-            id: this.withDefault(response.recipeId, ''),
-            name: this.withDefault(response.recipeName, ''),
-            imageUrl: this.toNullable(response.recipeImageUrl),
-            servings: this.withDefault(response.recipeServings, MEAL_API_DEFAULT_ITEM_AMOUNT),
-            totalCalories: this.withDefault(response.recipeTotalCalories, MEAL_API_EMPTY_NUTRITION_VALUE),
-            totalProteins: this.withDefault(response.recipeTotalProteins, MEAL_API_EMPTY_NUTRITION_VALUE),
-            totalFats: this.withDefault(response.recipeTotalFats, MEAL_API_EMPTY_NUTRITION_VALUE),
-            totalCarbs: this.withDefault(response.recipeTotalCarbs, MEAL_API_EMPTY_NUTRITION_VALUE),
-            totalFiber: this.withDefault(response.recipeTotalFiber, MEAL_API_EMPTY_NUTRITION_VALUE),
-            totalAlcohol: this.withDefault(response.recipeTotalAlcohol, MEAL_API_EMPTY_NUTRITION_VALUE),
-        };
-    }
-
-    private mapAiSession(response: MealAiSessionResponseDto): MealAiSession {
-        return {
-            id: response.id,
-            mealId: response.mealId,
-            imageAssetId: response.imageAssetId ?? null,
-            imageUrl: response.imageUrl ?? null,
-            status: response.status ?? null,
-            recognizedAtUtc: response.recognizedAtUtc,
-            notes: response.notes ?? null,
-            items: response.items.map(item => ({
-                id: item.id,
-                sessionId: item.sessionId,
-                nameEn: item.nameEn,
-                nameLocal: item.nameLocal ?? null,
-                amount: item.amount,
-                unit: item.unit,
-                calories: item.calories,
-                proteins: item.proteins,
-                fats: item.fats,
-                carbs: item.carbs,
-                fiber: item.fiber,
-                alcohol: item.alcohol,
-                confidence: item.confidence ?? 1,
-                resolution: item.resolution ?? 'Accepted',
-            })),
-        };
-    }
-
-    private normalizeMeasurementUnit(unit?: MeasurementUnit | string | null): MeasurementUnit {
-        if (unit === null || unit === undefined || unit.length === 0) {
-            return MeasurementUnit.G;
-        }
-
-        const normalized = unit.toString().toUpperCase();
-        if (this.isMeasurementUnit(normalized)) {
-            return normalized;
-        }
-
-        return MeasurementUnit.G;
-    }
-
-    private isMeasurementUnit(value: string): value is MeasurementUnit {
-        return value === 'G' || value === 'ML' || value === 'PCS';
-    }
-
-    private createEmptyNutritionTotals(): NutritionTotals {
-        return {
-            calories: MEAL_API_EMPTY_NUTRITION_VALUE,
-            proteins: MEAL_API_EMPTY_NUTRITION_VALUE,
-            fats: MEAL_API_EMPTY_NUTRITION_VALUE,
-            carbs: MEAL_API_EMPTY_NUTRITION_VALUE,
-            fiber: MEAL_API_EMPTY_NUTRITION_VALUE,
-            alcohol: MEAL_API_EMPTY_NUTRITION_VALUE,
-        };
-    }
-
-    private toNullable<T>(value: T | null | undefined): T | null {
-        return value ?? null;
-    }
-
-    private withDefault<T>(value: T | null | undefined, fallback: T): T {
-        return value ?? fallback;
-    }
-
-    private mapOptionalArray<T, R>(items: T[] | null | undefined, mapper: (item: T) => R): R[] {
-        return items?.map(mapper) ?? [];
+    private mealFiltersToSdk(filters: MealFilters): GetMealsRequestParams {
+        return { version: this.sdk.version, ...filters, mealTypes: sdkQueryString(filters.mealTypes) };
     }
 }

@@ -1,75 +1,35 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { DestroyRef, effect, inject, Service, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize, type Observable, shareReplay, tap } from 'rxjs';
+import { finalize, map, type Observable, shareReplay, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
 import { AuthService } from '../../services/auth.service';
-
-export type NotificationItem = {
-    id: string;
-    type: string;
-    title: string;
-    body: string | null;
-    targetUrl: string | null;
-    referenceId: string | null;
-    isRead: boolean;
-    createdAtUtc: string;
-};
-
-export type ScheduleTestNotificationRequest = {
-    delaySeconds: number;
-    type: string;
-};
-
-export type ScheduledNotificationResponse = {
-    type: string;
-    delaySeconds: number;
-    scheduledAtUtc: string;
-};
-
-export type WebPushConfiguration = {
-    enabled: boolean;
-    publicKey: string | null;
-};
-
-export type WebPushSubscriptionRequest = {
-    endpoint: string;
-    expirationTime: string | null;
-    keys: {
-        p256dh: string;
-        auth: string;
-    };
-    locale: string | null;
-    userAgent: string | null;
-};
-
-export type NotificationPreferences = {
-    pushNotificationsEnabled: boolean;
-    fastingPushNotificationsEnabled: boolean;
-    socialPushNotificationsEnabled: boolean;
-    fastingCheckInReminderHours: number;
-    fastingCheckInFollowUpReminderHours: number;
-};
-
-export type WebPushSubscriptionItem = {
-    endpoint: string;
-    endpointHost: string;
-    expirationTimeUtc: string | null;
-    locale: string | null;
-    userAgent: string | null;
-    createdAtUtc: string;
-    updatedAtUtc: string | null;
-};
-
-export type UpdateNotificationPreferencesRequest = {
-    pushNotificationsEnabled?: boolean;
-    fastingPushNotificationsEnabled?: boolean;
-    socialPushNotificationsEnabled?: boolean;
-    fastingCheckInReminderHours?: number;
-    fastingCheckInFollowUpReminderHours?: number;
-};
+import { NotificationsSdk } from '../api/sdk/generated/api/notifications.service';
+import { notificationFromSdk, notificationPreferencesFromSdk, webPushSubscriptionFromSdk } from '../api/sdk/notification-sdk.mapper';
+import { createSdkConnection, sdkRequestOptions } from '../api/sdk/sdk-connection';
+import { requireSdkFields, sdkNullableFields } from '../api/sdk/sdk-response';
+import type {
+    NotificationItem,
+    NotificationPreferences,
+    ScheduledNotificationResponse,
+    ScheduleTestNotificationRequest,
+    UpdateNotificationPreferencesRequest,
+    WebPushConfiguration,
+    WebPushSubscriptionItem,
+    WebPushSubscriptionRequest,
+} from '../models/notification.data';
+export type {
+    NotificationItem,
+    NotificationPreferences,
+    ScheduledNotificationResponse,
+    ScheduleTestNotificationRequest,
+    UpdateNotificationPreferencesRequest,
+    WebPushConfiguration,
+    WebPushSubscriptionItem,
+    WebPushSubscriptionRequest,
+} from '../models/notification.data';
 
 type FetchUnreadCountOptions = {
     force?: boolean;
@@ -82,6 +42,7 @@ export class NotificationService {
     private readonly destroyRef = inject(DestroyRef);
 
     private readonly baseUrl = environment.apiUrls.auth.replace('/auth', '/notifications');
+    private readonly sdk = createSdkConnection(NotificationsSdk, this.baseUrl, this.http);
     private readonly silentLoadingContext = new HttpContext().set(SKIP_GLOBAL_LOADING, true);
 
     public readonly unreadCount = signal(0);
@@ -119,11 +80,15 @@ export class NotificationService {
             return;
         }
 
-        this.unreadCountRequest$ = this.http
-            .get<{ count: number }>(`${this.baseUrl}/unread-count`, {
-                context: this.silentLoadingContext,
-            })
+        this.unreadCountRequest$ = this.sdk.client
+            .getNotificationsUnreadCount(
+                { version: this.sdk.version },
+                'body',
+                false,
+                sdkRequestOptions(undefined, this.silentLoadingContext),
+            )
             .pipe(
+                map(value => requireSdkFields(value, ['count'])),
                 finalize(() => {
                     this.unreadCountRequest$ = null;
                 }),
@@ -161,7 +126,7 @@ export class NotificationService {
     }
 
     public markAsRead(notificationId: string): Observable<void> {
-        return this.http.put<void>(`${this.baseUrl}/${notificationId}/read`, {}).pipe(
+        return this.sdk.client.putNotificationsByNotificationIdRead({ version: this.sdk.version, notificationId }).pipe(
             tap(() => {
                 const notification = this.notifications().find(item => item.id === notificationId);
                 if (notification?.isRead === false) {
@@ -174,7 +139,7 @@ export class NotificationService {
     }
 
     public markAllRead(): Observable<void> {
-        return this.http.put<void>(`${this.baseUrl}/read-all`, {}).pipe(
+        return this.sdk.client.putNotificationsReadAll({ version: this.sdk.version }).pipe(
             tap(() => {
                 this.unreadCount.set(0);
                 this.notifications.update(items => items.map(item => ({ ...item, isRead: true })));
@@ -183,32 +148,44 @@ export class NotificationService {
     }
 
     public scheduleTestNotification(request: ScheduleTestNotificationRequest): Observable<ScheduledNotificationResponse> {
-        return this.http.post<ScheduledNotificationResponse>(`${this.baseUrl}/test/schedule`, request);
+        return this.sdk.client
+            .postNotificationsTestSchedule({ version: this.sdk.version, scheduleTestNotificationHttpRequest: request })
+            .pipe(map(value => requireSdkFields(value, ['type', 'delaySeconds', 'scheduledAtUtc'])));
     }
 
     public getNotificationPreferences(): Observable<NotificationPreferences> {
-        return this.http.get<NotificationPreferences>(`${this.baseUrl}/preferences`);
+        return this.sdk.client.getNotificationsPreferences({ version: this.sdk.version }).pipe(map(notificationPreferencesFromSdk));
     }
 
     public updateNotificationPreferences(request: UpdateNotificationPreferencesRequest): Observable<NotificationPreferences> {
-        return this.http.put<NotificationPreferences>(`${this.baseUrl}/preferences`, request);
+        return this.sdk.client
+            .putNotificationsPreferences({ version: this.sdk.version, updateNotificationPreferencesHttpRequest: request })
+            .pipe(map(notificationPreferencesFromSdk));
     }
 
     public getWebPushSubscriptions(): Observable<WebPushSubscriptionItem[]> {
-        return this.http.get<WebPushSubscriptionItem[]>(`${this.baseUrl}/push/subscriptions`);
+        return this.sdk.client
+            .getNotificationsPushSubscriptions({ version: this.sdk.version })
+            .pipe(map(values => values.map(webPushSubscriptionFromSdk)));
     }
 
     public getWebPushConfiguration(): Observable<WebPushConfiguration> {
-        return this.http.get<WebPushConfiguration>(`${this.baseUrl}/push/config`);
+        return this.sdk.client
+            .getNotificationsPushConfig({ version: this.sdk.version })
+            .pipe(map(value => sdkNullableFields(requireSdkFields(value, ['enabled']), ['publicKey'])));
     }
 
     public upsertWebPushSubscription(request: WebPushSubscriptionRequest): Observable<void> {
-        return this.http.put<void>(`${this.baseUrl}/push/subscription`, request);
+        return this.sdk.client.putNotificationsPushSubscription({
+            version: this.sdk.version,
+            upsertWebPushSubscriptionHttpRequest: request,
+        });
     }
 
     public removeWebPushSubscription(endpoint: string): Observable<void> {
-        return this.http.request<void>('DELETE', `${this.baseUrl}/push/subscription`, {
-            body: { endpoint },
+        return this.sdk.client.deleteNotificationsPushSubscription({
+            version: this.sdk.version,
+            removeWebPushSubscriptionHttpRequest: { endpoint },
         });
     }
 
@@ -231,11 +208,12 @@ export class NotificationService {
         }
 
         this.notificationsLoading.set(true);
-        this.http
-            .get<NotificationItem[]>(this.baseUrl, {
-                context: this.silentLoadingContext,
-            })
-            .pipe(takeUntilDestroyed(this.destroyRef))
+        this.sdk.client
+            .getNotifications({ version: this.sdk.version }, 'body', false, sdkRequestOptions(undefined, this.silentLoadingContext))
+            .pipe(
+                map(values => values.map(notificationFromSdk)),
+                takeUntilDestroyed(this.destroyRef),
+            )
             .subscribe({
                 next: notifications => {
                     this.notifications.set(notifications);

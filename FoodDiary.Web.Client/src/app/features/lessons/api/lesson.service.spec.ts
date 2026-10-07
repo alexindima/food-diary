@@ -43,7 +43,7 @@ describe('LessonService', () => {
             });
 
         const request = httpMock.expectOne(
-            `${environment.apiUrls.lessons}/?locale=en&sort=shortest&page=2&limit=20&category=NutritionBasics&difficulty=Beginner&search=protein`,
+            `${environment.apiUrls.lessons}?locale=en&category=nutritionbasics&difficulty=beginner&search=protein&sort=shortest&page=2&limit=20`,
         );
         expect(request.request.method).toBe('GET');
         request.flush(page);
@@ -59,7 +59,7 @@ describe('LessonService', () => {
             },
         });
 
-        const request = httpMock.expectOne(`${environment.apiUrls.lessons}/?locale=en&sort=recommended&page=1&limit=20`);
+        const request = httpMock.expectOne(`${environment.apiUrls.lessons}?locale=en&sort=recommended&page=1&limit=20`);
         request.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
         expect(failed).toBe(true);
     });
@@ -73,7 +73,7 @@ describe('LessonService', () => {
             expect(result.totalPages).toBe(2);
         });
 
-        const request = httpMock.expectOne(`${environment.apiUrls.lessons}/?locale=en&sort=recommended&page=2&limit=20`);
+        const request = httpMock.expectOne(`${environment.apiUrls.lessons}?locale=en&sort=recommended&page=2&limit=20`);
         request.flush(lessons);
     });
 
@@ -96,7 +96,7 @@ describe('LessonService', () => {
 
         const request = httpMock.expectOne(`${environment.apiUrls.lessons}/lesson-1/read`);
         expect(request.request.method).toBe('POST');
-        expect(request.request.body).toEqual({});
+        expect(request.request.body).toBeNull();
         request.flush(null);
     });
 });

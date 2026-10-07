@@ -833,11 +833,11 @@
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1",
-      "sourceSha256": "c957ac6df715b677edd64b6870a24e774490878fef4d8a0808f332d78f6f6e84",
-      "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "sourceSha256": "b825ff24807357233b0b7b1df2bc1ad6025c6207eaea2c5f0242e5c653f05eb6",
+      "reviewedBaseline": "f777062a632366651650bdd9fec53813be7a986e",
       "coverage": "full-source-read",
-      "performance": "Reads each TS/template once, uses one selector alternation, and fingerprints discovery. Each API call reparses the source prefix for enclosing method/line; precomputed method/line spans are useful candidates.",
-      "reliability": "Regex does not fully parse nested decorators/generics/attribute expressions, and duplicate selectors overwrite by name. Generated SDK request overloads and component input aliases need targeted completeness fixtures.",
+      "performance": "Reads each TS/template once, uses one selector alternation, and fingerprints discovery. Each API call reparses the source prefix for enclosing method/line; precomputed method/line spans are useful candidates. Full merged-source reread: SDK manifest mapping adds per-file operation regex and repeated prefix scans for owner/line discovery; this inherited change is preserved, not a newly measured optimization.",
+      "reliability": "Regex does not fully parse nested decorators/generics/attribute expressions, and duplicate selectors overwrite by name. Generated SDK request overloads and component input aliases need targeted completeness fixtures. SDK manifest participates in the input fingerprint when present; operation-map and regex evidence remain navigation. This integration preserves the inherited SDK compiler; compact handoff code is unchanged.",
       "findings": [],
       "status": "reviewed-with-followups"
     },
@@ -4175,11 +4175,11 @@
     },
     {
       "path": ".github/workflows/ci-tests.yml",
-      "sourceSha256": "d4a5caecfb6bb5d9eec95ab183f36ef95e3cf2379d35ec8f060e9dd403849ecf",
-      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "sourceSha256": "37d31bc195568bf50beaaa15663b0101e1b0d45870efd5ec402de11af42ed439",
+      "reviewedBaseline": "f777062a632366651650bdd9fec53813be7a986e",
       "coverage": "full-source-read",
       "performance": "Wiki focused and three Full shards repeat checkout/history, npm ci and compiler preparation on independent runners; npm download caching exists but no shared prepared Wiki runtime/projection artifact is declared. Full shards run independently of focused checks; backend slow groups wait for fast tests. Frontend checks/tests/builds/E2E remain a long serial lane. Setup/compiler timings and safe exact-input caches should be measured before changing completeness.",
-      "reliability": "Wiki and backend aggregate gates require every applicable result and preserve failure diagnostics; tests are not removed by partitioning. Wiki jobs do not explicitly pin/setup .NET although tools compile net10 helpers, and focused Wiki lacks an explicit job timeout. API baseline discovery is bounded to 100 successful push runs and assumes candidate objects are available. Notifications omit API-SDK/TechRadar failure dependencies and do not download Wiki failure logs; fallback picks a lexically last log. Log-existence summaries can mislabel interrupted work. These are proposals/validation gaps, not a newly executed Linux CI claim.",
+      "reliability": "Wiki and backend aggregate gates require every applicable result and preserve failure diagnostics; tests are not removed by partitioning. Wiki jobs do not explicitly pin/setup .NET although tools compile net10 helpers, and focused Wiki lacks an explicit job timeout. API baseline discovery is bounded to 100 successful push runs and assumes candidate objects are available. Notifications omit API-SDK/TechRadar failure dependencies and do not download Wiki failure logs; fallback picks a lexically last log. Log-existence summaries can mislabel interrupted work. These are proposals/validation gaps, not a newly executed Linux CI claim. Master integration changes only the API SDK job display name; execution and gates are unchanged.",
       "findings": [],
       "status": "reviewed-with-followups"
     },

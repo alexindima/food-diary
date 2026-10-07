@@ -1,20 +1,28 @@
-import { Service } from '@angular/core';
-import type { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { inject, Service } from '@angular/core';
+import { map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { ApiService } from '../../../services/api.service';
 import { loadPagedCollection } from '../../../shared/api/load-paged-collection';
+import { ClientTasksSdk } from '../../../shared/api/sdk/generated/api/client-tasks.service';
+import { clientTaskFromSdk } from '../../../shared/api/sdk/recommendation-sdk.mapper';
+import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
 import type { ClientTask, ClientTaskStatus } from '../../../shared/models/dietologist.data';
 
 @Service()
-export class ClientTasksService extends ApiService {
+export class ClientTasksService {
     protected readonly baseUrl = environment.apiUrls.clientTasks;
+    private readonly sdk = createSdkConnection(ClientTasksSdk, this.baseUrl, inject(HttpClient));
 
     public getMyTasks(): Observable<ClientTask[]> {
-        return loadPagedCollection((page, limit) => this.get<ClientTask[]>('', { page, limit }));
+        return loadPagedCollection((page, limit) =>
+            this.sdk.client.getClientTasks({ version: this.sdk.version, page, limit }).pipe(map(values => values.map(clientTaskFromSdk))),
+        );
     }
 
     public changeStatus(taskId: string, status: Extract<ClientTaskStatus, 'Open' | 'Completed'>): Observable<ClientTask> {
-        return this.put<ClientTask>(`${taskId}/status`, { status });
+        return this.sdk.client
+            .putClientTasksByTaskIdStatus({ version: this.sdk.version, taskId, changeClientTaskStatusHttpRequest: { status } })
+            .pipe(map(clientTaskFromSdk));
     }
 }

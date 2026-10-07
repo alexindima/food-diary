@@ -7,7 +7,8 @@ import { fileURLToPath } from 'node:url';
 import { format, resolveConfig } from 'prettier';
 import ts from 'typescript';
 
-import { canonicalJson, productsContract } from './api-sdk-contract.mjs';
+import { canonicalJson, userApiContract } from './api-sdk-contract.mjs';
+import { normalizeBinaryResponseTypes } from './api-sdk-normalization.mjs';
 
 const clientRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const repoRoot = resolve(clientRoot, '..');
@@ -15,6 +16,7 @@ const sdkRoot = join(clientRoot, 'api-sdk');
 const outputRoot = join(clientRoot, 'src/app/shared/api/sdk/generated');
 const artifactRoot = join(repoRoot, '.artifacts/sdk');
 const config = JSON.parse(await readFile(join(sdkRoot, 'generator.json'), 'utf8'));
+const scopes = JSON.parse(await readFile(join(sdkRoot, 'scopes.json'), 'utf8'));
 const prettierConfig = await resolveConfig(join(clientRoot, 'package.json'));
 const check = process.argv.includes('--check');
 const exportApi = process.argv.includes('--export');
@@ -99,7 +101,7 @@ function organizeImports(content, nativeFileName) {
     }
 }
 
-const contractPath = join(sdkRoot, 'products.openapi.json');
+const contractPath = join(sdkRoot, 'user.openapi.json');
 if (exportApi) {
     console.log('Exporting OpenAPI from the real API host (workers and provider I/O disabled)...');
     const rawPath = join(artifactRoot, 'openapi.json');
@@ -126,10 +128,10 @@ if (exportApi) {
     } catch (error) {
         throw new Error(`API export did not produce a document.\n${output}`, { cause: error });
     }
-    const contract = await format(canonicalJson(productsContract(raw)), { ...prettierConfig, filepath: contractPath });
+    const contract = await format(canonicalJson(userApiContract(raw, scopes)), { ...prettierConfig, filepath: contractPath });
     if (check) {
         if (contract !== (await readFile(contractPath, 'utf8'))) {
-            throw new Error('Products API changed. Review the contract and run npm run sdk:update.');
+            throw new Error('User API changed. Review the contract and run npm run sdk:update.');
         }
     } else {
         await writeFile(contractPath, contract);
@@ -137,12 +139,49 @@ if (exportApi) {
 }
 
 const stagingRoot = await mkdtemp(join(tmpdir(), 'fooddiary-sdk-'));
+const currentContract = JSON.parse(await readFile(contractPath, 'utf8'));
+const noContentOperations = new Set();
+const binaryOperations = new Set();
+for (const path of Object.values(currentContract.paths)) {
+    for (const operation of Object.values(path)) {
+        const successCodes = Object.keys(operation.responses ?? {}).filter(code => /^2\d\d$/u.test(code));
+        if (successCodes.length > 0 && successCodes.every(code => code === '204')) noContentOperations.add(operation.operationId);
+        if (
+            successCodes.some(code =>
+                Object.values(operation.responses[code].content ?? {}).some(media => media.schema?.format === 'binary'),
+            )
+        ) {
+            binaryOperations.add(operation.operationId);
+        }
+    }
+}
+
+// Empty 204 responses have no schema. The upstream generator emits `any` for
+// them; expose Angular's usual void contract while preserving the null body.
+function normalizeNoContentReturns(content, fileName) {
+    const source = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true);
+    const edits = [];
+    const visit = node => {
+        if (ts.isMethodDeclaration(node) && node.body === undefined && noContentOperations.has(node.name.getText(source)) && node.type) {
+            const visitType = type => {
+                if (type.kind === ts.SyntaxKind.AnyKeyword) edits.push({ start: type.getStart(source), end: type.end });
+                ts.forEachChild(type, visitType);
+            };
+            visitType(node.type);
+        }
+        ts.forEachChild(node, visit);
+    };
+    visit(source);
+    for (const edit of edits.sort((a, b) => b.start - a.start)) content = content.slice(0, edit.start) + 'void' + content.slice(edit.end);
+    return content;
+}
+
 try {
     const jar = await generatorJar();
     const generatorConfigPath = join(stagingRoot, 'generator.json');
     await writeFile(generatorConfigPath, JSON.stringify(config.additionalProperties));
     const generatedRoot = join(stagingRoot, 'generated');
-    console.log(`Generating Products SDK with OpenAPI Generator ${config.version}...`);
+    console.log(`Generating user API SDK with OpenAPI Generator ${config.version}...`);
     await run('java', [
         '-jar',
         jar,
@@ -164,25 +203,29 @@ try {
     const differences = existing.filter(file => !files.includes(file));
     for (const file of files) {
         const sourcePath = join(generatedRoot, file);
-        const normalized = organizeImports(await readFile(sourcePath, 'utf8'), sourcePath);
+        const source = (await readFile(sourcePath, 'utf8')).replaceAll(/^\s*\/\/ @ts-ignore\s*$/gm, '');
+        const normalized = organizeImports(
+            normalizeBinaryResponseTypes(normalizeNoContentReturns(source, sourcePath), sourcePath, binaryOperations),
+            sourcePath,
+        );
         const content = await format(normalized, { ...prettierConfig, filepath: file });
         const target = join(outputRoot, file);
+        let current;
+        try {
+            current = await readFile(target, 'utf8');
+        } catch (error) {
+            if (error.code !== 'ENOENT') throw error;
+        }
         if (check) {
-            let current;
-            try {
-                current = await readFile(target, 'utf8');
-            } catch (error) {
-                if (error.code !== 'ENOENT') throw error;
-            }
             if (current !== content) differences.push(file);
-        } else {
+        } else if (current !== content) {
             await mkdir(dirname(target), { recursive: true });
             await writeFile(target, content);
         }
     }
     if (check && differences.length) throw new Error(`SDK drift: ${differences.join(', ')}. Run npm run sdk:generate.`);
     if (!check) for (const file of differences) await rm(join(outputRoot, file));
-    console.log(`Products SDK ${check ? 'verified' : 'generated'}: ${files.length} TypeScript files.`);
+    console.log(`User API SDK ${check ? 'verified' : 'generated'}: ${scopes.length} groups, ${files.length} TypeScript files.`);
 } finally {
     // This directory is owned by this invocation and was created by mkdtemp above.
     await rm(stagingRoot, { recursive: true, force: true });

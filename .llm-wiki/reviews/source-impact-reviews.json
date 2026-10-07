@@ -23,13 +23,13 @@
       "sources": [
         {
           "path": "docs/README.md",
-          "sha256": "15427e5574cf09f4f95ca84a7276b58bdfdb1b574c2cdf190e489dc087e3a7f0"
+          "sha256": "4662cb91aa31e7c8459dc800604a3fbd85a75a5abef30d4a1912ee5481f5b8c7"
         }
       ],
-      "reason": "Frontend navigation now documents the Products SDK pilot and links its authoritative guide. The docs index adds that guide; the existing evidence and authority model is unchanged.",
+      "reason": "SDK documentation and navigation now describe 32 user API groups, 205 operations and 23 fully migrated services. Dates keep existing calendar versus instant meaning; nutrient units, zeroes and precision remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
-      "reviewedAtUtc": "2026-10-06T16:55:28.9914308Z"
+      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "reviewedAtUtc": "2026-10-06T18:54:45.5207029Z"
     },
     {
       "pageId": "module.frontend",
@@ -125,17 +125,17 @@
     {
       "pageId": "system.frontend-index",
       "pagePath": ".llm-wiki/system/frontend-index.md",
-      "pageSha256": "1ea0c12ce78af5d45542c40530c4a07ae52fdd0a10b3ab76e7f37e89601f1226",
+      "pageSha256": "ffe52aa56bac185d19cfbca9407b7807223ca7f5ad4dcf3e5eb4b37c742c7d5e",
       "sources": [
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "fce5d9b5b1ac7cf4eb40dd4acca59c6fddddc2caafe30e1da7f72f24a8081498"
+          "sha256": "4702fb6145b184a37c886b7c979dd8d46028c582f7a2fce476508eb1d0ce3ae5"
         }
       ],
-      "reason": "Frontend navigation now documents the Products SDK pilot and links its authoritative guide. The docs index adds that guide; the existing evidence and authority model is unchanged.",
+      "reason": "Updated SDK guidance and frontend navigation from the actual 32-group 205-operation contract and 23 migrated services. Calendar strings remain unchanged; Date conversion is confined to product creation instants. Existing evidence hierarchy and scope boundaries remain.",
       "baseRef": "HEAD",
-      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
-      "reviewedAtUtc": "2026-10-06T16:55:29.41094Z"
+      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "reviewedAtUtc": "2026-10-06T18:50:56.9318340Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -144,13 +144,13 @@
       "sources": [
         {
           "path": "docs/README.md",
-          "sha256": "15427e5574cf09f4f95ca84a7276b58bdfdb1b574c2cdf190e489dc087e3a7f0"
+          "sha256": "4662cb91aa31e7c8459dc800604a3fbd85a75a5abef30d4a1912ee5481f5b8c7"
         }
       ],
-      "reason": "Frontend navigation now documents the Products SDK pilot and links its authoritative guide. The docs index adds that guide; the existing evidence and authority model is unchanged.",
+      "reason": "SDK documentation and navigation now describe 32 user API groups, 205 operations and 23 fully migrated services. Dates keep existing calendar versus instant meaning; nutrient units, zeroes and precision remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
-      "reviewedAtUtc": "2026-10-06T16:55:29.6657473Z"
+      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "reviewedAtUtc": "2026-10-06T18:54:45.9136136Z"
     },
     {
       "pageId": "system.quality-index",
@@ -219,13 +219,17 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "d4a5caecfb6bb5d9eec95ab183f36ef95e3cf2379d35ec8f060e9dd403849ecf"
+          "sha256": "37d31bc195568bf50beaaa15663b0101e1b0d45870efd5ec402de11af42ed439"
+        },
+        {
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "sha256": "658d16f9011690f88177e5effa44ac10fb695e9d17b3e31bed64695c2dac1a46"
         }
       ],
-      "reason": "The new SDK job exports the actual host contract and checks a normalized Products slice plus generated code. Existing snapshot and breaking-change guards stay in place; no production presentation routes or payloads changed. Frontend adapters keep application models and error behavior while consuming generated wire DTOs.",
+      "reason": "Published Swagger snapshots remain unchanged and the compatibility gate reports zero structural/behavioral changes. The SDK uses an isolated CLR-nullability-enriched view; real-host tests cover both views.",
       "baseRef": "HEAD",
-      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
-      "reviewedAtUtc": "2026-10-06T16:55:29.9036294Z"
+      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+      "reviewedAtUtc": "2026-10-07T00:15:00.7656562Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -248,14 +252,14 @@
       "pageSha256": "58810bcafe9de0e6e09ec7ce44659b61c6c2d807da6b207e95a00aa681b51685",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "0e2b1b827c5c94312a097ed55d6059ff1a5da5d4eb5b585f49de1cc4c2be38fa"
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "521224c86ce7db6f68788fd3f7d949329af6526b58be6a7005d35407d17a3bd1"
         }
       ],
-      "reason": "Reviewed graph and snapshot interoperability against real Node CLI fixtures. Both rename endpoints, Unicode Git output and case-sensitive ordinal identities now agree with MCP; 31 focused snapshot checks and 458 full MCP checks pass, including ordinary/Cyrillic/case-only/expanding-Unicode paths. Opaque fingerprints invalidate old projections naturally. SQL result/ranking contracts and read-only MCP tool surface remain; per-file followups are classified as validation candidates without speedup claims, and 221 audit sources are explicitly pending.",
+      "reason": "Reviewed inherited SDK merge provenance: SDK-aware frontend contract compilation and manifest cache input, unchanged API SDK CI behavior except its job label, inherited current backend/runtime/frontend indexes, and regenerated quality output. Combined handoff runtime is unchanged from the fully verified task patch; governed-delivery, facade-contract and tool-contract pass on the merged source tree.",
       "baseRef": "HEAD",
-      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
-      "reviewedAtUtc": "2026-10-06T23:30:13.7728828Z"
+      "gitHead": "6c48bdf68260d76f16b95a10933068ed0a0ed690",
+      "reviewedAtUtc": "2026-10-07T11:14:22.2214164Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -572,17 +576,17 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "fce5d9b5b1ac7cf4eb40dd4acca59c6fddddc2caafe30e1da7f72f24a8081498"
+          "sha256": "4702fb6145b184a37c886b7c979dd8d46028c582f7a2fce476508eb1d0ce3ae5"
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "f44d895482f467aeeac8046583a09876820554de10cb70a672cbba975ac9c07c"
+          "sha256": "359583bdc47a594b5c2dfebf5f21df1ed275bcd8123425cf0fcad2498110d4c7"
         }
       ],
-      "reason": "CI adds a separate SDK check job without removing existing Wiki, formatting, build or test gates. npm verify adds SDK tests and reproducibility. Products HTTP adapters changed; templates, UI copy, state ownership and rendered contracts are unchanged, so existing visual-UI guidance remains applicable when those surfaces change.",
+      "reason": "127 transport and cancellation tests, 88 consumer/composition tests and 77 auth cases verify state, request identity, DI owner resolution and error paths. Current indexes are refreshed.",
       "baseRef": "HEAD",
-      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
-      "reviewedAtUtc": "2026-10-06T16:55:30.4445662Z"
+      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+      "reviewedAtUtc": "2026-10-07T00:15:01.1779733Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -662,18 +666,18 @@
       "pageSha256": "8c8aff64bfc1811147a58a435a34a10950c1448a9d57bfc50802f9d45ffdbbf7",
       "sources": [
         {
-          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "6418170e4bd0e70b08346fbe1faf8148d95ef6abe065bd8348d86b574f974fde"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "37d31bc195568bf50beaaa15663b0101e1b0d45870efd5ec402de11af42ed439"
         },
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-          "sha256": "2a7122ae1c26d397bb45bb04bdbc8b3b770367b334da99c326d178de4dcc50a1"
+          "path": ".llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1",
+          "sha256": "b825ff24807357233b0b7b1df2bc1ad6025c6207eaea2c5f0242e5c653f05eb6"
         }
       ],
-      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
+      "reason": "Reviewed inherited SDK merge provenance: SDK-aware frontend contract compilation and manifest cache input, unchanged API SDK CI behavior except its job label, inherited current backend/runtime/frontend indexes, and regenerated quality output. Combined handoff runtime is unchanged from the fully verified task patch; governed-delivery, facade-contract and tool-contract pass on the merged source tree.",
       "baseRef": "HEAD",
-      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
-      "reviewedAtUtc": "2026-10-07T10:32:21.0542649Z"
+      "gitHead": "6c48bdf68260d76f16b95a10933068ed0a0ed690",
+      "reviewedAtUtc": "2026-10-07T11:14:23.1061864Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -855,13 +859,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8135842d705253282cd0eed076b7a1035c231fbf8dcca0576dd114af88ab7e8b"
+          "sha256": "cca99adf5b7ff82547fef8c2b4145b3466d85a546f10f00ed4a945af3f08ec08"
         }
       ],
-      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
-      "baseRef": "HEAD",
-      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
-      "reviewedAtUtc": "2026-10-07T10:32:33.8153082Z"
+      "reason": "Reviewed merge of the verified compact handoff correction with the inherited user API SDK commit. Handoff runtime and saved-artifact verification are unchanged from the passing Full Workspace/37-group patch; quality output regenerated from combined sources and source reviews reconciled by exact current hashes.",
+      "baseRef": "master",
+      "gitHead": "6c48bdf68260d76f16b95a10933068ed0a0ed690",
+      "reviewedAtUtc": "2026-10-07T11:09:21.9932642Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -912,13 +916,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "d4a5caecfb6bb5d9eec95ab183f36ef95e3cf2379d35ec8f060e9dd403849ecf"
+          "sha256": "37d31bc195568bf50beaaa15663b0101e1b0d45870efd5ec402de11af42ed439"
         }
       ],
-      "reason": "CI adds a separate SDK check job without removing existing Wiki, formatting, build or test gates. npm verify adds SDK tests and reproducibility. Products HTTP adapters changed; templates, UI copy, state ownership and rendered contracts are unchanged, so existing visual-UI guidance remains applicable when those surfaces change.",
+      "reason": "SDK generation remains deterministic with pinned tooling, strict TypeScript and live API checks. Existing frontend, backend and Wiki gates remain; migrated request headers, idempotency keys, loading contexts, pagination and calendar boundaries are verified in focused suites and timezone matrix.",
       "baseRef": "HEAD",
-      "gitHead": "53816bb62b8f7b950a72edc2881935399b5f8c61",
-      "reviewedAtUtc": "2026-10-06T16:55:31.088107Z"
+      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+      "reviewedAtUtc": "2026-10-06T18:50:58.1171903Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -942,13 +946,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "8f7903cfce9fbfbeb9871c7ea252625976a282e2277e804630ef7f78d3e9e682"
+          "sha256": "db1acfb906aa48d31d096e632a0f237fca85c86c25abf63b2346eabc36c02059"
         }
       ],
-      "reason": "Reviewed graph and snapshot interoperability against real Node CLI fixtures. Both rename endpoints, Unicode Git output and case-sensitive ordinal identities now agree with MCP; 31 focused snapshot checks and 458 full MCP checks pass, including ordinary/Cyrillic/case-only/expanding-Unicode paths. Opaque fingerprints invalidate old projections naturally. SQL result/ranking contracts and read-only MCP tool surface remain; per-file followups are classified as validation candidates without speedup claims, and 221 audit sources are explicitly pending.",
+      "reason": "Reviewed inherited SDK merge provenance: SDK-aware frontend contract compilation and manifest cache input, unchanged API SDK CI behavior except its job label, inherited current backend/runtime/frontend indexes, and regenerated quality output. Combined handoff runtime is unchanged from the fully verified task patch; governed-delivery, facade-contract and tool-contract pass on the merged source tree.",
       "baseRef": "HEAD",
-      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
-      "reviewedAtUtc": "2026-10-06T23:30:17.7035457Z"
+      "gitHead": "6c48bdf68260d76f16b95a10933068ed0a0ed690",
+      "reviewedAtUtc": "2026-10-07T11:14:24.0442084Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -957,13 +961,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8135842d705253282cd0eed076b7a1035c231fbf8dcca0576dd114af88ab7e8b"
+          "sha256": "cca99adf5b7ff82547fef8c2b4145b3466d85a546f10f00ed4a945af3f08ec08"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "db1acfb906aa48d31d096e632a0f237fca85c86c25abf63b2346eabc36c02059"
         }
       ],
-      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
+      "reason": "Reviewed inherited SDK merge provenance: SDK-aware frontend contract compilation and manifest cache input, unchanged API SDK CI behavior except its job label, inherited current backend/runtime/frontend indexes, and regenerated quality output. Combined handoff runtime is unchanged from the fully verified task patch; governed-delivery, facade-contract and tool-contract pass on the merged source tree.",
       "baseRef": "HEAD",
-      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
-      "reviewedAtUtc": "2026-10-07T10:32:40.6785719Z"
+      "gitHead": "6c48bdf68260d76f16b95a10933068ed0a0ed690",
+      "reviewedAtUtc": "2026-10-07T11:14:25.0263823Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1107,14 +1115,18 @@
       "pageSha256": "4e059a263f76810db4c559e2b5599d8599571ccf48d060f6360c6d0e8ec60b48",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "001798f7077b5d286ee5f3e25618578b343ad95d497eec2c557b0d60a724c4e5"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "e2be596e45298c71113aec0966720b60037d16ef22a57b4f586ad261224cb03f"
+          "sha256": "792c8141d93fb45f65a80b54b08ad360b2dea8999e53643a9b42e1ee41a7881d"
         }
       ],
-      "reason": "Reviewed the merged frontend inventory against current master including the Products SDK. Git-based discovery excludes three ignored TypeScript configuration files while preserving all 741 symbols, 106 routes, HTTP and frontend-contract evidence; explicit no-match and trace semantics remain unchanged.",
+      "reason": "Reviewed inherited SDK merge provenance: SDK-aware frontend contract compilation and manifest cache input, unchanged API SDK CI behavior except its job label, inherited current backend/runtime/frontend indexes, and regenerated quality output. Combined handoff runtime is unchanged from the fully verified task patch; governed-delivery, facade-contract and tool-contract pass on the merged source tree.",
       "baseRef": "HEAD",
-      "gitHead": "75c4520f7907cae0c1e8f23b4ba5597dacb306e8",
-      "reviewedAtUtc": "2026-10-06T17:39:11.5040911Z"
+      "gitHead": "6c48bdf68260d76f16b95a10933068ed0a0ed690",
+      "reviewedAtUtc": "2026-10-07T11:14:25.9995178Z"
     },
     {
       "pageId": "workflow-verification-planner",

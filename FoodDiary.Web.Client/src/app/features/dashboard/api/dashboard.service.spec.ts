@@ -70,7 +70,7 @@ describe('DashboardService snapshot', () => {
 
         const req = httpMock.expectOne(
             r =>
-                r.url === `${BASE_URL}/` &&
+                r.url === BASE_URL &&
                 r.params.get('date') === TEST_DATE.toISOString() &&
                 r.params.get('timeZoneOffsetMinutes') === String(TEST_TIME_ZONE_OFFSET_MINUTES) &&
                 r.params.get('page') === '1' &&
@@ -97,7 +97,7 @@ describe('DashboardService snapshot', () => {
 
         const req = httpMock.expectOne(
             r =>
-                r.url === `${BASE_URL}/` &&
+                r.url === BASE_URL &&
                 r.params.get('date') === TEST_DATE.toISOString() &&
                 r.params.get('timeZoneOffsetMinutes') === String(TEST_TIME_ZONE_OFFSET_MINUTES) &&
                 r.params.get('timeZoneId') === 'Asia/Tbilisi' &&
@@ -115,7 +115,7 @@ describe('DashboardService snapshot', () => {
             expect(result).toBeNull();
         });
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
+        const req = httpMock.expectOne(r => r.url === BASE_URL);
         req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 
@@ -124,7 +124,7 @@ describe('DashboardService snapshot', () => {
 
         service.getSnapshotStrict({ date: TEST_DATE, timeZoneOffsetMinutes: TEST_TIME_ZONE_OFFSET_MINUTES }).subscribe({ error: errorSpy });
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
+        const req = httpMock.expectOne(r => r.url === BASE_URL);
         req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
 
         expect(errorSpy).toHaveBeenCalledTimes(1);
@@ -135,7 +135,7 @@ describe('DashboardService silent snapshot', () => {
     it('should mark silent snapshot requests to skip global loading', () => {
         service.getSnapshotSilently({ date: TEST_DATE, timeZoneOffsetMinutes: TEST_TIME_ZONE_OFFSET_MINUTES }).subscribe();
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
+        const req = httpMock.expectOne(r => r.url === BASE_URL);
         expect(req.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
         req.flush({});
     });
@@ -143,7 +143,7 @@ describe('DashboardService silent snapshot', () => {
     it('should mark strict silent snapshot requests to skip global loading', () => {
         service.getSnapshotSilentlyStrict({ date: TEST_DATE, timeZoneOffsetMinutes: TEST_TIME_ZONE_OFFSET_MINUTES }).subscribe();
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
+        const req = httpMock.expectOne(r => r.url === BASE_URL);
         expect(req.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
         req.flush(MOCK_SNAPSHOT);
     });
@@ -156,7 +156,7 @@ describe('DashboardService silent failures', () => {
         const query = { date: TEST_DATE, timeZoneOffsetMinutes: TEST_TIME_ZONE_OFFSET_MINUTES, locale: '  ' };
         const request = strict ? service.getSnapshotSilentlyStrict(query) : service.getSnapshotSilently(query);
         request.subscribe({ next, error });
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
+        const req = httpMock.expectOne(r => r.url === BASE_URL);
         expect(req.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
         expect(req.request.params.has('locale')).toBe(false);
         expect(req.request.params.has('trendDays')).toBe(false);

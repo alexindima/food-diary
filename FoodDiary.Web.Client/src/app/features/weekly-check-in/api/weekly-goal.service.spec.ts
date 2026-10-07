@@ -48,7 +48,7 @@ describe('WeeklyGoalService', () => {
                 receivedError = error;
             },
         });
-        httpMock.expectOne(`${BASE_URL}/?weekStart=2026-08-17`).flush('Unavailable', {
+        httpMock.expectOne(`${BASE_URL}?weekStart=2026-08-17`).flush('Unavailable', {
             status: 503,
             statusText: 'Service Unavailable',
         });
@@ -61,7 +61,7 @@ describe('WeeklyGoalService', () => {
         service.getGoal('2026-08-17').subscribe(goal => {
             result = goal;
         });
-        httpMock.expectOne(`${BASE_URL}/?weekStart=2026-08-17`).flush(null);
+        httpMock.expectOne(`${BASE_URL}?weekStart=2026-08-17`).flush(null);
         expect(result).toBeNull();
     });
 
@@ -70,7 +70,7 @@ describe('WeeklyGoalService', () => {
             expect(goal).toEqual(GOAL);
         });
 
-        const request = httpMock.expectOne(`${BASE_URL}/?weekStart=2026-08-17`);
+        const request = httpMock.expectOne(`${BASE_URL}?weekStart=2026-08-17`);
         expect(request.request.method).toBe('GET');
         request.flush(GOAL);
     });
@@ -88,7 +88,7 @@ describe('WeeklyGoalService', () => {
             expect(goal).toEqual(GOAL);
         });
 
-        const request = httpMock.expectOne(`${BASE_URL}/`);
+        const request = httpMock.expectOne(BASE_URL);
         expect(request.request.method).toBe('PUT');
         expect(request.request.body).toEqual(payload);
         request.flush(GOAL);

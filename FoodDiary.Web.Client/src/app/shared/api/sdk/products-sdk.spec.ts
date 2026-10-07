@@ -1,10 +1,19 @@
-import { HttpClient, type HttpInterceptorFn, provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+    HttpClient,
+    HttpContext,
+    HttpContextToken,
+    HttpHeaders,
+    type HttpInterceptorFn,
+    provideHttpClient,
+    withInterceptors,
+} from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { createProductsSdk } from './products-sdk';
+import { sdkRequestOptions } from './sdk-connection';
 
 afterEach(() => {
     TestBed.inject(HttpTestingController).verify();
@@ -25,6 +34,23 @@ function connect(baseUrl: string): ReturnType<typeof createProductsSdk> {
 }
 
 describe('Products SDK HTTP integration', () => {
+    it('preserves per-call language headers and loading contexts through the same pipeline', async () => {
+        const sdk = connect('/api/v1/products');
+        const token = new HttpContextToken(() => false);
+        const context = new HttpContext().set(token, true);
+        const options = sdkRequestOptions(new HttpHeaders({ 'Accept-Language': 'ru' }), context);
+        const result = firstValueFrom(
+            sdk.client.getProductSuggestions({ version: sdk.version, search: 'молоко & рис', limit: 0 }, 'body', false, options),
+        );
+        const request = TestBed.inject(HttpTestingController).expectOne(item => item.url === '/api/v1/products/suggestions');
+        expect(request.request.context.get(token)).toBe(true);
+        expect(request.request.headers.get('Accept-Language')).toBe('ru');
+        expect(request.request.headers.get('X-Test-Pipeline')).toBe('active');
+        expect(request.request.params.get('search')).toBe('молоко & рис');
+        expect(request.request.params.get('limit')).toBe('0');
+        request.flush([]);
+        expect(await result).toEqual([]);
+    });
     it.each(['https://api.example.com', '', '/gateway'])(
         'uses the configured API base %s, cookies and Angular interceptors',
         async base => {

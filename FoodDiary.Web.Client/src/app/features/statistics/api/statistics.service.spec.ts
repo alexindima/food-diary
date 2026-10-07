@@ -8,7 +8,7 @@ import type { AggregatedStatistics } from '../models/statistics.data';
 import { StatisticsService } from './statistics.service';
 
 const BASE_URL = environment.apiUrls.statistics;
-const SERVICE_URL = `${BASE_URL}/`;
+const SERVICE_URL = BASE_URL;
 const SUMMARY_URL = `${BASE_URL}/summary`;
 const QUANTIZATION_DAYS = 7;
 const RESPONSE: AggregatedStatistics[] = [

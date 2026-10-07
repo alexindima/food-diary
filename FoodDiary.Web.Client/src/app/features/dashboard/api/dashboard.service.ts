@@ -1,10 +1,12 @@
-import { HttpContext } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import { catchError, type Observable } from 'rxjs';
+import { catchError, map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.tokens';
-import { ApiService } from '../../../services/api.service';
+import { dashboardSnapshotFromSdk } from '../../../shared/api/sdk/dashboard-sdk.mapper';
+import { DashboardSdk, type GetDashboardRequestParams } from '../../../shared/api/sdk/generated/api/dashboard.service';
+import { createSdkConnection, sdkRequestOptions } from '../../../shared/api/sdk/sdk-connection';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { DashboardSnapshot } from '../../../shared/models/dashboard.data';
 import { DASHBOARD_SNAPSHOT_QUERY_DEFAULTS } from './dashboard-api.tokens';
@@ -20,8 +22,9 @@ export type DashboardSnapshotQuery = {
 };
 
 @Service()
-export class DashboardService extends ApiService {
+export class DashboardService {
     protected readonly baseUrl = environment.apiUrls.dashboard;
+    private readonly sdk = createSdkConnection(DashboardSdk, this.baseUrl, inject(HttpClient));
     private readonly snapshotQueryDefaults = inject(DASHBOARD_SNAPSHOT_QUERY_DEFAULTS);
     private readonly silentLoadingContext = new HttpContext().set(SKIP_GLOBAL_LOADING, true);
 
@@ -49,12 +52,15 @@ export class DashboardService extends ApiService {
 
     private requestSnapshot(query: DashboardSnapshotQuery, context?: HttpContext): Observable<DashboardSnapshot> {
         const params = this.createSnapshotParams(query);
-        return this.get<DashboardSnapshot>('', params, undefined, context);
+        return this.sdk.client
+            .getDashboard(params, 'body', false, sdkRequestOptions(undefined, context))
+            .pipe(map(dashboardSnapshotFromSdk));
     }
 
-    private createSnapshotParams(query: DashboardSnapshotQuery): Record<string, string | number> {
+    private createSnapshotParams(query: DashboardSnapshotQuery): GetDashboardRequestParams {
         const { date, page = this.snapshotQueryDefaults.page, pageSize = this.snapshotQueryDefaults.pageSize, locale, trendDays } = query;
-        const params: Record<string, string | number> = {
+        const params: GetDashboardRequestParams = {
+            version: this.sdk.version,
             date: date.toISOString(),
             timeZoneOffsetMinutes: query.timeZoneOffsetMinutes,
             page,

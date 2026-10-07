@@ -31,27 +31,40 @@ export function canonicalJson(value) {
 // Keep the server's wire names, validation, nullability and auth metadata intact.
 // Only assign stable client method names and select the pilot's schema closure.
 export function productsContract(source) {
+    return userApiContract(source, [{ name: 'Products', prefix: productsPath, operations: operationNames }], 'FoodDiary Products API');
+}
+
+export function userApiContract(source, groups, title = 'FoodDiary User API') {
     if (!source.openapi?.startsWith('3.0.') || !source.paths || !source.components?.schemas) {
         throw new Error('Expected a complete OpenAPI 3.0 document from the FoodDiary host.');
     }
     const paths = {};
     const foundOperations = new Set();
+    const operationIds = new Set();
     for (const [path, sourceItem] of Object.entries(source.paths)) {
-        if (path !== productsPath && !path.startsWith(`${productsPath}/`)) continue;
+        // Specific scopes (for example auth sessions) own their nested routes.
+        const group = groups
+            .filter(candidate => path === candidate.prefix || path.startsWith(`${candidate.prefix}/`))
+            .sort((a, b) => b.prefix.length - a.prefix.length)[0];
+        if (!group) continue;
         const item = structuredClone(sourceItem);
         for (const [method, operation] of Object.entries(item)) {
             if (!httpMethods.has(method)) continue;
             const key = `${method.toUpperCase()} ${path}`;
-            const operationId = operationNames[key];
-            if (!operationId) throw new Error(`Name the new Products SDK operation: ${key}`);
+            const operationId = group.operations[key];
+            if (!operationId) throw new Error(`Name the new ${group.name} SDK operation: ${key}`);
+            if (operationIds.has(operationId)) throw new Error(`Duplicate SDK operation name: ${operationId}`);
+            operationIds.add(operationId);
             foundOperations.add(key);
             operation.operationId = operationId;
-            operation.tags = ['Products'];
+            operation.tags = [group.name];
         }
         paths[path] = item;
     }
-    for (const key of Object.keys(operationNames)) {
-        if (!foundOperations.has(key)) throw new Error(`Products SDK operation disappeared: ${key}`);
+    for (const group of groups) {
+        for (const key of Object.keys(group.operations)) {
+            if (!foundOperations.has(key)) throw new Error(`${group.name} SDK operation disappeared: ${key}`);
+        }
     }
 
     const schemas = {};
@@ -73,7 +86,7 @@ export function productsContract(source) {
     visit(paths);
     return {
         openapi: source.openapi,
-        info: { title: 'FoodDiary Products API', version: '1.0.0' },
+        info: { title, version: '1.0.0' },
         paths,
         components: { schemas, securitySchemes: source.components.securitySchemes ?? {} },
     };

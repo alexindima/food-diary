@@ -1,5 +1,5 @@
 /**
- * FoodDiary Products API
+ * FoodDiary User API
  *
  *
  *
@@ -11,7 +11,7 @@
 export interface FavoriteProductHttpResponse {
     alcoholPerBase?: number;
     barcode?: string | null;
-    baseUnit?: string | null;
+    baseUnit?: string;
     brand?: string | null;
     caloriesPerBase?: number;
     carbsPerBase?: number;
@@ -22,13 +22,13 @@ export interface FavoriteProductHttpResponse {
     fiberPerBase?: number;
     id?: string;
     imageUrl?: string | null;
-    imageUrls?: Array<string> | null;
+    imageUrls?: Array<string>;
     isOwnedByCurrentUser?: boolean;
     name?: string | null;
     preferredPortionAmount?: number;
     productId?: string;
-    productName?: string | null;
+    productName?: string;
     proteinsPerBase?: number;
-    qualityGrade?: string | null;
+    qualityGrade?: string;
     qualityScore?: number;
 }

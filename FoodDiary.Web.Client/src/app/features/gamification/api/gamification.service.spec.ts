@@ -45,7 +45,7 @@ describe('GamificationService', () => {
             expect(result).toEqual(MOCK_DATA);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(BASE_URL);
         expect(req.request.method).toBe('GET');
         expect(req.request.headers.get('Accept-Language')).toBe('ru');
         req.flush(MOCK_DATA);
@@ -64,7 +64,7 @@ describe('GamificationService', () => {
             },
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(BASE_URL);
         req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
         expect(failed).toBe(true);
     });

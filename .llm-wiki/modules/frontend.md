@@ -45,10 +45,16 @@ additional local rules.
 
 ## API SDK
 
-Products has an OpenAPI-generated Angular SDK under `src/app/shared/api/sdk/`.
-The generated client covers ten Products operations; the initial ProductService
-integration uses it for suggestions and deletion. Feature adapters preserve UI
-models and error behavior while the SDK uses the existing HttpClient pipeline.
+The user API has an OpenAPI-generated Angular SDK under `src/app/shared/api/sdk/`.
+The generated contract covers 39 groups and 259 operations. Forty-four frontend
+services use generated clients, including meals/recipes, dashboard/statistics,
+cycles, the dietologist workspace, user profiles, notifications, auth/session,
+AI, image coordination and exports. Feature
+adapters preserve UI models, date/quantity contracts and error behavior while
+the SDK uses the existing HttpClient pipeline, per-call headers and contexts.
+Cross-feature capability implementations load on demand at the composition root
+and preserve request identity across retries. Swagger retains C# nullable reference
+metadata; direct storage uploads and SignalR stay in their owning adapters.
 
 Read the concrete generated method and adapter needed for the task. Regenerate
 with `npm run sdk:update` after API changes, and use `npm run sdk:check:api` to

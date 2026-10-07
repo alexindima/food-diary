@@ -234,6 +234,8 @@ describe('NotificationService settings endpoints', () => {
             pushNotificationsEnabled: true,
             fastingPushNotificationsEnabled: false,
             socialPushNotificationsEnabled: true,
+            fastingCheckInReminderHours: 12,
+            fastingCheckInFollowUpReminderHours: 20,
         });
 
         service.updateNotificationPreferences({ pushNotificationsEnabled: false }).subscribe();
@@ -244,6 +246,8 @@ describe('NotificationService settings endpoints', () => {
             pushNotificationsEnabled: false,
             fastingPushNotificationsEnabled: true,
             socialPushNotificationsEnabled: true,
+            fastingCheckInReminderHours: 12,
+            fastingCheckInFollowUpReminderHours: 20,
         });
 
         service.getWebPushSubscriptions().subscribe();

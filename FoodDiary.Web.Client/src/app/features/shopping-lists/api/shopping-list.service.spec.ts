@@ -84,7 +84,7 @@ describe('ShoppingListService mutations', () => {
             expect(result).toEqual(response);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(BASE_URL);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual(createData);
         req.flush(response);

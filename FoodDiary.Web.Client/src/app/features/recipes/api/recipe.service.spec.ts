@@ -86,7 +86,7 @@ describe('RecipeService query', () => {
             expect(result).toEqual(MOCK_PAGE);
         });
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
+        const req = httpMock.expectOne(r => r.url === BASE_URL && r.method === 'GET');
         expect(req.request.params.get('page')).toBe('1');
         expect(req.request.params.get('limit')).toBe(String(DEFAULT_RECENT_LIMIT));
         expect(req.request.params.get('includePublic')).toBe('true');
@@ -98,7 +98,7 @@ describe('RecipeService query', () => {
 
         service.query(1, DEFAULT_PAGE_LIMIT, filters, false).subscribe();
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
+        const req = httpMock.expectOne(r => r.url === BASE_URL && r.method === 'GET');
         expect(req.request.params.get('search')).toBe('salad');
         expect(req.request.params.get('includePublic')).toBe('false');
         req.flush(MOCK_PAGE);
@@ -109,7 +109,7 @@ describe('RecipeService query', () => {
             expect(result).toEqual({ data: [], page: 1, limit: DEFAULT_PAGE_LIMIT, totalPages: 0, totalItems: 0 });
         });
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
+        const req = httpMock.expectOne(r => r.url === BASE_URL && r.method === 'GET');
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 });
@@ -153,7 +153,7 @@ describe('RecipeService mutations', () => {
             expect(result).toEqual(MOCK_RECIPE);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(BASE_URL);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual(createData);
         req.flush(MOCK_RECIPE);
@@ -187,7 +187,7 @@ describe('RecipeService mutations', () => {
 
         const req = httpMock.expectOne(`${BASE_URL}/r1/duplicate`);
         expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({});
+        expect(req.request.body).toBeNull();
         req.flush(MOCK_RECIPE);
     });
 });
@@ -379,6 +379,11 @@ describe('RecipeService mutation failures and filters', () => {
         expect(request.request.params.get('caloriesTo')).toBe('120');
         expect(request.request.params.get('hasImage')).toBe('false');
         expect(request.request.params.get('includePublic')).toBe('false');
-        request.flush({ recentItems: [], favoriteItems: [], favoriteTotalCount: 0, allRecipes: { data: [] } });
+        request.flush({
+            recentItems: [],
+            favoriteItems: [],
+            favoriteTotalCount: 0,
+            allRecipes: { data: [], page: 1, limit: 10, totalPages: 0, totalItems: 0 },
+        });
     });
 });

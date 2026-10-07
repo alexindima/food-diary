@@ -1,5 +1,5 @@
 /**
- * FoodDiary Products API
+ * FoodDiary User API
  *
  *
  *
@@ -13,7 +13,7 @@ import { ProductHttpResponsePagedHttpResponse } from './product-http-response-pa
 
 export interface ProductOverviewHttpResponse {
     allProducts?: ProductHttpResponsePagedHttpResponse;
-    favoriteItems?: Array<FavoriteProductHttpResponse> | null;
+    favoriteItems?: Array<FavoriteProductHttpResponse>;
     favoriteTotalCount?: number;
-    recentItems?: Array<ProductHttpResponse> | null;
+    recentItems?: Array<ProductHttpResponse>;
 }

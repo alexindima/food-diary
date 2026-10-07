@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1337,
     "ambiguousContracts": 2,
-    "consumerEdges": 10388,
+    "consumerEdges": 10391,
     "productionConsumerEdges": 5940,
-    "testConsumerEdges": 4448,
+    "testConsumerEdges": 4451,
     "consumedContracts": 1337,
     "unconsumedContracts": 0
   },
@@ -41788,6 +41788,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Presentation/Mappings/FoodRecognitionHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FoodRecognitionJobHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/OpenApiSdkExportTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -135255,6 +135268,19 @@
         "Modules/MealPlanning/Presentation/MealPlans/Responses/MealPlanHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/OpenApiSdkExportTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MealPlanHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Presentation/MealPlans/Responses/MealPlanHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/MealPlanHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -154950,6 +154976,19 @@
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CycleDaySymptomIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 5
+    },
+    {
+      "contract": "UpsertCycleDayHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Presentation/Requests/UpsertCycleDayHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/OpenApiSdkExportTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "UpsertCycleDayHttpRequest",
