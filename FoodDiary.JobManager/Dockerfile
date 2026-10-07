@@ -457,7 +457,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine@sha256:f62a272ac1b46e83f56b8ed0
 
 WORKDIR /app
 RUN apk add --no-cache \
-    tzdata=2026d-r0 \
+    tzdata=2026e-r0 \
     icu-data-en=78.1-r0 \
     icu-libs=78.1-r0 \
     keyutils-libs=1.6.3-r4 \
