@@ -67,6 +67,54 @@ Get-Content (Join-Path $PSScriptRoot 'registry.json') -Raw
     Assert-Condition ($midnight.daily[1].date -eq '2026-09-10' -and $midnight.daily[1].completedCount -eq 1 -and $midnight.daily[1].failedCount -eq 0 -and $midnight.daily[1].terminalCount -eq 1) 'Next UTC day has incorrect terminal outcomes.'
     $scheduler = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'Get-LlmWikiTaskSchedule.ps1'))
     Assert-Condition ($scheduler.Contains('-IncludeDispatchRegistry') -and -not $scheduler.Contains("'Manage-LlmWikiTaskDispatch.ps1'")) 'Scheduler must consume the full validated registry without a second scan.'
+    # Exercise the actual dispatch list/exit contract with controlled read-only collaborators.
+    $driftRoot = Join-Path $fixtureRoot 'dispatch-drift'
+    $driftTools = Join-Path $driftRoot '.llm-wiki/tools'
+    $driftReceipts = Join-Path $driftRoot '.artifacts/llm-wiki/scheduler/dispatches'
+    $workspace = '.artifacts/llm-wiki/tasks/fixture'
+    $driftWorkspace = Join-Path $driftRoot $workspace
+    $null = New-Item -ItemType Directory -Path $driftTools, $driftReceipts, $driftWorkspace -Force
+    $dispatchSource = Join-Path $PSScriptRoot 'Manage-LlmWikiTaskDispatch.ps1'
+    Copy-Item -LiteralPath $dispatchSource -Destination $driftTools
+    'param($Action, $Format); ''{}''' | Set-Content (Join-Path $driftTools 'Get-LlmWikiWorkspacePolicy.ps1')
+    'param($Action, $WorkspacePath, $Format); ''{"valid":true}''' | Set-Content (Join-Path $driftTools 'Manage-LlmWikiContextBundle.ps1')
+    'param($Action, $AsOfUtc, $Format); ''{"leases":[{"active":true,"leaseId":"fixture-lease"}]}''' | Set-Content (Join-Path $driftTools 'Manage-LlmWikiTaskLease.ps1')
+    $dispatchAst = [Management.Automation.Language.Parser]::ParseFile($dispatchSource, [ref]$null, [ref]$null)
+    $receipt = & {
+        foreach ($name in @('Get-Hash', 'New-Event')) {
+            $definition = $dispatchAst.Find({ param($node) $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $name }, $true)
+            if ($null -eq $definition) { throw "Dispatch fixture could not find actual function $name." }
+            . ([scriptblock]::Create($definition.Extent.Text))
+        }
+        $now = ([DateTime]'2026-10-07T00:00:00Z').ToUniversalTime()
+        [pscustomobject][ordered]@{
+            schemaVersion = 1; dispatchId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'; workspace = $workspace
+            owner = 'fixture'; leaseId = 'fixture-lease'; schedulePlanId = ''; schedulePlanHash = ''; scheduleClaimId = ''
+            contextBundlePath = "$workspace/context-bundle.json"; contextBundleHash = ('b' * 64)
+            packetFingerprint = ('c' * 64); events = @(New-Event @() 'started' ([pscustomobject]@{ result = 'fixture' }))
+        }
+    }
+    $receiptPath = Join-Path $driftReceipts "$($receipt.dispatchId).json"
+    $receipt | ConvertTo-Json -Depth 20 | Set-Content $receiptPath
+    foreach ($state in @('running', 'packet-drift', 'context-drift')) {
+        @{ currentPacketFingerprint = $(if ($state -eq 'packet-drift') { 'd' * 64 } else { 'c' * 64 }) } |
+            ConvertTo-Json | Set-Content (Join-Path $driftWorkspace 'workspace.json')
+        @{ bundleHash = $(if ($state -eq 'context-drift') { 'a' * 64 } else { 'b' * 64 }) } |
+            ConvertTo-Json | Set-Content (Join-Path $driftWorkspace 'context-bundle.json')
+        $dispatchOutput = & (Get-Process -Id $PID).Path -NoLogo -NoProfile -File (Join-Path $driftTools 'Manage-LlmWikiTaskDispatch.ps1') -Action list -FailOnInvalid -Format Json
+        $dispatchExit = $LASTEXITCODE
+        $dispatchResult = $dispatchOutput -join "`n" | ConvertFrom-Json
+        Assert-Condition ($dispatchResult.totalCount -eq 1 -and $dispatchResult.dispatches[0].state -ceq $state) "Actual dispatch fixture returned $($dispatchResult.dispatches[0].state) for ${state}: $(@($dispatchResult.dispatches[0].issues) -join ' ')"
+        $expectedDrift = [int]($state -ne 'running')
+        Assert-Condition ($dispatchResult.driftedCount -eq $expectedDrift -and $dispatchExit -eq $expectedDrift) "Dispatch list did not count or reject $state consistently."
+    }
+    $receipt.events[0].atUtc = ''
+    $receipt | ConvertTo-Json -Depth 20 | Set-Content $receiptPath
+    $malformedOutput = & (Get-Process -Id $PID).Path -NoLogo -NoProfile -File (Join-Path $driftTools 'Manage-LlmWikiTaskDispatch.ps1') -Action list -FailOnInvalid -Format Json
+    $malformedExit = $LASTEXITCODE
+    $malformed = $malformedOutput -join "`n" | ConvertFrom-Json
+    Assert-Condition ($malformed.invalidCount -eq 1 -and $malformedExit -eq 1 -and @($malformed.dispatches[0].issues | Where-Object { $_ -match 'timestamp is invalid' }).Count -eq 1) 'Malformed event timestamp did not produce an invalid receipt and failing exit.'
+    $global:LASTEXITCODE = 0
     Write-Host 'Dispatch metrics reuse passed: unchanged metrics, invalid and out-of-window dispatches retained, one fresh validation per invocation.'
 } finally {
     $resolvedFixture = [IO.Path]::GetFullPath($fixtureRoot)

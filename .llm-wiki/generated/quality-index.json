@@ -128,11 +128,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
-      "nonBlankLines": 481,
-      "decisionPoints": 101,
+      "nonBlankLines": 488,
+      "decisionPoints": 103,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 163.12
+      "structuralRiskScore": 166.26
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
@@ -2202,11 +2202,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
-      "nonBlankLines": 481,
-      "decisionPoints": 101,
+      "nonBlankLines": 488,
+      "decisionPoints": 103,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 163.12
+      "structuralRiskScore": 166.26
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiTaskJournal.ps1",
@@ -59816,8 +59816,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -60290,8 +60291,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiTaskLease.ps1",
       "line": 1,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
         ".llm-wiki/tools/Test-LlmWikiSchedulerLocks.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],

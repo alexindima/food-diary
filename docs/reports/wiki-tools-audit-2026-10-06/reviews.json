@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "reviewedFileCount": 364,
+  "reviewedFileCount": 409,
   "reviews": [
     {
       "path": ".llm-wiki/tools/Get-LlmWikiContentFingerprint.ps1",
@@ -186,14 +186,16 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
-      "sourceSha256": "329f460729ce2da232992b3fb5ce18663c5866b9e833003e40e28fd106b06ac5",
+      "sourceSha256": "bfd0364f125e2801b9c0c3ff9a7df06e9f9e091a21dba2fc2f072e171d37420c",
       "reviewedBaseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
       "coverage": "full-source-read",
       "performance": "Each graph-sensitive fingerprint probes node and dotnet versions and every stage includes HEAD. Static groups repeat after unrelated merges; any optimization must replace HEAD with scoped clean blob/tree evidence rather than simply dropping it. Consider per-run runtime version reuse after measuring its cost.",
-      "reliability": "NUL-safe rename parsing includes both paths, dirty bytes are hashed, review ledgers are deliberately excluded from smoke while validated separately, and runtime identity is included. Graph-sensitive checks retain the whole-worktree boundary. Malformed Git status and caller argument canonicalization need existing test review. Scheduler inputs select the bounded lease suite and invalidate its group receipt; workspace-policy stage now includes referenced check definitions.",
+      "reliability": "NUL-safe rename parsing includes both paths, dirty bytes are hashed, review ledgers are deliberately excluded from smoke while validated separately, and runtime identity is included. Graph-sensitive checks retain the whole-worktree boundary. Malformed Git status and caller argument canonicalization need existing test review. Scheduler inputs select the bounded lease suite and invalidate its group receipt; workspace-policy stage now includes referenced check definitions. The facade group now declares its actual graph/CI dependency breadth. Explicit char-array NUL splitting avoids the PS5 overload that retained an empty final record.",
       "findings": [
         "WTA-021",
-        "WTA-022"
+        "WTA-022",
+        "WTA-024",
+        "WTA-025"
       ],
       "status": "reviewed-with-followups"
     },
@@ -2329,15 +2331,16 @@
     },
     {
       "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
-      "sourceSha256": "4210cd00c7fa0f9dd8b9cf7ac117aa3d6da0f374d308388be5c0fea2f355af2f",
+      "sourceSha256": "5b9d76d2e2a64eb19d700f7cfd5978145499454e4de478cfcbce17e54ec20598",
       "reviewedBaseline": "f02f61e8217ac74b7c63554c1cf1742f2acfe8cf",
       "coverage": "full-source-read",
       "performance": "Fast catalog plans precede small subprocess scheduling fixtures; long product suites are replaced only within the owned scheduler fixture.",
-      "reliability": "Actual unknown-group execute/plan/product-plan cases reject without receipts; missing handler rejects; casing canonicalizes. Existing catalog, alias, priority, native output, failure aggregation and NuGet coordination assertions remain. Scheduler inputs select the bounded lease suite and invalidate its group receipt; workspace-policy stage now includes referenced check definitions.",
+      "reliability": "Actual unknown-group execute/plan/product-plan cases reject without receipts; missing handler rejects; casing canonicalizes. Existing catalog, alias, priority, native output, failure aggregation and NuGet coordination assertions remain. Scheduler inputs select the bounded lease suite and invalidate its group receipt; workspace-policy stage now includes referenced check definitions. Asserts that facade contracts declare the broad graph/runtime/CI dependency boundary used by the tests.",
       "findings": [
         "WTA-017",
         "WTA-021",
-        "WTA-022"
+        "WTA-022",
+        "WTA-024"
       ],
       "status": "reviewed-with-followups"
     },
@@ -2845,14 +2848,16 @@
     },
     {
       "path": ".llm-wiki/tools/Test-LlmWikiStageFingerprint.ps1",
-      "sourceSha256": "bc6dc29bb87ee53acaf2a177630f1432c1b800ace43629ac62e9c579d0f224c9",
+      "sourceSha256": "5f6a0de438493552ad18438b4631b7ee888ad1452f5f30600d26c69b88020a92",
       "reviewedBaseline": "f02f61e8217ac74b7c63554c1cf1742f2acfe8cf",
       "coverage": "full-source-read",
       "performance": "Uses a tiny Git repository and real stage fingerprinter/dispatcher, without executing the actual product suites.",
-      "reliability": "Adds referenced-definition stage invalidation and all seven manager inputs to the existing Unicode/rename/deletion/stable/changed-during-check receipt matrix. Production group handlers remain separately executed.",
+      "reliability": "Adds referenced-definition stage invalidation and all seven manager inputs to the existing Unicode/rename/deletion/stable/changed-during-check receipt matrix. Production group handlers remain separately executed. A real successful facade receipt cannot skip its subsequently failing shard guard; unchanged receipt reuse and edited/deleted input invalidation cover all nine direct tests. Cyrillic paths are assembled from code points and the tools-root default is resolved inside the script so PS5 can run the complete fixture.",
       "findings": [
         "WTA-021",
-        "WTA-022"
+        "WTA-022",
+        "WTA-024",
+        "WTA-025"
       ],
       "status": "reviewed-with-followups"
     },
@@ -3570,12 +3575,15 @@
     },
     {
       "path": ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
-      "sourceSha256": "4b494860416229ffc50057a8d78b84ff98712134bc1ed246bf2aaa839474f1a5",
+      "sourceSha256": "efe7c51d794ea0bfe441e444310cf2304e74e7be03c598ccefc00df2c012daf9",
       "reviewedBaseline": "f02f61e8217ac74b7c63554c1cf1742f2acfe8cf",
       "coverage": "full-source-read",
       "performance": "Controlled registry adapter records call counts to prove one validation per invocation.",
-      "reliability": "Checks output parity, retained invalid/out-of-window records, next-call freshness and exact UTC midnight terminal buckets. The stub does not prove actual dispatch validation or multiprocess consistency.",
-      "findings": [],
+      "reliability": "Checks output parity, retained invalid/out-of-window records, next-call freshness and exact UTC midnight terminal buckets. The stub does not prove actual dispatch validation or multiprocess consistency. Actual dispatch-list subprocess fixtures cover healthy, packet/context drift, zero-fraction timestamp round-trip and malformed timestamp rejection on PS7/PS5.",
+      "findings": [
+        "WTA-026",
+        "WTA-027"
+      ],
       "status": "reviewed-with-followups"
     },
     {
@@ -3736,6 +3744,466 @@
       "performance": "Parses each full source once with TypeScript compiler API and emits all symbols/tokens/edges as one JSON document. No semantic program construction; this is syntax projection.",
       "reliability": "Reads snapshot sources while resolving tooling dependency from the declared source workspace. Declaration/DI/route/HTTP relations remain bounded heuristic edges. Input paths are not contained/validated here, parse diagnostics are ignored, import() argument access can be undefined, and TSX is treated as TS; validate writer-owned input guarantees and malformed-source behavior.",
       "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Import-LlmWikiTaskWorkspace.ps1",
+      "sourceSha256": "2bbaf867bbaa767184bde7198a085142fe5659a25bd60db1af90fdcbcfb7ce3a",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Verifies the package, rereads it, initializes a new workspace and appends imported journal entries one at a time; journal reparsing and duplicate initialization composition are measurement candidates.",
+      "reliability": "Stages initialization and checks the doctor after moving to the final path; cleanup verifies staging containment. Verification and subsequent package read are separate snapshots; imported evidence/report references and concurrent destination publication need focused fixtures.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Initialize-LlmWikiTaskWorkspace.ps1",
+      "sourceSha256": "66bb02843ab9cd19620d02fc7915e1ee04565cec7a17c2aeb2476f6af0dd4116",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Reuses the compiled packet for acceptance only with explicit changed paths and no planned/head scope. Manifest/evidence still compose their own inputs; requirement membership repeatedly scans arrays.",
+      "reliability": "Uses a temporary workspace and pins Git base; reused acceptance checks source snapshot before publication. Nested lexical workspace paths, physical containment and target-creation races require validation. Existing artifact text is initialized before the final directory move.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+      "sourceSha256": "5deca5c80d4c1afbdb31a2faa53f12f02c58238cfe7d5ef97d38ac3ccbdb9bd6",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Core status still composes readiness, lineage, conformance, proof, requirements and repair separately; detailed status adds many repeated workspace assessments. Refresh defers those assessments but reads backups of six base and nineteen derived artifacts.",
+      "reliability": "Refresh restores caught failures and invalidates derived artifacts after packet changes; it has no shared mutation lease or crash-atomic multi-file commit. Deferred assessments are explicit. Confidence validity is exposed but does not contribute to the combined blocking expression; scope/path normalization and malformed artifacts need targeted validation.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Update-LlmWikiTaskWorkspace.ps1",
+      "sourceSha256": "bf13bb5c24c40a87eaabcad6db32b5b9346c98c3408c9485505449f7a1bedd69",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Reads the descriptor twice and each base artifact for parsing, then again for rollback; backup copies and doctor/policy composition add work. Request-owned raw/parsed snapshots could remove repeated reads.",
+      "reliability": "Checks canonical descriptor references, version bounds and sealed workspaces; symbolic bases use stored start identity. Same-version origin repair does not reject every doctor failure, and inconsistent already-pinned bases are not generally reconciled. Rollback is exception-based, without a mutation lease/crash transaction.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Update-LlmWikiTaskEvidence.ps1",
+      "sourceSha256": "7cf5864d82c5e31a66aec9fa0c75d2884aa5fe5588894ff3d126d6c0c81769e2",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Repeated check/review ID and rule-path searches, per-entry content hashes, policy hashes and native runtime-version commands are candidates for request-local maps and runtime reuse. Path-affinity mapping retokenizes every pair.",
+      "reliability": "Preserves retained evidence with explicit dependency/runtime/platform invalidation and receipt import. Writes evidence/acceptance sequentially with rollback on caught failure; no shared lease or immutable read-set validation. Imported receipts can change the saved statuses after result arrays were assembled; final-state reporting needs a focused test.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
+      "sourceSha256": "f585b3bfa501bf799c933f5951abc01973ab61a94cd0a7316143a73a37d93726",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Recomputes policy, per-entry definition/content/compatibility hashes and runtime versions; native version probes and repeated rule lookup are per-invocation reuse candidates.",
+      "reliability": "Validates current requirements and compatibility, artifact hashes and result reuse eligibility. Execution artifact boundary is a lexical prefix; missing/invalid executed-check artifacts and exact duplicate requirement IDs need focused fixtures. It is a validator, not execution coverage.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiTaskWorkspace.ps1",
+      "sourceSha256": "a72a8e96fa0ca6e8d1e8be4c5a4ecad28721107a742c25e26efe82259085db47",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Reads seven JSON artifacts, computes several hashes, and separately invokes lineage, journal, completion and policy comparison; these nested readers repeat the same inputs.",
+      "reliability": "Validates descriptor paths, policy snapshots, objective/base/packet consistency, mappings and required evidence. Artifact parse failures can still reach unconditional nested validators. Does not recompute the packet fingerprint from its payload; checks are structural/current compatibility rather than proof that all use cases executed.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiFacadeCommandCatalog.ps1",
+      "sourceSha256": "6413448cc906779d57dec676cd52fa15aab52c95c6548a65e67f685d6d81e9c7",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Parses the large facade and full runner once each, runs both help tiers, then executes small extracted route/diagnostic bodies with controlled collaborators.",
+      "reliability": "Checks route/registry completeness, success-only publication after all gates, profile/concurrency forwarding and freshness diagnostics. Extracted AST fixtures do not execute the full real verification/deployment path; script-text extraction offsets need stable-source guards.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiCriticalToolContracts.ps1",
+      "sourceSha256": "b6d78bbc1d52ac4e5a5e8677db0e435e83a702f020ba13203dadcd0b9f93033a",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Mixes cheap marker/AST checks with real context latency/concurrency, worker subprocesses and SQLite runtime initialization. Its actual dependencies are broad despite the former facade group declaration.",
+      "reliability": "Real owned fixtures reject empty benchmark envelopes, corpus placeholders/self-review, failed worker exits and invalid boundaries. Several remaining contracts are text markers only. Worker waits lack their own deadline and process disposal; citation quality thresholds are fixture contracts, not independent answer-quality evidence.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiStrictAffected.ps1",
+      "sourceSha256": "24838d25fd1692e0567223af413b21ba3c52478c8cefc07475324cee680daa35",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Reads the complete facade/runner/legacy audit and five generators, then uses bounded actual planner/policy commands; text scans are cheap but repeated.",
+      "reliability": "Checks that strict publication is uncached/non-deferred and scoped; most assertions inspect text rather than execute strict verification. Product-only plan and stylesheet policy controls are actual calls. Supports diagnosis of contract drift, not broad runtime proof. Actual extracted publication routes now require one smoke call with NoCache=true and exact BaseRef/ChangedPath forwarding for both strict affected and UI finalization; controlled collaborators avoid executing the full gate twice.",
+      "findings": [
+        "WTA-028"
+      ],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiIntegrationScan.ps1",
+      "sourceSha256": "0855ef2f4db5ae8e87bd88ef697a810174d2db96d91e81a3cf796f3f061f1e20",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Uses injected workflow/research/brief records to exercise small composition logic without Git/build/discovery overhead.",
+      "reliability": "Cross-layer fixtures cover inbound/outbound/DI/runtime/test evidence and tiny spacing explicitly avoids a scan. Does not exercise actual discovery or cross-layer integration execution.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiIntentOwnership.ps1",
+      "sourceSha256": "63169fe3fc07d9a94d086c6b77c839abe88dca5f4ca10a6d03322a0baf97956c",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Controlled SQLite-search response fixtures exercise ownership selection without projection builds; actual module inventory/guide lookup still runs.",
+      "reliability": "Covers missing module fields, legacy/modern canonicalization, ambiguous abstention, exact module names and explicit paths. Does not validate live SQL ranking/freshness; temporary cleanup trusts its generated path and utf8NoBOM requires modern PowerShell.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiResearchConfidence.ps1",
+      "sourceSha256": "cb813a0b5458624602bb58f234e92e44be6a0d0e336ccb0aee9d75307450295e",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Several real research/graph calls cover current module roots; compact response limits and fast-path source guards bound output/history work.",
+      "reliability": "Checks grounded discovery confidence, assessment-only requirements, module/test ownership and result bounds. String guards do not execute every failure/history branch; sidecar dependencies are checked in source.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiTestOnlyGovernance.ps1",
+      "sourceSha256": "9a23b7da05854ae60a71de5620d4bdb927e2d80c63b31bd25946ac52e425b242",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Four real bounded manifest/acceptance/policy calls use private artifacts; their underlying rich packet composition can repeat work.",
+      "reliability": "Checks automatic test mapping, exclusion of generated Wiki changes and a production policy control. The synthetic test/production paths are retired legacy roots; this is not full modern owner-root coverage or test execution.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiTaskBriefQueries.ps1",
+      "sourceSha256": "de3e501e5d5e37a01a265f9e97b71a06a4bf4dd1cd6f900a03b87d076294845b",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Fourteen uncached real brief queries collect timing/candidate/byte measurements but never report them; an unused functional-normalization helper remains.",
+      "reliability": "Checks explicit scope, broad assessment and SQLite exact-path diagnostics/intent reuse with seven source hashes. SkipTestPlan omits that path; no exact functional-parity or latency assertion follows from these diagnostics.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiTaskScope.ps1",
+      "sourceSha256": "b7acede4ec1d59b3ac0c6b81d195a92684e853dbc28849bfa9f039b1f799b5ef",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Private manifest/acceptance and one real SQLite-backed initializer cover local scope; initialization still composes a rich packet and policy.",
+      "reliability": "Checks normalized Windows scope, evidence references and modern planned test-root initialization, plus source wiring guards. Does not cover escaping paths, concurrent initialization or immutable import tampering.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
+      "sourceSha256": "0227d1c7e83505c78a3c9122d36c1aa1021f52c92844227395c00e66cc3379b5",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Exercises the actual bounded pool with tiny evaluators, concurrency two/outer serial one and ordering; this is orchestration verification, not a general speed benchmark.",
+      "reliability": "Actual failure/timeout/cancel fixtures confirm worker and child termination, pending-work suppression, Unicode diagnostics, exact case coverage/order and duplicate basename rejection. Does not assess retrieval/scoring quality; emitted diagnostics remain in the evidence directory.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWiki.ps1",
+      "sourceSha256": "4e53911b86892ad3af967dd0b38d0ba74699e7d866ad9d40cc62fae4d4b7c9a4",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Caches page lines/anchors once and computes reachability with a queue/set, but eagerly reads every Markdown page and uses per-line regex/Uri work. External target anchors are read lazily; file/byte limits are absent.",
+      "reliability": "Front matter, source normalization, IDs, generators, links/anchors, credentials and reachability produce explicit diagnostics. Markdown support is a limited regex grammar; local link resolution lacks a repository containment bound and physical link checks, and malformed URI/IO can abort the entire diagnostic run.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiLint.ps1",
+      "sourceSha256": "75e56ced12798abaaf002a6a541a4dfca94241cacc308f7531526095858d7f50",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Four tiny owned-repository fixtures launch the actual lint child; process startup dominates these small cases.",
+      "reliability": "Checks success plus missing index, unreachable pages and eight invalid-page diagnostics/exit codes. No malformed URI, links escaping the repository, symlink, tilde fence or large-input cases; child invocation has no independent deadline.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiMemoryIsolation.ps1",
+      "sourceSha256": "39700cef3fadf3aeaebbb4f33b3a4e31be35bda31704fb09be635d49993077cf",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Hashes/parses canonical memory once before controlled isolated-manager calls and rehashes after success; the synthetic event exercises only one unknown-kind failure.",
+      "reliability": "Rejects smoke pollution and overrides outside artifacts, restores environment and proves canonical bytes unchanged on successful completion. Does not exercise real promote/supersede/prune concurrency, corruption or persistence recovery.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Manage-LlmWikiEvalPromotion.ps1",
+      "sourceSha256": "22319854a885a9d629bb14ab26b0ec001c5df804265adeba8a341f8d7ada8812",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Validates/hashes the complete event history and repeatedly materializes candidate views for observe/decision output. Observation independently recomposes diff and policy after retrospective verification.",
+      "reliability": "Registry writes are direct and unlocked. Case execution checks expected membership plus unexpected violations, not complete exact sets; decision records prove a supplied reason rather than an independently authenticated human. Test-root containment uses a prefix without a separator; package/workspace read coherence and absent registry behavior require validation.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Write-LlmWikiContextEvaluationSnapshot.ps1",
+      "sourceSha256": "8321dee2a7192b9dcab8586424e22f2924f222f5cdd887cef81ab55df0aa35ec",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Each warmup/measured iteration reparses the corpus and runs a new evaluation; stores all evaluations although quality fields use only the last one. Snapshot provenance materializes the complete Git binary diff and prior JSON selection sorts the full directory.",
+      "reliability": "Checks change-set stability around measurement and refuses stale projection with SkipBuild. Corpus/policy hashes are taken after measurements, and automatic prior comparisons do not require matching corpus/runtime/threshold provenance. Git untracked paths use quoted line output and omit explicit native failure checks for some probes; output default can collide within one second. Sequential snapshot/summary publication is not transactional.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1",
+      "sourceSha256": "1cf33d635833f255bc61fe9ad74e9a6261a49c793222b371bd1c703c6c2fed65",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Batch mode amortizes process/SQLite setup; eager batch JSON and all diagnostic records are still materialized before summarizing. Repeated grouping/sorting computes cohort, failure, confidence and abstention statistics; corpus count is unbounded.",
+      "reliability": "Rejects empty/duplicate-ID corpora and validates response count, but does not explicitly require nonempty IDs/query fields or valid threshold ranges. NoBatch and batch rely on manager response ordering/freshness; accepted alternative paths affect scores by design. With a live gate, FailOnRegression enforces that gate while ordinary threshold failures remain separately reported; switchReady is advisory. Parser/role/latency fixtures and independent corpus authorship remain separate requirements.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
+      "sourceSha256": "b6fe5f06fd7f6d9e7815768f965e1e42466475f625b07c1bde718c8453846357",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Lists validate every event chain and independently verify/read the same workspace context for each dispatch. Lease joins scan arrays; context/descriptor snapshots and lease-ID maps can be reused per invocation after freshness/measurement validation.",
+      "reliability": "Actual owned public-list fixtures now prove running, packet/context drift, malformed timestamp and failing exit behavior. UTC timestamp canonicalization restores original event hashes after JSON coercion. Receipt top-level identity/owner/path metadata are not bound completely to the started event; updates span receipt and lease without a shared transaction/lease, and pruning catches deletion failures while counting candidates as changed.",
+      "findings": [
+        "WTA-026",
+        "WTA-027"
+      ],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
+      "sourceSha256": "e6ade2940d1c94ad4d3b9ff0f7dba8ac1dc002ea3fa173f98dc10b89e5e512fe",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Delivery assessment invokes requirements, conformance, proof, acceptance, journeys and lineage separately, rereading packet/evidence/criteria. Replan snapshots every recursive workspace file into RAM, including logs/backups; bounded immutable composition and selective rollback scope need measurement.",
+      "reliability": "Status assessment automatically writes check links into acceptance. Replan has caught-error rollback but no crash/concurrent-write atomicity despite its messages; restores/removes all snapshot files without a shared lease. Stale-packet check verifies path existence/deletion rather than a complete content snapshot; broad automatic check affinity and injected-assessment provenance require focused fixtures.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Manage-LlmWikiLearningExperiment.ps1",
+      "sourceSha256": "bcb5da42c93ff7837fbf33ec9c50b89145c6487fab6f82ea97d61d3bd08cc110",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Registry validation rebuilds Get-View for every event prefix, producing quadratic replay work, and each shadow invokes complete learning validation. List summary rematerializes the whole view four times.",
+      "reliability": "Checks chain/state/exposure and duplicate candidate-workspace observations, but uses direct unlocked writes and a test-root prefix without separator containment. Historical shadows are replayed against current learning candidates; subsequent observations can affect prior verification. Same-sample forecast replay and self-reported canary outcomes are observational evidence, not independent quality/causal proof.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Manage-LlmWikiInstructionExperiment.ps1",
+      "sourceSha256": "3bed7d14a3853425f0a25d623df788f828a59ab1a463fee6437fd02ab07de368",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Validation reconstructs prior views for each evaluate/stop, while cohort matching repeatedly searches arrays and outcome metrics are rebuilt independently for forecast/evaluation. A single-pass state reducer and keyed cohort map are grounded measurement candidates.",
+      "reliability": "Checks event chain, look count/new samples and stop binding to the latest outcome fingerprint. Forecast can report valid=true before applying initial registry validation. Direct writes lack a mutation lease/crash transaction; stored policy fingerprint does not freeze evaluation policy. Canonical date handling is explicit, but null/empty hashes are intentionally conflated; matched cohorts remain observational.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Manage-LlmWikiLearningPromotion.ps1",
+      "sourceSha256": "b373c3c4fb7e20a4529005a06e4643b6e2ffd44f0b185ecb6199072564abcd87",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Mutation can round-trip, rebuild derived snapshots, rehash and revalidate the full registry three times. Legacy/persistence replay and applied/rollback validation rebuild prior views repeatedly; show/list also rematerialize views.",
+      "reliability": "Prevalidates chains and persists a stable round-trip via temporary files, but read actions can migrate canonical legacy state. No mutation lease or shared transaction protects publication or experiment links. Rehash/migration changes historical identities; returned pre-publication event hashes need exact persisted-identity fixtures. The application branch trusts experiment.successful without separately requiring experimentResult.valid; evidence is repeated task observations, not independently authenticated human review.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+      "sourceSha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Unconditionally composes eighteen global registry/graph/metrics tools, then doctor and many overlapping per-workspace validators. Dispatch metrics rescan dispatches; per-workspace learning/experiment queries revalidate global journals. Metadata enumeration repeatedly visits known files. A request-owned fact bundle and keyed joins are primary bounded-history benchmark candidates.",
+      "reliability": "Per-workspace validator exceptions become explicit invalid data, but global failures can abort the whole audit. Git base resolution omits the fixed repository cwd. Applied decomposition clears existing invalid/conflict reasons; degraded outcome counts contribute to attentionCount but not to the identical valid predicate. Missing/escaping task roots, exact aggregate consistency and complete snapshot coherence need fixtures.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+      "sourceSha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Compact output is selected only after all full handoff registries/metrics and optional assessments run. It independently repeats workspace status, graph, lease/dispatch/metrics, outcomes, forecasts and validators; output truncation does not bound computation. Validated request-local facts and a compact-specific assessment path should be measured.",
+      "reliability": "PacketInput/StatusInput reuse is not explicitly source-bound. Nested workspace resolution is lexical; source anchors are positive line/path references without physical freshness/line-count checks. Acceptance evidenceNote reads a top-level property although the resolution contract nests it. Compact journal selection filters only the already-limited tail; full output can lose deeply nested evidence at JSON depth 12. Several read collaborators may migrate canonical registries.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1",
+      "sourceSha256": "c21809c2eb9368f5e694b3d19653508ad5ab5d4a3b64d33a2333940a5f15e5db",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Real packet/manifest/conformance/policy commands run in one owned workspace. Rich composition repeats, but synthetic scope keeps product verification out of the fixture.",
+      "reliability": "Proves generated bookkeeping isolation, explicit scope synchronization, caught journal-write failure rollback and text rendering. Uses retired synthetic product roots; does not execute complete delivery assessment or crash/concurrent full-workspace rollback.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1",
+      "sourceSha256": "e2ff1eee276599a475ec0da9594f511bcd6d85d9e1dc2ff72fc45684db064303",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "One real brief is reused for multiple planner cases; controlled readiness packet/API objects avoid repeated discovery. Result-shape guards inspect source directly.",
+      "reliability": "Covers heterogeneous/pathless ADRs and evidence, abbreviated briefs, legacy/scalar policy/API shapes, accepted versus additional unaccepted breaks and behavioral restrictions. Does not execute the generated plan phases or real API snapshot transition.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1",
+      "sourceSha256": "e3a2937fa9d654bbd44b1b69356a27c62a3e577074ec4627ce76fa8ec8c1d4bb",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Real current-module scans and compile probes are mixed with a private synthetic donor containing conditional aliased references. Several failing probes intentionally compile again to prove non-reuse, making this a substantive integration-style suite.",
+      "reliability": "Checks current module ownership/transitive wrappers/composition registrations, legacy/modern/contract namespace boundaries, real native compile success/failure, absent donor refs and uncached failures. Only external graph metadata is stubbed; fixture compiler/Git/readiness code are real. Initial fixture cleanup is less strict than the final donor containment check; compilation availability and remaining probe failure classes are separate prerequisites.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
+      "sourceSha256": "8e827a454a139a0428cdc5f9ee3d940e90672d1c9c1a4cd5c7d4ed6c0a8c1b79",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Many real routing/brief/research/design/QA/experience calls are repeated across scenarios; Routing/Experience partitions help bound execution. Request-local immutable inputs and separate controlled composition versus real discovery cases are measurement candidates.",
+      "reliability": "Covers grounded/ungrounded, visual/bug/maintenance/test-only/critical/repository-assessment routes, budget/order, ownership, history, pause/resume and injected delivery status. Several product paths are retired synthetic roots; supplied status/doctor/assessment records do not prove real delivery or product journeys. Failure collection continues through failed assertions; later indexing may fail before all diagnostics print.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+      "sourceSha256": "9eb74c08f415f8e0e829be2912de2c97c58f89b93157c1682fda56308ede6cec",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Matches each rule against every changed path and pattern, then searches evidence arrays for every required ID and invokes a separate lineage policy pass. Precompiled regexes, path sets and keyed evidence/union dependency maps are grounded candidates.",
+      "reliability": "Pins base through the Git helper, separates derived/operational paths and validates locale/migration pairs, statuses/reasons and lineage. Native changed-path discovery allows rename detection without explicitly collecting both endpoints. Same-ID check/review requirements keep only the first source rule; schema/unknown structural-check validation and exact evidence change-set/requirement association need fixtures.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
+      "sourceSha256": "ea16e7d69b1e41aa98714576148cde53a09fafeb96be92388577f010ad998b2c",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Repeated property lookup and recursive schema JSON serialization occur across parameters/media/headers/schemas. DTO comparison starts two Roslyn processes per changed file; exact-content rename pairing rereads delete/add candidates. Physical recursive DTO discovery and mtime-based helper readiness are further measurement candidates.",
+      "reliability": "Acceptance binds exact baseline/snapshot/change identities and synthetic comparisons do not inherit release decisions. Several equality/property/set operations are case-insensitive; compact model shapes omit some constraints and raw schema comparison covers only selected facets. Git snapshot reads do not always fix cwd/UTF-8, base is not uniformly pinned before the full read set, helper version freshness is timestamp-based, and PS5 JSON/overload support is incomplete. These are unverified contract/provenance followups.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibilityRegression.ps1",
+      "sourceSha256": "27a2ecde3155ff7dd1d6e79566663b8c81af011b0372f053bf0f8e8a00cea169",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Controlled schema/range/approval objects precede an owned Git repository with real Roslyn DTO discovery and repeated native parser calls. Prebuilt extractor copying avoids a duplicate build but is an external prerequisite.",
+      "reliability": "Meaningful actual selection checks cover tracked/untracked/Unicode/legacy/module DTOs, bin/obj exclusion, staged and ignored moves, edited/ambiguous pairing, and exact approval boundaries. Additional direct schema checks cover requests/responses/headers/range widening and empty endpoint arrays. Missing cases include case-only changes, absent versus explicit null, nested model constraints, cwd/native failures and cancellation.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
+      "sourceSha256": "f8994ec4e824400b47bebeef6a2d20b33f39f56753fb5631b1f26850b24c664e",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Runs a long real facade/workspace lifecycle with repeated assessments, refresh, criterion mapping and validation. Shared immutable packet/registry inputs could reduce repeated composition without removing gate execution.",
+      "reliability": "Proves pinned base/origin migration, atomic criteria, empty catalog diagnostics, stale-lineage blocking, proof/context security, finalization and pinned head. Authentication handler paths are retired synthetic inputs; a manually recorded passing Wiki check and scenario mappings are governance fixtures, not authentication execution. Optional-property/empty-estimate guards can omit coverage; no concurrency/crash rollback scenario is present.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiGovernedExtraction.ps1",
+      "sourceSha256": "0835c4ee277db3816caf01c057282f84bc65dfcf1b06af2878dec3c9c03618ed",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Combines pure plan/criterion assertions with two actual workspace initializer/requirement/acceptance/proof sequences and project-reference regression. Repeated rich initialization is the main cost candidate.",
+      "reliability": "Covers English/Russian module selection, canonical physical roots, atomic supplemental criteria, compound-resolution rejection and rename/sibling mapping. Much input is synthetic; injected rename provenance is not an actual Git move in this suite. It does not execute every extraction project/test/rollout phase.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiRankingPathLayout.mjs",
+      "sourceSha256": "21704d3ff5195fa08773b2c2b52795c3701b26a5fe445f87f2d69e137fb4360e",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Tiny pure-function fixtures cover layer/identity/alias logic without process or database work; duplicate/reordered test rows verify weight invariance.",
+      "reliability": "Exact positive and negative boundaries cover moved/legacy/module/test/shared roots, Windows separators, identifiers, Cyrillic compounds, entry roles and rare test identities. Synthetic names avoid corpus-target coupling. This is helper correctness evidence, not integrated SQL ranking or measured retrieval quality.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1",
+      "sourceSha256": "ecc077ad50a8c91bf606c4205cc9bbd076e4d6752cb40ebbb334fddcc1fabab4",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Builds once, evaluates every corpus through a bounded pool, hydrates full result sets, then builds/evaluates the actual .NET reader across four parity corpora. Repeated corpus reads/grouping and build readiness can be measured; comparisons bind two active implementations.",
+      "reliability": "Requires source existence, single consumption of every corpus, frozen counts/cohorts/control provenance, live holdout/control gates, all promoted top-ten coverage and exact Node/.NET ranks/top-five scores. Historical committed parity/runtime values are consistency assertions rather than fresh execution proof; independent authorship is not authenticated by these counts. Actual parity is performed for four named corpora; no global concurrent read-set seal surrounds this suite.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiTestPlanPrecision.ps1",
+      "sourceSha256": "801484ae3f4173165b52bbff6d99c3a6a2f627844e3ef53d3d895500283b83e9",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Many real graph/test-plan/brief/journey/privacy queries validate focused selection; NoBaseline and injected diff/policy keep selected paths bounded. Collection scans and repeated underlying context composition are measurement candidates.",
+      "reliability": "Tests actual CI guard selection, unique commands, cross-feature exclusion, declared-type/idempotency/module-test selection, verified frontend coverage reuse, broad assessment, database provider guidance and identity-session ownership/privacy. Some paths are retired synthetic roots; many assertions require minimum counts/membership rather than complete exact outputs. It validates plans/navigation, not execution of every recommended command.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".github/workflows/ci-tests.yml",
+      "sourceSha256": "d4a5caecfb6bb5d9eec95ab183f36ef95e3cf2379d35ec8f060e9dd403849ecf",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Wiki focused and three Full shards repeat checkout/history, npm ci and compiler preparation on independent runners; npm download caching exists but no shared prepared Wiki runtime/projection artifact is declared. Full shards run independently of focused checks; backend slow groups wait for fast tests. Frontend checks/tests/builds/E2E remain a long serial lane. Setup/compiler timings and safe exact-input caches should be measured before changing completeness.",
+      "reliability": "Wiki and backend aggregate gates require every applicable result and preserve failure diagnostics; tests are not removed by partitioning. Wiki jobs do not explicitly pin/setup .NET although tools compile net10 helpers, and focused Wiki lacks an explicit job timeout. API baseline discovery is bounded to 100 successful push runs and assumes candidate objects are available. Notifications omit API-SDK/TechRadar failure dependencies and do not download Wiki failure logs; fallback picks a lexically last log. Log-existence summaries can mislabel interrupted work. These are proposals/validation gaps, not a newly executed Linux CI claim.",
+      "findings": [],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/wiki.ps1",
+      "sourceSha256": "bd0661db5feb8cb56384cde836a92d96e4061151577262ad03923fc8e12d65ba",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Each facade invocation loads shared modules, extends Git environment settings and may resolve session/delta state before dispatch. Observed stages recompute fingerprints/runtime versions and launch independent workers; metadata lookup is repeated per tool. Trace probes can repeat the same query for text rendering, and grouped reviews invoke the full review writer per page. Request-owned dispatch metadata/immutable context and rendering existing query results are measurement candidates.",
+      "reliability": "All 2,909 lines and command routes were read. Strict affected and UI finalization now explicitly disable smoke receipt reuse, proved by extracted actual router execution with controlled collaborators and exact scope checks. Remaining proposals include complete BaseRef/Area/run-ID/resume argument forwarding, portable detached launch, interrupted-worker cleanup and PID identity, request-file validation/alias normalization, environment restoration, path-list splitting and reader-boundary consistency. Orphan-worker early break and parent receipt fallback/result identity need focused fixtures.",
+      "findings": [
+        "WTA-028"
+      ],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
+      "sourceSha256": "24aa562714b09f27092f65d16427b4a1076587424838ac3ff99ca904d6240ca8",
+      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "coverage": "full-source-read",
+      "performance": "Focused delegates the bounded catalog; legacy Core/Full invoke many sequential real queries, parse all generated indexes and repeatedly rebuild nested workspace assessments. Some packets are reused, but audit/handoff/schedule/learning/forecast calls revalidate the same registries many times. Deep fixture copies and backup/restore serialization add cost. Isolated Core/Workspace/Orchestration partitions support safe parallel execution; preserve all assertions when measuring request-owned read snapshots or reducing duplicate rendering/composition.",
+      "reliability": "All 5,334 lines were read continuously, with prior partial hash checked and every truncated gap recovered. Strong real fixtures cover tamper, rollback, native compiler/schema/selection, exact bytes, leases, dispatch drift, lineage and cleanup. Some assertions are source markers, minimum/count-only checks, optional/vacuous branches, manual execution attestations, copied peer tasks and header-only synthetic PNG evidence; these prove mechanism contracts rather than product execution or independent quality. Final environment/registry cleanup is outside an encompassing try/finally, and several fixed/prefix cleanup paths rely on the outer isolated snapshot. Abrupt failure, direct concurrent invocation, exact path membership, epoch/case boundaries and artifact validity remain explicit followups.",
+      "findings": [
+        "WTA-021",
+        "WTA-023"
+      ],
       "status": "reviewed-with-followups"
     }
   ]

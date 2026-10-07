@@ -42,6 +42,32 @@ if ($body -match 'ReuseUnchangedChecks|DeferPossiblyConcurrentStale') {
     throw 'Strict affected verification unexpectedly enables cache reuse or stale deferral.'
 }
 if ($body -match 'Invoke-ObservedWikiStage') { throw 'Strict affected verification accidentally inherited the full observed verify stages.' }
+$facadeAst = [Management.Automation.Language.Parser]::ParseFile((Join-Path $repositoryRoot '.llm-wiki/wiki.ps1'), [ref]$null, [ref]$null)
+$router = $facadeAst.Find({ param($node)
+    $node -is [Management.Automation.Language.SwitchStatementAst] -and $node.Condition.Extent.Text -eq '$Command'
+}, $true)
+foreach ($publicationCommand in @('verify-strict-affected', 'ui-finalize')) {
+    $clause = $router.Clauses | Where-Object { $_.Item1.Extent.Text -eq "'$publicationCommand'" } | Select-Object -First 1
+    if ($null -eq $clause) { throw "Missing publication route: $publicationCommand" }
+    & {
+        $calls = [Collections.Generic.List[object]]::new()
+        function Invoke-WikiTool([string]$Name, [hashtable]$ToolArguments = @{}) {
+            $calls.Add([pscustomobject]@{ name = $Name; arguments = @{} + $ToolArguments })
+        }
+        $BaseRef = 'fixture-base'
+        $ChangedPath = @('.llm-wiki/tools/fixture.ps1')
+        $PSBoundParameters = @{ ChangedPath = $true }
+        $routeText = $clause.Item2.Extent.Text
+        . ([scriptblock]::Create('$PSBoundParameters = @{ ChangedPath = $true };' + $routeText.Substring(1, $routeText.Length - 2)))
+        $smokeCalls = @($calls | Where-Object name -eq 'Invoke-LlmWikiAffectedSmoke.ps1')
+        if ($smokeCalls.Count -ne 1 -or -not $smokeCalls[0].arguments.ContainsKey('NoCache') -or -not [bool]$smokeCalls[0].arguments.NoCache) {
+            throw "$publicationCommand permits smoke receipt reuse despite its uncached publication contract."
+        }
+        if ($smokeCalls[0].arguments.BaseRef -cne $BaseRef -or ($smokeCalls[0].arguments.ChangedPath -join ',') -cne ($ChangedPath -join ',')) {
+            throw "$publicationCommand lost its exact smoke scope while disabling receipt reuse."
+        }
+    }
+}
 $visualFastStart = $facadeText.IndexOf("    'verify-fast' {")
 $visualFastEnd = $facadeText.IndexOf("    'verify-strict-affected' {", $visualFastStart)
 $visualFastBody = $facadeText.Substring($visualFastStart, $visualFastEnd - $visualFastStart)

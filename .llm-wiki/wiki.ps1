@@ -896,7 +896,7 @@ switch ($Command) {
         Invoke-WikiTool 'Test-LlmWikiLint.ps1'
         Invoke-WikiTool 'Test-LlmWikiPortable.ps1'
         $strictIndexArguments = @{ Check = $true; AffectedOnly = $true; BaseRef = $BaseRef }
-        $strictSmokeArguments = @{ BaseRef = $BaseRef }
+        $strictSmokeArguments = @{ BaseRef = $BaseRef; NoCache = $true }
         $policyArguments = @{ FailOnViolation = $true }
         $impactArguments = @{ FailOnUnreviewed = $true }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) {
@@ -1216,7 +1216,7 @@ switch ($Command) {
     'ui-finalize' {
         Write-Host 'Finalizing the accumulated UI delta: updating affected indexes once, then running the strict affected gate.'
         $finalizeIndexArguments = @{ AffectedOnly = $true; BaseRef = $BaseRef }
-        $finalizeSmokeArguments = @{ BaseRef = $BaseRef }
+        $finalizeSmokeArguments = @{ BaseRef = $BaseRef; NoCache = $true }
         $finalizePolicyArguments = @{ FailOnViolation = $true }
         $finalizeImpactArguments = @{ FailOnUnreviewed = $true }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) {

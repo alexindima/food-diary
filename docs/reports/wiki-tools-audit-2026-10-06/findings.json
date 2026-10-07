@@ -487,6 +487,128 @@
         "scheduler-lock-strict-ps5.log",
         "scheduler-orchestration-before-contract.log"
       ]
+    },
+    {
+      "id": "WTA-024",
+      "kind": "defect",
+      "severity": "warning",
+      "status": "fixed-focused-verified",
+      "location": {
+        "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
+        "startLine": 15,
+        "endLine": 15
+      },
+      "trigger": "A successful facade-contract receipt exists and a direct regression source such as the frozen shard guard changes in the same HEAD.",
+      "consequence": "The non-graph group fingerprint omitted that source; the runner reused success and skipped the now-failing guard. It also omitted actual broad retrieval/SQLite/CI dependencies.",
+      "testGap": "Stage tests covered only scheduler sources, not the actual direct-test closure or an existing facade success receipt.",
+      "remediation": "Declare facade contracts graph-dependent because they execute retrieval/SQLite and inspect the CI gate. Keep real receipt reuse for stable inputs; verify edited/deleted direct tests and actual changed failing guard execution.",
+      "evidence": [
+        "facade-cache-before.log",
+        "facade-cache-after.log",
+        "facade-cache-after-ps5.log",
+        "facade-cache-planning.log"
+      ]
+    },
+    {
+      "id": "WTA-025",
+      "kind": "defect",
+      "severity": "warning",
+      "status": "fixed-focused-verified",
+      "location": {
+        "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
+        "startLine": 83,
+        "endLine": 83
+      },
+      "trigger": "The stage fingerprinter parses NUL-terminated Git status on Windows PowerShell 5.1/.NET Framework.",
+      "consequence": "The ambiguous Split call chose the character-list overload, kept the empty final record and failed Substring. The stage regression also had a BOM-free Cyrillic parser failure and an empty default tools root under -File.",
+      "testGap": "The previous stage fixture was only proved on PS7.",
+      "remediation": "Select the char-array/options overload explicitly. Construct the same Cyrillic fixture path from code points and initialize the default tools root in the script body. The complete stage fixture passes with -File on both PS7 and PS5.",
+      "evidence": [
+        "facade-cache-ps5-diagnostic.log",
+        "facade-cache-after.log",
+        "facade-cache-after-ps5.log"
+      ]
+    },
+    {
+      "id": "WTA-026",
+      "kind": "defect",
+      "severity": "warning",
+      "status": "fixed-focused-verified",
+      "location": {
+        "path": ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
+        "startLine": 456,
+        "endLine": 456
+      },
+      "trigger": "A valid active dispatch has a changed context bundle with an unchanged packet.",
+      "consequence": "Public list returns context-drift but reports driftedCount=0; FailOnInvalid exits successfully.",
+      "testGap": "Existing metrics regression used an injected registry and did not execute the actual dispatch list/JSON persistence contract.",
+      "remediation": "Count both packet-drift and context-drift in the aggregate used by FailOnInvalid.",
+      "evidence": [
+        "dispatch-drift-before.log",
+        "dispatch-drift-after.log",
+        "dispatch-drift-after-ps5.log"
+      ]
+    },
+    {
+      "id": "WTA-027",
+      "kind": "defect",
+      "severity": "warning",
+      "status": "fixed-focused-verified",
+      "location": {
+        "path": ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
+        "startLine": 108,
+        "endLine": 108
+      },
+      "trigger": "An event produced by New-Event has a UTC timestamp with trailing zero fractional digits and is read back by a JSON parser that coerces timestamps.",
+      "consequence": "DateTime reserialization trims those digits and changes the event payload hash; a valid persisted receipt is reported invalid.",
+      "testGap": "Existing metrics regression used an injected registry and did not execute the actual dispatch list/JSON persistence contract.",
+      "remediation": "Canonicalize event timestamps to the original seven-fraction UTC o representation before hashing; malformed/empty timestamps produce explicit validation issues.",
+      "evidence": [
+        "dispatch-event-hash-before.log",
+        "dispatch-drift-after.log",
+        "dispatch-drift-after-ps5.log"
+      ]
+    },
+    {
+      "id": "WTA-028",
+      "kind": "defect",
+      "severity": "warning",
+      "status": "fixed-focused-verified",
+      "location": {
+        "path": ".llm-wiki/wiki.ps1",
+        "startLine": 899,
+        "endLine": 899
+      },
+      "trigger": "verify-strict-affected or ui-finalize calls the affected smoke runner when successful group receipts exist.",
+      "consequence": "Despite declaring an uncached publication check, both routes omitted NoCache and permitted the runner to reuse a receipt.",
+      "testGap": "Existing strict-contract checks inspected facade text for omitted resume flags, but did not assert the actual forwarded smoke arguments.",
+      "remediation": "Pass NoCache=true explicitly from both publication routes. Execute their actual AST bodies with controlled tool calls and require exact smoke scope together with the no-reuse flag. Ordinary resumable verify keeps its cache policy.",
+      "evidence": [
+        "strict-smoke-before.log",
+        "strict-smoke-before-ui.log",
+        "strict-smoke-after.log"
+      ]
+    },
+    {
+      "id": "WTA-029",
+      "kind": "defect",
+      "severity": "warning",
+      "status": "fixed-focused-verified",
+      "location": {
+        "path": ".llm-wiki/policies/context-search-ranking.json",
+        "startLine": 1717,
+        "endLine": 1717
+      },
+      "trigger": "A schedule query has both Schedule and Scheduler file identities, including the newly added scheduler lock regression.",
+      "consequence": "The scheduler-only identity bonus excludes the production Schedule owner. The unchanged unseen corpus regresses from 13 to 12 Wiki top-one results and fails its existing cohort threshold.",
+      "testGap": "The frozen corpus detected this source-growth regression; no corpus, threshold, rule count or assertion was changed to accommodate it.",
+      "remediation": "Use the shared schedule stem in the existing filename identity rule, matching Schedule and Scheduler consistently in both Node and .NET. The original failing case returns to rank one; it is the only rank change among the 100 unseen cases. All corpus gates and exact rank/top-five parity for four current corpora pass.",
+      "evidence": [
+        "final-retrieval-regression-diagnosis.json",
+        "final-focused-full.log",
+        "retrieval-stem-result.json",
+        "retrieval-stem-evaluation.log"
+      ]
     }
   ]
 }

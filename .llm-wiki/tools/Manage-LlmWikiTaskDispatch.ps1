@@ -103,10 +103,17 @@ function Test-Receipt([object]$Receipt) {
     foreach ($event in @($Receipt.events)) {
         if ([int]$event.sequence -ne $expectedSequence) { $issues.Add("Event sequence $($event.sequence) is not contiguous.") }
         if ([string]$event.previousHash -cne $previousHash) { $issues.Add("Event $expectedSequence previousHash is invalid.") }
+        # Restore the exact UTC representation written by New-Event after JSON
+        # readers coerce ISO timestamps to DateTime and trim trailing zeroes.
+        $eventAtUtc = $event.atUtc
+        try {
+            if ([string]::IsNullOrWhiteSpace([string]$eventAtUtc)) { throw 'Missing event timestamp.' }
+            $eventAtUtc = ([DateTimeOffset]$eventAtUtc).UtcDateTime.ToString('o')
+        } catch { $issues.Add("Event $expectedSequence timestamp is invalid.") }
         $payload = [ordered]@{
             sequence = $event.sequence
             type = $event.type
-            atUtc = $event.atUtc
+            atUtc = $eventAtUtc
             details = $event.details
             previousHash = $event.previousHash
         }
@@ -446,7 +453,7 @@ if ($Action -eq 'reconcile') {
         totalCount = $views.Count
         runningCount = @($views | Where-Object state -eq 'running').Count
         orphanedCount = @($views | Where-Object state -eq 'orphaned').Count
-        driftedCount = @($views | Where-Object state -eq 'packet-drift').Count
+        driftedCount = @($views | Where-Object state -in @('packet-drift', 'context-drift')).Count
         terminalCount = @($views | Where-Object state -in @('completed', 'failed')).Count
         invalidCount = @($views | Where-Object state -eq 'invalid').Count
         dispatches = @($views)

@@ -1,6 +1,7 @@
 [CmdletBinding()]
-param([string]$ToolsRoot = $PSScriptRoot)
+param([string]$ToolsRoot = '')
 $ErrorActionPreference = 'Stop'
+if ([string]::IsNullOrWhiteSpace($ToolsRoot)) { $ToolsRoot = $PSScriptRoot }
 $root = Join-Path ([IO.Path]::GetTempPath()) "wiki-stage-$([guid]::NewGuid().ToString('N'))"
 $fixtureTools = Join-Path $root '.llm-wiki/tools'
 $null = New-Item -ItemType Directory -Path $fixtureTools -Force
@@ -32,6 +33,38 @@ try {
         [IO.File]::WriteAllText($managerPath, 'other')
         if ($beforeManager -ceq (& $tool -Stage 'affected smoke:facade-contract')) { throw "Scheduler manager '$name' did not invalidate its regression receipt." }
     }
+    $facadeTests = @('SchedulerLocks', 'DispatchMetricsReuse', 'FullAuditShards', 'FacadeCommandCatalog', 'CriticalToolContracts', 'StrictAffected', 'AffectedSmokePlanning', 'ObservedStageReceipt', 'ConcurrentVerify')
+    foreach ($name in $facadeTests) {
+        [IO.File]::WriteAllText((Join-Path $fixtureTools "Test-LlmWiki$name.ps1"), '# stable facade fixture')
+    }
+    $runner = Join-Path $fixtureTools 'Invoke-LlmWikiAffectedSmoke.ps1'
+    & $runner -ChangedPath @() -RequestedGroup 'facade-contract' -NoCache
+    $facadeReceipt = Join-Path $root '.git/llm-wiki/affected-smoke-groups/facade-contract.json'
+    if (-not (Test-Path -LiteralPath $facadeReceipt)) { throw 'Facade fixture did not publish a stable success receipt.' }
+    $facadeReuse = @(& $runner -ChangedPath @() -RequestedGroup 'facade-contract' 6>&1 | ForEach-Object { $_.ToString() }) -join "`n"
+    if ($facadeReuse -notmatch 'group cached: facade-contract') { throw 'Unchanged facade inputs did not reuse their successful receipt.' }
+    $shardGuard = Join-Path $fixtureTools 'Test-LlmWikiFullAuditShards.ps1'
+    $guardTime = [IO.File]::GetLastWriteTimeUtc($shardGuard)
+    [IO.File]::WriteAllText($shardGuard, "throw 'Changed facade guard executed'")
+    [IO.File]::SetLastWriteTimeUtc($shardGuard, $guardTime)
+    $facadeRejected = $false
+    try { & $runner -ChangedPath @() -RequestedGroup 'facade-contract' }
+    catch {
+        if ($_.Exception.Message -notlike '*Changed facade guard executed*') { throw }
+        $facadeRejected = $true
+    }
+    if (-not $facadeRejected) { throw 'Cached facade receipt skipped its changed, failing shard guard.' }
+    [IO.File]::WriteAllText($shardGuard, '# stable facade fixture')
+    foreach ($name in $facadeTests) {
+        $testPath = Join-Path $fixtureTools "Test-LlmWiki$name.ps1"
+        $beforeTest = & $tool -Stage 'affected smoke:facade-contract'
+        [IO.File]::WriteAllText($testPath, '# edited facade fixture')
+        if ($beforeTest -ceq (& $tool -Stage 'affected smoke:facade-contract')) { throw "Direct facade test '$name' did not invalidate its receipt." }
+        if ((& $tool -Stage 'affected smoke:facade-contract') -cne (& $tool -Stage 'affected smoke:facade-contract')) { throw 'Unchanged facade inputs produced unstable fingerprints.' }
+        Remove-Item -LiteralPath $testPath
+        if ($beforeTest -ceq (& $tool -Stage 'affected smoke:facade-contract')) { throw "Deleted facade test '$name' did not invalidate its receipt." }
+        [IO.File]::WriteAllText($testPath, '# stable facade fixture')
+    }
     foreach ($stage in @('affected smoke', 'affected smoke:code-graph', 'affected smoke:context-bundle')) {
         [IO.File]::WriteAllText((Join-Path $root 'source.cs'), 'first edit')
         $before = & $tool -Stage $stage
@@ -40,7 +73,10 @@ try {
         if ($before -ceq $after) { throw "$stage ignored changed product content with identical Git status." }
         if ($after -cne (& $tool -Stage $stage)) { throw "$stage is unstable for unchanged inputs." }
     }
-    $unicodeName = if ([IO.Path]::DirectorySeparatorChar -eq '\') { 'путь файл.cs' } else { 'путь -> файл.cs' }
+    # Keep the fixture source readable by PS5 without a UTF-8 BOM; the path is still Cyrillic.
+    $unicodeStem = -join @([char]0x043f, [char]0x0443, [char]0x0442, [char]0x044c)
+    $unicodeTail = -join @([char]0x0444, [char]0x0430, [char]0x0439, [char]0x043b)
+    $unicodeName = if ([IO.Path]::DirectorySeparatorChar -eq '\') { "$unicodeStem $unicodeTail.cs" } else { "$unicodeStem -> $unicodeTail.cs" }
     $unicodePath = Join-Path $root $unicodeName
     [IO.File]::WriteAllText($unicodePath, 'first')
     $before = & $tool -Stage 'affected smoke'

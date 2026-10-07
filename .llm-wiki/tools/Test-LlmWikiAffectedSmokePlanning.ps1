@@ -146,6 +146,10 @@ $parallelRunnerText = Get-Content -LiteralPath $parallelRunner -Raw
 $plannerText = Get-Content -LiteralPath $planner -Raw
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $catalog = Import-PowerShellDataFile -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/policies/affected-smoke-catalog.psd1')
+$facadeGroup = @($catalog.Groups | Where-Object Id -eq 'facade-contract')
+if ($facadeGroup.Count -ne 1 -or -not [bool]$facadeGroup[0].GraphDependent) {
+    throw 'Facade contracts must bind their retrieval, SQLite and CI dependencies, not only the facade source.'
+}
 $implementationPlanGroup = @($catalog.Groups | Where-Object Id -eq 'implementation-plan')
 if ($implementationPlanGroup.Count -ne 1 -or -not [bool]$implementationPlanGroup[0].GraphDependent) {
     throw 'Implementation-plan smoke must prewarm the code graph before compiling task briefs and change packets.'

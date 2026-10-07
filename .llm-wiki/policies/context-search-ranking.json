@@ -1714,7 +1714,7 @@
       "id": "scheduler-intent",
       "queryTerms": ["schedule"],
       "minimumMatches": 1,
-      "identityTerms": ["scheduler"],
+      "identityTerms": ["schedule"],
       "score": 350,
       "directOnly": true,
       "identityScope": "file"

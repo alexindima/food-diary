@@ -80,7 +80,7 @@ $canonicalArguments = [ordered]@{}
 foreach ($key in @($Arguments.Keys | Sort-Object)) { $canonicalArguments[[string]$key] = $Arguments[$key] }
 $null = $material.AppendLine("arguments=$(($canonicalArguments | ConvertTo-Json -Depth 8 -Compress))")
 $statusOutput = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('-c', 'core.fsmonitor=false', 'status', '--porcelain=v1', '-z', '--untracked-files=all') -FailureMessage 'Unable to enumerate working-tree status for the verification stage fingerprint.').StandardOutput
-$records = @($statusOutput.Split([char]0, [StringSplitOptions]::RemoveEmptyEntries))
+$records = @($statusOutput.Split([char[]]@([char]0), [StringSplitOptions]::RemoveEmptyEntries))
 for ($index = 0; $index -lt $records.Count; $index++) {
     $record = $records[$index]
     $state = $record.Substring(0, 2)

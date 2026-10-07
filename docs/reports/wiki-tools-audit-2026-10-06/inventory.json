@@ -1,37 +1,23 @@
 {
   "schemaVersion": 1,
   "auditDate": "2026-10-06",
-  "baseline": "f02f61e8217ac74b7c63554c1cf1742f2acfe8cf",
+  "baseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
   "worktreeStatus": [
     " M .llm-wiki/generated/quality-index.json",
     " M .llm-wiki/policies/affected-smoke-catalog.psd1",
+    " M .llm-wiki/policies/context-search-ranking.json",
     " M .llm-wiki/reviews/source-impact-reviews.json",
     " M .llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
-    " M .llm-wiki/tools/Get-LlmWikiWorkspacePolicy.ps1",
-    " M .llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-    " M .llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-    " M .llm-wiki/tools/Manage-LlmWikiAgentRegistry.ps1",
-    " M .llm-wiki/tools/Manage-LlmWikiDispatchWatchdog.ps1",
-    " M .llm-wiki/tools/Manage-LlmWikiOrchestrationCycle.ps1",
-    " M .llm-wiki/tools/Manage-LlmWikiSchedulePlan.ps1",
-    " M .llm-wiki/tools/Manage-LlmWikiTaskDecomposition.ps1",
-    " M .llm-wiki/tools/Manage-LlmWikiTaskLease.ps1",
-    " M .llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1",
-    " M .llm-wiki/tools/Manage-LlmWikiWorkspaceCircuit.ps1",
+    " M .llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
     " M .llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiIndexManifest.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
+    " M .llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
     " M .llm-wiki/tools/Test-LlmWikiStageFingerprint.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiTools.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiVerificationCache.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiWorkspacePolicyCache.ps1",
-    " M .llm-wiki/tools/Write-LlmWikiIndexVerificationReceipt.ps1",
+    " M .llm-wiki/tools/Test-LlmWikiStrictAffected.ps1",
+    " M .llm-wiki/wiki.ps1",
     " M docs/reports/wiki-tools-audit-2026-10-06.md",
     " M docs/reports/wiki-tools-audit-2026-10-06/findings.json",
     " M docs/reports/wiki-tools-audit-2026-10-06/inventory.json",
-    " M docs/reports/wiki-tools-audit-2026-10-06/reviews.json",
-    "?? .llm-wiki/tools/Test-LlmWikiSchedulerLocks.ps1"
+    " M docs/reports/wiki-tools-audit-2026-10-06/reviews.json"
   ],
   "snapshotContract": "Hashes identify current worktree content; baseline identifies HEAD and is not a claim that the worktree is clean.",
   "hashContract": "sha256 UTF-8 source text with LF line endings; a hash proves source identity, not review",
@@ -47,7 +33,7 @@
   ],
   "classificationContract": "Automated navigation only. All source review and performance/reliability conclusions are recorded separately.",
   "sourceFileCount": 409,
-  "sourceLineCount": 75599.0,
+  "sourceLineCount": 75720.0,
   "files": [
     {
       "path": ".github/workflows/ci-tests.yml",
@@ -4520,7 +4506,7 @@
       "role": "query-or-orchestration",
       "extension": ".ps1",
       "lines": 108,
-      "sourceSha256": "329f460729ce2da232992b3fb5ce18663c5866b9e833003e40e28fd106b06ac5",
+      "sourceSha256": "bfd0364f125e2801b9c0c3ff9a7df06e9f9e091a21dba2fc2f072e171d37420c",
       "parameters": [
         "Stage",
         "Arguments",
@@ -11924,8 +11910,8 @@
       "path": ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
       "role": "state-workflow",
       "extension": ".ps1",
-      "lines": 484,
-      "sourceSha256": "83408f8abebedcd0eb2635f1f93ed2a7194eef2ac9b0b34deda3804789697fe2",
+      "lines": 491,
+      "sourceSha256": "b6fe5f06fd7f6d9e7815768f965e1e42466475f625b07c1bde718c8453846357",
       "parameters": [
         "Action",
         "WorkspacePath",
@@ -11980,17 +11966,17 @@
         {
           "name": "Test-Receipt",
           "startLine": 82,
-          "endLine": 130
+          "endLine": 137
         },
         {
           "name": "Append-Event",
-          "startLine": 131,
-          "endLine": 136
+          "startLine": 138,
+          "endLine": 143
         },
         {
           "name": "Get-DispatchView",
-          "startLine": 137,
-          "endLine": 200
+          "startLine": 144,
+          "endLine": 207
         }
       ],
       "parseErrors": [],
@@ -12012,115 +11998,115 @@
           "text": "[System.IO.File]::WriteAllText($temporaryPath, (($Receipt | ConvertTo-Json -Depth 20) + [Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))"
         },
         {
-          "line": 142,
+          "line": 149,
           "text": "[string](Get-Content -LiteralPath $descriptorPath -Raw | ConvertFrom-Json).currentPacketFingerprint"
         },
         {
-          "line": 150,
+          "line": 157,
           "text": "$contextValidation = & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextBundle.ps1') verify -WorkspacePath ([string]$Receipt.workspace) -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 151,
+          "line": 158,
           "text": "$contextBundle = Get-Content -LiteralPath $contextBundlePath -Raw | ConvertFrom-Json"
         },
         {
-          "line": 203,
+          "line": 210,
           "text": "$leaseRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 205,
+          "line": 212,
           "text": "foreach ($file in @(Get-ChildItem -LiteralPath $dispatchRoot -File -Filter '*.json' -ErrorAction SilentlyContinue | Sort-Object Name)) {"
         },
         {
-          "line": 207,
+          "line": 214,
           "text": "$receiptRaw = Get-Content -LiteralPath $file.FullName -Raw"
         },
         {
-          "line": 208,
+          "line": 215,
           "text": "$receipt = $receiptRaw | ConvertFrom-Json"
-        },
-        {
-          "line": 259,
-          "text": "foreach ($claimFile in @(Get-ChildItem -LiteralPath $claimRoot -File -Filter '*.json' -ErrorAction SilentlyContinue)) {"
-        },
-        {
-          "line": 261,
-          "text": "$claim = Get-Content -LiteralPath $claimFile.FullName -Raw | ConvertFrom-Json"
         },
         {
           "line": 266,
-          "text": "foreach ($file in @(Get-ChildItem -LiteralPath $dispatchRoot -File -Filter '*.json' -ErrorAction SilentlyContinue | Sort-Object Name)) {"
+          "text": "foreach ($claimFile in @(Get-ChildItem -LiteralPath $claimRoot -File -Filter '*.json' -ErrorAction SilentlyContinue)) {"
         },
         {
           "line": 268,
-          "text": "$receipt = Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json"
+          "text": "$claim = Get-Content -LiteralPath $claimFile.FullName -Raw | ConvertFrom-Json"
         },
         {
-          "line": 310,
-          "text": "$descriptor = Get-Content -LiteralPath (Join-Path $repositoryRoot \"$normalizedWorkspace/workspace.json\") -Raw | ConvertFrom-Json"
-        },
-        {
-          "line": 317,
-          "text": "$agentRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiAgentRegistry.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json"
-        },
-        {
-          "line": 325,
-          "text": "& (Join-Path $PSScriptRoot 'Manage-LlmWikiContextBundle.ps1') verify -WorkspacePath $normalizedWorkspace -Format Json | ConvertFrom-Json"
-        },
-        {
-          "line": 331,
-          "text": "-Format Json | ConvertFrom-Json"
-        },
-        {
-          "line": 336,
-          "text": "Get-Content -LiteralPath $contextBundleAbsolutePath -Raw | ConvertFrom-Json"
-        },
-        {
-          "line": 346,
-          "text": "$leaseResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') @leaseArguments | ConvertFrom-Json"
-        },
-        {
-          "line": 389,
-          "text": "$leaseRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json"
-        },
-        {
-          "line": 394,
-          "text": "$receiptRaw = Get-Content -LiteralPath $receiptPath -Raw"
-        },
-        {
-          "line": 395,
-          "text": "$receipt = $receiptRaw | ConvertFrom-Json"
-        },
-        {
-          "line": 406,
-          "text": "$leaseResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') @leaseArguments | ConvertFrom-Json"
-        },
-        {
-          "line": 415,
-          "text": "$leaseRegistryBeforeRelease = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json"
-        },
-        {
-          "line": 425,
-          "text": "$leaseRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json"
-        },
-        {
-          "line": 430,
-          "text": "$leaseRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json"
-        },
-        {
-          "line": 433,
-          "text": "$leaseRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json"
-        },
-        {
-          "line": 435,
+          "line": 273,
           "text": "foreach ($file in @(Get-ChildItem -LiteralPath $dispatchRoot -File -Filter '*.json' -ErrorAction SilentlyContinue | Sort-Object Name)) {"
         },
         {
-          "line": 437,
+          "line": 275,
           "text": "$receipt = Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json"
         },
         {
-          "line": 464,
+          "line": 317,
+          "text": "$descriptor = Get-Content -LiteralPath (Join-Path $repositoryRoot \"$normalizedWorkspace/workspace.json\") -Raw | ConvertFrom-Json"
+        },
+        {
+          "line": 324,
+          "text": "$agentRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiAgentRegistry.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json"
+        },
+        {
+          "line": 332,
+          "text": "& (Join-Path $PSScriptRoot 'Manage-LlmWikiContextBundle.ps1') verify -WorkspacePath $normalizedWorkspace -Format Json | ConvertFrom-Json"
+        },
+        {
+          "line": 338,
+          "text": "-Format Json | ConvertFrom-Json"
+        },
+        {
+          "line": 343,
+          "text": "Get-Content -LiteralPath $contextBundleAbsolutePath -Raw | ConvertFrom-Json"
+        },
+        {
+          "line": 353,
+          "text": "$leaseResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') @leaseArguments | ConvertFrom-Json"
+        },
+        {
+          "line": 396,
+          "text": "$leaseRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json"
+        },
+        {
+          "line": 401,
+          "text": "$receiptRaw = Get-Content -LiteralPath $receiptPath -Raw"
+        },
+        {
+          "line": 402,
+          "text": "$receipt = $receiptRaw | ConvertFrom-Json"
+        },
+        {
+          "line": 413,
+          "text": "$leaseResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') @leaseArguments | ConvertFrom-Json"
+        },
+        {
+          "line": 422,
+          "text": "$leaseRegistryBeforeRelease = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json"
+        },
+        {
+          "line": 432,
+          "text": "$leaseRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json"
+        },
+        {
+          "line": 437,
+          "text": "$leaseRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json"
+        },
+        {
+          "line": 440,
+          "text": "$leaseRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json"
+        },
+        {
+          "line": 442,
+          "text": "foreach ($file in @(Get-ChildItem -LiteralPath $dispatchRoot -File -Filter '*.json' -ErrorAction SilentlyContinue | Sort-Object Name)) {"
+        },
+        {
+          "line": 444,
+          "text": "$receipt = Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json"
+        },
+        {
+          "line": 471,
           "text": "$response | ConvertTo-Json -Depth 12"
         }
       ]
@@ -14100,8 +14086,8 @@
       "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
       "role": "regression-tool",
       "extension": ".ps1",
-      "lines": 408,
-      "sourceSha256": "4210cd00c7fa0f9dd8b9cf7ac117aa3d6da0f374d308388be5c0fea2f355af2f",
+      "lines": 412,
+      "sourceSha256": "5b9d76d2e2a64eb19d700f7cfd5978145499454e4de478cfcbce17e54ec20598",
       "parameters": [],
       "functions": [
         {
@@ -14137,71 +14123,71 @@
           "text": "$plannerText = Get-Content -LiteralPath $planner -Raw"
         },
         {
-          "line": 186,
+          "line": 190,
           "text": "$fullFocusedPlan = & $parallelRunner -AllGroups -Plan -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 214,
+          "line": 218,
           "text": "$forcedPlan = & $planner -ChangedPath @() -RequestedGroup strict-shapes -Plan -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 219,
+          "line": 223,
           "text": "$contextAlias = & $planner -ChangedPath @() -RequestedGroup context-bundle -Plan -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 225,
+          "line": 229,
           "text": "$graphAlias = & $planner @scope -RequestedGroup code-graph -Plan -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 247,
+          "line": 251,
           "text": "$legacyPlan = & $planner @scope -RequestedGroup read-only-guard -Plan -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 250,
+          "line": 254,
           "text": "$childPlan = & $planner @scope -RequestedGroup $group -Plan -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 301,
+          "line": 305,
           "text": "$arguments = Get-Content -LiteralPath $ArgumentsPath -Raw | ConvertFrom-Json"
         },
         {
-          "line": 313,
+          "line": 317,
           "text": "} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $fixtureRoot \"$group.environment.json\")"
         },
         {
-          "line": 340,
+          "line": 344,
           "text": "@(Get-ChildItem -LiteralPath $fixture -Filter '*.attempt' | ForEach-Object { [IO.File]::ReadAllText($_.FullName) })"
         },
         {
-          "line": 343,
+          "line": 347,
           "text": "@(Get-Content -LiteralPath (Join-Path $fixture 'attempts.txt'))"
         },
         {
-          "line": 345,
+          "line": 349,
           "text": "$receipts = @(Get-ChildItem -LiteralPath (Join-Path $fixture 'git-state/llm-wiki/parallel-smoke') -Filter '*.json' -ErrorAction SilentlyContinue)"
         },
         {
-          "line": 346,
+          "line": 350,
           "text": "$timingFiles = @(Get-ChildItem -LiteralPath (Join-Path $fixture '.artifacts/llm-wiki/parallel-smoke') -Filter '*.timings.json')"
         },
         {
-          "line": 348,
+          "line": 352,
           "text": "$timing = Get-Content -LiteralPath $timingFiles[0].FullName -Raw | ConvertFrom-Json"
         },
         {
-          "line": 363,
+          "line": 367,
           "text": "[IO.File]::ReadAllText($stdoutPath) -notmatch 'Expected fixture worker failure\\.' -or"
         },
         {
-          "line": 364,
+          "line": 368,
           "text": "[IO.File]::ReadAllText($stderrPath) -notmatch 'Early native stderr: причина сбоя\\.' -or"
         },
         {
-          "line": 365,
+          "line": 369,
           "text": "[IO.File]::ReadAllText($stderrPath) -notmatch 'Later stderr line 20') {"
         },
         {
-          "line": 378,
+          "line": 382,
           "text": "$workerEnvironments = @($attempts | ForEach-Object { Get-Content -LiteralPath (Join-Path $fixture \"$_.environment.json\") -Raw | ConvertFrom-Json })"
         }
       ]
@@ -15615,8 +15601,8 @@
       "path": ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
       "role": "regression-tool",
       "extension": ".ps1",
-      "lines": 75,
-      "sourceSha256": "4b494860416229ffc50057a8d78b84ff98712134bc1ed246bf2aaa839474f1a5",
+      "lines": 123,
+      "sourceSha256": "efe7c51d794ea0bfe441e444310cf2304e74e7be03c598ccefc00df2c012daf9",
       "parameters": [],
       "functions": [
         {
@@ -15678,6 +15664,30 @@
         {
           "line": 68,
           "text": "$scheduler = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'Get-LlmWikiTaskSchedule.ps1'))"
+        },
+        {
+          "line": 98,
+          "text": "$receipt | ConvertTo-Json -Depth 20 | Set-Content $receiptPath"
+        },
+        {
+          "line": 101,
+          "text": "ConvertTo-Json | Set-Content (Join-Path $driftWorkspace 'workspace.json')"
+        },
+        {
+          "line": 103,
+          "text": "ConvertTo-Json | Set-Content (Join-Path $driftWorkspace 'context-bundle.json')"
+        },
+        {
+          "line": 106,
+          "text": "$dispatchResult = $dispatchOutput -join \"`n\" | ConvertFrom-Json"
+        },
+        {
+          "line": 112,
+          "text": "$receipt | ConvertTo-Json -Depth 20 | Set-Content $receiptPath"
+        },
+        {
+          "line": 115,
+          "text": "$malformed = $malformedOutput -join \"`n\" | ConvertFrom-Json"
         }
       ]
     },
@@ -17897,8 +17907,8 @@
       "path": ".llm-wiki/tools/Test-LlmWikiStageFingerprint.ps1",
       "role": "regression-tool",
       "extension": ".ps1",
-      "lines": 85,
-      "sourceSha256": "bc6dc29bb87ee53acaf2a177630f1432c1b800ace43629ac62e9c579d0f224c9",
+      "lines": 121,
+      "sourceSha256": "5f6a0de438493552ad18438b4631b7ee888ad1452f5f30600d26c69b88020a92",
       "parameters": [
         "ToolsRoot"
       ],
@@ -17926,10 +17936,16 @@
       "path": ".llm-wiki/tools/Test-LlmWikiStrictAffected.ps1",
       "role": "regression-tool",
       "extension": ".ps1",
-      "lines": 183,
-      "sourceSha256": "71a1a0d9f871c454e489626f66e026f9a7bd7926e9a9147d28649a079281f517",
+      "lines": 209,
+      "sourceSha256": "24838d25fd1692e0567223af413b21ba3c52478c8cefc07475324cee680daa35",
       "parameters": [],
-      "functions": [],
+      "functions": [
+        {
+          "name": "Invoke-WikiTool",
+          "startLine": 54,
+          "endLine": 56
+        }
+      ],
       "parseErrors": [],
       "operationAnchors": [
         {
@@ -17957,11 +17973,11 @@
           "text": ") | ForEach-Object { Get-Content -LiteralPath (Join-Path $repositoryRoot \".llm-wiki/tools/$_\") -Raw }"
         },
         {
-          "line": 133,
+          "line": 159,
           "text": "$testPlanText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/tools/Get-LlmWikiTestPlan.ps1') -Raw"
         },
         {
-          "line": 150,
+          "line": 176,
           "text": "-Format Json | ConvertFrom-Json"
         }
       ]
@@ -21963,7 +21979,7 @@
       "role": "facade",
       "extension": ".ps1",
       "lines": 2909,
-      "sourceSha256": "a96eb644887aa12666707da019e0d36366620e5e6936bb07e83f3dfdfc081e30",
+      "sourceSha256": "bd0661db5feb8cb56384cde836a92d96e4061151577262ad03923fc8e12d65ba",
       "parameters": [
         "Command",
         "Module",
