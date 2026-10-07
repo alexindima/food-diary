@@ -1,24 +1,31 @@
+import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import type { Observable } from 'rxjs';
+import { map, type Observable } from 'rxjs';
 
-import { ApiService } from '../../../services/api.service';
+import { RecipesSdk } from '../../../shared/api/sdk/generated/api/recipes.service';
+import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
+import { sdkPage } from '../../../shared/api/sdk/sdk-response';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { PublicRecipe, PublicRecipeFilters } from '../models/public-recipe.data';
 import { PUBLIC_RECIPE_API_URL } from './public-recipe-api.token';
+import { publicRecipeFromSdk } from './public-recipe-sdk.mapper';
 
 @Service()
-export class PublicRecipeService extends ApiService {
+export class PublicRecipeService {
     protected readonly baseUrl = inject(PUBLIC_RECIPE_API_URL);
+    private readonly sdk = createSdkConnection(RecipesSdk, this.baseUrl, inject(HttpClient));
 
     public query(filters: PublicRecipeFilters): Observable<PageOf<PublicRecipe>> {
-        return this.get<PageOf<PublicRecipe>>('', { ...filters, limit: 20 });
+        return this.sdk.client
+            .getRecipesPublic({ version: this.sdk.version, ...filters, limit: 20 })
+            .pipe(map(value => sdkPage(value, publicRecipeFromSdk)));
     }
 
     public getCategories(search: string, language?: string): Observable<string[]> {
-        return this.get<string[]>('categories', { search, language });
+        return this.sdk.client.getRecipesPublicCategories({ version: this.sdk.version, search, language });
     }
 
     public getById(id: string): Observable<PublicRecipe> {
-        return this.get<PublicRecipe>(encodeURIComponent(id));
+        return this.sdk.client.getRecipesPublicById({ version: this.sdk.version, id }).pipe(map(publicRecipeFromSdk));
     }
 }

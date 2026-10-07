@@ -1,51 +1,64 @@
-import { Service } from '@angular/core';
-import { catchError, map, type Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { inject, Service } from '@angular/core';
+import { catchError, defer, map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { ApiService } from '../../../services/api.service';
+import { LessonsSdk } from '../../../shared/api/sdk/generated/api/lessons.service';
+import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
+import { sdkQueryString } from '../../../shared/api/sdk/sdk-query';
+import { sdkEnum } from '../../../shared/api/sdk/sdk-response';
 import { rethrowApiError } from '../../../shared/lib/api-error.utils';
-import { addOptionalStringParam, type ApiQueryParams } from '../../../shared/lib/api-query-params.utils';
-import type { LessonDetail, LessonPage, LessonQuery, LessonSummary } from '../models/lesson.data';
+import type { LessonDetail, LessonPage, LessonQuery } from '../models/lesson.data';
+import { lessonDetailFromSdk, lessonPageFromSdk } from './lesson-sdk.mapper';
 
 @Service()
-export class LessonService extends ApiService {
+export class LessonService {
     protected readonly baseUrl = environment.apiUrls.lessons;
+    private readonly sdk = createSdkConnection(LessonsSdk, this.baseUrl, inject(HttpClient));
 
     public getAll(query: LessonQuery): Observable<LessonPage> {
-        const params: ApiQueryParams = { locale: query.locale, sort: query.sort, page: query.page, limit: query.pageSize };
-        addOptionalStringParam(params, 'category', query.category?.trim());
-        addOptionalStringParam(params, 'difficulty', query.difficulty?.trim());
-        addOptionalStringParam(params, 'search', query.search?.trim());
-
-        return super.get<LessonPage | LessonSummary[]>('', params).pipe(
-            map(response => this.normalizePage(response, query)),
+        return defer(() => {
+            const category = sdkQueryString(query.category?.trim().toLowerCase());
+            const difficulty = sdkQueryString(query.difficulty?.trim().toLowerCase());
+            return this.sdk.client.getLessons({
+                version: this.sdk.version,
+                locale: query.locale,
+                sort: query.sort,
+                page: query.page,
+                limit: query.pageSize,
+                category:
+                    category !== undefined
+                        ? sdkEnum(category, [
+                              'nutritionbasics',
+                              'macronutrients',
+                              'micronutrients',
+                              'mealtiming',
+                              'mindfuleating',
+                              'weightmanagement',
+                              'hydration',
+                              'foodquality',
+                              'cookingtips',
+                          ] as const)
+                        : undefined,
+                difficulty: difficulty !== undefined ? sdkEnum(difficulty, ['beginner', 'intermediate', 'advanced'] as const) : undefined,
+                search: sdkQueryString(query.search?.trim()),
+            });
+        }).pipe(
+            map(response => lessonPageFromSdk(response, query)),
             catchError((error: unknown) => rethrowApiError('Get lessons error', error)),
         );
     }
 
     public getById(id: string): Observable<LessonDetail> {
-        return super.get<LessonDetail>(id).pipe(catchError((error: unknown) => rethrowApiError('Get lesson error', error)));
+        return this.sdk.client.getLessonsById({ version: this.sdk.version, id }).pipe(
+            map(lessonDetailFromSdk),
+            catchError((error: unknown) => rethrowApiError('Get lesson error', error)),
+        );
     }
 
     public markRead(id: string): Observable<void> {
-        return super.post<void>(`${id}/read`, {}).pipe(catchError((error: unknown) => rethrowApiError('Mark lesson read error', error)));
-    }
-
-    private normalizePage(response: LessonPage | LessonSummary[], query: LessonQuery): LessonPage {
-        if (!Array.isArray(response)) {
-            return response;
-        }
-
-        const start = (query.page - 1) * query.pageSize;
-        return {
-            items: response.slice(start, start + query.pageSize),
-            page: query.page,
-            pageSize: query.pageSize,
-            totalCount: response.length,
-            totalPages: Math.ceil(response.length / query.pageSize),
-            totalLessonCount: response.length,
-            readLessonCount: response.filter(lesson => lesson.isRead).length,
-            availableCategories: [...new Set(response.map(lesson => lesson.category))],
-        };
+        return this.sdk.client
+            .postLessonsByIdRead({ version: this.sdk.version, id })
+            .pipe(catchError((error: unknown) => rethrowApiError('Mark lesson read error', error)));
     }
 }

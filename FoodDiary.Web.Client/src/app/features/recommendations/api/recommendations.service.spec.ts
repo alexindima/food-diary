@@ -34,7 +34,7 @@ describe('RecommendationsService', () => {
             expect(result).toEqual(recommendations);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/?page=1&limit=100`);
+        const req = httpMock.expectOne(`${BASE_URL}?page=1&limit=100`);
         expect(req.request.method).toBe('GET');
         req.flush(recommendations);
     });
@@ -47,9 +47,9 @@ describe('RecommendationsService', () => {
         service.getMyRecommendations().subscribe(items => {
             result = items;
         });
-        httpMock.expectOne(`${BASE_URL}/?page=1&limit=100`).flush(firstPage);
+        httpMock.expectOne(`${BASE_URL}?page=1&limit=100`).flush(firstPage);
         expect(result).toBeUndefined();
-        httpMock.expectOne(`${BASE_URL}/?page=2&limit=100`).flush([last]);
+        httpMock.expectOne(`${BASE_URL}?page=2&limit=100`).flush([last]);
 
         expect(result).toEqual([...firstPage, last]);
     });
@@ -64,8 +64,8 @@ describe('RecommendationsService', () => {
                 failed = true;
             },
         });
-        httpMock.expectOne(`${BASE_URL}/?page=1&limit=100`).flush(firstPage);
-        httpMock.expectOne(`${BASE_URL}/?page=2&limit=100`).flush({}, { status: 503, statusText: 'Unavailable' });
+        httpMock.expectOne(`${BASE_URL}?page=1&limit=100`).flush(firstPage);
+        httpMock.expectOne(`${BASE_URL}?page=2&limit=100`).flush({}, { status: 503, statusText: 'Unavailable' });
 
         expect(failed).toBe(true);
         expect(received).toEqual([]);
@@ -78,7 +78,7 @@ describe('RecommendationsService', () => {
 
         const req = httpMock.expectOne(`${BASE_URL}/recommendation-1/read`);
         expect(req.request.method).toBe('PUT');
-        expect(req.request.body).toEqual({});
+        expect(req.request.body).toBeNull();
         req.flush(null);
     });
 });

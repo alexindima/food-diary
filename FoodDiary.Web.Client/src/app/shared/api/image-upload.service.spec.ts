@@ -76,7 +76,7 @@ describe('ImageUploadService', () => {
 
         const req = httpMock.expectOne(`${baseUrl}/${assetId}/confirm`);
         expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({});
+        expect(req.request.body).toBeNull();
         req.flush({ assetId, fileUrl: 'https://cdn.example.com/photo.jpg' });
     });
 

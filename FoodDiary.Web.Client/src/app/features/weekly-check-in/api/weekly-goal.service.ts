@@ -1,22 +1,31 @@
-import { Service } from '@angular/core';
-import { catchError, type Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { inject, Service } from '@angular/core';
+import { catchError, map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { ApiService } from '../../../services/api.service';
+import { WeeklyGoalsSdk } from '../../../shared/api/sdk/generated/api/weekly-goals.service';
+import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
+import { sdkOptional } from '../../../shared/api/sdk/sdk-response';
 import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { UpsertWeeklyGoalPayload, WeeklyGoal } from '../models/weekly-goal.data';
+import { weeklyGoalFromSdk } from './weekly-sdk.mapper';
 
 @Service()
-export class WeeklyGoalService extends ApiService {
+export class WeeklyGoalService {
     protected readonly baseUrl = environment.apiUrls.weeklyGoals;
+    private readonly sdk = createSdkConnection(WeeklyGoalsSdk, this.baseUrl, inject(HttpClient));
 
     public getGoal(weekStart: string): Observable<WeeklyGoal | null> {
-        return super
-            .get<WeeklyGoal | null>('', { weekStart })
-            .pipe(catchError((error: unknown) => rethrowApiError('Get weekly goal error', error)));
+        return this.sdk.client.getWeeklyGoals({ version: this.sdk.version, weekStart }).pipe(
+            map(value => sdkOptional(value, weeklyGoalFromSdk)),
+            catchError((error: unknown) => rethrowApiError('Get weekly goal error', error)),
+        );
     }
 
     public upsertGoal(payload: UpsertWeeklyGoalPayload): Observable<WeeklyGoal> {
-        return super.put<WeeklyGoal>('', payload).pipe(catchError((error: unknown) => rethrowApiError('Upsert weekly goal error', error)));
+        return this.sdk.client.putWeeklyGoals({ version: this.sdk.version, upsertWeeklyGoalHttpRequest: payload }).pipe(
+            map(weeklyGoalFromSdk),
+            catchError((error: unknown) => rethrowApiError('Upsert weekly goal error', error)),
+        );
     }
 }

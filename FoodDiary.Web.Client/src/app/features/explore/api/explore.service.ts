@@ -1,30 +1,38 @@
-import { Service } from '@angular/core';
-import { catchError, type Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { inject, Service } from '@angular/core';
+import { catchError, map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { ApiService } from '../../../services/api.service';
+import { RecipesSdk } from '../../../shared/api/sdk/generated/api/recipes.service';
+import { recipeFromSdk } from '../../../shared/api/sdk/recipe-sdk.mapper';
+import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
+import { sdkQueryString } from '../../../shared/api/sdk/sdk-query';
+import { sdkPage } from '../../../shared/api/sdk/sdk-response';
 import { fallbackApiError } from '../../../shared/lib/api-error.utils';
-import { addOptionalNumberParam, addOptionalStringParam, type ApiQueryParams } from '../../../shared/lib/api-query-params.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { ExploreFilters, ExploreRecipe } from '../models/explore.data';
 
 @Service()
-export class ExploreService extends ApiService {
+export class ExploreService {
     protected readonly baseUrl = `${environment.apiUrls.recipes}/explore`;
+    private readonly sdk = createSdkConnection(RecipesSdk, this.baseUrl, inject(HttpClient));
 
     public query(page: number, limit: number, filters?: ExploreFilters): Observable<PageOf<ExploreRecipe>> {
-        const params: ApiQueryParams = { page, limit };
-
-        const search = filters?.search?.trim();
-        addOptionalStringParam(params, 'search', search);
-        addOptionalStringParam(params, 'category', filters?.category);
-        addOptionalNumberParam(params, 'maxPrepTime', filters?.maxPrepTime);
-        addOptionalStringParam(params, 'sortBy', filters?.sortBy);
-
-        return this.get<PageOf<ExploreRecipe>>('', params).pipe(
-            catchError((error: unknown) =>
-                fallbackApiError('Explore recipes error', error, { data: [], page, limit, totalPages: 0, totalItems: 0 }),
-            ),
-        );
+        return this.sdk.client
+            .getRecipesExplore({
+                version: this.sdk.version,
+                page,
+                limit,
+                search: sdkQueryString(filters?.search?.trim()),
+                category: sdkQueryString(filters?.category),
+                maxPrepTime: filters?.maxPrepTime,
+                sortBy: filters?.sortBy,
+            })
+            .pipe(
+                map(value => sdkPage(value, recipeFromSdk)),
+                catchError((error: unknown) =>
+                    fallbackApiError('Explore recipes error', error, { data: [], page, limit, totalPages: 0, totalItems: 0 }),
+                ),
+            );
     }
 }

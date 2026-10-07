@@ -1,5 +1,5 @@
 /**
- * FoodDiary Products API
+ * FoodDiary User API
  *
  *
  *
@@ -12,7 +12,7 @@ export interface CreateProductHttpRequest {
     alcoholPerBase?: number;
     barcode?: string | null;
     baseAmount?: number;
-    baseUnit?: string | null;
+    baseUnit?: string;
     brand?: string | null;
     caloriesPerBase?: number;
     carbsPerBase?: number;
@@ -25,8 +25,8 @@ export interface CreateProductHttpRequest {
     imageAssetId?: string | null;
     imageAssetIds?: Array<string> | null;
     imageUrl?: string | null;
-    name?: string | null;
-    productType?: string | null;
+    name?: string;
+    productType?: string;
     proteinsPerBase?: number;
-    visibility?: string | null;
+    visibility?: string;
 }

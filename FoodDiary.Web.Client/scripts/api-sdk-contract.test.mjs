@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { canonicalJson, productsContract } from './api-sdk-contract.mjs';
+import { canonicalJson, productsContract, userApiContract } from './api-sdk-contract.mjs';
 
 function sourceDocument() {
     const root = '/api/v{version}/products';
@@ -72,4 +72,50 @@ test('canonicalizes object key order while preserving array order and nullabilit
 
 test('rejects compact snapshots instead of treating them as a complete OpenAPI document', () => {
     assert.throws(() => productsContract({ OpenApi: '3.0.4', Endpoints: [] }), /complete OpenAPI/);
+});
+
+test('keeps admin and auth outside a selected user SDK slice and names methods per group', () => {
+    const source = sourceDocument();
+    source.paths['/api/v{version}/hydrations/daily'] = { get: { security: [{ Bearer: [] }], responses: {} } };
+    source.paths['/api/v{version}/auth/refresh'] = { post: { responses: {} } };
+    const groups = [
+        {
+            name: 'Hydration',
+            prefix: '/api/v{version}/hydrations',
+            operations: { 'GET /api/v{version}/hydrations/daily': 'getHydrationDaily' },
+        },
+    ];
+    const contract = userApiContract(source, groups);
+    assert.deepEqual(Object.keys(contract.paths), ['/api/v{version}/hydrations/daily']);
+    assert.equal(contract.paths['/api/v{version}/hydrations/daily'].get.operationId, 'getHydrationDaily');
+    assert.deepEqual(contract.paths['/api/v{version}/hydrations/daily'].get.tags, ['Hydration']);
+});
+
+test('rejects a duplicate operation name across user SDK groups', () => {
+    const source = sourceDocument();
+    const groups = [
+        {
+            name: 'Products',
+            prefix: '/api/v{version}/products',
+            operations: { 'GET /api/v{version}/products': 'duplicate', 'POST /api/v{version}/products': 'duplicate' },
+        },
+    ];
+    assert.throws(() => userApiContract(source, groups), /Duplicate SDK operation/);
+});
+
+test('gives a nested SDK scope ownership independent of manifest order', () => {
+    const source = sourceDocument();
+    source.paths['/api/v{version}/auth/login'] = { post: { responses: {} } };
+    source.paths['/api/v{version}/auth/sessions'] = { get: { responses: {} } };
+    const parent = { name: 'Auth', prefix: '/api/v{version}/auth', operations: { 'POST /api/v{version}/auth/login': 'login' } };
+    const child = {
+        name: 'Sessions',
+        prefix: '/api/v{version}/auth/sessions',
+        operations: { 'GET /api/v{version}/auth/sessions': 'sessions' },
+    };
+    const contract = userApiContract(source, [parent, child]);
+    assert.deepEqual(contract, userApiContract(source, [child, parent]));
+    assert.deepEqual(contract.paths['/api/v{version}/auth/sessions'].get.tags, ['Sessions']);
+    source.paths['/api/v{version}/auth/sessions/new'] = { get: { responses: {} } };
+    assert.throws(() => userApiContract(source, [parent, child]), /Name the new Sessions SDK operation/);
 });

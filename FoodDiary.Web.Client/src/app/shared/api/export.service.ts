@@ -1,44 +1,59 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import type { HttpResponse } from '@angular/common/http';
+import { HttpClient, type HttpResponse } from '@angular/common/http';
 import { inject, PLATFORM_ID, Service } from '@angular/core';
 import { map, type Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { ApiService } from '../../services/api.service';
 import type { ExportCycleRequest, ExportDiaryRequest, ExportSensitiveCycleRequest } from '../models/export.models';
 import { BrowserWindowService } from '../platform/browser-window.service';
+import { ExportSdk } from './sdk/generated/api/export.service';
+import { createSdkConnection } from './sdk/sdk-connection';
 
 @Service()
-export class ExportService extends ApiService {
+export class ExportService {
     private readonly document = inject(DOCUMENT);
     private readonly browserWindow = inject(BrowserWindowService);
     private readonly platformId = inject(PLATFORM_ID);
     private readonly isBrowser = isPlatformBrowser(this.platformId);
 
     protected readonly baseUrl = environment.apiUrls.export;
+    private readonly sdk = createSdkConnection(ExportSdk, this.baseUrl, inject(HttpClient));
 
     public exportDiary(request: ExportDiaryRequest): Observable<void> {
         const { dateFrom, dateTo, format = 'csv', locale, timeZoneOffsetMinutes } = request;
         const ext = format === 'pdf' ? 'pdf' : 'csv';
         const reportOrigin = this.browserWindow.getOrigin();
-        return this.downloadBlob('diary', { dateFrom, dateTo, format, locale, timeZoneOffsetMinutes, reportOrigin }, `food-diary.${ext}`);
+        return this.saveBlobResponse(
+            this.sdk.client.getExportDiary(
+                { version: this.sdk.version, dateFrom, dateTo, format, locale, timeZoneOffsetMinutes, reportOrigin },
+                'response',
+                false,
+                { httpHeaderAccept: format === 'pdf' ? 'application/pdf' : 'text/csv' },
+            ),
+            `food-diary.${ext}`,
+        );
     }
 
     public exportCycle(request: ExportCycleRequest): Observable<void> {
         const { dateFrom, dateTo, timeZoneOffsetMinutes } = request;
-        return this.downloadBlob('cycle', { dateFrom, dateTo, timeZoneOffsetMinutes }, 'cycle-tracking.csv');
+        return this.saveBlobResponse(
+            this.sdk.client.getExportCycle({ version: this.sdk.version, dateFrom, dateTo, timeZoneOffsetMinutes }, 'response', false, {
+                httpHeaderAccept: 'text/csv',
+            }),
+            'cycle-tracking.csv',
+        );
     }
 
     public exportSensitiveCycle(request: ExportSensitiveCycleRequest): Observable<void> {
-        return this.saveBlobResponse(this.postBlob('cycle/sensitive', request), 'cycle-tracking-sensitive.csv');
-    }
-
-    private downloadBlob(
-        endpoint: string,
-        params: Record<string, string | number | boolean | null | undefined>,
-        fallbackFileName: string,
-    ): Observable<void> {
-        return this.saveBlobResponse(this.getBlob(endpoint, params), fallbackFileName);
+        return this.saveBlobResponse(
+            this.sdk.client.postExportCycleSensitive(
+                { version: this.sdk.version, sensitiveCycleExportHttpRequest: request },
+                'response',
+                false,
+                { httpHeaderAccept: 'text/csv' },
+            ),
+            'cycle-tracking-sensitive.csv',
+        );
     }
 
     private saveBlobResponse(response$: Observable<HttpResponse<Blob>>, fallbackFileName: string): Observable<void> {

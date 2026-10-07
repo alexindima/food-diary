@@ -64,7 +64,7 @@ describe('HydrationService', () => {
             expect(entries).toEqual([MOCK_ENTRY]);
         });
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
+        const req = httpMock.expectOne(r => r.url === BASE_URL);
         expect(req.request.method).toBe('GET');
         expect(req.request.params.get('dateUtc')).toBe('2026-03-28');
         req.flush([MOCK_ENTRY]);
@@ -75,7 +75,7 @@ describe('HydrationService', () => {
             expect(entries).toEqual([]);
         });
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
+        const req = httpMock.expectOne(r => r.url === BASE_URL);
         req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 
@@ -84,7 +84,7 @@ describe('HydrationService', () => {
 
         service.getEntries(localDate).subscribe();
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/`);
+        const req = httpMock.expectOne(r => r.url === BASE_URL);
         expect(req.request.params.get('dateUtc')).toBe('2026-03-28');
         req.flush([]);
     });
@@ -96,7 +96,7 @@ describe('HydrationService', () => {
             expect(entry).toEqual(MOCK_ENTRY);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(BASE_URL);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual({
             amountMl: ENTRY_AMOUNT_ML,
@@ -116,7 +116,7 @@ describe('HydrationService', () => {
             },
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(BASE_URL);
         req.flush('Server error', { status: HttpStatusCode.BadRequest, statusText: 'Bad Request' });
 
         expect(errorStatus).toBe(HttpStatusCode.BadRequest);

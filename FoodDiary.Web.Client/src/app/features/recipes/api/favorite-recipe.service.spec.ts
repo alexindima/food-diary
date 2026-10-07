@@ -141,7 +141,7 @@ describe('FavoriteRecipeService', () => {
             expect(result).toEqual(favorite);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(BASE_URL);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual({ recipeId: 'recipe-1', name: 'Soup' });
         req.flush(favorite);

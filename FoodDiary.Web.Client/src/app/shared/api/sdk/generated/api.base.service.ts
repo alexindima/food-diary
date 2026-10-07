@@ -1,5 +1,5 @@
 /**
- * FoodDiary Products API
+ * FoodDiary User API
  *
  *
  *

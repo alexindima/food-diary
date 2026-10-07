@@ -48,7 +48,7 @@ describe('ExploreService query', () => {
                 expect(result).toEqual(page);
             });
 
-        const req = httpMock.expectOne(request => request.url === `${BASE_URL}/` && request.method === 'GET');
+        const req = httpMock.expectOne(request => request.url === BASE_URL && request.method === 'GET');
         expect(req.request.params.get('page')).toBe(String(PAGE));
         expect(req.request.params.get('limit')).toBe(String(LIMIT));
         expect(req.request.params.get('search')).toBe('soup');
@@ -61,7 +61,7 @@ describe('ExploreService query', () => {
     it('omits blank optional filters', () => {
         service.query(PAGE, LIMIT, { search: '   ' }).subscribe();
 
-        const req = httpMock.expectOne(request => request.url === `${BASE_URL}/` && request.method === 'GET');
+        const req = httpMock.expectOne(request => request.url === BASE_URL && request.method === 'GET');
         expect(req.request.params.has('search')).toBe(false);
         req.flush(createPage());
     });
@@ -71,7 +71,7 @@ describe('ExploreService query', () => {
             expect(result).toEqual({ data: [], page: PAGE, limit: LIMIT, totalPages: 0, totalItems: 0 });
         });
 
-        const req = httpMock.expectOne(request => request.url === `${BASE_URL}/` && request.method === 'GET');
+        const req = httpMock.expectOne(request => request.url === BASE_URL && request.method === 'GET');
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Server Error' });
     });
 });

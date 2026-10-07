@@ -9,7 +9,6 @@ import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import { FEATURE_ACTION_PROVIDERS } from '../../../../composition/feature-action.providers';
 import { AuthService } from '../../../../services/auth.service';
 import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
 import { UnsavedChangesService } from '../../../../services/unsaved-changes.service';
@@ -19,8 +18,8 @@ import type { DietologistRelationship } from '../../../../shared/models/dietolog
 import { Gender, type User } from '../../../../shared/models/user.data';
 import { NotificationService, type WebPushSubscriptionItem } from '../../../../shared/notifications/notification.service';
 import { PushNotificationService } from '../../../../shared/notifications/push-notification.service';
-import { DietologistFacade } from '../../../dietologist/lib/dietologist.facade';
-import { PremiumBillingFacade } from '../../../premium/lib/premium-billing.facade';
+import { DIETOLOGIST_RELATIONSHIP_ACTIONS } from '../../../dietologist/contracts/relationship-actions';
+import { BILLING_ACCOUNT_ACTIONS } from '../../../premium/contracts/billing-account-actions';
 import { ProfileManageFacade } from '../../lib/profile-manage.facade';
 import { DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS, DEFAULT_FASTING_CHECK_IN_REMINDER_HOURS } from '../../lib/user-manage.config';
 import { UserManageComparisonWidgetsComponent } from '../user-manage-sections/comparison-widgets/user-manage-comparison-widgets';
@@ -767,7 +766,7 @@ async function createComponentAsync(
 
     await TestBed.configureTestingModule({
         imports: [UserManageComponent],
-        providers: [...FEATURE_ACTION_PROVIDERS, ...createTestingProviders(queryParams), provideTranslateTesting()],
+        providers: [...createTestingProviders(queryParams), provideTranslateTesting()],
     })
         .overrideComponent(UserManageComponent, {
             remove: { providers: [ProfileManageFacade, UserManageNotificationsFacade] },
@@ -789,8 +788,8 @@ async function createComponentAsync(
 
 function createTestingProviders(queryParams: Record<string, string>): unknown[] {
     return [
-        { provide: DietologistFacade, useValue: dietologistService },
-        { provide: PremiumBillingFacade, useValue: createPremiumBillingFacadeMock() },
+        { provide: DIETOLOGIST_RELATIONSHIP_ACTIONS, useValue: dietologistService },
+        { provide: BILLING_ACCOUNT_ACTIONS, useValue: createPremiumBillingFacadeMock() },
         { provide: AuthService, useValue: { isAdmin: vi.fn(() => false) } },
         { provide: ActivatedRoute, useValue: { queryParamMap: of(convertToParamMap(queryParams)) } },
         { provide: Router, useValue: router },

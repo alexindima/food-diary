@@ -31,6 +31,14 @@ const loginRequest = new LoginRequest({
 });
 
 const loginFakeToken = createFakeJwt({ nameid: 'user-123', role: 'User' });
+const authUserFields = {
+    hasPassword: true,
+    pushNotificationsEnabled: false,
+    fastingPushNotificationsEnabled: false,
+    socialPushNotificationsEnabled: false,
+    fastingCheckInReminderHours: 12,
+    fastingCheckInFollowUpReminderHours: 20,
+};
 
 const loginAuthResponse = {
     accessToken: loginFakeToken,
@@ -39,6 +47,12 @@ const loginAuthResponse = {
         email: 'test@example.com',
         isActive: true,
         isEmailConfirmed: true,
+        hasPassword: true,
+        pushNotificationsEnabled: false,
+        fastingPushNotificationsEnabled: false,
+        socialPushNotificationsEnabled: false,
+        fastingCheckInReminderHours: 12,
+        fastingCheckInFollowUpReminderHours: 20,
         language: 'en',
     },
 };
@@ -380,6 +394,7 @@ describe('register', () => {
     const authResponse = {
         accessToken: fakeToken,
         user: {
+            ...authUserFields,
             id: 'new-user-456',
             email: 'new@example.com',
             isActive: true,
@@ -458,7 +473,7 @@ describe('refreshToken', () => {
         expect(req.request.body).toEqual({ refreshToken: 'existing-refresh-token' });
         req.flush({
             accessToken: createFakeJwt({ sub: 'user-1' }),
-            user: { id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
+            user: { ...authUserFields, id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
         });
     });
 
@@ -473,7 +488,7 @@ describe('refreshToken', () => {
         const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
         req.flush({
             accessToken: newToken,
-            user: { id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
+            user: { ...authUserFields, id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
         });
 
         expect(service.isAuthenticated()).toBe(true);
@@ -489,7 +504,7 @@ describe('refreshToken', () => {
 
         requests[0].flush({
             accessToken: newToken,
-            user: { id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
+            user: { ...authUserFields, id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
         });
 
         expect(await results).toEqual([newToken, newToken]);
@@ -547,7 +562,7 @@ describe('refresh token storage and failure', () => {
         const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
         req.flush({
             accessToken: createFakeJwt({ sub: 'user-1' }),
-            user: { id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
+            user: { ...authUserFields, id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
         });
 
         expect(localStorage.getItem('refreshToken')).toBeNull();
@@ -694,7 +709,7 @@ describe('session restore', () => {
         const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
         req.flush({
             accessToken: restoredToken,
-            user: { id: 'user-restore-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
+            user: { ...authUserFields, id: 'user-restore-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
         });
 
         await restorePromise;
@@ -726,7 +741,7 @@ describe('session restore', () => {
         const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
         req.flush({
             accessToken: restoredToken,
-            user: { id: 'user-expired', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
+            user: { ...authUserFields, id: 'user-expired', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
         });
 
         await restorePromise;

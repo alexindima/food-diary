@@ -94,7 +94,7 @@ describe('MealService query', () => {
             expect(result.data[0].id).toBe('m1');
         });
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
+        const req = httpMock.expectOne(r => r.url === BASE_URL && r.method === 'GET');
         expect(req.request.params.get('page')).toBe('1');
         expect(req.request.params.get('limit')).toBe(String(DEFAULT_LIMIT));
         expect(req.request.params.get('dateFrom')).toBe('2026-03-01');
@@ -114,7 +114,7 @@ describe('MealService query', () => {
             expect(meal.aiSessions).toEqual([]);
         });
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
+        const req = httpMock.expectOne(r => r.url === BASE_URL && r.method === 'GET');
         req.flush(MOCK_PAGE_DTO);
     });
 
@@ -128,7 +128,7 @@ describe('MealService query', () => {
             },
         });
 
-        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/` && r.method === 'GET');
+        const req = httpMock.expectOne(r => r.url === BASE_URL && r.method === 'GET');
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 });
@@ -195,9 +195,14 @@ describe('MealService create', () => {
             expect(result.id).toBe('m1');
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(BASE_URL);
         expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({ ...createData, preMealSatietyLevel: 0, postMealSatietyLevel: 0 });
+        expect(req.request.body).toEqual({
+            ...createData,
+            date: createData.date.toISOString(),
+            preMealSatietyLevel: 0,
+            postMealSatietyLevel: 0,
+        });
         req.flush(MOCK_MEAL_DTO);
     });
 
@@ -213,7 +218,7 @@ describe('MealService create', () => {
             },
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(BASE_URL);
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
     });
 });
@@ -234,7 +239,12 @@ describe('MealService update', () => {
 
         const req = httpMock.expectOne(`${BASE_URL}/m1`);
         expect(req.request.method).toBe('PATCH');
-        expect(req.request.body).toEqual({ ...updateData, preMealSatietyLevel: 0, postMealSatietyLevel: 0 });
+        expect(req.request.body).toEqual({
+            ...updateData,
+            date: updateData.date.toISOString(),
+            preMealSatietyLevel: 0,
+            postMealSatietyLevel: 0,
+        });
         req.flush(MOCK_MEAL_DTO);
     });
 
@@ -508,7 +518,7 @@ describe('MealService repeat and overview transport', () => {
         service
             .query(1, DEFAULT_LIMIT, { caloriesFrom: 0, caloriesTo: 0, hasImage: false, hasAiSession: false, mealTypes: 'Dinner,Snack' })
             .subscribe();
-        const request = httpMock.expectOne(req => req.url === `${BASE_URL}/`);
+        const request = httpMock.expectOne(req => req.url === BASE_URL);
         expect(request.request.params.get('caloriesFrom')).toBe('0');
         expect(request.request.params.get('caloriesTo')).toBe('0');
         expect(request.request.params.get('hasImage')).toBe('false');

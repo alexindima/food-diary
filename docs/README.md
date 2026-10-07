@@ -50,7 +50,7 @@ This directory contains long-form repository documentation. Keep root-level mark
 - [Daily advice JSON import](admin-daily-advices-import.md) - admin workflow, file format and duplicate handling.
 
 - `frontend/FRONTEND_ARCHITECTURE.md`
-- `frontend/API_SDK.md` - generated Products API SDK, regeneration commands, CI drift checks and AI development guidance.
+- `frontend/API_SDK.md` - generated user API SDK, migrated feature adapters, regeneration commands, CI drift checks and AI development guidance.
 - `frontend/PUBLIC_RECIPES.md` - anonymous recipe catalog, privacy boundaries, SSR deployment and verification.
 - `frontend/TEMPLATE_LINTING.md` - active template-rule verification and existing complexity limits.
 - `frontend/FRONTEND_OBSERVABILITY_BASELINE.md`

@@ -1540,7 +1540,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         return JsonSerializer.Serialize(snapshot, IndentedJsonOptions);
     }
 
-    private static string BuildAuthAdminOpenApiSnapshot(JsonElement root) {
+    internal static string BuildAuthAdminOpenApiSnapshot(JsonElement root) {
         string[] selectedPaths = [
             "/api/v{version}/auth/register",
             "/api/v{version}/auth/login",

@@ -11,7 +11,18 @@ $outputPath = Join-Path $wikiRoot 'generated/frontend-contract-index.json'
 $cachePath = Join-Path $repositoryRoot '.artifacts/llm-wiki/index-cache/frontend-contract-index.json'
 $sourceInputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', ':(icase)FoodDiary.Web.Client/**/*.ts', ':(icase)FoodDiary.Web.Client/**/*.html') -FailureMessage 'Unable to enumerate frontend-contract sources.')
 $sourceInputs = @($sourceInputs | Where-Object { $_ -notmatch '[\/](node_modules|dist[^\/]*|coverage|\.angular)[\/]' -and [IO.File]::Exists((Join-Path $repositoryRoot $_)) })
+$sdkManifestPath = Join-Path $repositoryRoot 'FoodDiary.Web.Client/api-sdk/scopes.json'
+$sdkOperations = @{}
+if (Test-Path -LiteralPath $sdkManifestPath) {
+    foreach ($sdkScope in @(Get-Content -LiteralPath $sdkManifestPath -Raw | ConvertFrom-Json)) {
+        foreach ($sdkOperation in $sdkScope.operations.PSObject.Properties) {
+            $sdkParts = $sdkOperation.Name.Split(' ', 2)
+            $sdkOperations[[string]$sdkOperation.Value] = @{ method = $sdkParts[0]; url = $sdkParts[1] }
+        }
+    }
+}
 $cacheInputs = $sourceInputs + @('.llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1', '.llm-wiki/tools/LlmWikiJson.ps1', '.llm-wiki/tools/LlmWikiIndexCache.ps1', '.llm-wiki/tools/LlmWikiGitPaths.ps1')
+if (Test-Path -LiteralPath $sdkManifestPath) { $cacheInputs += 'FoodDiary.Web.Client/api-sdk/scopes.json' }
 $inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $cacheInputs
 if ($ReuseUnchangedCheck -and (Test-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint)) { Write-Host 'Frontend contract index cache hit: inputs, generator, and output are unchanged.'; exit 0 }
 
@@ -46,6 +57,26 @@ foreach ($file in $tsFiles) {
     $inheritsApiService = $content -match '\bclass\s+[A-Za-z_][A-Za-z0-9_]*\s+extends\s+ApiService\b'
     $baseUrlMatch = [regex]::Match($content, '(?m)\bbaseUrl\s*=\s*(?<value>[^;\r\n]+)')
     $baseUrlExpression = if ($baseUrlMatch.Success) { $baseUrlMatch.Groups['value'].Value.Trim() } else { $null }
+    foreach ($sdkMatch in [regex]::Matches($content, '\bthis\.[A-Za-z_][A-Za-z0-9_]*\s*\.\s*client\s*\.\s*(?<operation>[A-Za-z_][A-Za-z0-9_]*)\s*\(')) {
+        $sdkName = $sdkMatch.Groups['operation'].Value
+        if (-not $sdkOperations.ContainsKey($sdkName)) { continue }
+        $sdkOperation = $sdkOperations[$sdkName]
+        $ownerMethods = [regex]::Matches($content.Substring(0, $sdkMatch.Index),
+            '(?m)^\s*(?:public|protected|private)\s+(?:async\s+)?(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*\([^)]*\)\s*:\s*[^{\r\n]+\{')
+        $ownerMethod = if ($ownerMethods.Count -gt 0) { $ownerMethods[$ownerMethods.Count - 1].Groups['name'].Value } else { $null }
+        $apiCalls.Add([pscustomobject]@{
+            feature = $feature
+            method = $sdkOperation.method
+            responseType = $null
+            urlExpression = $sdkOperation.url
+            path = $path
+            line = 1 + [regex]::Matches($content.Substring(0, $sdkMatch.Index), "`n").Count
+            publicMethod = $ownerMethod
+            transport = 'GeneratedApiClient'
+            baseUrlExpression = $baseUrlExpression
+            resolvedUrlExpression = $sdkOperation.url
+        })
+    }
     $componentMatch = [regex]::Match(
         $content,
         '(?ms)@Component\s*\(\s*\{(?<metadata>.*?)\}\s*\)\s*(?:export\s+)?(?:default\s+)?class\s+(?<class>[A-Za-z_][A-Za-z0-9_]*)')

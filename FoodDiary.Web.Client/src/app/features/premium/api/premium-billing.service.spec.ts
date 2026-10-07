@@ -6,6 +6,15 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { environment } from '../../../../environments/environment';
 import { PremiumBillingService } from './premium-billing.service';
 
+const BILLING_FLAGS = {
+    renewalEnabled: false,
+    premiumTrialActive: false,
+    premiumTrialUsed: false,
+    canStartPremiumTrial: true,
+    provider: 'paddle',
+    availableProviders: ['paddle'],
+};
+
 describe('PremiumBillingService', () => {
     let service: PremiumBillingService;
     let httpMock: HttpTestingController;
@@ -37,6 +46,7 @@ describe('PremiumBillingService', () => {
             currentPeriodEndUtc: null,
             cancelAtPeriodEnd: false,
             manageBillingAvailable: false,
+            ...BILLING_FLAGS,
         });
     });
 
@@ -59,7 +69,7 @@ describe('PremiumBillingService', () => {
 
         const req = httpMock.expectOne(`${baseUrl}/trial`);
         expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({});
+        expect(req.request.body).toBeNull();
         req.flush({
             isPremium: true,
             subscriptionStatus: 'trialing',
@@ -67,6 +77,7 @@ describe('PremiumBillingService', () => {
             currentPeriodEndUtc: '2026-06-01T00:00:00Z',
             cancelAtPeriodEnd: false,
             manageBillingAvailable: false,
+            ...BILLING_FLAGS,
             premiumTrialActive: true,
             premiumTrialUsed: true,
             canStartPremiumTrial: false,
@@ -92,7 +103,7 @@ describe('PremiumBillingService', () => {
 
         const req = httpMock.expectOne(`${baseUrl}/portal-session`);
         expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({});
+        expect(req.request.body).toBeNull();
         req.flush({
             url: 'https://billing.stripe.com/session/test',
         });

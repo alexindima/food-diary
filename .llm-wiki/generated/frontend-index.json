@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1960,
-    "symbols": 741,
+    "typescriptFiles": 2291,
+    "symbols": 779,
     "routes": 106,
     "features": 46,
-    "specs": 698,
+    "specs": 706,
     "localeFiles": 5,
     "roles": {
       "Component": 483,
@@ -20,7 +20,7 @@
       "Facade": 86,
       "Other": 25,
       "Pipe": 4,
-      "Service": 131
+      "Service": 169
     }
   },
   "features": [
@@ -447,6 +447,7 @@
         "verify-pending"
       ],
       "tests": [
+        "FoodDiary.Web.Client/src/app/features/auth/api/telegram-auth.service.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-admin-return-url.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-countdown.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-flow.facade.spec.ts",
@@ -848,6 +849,7 @@
         ":id"
       ],
       "tests": [
+        "FoodDiary.Web.Client/src/app/features/meal-plans/api/meal-plan-sdk.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meal-plans/api/meal-plan.service.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meal-plans/lib/list/meal-plan-list-navigation.spec.ts",
         "FoodDiary.Web.Client/src/app/features/meal-plans/lib/list/meal-plan-list-query.spec.ts",
@@ -1133,6 +1135,7 @@
         ""
       ],
       "tests": [
+        "FoodDiary.Web.Client/src/app/features/profile/api/active-sessions.service.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/dialogs/change-password-dialog/change-password-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/dialogs/password-success-dialog/password-success-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/dialogs/update-success-dialog/update-success-dialog.spec.ts",
@@ -1255,6 +1258,7 @@
       ],
       "tests": [
         "FoodDiary.Web.Client/src/app/features/recipes/api/favorite-recipe.service.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/recipes/api/public-recipe-sdk.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/api/public-recipe.service.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-cook-mode/recipe-cook-mode.spec.ts",
@@ -3190,7 +3194,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/auth/api/telegram-auth.service.ts",
-      "line": 10
+      "line": 15
     },
     {
       "name": "AuthGoogleSectionComponent",
@@ -3330,7 +3334,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
-      "line": 20
+      "line": 24
     },
     {
       "name": "CycleExportDialogComponent",
@@ -3484,7 +3488,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard.service.ts",
-      "line": 23
+      "line": 25
     },
     {
       "name": "CycleSummaryCardComponent",
@@ -3722,7 +3726,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/api/dietologist.service.ts",
-      "line": 40
+      "line": 54
     },
     {
       "name": "DietologistFacade",
@@ -3820,28 +3824,28 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/explore/api/comment.service.ts",
-      "line": 11
+      "line": 15
     },
     {
       "name": "ExploreService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/explore/api/explore.service.ts",
-      "line": 12
+      "line": 16
     },
     {
       "name": "LikeService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/explore/api/like.service.ts",
-      "line": 11
+      "line": 13
     },
     {
       "name": "ReportService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/explore/api/report.service.ts",
-      "line": 10
+      "line": 13
     },
     {
       "name": "RecipeCommentItemComponent",
@@ -3897,7 +3901,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/fasting/api/fasting.service.ts",
-      "line": 20
+      "line": 23
     },
     {
       "name": "FastingCheckInCardComponent",
@@ -4114,7 +4118,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/gamification/api/gamification.service.ts",
-      "line": 13
+      "line": 15
     },
     {
       "name": "GamificationAchievementsDialogComponent",
@@ -4149,7 +4153,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/goals/api/goals.service.ts",
-      "line": 11
+      "line": 13
     },
     {
       "name": "CalorieGoalDialogComponent",
@@ -4226,14 +4230,14 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/hydration/api/hydration.service.ts",
-      "line": 11
+      "line": 14
     },
     {
       "name": "LessonService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/lessons/api/lesson.service.ts",
-      "line": 11
+      "line": 15
     },
     {
       "name": "LessonFacade",
@@ -4296,7 +4300,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/api/meal-plan.service.ts",
-      "line": 15
+      "line": 20
     },
     {
       "name": "MealPlanListRouteStateFacade",
@@ -4359,14 +4363,14 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meals/api/favorite-meal.service.ts",
-      "line": 15
+      "line": 19
     },
     {
       "name": "MealService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
-      "line": 39
+      "line": 18
     },
     {
       "name": "MealDetailItemPreviewComponent",
@@ -4639,7 +4643,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
-      "line": 17
+      "line": 20
     },
     {
       "name": "PaddleCheckoutService",
@@ -4709,14 +4713,14 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
-      "line": 16
+      "line": 19
     },
     {
       "name": "OpenFoodFactsService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/products/api/open-food-facts.service.ts",
-      "line": 11
+      "line": 13
     },
     {
       "name": "ProductService",
@@ -4730,7 +4734,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/products/api/public-product.service.ts",
-      "line": 9
+      "line": 11
     },
     {
       "name": "ProductDetailActionsComponent",
@@ -5017,14 +5021,14 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/profile/api/active-sessions.service.ts",
-      "line": 10
+      "line": 13
     },
     {
       "name": "ProfileMeasurementsService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/profile/api/profile-measurements.service.ts",
-      "line": 22
+      "line": 18
     },
     {
       "name": "ChangePasswordDialogComponent",
@@ -5290,21 +5294,21 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/favorite-recipe.service.ts",
-      "line": 15
+      "line": 19
     },
     {
       "name": "PublicRecipeService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/public-recipe.service.ts",
-      "line": 10
+      "line": 14
     },
     {
       "name": "RecipeService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
-      "line": 21
+      "line": 27
     },
     {
       "name": "RecipeCookModeComponent",
@@ -5647,14 +5651,14 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/recommendations/api/client-tasks.service.ts",
-      "line": 10
+      "line": 13
     },
     {
       "name": "RecommendationsService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/recommendations/api/recommendations.service.ts",
-      "line": 15
+      "line": 19
     },
     {
       "name": "RecommendationThreadComponent",
@@ -5682,7 +5686,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/api/shopping-list.service.ts",
-      "line": 18
+      "line": 24
     },
     {
       "name": "ShoppingListBrowserComponent",
@@ -5766,7 +5770,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/statistics/api/statistics.service.ts",
-      "line": 9
+      "line": 14
     },
     {
       "name": "StatisticsBodyTrendCardComponent",
@@ -5829,7 +5833,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/usda/api/usda.service.ts",
-      "line": 15
+      "line": 14
     },
     {
       "name": "DailyMicronutrientCardComponent",
@@ -5878,7 +5882,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/api/waist-entries.service.ts",
-      "line": 23
+      "line": 25
     },
     {
       "name": "WaistHistoryChartCardComponent",
@@ -5962,7 +5966,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/wearables/api/wearable.service.ts",
-      "line": 11
+      "line": 15
     },
     {
       "name": "WearableConnectionsComponent",
@@ -5990,14 +5994,14 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/api/weekly-check-in.service.ts",
-      "line": 10
+      "line": 13
     },
     {
       "name": "WeeklyGoalService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/api/weekly-goal.service.ts",
-      "line": 10
+      "line": 14
     },
     {
       "name": "WeeklyCheckInStatsCardComponent",
@@ -6053,7 +6057,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/api/weight-entries.service.ts",
-      "line": 23
+      "line": 25
     },
     {
       "name": "WeightHistoryBmiCardComponent",
@@ -6172,7 +6176,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 32
+      "line": 37
     },
     {
       "name": "GlobalErrorHandler",
@@ -6263,35 +6267,35 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/ai-food.service.ts",
-      "line": 19
+      "line": 23
     },
     {
       "name": "ExportService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/export.service.ts",
-      "line": 12
+      "line": 13
     },
     {
       "name": "FoodRecognitionService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 36
+      "line": 41
     },
     {
       "name": "ImageUploadService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/image-upload.service.ts",
-      "line": 11
+      "line": 14
     },
     {
       "name": "RecipeLookupService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/recipe-lookup.service.ts",
-      "line": 10
+      "line": 13
     },
     {
       "name": "BaseService",
@@ -6305,14 +6309,280 @@
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api.module.ts",
-      "line": 13
+      "line": 91
+    },
+    {
+      "name": "AiSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/ai.service.ts",
+      "line": 111
+    },
+    {
+      "name": "AuthSessionsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/auth-sessions.service.ts",
+      "line": 39
+    },
+    {
+      "name": "AuthSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/auth.service.ts",
+      "line": 120
+    },
+    {
+      "name": "BillingSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/billing.service.ts",
+      "line": 57
+    },
+    {
+      "name": "ClientTasksSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/client-tasks.service.ts",
+      "line": 38
+    },
+    {
+      "name": "CyclesSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/cycles.service.ts",
+      "line": 112
+    },
+    {
+      "name": "DashboardSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/dashboard.service.ts",
+      "line": 49
+    },
+    {
+      "name": "DietologistSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/dietologist.service.ts",
+      "line": 229
+    },
+    {
+      "name": "ExercisesSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/exercises.service.ts",
+      "line": 52
+    },
+    {
+      "name": "ExportSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/export.service.ts",
+      "line": 46
+    },
+    {
+      "name": "FastingSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/fasting.service.ts",
+      "line": 96
+    },
+    {
+      "name": "FavoriteMealsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/favorite-meals.service.ts",
+      "line": 55
+    },
+    {
+      "name": "FavoriteProductsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/favorite-products.service.ts",
+      "line": 58
+    },
+    {
+      "name": "FavoriteRecipesSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/favorite-recipes.service.ts",
+      "line": 50
+    },
+    {
+      "name": "GamificationSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/gamification.service.ts",
+      "line": 27
+    },
+    {
+      "name": "GoalsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/goals.service.ts",
+      "line": 34
+    },
+    {
+      "name": "HydrationSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/hydration.service.ts",
+      "line": 68
+    },
+    {
+      "name": "ImagesSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/images.service.ts",
+      "line": 46
+    },
+    {
+      "name": "LessonsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/lessons.service.ts",
+      "line": 56
+    },
+    {
+      "name": "MealPlansSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/meal-plans.service.ts",
+      "line": 59
+    },
+    {
+      "name": "MealsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/meals.service.ts",
+      "line": 112
+    },
+    {
+      "name": "NotificationsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/notifications.service.ts",
+      "line": 92
+    },
+    {
+      "name": "OpenFoodFactsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/open-food-facts.service.ts",
+      "line": 35
     },
     {
       "name": "ProductsSdk",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/products.service.ts",
-      "line": 112
+      "line": 109
+    },
+    {
+      "name": "RecipesSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/recipes.service.ts",
+      "line": 186
+    },
+    {
+      "name": "RecommendationsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/recommendations.service.ts",
+      "line": 56
+    },
+    {
+      "name": "ReportsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/reports.service.ts",
+      "line": 32
+    },
+    {
+      "name": "ShoppingListsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/shopping-lists.service.ts",
+      "line": 70
+    },
+    {
+      "name": "StatisticsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/statistics.service.ts",
+      "line": 51
+    },
+    {
+      "name": "TdeeSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/tdee.service.ts",
+      "line": 27
+    },
+    {
+      "name": "TelegramAuthSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/telegram-auth.service.ts",
+      "line": 115
+    },
+    {
+      "name": "TelegramBotSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/telegram-bot.service.ts",
+      "line": 58
+    },
+    {
+      "name": "UsdaSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/usda.service.ts",
+      "line": 57
+    },
+    {
+      "name": "UsersSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/users.service.ts",
+      "line": 116
+    },
+    {
+      "name": "WaistEntriesSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/waist-entries.service.ts",
+      "line": 77
+    },
+    {
+      "name": "WearablesSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/wearables.service.ts",
+      "line": 66
+    },
+    {
+      "name": "WeeklyCheckInSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/weekly-check-in.service.ts",
+      "line": 29
+    },
+    {
+      "name": "WeeklyGoalsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/weekly-goals.service.ts",
+      "line": 36
+    },
+    {
+      "name": "WeightEntriesSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/weight-entries.service.ts",
+      "line": 77
     },
     {
       "name": "Configuration",
@@ -6347,7 +6617,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-      "line": 35
+      "line": 45
     },
     {
       "name": "LoginRequest",
@@ -6585,7 +6855,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 79
+      "line": 39
     },
     {
       "name": "PushNotificationService",

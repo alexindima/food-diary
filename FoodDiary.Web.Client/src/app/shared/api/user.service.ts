@@ -1,14 +1,14 @@
-import { HttpContext } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, map, type Observable, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
-import { ApiService } from '../../services/api.service';
 import { SessionEventsService } from '../auth/session-events.service';
 import { fallbackApiError, rethrowApiError } from '../lib/api-error.utils';
 import type { DietologistRelationship } from '../models/dietologist.data';
+import type { NotificationPreferences, WebPushSubscriptionItem } from '../models/notification.data';
 import type { GoalHistoryPage } from '../models/user.data';
 import type {
     ChangePasswordRequest,
@@ -22,7 +22,17 @@ import type {
     WaistGoalHistoryItem,
     WeightGoalHistoryItem,
 } from '../models/user.data';
-import type { NotificationPreferences, WebPushSubscriptionItem } from '../notifications/notification.service';
+import { UsersSdk } from './sdk/generated/api/users.service';
+import { createSdkConnection, sdkRequestOptions } from './sdk/sdk-connection';
+import {
+    profileOverviewFromSdk,
+    userFromSdk,
+    userUpdateToSdk,
+    waistGoalFromSdk,
+    waistGoalPageFromSdk,
+    weightGoalFromSdk,
+    weightGoalPageFromSdk,
+} from './sdk/user-sdk.mapper';
 
 export type UserProfileOverview = {
     user: User;
@@ -32,15 +42,15 @@ export type UserProfileOverview = {
 };
 
 @Service()
-export class UserService extends ApiService {
+export class UserService {
     protected readonly baseUrl = environment.apiUrls.users;
+    private readonly sdk = createSdkConnection(UsersSdk, this.baseUrl, inject(HttpClient));
     private readonly sessionEvents = inject(SessionEventsService);
     private readonly silentLoadingContext = new HttpContext().set(SKIP_GLOBAL_LOADING, true);
     private readonly userSignal = signal<User | null>(null);
     public readonly user = this.userSignal.asReadonly();
 
     public constructor() {
-        super();
         this.sessionEvents.authenticated$.pipe(takeUntilDestroyed()).subscribe(() => {
             this.clearUser();
         });
@@ -58,7 +68,8 @@ export class UserService extends ApiService {
     }
 
     public getOverview(): Observable<UserProfileOverview | null> {
-        return this.get<UserProfileOverview>('overview').pipe(
+        return this.sdk.client.getUsersOverview({ version: this.sdk.version }).pipe(
+            map(profileOverviewFromSdk),
             tap(overview => {
                 this.userSignal.set(overview.user);
             }),
@@ -70,7 +81,8 @@ export class UserService extends ApiService {
     }
 
     public getInfo(): Observable<User | null> {
-        return this.get<User>('info').pipe(
+        return this.sdk.client.getUsersInfo({ version: this.sdk.version }).pipe(
+            map(userFromSdk),
             tap(user => {
                 this.userSignal.set(user);
             }),
@@ -82,28 +94,38 @@ export class UserService extends ApiService {
     }
 
     public getInfoSilently(): Observable<User | null> {
-        return this.get<User>('info', undefined, undefined, this.silentLoadingContext).pipe(
-            tap(user => {
-                this.userSignal.set(user);
-            }),
-            catchError((error: unknown) => {
-                this.userSignal.set(null);
-                return fallbackApiError('Get user info error', error, null);
-            }),
-        );
+        return this.sdk.client
+            .getUsersInfo({ version: this.sdk.version }, 'body', false, sdkRequestOptions(undefined, this.silentLoadingContext))
+            .pipe(
+                map(userFromSdk),
+                tap(user => {
+                    this.userSignal.set(user);
+                }),
+                catchError((error: unknown) => {
+                    this.userSignal.set(null);
+                    return fallbackApiError('Get user info error', error, null);
+                }),
+            );
     }
 
     public update(data: UpdateUserDto): Observable<User | null> {
-        return this.patch<User>('info', data).pipe(
-            tap(user => {
-                this.userSignal.set(user);
-            }),
-            catchError((error: unknown) => fallbackApiError('Update user error', error, null)),
-        );
+        return this.sdk.client
+            .patchUsersInfo({
+                version: this.sdk.version,
+                updateUserHttpRequest: userUpdateToSdk(data),
+            })
+            .pipe(
+                map(userFromSdk),
+                tap(user => {
+                    this.userSignal.set(user);
+                }),
+                catchError((error: unknown) => fallbackApiError('Update user error', error, null)),
+            );
     }
 
     public updateAppearance(data: UpdateUserAppearanceDto): Observable<User | null> {
-        return this.patch<User>('preferences/appearance', data).pipe(
+        return this.sdk.client.patchUsersPreferencesAppearance({ version: this.sdk.version, updateUserAppearanceHttpRequest: data }).pipe(
+            map(userFromSdk),
             tap(user => {
                 this.userSignal.set(user);
             }),
@@ -112,7 +134,8 @@ export class UserService extends ApiService {
     }
 
     public updateDashboardLayout(layout: DashboardLayoutSettings): Observable<User | null> {
-        return this.patch<User>('info', { dashboardLayout: layout }).pipe(
+        return this.sdk.client.patchUsersInfo({ version: this.sdk.version, updateUserHttpRequest: { dashboardLayout: layout } }).pipe(
+            map(userFromSdk),
             tap(user => {
                 this.userSignal.set(user);
             }),
@@ -121,14 +144,14 @@ export class UserService extends ApiService {
     }
 
     public changePassword(request: ChangePasswordRequest): Observable<boolean> {
-        return this.patch<void>('password', request).pipe(
+        return this.sdk.client.patchUsersPassword({ version: this.sdk.version, changePasswordHttpRequest: request }).pipe(
             map(() => true),
             catchError((error: unknown) => fallbackApiError('Change password error', error, false)),
         );
     }
 
     public setPassword(request: SetPasswordRequest): Observable<boolean> {
-        return this.patch<void>('password/set', request).pipe(
+        return this.sdk.client.patchUsersPasswordSet({ version: this.sdk.version, setPasswordHttpRequest: request }).pipe(
             tap(() => {
                 const current = this.userSignal();
                 if (current !== null) {
@@ -141,7 +164,7 @@ export class UserService extends ApiService {
     }
 
     public acceptAiConsent(): Observable<void> {
-        return this.post<void>('ai-consent', {}).pipe(
+        return this.sdk.client.postUsersAiConsent({ version: this.sdk.version }).pipe(
             tap(() => {
                 const current = this.userSignal();
                 if (current !== null) {
@@ -153,7 +176,7 @@ export class UserService extends ApiService {
     }
 
     public revokeAiConsent(): Observable<void> {
-        return this.delete<void>('ai-consent').pipe(
+        return this.sdk.client.deleteUsersAiConsent({ version: this.sdk.version }).pipe(
             tap(() => {
                 const current = this.userSignal();
                 if (current !== null) {
@@ -165,7 +188,7 @@ export class UserService extends ApiService {
     }
 
     public deleteCurrentUser(): Observable<boolean> {
-        return this.delete<void>('').pipe(
+        return this.sdk.client.deleteUsers({ version: this.sdk.version }).pipe(
             tap(() => {
                 this.userSignal.set(null);
             }),
@@ -175,14 +198,15 @@ export class UserService extends ApiService {
     }
 
     public getDesiredWeight(): Observable<number | null> {
-        return this.get<DesiredWeightResponse>('desired-weight').pipe(
+        return this.sdk.client.getUsersDesiredWeight({ version: this.sdk.version }).pipe(
             map(response => response.desiredWeightKg ?? null),
             catchError((error: unknown) => fallbackApiError('Get desired weight error', error, null)),
         );
     }
 
     public getWeightGoal(): Observable<DesiredWeightResponse> {
-        return this.get<DesiredWeightResponse>('desired-weight').pipe(
+        return this.sdk.client.getUsersDesiredWeight({ version: this.sdk.version }).pipe(
+            map(weightGoalFromSdk),
             catchError((error: unknown) =>
                 fallbackApiError('Get weight goal error', error, {
                     desiredWeightKg: null,
@@ -194,38 +218,44 @@ export class UserService extends ApiService {
     }
 
     public getWeightGoalHistoryPage(cursor?: string): Observable<GoalHistoryPage<WeightGoalHistoryItem>> {
-        return this.get<GoalHistoryPage<WeightGoalHistoryItem>>(
-            'weight-goals/page',
-            cursor === undefined ? {} : { cursor },
-            undefined,
-            this.silentLoadingContext,
-        );
+        return this.sdk.client
+            .getUsersWeightGoalsPage(
+                { version: this.sdk.version, cursor },
+                'body',
+                false,
+                sdkRequestOptions(undefined, this.silentLoadingContext),
+            )
+            .pipe(map(weightGoalPageFromSdk));
     }
 
     public updateDesiredWeight(value: number | null): Observable<number | null> {
-        return this.put<DesiredWeightResponse>('desired-weight', {
-            desiredWeightKg: value,
-        }).pipe(
-            map(response => response.desiredWeightKg ?? null),
-            catchError((error: unknown) => rethrowApiError('Update desired weight error', error)),
-        );
+        return this.sdk.client
+            .putUsersDesiredWeight({ version: this.sdk.version, updateDesiredWeightHttpRequest: { desiredWeightKg: value } })
+            .pipe(
+                map(response => response.desiredWeightKg ?? null),
+                catchError((error: unknown) => rethrowApiError('Update desired weight error', error)),
+            );
     }
 
     public updateWeightGoal(value: number | null): Observable<DesiredWeightResponse> {
-        return this.put<DesiredWeightResponse>('desired-weight', { desiredWeightKg: value }).pipe(
-            catchError((error: unknown) => rethrowApiError('Update weight goal error', error)),
-        );
+        return this.sdk.client
+            .putUsersDesiredWeight({ version: this.sdk.version, updateDesiredWeightHttpRequest: { desiredWeightKg: value } })
+            .pipe(
+                map(weightGoalFromSdk),
+                catchError((error: unknown) => rethrowApiError('Update weight goal error', error)),
+            );
     }
 
     public getDesiredWaist(): Observable<number | null> {
-        return this.get<DesiredWaistResponse>('desired-waist').pipe(
+        return this.sdk.client.getUsersDesiredWaist({ version: this.sdk.version }).pipe(
             map(response => response.desiredWaistCm ?? null),
             catchError((error: unknown) => fallbackApiError('Get desired waist error', error, null)),
         );
     }
 
     public getWaistGoal(): Observable<DesiredWaistResponse> {
-        return this.get<DesiredWaistResponse>('desired-waist').pipe(
+        return this.sdk.client.getUsersDesiredWaist({ version: this.sdk.version }).pipe(
+            map(waistGoalFromSdk),
             catchError((error: unknown) =>
                 fallbackApiError('Get waist goal error', error, {
                     desiredWaistCm: null,
@@ -237,26 +267,31 @@ export class UserService extends ApiService {
     }
 
     public getWaistGoalHistoryPage(cursor?: string): Observable<GoalHistoryPage<WaistGoalHistoryItem>> {
-        return this.get<GoalHistoryPage<WaistGoalHistoryItem>>(
-            'waist-goals/page',
-            cursor === undefined ? {} : { cursor },
-            undefined,
-            this.silentLoadingContext,
-        );
+        return this.sdk.client
+            .getUsersWaistGoalsPage(
+                { version: this.sdk.version, cursor },
+                'body',
+                false,
+                sdkRequestOptions(undefined, this.silentLoadingContext),
+            )
+            .pipe(map(waistGoalPageFromSdk));
     }
 
     public updateDesiredWaist(value: number | null): Observable<number | null> {
-        return this.put<DesiredWaistResponse>('desired-waist', {
-            desiredWaistCm: value,
-        }).pipe(
-            map(response => response.desiredWaistCm ?? null),
-            catchError((error: unknown) => rethrowApiError('Update desired waist error', error)),
-        );
+        return this.sdk.client
+            .putUsersDesiredWaist({ version: this.sdk.version, updateDesiredWaistHttpRequest: { desiredWaistCm: value } })
+            .pipe(
+                map(response => response.desiredWaistCm ?? null),
+                catchError((error: unknown) => rethrowApiError('Update desired waist error', error)),
+            );
     }
 
     public updateWaistGoal(value: number | null): Observable<DesiredWaistResponse> {
-        return this.put<DesiredWaistResponse>('desired-waist', { desiredWaistCm: value }).pipe(
-            catchError((error: unknown) => rethrowApiError('Update waist goal error', error)),
-        );
+        return this.sdk.client
+            .putUsersDesiredWaist({ version: this.sdk.version, updateDesiredWaistHttpRequest: { desiredWaistCm: value } })
+            .pipe(
+                map(waistGoalFromSdk),
+                catchError((error: unknown) => rethrowApiError('Update waist goal error', error)),
+            );
     }
 }

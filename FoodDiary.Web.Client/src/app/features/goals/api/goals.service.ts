@@ -2,26 +2,36 @@ import { inject, Service } from '@angular/core';
 import { catchError, concatMap, map, type Observable, of } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { ApiService } from '../../../services/api.service';
+import { GoalsSdk } from '../../../shared/api/sdk/generated/api/goals.service';
+import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
+import { requireSdkFields } from '../../../shared/api/sdk/sdk-response';
 import { UserService } from '../../../shared/api/user.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { GoalsResponse, UpdateGoalsRequest } from '../../../shared/models/goals.data';
 
 @Service()
-export class GoalsService extends ApiService {
+export class GoalsService {
     protected readonly baseUrl = environment.apiUrls.goals;
     private readonly userService = inject(UserService);
+    private readonly sdk = createSdkConnection(GoalsSdk, this.baseUrl, inject(HttpClient));
 
     public getGoals(): Observable<GoalsResponse | null> {
-        return this.get<GoalsResponse>('').pipe(catchError((error: unknown) => fallbackApiError('Get goals error', error, null)));
+        return this.sdk.client.getGoals({ version: this.sdk.version }).pipe(
+            map(response => requireSdkFields(response, ['calorieCyclingEnabled'])),
+            catchError((error: unknown) => fallbackApiError('Get goals error', error, null)),
+        );
     }
 
     public getGoalsStrict(): Observable<GoalsResponse> {
-        return this.get<GoalsResponse>('').pipe(catchError((error: unknown) => rethrowApiError('Get goals error', error)));
+        return this.sdk.client.getGoals({ version: this.sdk.version }).pipe(
+            map(response => requireSdkFields(response, ['calorieCyclingEnabled'])),
+            catchError((error: unknown) => rethrowApiError('Get goals error', error)),
+        );
     }
 
     public updateGoals(request: UpdateGoalsRequest): Observable<GoalsResponse | null> {
-        return this.patch<GoalsResponse>('', request).pipe(
+        return this.sdk.client.patchGoals({ version: this.sdk.version, updateGoalsHttpRequest: request }).pipe(
+            map(response => requireSdkFields(response, ['calorieCyclingEnabled'])),
             catchError((error: unknown) => fallbackApiError('Update goals error', error, null)),
             concatMap(goals =>
                 goals === null
@@ -51,3 +61,4 @@ export class GoalsService extends ApiService {
         return this.userService.updateWaistGoal(null).pipe(map(result => ({ ...goals, desiredWaistCm: result.desiredWaistCm })));
     }
 }
+import { HttpClient } from '@angular/common/http';

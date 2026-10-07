@@ -103,7 +103,7 @@ describe('FavoriteProductService', () => {
             expect(result).toEqual(favorite);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(BASE_URL);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual({ productId: 'product-1', name: 'Apple', preferredPortionAmount: CREATED_PORTION_AMOUNT });
         req.flush(favorite);

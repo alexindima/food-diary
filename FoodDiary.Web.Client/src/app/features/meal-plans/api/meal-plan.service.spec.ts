@@ -32,7 +32,7 @@ describe('MealPlanService', () => {
             expect(result).toEqual(page);
         });
 
-        const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}/?page=1&limit=50&dietType=Keto`);
+        const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}?dietType=Keto&page=1&limit=50`);
         expect(request.request.method).toBe('GET');
         request.flush(page);
     });
@@ -47,7 +47,7 @@ describe('MealPlanService', () => {
             },
         });
 
-        const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}/?page=1&limit=50`);
+        const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}?page=1&limit=50`);
         request.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
     });
 

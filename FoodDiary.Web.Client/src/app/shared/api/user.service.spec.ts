@@ -54,6 +54,10 @@ afterEach(() => {
 });
 
 describe('UserService info', () => {
+    it('keeps a returned birth date as a calendar string', () => {
+        service.getInfo().subscribe(user => { expect(user?.birthDate).toBe('2000-10-02'); });
+        httpMock.expectOne(`${BASE_URL}/info`).flush({ ...MOCK_USER, birthDate: '2000-10-02' });
+    });
     it('should get user info and update signal', () => {
         service.getInfo().subscribe(result => {
             expect(result).toEqual(MOCK_USER);
@@ -275,7 +279,7 @@ describe('UserService deletion', () => {
             expect(result).toBe(true);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}/`);
+        const req = httpMock.expectOne(BASE_URL);
         expect(req.request.method).toBe('DELETE');
         req.flush(null);
 
@@ -426,7 +430,18 @@ describe('UserService body goal writes', () => {
 
 describe('UserService overview state', () => {
     it('loads overview user and clears stale user data after an overview error', () => {
-        const overview = { user: MOCK_USER, notificationPreferences: {}, webPushSubscriptions: [], dietologistRelationship: null };
+        const overview = {
+            user: MOCK_USER,
+            notificationPreferences: {
+                pushNotificationsEnabled: true,
+                fastingPushNotificationsEnabled: false,
+                socialPushNotificationsEnabled: true,
+                fastingCheckInReminderHours: FASTING_CHECK_IN_REMINDER_HOURS,
+                fastingCheckInFollowUpReminderHours: FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS,
+            },
+            webPushSubscriptions: [],
+            dietologistRelationship: null,
+        };
         const next = vi.fn();
         service.getOverview().subscribe(next);
         httpMock.expectOne(`${BASE_URL}/overview`).flush(overview);
@@ -460,7 +475,7 @@ describe('UserService consent state', () => {
         service.acceptAiConsent().subscribe();
         const accept = httpMock.expectOne(`${BASE_URL}/ai-consent`);
         expect(accept.request.method).toBe('POST');
-        expect(accept.request.body).toEqual({});
+        expect(accept.request.body).toBeNull();
         accept.flush(null);
         if (cached) {
             expect(service.user()?.aiConsentAcceptedAt).toEqual(expect.any(String));
@@ -524,7 +539,9 @@ describe('UserService failure contracts', () => {
         }
         const next = vi.fn();
         request.subscribe(next);
-        httpMock.expectOne(`${BASE_URL}/${endpoint}`).flush('offline', { status: 503, statusText: 'Unavailable' });
+        httpMock
+            .expectOne(endpoint.length > 0 ? `${BASE_URL}/${endpoint}` : BASE_URL)
+            .flush('offline', { status: 503, statusText: 'Unavailable' });
         expect(next).toHaveBeenCalledWith(fallback);
         expect(service.user()).toEqual(MOCK_USER);
     });

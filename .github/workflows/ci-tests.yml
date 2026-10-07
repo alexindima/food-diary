@@ -232,7 +232,7 @@ jobs:
           push: false
 
   api-sdk:
-    name: Products API SDK contract and generation
+    name: User API SDK contract and generation
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:

@@ -1,8 +1,14 @@
-import { HttpStatusCode } from '@angular/common/http';
+import { HttpClient, HttpStatusCode } from '@angular/common/http';
 import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
 import { catchError, defer, finalize, firstValueFrom, from, map, type Observable, of, shareReplay, tap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
+import { authResponseFromSdk } from '../shared/api/sdk/auth-sdk.mapper';
+import { AuthSdk } from '../shared/api/sdk/generated/api/auth.service';
+import { TelegramAuthSdk } from '../shared/api/sdk/generated/api/telegram-auth.service';
+import { createSdkConnection } from '../shared/api/sdk/sdk-connection';
+import { requireSdkFields } from '../shared/api/sdk/sdk-response';
+import { userFromSdk } from '../shared/api/sdk/user-sdk.mapper';
 import type {
     AuthResponse,
     ConfirmPasswordResetRequest,
@@ -19,7 +25,6 @@ import { getNumberProperty } from '../shared/lib/unknown-value.utils';
 import type { User } from '../shared/models/user.data';
 import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { ThemeService } from '../shared/theme/theme.service';
-import { ApiService } from './api.service';
 import { FrontendLoggerService } from './frontend-logger.service';
 import { JwtDecoderService } from './jwt-decoder.service';
 import { NavigationService } from './navigation.service';
@@ -29,7 +34,7 @@ const TOKEN_EXPIRATION_LEEWAY_SECONDS = 30;
 const AUTH_REFRESH_LOCK_NAME = 'fooddiary.auth.refresh';
 
 @Service()
-export class AuthService extends ApiService {
+export class AuthService {
     private readonly navigationService = inject(NavigationService);
     private readonly sessionEvents = inject(SessionEventsService);
     private readonly browserWindow = inject(BrowserWindowService);
@@ -39,6 +44,9 @@ export class AuthService extends ApiService {
     private readonly jwtDecoder = inject(JwtDecoderService);
     private readonly logger = inject(FrontendLoggerService);
     protected readonly baseUrl = environment.apiUrls.auth;
+    private readonly http = inject(HttpClient);
+    private readonly sdk = createSdkConnection(AuthSdk, this.baseUrl, this.http);
+    private readonly telegram = createSdkConnection(TelegramAuthSdk, this.baseUrl, this.http);
 
     private readonly authTokenSignal = signal<string | null>(this.tokenStorage.getToken());
     private readonly userSignal = signal<string | null>(this.tokenStorage.loadUserId());
@@ -64,7 +72,6 @@ export class AuthService extends ApiService {
     public readonly isAuthReady = this.authReadySignal.asReadonly();
 
     public constructor() {
-        super();
         const stopListening = this.browserWindow.onLocalStorageChange(event => {
             const sessionRemoved = event.key === 'refreshSession' && event.newValue === null;
             const storageCleared = event.key === null;
@@ -144,7 +151,8 @@ export class AuthService extends ApiService {
             password: data.password,
             rememberMe: data.rememberMe,
         };
-        return this.post<AuthResponse>('login', loginData).pipe(
+        return this.sdk.client.postAuthLogin({ version: this.sdk.version, loginHttpRequest: loginData }).pipe(
+            map(authResponseFromSdk),
             tap(response => {
                 this.onLogin(response, data.rememberMe || false);
             }),
@@ -153,21 +161,27 @@ export class AuthService extends ApiService {
     }
 
     public register(data: RegisterRequest): Observable<AuthResponse> {
-        return this.post<AuthResponse>('register', {
-            email: data.email,
-            password: data.password,
-            language: data.language,
-            clientOrigin: this.getClientOrigin(),
-        }).pipe(
-            tap(response => {
-                this.onLogin(response, false);
-            }),
-            catchError((error: unknown) => rethrowApiError('Register error', error)),
-        );
+        return this.sdk.client
+            .postAuthRegister({
+                version: this.sdk.version,
+                registerHttpRequest: {
+                    email: data.email,
+                    password: data.password,
+                    language: data.language,
+                    clientOrigin: this.getClientOrigin(),
+                },
+            })
+            .pipe(
+                map(authResponseFromSdk),
+                tap(response => {
+                    this.onLogin(response, false);
+                }),
+                catchError((error: unknown) => rethrowApiError('Register error', error)),
+            );
     }
 
     public verifyEmail(userId: string, token: string): Observable<void> {
-        return this.post<void>('verify-email', { userId, token }).pipe(
+        return this.sdk.client.postAuthVerifyEmail({ version: this.sdk.version, verifyEmailHttpRequest: { userId, token } }).pipe(
             tap(() => {
                 this.setEmailConfirmed(true);
             }),
@@ -176,26 +190,36 @@ export class AuthService extends ApiService {
     }
 
     public resendEmailVerification(): Observable<void> {
-        return this.post<void>('verify-email/resend', { clientOrigin: this.getClientOrigin() }).pipe(
-            catchError((error: unknown) => rethrowApiError('Resend email verification error', error)),
-        );
+        return this.sdk.client
+            .postAuthVerifyEmailResend({
+                version: this.sdk.version,
+                resendEmailVerificationHttpRequest: { clientOrigin: this.getClientOrigin() },
+            })
+            .pipe(catchError((error: unknown) => rethrowApiError('Resend email verification error', error)));
     }
 
     public restoreAccount(data: RestoreAccountRequest, rememberMe = false): Observable<AuthResponse> {
-        return this.post<AuthResponse>('restore', {
-            email: data.email,
-            password: data.password,
-            rememberMe,
-        }).pipe(
-            tap(response => {
-                this.onLogin(response, rememberMe);
-            }),
-            catchError((error: unknown) => rethrowApiError('Restore account error', error)),
-        );
+        return this.sdk.client
+            .postAuthRestore({
+                version: this.sdk.version,
+                restoreAccountHttpRequest: {
+                    email: data.email,
+                    password: data.password,
+                    rememberMe,
+                },
+            })
+            .pipe(
+                map(authResponseFromSdk),
+                tap(response => {
+                    this.onLogin(response, rememberMe);
+                }),
+                catchError((error: unknown) => rethrowApiError('Restore account error', error)),
+            );
     }
 
     public loginWithGoogle(data: GoogleLoginRequest): Observable<AuthResponse> {
-        return this.post<AuthResponse>('google', data).pipe(
+        return this.sdk.client.postAuthGoogle({ version: this.sdk.version, googleLoginHttpRequest: data }).pipe(
+            map(authResponseFromSdk),
             tap(response => {
                 this.onLogin(response, data.rememberMe ?? false);
             }),
@@ -204,36 +228,51 @@ export class AuthService extends ApiService {
     }
 
     public linkGoogle(credential: string): Observable<User> {
-        return this.post<User>('google/link', { credential }).pipe(
+        return this.sdk.client.postAuthGoogleLink({ version: this.sdk.version, googleLoginHttpRequest: { credential } }).pipe(
+            map(userFromSdk),
             catchError((error: unknown) => rethrowApiError('Google link error', error)),
         );
     }
 
     public unlinkTelegram(initData: string): Observable<void> {
-        return this.post<void>('telegram/unlink', { initData });
+        return this.telegram.client.postAuthTelegramUnlink({ version: this.telegram.version, telegramAuthHttpRequest: { initData } });
     }
 
     public requestTelegramBackupEmail(email: string, initData: string): Observable<void> {
-        return this.post<void>('telegram/backup-email', { email, initData });
+        return this.telegram.client.postAuthTelegramBackupEmail({
+            version: this.telegram.version,
+            telegramBackupEmailHttpRequest: { email, initData },
+        });
     }
 
     public startTelegramBackupEmail(email: string): Observable<{ authorizationUrl: string }> {
-        return this.post<{ authorizationUrl: string }>('telegram/backup-email/oidc/start', { email });
+        return this.telegram.client
+            .postAuthTelegramBackupEmailOidcStart({ version: this.telegram.version, startTelegramBackupEmailHttpRequest: { email } })
+            .pipe(map(value => requireSdkFields(value, ['authorizationUrl'])));
     }
 
     public completeTelegramBackupEmail(code: string, state: string): Observable<void> {
-        return this.post<void>('telegram/backup-email/oidc/complete', { code, state });
+        return this.telegram.client.postAuthTelegramBackupEmailOidcComplete({
+            version: this.telegram.version,
+            exchangeTelegramOidcHttpRequest: { code, state },
+        });
     }
 
     public requestPasswordReset(data: PasswordResetRequest): Observable<void> {
-        return this.post<void>('password-reset/request', {
-            email: data.email,
-            clientOrigin: this.getClientOrigin(),
-        }).pipe(catchError((error: unknown) => rethrowApiError('Password reset request error', error)));
+        return this.sdk.client
+            .postAuthPasswordResetRequest({
+                version: this.sdk.version,
+                requestPasswordResetHttpRequest: {
+                    email: data.email,
+                    clientOrigin: this.getClientOrigin(),
+                },
+            })
+            .pipe(catchError((error: unknown) => rethrowApiError('Password reset request error', error)));
     }
 
     public confirmPasswordReset(data: ConfirmPasswordResetRequest): Observable<AuthResponse> {
-        return this.post<AuthResponse>('password-reset/confirm', data).pipe(
+        return this.sdk.client.postAuthPasswordResetConfirm({ version: this.sdk.version, confirmPasswordResetHttpRequest: data }).pipe(
+            map(authResponseFromSdk),
             tap(response => {
                 this.onLogin(response, false);
             }),
@@ -242,7 +281,9 @@ export class AuthService extends ApiService {
     }
 
     public startAdminSso(): Observable<AdminSsoStartResponse> {
-        return this.post<AdminSsoStartResponse>('admin-sso/start', {});
+        return this.sdk.client
+            .postAuthAdminSsoStart({ version: this.sdk.version })
+            .pipe(map(value => requireSdkFields(value, ['code', 'expiresAtUtc'])));
     }
 
     public refreshToken(): Observable<string | null> {
@@ -284,7 +325,8 @@ export class AuthService extends ApiService {
         }
         const request = legacyRefreshToken === null ? {} : { refreshToken: legacyRefreshToken };
         return firstValueFrom(
-            this.post<AuthResponse>('refresh', request).pipe(
+            this.sdk.client.postAuthRefresh({ version: this.sdk.version, refreshTokenHttpRequest: request }).pipe(
+                map(authResponseFromSdk),
                 map(response => {
                     if (refreshVersion !== this.sessionVersion) {
                         return null;
@@ -312,7 +354,11 @@ export class AuthService extends ApiService {
         this.pendingLegacyRefreshToken = null;
         if (hasRefreshSession) {
             const request = legacyRefreshToken === null ? {} : { refreshToken: legacyRefreshToken };
-            await firstValueFrom(this.post<void>('logout', request).pipe(catchError(() => of(undefined))));
+            await firstValueFrom(
+                this.sdk.client
+                    .postAuthLogout({ version: this.sdk.version, refreshTokenHttpRequest: request })
+                    .pipe(catchError(() => of(undefined))),
+            );
         }
         this.sessionEvents.notifySessionEnded();
         this.authTokenSignal.set(null);
@@ -463,7 +509,8 @@ export class AuthService extends ApiService {
         this.browserWindow.replaceCurrentUrl(nextUrl);
 
         return firstValueFrom(
-            this.post<{ accessToken: string }>('impersonation/exchange', { code }).pipe(
+            this.sdk.client.postAuthImpersonationExchange({ version: this.sdk.version, exchangeImpersonationHttpRequest: { code } }).pipe(
+                map(value => requireSdkFields(value, ['accessToken'])),
                 catchError((error: unknown) => fallbackApiError('impersonation exchange error', error, null)),
             ),
         ).then(response => {

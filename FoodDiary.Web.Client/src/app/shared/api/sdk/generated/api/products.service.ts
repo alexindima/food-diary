@@ -1,5 +1,5 @@
 /**
- * FoodDiary Products API
+ * FoodDiary User API
  *
  *
  *
@@ -14,23 +14,20 @@ import { Inject, Injectable, Optional } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OpenApiHttpParams, QueryParamStyle } from '../query.params';
 
-// @ts-ignore
-// @ts-ignore
 import { CreateProductHttpRequest } from '../model/create-product-http-request';
-// @ts-ignore
+
 import { ProductHttpResponse } from '../model/product-http-response';
-// @ts-ignore
+
 import { ProductHttpResponsePagedHttpResponse } from '../model/product-http-response-paged-http-response';
-// @ts-ignore
+
 import { ProductOverviewHttpResponse } from '../model/product-overview-http-response';
-// @ts-ignore
+
 import { ProductSearchSuggestionHttpResponse } from '../model/product-search-suggestion-http-response';
-// @ts-ignore
+
 import { PublicProductHttpResponse } from '../model/public-product-http-response';
-// @ts-ignore
+
 import { UpdateProductHttpRequest } from '../model/update-product-http-request';
 
-// @ts-ignore
 import { BaseService } from '../api.base.service';
 import { Configuration } from '../configuration';
 import { BASE_PATH } from '../variables';
@@ -218,19 +215,19 @@ export class ProductsSdk extends BaseService {
         observe?: 'body',
         reportProgress?: boolean,
         options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
-    ): Observable<any>;
+    ): Observable<void>;
     public deleteProduct(
         requestParameters: DeleteProductRequestParams,
         observe?: 'response',
         reportProgress?: boolean,
         options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
-    ): Observable<HttpResponse<any>>;
+    ): Observable<HttpResponse<void>>;
     public deleteProduct(
         requestParameters: DeleteProductRequestParams,
         observe?: 'events',
         reportProgress?: boolean,
         options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
-    ): Observable<HttpEvent<any>>;
+    ): Observable<HttpEvent<void>>;
     public deleteProduct(
         requestParameters: DeleteProductRequestParams,
         observe: any = 'body',

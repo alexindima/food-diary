@@ -1,5 +1,5 @@
 /**
- * FoodDiary Products API
+ * FoodDiary User API
  *
  *
  *
@@ -10,7 +10,7 @@
 import { ProductHttpResponse } from './product-http-response';
 
 export interface ProductHttpResponsePagedHttpResponse {
-    data?: Array<ProductHttpResponse> | null;
+    data?: Array<ProductHttpResponse>;
     limit?: number;
     page?: number;
     totalItems?: number;

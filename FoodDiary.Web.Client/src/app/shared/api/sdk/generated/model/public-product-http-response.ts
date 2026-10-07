@@ -1,5 +1,5 @@
 /**
- * FoodDiary Products API
+ * FoodDiary User API
  *
  *
  *
@@ -11,7 +11,7 @@
 export interface PublicProductHttpResponse {
     alcohol?: number;
     baseAmount?: number;
-    baseUnit?: string | null;
+    baseUnit?: string;
     brand?: string | null;
     calories?: number;
     carbs?: number;
@@ -20,7 +20,7 @@ export interface PublicProductHttpResponse {
     fiber?: number;
     id?: string;
     imageUrl?: string | null;
-    images?: Array<string> | null;
-    name?: string | null;
+    images?: Array<string>;
+    name?: string;
     proteins?: number;
 }

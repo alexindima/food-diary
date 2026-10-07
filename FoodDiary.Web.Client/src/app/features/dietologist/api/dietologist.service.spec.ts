@@ -81,15 +81,25 @@ describe('DietologistService client workspace', () => {
             })
             .subscribe();
         const dashboardReq = httpMock.expectOne(
-            `${BASE_URL}/clients/client-1/dashboard?dateFrom=2026-05-17&dateTo=2026-05-23&page=1&limit=5&trendDays=14&locale=en`,
+            `${BASE_URL}/clients/client-1/dashboard?dateFrom=2026-05-17&dateTo=2026-05-23&page=1&limit=5&locale=en&trendDays=14`,
         );
         expect(dashboardReq.request.method).toBe('GET');
-        dashboardReq.flush({});
+        dashboardReq.flush({
+            date: '2026-05-17',
+            dateTo: '2026-05-23',
+            dailyGoal: 2000,
+            weeklyCalorieGoal: 14000,
+            statistics: { totalCalories: 0, averageProteins: 0, averageFats: 0, averageCarbs: 0, averageFiber: 0 },
+            weeklyCalories: [],
+            weight: { latest: null, previous: null, desiredWeightKg: null },
+            waist: { latest: null, previous: null, desiredWaistCm: null },
+            meals: { items: [], total: 0 },
+        });
 
         service.getClientGoals('client-1').subscribe();
         const goalsReq = httpMock.expectOne(`${BASE_URL}/clients/client-1/goals`);
         expect(goalsReq.request.method).toBe('GET');
-        goalsReq.flush({});
+        goalsReq.flush({ id: 'client-1', email: 'client@example.com' });
 
         service.getRecommendationsForClient('client-1').subscribe();
         const recommendationsReq = httpMock.expectOne(`${BASE_URL}/clients/client-1/recommendations?page=1&limit=100`);
@@ -102,7 +112,13 @@ describe('DietologistService client workspace', () => {
         const createReq = httpMock.expectOne(`${BASE_URL}/clients/client-1/recommendations`);
         expect(createReq.request.method).toBe('POST');
         expect(createReq.request.body).toEqual({ text: 'Please add more protein.' });
-        createReq.flush({});
+        createReq.flush({
+            id: 'recommendation-1',
+            dietologistUserId: 'dietologist-1',
+            text: 'Please add more protein.',
+            isRead: false,
+            createdAtUtc: '2026-05-17T10:00:00Z',
+        });
 
         service.disconnectClient('client-1').subscribe();
         const disconnectReq = httpMock.expectOne(`${BASE_URL}/clients/client-1`);
@@ -125,13 +141,13 @@ describe('DietologistService invitations', () => {
         service.acceptInvitationForCurrentUser('inv-1').subscribe();
         const acceptReq = httpMock.expectOne(`${BASE_URL}/invitations/inv-1/accept-current-user`);
         expect(acceptReq.request.method).toBe('POST');
-        expect(acceptReq.request.body).toEqual({});
+        expect(acceptReq.request.body).toBeNull();
         acceptReq.flush(null);
 
         service.declineInvitationForCurrentUser('inv-1').subscribe();
         const declineReq = httpMock.expectOne(`${BASE_URL}/invitations/inv-1/decline-current-user`);
         expect(declineReq.request.method).toBe('POST');
-        expect(declineReq.request.body).toEqual({});
+        expect(declineReq.request.body).toBeNull();
         declineReq.flush(null);
     });
 });

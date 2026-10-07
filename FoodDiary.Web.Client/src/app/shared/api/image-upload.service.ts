@@ -6,11 +6,15 @@ import { environment } from '../../../environments/environment';
 import { SKIP_AUTH } from '../../constants/http-context.tokens';
 import { rethrowApiError } from '../lib/api-error.utils';
 import type { ConfirmImageUploadResponse, ImageUploadUrlResponse } from '../models/image-upload.data';
+import { ImagesSdk } from './sdk/generated/api/images.service';
+import { createSdkConnection } from './sdk/sdk-connection';
+import { requireSdkFields } from './sdk/sdk-response';
 
 @Service()
 export class ImageUploadService {
     private readonly http = inject(HttpClient);
     private readonly baseUrl = environment.apiUrls.images;
+    private readonly sdk = createSdkConnection(ImagesSdk, this.baseUrl, this.http);
 
     public requestUploadUrl(file: File): Observable<ImageUploadUrlResponse> {
         const body = {
@@ -19,9 +23,10 @@ export class ImageUploadService {
             fileSizeBytes: file.size,
         };
 
-        return this.http
-            .post<ImageUploadUrlResponse>(`${this.baseUrl}/upload-url`, body)
-            .pipe(catchError((error: unknown) => rethrowApiError('Failed to request image upload URL', error)));
+        return this.sdk.client.postImagesUploadUrl({ version: this.sdk.version, getImageUploadUrlHttpRequest: body }).pipe(
+            map(value => requireSdkFields(value, ['assetId', 'uploadUrl', 'fileUrl', 'expiresAtUtc'])),
+            catchError((error: unknown) => rethrowApiError('Failed to request image upload URL', error)),
+        );
     }
 
     public uploadToPresignedUrl(uploadUrl: string, file: File): Observable<void> {
@@ -38,14 +43,15 @@ export class ImageUploadService {
     }
 
     public confirmUpload(assetId: string): Observable<ConfirmImageUploadResponse> {
-        return this.http
-            .post<ConfirmImageUploadResponse>(`${this.baseUrl}/${assetId}/confirm`, {})
-            .pipe(catchError((error: unknown) => rethrowApiError('Failed to confirm image upload', error)));
+        return this.sdk.client.postImagesByAssetIdConfirm({ version: this.sdk.version, assetId }).pipe(
+            map(value => requireSdkFields(value, ['assetId', 'fileUrl'])),
+            catchError((error: unknown) => rethrowApiError('Failed to confirm image upload', error)),
+        );
     }
 
     public deleteAsset(assetId: string): Observable<void> {
-        return this.http
-            .delete<void>(`${this.baseUrl}/${assetId}`)
+        return this.sdk.client
+            .deleteImagesByAssetId({ version: this.sdk.version, assetId })
             .pipe(catchError((error: unknown) => rethrowApiError('Failed to delete image asset', error)));
     }
 }

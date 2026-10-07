@@ -1,8 +1,11 @@
 import { inject, Service } from '@angular/core';
-import { catchError, type Observable } from 'rxjs';
+import { catchError, map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { ApiService } from '../../../services/api.service';
+import { fastingOverviewFromSdk, fastingSessionFromSdk } from '../../../shared/api/sdk/fasting-sdk.mapper';
+import { FastingSdk } from '../../../shared/api/sdk/generated/api/fasting.service';
+import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
+import { sdkPage } from '../../../shared/api/sdk/sdk-response';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type {
     ExtendFastingPayload,
@@ -17,47 +20,59 @@ import type { PageOf } from '../../../shared/models/page-of.data';
 import { FASTING_API_LIMITS } from './fasting-api.tokens';
 
 @Service()
-export class FastingService extends ApiService {
+export class FastingService {
     private readonly defaultLimits = inject(FASTING_API_LIMITS);
 
     protected readonly baseUrl = environment.apiUrls.fasting;
+    private readonly sdk = createSdkConnection(FastingSdk, this.baseUrl, inject(HttpClient));
 
     public start(payload: StartFastingPayload): Observable<FastingSession> {
-        return this.post<FastingSession>('start', payload).pipe(
+        return this.sdk.client.postFastingStart({ version: this.sdk.version, startFastingHttpRequest: payload }).pipe(
+            map(fastingSessionFromSdk),
             catchError((error: unknown) => rethrowApiError('Start fasting error', error)),
         );
     }
 
     public end(): Observable<FastingSession> {
-        return this.put<FastingSession>('end', {}).pipe(catchError((error: unknown) => rethrowApiError('End fasting error', error)));
+        return this.sdk.client.putFastingEnd({ version: this.sdk.version }).pipe(
+            map(fastingSessionFromSdk),
+            catchError((error: unknown) => rethrowApiError('End fasting error', error)),
+        );
     }
 
     public extend(payload: ExtendFastingPayload): Observable<FastingSession> {
-        return this.put<FastingSession>('current/duration', payload).pipe(
+        return this.sdk.client.putFastingCurrentDuration({ version: this.sdk.version, extendActiveFastingHttpRequest: payload }).pipe(
+            map(fastingSessionFromSdk),
             catchError((error: unknown) => rethrowApiError('Extend fasting error', error)),
         );
     }
 
     public reduceTarget(payload: ReduceFastingTargetPayload): Observable<FastingSession> {
-        return this.put<FastingSession>('current/duration/reduce', payload).pipe(
-            catchError((error: unknown) => rethrowApiError('Reduce fasting target error', error)),
-        );
+        return this.sdk.client
+            .putFastingCurrentDurationReduce({ version: this.sdk.version, reduceActiveFastingTargetHttpRequest: payload })
+            .pipe(
+                map(fastingSessionFromSdk),
+                catchError((error: unknown) => rethrowApiError('Reduce fasting target error', error)),
+            );
     }
 
     public updateCheckIn(payload: UpdateFastingCheckInPayload): Observable<FastingSession> {
-        return this.put<FastingSession>('current/check-in', payload).pipe(
+        return this.sdk.client.putFastingCurrentCheckIn({ version: this.sdk.version, updateFastingCheckInHttpRequest: payload }).pipe(
+            map(fastingSessionFromSdk),
             catchError((error: unknown) => rethrowApiError('Update fasting check-in error', error)),
         );
     }
 
     public skipCyclicDay(): Observable<FastingSession> {
-        return this.put<FastingSession>('current/skip-day', {}).pipe(
+        return this.sdk.client.putFastingCurrentSkipDay({ version: this.sdk.version }).pipe(
+            map(fastingSessionFromSdk),
             catchError((error: unknown) => rethrowApiError('Skip cyclic day error', error)),
         );
     }
 
     public postponeCyclicDay(): Observable<FastingSession> {
-        return this.put<FastingSession>('current/postpone-day', {}).pipe(
+        return this.sdk.client.putFastingCurrentPostponeDay({ version: this.sdk.version }).pipe(
+            map(fastingSessionFromSdk),
             catchError((error: unknown) => rethrowApiError('Postpone cyclic day error', error)),
         );
     }
@@ -97,15 +112,22 @@ export class FastingService extends ApiService {
     }
 
     public getHistory(query: FastingHistoryQuery): Observable<PageOf<FastingSession>> {
-        return this.get<PageOf<FastingSession>>('history', {
-            from: query.from,
-            to: query.to,
-            page: query.page ?? 1,
-            limit: query.limit ?? this.defaultLimits.historyPageSize,
-        }).pipe(catchError((error: unknown) => rethrowApiError('Get fasting history error', error)));
+        return this.sdk.client
+            .getFastingHistory({
+                version: this.sdk.version,
+                from: query.from,
+                to: query.to,
+                page: query.page ?? 1,
+                limit: query.limit ?? this.defaultLimits.historyPageSize,
+            })
+            .pipe(
+                map(value => sdkPage(value, fastingSessionFromSdk)),
+                catchError((error: unknown) => rethrowApiError('Get fasting history error', error)),
+            );
     }
 
     private requestOverview(): Observable<FastingOverview> {
-        return this.get<FastingOverview>('overview');
+        return this.sdk.client.getFastingOverview({ version: this.sdk.version }).pipe(map(fastingOverviewFromSdk));
     }
 }
+import { HttpClient } from '@angular/common/http';

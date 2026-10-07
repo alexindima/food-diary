@@ -2,54 +2,59 @@ import { inject, Service } from '@angular/core';
 import { catchError, map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { ApiService } from '../../../services/api.service';
+import { UsdaSdk } from '../../../shared/api/sdk/generated/api/usda.service';
+import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
+import { requireSdkFields } from '../../../shared/api/sdk/sdk-response';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import type { DailyMicronutrientSummary, Micronutrient, UsdaFood, UsdaFoodDetail } from '../../../shared/models/usda.data';
+import type { DailyMicronutrientSummary, UsdaFood, UsdaFoodDetail } from '../../../shared/models/usda.data';
 import { USDA_SEARCH_LIMIT } from './usda-api.tokens';
-
-type UsdaFoodDetailHttpResponse = Omit<UsdaFoodDetail, 'nutrients'> & {
-    nutrients: Array<Omit<Micronutrient, 'amountPer100g'> & { amountPer100G: number }>;
-};
+import { dailyMicronutrientsFromSdk, usdaDetailFromSdk } from './usda-sdk.mapper';
 
 @Service()
-export class UsdaService extends ApiService {
+export class UsdaService {
     private readonly defaultSearchLimit = inject(USDA_SEARCH_LIMIT);
 
     protected readonly baseUrl = environment.apiUrls.usda;
+    private readonly sdk = createSdkConnection(UsdaSdk, this.baseUrl, inject(HttpClient));
 
     public searchFoods(search: string, limit?: number): Observable<UsdaFood[]> {
-        return this.get<UsdaFood[]>('foods', { search, limit: limit ?? this.defaultSearchLimit }).pipe(
+        return this.sdk.client.getUsdaFoods({ version: this.sdk.version, search, limit: limit ?? this.defaultSearchLimit }).pipe(
+            map(values =>
+                values.map(response => ({
+                    ...requireSdkFields(response, ['fdcId', 'description']),
+                    foodCategory: response.foodCategory ?? null,
+                })),
+            ),
             catchError((error: unknown) => fallbackApiError('Search USDA foods error', error, [])),
         );
     }
 
     public getFoodDetail(fdcId: number): Observable<UsdaFoodDetail> {
-        return this.get<UsdaFoodDetailHttpResponse>(`foods/${fdcId}`).pipe(
-            map(detail => ({
-                ...detail,
-                nutrients: detail.nutrients.map(({ amountPer100G, ...nutrient }) => ({
-                    ...nutrient,
-                    amountPer100g: amountPer100G,
-                })),
-            })),
+        return this.sdk.client.getUsdaFoodsByFdcId({ version: this.sdk.version, fdcId }).pipe(
+            map(usdaDetailFromSdk),
             catchError((error: unknown) => rethrowApiError('Get USDA food detail error', error)),
         );
     }
 
     public linkProduct(productId: string, fdcId: number): Observable<void> {
-        return this.put<void>(`products/${productId}/link`, { fdcId }).pipe(
-            catchError((error: unknown) => rethrowApiError('Link product to USDA food error', error)),
-        );
+        return this.sdk.client
+            .putUsdaProductsByProductIdLink({ version: this.sdk.version, productId, linkProductToUsdaFoodHttpRequest: { fdcId } })
+            .pipe(
+                map(() => {}),
+                catchError((error: unknown) => rethrowApiError('Link product to USDA food error', error)),
+            );
     }
 
     public unlinkProduct(productId: string): Observable<void> {
-        return this.delete<void>(`products/${productId}/link`).pipe(
+        return this.sdk.client.deleteUsdaProductsByProductIdLink({ version: this.sdk.version, productId }).pipe(
+            map(() => {}),
             catchError((error: unknown) => rethrowApiError('Unlink product from USDA food error', error)),
         );
     }
 
     public getDailyMicronutrients(date: string): Observable<DailyMicronutrientSummary> {
-        return this.get<DailyMicronutrientSummary>('daily-micronutrients', { date }).pipe(
+        return this.sdk.client.getUsdaDailyMicronutrients({ version: this.sdk.version, date }).pipe(
+            map(dailyMicronutrientsFromSdk),
             catchError((error: unknown) =>
                 fallbackApiError('Get daily micronutrients error', error, {
                     date,
@@ -62,3 +67,4 @@ export class UsdaService extends ApiService {
         );
     }
 }
+import { HttpClient } from '@angular/common/http';

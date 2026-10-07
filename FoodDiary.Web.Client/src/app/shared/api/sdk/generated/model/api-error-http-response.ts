@@ -1,5 +1,5 @@
 /**
- * FoodDiary Products API
+ * FoodDiary User API
  *
  *
  *
@@ -9,8 +9,8 @@
  */
 
 export interface ApiErrorHttpResponse {
-    error?: string | null;
+    error?: string;
     errors?: { [key: string]: Array<string> } | null;
-    message?: string | null;
+    message?: string;
     traceId?: string | null;
 }

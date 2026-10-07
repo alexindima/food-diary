@@ -1,5 +1,5 @@
 /**
- * FoodDiary Products API
+ * FoodDiary User API
  *
  *
  *
@@ -17,8 +17,8 @@ export interface ProductSearchSuggestionHttpResponse {
     fatsPer100G?: number | null;
     fiberPer100G?: number | null;
     imageUrl?: string | null;
-    name?: string | null;
+    name?: string;
     proteinsPer100G?: number | null;
-    source?: string | null;
+    source?: string;
     usdaFdcId?: number | null;
 }

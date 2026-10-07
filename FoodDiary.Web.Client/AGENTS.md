@@ -27,7 +27,7 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 - UI kit tests: `npm run test:ci:ui-kit`
 - Admin tests: `npm run test:ci:admin`
 - Full frontend verification: `npm run verify`
-- API SDK: `npm run sdk:update` after Products API changes; `npm run sdk:check:api` verifies the live contract and generated code. See `../docs/frontend/API_SDK.md`.
+- API SDK: `npm run sdk:update` after changes to selected user APIs; `npm run sdk:check:api` verifies the live contract and generated code. Scope is frozen in `api-sdk/scopes.json`; see `../docs/frontend/API_SDK.md`.
 - Do not hand-edit `src/app/shared/api/sdk/generated/`. Use generated services/DTOs through feature API adapters; keep UI models, normalization and state outside generated code. Read concrete methods rather than loading the entire SDK into AI context.
 - i18n check: `npm run check:i18n`
 - SEO prerender check: `npm run check:seo-prerender`

@@ -1,16 +1,23 @@
-import { Service } from '@angular/core';
-import { catchError, type Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { inject, Service } from '@angular/core';
+import { catchError, map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { ApiService } from '../../../services/api.service';
+import { ReportsSdk } from '../../../shared/api/sdk/generated/api/reports.service';
+import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
+import { requireSdkFields } from '../../../shared/api/sdk/sdk-response';
 import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { ContentReport, CreateReportDto } from '../models/report.data';
 
 @Service()
-export class ReportService extends ApiService {
+export class ReportService {
     protected readonly baseUrl = environment.apiUrls.reports;
+    private readonly sdk = createSdkConnection(ReportsSdk, this.baseUrl, inject(HttpClient));
 
     public create(dto: CreateReportDto): Observable<ContentReport> {
-        return this.post<ContentReport>('', dto).pipe(catchError((error: unknown) => rethrowApiError('Create report error', error)));
+        return this.sdk.client.postReports({ version: this.sdk.version, createContentReportHttpRequest: dto }).pipe(
+            map(response => requireSdkFields(response, ['id', 'reporterId', 'targetType', 'targetId', 'reason', 'status', 'createdAtUtc'])),
+            catchError((error: unknown) => rethrowApiError('Create report error', error)),
+        );
     }
 }

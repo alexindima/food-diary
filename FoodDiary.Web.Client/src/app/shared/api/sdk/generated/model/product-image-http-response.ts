@@ -1,5 +1,5 @@
 /**
- * FoodDiary Products API
+ * FoodDiary User API
  *
  *
  *
@@ -10,5 +10,5 @@
 
 export interface ProductImageHttpResponse {
     imageAssetId?: string | null;
-    imageUrl?: string | null;
+    imageUrl?: string;
 }

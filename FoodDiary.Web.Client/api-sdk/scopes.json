@@ -1,0 +1,495 @@
+[
+    {
+        "prefix": "/api/v{version}/products",
+        "name": "Products",
+        "operations": {
+            "GET /api/v{version}/products": "queryProducts",
+            "POST /api/v{version}/products": "createProduct",
+            "GET /api/v{version}/products/overview": "getProductsOverview",
+            "GET /api/v{version}/products/recent": "getRecentProducts",
+            "GET /api/v{version}/products/{id}": "getProductById",
+            "PATCH /api/v{version}/products/{id}": "updateProduct",
+            "DELETE /api/v{version}/products/{id}": "deleteProduct",
+            "POST /api/v{version}/products/{id}/duplicate": "duplicateProduct",
+            "GET /api/v{version}/products/suggestions": "getProductSuggestions",
+            "GET /api/v{version}/products/public/{id}": "getPublicProductById"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/favorite-products",
+        "name": "FavoriteProducts",
+        "operations": {
+            "GET /api/v{version}/favorite-products/page": "getFavoriteProductsPage",
+            "GET /api/v{version}/favorite-products/check/{productId}": "getFavoriteProductsCheckByProductId",
+            "POST /api/v{version}/favorite-products": "postFavoriteProducts",
+            "PUT /api/v{version}/favorite-products/{id}": "putFavoriteProductsById",
+            "DELETE /api/v{version}/favorite-products/{id}": "deleteFavoriteProductsById"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/recipes",
+        "name": "Recipes",
+        "operations": {
+            "GET /api/v{version}/recipes/public": "getRecipesPublic",
+            "GET /api/v{version}/recipes/public/categories": "getRecipesPublicCategories",
+            "GET /api/v{version}/recipes/public/{id}": "getRecipesPublicById",
+            "GET /api/v{version}/recipes/{recipeId}/comments": "getRecipesByRecipeIdComments",
+            "POST /api/v{version}/recipes/{recipeId}/comments": "postRecipesByRecipeIdComments",
+            "PATCH /api/v{version}/recipes/{recipeId}/comments/{commentId}": "patchRecipesByRecipeIdCommentsByCommentId",
+            "DELETE /api/v{version}/recipes/{recipeId}/comments/{commentId}": "deleteRecipesByRecipeIdCommentsByCommentId",
+            "GET /api/v{version}/recipes/explore": "getRecipesExplore",
+            "POST /api/v{version}/recipes/{recipeId}/likes/toggle": "postRecipesByRecipeIdLikesToggle",
+            "GET /api/v{version}/recipes/{recipeId}/likes": "getRecipesByRecipeIdLikes",
+            "GET /api/v{version}/recipes": "getRecipes",
+            "POST /api/v{version}/recipes": "postRecipes",
+            "GET /api/v{version}/recipes/overview": "getRecipesOverview",
+            "GET /api/v{version}/recipes/recent": "getRecipesRecent",
+            "GET /api/v{version}/recipes/{id}": "getRecipesById",
+            "PATCH /api/v{version}/recipes/{id}": "patchRecipesById",
+            "DELETE /api/v{version}/recipes/{id}": "deleteRecipesById",
+            "POST /api/v{version}/recipes/{id}/duplicate": "postRecipesByIdDuplicate"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/favorite-recipes",
+        "name": "FavoriteRecipes",
+        "operations": {
+            "GET /api/v{version}/favorite-recipes/page": "getFavoriteRecipesPage",
+            "GET /api/v{version}/favorite-recipes/check/{recipeId}": "getFavoriteRecipesCheckByRecipeId",
+            "POST /api/v{version}/favorite-recipes": "postFavoriteRecipes",
+            "DELETE /api/v{version}/favorite-recipes/{id}": "deleteFavoriteRecipesById"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/meals",
+        "name": "Meals",
+        "operations": {
+            "POST /api/v{version}/meals/recognitions/{operationId}/undo": "postMealsRecognitionsByOperationIdUndo",
+            "POST /api/v{version}/meals/recognitions/{recognitionId}": "postMealsRecognitionsByRecognitionId",
+            "GET /api/v{version}/meals/overview": "getMealsOverview",
+            "GET /api/v{version}/meals": "getMeals",
+            "POST /api/v{version}/meals": "postMeals",
+            "GET /api/v{version}/meals/{id}": "getMealsById",
+            "PATCH /api/v{version}/meals/{id}": "patchMealsById",
+            "DELETE /api/v{version}/meals/{id}": "deleteMealsById",
+            "POST /api/v{version}/meals/{id}/repeat": "postMealsByIdRepeat"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/favorite-meals",
+        "name": "FavoriteMeals",
+        "operations": {
+            "GET /api/v{version}/favorite-meals/page": "getFavoriteMealsPage",
+            "GET /api/v{version}/favorite-meals/check/{mealId}": "getFavoriteMealsCheckByMealId",
+            "POST /api/v{version}/favorite-meals": "postFavoriteMeals",
+            "POST /api/v{version}/favorite-meals/{id}/restore": "postFavoriteMealsByIdRestore",
+            "DELETE /api/v{version}/favorite-meals/{id}": "deleteFavoriteMealsById"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/weight-entries",
+        "name": "WeightEntries",
+        "operations": {
+            "GET /api/v{version}/weight-entries": "getWeightEntries",
+            "POST /api/v{version}/weight-entries": "postWeightEntries",
+            "GET /api/v{version}/weight-entries/latest": "getWeightEntriesLatest",
+            "GET /api/v{version}/weight-entries/summary": "getWeightEntriesSummary",
+            "GET /api/v{version}/weight-entries/page-summary": "getWeightEntriesPageSummary",
+            "PUT /api/v{version}/weight-entries/{id}": "putWeightEntriesById",
+            "DELETE /api/v{version}/weight-entries/{id}": "deleteWeightEntriesById"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/waist-entries",
+        "name": "WaistEntries",
+        "operations": {
+            "GET /api/v{version}/waist-entries": "getWaistEntries",
+            "POST /api/v{version}/waist-entries": "postWaistEntries",
+            "GET /api/v{version}/waist-entries/latest": "getWaistEntriesLatest",
+            "GET /api/v{version}/waist-entries/summary": "getWaistEntriesSummary",
+            "GET /api/v{version}/waist-entries/page-summary": "getWaistEntriesPageSummary",
+            "PUT /api/v{version}/waist-entries/{id}": "putWaistEntriesById",
+            "DELETE /api/v{version}/waist-entries/{id}": "deleteWaistEntriesById"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/hydrations",
+        "name": "Hydration",
+        "operations": {
+            "GET /api/v{version}/hydrations": "getHydration",
+            "POST /api/v{version}/hydrations": "postHydration",
+            "GET /api/v{version}/hydrations/daily": "getHydrationDaily",
+            "PUT /api/v{version}/hydrations/{id}": "putHydrationById",
+            "DELETE /api/v{version}/hydrations/{id}": "deleteHydrationById",
+            "POST /api/v{version}/hydrations/operations/{operationId}": "postHydrationOperationsByOperationId"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/weekly-goals",
+        "name": "WeeklyGoals",
+        "operations": {
+            "GET /api/v{version}/weekly-goals": "getWeeklyGoals",
+            "PUT /api/v{version}/weekly-goals": "putWeeklyGoals"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/weekly-check-in",
+        "name": "WeeklyCheckIn",
+        "operations": {
+            "GET /api/v{version}/weekly-check-in": "getWeeklyCheckIn"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/goals",
+        "name": "Goals",
+        "operations": {
+            "GET /api/v{version}/goals": "getGoals",
+            "PATCH /api/v{version}/goals": "patchGoals"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/fasting",
+        "name": "Fasting",
+        "operations": {
+            "POST /api/v{version}/fasting/start": "postFastingStart",
+            "PUT /api/v{version}/fasting/end": "putFastingEnd",
+            "PUT /api/v{version}/fasting/current/duration": "putFastingCurrentDuration",
+            "PUT /api/v{version}/fasting/current/duration/reduce": "putFastingCurrentDurationReduce",
+            "PUT /api/v{version}/fasting/current/check-in": "putFastingCurrentCheckIn",
+            "PUT /api/v{version}/fasting/current/skip-day": "putFastingCurrentSkipDay",
+            "PUT /api/v{version}/fasting/current/postpone-day": "putFastingCurrentPostponeDay",
+            "GET /api/v{version}/fasting/stats": "getFastingStats",
+            "GET /api/v{version}/fasting/insights": "getFastingInsights",
+            "GET /api/v{version}/fasting/current": "getFastingCurrent",
+            "GET /api/v{version}/fasting/overview": "getFastingOverview",
+            "GET /api/v{version}/fasting/history": "getFastingHistory"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/gamification",
+        "name": "Gamification",
+        "operations": {
+            "GET /api/v{version}/gamification": "getGamification"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/lessons",
+        "name": "Lessons",
+        "operations": {
+            "GET /api/v{version}/lessons": "getLessons",
+            "GET /api/v{version}/lessons/{id}": "getLessonsById",
+            "POST /api/v{version}/lessons/{id}/read": "postLessonsByIdRead"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/shopping-lists",
+        "name": "ShoppingLists",
+        "operations": {
+            "GET /api/v{version}/shopping-lists/overview": "getShoppingListsOverview",
+            "GET /api/v{version}/shopping-lists/current": "getShoppingListsCurrent",
+            "GET /api/v{version}/shopping-lists/page": "getShoppingListsPage",
+            "GET /api/v{version}/shopping-lists/{id}": "getShoppingListsById",
+            "PATCH /api/v{version}/shopping-lists/{id}": "patchShoppingListsById",
+            "DELETE /api/v{version}/shopping-lists/{id}": "deleteShoppingListsById",
+            "POST /api/v{version}/shopping-lists": "postShoppingLists"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/meal-plans",
+        "name": "MealPlans",
+        "operations": {
+            "DELETE /api/v{version}/meal-plans/{id}": "deleteMealPlansById",
+            "GET /api/v{version}/meal-plans/{id}": "getMealPlansById",
+            "GET /api/v{version}/meal-plans": "getMealPlans",
+            "POST /api/v{version}/meal-plans/{id}/adopt": "postMealPlansByIdAdopt",
+            "POST /api/v{version}/meal-plans/{id}/shopping-list": "postMealPlansByIdShoppingList"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/reports",
+        "name": "Reports",
+        "operations": {
+            "POST /api/v{version}/reports": "postReports"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/statistics",
+        "name": "Statistics",
+        "operations": {
+            "GET /api/v{version}/statistics": "getStatistics",
+            "GET /api/v{version}/statistics/summary": "getStatisticsSummary",
+            "GET /api/v{version}/statistics/diary-summary": "getStatisticsDiarySummary"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/dashboard",
+        "name": "Dashboard",
+        "operations": {
+            "GET /api/v{version}/dashboard": "getDashboard",
+            "GET /api/v{version}/dashboard/advice": "getDashboardAdvice",
+            "POST /api/v{version}/dashboard/test-email": "postDashboardTestEmail"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/users",
+        "name": "Users",
+        "operations": {
+            "POST /api/v{version}/users/ai-consent": "postUsersAiConsent",
+            "DELETE /api/v{version}/users/ai-consent": "deleteUsersAiConsent",
+            "GET /api/v{version}/users/overview": "getUsersOverview",
+            "GET /api/v{version}/users/info": "getUsersInfo",
+            "PATCH /api/v{version}/users/info": "patchUsersInfo",
+            "PATCH /api/v{version}/users/preferences/appearance": "patchUsersPreferencesAppearance",
+            "GET /api/v{version}/users/desired-weight": "getUsersDesiredWeight",
+            "PUT /api/v{version}/users/desired-weight": "putUsersDesiredWeight",
+            "GET /api/v{version}/users/desired-waist": "getUsersDesiredWaist",
+            "PUT /api/v{version}/users/desired-waist": "putUsersDesiredWaist",
+            "DELETE /api/v{version}/users": "deleteUsers",
+            "PATCH /api/v{version}/users/password": "patchUsersPassword",
+            "PATCH /api/v{version}/users/password/set": "patchUsersPasswordSet",
+            "GET /api/v{version}/users/waist-goals/page": "getUsersWaistGoalsPage",
+            "GET /api/v{version}/users/weight-goals/page": "getUsersWeightGoalsPage"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/dietologist",
+        "name": "Dietologist",
+        "operations": {
+            "POST /api/v{version}/dietologist/recommendations/bulk": "postDietologistRecommendationsBulk",
+            "POST /api/v{version}/dietologist/invite": "postDietologistInvite",
+            "DELETE /api/v{version}/dietologist/relationship": "deleteDietologistRelationship",
+            "GET /api/v{version}/dietologist/relationship": "getDietologistRelationship",
+            "PUT /api/v{version}/dietologist/permissions": "putDietologistPermissions",
+            "GET /api/v{version}/dietologist/my-dietologist": "getDietologistMyDietologist",
+            "GET /api/v{version}/dietologist/clients/attention": "getDietologistClientsAttention",
+            "PUT /api/v{version}/dietologist/clients/attention/{signalId}/state": "putDietologistClientsAttentionBySignalIdState",
+            "GET /api/v{version}/dietologist/clients": "getDietologistClients",
+            "DELETE /api/v{version}/dietologist/clients/{clientUserId}": "deleteDietologistClientsByClientUserId",
+            "GET /api/v{version}/dietologist/clients/{clientUserId}/dashboard": "getDietologistClientsByClientUserIdDashboard",
+            "GET /api/v{version}/dietologist/clients/{clientUserId}/goals": "getDietologistClientsByClientUserIdGoals",
+            "POST /api/v{version}/dietologist/clients/{clientUserId}/recommendations": "postDietologistClientsByClientUserIdRecommendations",
+            "GET /api/v{version}/dietologist/clients/{clientUserId}/recommendations": "getDietologistClientsByClientUserIdRecommendations",
+            "GET /api/v{version}/dietologist/clients/{clientUserId}/tasks": "getDietologistClientsByClientUserIdTasks",
+            "POST /api/v{version}/dietologist/clients/{clientUserId}/tasks": "postDietologistClientsByClientUserIdTasks",
+            "PUT /api/v{version}/dietologist/clients/tasks/{taskId}/cancel": "putDietologistClientsTasksByTaskIdCancel",
+            "POST /api/v{version}/dietologist/accept": "postDietologistAccept",
+            "POST /api/v{version}/dietologist/decline": "postDietologistDecline",
+            "GET /api/v{version}/dietologist/invitations/{invitationId}/current-user": "getDietologistInvitationsByInvitationIdCurrentUser",
+            "POST /api/v{version}/dietologist/invitations/{invitationId}/accept-current-user": "postDietologistInvitationsByInvitationIdAcceptCurrentUser",
+            "POST /api/v{version}/dietologist/invitations/{invitationId}/decline-current-user": "postDietologistInvitationsByInvitationIdDeclineCurrentUser",
+            "GET /api/v{version}/dietologist/invitation/{invitationId}": "getDietologistInvitationByInvitationId",
+            "GET /api/v{version}/dietologist/recommendation-templates": "getDietologistRecommendationTemplates",
+            "POST /api/v{version}/dietologist/recommendation-templates": "postDietologistRecommendationTemplates",
+            "PUT /api/v{version}/dietologist/recommendation-templates/{templateId}": "putDietologistRecommendationTemplatesByTemplateId",
+            "DELETE /api/v{version}/dietologist/recommendation-templates/{templateId}": "deleteDietologistRecommendationTemplatesByTemplateId"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/recommendations",
+        "name": "Recommendations",
+        "operations": {
+            "GET /api/v{version}/recommendations": "getRecommendations",
+            "PUT /api/v{version}/recommendations/{recommendationId}/read": "putRecommendationsByRecommendationIdRead",
+            "GET /api/v{version}/recommendations/{recommendationId}/comments": "getRecommendationsByRecommendationIdComments",
+            "POST /api/v{version}/recommendations/{recommendationId}/comments": "postRecommendationsByRecommendationIdComments"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/client-tasks",
+        "name": "ClientTasks",
+        "operations": {
+            "GET /api/v{version}/client-tasks": "getClientTasks",
+            "PUT /api/v{version}/client-tasks/{taskId}/status": "putClientTasksByTaskIdStatus"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/open-food-facts",
+        "name": "OpenFoodFacts",
+        "operations": {
+            "GET /api/v{version}/open-food-facts/products/{barcode}": "getOpenFoodFactsProductsByBarcode",
+            "GET /api/v{version}/open-food-facts/products": "getOpenFoodFactsProducts"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/usda",
+        "name": "Usda",
+        "operations": {
+            "GET /api/v{version}/usda/foods": "getUsdaFoods",
+            "GET /api/v{version}/usda/foods/{fdcId}": "getUsdaFoodsByFdcId",
+            "PUT /api/v{version}/usda/products/{productId}/link": "putUsdaProductsByProductIdLink",
+            "DELETE /api/v{version}/usda/products/{productId}/link": "deleteUsdaProductsByProductIdLink",
+            "GET /api/v{version}/usda/daily-micronutrients": "getUsdaDailyMicronutrients"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/wearables",
+        "name": "Wearables",
+        "operations": {
+            "GET /api/v{version}/wearables/connections": "getWearablesConnections",
+            "GET /api/v{version}/wearables/{provider}/auth-url": "getWearablesByProviderAuthUrl",
+            "POST /api/v{version}/wearables/{provider}/connect": "postWearablesByProviderConnect",
+            "DELETE /api/v{version}/wearables/{provider}/disconnect": "deleteWearablesByProviderDisconnect",
+            "POST /api/v{version}/wearables/{provider}/sync": "postWearablesByProviderSync",
+            "GET /api/v{version}/wearables/daily-summary": "getWearablesDailySummary"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/billing",
+        "name": "Billing",
+        "operations": {
+            "GET /api/v{version}/billing/overview": "getBillingOverview",
+            "POST /api/v{version}/billing/trial": "postBillingTrial",
+            "POST /api/v{version}/billing/checkout-session": "postBillingCheckoutSession",
+            "POST /api/v{version}/billing/portal-session": "postBillingPortalSession",
+            "POST /api/v{version}/billing/webhooks/{provider}": "postBillingWebhooksByProvider"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/cycles",
+        "name": "Cycles",
+        "operations": {
+            "PUT /api/v{version}/cycles/{cycleProfileId}/days": "putCyclesByCycleProfileIdDays",
+            "DELETE /api/v{version}/cycles/{cycleProfileId}/days": "deleteCyclesByCycleProfileIdDays",
+            "PUT /api/v{version}/cycles/{cycleProfileId}/factors": "putCyclesByCycleProfileIdFactors",
+            "GET /api/v{version}/cycles/current": "getCyclesCurrent",
+            "GET /api/v{version}/cycles/current/nutrition-summary": "getCyclesCurrentNutritionSummary",
+            "POST /api/v{version}/cycles": "postCycles",
+            "DELETE /api/v{version}/cycles/{cycleProfileId}": "deleteCyclesByCycleProfileId",
+            "PUT /api/v{version}/cycles/{cycleProfileId}/settings": "putCyclesByCycleProfileIdSettings",
+            "PUT /api/v{version}/cycles/{cycleProfileId}/consents/{purpose}": "putCyclesByCycleProfileIdConsentsByPurpose",
+            "PUT /api/v{version}/cycles/{cycleProfileId}/period-start": "putCyclesByCycleProfileIdPeriodStart",
+            "PUT /api/v{version}/cycles/{cycleProfileId}/menstrual-episodes/{menstrualEpisodeId}": "putCyclesByCycleProfileIdMenstrualEpisodesByMenstrualEpisodeId",
+            "DELETE /api/v{version}/cycles/{cycleProfileId}/menstrual-episodes/{menstrualEpisodeId}": "deleteCyclesByCycleProfileIdMenstrualEpisodesByMenstrualEpisodeId"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/exercises",
+        "name": "Exercises",
+        "operations": {
+            "GET /api/v{version}/exercises": "getExercises",
+            "POST /api/v{version}/exercises": "postExercises",
+            "PUT /api/v{version}/exercises/{id}": "putExercisesById",
+            "DELETE /api/v{version}/exercises/{id}": "deleteExercisesById"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/tdee",
+        "name": "Tdee",
+        "operations": {
+            "GET /api/v{version}/tdee": "getTdee"
+        }
+    },
+    {
+        "prefix": "/api/v{version}/notifications",
+        "name": "Notifications",
+        "operations": {
+            "GET /api/v{version}/notifications/push/config": "getNotificationsPushConfig",
+            "GET /api/v{version}/notifications/push/subscriptions": "getNotificationsPushSubscriptions",
+            "PUT /api/v{version}/notifications/push/subscription": "putNotificationsPushSubscription",
+            "DELETE /api/v{version}/notifications/push/subscription": "deleteNotificationsPushSubscription",
+            "GET /api/v{version}/notifications": "getNotifications",
+            "GET /api/v{version}/notifications/unread-count": "getNotificationsUnreadCount",
+            "PUT /api/v{version}/notifications/{notificationId}/read": "putNotificationsByNotificationIdRead",
+            "PUT /api/v{version}/notifications/read-all": "putNotificationsReadAll",
+            "POST /api/v{version}/notifications/test/schedule": "postNotificationsTestSchedule",
+            "GET /api/v{version}/notifications/preferences": "getNotificationsPreferences",
+            "PUT /api/v{version}/notifications/preferences": "putNotificationsPreferences"
+        }
+    },
+    {
+        "operations": {
+            "POST /api/v{version}/auth/admin-sso/exchange": "postAuthAdminSsoExchange",
+            "POST /api/v{version}/auth/admin-sso/start": "postAuthAdminSsoStart",
+            "POST /api/v{version}/auth/google": "postAuthGoogle",
+            "POST /api/v{version}/auth/google/link": "postAuthGoogleLink",
+            "POST /api/v{version}/auth/impersonation/exchange": "postAuthImpersonationExchange",
+            "POST /api/v{version}/auth/login": "postAuthLogin",
+            "POST /api/v{version}/auth/logout": "postAuthLogout",
+            "POST /api/v{version}/auth/password-reset/confirm": "postAuthPasswordResetConfirm",
+            "POST /api/v{version}/auth/password-reset/request": "postAuthPasswordResetRequest",
+            "POST /api/v{version}/auth/refresh": "postAuthRefresh",
+            "POST /api/v{version}/auth/register": "postAuthRegister",
+            "POST /api/v{version}/auth/restore": "postAuthRestore",
+            "POST /api/v{version}/auth/verify-email": "postAuthVerifyEmail",
+            "POST /api/v{version}/auth/verify-email/resend": "postAuthVerifyEmailResend"
+        },
+        "prefix": "/api/v{version}/auth",
+        "name": "Auth"
+    },
+    {
+        "operations": {
+            "POST /api/v{version}/auth/telegram/backup-email": "postAuthTelegramBackupEmail",
+            "POST /api/v{version}/auth/telegram/backup-email/oidc/complete": "postAuthTelegramBackupEmailOidcComplete",
+            "POST /api/v{version}/auth/telegram/backup-email/oidc/start": "postAuthTelegramBackupEmailOidcStart",
+            "POST /api/v{version}/auth/telegram/complete": "postAuthTelegramComplete",
+            "POST /api/v{version}/auth/telegram/complete-link": "postAuthTelegramCompleteLink",
+            "GET /api/v{version}/auth/telegram/configuration": "getAuthTelegramConfiguration",
+            "POST /api/v{version}/auth/telegram/link": "postAuthTelegramLink",
+            "POST /api/v{version}/auth/telegram/login-widget": "postAuthTelegramLoginWidget",
+            "POST /api/v{version}/auth/telegram/mini-app/begin": "postAuthTelegramMiniAppBegin",
+            "POST /api/v{version}/auth/telegram/mini-app/begin-link": "postAuthTelegramMiniAppBeginLink",
+            "POST /api/v{version}/auth/telegram/oidc/exchange": "postAuthTelegramOidcExchange",
+            "POST /api/v{version}/auth/telegram/oidc/start": "postAuthTelegramOidcStart",
+            "POST /api/v{version}/auth/telegram/oidc/start-link": "postAuthTelegramOidcStartLink",
+            "POST /api/v{version}/auth/telegram/unlink": "postAuthTelegramUnlink",
+            "POST /api/v{version}/auth/telegram/verify": "postAuthTelegramVerify"
+        },
+        "prefix": "/api/v{version}/auth/telegram",
+        "name": "TelegramAuth"
+    },
+    {
+        "operations": {
+            "DELETE /api/v{version}/auth/sessions": "deleteAuthSessions",
+            "GET /api/v{version}/auth/sessions": "getAuthSessions",
+            "DELETE /api/v{version}/auth/sessions/{sessionId}": "deleteAuthSessionsBySessionId"
+        },
+        "prefix": "/api/v{version}/auth/sessions",
+        "name": "AuthSessions"
+    },
+    {
+        "operations": {
+            "POST /api/v{version}/auth/telegram/bot/auth": "postAuthTelegramBotAuth",
+            "POST /api/v{version}/auth/telegram/bot/operations": "postAuthTelegramBotOperations",
+            "POST /api/v{version}/auth/telegram/bot/operations/{operationId}/checkpoint": "postAuthTelegramBotOperationsByOperationIdCheckpoint",
+            "POST /api/v{version}/auth/telegram/bot/operations/{operationId}/lease": "postAuthTelegramBotOperationsByOperationIdLease",
+            "GET /api/v{version}/auth/telegram/bot/operations/ready": "getAuthTelegramBotOperationsReady"
+        },
+        "prefix": "/api/v{version}/auth/telegram/bot",
+        "name": "TelegramBot"
+    },
+    {
+        "operations": {
+            "POST /api/v{version}/ai/food/nutrition": "postAiFoodNutrition",
+            "POST /api/v{version}/ai/food/recipe-import": "postAiFoodRecipeImport",
+            "POST /api/v{version}/ai/food/recipe-import/video": "postAiFoodRecipeImportVideo",
+            "GET /api/v{version}/ai/food/recognitions": "getAiFoodRecognitions",
+            "POST /api/v{version}/ai/food/recognitions": "postAiFoodRecognitions",
+            "DELETE /api/v{version}/ai/food/recognitions/{id}": "deleteAiFoodRecognitionsById",
+            "GET /api/v{version}/ai/food/recognitions/{id}": "getAiFoodRecognitionsById",
+            "GET /api/v{version}/ai/food/recognitions/page": "getAiFoodRecognitionsPage",
+            "POST /api/v{version}/ai/food/text": "postAiFoodText",
+            "POST /api/v{version}/ai/food/vision": "postAiFoodVision",
+            "GET /api/v{version}/ai/usage/me": "getAiUsageMe"
+        },
+        "prefix": "/api/v{version}/ai",
+        "name": "Ai"
+    },
+    {
+        "operations": {
+            "DELETE /api/v{version}/images/{assetId}": "deleteImagesByAssetId",
+            "POST /api/v{version}/images/{assetId}/confirm": "postImagesByAssetIdConfirm",
+            "POST /api/v{version}/images/upload-url": "postImagesUploadUrl"
+        },
+        "prefix": "/api/v{version}/images",
+        "name": "Images"
+    },
+    {
+        "operations": {
+            "GET /api/v{version}/export/cycle": "getExportCycle",
+            "POST /api/v{version}/export/cycle/sensitive": "postExportCycleSensitive",
+            "GET /api/v{version}/export/diary": "getExportDiary"
+        },
+        "prefix": "/api/v{version}/export",
+        "name": "Export"
+    }
+]

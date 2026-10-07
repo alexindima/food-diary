@@ -1,8 +1,12 @@
-import { Service } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { inject, Service } from '@angular/core';
 import { catchError, map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { ApiService } from '../../../services/api.service';
+import { cycleDayFromSdk, cycleFromSdk, cycleNutritionFromSdk } from '../../../shared/api/sdk/cycle-sdk.mapper';
+import { CyclesSdk } from '../../../shared/api/sdk/generated/api/cycles.service';
+import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
+import { sdkOptional } from '../../../shared/api/sdk/sdk-response';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type {
     CreateCyclePayload,
@@ -17,56 +21,86 @@ import type {
 } from '../../../shared/models/cycle.data';
 
 @Service()
-export class CyclesService extends ApiService {
+export class CyclesService {
     protected readonly baseUrl = environment.apiUrls.cycles;
+    private readonly sdk = createSdkConnection(CyclesSdk, this.baseUrl, inject(HttpClient));
 
     public getCurrent(): Observable<CycleResponse | null> {
-        return this.get<CycleResponse | null>('current').pipe(catchError((error: unknown) => rethrowApiError('Cycle fetch error', error)));
+        return this.sdk.client.getCyclesCurrent({ version: this.sdk.version }).pipe(
+            map(value => sdkOptional(value, cycleFromSdk)),
+            catchError((error: unknown) => rethrowApiError('Cycle fetch error', error)),
+        );
     }
 
     public getNutritionSummary(dateFrom: string, dateTo: string): Observable<CycleNutritionSummary | null> {
-        return this.get<CycleNutritionSummary | null>('current/nutrition-summary', { dateFrom, dateTo }).pipe(
+        return this.sdk.client.getCyclesCurrentNutritionSummary({ version: this.sdk.version, dateFrom, dateTo }).pipe(
+            map(value => sdkOptional(value, cycleNutritionFromSdk)),
             catchError((error: unknown) => fallbackApiError('Cycle nutrition summary fetch error', error, null)),
         );
     }
 
     public create(payload: CreateCyclePayload): Observable<CycleResponse> {
-        return this.post<CycleResponse>('', payload).pipe(catchError((error: unknown) => rethrowApiError('Cycle create error', error)));
+        return this.sdk.client.postCycles({ version: this.sdk.version, createCycleHttpRequest: payload }).pipe(
+            map(cycleFromSdk),
+            catchError((error: unknown) => rethrowApiError('Cycle create error', error)),
+        );
     }
 
     public updateSettings(cycleProfileId: string, payload: UpdateCycleSettingsPayload): Observable<CycleResponse> {
-        return this.put<CycleResponse>(`${cycleProfileId}/settings`, payload).pipe(
-            catchError((error: unknown) => rethrowApiError('Cycle settings update error', error)),
-        );
+        return this.sdk.client
+            .putCyclesByCycleProfileIdSettings({ version: this.sdk.version, cycleProfileId, updateCycleSettingsHttpRequest: payload })
+            .pipe(
+                map(cycleFromSdk),
+                catchError((error: unknown) => rethrowApiError('Cycle settings update error', error)),
+            );
     }
 
     public updateConsent(cycleProfileId: string, purpose: number, payload: UpdateCycleConsentPayload): Observable<CycleResponse> {
-        return this.put<CycleResponse>(`${cycleProfileId}/consents/${purpose}`, payload).pipe(
-            catchError((error: unknown) => rethrowApiError('Cycle consent update error', error)),
-        );
+        return this.sdk.client
+            .putCyclesByCycleProfileIdConsentsByPurpose({
+                version: this.sdk.version,
+                cycleProfileId,
+                purpose,
+                updateCycleConsentHttpRequest: payload,
+            })
+            .pipe(
+                map(cycleFromSdk),
+                catchError((error: unknown) => rethrowApiError('Cycle consent update error', error)),
+            );
     }
 
     public deleteCycle(cycleProfileId: string): Observable<void> {
-        return this.delete<void>(cycleProfileId).pipe(catchError((error: unknown) => rethrowApiError('Cycle delete error', error)));
+        return this.sdk.client
+            .deleteCyclesByCycleProfileId({ version: this.sdk.version, cycleProfileId })
+            .pipe(catchError((error: unknown) => rethrowApiError('Cycle delete error', error)));
     }
 
     public upsertDay(cycleProfileId: string, payload: UpsertCycleDayPayload): Observable<CycleLogDay> {
-        return this.put<CycleLogDay>(`${cycleProfileId}/days`, payload).pipe(
-            map(day => day),
-            catchError((error: unknown) => rethrowApiError('Cycle day upsert error', error)),
-        );
+        return this.sdk.client
+            .putCyclesByCycleProfileIdDays({
+                version: this.sdk.version,
+                cycleProfileId,
+                upsertCycleDayHttpRequest: payload,
+            })
+            .pipe(
+                map(cycleDayFromSdk),
+                catchError((error: unknown) => rethrowApiError('Cycle day upsert error', error)),
+            );
     }
 
     public clearDay(cycleProfileId: string, date: string): Observable<void> {
-        return this.delete<void>(`${cycleProfileId}/days`, undefined, { date }).pipe(
-            catchError((error: unknown) => rethrowApiError('Cycle day clear error', error)),
-        );
+        return this.sdk.client
+            .deleteCyclesByCycleProfileIdDays({ version: this.sdk.version, cycleProfileId, date })
+            .pipe(catchError((error: unknown) => rethrowApiError('Cycle day clear error', error)));
     }
 
     public confirmPeriodStart(cycleProfileId: string, date: string): Observable<CycleResponse> {
-        return this.put<CycleResponse>(`${cycleProfileId}/period-start`, { date }).pipe(
-            catchError((error: unknown) => rethrowApiError('Period start confirmation error', error)),
-        );
+        return this.sdk.client
+            .putCyclesByCycleProfileIdPeriodStart({ version: this.sdk.version, cycleProfileId, confirmPeriodStartHttpRequest: { date } })
+            .pipe(
+                map(cycleFromSdk),
+                catchError((error: unknown) => rethrowApiError('Period start confirmation error', error)),
+            );
     }
 
     public updateMenstrualEpisode(
@@ -74,21 +108,38 @@ export class CyclesService extends ApiService {
         menstrualEpisodeId: string,
         payload: UpdateMenstrualEpisodePayload,
     ): Observable<CycleResponse> {
-        return this.put<CycleResponse>(`${cycleProfileId}/menstrual-episodes/${menstrualEpisodeId}`, payload).pipe(
-            catchError((error: unknown) => rethrowApiError('Menstrual episode update error', error)),
-        );
+        return this.sdk.client
+            .putCyclesByCycleProfileIdMenstrualEpisodesByMenstrualEpisodeId({
+                version: this.sdk.version,
+                cycleProfileId,
+                menstrualEpisodeId,
+                updateMenstrualEpisodeHttpRequest: payload,
+            })
+            .pipe(
+                map(cycleFromSdk),
+                catchError((error: unknown) => rethrowApiError('Menstrual episode update error', error)),
+            );
     }
 
     public deleteMenstrualEpisode(cycleProfileId: string, menstrualEpisodeId: string): Observable<CycleResponse> {
-        return this.delete<CycleResponse>(`${cycleProfileId}/menstrual-episodes/${menstrualEpisodeId}`).pipe(
-            catchError((error: unknown) => rethrowApiError('Menstrual episode delete error', error)),
-        );
+        return this.sdk.client
+            .deleteCyclesByCycleProfileIdMenstrualEpisodesByMenstrualEpisodeId({
+                version: this.sdk.version,
+                cycleProfileId,
+                menstrualEpisodeId,
+            })
+            .pipe(
+                map(cycleFromSdk),
+                catchError((error: unknown) => rethrowApiError('Menstrual episode delete error', error)),
+            );
     }
 
     public upsertFactor(cycleProfileId: string, payload: UpsertCycleFactorPayload): Observable<CycleResponse> {
-        return this.put<CycleResponse>(`${cycleProfileId}/factors`, payload).pipe(
-            map(cycle => cycle),
-            catchError((error: unknown) => rethrowApiError('Cycle factor upsert error', error)),
-        );
+        return this.sdk.client
+            .putCyclesByCycleProfileIdFactors({ version: this.sdk.version, cycleProfileId, upsertCycleFactorHttpRequest: payload })
+            .pipe(
+                map(cycleFromSdk),
+                catchError((error: unknown) => rethrowApiError('Cycle factor upsert error', error)),
+            );
     }
 }

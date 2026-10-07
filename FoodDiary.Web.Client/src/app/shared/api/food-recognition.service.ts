@@ -9,6 +9,7 @@ import {
     filter,
     from,
     last,
+    map,
     merge,
     type Observable,
     of,
@@ -27,6 +28,10 @@ import type { FoodVisionRequest, FoodVisionResponse } from '../models/ai.data';
 import { type FoodRecognitionJob, RECOGNITION_PAGE_SIZE } from '../models/food-recognition.data';
 import type { PageOf } from '../models/page-of.data';
 import { BrowserStorageService } from '../platform/browser-storage.service';
+import { recognitionJobFromSdk } from './sdk/ai-sdk.mapper';
+import { AiSdk } from './sdk/generated/api/ai.service';
+import { createSdkConnection } from './sdk/sdk-connection';
+import { sdkPage } from './sdk/sdk-response';
 
 const POLL_INTERVAL_MS = 5000;
 const POST_RETRY_MS = 1000;
@@ -38,6 +43,7 @@ export class FoodRecognitionService {
     private readonly auth = inject(AuthService);
     private readonly storage = inject(BrowserStorageService);
     private readonly baseUrl = `${environment.apiUrls.ai}/food/recognitions`;
+    private readonly sdk = createSdkConnection(AiSdk, this.baseUrl, this.http);
     private readonly changes = new Subject<string | null>();
     private connection: HubConnection | null = null;
     private connecting: Promise<void> | null = null;
@@ -72,16 +78,19 @@ export class FoodRecognitionService {
         const id = this.storage.getItem('session', key) ?? crypto.randomUUID();
         // Persist before POST. A lost acceptance response retries the same durable task.
         this.storage.setItem('session', key, id);
-        return this.http.post<FoodRecognitionJob>(this.baseUrl, { id, ...request }).pipe(
-            retry({ count: 2, delay: (error: unknown) => (this.isTransient(error) ? timer(POST_RETRY_MS) : throwError(() => error)) }),
-            switchMap(job => this.waitForResult(job.id, user)),
-            catchError((error: unknown) => {
-                if (!this.isTransient(error)) {
-                    this.storage.removeItem('session', key);
-                }
-                return throwError(() => error);
-            }),
-        );
+        return this.sdk.client
+            .postAiFoodRecognitions({ version: this.sdk.version, startFoodRecognitionHttpRequest: { id, ...request } })
+            .pipe(
+                map(recognitionJobFromSdk),
+                retry({ count: 2, delay: (error: unknown) => (this.isTransient(error) ? timer(POST_RETRY_MS) : throwError(() => error)) }),
+                switchMap(job => this.waitForResult(job.id, user)),
+                catchError((error: unknown) => {
+                    if (!this.isTransient(error)) {
+                        this.storage.removeItem('session', key);
+                    }
+                    return throwError(() => error);
+                }),
+            );
     }
 
     public resume(id: string): Observable<FoodVisionResponse> {
@@ -94,11 +103,13 @@ export class FoodRecognitionService {
     }
 
     public deleteRecognition(id: string): Observable<void> {
-        return this.http.delete<void>(`${this.baseUrl}/${id}`);
+        return this.sdk.client.deleteAiFoodRecognitionsById({ version: this.sdk.version, id });
     }
 
     public list(page = 1, limit = RECOGNITION_PAGE_SIZE, isProductLabel = false): Observable<PageOf<FoodRecognitionJob>> {
-        return this.http.get<PageOf<FoodRecognitionJob>>(`${this.baseUrl}/page`, { params: { page, limit, isProductLabel } });
+        return this.sdk.client
+            .getAiFoodRecognitionsPage({ version: this.sdk.version, page, limit, isProductLabel })
+            .pipe(map(value => sdkPage(value, recognitionJobFromSdk)));
     }
 
     private waitForResult(id: string, user: string): Observable<FoodVisionResponse> {
@@ -108,9 +119,10 @@ export class FoodRecognitionService {
                 if (this.auth.getUserId() !== user) {
                     return throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Unauthorized }));
                 }
-                return this.http
-                    .get<FoodRecognitionJob>(`${this.baseUrl}/${id}`)
-                    .pipe(catchError((error: unknown) => (this.isTransient(error) ? EMPTY : throwError(() => error))));
+                return this.sdk.client.getAiFoodRecognitionsById({ version: this.sdk.version, id }).pipe(
+                    map(recognitionJobFromSdk),
+                    catchError((error: unknown) => (this.isTransient(error) ? EMPTY : throwError(() => error))),
+                );
             }),
             takeWhile(job => job.status === 'Queued' || job.status === 'Running', true),
             last(),
