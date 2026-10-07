@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4406,
-    "symbols": 4338,
+    "sourceFiles": 4445,
+    "symbols": 4377,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2268,
+      "class": 2306,
       "enum": 65,
       "interface": 411,
-      "record": 1473,
+      "record": 1474,
       "record struct": 121
     },
     "roles": {
@@ -29,17 +29,17 @@
       "Factory": 14,
       "Handler": 7,
       "LookupRepository": 3,
-      "Mapper": 8,
+      "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1785,
+      "Other": 1796,
       "Query": 300,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 99,
-      "Request": 166,
-      "Response": 242,
+      "Request": 174,
+      "Response": 261,
       "Service": 168,
       "Validator": 236,
       "ValueObject": 115,
@@ -1728,6 +1728,279 @@
       "line": 7
     },
     {
+      "name": "BotApiMapper",
+      "kind": "class",
+      "role": "Mapper",
+      "path": "FoodDiary.Telegram.Bot/Api/BotApiMapper.cs",
+      "line": 5
+    },
+    {
+      "name": "BotApiRequestContext",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Api/BotApiRequestContext.cs",
+      "line": 2
+    },
+    {
+      "name": "BotApiTransport",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Api/BotApiTransport.cs",
+      "line": 7
+    },
+    {
+      "name": "BotAuthApi",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotAuthApi.cs",
+      "line": 7
+    },
+    {
+      "name": "BotDiaryApi",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotDiaryApi.cs",
+      "line": 7
+    },
+    {
+      "name": "BotHydrationApi",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotHydrationApi.cs",
+      "line": 7
+    },
+    {
+      "name": "BotImagesApi",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotImagesApi.cs",
+      "line": 7
+    },
+    {
+      "name": "BotMealsApi",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotMealsApi.cs",
+      "line": 7
+    },
+    {
+      "name": "BotOperationsApi",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotOperationsApi.cs",
+      "line": 7
+    },
+    {
+      "name": "BotRecognitionApi",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotRecognitionApi.cs",
+      "line": 7
+    },
+    {
+      "name": "ApiErrorHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "AuthenticationHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "CheckpointTelegramOperationHttpRequest",
+      "kind": "class",
+      "role": "Request",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/CheckpointTelegramOperationHttpRequest.cs",
+      "line": 6
+    },
+    {
+      "name": "ConfirmImageUploadHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/ConfirmImageUploadHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateHydrationEntryHttpRequest",
+      "kind": "class",
+      "role": "Request",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationEntryHttpRequest.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateHydrationFromOperationHttpRequest",
+      "kind": "class",
+      "role": "Request",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationFromOperationHttpRequest.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateMealFromRecognitionHttpRequest",
+      "kind": "class",
+      "role": "Request",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateMealFromRecognitionHttpRequest.cs",
+      "line": 6
+    },
+    {
+      "name": "DashboardLayoutHttpModel",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/DashboardLayoutHttpModel.cs",
+      "line": 6
+    },
+    {
+      "name": "DiaryStatisticsDayHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsDayHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "DiaryStatisticsSummaryHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsSummaryHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "FoodNutritionHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "FoodNutritionItemHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionItemHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "FoodRecognitionImageHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionImageHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "FoodRecognitionJobHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "FoodVisionHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodVisionHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "FoodVisionItemHttpModel",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodVisionItemHttpModel.cs",
+      "line": 6
+    },
+    {
+      "name": "GetImageUploadUrlHttpRequest",
+      "kind": "class",
+      "role": "Request",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpRequest.cs",
+      "line": 6
+    },
+    {
+      "name": "GetImageUploadUrlHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "HydrationEntryHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/HydrationEntryHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "HydrationOperationHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/HydrationOperationHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "ProductLabelHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/ProductLabelHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "RecognizedMealCreationHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/RecognizedMealCreationHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "RecognizedMealUndoHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/RecognizedMealUndoHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "RegisterTelegramOperationHttpRequest",
+      "kind": "class",
+      "role": "Request",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/RegisterTelegramOperationHttpRequest.cs",
+      "line": 6
+    },
+    {
+      "name": "StartFoodRecognitionHttpRequest",
+      "kind": "class",
+      "role": "Request",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/StartFoodRecognitionHttpRequest.cs",
+      "line": 6
+    },
+    {
+      "name": "TelegramBotAuthHttpRequest",
+      "kind": "class",
+      "role": "Request",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramBotAuthHttpRequest.cs",
+      "line": 6
+    },
+    {
+      "name": "TelegramOperationLeaseHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramOperationLeaseHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "TelegramOperationRegisteredHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramOperationRegisteredHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "UserHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 6
+    },
+    {
       "name": "BotInputParser",
       "kind": "class",
       "role": "Other",
@@ -1781,7 +2054,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
-      "line": 8
+      "line": 11
     },
     {
       "name": "BotDiaryStatistics",
@@ -1844,7 +2117,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/BotOperationClient.cs",
-      "line": 6
+      "line": 9
     },
     {
       "name": "BotOperationLease",

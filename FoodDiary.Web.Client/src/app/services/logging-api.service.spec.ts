@@ -26,6 +26,7 @@ describe('LoggingApiService', () => {
         expect(req.request.body).toEqual(EVENT);
         expect(req.request.context.get(SKIP_AUTH)).toBe(true);
         expect(req.request.context.get(SKIP_OBSERVABILITY)).toBe(true);
+        expect(req.request.withCredentials).toBe(false);
         req.flush(null);
         httpMock.verify();
     });

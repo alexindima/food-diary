@@ -3,21 +3,18 @@ import { inject, Service } from '@angular/core';
 import { map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
+import { AdminModerationSdk } from '../../../shared/api/sdk/generated/api/admin-moderation.service';
+import { createSdkConnection, sdkRequestOptions } from '../../../shared/api/sdk/sdk-connection';
+import { sdkPage } from '../../../shared/api/sdk/sdk-response';
 import type { AdminContentReport, AdminReportAction } from '../models/admin-moderation.data';
 import type { PagedResponse } from '../models/admin-moderation-page.models';
-
-type ApiPagedResponse<T> = {
-    data: T[];
-    page: number;
-    limit: number;
-    totalPages: number;
-    totalItems: number;
-};
+import { adminContentReportFromSdk } from './admin-moderation-sdk.mapper';
 
 @Service()
 export class AdminModerationService {
     private readonly http = inject(HttpClient);
     private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/moderation`;
+    private readonly sdk = createSdkConnection(AdminModerationSdk, this.baseUrl, this.http);
 
     public getReports(
         page: number,
@@ -35,20 +32,31 @@ export class AdminModerationService {
                 params = params.set(key, value);
             }
         }
-        return this.http.get<ApiPagedResponse<AdminContentReport>>(this.baseUrl, { params }).pipe(
-            map(response => ({
-                items: response.data,
-                totalPages: response.totalPages,
-                totalItems: response.totalItems,
-            })),
-        );
+        return this.sdk.client
+            .getAdminModeration({ version: this.sdk.version }, 'body', false, sdkRequestOptions(undefined, params))
+            .pipe(map(response => sdkPage(response, adminContentReportFromSdk)))
+            .pipe(
+                map(response => ({
+                    items: response.data,
+                    totalPages: response.totalPages,
+                    totalItems: response.totalItems,
+                })),
+            );
     }
 
     public reviewReport(reportId: string, action: AdminReportAction): Observable<void> {
-        return this.http.post<void>(`${this.baseUrl}/${reportId}/review`, action);
+        return this.sdk.client.postAdminModerationByIdReview({
+            version: this.sdk.version,
+            id: reportId,
+            adminReportActionHttpRequest: action,
+        });
     }
 
     public dismissReport(reportId: string, action: AdminReportAction): Observable<void> {
-        return this.http.post<void>(`${this.baseUrl}/${reportId}/dismiss`, action);
+        return this.sdk.client.postAdminModerationByIdDismiss({
+            version: this.sdk.version,
+            id: reportId,
+            adminReportActionHttpRequest: action,
+        });
     }
 }

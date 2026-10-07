@@ -21,6 +21,7 @@ describe('MarketingAttributionService', () => {
         expect(req.request.method).toBe('POST');
         expect(req.request.context.get(SKIP_AUTH)).toBe(true);
         expect(req.request.context.get(SKIP_OBSERVABILITY)).toBe(true);
+        expect(req.request.withCredentials).toBe(false);
         expect(req.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/u);
         expect(req.request.body).toMatchObject({
             sessionId: 'fd-session-test',

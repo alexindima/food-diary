@@ -17,6 +17,8 @@ export * from './goals.service';
 export * from './hydration.service';
 export * from './images.service';
 export * from './lessons.service';
+export * from './logging.service';
+export * from './marketing.service';
 export * from './meal-plans.service';
 export * from './meals.service';
 export * from './notifications.service';
@@ -56,6 +58,8 @@ import { GoalsSdk } from './goals.service';
 import { HydrationSdk } from './hydration.service';
 import { ImagesSdk } from './images.service';
 import { LessonsSdk } from './lessons.service';
+import { LoggingSdk } from './logging.service';
+import { MarketingSdk } from './marketing.service';
 import { MealPlansSdk } from './meal-plans.service';
 import { MealsSdk } from './meals.service';
 import { NotificationsSdk } from './notifications.service';
@@ -96,6 +100,8 @@ export const APIS = [
     HydrationSdk,
     ImagesSdk,
     LessonsSdk,
+    LoggingSdk,
+    MarketingSdk,
     MealPlansSdk,
     MealsSdk,
     NotificationsSdk,

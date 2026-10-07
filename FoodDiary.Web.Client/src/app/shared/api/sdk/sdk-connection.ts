@@ -7,7 +7,12 @@ type SdkConstructor<T> = new (http: HttpClient, basePath: string | string[], con
 const SDK_EXTRA_HEADERS = new HttpContextToken<HttpHeaders | null>(() => null);
 
 /** The generated client delegates to the application's existing interceptor chain. */
-export function createSdkConnection<T>(type: SdkConstructor<T>, baseUrl: string, http: HttpClient): { client: T; version: string } {
+export function createSdkConnection<T>(
+    type: SdkConstructor<T>,
+    baseUrl: string,
+    http: HttpClient,
+    withCredentials = true,
+): { client: T; version: string } {
     const marker = '/api/v';
     const markerIndex = baseUrl.lastIndexOf(marker);
     if (markerIndex === -1) {
@@ -38,7 +43,7 @@ export function createSdkConnection<T>(type: SdkConstructor<T>, baseUrl: string,
             return http.request(request.clone({ headers, params }));
         },
     });
-    return { client: new type(transport, basePath, new Configuration({ withCredentials: true })), version };
+    return { client: new type(transport, basePath, new Configuration({ withCredentials })), version };
 }
 
 /** Preserve per-call headers and existing contexts, including loading suppression. */

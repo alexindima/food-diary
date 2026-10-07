@@ -8,7 +8,7 @@
     "moduleCycleNodes": 0,
     "backendBusinessModules": 34,
     "moduleHotspotReviewCandidates": 4,
-    "ambiguousBackendContracts": 2,
+    "ambiguousBackendContracts": 29,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 111,
     "routedStandaloneComponents": 67,
@@ -262,6 +262,177 @@
   ],
   "ambiguousBackendContracts": [
     {
+      "name": "ApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "AuthenticationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
+        "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "CheckpointTelegramOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CheckpointTelegramOperationHttpRequest.cs",
+        "Modules/Identity/Presentation/Features/Auth/Requests/CheckpointTelegramOperationHttpRequest.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "ConfirmImageUploadHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ConfirmImageUploadHttpResponse.cs",
+        "Modules/Images/Presentation/Responses/ConfirmImageUploadHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "CreateHydrationEntryHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationEntryHttpRequest.cs",
+        "Modules/Hydration/Presentation/Requests/CreateHydrationEntryHttpRequest.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "CreateHydrationFromOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationFromOperationHttpRequest.cs",
+        "Modules/Hydration/Presentation/Requests/CreateHydrationFromOperationHttpRequest.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "CreateMealFromRecognitionHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateMealFromRecognitionHttpRequest.cs",
+        "Modules/Meals/Presentation/Requests/CreateMealFromRecognitionHttpRequest.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "DiaryStatisticsDayHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsDayHttpResponse.cs",
+        "Modules/Statistics/Presentation/Responses/DiaryStatisticsDayHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "DiaryStatisticsSummaryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsSummaryHttpResponse.cs",
+        "Modules/Statistics/Presentation/Responses/DiaryStatisticsSummaryHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
       "name": "DismissContentReportCommand",
       "roles": [
         "Command"
@@ -280,6 +451,253 @@
       "collisionClassification": "ambiguous"
     },
     {
+      "name": "FoodNutritionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/FoodNutritionHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "FoodNutritionItemHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionItemHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/FoodNutritionItemHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "FoodRecognitionImageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionImageHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/FoodRecognitionImageHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "FoodRecognitionJobHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "FoodVisionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodVisionHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/FoodVisionHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "GetImageUploadUrlHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpRequest.cs",
+        "Modules/Images/Presentation/Requests/GetImageUploadUrlHttpRequest.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "GetImageUploadUrlHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpResponse.cs",
+        "Modules/Images/Presentation/Responses/GetImageUploadUrlHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "HydrationEntryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/HydrationEntryHttpResponse.cs",
+        "Modules/Hydration/Presentation.Contracts/Responses/HydrationEntryHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "HydrationOperationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/HydrationOperationHttpResponse.cs",
+        "Modules/Hydration/Presentation/Responses/HydrationOperationHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "ProductLabelHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ProductLabelHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/ProductLabelHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "RecognizedMealCreationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RecognizedMealCreationHttpResponse.cs",
+        "Modules/Meals/Presentation/Responses/RecognizedMealCreationHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "RecognizedMealUndoHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RecognizedMealUndoHttpResponse.cs",
+        "Modules/Meals/Presentation/Responses/RecognizedMealUndoHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "RegisterTelegramOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RegisterTelegramOperationHttpRequest.cs",
+        "Modules/Identity/Presentation/Features/Auth/Requests/RegisterTelegramOperationHttpRequest.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
       "name": "ReviewContentReportCommand",
       "roles": [
         "Command"
@@ -293,6 +711,101 @@
       "definitionPaths": [
         "Modules/Admin/Application/Commands/ReviewContentReport/ReviewContentReportCommand.cs",
         "Modules/ContentReports/Contracts/Commands/ReviewContentReport/ReviewContentReportCommand.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "StartFoodRecognitionHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/StartFoodRecognitionHttpRequest.cs",
+        "Modules/Ai/Presentation/Requests/StartFoodRecognitionHttpRequest.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "TelegramBotAuthHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramBotAuthHttpRequest.cs",
+        "Modules/Identity/Presentation/Features/Auth/Requests/TelegramBotAuthHttpRequest.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "TelegramOperationLeaseHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramOperationLeaseHttpResponse.cs",
+        "Modules/Identity/Presentation/Features/Auth/Responses/TelegramOperationLeaseHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "TelegramOperationRegisteredHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramOperationRegisteredHttpResponse.cs",
+        "Modules/Identity/Presentation/Features/Auth/Responses/TelegramOperationRegisteredHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "UserHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+        "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
       ],
       "ambiguous": true,
       "collisionClassification": "ambiguous"

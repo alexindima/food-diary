@@ -232,7 +232,7 @@ jobs:
           push: false
 
   api-sdk:
-    name: User API SDK contract and generation
+    name: User and Admin API client contracts and generation
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
@@ -263,7 +263,7 @@ jobs:
         run: npm run test:sdk
       - name: Check live API contract and generated SDK
         working-directory: FoodDiary.Web.Client
-        run: npm run sdk:check:api
+        run: npm run sdk:check:api && npm run sdk:admin:check:api && npm run sdk:bot:check:api
 
   backend-format:
     name: Backend formatting and full solution build

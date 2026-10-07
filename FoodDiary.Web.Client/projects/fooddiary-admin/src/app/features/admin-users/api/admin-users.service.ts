@@ -3,6 +3,9 @@ import { inject, Service } from '@angular/core';
 import { map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
+import { AdminUsersSdk } from '../../../shared/api/sdk/generated/api/admin-users.service';
+import { createSdkConnection, sdkRequestOptions } from '../../../shared/api/sdk/sdk-connection';
+import { sdkPage } from '../../../shared/api/sdk/sdk-response';
 import type {
     AdminImpersonationSession,
     AdminImpersonationStart,
@@ -16,24 +19,28 @@ import type {
     AdminUserUpdate,
     PagedResponse,
 } from '../models/admin-user.models';
+import {
+    adminImpersonationSessionFromSdk,
+    adminImpersonationStartFromSdk,
+    adminUserCreationFromSdk,
+    adminUserFromSdk,
+    adminUserLoginDeviceSummaryFromSdk,
+    adminUserLoginEventFromSdk,
+    adminUserRoleAuditEventFromSdk,
+} from './admin-users-sdk.mapper';
 
 const DEFAULT_ROLE_AUDIT_LIMIT = 20;
-
-type ApiPagedResponse<T> = {
-    data: T[];
-    page: number;
-    limit: number;
-    totalPages: number;
-    totalItems: number;
-};
 
 @Service()
 export class AdminUsersService {
     private readonly http = inject(HttpClient);
     private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/users`;
+    private readonly sdk = createSdkConnection(AdminUsersSdk, this.baseUrl, this.http);
 
     public createUser(payload: AdminUserCreate): Observable<AdminUserCreation> {
-        return this.http.post<AdminUserCreation>(this.baseUrl, payload);
+        return this.sdk.client
+            .postAdminUsers({ version: this.sdk.version, adminUserCreateHttpRequest: payload })
+            .pipe(map(adminUserCreationFromSdk));
     }
 
     public getUsers(
@@ -56,36 +63,49 @@ export class AdminUsersService {
             params = params.set('search', search);
         }
 
-        return this.http.get<ApiPagedResponse<AdminUser>>(this.baseUrl, { params }).pipe(
-            map(response => ({
-                items: response.data,
-                page: response.page,
-                limit: response.limit,
-                totalPages: response.totalPages,
-                totalItems: response.totalItems,
-            })),
-        );
+        return this.sdk.client
+            .getAdminUsers({ version: this.sdk.version }, 'body', false, sdkRequestOptions(undefined, params))
+            .pipe(map(response => sdkPage(response, adminUserFromSdk)))
+            .pipe(
+                map(response => ({
+                    items: response.data,
+                    page: response.page,
+                    limit: response.limit,
+                    totalPages: response.totalPages,
+                    totalItems: response.totalItems,
+                })),
+            );
     }
 
     public updateUser(userId: string, payload: AdminUserUpdate): Observable<AdminUser> {
-        return this.http.patch<AdminUser>(`${this.baseUrl}/${userId}`, payload);
+        return this.sdk.client
+            .patchAdminUsersById({ version: this.sdk.version, id: userId, adminUserUpdateHttpRequest: payload })
+            .pipe(map(adminUserFromSdk));
     }
 
     public setPassword(userId: string, payload: AdminUserSetPassword): Observable<void> {
-        return this.http.patch<void>(`${this.baseUrl}/${userId}/password`, payload);
+        return this.sdk.client.patchAdminUsersByIdPassword({
+            version: this.sdk.version,
+            id: userId,
+            adminUserSetPasswordHttpRequest: payload,
+        });
     }
 
     public getUser(userId: string): Observable<AdminUser> {
-        return this.http.get<AdminUser>(`${this.baseUrl}/${userId}`);
+        return this.sdk.client.getAdminUsersById({ version: this.sdk.version, id: userId }).pipe(map(adminUserFromSdk));
     }
 
     public getUserRoleAudit(userId: string, limit = DEFAULT_ROLE_AUDIT_LIMIT): Observable<AdminUserRoleAuditEvent[]> {
         const params = new HttpParams().set('limit', limit);
-        return this.http.get<AdminUserRoleAuditEvent[]>(`${this.baseUrl}/${userId}/role-audit`, { params });
+        return this.sdk.client
+            .getAdminUsersByIdRoleAudit({ version: this.sdk.version, id: userId }, 'body', false, sdkRequestOptions(undefined, params))
+            .pipe(map(items => items.map(adminUserRoleAuditEventFromSdk)));
     }
 
     public startImpersonation(userId: string, reason: string): Observable<AdminImpersonationStart> {
-        return this.http.post<AdminImpersonationStart>(`${this.baseUrl}/${userId}/impersonation`, { reason });
+        return this.sdk.client
+            .postAdminUsersByIdImpersonation({ version: this.sdk.version, id: userId, adminImpersonationStartHttpRequest: { reason } })
+            .pipe(map(adminImpersonationStartFromSdk));
     }
 
     public getImpersonationSessions(
@@ -100,15 +120,18 @@ export class AdminUsersService {
             params = params.set('search', search);
         }
 
-        return this.http.get<ApiPagedResponse<AdminImpersonationSession>>(`${this.baseUrl}/impersonation-sessions`, { params }).pipe(
-            map(response => ({
-                items: response.data,
-                page: response.page,
-                limit: response.limit,
-                totalPages: response.totalPages,
-                totalItems: response.totalItems,
-            })),
-        );
+        return this.sdk.client
+            .getAdminUsersImpersonationSessions({ version: this.sdk.version }, 'body', false, sdkRequestOptions(undefined, params))
+            .pipe(map(response => sdkPage(response, adminImpersonationSessionFromSdk)))
+            .pipe(
+                map(response => ({
+                    items: response.data,
+                    page: response.page,
+                    limit: response.limit,
+                    totalPages: response.totalPages,
+                    totalItems: response.totalItems,
+                })),
+            );
     }
 
     public getLoginEvents(
@@ -123,18 +146,23 @@ export class AdminUsersService {
             params = params.set('search', search);
         }
 
-        return this.http.get<ApiPagedResponse<AdminUserLoginEvent>>(`${this.baseUrl}/login-events`, { params }).pipe(
-            map(response => ({
-                items: response.data,
-                page: response.page,
-                limit: response.limit,
-                totalPages: response.totalPages,
-                totalItems: response.totalItems,
-            })),
-        );
+        return this.sdk.client
+            .getAdminUsersLoginEvents({ version: this.sdk.version }, 'body', false, sdkRequestOptions(undefined, params))
+            .pipe(map(response => sdkPage(response, adminUserLoginEventFromSdk)))
+            .pipe(
+                map(response => ({
+                    items: response.data,
+                    page: response.page,
+                    limit: response.limit,
+                    totalPages: response.totalPages,
+                    totalItems: response.totalItems,
+                })),
+            );
     }
 
     public getLoginSummary(): Observable<AdminUserLoginDeviceSummary[]> {
-        return this.http.get<AdminUserLoginDeviceSummary[]>(`${this.baseUrl}/login-summary`);
+        return this.sdk.client
+            .getAdminUsersLoginSummary({ version: this.sdk.version })
+            .pipe(map(items => items.map(adminUserLoginDeviceSummaryFromSdk)));
     }
 }

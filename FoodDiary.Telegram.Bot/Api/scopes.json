@@ -1,0 +1,86 @@
+[
+  {
+    "method": "POST",
+    "name": "BotAuth",
+    "operationId": "Authenticate",
+    "path": "/api/v{version}/auth/telegram/bot/auth"
+  },
+  {
+    "method": "POST",
+    "name": "BotOperations",
+    "operationId": "Register",
+    "path": "/api/v{version}/auth/telegram/bot/operations"
+  },
+  {
+    "method": "GET",
+    "name": "BotOperations",
+    "operationId": "ListReady",
+    "path": "/api/v{version}/auth/telegram/bot/operations/ready"
+  },
+  {
+    "method": "POST",
+    "name": "BotOperations",
+    "operationId": "Acquire",
+    "path": "/api/v{version}/auth/telegram/bot/operations/{operationId}/lease"
+  },
+  {
+    "method": "POST",
+    "name": "BotOperations",
+    "operationId": "Checkpoint",
+    "path": "/api/v{version}/auth/telegram/bot/operations/{operationId}/checkpoint"
+  },
+  {
+    "method": "GET",
+    "name": "BotDiary",
+    "operationId": "GetStatistics",
+    "path": "/api/v{version}/statistics/diary-summary"
+  },
+  {
+    "method": "POST",
+    "name": "BotImages",
+    "operationId": "RequestUpload",
+    "path": "/api/v{version}/images/upload-url"
+  },
+  {
+    "method": "POST",
+    "name": "BotImages",
+    "operationId": "ConfirmUpload",
+    "path": "/api/v{version}/images/{assetId}/confirm"
+  },
+  {
+    "method": "POST",
+    "name": "BotRecognition",
+    "operationId": "StartRecognition",
+    "path": "/api/v{version}/ai/food/recognitions"
+  },
+  {
+    "method": "GET",
+    "name": "BotRecognition",
+    "operationId": "GetRecognition",
+    "path": "/api/v{version}/ai/food/recognitions/{id}"
+  },
+  {
+    "method": "POST",
+    "name": "BotMeals",
+    "operationId": "SaveRecognizedMeal",
+    "path": "/api/v{version}/meals/recognitions/{recognitionId}"
+  },
+  {
+    "method": "POST",
+    "name": "BotMeals",
+    "operationId": "UndoRecognizedMeal",
+    "path": "/api/v{version}/meals/recognitions/{operationId}/undo"
+  },
+  {
+    "method": "POST",
+    "name": "BotHydration",
+    "operationId": "SaveWater",
+    "path": "/api/v{version}/hydrations/operations/{operationId}"
+  },
+  {
+    "method": "POST",
+    "name": "BotHydration",
+    "operationId": "AddWater",
+    "path": "/api/v{version}/hydrations"
+  }
+]

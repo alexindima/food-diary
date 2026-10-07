@@ -3,6 +3,9 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.Extensions.Options;
+using FoodDiary.Telegram.Bot.Api;
+using FoodDiary.Telegram.Bot.Api.Generated.Api;
+using FoodDiary.Telegram.Bot.Api.Generated.Model;
 
 namespace FoodDiary.Telegram.Bot.Operations;
 
@@ -14,20 +17,20 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
         if (days is not (1 or 7)) {
             throw new InvalidDataException("Invalid statistics period.");
         }
-        using HttpRequestMessage request = CreateRequest(HttpMethod.Get,
-            $"/api/v1/statistics/diary-summary?days={days.ToString(CultureInfo.InvariantCulture)}", token);
-        BotDiaryStatistics result = await SendAsync<BotDiaryStatistics>(request, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await new BotDiaryApi(CreateTransport()).GetStatisticsAsync("1", days,
+            new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
+        DiaryStatisticsSummaryHttpResponse result = await ReadAsync<DiaryStatisticsSummaryHttpResponse>(response, cancellationToken).ConfigureAwait(false);
         if (result.CalendarDays != days || result.Days is null || result.Days.Count != days) {
             throw new InvalidDataException("Statistics response does not match the requested period.");
         }
-        return result;
+        return BotApiMapper.Statistics(result);
     }
 
     internal async Task<string> AuthenticateAsync(long telegramUserId, BotOperationLease lease, CancellationToken cancellationToken) {
-        using HttpRequestMessage request = CreateRequest(HttpMethod.Post, "/api/v1/auth/telegram/bot/auth", accessToken: null);
-        request.Headers.Add("X-Telegram-Bot-Secret", options.Value.ApiSecret);
-        request.Content = JsonContent.Create(new { TelegramUserId = telegramUserId });
-        AuthReply reply = await SendAsync<AuthReply>(request, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await new BotAuthApi(CreateTransport()).AuthenticateAsync("1",
+            new TelegramBotAuthHttpRequest { TelegramUserId = telegramUserId }, new BotApiRequestContext(ApiSecret: options.Value.ApiSecret),
+            cancellationToken).ConfigureAwait(false);
+        AuthenticationHttpResponse reply = await ReadAsync<AuthenticationHttpResponse>(response, cancellationToken).ConfigureAwait(false);
         if (reply.User is null || reply.User.Id != lease.UserId || string.IsNullOrWhiteSpace(reply.AccessToken) ||
             !MatchesSecurityVersion(reply.AccessToken, lease.SecurityVersion)) {
             throw new InvalidDataException("Telegram authentication no longer matches the operation owner.");
@@ -37,11 +40,12 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
 
     internal async Task<BotImageUpload> RequestUploadAsync(string token, Guid operationId, int attempt, string contentType,
         int sizeBytes, CancellationToken cancellationToken) {
-        using HttpRequestMessage request = CreateRequest(HttpMethod.Post, "/api/v1/images/upload-url", token);
-        request.Headers.Add("Idempotency-Key", $"telegram:{operationId:N}:upload:{attempt.ToString(CultureInfo.InvariantCulture)}");
         string extension = contentType switch { "image/png" => "png", "image/webp" => "webp", _ => "jpg" };
-        request.Content = JsonContent.Create(new { FileName = $"{operationId:N}.{extension}", ContentType = contentType, FileSizeBytes = sizeBytes });
-        return await SendAsync<BotImageUpload>(request, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await new BotImagesApi(CreateTransport()).RequestUploadAsync("1",
+            $"telegram:{operationId:N}:upload:{attempt.ToString(CultureInfo.InvariantCulture)}",
+            new GetImageUploadUrlHttpRequest { FileName = $"{operationId:N}.{extension}", ContentType = contentType, FileSizeBytes = sizeBytes },
+            new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
+        return BotApiMapper.Upload(await ReadAsync<GetImageUploadUrlHttpResponse>(response, cancellationToken).ConfigureAwait(false));
     }
 
     internal async Task UploadAsync(BotImageUpload upload, string contentType, byte[] content, CancellationToken cancellationToken) {
@@ -56,28 +60,29 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
     }
 
     internal async Task ConfirmUploadAsync(string token, Guid assetId, CancellationToken cancellationToken) {
-        using HttpRequestMessage request = CreateRequest(HttpMethod.Post, $"/api/v1/images/{assetId:D}/confirm", token);
-        request.Headers.Add("Idempotency-Key", $"telegram:{assetId:N}:confirm");
-        using HttpResponseMessage response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await new BotImagesApi(CreateTransport()).ConfirmUploadAsync(assetId, "1",
+            $"telegram:{assetId:N}:confirm", new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
     }
 
     internal async Task<BotRecognitionJob> StartRecognitionAsync(string token, Guid operationId, Guid assetId,
         string? caption, CancellationToken cancellationToken) {
-        using HttpRequestMessage request = CreateRequest(HttpMethod.Post, "/api/v1/ai/food/recognitions", token);
-        request.Content = JsonContent.Create(new { Id = operationId, ImageAssetId = assetId, Description = caption });
-        return await SendAsync<BotRecognitionJob>(request, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await new BotRecognitionApi(CreateTransport()).StartRecognitionAsync("1",
+            new StartFoodRecognitionHttpRequest { Id = operationId, ImageAssetId = assetId, Description = caption },
+            new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
+        return BotApiMapper.Recognition(await ReadAsync<FoodRecognitionJobHttpResponse>(response, cancellationToken).ConfigureAwait(false));
     }
 
     internal async Task<BotRecognitionJob> GetRecognitionAsync(string token, Guid jobId, CancellationToken cancellationToken) {
-        using HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"/api/v1/ai/food/recognitions/{jobId:D}", token);
-        return await SendAsync<BotRecognitionJob>(request, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await new BotRecognitionApi(CreateTransport()).GetRecognitionAsync(jobId, "1",
+            new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
+        return BotApiMapper.Recognition(await ReadAsync<FoodRecognitionJobHttpResponse>(response, cancellationToken).ConfigureAwait(false));
     }
 
     internal async Task<BotRecognizedMeal> SaveRecognizedMealAsync(string token, Guid recognitionId, DateTime occurredAtUtc, CancellationToken cancellationToken) {
-        using HttpRequestMessage request = CreateRequest(HttpMethod.Post, $"/api/v1/meals/recognitions/{recognitionId:D}", token);
-        request.Content = JsonContent.Create(new { OccurredAtUtc = occurredAtUtc });
-        BotRecognizedMeal result = await SendAsync<BotRecognizedMeal>(request, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await new BotMealsApi(CreateTransport()).SaveRecognizedMealAsync(recognitionId, "1",
+            new CreateMealFromRecognitionHttpRequest { OccurredAtUtc = occurredAtUtc }, new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
+        BotRecognizedMeal result = BotApiMapper.Meal(await ReadAsync<RecognizedMealCreationHttpResponse>(response, cancellationToken).ConfigureAwait(false));
         if (result.OperationId != recognitionId || result.MealId == Guid.Empty) {
             throw new InvalidDataException("Meal receipt identity mismatch.");
         }
@@ -85,23 +90,23 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
     }
 
     internal async Task<string> UndoRecognizedMealAsync(string token, Guid operationId, CancellationToken cancellationToken) {
-        using HttpRequestMessage request = CreateRequest(HttpMethod.Post, $"/api/v1/meals/recognitions/{operationId:D}/undo", token);
-        using HttpResponseMessage response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await new BotMealsApi(CreateTransport()).UndoRecognizedMealAsync(operationId, "1",
+            new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
         await response.Content.LoadIntoBufferAsync(MaximumResponseBytes, cancellationToken).ConfigureAwait(false);
         if (response.StatusCode is System.Net.HttpStatusCode.Conflict or System.Net.HttpStatusCode.NotFound) {
-            ApiErrorReply? error = await response.Content.ReadFromJsonAsync<ApiErrorReply>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            ApiErrorHttpResponse? error = await response.Content.ReadFromJsonAsync<ApiErrorHttpResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
             return error?.Error ?? "Meal.RecognitionOperationNotFound";
         }
         response.EnsureSuccessStatusCode();
-        UndoReply? reply = await response.Content.ReadFromJsonAsync<UndoReply>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        RecognizedMealUndoHttpResponse? reply = await response.Content.ReadFromJsonAsync<RecognizedMealUndoHttpResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
         return reply?.Status ?? throw new InvalidDataException("Missing undo result.");
     }
 
-    private sealed record UndoReply(string Status);
     internal async Task<BotHydrationReceipt> SaveWaterAsync(string token, Guid operationId, DateTime timestampUtc, int amountMl, CancellationToken cancellationToken) {
-        using HttpRequestMessage request = CreateRequest(HttpMethod.Post, $"/api/v1/hydrations/operations/{operationId:D}", token);
-        request.Content = JsonContent.Create(new { TimestampUtc = timestampUtc, AmountMl = amountMl });
-        BotHydrationReceipt receipt = await SendAsync<BotHydrationReceipt>(request, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await new BotHydrationApi(CreateTransport()).SaveWaterAsync(operationId, "1",
+            new CreateHydrationFromOperationHttpRequest { TimestampUtc = timestampUtc, AmountMl = amountMl },
+            new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
+        BotHydrationReceipt receipt = BotApiMapper.Water(await ReadAsync<HydrationOperationHttpResponse>(response, cancellationToken).ConfigureAwait(false));
         if (receipt.OperationId != operationId || receipt.EntryId == Guid.Empty || receipt.AmountMl != amountMl ||
             receipt.TimestampUtc.Ticks / 10 != timestampUtc.Ticks / 10) {
             throw new InvalidDataException("Water receipt does not match the requested operation.");
@@ -109,25 +114,18 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
         return receipt;
     }
 
-    private sealed record ApiErrorReply(string Error);
-
-    private HttpRequestMessage CreateRequest(HttpMethod method, string path, string? accessToken) {
+    private BotApiTransport CreateTransport() {
         if (!BotUriHelper.TryCreateApiBaseUri(options.Value.ApiBaseUrl, out Uri? baseUri)) {
             throw new InvalidOperationException("Telegram diary API is not configured.");
         }
-        var request = new HttpRequestMessage(method, new Uri(baseUri!, path));
-        if (accessToken is not null) {
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-        }
-        return request;
+        return new BotApiTransport(client, baseUri!);
     }
 
-    private async Task<T> SendAsync<T>(HttpRequestMessage request, CancellationToken cancellationToken) {
-        using HttpResponseMessage response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+    private static async Task<T> ReadAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken) {
         if (response.StatusCode is System.Net.HttpStatusCode.Forbidden or System.Net.HttpStatusCode.TooManyRequests) {
             await response.Content.LoadIntoBufferAsync(MaximumResponseBytes, cancellationToken).ConfigureAwait(false);
             try {
-                ApiErrorReply? error = await response.Content.ReadFromJsonAsync<ApiErrorReply>(cancellationToken: cancellationToken).ConfigureAwait(false);
+                ApiErrorHttpResponse? error = await response.Content.ReadFromJsonAsync<ApiErrorHttpResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
                 if (error?.Error is "Ai.ConsentRequired" or "Ai.QuotaExceeded") {
                     throw new BotRecognitionAccessException(error.Error);
                 }
@@ -161,6 +159,4 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
         }
     }
 
-    private sealed record AuthReply(string AccessToken, AuthUser User);
-    private sealed record AuthUser(Guid Id);
 }

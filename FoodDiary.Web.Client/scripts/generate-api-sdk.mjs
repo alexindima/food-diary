@@ -13,14 +13,19 @@ import { normalizeBinaryResponseTypes } from './api-sdk-normalization.mjs';
 const clientRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const repoRoot = resolve(clientRoot, '..');
 const sdkRoot = join(clientRoot, 'api-sdk');
-const outputRoot = join(clientRoot, 'src/app/shared/api/sdk/generated');
+const admin = process.argv.includes('--admin');
+const label = admin ? 'Admin' : 'User';
+const outputRoot = join(
+    clientRoot,
+    admin ? 'projects/fooddiary-admin/src/app/shared/api/sdk/generated' : 'src/app/shared/api/sdk/generated',
+);
 const artifactRoot = join(repoRoot, '.artifacts/sdk');
 const config = JSON.parse(await readFile(join(sdkRoot, 'generator.json'), 'utf8'));
-const scopes = JSON.parse(await readFile(join(sdkRoot, 'scopes.json'), 'utf8'));
+const scopes = JSON.parse(await readFile(join(sdkRoot, admin ? 'admin.scopes.json' : 'scopes.json'), 'utf8'));
 const prettierConfig = await resolveConfig(join(clientRoot, 'package.json'));
 const check = process.argv.includes('--check');
 const exportApi = process.argv.includes('--export');
-const unknownArguments = process.argv.slice(2).filter(argument => !['--check', '--export'].includes(argument));
+const unknownArguments = process.argv.slice(2).filter(argument => !['--check', '--export', '--admin'].includes(argument));
 if (unknownArguments.length) throw new Error(`Unknown SDK arguments: ${unknownArguments.join(', ')}`);
 
 async function run(command, args, env = process.env) {
@@ -101,7 +106,7 @@ function organizeImports(content, nativeFileName) {
     }
 }
 
-const contractPath = join(sdkRoot, 'user.openapi.json');
+const contractPath = join(sdkRoot, admin ? 'admin.openapi.json' : 'user.openapi.json');
 if (exportApi) {
     console.log('Exporting OpenAPI from the real API host (workers and provider I/O disabled)...');
     const rawPath = join(artifactRoot, 'openapi.json');
@@ -128,10 +133,13 @@ if (exportApi) {
     } catch (error) {
         throw new Error(`API export did not produce a document.\n${output}`, { cause: error });
     }
-    const contract = await format(canonicalJson(userApiContract(raw, scopes)), { ...prettierConfig, filepath: contractPath });
+    const contract = await format(canonicalJson(userApiContract(raw, scopes, `FoodDiary ${label} API`)), {
+        ...prettierConfig,
+        filepath: contractPath,
+    });
     if (check) {
         if (contract !== (await readFile(contractPath, 'utf8'))) {
-            throw new Error('User API changed. Review the contract and run npm run sdk:update.');
+            throw new Error(`${label} API changed. Review the contract and run npm run ${admin ? 'sdk:admin:update' : 'sdk:update'}.`);
         }
     } else {
         await writeFile(contractPath, contract);
@@ -181,7 +189,7 @@ try {
     const generatorConfigPath = join(stagingRoot, 'generator.json');
     await writeFile(generatorConfigPath, JSON.stringify(config.additionalProperties));
     const generatedRoot = join(stagingRoot, 'generated');
-    console.log(`Generating user API SDK with OpenAPI Generator ${config.version}...`);
+    console.log(`Generating ${label.toLowerCase()} API SDK with OpenAPI Generator ${config.version}...`);
     await run('java', [
         '-jar',
         jar,
@@ -225,7 +233,7 @@ try {
     }
     if (check && differences.length) throw new Error(`SDK drift: ${differences.join(', ')}. Run npm run sdk:generate.`);
     if (!check) for (const file of differences) await rm(join(outputRoot, file));
-    console.log(`User API SDK ${check ? 'verified' : 'generated'}: ${scopes.length} groups, ${files.length} TypeScript files.`);
+    console.log(`${label} API SDK ${check ? 'verified' : 'generated'}: ${scopes.length} groups, ${files.length} TypeScript files.`);
 } finally {
     // This directory is owned by this invocation and was created by mkdtemp above.
     await rm(stagingRoot, { recursive: true, force: true });

@@ -6,6 +6,22 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { environment } from '../../../../environments/environment';
 import { AdminDashboardService } from './admin-dashboard.service';
 
+const overview = {
+    fromUtc: '2026-08-01T00:00:00Z',
+    toUtc: '2026-09-01T00:00:00Z',
+    interval: 'day',
+    period: {
+        fromUtc: '2026-08-01T00:00:00Z',
+        toUtc: '2026-09-01T00:00:00Z',
+        metrics: { registrations: 0, payingUsers: 0, aiTokens: 0, trend: [] },
+        currencies: [],
+    },
+    previous: null,
+    totalUsersNow: 0,
+    premiumUsersNow: 0,
+    pendingReportsNow: 0,
+};
+
 describe('AdminDashboardService', () => {
     let service: AdminDashboardService;
     let httpMock: HttpTestingController;
@@ -35,6 +51,7 @@ describe('AdminDashboardService', () => {
             activeUsers: 8,
             premiumUsers: 3,
             deletedUsers: 2,
+            pendingReportsCount: 0,
             recentUsers: [],
         };
 
@@ -52,13 +69,13 @@ describe('AdminDashboardService', () => {
         const req = httpMock.expectOne(request => request.url === `${baseUrl}/overview`);
         expect(req.request.params.get('from')).toBe('2026-08-01');
         expect(req.request.params.get('to')).toBe('2026-08-31');
-        req.flush({});
+        req.flush(overview);
     });
 
     it('omits stale date parameters for all time', () => {
         service.getOverview({ allTime: true, from: '2026-08-01' }).subscribe();
         const req = httpMock.expectOne(`${baseUrl}/overview?allTime=true`);
         expect(req.request.params.has('from')).toBe(false);
-        req.flush({});
+        req.flush(overview);
     });
 });

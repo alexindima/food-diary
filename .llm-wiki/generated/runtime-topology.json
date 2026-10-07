@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "3211c1e96ce496ce85b50e2ea0e71d07bb56cab1b7972bba6edc7a1a0d3943e0",
-    "sourceFileCount": 4407
+    "sourceFingerprint": "52168932e9b8840664d3ea57dde762a0e201f2cbc09b77918a235034e8343efd",
+    "sourceFileCount": 4446
   },
   "summary": {
     "composeServices": 18,
     "hostedServices": 15,
-    "httpClients": 20,
+    "httpClients": 21,
     "webhooks": 22,
     "recurringJobRegistrations": 17,
     "networkPolicies": 38
@@ -658,6 +658,15 @@
     },
     {
       "contract": null,
+      "implementation": "BotApiTransport",
+      "registrationPath": "FoodDiary.Telegram.Bot/Api/BotApiTransport.cs",
+      "behaviorSignals": [
+        "cancellation-propagation-candidate"
+      ],
+      "behaviorSignalScope": "class-window"
+    },
+    {
+      "contract": null,
       "implementation": "BotDiaryClient",
       "registrationPath": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
       "behaviorSignals": [
@@ -1218,7 +1227,6 @@
       ],
       "behaviorSignals": [
         "cancellation-propagation-candidate",
-        "idempotency",
         "retry-or-resilience"
       ],
       "behaviorSignalScope": "policy-file",

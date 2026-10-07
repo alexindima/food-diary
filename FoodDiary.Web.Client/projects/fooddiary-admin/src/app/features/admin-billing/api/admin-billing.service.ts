@@ -3,45 +3,65 @@ import { inject, Service } from '@angular/core';
 import { map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
+import { AdminBillingSdk } from '../../../shared/api/sdk/generated/api/admin-billing.service';
+import { createSdkConnection, sdkRequestOptions } from '../../../shared/api/sdk/sdk-connection';
+import { sdkItemsPage } from '../../../shared/api/sdk/sdk-response';
 import type {
     AdminBillingFilters,
     AdminBillingPayment,
     AdminBillingRevenueSummary,
     AdminBillingSubscription,
-    AdminBillingTab,
     AdminBillingWebhookEvent,
     PagedResponse,
 } from '../models/admin-billing.models';
-
-type ApiPagedResponse<T> = {
-    data: T[];
-    page: number;
-    limit: number;
-    totalPages: number;
-    totalItems: number;
-};
+import {
+    adminBillingPaymentFromSdk,
+    adminBillingRevenueSummaryFromSdk,
+    adminBillingSubscriptionFromSdk,
+    adminBillingWebhookEventFromSdk,
+} from './admin-billing-sdk.mapper';
 
 @Service()
 export class AdminBillingService {
     private readonly http = inject(HttpClient);
     private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/billing`;
+    private readonly sdk = createSdkConnection(AdminBillingSdk, this.baseUrl, this.http);
 
     public getSubscriptions(
         page: number,
         limit: number,
         filters: AdminBillingFilters,
     ): Observable<PagedResponse<AdminBillingSubscription>> {
-        return this.getPaged<AdminBillingSubscription>('subscriptions', page, limit, filters);
+        return this.sdk.client
+            .getAdminBillingSubscriptions(
+                { version: this.sdk.version, page, limit },
+                'body',
+                false,
+                sdkRequestOptions(undefined, this.buildFilterParams(filters)),
+            )
+            .pipe(map(response => sdkItemsPage(response, adminBillingSubscriptionFromSdk)));
     }
 
     public getPayments(page: number, limit: number, filters: AdminBillingFilters): Observable<PagedResponse<AdminBillingPayment>> {
-        return this.getPaged<AdminBillingPayment>('payments', page, limit, filters);
+        return this.sdk.client
+            .getAdminBillingPayments(
+                { version: this.sdk.version, page, limit },
+                'body',
+                false,
+                sdkRequestOptions(undefined, this.buildFilterParams(filters)),
+            )
+            .pipe(map(response => sdkItemsPage(response, adminBillingPaymentFromSdk)));
     }
 
     public getRevenueSummary(filters: AdminBillingFilters): Observable<AdminBillingRevenueSummary> {
-        return this.http.get<AdminBillingRevenueSummary>(`${this.baseUrl}/revenue-summary`, {
-            params: this.buildFilterParams(filters),
-        });
+        return this.sdk.client
+            .getAdminBillingRevenueSummary(
+                { version: this.sdk.version },
+                'body',
+                false,
+                sdkRequestOptions(undefined, this.buildFilterParams(filters)),
+            )
+            .pipe(map(adminBillingRevenueSummaryFromSdk));
     }
 
     public getWebhookEvents(
@@ -49,21 +69,14 @@ export class AdminBillingService {
         limit: number,
         filters: AdminBillingFilters,
     ): Observable<PagedResponse<AdminBillingWebhookEvent>> {
-        return this.getPaged<AdminBillingWebhookEvent>('webhook-events', page, limit, filters);
-    }
-
-    private getPaged<T>(path: AdminBillingTab, page: number, limit: number, filters: AdminBillingFilters): Observable<PagedResponse<T>> {
-        const params = this.buildFilterParams(filters).set('page', page).set('limit', limit);
-
-        return this.http.get<ApiPagedResponse<T>>(`${this.baseUrl}/${path}`, { params }).pipe(
-            map(response => ({
-                items: response.data,
-                page: response.page,
-                limit: response.limit,
-                totalPages: response.totalPages,
-                totalItems: response.totalItems,
-            })),
-        );
+        return this.sdk.client
+            .getAdminBillingWebhookEvents(
+                { version: this.sdk.version, page, limit },
+                'body',
+                false,
+                sdkRequestOptions(undefined, this.buildFilterParams(filters)),
+            )
+            .pipe(map(response => sdkItemsPage(response, adminBillingWebhookEventFromSdk)));
     }
 
     private buildFilterParams(filters: AdminBillingFilters): HttpParams {

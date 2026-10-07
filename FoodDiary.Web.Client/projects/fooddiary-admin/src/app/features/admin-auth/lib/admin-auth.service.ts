@@ -1,9 +1,12 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { inject, PLATFORM_ID, Service, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
+import { AdminAuthSdk } from '../../../shared/api/sdk/generated/api/admin-auth.service';
+import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
+import { requireSdkFields } from '../../../shared/api/sdk/sdk-response';
 
 const BASE64_BLOCK_SIZE = 4;
 const BASE64_REMAINDER_NONE = 0;
@@ -12,6 +15,8 @@ const BASE64_REMAINDER_NONE = 0;
 export class AdminAuthService {
     private readonly authUrl = environment.apiUrls.auth;
     private readonly http = inject(HttpClient);
+    private readonly sdk = createSdkConnection(AdminAuthSdk, this.authUrl, this.http);
+    private readonly cookieSdk = createSdkConnection(AdminAuthSdk, this.authUrl, this.http, true);
     private readonly document = inject(DOCUMENT);
     private readonly platformId = inject(PLATFORM_ID);
     private readonly isBrowser = isPlatformBrowser(this.platformId);
@@ -99,7 +104,9 @@ export class AdminAuthService {
         }
 
         try {
-            const response = await firstValueFrom(this.http.post<AdminSsoStartResponse>(`${this.authUrl}/admin-sso/start`, {}));
+            const response = await firstValueFrom(
+                this.sdk.client.postAuthAdminSsoStart({ version: this.sdk.version }).pipe(map(value => requireSdkFields(value, ['code']))),
+            );
             if (response.code.length === 0) {
                 return false;
             }
@@ -116,7 +123,9 @@ export class AdminAuthService {
         this.ssoRateLimitedSignal.set(false);
         try {
             const response = await firstValueFrom(
-                this.http.post<AuthenticationResponse>(`${this.authUrl}/admin-sso/exchange`, { code }, { withCredentials: true }),
+                this.cookieSdk.client
+                    .postAuthAdminSsoExchange({ version: this.cookieSdk.version, adminSsoExchangeHttpRequest: { code } })
+                    .pipe(map(value => requireSdkFields(value, ['accessToken']))),
             );
 
             if (response.accessToken.length === 0) {
@@ -257,11 +266,3 @@ export class AdminAuthService {
         }
     }
 }
-
-type AuthenticationResponse = {
-    accessToken: string;
-};
-
-type AdminSsoStartResponse = {
-    code: string;
-};

@@ -31,17 +31,25 @@ Direct behavior tests cover identity, selection, scope, freshness and output bou
 Preserve or explicitly migrate public inputs and output payloads. Exercise loading, empty, error, disabled, and permission states where relevant. Verify accessible naming, semantics, keyboard navigation, focus transitions, and error announcements. Shared UI-kit changes need consumer-aware rendered evidence at representative viewport sizes.
 
 Multi-step authentication flows should also trace transient state across
-components, services, and navigation. API-call discovery covers direct
+components, services, and navigation. Legacy-source API-call discovery covers direct
 `HttpClient` calls and `get/post/put/patch/delete` helpers invoked by classes
 extending `ApiService`. Inherited calls record the owning public method, base
 URL expression, endpoint argument, and combined URL expression, so queries such
 as `linkGoogle` and `google/link` resolve the same call.
 
 For generated user SDK calls, also follow the feature adapter to the concrete
-generated method, `FoodDiary.Web.Client/api-sdk/user.openapi.json` and the scope manifest.
+generated method, the owning `FoodDiary.Web.Client/api-sdk/user.openapi.json` or
+`admin.openapi.json` contract and its scope manifest. The index resolves both
+manifests without importing either application's implementations into the other.
 The SDK carries wire DTOs; application models and response/error normalization
 remain in adapters. Regenerate after API changes and run `npm run sdk:check:api`
 to verify the live contract alongside the usual feature tests and compiler.
+
+Run `npm run check:api-client-usage` when reviewing API adapters or transport
+exceptions. This guard rejects manual HTTP entrypoints in both apps; its reviewed
+exceptions are method/verb/target-specific. A new request in an upload or
+translation file remains subject to the rule. Generated-code drift checks and
+behavioral tests remain separate verification obligations.
 
 Angular signal contracts include typed and inferred `input()` / `output()`
 members, including nested generic types such as `input<readonly Item[]>([])`.

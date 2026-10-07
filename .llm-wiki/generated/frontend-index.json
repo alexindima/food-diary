@@ -8,19 +8,19 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2291,
-    "symbols": 779,
+    "typescriptFiles": 2459,
+    "symbols": 807,
     "routes": 106,
     "features": 46,
-    "specs": 706,
+    "specs": 708,
     "localeFiles": 5,
     "roles": {
       "Component": 483,
       "Directive": 12,
       "Facade": 86,
-      "Other": 25,
+      "Other": 30,
       "Pipe": 4,
-      "Service": 169
+      "Service": 192
     }
   },
   "features": [
@@ -179,6 +179,8 @@
         ""
       ],
       "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/api/admin-catalog-sdk.mapper.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/api/admin-catalog.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/lib/admin-catalog.facade.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/lib/catalog-file.spec.ts"
       ]
@@ -2088,7 +2090,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/api/admin-achievements.service.ts",
-      "line": 14
+      "line": 18
     },
     {
       "name": "AdminAchievementsFacade",
@@ -2137,7 +2139,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts",
-      "line": 12
+      "line": 17
     },
     {
       "name": "AdminAiPromptContextComponent",
@@ -2179,7 +2181,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-usage/api/admin-ai-usage.service.ts",
-      "line": 9
+      "line": 13
     },
     {
       "name": "AdminAiUsageFacade",
@@ -2200,7 +2202,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-audit/api/admin-audit.service.ts",
-      "line": 9
+      "line": 13
     },
     {
       "name": "AdminAuditFacade",
@@ -2221,7 +2223,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
-      "line": 12
+      "line": 15
     },
     {
       "name": "AdminBillingService",
@@ -2284,7 +2286,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/api/admin-bugs.service.ts",
-      "line": 9
+      "line": 13
     },
     {
       "name": "AdminBugReportCardComponent",
@@ -2312,7 +2314,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/api/admin-catalog.service.ts",
-      "line": 9
+      "line": 17
     },
     {
       "name": "AdminCatalogFacade",
@@ -2333,7 +2335,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/api/admin-daily-advices.service.ts",
-      "line": 15
+      "line": 19
     },
     {
       "name": "DailyAdviceGroupCardComponent",
@@ -2361,14 +2363,14 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/api/admin-dashboard.service.ts",
-      "line": 10
+      "line": 14
     },
     {
       "name": "AdminTelemetryService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/api/admin-telemetry.service.ts",
-      "line": 11
+      "line": 15
     },
     {
       "name": "AdminDashboardContentComponent",
@@ -2396,7 +2398,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/api/admin-email-templates.service.ts",
-      "line": 14
+      "line": 18
     },
     {
       "name": "AdminEmailTemplateEditDialogComponent",
@@ -2424,7 +2426,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/api/admin-lessons.service.ts",
-      "line": 16
+      "line": 20
     },
     {
       "name": "AdminLessonEditDialogComponent",
@@ -2452,7 +2454,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/api/admin-mail-inbox.service.ts",
-      "line": 14
+      "line": 22
     },
     {
       "name": "AdminMailMessageDialogComponent",
@@ -2480,7 +2482,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/api/admin-meal-plans.service.ts",
-      "line": 10
+      "line": 14
     },
     {
       "name": "AdminMealPlansFacade",
@@ -2508,7 +2510,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/api/admin-moderation.service.ts",
-      "line": 18
+      "line": 14
     },
     {
       "name": "AdminModerationContextComponent",
@@ -2543,7 +2545,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/api/admin-outgoing-emails.service.ts",
-      "line": 11
+      "line": 15
     },
     {
       "name": "OutgoingEmailDetailsComponent",
@@ -2585,7 +2587,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-retention/api/admin-retention.service.ts",
-      "line": 9
+      "line": 13
     },
     {
       "name": "AdminRetentionFacade",
@@ -2606,7 +2608,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-template-history/api/admin-template-history.service.ts",
-      "line": 9
+      "line": 14
     },
     {
       "name": "AdminTemplateHistoryComponent",
@@ -2627,7 +2629,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 31
+      "line": 35
     },
     {
       "name": "AdminUserDetailsBodyComponent",
@@ -2719,6 +2721,195 @@
       "selector": "fd-admin-users",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.ts",
       "line": 42
+    },
+    {
+      "name": "BaseService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api.base.service.ts",
+      "line": 14
+    },
+    {
+      "name": "ApiModule",
+      "role": "Other",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api.module.ts",
+      "line": 55
+    },
+    {
+      "name": "AdminAchievementsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-achievements.service.ts",
+      "line": 47
+    },
+    {
+      "name": "AdminAcquisitionSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-acquisition.service.ts",
+      "line": 42
+    },
+    {
+      "name": "AdminAiPromptsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-ai-prompts.service.ts",
+      "line": 69
+    },
+    {
+      "name": "AdminAiUsageSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-ai-usage.service.ts",
+      "line": 31
+    },
+    {
+      "name": "AdminAuditSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-audit.service.ts",
+      "line": 37
+    },
+    {
+      "name": "AdminAuthSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-auth.service.ts",
+      "line": 36
+    },
+    {
+      "name": "AdminBillingSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-billing.service.ts",
+      "line": 78
+    },
+    {
+      "name": "AdminBugsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-bugs.service.ts",
+      "line": 35
+    },
+    {
+      "name": "AdminCatalogSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-catalog.service.ts",
+      "line": 65
+    },
+    {
+      "name": "AdminDailyAdvicesSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-daily-advices.service.ts",
+      "line": 71
+    },
+    {
+      "name": "AdminDashboardSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-dashboard.service.ts",
+      "line": 38
+    },
+    {
+      "name": "AdminEmailTemplatesSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-email-templates.service.ts",
+      "line": 56
+    },
+    {
+      "name": "AdminImagesSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-images.service.ts",
+      "line": 46
+    },
+    {
+      "name": "AdminLessonsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-lessons.service.ts",
+      "line": 63
+    },
+    {
+      "name": "AdminMailInboxSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-mail-inbox.service.ts",
+      "line": 60
+    },
+    {
+      "name": "AdminMealPlansSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-meal-plans.service.ts",
+      "line": 60
+    },
+    {
+      "name": "AdminModerationSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-moderation.service.ts",
+      "line": 50
+    },
+    {
+      "name": "AdminOutgoingEmailsSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-outgoing-emails.service.ts",
+      "line": 37
+    },
+    {
+      "name": "AdminRetentionSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-retention.service.ts",
+      "line": 32
+    },
+    {
+      "name": "AdminTelemetrySdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-telemetry.service.ts",
+      "line": 29
+    },
+    {
+      "name": "AdminUsersSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-users.service.ts",
+      "line": 132
+    },
+    {
+      "name": "Configuration",
+      "role": "Other",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/configuration.ts",
+      "line": 37
+    },
+    {
+      "name": "CustomHttpParameterCodec",
+      "role": "Other",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/encoder.ts",
+      "line": 7
+    },
+    {
+      "name": "IdentityHttpParameterCodec",
+      "role": "Other",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/encoder.ts",
+      "line": 21
+    },
+    {
+      "name": "OpenApiHttpParams",
+      "role": "Other",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/query.params.ts",
+      "line": 25
     },
     {
       "name": "AdminCatalogFilterComponent",
@@ -6165,13 +6356,6 @@
       "line": 15
     },
     {
-      "name": "ApiService",
-      "role": "Service",
-      "selector": null,
-      "path": "FoodDiary.Web.Client/src/app/services/api.service.ts",
-      "line": 8
-    },
-    {
       "name": "AuthService",
       "role": "Service",
       "selector": null,
@@ -6225,7 +6409,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/logging-api.service.ts",
-      "line": 31
+      "line": 33
     },
     {
       "name": "NavigationService",
@@ -6309,7 +6493,7 @@
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api.module.ts",
-      "line": 91
+      "line": 95
     },
     {
       "name": "AiSdk",
@@ -6443,6 +6627,20 @@
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/lessons.service.ts",
       "line": 56
+    },
+    {
+      "name": "LoggingSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/logging.service.ts",
+      "line": 28
+    },
+    {
+      "name": "MarketingSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/marketing.service.ts",
+      "line": 37
     },
     {
       "name": "MealPlansSdk",
@@ -6778,7 +6976,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/marketing/marketing-attribution.service.ts",
-      "line": 34
+      "line": 36
     },
     {
       "name": "GoalHistoryPager",

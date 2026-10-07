@@ -17,6 +17,7 @@ $cases = @(
     [pscustomobject]@{ View = 'spec-gaps'; Query = ''; Limit = 30; Minimum = 30 }
     [pscustomobject]@{ View = 'components'; Query = 'AiPhotoPreview'; Limit = 10; Minimum = 1 }
     [pscustomobject]@{ View = 'api'; Query = 'google/link'; Limit = 10; Minimum = 1 }
+    [pscustomobject]@{ View = 'api'; Query = 'admin/users'; Limit = 10; Minimum = 1 }
 )
 $sqlDurations = [Collections.Generic.List[double]]::new()
 foreach ($case in $cases) {

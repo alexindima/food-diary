@@ -669,6 +669,82 @@
                 },
                 "type": "object"
             },
+            "ClientTelemetryLogHttpRequest": {
+                "additionalProperties": false,
+                "properties": {
+                    "buildVersion": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "category": {
+                        "type": "string"
+                    },
+                    "details": {
+                        "nullable": true
+                    },
+                    "durationMs": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "httpMethod": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "level": {
+                        "type": "string"
+                    },
+                    "location": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "message": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "outcome": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "pageRoute": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "route": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "sessionId": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "stack": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "statusCode": {
+                        "format": "int32",
+                        "nullable": true,
+                        "type": "integer"
+                    },
+                    "timestamp": {
+                        "type": "string"
+                    },
+                    "unit": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "value": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    }
+                },
+                "type": "object"
+            },
             "CompleteTelegramAuthenticationHttpRequest": {
                 "additionalProperties": false,
                 "properties": {
@@ -3971,6 +4047,98 @@
                     },
                     "rememberMe": {
                         "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "MarketingAttributionHttpRequest": {
+                "additionalProperties": false,
+                "properties": {
+                    "anonymousId": {
+                        "type": "string"
+                    },
+                    "buildVersion": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "landingPath": {
+                        "type": "string"
+                    },
+                    "referrerHost": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "sessionId": {
+                        "type": "string"
+                    },
+                    "timestamp": {
+                        "type": "string"
+                    },
+                    "utmCampaign": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "utmContent": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "utmMedium": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "utmSource": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "utmTerm": {
+                        "nullable": true,
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "MarketingSignupAttributionHttpRequest": {
+                "additionalProperties": false,
+                "properties": {
+                    "anonymousId": {
+                        "type": "string"
+                    },
+                    "buildVersion": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "landingPath": {
+                        "type": "string"
+                    },
+                    "referrerHost": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "sessionId": {
+                        "type": "string"
+                    },
+                    "timestamp": {
+                        "type": "string"
+                    },
+                    "utmCampaign": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "utmContent": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "utmMedium": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "utmSource": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "utmTerm": {
+                        "nullable": true,
+                        "type": "string"
                     }
                 },
                 "type": "object"
@@ -28525,6 +28693,455 @@
                     }
                 ],
                 "tags": ["Lessons"]
+            }
+        },
+        "/api/v{version}/logs": {
+            "post": {
+                "operationId": "postLogs",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/*+json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/ClientTelemetryLogHttpRequest"
+                                    }
+                                ]
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/ClientTelemetryLogHttpRequest"
+                                    }
+                                ]
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/ClientTelemetryLogHttpRequest"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "413": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Content Too Large"
+                    },
+                    "429": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [],
+                "tags": ["Logging"]
+            }
+        },
+        "/api/v{version}/marketing/attribution-events": {
+            "post": {
+                "operationId": "postMarketingAttributionEvents",
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Idempotency-Key",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/*+json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/MarketingAttributionHttpRequest"
+                                    }
+                                ]
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/MarketingAttributionHttpRequest"
+                                    }
+                                ]
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/MarketingAttributionHttpRequest"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Conflict"
+                    },
+                    "413": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Content Too Large"
+                    },
+                    "429": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Service Unavailable"
+                    }
+                },
+                "security": [],
+                "tags": ["Marketing"]
+            }
+        },
+        "/api/v{version}/marketing/attribution-events/signup": {
+            "post": {
+                "operationId": "postMarketingAttributionEventsSignup",
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Idempotency-Key",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/*+json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/MarketingSignupAttributionHttpRequest"
+                                    }
+                                ]
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/MarketingSignupAttributionHttpRequest"
+                                    }
+                                ]
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/MarketingSignupAttributionHttpRequest"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Forbidden"
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Conflict"
+                    },
+                    "413": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Content Too Large"
+                    },
+                    "429": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    },
+                    "503": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Service Unavailable"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": ["Marketing"]
             }
         },
         "/api/v{version}/meal-plans": {

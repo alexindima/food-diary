@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "contracts": 1337,
-    "ambiguousContracts": 2,
-    "consumerEdges": 10391,
-    "productionConsumerEdges": 5940,
-    "testConsumerEdges": 4451,
+    "ambiguousContracts": 29,
+    "consumerEdges": 10434,
+    "productionConsumerEdges": 5982,
+    "testConsumerEdges": 4452,
     "consumedContracts": 1337,
     "unconsumedContracts": 0
   },
@@ -1512,16 +1512,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "ApiVersionHttpResponse",
@@ -1580,16 +1582,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "AwsSesBouncedRecipientHttpRequest",
@@ -2294,16 +2298,18 @@
         "Request"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CheckpointTelegramOperationHttpRequest.cs",
         "Modules/Identity/Presentation/Features/Auth/Requests/CheckpointTelegramOperationHttpRequest.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "CheckUserAccessQuery",
@@ -2600,16 +2606,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ConfirmImageUploadHttpResponse.cs",
         "Modules/Images/Presentation/Responses/ConfirmImageUploadHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "ConfirmPasswordResetCommand",
@@ -3025,16 +3033,18 @@
         "Request"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationEntryHttpRequest.cs",
         "Modules/Hydration/Presentation/Requests/CreateHydrationEntryHttpRequest.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "CreateHydrationFromOperationCommand",
@@ -3059,16 +3069,18 @@
         "Request"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationFromOperationHttpRequest.cs",
         "Modules/Hydration/Presentation/Requests/CreateHydrationFromOperationHttpRequest.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "CreateLessonCommand",
@@ -3161,16 +3173,18 @@
         "Request"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateMealFromRecognitionHttpRequest.cs",
         "Modules/Meals/Presentation/Requests/CreateMealFromRecognitionHttpRequest.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "CreateMealHttpRequest",
@@ -4266,16 +4280,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsDayHttpResponse.cs",
         "Modules/Statistics/Presentation/Responses/DiaryStatisticsDayHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "DiaryStatisticsSummaryHttpResponse",
@@ -4283,16 +4299,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsSummaryHttpResponse.cs",
         "Modules/Statistics/Presentation/Responses/DiaryStatisticsSummaryHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "DietologistInfoHttpResponse",
@@ -5202,16 +5220,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodNutritionHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "FoodNutritionItemHttpResponse",
@@ -5219,16 +5239,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionItemHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodNutritionItemHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "FoodRecognitionImageHttpResponse",
@@ -5236,16 +5258,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionImageHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodRecognitionImageHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "FoodRecognitionJobHttpResponse",
@@ -5253,16 +5277,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "FoodTextHttpRequest",
@@ -5304,16 +5330,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodVisionHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodVisionHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "GamificationHttpResponse",
@@ -7191,16 +7219,18 @@
         "Request"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpRequest.cs",
         "Modules/Images/Presentation/Requests/GetImageUploadUrlHttpRequest.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "GetImageUploadUrlHttpResponse",
@@ -7208,16 +7238,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpResponse.cs",
         "Modules/Images/Presentation/Responses/GetImageUploadUrlHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "GetInboundMailMessageDetailsQuery",
@@ -9163,16 +9195,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/HydrationEntryHttpResponse.cs",
         "Modules/Hydration/Presentation.Contracts/Responses/HydrationEntryHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "HydrationOperationHttpResponse",
@@ -9180,16 +9214,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/HydrationOperationHttpResponse.cs",
         "Modules/Hydration/Presentation/Responses/HydrationOperationHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "IAchievementAwardService",
@@ -18110,16 +18146,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ProductLabelHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/ProductLabelHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "ProductOverviewHttpResponse",
@@ -19096,16 +19134,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RecognizedMealCreationHttpResponse.cs",
         "Modules/Meals/Presentation/Responses/RecognizedMealCreationHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "RecognizedMealUndoHttpResponse",
@@ -19113,16 +19153,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RecognizedMealUndoHttpResponse.cs",
         "Modules/Meals/Presentation/Responses/RecognizedMealUndoHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "RecommendationCommentHttpResponse",
@@ -19402,16 +19444,18 @@
         "Request"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RegisterTelegramOperationHttpRequest.cs",
         "Modules/Identity/Presentation/Features/Auth/Requests/RegisterTelegramOperationHttpRequest.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "RelayEmailMessageRequest",
@@ -20559,16 +20603,18 @@
         "Request"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/StartFoodRecognitionHttpRequest.cs",
         "Modules/Ai/Presentation/Requests/StartFoodRecognitionHttpRequest.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "StartPremiumTrialCommand",
@@ -20780,16 +20826,18 @@
         "Request"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramBotAuthHttpRequest.cs",
         "Modules/Identity/Presentation/Features/Auth/Requests/TelegramBotAuthHttpRequest.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "TelegramConfigurationHttpResponse",
@@ -20865,16 +20913,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramOperationLeaseHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/TelegramOperationLeaseHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "TelegramOperationRegisteredHttpResponse",
@@ -20882,16 +20932,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramOperationRegisteredHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/TelegramOperationRegisteredHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "TelegramVerifyCommand",
@@ -22259,16 +22311,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
         "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "UserLoginEvent",
@@ -27265,7 +27319,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
@@ -27278,7 +27333,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
@@ -27291,7 +27347,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Filters/RejectOversizedRequestAttribute.cs",
@@ -27304,7 +27361,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Responses/PresentationErrorHttpMapper.cs",
@@ -27317,7 +27375,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Responses/ProducesApiErrorResponseAttribute.cs",
@@ -27330,7 +27389,36 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "isTest": false,
+      "referenceCount": 4
+    },
+    {
+      "contract": "ApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotOperationClient.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Web.Api/Extensions/ApiAuthorizationMiddlewareResultHandler.cs",
@@ -27343,7 +27431,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Web.Api/Extensions/ApiExceptionHandler.cs",
@@ -27356,7 +27445,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Web.Api/Extensions/ImpersonationAccessGuardMiddleware.cs",
@@ -27369,7 +27459,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Web.Api/Options/RateLimiterOptionsSetup.cs",
@@ -27382,7 +27473,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Web.Api/Swagger/PresentationTransportOperationFilter.cs",
@@ -27395,7 +27487,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Web.Api/Swagger/StandardErrorResponsesOperationFilter.cs",
@@ -27408,7 +27501,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Presentation/Recipes/RecipeVideoAdmissionAttribute.cs",
@@ -27421,7 +27515,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Presentation/Features/Logs/LogsController.cs",
@@ -27434,7 +27529,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/Presentation/Controllers/MarketingAttributionController.cs",
@@ -27447,7 +27543,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/RecipeCommunity/Presentation/RecipeLikes/Controllers/RecipeLikesController.cs",
@@ -27460,7 +27557,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthAndProductsFlowTests.cs",
@@ -27473,7 +27571,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BillingSecurityIntegrationTests.cs",
@@ -27486,7 +27585,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/FrontendObservabilityIntegrationTests.cs",
@@ -27499,7 +27599,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/ApiAuthorizationMiddlewareResultHandlerTests.cs",
@@ -27512,7 +27613,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/ApiExceptionHandlerTests.cs",
@@ -27525,7 +27627,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/ExtensionsTests.cs",
@@ -27538,7 +27641,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/ImpersonationAccessGuardMiddlewareTests.cs",
@@ -27551,7 +27655,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingWebhookControllerTests.cs",
@@ -27564,7 +27669,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramBotSecretAuthorizationFilterTests.cs",
@@ -27577,7 +27683,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerTests.cs",
@@ -27590,7 +27697,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
@@ -27603,7 +27711,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/IdempotencyFilterTests.cs",
@@ -27616,7 +27725,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/PresentationServiceCollectionExtensionsTests.cs",
@@ -27629,7 +27739,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/RejectOversizedRequestAttributeTests.cs",
@@ -27642,7 +27753,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/ResultExtensionsTests.cs",
@@ -27655,7 +27767,8 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs",
@@ -27785,6 +27898,35 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
+        "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "AuthenticationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
+        "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "AuthenticationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -27798,6 +27940,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -27811,6 +27954,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -27824,6 +27968,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -27837,6 +27982,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -27850,6 +27996,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -27863,6 +28010,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -27876,6 +28024,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -27889,6 +28038,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -27902,6 +28052,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -27915,6 +28066,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -27928,6 +28080,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -29969,6 +30122,35 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CheckpointTelegramOperationHttpRequest.cs",
+        "Modules/Identity/Presentation/Features/Auth/Requests/CheckpointTelegramOperationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotOperationsApi.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CheckpointTelegramOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CheckpointTelegramOperationHttpRequest.cs",
+        "Modules/Identity/Presentation/Features/Auth/Requests/CheckpointTelegramOperationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotOperationClient.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CheckpointTelegramOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CheckpointTelegramOperationHttpRequest.cs",
         "Modules/Identity/Presentation/Features/Auth/Requests/CheckpointTelegramOperationHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -29982,6 +30164,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CheckpointTelegramOperationHttpRequest.cs",
         "Modules/Identity/Presentation/Features/Auth/Requests/CheckpointTelegramOperationHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -31100,6 +31283,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ConfirmImageUploadHttpResponse.cs",
         "Modules/Images/Presentation/Responses/ConfirmImageUploadHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -31113,6 +31297,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ConfirmImageUploadHttpResponse.cs",
         "Modules/Images/Presentation/Responses/ConfirmImageUploadHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -32907,6 +33092,35 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationEntryHttpRequest.cs",
+        "Modules/Hydration/Presentation/Requests/CreateHydrationEntryHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotHydrationApi.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateHydrationEntryHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationEntryHttpRequest.cs",
+        "Modules/Hydration/Presentation/Requests/CreateHydrationEntryHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateHydrationEntryHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationEntryHttpRequest.cs",
         "Modules/Hydration/Presentation/Requests/CreateHydrationEntryHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -32920,6 +33134,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationEntryHttpRequest.cs",
         "Modules/Hydration/Presentation/Requests/CreateHydrationEntryHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -32933,6 +33148,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationEntryHttpRequest.cs",
         "Modules/Hydration/Presentation/Requests/CreateHydrationEntryHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -32946,6 +33162,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationEntryHttpRequest.cs",
         "Modules/Hydration/Presentation/Requests/CreateHydrationEntryHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -32959,6 +33176,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationEntryHttpRequest.cs",
         "Modules/Hydration/Presentation/Requests/CreateHydrationEntryHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -32972,6 +33190,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationEntryHttpRequest.cs",
         "Modules/Hydration/Presentation/Requests/CreateHydrationEntryHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -33050,6 +33269,35 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationFromOperationHttpRequest.cs",
+        "Modules/Hydration/Presentation/Requests/CreateHydrationFromOperationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotHydrationApi.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateHydrationFromOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationFromOperationHttpRequest.cs",
+        "Modules/Hydration/Presentation/Requests/CreateHydrationFromOperationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateHydrationFromOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationFromOperationHttpRequest.cs",
         "Modules/Hydration/Presentation/Requests/CreateHydrationFromOperationHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -33063,6 +33311,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationFromOperationHttpRequest.cs",
         "Modules/Hydration/Presentation/Requests/CreateHydrationFromOperationHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -33076,6 +33325,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationFromOperationHttpRequest.cs",
         "Modules/Hydration/Presentation/Requests/CreateHydrationFromOperationHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -33466,6 +33716,35 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateMealFromRecognitionHttpRequest.cs",
+        "Modules/Meals/Presentation/Requests/CreateMealFromRecognitionHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotMealsApi.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateMealFromRecognitionHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateMealFromRecognitionHttpRequest.cs",
+        "Modules/Meals/Presentation/Requests/CreateMealFromRecognitionHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateMealFromRecognitionHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateMealFromRecognitionHttpRequest.cs",
         "Modules/Meals/Presentation/Requests/CreateMealFromRecognitionHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -33479,6 +33758,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateMealFromRecognitionHttpRequest.cs",
         "Modules/Meals/Presentation/Requests/CreateMealFromRecognitionHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -38120,6 +38400,21 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsDayHttpResponse.cs",
+        "Modules/Statistics/Presentation/Responses/DiaryStatisticsDayHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsSummaryHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DiaryStatisticsDayHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsDayHttpResponse.cs",
         "Modules/Statistics/Presentation/Responses/DiaryStatisticsDayHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -38133,6 +38428,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsDayHttpResponse.cs",
         "Modules/Statistics/Presentation/Responses/DiaryStatisticsDayHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -38146,6 +38442,35 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsSummaryHttpResponse.cs",
+        "Modules/Statistics/Presentation/Responses/DiaryStatisticsSummaryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/BotApiMapper.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DiaryStatisticsSummaryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsSummaryHttpResponse.cs",
+        "Modules/Statistics/Presentation/Responses/DiaryStatisticsSummaryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "DiaryStatisticsSummaryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsSummaryHttpResponse.cs",
         "Modules/Statistics/Presentation/Responses/DiaryStatisticsSummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -38159,6 +38484,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsSummaryHttpResponse.cs",
         "Modules/Statistics/Presentation/Responses/DiaryStatisticsSummaryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41601,6 +41927,21 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/FoodNutritionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FoodNutritionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodNutritionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41614,6 +41955,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodNutritionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41627,6 +41969,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodNutritionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41640,6 +41983,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodNutritionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41653,6 +41997,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodNutritionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41666,6 +42011,21 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionItemHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/FoodNutritionItemHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FoodNutritionItemHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionItemHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodNutritionItemHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41679,6 +42039,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionItemHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodNutritionItemHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41692,6 +42053,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionItemHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodNutritionItemHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41705,6 +42067,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionItemHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodNutritionItemHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41718,6 +42081,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionItemHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodNutritionItemHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41731,6 +42095,21 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionImageHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/FoodRecognitionImageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FoodRecognitionImageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionImageHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodRecognitionImageHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41744,6 +42123,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionImageHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodRecognitionImageHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41757,6 +42137,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionImageHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodRecognitionImageHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41770,6 +42151,35 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/BotApiMapper.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FoodRecognitionJobHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "FoodRecognitionJobHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41783,6 +42193,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41796,6 +42207,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41809,6 +42221,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41926,6 +42339,21 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodVisionHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/FoodVisionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FoodVisionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodVisionHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodVisionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41939,6 +42367,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodVisionHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodVisionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41952,6 +42381,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodVisionHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodVisionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41965,6 +42395,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodVisionHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodVisionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -41978,6 +42409,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodVisionHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/FoodVisionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -48543,6 +48975,35 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpRequest.cs",
+        "Modules/Images/Presentation/Requests/GetImageUploadUrlHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotImagesApi.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetImageUploadUrlHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpRequest.cs",
+        "Modules/Images/Presentation/Requests/GetImageUploadUrlHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetImageUploadUrlHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpRequest.cs",
         "Modules/Images/Presentation/Requests/GetImageUploadUrlHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -48556,6 +49017,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpRequest.cs",
         "Modules/Images/Presentation/Requests/GetImageUploadUrlHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -48569,6 +49031,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpRequest.cs",
         "Modules/Images/Presentation/Requests/GetImageUploadUrlHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -48582,6 +49045,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpRequest.cs",
         "Modules/Images/Presentation/Requests/GetImageUploadUrlHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -48595,6 +49059,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpRequest.cs",
         "Modules/Images/Presentation/Requests/GetImageUploadUrlHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -48608,6 +49073,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpRequest.cs",
         "Modules/Images/Presentation/Requests/GetImageUploadUrlHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -48621,6 +49087,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpRequest.cs",
         "Modules/Images/Presentation/Requests/GetImageUploadUrlHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -48634,6 +49101,35 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpResponse.cs",
+        "Modules/Images/Presentation/Responses/GetImageUploadUrlHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/BotApiMapper.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetImageUploadUrlHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpResponse.cs",
+        "Modules/Images/Presentation/Responses/GetImageUploadUrlHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetImageUploadUrlHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpResponse.cs",
         "Modules/Images/Presentation/Responses/GetImageUploadUrlHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -48647,6 +49143,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpResponse.cs",
         "Modules/Images/Presentation/Responses/GetImageUploadUrlHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -48660,6 +49157,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/GetImageUploadUrlHttpResponse.cs",
         "Modules/Images/Presentation/Responses/GetImageUploadUrlHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -56135,6 +56633,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/HydrationEntryHttpResponse.cs",
         "Modules/Hydration/Presentation.Contracts/Responses/HydrationEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -56148,6 +56647,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/HydrationEntryHttpResponse.cs",
         "Modules/Hydration/Presentation.Contracts/Responses/HydrationEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -56161,6 +56661,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/HydrationEntryHttpResponse.cs",
         "Modules/Hydration/Presentation.Contracts/Responses/HydrationEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -56174,6 +56675,35 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/HydrationOperationHttpResponse.cs",
+        "Modules/Hydration/Presentation/Responses/HydrationOperationHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/BotApiMapper.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "HydrationOperationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/HydrationOperationHttpResponse.cs",
+        "Modules/Hydration/Presentation/Responses/HydrationOperationHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "HydrationOperationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/HydrationOperationHttpResponse.cs",
         "Modules/Hydration/Presentation/Responses/HydrationOperationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -56187,6 +56717,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/HydrationOperationHttpResponse.cs",
         "Modules/Hydration/Presentation/Responses/HydrationOperationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -56200,6 +56731,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/HydrationOperationHttpResponse.cs",
         "Modules/Hydration/Presentation/Responses/HydrationOperationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -139256,6 +139788,21 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ProductLabelHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/ProductLabelHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodVisionHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ProductLabelHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ProductLabelHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/ProductLabelHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -139269,6 +139816,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ProductLabelHttpResponse.cs",
         "Modules/Ai/Presentation/Responses/ProductLabelHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -142753,6 +143301,35 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RecognizedMealCreationHttpResponse.cs",
+        "Modules/Meals/Presentation/Responses/RecognizedMealCreationHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/BotApiMapper.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecognizedMealCreationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RecognizedMealCreationHttpResponse.cs",
+        "Modules/Meals/Presentation/Responses/RecognizedMealCreationHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecognizedMealCreationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RecognizedMealCreationHttpResponse.cs",
         "Modules/Meals/Presentation/Responses/RecognizedMealCreationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -142766,6 +143343,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RecognizedMealCreationHttpResponse.cs",
         "Modules/Meals/Presentation/Responses/RecognizedMealCreationHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -142779,6 +143357,21 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RecognizedMealUndoHttpResponse.cs",
+        "Modules/Meals/Presentation/Responses/RecognizedMealUndoHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "RecognizedMealUndoHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RecognizedMealUndoHttpResponse.cs",
         "Modules/Meals/Presentation/Responses/RecognizedMealUndoHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -142792,6 +143385,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RecognizedMealUndoHttpResponse.cs",
         "Modules/Meals/Presentation/Responses/RecognizedMealUndoHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -144300,6 +144894,35 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RegisterTelegramOperationHttpRequest.cs",
+        "Modules/Identity/Presentation/Features/Auth/Requests/RegisterTelegramOperationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotOperationsApi.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RegisterTelegramOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RegisterTelegramOperationHttpRequest.cs",
+        "Modules/Identity/Presentation/Features/Auth/Requests/RegisterTelegramOperationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotOperationClient.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RegisterTelegramOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RegisterTelegramOperationHttpRequest.cs",
         "Modules/Identity/Presentation/Features/Auth/Requests/RegisterTelegramOperationHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -144313,6 +144936,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RegisterTelegramOperationHttpRequest.cs",
         "Modules/Identity/Presentation/Features/Auth/Requests/RegisterTelegramOperationHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -144326,6 +144950,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/RegisterTelegramOperationHttpRequest.cs",
         "Modules/Identity/Presentation/Features/Auth/Requests/RegisterTelegramOperationHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -149107,6 +149732,35 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/StartFoodRecognitionHttpRequest.cs",
+        "Modules/Ai/Presentation/Requests/StartFoodRecognitionHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotRecognitionApi.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "StartFoodRecognitionHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/StartFoodRecognitionHttpRequest.cs",
+        "Modules/Ai/Presentation/Requests/StartFoodRecognitionHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "StartFoodRecognitionHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/StartFoodRecognitionHttpRequest.cs",
         "Modules/Ai/Presentation/Requests/StartFoodRecognitionHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -149120,6 +149774,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/StartFoodRecognitionHttpRequest.cs",
         "Modules/Ai/Presentation/Requests/StartFoodRecognitionHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -149133,6 +149788,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/StartFoodRecognitionHttpRequest.cs",
         "Modules/Ai/Presentation/Requests/StartFoodRecognitionHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -149900,6 +150556,49 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramBotAuthHttpRequest.cs",
+        "Modules/Identity/Presentation/Features/Auth/Requests/TelegramBotAuthHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotAuthApi.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TelegramBotAuthHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramBotAuthHttpRequest.cs",
+        "Modules/Identity/Presentation/Features/Auth/Requests/TelegramBotAuthHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TelegramBotAuthHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramBotAuthHttpRequest.cs",
+        "Modules/Identity/Presentation/Features/Auth/Requests/TelegramBotAuthHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TelegramBotAuthHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramBotAuthHttpRequest.cs",
         "Modules/Identity/Presentation/Features/Auth/Requests/TelegramBotAuthHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -149913,6 +150612,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramBotAuthHttpRequest.cs",
         "Modules/Identity/Presentation/Features/Auth/Requests/TelegramBotAuthHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -149926,6 +150626,21 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramBotAuthHttpRequest.cs",
+        "Modules/Identity/Presentation/Features/Auth/Requests/TelegramBotAuthHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotGeneratedClientTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TelegramBotAuthHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramBotAuthHttpRequest.cs",
         "Modules/Identity/Presentation/Features/Auth/Requests/TelegramBotAuthHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -149939,6 +150654,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramBotAuthHttpRequest.cs",
         "Modules/Identity/Presentation/Features/Auth/Requests/TelegramBotAuthHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -149952,6 +150668,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramBotAuthHttpRequest.cs",
         "Modules/Identity/Presentation/Features/Auth/Requests/TelegramBotAuthHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -149965,6 +150682,7 @@
         "Request"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramBotAuthHttpRequest.cs",
         "Modules/Identity/Presentation/Features/Auth/Requests/TelegramBotAuthHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -150225,6 +150943,35 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramOperationLeaseHttpResponse.cs",
+        "Modules/Identity/Presentation/Features/Auth/Responses/TelegramOperationLeaseHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/BotApiMapper.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TelegramOperationLeaseHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramOperationLeaseHttpResponse.cs",
+        "Modules/Identity/Presentation/Features/Auth/Responses/TelegramOperationLeaseHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotOperationClient.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TelegramOperationLeaseHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramOperationLeaseHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/TelegramOperationLeaseHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -150238,6 +150985,21 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramOperationRegisteredHttpResponse.cs",
+        "Modules/Identity/Presentation/Features/Auth/Responses/TelegramOperationRegisteredHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotOperationClient.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "TelegramOperationRegisteredHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramOperationRegisteredHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/TelegramOperationRegisteredHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -150251,6 +151013,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramOperationRegisteredHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/TelegramOperationRegisteredHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -155906,6 +156669,21 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+        "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UserHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
         "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -155919,6 +156697,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
         "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -155932,6 +156711,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
         "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -155945,6 +156725,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
         "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -155958,6 +156739,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
         "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -155971,6 +156753,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
         "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -155984,6 +156767,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
         "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -155997,6 +156781,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
         "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -156010,6 +156795,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
         "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -156023,6 +156809,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
         "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -156036,6 +156823,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
         "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",

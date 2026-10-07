@@ -11,9 +11,11 @@ $outputPath = Join-Path $wikiRoot 'generated/frontend-contract-index.json'
 $cachePath = Join-Path $repositoryRoot '.artifacts/llm-wiki/index-cache/frontend-contract-index.json'
 $sourceInputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', ':(icase)FoodDiary.Web.Client/**/*.ts', ':(icase)FoodDiary.Web.Client/**/*.html') -FailureMessage 'Unable to enumerate frontend-contract sources.')
 $sourceInputs = @($sourceInputs | Where-Object { $_ -notmatch '[\/](node_modules|dist[^\/]*|coverage|\.angular)[\/]' -and [IO.File]::Exists((Join-Path $repositoryRoot $_)) })
-$sdkManifestPath = Join-Path $repositoryRoot 'FoodDiary.Web.Client/api-sdk/scopes.json'
+$sdkManifestPaths = @('FoodDiary.Web.Client/api-sdk/scopes.json', 'FoodDiary.Web.Client/api-sdk/admin.scopes.json')
 $sdkOperations = @{}
-if (Test-Path -LiteralPath $sdkManifestPath) {
+foreach ($manifest in $sdkManifestPaths) {
+    $sdkManifestPath = Join-Path $repositoryRoot $manifest
+    if (-not (Test-Path -LiteralPath $sdkManifestPath)) { continue }
     foreach ($sdkScope in @(Get-Content -LiteralPath $sdkManifestPath -Raw | ConvertFrom-Json)) {
         foreach ($sdkOperation in $sdkScope.operations.PSObject.Properties) {
             $sdkParts = $sdkOperation.Name.Split(' ', 2)
@@ -22,7 +24,9 @@ if (Test-Path -LiteralPath $sdkManifestPath) {
     }
 }
 $cacheInputs = $sourceInputs + @('.llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1', '.llm-wiki/tools/LlmWikiJson.ps1', '.llm-wiki/tools/LlmWikiIndexCache.ps1', '.llm-wiki/tools/LlmWikiGitPaths.ps1')
-if (Test-Path -LiteralPath $sdkManifestPath) { $cacheInputs += 'FoodDiary.Web.Client/api-sdk/scopes.json' }
+foreach ($manifest in $sdkManifestPaths) {
+    if (Test-Path -LiteralPath (Join-Path $repositoryRoot $manifest)) { $cacheInputs += $manifest }
+}
 $inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $cacheInputs
 if ($ReuseUnchangedCheck -and (Test-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint)) { Write-Host 'Frontend contract index cache hit: inputs, generator, and output are unchanged.'; exit 0 }
 

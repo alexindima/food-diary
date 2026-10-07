@@ -15,6 +15,16 @@ it('omits absent dates rather than sending undefined for all-time cohorts', () =
     expect(request.request.params.get('cohortFrom')).toBe('1970-01-01');
     expect(request.request.params.has('cohortTo')).toBe(false);
     expect(request.request.params.get('from')).toBe('2026-09-01');
-    request.flush({});
+    request.flush({
+        fromUtc: '2026-09-01T00:00:00Z',
+        toUtc: '2026-09-19T00:00:00Z',
+        asOfUtc: '2026-09-19T00:00:00Z',
+        cohortFromUtc: '1970-01-01T00:00:00Z',
+        cohortToUtc: '2026-09-19T00:00:00Z',
+        mealEntriesInPeriod: 0,
+        activeUsersInPeriod: 0,
+        cohorts: [],
+        activityByDay: [],
+    });
     http.verify();
 });

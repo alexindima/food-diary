@@ -491,5 +491,20 @@
         },
         "prefix": "/api/v{version}/export",
         "name": "Export"
+    },
+    {
+        "operations": {
+            "POST /api/v{version}/logs": "postLogs"
+        },
+        "name": "Logging",
+        "prefix": "/api/v{version}/logs"
+    },
+    {
+        "operations": {
+            "POST /api/v{version}/marketing/attribution-events/signup": "postMarketingAttributionEventsSignup",
+            "POST /api/v{version}/marketing/attribution-events": "postMarketingAttributionEvents"
+        },
+        "name": "Marketing",
+        "prefix": "/api/v{version}/marketing/attribution-events"
     }
 ]

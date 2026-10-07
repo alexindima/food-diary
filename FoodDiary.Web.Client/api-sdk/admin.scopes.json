@@ -1,0 +1,200 @@
+[
+    {
+        "name": "AdminAchievements",
+        "operations": {
+            "GET /api/v{version}/admin/achievement-definitions": "getAdminAchievementDefinitions",
+            "POST /api/v{version}/admin/achievement-definitions": "postAdminAchievementDefinitions",
+            "PUT /api/v{version}/admin/achievement-definitions/{id}": "putAdminAchievementDefinitionsById"
+        },
+        "prefix": "/api/v{version}/admin/achievement-definitions"
+    },
+    {
+        "name": "AdminAcquisition",
+        "operations": {
+            "GET /api/v{version}/admin/acquisition/range": "getAdminAcquisitionRange",
+            "GET /api/v{version}/admin/acquisition/summary": "getAdminAcquisitionSummary"
+        },
+        "prefix": "/api/v{version}/admin/acquisition"
+    },
+    {
+        "name": "AdminAiPrompts",
+        "operations": {
+            "GET /api/v{version}/admin/ai-prompts": "getAdminAiPrompts",
+            "GET /api/v{version}/admin/ai-prompts/scenarios": "getAdminAiPromptsScenarios",
+            "GET /api/v{version}/admin/ai-prompts/{key}/{locale}/revisions": "getAdminAiPromptsByKeyByLocaleRevisions",
+            "POST /api/v{version}/admin/ai-prompts/preview": "postAdminAiPromptsPreview",
+            "POST /api/v{version}/admin/ai-prompts/test": "postAdminAiPromptsTest",
+            "PUT /api/v{version}/admin/ai-prompts/{key}/{locale}": "putAdminAiPromptsByKeyByLocale"
+        },
+        "prefix": "/api/v{version}/admin/ai-prompts"
+    },
+    {
+        "name": "AdminAiUsage",
+        "operations": {
+            "GET /api/v{version}/admin/ai-usage/summary": "getAdminAiUsageSummary"
+        },
+        "prefix": "/api/v{version}/admin/ai-usage"
+    },
+    {
+        "name": "AdminAudit",
+        "operations": {
+            "GET /api/v{version}/admin/audit": "getAdminAudit"
+        },
+        "prefix": "/api/v{version}/admin/audit"
+    },
+    {
+        "name": "AdminBilling",
+        "operations": {
+            "GET /api/v{version}/admin/billing/payments": "getAdminBillingPayments",
+            "GET /api/v{version}/admin/billing/revenue-summary": "getAdminBillingRevenueSummary",
+            "GET /api/v{version}/admin/billing/subscriptions": "getAdminBillingSubscriptions",
+            "GET /api/v{version}/admin/billing/webhook-events": "getAdminBillingWebhookEvents"
+        },
+        "prefix": "/api/v{version}/admin/billing"
+    },
+    {
+        "name": "AdminBugs",
+        "operations": {
+            "GET /api/v{version}/admin/bugs": "getAdminBugs"
+        },
+        "prefix": "/api/v{version}/admin/bugs"
+    },
+    {
+        "name": "AdminCatalog",
+        "operations": {
+            "GET /api/v{version}/admin/catalog/products/export": "getAdminCatalogProductsExport",
+            "GET /api/v{version}/admin/catalog/recipes/export": "getAdminCatalogRecipesExport",
+            "POST /api/v{version}/admin/catalog/products/import": "postAdminCatalogProductsImport",
+            "POST /api/v{version}/admin/catalog/products/preview": "postAdminCatalogProductsPreview",
+            "POST /api/v{version}/admin/catalog/recipes/import": "postAdminCatalogRecipesImport",
+            "POST /api/v{version}/admin/catalog/recipes/preview": "postAdminCatalogRecipesPreview"
+        },
+        "prefix": "/api/v{version}/admin/catalog"
+    },
+    {
+        "name": "AdminDailyAdvices",
+        "operations": {
+            "DELETE /api/v{version}/admin/daily-advices/groups/{id}": "deleteAdminDailyAdvicesGroupsById",
+            "GET /api/v{version}/admin/daily-advices": "getAdminDailyAdvices",
+            "GET /api/v{version}/admin/daily-advices/groups": "getAdminDailyAdvicesGroups",
+            "POST /api/v{version}/admin/daily-advices/groups/import": "postAdminDailyAdvicesGroupsImport",
+            "POST /api/v{version}/admin/daily-advices/import": "postAdminDailyAdvicesImport",
+            "PUT /api/v{version}/admin/daily-advices/groups/{id}": "putAdminDailyAdvicesGroupsById"
+        },
+        "prefix": "/api/v{version}/admin/daily-advices"
+    },
+    {
+        "name": "AdminDashboard",
+        "operations": {
+            "GET /api/v{version}/admin/dashboard": "getAdminDashboard",
+            "GET /api/v{version}/admin/dashboard/overview": "getAdminDashboardOverview"
+        },
+        "prefix": "/api/v{version}/admin/dashboard"
+    },
+    {
+        "name": "AdminEmailTemplates",
+        "operations": {
+            "GET /api/v{version}/admin/email-templates": "getAdminEmailTemplates",
+            "GET /api/v{version}/admin/email-templates/{key}/{locale}/revisions": "getAdminEmailTemplatesByKeyByLocaleRevisions",
+            "POST /api/v{version}/admin/email-templates/test": "postAdminEmailTemplatesTest",
+            "PUT /api/v{version}/admin/email-templates/{key}/{locale}": "putAdminEmailTemplatesByKeyByLocale"
+        },
+        "prefix": "/api/v{version}/admin/email-templates"
+    },
+    {
+        "name": "AdminLessons",
+        "operations": {
+            "DELETE /api/v{version}/admin/lessons/{id}": "deleteAdminLessonsById",
+            "GET /api/v{version}/admin/lessons": "getAdminLessons",
+            "POST /api/v{version}/admin/lessons": "postAdminLessons",
+            "POST /api/v{version}/admin/lessons/import": "postAdminLessonsImport",
+            "PUT /api/v{version}/admin/lessons/{id}": "putAdminLessonsById"
+        },
+        "prefix": "/api/v{version}/admin/lessons"
+    },
+    {
+        "name": "AdminMailInbox",
+        "operations": {
+            "GET /api/v{version}/admin/mail-inbox/messages": "getAdminMailInboxMessages",
+            "GET /api/v{version}/admin/mail-inbox/messages/page": "getAdminMailInboxMessagesPage",
+            "GET /api/v{version}/admin/mail-inbox/messages/{id}": "getAdminMailInboxMessagesById",
+            "POST /api/v{version}/admin/mail-inbox/messages/{id}/read": "postAdminMailInboxMessagesByIdRead"
+        },
+        "prefix": "/api/v{version}/admin/mail-inbox"
+    },
+    {
+        "name": "AdminMealPlans",
+        "operations": {
+            "GET /api/v{version}/admin/meal-plans": "getAdminMealPlans",
+            "GET /api/v{version}/admin/meal-plans/recipes": "getAdminMealPlansRecipes",
+            "GET /api/v{version}/admin/meal-plans/{id}": "getAdminMealPlansById",
+            "POST /api/v{version}/admin/meal-plans": "postAdminMealPlans",
+            "PUT /api/v{version}/admin/meal-plans/{id}": "putAdminMealPlansById"
+        },
+        "prefix": "/api/v{version}/admin/meal-plans"
+    },
+    {
+        "name": "AdminModeration",
+        "operations": {
+            "GET /api/v{version}/admin/moderation": "getAdminModeration",
+            "POST /api/v{version}/admin/moderation/{id}/dismiss": "postAdminModerationByIdDismiss",
+            "POST /api/v{version}/admin/moderation/{id}/review": "postAdminModerationByIdReview"
+        },
+        "prefix": "/api/v{version}/admin/moderation"
+    },
+    {
+        "name": "AdminOutgoingEmails",
+        "operations": {
+            "GET /api/v{version}/admin/outgoing-emails": "getAdminOutgoingEmails"
+        },
+        "prefix": "/api/v{version}/admin/outgoing-emails"
+    },
+    {
+        "name": "AdminRetention",
+        "operations": {
+            "GET /api/v{version}/admin/analytics/retention": "getAdminAnalyticsRetention"
+        },
+        "prefix": "/api/v{version}/admin/analytics/retention"
+    },
+    {
+        "name": "AdminAuth",
+        "operations": {
+            "POST /api/v{version}/auth/admin-sso/exchange": "postAuthAdminSsoExchange",
+            "POST /api/v{version}/auth/admin-sso/start": "postAuthAdminSsoStart"
+        },
+        "prefix": "/api/v{version}/auth/admin-sso"
+    },
+    {
+        "name": "AdminTelemetry",
+        "operations": {
+            "GET /api/v{version}/admin/telemetry/fasting": "getAdminTelemetryFasting"
+        },
+        "prefix": "/api/v{version}/admin/telemetry"
+    },
+    {
+        "name": "AdminUsers",
+        "operations": {
+            "GET /api/v{version}/admin/users": "getAdminUsers",
+            "GET /api/v{version}/admin/users/collaboration-audit": "getAdminUsersCollaborationAudit",
+            "GET /api/v{version}/admin/users/impersonation-sessions": "getAdminUsersImpersonationSessions",
+            "GET /api/v{version}/admin/users/login-events": "getAdminUsersLoginEvents",
+            "GET /api/v{version}/admin/users/login-summary": "getAdminUsersLoginSummary",
+            "GET /api/v{version}/admin/users/{id}": "getAdminUsersById",
+            "GET /api/v{version}/admin/users/{id}/role-audit": "getAdminUsersByIdRoleAudit",
+            "PATCH /api/v{version}/admin/users/{id}": "patchAdminUsersById",
+            "PATCH /api/v{version}/admin/users/{id}/password": "patchAdminUsersByIdPassword",
+            "POST /api/v{version}/admin/users": "postAdminUsers",
+            "POST /api/v{version}/admin/users/{id}/impersonation": "postAdminUsersByIdImpersonation"
+        },
+        "prefix": "/api/v{version}/admin/users"
+    },
+    {
+        "name": "AdminImages",
+        "operations": {
+            "DELETE /api/v{version}/images/{assetId}": "deleteImagesByAssetId",
+            "POST /api/v{version}/images/upload-url": "postImagesUploadUrl",
+            "POST /api/v{version}/images/{assetId}/confirm": "postImagesByAssetIdConfirm"
+        },
+        "prefix": "/api/v{version}/images"
+    }
+]

@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1621,
-    "credential": 156,
-    "identity": 175,
-    "health": 753,
+    "candidateFields": 1656,
+    "credential": 157,
+    "identity": 180,
+    "health": 772,
     "financial": 133,
-    "privateContent": 404,
-    "boundaryFiles": 212,
+    "privateContent": 414,
+    "boundaryFiles": 223,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -49,8 +49,22 @@
       "category": "credential",
       "name": "AccessToken",
       "type": "string",
-      "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
-      "line": 164
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
+      "line": 9
+    },
+    {
+      "category": "credential",
+      "name": "HasPassword",
+      "type": "bool",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 43
+    },
+    {
+      "category": "credential",
+      "name": "MustChangePassword",
+      "type": "bool",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 63
     },
     {
       "category": "credential",
@@ -72,13 +86,6 @@
       "type": "string",
       "path": "FoodDiary.Telegram.Bot/TelegramBotOptions.cs",
       "line": 10
-    },
-    {
-      "category": "credential",
-      "name": "AccessToken",
-      "type": "string",
-      "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-      "line": 353
     },
     {
       "category": "credential",
@@ -2165,6 +2172,139 @@
       "type": "double?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
       "line": 341
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsDayHttpResponse.cs",
+      "line": 11
+    },
+    {
+      "category": "health",
+      "name": "AverageCaloriesPerCalendarDay",
+      "type": "double",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsSummaryHttpResponse.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsSummaryHttpResponse.cs",
+      "line": 23
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "decimal",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionHttpResponse.cs",
+      "line": 11
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionItemHttpResponse.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "Nutrition",
+      "type": "FoodNutritionHttpResponse?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
+      "line": 25
+    },
+    {
+      "category": "health",
+      "name": "NutritionErrorCode",
+      "type": "string?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
+      "line": 27
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/ProductLabelHttpResponse.cs",
+      "line": 17
+    },
+    {
+      "category": "health",
+      "name": "ActivityLevel",
+      "type": "string",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "BirthDate",
+      "type": "DateTime?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "DesiredWaistCm",
+      "type": "double?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 21
+    },
+    {
+      "category": "health",
+      "name": "DesiredWeightKg",
+      "type": "double?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 23
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInFollowUpReminderHours",
+      "type": "int",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 27
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInReminderHours",
+      "type": "int",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 29
+    },
+    {
+      "category": "health",
+      "name": "FastingPushNotificationsEnabled",
+      "type": "bool",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 31
+    },
+    {
+      "category": "health",
+      "name": "Gender",
+      "type": "string?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 39
+    },
+    {
+      "category": "health",
+      "name": "HeightCm",
+      "type": "double?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 47
+    },
+    {
+      "category": "health",
+      "name": "HydrationGoal",
+      "type": "double?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 49
+    },
+    {
+      "category": "health",
+      "name": "WeightKg",
+      "type": "double?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 89
     },
     {
       "category": "health",
@@ -7329,6 +7469,41 @@
       "category": "identity",
       "name": "TelegramUserId",
       "type": "long",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/RegisterTelegramOperationHttpRequest.cs",
+      "line": 11
+    },
+    {
+      "category": "identity",
+      "name": "TelegramUserId",
+      "type": "long",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramBotAuthHttpRequest.cs",
+      "line": 9
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 25
+    },
+    {
+      "category": "identity",
+      "name": "HasTelegramIdentity",
+      "type": "bool",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 45
+    },
+    {
+      "category": "identity",
+      "name": "IsEmailConfirmed",
+      "type": "bool",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 55
+    },
+    {
+      "category": "identity",
+      "name": "TelegramUserId",
+      "type": "long",
       "path": "FoodDiary.Telegram.Bot/Operations/BotIncomingOperation.cs",
       "line": 3
     },
@@ -8668,6 +8843,76 @@
       "type": "ImageAssetId?",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
       "line": 330
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionHttpResponse.cs",
+      "line": 21
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionImageHttpResponse.cs",
+      "line": 9
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionImageHttpResponse.cs",
+      "line": 11
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
+      "line": 19
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
+      "line": 21
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodVisionHttpResponse.cs",
+      "line": 11
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/ProductLabelHttpResponse.cs",
+      "line": 27
+    },
+    {
+      "category": "privateContent",
+      "name": "AdditionalImageAssetIds",
+      "type": "List<Guid>?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/StartFoodRecognitionHttpRequest.cs",
+      "line": 9
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/StartFoodRecognitionHttpRequest.cs",
+      "line": 15
+    },
+    {
+      "category": "privateContent",
+      "name": "ProfileImageAssetId",
+      "type": "Guid?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 67
     },
     {
       "category": "privateContent",
@@ -11374,11 +11619,101 @@
       "fieldCount": 1
     },
     {
-      "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
       "categories": [
         "credential"
       ],
       "fieldCount": 1
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsDayHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsSummaryHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionHttpResponse.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionItemHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionImageHttpResponse.cs",
+      "categories": [
+        "privateContent"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 4
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodVisionHttpResponse.cs",
+      "categories": [
+        "privateContent"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/ProductLabelHttpResponse.cs",
+      "categories": [
+        "health",
+        "privateContent"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/RegisterTelegramOperationHttpRequest.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/StartFoodRecognitionHttpRequest.cs",
+      "categories": [
+        "privateContent"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramBotAuthHttpRequest.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "categories": [
+        "credential",
+        "health",
+        "identity",
+        "privateContent"
+      ],
+      "fieldCount": 17
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryStatistics.cs",
@@ -11429,13 +11764,6 @@
         "credential"
       ],
       "fieldCount": 2
-    },
-    {
-      "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
     },
     {
       "path": "Modules/Admin/Infrastructure/Integrations/BugTriage/AdminBugTriageOptions.cs",

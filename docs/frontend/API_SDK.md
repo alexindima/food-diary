@@ -1,7 +1,7 @@
-# Generated user API SDK
+# Generated API clients
 
 FoodDiary generates an Angular `HttpClient` SDK from the actual host's OpenAPI
-document. The internal API client covers 39 API groups and 259 operations. Generated transport contracts
+document. The user API client covers 41 API groups and 262 operations. Generated transport contracts
 live in `FoodDiary.Web.Client/src/app/shared/api/sdk/generated/`; application
 models, UI state and response normalization remain in the existing feature
 adapters. This keeps auth/refresh/retry interceptors and cookie behavior in the
@@ -22,6 +22,15 @@ Run from `FoodDiary.Web.Client/`, with Node 22+, Java 21+ and the repository's
 - `npm run sdk:check`: check committed generated code without changing files.
 - `npm run sdk:check:api`: export the actual API and verify both contract and SDK.
 - `npm run test:sdk`: test scope selection, schema closure and drift prerequisites.
+- `npm run sdk:admin:update`: export the same host and regenerate the admin client.
+- `npm run sdk:admin:generate`: regenerate from `api-sdk/admin.openapi.json`.
+- `npm run sdk:admin:check`: verify the committed admin contract and generated code.
+- `npm run sdk:admin:check:api`: verify the admin contract against the actual API.
+- `npm run sdk:bot:update`: export the host and regenerate the Telegram bot C# client.
+- `npm run sdk:bot:generate`: regenerate from the committed bot contract.
+- `npm run sdk:bot:check`: check reproducibility without an API export.
+- `npm run sdk:bot:check:api`: check the selected bot contract against the actual host.
+- `npm run check:api-client-usage`: reject handwritten HTTP requests in the user and admin applications and test the guard's negative fixtures.
 
 The exporter uses `TransportApiWebApplicationFactory`, disables hosted workers
 and does not require a database, credentials or external providers. Export and
@@ -50,8 +59,8 @@ shopping lists, fasting, meals, recipes/public recipes, exploration, meal plans,
 lessons, cycles, statistics, dashboards, the dietologist workspace, user profiles,
 profile measurements, recipe lookup and notifications consume generated clients.
 Authentication, Telegram authentication, active sessions, AI/recognition, image
-upload coordination and file export use them as well: 44 frontend services in
-total. Direct presigned storage uploads retain their
+upload coordination, file export, telemetry and marketing attribution use them
+as well: 46 user frontend services in total. Direct presigned storage uploads retain their
 original `SKIP_AUTH` transport, and recognition SignalR/polling orchestration
 remains in `FoodRecognitionService`.
 
@@ -61,9 +70,28 @@ includes explicitly selected user groups and transitively referenced schemas.
 Nested scopes use the most specific prefix: auth, Telegram auth, sessions and bot
 operations have separate generated clients. Added or removed operations require
 a review of the frozen scope manifest. New modules can be
-added as separate slices instead of generating unrelated Admin/auth APIs into
-the user app. A future Admin consumer should use a shared workspace library;
-the current admin-to-client import boundary still applies.
+added as separate slices instead of generating unrelated Admin APIs into
+the user app. The admin client has its own contract and frozen scope manifest:
+`api-sdk/admin.openapi.json` and `api-sdk/admin.scopes.json`. Its 21 groups and
+72 operations are generated into
+`projects/fooddiary-admin/src/app/shared/api/sdk/generated/` and consumed by
+21 existing admin services. Both applications reuse the pinned generator and
+contract selector while retaining their existing import boundary.
+
+Admin adapters retain their application models, collection paging and legacy
+filter omission/whitespace rules. Open filter records use an explicit query
+bridge; fixed query values continue through generated request parameters.
+Admin HTTP keeps its existing interceptor pipeline and cookie policy: ordinary
+requests omit cross-origin credentials, while SSO exchange enables them.
+SSO tokens and state remain in `AdminAuthService`. Presigned admin image uploads
+continue through the existing `HttpBackend` client. Import/test idempotency keys
+are created once per invocation and survive re-subscription.
+
+Admin meal-plan lists use `CatalogPlanSummary`, matching the actual summary
+response. Detail/editor flows still fetch `CatalogPlan` with days and meals.
+No placeholder days or extra detail requests are introduced into list loading.
+Both client contracts are checked in CI and both generated outputs in
+`npm run verify`.
 
 `createSdkConnection` delegates to the existing Angular interceptor chain with
 cookies enabled. `sdkRequestOptions` preserves per-call headers and HttpContext,
@@ -108,6 +136,54 @@ handling, including media types beginning with `text/`; video import retains
 multipart file and field behavior.
 
 ## AI development and compatibility
+
+The isolated export enables API Explorer only for the internal Logs and
+MarketingAttribution controllers. Their three routes stay hidden in published
+Swagger. Telemetry adapters keep their original cookie policy and
+`SKIP_AUTH`/`SKIP_OBSERVABILITY` contexts; attribution keeps its first-touch state,
+idempotency keys and error suppression. The retired generic `ApiService` has no
+remaining production consumers.
+
+The Telegram bot uses a separate selected contract and 14 generated operations
+under `FoodDiary.Telegram.Bot/Api/Generated/`. The pinned C# generator uses the
+repository's small templates with `HttpClient` and `System.Text.Json`; no new
+project or runtime dependency is added. Generated methods send typed request DTOs
+and return raw responses owned by the bot adapters. Those adapters retain response
+size limits, expected status handling, cancellation, lease/security-version and
+receipt checks, and durable checkpoint/retry rules. API credentials stay on each
+request. The legacy water call supplies the idempotency header required by its
+existing server contract and uses the existing named clients without redirects.
+UTC timestamps and calendar dates retain their native `DateTime`/`DateOnly`
+representations. The bot's four displayed nutrition totals retain `decimal`
+through a client-only generation hint; statistics retain the server's `double`
+representation. Raw signed uploads and Telegram downloads remain in their owners.
+
+Bot scope selection freezes exact consumed methods while preserving transitive
+schema closure. CI checks the bot's live contract and deterministic C# output.
+
+## Preventing manual API clients from returning
+
+Generation drift checks are complemented by source architecture guards. The
+frontend guard uses TypeScript types to reject direct HttpClient method references
+(including aliases, bracket calls and destructuring), HttpBackend dispatch, native
+fetch/XMLHttpRequest/beacon entrypoints, httpResource and alternate HTTP-library
+imports in both application roots. It runs through `lint`, `verify`, CI and
+pre-push. Generated output is exempt only at its two exact owned paths.
+
+Exceptions match the concrete file, owning method, HTTP verb and target shape:
+generated transport forwarding, existing interceptor forwarding, signed storage
+PUTs and static translation JSON GETs. A new API request in an exempt file is
+still rejected. SignalR continues using its own client and connection lifecycle.
+
+`GeneratedApiClientUsageTests` in the backend architecture suite applies the same
+policy to the Telegram bot using Roslyn symbols, rejecting direct HTTP dispatch,
+HTTP request construction and handwritten FoodDiary route literals. Existing
+transport forwarding and signed storage upload shapes are the only handwritten
+HTTP exceptions. Negative fixtures exercise old-client regressions, renamed
+clients, detached aliases and additional requests inside exception files.
+
+New transport exceptions require an explicit policy change and
+regression coverage; do not widen them to entire feature areas.
 
 For an AI agent, generated methods and DTOs provide concrete API evidence and
 compiler feedback instead of manually duplicated HTTP assumptions. Read the

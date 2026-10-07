@@ -1,0 +1,11 @@
+{
+  "packageName": "FoodDiary.Telegram.Bot.Api.Generated",
+  "library": "generichost",
+  "nullableReferenceTypes": true,
+  "optionalProjectFile": false,
+  "optionalAssemblyInfo": false,
+  "validatable": false,
+  "useDateTimeOffset": false,
+  "hideGenerationTimestamp": true,
+  "nonPublicApi": true
+}

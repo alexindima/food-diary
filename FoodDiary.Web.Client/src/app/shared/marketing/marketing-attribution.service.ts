@@ -4,6 +4,8 @@ import { inject, Service } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { SKIP_AUTH } from '../../constants/http-context.tokens';
 import { SKIP_OBSERVABILITY } from '../../constants/observability-context.tokens';
+import { MarketingSdk } from '../api/sdk/generated/api/marketing.service';
+import { createSdkConnection, sdkRequestOptions } from '../api/sdk/sdk-connection';
 import { ClientTelemetrySessionService } from '../observability/client-telemetry-session.service';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
@@ -37,6 +39,7 @@ export class MarketingAttributionService {
     private readonly browserWindow = inject(BrowserWindowService);
     private readonly telemetrySession = inject(ClientTelemetrySessionService);
     private readonly baseUrl = `${environment.apiUrls.marketing}/attribution-events`;
+    private readonly sdk = createSdkConnection(MarketingSdk, this.baseUrl, this.http, false);
     private readonly telemetryContext = new HttpContext().set(SKIP_AUTH, true).set(SKIP_OBSERVABILITY, true);
     private readonly authenticatedTelemetryContext = new HttpContext().set(SKIP_OBSERVABILITY, true);
 
@@ -52,11 +55,13 @@ export class MarketingAttributionService {
 
         this.persistFirstTouch(payload);
         this.markCapturedInSession(payload);
-        this.http
-            .post<void>(this.baseUrl, payload, {
-                context: this.telemetryContext,
-                headers: { 'Idempotency-Key': crypto.randomUUID() },
-            })
+        this.sdk.client
+            .postMarketingAttributionEvents(
+                { version: this.sdk.version, marketingAttributionHttpRequest: payload, idempotencyKey: crypto.randomUUID() },
+                'body',
+                false,
+                sdkRequestOptions(undefined, this.telemetryContext),
+            )
             .subscribe({
                 error: () => {
                     // Attribution failures should never affect app flow.
@@ -71,11 +76,13 @@ export class MarketingAttributionService {
 
         const source = this.readFirstTouch() ?? this.createOrganicPayload();
         const payload = this.createSignupPayload(source);
-        this.http
-            .post<void>(`${this.baseUrl}/signup`, payload, {
-                context: this.authenticatedTelemetryContext,
-                headers: { 'Idempotency-Key': crypto.randomUUID() },
-            })
+        this.sdk.client
+            .postMarketingAttributionEventsSignup(
+                { version: this.sdk.version, marketingSignupAttributionHttpRequest: payload, idempotencyKey: crypto.randomUUID() },
+                'body',
+                false,
+                sdkRequestOptions(undefined, this.authenticatedTelemetryContext),
+            )
             .subscribe({
                 error: () => {
                     // Attribution failures should never affect app flow.

@@ -1517,6 +1517,7 @@ export default [
     {
         ignores: [
             'src/app/shared/api/sdk/generated/**',
+            'projects/fooddiary-admin/src/app/shared/api/sdk/generated/**',
             '**/node_modules/**',
             '**/dist/**',
             '**/dist-admin/**',

@@ -7,6 +7,27 @@ import { environment } from '../../../../environments/environment';
 import type { MarketingAttributionSummary } from '../models/admin-acquisition.data';
 import { AdminAcquisitionService, DEFAULT_ACQUISITION_WINDOW_HOURS } from './admin-acquisition.service';
 
+const summary: MarketingAttributionSummary = {
+    windowHours: DEFAULT_ACQUISITION_WINDOW_HOURS,
+    generatedAtUtc: '2026-10-07T00:00:00Z',
+    events: 0,
+    visits: 0,
+    signups: 0,
+    premiumStarts: 0,
+    anonymousVisitors: 0,
+    sessions: 0,
+    attributedEvents: 0,
+    organicEvents: 0,
+    attributedVisits: 0,
+    organicVisits: 0,
+    signupRatePercent: 0,
+    premiumRatePercent: 0,
+    lastEventAtUtc: null,
+    topCampaigns: [],
+    topSources: [],
+    recentEvents: [],
+};
+
 describe('AdminAcquisitionService', () => {
     const SELECTED_WINDOW_HOURS = 168;
     let service: AdminAcquisitionService;
@@ -34,7 +55,7 @@ describe('AdminAcquisitionService', () => {
             candidate => candidate.url === summaryUrl && candidate.params.get('hours') === DEFAULT_ACQUISITION_WINDOW_HOURS.toString(),
         );
         expect(request.request.method).toBe('GET');
-        request.flush({});
+        request.flush(summary);
     });
 
     it('requests a selected reporting window', () => {
@@ -44,17 +65,17 @@ describe('AdminAcquisitionService', () => {
             candidate => candidate.url === summaryUrl && candidate.params.get('hours') === SELECTED_WINDOW_HOURS.toString(),
         );
         expect(request.request.method).toBe('GET');
-        request.flush({});
+        request.flush(summary);
     });
 
     it('keeps visit metrics usable while an older API version is still serving requests', () => {
         let result: MarketingAttributionSummary | undefined;
-        service.getSummary().subscribe(summary => {
-            result = summary;
+        service.getSummary().subscribe(value => {
+            result = value;
         });
 
         const request = httpMock.expectOne(candidate => candidate.url === summaryUrl);
-        request.flush({ visits: 52 });
+        request.flush({ ...summary, visits: 52, attributedVisits: undefined, organicVisits: undefined });
 
         expect(result).toMatchObject({
             attributedVisits: 0,

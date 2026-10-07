@@ -28,7 +28,10 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 - Admin tests: `npm run test:ci:admin`
 - Full frontend verification: `npm run verify`
 - API SDK: `npm run sdk:update` after changes to selected user APIs; `npm run sdk:check:api` verifies the live contract and generated code. Scope is frozen in `api-sdk/scopes.json`; see `../docs/frontend/API_SDK.md`.
+- Admin API client: `npm run sdk:admin:update` and `npm run sdk:admin:check:api`, with separate `api-sdk/admin.scopes.json` and `admin.openapi.json` inputs. Both generated outputs are checked by `npm run verify`.
+- Telegram bot API client: `npm run sdk:bot:update` and `npm run sdk:bot:check:api`; its contract/templates and C# output live in `FoodDiary.Telegram.Bot/Api/`. All three client outputs are checked by `npm run verify`.
 - Do not hand-edit `src/app/shared/api/sdk/generated/`. Use generated services/DTOs through feature API adapters; keep UI models, normalization and state outside generated code. Read concrete methods rather than loading the entire SDK into AI context.
+- `npm run check:api-client-usage` rejects manual HTTP/native fetch entrypoints in both apps; it also runs through `lint`, `verify`, CI and pre-push. Keep exceptions restricted to the reviewed transport method, verb and target shape. Do not exempt a whole API service or a feature folder.
 - i18n check: `npm run check:i18n`
 - SEO prerender check: `npm run check:seo-prerender`
 - Client smoke E2E: `npm run test:e2e:client:smoke`

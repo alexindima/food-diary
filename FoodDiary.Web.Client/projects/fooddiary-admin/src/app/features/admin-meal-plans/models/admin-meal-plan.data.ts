@@ -31,6 +31,16 @@ export type CatalogPlan = {
     days: CatalogDay[];
 };
 
+export type CatalogPlanSummary = {
+    id: string;
+    name: string;
+    description: string | null;
+    dietType: string;
+    durationDays: number;
+    targetCaloriesPerDay: number | null;
+    isCurated: boolean;
+};
+
 export type CatalogRecipe = {
     id: string;
     name: string;

@@ -61,6 +61,8 @@ Rules for `Tooling/tests/FoodDiary.ArchitectureTests/`.
 
 ## Current Guardrails
 
+- `GeneratedApiClientUsageTests` scans all current Telegram bot C# sources and rejects manual HTTP dispatch and FoodDiary route literals outside the exact generated output root. Keep its method-level forwarding/storage exceptions and negative alias/request fixtures narrow; it complements generated-output drift checks.
+
 - `MigratedModuleNamespaceTests` enforces canonical project names and folder namespaces across Billing, BodyMetrics and ContentReports, including tests. BodyMetrics keeps only separate write and read-model repository ports. PhysicalProjectLayoutTests has no remaining BodyMetrics nesting exceptions.
 
 - `PhysicalProjectLayoutTests` scans physical `.csproj` paths, including projects not yet in the solution, while pruning build caches and package folders. It rejects new nesting and stale entries in the exact legacy baseline. Move projects to sibling folders and remove resolved baseline entries; do not extend the baseline for new projects.

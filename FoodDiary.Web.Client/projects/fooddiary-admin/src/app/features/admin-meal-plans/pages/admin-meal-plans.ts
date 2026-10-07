@@ -7,7 +7,7 @@ import { finalize } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { AdminMealPlansFacade } from '../lib/admin-meal-plans.facade';
-import type { CatalogPlan } from '../models/admin-meal-plan.data';
+import type { CatalogPlan, CatalogPlanSummary } from '../models/admin-meal-plan.data';
 import { AdminMealPlanEditorComponent } from './admin-meal-plan-editor';
 
 @Component({
@@ -22,7 +22,7 @@ export class AdminMealPlansComponent {
     private readonly api = inject(AdminMealPlansFacade);
     private readonly destroyRef = inject(DestroyRef);
     private readonly translate = inject(TranslateService);
-    protected readonly plans = signal<CatalogPlan[]>([]);
+    protected readonly plans = signal<CatalogPlanSummary[]>([]);
     protected readonly loading = signal(false);
     protected readonly loadFailed = signal(false);
     protected readonly editing = signal(false);
@@ -62,7 +62,7 @@ export class AdminMealPlansComponent {
         this.editing.set(true);
     }
 
-    protected edit(plan: CatalogPlan): void {
+    protected edit(plan: CatalogPlanSummary): void {
         this.loading.set(true);
         this.error.set(null);
         this.api

@@ -30,3 +30,7 @@ Also apply the workspace guide at `FoodDiary.Web.Client/AGENTS.md`.
 - Build: `cd FoodDiary.Web.Client && npm run build:admin`
 - Test: `cd FoodDiary.Web.Client && npm run test:ci:admin`
 - Lint: `cd FoodDiary.Web.Client && npm run lint`
+- API client update: `cd FoodDiary.Web.Client && npm run sdk:admin:update`
+- API client drift check: `cd FoodDiary.Web.Client && npm run sdk:admin:check:api`
+- Do not hand-edit `src/app/shared/api/sdk/generated/`. Use concrete generated services and DTOs through the existing admin feature adapters, preserving SSO ownership, cookie policy, filters and idempotency.
+- The admin contract and frozen operation manifest live in `FoodDiary.Web.Client/api-sdk/admin.openapi.json` and `admin.scopes.json`; generation tooling is shared with the user client. Admin runtime code must retain its existing boundary from the main app sources.

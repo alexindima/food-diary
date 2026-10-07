@@ -21,6 +21,8 @@ import { GoalsSdk } from './api/goals.service';
 import { HydrationSdk } from './api/hydration.service';
 import { ImagesSdk } from './api/images.service';
 import { LessonsSdk } from './api/lessons.service';
+import { LoggingSdk } from './api/logging.service';
+import { MarketingSdk } from './api/marketing.service';
 import { MealPlansSdk } from './api/meal-plans.service';
 import { MealsSdk } from './api/meals.service';
 import { NotificationsSdk } from './api/notifications.service';
@@ -66,6 +68,8 @@ import { WeightEntriesSdk } from './api/weight-entries.service';
         HydrationSdk,
         ImagesSdk,
         LessonsSdk,
+        LoggingSdk,
+        MarketingSdk,
         MealPlansSdk,
         MealsSdk,
         NotificationsSdk,
