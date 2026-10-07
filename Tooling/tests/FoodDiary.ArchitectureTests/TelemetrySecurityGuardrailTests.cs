@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -229,6 +230,63 @@ public sealed class TelemetrySecurityGuardrailTests {
         Assert.Multiple(
             () => Assert.Contains("TelemetryPrivacyProcessor.ResolveRouteLabel(httpContext)", exceptionHandler, StringComparison.Ordinal),
             () => Assert.DoesNotContain("httpContext.Request.Path);", exceptionHandler, StringComparison.Ordinal));
+    }
+
+    [Theory]
+    [InlineData("FoodDiary.Web.Client/nginx.conf", 0, "FoodDiary.Web.Client/src/index.html")]
+    [InlineData("nginx/sites-enabled/fooddiary.club", 0, "FoodDiary.Web.Client/src/index.html")]
+    [InlineData("FoodDiary.Web.Client/nginx.telegram-test.conf", 0, "FoodDiary.Web.Client/src/index.html")]
+    [InlineData("nginx/sites-enabled/fooddiary.club", 1, "FoodDiary.Web.Client/projects/fooddiary-admin/src/index.html")]
+    public void BrowserContentSecurityPolicy_AllowsExistingFontStylesAndFiles(string configPath, int policyIndex, string htmlPath) {
+        string policy = ReadContentSecurityPolicy(configPath, policyIndex);
+        string[] styles = ReadPolicySources(policy, "style-src");
+        string[] fonts = ReadPolicySources(policy, "font-src");
+        MatchCollection links = Regex.Matches(ReadSource(htmlPath), "<link\\b[^>]*\\bhref=\"(?<url>https://fonts\\.googleapis\\.com/[^\"]+)\"",
+            RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
+        Assert.NotEmpty(links);
+
+        foreach (Match link in links) {
+            string origin = new Uri(link.Groups["url"].Value).GetLeftPart(UriPartial.Authority);
+            Assert.Contains(origin, styles, StringComparer.Ordinal);
+        }
+
+        Assert.Contains("https://fonts.gstatic.com", fonts, StringComparer.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("FoodDiary.Web.Client/nginx.conf", 0)]
+    [InlineData("nginx/sites-enabled/fooddiary.club", 0)]
+    [InlineData("nginx/sites-enabled/fooddiary.club", 1)]
+    public void ProductionContentSecurityPolicy_AllowsCloudflareBeaconWithoutBroadScriptSources(string configPath, int policyIndex) {
+        string[] scripts = ReadPolicySources(ReadContentSecurityPolicy(configPath, policyIndex), "script-src");
+
+        Assert.Multiple(
+            () => Assert.Contains("https://static.cloudflareinsights.com", scripts, StringComparer.Ordinal),
+            () => Assert.DoesNotContain("*", scripts, StringComparer.Ordinal),
+            () => Assert.DoesNotContain("https:", scripts, StringComparer.Ordinal),
+            () => Assert.DoesNotContain("'unsafe-eval'", scripts, StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public void ClientContentSecurityPolicies_StayConsistentAcrossProductionLayers() {
+        Assert.Equal(
+            ReadContentSecurityPolicy("FoodDiary.Web.Client/nginx.conf", 0),
+            ReadContentSecurityPolicy("nginx/sites-enabled/fooddiary.club", 0));
+        Assert.DoesNotContain("https://static.cloudflareinsights.com",
+            ReadPolicySources(ReadContentSecurityPolicy("FoodDiary.Web.Client/nginx.telegram-test.conf", 0), "script-src"), StringComparer.Ordinal);
+    }
+
+    private static string ReadContentSecurityPolicy(string configPath, int policyIndex) {
+        MatchCollection policies = Regex.Matches(ReadSource(configPath), "add_header Content-Security-Policy \"(?<policy>[^\"]+)\" always;",
+            RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
+        Assert.True(policies.Count > policyIndex, $"{configPath}: CSP {policyIndex.ToString(CultureInfo.InvariantCulture)} is missing.");
+        return policies[policyIndex].Groups["policy"].Value;
+    }
+
+    private static string[] ReadPolicySources(string policy, string directive) {
+        string entry = Assert.Single(policy.Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries),
+            value => value.StartsWith(directive + " ", StringComparison.Ordinal));
+        return entry[(directive.Length + 1)..].Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
     }
 
     private static string ReadSource(string path) =>

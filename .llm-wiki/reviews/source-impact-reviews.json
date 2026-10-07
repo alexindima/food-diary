@@ -588,13 +588,13 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "04959c1f339e43cc39b95966e685ca585fed3cce7f78bf6e83af7c407e5ca73d"
+          "sha256": "b7b6d4484b9932ad0f78076957bd8e99aa4824d5ec0c5069dbbcc65f67e81e19"
         }
       ],
-      "reason": "Verified this workflow still applies to rendered UI changes. This task modifies tests, lint wiring and documentation only; templates, styles, controls, copy, keyboard semantics and browser runtime are unchanged. Browser evidence is not applicable to the new source guard.",
+      "reason": "Only a scoped concurrently-to-shell-quote security override was added. Frontend visual QA scripts, routes, artifact capture, viewport coverage, and review workflow remain unchanged; no page text update is needed.",
       "baseRef": "HEAD",
-      "gitHead": "f95615c4f191b12b5013634654ca600874e345a1",
-      "reviewedAtUtc": "2026-10-07T13:48:35.2989253Z"
+      "gitHead": "a87e311f29ab696469666c48f82799a2f3a6cd41",
+      "reviewedAtUtc": "2026-10-07T20:43:10.6032600Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
