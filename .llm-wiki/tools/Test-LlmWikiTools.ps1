@@ -991,8 +991,9 @@ Assert-Wiki (@($photoPreviewPlan.focusedTestDetails | Where-Object {
     $_.priority -eq 'recommended'
 }).Count -eq 1) 'Frontend test plan did not prioritize the direct component consumer spec.'
 $linkGoogleApiCall = @($frontendContract.apiCalls | Where-Object publicMethod -eq 'linkGoogle')
-Assert-Wiki ($linkGoogleApiCall.Count -eq 1) 'Frontend contract index did not discover linkGoogle through inherited ApiService helpers.'
-Assert-Wiki ($linkGoogleApiCall[0].transport -eq 'InheritedApiService') 'Frontend contract index did not classify linkGoogle as an inherited API helper call.'
+Assert-Wiki ($linkGoogleApiCall.Count -eq 1) 'Frontend contract index did not discover linkGoogle through the generated API client.'
+Assert-Wiki ($linkGoogleApiCall[0].transport -eq 'GeneratedApiClient') 'Frontend contract index did not classify linkGoogle as a generated API client call.'
+Assert-Wiki ($linkGoogleApiCall[0].method -eq 'POST') 'Frontend contract index did not retain the linkGoogle HTTP method.'
 Assert-Wiki ($linkGoogleApiCall[0].resolvedUrlExpression -match 'google/link$') 'Frontend contract index did not resolve the linkGoogle endpoint expression.'
 $uiJson = & (Join-Path $toolsRoot 'Find-LlmWikiFrontendContract.ps1') -View components -Query Autocomplete -Format Json
 $ui = $uiJson | ConvertFrom-Json

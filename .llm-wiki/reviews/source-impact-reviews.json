@@ -122,12 +122,16 @@
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
           "sha256": "89324d1bcd02dcca654322486bdb9679469435c7588d8b9e77c9a426aae6a912"
+        },
+        {
+          "path": "FoodDiary.Web.Client/angular.json",
+          "sha256": "3cb03a99e8b9b4174efc7bd7f693e5f08a9c0cf999d6bb1da10b369d836157a6"
         }
       ],
-      "reason": "Read the index page and verified unchanged Angular source discovery; the AGENTS update adds a source guard command and no Angular classes, routes, selectors or locales. Index semantics remain accurate.",
+      "reason": "Coverage exclusions affect only generated SDK roots; Angular source discovery, compiler inventory and handwritten adapter coverage remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "f95615c4f191b12b5013634654ca600874e345a1",
-      "reviewedAtUtc": "2026-10-07T13:48:32.5829038Z"
+      "gitHead": "63d3954ebf974ed5a2a8165ff4abd09d6bae58c6",
+      "reviewedAtUtc": "2026-10-07T15:28:39.1134897Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -166,13 +170,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "ace3dbd910be6380b0085a29c778224bf12e43903530c693d85288d17e6fc166"
+          "sha256": "3cb03a99e8b9b4174efc7bd7f693e5f08a9c0cf999d6bb1da10b369d836157a6"
         }
       ],
-      "reason": "Reviewed frontend index and repository catalog guidance against the Angular Vite targets, explicit tsconfig and regenerated deterministic inventories; build commands and public UI contracts remain accurate.",
+      "reason": "Only test coverage scope changes; projects, routes, build targets, dependencies and runtime ownership are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "4303e0f849219ddef50a861335783670ae8bcff5",
-      "reviewedAtUtc": "2026-10-06T00:22:19.9079816Z"
+      "gitHead": "63d3954ebf974ed5a2a8165ff4abd09d6bae58c6",
+      "reviewedAtUtc": "2026-10-07T15:28:39.309793Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -676,12 +680,16 @@
         {
           "path": ".llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1",
           "sha256": "6c99ef1b5fc2031f71247880d34eceddce86af53fde20ff39d0c95f5439d6c15"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
+          "sha256": "72e8cbb8ab5c25efde3664ac547aa20924991ebc5060a8e9997ae8568b072b84"
         }
       ],
-      "reason": "All three clients have generation gates; 5520 frontend, 208 bot and 2116 architecture tests passed.",
+      "reason": "Core smoke now validates the current generated linkGoogle transport and retains its POST method and endpoint assertions; focused frontend-contract tests enforce the same contract.",
       "baseRef": "HEAD",
-      "gitHead": "f777062a632366651650bdd9fec53813be7a986e",
-      "reviewedAtUtc": "2026-10-07T11:12:10.4523201Z"
+      "gitHead": "63d3954ebf974ed5a2a8165ff4abd09d6bae58c6",
+      "reviewedAtUtc": "2026-10-07T15:28:39.6767599Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1101,17 +1109,21 @@
     {
       "pageId": "workflow-test-plan",
       "pagePath": ".llm-wiki/workflows/test-plan.md",
-      "pageSha256": "00873290bae6cba909cc474821519081b25bcc6767c089668d188119c77126c3",
+      "pageSha256": "36583b8f66739cd95c1f1cd5544883d0fc2924eef26a80410247f92a70d5967e",
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
           "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb"
+        },
+        {
+          "path": "docs/TESTING_STRATEGY.md",
+          "sha256": "e33cf5817fbfefa11f25b51f6355e479433bda8357bd83aaae6f6255b12cbae6"
         }
       ],
-      "reason": "The existing performance-data-access rule and integration-check identity are preserved while current Services/ paths become eligible. Executed persistence regression verifies both selection and the exact required command; planning and ownership logic are unchanged.",
+      "reason": "Testing strategy now distinguishes generated SDK measurement exclusions from maintained adapters/helpers and retains SDK generation/live API gates and all coverage thresholds.",
       "baseRef": "HEAD",
-      "gitHead": "755c4ee5bb00ea025c5ad8321db12ec48386e496",
-      "reviewedAtUtc": "2026-10-04T10:05:50.6200728Z"
+      "gitHead": "63d3954ebf974ed5a2a8165ff4abd09d6bae58c6",
+      "reviewedAtUtc": "2026-10-07T15:28:40.1407075Z"
     },
     {
       "pageId": "workflow-trace-feature",

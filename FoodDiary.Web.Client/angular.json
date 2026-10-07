@@ -207,7 +207,7 @@
                         "coverage": {
                             "coverage": true,
                             "coverageInclude": ["src/app/**/*.ts"],
-                            "coverageExclude": ["**/*.spec.ts", "**/*.stories.ts", "**/*.d.ts"],
+                            "coverageExclude": ["**/*.spec.ts", "**/*.stories.ts", "**/*.d.ts", "src/app/shared/api/sdk/generated/**"],
                             "runnerConfig": "vitest.config.mjs",
                             "coverageThresholds": {
                                 "statements": 81,
@@ -402,7 +402,12 @@
                         "coverage": {
                             "coverage": true,
                             "coverageInclude": ["projects/fooddiary-admin/src/**/*.ts"],
-                            "coverageExclude": ["**/*.spec.ts", "**/*.stories.ts", "**/*.d.ts"],
+                            "coverageExclude": [
+                                "**/*.spec.ts",
+                                "**/*.stories.ts",
+                                "**/*.d.ts",
+                                "projects/fooddiary-admin/src/app/shared/api/sdk/generated/**"
+                            ],
                             "runnerConfig": "vitest.config.mjs"
                         }
                     }

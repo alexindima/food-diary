@@ -61,8 +61,8 @@ describe('WaistEntriesService list', () => {
         req.flush([MOCK_ENTRY]);
     });
 
-    it('should skip empty optional filters', () => {
-        service.getEntries({ dateFrom: '', dateTo: undefined, limit: undefined }).subscribe(entries => {
+    it.each([undefined, ''])('should skip empty optional filters when dateTo is "%s"', dateTo => {
+        service.getEntries({ dateFrom: '', dateTo, limit: undefined }).subscribe(entries => {
             expect(entries).toEqual([MOCK_ENTRY]);
         });
 

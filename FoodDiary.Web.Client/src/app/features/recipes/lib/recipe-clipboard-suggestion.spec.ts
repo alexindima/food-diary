@@ -7,6 +7,7 @@ import { BrowserStorageService } from '../../../shared/platform/browser-storage.
 import { instagramRecipeUrl, RecipeClipboardSuggestion } from './recipe-clipboard-suggestion';
 
 const link = 'https://www.instagram.com/reel/DdwiuWSNL5o/';
+const oversizedClipboardLength = 2049;
 let onReturn: () => void;
 let suggestion: RecipeClipboardSuggestion;
 const clipboard = { readTextAsync: vi.fn(), canReadWithoutPromptAsync: vi.fn(), onReturn: vi.fn() };
@@ -66,6 +67,26 @@ describe('clipboard suggestions', () => {
         expect(suggestion.unavailable()).toBe(true);
         expect(suggestion.suggestion()).toBeNull();
     });
+    it('pastes and trims text on an explicit request with suggestions disabled', async () => {
+        clipboard.readTextAsync.mockResolvedValue(` ${link}\n`);
+        expect(await suggestion.pasteAsync()).toBe(link);
+        expect(suggestion.enabled()).toBe(false);
+        expect(suggestion.unavailable()).toBe(false);
+        expect(clipboard.readTextAsync).toHaveBeenCalledOnce();
+        expect(clipboard.canReadWithoutPromptAsync).not.toHaveBeenCalled();
+    });
+    it('rejects oversized manually pasted content', async () => {
+        clipboard.readTextAsync.mockResolvedValue('x'.repeat(oversizedClipboardLength));
+        expect(await suggestion.pasteAsync()).toBeNull();
+        expect(suggestion.unavailable()).toBe(false);
+    });
+    it('recovers from a rejected manual paste on the next request', async () => {
+        clipboard.readTextAsync.mockRejectedValueOnce(new Error('NotAllowedError')).mockResolvedValue(link);
+        expect(await suggestion.pasteAsync()).toBeNull();
+        expect(suggestion.unavailable()).toBe(true);
+        expect(await suggestion.pasteAsync()).toBe(link);
+        expect(suggestion.unavailable()).toBe(false);
+    });
 });
 
 describe('Instagram link detection', () => {
@@ -78,6 +99,7 @@ describe('Instagram link detection', () => {
         'https://instagram.com:8080/reel/example/',
         'http://instagram.com/reel/example/',
         'unrelated private clipboard text',
+        'x'.repeat(oversizedClipboardLength),
     ])('ignores unsupported content %s', text => {
         expect(instagramRecipeUrl(text)).toBeNull();
     });

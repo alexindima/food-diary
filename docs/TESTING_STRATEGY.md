@@ -146,6 +146,11 @@ Run from `FoodDiary.Web.Client`.
 | `npm run check:seo-prerender` | SEO prerender HTML checks. |
 | `npm run verify` | Full frontend verification chain. |
 
+User and Admin coverage excludes only their generated SDK directories. Feature
+adapters, response mappers, transport helpers, and other handwritten code remain
+in coverage with the existing thresholds. Generated clients are verified by the
+SDK generation and live API contract gates, alongside adapter HTTP tests.
+
 ## Contract Snapshots
 
 If backend HTTP routes, payloads, status codes, OpenAPI output, or Swagger-visible behavior changes intentionally:

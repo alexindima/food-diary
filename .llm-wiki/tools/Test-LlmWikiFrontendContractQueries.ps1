@@ -31,6 +31,15 @@ foreach ($case in $cases) {
     if ($returnedCount -lt [int]$case.Minimum) {
         throw "$($case.View)/$($case.Query): frontend-contract parity was vacuous; expected at least $($case.Minimum) record(s), got $returnedCount."
     }
+    if ($case.View -eq 'api' -and $case.Query -eq 'linkGoogle') {
+        $linkGoogleCall = @($sqlite.apiCalls)
+        if ($linkGoogleCall.Count -ne 1 -or $linkGoogleCall[0].publicMethod -ne 'linkGoogle' -or
+            $linkGoogleCall[0].path -ne 'FoodDiary.Web.Client/src/app/services/auth.service.ts' -or
+            $linkGoogleCall[0].transport -ne 'GeneratedApiClient' -or $linkGoogleCall[0].method -ne 'POST' -or
+            $linkGoogleCall[0].resolvedUrlExpression -ne '/api/v{version}/auth/google/link') {
+            throw 'Frontend contract query lost the generated linkGoogle transport, owner or endpoint.'
+        }
+    }
     $sqlDurations.Add($sqlStopwatch.Elapsed.TotalMilliseconds)
 }
 
