@@ -203,26 +203,14 @@
       "pageSha256": "bf06c7515995b5983125ae2d8469bc357431d468feed457a4ae9ab443288c4a4",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "cbf13b6ef0f4ff6d2e918be4c95c52bd81d6bcb9e0c111c6474da7298e294225"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1",
-          "sha256": "c78ff2dd2fc1e8a894804f89f3d697282fe9ba9765a1f4f1d02917f5026043e0"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-          "sha256": "9ebcf58ffaa9dec88c569b23327d83979d3039965c2feab61792e20a5269295f"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiVerificationCache.ps1",
-          "sha256": "529fdf5f7dcb2efc54d131ff29c79df622a690ff1dd46711a5ee564ff5b72541"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242"
         }
       ],
-      "reason": "Reviewed actual unknown-group dispatch rejection, exact Unicode fast-cache invalidation and held snapshot lease cleanup. Full planning, guard and verification-cache regressions pass; scoped publication now avoids full-gate hashing while complete generation/status/full checks remain tested on PS7/PS5.",
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
       "baseRef": "HEAD",
-      "gitHead": "f02f61e8217ac74b7c63554c1cf1742f2acfe8cf",
-      "reviewedAtUtc": "2026-10-07T00:41:30.1016239Z"
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:10.5188267Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -354,14 +342,14 @@
       "pageSha256": "6905a9cfcb2c8ed64f714f760c972c46d47fa98b70bb6db940780fa6be0b34e0",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
-          "sha256": "b6fe5f06fd7f6d9e7815768f965e1e42466475f625b07c1bde718c8453846357"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242"
         }
       ],
-      "reason": "Reviewed actual dispatch persistence and list aggregation. Public owned fixtures reproduce zero-fraction event hash mismatch and context-drift false success; corrected UTC payload reconstruction and drift aggregation pass healthy/drift/malformed controls on PS7/PS5. Existing metrics and lifecycle contracts remain.",
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
       "baseRef": "HEAD",
-      "gitHead": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
-      "reviewedAtUtc": "2026-10-07T02:09:07.7329406Z"
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:11.8327426Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -433,14 +421,14 @@
       "pageSha256": "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:35.2888549Z"
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
+      "baseRef": "HEAD",
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:13.3197076Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -448,14 +436,14 @@
       "pageSha256": "1a4c6620169d6fbe556feae253e1e80b1f7a4f4d232962b8fe8b13635bfb608a",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:35.5745515Z"
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
+      "baseRef": "HEAD",
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:14.2336431Z"
     },
     {
       "pageId": "workflow-cost-aware-verification",
@@ -538,14 +526,14 @@
       "pageSha256": "95480b241c0d18016bd62e851be9ae87207340be4b90243c591d7d6da7fb608e",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:37.0833427Z"
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
+      "baseRef": "HEAD",
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:15.6275362Z"
     },
     {
       "pageId": "workflow-failure-knowledge",
@@ -617,18 +605,14 @@
       "pageSha256": "afe53d54c25e32851bd4696c4fc162d497360f95a6b31a95aa557991f57dc840",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "0e2b1b827c5c94312a097ed55d6059ff1a5da5d4eb5b585f49de1cc4c2be38fa"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "ed0639273665e36edb806689d1c42f7f3d25e5f2d430826e857ea4e96baf5ca2"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242"
         }
       ],
-      "reason": "Full-source research/workflow audit retains all 408 source entries with 220 complete reads and 188 explicitly pending. Current-layout diff regression reproduced lost Admin dependencies and modern tests; the tool now reads the declared graph and current Git test roots, and the full focused SQLite diff suite passes. Existing limits, source authority, typed protocol, application HTTP contracts and ownership remain; per-file performance and reliability followups are candidates, not inferred successful execution or speedups.",
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
       "baseRef": "HEAD",
-      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
-      "reviewedAtUtc": "2026-10-07T00:02:31.8118930Z"
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:17.4774965Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -663,14 +647,14 @@
       "pageSha256": "d93e8bf4522a803da1d1a59bd2cd49e0d6a6b39360281f4df4f1792621027fb1",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:39.1824496Z"
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
+      "baseRef": "HEAD",
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:19.3126359Z"
     },
     {
       "pageId": "workflow-index-pipeline",
@@ -679,33 +663,17 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "8a57b8096f5037e179110ed23a6ae7e08f97baf47b59ca919f397123411fa3a0"
+          "sha256": "6418170e4bd0e70b08346fbe1faf8148d95ef6abe065bd8348d86b574f974fde"
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
-          "sha256": "bfd0364f125e2801b9c0c3ff9a7df06e9f9e091a21dba2fc2f072e171d37420c"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
-          "sha256": "5b9d76d2e2a64eb19d700f7cfd5978145499454e4de478cfcbce17e54ec20598"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiStageFingerprint.ps1",
-          "sha256": "5f6a0de438493552ad18438b4631b7ee888ad1452f5f30600d26c69b88020a92"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiStrictAffected.ps1",
-          "sha256": "24838d25fd1692e0567223af413b21ba3c52478c8cefc07475324cee680daa35"
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "bd0661db5feb8cb56384cde836a92d96e4061151577262ad03923fc8e12d65ba"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+          "sha256": "2a7122ae1c26d397bb45bb04bdbc8b3b770367b334da99c326d178de4dcc50a1"
         }
       ],
-      "reason": "Complete facade review confirms strict affected and UI finalization must forward NoCache. Separate pre-fix route regressions reject cached smoke permission; corrected routes preserve exact BaseRef/path scope and pass. Reviewed remaining worker, argument, cache and reader boundary proposals without claiming unverified fixes.",
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
       "baseRef": "HEAD",
-      "gitHead": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
-      "reviewedAtUtc": "2026-10-07T02:38:04.1396244Z"
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:21.0542649Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -747,14 +715,14 @@
       "pageSha256": "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
       "sources": [
         {
-          "path": ".llm-wiki/evals/cases.json",
-          "sha256": "acef17559a23db9ff1ac529cbe582e4b560a3b0e993b09a1110f4831f1e58e0e"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242"
         }
       ],
-      "reason": "Reviewed the sole cases.json edit: it corrects the static billing-security source path after module extraction, while retaining all expected classifications. No promoted case, event chain, approval state, retrospective or evaluation lifecycle behavior changes.",
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
       "baseRef": "HEAD",
-      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
-      "reviewedAtUtc": "2026-09-14T13:58:06.762685Z"
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:24.1942857Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -808,17 +776,17 @@
     {
       "pageId": "workflow-plan-diff-conformance",
       "pagePath": ".llm-wiki/workflows/plan-diff-conformance.md",
-      "pageSha256": "bd822668f34d604e09bbacb4af4315b22b23dda78800c8fb26fe105ae693db36",
+      "pageSha256": "82ddb1109ba7b26835924019c29df7bbb942e5c0c321ea41bdebadf360848e00",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:40.7898583Z"
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
+      "baseRef": "HEAD",
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:28.3428348Z"
     },
     {
       "pageId": "workflow-post-task-retrospective",
@@ -826,14 +794,14 @@
       "pageSha256": "dbcac0a7ae8c9e8975807cd711fc7680b3c731e74459583b85917d9bb8e1827d",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242"
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:41.096778Z"
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
+      "baseRef": "HEAD",
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:30.5386508Z"
     },
     {
       "pageId": "workflow-privacy-review",
@@ -871,14 +839,14 @@
       "pageSha256": "7622935ab3aa92e0641117a4b5afc2b8faada090a2a8a83e9ea27a575f549281",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "6c4cd9d5ee6fdfcfd6398dc79f588b570b9f935a59795918d74447a4f1fc6181"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242"
         }
       ],
-      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:10.4408799Z"
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:31.9300906Z"
     },
     {
       "pageId": "workflow-quality-risk",
@@ -887,13 +855,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d5eee8aefa9a3cc0d27bd81cc4620cb4440fa242faad97920d605c7e2166aa00"
+          "sha256": "8135842d705253282cd0eed076b7a1035c231fbf8dcca0576dd114af88ab7e8b"
         }
       ],
-      "reason": "Reviewed actual dispatch persistence and list aggregation. Public owned fixtures reproduce zero-fraction event hash mismatch and context-drift false success; corrected UTC payload reconstruction and drift aggregation pass healthy/drift/malformed controls on PS7/PS5. Existing metrics and lifecycle contracts remain.",
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
       "baseRef": "HEAD",
-      "gitHead": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
-      "reviewedAtUtc": "2026-10-07T02:09:08.5075257Z"
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:33.8153082Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -928,14 +896,14 @@
       "pageSha256": "d6032fccda979d114e265f30e4f14d9593ded53c6b79d85a2dfc467b07fa3a61",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "6c4cd9d5ee6fdfcfd6398dc79f588b570b9f935a59795918d74447a4f1fc6181"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242"
         }
       ],
-      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:12.2194054Z"
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:35.2448554Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -958,14 +926,14 @@
       "pageSha256": "19ab27e4988b8393d632a38bade21f376fc170acef7dd22a5d10744eb4a972a8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "6a12c8e82a68b9b3ee77a0c893544614dfa921d4e6f9245c35156c419f7b9313"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242"
         }
       ],
-      "reason": "Reviewed workflow documentation impact; behavior remains the same except empty and legacy identifier collections no longer terminate strict-mode facade execution.",
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:42:10.6568318Z"
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:37.1845325Z"
     },
     {
       "pageId": "workflow-runtime-impact",
@@ -989,17 +957,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d5eee8aefa9a3cc0d27bd81cc4620cb4440fa242faad97920d605c7e2166aa00"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "94eda9827bcad393a9b6c6cdb7e22fb248bd988331e23e4b438d0d623499e0fd"
+          "sha256": "8135842d705253282cd0eed076b7a1035c231fbf8dcca0576dd114af88ab7e8b"
         }
       ],
-      "reason": "Reviewed cache dependency closure and PS5 NUL parsing, dispatch context-drift and timestamp hash integrity, uncached publication routes, and shared schedule identity ranking; focused PS7/PS5 fixtures and complete corpus/current Node-.NET parity pass.",
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
       "baseRef": "HEAD",
-      "gitHead": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
-      "reviewedAtUtc": "2026-10-07T03:06:42.5525371Z"
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:40.6785719Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1007,14 +971,14 @@
       "pageSha256": "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-          "sha256": "41e8243a3c0581d8bea51a52304d88c87ba5b1a891d367a315990468a6b7a7bc"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242"
         }
       ],
-      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:15.4784073Z"
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:43.0789044Z"
     },
     {
       "pageId": "workflow-task-brief",
@@ -1052,14 +1016,14 @@
       "pageSha256": "7b3ea1842edd2b40e621b8bef887a96786f9bff979e494b7832a71c176439ff0",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
       "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:06.5229114Z"
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:45.3752950Z"
     },
     {
       "pageId": "workflow-task-dispatch-receipts",
@@ -1090,18 +1054,14 @@
       "pageSha256": "b202a96ec11daaeb6c19f06965768c28baf9b143f2a3264db07c52d6039f6768",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
-          "sha256": "b6fe5f06fd7f6d9e7815768f965e1e42466475f625b07c1bde718c8453846357"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
-          "sha256": "efe7c51d794ea0bfe441e444310cf2304e74e7be03c598ccefc00df2c012daf9"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242"
         }
       ],
-      "reason": "Reviewed actual dispatch persistence and list aggregation. Public owned fixtures reproduce zero-fraction event hash mismatch and context-drift false success; corrected UTC payload reconstruction and drift aggregation pass healthy/drift/malformed controls on PS7/PS5. Existing metrics and lifecycle contracts remain.",
+      "reason": "Reviewed compact missing-assessment suppression with retained saved validation and mandatory readiness/continuity. PS7/PS5 fixtures pass; actual current-source ABBA measurement retains exact JSON fields and shows a conservative 16.499s to 6.460s warm comparison.",
       "baseRef": "HEAD",
-      "gitHead": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
-      "reviewedAtUtc": "2026-10-07T02:09:10.7508127Z"
+      "gitHead": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "reviewedAtUtc": "2026-10-07T10:32:48.6107875Z"
     },
     {
       "pageId": "workflow-task-workspace",

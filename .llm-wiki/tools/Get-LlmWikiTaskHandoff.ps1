@@ -196,15 +196,16 @@ $requirementModel = if (Test-Path -LiteralPath $requirementModelPath -PathType L
         -Format Json | ConvertFrom-Json
 }
 $impactSimulationPath = Join-Path $absoluteWorkspacePath 'impact-simulation.json'
+# Compact output omits these derived assessments; saved artifacts still need verification.
 $impactSimulation = if (Test-Path -LiteralPath $impactSimulationPath -PathType Leaf) {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiImpactSimulation.ps1') verify `
         -WorkspacePath $normalizedWorkspacePath `
         -Format Json | ConvertFrom-Json
-} else {
+} elseif (-not $Compact) {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiImpactSimulation.ps1') assess `
         -WorkspacePath $normalizedWorkspacePath `
         -Format Json | ConvertFrom-Json
-}
+} else { $null }
 $repairLoopPath = Join-Path $absoluteWorkspacePath 'repair-loop.json'
 $repairLoop = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRepairLoop.ps1') `
     $(if (Test-Path -LiteralPath $repairLoopPath -PathType Leaf) { 'verify' } else { 'show' }) `
@@ -278,15 +279,15 @@ $contextFeedbackProfiles = @(if ($null -ne $contextBundle) {
 $confidenceLedgerPath = Join-Path $absoluteWorkspacePath 'confidence-ledger.json'
 $confidenceLedger = if (Test-Path -LiteralPath $confidenceLedgerPath -PathType Leaf) {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiConfidenceLedger.ps1') verify -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json
-} else {
+} elseif (-not $Compact) {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiConfidenceLedger.ps1') assess -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json
-}
+} else { $null }
 $changeCritiquePath = Join-Path $absoluteWorkspacePath 'change-critique.json'
 $changeCritique = if (Test-Path -LiteralPath $changeCritiquePath -PathType Leaf) {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeCritique.ps1') verify -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json
-} else {
+} elseif (-not $Compact) {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeCritique.ps1') assess -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json
-}
+} else { $null }
 $retrospectivePath = Join-Path $absoluteWorkspacePath 'retrospective.json'
 $retrospective = if (Test-Path -LiteralPath $retrospectivePath -PathType Leaf) {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiRetrospective.ps1') verify -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json

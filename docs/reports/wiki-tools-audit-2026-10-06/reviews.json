@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "reviewedFileCount": 409,
+  "reviewedFileCount": 410,
   "reviews": [
     {
       "path": ".llm-wiki/tools/Get-LlmWikiContentFingerprint.ps1",
@@ -2273,11 +2273,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-      "sourceSha256": "a7f5206739940583f68260dbc6d41641886efc5260202bfc70aaaf1cf349d0e9",
-      "reviewedBaseline": "f02f61e8217ac74b7c63554c1cf1742f2acfe8cf",
+      "sourceSha256": "2a7122ae1c26d397bb45bb04bdbc8b3b770367b334da99c326d178de4dcc50a1",
+      "reviewedBaseline": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
       "coverage": "full-source-read",
       "performance": "Plans from one declarative catalog, expands aliases and intersects requested groups with affected groups; per-group receipts avoid repeated suites. Fingerprint calculation still scans input state per group.",
-      "reliability": "Rejected unknown/ambiguous requested groups and missing dispatch handlers now cannot publish false success. Canonical group IDs deduplicate case variants; compatibility aliases remain covered. Scheduler inputs select the bounded lease suite and invalidate its group receipt; workspace-policy stage now includes referenced check definitions.",
+      "reliability": "Rejected unknown/ambiguous requested groups and missing dispatch handlers now cannot publish false success. Canonical group IDs deduplicate case variants; compatibility aliases remain covered. Scheduler inputs select the bounded lease suite and invalidate its group receipt; workspace-policy stage now includes referenced check definitions. Governed delivery now executes the dedicated handoff regression; catalog routing covers both the implementation and regression without changing group membership.",
       "findings": [
         "WTA-017",
         "WTA-021",
@@ -4043,12 +4043,14 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-      "sourceSha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234",
-      "reviewedBaseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+      "sourceSha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242",
+      "reviewedBaseline": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
       "coverage": "full-source-read",
-      "performance": "Compact output is selected only after all full handoff registries/metrics and optional assessments run. It independently repeats workspace status, graph, lease/dispatch/metrics, outcomes, forecasts and validators; output truncation does not bound computation. Validated request-local facts and a compact-specific assessment path should be measured.",
-      "reliability": "PacketInput/StatusInput reuse is not explicitly source-bound. Nested workspace resolution is lexical; source anchors are positive line/path references without physical freshness/line-count checks. Acceptance evidenceNote reads a top-level property although the resolution contract nests it. Compact journal selection filters only the already-limited tail; full output can lose deeply nested evidence at JSON depth 12. Several read collaborators may migrate canonical registries.",
-      "findings": [],
+      "performance": "Compact output is selected only after all full handoff registries/metrics and optional assessments run. It independently repeats workspace status, graph, lease/dispatch/metrics, outcomes, forecasts and validators; output truncation does not bound computation. Validated request-local facts and a compact-specific assessment path should be measured. Compact now omits three absent full-only assessment fallbacks; the current-source ABBA fixture retains exact public output and lowers warm observed wall time from 16.499s to 6.460s. Persisted artifacts still take their original verify branch.",
+      "reliability": "PacketInput/StatusInput reuse is not explicitly source-bound. Nested workspace resolution is lexical; source anchors are positive line/path references without physical freshness/line-count checks. Acceptance evidenceNote reads a top-level property although the resolution contract nests it. Compact journal selection filters only the already-limited tail; full output can lose deeply nested evidence at JSON depth 12. Several read collaborators may migrate canonical registries. Focused PS7/PS5 composition fixtures retain saved verification/failure propagation, required readiness, continuity, optional context/plan resume, supplied inputs, states and output formats.",
+      "findings": [
+        "WTA-030"
+      ],
       "status": "reviewed-with-followups"
     },
     {
@@ -4203,6 +4205,18 @@
       "findings": [
         "WTA-021",
         "WTA-023"
+      ],
+      "status": "reviewed-with-followups"
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
+      "sourceSha256": "2518b9c01ca2b1722770fb4a3c7b0019a09082a7d2ead7ebddd794e62ff2f907",
+      "reviewedBaseline": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
+      "coverage": "full-source-read",
+      "performance": "Owned miniature repository with controlled collaborators executes the actual public handoff composer. Call logs prove suppressed assess work and retained verification; avoids expensive global real-registry calls in the focused fixture.",
+      "reliability": "Covers absent and individually/all saved artifacts, malformed saved/context/plan failure propagation, exact shared compact/full fields, pending evidence and journal filtering, supplied snapshots, required readiness failure, sealed/decomposed states, Markdown/OutputPath and malformed evidence. Full fallback failure remains observable. Real collaboration is separately exercised by the full Workspace shard.",
+      "findings": [
+        "WTA-030"
       ],
       "status": "reviewed-with-followups"
     }

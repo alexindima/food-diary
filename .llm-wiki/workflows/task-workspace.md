@@ -23,6 +23,7 @@ sources:
   - .llm-wiki/tools/Manage-LlmWikiTaskLease.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskAudit.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1
+  - .llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1
   - .llm-wiki/tools/Export-LlmWikiTaskWorkspace.ps1
   - .llm-wiki/tools/LlmWikiJson.ps1
   - .llm-wiki/tools/Import-LlmWikiTaskWorkspace.ps1
@@ -51,6 +52,13 @@ sources:
 ---
 
 # Start a Governed AI Task Workspace
+
+`task-handoff -Compact` retains readiness, continuity, pending evidence, journal
+decisions, source anchors and resume commands. It verifies saved confidence,
+critique and impact artifacts, but does not synthesize those full-only
+assessments when they are absent. Full handoff continues to assess absent
+artifacts. The focused `governed-delivery` group protects both modes and saved
+artifact failures.
 
 Repeated `workspace-policy get -Format Json` calls reuse one process-local
 validated JSON entry. Every call rereads the policy and compares its complete

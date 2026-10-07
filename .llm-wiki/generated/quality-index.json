@@ -56,11 +56,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-      "nonBlankLines": 446,
-      "decisionPoints": 139,
+      "nonBlankLines": 448,
+      "decisionPoints": 140,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 219.42
+      "structuralRiskScore": 220.96
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
@@ -96,11 +96,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-      "nonBlankLines": 749,
+      "nonBlankLines": 750,
       "decisionPoints": 112,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 184.98
+      "structuralRiskScore": 185
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/products.service.ts",
@@ -1402,11 +1402,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-      "nonBlankLines": 749,
+      "nonBlankLines": 750,
       "decisionPoints": 112,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 184.98
+      "structuralRiskScore": 185
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskSchedule.ps1",
@@ -1506,11 +1506,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-      "nonBlankLines": 446,
-      "decisionPoints": 139,
+      "nonBlankLines": 448,
+      "decisionPoints": 140,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 219.42
+      "structuralRiskScore": 220.96
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiContractReferenceExtractor.ps1",
@@ -58453,10 +58453,11 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
       "line": 1,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAcceptancePacketReuse.ps1",
         ".llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1",
+        ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -58885,8 +58886,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -59273,11 +59275,12 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiChangePacket.ps1",
       "line": 1,
-      "testReferenceCount": 4,
+      "testReferenceCount": 5,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAcceptancePacketReuse.ps1",
         ".llm-wiki/tools/Test-LlmWikiChangePacketMetadata.ps1",
         ".llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1",
+        ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -59595,7 +59598,7 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiSmokeSandbox.ps1",
       "line": 1,
-      "testReferenceCount": 39,
+      "testReferenceCount": 40,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAcceptancePacketReuse.ps1",
         ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
@@ -59627,6 +59630,7 @@
         ".llm-wiki/tools/Test-LlmWikiSchedulerLocks.ps1",
         ".llm-wiki/tools/Test-LlmWikiSqliteColdCheckout.ps1",
         ".llm-wiki/tools/Test-LlmWikiTaskBaseline.ps1",
+        ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
         ".llm-wiki/tools/Test-LlmWikiTaskScope.ps1",
         ".llm-wiki/tools/Test-LlmWikiTestOnlyGovernance.ps1",
         ".llm-wiki/tools/Test-LlmWikiToolStartup.ps1",
@@ -59723,8 +59727,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiChangeCritique.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -59780,8 +59785,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -59816,9 +59822,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
       "line": 1,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
+        ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -59980,9 +59987,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
       "line": 1,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiImpactSimulationQueries.ps1",
+        ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -60277,9 +60285,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiTaskJournal.ps1",
       "line": 1,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1",
+        ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
         ".llm-wiki/tools/Test-LlmWikiTaskWorkspace.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
@@ -60317,8 +60326,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -60354,9 +60364,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
       "line": 1,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiCollections.ps1",
+        ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1",
         ".llm-wiki/tools/Test-LlmWikiWorkflowRecovery.ps1"
       ],

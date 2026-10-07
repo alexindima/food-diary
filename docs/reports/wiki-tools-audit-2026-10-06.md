@@ -1,10 +1,10 @@
 # Wiki tool performance and reliability audit
 
-Status: **complete**. All
-409 sources were read in full. Followup proposals are separate from the fixes
+Status: **complete, including the compact handoff followup**. All
+410 current sources were read in full. Followup proposals are separate from the fixes
 that have execution evidence; this is not a claim that every proposal was implemented.
 
-The audit now covers **409 files** (408 in its initial inventory), with **74,954 lines in its initial baseline**:
+The audit now covers **410 files** (408 in its initial inventory), with **74,954 lines in its initial baseline**:
 the Wiki facade, every tool/library/regression source under `.llm-wiki/tools`,
 the complete Development MCP runtime, and its launcher/CI integration. Generated
 navigation is not an authority. Relevant policies, contracts and tests are
@@ -17,9 +17,9 @@ inspected with their owning tool.
   does **not** mark a file reviewed.
 - [Reviews](wiki-tools-audit-2026-10-06/reviews.json) records complete-source
   inspection and specific performance/reliability observations for each file.
-  Current checkpoint: **409 reviewed; 0 pending**; exact source hashes pass the coverage guard.
+  Current checkpoint: **410 reviewed; 0 pending**; exact source hashes pass the coverage guard.
 - [Findings](wiki-tools-audit-2026-10-06/findings.json) includes concrete triggers,
-  consequences, test gaps, remediation and evidence references. All twenty-nine fixes
+  consequences, test gaps, remediation and evidence references. All thirty corrections
   have passed focused regression checks; final integrated results are recorded below.
 - [Coverage check](wiki-tools-audit-2026-10-06/Test-Coverage.ps1) rejects stale
   reviewed hashes, duplicate/missing scope entries and incomplete claims when
@@ -240,3 +240,11 @@ Complete source coverage passes **409/409** with no pending entries, stale revie
 The full frozen audit retains **712 assertions** and the CI aggregate guard passes **64 result combinations**. Full Core passes again after the ranking correction in **213.07s**. Full Workspace (**575.72s**) and Orchestration (**254.39s**) passed the unchanged runtime fixes before the final policy-only stem correction. The correction itself passes all retrieval corpora and exact current Node/.NET parity on **302 cases**; the existing full MCP suite has **458 passed, zero failed and zero skipped**, with no subsequent C# runtime/test source edits. The per-file performance/reliability proposals remain classified followups, not unmeasured implementation claims.
 
 These are local Windows execution results. Linux CI and deployment are not claimed, and concurrent timings do not establish whole-Wiki speedups. Historical checkpoint sections above record the progressive review; this final result supersedes their earlier pending counts.
+
+## Compact handoff followup, 2026-10-07
+
+WTA-030 implements the measured compact-handoff improvement. Missing confidence, critique and impact artifacts no longer trigger full-only synthesis for Compact. Saved artifacts retain the original verify branch, and full handoff still assesses missing artifacts. Readiness, continuity, pending evidence, journal decisions, context anchors and resume commands retain their public shape.
+
+The current-source ABBA fixture records before **29.917s/16.499s**, after **6.897s/6.460s**, with exact compact JSON parity except generatedAtUtc. The first baseline includes cold work; the conservative warm comparison is **16.499s to 6.460s (about 2.55x)** on this one owned synthetic task. No whole-Wiki speedup or existing-receipt verification shortcut is claimed.
+
+The dedicated regression passes on Windows PowerShell 7 and 5.1, including saved/malformed optional artifacts, required readiness failures, supplied snapshots, states and output formats. It joins the existing governed-delivery group; all 37 focused groups and the frozen legacy assertion inventory remain intact. Source scope grows to **410** with the new complete-source reviewed regression. Final integrated verification for this followup passes: all 37 focused groups, all 12 index Check stages, change policy and 21 current/reviewed affected Wiki pages. Full Workspace passes in 1235.12s, exercising real saved artifacts, lineage, handoff and refresh. The focused group runner records 1266.03s; concurrent gate durations are not speedup measurements. The frozen 712-assertion inventory and 64 CI result combinations remain intact. Runtime/index source hashes were held unchanged during these gates and rechecked before handoff.

@@ -50,6 +50,7 @@
         @{ When = 'adaptive-evals'; Remove = @('adaptive-routing', 'adaptive-experience') }
     )
     AdditionalMatches = @(
+        @{ Pattern = '^\.llm-wiki/tools/(Get-LlmWikiTaskHandoff|Test-LlmWikiTaskHandoff)\.ps1$'; Groups = @('governed-delivery') }
         @{ Pattern = '^\.llm-wiki/tools/code-graph-batch\.mjs$'; Groups = @('context-bundle') }
         @{ Pattern = '^\.llm-wiki/tools/(LlmWikiSourceInventory|Test-LlmWikiSourceInventory)\.ps1$'; Groups = @('domain-data-query') }
         @{ Pattern = '^\.llm-wiki/tools/LlmWikiGitPaths\.ps1$'; Groups = @('api-compatibility') }

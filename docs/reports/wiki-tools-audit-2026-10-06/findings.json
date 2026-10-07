@@ -609,6 +609,30 @@
         "retrieval-stem-result.json",
         "retrieval-stem-evaluation.log"
       ]
+    },
+    {
+      "id": "WTA-030",
+      "kind": "performance",
+      "severity": "warning",
+      "status": "fixed-integrated-verified",
+      "location": {
+        "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+        "startLine": 200,
+        "endLine": 207
+      },
+      "trigger": "Compact handoff has no saved confidence, critique or impact assessment.",
+      "consequence": "The composer eagerly synthesizes full-only assessments before projecting compact output. An actual one-task current-source fixture takes 16.499s on a warm baseline versus 6.460s after the bounded correction.",
+      "testGap": "Legacy compact assertions checked view/anchors, but did not protect optional assessment suppression, stored receipt verification or mandatory failure propagation.",
+      "remediation": "Keep existing verify branches for saved artifacts; assess absent artifacts only for full handoff. Route both the tool and a dedicated composition regression through the existing governed-delivery group.",
+      "evidence": [
+        "../wiki-compact-handoff-20261007/regression-before.log",
+        "../wiki-compact-handoff-20261007/regression-final-ps7.log",
+        "../wiki-compact-handoff-20261007/regression-final-ps5.log",
+        "../wiki-compact-handoff-20261007/production-proof.json",
+        "../wiki-compact-handoff-20261007/full-workspace.log",
+        "../wiki-compact-handoff-20261007/focused-full.log",
+        "../wiki-compact-handoff-20261007/assertion-inventory.log"
+      ]
     }
   ]
 }

@@ -1,23 +1,16 @@
 {
   "schemaVersion": 1,
   "auditDate": "2026-10-06",
-  "baseline": "d975b58a448e71d7b868a0f47b1f71ed8aef563b",
+  "baseline": "2668adfec96fd0a8f2486997e0ba2909f2c3fc34",
   "worktreeStatus": [
-    " M .llm-wiki/generated/quality-index.json",
     " M .llm-wiki/policies/affected-smoke-catalog.psd1",
-    " M .llm-wiki/policies/context-search-ranking.json",
-    " M .llm-wiki/reviews/source-impact-reviews.json",
-    " M .llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
-    " M .llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiStageFingerprint.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiStrictAffected.ps1",
-    " M .llm-wiki/wiki.ps1",
+    " M .llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+    " M .llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+    " M .llm-wiki/workflows/task-workspace.md",
     " M docs/reports/wiki-tools-audit-2026-10-06.md",
     " M docs/reports/wiki-tools-audit-2026-10-06/findings.json",
-    " M docs/reports/wiki-tools-audit-2026-10-06/inventory.json",
-    " M docs/reports/wiki-tools-audit-2026-10-06/reviews.json"
+    " M docs/reports/wiki-tools-audit-2026-10-06/reviews.json",
+    "?? .llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1"
   ],
   "snapshotContract": "Hashes identify current worktree content; baseline identifies HEAD and is not a claim that the worktree is clean.",
   "hashContract": "sha256 UTF-8 source text with LF line endings; a hash proves source identity, not review",
@@ -32,8 +25,8 @@
     ".github/workflows/ci-tests.yml"
   ],
   "classificationContract": "Automated navigation only. All source review and performance/reliability conclusions are recorded separately.",
-  "sourceFileCount": 409,
-  "sourceLineCount": 75720.0,
+  "sourceFileCount": 410,
+  "sourceLineCount": 75893.0,
   "files": [
     {
       "path": ".github/workflows/ci-tests.yml",
@@ -3899,8 +3892,8 @@
       "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
       "role": "query-or-orchestration",
       "extension": ".ps1",
-      "lines": 757,
-      "sourceSha256": "e639a1702f053c0a6d7c1d78188e17e7a2c5896e95dbef485f3a0e0147ca4234",
+      "lines": 758,
+      "sourceSha256": "9157018bf6f7a083c7ff6014757ed9e88eb682cb76d80127ff423fe77aadc242",
       "parameters": [
         "WorkspacePath",
         "PacketInput",
@@ -4058,123 +4051,123 @@
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
-          "line": 202,
+          "line": 203,
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
-          "line": 206,
+          "line": 207,
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
-          "line": 212,
+          "line": 213,
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
-          "line": 216,
+          "line": 217,
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
-          "line": 220,
-          "text": "-Format Json | ConvertFrom-Json"
-        },
-        {
-          "line": 223,
+          "line": 221,
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
           "line": 224,
+          "text": "-Format Json | ConvertFrom-Json"
+        },
+        {
+          "line": 225,
           "text": "$verificationTelemetryValidation = & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') verify -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 226,
+          "line": 227,
           "text": "& (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') metrics -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 234,
+          "line": 235,
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
-          "line": 240,
+          "line": 241,
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
-          "line": 246,
+          "line": 247,
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
-          "line": 252,
+          "line": 253,
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
-          "line": 258,
+          "line": 259,
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
-          "line": 264,
+          "line": 265,
           "text": "-Format Json | ConvertFrom-Json"
-        },
-        {
-          "line": 266,
-          "text": "$contextStrategyOutcomeMetrics = & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextOutcome.ps1') metrics -Format Json | ConvertFrom-Json"
         },
         {
           "line": 267,
+          "text": "$contextStrategyOutcomeMetrics = & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextOutcome.ps1') metrics -Format Json | ConvertFrom-Json"
+        },
+        {
+          "line": 268,
           "text": "$contextStrategyOutcomeHealth = & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextOutcome.ps1') health -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 272,
+          "line": 273,
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
-          "line": 274,
+          "line": 275,
           "text": "$contextFeedback = & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextFeedback.ps1') metrics -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 280,
+          "line": 281,
           "text": "& (Join-Path $PSScriptRoot 'Manage-LlmWikiConfidenceLedger.ps1') verify -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 282,
+          "line": 283,
           "text": "& (Join-Path $PSScriptRoot 'Manage-LlmWikiConfidenceLedger.ps1') assess -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 286,
+          "line": 287,
           "text": "& (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeCritique.ps1') verify -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 288,
+          "line": 289,
           "text": "& (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeCritique.ps1') assess -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 292,
+          "line": 293,
           "text": "& (Join-Path $PSScriptRoot 'Manage-LlmWikiRetrospective.ps1') verify -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 296,
+          "line": 297,
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
-          "line": 299,
+          "line": 300,
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
-          "line": 302,
-          "text": "-Format Json | ConvertFrom-Json"
-        },
-        {
-          "line": 305,
+          "line": 303,
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
           "line": 306,
+          "text": "-Format Json | ConvertFrom-Json"
+        },
+        {
+          "line": 307,
           "text": "$learningHealth = & (Join-Path $PSScriptRoot 'Manage-LlmWikiLearningHealth.ps1') list -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 308,
+          "line": 309,
           "text": "$evalPromotion = & (Join-Path $PSScriptRoot 'Manage-LlmWikiEvalPromotion.ps1') list -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 531,
+          "line": 532,
           "text": "$content = $(if ($Compact) { $compactHandoff } else { $handoff }) | ConvertTo-Json -Depth 12"
         }
       ]
@@ -4822,8 +4815,8 @@
       "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
       "role": "query-or-orchestration",
       "extension": ".ps1",
-      "lines": 453,
-      "sourceSha256": "a7f5206739940583f68260dbc6d41641886efc5260202bfc70aaaf1cf349d0e9",
+      "lines": 455,
+      "sourceSha256": "2a7122ae1c26d397bb45bb04bdbc8b3b770367b334da99c326d178de4dcc50a1",
       "parameters": [
         "BaseRef",
         "ChangedPath",
@@ -4870,7 +4863,7 @@
           "text": "(@($rootResult.changes | ConvertTo-Json -Depth 7) -join '') -cne (@($frontendResult.changes | ConvertTo-Json -Depth 7) -join '')) {"
         },
         {
-          "line": 447,
+          "line": 449,
           "text": "[IO.File]::WriteAllText($temporaryReceiptPath, (($receipt | ConvertTo-Json -Depth 4) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))"
         }
       ]
@@ -18031,6 +18024,76 @@
         {
           "line": 59,
           "text": "$sqlite = & $briefTool @arguments | ConvertFrom-Json"
+        }
+      ]
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
+      "role": "regression-tool",
+      "extension": ".ps1",
+      "lines": 170,
+      "sourceSha256": "2518b9c01ca2b1722770fb4a3c7b0019a09082a7d2ead7ebddd794e62ff2f907",
+      "parameters": [],
+      "functions": [
+        {
+          "name": "Write-Json",
+          "startLine": 15,
+          "endLine": 17
+        },
+        {
+          "name": "Assert-Handoff",
+          "startLine": 18,
+          "endLine": 20
+        },
+        {
+          "name": "Get-Calls",
+          "startLine": 21,
+          "endLine": 25
+        },
+        {
+          "name": "Invoke-Handoff",
+          "startLine": 26,
+          "endLine": 35
+        },
+        {
+          "name": "Assert-Rejected",
+          "startLine": 36,
+          "endLine": 43
+        }
+      ],
+      "parseErrors": [],
+      "operationAnchors": [
+        {
+          "line": 16,
+          "text": "[IO.File]::WriteAllText($Path, ($Value | ConvertTo-Json -Depth 20), [Text.UTF8Encoding]::new($false))"
+        },
+        {
+          "line": 23,
+          "text": "foreach ($line in [IO.File]::ReadAllLines($callLog)) { $line | ConvertFrom-Json }"
+        },
+        {
+          "line": 33,
+          "text": "if ($Format -eq 'Json' -and -not $OutputPath) { return ($content -join [Environment]::NewLine) | ConvertFrom-Json }"
+        },
+        {
+          "line": 84,
+          "text": "[IO.File]::AppendAllText((Join-Path $root 'calls.jsonl'), ($call | ConvertTo-Json -Compress) + [Environment]::NewLine)"
+        },
+        {
+          "line": 94,
+          "text": "if ((Test-Path -LiteralPath $path) -and [IO.File]::ReadAllText($path) -eq 'broken') { throw \"Malformed saved $receipt\" }"
+        },
+        {
+          "line": 104,
+          "text": "Get-Content (Join-Path $root $dataName) -Raw"
+        },
+        {
+          "line": 120,
+          "text": "Assert-Handoff (($compact.$key | ConvertTo-Json -Depth 10 -Compress) -ceq ($full.$key | ConvertTo-Json -Depth 10 -Compress)) \"Compact output changed $key.\""
+        },
+        {
+          "line": 157,
+          "text": "Assert-Handoff ((Get-Content (Join-Path $fixture $outputPath) -Raw | ConvertFrom-Json).view -eq 'compact') 'Compact OutputPath did not publish its JSON view.'"
         }
       ]
     },
