@@ -2,6 +2,30 @@ namespace FoodDiary.Development.Mcp.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class WikiOutputParserTests {
+    [Theory]
+    [InlineData("Modules/Users/Application/Queries/GetUser/GetUserQuery.cs")]
+    [InlineData("Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/EmailTests.cs")]
+    [InlineData("Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs")]
+    [InlineData("Hosts/tests/FoodDiary.Web.Api.Tests/OptionsTests.cs")]
+    [InlineData("Platform/tests/FoodDiary.Infrastructure.Tests/RepositoryTests.cs")]
+    [InlineData("scripts/Start-FoodDiaryDevelopmentMcp.ps1")]
+    [InlineData(@"Modules\Users\Application\Queries\GetUser\GetUserQuery.cs")]
+    public void Parse_PreservesModernRepositoryRootsInStructuredTraceAndText(string path) {
+        string expectedPath = path.Replace('\\', '/');
+        string json = System.Text.Json.JsonSerializer.Serialize(new {
+            symbols = new[] { new { path } },
+        });
+
+        WikiCommandResult structured = WikiOutputParser.Parse("trace", json, "repository", "head");
+        WikiCommandResult text = WikiOutputParser.Parse("trace", $"Source: {path}", "repository", "head");
+
+        Assert.Multiple(
+            () => Assert.Equal([expectedPath], structured.ReferencedPaths),
+            () => Assert.Equal([expectedPath], structured.GetScopePaths()),
+            () => Assert.Equal([expectedPath], text.ReferencedPaths),
+            () => Assert.Equal([expectedPath], text.GetScopePaths()));
+    }
+
     [Fact]
     public void Parse_UsesStructuredWarningsAndDoesNotTreatJsonPropertyNameAsWarning() {
         const string output = """

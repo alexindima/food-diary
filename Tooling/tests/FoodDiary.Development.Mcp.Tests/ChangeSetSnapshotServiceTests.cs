@@ -10,14 +10,16 @@ public sealed class ChangeSetSnapshotServiceTests {
     }
 
     [Theory]
-    [InlineData("R  new/path.cs\0old/path.cs\0", "new/path.cs")]
-    [InlineData("C  copied/path.cs\0source/path.cs\0", "copied/path.cs")]
-    public void ParseChangedPaths_UsesDestinationForRenameAndCopy(
+    [InlineData("R  new/path.cs\0old/path.cs\0", "new/path.cs", "old/path.cs")]
+    [InlineData(" R new/path.cs\0old/path.cs\0", "new/path.cs", "old/path.cs")]
+    [InlineData("C  copied/path.cs\0source/path.cs\0", "copied/path.cs", null)]
+    public void ParseChangedPaths_UsesBothRenameEndpointsAndOnlyCopyDestination(
         string porcelain,
-        string expectedPath) {
+        string expectedPath,
+        string? expectedSourcePath) {
         string[] result = ChangeSetSnapshotService.ParseChangedPaths(porcelain);
 
-        Assert.Equal([expectedPath], result);
+        Assert.Equal(expectedSourcePath is null ? [expectedPath] : [expectedPath, expectedSourcePath], result);
     }
 
     [Fact]
@@ -27,6 +29,15 @@ public sealed class ChangeSetSnapshotServiceTests {
         string[] result = ChangeSetSnapshotService.ParseChangedPaths(porcelain);
 
         Assert.Equal(["deleted.cs", "каталог/новый файл.cs"], result);
+    }
+
+    [Fact]
+    public void ParseChangedPaths_PreservesCaseSensitiveGitNamesAndCanonicalHashOrder() {
+        const string porcelain = "?? Scoped/alpha.cs\0?? Scoped/_z.cs\0?? Scoped/Alpha.cs\0";
+
+        string[] result = ChangeSetSnapshotService.ParseChangedPaths(porcelain);
+
+        Assert.Equal(["Scoped/Alpha.cs", "Scoped/_z.cs", "Scoped/alpha.cs"], result);
     }
 
     [Theory]
@@ -179,6 +190,64 @@ public sealed class ChangeSetSnapshotServiceTests {
         }
     }
 
+    [Fact]
+    public async Task GetAsync_WhenTrackedFileMovesOutOfScope_ReportsSourceDeletion() {
+        string repositoryRoot = Path.Combine(Path.GetTempPath(), $"fooddiary-snapshot-rename-{Guid.NewGuid():N}");
+        string resolvedRoot = Path.GetFullPath(repositoryRoot);
+        if (!string.Equals(Path.GetDirectoryName(resolvedRoot), Path.GetFullPath(Path.GetTempPath()).TrimEnd(Path.DirectorySeparatorChar), StringComparison.Ordinal) ||
+            !Path.GetFileName(resolvedRoot).StartsWith("fooddiary-snapshot-rename-", StringComparison.Ordinal)) {
+            throw new InvalidOperationException("Unsafe snapshot fixture path.");
+        }
+        Directory.CreateDirectory(Path.Combine(repositoryRoot, "Scoped"));
+        Directory.CreateDirectory(Path.Combine(repositoryRoot, "Unrelated"));
+        try {
+            RunGit(repositoryRoot, "init", "--quiet");
+            RunGit(repositoryRoot, "config", "user.email", "snapshot@example.invalid");
+            RunGit(repositoryRoot, "config", "user.name", "Snapshot Test");
+            await File.WriteAllTextAsync(Path.Combine(repositoryRoot, "Scoped", "source.cs"), "tracked source");
+            RunGit(repositoryRoot, "add", ".");
+            RunGit(repositoryRoot, "commit", "--quiet", "-m", "baseline");
+            using var service = new ChangeSetSnapshotService(TimeProvider.System, repositoryRoot);
+            ChangeSetSnapshot initial = await service.GetAsync(["Scoped"], CancellationToken.None);
+
+            RunGit(repositoryRoot, "mv", "Scoped/source.cs", "Unrelated/source.cs");
+            await service.RefreshAsync(CancellationToken.None);
+            ChangeSetSnapshot moved = await service.GetAsync(["Scoped"], CancellationToken.None);
+
+            Assert.Equal(["Scoped/source.cs"], moved.ChangedPaths);
+            Assert.False(string.Equals(initial.Fingerprint, moved.Fingerprint, StringComparison.Ordinal));
+        } finally {
+            foreach (string path in Directory.EnumerateFiles(resolvedRoot, "*", SearchOption.AllDirectories)) {
+                File.SetAttributes(path, FileAttributes.Normal);
+            }
+            Directory.Delete(resolvedRoot, recursive: true);
+        }
+    }
+
+    [Theory]
+    [InlineData("Unrelated/source.cs")]
+    [InlineData(".artifacts/source.cs")]
+    public void WatcherRename_InvalidatesOldScopeEvenWhenDestinationIsIgnored(string destination) {
+        string repositoryRoot = Path.GetFullPath(Path.Combine(Path.GetTempPath(), $"fooddiary-snapshot-rename-{Guid.NewGuid():N}"));
+        if (!string.Equals(Path.GetDirectoryName(repositoryRoot), Path.GetFullPath(Path.GetTempPath()).TrimEnd(Path.DirectorySeparatorChar), StringComparison.Ordinal)) {
+            throw new InvalidOperationException("Unsafe snapshot fixture path.");
+        }
+        Directory.CreateDirectory(repositoryRoot);
+        try {
+            using var service = new ChangeSetSnapshotService(TimeProvider.System, repositoryRoot);
+            System.Reflection.MethodInfo handler = typeof(ChangeSetSnapshotService).GetMethod(
+                "OnChanged", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+            System.Reflection.MethodInfo pending = typeof(ChangeSetSnapshotService).GetMethod(
+                "HasRelevantPendingChange", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+
+            handler.Invoke(service, [service, new RenamedEventArgs(WatcherChangeTypes.Renamed, repositoryRoot, destination, "Scoped/source.cs")]);
+
+            Assert.Equal(true, pending.Invoke(service, [new[] { "Scoped" }]));
+        } finally {
+            Directory.Delete(repositoryRoot);
+        }
+    }
+
     private static string RunGit(string repositoryRoot, params string[] arguments) {
         using System.Diagnostics.Process process = new() {
             StartInfo = new System.Diagnostics.ProcessStartInfo {
@@ -201,5 +270,72 @@ public sealed class ChangeSetSnapshotServiceTests {
         process.WaitForExit();
         Assert.True(process.ExitCode == 0, error);
         return output;
+    }
+
+    [Theory]
+    [InlineData("Scoped/source.cs", "Unrelated/source.cs")]
+    [InlineData("Область/файл.cs", "Другая/файл.cs")]
+    [InlineData("Scoped/source.cs", "Scoped/Source.cs")]
+    [InlineData("Scoped/İ.cs", "Scoped/j.cs")]
+    public async Task GetAsync_WithTrackedRename_MatchesRealNodeGraphFingerprint(string sourcePath, string destinationPath) {
+        string repositoryRoot = Path.GetFullPath(Path.Combine(Path.GetTempPath(), $"fooddiary-snapshot-parity-{Guid.NewGuid():N}"));
+        if (!string.Equals(Path.GetDirectoryName(repositoryRoot), Path.GetFullPath(Path.GetTempPath()).TrimEnd(Path.DirectorySeparatorChar), StringComparison.Ordinal)) {
+            throw new InvalidOperationException("Unsafe snapshot fixture path.");
+        }
+        string sourceRoot = FoodDiary.Development.Mcp.Infrastructure.RepositoryRootResolver.Resolve();
+        Directory.CreateDirectory(Path.Combine(repositoryRoot, ".llm-wiki", "tools"));
+        Directory.CreateDirectory(Path.Combine(repositoryRoot, ".llm-wiki", "policies"));
+        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(repositoryRoot, sourcePath))!);
+        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(repositoryRoot, destinationPath))!);
+        try {
+            foreach (string file in Directory.EnumerateFiles(Path.Combine(sourceRoot, ".llm-wiki", "tools"), "*.mjs")) {
+                File.Copy(file, Path.Combine(repositoryRoot, ".llm-wiki", "tools", Path.GetFileName(file)));
+            }
+            File.Copy(Path.Combine(sourceRoot, ".llm-wiki", "policies", "context-search-ranking.json"),
+                Path.Combine(repositoryRoot, ".llm-wiki", "policies", "context-search-ranking.json"));
+            await File.WriteAllTextAsync(Path.Combine(repositoryRoot, ".gitignore"), ".artifacts/\n");
+            await File.WriteAllTextAsync(Path.Combine(repositoryRoot, sourcePath), "tracked source");
+            RunGit(repositoryRoot, "init", "--quiet");
+            RunGit(repositoryRoot, "config", "user.email", "snapshot@example.invalid");
+            RunGit(repositoryRoot, "config", "user.name", "Snapshot Test");
+            RunGit(repositoryRoot, "add", ".");
+            RunGit(repositoryRoot, "commit", "--quiet", "-m", "baseline");
+            RunGit(repositoryRoot, "mv", "-f", sourcePath, destinationPath);
+            using var service = new ChangeSetSnapshotService(TimeProvider.System, repositoryRoot);
+            ChangeSetSnapshot snapshot = await service.GetAsync(CancellationToken.None);
+            Assert.Equal(new[] { sourcePath, destinationPath }.Order(StringComparer.Ordinal), snapshot.ChangedPaths, StringComparer.Ordinal);
+            using System.Diagnostics.Process process = new() {
+                StartInfo = new System.Diagnostics.ProcessStartInfo {
+                    FileName = "node",
+                    WorkingDirectory = repositoryRoot,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                },
+            };
+            process.StartInfo.ArgumentList.Add(Path.Combine(repositoryRoot, ".llm-wiki", "tools", "code-graph.mjs"));
+            process.StartInfo.ArgumentList.Add("status");
+            FoodDiary.Development.Mcp.Infrastructure.GitProcessEnvironment.ClearLocalRepositoryVariables(process.StartInfo);
+            using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(30));
+            process.Start();
+            Task<string> output = process.StandardOutput.ReadToEndAsync(timeout.Token);
+            Task<string> error = process.StandardError.ReadToEndAsync(timeout.Token);
+            try {
+                await process.WaitForExitAsync(timeout.Token);
+            } catch (OperationCanceledException) {
+                if (!process.HasExited) { process.Kill(entireProcessTree: true); }
+                throw;
+            }
+            Assert.True(process.ExitCode == 0, await error);
+            using var status = System.Text.Json.JsonDocument.Parse(await output);
+            Assert.Equal(snapshot.Fingerprint, status.RootElement.GetProperty("currentChangeSetFingerprint").GetString());
+            Assert.Equal(snapshot.ChangedPaths.Count, status.RootElement.GetProperty("currentWorkspace").GetProperty("changedPathCount").GetInt32());
+        } finally {
+            foreach (string path in Directory.EnumerateFiles(repositoryRoot, "*", SearchOption.AllDirectories)) {
+                File.SetAttributes(path, FileAttributes.Normal);
+            }
+            Directory.Delete(repositoryRoot, recursive: true);
+        }
     }
 }

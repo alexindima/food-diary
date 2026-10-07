@@ -48,11 +48,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-      "nonBlankLines": 628,
-      "decisionPoints": 137,
+      "nonBlankLines": 640,
+      "decisionPoints": 141,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 220.06
+      "structuralRiskScore": 226.3
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
@@ -215,6 +215,14 @@
       "structuralRiskScore": 140.26
     },
     {
+      "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+      "nonBlankLines": 560,
+      "decisionPoints": 84,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 139.2
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiTaskDecomposition.ps1",
       "nonBlankLines": 392,
       "decisionPoints": 86,
@@ -229,14 +237,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 137.62
-    },
-    {
-      "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-      "nonBlankLines": 553,
-      "decisionPoints": 83,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 137.56
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
@@ -791,6 +791,14 @@
       "structuralRiskScore": 85.48
     },
     {
+      "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshotService.cs",
+      "nonBlankLines": 328,
+      "decisionPoints": 52,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 84.56
+    },
+    {
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
       "nonBlankLines": 177,
       "decisionPoints": 54,
@@ -805,14 +813,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 83.12
-    },
-    {
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/lib/catalog-file.ts",
-      "nonBlankLines": 146,
-      "decisionPoints": 53,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 82.42
     }
   ],
   "files": [
@@ -1210,11 +1210,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-      "nonBlankLines": 553,
-      "decisionPoints": 83,
+      "nonBlankLines": 560,
+      "decisionPoints": 84,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 137.56
+      "structuralRiskScore": 139.2
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiDispatchMetrics.ps1",
@@ -1554,11 +1554,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-      "nonBlankLines": 628,
-      "decisionPoints": 137,
+      "nonBlankLines": 640,
+      "decisionPoints": 141,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 220.06
+      "structuralRiskScore": 226.3
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiMcpCommand.ps1",
@@ -2586,11 +2586,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshotService.cs",
-      "nonBlankLines": 310,
-      "decisionPoints": 46,
+      "nonBlankLines": 328,
+      "decisionPoints": 52,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 75.2
+      "structuralRiskScore": 84.56
     },
     {
       "path": "FoodDiary.Development.Mcp/ChangeSets/IChangeSetSnapshotService.cs",
@@ -2906,11 +2906,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryCache.cs",
-      "nonBlankLines": 89,
-      "decisionPoints": 11,
+      "nonBlankLines": 100,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.28
+      "structuralRiskScore": 17
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryCacheMetrics.cs",
@@ -59134,8 +59134,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
       "line": 1,
-      "testReferenceCount": 6,
+      "testReferenceCount": 7,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
         ".llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1",
         ".llm-wiki/tools/Test-LlmWikiFullResume.ps1",
         ".llm-wiki/tools/Test-LlmWikiIndexCheckpoint.ps1",
@@ -59286,8 +59287,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiChangeSemantics.ps1",
       "line": 1,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
         ".llm-wiki/tools/Test-LlmWikiIndexSelection.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
@@ -59364,8 +59366,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiGeneratedArtifacts.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
         ".llm-wiki/tools/Test-LlmWikiGeneratedArtifacts.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -59454,8 +59457,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiIndexTiming.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
         ".llm-wiki/tools/Test-LlmWikiIndexTiming.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -59499,9 +59503,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
       "line": 1,
-      "testReferenceCount": 5,
+      "testReferenceCount": 6,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
+        ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
         ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
         ".llm-wiki/tools/Test-LlmWikiFullResume.ps1",
         ".llm-wiki/tools/Test-LlmWikiProcess.ps1",

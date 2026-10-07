@@ -203,6 +203,141 @@
         "module-pages-fixed.log",
         "backend-module-model-fixed.log"
       ]
+    },
+    {
+      "id": "WTA-011",
+      "trigger": "Wiki output contains canonical Modules/Services/Tooling/Hosts/Platform/scripts paths or Windows separators.",
+      "consequence": "Modern module paths disappear from referenced/scope paths; text test paths are shortened to an inner tests segment.",
+      "testGap": "Parser tests exercised legacy roots and did not compare structured and text output for the current repository layout.",
+      "remediation": "Add current repository roots while retaining existing path normalization, sorting, timeout and trace filtering.",
+      "evidence": [
+        "mcp-path-before.log",
+        "mcp-path-after.log",
+        "test-results/mcp-path-before.trx",
+        "test-results/mcp-path-after.trx",
+        "mcp-full-pass.log",
+        "test-results/mcp-full-pass.trx"
+      ],
+      "status": "fixed-focused-verified",
+      "severity": "warning",
+      "kind": "defect",
+      "location": {
+        "path": "FoodDiary.Development.Mcp/Wiki/WikiOutputParser.cs",
+        "startLine": 186,
+        "endLine": 186
+      }
+    },
+    {
+      "id": "WTA-012",
+      "trigger": "A tracked file is renamed out of a requested scope, including a move into a watcher-ignored tree.",
+      "consequence": "The scoped projection can report no change and preserve its prior fingerprint, allowing stale context reuse for a removed source.",
+      "testGap": "Existing rename test intentionally retained destination only and no regression exercised the old scope or ignored destination.",
+      "remediation": "Retain both rename endpoints in porcelain parsing and watcher pending paths; retain destination-only copy behavior.",
+      "evidence": [
+        "mcp-path-before.log",
+        "mcp-path-after.log",
+        "test-results/mcp-path-before.trx",
+        "test-results/mcp-path-after.trx",
+        "mcp-full-pass.log",
+        "test-results/mcp-full-pass.trx"
+      ],
+      "status": "fixed-focused-verified",
+      "severity": "warning",
+      "kind": "defect",
+      "location": {
+        "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshotService.cs",
+        "startLine": 233,
+        "endLine": 233
+      }
+    },
+    {
+      "id": "WTA-013",
+      "trigger": "A cache key expires through TryGet or metrics pruning, is reinserted, and the cache later exceeds retention.",
+      "consequence": "Stale FIFO bookkeeping evicts the newly reinserted value before an older live key; repeated expiry also retains disconnected queue entries.",
+      "testGap": "Tests bounded dictionary entries but never expired/reinserted keys before FIFO overflow.",
+      "remediation": "Keep dictionary and FIFO node removal atomic under one Lock, with one linked node per active key and no disconnected queue history.",
+      "evidence": [
+        "mcp-cache-before.log",
+        "mcp-cache-after.log",
+        "test-results/mcp-cache-before.trx",
+        "test-results/mcp-cache-after.trx",
+        "mcp-full-pass.log",
+        "test-results/mcp-full-pass.trx"
+      ],
+      "status": "fixed-focused-verified",
+      "severity": "warning",
+      "kind": "defect",
+      "location": {
+        "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryCache.cs",
+        "startLine": 13,
+        "endLine": 13
+      }
+    },
+    {
+      "id": "WTA-014",
+      "kind": "defect",
+      "severity": "warning",
+      "status": "fixed-focused-verified",
+      "location": {
+        "path": ".llm-wiki/tools/code-graph.mjs",
+        "startLine": 201,
+        "endLine": 201
+      },
+      "trigger": "The same worktree with a tracked rename is fingerprinted by Node and MCP, including Unicode or case-only paths.",
+      "consequence": "Different fingerprints prevent exact projection reuse; OEM-decoded Git paths become nonexistent mojibake paths and no longer identify the changed source. Case-insensitive identity and case conversion also disagree across runtimes.",
+      "testGap": "Previous scope tests did not run the real Node CLI against the same repository snapshot.",
+      "remediation": "Retain both rename endpoints, decode Git as UTF-8, preserve case-sensitive Git identities and use the same ordinal hash order in Node and C#.",
+      "evidence": [
+        "graph-rename-before.log",
+        "graph-rename-unicode.log",
+        "graph-rename-path-diagnostic.log",
+        "graph-rename-final.log",
+        "test-results/graph-rename-before.trx",
+        "test-results/graph-rename-final.trx",
+        "graph-mcp-full.log",
+        "test-results/graph-mcp-full.trx",
+        "graph-pass-verify.log"
+      ]
+    },
+    {
+      "id": "WTA-015",
+      "kind": "defect",
+      "severity": "warning",
+      "status": "fixed-focused-verified",
+      "location": {
+        "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+        "startLine": 210,
+        "endLine": 210
+      },
+      "trigger": "A current extracted module is selected by diff context after all application modules have moved to owning projects.",
+      "consequence": "Declared dependencies and downstream consumers become empty and module-owned test navigation disappears. Admin lost eight declared dependencies despite 46 current C# test files.",
+      "testGap": "Existing SQLite diff cases checked symbols and source hashes but not module graph edges or current focused test roots.",
+      "remediation": "Load declared graph entries for extracted modules and enumerate all current owned test roots through the existing module-root helper and NUL-safe Git inventory.",
+      "evidence": [
+        "diff-layout-before.log",
+        "diff-layout-after.log"
+      ]
+    },
+    {
+      "id": "WTA-016",
+      "kind": "defect",
+      "severity": "warning",
+      "status": "fixed-focused-verified",
+      "location": {
+        "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
+        "startLine": 437,
+        "endLine": 452
+      },
+      "trigger": "A whole-pipeline receipt matches unchanged inputs and generated architecture output that contains drift after update.",
+      "consequence": "Check exits successfully before the architecture generator runs; its own cache gate cannot protect this shortcut.",
+      "testGap": "Previous cache fixture exercised only the architecture generator, not a valid whole-pipeline receipt.",
+      "remediation": "Before the whole-pipeline Check shortcut succeeds, enforce the same three required architecture summary counters. Retain fast receipt reuse for clean results.",
+      "evidence": [
+        "pipeline-cache-before.log",
+        "pipeline-cache-after.log",
+        "pipeline-cache-final.log",
+        "pipeline-cache-ps5.log"
+      ]
     }
   ]
 }

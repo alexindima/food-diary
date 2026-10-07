@@ -252,14 +252,14 @@
       "pageSha256": "58810bcafe9de0e6e09ec7ce44659b61c6c2d807da6b207e95a00aa681b51685",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "962ba48f14cfef1b46bca9f2221331a2a024c1fa145803a0b2acbce218dfbcf5"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "0e2b1b827c5c94312a097ed55d6059ff1a5da5d4eb5b585f49de1cc4c2be38fa"
         }
       ],
-      "reason": "Combined expanded local QA source freeze reviewed: user access precedes USDA provider calls, indexed external identifiers and nullable HTTP response preserved, lookup deadlines and rate admission bounded, native clean/upgrade/rollback/bundle verified, actual browser source-link recovery and CRUD/export/keyboard/locale/responsive scenarios passed; current reviewed21-file admin batch restores drafts and correct search ordering.",
+      "reason": "Reviewed graph and snapshot interoperability against real Node CLI fixtures. Both rename endpoints, Unicode Git output and case-sensitive ordinal identities now agree with MCP; 31 focused snapshot checks and 458 full MCP checks pass, including ordinary/Cyrillic/case-only/expanding-Unicode paths. Opaque fingerprints invalidate old projections naturally. SQL result/ranking contracts and read-only MCP tool surface remain; per-file followups are classified as validation candidates without speedup claims, and 221 audit sources are explicitly pending.",
       "baseRef": "HEAD",
-      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "reviewedAtUtc": "2026-10-06T14:21:58.0760588Z"
+      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+      "reviewedAtUtc": "2026-10-06T23:30:13.7728828Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -282,41 +282,37 @@
       "pageSha256": "23c1a9278403a636f6ec63e87fa3f5afd67333592db3e51c8c24dcb542ed6ec8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "f95543f786a6d29c980598ede659bca657661ff291d112abfc77309fff43022e"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "339342e0bf6788867c8fc2899a69105864495ab3e51e3fc8f4151f03c98cac34"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-          "sha256": "41e8243a3c0581d8bea51a52304d88c87ba5b1a891d367a315990468a6b7a7bc"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "a2faa5b30deae02ebe0f2c2aa645b0f7c3f8599aa9067d28139370df8bf7179a"
+          "sha256": "ed0639273665e36edb806689d1c42f7f3d25e5f2d430826e857ea4e96baf5ca2"
         }
       ],
-      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "reason": "Full-source research/workflow audit retains all 408 source entries with 220 complete reads and 188 explicitly pending. Current-layout diff regression reproduced lost Admin dependencies and modern tests; the tool now reads the declared graph and current Git test roots, and the full focused SQLite diff suite passes. Existing limits, source authority, typed protocol, application HTTP contracts and ownership remain; per-file performance and reliability followups are candidates, not inferred successful execution or speedups.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:01.6763957Z"
+      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+      "reviewedAtUtc": "2026-10-07T00:02:29.6351673Z"
     },
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "0ac679ef2682cda58904cad9b5fd081e1541eb5c061f16522ae55dc1bd030f6f",
+      "pageSha256": "bde0fa1a7f96718daca98a7293f37a1c0f358fe0b3938744705470870561280a",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
-          "sha256": "eff28ecb416b3624cd5f0de9a8f2bb203a52efd7021d4b439a4ade4ae61b5287"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "0e2b1b827c5c94312a097ed55d6059ff1a5da5d4eb5b585f49de1cc4c2be38fa"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "ed0639273665e36edb806689d1c42f7f3d25e5f2d430826e857ea4e96baf5ca2"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiDiffContextQueries.ps1",
+          "sha256": "ac27d8da0ee66657a194a350da83b7612bd16178addc163c18aa830827427397"
         }
       ],
-      "reason": "Reviewed current corpus pool, ordered case coverage and failure/timeout/cancellation cleanup against LlmWikiCorpusEvaluation.ps1 and Test-LlmWikiCorpusEvaluation.ps1. Retrieval identity, thresholds and corpus scheduling are unchanged. Controlled Linux subreaper diagnostics reproduce a terminated zombie reported alive by HasExited; updated process termination checks pass all three failure paths and retain rejection of a live descendant.",
+      "reason": "Full-source research/workflow audit retains all 408 source entries with 220 complete reads and 188 explicitly pending. Current-layout diff regression reproduced lost Admin dependencies and modern tests; the tool now reads the declared graph and current Git test roots, and the full focused SQLite diff suite passes. Existing limits, source authority, typed protocol, application HTTP contracts and ownership remain; per-file performance and reliability followups are candidates, not inferred successful execution or speedups.",
       "baseRef": "HEAD",
-      "gitHead": "d618f4b90cfc9b8b86854ead921110cee2935023",
-      "reviewedAtUtc": "2026-10-05T21:58:54.0190701Z"
+      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+      "reviewedAtUtc": "2026-10-07T00:02:30.1180826Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -354,14 +350,14 @@
       "pageSha256": "6905a9cfcb2c8ed64f714f760c972c46d47fa98b70bb6db940780fa6be0b34e0",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "03e5557aed0fa12e809720c2e35b674b414d71adc4e323e37286eb1727bc9fc0"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "ed0639273665e36edb806689d1c42f7f3d25e5f2d430826e857ea4e96baf5ca2"
         }
       ],
-      "reason": "Reviewed affected bundle, impact and maintenance guidance: every context request still probes current source bytes, including same-size edits with unchanged timestamps, and validates dependent files before cache reuse. Ranking, output bounds, ambiguity, snapshot isolation, governed workflows and writer recovery are preserved.",
+      "reason": "Full-source research/workflow audit retains all 408 source entries with 220 complete reads and 188 explicitly pending. Current-layout diff regression reproduced lost Admin dependencies and modern tests; the tool now reads the declared graph and current Git test roots, and the full focused SQLite diff suite passes. Existing limits, source authority, typed protocol, application HTTP contracts and ownership remain; per-file performance and reliability followups are candidates, not inferred successful execution or speedups.",
       "baseRef": "HEAD",
-      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
-      "reviewedAtUtc": "2026-10-04T20:51:30.3730331Z"
+      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+      "reviewedAtUtc": "2026-10-07T00:02:30.6520275Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -622,13 +618,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
+          "sha256": "0e2b1b827c5c94312a097ed55d6059ff1a5da5d4eb5b585f49de1cc4c2be38fa"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "ed0639273665e36edb806689d1c42f7f3d25e5f2d430826e857ea4e96baf5ca2"
         }
       ],
-      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
+      "reason": "Full-source research/workflow audit retains all 408 source entries with 220 complete reads and 188 explicitly pending. Current-layout diff regression reproduced lost Admin dependencies and modern tests; the tool now reads the declared graph and current Git test roots, and the full focused SQLite diff suite passes. Existing limits, source authority, typed protocol, application HTTP contracts and ownership remain; per-file performance and reliability followups are candidates, not inferred successful execution or speedups.",
       "baseRef": "HEAD",
-      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
-      "reviewedAtUtc": "2026-10-05T08:37:22.5932749Z"
+      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+      "reviewedAtUtc": "2026-10-07T00:02:31.8118930Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -678,50 +678,18 @@
       "pageSha256": "8c8aff64bfc1811147a58a435a34a10950c1448a9d57bfc50802f9d45ffdbbf7",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1",
-          "sha256": "8a7d8e969567783b63334b410acf5af3b0f3053a81869901e56c38b7f4343c6f"
-        },
-        {
-          "path": ".llm-wiki/tools/Build-LlmWikiModulePages.ps1",
-          "sha256": "a951d14a0b3dedd1210d8e27bb5384f2ac7b4702d48c7492e5790f23d8189f93"
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
-          "sha256": "0274d106cd0d4a9ac4c3c83528997ce55cfc8c4f4bb271f69cfaee97ad3cd2b1"
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-          "sha256": "5317c39b130e125ed64948d2e3c8456780cf20ea7eaf5c3e9b742d03e7f3d0ea"
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiSourceInventory.ps1",
-          "sha256": "55a4eecd7c5a0f85418df1b10107f33af074ad609a8d8a41002ab45d3ec80091"
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiVerificationReceipts.ps1",
-          "sha256": "cb1f4e361ea80780e3417f58c9b2c92c3be5912a8acf8aa7eea63c794e4a6247"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
+          "sha256": "f6e2dc46d241bfbfe913d26ad6cba29927a73f45f75225259c0f37b0bb85eacc"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
-          "sha256": "bff2dd154f670121876ae0e31b6b3fddbc21e1b08918f53ed6ddf4080c5dd360"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiBackendModuleModel.ps1",
-          "sha256": "0ae2bdde1ea661c79f293fc9f49173d9c97a91027fd274eebd2f187b482ceeae"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiPortable.ps1",
-          "sha256": "d566e6e58de3d1d5a6a032d3065b04e8e0b5dacfbf641fc331d626027e10191f"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiSourceInventory.ps1",
-          "sha256": "4caee4fc7b078cb3f9c568062ea29484c23b6c3de88d127d6e6d33881b95f7b2"
+          "sha256": "5e1058ee04192a4415205e0311e5588838feeeeb6238a00557aa0392467afacf"
         }
       ],
-      "reason": "Reviewed Wiki runtime and generator corrections against their sources: exit-state preservation, portable collision-safe JSON hashes, legacy source enumeration, bounded cache metadata and reader leases, ordered template scope, Unicode receipt fingerprints, cached architecture drift enforcement and declared module edges. Focused regressions passed; the report explicitly retains 284 unreviewed files and makes no new wall-time claim. Application HTTP contracts and data ownership are unchanged.",
+      "reason": "Reviewed the pipeline, parser, rename fingerprint, bounded cache and extracted-module diff fixes against current sources. Architecture receipt regressions pass on PS7/PS5; MCP passes 458 tests. Existing navigation and workflow instructions remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
-      "reviewedAtUtc": "2026-10-06T22:31:24.9586612Z"
+      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+      "reviewedAtUtc": "2026-10-07T00:20:52.5123381Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -857,14 +825,14 @@
       "pageSha256": "b60f38c1d4bb6323e6d9a1128ef46cbe3f2c097c8abd5f71e062f9d48a25997c",
       "sources": [
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "bde33aac0fe4e4ae6e99be233129e8142b3d6149eb84af4b92397cac55e05f80"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "0e2b1b827c5c94312a097ed55d6059ff1a5da5d4eb5b585f49de1cc4c2be38fa"
         }
       ],
-      "reason": "Reviewed the merged privacy inventory against current master and the Wiki batch reader: the bounded SqliteTransaction keyword evidence is read-only local source indexing, with no query payload in telemetry, persistent data sharing, or new credentials.",
+      "reason": "Reviewed graph and snapshot interoperability against real Node CLI fixtures. Both rename endpoints, Unicode Git output and case-sensitive ordinal identities now agree with MCP; 31 focused snapshot checks and 458 full MCP checks pass, including ordinary/Cyrillic/case-only/expanding-Unicode paths. Opaque fingerprints invalidate old projections naturally. SQL result/ranking contracts and read-only MCP tool surface remain; per-file followups are classified as validation candidates without speedup claims, and 221 audit sources are explicitly pending.",
       "baseRef": "HEAD",
-      "gitHead": "75c4520f7907cae0c1e8f23b4ba5597dacb306e8",
-      "reviewedAtUtc": "2026-10-06T17:39:06.9437373Z"
+      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+      "reviewedAtUtc": "2026-10-06T23:30:15.6328724Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -903,13 +871,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "88d0666d9ab15af2d855f6360ea404b5b993ef63cddcb7539947a5199fbd277a"
+          "sha256": "dba090343499df70d342ae2d27daf01448668a6d50b54e70e2e8cca047fa00fa"
         }
       ],
-      "reason": "Reviewed Wiki runtime and generator corrections against their sources: exit-state preservation, portable collision-safe JSON hashes, legacy source enumeration, bounded cache metadata and reader leases, ordered template scope, Unicode receipt fingerprints, cached architecture drift enforcement and declared module edges. Focused regressions passed; the report explicitly retains 284 unreviewed files and makes no new wall-time claim. Application HTTP contracts and data ownership are unchanged.",
+      "reason": "Reviewed the pipeline, parser, rename fingerprint, bounded cache and extracted-module diff fixes against current sources. Architecture receipt regressions pass on PS7/PS5; MCP passes 458 tests. Existing navigation and workflow instructions remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
-      "reviewedAtUtc": "2026-10-06T22:31:25.8125515Z"
+      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+      "reviewedAtUtc": "2026-10-07T00:20:53.6077998Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -990,13 +958,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d688c703ad1041010fff43e3273f4edb8f64c03ace6a0bd7c0d8f48643e2a01c"
+          "sha256": "8f7903cfce9fbfbeb9871c7ea252625976a282e2277e804630ef7f78d3e9e682"
         }
       ],
-      "reason": "Reviewed the runtime projection regenerated after merging current master with Wiki performance changes. Its changed fingerprint reflects the local read-only batch reader; the merge adds no production host, worker, external client or recurring job.",
+      "reason": "Reviewed graph and snapshot interoperability against real Node CLI fixtures. Both rename endpoints, Unicode Git output and case-sensitive ordinal identities now agree with MCP; 31 focused snapshot checks and 458 full MCP checks pass, including ordinary/Cyrillic/case-only/expanding-Unicode paths. Opaque fingerprints invalidate old projections naturally. SQL result/ranking contracts and read-only MCP tool surface remain; per-file followups are classified as validation candidates without speedup claims, and 221 audit sources are explicitly pending.",
       "baseRef": "HEAD",
-      "gitHead": "75c4520f7907cae0c1e8f23b4ba5597dacb306e8",
-      "reviewedAtUtc": "2026-10-06T17:39:09.7873901Z"
+      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+      "reviewedAtUtc": "2026-10-06T23:30:17.7035457Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1005,13 +973,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "88d0666d9ab15af2d855f6360ea404b5b993ef63cddcb7539947a5199fbd277a"
+          "sha256": "dba090343499df70d342ae2d27daf01448668a6d50b54e70e2e8cca047fa00fa"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "8f7903cfce9fbfbeb9871c7ea252625976a282e2277e804630ef7f78d3e9e682"
         }
       ],
-      "reason": "Reviewed Wiki runtime and generator corrections against their sources: exit-state preservation, portable collision-safe JSON hashes, legacy source enumeration, bounded cache metadata and reader leases, ordered template scope, Unicode receipt fingerprints, cached architecture drift enforcement and declared module edges. Focused regressions passed; the report explicitly retains 284 unreviewed files and makes no new wall-time claim. Application HTTP contracts and data ownership are unchanged.",
+      "reason": "Reviewed regenerated quality and runtime navigation; tool-only cache and fingerprint changes add no private payload persistence or product authorization changes. Existing security review guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
-      "reviewedAtUtc": "2026-10-06T22:31:27.4978524Z"
+      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+      "reviewedAtUtc": "2026-10-07T00:20:54.9206081Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1031,21 +1003,17 @@
     {
       "pageId": "workflow-task-brief",
       "pagePath": ".llm-wiki/workflows/task-brief.md",
-      "pageSha256": "65f4d9ae72ac28fb74987f36e590addfb2bc44bac79e07844eaa04a52661e307",
+      "pageSha256": "788b8f6aa6bd6b38cb6dca5b8a8784669461c6fd95fb7c732777832943e8dcfd",
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
+          "sha256": "ed0639273665e36edb806689d1c42f7f3d25e5f2d430826e857ea4e96baf5ca2"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Full-source research/workflow audit retains all 408 source entries with 220 complete reads and 188 explicitly pending. Current-layout diff regression reproduced lost Admin dependencies and modern tests; the tool now reads the declared graph and current Git test roots, and the full focused SQLite diff suite passes. Existing limits, source authority, typed protocol, application HTTP contracts and ownership remain; per-file performance and reliability followups are candidates, not inferred successful execution or speedups.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:35.4592038Z"
+      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+      "reviewedAtUtc": "2026-10-07T00:02:34.8626779Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -1208,13 +1176,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "339342e0bf6788867c8fc2899a69105864495ab3e51e3fc8f4151f03c98cac34"
+          "sha256": "ed0639273665e36edb806689d1c42f7f3d25e5f2d430826e857ea4e96baf5ca2"
         }
       ],
-      "reason": "Reviewed the retrieval gate: frozen corpora and Node/.NET SQLite ranking consistency remain intact. Only retired JSON query comparisons were replaced by direct behavioral expectations; all 37 focused groups remain in the canonical catalog.",
+      "reason": "Full-source research/workflow audit retains all 408 source entries with 220 complete reads and 188 explicitly pending. Current-layout diff regression reproduced lost Admin dependencies and modern tests; the tool now reads the declared graph and current Git test roots, and the full focused SQLite diff suite passes. Existing limits, source authority, typed protocol, application HTTP contracts and ownership remain; per-file performance and reliability followups are candidates, not inferred successful execution or speedups.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:07.7119398Z"
+      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+      "reviewedAtUtc": "2026-10-07T00:02:31.2783452Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1256,33 +1224,37 @@
       "pageSha256": "f9ddf22db2cc07f9109f6b518b296525846afc0f92e94ac0b443f5bf8ea4b89a",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "e7f91bcf39773d6738e34c14027dd94bbf0e357689c473bac66ad228875d31c0"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "0e2b1b827c5c94312a097ed55d6059ff1a5da5d4eb5b585f49de1cc4c2be38fa"
         },
         {
-          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-          "sha256": "5317c39b130e125ed64948d2e3c8456780cf20ea7eaf5c3e9b742d03e7f3d0ea"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "ed0639273665e36edb806689d1c42f7f3d25e5f2d430826e857ea4e96baf5ca2"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiDiffContextQueries.ps1",
+          "sha256": "ac27d8da0ee66657a194a350da83b7612bd16178addc163c18aa830827427397"
         }
       ],
-      "reason": "Reviewed Wiki runtime and generator corrections against their sources: exit-state preservation, portable collision-safe JSON hashes, legacy source enumeration, bounded cache metadata and reader leases, ordered template scope, Unicode receipt fingerprints, cached architecture drift enforcement and declared module edges. Focused regressions passed; the report explicitly retains 284 unreviewed files and makes no new wall-time claim. Application HTTP contracts and data ownership are unchanged.",
+      "reason": "Full-source research/workflow audit retains all 408 source entries with 220 complete reads and 188 explicitly pending. Current-layout diff regression reproduced lost Admin dependencies and modern tests; the tool now reads the declared graph and current Git test roots, and the full focused SQLite diff suite passes. Existing limits, source authority, typed protocol, application HTTP contracts and ownership remain; per-file performance and reliability followups are candidates, not inferred successful execution or speedups.",
       "baseRef": "HEAD",
-      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
-      "reviewedAtUtc": "2026-10-06T22:31:26.6936779Z"
+      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+      "reviewedAtUtc": "2026-10-07T00:02:33.1004102Z"
     },
     {
       "pageId": "workflow.review-diff",
       "pagePath": ".llm-wiki/workflows/review-diff.md",
-      "pageSha256": "7a7a54c7bf5c73c0b94be81d974d8734405b72a7e2468ec3001ba05c475133db",
+      "pageSha256": "8b14b705356df0c8d113abdeadffa966c12a7457195b815ec996cddc6c344ffb",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "6ebe8fdda49be99b2847cfcdeb0c7adf6a351ce8990f1a16478ad48fec13e85c"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "ed0639273665e36edb806689d1c42f7f3d25e5f2d430826e857ea4e96baf5ca2"
         }
       ],
-      "reason": "Reviewed final receipt ordering: the documented matching generation and complete verify-full requirement still holds, now including the existing source-impact and change-policy gates before publication.",
+      "reason": "Full-source research/workflow audit retains all 408 source entries with 220 complete reads and 188 explicitly pending. Current-layout diff regression reproduced lost Admin dependencies and modern tests; the tool now reads the declared graph and current Git test roots, and the full focused SQLite diff suite passes. Existing limits, source authority, typed protocol, application HTTP contracts and ownership remain; per-file performance and reliability followups are candidates, not inferred successful execution or speedups.",
       "baseRef": "HEAD",
-      "gitHead": "c00b5915692f57b1b4b13746d221918eb0acc198",
-      "reviewedAtUtc": "2026-10-03T06:42:22.3898133Z"
+      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+      "reviewedAtUtc": "2026-10-07T00:02:33.6583919Z"
     },
     {
       "pageId": "workflow.self-maintenance",
@@ -1290,30 +1262,14 @@
       "pageSha256": "891ba091baab5bb5ebac52ec2d8482eba48976374cc43486fa4fbbe800d24fa2",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-context-projection.mjs",
-          "sha256": "5a243e38926bddf04aec7ccd1ad903e0e5ee78a476e63d9d39287810ab971237"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-context-projection.test.mjs",
-          "sha256": "2507430dbd19d7d85b8fd6b23bf713169e6e0139b472ac573de86740a0b44b12"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-maintenance.mjs",
-          "sha256": "44f305954c59613348776401ad650df6c959c361f36a97d45a63664fe3f238eb"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "95e5bb441bba5cc7538a4ed0f879160e2555a02ac77e2b0cfeb785e9663c7487"
-        },
-        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
+          "sha256": "0e2b1b827c5c94312a097ed55d6059ff1a5da5d4eb5b585f49de1cc4c2be38fa"
         }
       ],
-      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
+      "reason": "Reviewed graph and snapshot interoperability against real Node CLI fixtures. Both rename endpoints, Unicode Git output and case-sensitive ordinal identities now agree with MCP; 31 focused snapshot checks and 458 full MCP checks pass, including ordinary/Cyrillic/case-only/expanding-Unicode paths. Opaque fingerprints invalidate old projections naturally. SQL result/ranking contracts and read-only MCP tool surface remain; per-file followups are classified as validation candidates without speedup claims, and 221 audit sources are explicitly pending.",
       "baseRef": "HEAD",
-      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
-      "reviewedAtUtc": "2026-10-05T08:37:25.6783599Z"
+      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+      "reviewedAtUtc": "2026-10-06T23:30:19.1430879Z"
     }
   ]
 }

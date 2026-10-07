@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -11,8 +10,9 @@ public sealed class WikiQueryCache(
     private static readonly TimeSpan EntryLifetime = TimeSpan.FromMinutes(2);
     private const int MaximumEntries = 128;
     private const int MaximumCacheableOutputCharacters = 1024 * 1024;
-    private readonly ConcurrentDictionary<string, CacheEntry> _entries = new(StringComparer.Ordinal);
-    private readonly ConcurrentQueue<string> _insertionOrder = new();
+    private readonly Lock _gate = new();
+    private readonly Dictionary<string, LinkedListNode<CacheEntry>> _entries = new(StringComparer.Ordinal);
+    private readonly LinkedList<CacheEntry> _insertionOrder = new();
 
     public bool TryGet(
         string snapshotFingerprint,
@@ -21,22 +21,22 @@ public sealed class WikiQueryCache(
         out WikiCommandResult? result,
         bool recordMetrics = true) {
         string key = CreateKey(snapshotFingerprint, command, arguments);
-        if (_entries.TryGetValue(key, out CacheEntry? entry)) {
-            if (timeProvider.GetUtcNow() - entry.CreatedAtUtc <= EntryLifetime) {
-                if (recordMetrics) {
-                    telemetry.RecordCacheHit();
-                }
-                result = entry.Result;
-                return true;
-            }
-            _entries.TryRemove(key, out _);
-        }
-
-        if (recordMetrics) {
-            telemetry.RecordCacheMiss();
-        }
+        bool hit = false;
         result = null;
-        return false;
+        lock (_gate) {
+            if (_entries.TryGetValue(key, out LinkedListNode<CacheEntry>? node)) {
+                if (timeProvider.GetUtcNow() - node.Value.CreatedAtUtc <= EntryLifetime) {
+                    result = node.Value.Result;
+                    hit = true;
+                } else {
+                    Remove(node);
+                }
+            }
+        }
+        if (recordMetrics) {
+            if (hit) { telemetry.RecordCacheHit(); } else { telemetry.RecordCacheMiss(); }
+        }
+        return hit;
     }
 
     public void Set(
@@ -49,18 +49,26 @@ public sealed class WikiQueryCache(
         }
 
         string key = CreateKey(snapshotFingerprint, command, arguments);
-        CacheEntry entry = new(result, timeProvider.GetUtcNow());
-        if (_entries.TryAdd(key, entry)) {
-            _insertionOrder.Enqueue(key);
-        } else {
-            _entries[key] = entry;
+        CacheEntry entry = new(key, result, timeProvider.GetUtcNow());
+        lock (_gate) {
+            if (_entries.TryGetValue(key, out LinkedListNode<CacheEntry>? node)) {
+                node.Value = entry;
+            } else {
+                _entries.Add(key, _insertionOrder.AddLast(entry));
+            }
+            while (_entries.Count > MaximumEntries) {
+                Remove(_insertionOrder.First!);
+            }
         }
-        Trim();
     }
 
     public WikiRuntimeMetrics CaptureMetrics() {
-        PruneExpired();
-        return telemetry.Capture(_entries.Count);
+        int count;
+        lock (_gate) {
+            PruneExpired();
+            count = _entries.Count;
+        }
+        return telemetry.Capture(count);
     }
 
     internal static string CreateKey(
@@ -76,18 +84,20 @@ public sealed class WikiQueryCache(
         return Convert.ToHexString(hash.GetHashAndReset()).ToLowerInvariant();
     }
 
-    private void Trim() {
-        while (_entries.Count > MaximumEntries && _insertionOrder.TryDequeue(out string? key)) {
-            _entries.TryRemove(key, out _);
-        }
+    private void Remove(LinkedListNode<CacheEntry> node) {
+        _entries.Remove(node.Value.Key);
+        _insertionOrder.Remove(node);
     }
 
     private void PruneExpired() {
         DateTimeOffset now = timeProvider.GetUtcNow();
-        foreach (KeyValuePair<string, CacheEntry> pair in _entries) {
-            if (now - pair.Value.CreatedAtUtc > EntryLifetime) {
-                _entries.TryRemove(pair.Key, out _);
+        LinkedListNode<CacheEntry>? node = _insertionOrder.First;
+        while (node is not null) {
+            LinkedListNode<CacheEntry>? next = node.Next;
+            if (now - node.Value.CreatedAtUtc > EntryLifetime) {
+                Remove(node);
             }
+            node = next;
         }
     }
 
@@ -97,5 +107,5 @@ public sealed class WikiQueryCache(
         hash.AppendData(bytes);
     }
 
-    private sealed record CacheEntry(WikiCommandResult Result, DateTimeOffset CreatedAtUtc);
+    private sealed record CacheEntry(string Key, WikiCommandResult Result, DateTimeOffset CreatedAtUtc);
 }

@@ -189,6 +189,8 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardErrorEncoding = Encoding.UTF8,
                 UseShellExecute = false,
                 CreateNoWindow = true,
             },
@@ -232,7 +234,8 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
 
     internal static string[] ParseChangedPaths(string porcelain) {
         string[] records = porcelain.Split('\0', StringSplitOptions.RemoveEmptyEntries);
-        HashSet<string> paths = new(StringComparer.OrdinalIgnoreCase);
+        // Git path identities are case-sensitive, including case-only renames.
+        HashSet<string> paths = new(StringComparer.Ordinal);
         for (int index = 0; index < records.Length; index++) {
             string record = records[index];
             if (record.Length < 4) {
@@ -243,12 +246,18 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
             string path = record[3..].Replace('\\', '/');
             if ((status[0] is 'R' or 'C' || status[1] is 'R' or 'C') && index + 1 < records.Length) {
                 // In porcelain v1 -z output the destination path is first and the source path follows it.
-                index++;
+                string sourcePath = records[++index].Replace('\\', '/');
+                if (status[0] is 'R' || status[1] is 'R') {
+                    // A rename also removes the source from its former scope.
+                    // Copies leave the original file unchanged.
+                    paths.Add(sourcePath);
+                }
             }
             paths.Add(path);
         }
 
-        return [.. paths.Order(StringComparer.OrdinalIgnoreCase)];
+        // Keep the byte-hash order in parity with the Node graph writer.
+        return [.. paths.Order(StringComparer.Ordinal)];
     }
 
     private static void Append(IncrementalHash hash, string value) =>
@@ -270,14 +279,24 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
         !path.Contains("source-impact-review", StringComparison.OrdinalIgnoreCase);
 
     private void OnChanged(object sender, FileSystemEventArgs args) {
-        string relativePath = Path.GetRelativePath(_repositoryRoot, args.FullPath)
+        bool changed = TrackChangedPath(args.FullPath);
+        if (args is RenamedEventArgs renamed) {
+            changed |= TrackChangedPath(renamed.OldFullPath);
+        }
+        if (changed) {
+            Interlocked.Increment(ref _generation);
+        }
+    }
+
+    private bool TrackChangedPath(string fullPath) {
+        string relativePath = Path.GetRelativePath(_repositoryRoot, fullPath)
             .Replace('\\', '/');
         if (IsIgnoredWatcherPath(relativePath)) {
-            return;
+            return false;
         }
 
         Volatile.Read(ref _pendingChangedPaths)[relativePath] = 0;
-        Interlocked.Increment(ref _generation);
+        return true;
     }
 
     private void OnWatcherError(object sender, ErrorEventArgs args) {

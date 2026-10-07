@@ -213,15 +213,14 @@ function changeSetSnapshot() {
     changedPaths.add(record.slice(3).replaceAll('\\', '/'));
     if ((['R', 'C'].includes(changeStatus[0]) || ['R', 'C'].includes(changeStatus[1])) && index + 1 < records.length) {
       index += 1;
+      if (changeStatus[0] === 'R' || changeStatus[1] === 'R') {
+        changedPaths.add(records[index].replaceAll('\\', '/'));
+      }
     }
   }
-  const orderedPaths = [...changedPaths].sort((left, right) => {
-    const normalizedLeft = left.toLowerCase();
-    const normalizedRight = right.toLowerCase();
-    if (normalizedLeft < normalizedRight) return -1;
-    if (normalizedLeft > normalizedRight) return 1;
-    return left < right ? -1 : left > right ? 1 : 0;
-  });
+  // Git identities are case-sensitive. UTF-16 ordinal ordering matches the MCP
+  // snapshot without locale-sensitive or expanding Unicode case conversions.
+  const orderedPaths = [...changedPaths].sort();
   const hash = createHash('sha256');
   hash.update(head, 'utf8');
   hash.update(status, 'utf8');

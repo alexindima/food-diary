@@ -183,6 +183,6 @@ public static partial class WikiOutputParser {
         }
     }
 
-    [GeneratedRegex(@"(?<![\w.-])(?:\.llm-wiki|docs|tests|FoodDiary[\w.-]*|MailInbox|MailRelay|Shared)[/\\][\w./\\-]+", RegexOptions.CultureInvariant, matchTimeoutMilliseconds: 100)]
+    [GeneratedRegex(@"(?<![\w.-])(?:\.llm-wiki|docs|tests|FoodDiary[\w.-]*|MailInbox|MailRelay|Shared|Modules|Services|Tooling|Hosts|Platform|scripts)[/\\][\w./\\-]+", RegexOptions.CultureInvariant, matchTimeoutMilliseconds: 100)]
     private static partial Regex RepositoryPathRegex();
 }

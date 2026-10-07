@@ -20,6 +20,7 @@ $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiGitRenames.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiChangeSemantics.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiModuleTestRoots.ps1')
 $catalogPath = Join-Path $wikiRoot 'generated/repository-catalog.json'
 $symbolIndexPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
 $frontendIndexPath = Join-Path $wikiRoot 'generated/frontend-index.json'
@@ -206,6 +207,7 @@ $scopes = [ordered]@{
 $activeScopes = @($scopes.GetEnumerator() | Where-Object { $_.Value } | ForEach-Object { $_.Key })
 
 $candidateModules = [System.Collections.Generic.List[object]]::new()
+$moduleGraph = Get-Content -LiteralPath (Join-Path $repositoryRoot 'docs/architecture/module-dependencies.json') -Raw | ConvertFrom-Json
 foreach ($graphModule in $catalog.applicationModules) {
     $candidateModules.Add([pscustomobject]@{
         name = $graphModule.name
@@ -215,9 +217,11 @@ foreach ($graphModule in $catalog.applicationModules) {
 }
 foreach ($extractedModule in $catalog.extractedApplicationModules) {
     if (@($candidateModules | Where-Object { $_.name -eq $extractedModule.name }).Count -eq 0) {
+        $graphEntry = $moduleGraph.modules.PSObject.Properties[[string]$extractedModule.name]
+        if ($null -eq $graphEntry) { throw "Extracted module '$($extractedModule.name)' has no declared dependency graph entry." }
         $candidateModules.Add([pscustomobject]@{
             name = $extractedModule.name
-            dependencies = @()
+            dependencies = @($graphEntry.Value)
             origin = 'extracted-project'
         })
     }
@@ -373,10 +377,13 @@ foreach ($module in $matchedModules) {
 }
 
 $focusedTests = [System.Collections.Generic.List[string]]::new()
+$testRoots = @('tests', 'Hosts/tests', 'Platform/tests', 'Shared/tests', 'Tooling/tests',
+    'Services/MailRelay/tests', 'Services/MailInbox/tests') + @(Get-LlmWikiModuleTestRoots -RepositoryRoot $repositoryRoot)
+$testPathspecs = @($testRoots | ForEach-Object { "$_/**/*.cs" })
 $repositoryTestSources = @(
     Invoke-LlmWikiGitPathList `
         -RepositoryRoot $repositoryRoot `
-        -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', 'tests/**/*.cs') `
+        -Arguments (@('ls-files', '--cached', '--others', '--exclude-standard', '--') + $testPathspecs) `
         -FailureMessage 'Unable to enumerate focused test candidates.' |
         Sort-Object -Unique
 )

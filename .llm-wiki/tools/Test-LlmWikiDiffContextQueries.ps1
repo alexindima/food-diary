@@ -8,6 +8,31 @@ $repositoryRoot = (& git -C $PSScriptRoot rev-parse --show-toplevel).Trim()
 if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($repositoryRoot)) { throw 'Unable to resolve the repository root for diff-context parity.' }
 $null = & $manager -Action build -Format Json
 
+# The entire current backend uses extracted modules; diff navigation must keep
+# declared business edges and module-owned tests even without legacy roots.
+$layoutInput = [pscustomobject]@{
+    ready = $true; source = 'sqlite-compiled-index'; selectionMode = 'context'
+    catalog = [pscustomobject]@{
+        applicationModules = @()
+        extractedApplicationModules = @([pscustomobject]@{ name = 'Admin'; project = 'Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj' })
+        dotnet = [pscustomobject]@{ projects = @() }
+        knowledgeSources = [pscustomobject]@{ agentGuides = @('AGENTS.md') }
+    }
+    symbols = @(); frontendSymbols = @(); sourceHashes = [pscustomobject]@{}
+    scannedRecords = 0; returnedRecords = 0; durationMs = 0
+}
+$layoutDiff = & $diffTool -ChangedPath 'Modules/Admin/Application/Queries' -CompiledIndexInput $layoutInput -Format Json -Limit 12 | ConvertFrom-Json
+$moduleGraph = Get-Content -LiteralPath (Join-Path $repositoryRoot 'docs/architecture/module-dependencies.json') -Raw | ConvertFrom-Json
+$layoutFailures = [Collections.Generic.List[string]]::new()
+if ((@($layoutDiff.modules[0].dependencies | Sort-Object) -join '|') -cne
+    (@($moduleGraph.modules.Admin | Sort-Object) -join '|')) {
+    $layoutFailures.Add('Extracted module diff navigation lost its declared business dependencies.')
+}
+if (@($layoutDiff.focusedTests | Where-Object { $_ -match '^Modules/Admin/tests/.+\.cs$' }).Count -eq 0) {
+    $layoutFailures.Add('Diff navigation missed current module-owned focused test sources.')
+}
+if ($layoutFailures.Count -gt 0) { throw ($layoutFailures -join ' ') }
+
 $cases = @(
     [pscustomobject]@{ ChangedPath = @('Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs'); MinimumSymbols = 1 }
     [pscustomobject]@{ ChangedPath = @('Modules/Fasting/Presentation/Controllers/FastingController.cs'); MinimumSymbols = 1 }

@@ -6,19 +6,28 @@ $wikiRoot = Split-Path -Parent $PSScriptRoot
 $indexPath = Join-Path $wikiRoot 'generated/architecture-health-index.json'
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $cacheFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'architecture-cache-drift'
 $fixtureTools = Join-Path $cacheFixture '.llm-wiki/tools'
 try {
     $null = New-Item -ItemType Directory -Path $fixtureTools -Force
-    $toolNames = @('Build-LlmWikiArchitectureHealthIndex.ps1','LlmWikiJson.ps1','LlmWikiGitPaths.ps1','LlmWikiIndexCache.ps1')
+    $generatorToolNames = @('Build-LlmWikiArchitectureHealthIndex.ps1','LlmWikiJson.ps1','LlmWikiGitPaths.ps1','LlmWikiIndexCache.ps1')
+    $toolNames = $generatorToolNames + @('Invoke-LlmWikiIndexPipeline.ps1','LlmWikiChangeSemantics.ps1',
+        'LlmWikiProcess.ps1','LlmWikiGeneratedArtifacts.ps1','LlmWikiIndexTiming.ps1')
     foreach ($name in $toolNames) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot $name) -Destination (Join-Path $fixtureTools $name) }
     & git -C $cacheFixture init --quiet
     if ($LASTEXITCODE -ne 0) { throw 'Unable to initialize architecture-cache fixture.' }
     $fixtureOutput = Join-Path $cacheFixture '.llm-wiki/generated/architecture-health-index.json'
     $fixtureReceipt = Join-Path $cacheFixture '.artifacts/llm-wiki/index-cache/architecture-health-index.json'
     $null = New-Item -ItemType Directory -Path (Split-Path -Parent $fixtureOutput) -Force
-    $fingerprint = Get-LlmWikiIndexInputFingerprint $cacheFixture @($toolNames | ForEach-Object { ".llm-wiki/tools/$_" })
+    $fingerprint = Get-LlmWikiIndexInputFingerprint $cacheFixture @($generatorToolNames | ForEach-Object { ".llm-wiki/tools/$_" })
+    $pipelineToolSet = 'Build-LlmWikiArchitectureHealthIndex.ps1'
+    $hasher = [Security.Cryptography.SHA256]::Create()
+    try { $toolSetKey = [BitConverter]::ToString($hasher.ComputeHash([Text.Encoding]::UTF8.GetBytes($pipelineToolSet))).Replace('-', '').ToLowerInvariant().Substring(0, 16) }
+    finally { $hasher.Dispose() }
+    $pipelineReceipt = Join-Path $cacheFixture ".git/llm-wiki/index-cache/pipeline-$toolSetKey.json"
+    $null = New-Item -ItemType Directory -Path (Split-Path -Parent $pipelineReceipt) -Force
     $shell = (Get-Process -Id $PID).Path
     foreach ($scenario in @('dependencyViolations','untrackedProductionProjects','moduleCycleNodes','clean')) {
         $summary = [ordered]@{dependencyViolations=0;untrackedProductionProjects=0;moduleCycleNodes=0}
@@ -28,6 +37,19 @@ try {
         $messages = & $shell -NoLogo -NoProfile -File (Join-Path $fixtureTools 'Build-LlmWikiArchitectureHealthIndex.ps1') -Check -ReuseUnchangedCheck
         $expectedExit = if ($scenario -eq 'clean') { 0 } else { 1 }
         if ($LASTEXITCODE -ne $expectedExit) { throw "Cached architecture gate returned the wrong result for $scenario`: $($messages -join ' ')" }
+        $inputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $cacheFixture -Arguments @('ls-files','--cached','--others','--exclude-standard') |
+            Where-Object { $_ -notmatch '^\.llm-wiki/(?:generated|reviews)/|^\.artifacts/|(?:^|/)(?:node_modules|bin|obj|dist|coverage|TestResults)/' })
+        $outputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $cacheFixture -Arguments @('ls-files','--cached','--others','--exclude-standard','--','.llm-wiki/generated/**'))
+        [IO.File]::WriteAllText($pipelineReceipt, ([ordered]@{
+            schemaVersion = 1; toolSet = $pipelineToolSet
+            inputFingerprint = Get-LlmWikiIndexInputFingerprint $cacheFixture $inputs
+            outputFingerprint = Get-LlmWikiIndexInputFingerprint $cacheFixture $outputs
+        } | ConvertTo-Json -Depth 4))
+        $pipelineMessages = & $shell -NoLogo -NoProfile -File (Join-Path $fixtureTools 'Invoke-LlmWikiIndexPipeline.ps1') `
+            -Check -AffectedOnly -ChangedPath '.llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1' -ReuseUnchangedChecks
+        if ($LASTEXITCODE -ne $expectedExit) { throw "Cached pipeline gate returned the wrong result for $scenario`: $($pipelineMessages -join ' ')" }
+        $expectedMessage = if ($scenario -eq 'clean') { 'affected pipeline cache hit' } else { 'Architecture drift detected in cached index' }
+        if (($pipelineMessages -join ' ') -notlike "*$expectedMessage*") { throw "Pipeline cache scenario '$scenario' did not exercise the expected gate." }
     }
 } finally {
     $resolvedFixture = [IO.Path]::GetFullPath($cacheFixture)

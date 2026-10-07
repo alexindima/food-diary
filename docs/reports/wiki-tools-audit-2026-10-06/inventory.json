@@ -1,68 +1,27 @@
 {
   "schemaVersion": 1,
   "auditDate": "2026-10-06",
-  "baseline": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
+  "baseline": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
   "worktreeStatus": [
-    " M .llm-wiki/generated/modules/admin.md",
-    " M .llm-wiki/generated/modules/ai.md",
-    " M .llm-wiki/generated/modules/billing.md",
-    " M .llm-wiki/generated/modules/body-metrics.md",
-    " M .llm-wiki/generated/modules/content-reports.md",
-    " M .llm-wiki/generated/modules/cycles.md",
-    " M .llm-wiki/generated/modules/daily-advices.md",
-    " M .llm-wiki/generated/modules/dashboard.md",
-    " M .llm-wiki/generated/modules/dietologist.md",
-    " M .llm-wiki/generated/modules/exercises.md",
-    " M .llm-wiki/generated/modules/export.md",
-    " M .llm-wiki/generated/modules/fasting.md",
-    " M .llm-wiki/generated/modules/favorites.md",
-    " M .llm-wiki/generated/modules/gamification.md",
-    " M .llm-wiki/generated/modules/hydration.md",
-    " M .llm-wiki/generated/modules/identity.md",
-    " M .llm-wiki/generated/modules/images.md",
-    " M .llm-wiki/generated/modules/index.md",
-    " M .llm-wiki/generated/modules/lessons.md",
-    " M .llm-wiki/generated/modules/marketing.md",
-    " M .llm-wiki/generated/modules/meal-planning.md",
-    " M .llm-wiki/generated/modules/meals.md",
-    " M .llm-wiki/generated/modules/notifications.md",
-    " M .llm-wiki/generated/modules/open-food-facts.md",
-    " M .llm-wiki/generated/modules/products.md",
-    " M .llm-wiki/generated/modules/recent-items.md",
-    " M .llm-wiki/generated/modules/recipe-community.md",
-    " M .llm-wiki/generated/modules/recipes.md",
-    " M .llm-wiki/generated/modules/statistics.md",
-    " M .llm-wiki/generated/modules/tdee.md",
-    " M .llm-wiki/generated/modules/usda.md",
-    " M .llm-wiki/generated/modules/users.md",
-    " M .llm-wiki/generated/modules/wearables.md",
-    " M .llm-wiki/generated/modules/weekly-check-in.md",
-    " M .llm-wiki/generated/modules/weekly-goals.md",
+    " M .llm-wiki/generated/csharp-symbol-index.json",
     " M .llm-wiki/generated/quality-index.json",
-    " M .llm-wiki/generated/repository-catalog.json",
+    " M .llm-wiki/generated/runtime-topology.json",
     " M .llm-wiki/reviews/source-impact-reviews.json",
-    " M .llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1",
-    " M .llm-wiki/tools/Build-LlmWikiModulePages.ps1",
-    " M .llm-wiki/tools/LlmWikiChangeSemantics.ps1",
-    " M .llm-wiki/tools/LlmWikiJson.ps1",
-    " M .llm-wiki/tools/LlmWikiProcess.ps1",
-    " M .llm-wiki/tools/LlmWikiQueryCache.ps1",
-    " M .llm-wiki/tools/LlmWikiSourceInventory.ps1",
-    " M .llm-wiki/tools/LlmWikiVerificationReceipts.ps1",
+    " M .llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+    " M .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
     " M .llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiBackendModuleModel.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiIndexSelection.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiPortable.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiProcess.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiSourceInventory.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiVerificationReceipts.ps1",
-    "?? docs/reports/wiki-tools-audit-2026-10-06.md",
-    "?? docs/reports/wiki-tools-audit-2026-10-06/Build-Inventory.ps1",
-    "?? docs/reports/wiki-tools-audit-2026-10-06/Test-Coverage.ps1",
-    "?? docs/reports/wiki-tools-audit-2026-10-06/findings.json",
-    "?? docs/reports/wiki-tools-audit-2026-10-06/inventory.json",
-    "?? docs/reports/wiki-tools-audit-2026-10-06/reviews.json"
+    " M .llm-wiki/tools/Test-LlmWikiDiffContextQueries.ps1",
+    " M .llm-wiki/tools/code-graph.mjs",
+    " M FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshotService.cs",
+    " M FoodDiary.Development.Mcp/Wiki/WikiOutputParser.cs",
+    " M FoodDiary.Development.Mcp/Wiki/WikiQueryCache.cs",
+    " M Tooling/tests/FoodDiary.Development.Mcp.Tests/ChangeSetSnapshotServiceTests.cs",
+    " M Tooling/tests/FoodDiary.Development.Mcp.Tests/WikiOutputParserTests.cs",
+    " M Tooling/tests/FoodDiary.Development.Mcp.Tests/WikiQueryCacheTests.cs",
+    " M docs/reports/wiki-tools-audit-2026-10-06.md",
+    " M docs/reports/wiki-tools-audit-2026-10-06/findings.json",
+    " M docs/reports/wiki-tools-audit-2026-10-06/inventory.json",
+    " M docs/reports/wiki-tools-audit-2026-10-06/reviews.json"
   ],
   "snapshotContract": "Hashes identify current worktree content; baseline identifies HEAD and is not a claim that the worktree is clean.",
   "hashContract": "sha256 UTF-8 source text with LF line endings; a hash proves source identity, not review",
@@ -78,7 +37,7 @@
   ],
   "classificationContract": "Automated navigation only. All source review and performance/reliability conclusions are recorded separately.",
   "sourceFileCount": 408,
-  "sourceLineCount": 75220.0,
+  "sourceLineCount": 75314.0,
   "files": [
     {
       "path": ".github/workflows/ci-tests.yml",
@@ -1185,8 +1144,8 @@
       "path": ".llm-wiki/tools/code-graph.mjs",
       "role": "graph-runtime",
       "extension": ".mjs",
-      "lines": 2987,
-      "sourceSha256": "d0e3972e6d6badf39e57b653f306f724fbcd0728a24fe998a4091b1b05ecaebc",
+      "lines": 2986,
+      "sourceSha256": "0e2b1b827c5c94312a097ed55d6059ff1a5da5d4eb5b585f49de1cc4c2be38fa",
       "parameters": [],
       "functions": [],
       "parseErrors": [],
@@ -1200,7 +1159,7 @@
           "text": "process.kill(pid, 0);"
         },
         {
-          "line": 351,
+          "line": 350,
           "text": "database = new DatabaseSync(databasePath);"
         }
       ]
@@ -2660,8 +2619,8 @@
       "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
       "role": "query-or-orchestration",
       "extension": ".ps1",
-      "lines": 578,
-      "sourceSha256": "339342e0bf6788867c8fc2899a69105864495ab3e51e3fc8f4151f03c98cac34",
+      "lines": 585,
+      "sourceSha256": "ed0639273665e36edb806689d1c42f7f3d25e5f2d430826e857ea4e96baf5ca2",
       "parameters": [
         "BaseRef",
         "HeadRef",
@@ -2676,49 +2635,53 @@
       "functions": [
         {
           "name": "ConvertTo-RepositoryPath",
-          "startLine": 27,
-          "endLine": 30
+          "startLine": 28,
+          "endLine": 31
         },
         {
           "name": "ConvertTo-Slug",
-          "startLine": 32,
-          "endLine": 36
+          "startLine": 33,
+          "endLine": 37
         },
         {
           "name": "Read-IndexWhenPathIsPresent",
-          "startLine": 116,
-          "endLine": 127
+          "startLine": 117,
+          "endLine": 128
         },
         {
           "name": "Write-Section",
-          "startLine": 543,
-          "endLine": 557
+          "startLine": 550,
+          "endLine": 564
         }
       ],
       "parseErrors": [],
       "operationAnchors": [
         {
-          "line": 105,
+          "line": 106,
           "text": "$emptyResult | ConvertTo-Json -Depth 8"
         },
         {
-          "line": 120,
+          "line": 121,
           "text": "$raw = [System.IO.File]::ReadAllText($Path)"
         },
         {
-          "line": 123,
+          "line": 124,
           "text": "return [pscustomobject]@{ index = ($raw | ConvertFrom-Json); bytesRead = $raw.Length }"
         },
         {
-          "line": 325,
+          "line": 210,
+          "text": "$moduleGraph = Get-Content -LiteralPath (Join-Path $repositoryRoot 'docs/architecture/module-dependencies.json') -Raw | ConvertFrom-Json"
+        },
+        {
+          "line": 329,
           "text": "$wikiPages = Get-ChildItem -LiteralPath $wikiRoot -Recurse -File -Filter '*.md' |"
         },
         {
-          "line": 328,
+          "line": 332,
           "text": "$lines = @(Get-Content -LiteralPath $page.FullName)"
         },
         {
-          "line": 531,
+          "line": 538,
           "text": "$result | ConvertTo-Json -Depth 10"
         }
       ]
@@ -5234,8 +5197,8 @@
       "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
       "role": "query-or-orchestration",
       "extension": ".ps1",
-      "lines": 650,
-      "sourceSha256": "809ce266bef62238008f20c4fdf808b06eac659221109ea92be504c6131a6401",
+      "lines": 662,
+      "sourceSha256": "f6e2dc46d241bfbfe913d26ad6cba29927a73f45f75225259c0f37b0bb85eacc",
       "parameters": [
         "Check",
         "AffectedOnly",
@@ -5303,13 +5266,13 @@
         },
         {
           "name": "Invoke-PipelineBatch",
-          "startLine": 445,
-          "endLine": 529
+          "startLine": 457,
+          "endLine": 541
         },
         {
           "name": "Start-PipelineWorker",
-          "startLine": 447,
-          "endLine": 463
+          "startLine": 459,
+          "endLine": 475
         }
       ],
       "parseErrors": [],
@@ -5343,27 +5306,31 @@
           "text": "(($receipt | ConvertTo-Json -Depth 4) + [Environment]::NewLine),"
         },
         {
-          "line": 449,
+          "line": 443,
+          "text": "$cachedIndex = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/generated/architecture-health-index.json') -Raw | ConvertFrom-Json"
+        },
+        {
+          "line": 461,
           "text": "$startInfo = New-Object System.Diagnostics.ProcessStartInfo"
         },
         {
-          "line": 492,
+          "line": 504,
           "text": "$worker.process.WaitForExit()"
         },
         {
-          "line": 562,
+          "line": 574,
           "text": "foreach ($item in @(Get-ChildItem -LiteralPath $generatedRoot -Force)) {"
         },
         {
-          "line": 580,
+          "line": 592,
           "text": "foreach ($item in @(Get-ChildItem -LiteralPath $generatedRoot -Force)) {"
         },
         {
-          "line": 606,
+          "line": 618,
           "text": "foreach ($item in @(Get-ChildItem -LiteralPath $generatedRoot -Force)) {"
         },
         {
-          "line": 610,
+          "line": 622,
           "text": "foreach ($item in @(Get-ChildItem -LiteralPath $backupRoot -Force)) {"
         }
       ]
@@ -14500,34 +14467,38 @@
       "path": ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
       "role": "regression-tool",
       "extension": ".ps1",
-      "lines": 76,
-      "sourceSha256": "bff2dd154f670121876ae0e31b6b3fddbc21e1b08918f53ed6ddf4080c5dd360",
+      "lines": 98,
+      "sourceSha256": "5e1058ee04192a4415205e0311e5588838feeeeb6238a00557aa0392467afacf",
       "parameters": [],
       "functions": [],
       "parseErrors": [],
       "operationAnchors": [
         {
-          "line": 26,
+          "line": 35,
           "text": "[IO.File]::WriteAllText($fixtureOutput, ([ordered]@{schemaVersion=1;summary=$summary} | ConvertTo-Json -Depth 4))"
         },
         {
-          "line": 40,
+          "line": 47,
+          "text": "} | ConvertTo-Json -Depth 4))"
+        },
+        {
+          "line": 62,
           "text": "$index = Get-Content -LiteralPath $indexPath -Raw | ConvertFrom-Json"
         },
         {
-          "line": 41,
+          "line": 63,
           "text": "$catalog = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/repository-catalog.json') -Raw | ConvertFrom-Json"
         },
         {
-          "line": 42,
+          "line": 64,
           "text": "$symbols = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/csharp-symbol-index.json') -Raw | ConvertFrom-Json"
         },
         {
-          "line": 43,
+          "line": 65,
           "text": "$backendContracts = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/backend-contract-index.json') -Raw | ConvertFrom-Json"
         },
         {
-          "line": 46,
+          "line": 68,
           "text": "if (($index.unconsumedBackendContracts | ConvertTo-Json -Depth 10 -Compress) -cne ($expectedUnconsumed | ConvertTo-Json -Depth 10 -Compress) -or"
         }
       ]
@@ -15570,42 +15541,50 @@
       "path": ".llm-wiki/tools/Test-LlmWikiDiffContextQueries.ps1",
       "role": "regression-tool",
       "extension": ".ps1",
-      "lines": 99,
-      "sourceSha256": "eb09e00852488e69def2b205d1cdf4d615067e0ccdc5ae2ad68a6640db7aee02",
+      "lines": 124,
+      "sourceSha256": "ac27d8da0ee66657a194a350da83b7612bd16178addc163c18aa830827427397",
       "parameters": [],
       "functions": [
         {
           "name": "ConvertTo-FunctionalJson",
-          "startLine": 31,
-          "endLine": 38
+          "startLine": 56,
+          "endLine": 63
         },
         {
           "name": "Get-NormalizedSourceHash",
-          "startLine": 74,
-          "endLine": 79
+          "startLine": 99,
+          "endLine": 104
         },
         {
           "name": "Get-Median",
-          "startLine": 90,
-          "endLine": 95
+          "startLine": 115,
+          "endLine": 120
         }
       ],
       "parseErrors": [],
       "operationAnchors": [
         {
-          "line": 37,
+          "line": 24,
+          "text": "$layoutDiff = & $diffTool -ChangedPath 'Modules/Admin/Application/Queries' -CompiledIndexInput $layoutInput -Format Json -Limit 12 | ConvertFrom-Json"
+        },
+        {
+          "line": 25,
+          "text": "$moduleGraph = Get-Content -LiteralPath (Join-Path $repositoryRoot 'docs/architecture/module-dependencies.json') -Raw | ConvertFrom-Json"
+        },
+        {
+          "line": 62,
           "text": "return $functional | ConvertTo-Json -Depth 12 -Compress"
         },
         {
-          "line": 48,
+          "line": 73,
           "text": "$sqlite = & $diffTool @arguments | ConvertFrom-Json"
         },
         {
-          "line": 75,
+          "line": 100,
           "text": "$text = [IO.File]::ReadAllText($Path).Replace(\"`r`n\", \"`n\")"
         },
         {
-          "line": 83,
+          "line": 108,
           "text": "$hashProbe = & $diffTool -ChangedPath @($cases[0].ChangedPath) -Format Json | ConvertFrom-Json"
         }
       ]
@@ -22205,8 +22184,8 @@
       "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshotService.cs",
       "role": "mcp-runtime",
       "extension": ".cs",
-      "lines": 346,
-      "sourceSha256": "d1b3c701b0c7d140a6bc9f954f98352b3e2ae8626a892a9503d975041d79c5d0",
+      "lines": 365,
+      "sourceSha256": "865a7f1c6a3a7453574b549eca9da5c3f44addc0e26693a9c909e3fc892ffe54",
       "parameters": [],
       "functions": [],
       "parseErrors": [],
@@ -22216,19 +22195,19 @@
           "text": "StartInfo = new ProcessStartInfo {"
         },
         {
-          "line": 205,
+          "line": 207,
           "text": "Task<string> standardOutput = process.StandardOutput.ReadToEndAsync(cancellationToken);"
         },
         {
-          "line": 206,
+          "line": 208,
           "text": "Task<string> standardError = process.StandardError.ReadToEndAsync(cancellationToken);"
         },
         {
-          "line": 211,
+          "line": 213,
           "text": "await process.WaitForExitAsync(linkedCancellation.Token).ConfigureAwait(false);"
         },
         {
-          "line": 341,
+          "line": 360,
           "text": "process.Kill(entireProcessTree: true);"
         }
       ]
@@ -22794,7 +22773,7 @@
       "role": "mcp-runtime",
       "extension": ".cs",
       "lines": 188,
-      "sourceSha256": "b1bcc2e5270a13b13c6430ae612522cab575422ad498731d61fd9438e99eb569",
+      "sourceSha256": "d68e48a93e93a508d12aabfb54a27ab0398c997eedc530dd80d14d585f927e5b",
       "parameters": [],
       "functions": [],
       "parseErrors": [],
@@ -22804,8 +22783,8 @@
       "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryCache.cs",
       "role": "mcp-runtime",
       "extension": ".cs",
-      "lines": 101,
-      "sourceSha256": "8b5b826ca62c0388f85d52cf964b45a5db26d8724426cc84f21f780065ae063f",
+      "lines": 111,
+      "sourceSha256": "25a8409d79972751b7240975724dc039316a6541d402934886e018f5dca5cb67",
       "parameters": [],
       "functions": [],
       "parseErrors": [],

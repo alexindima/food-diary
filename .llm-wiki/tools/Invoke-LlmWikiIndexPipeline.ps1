@@ -437,6 +437,18 @@ if (-not $RequiredOnly -and 'Build-LlmWikiQualityIndex.ps1' -in $selectedToolNam
 if ($ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
     $pipelineCacheState = Get-PipelineCacheState $selectedToolNames
     if ($Check -and (Test-PipelineCacheReceipt $pipelineCacheState)) {
+        # Update receipts prove unchanged bytes, including indexes with drift.
+        # Retain the architecture generator's check contract on this shortcut.
+        if ('Build-LlmWikiArchitectureHealthIndex.ps1' -in $selectedToolNames) {
+            $cachedIndex = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/generated/architecture-health-index.json') -Raw | ConvertFrom-Json
+            foreach ($name in @('dependencyViolations', 'untrackedProductionProjects', 'moduleCycleNodes')) {
+                if ($null -eq $cachedIndex.summary.PSObject.Properties[$name]) { throw "Architecture cache is missing '$name'." }
+                if ([int]$cachedIndex.summary.$name -ne 0) {
+                    Write-Host "Architecture drift detected in cached index: $name=$($cachedIndex.summary.$name)."
+                    exit 1
+                }
+            }
+        }
         Write-Host "LLM Wiki affected pipeline cache hit: $(@($selectedToolNames).Count) generator(s), source and generated hashes unchanged."
         exit 0
     }
