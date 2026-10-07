@@ -18,6 +18,20 @@ try {
     & git -C $root -c user.name=Wiki -c user.email=wiki@example.invalid commit --quiet -m baseline
     if ($LASTEXITCODE -ne 0) { throw 'Unable to initialize stage fingerprint fixture.' }
     $tool = Join-Path $fixtureTools 'Get-LlmWikiVerificationStageFingerprint.ps1'
+    $changeDefinitions = Join-Path $policyRoot 'change-policies.json'
+    [IO.File]::WriteAllText($changeDefinitions, 'first')
+    $policyBefore = & $tool -Stage 'workspace policy'
+    $definitionTime = [IO.File]::GetLastWriteTimeUtc($changeDefinitions)
+    [IO.File]::WriteAllText($changeDefinitions, 'other')
+    [IO.File]::SetLastWriteTimeUtc($changeDefinitions, $definitionTime)
+    if ($policyBefore -ceq (& $tool -Stage 'workspace policy')) { throw 'Workspace-policy stage ignored changed referenced check definitions.' }
+    foreach ($name in @('AgentRegistry', 'TaskLease', 'SchedulePlan', 'OrchestrationCycle', 'DispatchWatchdog', 'WorkspaceCircuit', 'TaskDecomposition')) {
+        $managerPath = Join-Path $fixtureTools "Manage-LlmWiki$name.ps1"
+        [IO.File]::WriteAllText($managerPath, 'first')
+        $beforeManager = & $tool -Stage 'affected smoke:facade-contract'
+        [IO.File]::WriteAllText($managerPath, 'other')
+        if ($beforeManager -ceq (& $tool -Stage 'affected smoke:facade-contract')) { throw "Scheduler manager '$name' did not invalidate its regression receipt." }
+    }
     foreach ($stage in @('affected smoke', 'affected smoke:code-graph', 'affected smoke:context-bundle')) {
         [IO.File]::WriteAllText((Join-Path $root 'source.cs'), 'first edit')
         $before = & $tool -Stage $stage

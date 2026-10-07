@@ -162,8 +162,8 @@ $mutating = $Action -in @('open', 'reset', 'prune')
 $lockStream = $null
 if ($mutating) {
     if (-not (Test-Path -LiteralPath $schedulerRoot)) { New-Item -ItemType Directory -Path $schedulerRoot | Out-Null }
-    if ((Test-Path -LiteralPath $lockPath -PathType Leaf) -and ($now - [IO.File]::GetLastWriteTimeUtc($lockPath)).TotalMinutes -gt 10) { [IO.File]::Delete($lockPath) }
-    try { $lockStream = [IO.File]::Open($lockPath, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None) }
+    # The OS lease defines ownership; retain the stable file across crashes/reuse.
+    try { $lockStream = [IO.File]::Open($lockPath, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::Write, [IO.FileShare]::None) }
     catch { throw 'Workspace circuit registry is already being mutated; retry after it completes.' }
 }
 
@@ -240,7 +240,6 @@ try {
     }
 } finally {
     if ($null -ne $lockStream) { $lockStream.Dispose() }
-    if ($mutating -and (Test-Path -LiteralPath $lockPath)) { [IO.File]::Delete($lockPath) }
 }
 
 if ($Format -eq 'Json') { $response | ConvertTo-Json -Depth 20 }

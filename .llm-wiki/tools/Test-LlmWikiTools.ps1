@@ -4596,7 +4596,7 @@ try {
         $leaseLockDirectory = Split-Path -Parent $leaseLockPath
         if (-not (Test-Path -LiteralPath $leaseLockDirectory)) { New-Item -ItemType Directory -Path $leaseLockDirectory | Out-Null }
         [System.IO.File]::WriteAllText($leaseLockPath, 'abandoned', [System.Text.UTF8Encoding]::new($false))
-        [System.IO.File]::SetLastWriteTimeUtc($leaseLockPath, [DateTime]::UtcNow.AddMinutes(-10))
+        [System.IO.File]::SetLastWriteTimeUtc($leaseLockPath, [DateTime]::UtcNow)
         $acquiredLease = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskLease.ps1') acquire `
             -WorkspacePath $cacheSourceWorkspacePath `
             -Owner 'smoke-agent-a' `
@@ -4604,7 +4604,7 @@ try {
             -AsOfUtc $leaseNow `
             -Format Json | ConvertFrom-Json
         Assert-Wiki ($acquiredLease.changed -and $acquiredLease.lease.active -and $acquiredLease.lease.owner -eq 'smoke-agent-a') 'Task lease acquisition failed.'
-        Assert-Wiki (-not (Test-Path -LiteralPath $leaseLockPath)) 'Task lease acquisition did not recover and clean an abandoned lock.'
+        Assert-Wiki ((Test-Path -LiteralPath $leaseLockPath) -and [IO.File]::ReadAllText($leaseLockPath) -ceq 'abandoned') 'Task lease acquisition did not recover a fresh orphan while preserving stable lock identity.'
         $contentionRejected = $false
         try {
             & (Join-Path $toolsRoot 'Manage-LlmWikiTaskLease.ps1') acquire `

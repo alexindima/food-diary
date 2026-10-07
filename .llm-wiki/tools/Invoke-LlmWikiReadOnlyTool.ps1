@@ -548,18 +548,20 @@ try {
     else { $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT = $previousSnapshotRoot }
     if ($null -eq $previousSourceRoot) { Remove-Item Env:LLM_WIKI_READ_ONLY_SOURCE_ROOT -ErrorAction SilentlyContinue }
     else { $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT = $previousSourceRoot }
-    if ($snapshotLock) { $snapshotLock.Dispose() }
-    if ($removeSnapshot) {
-        Remove-Item -LiteralPath $readyPath -Force -ErrorAction SilentlyContinue
-        if (Test-Path -LiteralPath (Join-Path $snapshotRoot '.git') -PathType Container) {
-            Remove-Item -LiteralPath $snapshotRoot -Recurse -Force -ErrorAction SilentlyContinue
-        } else {
-            $worktreeRemoveResult = Invoke-LlmWikiGitCommand -RepositoryRoot $sourceRepositoryRoot -Arguments @('worktree', 'remove', '--force', $snapshotRoot) -AllowedExitCode @(0..128)
-            if ($worktreeRemoveResult.ExitCode -ne 0) {
-                Write-Warning "Unable to remove isolated read-only snapshot: $snapshotRoot"
+    try {
+        # A waiting reader must not acquire this slot during poisoned-clone removal.
+        if ($removeSnapshot) {
+            Remove-Item -LiteralPath $readyPath -Force -ErrorAction SilentlyContinue
+            if (Test-Path -LiteralPath (Join-Path $snapshotRoot '.git') -PathType Container) {
+                Remove-Item -LiteralPath $snapshotRoot -Recurse -Force -ErrorAction SilentlyContinue
+            } else {
+                $worktreeRemoveResult = Invoke-LlmWikiGitCommand -RepositoryRoot $sourceRepositoryRoot -Arguments @('worktree', 'remove', '--force', $snapshotRoot) -AllowedExitCode @(0..128)
+                if ($worktreeRemoveResult.ExitCode -ne 0) {
+                    Write-Warning "Unable to remove isolated read-only snapshot: $snapshotRoot"
+                }
             }
         }
-    }
+    } finally { if ($snapshotLock) { $snapshotLock.Dispose() } }
     # Unlinking an unlocked file races with a waiter acquiring that same slot.
     Write-ReadOnlyTiming -Stage 'outer-before-prune'
     Remove-StaleReadOnlySnapshots -RepositoryRoot $sourceRepositoryRoot -SnapshotParent $snapshotParent -CurrentFingerprint $snapshotFingerprint

@@ -155,11 +155,9 @@ $mutating = $Action -in @('create', 'claim', 'prune')
 $lockStream = $null
 if ($mutating) {
     if (-not (Test-Path -LiteralPath $schedulerRoot)) { New-Item -ItemType Directory -Path $schedulerRoot | Out-Null }
-    if (Test-Path -LiteralPath $lockPath -PathType Leaf) {
-        if (([DateTime]::UtcNow - [System.IO.File]::GetLastWriteTimeUtc($lockPath)).TotalMinutes -gt 5) { [System.IO.File]::Delete($lockPath) }
-    }
+    # The OS lease defines ownership; retain the stable file across crashes/reuse.
     try {
-        $lockStream = [System.IO.File]::Open($lockPath, [System.IO.FileMode]::CreateNew, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
+        $lockStream = [System.IO.File]::Open($lockPath, [System.IO.FileMode]::OpenOrCreate, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
     } catch {
         throw 'Schedule plan registry is busy; retry after the current mutation completes.'
     }
@@ -308,8 +306,8 @@ try {
             retentionCount = [int]$planPolicy.retentionCount
             candidateCount = $candidateCount
             changedCount = $(if ($Apply) { $candidateCount } else { 0 })
-            planCandidates = @($candidates.BaseName)
-            claimCandidates = @($claimCandidates.BaseName)
+            planCandidates = @($candidates | ForEach-Object BaseName)
+            claimCandidates = @($claimCandidates | ForEach-Object BaseName)
         }
     } else {
         $items = @((Get-PlanFiles) | ForEach-Object {
@@ -343,7 +341,6 @@ try {
     }
 } finally {
     if ($null -ne $lockStream) { $lockStream.Dispose() }
-    if ($mutating -and (Test-Path -LiteralPath $lockPath)) { [System.IO.File]::Delete($lockPath) }
 }
 
 if ($Format -eq 'Json') {

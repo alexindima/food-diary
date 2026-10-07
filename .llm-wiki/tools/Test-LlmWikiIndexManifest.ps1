@@ -41,6 +41,12 @@ try {
     foreach ($name in @('Write-LlmWikiIndexVerificationReceipt.ps1', 'LlmWikiGitPaths.ps1')) {
         Copy-Item -LiteralPath (Join-Path $PSScriptRoot $name) -Destination $fixtureTools
     }
+    $writer = Join-Path $fixtureTools 'Write-LlmWikiIndexVerificationReceipt.ps1'
+    # Scoped success neither reads full-gate inputs nor changes publication state.
+    # At this point the fixture deliberately has no manifest, index or Git HEAD.
+    $partialMessage = & $writer -ReceiptKind Verification 6>&1 | Out-String
+    if ($partialMessage -notmatch 'full verification status is unchanged' -or
+        (Test-Path -LiteralPath (Join-Path $fixture '.git/llm-wiki'))) { throw 'Scoped verification touched full publication evidence.' }
     [IO.File]::WriteAllText((Join-Path $fixture '.llm-wiki/policies/query-indexes.json'), '{"schemaVersion":1,"paths":[".llm-wiki/generated/index.json"]}')
     [IO.File]::WriteAllText((Join-Path $fixture '.llm-wiki/generated/index.json'), '{}')
     [IO.File]::WriteAllText((Join-Path $fixture 'source.cs'), 'public class Original {}')

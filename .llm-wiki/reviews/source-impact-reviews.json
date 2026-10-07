@@ -203,18 +203,26 @@
       "pageSha256": "bf06c7515995b5983125ae2d8469bc357431d468feed457a4ae9ab443288c4a4",
       "sources": [
         {
-          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-          "sha256": "5317c39b130e125ed64948d2e3c8456780cf20ea7eaf5c3e9b742d03e7f3d0ea"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+          "sha256": "cbf13b6ef0f4ff6d2e918be4c95c52bd81d6bcb9e0c111c6474da7298e294225"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
-          "sha256": "7e1fff9975ded8618bd20c7b587b01ec6e2dd84f3e395e30fecce1e0b4ba5d9b"
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1",
+          "sha256": "c78ff2dd2fc1e8a894804f89f3d697282fe9ba9765a1f4f1d02917f5026043e0"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
+          "sha256": "9ebcf58ffaa9dec88c569b23327d83979d3039965c2feab61792e20a5269295f"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiVerificationCache.ps1",
+          "sha256": "529fdf5f7dcb2efc54d131ff29c79df622a690ff1dd46711a5ee564ff5b72541"
         }
       ],
-      "reason": "Reviewed Wiki runtime and generator corrections against their sources: exit-state preservation, portable collision-safe JSON hashes, legacy source enumeration, bounded cache metadata and reader leases, ordered template scope, Unicode receipt fingerprints, cached architecture drift enforcement and declared module edges. Focused regressions passed; the report explicitly retains 284 unreviewed files and makes no new wall-time claim. Application HTTP contracts and data ownership are unchanged.",
+      "reason": "Reviewed actual unknown-group dispatch rejection, exact Unicode fast-cache invalidation and held snapshot lease cleanup. Full planning, guard and verification-cache regressions pass; scoped publication now avoids full-gate hashing while complete generation/status/full checks remain tested on PS7/PS5.",
       "baseRef": "HEAD",
-      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
-      "reviewedAtUtc": "2026-10-06T22:31:23.1270290Z"
+      "gitHead": "f02f61e8217ac74b7c63554c1cf1742f2acfe8cf",
+      "reviewedAtUtc": "2026-10-07T00:41:30.1016239Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -350,14 +358,14 @@
       "pageSha256": "6905a9cfcb2c8ed64f714f760c972c46d47fa98b70bb6db940780fa6be0b34e0",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "ed0639273665e36edb806689d1c42f7f3d25e5f2d430826e857ea4e96baf5ca2"
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskDecomposition.ps1",
+          "sha256": "0aaa092dafb5bfb1c087261162bf7a5a7677bd57006b8e3de0bb029d20235acb"
         }
       ],
-      "reason": "Full-source research/workflow audit retains all 408 source entries with 220 complete reads and 188 explicitly pending. Current-layout diff regression reproduced lost Admin dependencies and modern tests; the tool now reads the declared graph and current Git test roots, and the full focused SQLite diff suite passes. Existing limits, source authority, typed protocol, application HTTP contracts and ownership remain; per-file performance and reliability followups are candidates, not inferred successful execution or speedups.",
+      "reason": "Reviewed generated navigation and the 290/409 intermediate source audit. Remaining candidates are explicitly unverified proposals; no full audit or Linux verification is claimed.",
       "baseRef": "HEAD",
-      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
-      "reviewedAtUtc": "2026-10-07T00:02:30.6520275Z"
+      "gitHead": "f02f61e8217ac74b7c63554c1cf1742f2acfe8cf",
+      "reviewedAtUtc": "2026-10-07T01:06:31.6993641Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -678,18 +686,50 @@
       "pageSha256": "8c8aff64bfc1811147a58a435a34a10950c1448a9d57bfc50802f9d45ffdbbf7",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-          "sha256": "f6e2dc46d241bfbfe913d26ad6cba29927a73f45f75225259c0f37b0bb85eacc"
+          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
+          "sha256": "79cc8b35edd013e7e09672d9efca3aa3fd39d2d4b2e3ee1b45e1a98f476774b4"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
-          "sha256": "5e1058ee04192a4415205e0311e5588838feeeeb6238a00557aa0392467afacf"
+          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
+          "sha256": "329f460729ce2da232992b3fb5ce18663c5866b9e833003e40e28fd106b06ac5"
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+          "sha256": "a7f5206739940583f68260dbc6d41641886efc5260202bfc70aaaf1cf349d0e9"
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+          "sha256": "cbf13b6ef0f4ff6d2e918be4c95c52bd81d6bcb9e0c111c6474da7298e294225"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1",
+          "sha256": "c78ff2dd2fc1e8a894804f89f3d697282fe9ba9765a1f4f1d02917f5026043e0"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
+          "sha256": "4210cd00c7fa0f9dd8b9cf7ac117aa3d6da0f374d308388be5c0fea2f355af2f"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
+          "sha256": "243ce9c31eec536603ade78950a64e2e10bb16fd57ebbb3e5e890db20656d47c"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
+          "sha256": "9ebcf58ffaa9dec88c569b23327d83979d3039965c2feab61792e20a5269295f"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiStageFingerprint.ps1",
+          "sha256": "bc6dc29bb87ee53acaf2a177630f1432c1b800ace43629ac62e9c579d0f224c9"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
+          "sha256": "24aa562714b09f27092f65d16427b4a1076587424838ac3ff99ca904d6240ca8"
         }
       ],
-      "reason": "Reviewed the pipeline, parser, rename fingerprint, bounded cache and extracted-module diff fixes against current sources. Architecture receipt regressions pass on PS7/PS5; MCP passes 458 tests. Existing navigation and workflow instructions remain accurate.",
+      "reason": "Reviewed the exact frozen assertion delta: all 712 assertions remain and one lease assertion is replaced by fresh-orphan/stable-file recovery. Full Orchestration passes in 179.07 seconds; the shard guard retains its original counts, CI matrix, isolated partitions and failure gate. Strict prune, lock crash/recovery and policy dependency regressions pass PS7/PS5.",
       "baseRef": "HEAD",
-      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
-      "reviewedAtUtc": "2026-10-07T00:20:52.5123381Z"
+      "gitHead": "f02f61e8217ac74b7c63554c1cf1742f2acfe8cf",
+      "reviewedAtUtc": "2026-10-07T01:22:40.3694259Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -871,13 +911,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "dba090343499df70d342ae2d27daf01448668a6d50b54e70e2e8cca047fa00fa"
+          "sha256": "a83795a8ade9a2f194f2517c4955c88d0418af118e1a655e54306a20cfb4183b"
         }
       ],
-      "reason": "Reviewed the pipeline, parser, rename fingerprint, bounded cache and extracted-module diff fixes against current sources. Architecture receipt regressions pass on PS7/PS5; MCP passes 458 tests. Existing navigation and workflow instructions remain accurate.",
+      "reason": "Reviewed all seven scheduler managers and stable OS lease recovery, actual killed-holder/live-holder cases, dependency-aware policy caching and stage fingerprints. Full lock and policy-cache fixtures pass on PS7/PS5; canonical smoke routing and existing stage invalidation regressions pass. Existing workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
-      "reviewedAtUtc": "2026-10-07T00:20:53.6077998Z"
+      "gitHead": "f02f61e8217ac74b7c63554c1cf1742f2acfe8cf",
+      "reviewedAtUtc": "2026-10-07T01:06:33.0829933Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -973,17 +1013,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "dba090343499df70d342ae2d27daf01448668a6d50b54e70e2e8cca047fa00fa"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "8f7903cfce9fbfbeb9871c7ea252625976a282e2277e804630ef7f78d3e9e682"
+          "sha256": "a83795a8ade9a2f194f2517c4955c88d0418af118e1a655e54306a20cfb4183b"
         }
       ],
-      "reason": "Reviewed regenerated quality and runtime navigation; tool-only cache and fingerprint changes add no private payload persistence or product authorization changes. Existing security review guidance remains accurate.",
+      "reason": "Reviewed regeneration and cache/lease changes: no query text or private payloads are newly persisted; source-authority and private snapshot protections remain. Current security review guidance still applies.",
       "baseRef": "HEAD",
-      "gitHead": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
-      "reviewedAtUtc": "2026-10-07T00:20:54.9206081Z"
+      "gitHead": "f02f61e8217ac74b7c63554c1cf1742f2acfe8cf",
+      "reviewedAtUtc": "2026-10-07T01:06:33.8379985Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1051,14 +1087,18 @@
       "pageSha256": "e796ff74731a2dda404ebab68170be7eaccc7c57268fc23f141a91c228e1a49f",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "a96eb644887aa12666707da019e0d36366620e5e6936bb07e83f3dfdfc081e30"
+          "path": ".llm-wiki/tools/Manage-LlmWikiDispatchWatchdog.ps1",
+          "sha256": "7cb90321f54f3e5fc99b2336bd81f534f9a22c61e76267a2769e985eef0a67bc"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskLease.ps1",
+          "sha256": "0144ab8852b2f76db0aad889e8d42263e4c7dc1d6f2357f65fee2cf531b82444"
         }
       ],
-      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "reason": "Reviewed persistent scheduler lease recovery and strict empty prune shapes. The real seven-manager suite explicitly uses StrictMode and passes PS7/PS5. The legacy Full Orchestration lease assertion now requires fresh-orphan recovery with unchanged stable lock identity; its existing contention and lifecycle assertions remain. Policy cache and passed-stage receipts bind referenced definitions.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:16.6351724Z"
+      "gitHead": "f02f61e8217ac74b7c63554c1cf1742f2acfe8cf",
+      "reviewedAtUtc": "2026-10-07T01:15:37.2766189Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1066,18 +1106,38 @@
       "pageSha256": "b202a96ec11daaeb6c19f06965768c28baf9b143f2a3264db07c52d6039f6768",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDispatchMetrics.ps1",
-          "sha256": "0e43e46d416f56357dfe0079897e4a678e4c1be6de59c222726e7ef1660fc137"
+          "path": ".llm-wiki/tools/Manage-LlmWikiAgentRegistry.ps1",
+          "sha256": "0a0ef490bf128b45c5ce39f3a1fec716658320fffce257001eb5b2304020e91c"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
-          "sha256": "4b494860416229ffc50057a8d78b84ff98712134bc1ed246bf2aaa839474f1a5"
+          "path": ".llm-wiki/tools/Manage-LlmWikiDispatchWatchdog.ps1",
+          "sha256": "7cb90321f54f3e5fc99b2336bd81f534f9a22c61e76267a2769e985eef0a67bc"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiOrchestrationCycle.ps1",
+          "sha256": "827e82c32fb3e6645dbca6eda2002807d1a1b9034a8c913647a28859edd675a1"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiSchedulePlan.ps1",
+          "sha256": "6ecef420a92d3cdc7436b605418681866dfad5634d373490eafd59fa8e4ec6b7"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskDecomposition.ps1",
+          "sha256": "0aaa092dafb5bfb1c087261162bf7a5a7677bd57006b8e3de0bb029d20235acb"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskLease.ps1",
+          "sha256": "0144ab8852b2f76db0aad889e8d42263e4c7dc1d6f2357f65fee2cf531b82444"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiWorkspaceCircuit.ps1",
+          "sha256": "fc85552cb541fa09b913d258cc2231c18bba7254bbf010c3b02b917461e0f422"
         }
       ],
-      "reason": "Metrics preserve deserialized date timezone when converting to UTC; strict-mode regression covers terminal dates across midnight with positive and negative offsets. Receipt lifecycle and scheduler registry reuse remain unchanged.",
+      "reason": "Reviewed persistent scheduler lease recovery and strict empty prune shapes. The real seven-manager suite explicitly uses StrictMode and passes PS7/PS5. The legacy Full Orchestration lease assertion now requires fresh-orphan recovery with unchanged stable lock identity; its existing contention and lifecycle assertions remain. Policy cache and passed-stage receipts bind referenced definitions.",
       "baseRef": "HEAD",
-      "gitHead": "f99ac78e7703560d7fde0cf0023a9c046186dd46",
-      "reviewedAtUtc": "2026-09-23T00:11:56.0026213Z"
+      "gitHead": "f02f61e8217ac74b7c63554c1cf1742f2acfe8cf",
+      "reviewedAtUtc": "2026-10-07T01:15:38.1573002Z"
     },
     {
       "pageId": "workflow-task-workspace",
@@ -1085,14 +1145,22 @@
       "pageSha256": "bdf105c4622b332968b1b8d2cea3318ee143986eefaea86fa6dfe13171b034a9",
       "sources": [
         {
-          "path": ".llm-wiki/tools/LlmWikiJson.ps1",
-          "sha256": "4df79c53aaad7b30913d08d5622fbd1aee064ca3bcea6a67805a1ddd33258157"
+          "path": ".llm-wiki/tools/Get-LlmWikiWorkspacePolicy.ps1",
+          "sha256": "e322746415899e6561a68dac98e266e4ce52be19003cb701c14e357b0d925404"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskLease.ps1",
+          "sha256": "0144ab8852b2f76db0aad889e8d42263e4c7dc1d6f2357f65fee2cf531b82444"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiWorkspacePolicyCache.ps1",
+          "sha256": "0ca013e1ea74990efc571977980d668c700cc8cf7c13517e2bc4549493a0c4a8"
         }
       ],
-      "reason": "Reviewed JSON hash compatibility for governed artifacts: ordinary PS7 fingerprints are retained across PS5 serialization, while previously conflated literal Unicode-escape strings now correctly have different hashes. Existing task continuity must still validate current artifact content and require refresh when a genuine fingerprint changes.",
+      "reason": "Reviewed all seven scheduler managers and stable OS lease recovery, actual killed-holder/live-holder cases, dependency-aware policy caching and stage fingerprints. Full lock and policy-cache fixtures pass on PS7/PS5; canonical smoke routing and existing stage invalidation regressions pass. Existing workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
-      "reviewedAtUtc": "2026-10-06T19:16:46.4091084Z"
+      "gitHead": "f02f61e8217ac74b7c63554c1cf1742f2acfe8cf",
+      "reviewedAtUtc": "2026-10-07T01:06:35.5922393Z"
     },
     {
       "pageId": "workflow-test-plan",

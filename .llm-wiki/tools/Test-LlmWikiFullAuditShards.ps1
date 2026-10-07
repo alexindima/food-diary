@@ -12,11 +12,11 @@ $expected = @{
     # Compared with c40a7a51d: three frontend-test assertions now require the
     # spec inventory, direct-spec links and downstream test-gap counts; none removed.
     Core = @{ count = 335; hash = 'c75d472cde15e5bab15d49e3f789629969a2b8bc1b2f60094e42f4bb1f80abf0' }
-    # Daily metrics assertion now verifies the exact UTC dates and total across midnight;
-    # no assertions were removed or relaxed.
-    Governed = @{ count = 376; hash = '9a0737e2c64b6e66529ce281c5e186137475102dbb50a6de9b537d372051b221' }
+    # The lease assertion requires fresh-orphan recovery with unchanged stable
+    # lock identity; its old unlink requirement is replaced. Counts remain frozen.
+    Governed = @{ count = 376; hash = '992083313b939fab1e649bd4f61fe64e1d46bcfb017b0f580e3a41f6d2c2922f' }
     Workspace = @{ count = 279; hash = 'ba880a6e89141db9d594badfdd783734b187785ad3281d1c4cf755ae336fffd4' }
-    Orchestration = @{ count = 97; hash = 'd22a4de6aae3709be895115af15f25a04555712c818dca2c04e3a6b393b58105' }
+    Orchestration = @{ count = 97; hash = 'fdd52d1221307232c0a905826fd28e98c22428d303ffe571b91210a1a2c2aac4' }
     Common = @{ count = 1; hash = '43c752083d5bd294ccf4a8efb8bdf4cd9831a14bc33acdbaa06de6659838f6bd' }
 }
 $groups = @{ Core = @(); Governed = @(); Workspace = @(); Orchestration = @(); Common = @() }

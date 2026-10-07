@@ -87,11 +87,9 @@ $mutating = $Action -in @('run', 'prune')
 $lockStream = $null
 if ($mutating) {
     if (-not (Test-Path -LiteralPath $schedulerRoot)) { New-Item -ItemType Directory -Path $schedulerRoot | Out-Null }
-    if (Test-Path -LiteralPath $lockPath -PathType Leaf) {
-        if (([DateTime]::UtcNow - [System.IO.File]::GetLastWriteTimeUtc($lockPath)).TotalMinutes -gt 10) { [System.IO.File]::Delete($lockPath) }
-    }
+    # The OS lease defines ownership; retain the stable file across crashes/reuse.
     try {
-        $lockStream = [System.IO.File]::Open($lockPath, [System.IO.FileMode]::CreateNew, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
+        $lockStream = [System.IO.File]::Open($lockPath, [System.IO.FileMode]::OpenOrCreate, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
     } catch {
         throw 'Dispatch watchdog is already running; retry after it completes.'
     }
@@ -251,7 +249,7 @@ try {
             -not $retainedWatchdogIds.ContainsKey($watchdogIdFromFile)
         })
         if ($Apply) { foreach ($file in $candidates) { [System.IO.File]::Delete($file.FullName) } }
-        $response = [pscustomobject][ordered]@{ schemaVersion = 1; action = 'prune'; apply = [bool]$Apply; retentionCount = $retentionCount; candidateCount = $candidates.Count; changedCount = $(if ($Apply) { $candidates.Count } else { 0 }); candidates = @($candidates.BaseName) }
+        $response = [pscustomobject][ordered]@{ schemaVersion = 1; action = 'prune'; apply = [bool]$Apply; retentionCount = $retentionCount; candidateCount = $candidates.Count; changedCount = $(if ($Apply) { $candidates.Count } else { 0 }); candidates = @($candidates | ForEach-Object BaseName) }
     } else {
         $items = @((Get-Files) | ForEach-Object {
             try {
@@ -266,7 +264,6 @@ try {
     }
 } finally {
     if ($null -ne $lockStream) { $lockStream.Dispose() }
-    if ($mutating -and (Test-Path -LiteralPath $lockPath)) { [System.IO.File]::Delete($lockPath) }
 }
 
 if ($Format -eq 'Json') {

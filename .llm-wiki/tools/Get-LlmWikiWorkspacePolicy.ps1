@@ -22,7 +22,11 @@ $absolutePath = Join-Path $repositoryRoot $normalizedPath
 $issues = [System.Collections.Generic.List[string]]::new()
 $policy = $null
 $policyText = $null
-$cacheKey = 'FoodDiary.Wiki.WorkspacePolicy.ValidatedJson.v1'
+$changePolicyPath = Join-Path $wikiRoot 'policies/change-policies.json'
+$changePolicyExists = [IO.File]::Exists($changePolicyPath)
+$changePolicyText = $null
+if ($changePolicyExists) { $changePolicyText = [IO.File]::ReadAllText($changePolicyPath) }
+$cacheKey = 'FoodDiary.Wiki.WorkspacePolicy.ValidatedJson.v2'
 $cacheable = $Action -eq 'get' -and $Format -eq 'Json'
 $validatorText = if ($cacheable) { $MyInvocation.MyCommand.ScriptBlock.ToString() } else { $null }
 if (-not (Test-Path -LiteralPath $absolutePath -PathType Leaf)) {
@@ -36,7 +40,9 @@ if (-not (Test-Path -LiteralPath $absolutePath -PathType Leaf)) {
             # One immutable entry bounds memory and cannot share mutable policy objects.
             if ($null -ne $cached -and [string]::Equals($cached.path, $absolutePath, [StringComparison]::Ordinal) -and
                 [string]::Equals($cached.validator, $validatorText, [StringComparison]::Ordinal) -and
-                [string]::Equals($cached.input, $policyText, [StringComparison]::Ordinal)) {
+                [string]::Equals($cached.input, $policyText, [StringComparison]::Ordinal) -and
+                $cached.changePolicyExists -eq $changePolicyExists -and
+                [string]::Equals($cached.changePolicyInput, $changePolicyText, [StringComparison]::Ordinal)) {
                 if ($WithFingerprint) { $cached.snapshotJson } else { $cached.policyJson }
                 return
             }
@@ -424,9 +430,8 @@ if ($null -ne $policy) {
     Add-Issue ($policy.scheduler.contextBundles.memory.minimumCandidateScore -ge 1 -and $policy.scheduler.contextBundles.memory.minimumCandidateScore -le 100) 'scheduler.contextBundles.memory.minimumCandidateScore must be between 1 and 100.'
     Add-Issue ($policy.scheduler.contextBundles.memory.duplicateSimilarityPercent -ge 1 -and $policy.scheduler.contextBundles.memory.duplicateSimilarityPercent -le 100) 'scheduler.contextBundles.memory.duplicateSimilarityPercent must be between 1 and 100.'
     Add-Issue ($policy.scheduler.contextBundles.memory.maximumCandidates -ge 1 -and $policy.scheduler.contextBundles.memory.maximumCandidates -le 100) 'scheduler.contextBundles.memory.maximumCandidates must be between 1 and 100.'
-    $changePolicyPath = Join-Path $wikiRoot 'policies/change-policies.json'
-    if (Test-Path -LiteralPath $changePolicyPath -PathType Leaf) {
-        $changePolicy = Get-Content -LiteralPath $changePolicyPath -Raw | ConvertFrom-Json
+    if ($changePolicyExists) {
+        $changePolicy = $changePolicyText | ConvertFrom-Json
         $knownCheckIds = @($changePolicy.rules.requiredChecks.id | Where-Object { $_ } | Sort-Object -Unique)
         $coveredCheckIds = [Collections.Generic.HashSet[string]]::new()
         foreach ($coverageRule in @($policy.scheduler.verificationPlanner.supersedes.PSObject.Properties)) {
@@ -542,6 +547,8 @@ if ($Action -eq 'get') {
             path = $absolutePath
             validator = $validatorText
             input = $policyText
+            changePolicyInput = $changePolicyText
+            changePolicyExists = $changePolicyExists
             policyJson = $policyJson
             snapshotJson = $snapshotJson
         })

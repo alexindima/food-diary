@@ -77,11 +77,9 @@ $mutating = $Action -ne 'list'
 $lockStream = $null
 if ($mutating) {
     if (-not (Test-Path -LiteralPath $schedulerPath)) { New-Item -ItemType Directory -Path $schedulerPath | Out-Null }
-    if (Test-Path -LiteralPath $lockPath -PathType Leaf) {
-        if (([DateTime]::UtcNow - [System.IO.File]::GetLastWriteTimeUtc($lockPath)).TotalMinutes -gt 5) { [System.IO.File]::Delete($lockPath) }
-    }
+    # The OS lease defines ownership; retain the stable file across crashes/reuse.
     try {
-        $lockStream = [System.IO.File]::Open($lockPath, [System.IO.FileMode]::CreateNew, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
+        $lockStream = [System.IO.File]::Open($lockPath, [System.IO.FileMode]::OpenOrCreate, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
     } catch {
         throw 'Agent registry is busy; retry after the current mutation completes.'
     }
@@ -168,7 +166,6 @@ try {
     }
 } finally {
     if ($null -ne $lockStream) { $lockStream.Dispose() }
-    if ($mutating -and (Test-Path -LiteralPath $lockPath)) { [System.IO.File]::Delete($lockPath) }
 }
 if ($Format -eq 'Json') {
     $result | ConvertTo-Json -Depth 10

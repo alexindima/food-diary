@@ -3,7 +3,7 @@
 Status: **in progress**. This is a complete-scope code audit, not a claim that
 all tools have been reviewed or optimized.
 
-The audit covers **408 files**, with **74,954 lines in its initial baseline**:
+The audit now covers **409 files** (408 in its initial inventory), with **74,954 lines in its initial baseline**:
 the Wiki facade, every tool/library/regression source under `.llm-wiki/tools`,
 the complete Development MCP runtime, and its launcher/CI integration. Generated
 navigation is not an authority. Relevant policies, contracts and tests are
@@ -16,9 +16,9 @@ inspected with their owning tool.
   does **not** mark a file reviewed.
 - [Reviews](wiki-tools-audit-2026-10-06/reviews.json) records complete-source
   inspection and specific performance/reliability observations for each file.
-  Current checkpoint: **221 reviewed; 187 still pending**.
+  Current checkpoint: **364 reviewed; 45 still pending**.
 - [Findings](wiki-tools-audit-2026-10-06/findings.json) includes concrete triggers,
-  consequences, test gaps, remediation and evidence references. All sixteen fixes
+  consequences, test gaps, remediation and evidence references. All twenty-three fixes
   have passed focused regression checks.
 - [Coverage check](wiki-tools-audit-2026-10-06/Test-Coverage.ps1) rejects stale
   reviewed hashes, duplicate/missing scope entries and incomplete claims when
@@ -112,3 +112,43 @@ Per-file followups identify repeated source/receipt/packet parsing, whole test-t
 ## Pipeline cache delivery checkpoint
 
 A valid whole-pipeline receipt reproduced a false-green architecture Check despite a nonzero drift counter. The fast path now enforces the same three summary counters as the generator. All three drift fixtures and the clean cache-hit fixture pass on Windows PowerShell 7 and 5.1; the clean case asserts that receipt reuse still occurs. This adds one complete-source coordinator review, bringing current coverage to **221 of 408**, with **187 pending**. The broad audit remains in progress; this checkpoint is the bounded change set being delivered to local master.
+
+## Coordinator, receipt and launcher pass
+
+Thirty-two more complete-source reviews cover the smoke/read-only coordinators and their regressions, baseline/contract/cache/session adapters, telemetry and corpus helpers, Markdown repair/scanning, and MCP launch/CI gate scripts. Current coverage is **253 of 408**, with **155 pending**. No pending source was marked reviewed from inventory or test names.
+
+Three reproduced reliability defects are fixed: unknown groups previously published a success receipt after zero tests; contaminated snapshot removal released its lease before deletion; and verify-fast cache reuse missed equal-size/time Unicode edits. The full affected-smoke planning, read-only guard and verification-cache suites pass on PS7. The snapshot lease also passes a focused PS5 probe.
+
+Scoped publication no longer hashes full-gate inputs before leaving full verification unchanged. Two before samples were **5508 and 3434 ms**; five after samples were **94 ms first call and 7-9 ms warm**. These are local in-process measurements of this one no-op path, not a whole-verify benchmark or a claim about Linux. Generation, full Verification and Status keep exact fingerprints; their complete publication fixture passes on PS7 and PS5.
+
+Remaining source-backed proposals include per-invocation composition inputs, bounded worker output/deadlines, atomic metadata publication, current test cohort classification, citation line-count reuse, and launcher lease/publication races. These remain validation or measurement candidates in the per-file ledger.
+
+Eight further complete-source regression reviews were performed during the prior running gate and stored separately to keep its inputs stable. Their source hashes were revalidated before import. Current checkpoint: **261/408**, with **147 pending**.
+
+## Scheduler and governed assessment pass
+
+Twenty-seven additional full-source reviews cover scheduler mutation and lineage, evidence execution/cache/journal, policy validation, telemetry/risk/quality, and context confidence/budget/benchmark/experiment/security. The new bounded lock regression expands scope to **409 files**; current reviewed coverage is **288**, with **121 pending**. Original inventory history remains intact.
+
+A fresh ownerless registry lock reproduced immediate mutation rejection. Seven managers now retain stable exclusive OS leases; owned fixtures prove recovery after killed holders, rejection of recent/old live holders, and stable file identity on PS7/PS5. The existing bounded catalog executes this suite for all seven managers and its receipts bind their changed sources. Linux execution remains unverified because Docker is not running locally.
+
+A second regression reproduced cached policy acceptance after an equal-size/time referenced check-ID change, despite uncached validation rejection. Both validated JSON caching and the workspace-policy stage now bind change-policy inputs. PS7/PS5 cache tests and the stage invalidation suite pass, including absence/creation, malformed/empty definitions and restoration.
+
+The largest remaining measured-work candidates in this pass are repeated nested bundle/budget/benchmark validation, repeated per-source context-security scans, repeated registry joins and complete telemetry hash/serialization on each append. Ledger entries separate these source-backed proposals from confirmed defects; no runtime latency gain is inferred from code inspection alone.
+
+Acceptance and change-manifest owners were then read in full. Their exact-scope composition reuse and evidence/plan validation limits are recorded separately. Current checkpoint: **290/409**, with **119 pending**.
+
+The first integrated scheduler gate exposed a third defect: three empty prune responses accessed BaseName on an empty collection under StrictMode. Explicit enumeration fixes the shape, and the complete seven-manager fixture now enables StrictMode and passes on PS7/PS5. The full Orchestration shard reached all lifecycle scenarios but initially failed its obsolete requirement to delete an orphan lock; that assertion now requires immediate fresh-orphan recovery with unchanged stable file identity. Final integrated reruns remain required. The 5,334-line legacy audit source is still pending full-source review; this bounded test edit does not mark it reviewed.
+
+The Full Orchestration integration shard passes in **179.07 seconds**. Its frozen inventory review proves the same **712 total assertions** (335 Core, 376 Governed, one common; governed partitions 279 Workspace and 97 Orchestration) with exactly one assertion replaced to preserve fresh-orphan stable lock identity. The corresponding two hashes were intentionally refreshed; no assertion count changed. Nine additional query-regression sources and the full shard guard bring reviewed coverage to **300/409**, with **109 pending**. The subsequent ordinary Wiki gate passes **8/8 selected stages**, including seven smoke groups, in **226.89 seconds**. This does not establish full-audit completion.
+
+## Context and evidence composition pass
+
+Twenty-four further complete-source reviews cover context bundles/feedback/strategy/outcomes, memory/learning health, evidence lineage/session identity, requirement/proof/conformance, repair/prediction/cost/plan/routing, critique/retrospective/impact and task similarity. Current reviewed coverage is **324/409**, with **85 pending**. This pass changes the audit ledger only; no new runtime optimization or speedup is claimed.
+
+Recurring candidates are immediate rebuild-after-create validation, repeated verification of the same registry/artifact inputs through nested tools, per-item array searches and deep JSON serialization. The ledger identifies exact call chains and where request-owned immutable inputs, ID maps, token sets or coherent source snapshots could help. Source-backed correctness candidates remain explicitly unverified, including transaction boundaries, stale/absent input sets, immutable execution-source identity and exact check-set validation. Observational model/instruction/outcome scores are not treated as independent quality or causal evidence.
+
+## Regression-source coverage pass
+
+Thirty-nine additional complete regression reads and the TypeScript extractor cover actual receipt/concurrency/cache/freshness, parser/projection, routing, scope, recovery and telemetry assertions. The checkpoint is **364/409**, with **45 pending**. Source inspection is not a claim that these suites were rerun in this documentation-only pass.
+
+Per-file entries identify which tests execute real public commands, which use isolated controlled helpers, and which only inspect text/schema/counts. Coverage gaps remain explicit: status-only mutation checks, vacuous empty loops, child cleanup/deadlines, exact result membership and unsupported/malformed parser inputs. None of the existing assertion counts, case inventories or runtime thresholds were reduced.

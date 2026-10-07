@@ -1,27 +1,37 @@
 {
   "schemaVersion": 1,
   "auditDate": "2026-10-06",
-  "baseline": "29757cb2015d6d51556fd55ea5ed85561bf8b6a0",
+  "baseline": "f02f61e8217ac74b7c63554c1cf1742f2acfe8cf",
   "worktreeStatus": [
-    " M .llm-wiki/generated/csharp-symbol-index.json",
     " M .llm-wiki/generated/quality-index.json",
-    " M .llm-wiki/generated/runtime-topology.json",
+    " M .llm-wiki/policies/affected-smoke-catalog.psd1",
     " M .llm-wiki/reviews/source-impact-reviews.json",
-    " M .llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-    " M .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
-    " M .llm-wiki/tools/Test-LlmWikiDiffContextQueries.ps1",
-    " M .llm-wiki/tools/code-graph.mjs",
-    " M FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshotService.cs",
-    " M FoodDiary.Development.Mcp/Wiki/WikiOutputParser.cs",
-    " M FoodDiary.Development.Mcp/Wiki/WikiQueryCache.cs",
-    " M Tooling/tests/FoodDiary.Development.Mcp.Tests/ChangeSetSnapshotServiceTests.cs",
-    " M Tooling/tests/FoodDiary.Development.Mcp.Tests/WikiOutputParserTests.cs",
-    " M Tooling/tests/FoodDiary.Development.Mcp.Tests/WikiQueryCacheTests.cs",
+    " M .llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
+    " M .llm-wiki/tools/Get-LlmWikiWorkspacePolicy.ps1",
+    " M .llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+    " M .llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+    " M .llm-wiki/tools/Manage-LlmWikiAgentRegistry.ps1",
+    " M .llm-wiki/tools/Manage-LlmWikiDispatchWatchdog.ps1",
+    " M .llm-wiki/tools/Manage-LlmWikiOrchestrationCycle.ps1",
+    " M .llm-wiki/tools/Manage-LlmWikiSchedulePlan.ps1",
+    " M .llm-wiki/tools/Manage-LlmWikiTaskDecomposition.ps1",
+    " M .llm-wiki/tools/Manage-LlmWikiTaskLease.ps1",
+    " M .llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1",
+    " M .llm-wiki/tools/Manage-LlmWikiWorkspaceCircuit.ps1",
+    " M .llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
+    " M .llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
+    " M .llm-wiki/tools/Test-LlmWikiIndexManifest.ps1",
+    " M .llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
+    " M .llm-wiki/tools/Test-LlmWikiStageFingerprint.ps1",
+    " M .llm-wiki/tools/Test-LlmWikiTools.ps1",
+    " M .llm-wiki/tools/Test-LlmWikiVerificationCache.ps1",
+    " M .llm-wiki/tools/Test-LlmWikiWorkspacePolicyCache.ps1",
+    " M .llm-wiki/tools/Write-LlmWikiIndexVerificationReceipt.ps1",
     " M docs/reports/wiki-tools-audit-2026-10-06.md",
     " M docs/reports/wiki-tools-audit-2026-10-06/findings.json",
     " M docs/reports/wiki-tools-audit-2026-10-06/inventory.json",
-    " M docs/reports/wiki-tools-audit-2026-10-06/reviews.json"
+    " M docs/reports/wiki-tools-audit-2026-10-06/reviews.json",
+    "?? .llm-wiki/tools/Test-LlmWikiSchedulerLocks.ps1"
   ],
   "snapshotContract": "Hashes identify current worktree content; baseline identifies HEAD and is not a claim that the worktree is clean.",
   "hashContract": "sha256 UTF-8 source text with LF line endings; a hash proves source identity, not review",
@@ -36,8 +46,8 @@
     ".github/workflows/ci-tests.yml"
   ],
   "classificationContract": "Automated navigation only. All source review and performance/reliability conclusions are recorded separately.",
-  "sourceFileCount": 408,
-  "sourceLineCount": 75314.0,
+  "sourceFileCount": 409,
+  "sourceLineCount": 75599.0,
   "files": [
     {
       "path": ".github/workflows/ci-tests.yml",
@@ -4510,7 +4520,7 @@
       "role": "query-or-orchestration",
       "extension": ".ps1",
       "lines": 108,
-      "sourceSha256": "5b536fc8668332c15b6aca45eec3071305aa0437a230ca8a07428441f2ca91ab",
+      "sourceSha256": "329f460729ce2da232992b3fb5ce18663c5866b9e833003e40e28fd106b06ac5",
       "parameters": [
         "Stage",
         "Arguments",
@@ -4594,8 +4604,8 @@
       "path": ".llm-wiki/tools/Get-LlmWikiWorkspacePolicy.ps1",
       "role": "query-or-orchestration",
       "extension": ".ps1",
-      "lines": 556,
-      "sourceSha256": "d5ff198d1115baf9ebdaab228f52c1b5bf727e03f48548fb05491be9561a8dcc",
+      "lines": 563,
+      "sourceSha256": "e322746415899e6561a68dac98e266e4ce52be19003cb701c14e357b0d925404",
       "parameters": [
         "Action",
         "Path",
@@ -4606,48 +4616,52 @@
       "functions": [
         {
           "name": "Add-Issue",
-          "startLine": 50,
-          "endLine": 52
+          "startLine": 56,
+          "endLine": 58
         },
         {
           "name": "Test-Regex",
-          "startLine": 53,
-          "endLine": 59
+          "startLine": 59,
+          "endLine": 65
         },
         {
           "name": "Get-Fingerprint",
-          "startLine": 60,
-          "endLine": 67
+          "startLine": 66,
+          "endLine": 73
         }
       ],
       "parseErrors": [],
       "operationAnchors": [
         {
-          "line": 32,
+          "line": 28,
+          "text": "if ($changePolicyExists) { $changePolicyText = [IO.File]::ReadAllText($changePolicyPath) }"
+        },
+        {
+          "line": 36,
           "text": "$policyText = Get-Content -LiteralPath $absolutePath -Raw"
         },
         {
-          "line": 44,
+          "line": 50,
           "text": "$policy = $policyText | ConvertFrom-Json"
         },
         {
-          "line": 61,
+          "line": 67,
           "text": "$json = $Value | ConvertTo-Json -Depth 20 -Compress"
         },
         {
-          "line": 429,
-          "text": "$changePolicy = Get-Content -LiteralPath $changePolicyPath -Raw | ConvertFrom-Json"
+          "line": 434,
+          "text": "$changePolicy = $changePolicyText | ConvertFrom-Json"
         },
         {
-          "line": 536,
+          "line": 541,
           "text": "$policyJson = $policy | ConvertTo-Json -Depth 20"
         },
         {
-          "line": 540,
+          "line": 545,
           "text": "} | ConvertTo-Json -Depth 20"
         },
         {
-          "line": 551,
+          "line": 558,
           "text": "$result | ConvertTo-Json -Depth 8"
         }
       ]
@@ -4822,8 +4836,8 @@
       "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
       "role": "query-or-orchestration",
       "extension": ".ps1",
-      "lines": 446,
-      "sourceSha256": "81161ed577e9ca88b30f5661e500cc71116f69da30425cef062754e2804ad118",
+      "lines": 453,
+      "sourceSha256": "a7f5206739940583f68260dbc6d41641886efc5260202bfc70aaaf1cf349d0e9",
       "parameters": [
         "BaseRef",
         "ChangedPath",
@@ -4835,8 +4849,8 @@
       "functions": [
         {
           "name": "Expand-SmokeGroups",
-          "startLine": 51,
-          "endLine": 62
+          "startLine": 54,
+          "endLine": 66
         }
       ],
       "parseErrors": [],
@@ -4846,31 +4860,31 @@
           "text": "[pscustomobject][ordered]@{ changedPathCount = 0; groups = @() } | ConvertTo-Json -Depth 3"
         },
         {
-          "line": 88,
+          "line": 92,
           "text": "[pscustomobject][ordered]@{ changedPathCount = $paths.Count; groups = @() } | ConvertTo-Json -Depth 3"
         },
         {
-          "line": 109,
+          "line": 113,
           "text": "if ($Plan -and $Format -eq 'Json') { $planResult | ConvertTo-Json -Depth 3; exit 0 }"
         },
         {
-          "line": 124,
+          "line": 128,
           "text": "$receipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json"
         },
         {
-          "line": 161,
+          "line": 165,
           "text": "$rootResult = & (Join-Path $toolsRoot 'Get-LlmWikiDependencyChanges.ps1') -BaseRef HEAD -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 164,
+          "line": 168,
           "text": "$frontendResult = & (Join-Path $toolsRoot 'Get-LlmWikiDependencyChanges.ps1') -BaseRef HEAD -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 167,
+          "line": 171,
           "text": "(@($rootResult.changes | ConvertTo-Json -Depth 7) -join '') -cne (@($frontendResult.changes | ConvertTo-Json -Depth 7) -join '')) {"
         },
         {
-          "line": 440,
+          "line": 447,
           "text": "[IO.File]::WriteAllText($temporaryReceiptPath, (($receipt | ConvertTo-Json -Depth 4) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))"
         }
       ]
@@ -5519,8 +5533,8 @@
       "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
       "role": "query-or-orchestration",
       "extension": ".ps1",
-      "lines": 567,
-      "sourceSha256": "fbe8a5248a4151d39ca9472eeb142d2f52668ea96784b594f7ef1b196423a4ca",
+      "lines": 569,
+      "sourceSha256": "cbf13b6ef0f4ff6d2e918be4c95c52bd81d6bcb9e0c111c6474da7298e294225",
       "parameters": [
         "ToolPath",
         "ToolArguments",
@@ -7155,8 +7169,8 @@
       "path": ".llm-wiki/tools/Manage-LlmWikiAgentRegistry.ps1",
       "role": "state-workflow",
       "extension": ".ps1",
-      "lines": 178,
-      "sourceSha256": "55264ad5583c7e0d97eeba9a14ca960560706c53ebb92732a061a511f45fed93",
+      "lines": 175,
+      "sourceSha256": "0a0ef490bf128b45c5ce39f3a1fec716658320fffce257001eb5b2304020e91c",
       "parameters": [
         "Action",
         "Owner",
@@ -7201,11 +7215,11 @@
           "text": "[System.IO.File]::WriteAllText($temporaryPath, (($Registry | ConvertTo-Json -Depth 10) + [Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))"
         },
         {
-          "line": 153,
+          "line": 151,
           "text": "$leases = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 174,
+          "line": 171,
           "text": "$result | ConvertTo-Json -Depth 10"
         }
       ]
@@ -8744,8 +8758,8 @@
       "path": ".llm-wiki/tools/Manage-LlmWikiDispatchWatchdog.ps1",
       "role": "state-workflow",
       "extension": ".ps1",
-      "lines": 280,
-      "sourceSha256": "972e70c37a811705593d35d5aa268cf6552ad903739f0049df917dbfe294b1bc",
+      "lines": 277,
+      "sourceSha256": "7cb90321f54f3e5fc99b2336bd81f534f9a22c61e76267a2769e985eef0a67bc",
       "parameters": [
         "Action",
         "WatchdogId",
@@ -8816,47 +8830,47 @@
           "text": "[System.IO.File]::WriteAllText($temporaryPath, (($Receipt | ConvertTo-Json -Depth 20) + [Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))"
         },
         {
-          "line": 102,
+          "line": 100,
           "text": "$dispatchList = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskDispatch.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 103,
+          "line": 101,
           "text": "$agentRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiAgentRegistry.ps1') list -AsOfUtc $now -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 105,
+          "line": 103,
           "text": "foreach ($file in @(Get-ChildItem -LiteralPath $dispatchRoot -File -Filter '*.json' -ErrorAction SilentlyContinue)) {"
         },
         {
-          "line": 107,
+          "line": 105,
           "text": "$receipt = Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json"
         },
         {
-          "line": 183,
+          "line": 181,
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
-          "line": 236,
+          "line": 234,
           "text": "foreach ($cycleFile in @(Get-ChildItem -LiteralPath $cycleRoot -File -Filter '*.json' -ErrorAction SilentlyContinue)) {"
         },
         {
-          "line": 238,
+          "line": 236,
           "text": "$cycle = Get-Content -LiteralPath $cycleFile.FullName -Raw | ConvertFrom-Json"
         },
         {
-          "line": 243,
+          "line": 241,
           "text": "foreach ($circuitFile in @(Get-ChildItem -LiteralPath $circuitRoot -File -Filter '*.json' -ErrorAction SilentlyContinue)) {"
         },
         {
-          "line": 245,
+          "line": 243,
           "text": "$circuit = Get-Content -LiteralPath $circuitFile.FullName -Raw | ConvertFrom-Json"
         },
         {
-          "line": 258,
+          "line": 256,
           "text": "$receipt = Get-Content -LiteralPath $_.FullName -Raw | ConvertFrom-Json"
         },
         {
-          "line": 273,
+          "line": 270,
           "text": "$response | ConvertTo-Json -Depth 20"
         }
       ]
@@ -10421,8 +10435,8 @@
       "path": ".llm-wiki/tools/Manage-LlmWikiOrchestrationCycle.ps1",
       "role": "state-workflow",
       "extension": ".ps1",
-      "lines": 236,
-      "sourceSha256": "e39817e7088b72892361b47f7076ae83a27d8b48a4bb395fd16d76e12be528ef",
+      "lines": 233,
+      "sourceSha256": "827e82c32fb3e6645dbca6eda2002807d1a1b9034a8c913647a28859edd675a1",
       "parameters": [
         "Action",
         "CycleId",
@@ -10489,43 +10503,43 @@
           "text": "[System.IO.File]::WriteAllText($temporaryPath, (($Cycle | ConvertTo-Json -Depth 20) + [Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))"
         },
         {
-          "line": 104,
+          "line": 102,
           "text": "$preAudit = & (Join-Path $PSScriptRoot 'Test-LlmWikiOrchestrationLineage.ps1') -AsOfUtc $now -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 105,
+          "line": 103,
           "text": "$coverage = & (Join-Path $PSScriptRoot 'Get-LlmWikiAgentFleetCoverage.ps1') -TasksPath $TasksPath -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 111,
+          "line": 109,
           "text": "$watchdog = & (Join-Path $PSScriptRoot 'Manage-LlmWikiDispatchWatchdog.ps1') @watchdogArguments | ConvertFrom-Json"
         },
         {
-          "line": 112,
+          "line": 110,
           "text": "$reconciliation = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskDispatch.ps1') reconcile -AsOfUtc $now -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 114,
+          "line": 112,
           "text": "$reconciliation = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskDispatch.ps1') reconcile -Apply -AsOfUtc $now -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 124,
+          "line": 122,
           "text": "$planResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiSchedulePlan.ps1') @planArguments | ConvertFrom-Json"
         },
         {
-          "line": 127,
+          "line": 125,
           "text": "$claimResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiSchedulePlan.ps1') @claimArguments | ConvertFrom-Json"
         },
         {
-          "line": 139,
+          "line": 137,
           "text": "$postAudit = & (Join-Path $PSScriptRoot 'Test-LlmWikiOrchestrationLineage.ps1') -AsOfUtc $now -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 214,
+          "line": 212,
           "text": "$cycle = Get-Content -LiteralPath $_.FullName -Raw | ConvertFrom-Json"
         },
         {
-          "line": 229,
+          "line": 226,
           "text": "$response | ConvertTo-Json -Depth 20"
         }
       ]
@@ -11491,8 +11505,8 @@
       "path": ".llm-wiki/tools/Manage-LlmWikiSchedulePlan.ps1",
       "role": "state-workflow",
       "extension": ".ps1",
-      "lines": 359,
-      "sourceSha256": "15468968a58b75607f599b61bf7266110a00724175979be947fb1aefaa124f2b",
+      "lines": 356,
+      "sourceSha256": "6ecef420a92d3cdc7436b605418681866dfad5634d373490eafd59fa8e4ec6b7",
       "parameters": [
         "Action",
         "PlanId",
@@ -11595,35 +11609,35 @@
           "text": "$currentFingerprint = [string](Get-Content -LiteralPath $descriptorPath -Raw | ConvertFrom-Json).currentPacketFingerprint"
         },
         {
-          "line": 171,
+          "line": 169,
           "text": "$schedule = & (Join-Path $PSScriptRoot 'Get-LlmWikiTaskSchedule.ps1') @scheduleArguments | ConvertFrom-Json"
         },
         {
-          "line": 173,
+          "line": 171,
           "text": "$descriptor = Get-Content -LiteralPath (Join-Path $repositoryRoot \"$($_.path)/workspace.json\") -Raw | ConvertFrom-Json"
         },
         {
-          "line": 234,
+          "line": 232,
           "text": "$dispatchResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskDispatch.ps1') @dispatchArguments | ConvertFrom-Json"
         },
         {
-          "line": 287,
+          "line": 285,
           "text": "foreach ($cycleFile in @(Get-ChildItem -LiteralPath $cycleRoot -File -Filter '*.json' -ErrorAction SilentlyContinue)) {"
         },
         {
-          "line": 289,
+          "line": 287,
           "text": "$cycle = Get-Content -LiteralPath $cycleFile.FullName -Raw | ConvertFrom-Json"
         },
         {
-          "line": 317,
+          "line": 315,
           "text": "$plan = Get-Content -LiteralPath $_.FullName -Raw | ConvertFrom-Json"
         },
         {
-          "line": 326,
+          "line": 324,
           "text": "$claim = Get-Content -LiteralPath $_.FullName -Raw | ConvertFrom-Json"
         },
         {
-          "line": 350,
+          "line": 347,
           "text": "$response | ConvertTo-Json -Depth 20"
         }
       ]
@@ -11731,8 +11745,8 @@
       "path": ".llm-wiki/tools/Manage-LlmWikiTaskDecomposition.ps1",
       "role": "state-workflow",
       "extension": ".ps1",
-      "lines": 397,
-      "sourceSha256": "3609439f485159343cf37b591784e346a67c0d5082e52061af3fa2126eced5c3",
+      "lines": 396,
+      "sourceSha256": "0aaa092dafb5bfb1c087261162bf7a5a7677bd57006b8e3de0bb029d20235acb",
       "parameters": [
         "Action",
         "WorkspacePath",
@@ -11901,7 +11915,7 @@
           "text": "$application = Get-Content -LiteralPath $_.FullName -Raw | ConvertFrom-Json"
         },
         {
-          "line": 390,
+          "line": 389,
           "text": "if ($Format -eq 'Json') { $response | ConvertTo-Json -Depth 30 }"
         }
       ]
@@ -12179,8 +12193,8 @@
       "path": ".llm-wiki/tools/Manage-LlmWikiTaskLease.ps1",
       "role": "state-workflow",
       "extension": ".ps1",
-      "lines": 150,
-      "sourceSha256": "9080cce1fe27ca05102f881ed2d28fa05b00d792c606ec882fd15b2943343afd",
+      "lines": 146,
+      "sourceSha256": "0144ab8852b2f76db0aad889e8d42263e4c7dc1d6f2357f65fee2cf531b82444",
       "parameters": [
         "Action",
         "WorkspacePath",
@@ -12227,7 +12241,7 @@
           "text": "[System.IO.File]::WriteAllText($temporaryPath, (($Registry | ConvertTo-Json -Depth 10) + [Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))"
         },
         {
-          "line": 146,
+          "line": 142,
           "text": "$result | ConvertTo-Json -Depth 8"
         }
       ]
@@ -12584,7 +12598,7 @@
       "role": "state-workflow",
       "extension": ".ps1",
       "lines": 116,
-      "sourceSha256": "bbb687f52fa88e5ea13dda1a3f7a50faa11d5fa76ed110d93c9f0296a27cf708",
+      "sourceSha256": "c78ff2dd2fc1e8a894804f89f3d697282fe9ba9765a1f4f1d02917f5026043e0",
       "parameters": [
         "Action",
         "RepositoryRoot",
@@ -13020,8 +13034,8 @@
       "path": ".llm-wiki/tools/Manage-LlmWikiWorkspaceCircuit.ps1",
       "role": "state-workflow",
       "extension": ".ps1",
-      "lines": 254,
-      "sourceSha256": "fb68081a91c6b305831ef59aa1f3b6002dca9f5b89428b0181d02c183ec41b3d",
+      "lines": 253,
+      "sourceSha256": "fc85552cb541fa09b913d258cc2231c18bba7254bbf010c3b02b917461e0f422",
       "parameters": [
         "Action",
         "WorkspacePath",
@@ -13116,7 +13130,7 @@
           "text": "[IO.File]::WriteAllText($temporaryPath, (($Receipt | ConvertTo-Json -Depth 20) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))"
         },
         {
-          "line": 246,
+          "line": 245,
           "text": "if ($Format -eq 'Json') { $response | ConvertTo-Json -Depth 20 }"
         }
       ]
@@ -14086,100 +14100,108 @@
       "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
       "role": "regression-tool",
       "extension": ".ps1",
-      "lines": 356,
-      "sourceSha256": "589ba878dd41d42ad8e598cee712da69eabd34943302e381a9cb8505d9e2a501",
+      "lines": 408,
+      "sourceSha256": "4210cd00c7fa0f9dd8b9cf7ac117aa3d6da0f374d308388be5c0fea2f355af2f",
       "parameters": [],
       "functions": [
         {
           "name": "Get-Groups",
-          "startLine": 7,
-          "endLine": 10
+          "startLine": 55,
+          "endLine": 58
         }
       ],
       "parseErrors": [],
       "operationAnchors": [
         {
-          "line": 8,
+          "line": 36,
+          "text": "$mixedCase = & $planner -ChangedPath @() -RequestedGroup @('strict-shapes', 'STRICT-SHAPES') -Plan -Format Json | ConvertFrom-Json"
+        },
+        {
+          "line": 46,
+          "text": "if (@(Get-ChildItem -LiteralPath (Join-Path $dispatchFixture '.git/llm-wiki/affected-smoke-groups') -Filter '*.json' -ErrorAction SilentlyContinue).Count -ne 0) {"
+        },
+        {
+          "line": 56,
           "text": "$plan = & $planner -ChangedPath $ChangedPath -Plan -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 78,
+          "line": 130,
           "text": "$wikiText = Get-Content (Join-Path $PSScriptRoot '../wiki.ps1') -Raw"
         },
         {
-          "line": 93,
+          "line": 145,
           "text": "$parallelRunnerText = Get-Content -LiteralPath $parallelRunner -Raw"
         },
         {
-          "line": 94,
+          "line": 146,
           "text": "$plannerText = Get-Content -LiteralPath $planner -Raw"
         },
         {
-          "line": 134,
+          "line": 186,
           "text": "$fullFocusedPlan = & $parallelRunner -AllGroups -Plan -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 162,
+          "line": 214,
           "text": "$forcedPlan = & $planner -ChangedPath @() -RequestedGroup strict-shapes -Plan -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 167,
+          "line": 219,
           "text": "$contextAlias = & $planner -ChangedPath @() -RequestedGroup context-bundle -Plan -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 173,
+          "line": 225,
           "text": "$graphAlias = & $planner @scope -RequestedGroup code-graph -Plan -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 195,
+          "line": 247,
           "text": "$legacyPlan = & $planner @scope -RequestedGroup read-only-guard -Plan -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 198,
+          "line": 250,
           "text": "$childPlan = & $planner @scope -RequestedGroup $group -Plan -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 249,
+          "line": 301,
           "text": "$arguments = Get-Content -LiteralPath $ArgumentsPath -Raw | ConvertFrom-Json"
         },
         {
-          "line": 261,
+          "line": 313,
           "text": "} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $fixtureRoot \"$group.environment.json\")"
         },
         {
-          "line": 288,
+          "line": 340,
           "text": "@(Get-ChildItem -LiteralPath $fixture -Filter '*.attempt' | ForEach-Object { [IO.File]::ReadAllText($_.FullName) })"
         },
         {
-          "line": 291,
+          "line": 343,
           "text": "@(Get-Content -LiteralPath (Join-Path $fixture 'attempts.txt'))"
         },
         {
-          "line": 293,
+          "line": 345,
           "text": "$receipts = @(Get-ChildItem -LiteralPath (Join-Path $fixture 'git-state/llm-wiki/parallel-smoke') -Filter '*.json' -ErrorAction SilentlyContinue)"
         },
         {
-          "line": 294,
+          "line": 346,
           "text": "$timingFiles = @(Get-ChildItem -LiteralPath (Join-Path $fixture '.artifacts/llm-wiki/parallel-smoke') -Filter '*.timings.json')"
         },
         {
-          "line": 296,
+          "line": 348,
           "text": "$timing = Get-Content -LiteralPath $timingFiles[0].FullName -Raw | ConvertFrom-Json"
         },
         {
-          "line": 311,
+          "line": 363,
           "text": "[IO.File]::ReadAllText($stdoutPath) -notmatch 'Expected fixture worker failure\\.' -or"
         },
         {
-          "line": 312,
+          "line": 364,
           "text": "[IO.File]::ReadAllText($stderrPath) -notmatch 'Early native stderr: причина сбоя\\.' -or"
         },
         {
-          "line": 313,
+          "line": 365,
           "text": "[IO.File]::ReadAllText($stderrPath) -notmatch 'Later stderr line 20') {"
         },
         {
-          "line": 326,
+          "line": 378,
           "text": "$workerEnvironments = @($attempts | ForEach-Object { Get-Content -LiteralPath (Join-Path $fixture \"$_.environment.json\") -Raw | ConvertFrom-Json })"
         }
       ]
@@ -16054,7 +16076,7 @@
       "role": "regression-tool",
       "extension": ".ps1",
       "lines": 69,
-      "sourceSha256": "63b110801e8a63c8f5dbd326966087276927c7baf956caec6d4e992af9418dd7",
+      "sourceSha256": "243ce9c31eec536603ade78950a64e2e10bb16fd57ebbb3e5e890db20656d47c",
       "parameters": [],
       "functions": [],
       "parseErrors": [],
@@ -16518,8 +16540,8 @@
       "path": ".llm-wiki/tools/Test-LlmWikiIndexManifest.ps1",
       "role": "regression-tool",
       "extension": ".ps1",
-      "lines": 103,
-      "sourceSha256": "845940da31d9ba468bc4084696c711c04be247be39674d455fd05cc6940e547b",
+      "lines": 109,
+      "sourceSha256": "436abd0578f24087f8a27486161fb0c04d3a6c360ccf52eea1c70411cd9295c6",
       "parameters": [],
       "functions": [],
       "parseErrors": [],
@@ -16541,31 +16563,31 @@
           "text": "$mcpManifestText = Get-Content -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Development.Mcp/Diagnostics/WikiIndexManifest.cs') -Raw"
         },
         {
-          "line": 73,
+          "line": 79,
           "text": "$status = & $writer -ReceiptKind Status | ConvertFrom-Json"
         },
         {
-          "line": 78,
+          "line": 84,
           "text": "$status = & $writer -ReceiptKind Status | ConvertFrom-Json"
         },
         {
-          "line": 81,
+          "line": 87,
           "text": "$status = & $writer -ReceiptKind Status | ConvertFrom-Json"
         },
         {
-          "line": 85,
+          "line": 91,
           "text": "$status = & $writer -ReceiptKind Status | ConvertFrom-Json"
         },
         {
-          "line": 89,
-          "text": "$status = & $writer -ReceiptKind Status | ConvertFrom-Json"
-        },
-        {
-          "line": 92,
+          "line": 95,
           "text": "$status = & $writer -ReceiptKind Status | ConvertFrom-Json"
         },
         {
           "line": 98,
+          "text": "$status = & $writer -ReceiptKind Status | ConvertFrom-Json"
+        },
+        {
+          "line": 104,
           "text": "$status = & $writer -ReceiptKind Status | ConvertFrom-Json"
         }
       ]
@@ -17209,12 +17231,28 @@
       "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
       "role": "regression-tool",
       "extension": ".ps1",
-      "lines": 414,
-      "sourceSha256": "0e82df197b653e62d8e4857137c84150a67fb746d04c1de74795d208177b663e",
+      "lines": 470,
+      "sourceSha256": "9ebcf58ffaa9dec88c569b23327d83979d3039965c2feab61792e20a5269295f",
       "parameters": [
         "Isolated"
       ],
-      "functions": [],
+      "functions": [
+        {
+          "name": "Write-ReadOnlyTiming",
+          "startLine": 39,
+          "endLine": 39
+        },
+        {
+          "name": "Remove-StaleReadOnlySnapshots",
+          "startLine": 40,
+          "endLine": 40
+        },
+        {
+          "name": "Remove-Item",
+          "startLine": 41,
+          "endLine": 53
+        }
+      ],
       "parseErrors": [],
       "operationAnchors": [
         {
@@ -17222,99 +17260,99 @@
           "text": "foreach ($name in @('Get-FileHashOrMissing', 'Get-GuardState', 'Compare-GuardState')) {"
         },
         {
-          "line": 54,
+          "line": 110,
           "text": "Get-ChildItem -LiteralPath (Join-Path $repositoryRoot '.llm-wiki') -Force |"
         },
         {
-          "line": 91,
+          "line": 147,
           "text": "$cleanSourceHash = (Get-FileHash -LiteralPath $cleanSource -Algorithm SHA256).Hash"
         },
         {
-          "line": 127,
+          "line": 183,
           "text": "if ((Get-Content -LiteralPath $dirtySentinel -Raw) -cne 'concurrent-writer-content') {"
         },
         {
-          "line": 130,
+          "line": 186,
           "text": "if ((Get-FileHash -LiteralPath $cleanSource -Algorithm SHA256).Hash -cne $cleanSourceHash) {"
         },
         {
-          "line": 152,
+          "line": 208,
           "text": "Get-Content (Join-Path (Get-Location) 'read-only-guard-worktree-smoke.tmp') -Raw"
         },
         {
-          "line": 156,
+          "line": 212,
           "text": "if ([IO.File]::ReadAllText($dirtySentinel) -cne 'concurrent-writer-content') { throw 'Dirty overlay validation changed the source worktree.' }"
         },
         {
-          "line": 172,
+          "line": 228,
           "text": "@{changeSetFresh=(-not (Test-Path $stale));searchDocuments=1;typescriptProjectionComplete=$true} | ConvertTo-Json -Compress"
         },
         {
-          "line": 177,
+          "line": 233,
           "text": "$count = if (Test-Path $marker) { [int][IO.File]::ReadAllText($marker) } else { 0 }"
         },
         {
-          "line": 196,
+          "line": 252,
           "text": "@{ root = (Get-Location).Path } | ConvertTo-Json -Compress"
         },
         {
-          "line": 201,
+          "line": 257,
           "text": "@{ root = $root; overlay = [IO.File]::ReadAllText((Join-Path $root 'CleanScope/overlay.txt')); foreignExists = (Test-Path -LiteralPath (Join-Path $root 'foreign-overlay.txt')) } | ConvertTo-Json -Compress"
         },
         {
-          "line": 259,
+          "line": 315,
           "text": "$cleanReadyFile = Get-ChildItem -LiteralPath $cleanSnapshotParent -Filter '*.ready' -File |"
         },
         {
-          "line": 268,
+          "line": 324,
           "text": "if (@(Get-ChildItem -LiteralPath $cleanSnapshotParent -Filter '*.ready' -File).Count -ne 1 -or"
         },
         {
-          "line": 274,
+          "line": 330,
           "text": "$cachedManagerLf = [IO.File]::ReadAllText($cachedManagerPath).Replace(\"`r`n\", \"`n\").Replace(\"`r\", \"`n\")"
         },
         {
-          "line": 294,
+          "line": 350,
           "text": "$probe = & (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $cleanSafeTool -ToolArguments @{ ProposedPath = @('CleanScope'); Probe = $true } | ConvertFrom-Json"
         },
         {
-          "line": 338,
+          "line": 394,
           "text": "if ([int][IO.File]::ReadAllText($privateMarker) -ne 1) { throw 'Fresh read-only projection was needlessly rebuilt.' }"
         },
         {
-          "line": 341,
+          "line": 397,
           "text": "if ([int][IO.File]::ReadAllText($privateMarker) -ne 2) { throw 'Stale read-only projection was not refreshed once.' }"
         },
         {
-          "line": 344,
+          "line": 400,
           "text": "if ([int][IO.File]::ReadAllText($privateMarker) -ne 3) { throw 'An unavailable readiness probe prevented private projection recovery.' }"
         },
         {
-          "line": 349,
+          "line": 405,
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
-          "line": 356,
+          "line": 412,
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
-          "line": 372,
+          "line": 428,
           "text": "$start = [Diagnostics.ProcessStartInfo]::new()"
         },
         {
-          "line": 381,
+          "line": 437,
           "text": "$partitionProcesses += [pscustomobject]@{ Process=$process; Output=$process.StandardOutput.ReadToEndAsync(); Error=$process.StandardError.ReadToEndAsync() }"
         },
         {
-          "line": 385,
+          "line": 441,
           "text": "if (-not $item.Process.WaitForExit(45000)) { throw 'Concurrent snapshot partition process timed out.' }"
         },
         {
-          "line": 389,
+          "line": 445,
           "text": "($output | ConvertFrom-Json).root"
         },
         {
-          "line": 397,
+          "line": 453,
           "text": "if (-not $item.Process.HasExited) { $item.Process.Kill($true) }"
         }
       ]
@@ -17508,6 +17546,58 @@
         {
           "line": 43,
           "text": "$result = & (Join-Path $PSScriptRoot 'Find-LlmWikiArchitectureHealth.ps1') -View $view -Query $query -Limit 30 -IncludeDiagnostics -Format Json | ConvertFrom-Json"
+        }
+      ]
+    },
+    {
+      "path": ".llm-wiki/tools/Test-LlmWikiSchedulerLocks.ps1",
+      "role": "regression-tool",
+      "extension": ".ps1",
+      "lines": 113,
+      "sourceSha256": "46d793f7ea73f8833381e561dc654008d123a6c5a8fc8e8eeec5b697e5f1f8aa",
+      "parameters": [],
+      "functions": [],
+      "parseErrors": [],
+      "operationAnchors": [
+        {
+          "line": 54,
+          "text": "try { $null = & $manager -Action prune -Format Json | ConvertFrom-Json }"
+        },
+        {
+          "line": 56,
+          "text": "if (-not (Test-Path -LiteralPath $lock) -or [IO.File]::ReadAllText($lock) -cne 'stable-lock-identity') {"
+        },
+        {
+          "line": 71,
+          "text": "$null = & $manager -Action prune -Format Json | ConvertFrom-Json"
+        },
+        {
+          "line": 75,
+          "text": "$start = [Diagnostics.ProcessStartInfo]::new()"
+        },
+        {
+          "line": 86,
+          "text": "$output = $child.StandardOutput.ReadToEndAsync()"
+        },
+        {
+          "line": 87,
+          "text": "$errorOutput = $child.StandardError.ReadToEndAsync()"
+        },
+        {
+          "line": 96,
+          "text": "$child.Kill()"
+        },
+        {
+          "line": 97,
+          "text": "if (-not $child.WaitForExit(5000)) { throw 'Owned lock holder did not terminate.' }"
+        },
+        {
+          "line": 100,
+          "text": "$null = & $manager -Action prune -Format Json | ConvertFrom-Json"
+        },
+        {
+          "line": 103,
+          "text": "if (-not $child.HasExited) { $child.Kill(); $null = $child.WaitForExit(5000) }"
         }
       ]
     },
@@ -17807,8 +17897,8 @@
       "path": ".llm-wiki/tools/Test-LlmWikiStageFingerprint.ps1",
       "role": "regression-tool",
       "extension": ".ps1",
-      "lines": 71,
-      "sourceSha256": "d85ca4bd98dee978b3a2a4f9b06866c65c11638124d77156694f728287d2ba44",
+      "lines": 85,
+      "sourceSha256": "bc6dc29bb87ee53acaf2a177630f1432c1b800ace43629ac62e9c579d0f224c9",
       "parameters": [
         "ToolsRoot"
       ],
@@ -18154,7 +18244,7 @@
       "role": "regression-tool",
       "extension": ".ps1",
       "lines": 5334,
-      "sourceSha256": "e56524a1a3c6c30e4a5ed041e45b40dd43f0aea91b54498f999e94fc31df465d",
+      "sourceSha256": "24aa562714b09f27092f65d16427b4a1076587424838ac3ff99ca904d6240ca8",
       "parameters": [
         "Profile",
         "AuditShard",
@@ -20706,6 +20796,10 @@
           "text": "-Format Json | ConvertFrom-Json"
         },
         {
+          "line": 4607,
+          "text": "Assert-Wiki ((Test-Path -LiteralPath $leaseLockPath) -and [IO.File]::ReadAllText($leaseLockPath) -ceq 'abandoned') 'Task lease acquisition did not recover a fresh orphan while preserving stable lock identity.'"
+        },
+        {
           "line": 4618,
           "text": "$leasedSchedule = & (Join-Path $toolsRoot 'Get-LlmWikiTaskSchedule.ps1') -MaxConcurrency 2 -Format Json | ConvertFrom-Json"
         },
@@ -21232,8 +21326,8 @@
       "path": ".llm-wiki/tools/Test-LlmWikiVerificationCache.ps1",
       "role": "regression-tool",
       "extension": ".ps1",
-      "lines": 70,
-      "sourceSha256": "0b2faca55869d32d49e7694753ad98b0b88757d2ab0f8a06c3af158b07707ee2",
+      "lines": 91,
+      "sourceSha256": "529fdf5f7dcb2efc54d131ff29c79df622a690ff1dd46711a5ee564ff5b72541",
       "parameters": [],
       "functions": [
         {
@@ -21374,14 +21468,14 @@
       "path": ".llm-wiki/tools/Test-LlmWikiWorkspacePolicyCache.ps1",
       "role": "regression-tool",
       "extension": ".ps1",
-      "lines": 89,
-      "sourceSha256": "f47f25d923af95c17c8cd0abaf1b53e7ee9427f0a1c486b90c7d7040c21d0eaf",
+      "lines": 114,
+      "sourceSha256": "0ca013e1ea74990efc571977980d668c700cc8cf7c13517e2bc4549493a0c4a8",
       "parameters": [],
       "functions": [
         {
           "name": "Assert-Rejected",
-          "startLine": 18,
-          "endLine": 22
+          "startLine": 21,
+          "endLine": 25
         }
       ],
       "parseErrors": [],
@@ -21391,35 +21485,47 @@
           "text": "$original = [IO.File]::ReadAllText((Join-Path $PSScriptRoot '../policies/workspace-policies.json'))"
         },
         {
-          "line": 26,
+          "line": 18,
+          "text": "$changePolicyOriginal = [IO.File]::ReadAllText((Join-Path $PSScriptRoot '../policies/change-policies.json'))"
+        },
+        {
+          "line": 29,
           "text": "$validation = & $tool validate -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 27,
+          "line": 30,
           "text": "if (-not $validation.valid -or ($snapshot | ConvertFrom-Json).fingerprint -cne $validation.fingerprint) {"
         },
         {
-          "line": 51,
+          "line": 36,
+          "text": "$coveredChecks = @(($original | ConvertFrom-Json).scheduler.verificationPlanner.supersedes.PSObject.Properties)"
+        },
+        {
+          "line": 44,
+          "text": "if ((& $tool validate -Format Json | ConvertFrom-Json).valid) { throw 'Full validation missed the changed referenced check ID.' }"
+        },
+        {
+          "line": 76,
           "text": "if ((& $tool validate -Format Json | ConvertFrom-Json).valid) { throw 'Full validation accepted invalid policy.' }"
         },
         {
-          "line": 63,
+          "line": 88,
           "text": "$changedPolicy = $original | ConvertFrom-Json"
         },
         {
-          "line": 65,
+          "line": 90,
           "text": "[IO.File]::WriteAllText($policyPath, ($changedPolicy | ConvertTo-Json -Depth 30))"
         },
         {
-          "line": 66,
+          "line": 91,
           "text": "$changedSnapshot = & $tool get -WithFingerprint -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 67,
+          "line": 92,
           "text": "$changedValidation = & $tool validate -Format Json | ConvertFrom-Json"
         },
         {
-          "line": 77,
+          "line": 102,
           "text": "$source = [IO.File]::ReadAllText($tool)"
         }
       ]
@@ -21733,7 +21839,7 @@
       "role": "query-or-orchestration",
       "extension": ".ps1",
       "lines": 137,
-      "sourceSha256": "8110fcc922c7fd52f5c40d50570cd038ff0340ff57ef010d1ed7c186ba072674",
+      "sourceSha256": "1efba4f711d5f182c0e8a33180521f14d528dce2ebf8124406b6f37cba304769",
       "parameters": [
         "ReceiptKind",
         "CompletedFullVerification"
@@ -21741,55 +21847,55 @@
       "functions": [
         {
           "name": "Add-Text",
-          "startLine": 23,
-          "endLine": 25
+          "startLine": 27,
+          "endLine": 29
         },
         {
           "name": "Get-GitBlobHashes",
-          "startLine": 28,
-          "endLine": 58
+          "startLine": 32,
+          "endLine": 62
         }
       ],
       "parseErrors": [],
       "operationAnchors": [
         {
-          "line": 15,
+          "line": 19,
           "text": "try { $indexManifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json }"
         },
         {
-          "line": 30,
+          "line": 34,
           "text": "# stable, but that ProcessStartInfo property exists only on .NET 5+ (PowerShell 7+);"
         },
         {
-          "line": 34,
+          "line": 38,
           "text": "# so Unix Start-Process redirection cannot append an extra empty path record."
         },
         {
-          "line": 40,
+          "line": 44,
           "text": "$process = Start-Process -FilePath 'git' -ArgumentList 'hash-object', '--stdin-paths' `"
         },
         {
-          "line": 45,
+          "line": 49,
           "text": "# Get-Content -Raw on a genuinely empty file emits no pipeline output at all on"
         },
         {
-          "line": 49,
+          "line": 53,
           "text": "# -Encoding UTF8 matches the BOM-free UTF-8 git wrote, instead of Get-Content's"
         },
         {
-          "line": 51,
+          "line": 55,
           "text": "$errorOutput = (Get-Content -LiteralPath $stderrPath -Raw -Encoding UTF8 -ErrorAction SilentlyContinue) -join ''"
         },
         {
-          "line": 54,
+          "line": 58,
           "text": "return @(Get-Content -LiteralPath $stdoutPath -Encoding UTF8 | Where-Object { $_ })"
         },
         {
-          "line": 97,
+          "line": 101,
           "text": "try { Get-Content -LiteralPath $path -Raw | ConvertFrom-Json } catch { $null }"
         },
         {
-          "line": 106,
+          "line": 110,
           "text": "$states | ConvertTo-Json -Depth 4"
         },
         {

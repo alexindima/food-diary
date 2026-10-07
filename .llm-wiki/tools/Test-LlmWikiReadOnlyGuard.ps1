@@ -12,6 +12,62 @@ foreach ($name in @('Get-FileHashOrMissing', 'Get-GuardState', 'Compare-GuardSta
     if ($null -eq $definition) { throw "Missing guard helper: $name" }
     Invoke-Expression $definition.Extent.Text
 }
+# Probe a second real file lease at both removal boundaries in the actual outer
+# cleanup block. A fault also verifies that cleanup cannot strand the slot lock.
+$cleanupTry = $guardAst.Find({ param($node)
+    $node -is [Management.Automation.Language.TryStatementAst] -and $node.Finally -and
+        $node.Finally.Extent.Text.Contains('if ($snapshotLock)')
+}, $true)
+if (-not $cleanupTry) { throw 'Read-only snapshot cleanup block was not found.' }
+$cleanupText = $cleanupTry.Finally.Extent.Text
+$cleanupBlock = [scriptblock]::Create($cleanupText.Substring(1, $cleanupText.Length - 2))
+$leaseFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'snapshot-cleanup-lease'
+try {
+    foreach ($injectFailure in @($false, $true)) {
+        & {
+            $snapshotRoot = Join-Path $leaseFixture 'snapshot'
+            $null = New-Item -ItemType Directory -Path (Join-Path $snapshotRoot '.git') -Force
+            $readyPath = Join-Path $leaseFixture 'slot.ready'
+            $snapshotLockPath = Join-Path $leaseFixture 'slot.lock'
+            [IO.File]::WriteAllText($readyPath, 'contaminated')
+            $sourceRepositoryRoot = $leaseFixture; $snapshotParent = $leaseFixture; $snapshotFingerprint = 'owned-probe'
+            $previousSnapshotRoot = $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT
+            $previousSourceRoot = $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT
+            $removeSnapshot = $true
+            $probeState = [pscustomobject]@{ checks = 0; available = $false }
+            $snapshotLock = [IO.File]::Open($snapshotLockPath, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+            function Write-ReadOnlyTiming { param($Stage) }
+            function Remove-StaleReadOnlySnapshots { param($RepositoryRoot, $SnapshotParent, $CurrentFingerprint) }
+            function Remove-Item {
+                param([string]$LiteralPath, [switch]$Force, [switch]$Recurse, [object]$ErrorAction)
+                if ($LiteralPath -in @($readyPath, $snapshotRoot)) {
+                    $probeState.checks++
+                    try {
+                        $peerLease = [IO.File]::Open($snapshotLockPath, [IO.FileMode]::Open, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+                        $probeState.available = $true
+                        $peerLease.Dispose()
+                    } catch [IO.IOException] { }
+                }
+                if ($injectFailure -and $LiteralPath -ceq $snapshotRoot) { throw 'Injected snapshot cleanup failure.' }
+                Microsoft.PowerShell.Management\Remove-Item @PSBoundParameters
+            }
+            try {
+                $cleanupFailure = $null
+                try { & $cleanupBlock } catch { $cleanupFailure = $_.Exception.Message }
+                if ($probeState.checks -ne 2 -or $probeState.available) { throw 'Snapshot lease became available while contaminated artifacts were being removed.' }
+                if ($injectFailure -and $cleanupFailure -cne 'Injected snapshot cleanup failure.') { throw 'Snapshot cleanup fault was lost.' }
+                if (-not $injectFailure -and $cleanupFailure) { throw $cleanupFailure }
+                $peerLease = [IO.File]::Open($snapshotLockPath, [IO.FileMode]::Open, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+                $peerLease.Dispose()
+            } finally { $snapshotLock.Dispose() }
+        }
+    }
+} finally {
+    $leaseRoot = [IO.Path]::GetFullPath($leaseFixture)
+    $leaseParent = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot)).TrimEnd('\', '/')
+    if ([IO.Path]::GetDirectoryName($leaseRoot) -cne $leaseParent -or [IO.Path]::GetFileName($leaseRoot) -notmatch '^snapshot-cleanup-lease-[a-f0-9]{32}$') { throw 'Unsafe snapshot lease fixture cleanup.' }
+    Remove-Item -LiteralPath $leaseRoot -Recurse -Force
+}
 $statusFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'guard-status-paths'
 try {
     & git -C $statusFixture init --quiet

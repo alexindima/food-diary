@@ -29,14 +29,14 @@ function Get-FileSha256([string]$Path) {
     finally { $sha.Dispose(); $stream.Dispose() }
 }
 
-function ConvertTo-RepositoryPath([string]$Path) { return $Path.Trim().Replace('\', '/') }
+function ConvertTo-RepositoryPath([string]$Path) { return ConvertTo-LlmWikiRepositoryPath $Path }
 
 $head = (Invoke-Git @('rev-parse', 'HEAD') | Select-Object -First 1)
 $requestedBaseRef = $BaseRef
 $resolvedBase = Resolve-LlmWikiCommitRef -RepositoryRoot $RepositoryRoot -Ref $BaseRef
 $workspacePaths = @(
-    Invoke-Git @('diff', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--')
-    Invoke-Git @('ls-files', '--others', '--exclude-standard')
+    Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments @('diff', '--name-only', '--no-renames', '--diff-filter=ACMRD', 'HEAD', '--') -FailureMessage 'Unable to collect verification-cache changed paths.'
+    Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'Unable to collect verification-cache untracked paths.'
 ) | Where-Object { $_ } | ForEach-Object { ConvertTo-RepositoryPath $_ } | Sort-Object -Unique
 $workspaceMetadata = @(Invoke-Git @('diff', '--raw', 'HEAD', '--'))
 $workspaceEntries = @($workspacePaths | ForEach-Object {

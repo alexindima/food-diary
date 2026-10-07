@@ -47,17 +47,21 @@ $catalogPath = Join-Path $wikiRoot 'policies/affected-smoke-catalog.psd1'
 $smokeCatalog = Import-PowerShellDataFile -LiteralPath $catalogPath
 if ([int]$smokeCatalog.SchemaVersion -ne 1) { throw "Unsupported affected-smoke catalog schema: $($smokeCatalog.SchemaVersion)." }
 $catalogGroups = @($smokeCatalog.Groups)
+foreach ($name in $forcedGroups) {
+    if (@($catalogGroups | Where-Object Id -eq $name).Count -ne 1) { throw "Unknown requested smoke group: $name" }
+}
 
 function Expand-SmokeGroups([string[]]$Names) {
     foreach ($name in $Names) {
         $entry = @($catalogGroups | Where-Object Id -eq $name)
-        if ($entry.Count -eq 1 -and $entry[0].ContainsKey('ExpandTo')) {
+        if ($entry.Count -ne 1) { throw "Unknown or ambiguous smoke group: $name" }
+        if ($entry[0].ContainsKey('ExpandTo')) {
             foreach ($child in $entry[0].ExpandTo) {
                 $target = @($catalogGroups | Where-Object Id -eq $child)
                 if ($target.Count -ne 1 -or $target[0].ContainsKey('ExpandTo')) { throw "Invalid smoke alias target: $name -> $child" }
-                [string]$child
+                [string]$target[0].Id
             }
-        } else { $name }
+        } else { [string]$entry[0].Id }
     }
 }
 
@@ -170,6 +174,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             Write-Host "Dependency analysis smoke passed: $($rootResult.changeCount) current change(s), cwd-independent."
         }
         'facade-contract' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiSchedulerLocks.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiDispatchMetricsReuse.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiFullAuditShards.ps1')
@@ -420,6 +426,7 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
                 -ToolArguments @{ Profile = 'Full' }
             if (-not $?) { exit 1 }
         }
+        default { throw "No execution handler for smoke group: $group" }
     }
     $stopwatch.Stop()
     $durationSeconds = [Math]::Round($stopwatch.Elapsed.TotalSeconds, 2)

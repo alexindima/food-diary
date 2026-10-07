@@ -27,6 +27,27 @@ try {
     & git -C $fixtureRoot -c user.name='LLM Wiki' -c user.email='llm-wiki@example.invalid' commit --quiet -m baseline
     if ($LASTEXITCODE -ne 0) { throw 'Unable to initialize verification-cache fixture.' }
 
+    $unicodeStem = -join @([char]0x0444, [char]0x0430, [char]0x0439, [char]0x043B)
+    foreach ($tracked in @($true, $false)) {
+        $unicodeName = " $unicodeStem $(if ($tracked) { 'tracked' } else { 'untracked' }).txt"
+        $unicodePath = Join-Path $fixtureRoot $unicodeName
+        [IO.File]::WriteAllText($unicodePath, 'first')
+        if ($tracked) {
+            & git -C $fixtureRoot add -- $unicodeName
+            & git -C $fixtureRoot -c user.name='LLM Wiki' -c user.email='llm-wiki@example.invalid' commit --quiet -m unicode-baseline
+            if ($LASTEXITCODE -ne 0) { throw 'Unable to commit the Unicode cache fixture.' }
+            [IO.File]::WriteAllText($unicodePath, 'dirty')
+        }
+        $unicodeArguments = @{ RepositoryRoot = $fixtureRoot; BaseRef = 'HEAD'; ChangedPath = @($unicodeName); Mode = 'default' }
+        $recordedUnicode = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') -Action Record @unicodeArguments
+        $unicodeTime = [IO.File]::GetLastWriteTimeUtc($unicodePath)
+        [IO.File]::WriteAllText($unicodePath, 'other')
+        [IO.File]::SetLastWriteTimeUtc($unicodePath, $unicodeTime)
+        $unicodeMiss = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') -Action Check @unicodeArguments
+        Assert-Cache (-not $unicodeMiss.hit -and $unicodeMiss.fingerprint -cne $recordedUnicode.fingerprint) "Verification cache ignored same-size Unicode content (tracked=$tracked)."
+        if ($tracked) { & git -C $fixtureRoot checkout -- $unicodeName } else { Remove-Item -LiteralPath $unicodePath -Force }
+    }
+
     $arguments = @{ RepositoryRoot = $fixtureRoot; BaseRef = 'HEAD'; ChangedPath = @('source.txt'); Mode = 'default' }
     $miss = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') -Action Check @arguments
     Assert-Cache (-not $miss.hit) 'Verification cache reported a hit before a receipt existed.'

@@ -6,6 +6,10 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+if ($ReceiptKind -eq 'Verification' -and -not $CompletedFullVerification) {
+    Write-Host 'Selected verification passed; full verification status is unchanged. Run wiki.ps1 verify-full for the full gate.'
+    return
+}
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $manifestPath = Join-Path $repositoryRoot '.llm-wiki/policies/query-indexes.json'
@@ -107,10 +111,6 @@ if ($ReceiptKind -eq 'Status') {
     return
 }
 if ($ReceiptKind -eq 'Verification') {
-    if (-not $CompletedFullVerification) {
-        Write-Host 'Selected verification passed; full verification status is unchanged. Run wiki.ps1 verify-full for the full gate.'
-        return
-    }
     $generationReceipt = if (Test-Path -LiteralPath $generationReceiptPath -PathType Leaf) {
         try { Get-Content -LiteralPath $generationReceiptPath -Raw | ConvertFrom-Json } catch { $null }
     } else { $null }

@@ -338,6 +338,155 @@
         "pipeline-cache-final.log",
         "pipeline-cache-ps5.log"
       ]
+    },
+    {
+      "id": "WTA-017",
+      "kind": "defect",
+      "severity": "warning",
+      "status": "fixed-focused-verified",
+      "location": {
+        "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+        "startLine": 51,
+        "endLine": 51
+      },
+      "trigger": "An unregistered requested group or a catalog group without an execution handler reaches affected smoke.",
+      "consequence": "Unknown execute returned success in 0 seconds and published a success receipt without running tests. Case variants can duplicate canonical group identity.",
+      "testGap": "Existing scheduler tests covered known catalog groups, but not rejected requested IDs or missing dispatch handlers.",
+      "remediation": "Validate unique requested/catalog identities, canonicalize aliases and throw from the default dispatch handler.",
+      "evidence": [
+        "smoke-unknown-before.log",
+        "smoke-dispatch-before.log",
+        "smoke-dispatch-after.log"
+      ]
+    },
+    {
+      "id": "WTA-018",
+      "kind": "defect",
+      "severity": "warning",
+      "status": "fixed-focused-verified",
+      "location": {
+        "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+        "startLine": 552,
+        "endLine": 552
+      },
+      "trigger": "A rejected mutating read-only command discards its contaminated snapshot while another reader waits for the same slot.",
+      "consequence": "The slot lease was released before removal, allowing a new reader to race with deletion of the checkout it acquired.",
+      "testGap": "Previous corruption recovery and stable-lock tests did not probe exclusivity at the contaminated removal boundaries.",
+      "remediation": "Remove contaminated ready marker and checkout while holding the lease, then release it in finally even when cleanup throws.",
+      "evidence": [
+        "read-only-lease-before.log",
+        "read-only-cleanup-before.log",
+        "read-only-cleanup-after.log",
+        "read-only-lease-ps5.log"
+      ]
+    },
+    {
+      "id": "WTA-019",
+      "kind": "defect",
+      "severity": "warning",
+      "status": "fixed-focused-verified",
+      "location": {
+        "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1",
+        "startLine": 38,
+        "endLine": 38
+      },
+      "trigger": "A tracked or untracked Unicode file is already dirty, then content changes with equal size and preserved timestamp.",
+      "consequence": "Quoted line-based Git paths were hashed as missing files, leaving the verify-fast fingerprint unchanged and reusing stale success. Trim also changes legitimate leading-space identities.",
+      "testGap": "The cache tests only edited ASCII paths.",
+      "remediation": "Use the existing NUL-safe Git path inventory, disable rename collapsing for changed paths and preserve exact whitespace in path normalization.",
+      "evidence": [
+        "fast-cache-before.log",
+        "fast-cache-after.log"
+      ]
+    },
+    {
+      "id": "WTA-020",
+      "kind": "performance-and-reliability",
+      "severity": "warning",
+      "status": "fixed-focused-verified",
+      "location": {
+        "path": ".llm-wiki/tools/Write-LlmWikiIndexVerificationReceipt.ps1",
+        "startLine": 9,
+        "endLine": 9
+      },
+      "trigger": "Ordinary scoped verification calls the publication writer without CompletedFullVerification.",
+      "consequence": "It hashes the full repository and every generated index before reporting that the full status is unchanged; it also fails on irrelevant missing full-gate inputs.",
+      "testGap": "Tests distinguished publication states but did not prove the scoped no-op avoids full-gate I/O.",
+      "remediation": "Return immediately for the explicitly scoped no-op, before manifest/source/index reads; retain Generation, Status and completed full Verification behavior.",
+      "evidence": [
+        "partial-receipt-before.log",
+        "partial-receipt-after.log",
+        "partial-receipt-ps5.log",
+        "partial-receipt-before-timing.json",
+        "partial-receipt-after-timing.json"
+      ]
+    },
+    {
+      "id": "WTA-021",
+      "kind": "defect",
+      "severity": "warning",
+      "status": "fixed-focused-verified",
+      "location": {
+        "path": ".llm-wiki/tools/Manage-LlmWikiTaskLease.ps1",
+        "startLine": 77,
+        "endLine": 77
+      },
+      "trigger": "A scheduler writer terminates while its lock file remains, or a long-lived lock reaches age-based reclamation.",
+      "consequence": "Fresh ownerless files reject mutations for five to ten minutes; age is not live ownership. Stable-file deletion also risks changing the coordination identity on platforms that permit unlinking a held file.",
+      "testGap": "Registry/lifecycle checks did not terminate an actual lock holder or exercise fresh orphan and old live leases.",
+      "remediation": "All seven scheduler managers use persistent OpenOrCreate exclusive OS leases, dispose only the handle and retain the coordination file. Add real manager/child lease tests to the bounded catalog and bind their source inputs to group receipts.",
+      "evidence": [
+        "scheduler-lock-before.log",
+        "scheduler-lock-after.log",
+        "scheduler-lock-ps5.log",
+        "scheduler-lock-planning.log",
+        "scheduler-orchestration-final.log",
+        "scheduler-assertion-inventory-review.json",
+        "scheduler-assertion-inventory-after.log"
+      ]
+    },
+    {
+      "id": "WTA-022",
+      "kind": "defect",
+      "severity": "warning",
+      "status": "fixed-focused-verified",
+      "location": {
+        "path": ".llm-wiki/tools/Get-LlmWikiWorkspacePolicy.ps1",
+        "startLine": 26,
+        "endLine": 26
+      },
+      "trigger": "Referenced check IDs change in change-policies.json while workspace-policies.json and validator text remain unchanged.",
+      "consequence": "The validated JSON cache continues accepting a policy rejected by full validation; the workspace-policy stage also reuses its passed receipt because the dependency was absent from its fingerprint.",
+      "testGap": "Policy cache tests changed only its primary policy/validator and the fixture omitted referenced definitions.",
+      "remediation": "Bind dependency text and presence to the immutable cache entry, parse that captured input on a miss, and include the same dependency in workspace-policy stage fingerprints. Test equal-size/time edits, mode parity, missing-to-created, empty/malformed content and restoration.",
+      "evidence": [
+        "policy-dependency-before.log",
+        "policy-dependency-after.log",
+        "policy-dependency-ps5.log",
+        "policy-stage-before.log",
+        "policy-stage-after.log"
+      ]
+    },
+    {
+      "id": "WTA-023",
+      "kind": "defect",
+      "severity": "warning",
+      "status": "fixed-focused-verified",
+      "location": {
+        "path": ".llm-wiki/tools/Manage-LlmWikiSchedulePlan.ps1",
+        "startLine": 309,
+        "endLine": 310
+      },
+      "trigger": "A facade/runner invokes prune on a fresh scheduler under StrictMode.",
+      "consequence": "Schedule plan, orchestration cycle and watchdog response construction reads BaseName directly from an empty collection and throws instead of returning a valid empty result.",
+      "testGap": "Standalone new lease tests initially inherited permissive mode; the real bounded gate exposed the strict caller context.",
+      "remediation": "Enumerate candidate names through the pipeline and explicitly enable StrictMode in the real seven-manager lease fixture. Preserve the full legacy lease test with a fresh orphan/stable-file assertion matching the new lifecycle contract.",
+      "evidence": [
+        "scheduler-verify-before-strict.log",
+        "scheduler-lock-strict.log",
+        "scheduler-lock-strict-ps5.log",
+        "scheduler-orchestration-before-contract.log"
+      ]
     }
   ]
 }

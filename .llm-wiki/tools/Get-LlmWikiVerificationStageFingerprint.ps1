@@ -26,7 +26,7 @@ function Test-RelevantPath([string]$Path) {
     if ($graphSensitive) { return -not $normalized.StartsWith('.llm-wiki/reviews/') }
     $smokeInfrastructure = '^\.llm-wiki/tools/(?:Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiParallelSmoke|Get-LlmWikiVerificationStageFingerprint)\.ps1$'
     switch ($Stage) {
-        'workspace policy' { return $normalized -match '(^|/)AGENTS\.md$|^\.llm-wiki/(policies/workspace|tools/Get-LlmWikiWorkspacePolicy)' }
+        'workspace policy' { return $normalized -match '(^|/)AGENTS\.md$|^\.llm-wiki/(policies/(?:workspace|change-policies\.json)|tools/Get-LlmWikiWorkspacePolicy)' }
         'page contracts' { return $normalized -match '^\.llm-wiki/(?!generated/|reviews/).+\.(md|json|ps1)$' }
         'lint regression' { return $normalized -match '^\.llm-wiki/(?!generated/|reviews/)' }
         'indexes' { return $normalized -notmatch '^\.llm-wiki/reviews/' }
@@ -52,7 +52,7 @@ function Test-RelevantPath([string]$Path) {
         'affected smoke:verification-receipts' { return $normalized -match $smokeInfrastructure -or $normalized -match '^\.llm-wiki/tools/(?:LlmWikiVerificationReceipts|Manage-LlmWikiVerificationReceipts|Import-LlmWikiEvidenceReceipts|Test-LlmWikiVerificationReceipts)\.ps1$' }
         'affected smoke:task-scope' { return $normalized -match '^\.llm-wiki/tools/(?:Initialize-LlmWikiTaskWorkspace|Manage-LlmWikiTaskContract|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiPlanConformance|Test-LlmWikiTaskScope|Test-LlmWikiTaskWorkspace|Update-LlmWikiTaskWorkspace|Manage-LlmWikiTaskJournal|Compare-LlmWikiTaskPolicy|Invoke-LlmWikiAffectedSmoke|Get-LlmWikiVerificationStageFingerprint)\.ps1$' }
         'affected smoke:git-paths' { return $normalized -match '^\.llm-wiki/tools/(?:LlmWikiGitPaths|Test-LlmWikiGitPaths|Invoke-LlmWikiAffectedSmoke|Get-LlmWikiVerificationStageFingerprint)\.ps1$' }
-        'affected smoke:facade-contract' { return $normalized -match '^\.llm-wiki/wiki\.ps1$' -or $normalized -match $smokeInfrastructure -or $normalized -match '^\.llm-wiki/tools/(?:Invoke-LlmWikiObservedStage|Test-LlmWikiAffectedSmokePlanning|Test-LlmWikiStrictAffected|Test-LlmWikiFormattingReady)\.ps1$' }
+        'affected smoke:facade-contract' { return $normalized -match '^\.llm-wiki/wiki\.ps1$' -or $normalized -match $smokeInfrastructure -or $normalized -match '^\.llm-wiki/tools/(?:Invoke-LlmWikiObservedStage|Test-LlmWikiAffectedSmokePlanning|Test-LlmWikiStrictAffected|Test-LlmWikiFormattingReady)\.ps1$' -or $normalized -match '^\.llm-wiki/tools/(Manage-LlmWiki(?:AgentRegistry|TaskLease|SchedulePlan|OrchestrationCycle|DispatchWatchdog|WorkspaceCircuit|TaskDecomposition)|Test-LlmWikiSchedulerLocks)\.ps1$' }
         'affected smoke:read-only-guard' { return $normalized -match $smokeInfrastructure -or $normalized -match '^\.llm-wiki/tools/(?:Invoke-LlmWikiReadOnlyTool|LlmWikiGitPaths|LlmWikiChangeSetSnapshot|Test-LlmWikiReadOnlyOverlayPaths|Find-LlmWikiIntentOwnership|Test-LlmWikiIntentOwnership|Test-LlmWikiReadOnlyGuard|Test-LlmWikiReadOnlyRetrievalContracts)\.ps1$' }
         'affected smoke:tool-contract' { return $normalized -match $smokeInfrastructure -or $normalized -match '^\.llm-wiki/tools/Test-LlmWikiChangedTools\.ps1$' }
         'affected smoke:test-only-governance' { return $normalized -match '^\.llm-wiki/tools/(?:Manage-LlmWikiChangeManifest|Manage-LlmWikiAcceptanceMatrix|Test-LlmWikiTestOnlyGovernance|Invoke-LlmWikiAffectedSmoke|Get-LlmWikiVerificationStageFingerprint)\.ps1$' }

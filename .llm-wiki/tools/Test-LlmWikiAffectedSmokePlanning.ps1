@@ -4,10 +4,62 @@ param()
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $planner = Join-Path $PSScriptRoot 'Invoke-LlmWikiAffectedSmoke.ps1'
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$dispatchFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) -Name 'smoke-dispatch'
+try {
+    $dispatchTools = Join-Path $dispatchFixture '.llm-wiki/tools'
+    $dispatchPolicy = Join-Path $dispatchFixture '.llm-wiki/policies'
+    $null = New-Item -ItemType Directory -Path $dispatchTools, $dispatchPolicy -Force
+    foreach ($name in @('Invoke-LlmWikiAffectedSmoke.ps1', 'LlmWikiGitPaths.ps1', 'Get-LlmWikiVerificationStageFingerprint.ps1')) {
+        Copy-Item -LiteralPath (Join-Path $PSScriptRoot $name) -Destination $dispatchTools
+    }
+    $dispatchCatalog = Join-Path $dispatchPolicy 'affected-smoke-catalog.psd1'
+    Copy-Item -LiteralPath (Join-Path $PSScriptRoot '../policies/affected-smoke-catalog.psd1') -Destination $dispatchCatalog
+    & git -C $dispatchFixture init --quiet
+    & git -C $dispatchFixture add .
+    & git -C $dispatchFixture -c user.name='Wiki Tests' -c user.email='wiki@example.invalid' commit --quiet -m fixture
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to initialize the smoke dispatch fixture.' }
+    $dispatchShell = (Get-Process -Id $PID).Path
+    $fixturePlanner = Join-Path $dispatchTools 'Invoke-LlmWikiAffectedSmoke.ps1'
+    foreach ($case in @('execute', 'plan', 'product-plan')) {
+        $caseArguments = @('-NoLogo', '-NoProfile', '-File', $fixturePlanner, '-RequestedGroup', 'unregistered-group', '-NoCache')
+        if ($case -ne 'execute') { $caseArguments += @('-Plan', '-Format', 'Json') }
+        if ($case -eq 'product-plan') { $caseArguments += @('-ChangedPath', 'Modules/Users/Domain/Example.cs') }
+        $caseOutput = & $dispatchShell @caseArguments 2>&1 | Out-String
+        if ($LASTEXITCODE -eq 0 -or $caseOutput -notmatch 'Unknown requested smoke group') {
+            throw "Unknown smoke group was accepted in '$case': $caseOutput"
+        }
+    }
+    if (Test-Path -LiteralPath (Join-Path $dispatchFixture '.git/llm-wiki/affected-smoke-groups')) {
+        throw 'Rejected smoke groups reached receipt publication.'
+    }
+    $mixedCase = & $planner -ChangedPath @() -RequestedGroup @('strict-shapes', 'STRICT-SHAPES') -Plan -Format Json | ConvertFrom-Json
+    if (@($mixedCase.groups).Count -ne 1 -or $mixedCase.groups[0] -cne 'strict-shapes') { throw 'Requested smoke groups lost canonical identity.' }
+    [IO.File]::WriteAllText($dispatchCatalog, '@{ SchemaVersion = 1; Groups = @(@{Id="unsupported-handler";Patterns=@();GraphDependent=$false}); AdditionalMatches=@(); Suppressions=@() }')
+    & git -C $dispatchFixture add .
+    & git -C $dispatchFixture -c user.name='Wiki Tests' -c user.email='wiki@example.invalid' commit --quiet -m unsupported-handler
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to prepare the unsupported smoke handler fixture.' }
+    $unsupportedOutput = & $dispatchShell -NoLogo -NoProfile -File $fixturePlanner -RequestedGroup unsupported-handler -NoCache 2>&1 | Out-String
+    if ($LASTEXITCODE -eq 0 -or $unsupportedOutput -notmatch 'No execution handler for smoke group') {
+        throw "A catalog group without an execution handler published success: $unsupportedOutput"
+    }
+    if (@(Get-ChildItem -LiteralPath (Join-Path $dispatchFixture '.git/llm-wiki/affected-smoke-groups') -Filter '*.json' -ErrorAction SilentlyContinue).Count -ne 0) {
+        throw 'An unsupported smoke handler published a receipt.'
+    }
+} finally {
+    $dispatchRoot = [IO.Path]::GetFullPath($dispatchFixture)
+    $dispatchParent = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot -RepositoryRoot (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)))).TrimEnd('\', '/')
+    if ([IO.Path]::GetDirectoryName($dispatchRoot) -cne $dispatchParent -or [IO.Path]::GetFileName($dispatchRoot) -notmatch '^smoke-dispatch-[a-f0-9]{32}$') { throw 'Unsafe smoke dispatch fixture cleanup.' }
+    Remove-Item -LiteralPath $dispatchRoot -Recurse -Force
+}
 function Get-Groups([string[]]$ChangedPath) {
     $plan = & $planner -ChangedPath $ChangedPath -Plan -Format Json | ConvertFrom-Json
     @($plan.groups)
 }
+foreach ($name in @('AgentRegistry', 'TaskLease', 'SchedulePlan', 'OrchestrationCycle', 'DispatchWatchdog', 'WorkspaceCircuit', 'TaskDecomposition')) {
+    if (@(Get-Groups ".llm-wiki/tools/Manage-LlmWiki$name.ps1") -notcontains 'facade-contract') { throw "Scheduler manager '$name' omitted its lock regression." }
+}
+if (@(Get-Groups '.llm-wiki/tools/Test-LlmWikiSchedulerLocks.ps1') -notcontains 'facade-contract') { throw 'Scheduler lock regression does not select its owning group.' }
 
 $unknownGroups = @(Get-Groups '.llm-wiki/tools/Manage-LlmWikiFutureFeature.ps1')
 if ($unknownGroups -notcontains 'tool-contract' -or $unknownGroups -contains 'full-tools') {

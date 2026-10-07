@@ -14,6 +14,9 @@ try {
     $policyPath = Join-Path $fixturePolicies 'workspace-policies.json'
     $original = [IO.File]::ReadAllText((Join-Path $PSScriptRoot '../policies/workspace-policies.json'))
     [IO.File]::WriteAllText($policyPath, $original)
+    $changePolicyPath = Join-Path $fixturePolicies 'change-policies.json'
+    $changePolicyOriginal = [IO.File]::ReadAllText((Join-Path $PSScriptRoot '../policies/change-policies.json'))
+    [IO.File]::WriteAllText($changePolicyPath, $changePolicyOriginal)
 
     function Assert-Rejected([scriptblock]$Action, [string]$Name) {
         $rejected = $false
@@ -30,6 +33,28 @@ try {
     if ((& $tool get -Format Json) -cne $baseline -or (& $tool get -WithFingerprint -Format Json) -cne $snapshot) {
         throw 'Policy cache changed serialized output across modes.'
     }
+    $coveredChecks = @(($original | ConvertFrom-Json).scheduler.verificationPlanner.supersedes.PSObject.Properties)
+    $coveredCheck = [string]$coveredChecks[0].Name
+    $invalidCoveredCheck = $coveredCheck.Substring(0, $coveredCheck.Length - 1) + 'x'
+    $changedDefinitions = $changePolicyOriginal.Replace(('"' + $coveredCheck + '"'), ('"' + $invalidCoveredCheck + '"'))
+    if ($changedDefinitions -ceq $changePolicyOriginal -or $changedDefinitions.Length -ne $changePolicyOriginal.Length) { throw 'Referenced check definition fixture was not constructed.' }
+    $definitionTime = [IO.File]::GetLastWriteTimeUtc($changePolicyPath)
+    [IO.File]::WriteAllText($changePolicyPath, $changedDefinitions)
+    [IO.File]::SetLastWriteTimeUtc($changePolicyPath, $definitionTime)
+    if ((& $tool validate -Format Json | ConvertFrom-Json).valid) { throw 'Full validation missed the changed referenced check ID.' }
+    Assert-Rejected { & $tool get -Format Json } 'a changed referenced check definition with equal size/time'
+    Assert-Rejected { & $tool get -WithFingerprint -Format Json } 'a changed referenced check definition in snapshot mode'
+    [IO.File]::WriteAllText($changePolicyPath, $changePolicyOriginal)
+    if ((& $tool get -Format Json) -cne $baseline) { throw 'Referenced check restoration did not recover valid policy.' }
+    Remove-Item -LiteralPath $changePolicyPath -Force
+    if ((& $tool get -Format Json) -cne $baseline) { throw 'Optional dependency absence did not recover valid policy.' }
+    [IO.File]::WriteAllText($changePolicyPath, $changedDefinitions)
+    Assert-Rejected { & $tool get -Format Json } 'a newly created invalid referenced check definition'
+    [IO.File]::WriteAllText($changePolicyPath, '')
+    Assert-Rejected { & $tool get -Format Json } 'an empty referenced check definition'
+    [IO.File]::WriteAllText($changePolicyPath, '{broken')
+    Assert-Rejected { & $tool get -Format Json } 'a malformed referenced check definition'
+    [IO.File]::WriteAllText($changePolicyPath, $changePolicyOriginal)
     $mutable = & $tool get
     $mutable.workspace.latestSchemaVersion = 0
     if ((& $tool get -Format Json) -cne $baseline) { throw 'Caller mutation contaminated cached policy.' }
