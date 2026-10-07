@@ -974,12 +974,16 @@
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
           "sha256": "9857f933991cdb2a049308c09f38f2e0c2eb2f0c898943ef317fb3c4437ac543"
+        },
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "53e108347e2f884d2ae99673e15834f56ac2b454d3dec0dc96eb1091dbe5706f"
         }
       ],
-      "reason": "Per-request credentials, telemetry flags, separate signed uploads and unchanged response/session/lease limits are validated.",
-      "baseRef": "HEAD",
-      "gitHead": "f95615c4f191b12b5013634654ca600874e345a1",
-      "reviewedAtUtc": "2026-10-07T11:55:16.3331487Z"
+      "reason": "Preserve the reviewed quality, runtime and sensitive-data source changes from the generated-client migration. The additional ranking change excludes generated frontend SDK roots only from application-service role affinity; security query expansion and evidence/report boundaries are unchanged.",
+      "baseRef": "origin/master",
+      "gitHead": "ec28b1444224694b449e40672dd420cffd858c9b",
+      "reviewedAtUtc": "2026-10-07T14:18:54.2103269Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

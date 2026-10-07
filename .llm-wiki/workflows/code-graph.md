@@ -260,6 +260,8 @@ adapter retain their corresponding layer selectors after extraction. Application
 query handlers participate in reader/service role matching; command handlers
 participate in service role matching. These roles do not replace literal file
 identities or grant implementation affinity to contracts, validators, or tests.
+Generated User and Admin SDK files do not receive the frontend application-service
+role boost. They remain searchable by their exact file paths and identities.
 Lexical rank counts distinct physical paths, so extra index records for one file
 cannot penalize all following files. Contiguous multiword module names retain
 module ownership even when mentioned after a generic subject in the query.

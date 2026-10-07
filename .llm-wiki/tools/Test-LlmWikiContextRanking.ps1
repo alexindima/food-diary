@@ -66,4 +66,27 @@ foreach ($case in $normalizationCases) {
     }
 }
 
-Write-Host 'LLM Wiki SQLite context ranking passed: exact identity, scope, focused tests and contextual normalization with reader parity.'
+$serviceCases = @(
+    @{ query = 'frontend service loads and marks notifications'; path = 'FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts' },
+    @{ query = 'FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/notifications.service.ts'; path = 'FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/notifications.service.ts' },
+    @{ query = 'FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-users.service.ts'; path = 'FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-users.service.ts' }
+)
+foreach ($case in $serviceCases) {
+    $nodeResult = & $manager search -Query $case.query -ChangeType Frontend -Limit 10 -SkipRefresh -Format Json | ConvertFrom-Json
+    $readerResult = [LlmWiki.SqliteReader.ContextSearchReader]::Search(
+        $repositoryRoot, $case.query, 10, 'Frontend', '', [string[]]@(), [string]$graphStatus.currentChangeSetFingerprint
+    ) | ConvertFrom-Json
+    if (-not $nodeResult.ready -or -not $readerResult.ready -or
+        (@($readerResult.records.path) -join "`0") -cne (@($nodeResult.records.path) -join "`0") -or
+        @($readerResult.records)[0].path -cne $case.path) {
+        throw "Application service and generated SDK ranking lost its owner or reader parity: $($case.query)"
+    }
+    foreach ($candidate in @($nodeResult.records) + @($readerResult.records)) {
+        if ($candidate.path -like '*/api/sdk/generated/*' -and
+            @($candidate.reasons | Where-Object { $_ -like 'structural role frontend-api-service-role*' }).Count -gt 0) {
+            throw "Generated SDK received an application-service role boost: $($candidate.path)"
+        }
+    }
+}
+
+Write-Host 'LLM Wiki SQLite context ranking passed: exact identity, scope, focused tests, contextual normalization and generated SDK roles with reader parity.'

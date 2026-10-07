@@ -2466,6 +2466,10 @@
         "FoodDiary.Web.Client/src/app/shared/api/",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/"
       ],
+      "excludedPathPrefixes": [
+        "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/"
+      ],
       "pathSuffixes": [".ts"],
       "excludeTests": true
     },
