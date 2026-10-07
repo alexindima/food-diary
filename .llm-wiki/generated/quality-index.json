@@ -15370,11 +15370,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/logging-api.service.ts",
-      "nonBlankLines": 42,
+      "nonBlankLines": 46,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.84
+      "structuralRiskScore": 0.92
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/navigation.service.ts",

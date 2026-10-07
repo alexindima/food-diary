@@ -55,7 +55,9 @@ afterEach(() => {
 
 describe('UserService info', () => {
     it('keeps a returned birth date as a calendar string', () => {
-        service.getInfo().subscribe(user => { expect(user?.birthDate).toBe('2000-10-02'); });
+        service.getInfo().subscribe(user => {
+            expect(user?.birthDate).toBe('2000-10-02');
+        });
         httpMock.expectOne(`${BASE_URL}/info`).flush({ ...MOCK_USER, birthDate: '2000-10-02' });
     });
     it('should get user info and update signal', () => {

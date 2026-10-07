@@ -15,7 +15,9 @@ describe('Active sessions generated transport', () => {
         service = TestBed.inject(ActiveSessionsService);
         http = TestBed.inject(HttpTestingController);
     });
-    afterEach(() => { http.verify(); });
+    afterEach(() => {
+        http.verify();
+    });
 
     it('preserves the current-session flag and nullable device metadata', () => {
         const row = {
@@ -28,7 +30,9 @@ describe('Active sessions generated transport', () => {
             createdAtUtc: '2026-10-06T10:00:00Z',
             lastActiveAtUtc: '2026-10-06T11:00:00Z',
         };
-        service.getAll().subscribe(value => { expect(value).toEqual([row]); });
+        service.getAll().subscribe(value => {
+            expect(value).toEqual([row]);
+        });
         const request = http.expectOne(`${base}?page=1&limit=100`);
         expect(request.request.withCredentials).toBe(true);
         request.flush([row]);

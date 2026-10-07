@@ -37,8 +37,12 @@ export class LoggingApiService {
     private readonly telemetryContext = new HttpContext().set(SKIP_AUTH, true).set(SKIP_OBSERVABILITY, true);
 
     public logEvent(payload: ClientTelemetryEvent): Observable<void> {
-        return this.sdk.client.postLogs({ version: this.sdk.version, clientTelemetryLogHttpRequest: payload }, 'body', false,
-            sdkRequestOptions(undefined, this.telemetryContext));
+        return this.sdk.client.postLogs(
+            { version: this.sdk.version, clientTelemetryLogHttpRequest: payload },
+            'body',
+            false,
+            sdkRequestOptions(undefined, this.telemetryContext),
+        );
     }
 
     public logError(payload: ClientTelemetryEvent): Observable<void> {

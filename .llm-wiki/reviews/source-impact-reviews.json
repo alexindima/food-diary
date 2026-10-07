@@ -151,13 +151,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b31e4f5a3501e74d94191909fd58bde1d1ed4805a8552bb6706cad56c7fd05bd"
+          "sha256": "0f7a002d0be21bcd58663dda0d4d54a20ad4381d83e0beb5a49561abddd9ead9"
         }
       ],
-      "reason": "Reviewed regenerated quality projection for Wiki candidate SQL and diagnostic runner changes; structural metrics remain navigation evidence and do not replace executed assertions.",
+      "reason": "Reviewed regenerated quality projection for Wiki candidate SQL and diagnostic runner changes; structural metrics remain navigation evidence and do not replace executed assertions. Formatting-only follow-up changes logging-api.service.ts from 42 to 46 nonblank lines; behavior, decision points and critical-symbol counts are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "829474ddf40a574626a8b236adb6ca9629439dcb",
-      "reviewedAtUtc": "2026-10-04T22:08:42.855769Z"
+      "gitHead": "8a64da3402d3ae326754511dc032ced3aa079f2c",
+      "reviewedAtUtc": "2026-10-07T14:44:31.5676834Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -863,13 +863,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9b411185dcf56c337fd443eba9e321896469de5f995fa57969c1252f3baed9e6"
+          "sha256": "0f7a002d0be21bcd58663dda0d4d54a20ad4381d83e0beb5a49561abddd9ead9"
         }
       ],
-      "reason": "5520 frontend, 208 bot and 2116 architecture tests passed; all three generated clients have reproducibility and live schema gates.",
+      "reason": "5520 frontend, 208 bot and 2116 architecture tests passed; all three generated clients have reproducibility and live schema gates. Formatting-only follow-up changes logging-api.service.ts from 42 to 46 nonblank lines; behavior, decision points and critical-symbol counts are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "f95615c4f191b12b5013634654ca600874e345a1",
-      "reviewedAtUtc": "2026-10-07T11:55:15.3817430Z"
+      "gitHead": "8a64da3402d3ae326754511dc032ced3aa079f2c",
+      "reviewedAtUtc": "2026-10-07T14:44:31.9480623Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -965,7 +965,7 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9b411185dcf56c337fd443eba9e321896469de5f995fa57969c1252f3baed9e6"
+          "sha256": "0f7a002d0be21bcd58663dda0d4d54a20ad4381d83e0beb5a49561abddd9ead9"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
@@ -980,10 +980,10 @@
           "sha256": "53e108347e2f884d2ae99673e15834f56ac2b454d3dec0dc96eb1091dbe5706f"
         }
       ],
-      "reason": "Preserve the reviewed quality, runtime and sensitive-data source changes from the generated-client migration. The additional ranking change excludes generated frontend SDK roots only from application-service role affinity; security query expansion and evidence/report boundaries are unchanged.",
-      "baseRef": "origin/master",
-      "gitHead": "ec28b1444224694b449e40672dd420cffd858c9b",
-      "reviewedAtUtc": "2026-10-07T14:18:54.2103269Z"
+      "reason": "Preserve the reviewed quality, runtime and sensitive-data source changes from the generated-client migration. The additional ranking change excludes generated frontend SDK roots only from application-service role affinity; security query expansion and evidence/report boundaries are unchanged. Formatting-only follow-up changes logging-api.service.ts from 42 to 46 nonblank lines; behavior, decision points and critical-symbol counts are unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "8a64da3402d3ae326754511dc032ced3aa079f2c",
+      "reviewedAtUtc": "2026-10-07T14:44:32.3771107Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
