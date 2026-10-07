@@ -81,7 +81,11 @@ run_backend_checks() {
   command dotnet build FoodDiary.slnx --artifacts-path "$PRE_PUSH_ARTIFACTS_PATH" || return 1
   # Format once, after restore/build; migrations are already part of the solution.
   if printf '%s\n' "$changed_paths" | grep -Eq '\.cs$'; then
-    command dotnet format FoodDiary.slnx --verify-no-changes --no-restore || return 1
+    # Use the same assets and generated sources as the isolated build. An absolute
+    # native path avoids project-local artifact directories on Windows and Unix.
+    PRE_PUSH_ARTIFACTS_NATIVE_PATH=$("$HOOK_POWERSHELL" -NoLogo -NoProfile -Command "[System.IO.Path]::GetFullPath('$PRE_PUSH_ARTIFACTS_PATH')" | tr -d '\r') || return 1
+    [ -n "$PRE_PUSH_ARTIFACTS_NATIVE_PATH" ] || return 1
+    ArtifactsPath="$PRE_PUSH_ARTIFACTS_NATIVE_PATH" UseArtifactsOutput=true command dotnet format FoodDiary.slnx --verify-no-changes --no-restore || return 1
   fi
   # Integration namespaces/classes and the slow MCP process suite run in CI.
   # Keep unit and architecture tests locally; also honor explicit test categories.

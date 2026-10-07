@@ -531,7 +531,9 @@ its own atomic update normally. The focused concurrency regression launches two
 real domain-index updates and requires the second process to take the reuse path.
 
 The pre-push hook isolates .NET outputs under the PID-specific
-`.artifacts/pre-push/<pid>` directory. Its
+`.artifacts/pre-push/<pid>` directory. The formatter receives the same absolute
+native `ArtifactsPath` and `UseArtifactsOutput=true`, so `--no-restore` loads the
+built package assets and generated sources in a fresh checkout. Its
 cleanup removes only the current hook's directory plus invalid nested
 `.artifacts` folders; it does not delete `.artifacts/llm-wiki`, another hook's
 build outputs, or another development session's task-scoped artifacts. This
