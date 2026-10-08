@@ -140,16 +140,18 @@ $modelRoutingOutcome = if (Test-Path -LiteralPath $modelRoutingOutcomePath -Path
         -WorkspacePath $normalizedWorkspacePath `
         -Format Json | ConvertFrom-Json
 } else { $null }
-$modelRoutingOutcomeMetrics = & (Join-Path $PSScriptRoot 'Manage-LlmWikiModelRoutingOutcome.ps1') metrics -Format Json | ConvertFrom-Json
-$modelRoutingOutcomeHealth = & (Join-Path $PSScriptRoot 'Manage-LlmWikiModelRoutingOutcome.ps1') health -Format Json | ConvertFrom-Json
+$modelRoutingOutcomeMetrics = & (Join-Path $PSScriptRoot 'Manage-LlmWikiModelRoutingOutcome.ps1') metrics -IncludeHealth -Format Json | ConvertFrom-Json
+$modelRoutingOutcomeHealth = $modelRoutingOutcomeMetrics.healthView
+$modelRoutingOutcomeMetrics.PSObject.Properties.Remove('healthView')
 $instructionOutcomePath = Join-Path $absoluteWorkspacePath 'instruction-outcome.json'
 $instructionOutcome = if (Test-Path -LiteralPath $instructionOutcomePath -PathType Leaf) {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiInstructionOutcome.ps1') verify `
         -WorkspacePath $normalizedWorkspacePath `
         -Format Json | ConvertFrom-Json
 } else { $null }
-$instructionOutcomeMetrics = & (Join-Path $PSScriptRoot 'Manage-LlmWikiInstructionOutcome.ps1') metrics -Format Json | ConvertFrom-Json
-$instructionOutcomeCandidates = & (Join-Path $PSScriptRoot 'Manage-LlmWikiInstructionOutcome.ps1') candidates -Format Json | ConvertFrom-Json
+$instructionOutcomeMetrics = & (Join-Path $PSScriptRoot 'Manage-LlmWikiInstructionOutcome.ps1') metrics -IncludeCandidates -Format Json | ConvertFrom-Json
+$instructionOutcomeCandidates = $instructionOutcomeMetrics.candidatesView
+$instructionOutcomeMetrics.PSObject.Properties.Remove('candidatesView')
 $instructionExperiments = & (Join-Path $PSScriptRoot 'Manage-LlmWikiInstructionExperiment.ps1') list -Format Json | ConvertFrom-Json
 $instructionExperimentForecasts = @($instructionExperiments.experiments | Where-Object state -eq 'active' | ForEach-Object {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiInstructionExperiment.ps1') forecast -Id $_.experimentId -Format Json | ConvertFrom-Json
@@ -265,8 +267,9 @@ $contextStrategyOutcome = if (Test-Path -LiteralPath $contextStrategyOutcomePath
         -WorkspacePath $normalizedWorkspacePath `
         -Format Json | ConvertFrom-Json
 } else { $null }
-$contextStrategyOutcomeMetrics = & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextOutcome.ps1') metrics -Format Json | ConvertFrom-Json
-$contextStrategyOutcomeHealth = & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextOutcome.ps1') health -Format Json | ConvertFrom-Json
+$contextStrategyOutcomeMetrics = & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextOutcome.ps1') metrics -IncludeHealth -Format Json | ConvertFrom-Json
+$contextStrategyOutcomeHealth = $contextStrategyOutcomeMetrics.healthView
+$contextStrategyOutcomeMetrics.PSObject.Properties.Remove('healthView')
 $contextSecurityPath = Join-Path $absoluteWorkspacePath 'context-security.json'
 $contextSecurity = if (Test-Path -LiteralPath $contextSecurityPath -PathType Leaf) {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextSecurity.ps1') verify `

@@ -323,6 +323,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'verification-cache' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiPortable.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiIndexManifest.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiVerificationCache.ps1')
@@ -330,6 +332,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             & (Join-Path $toolsRoot 'Test-LlmWikiOperationalTelemetry.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiTelemetryValidationReuse.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiOutcomeViews.ps1')
             if (-not $?) { exit 1 }
         }
         'verification-receipts' {

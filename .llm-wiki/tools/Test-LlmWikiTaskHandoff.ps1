@@ -76,7 +76,7 @@ try {
     [IO.File]::WriteAllText((Join-Path $fixture 'source.cs'), "namespace Fixture {" + [Environment]::NewLine + 'class Sample {}' + [Environment]::NewLine + '}')
     # Control collaborators, execute the unchanged public composition script.
     $stub = @'
-param([Parameter(Position=0)][string]$Action, [string]$WorkspacePath, [string]$Format, [string]$BaseRef, [string]$Objective, [object]$PacketInput, [switch]$IncludeSealed, [switch]$IncludeDispatchRegistry, [string]$Id)
+param([Parameter(Position=0)][string]$Action, [string]$WorkspacePath, [string]$Format, [string]$BaseRef, [string]$Objective, [object]$PacketInput, [switch]$IncludeSealed, [switch]$IncludeDispatchRegistry, [switch]$IncludeHealth, [switch]$IncludeCandidates, [string]$Id)
 $root = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $name = Split-Path -Leaf $PSCommandPath
 $fingerprint = if ($null -ne $PacketInput) { $PacketInput.fingerprint } else { '' }
@@ -88,6 +88,9 @@ $receipt = switch ($name) {
     'Manage-LlmWikiImpactSimulation.ps1' { 'impact-simulation.json' }
     'Manage-LlmWikiContextBundle.ps1' { 'context-bundle.json' }
     'Manage-LlmWikiVerificationPlan.ps1' { 'verification-plan.json' }
+    'Manage-LlmWikiModelRoutingOutcome.ps1' { 'model-routing-outcome.json' }
+    'Manage-LlmWikiInstructionOutcome.ps1' { 'instruction-outcome.json' }
+    'Manage-LlmWikiContextOutcome.ps1' { 'context-strategy-outcome.json' }
 }
 if ($receipt) {
     $path = Join-Path (Join-Path $root $WorkspacePath) $receipt
@@ -102,9 +105,10 @@ $dataName = switch ($name) {
     default { 'shared.json' }
 }
 $dataText = Get-Content (Join-Path $root $dataName) -Raw
-if ($IncludeDispatchRegistry) {
+if ($IncludeDispatchRegistry -or $IncludeHealth -or $IncludeCandidates) {
     $data = $dataText | ConvertFrom-Json
-    $data | Add-Member -NotePropertyName dispatchRegistry -NotePropertyValue ($dataText | ConvertFrom-Json)
+    $viewName = if ($IncludeDispatchRegistry) {'dispatchRegistry'} elseif ($IncludeHealth) {'healthView'} else {'candidatesView'}
+    $data | Add-Member -NotePropertyName $viewName -NotePropertyValue ($dataText | ConvertFrom-Json)
     $data | ConvertTo-Json -Depth 20
 } else { $dataText }
 '@
@@ -121,6 +125,10 @@ if ($IncludeDispatchRegistry) {
     $compact = Invoke-Handoff -Compact
     Assert-Handoff (@(Get-Calls | Where-Object tool -eq 'Manage-LlmWikiTaskDispatch.ps1').Count -eq 0 -and
         @(Get-Calls | Where-Object tool -eq 'Get-LlmWikiDispatchMetrics.ps1').Count -eq 1) 'Handoff repeated dispatch registry validation outside metrics.'
+    foreach ($outcomeTool in @('Manage-LlmWikiModelRoutingOutcome.ps1','Manage-LlmWikiInstructionOutcome.ps1','Manage-LlmWikiContextOutcome.ps1')) {
+        $calls = @(Get-Calls | Where-Object tool -eq $outcomeTool)
+        Assert-Handoff ($calls.Count -eq 1 -and $calls[0].action -eq 'metrics') 'Handoff repeated an outcome view calculation.'
+    }
     Assert-Handoff (@(Get-Calls | Where-Object { $_.tool -in $assessmentTools }).Count -eq 0) 'Compact handoff still synthesizes missing full-only assessments.'
     Assert-Handoff (@(Get-Calls | Where-Object { $_.tool -eq 'Manage-LlmWikiTaskWorkspace.ps1' -and $_.packetFingerprint -eq 'current' }).Count -eq 1) 'Compact handoff skipped required readiness or lost its fresh packet.'
     foreach ($key in @('objective','state','readiness','continuity','nextActions','resumeCommands')) {
@@ -136,6 +144,20 @@ if ($IncludeDispatchRegistry) {
         Assert-Handoff (@(Get-Calls | Where-Object { $_.tool -in $assessmentTools -and $_.action -eq 'verify' }).Count -eq 1) "Compact handoff skipped saved $receipt."
         [IO.File]::WriteAllText($path,'broken')
         Assert-Rejected { Invoke-Handoff -Compact } "*Malformed saved $receipt*"
+        Remove-Item -LiteralPath $path
+    }
+    foreach ($sample in @(
+        @{tool='Manage-LlmWikiModelRoutingOutcome.ps1';receipt='model-routing-outcome.json'}
+        @{tool='Manage-LlmWikiInstructionOutcome.ps1';receipt='instruction-outcome.json'}
+        @{tool='Manage-LlmWikiContextOutcome.ps1';receipt='context-strategy-outcome.json'}
+    )) {
+        $path = Join-Path $workspaceDirectory $sample.receipt
+        [IO.File]::WriteAllText($path, '{}')
+        $null = Invoke-Handoff -Compact
+        $calls = @(Get-Calls | Where-Object tool -eq $sample.tool)
+        Assert-Handoff (@($calls | Where-Object action -eq 'verify').Count -eq 1 -and @($calls | Where-Object action -eq 'metrics').Count -eq 1 -and $calls.Count -eq 2) 'Combined outcome views skipped a required workspace receipt check.'
+        [IO.File]::WriteAllText($path, 'broken')
+        Assert-Rejected { Invoke-Handoff -Compact } "*Malformed saved $($sample.receipt)*"
         Remove-Item -LiteralPath $path
     }
     foreach ($receipt in $receipts + @('verification-plan.json','context-bundle.json')) { [IO.File]::WriteAllText((Join-Path $workspaceDirectory $receipt),'{}') }

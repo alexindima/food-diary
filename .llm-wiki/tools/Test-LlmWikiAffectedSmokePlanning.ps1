@@ -92,6 +92,16 @@ if ($frontendInventoryGroups -notcontains 'index-selection') { throw 'Frontend s
 if (@(Get-Groups '.llm-wiki/tools/Test-LlmWikiTelemetryValidationReuse.ps1') -notcontains 'verification-cache') {
     throw 'Telemetry validation reuse omitted its owning regression group.'
 }
+foreach ($outcomeSource in @('Manage-LlmWikiModelRoutingOutcome', 'Manage-LlmWikiContextOutcome', 'Manage-LlmWikiInstructionOutcome', 'Test-LlmWikiOutcomeViews', 'LlmWikiOutcomeViewFixture')) {
+    if (@(Get-Groups ".llm-wiki/tools/$outcomeSource.ps1") -notcontains 'verification-cache') {
+        throw "Outcome view source '$outcomeSource' omitted its validation regression."
+    }
+}
+foreach ($jsonSource in @('LlmWikiJson', 'Test-LlmWikiPortable')) {
+    if (@(Get-Groups ".llm-wiki/tools/$jsonSource.ps1") -notcontains 'verification-cache') {
+        throw "Shared JSON source '$jsonSource' omitted its portability and journal regressions."
+    }
+}
 if ($contextEvalGroups -notcontains 'adaptive-evals' -or $contextEvalGroups -notcontains 'context-search-evals' -or $contextEvalGroups -notcontains 'context-retrieval') {
     throw 'Context-search corpora must run both adaptive evals and the SQL context regression suite.'
 }

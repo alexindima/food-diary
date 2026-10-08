@@ -5,12 +5,14 @@ param(
     [string]$Action = 'list',
     [string]$WorkspacePath,
     [DateTime]$AsOfUtc = [DateTime]::UtcNow,
+    [switch]$IncludeCandidates,
     [switch]$FailOnInvalid,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text'
 )
 
 $ErrorActionPreference = 'Stop'
+if ($IncludeCandidates -and $Action -ne 'metrics') { throw 'IncludeCandidates is supported only for metrics.' }
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
@@ -165,6 +167,26 @@ function Get-Profiles([object]$Registry) {
 function Write-Registry([object]$Registry) {
     [IO.File]::WriteAllText($registryPath, (($Registry | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
 }
+function Get-Candidates([object[]]$Profiles, [object]$Validation) {
+    $candidates = @($Profiles | Where-Object health -eq 'degraded' | ForEach-Object {
+        $profile = $_
+        $absolute = Join-Path $repositoryRoot $profile.path
+        $current = if (Test-Path -LiteralPath $absolute -PathType Leaf) { Get-FileSha $absolute } else { '' }
+        [pscustomobject][ordered]@{
+            id = "instruction-$((Get-Hash "$($profile.path)|$($profile.fingerprint)").Substring(0, 16))"
+            type = 'instruction-effectiveness'
+            path = $profile.path
+            observedFingerprint = $profile.fingerprint
+            currentFingerprint = $current
+            current = $current -ceq $profile.fingerprint
+            score = [int]$outcomePolicy.candidateScore
+            statement = "Review '$($profile.path)' because tasks using this instruction version show degraded outcomes."
+            evidence = @("samples=$($profile.sampleCount)", "recent-score=$($profile.recentAverageOutcomeScore)", "recent-success=$($profile.recentSuccessRatePercent)%", @($profile.degradationReasons))
+            recommendedWorkflow = 'learning-shadow'
+        }
+    })
+    [pscustomobject][ordered]@{ action = 'candidates'; valid = $Validation.valid; issues = @($Validation.issues); registryFingerprint = $Validation.registryFingerprint; eligibleCount = @($candidates | Where-Object current).Count; candidates = $candidates }
+}
 
 $registry = Read-Registry
 $validation = Test-Registry $registry
@@ -282,26 +304,10 @@ if ($Action -eq 'observe') {
             profiles = $profiles
         }
     }
+    if ($IncludeCandidates) { $result | Add-Member -NotePropertyName candidatesView -NotePropertyValue (Get-Candidates $profiles $validation) }
 } elseif ($Action -eq 'candidates') {
     $profiles = @(Get-Profiles $registry)
-    $candidates = @($profiles | Where-Object health -eq 'degraded' | ForEach-Object {
-        $profile = $_
-        $absolute = Join-Path $repositoryRoot $profile.path
-        $current = if (Test-Path -LiteralPath $absolute -PathType Leaf) { Get-FileSha $absolute } else { '' }
-        [pscustomobject][ordered]@{
-            id = "instruction-$((Get-Hash "$($profile.path)|$($profile.fingerprint)").Substring(0, 16))"
-            type = 'instruction-effectiveness'
-            path = $profile.path
-            observedFingerprint = $profile.fingerprint
-            currentFingerprint = $current
-            current = $current -ceq $profile.fingerprint
-            score = [int]$outcomePolicy.candidateScore
-            statement = "Review '$($profile.path)' because tasks using this instruction version show degraded outcomes."
-            evidence = @("samples=$($profile.sampleCount)", "recent-score=$($profile.recentAverageOutcomeScore)", "recent-success=$($profile.recentSuccessRatePercent)%", @($profile.degradationReasons))
-            recommendedWorkflow = 'learning-shadow'
-        }
-    })
-    $result = [pscustomobject][ordered]@{ action = 'candidates'; valid = $validation.valid; issues = @($validation.issues); registryFingerprint = $validation.registryFingerprint; eligibleCount = @($candidates | Where-Object current).Count; candidates = $candidates }
+    $result = Get-Candidates $profiles $validation
 } else {
     $result = [pscustomobject][ordered]@{ action = 'list'; valid = $validation.valid; issues = @($validation.issues); registryFingerprint = $validation.registryFingerprint; events = @($registry.events) }
 }

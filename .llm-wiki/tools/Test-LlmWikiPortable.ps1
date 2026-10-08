@@ -29,6 +29,11 @@ if ((Get-LlmWikiJsonFingerprint $portableValue) -cne '56cd2450fd16dc1da430fc36d6
     throw 'JSON fingerprint changed across runtimes for an identical value.'
 }
 foreach ($case in @(
+    @{ value = 'plain ASCII 123'; canonical = '{"text":"plain ASCII 123"}' },
+    @{ value = '\UABCD'; canonical = '{"text":"\\UABCD"}' },
+    @{ value = '\\u0027'; canonical = '{"text":"\\\\u0027"}' },
+    @{ value = "line`nnext`tend"; canonical = '{"text":"line\nnext\tend"}' },
+    @{ value = [string][char]1; canonical = '{"text":"\u0001"}' },
     @{ value = "'"; canonical = '{"text":"''"}' },
     @{ value = '\u0027'; canonical = '{"text":"\\u0027"}' },
     @{ value = "\'"; canonical = '{"text":"\\''"}' },

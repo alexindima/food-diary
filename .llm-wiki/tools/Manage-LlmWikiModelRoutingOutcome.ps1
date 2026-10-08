@@ -5,12 +5,14 @@ param(
     [string]$Action = 'list',
     [string]$WorkspacePath,
     [DateTime]$AsOfUtc = [DateTime]::UtcNow,
+    [switch]$IncludeHealth,
     [switch]$FailOnInvalid,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text'
 )
 
 $ErrorActionPreference = 'Stop'
+if ($IncludeHealth -and $Action -ne 'metrics') { throw 'IncludeHealth is supported only for metrics.' }
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $registryPath = if (-not [string]::IsNullOrWhiteSpace([string]$env:LLM_WIKI_MODEL_ROUTE_OUTCOME_REGISTRY_PATH)) {
@@ -196,6 +198,19 @@ function Get-Metrics([object]$Registry, [object]$Validation) {
 function Write-Registry([object]$Registry) {
     [IO.File]::WriteAllText($registryPath, (($Registry | ConvertTo-Json -Depth 20) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
 }
+function Get-Health([object]$Metrics, [object]$Validation) {
+    $eligibleProfileCount = @($Metrics.profiles | Where-Object health -ne 'insufficient-data').Count
+    [pscustomobject][ordered]@{
+        action = 'health'; valid = $Validation.valid; issues = @($Validation.issues)
+        health = $(if (-not $Validation.valid) { 'invalid' } elseif ([int]$Metrics.validEventCount -eq 0 -or $eligibleProfileCount -eq 0) { 'insufficient-data' } elseif ([int]$Metrics.degradedProfileCount -gt 0) { 'degraded' } else { 'healthy' })
+        sampleCount = [int]$Metrics.validEventCount
+        minimumSamples = [int]$Metrics.minimumSamples
+        degradedProfileCount = [int]$Metrics.degradedProfileCount
+        escalationRecommended = [int]$Metrics.degradedProfileCount -gt 0
+        degradedProfiles = @($Metrics.profiles | Where-Object health -eq 'degraded')
+        registryFingerprint = [string]$Metrics.registryFingerprint
+    }
+}
 
 $registry = Read-Registry
 $validation = Test-Registry $registry
@@ -256,19 +271,10 @@ if ($Action -eq 'observe') {
     }
 } elseif ($Action -eq 'metrics') {
     $result = [pscustomobject][ordered]@{ action = 'metrics'; valid = $validation.valid; issues = @($validation.issues); metrics = Get-Metrics $registry $validation }
+    if ($IncludeHealth) { $result | Add-Member -NotePropertyName healthView -NotePropertyValue (Get-Health $result.metrics $validation) }
 } elseif ($Action -eq 'health') {
     $metrics = Get-Metrics $registry $validation
-    $eligibleProfileCount = @($metrics.profiles | Where-Object health -ne 'insufficient-data').Count
-    $result = [pscustomobject][ordered]@{
-        action = 'health'; valid = $validation.valid; issues = @($validation.issues)
-        health = $(if (-not $validation.valid) { 'invalid' } elseif ([int]$metrics.validEventCount -eq 0 -or $eligibleProfileCount -eq 0) { 'insufficient-data' } elseif ([int]$metrics.degradedProfileCount -gt 0) { 'degraded' } else { 'healthy' })
-        sampleCount = [int]$metrics.validEventCount
-        minimumSamples = [int]$metrics.minimumSamples
-        degradedProfileCount = [int]$metrics.degradedProfileCount
-        escalationRecommended = [int]$metrics.degradedProfileCount -gt 0
-        degradedProfiles = @($metrics.profiles | Where-Object health -eq 'degraded')
-        registryFingerprint = [string]$metrics.registryFingerprint
-    }
+    $result = Get-Health $metrics $validation
 } elseif ($Action -eq 'verify') {
     $verifyIssues = [Collections.Generic.List[string]]::new()
     foreach ($issue in @($validation.issues)) { $verifyIssues.Add($issue) }

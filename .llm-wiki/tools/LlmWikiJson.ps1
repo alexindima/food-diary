@@ -46,17 +46,21 @@ function Get-LlmWikiJsonFingerprint {
     # Retain existing PowerShell 7 fingerprints when Windows PowerShell escapes
     # apostrophes. An even number of preceding slashes denotes a real Unicode
     # escape; odd counts belong to a literal backslash-u sequence and stay intact.
-    $json = [regex]::Replace($json, '(\\*)\\u0027', {
-        param($match)
-        $prefix = $match.Groups[1].Value
-        if ($prefix.Length % 2 -eq 0) { return $prefix + "'" }
-        return $match.Value
-    })
-    $json = [regex]::Replace($json, '(\\*)\\u[0-9A-Fa-f]{4}', {
-        param($match)
-        if ($match.Groups[1].Value.Length % 2 -eq 0) { return $match.Value.ToLowerInvariant() }
-        return $match.Value
-    })
+    # The replacement delegates are expensive even when neither regex can match.
+    # Both patterns require this exact marker, including literal escaped text.
+    if ($json.IndexOf('\u', [StringComparison]::Ordinal) -ge 0) {
+        $json = [regex]::Replace($json, '(\\*)\\u0027', {
+            param($match)
+            $prefix = $match.Groups[1].Value
+            if ($prefix.Length % 2 -eq 0) { return $prefix + "'" }
+            return $match.Value
+        })
+        $json = [regex]::Replace($json, '(\\*)\\u[0-9A-Fa-f]{4}', {
+            param($match)
+            if ($match.Groups[1].Value.Length % 2 -eq 0) { return $match.Value.ToLowerInvariant() }
+            return $match.Value
+        })
+    }
 
     $sha = [Security.Cryptography.SHA256]::Create()
     try {

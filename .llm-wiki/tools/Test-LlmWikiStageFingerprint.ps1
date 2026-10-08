@@ -26,6 +26,20 @@ try {
     [IO.File]::WriteAllText($changeDefinitions, 'other')
     [IO.File]::SetLastWriteTimeUtc($changeDefinitions, $definitionTime)
     if ($policyBefore -ceq (& $tool -Stage 'workspace policy')) { throw 'Workspace-policy stage ignored changed referenced check definitions.' }
+    $jsonHelper = Join-Path $fixtureTools 'LlmWikiJson.ps1'
+    foreach ($stage in @('affected smoke:verification-cache', 'affected smoke:verification-receipts', 'affected smoke:task-scope', 'affected smoke:strict-shapes')) {
+        [IO.File]::WriteAllText($jsonHelper, 'first')
+        $jsonBefore = & $tool -Stage $stage
+        $jsonTime = [IO.File]::GetLastWriteTimeUtc($jsonHelper)
+        [IO.File]::WriteAllText($jsonHelper, 'other')
+        [IO.File]::SetLastWriteTimeUtc($jsonHelper, $jsonTime)
+        if ($jsonBefore -ceq (& $tool -Stage $stage)) { throw "$stage ignored its changed shared JSON helper." }
+    }
+    $portableTest = Join-Path $fixtureTools 'Test-LlmWikiPortable.ps1'
+    [IO.File]::WriteAllText($portableTest, 'first')
+    $portableBefore = & $tool -Stage 'affected smoke:verification-cache'
+    [IO.File]::WriteAllText($portableTest, 'other')
+    if ($portableBefore -ceq (& $tool -Stage 'affected smoke:verification-cache')) { throw 'Verification-cache stage ignored its portability test.' }
     foreach ($name in @('AgentRegistry', 'TaskLease', 'SchedulePlan', 'OrchestrationCycle', 'DispatchWatchdog', 'WorkspaceCircuit', 'TaskDecomposition')) {
         $managerPath = Join-Path $fixtureTools "Manage-LlmWiki$name.ps1"
         [IO.File]::WriteAllText($managerPath, 'first')

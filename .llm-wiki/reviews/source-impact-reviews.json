@@ -200,13 +200,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "d1d757f0f9abfd343803f0b665f144f443557b8caa2715c84488a96bbb4749ad"
+          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
         }
       ],
-      "reason": "Audit and handoff now reuse the registry validated inside dispatch metrics via the existing IncludeDispatchRegistry option. The internal property is removed from public metrics. Fixed-time before/after registry and metric outputs match; tests preserve invalid/out-of-window attention, SLO, required handoff assessments and registry failures. Both consumers select their integration regressions.",
+      "reason": "Combined outcome metrics reuse one fully validated registry and one profile calculation for model/context health and instruction candidates. Default and standalone views match the previous implementation on fixed valid histories. Tests protect invalid/restored/missing journals, updated policy/current instruction hashes and retained workspace receipt verification. Catalog and fingerprint inputs include all owning helpers and new fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:04.6267379Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:28.7073604Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -355,13 +355,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "d1d757f0f9abfd343803f0b665f144f443557b8caa2715c84488a96bbb4749ad"
+          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
         }
       ],
-      "reason": "The dispatch followup records a bounded 200-receipt measurement and distinguishes this portion from complete audit/handoff cost.",
+      "reason": "The followup distinguishes cold/warm journal-view measurements from entire handoff or CI performance; raw owned fixtures and evidence are retained.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:05.3550961Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:29.4055490Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -418,14 +418,14 @@
       "pageSha256": "e4de9df2c7adeae34ec774eebca8f821c2a90f1b85fe27d16d59d8d581495c23",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Manage-LlmWikiContextOutcome.ps1",
+          "sha256": "4e810d581b579a8a1fef6408e44e3e066a40ddeb107e80f0ac05091549b8cb3e"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:34.9788762Z"
+      "reason": "The followup distinguishes cold/warm journal-view measurements from entire handoff or CI performance; raw owned fixtures and evidence are retained.",
+      "baseRef": "HEAD",
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:30.2150627Z"
     },
     {
       "pageId": "workflow-controlled-learning-promotion",
@@ -433,18 +433,14 @@
       "pageSha256": "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "d1d757f0f9abfd343803f0b665f144f443557b8caa2715c84488a96bbb4749ad"
+          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
         }
       ],
-      "reason": "The dispatch followup records a bounded 200-receipt measurement and distinguishes this portion from complete audit/handoff cost.",
+      "reason": "The followup distinguishes cold/warm journal-view measurements from entire handoff or CI performance; raw owned fixtures and evidence are retained.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:06.1269563Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:30.9395221Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -452,18 +448,14 @@
       "pageSha256": "1a4c6620169d6fbe556feae253e1e80b1f7a4f4d232962b8fe8b13635bfb608a",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "d1d757f0f9abfd343803f0b665f144f443557b8caa2715c84488a96bbb4749ad"
+          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
         }
       ],
-      "reason": "The dispatch followup records a bounded 200-receipt measurement and distinguishes this portion from complete audit/handoff cost.",
+      "reason": "The followup distinguishes cold/warm journal-view measurements from entire handoff or CI performance; raw owned fixtures and evidence are retained.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:06.8467344Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:31.6929041Z"
     },
     {
       "pageId": "workflow-cost-aware-verification",
@@ -546,18 +538,14 @@
       "pageSha256": "95480b241c0d18016bd62e851be9ae87207340be4b90243c591d7d6da7fb608e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "d1d757f0f9abfd343803f0b665f144f443557b8caa2715c84488a96bbb4749ad"
+          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
         }
       ],
-      "reason": "The dispatch followup records a bounded 200-receipt measurement and distinguishes this portion from complete audit/handoff cost.",
+      "reason": "The followup distinguishes cold/warm journal-view measurements from entire handoff or CI performance; raw owned fixtures and evidence are retained.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:07.5876435Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:32.4016989Z"
     },
     {
       "pageId": "workflow-failure-knowledge",
@@ -629,18 +617,14 @@
       "pageSha256": "afe53d54c25e32851bd4696c4fc162d497360f95a6b31a95aa557991f57dc840",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "d1d757f0f9abfd343803f0b665f144f443557b8caa2715c84488a96bbb4749ad"
+          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
         }
       ],
-      "reason": "The dispatch followup records a bounded 200-receipt measurement and distinguishes this portion from complete audit/handoff cost.",
+      "reason": "The followup distinguishes cold/warm journal-view measurements from entire handoff or CI performance; raw owned fixtures and evidence are retained.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:08.2815362Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:33.1773219Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -675,18 +659,14 @@
       "pageSha256": "d93e8bf4522a803da1d1a59bd2cd49e0d6a6b39360281f4df4f1792621027fb1",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "d1d757f0f9abfd343803f0b665f144f443557b8caa2715c84488a96bbb4749ad"
+          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
         }
       ],
-      "reason": "The dispatch followup records a bounded 200-receipt measurement and distinguishes this portion from complete audit/handoff cost.",
+      "reason": "The followup distinguishes cold/warm journal-view measurements from entire handoff or CI performance; raw owned fixtures and evidence are retained.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:08.9605368Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:33.8537056Z"
     },
     {
       "pageId": "workflow-index-pipeline",
@@ -695,17 +675,33 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "bb88fdc1b7b8c34f0cde78e8cc7b2e74114fe04d222891e3f9821fdddd0c0631"
+          "sha256": "87fca7de75fb791316efdd580d871b9f31836ff8a622ed1c7130b1bd3784ac4d"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
+          "sha256": "a1b652e0034fa16895b822a312731570af00df533b44d68185e0033757f0df0f"
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+          "sha256": "3de74957962168431c7a19448c3226b772712ef6f7de77eb5f4d219a40d47605"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
-          "sha256": "b286ba99dbd146c7c0438dcd2418d29177aba0c15e2608484381c06419bb6475"
+          "sha256": "98d466e0306c51f3dcdd5d0e21e38ed8e16cf66251363098c82cd0522b187a18"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiPortable.ps1",
+          "sha256": "d457207134164cc1ed505f14fa16698bec6ff4d7fc34d418841bc3b055db9d3f"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiStageFingerprint.ps1",
+          "sha256": "fbdfed8b3c570646d75f5f31d8e23166b160cda215d001b76dfddc3bf8fa16c5"
         }
       ],
-      "reason": "Audit and handoff now reuse the registry validated inside dispatch metrics via the existing IncludeDispatchRegistry option. The internal property is removed from public metrics. Fixed-time before/after registry and metric outputs match; tests preserve invalid/out-of-window attention, SLO, required handoff assessments and registry failures. Both consumers select their integration regressions.",
+      "reason": "Shared JSON hashing skips only regex normalization when the exact required ordinal backslash-u marker is absent after existing HTML escaping. Slow path, serialization, hashing and all journal validation checks remain unchanged. Golden canonical strings and 92 independent baseline hashes agree in PowerShell 5 and 7; full metrics/candidates output agrees in counterbalanced runs. Portable tests and dependent receipt invalidation are now explicitly routed.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:09.6348422Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T12:17:45.7872614Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -713,14 +709,14 @@
       "pageSha256": "61d91d7cbe073b4d9d81be15b1391daea4fc698ef9abec557da5a9d9b45c26bb",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Manage-LlmWikiInstructionOutcome.ps1",
+          "sha256": "a0a0ac7b688b195748048b4d55b99fdfd4ce36667ea781fbe5aec7692dc0be32"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:39.7487443Z"
+      "reason": "The followup distinguishes cold/warm journal-view measurements from entire handoff or CI performance; raw owned fixtures and evidence are retained.",
+      "baseRef": "HEAD",
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:35.1946544Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -747,18 +743,14 @@
       "pageSha256": "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "d1d757f0f9abfd343803f0b665f144f443557b8caa2715c84488a96bbb4749ad"
+          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
         }
       ],
-      "reason": "The dispatch followup records a bounded 200-receipt measurement and distinguishes this portion from complete audit/handoff cost.",
+      "reason": "The followup distinguishes cold/warm journal-view measurements from entire handoff or CI performance; raw owned fixtures and evidence are retained.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:10.3947737Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:35.8906124Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -766,18 +758,14 @@
       "pageSha256": "f2175e29d46c5bf4aca0b8bb756b10ce36fb1049494ab8ee1309f48f3f75fbe6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiModelRouting.ps1",
-          "sha256": "c1dc42d2862b62fc0847143f69bc99320b2e80e06786e86c0b3f4db6356f6128"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "6a12c8e82a68b9b3ee77a0c893544614dfa921d4e6f9245c35156c419f7b9313"
+          "path": ".llm-wiki/tools/Manage-LlmWikiModelRoutingOutcome.ps1",
+          "sha256": "79f707c628b4c3b3c4206ba6dd3144609b5cfb4bdcd103c052063a4f5b4133be"
         }
       ],
-      "reason": "Reviewed workflow documentation impact; behavior remains the same except empty and legacy identifier collections no longer terminate strict-mode facade execution.",
+      "reason": "The followup distinguishes cold/warm journal-view measurements from entire handoff or CI performance; raw owned fixtures and evidence are retained.",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:42:09.1598456Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:36.5473904Z"
     },
     {
       "pageId": "workflow-ownership-impact",
@@ -815,18 +803,14 @@
       "pageSha256": "82ddb1109ba7b26835924019c29df7bbb942e5c0c321ea41bdebadf360848e00",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "d1d757f0f9abfd343803f0b665f144f443557b8caa2715c84488a96bbb4749ad"
+          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
         }
       ],
-      "reason": "The dispatch followup records a bounded 200-receipt measurement and distinguishes this portion from complete audit/handoff cost.",
+      "reason": "The followup distinguishes cold/warm journal-view measurements from entire handoff or CI performance; raw owned fixtures and evidence are retained.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:11.1108997Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:37.2106612Z"
     },
     {
       "pageId": "workflow-post-task-retrospective",
@@ -834,18 +818,14 @@
       "pageSha256": "dbcac0a7ae8c9e8975807cd711fc7680b3c731e74459583b85917d9bb8e1827d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "d1d757f0f9abfd343803f0b665f144f443557b8caa2715c84488a96bbb4749ad"
+          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
         }
       ],
-      "reason": "Audit and handoff now reuse the registry validated inside dispatch metrics via the existing IncludeDispatchRegistry option. The internal property is removed from public metrics. Fixed-time before/after registry and metric outputs match; tests preserve invalid/out-of-window attention, SLO, required handoff assessments and registry failures. Both consumers select their integration regressions.",
+      "reason": "Combined outcome metrics reuse one fully validated registry and one profile calculation for model/context health and instruction candidates. Default and standalone views match the previous implementation on fixed valid histories. Tests protect invalid/restored/missing journals, updated policy/current instruction hashes and retained workspace receipt verification. Catalog and fingerprint inputs include all owning helpers and new fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:11.8757197Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:37.8591816Z"
     },
     {
       "pageId": "workflow-privacy-review",
@@ -883,18 +863,14 @@
       "pageSha256": "7622935ab3aa92e0641117a4b5afc2b8faada090a2a8a83e9ea27a575f549281",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "d1d757f0f9abfd343803f0b665f144f443557b8caa2715c84488a96bbb4749ad"
+          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
         }
       ],
-      "reason": "The dispatch followup records a bounded 200-receipt measurement and distinguishes this portion from complete audit/handoff cost.",
+      "reason": "The followup distinguishes cold/warm journal-view measurements from entire handoff or CI performance; raw owned fixtures and evidence are retained.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:12.5809039Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:38.6170060Z"
     },
     {
       "pageId": "workflow-quality-risk",
@@ -903,13 +879,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4a7162268a1c09b7f3a56535b37848f8d9ff027384cb86b6e14140e44a18279e"
+          "sha256": "ea7891b6ed2f76884b1a97b96908e5a6ffdb5322fe20fbacf96fc0e62bd7d895"
         }
       ],
-      "reason": "Audit and handoff now reuse the registry validated inside dispatch metrics via the existing IncludeDispatchRegistry option. The internal property is removed from public metrics. Fixed-time before/after registry and metric outputs match; tests preserve invalid/out-of-window attention, SLO, required handoff assessments and registry failures. Both consumers select their integration regressions.",
+      "reason": "Shared JSON hashing skips only regex normalization when the exact required ordinal backslash-u marker is absent after existing HTML escaping. Slow path, serialization, hashing and all journal validation checks remain unchanged. Golden canonical strings and 92 independent baseline hashes agree in PowerShell 5 and 7; full metrics/candidates output agrees in counterbalanced runs. Portable tests and dependent receipt invalidation are now explicitly routed.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:13.5648327Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T12:17:50.9811754Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -944,18 +920,14 @@
       "pageSha256": "d6032fccda979d114e265f30e4f14d9593ded53c6b79d85a2dfc467b07fa3a61",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "d1d757f0f9abfd343803f0b665f144f443557b8caa2715c84488a96bbb4749ad"
+          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
         }
       ],
-      "reason": "The dispatch followup records a bounded 200-receipt measurement and distinguishes this portion from complete audit/handoff cost.",
+      "reason": "The followup distinguishes cold/warm journal-view measurements from entire handoff or CI performance; raw owned fixtures and evidence are retained.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:15.1333945Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:40.7904214Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -978,18 +950,14 @@
       "pageSha256": "19ab27e4988b8393d632a38bade21f376fc170acef7dd22a5d10744eb4a972a8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "d1d757f0f9abfd343803f0b665f144f443557b8caa2715c84488a96bbb4749ad"
+          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
         }
       ],
-      "reason": "The dispatch followup records a bounded 200-receipt measurement and distinguishes this portion from complete audit/handoff cost.",
+      "reason": "The followup distinguishes cold/warm journal-view measurements from entire handoff or CI performance; raw owned fixtures and evidence are retained.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:15.7943334Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:41.4670076Z"
     },
     {
       "pageId": "workflow-runtime-impact",
@@ -1013,13 +981,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4a7162268a1c09b7f3a56535b37848f8d9ff027384cb86b6e14140e44a18279e"
+          "sha256": "ea7891b6ed2f76884b1a97b96908e5a6ffdb5322fe20fbacf96fc0e62bd7d895"
         }
       ],
-      "reason": "No persisted or cross-request cache was added. The existing validated dispatch view is reused only within the current read-only composition; registry data, required validation and later fresh reads remain covered.",
+      "reason": "No persisted, cross-request or journal-verdict cache is added. Event/source/chain/schema/policy/threshold checks and current instruction-source hashes remain mandatory; no private content is added to telemetry. Combined outcome views retain validation and required workspace receipt checks.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:16.6606092Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T12:18:00.3117560Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1027,18 +995,14 @@
       "pageSha256": "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "d1d757f0f9abfd343803f0b665f144f443557b8caa2715c84488a96bbb4749ad"
+          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
         }
       ],
-      "reason": "Audit and handoff now reuse the registry validated inside dispatch metrics via the existing IncludeDispatchRegistry option. The internal property is removed from public metrics. Fixed-time before/after registry and metric outputs match; tests preserve invalid/out-of-window attention, SLO, required handoff assessments and registry failures. Both consumers select their integration regressions.",
+      "reason": "Combined outcome metrics reuse one fully validated registry and one profile calculation for model/context health and instruction candidates. Default and standalone views match the previous implementation on fixed valid histories. Tests protect invalid/restored/missing journals, updated policy/current instruction hashes and retained workspace receipt verification. Catalog and fingerprint inputs include all owning helpers and new fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:17.3095668Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:43.0423704Z"
     },
     {
       "pageId": "workflow-task-brief",
@@ -1080,18 +1044,14 @@
       "pageSha256": "7b3ea1842edd2b40e621b8bef887a96786f9bff979e494b7832a71c176439ff0",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "d1d757f0f9abfd343803f0b665f144f443557b8caa2715c84488a96bbb4749ad"
+          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
         }
       ],
-      "reason": "Audit and handoff now reuse the registry validated inside dispatch metrics via the existing IncludeDispatchRegistry option. The internal property is removed from public metrics. Fixed-time before/after registry and metric outputs match; tests preserve invalid/out-of-window attention, SLO, required handoff assessments and registry failures. Both consumers select their integration regressions.",
+      "reason": "Combined outcome metrics reuse one fully validated registry and one profile calculation for model/context health and instruction candidates. Default and standalone views match the previous implementation on fixed valid histories. Tests protect invalid/restored/missing journals, updated policy/current instruction hashes and retained workspace receipt verification. Catalog and fingerprint inputs include all owning helpers and new fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:18.0036710Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:43.7176673Z"
     },
     {
       "pageId": "workflow-task-dispatch-receipts",
@@ -1114,22 +1074,14 @@
       "pageSha256": "b202a96ec11daaeb6c19f06965768c28baf9b143f2a3264db07c52d6039f6768",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "d1d757f0f9abfd343803f0b665f144f443557b8caa2715c84488a96bbb4749ad"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
-          "sha256": "3e23391148a7f00e465becfa746f489b2b020bbd76cc36da93b5f6bbb0f5db6e"
+          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
         }
       ],
-      "reason": "Audit and handoff now reuse the registry validated inside dispatch metrics via the existing IncludeDispatchRegistry option. The internal property is removed from public metrics. Fixed-time before/after registry and metric outputs match; tests preserve invalid/out-of-window attention, SLO, required handoff assessments and registry failures. Both consumers select their integration regressions.",
+      "reason": "Combined outcome metrics reuse one fully validated registry and one profile calculation for model/context health and instruction candidates. Default and standalone views match the previous implementation on fixed valid histories. Tests protect invalid/restored/missing journals, updated policy/current instruction hashes and retained workspace receipt verification. Catalog and fingerprint inputs include all owning helpers and new fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T10:09:25.1177754Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T10:44:44.3792533Z"
     },
     {
       "pageId": "workflow-task-workspace",
@@ -1137,22 +1089,22 @@
       "pageSha256": "e7bbcdd3bf36678ac1f01992447ea0fb84eb6b4044cf3f613edd8328576d21ba",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
+          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "d1d757f0f9abfd343803f0b665f144f443557b8caa2715c84488a96bbb4749ad"
+          "path": ".llm-wiki/tools/LlmWikiJson.ps1",
+          "sha256": "5e3b6909937f375fb408fcec488afba6ca84129a1f344613cb31dbdeb00604d4"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
-          "sha256": "12c2c9e7bc111693fc37d06b356792d8e1da326e6c208d59831c3a2615c9feff"
+          "sha256": "351f9af3276feca84f845b319cb265306cdf645c428d803b5197e85f84bab097"
         }
       ],
-      "reason": "Audit and handoff now reuse the registry validated inside dispatch metrics via the existing IncludeDispatchRegistry option. The internal property is removed from public metrics. Fixed-time before/after registry and metric outputs match; tests preserve invalid/out-of-window attention, SLO, required handoff assessments and registry failures. Both consumers select their integration regressions.",
+      "reason": "Shared JSON hashing skips only regex normalization when the exact required ordinal backslash-u marker is absent after existing HTML escaping. Slow path, serialization, hashing and all journal validation checks remain unchanged. Golden canonical strings and 92 independent baseline hashes agree in PowerShell 5 and 7; full metrics/candidates output agrees in counterbalanced runs. Portable tests and dependent receipt invalidation are now explicitly routed.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:20.1004745Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T12:18:03.7156579Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1293,13 +1245,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "fdceb9b3b86ca1a69745ec9dca13a3dbbf484754df461b7dc1768524909565ac"
+          "sha256": "d9e2054a0f11d88d92e5e68f6daa801358e1f33e5019a396b858975b4086b43c"
         }
       ],
-      "reason": "The dispatch followup records a bounded 200-receipt measurement and distinguishes this portion from complete audit/handoff cost.",
+      "reason": "Reports distinguish local journal-operation measurements from complete verification and CI. Additional source-set/band memoization was rejected after failing to show a stable incremental gain. Final source identity and actual integrated gates are retained as owned evidence.",
       "baseRef": "HEAD",
-      "gitHead": "3dce67e138605112ca138fe2949edae223bf5242",
-      "reviewedAtUtc": "2026-10-08T09:56:14.3835342Z"
+      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
+      "reviewedAtUtc": "2026-10-08T12:17:55.6360759Z"
     },
     {
       "pageId": "workflow.review-diff",
