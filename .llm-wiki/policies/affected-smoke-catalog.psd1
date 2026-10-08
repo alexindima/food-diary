@@ -50,6 +50,7 @@
         @{ When = 'adaptive-evals'; Remove = @('adaptive-routing', 'adaptive-experience') }
     )
     AdditionalMatches = @(
+        @{ Pattern = '^\.llm-wiki/tools/(Get-LlmWikiTaskAudit|Get-LlmWikiTaskHandoff)\.ps1$'; Groups = @('facade-contract') }
         @{ Pattern = '^\.llm-wiki/tools/code-graph\.mjs$|^FoodDiary\.Development\.Mcp/Wiki/SqliteContextSearchReader\.cs$|^Tooling/tests/FoodDiary\.Development\.Mcp\.Tests/SqliteWikiContextSearchTests[^/]*\.cs$'; Groups = @('context-bundle') }
         @{ Pattern = '^\.llm-wiki/tools/(Get-LlmWikiTaskHandoff|Test-LlmWikiTaskHandoff)\.ps1$'; Groups = @('governed-delivery') }
         @{ Pattern = '^\.llm-wiki/tools/code-graph-batch\.mjs$'; Groups = @('context-bundle') }

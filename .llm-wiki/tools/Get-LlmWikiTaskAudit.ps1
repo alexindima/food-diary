@@ -39,8 +39,9 @@ $taskGraph = if ($normalizedTasksPath -ceq '.artifacts/llm-wiki/tasks') {
     & (Join-Path $PSScriptRoot 'Get-LlmWikiTaskGraph.ps1') -TasksPath $normalizedTasksPath -Format Json | ConvertFrom-Json
 } else { $null }
 $taskLeases = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') list -AsOfUtc $auditTime -Format Json | ConvertFrom-Json
-$taskDispatches = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskDispatch.ps1') list -AsOfUtc $auditTime -Format Json | ConvertFrom-Json
-$dispatchMetrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiDispatchMetrics.ps1') -AsOfUtc $auditTime -Format Json | ConvertFrom-Json
+$dispatchMetrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiDispatchMetrics.ps1') -AsOfUtc $auditTime -IncludeDispatchRegistry -Format Json | ConvertFrom-Json
+$taskDispatches = $dispatchMetrics.dispatchRegistry
+$dispatchMetrics.PSObject.Properties.Remove('dispatchRegistry')
 $agentRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiAgentRegistry.ps1') list -AsOfUtc $auditTime -Format Json | ConvertFrom-Json
 $circuitRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiWorkspaceCircuit.ps1') list -AsOfUtc $auditTime -Format Json | ConvertFrom-Json
 $decompositionRegistry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskDecomposition.ps1') list -AsOfUtc $auditTime -Format Json | ConvertFrom-Json

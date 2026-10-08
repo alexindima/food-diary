@@ -76,7 +76,7 @@ try {
     [IO.File]::WriteAllText((Join-Path $fixture 'source.cs'), "namespace Fixture {" + [Environment]::NewLine + 'class Sample {}' + [Environment]::NewLine + '}')
     # Control collaborators, execute the unchanged public composition script.
     $stub = @'
-param([Parameter(Position=0)][string]$Action, [string]$WorkspacePath, [string]$Format, [string]$BaseRef, [string]$Objective, [object]$PacketInput, [switch]$IncludeSealed, [string]$Id)
+param([Parameter(Position=0)][string]$Action, [string]$WorkspacePath, [string]$Format, [string]$BaseRef, [string]$Objective, [object]$PacketInput, [switch]$IncludeSealed, [switch]$IncludeDispatchRegistry, [string]$Id)
 $root = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $name = Split-Path -Leaf $PSCommandPath
 $fingerprint = if ($null -ne $PacketInput) { $PacketInput.fingerprint } else { '' }
@@ -101,7 +101,12 @@ $dataName = switch ($name) {
     'Manage-LlmWikiTaskJournal.ps1' { 'journal.json' }
     default { 'shared.json' }
 }
-Get-Content (Join-Path $root $dataName) -Raw
+$dataText = Get-Content (Join-Path $root $dataName) -Raw
+if ($IncludeDispatchRegistry) {
+    $data = $dataText | ConvertFrom-Json
+    $data | Add-Member -NotePropertyName dispatchRegistry -NotePropertyValue ($dataText | ConvertFrom-Json)
+    $data | ConvertTo-Json -Depth 20
+} else { $dataText }
 '@
     $ast = [Management.Automation.Language.Parser]::ParseFile($source,[ref]$null,[ref]$null)
     $names = @($ast.FindAll({param($node)
@@ -114,6 +119,8 @@ Get-Content (Join-Path $root $dataName) -Raw
     $full = Invoke-Handoff
     Assert-Handoff (@(Get-Calls | Where-Object { $_.tool -in $assessmentTools -and $_.action -eq 'assess' }).Count -eq 3) 'Full handoff stopped assessing missing optional artifacts.'
     $compact = Invoke-Handoff -Compact
+    Assert-Handoff (@(Get-Calls | Where-Object tool -eq 'Manage-LlmWikiTaskDispatch.ps1').Count -eq 0 -and
+        @(Get-Calls | Where-Object tool -eq 'Get-LlmWikiDispatchMetrics.ps1').Count -eq 1) 'Handoff repeated dispatch registry validation outside metrics.'
     Assert-Handoff (@(Get-Calls | Where-Object { $_.tool -in $assessmentTools }).Count -eq 0) 'Compact handoff still synthesizes missing full-only assessments.'
     Assert-Handoff (@(Get-Calls | Where-Object { $_.tool -eq 'Manage-LlmWikiTaskWorkspace.ps1' -and $_.packetFingerprint -eq 'current' }).Count -eq 1) 'Compact handoff skipped required readiness or lost its fresh packet.'
     foreach ($key in @('objective','state','readiness','continuity','nextActions','resumeCommands')) {

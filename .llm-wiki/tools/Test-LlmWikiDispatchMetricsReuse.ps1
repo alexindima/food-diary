@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param()
 $ErrorActionPreference = 'Stop'
+Set-StrictMode -Version Latest
 $repositoryRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $artifactRoot = [IO.Path]::GetFullPath((Join-Path $repositoryRoot '.artifacts/llm-wiki'))
 $fixtureRoot = Join-Path $artifactRoot ('dispatch-metrics-reuse-' + [Guid]::NewGuid().ToString('N'))
@@ -42,6 +43,52 @@ Get-Content (Join-Path $PSScriptRoot 'registry.json') -Raw
     $registry | ConvertTo-Json -Depth 10 | Set-Content $registryPath
     $fresh = & $tool @arguments -IncludeDispatchRegistry | ConvertFrom-Json
     Assert-Condition ($fresh.dispatchRegistry.invalidCount -eq 2 -and $fresh.attentionCount -eq 2) 'A later invocation reused stale registry state.'
+    # Execute the actual audit composition against owned collaborators. Invalid
+    # dispatches outside metrics records must still contribute to attention.
+    $auditSource = Join-Path $PSScriptRoot 'Get-LlmWikiTaskAudit.ps1'
+    Copy-Item -LiteralPath $auditSource -Destination $fixtureTools
+    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'LlmWikiTaskAuditHelpers.ps1') -Destination $fixtureTools
+    $auditAst = [Management.Automation.Language.Parser]::ParseFile($auditSource, [ref]$null, [ref]$null)
+    $auditTools = @($auditAst.FindAll({param($node)
+        $node -is [Management.Automation.Language.CommandAst] -and $node.InvocationOperator -eq [Management.Automation.Language.TokenKind]::Ampersand
+    }, $true) | ForEach-Object {
+        $match = [regex]::Match($_.CommandElements[0].Extent.Text, "'([^']+\.ps1)'")
+        if ($match.Success) { $match.Groups[1].Value }
+    } | Sort-Object -Unique)
+    $generic = [pscustomobject]@{
+        valid=$true;issues=@();summary=@{issueCount=0};metrics=@{invalidReceiptCount=0;invalidQualityAdjustmentCount=0}
+        invalidCount=0;invalidReceiptCount=0;degradedProfileCount=0;degradedCohortProfileCount=0;rollbackRecommended=$false
+        staleCount=0;rollbackRecommendationCount=0;eligibleCount=0;approvedCount=0;appliedCount=0;rolledBackCount=0
+        activeCount=0;successfulCount=0;pendingCount=0;flakyCount=0;totalCount=0;registryHash='fixture-registry'
+    }
+    $generic | ConvertTo-Json -Depth 10 | Set-Content (Join-Path $fixtureTools 'generic.json')
+    foreach ($name in $auditTools) {
+        if ($name -in @('Get-LlmWikiWorkspacePolicy.ps1', 'Get-LlmWikiDispatchMetrics.ps1')) { continue }
+        [IO.File]::WriteAllText((Join-Path $fixtureTools $name), "param(`$Action, `$AsOfUtc, `$Format) [IO.File]::ReadAllText((Join-Path `$PSScriptRoot 'generic.json'))")
+    }
+    [IO.File]::WriteAllText((Join-Path $fixtureTools 'LlmWikiGitPaths.ps1'), "function Invoke-LlmWikiGitCommand { param(`$RepositoryRoot, `$Arguments, `$FailureMessage) [pscustomobject]@{Lines=@('fixture-head')} }")
+    $auditMetricsPath = Join-Path $fixtureTools 'Get-LlmWikiDispatchMetrics.ps1'
+    $originalMetrics = [IO.File]::ReadAllText($auditMetricsPath)
+    $auditMetrics = @'
+param($AsOfUtc, $Format, [switch]$IncludeDispatchRegistry)
+if (-not $IncludeDispatchRegistry) { throw 'Audit omitted the validated dispatch registry.' }
+if (Test-Path -LiteralPath (Join-Path $PSScriptRoot 'reject-metrics')) { throw 'Fixture registry validation failed.' }
+[IO.File]::AppendAllText((Join-Path $PSScriptRoot 'audit-metrics-reads.txt'), "read`n")
+@{windowDays=7;slo=@{violationCount=2};dispatchRegistry=@{invalidCount=1;dispatches=@()}} | ConvertTo-Json -Depth 10
+'@
+    [IO.File]::WriteAllText($auditMetricsPath, $auditMetrics)
+    $dispatchReadsBeforeAudit = @([IO.File]::ReadAllLines((Join-Path $fixtureTools 'reads.txt'))).Count
+    $audit = & (Join-Path $fixtureTools 'Get-LlmWikiTaskAudit.ps1') -TasksPath '.artifacts/llm-wiki/tasks/empty/children' -AsOfUtc $arguments.AsOfUtc -Format Json | ConvertFrom-Json
+    Assert-Condition (-not $audit.valid -and $audit.invalidDispatchCount -eq 1 -and $audit.dispatchSloViolationCount -eq 2 -and $audit.attentionCount -eq 3) 'Audit lost dispatch or SLO attention while reusing metrics.'
+    Assert-Condition ($null -eq $audit.dispatchMetrics.PSObject.Properties['dispatchRegistry']) 'Internal dispatch registry leaked into public audit metrics.'
+    Assert-Condition (@([IO.File]::ReadAllLines((Join-Path $fixtureTools 'audit-metrics-reads.txt'))).Count -eq 1) 'Audit repeated metrics validation.'
+    Assert-Condition (@([IO.File]::ReadAllLines((Join-Path $fixtureTools 'reads.txt'))).Count -eq $dispatchReadsBeforeAudit) 'Audit reread the dispatch registry outside metrics.'
+    [IO.File]::WriteAllText((Join-Path $fixtureTools 'reject-metrics'), '')
+    $auditRejected = $false
+    try { & (Join-Path $fixtureTools 'Get-LlmWikiTaskAudit.ps1') -TasksPath '.artifacts/llm-wiki/tasks/empty/children' -Format Json | Out-Null }
+    catch { $auditRejected = $_.Exception.Message -like '*Fixture registry validation failed*' }
+    Assert-Condition $auditRejected 'Audit concealed a dispatch registry validation failure.'
+    [IO.File]::WriteAllText($auditMetricsPath, $originalMetrics)
     # Terminal dates, not start dates or local offsets, determine the UTC daily buckets.
     $registry.dispatches = @(
         @{ dispatchId = 'before-midnight'; state = 'failed'; valid = $true }

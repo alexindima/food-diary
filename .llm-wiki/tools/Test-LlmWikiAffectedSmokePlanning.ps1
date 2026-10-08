@@ -60,6 +60,11 @@ foreach ($name in @('AgentRegistry', 'TaskLease', 'SchedulePlan', 'Orchestration
     if (@(Get-Groups ".llm-wiki/tools/Manage-LlmWiki$name.ps1") -notcontains 'facade-contract') { throw "Scheduler manager '$name' omitted its lock regression." }
 }
 if (@(Get-Groups '.llm-wiki/tools/Test-LlmWikiSchedulerLocks.ps1') -notcontains 'facade-contract') { throw 'Scheduler lock regression does not select its owning group.' }
+foreach ($dispatchConsumer in @('Get-LlmWikiTaskAudit', 'Get-LlmWikiTaskHandoff')) {
+    if (@(Get-Groups ".llm-wiki/tools/$dispatchConsumer.ps1") -notcontains 'facade-contract') {
+        throw "Dispatch metrics consumer '$dispatchConsumer' omitted its reuse regression."
+    }
+}
 
 $unknownGroups = @(Get-Groups '.llm-wiki/tools/Manage-LlmWikiFutureFeature.ps1')
 if ($unknownGroups -notcontains 'tool-contract' -or $unknownGroups -contains 'full-tools') {

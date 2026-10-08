@@ -101,11 +101,12 @@ $taskGraph = & (Join-Path $PSScriptRoot 'Get-LlmWikiTaskGraph.ps1') -IncludeSeal
 $graphNode = $taskGraph.nodes | Where-Object name -eq (Split-Path -Leaf $normalizedWorkspacePath) | Select-Object -First 1
 $taskLeases = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskLease.ps1') list -Format Json | ConvertFrom-Json
 $activeLease = $taskLeases.leases | Where-Object { $_.active -and $_.workspace -eq $normalizedWorkspacePath } | Select-Object -First 1
-$taskDispatches = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskDispatch.ps1') list -Format Json | ConvertFrom-Json
+$dispatchMetrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiDispatchMetrics.ps1') -IncludeDispatchRegistry -Format Json | ConvertFrom-Json
+$taskDispatches = $dispatchMetrics.dispatchRegistry
+$dispatchMetrics.PSObject.Properties.Remove('dispatchRegistry')
 $workspaceDispatches = @($taskDispatches.dispatches | Where-Object workspace -eq $normalizedWorkspacePath | Sort-Object startedAtUtc -Descending)
 $currentDispatch = $workspaceDispatches | Where-Object state -in @('running', 'orphaned', 'packet-drift', 'context-drift', 'invalid') | Select-Object -First 1
 if ($null -eq $currentDispatch) { $currentDispatch = $workspaceDispatches | Select-Object -First 1 }
-$dispatchMetrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiDispatchMetrics.ps1') -Format Json | ConvertFrom-Json
 $ownerReliability = if ($null -ne $currentDispatch) {
     $dispatchMetrics.owners | Where-Object owner -eq $currentDispatch.owner | Select-Object -First 1
 } else { $null }
