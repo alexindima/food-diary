@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence.Recipes;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Infrastructure;
@@ -33,7 +34,7 @@ public sealed class ModuleBoundaryIntegrationTests(PostgresDatabaseFixture datab
         var user = User.Create("recipe-boundary@example.com", "hash");
         var product = Product.Create(user.Id, "Apple", MeasurementUnit.G, 100, 100, 52, 1, 1, 11, 2, 0);
         var recipe = Recipe.Create(user.Id, "Apple dish", 1);
-        recipe.AddStep(1, "Prepare").AddProductIngredient(product.Id, 100);
+        recipe.AddStep(1, "Prepare").AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(100));
         context.Users.Add(user);
         context.Products.Add(product);
         context.Recipes.Add(recipe);

@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 294,
-    "documentationPages": 224
+    "documentationPages": 225
   },
   "dotnet": {
     "projects": [
@@ -14754,6 +14754,8 @@
           "Modules/RecipeCommunity/Application/FoodDiary.Modules.RecipeCommunity.Application.csproj",
           "Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj",
           "Modules/Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj",
+          "Modules/Recipes/Domain.Contracts/FoodDiary.Modules.Recipes.Domain.Contracts.csproj",
+          "Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj",
           "Modules/Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj",
           "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
           "Modules/Usda/Application.Abstractions/FoodDiary.Modules.Usda.Application.Abstractions.csproj",
@@ -15846,6 +15848,7 @@
       "docs/ai/wiki-retrieval-ownership.md",
       "docs/architecture/COMPOSED_READ_BOUNDARIES.md",
       "docs/architecture/Exception-vs-Result.md",
+      "docs/architecture/PRIMITIVE_TYPES.md",
       "docs/architecture/TEST_PROJECT_OWNERSHIP.md",
       "docs/architecture/ai-development-reliability.md",
       "docs/architecture/architecture-improvements-20260905.md",

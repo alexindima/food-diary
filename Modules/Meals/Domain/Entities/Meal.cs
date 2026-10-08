@@ -1,5 +1,7 @@
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Meals.Domain.ValueObjects;
 using FoodDiary.Modules.Meals.Domain.Events;
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
@@ -149,14 +151,14 @@ public sealed class Meal : AggregateRoot<MealId> {
         SetModified();
     }
 
-    public MealItem AddProduct(ProductId productId, double amount) {
+    public MealItem AddProduct(ProductId productId, ProductUnitQuantity amount) {
         var item = MealItem.CreateWithProduct(Id, productId, amount);
         _items.Add(item);
         SetModified();
         return item;
     }
 
-    public MealItem AddRecipe(RecipeId recipeId, double servings) {
+    public MealItem AddRecipe(RecipeId recipeId, RecipeServingQuantity servings) {
         var item = MealItem.CreateWithRecipe(Id, recipeId, servings);
         _items.Add(item);
         SetModified();

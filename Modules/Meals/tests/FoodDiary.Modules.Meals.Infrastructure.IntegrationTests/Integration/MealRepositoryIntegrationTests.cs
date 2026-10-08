@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Modules.Meals.Infrastructure.Persistence.Meals;
@@ -31,7 +33,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         var recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe.Create(user.Id, "Legacy recipe", 2);
         recipe.SetManualNutrition(600, 20, 30, 50, fiber: null, alcohol: null);
         var meal = Meal.Create(user.Id, DateTime.UtcNow);
-        meal.AddRecipe(recipe.Id, 1);
+        meal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(1));
         meal.AddAiSession(image.Id, AiRecognitionSource.Photo, DateTime.UtcNow, notes: null,
             [MealAiItemData.Create("Apple", nameLocal: null, 100, "g", 52, 0.3, 0.2, 14, 2.4, 0)]);
         context.AddRange(user, image, recipe, meal);
@@ -57,7 +59,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         var recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe.Create(user.Id, "Current recipe", 4);
         recipe.SetManualNutrition(1000, 40, 20, 160, 5, 0);
         var meal = Meal.Create(user.Id, DateTime.UtcNow);
-        meal.AddRecipe(recipe.Id, 1).ApplyRecipeSnapshot("Saved recipe", imageUrl: null, 2, 600, 20, 30, 50, 0, 0);
+        meal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(0.75)).ApplyRecipeSnapshot("Saved recipe", imageUrl: null, 2, 600, 20, 30, 50, 0, 0);
         context.AddRange(user, recipe, meal);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
@@ -69,6 +71,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         MealItemProjectionReadModel item = Assert.Single(result.Items);
         Assert.Multiple(
             () => Assert.Equal("Saved recipe", item.RecipeName),
+            () => Assert.Equal(0.75, item.Amount),
             () => Assert.Equal(1, item.RecipeServings),
             () => Assert.Equal(300, item.RecipeTotalCalories),
             () => Assert.Equal(10, item.RecipeTotalProteins));
@@ -83,7 +86,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         var product = Product.Create(otherUser.Id, "Shared apple", MeasurementUnit.G, 100, 100,
             52, 0.3, 0.2, 14, 2.4, 0);
         var meal = Meal.Create(user.Id, DateTime.UtcNow);
-        MealItem item = meal.AddProduct(product.Id, 100);
+        MealItem item = meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(100));
         MealAiSession session = meal.AddAiSession(imageAssetId: null, AiRecognitionSource.Text, DateTime.UtcNow,
             notes: null, [MealAiItemData.Create("Apple", nameLocal: null, 100, "g", 52, 0.3, 0.2, 14, 2.4, 0)]);
         MealAiItem aiItem = Assert.Single(session.Items);
@@ -130,7 +133,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         var product = Product.Create(user.Id, "Apple", MeasurementUnit.G, 100, 100,
             52, 0.3, 0.2, 14, 2.4, 0, productType: ProductType.Fruit);
         var meal = Meal.Create(user.Id, DateTime.UtcNow);
-        MealItem item = meal.AddProduct(product.Id, 100);
+        MealItem item = meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(125.5));
         item.ApplyProductSnapshot("Original apple", imageUrl: null, MeasurementUnit.G, 100,
             40, 0.2, 0.1, 10, 2, 0);
         context.Users.Add(user);
@@ -143,6 +146,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
 
         Assert.NotNull(projection);
         MealItemProjectionReadModel projected = Assert.Single(projection.Items);
+        Assert.Equal(125.5, projected.Amount);
         Assert.Equal(ProductType.Fruit, projected.ProductType);
         Assert.Equal(40, projected.ProductCaloriesPerBase);
     }
@@ -393,10 +397,10 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         await context.SaveChangesAsync();
 
         var meal = Meal.Create(user.Id, new DateTime(2026, 5, 2, 13, 45, 0, DateTimeKind.Utc));
-        meal.AddProduct(linkedProduct.Id, 50);
-        meal.AddProduct(unlinkedProduct.Id, 125);
+        meal.AddProduct(linkedProduct.Id, ProductUnitQuantity.FromUnits(50));
+        meal.AddProduct(unlinkedProduct.Id, ProductUnitQuantity.FromUnits(125));
         var otherDayMeal = Meal.Create(user.Id, new DateTime(2026, 5, 3, 0, 0, 0, DateTimeKind.Utc));
-        otherDayMeal.AddProduct(linkedProduct.Id, 75);
+        otherDayMeal.AddProduct(linkedProduct.Id, ProductUnitQuantity.FromUnits(75));
         context.Meals.AddRange(meal, otherDayMeal);
         await context.SaveChangesAsync();
 

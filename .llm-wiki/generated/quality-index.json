@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6410,
+    "productionFiles": 6417,
     "wikiToolFiles": 210,
     "wikiToolsWithoutTestReferences": 5,
     "criticalSymbols": 994,
@@ -656,11 +656,11 @@
     },
     {
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "nonBlankLines": 374,
+      "nonBlankLines": 386,
       "decisionPoints": 66,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 106.48
+      "structuralRiskScore": 106.72
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
@@ -23946,11 +23946,11 @@
     },
     {
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
-      "nonBlankLines": 97,
+      "nonBlankLines": 98,
       "decisionPoints": 13,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.44
+      "structuralRiskScore": 21.46
     },
     {
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
@@ -24034,11 +24034,11 @@
     },
     {
       "path": "Modules/Billing/Application/Commands/ProcessQueuedBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
-      "nonBlankLines": 51,
+      "nonBlankLines": 52,
       "decisionPoints": 10,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.02
+      "structuralRiskScore": 18.04
     },
     {
       "path": "Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs",
@@ -24226,11 +24226,19 @@
     },
     {
       "path": "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs",
-      "nonBlankLines": 150,
-      "decisionPoints": 6,
+      "nonBlankLines": 165,
+      "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12
+      "structuralRiskScore": 15.3
+    },
+    {
+      "path": "Modules/Billing/Domain/Enums/BillingWebhookProcessingState.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
@@ -24450,11 +24458,11 @@
     },
     {
       "path": "Modules/Billing/PersistenceModel/BillingWebhookEventConfiguration.cs",
-      "nonBlankLines": 40,
+      "nonBlankLines": 41,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.8
+      "structuralRiskScore": 0.82
     },
     {
       "path": "Modules/Billing/Presentation/BillingWebhookHttpProcessor.cs",
@@ -24626,11 +24634,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/Common/UtcDateNormalizer.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 1,
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.72
+      "structuralRiskScore": 0.12
     },
     {
       "path": "Modules/BodyMetrics/Application/DependencyInjection.cs",
@@ -24650,11 +24658,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
-      "nonBlankLines": 43,
+      "nonBlankLines": 44,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.36
+      "structuralRiskScore": 7.38
     },
     {
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandValidator.cs",
@@ -24698,11 +24706,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
-      "nonBlankLines": 58,
+      "nonBlankLines": 60,
       "decisionPoints": 5,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.66
+      "structuralRiskScore": 10.7
     },
     {
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandValidator.cs",
@@ -24850,11 +24858,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
-      "nonBlankLines": 40,
+      "nonBlankLines": 41,
       "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.8
+      "structuralRiskScore": 5.82
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandValidator.cs",
@@ -24898,11 +24906,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
-      "nonBlankLines": 58,
+      "nonBlankLines": 60,
       "decisionPoints": 5,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.66
+      "structuralRiskScore": 10.7
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandValidator.cs",
@@ -25123,18 +25131,18 @@
     {
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WaistEntry.cs",
       "nonBlankLines": 70,
-      "decisionPoints": 9,
+      "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.9
+      "structuralRiskScore": 13.4
     },
     {
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WeightEntry.cs",
       "nonBlankLines": 70,
-      "decisionPoints": 9,
+      "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.9
+      "structuralRiskScore": 13.4
     },
     {
       "path": "Modules/BodyMetrics/Domain/ValueObjects/Ids/WaistEntryId.cs",
@@ -25151,6 +25159,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/BodyMetrics/Domain/ValueObjects/MeasurementDay.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs",
@@ -33098,11 +33114,11 @@
     },
     {
       "path": "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
-      "nonBlankLines": 36,
+      "nonBlankLines": 37,
       "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.72
+      "structuralRiskScore": 5.74
     },
     {
       "path": "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommandValidator.cs",
@@ -33122,11 +33138,11 @@
     },
     {
       "path": "Modules/Hydration/Application/Commands/CreateHydrationFromOperation/CreateHydrationFromOperationCommandHandler.cs",
-      "nonBlankLines": 47,
+      "nonBlankLines": 48,
       "decisionPoints": 6,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.94
+      "structuralRiskScore": 11.96
     },
     {
       "path": "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs",
@@ -33162,11 +33178,11 @@
     },
     {
       "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
-      "nonBlankLines": 56,
+      "nonBlankLines": 58,
       "decisionPoints": 6,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.12
+      "structuralRiskScore": 12.16
     },
     {
       "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandValidator.cs",
@@ -33354,11 +33370,11 @@
     },
     {
       "path": "Modules/Hydration/Domain/Entities/Tracking/HydrationEntry.cs",
-      "nonBlankLines": 61,
+      "nonBlankLines": 65,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.22
+      "structuralRiskScore": 10.3
     },
     {
       "path": "Modules/Hydration/Domain/Entities/Tracking/HydrationOperationReceipt.cs",
@@ -33367,6 +33383,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 5.12
+    },
+    {
+      "path": "Modules/Hydration/Domain/ValueObjects/HydrationAmount.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.78
     },
     {
       "path": "Modules/Hydration/Domain/ValueObjects/Ids/HydrationEntryId.cs",
@@ -38522,11 +38546,11 @@
     },
     {
       "path": "Modules/Meals/Application/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
-      "nonBlankLines": 174,
+      "nonBlankLines": 176,
       "decisionPoints": 12,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.48
+      "structuralRiskScore": 23.52
     },
     {
       "path": "Modules/Meals/Application/Commands/RepeatMeal/RepeatMealCommandValidator.cs",
@@ -38882,11 +38906,11 @@
     },
     {
       "path": "Modules/Meals/Application/Services/MealManualItemAppender.cs",
-      "nonBlankLines": 79,
+      "nonBlankLines": 81,
       "decisionPoints": 13,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.08
+      "structuralRiskScore": 21.12
     },
     {
       "path": "Modules/Meals/Application/Services/MealNutritionApplier.cs",
@@ -39162,11 +39186,11 @@
     },
     {
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
-      "nonBlankLines": 367,
+      "nonBlankLines": 369,
       "decisionPoints": 48,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 79.34
+      "structuralRiskScore": 79.38
     },
     {
       "path": "Modules/Meals/Domain/Entities/MealAiItem.cs",
@@ -39194,11 +39218,11 @@
     },
     {
       "path": "Modules/Meals/Domain/Entities/MealItem.cs",
-      "nonBlankLines": 242,
-      "decisionPoints": 27,
+      "nonBlankLines": 257,
+      "decisionPoints": 31,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 45.34
+      "structuralRiskScore": 51.64
     },
     {
       "path": "Modules/Meals/Domain/Entities/MealRecognitionReceipt.cs",
@@ -41593,6 +41617,14 @@
       "structuralRiskScore": 0.18
     },
     {
+      "path": "Modules/Products/Domain.Contracts/ValueObjects/ProductUnitQuantity.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.8
+    },
+    {
       "path": "Modules/Products/Domain/AssemblyInfo.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
@@ -42698,11 +42730,11 @@
     },
     {
       "path": "Modules/Recipes/Application/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
-      "nonBlankLines": 130,
+      "nonBlankLines": 132,
       "decisionPoints": 23,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 39.1
+      "structuralRiskScore": 39.14
     },
     {
       "path": "Modules/Recipes/Application/Commands/DuplicateRecipe/DuplicateRecipeCommandValidator.cs",
@@ -43210,11 +43242,11 @@
     },
     {
       "path": "Modules/Recipes/Application/Services/RecipeStepAppender.cs",
-      "nonBlankLines": 101,
+      "nonBlankLines": 103,
       "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.02
+      "structuralRiskScore": 23.06
     },
     {
       "path": "Modules/Recipes/Contracts/Common/IRecipeAccessService.cs",
@@ -43329,6 +43361,14 @@
       "structuralRiskScore": 0.18
     },
     {
+      "path": "Modules/Recipes/Domain.Contracts/ValueObjects/RecipeServingQuantity.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.8
+    },
+    {
       "path": "Modules/Recipes/Domain/AssemblyInfo.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
@@ -43354,11 +43394,11 @@
     },
     {
       "path": "Modules/Recipes/Domain/Entities/RecipeIngredient.cs",
-      "nonBlankLines": 120,
-      "decisionPoints": 14,
+      "nonBlankLines": 125,
+      "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.4
+      "structuralRiskScore": 28
     },
     {
       "path": "Modules/Recipes/Domain/Entities/RecipeIngredientProductSnapshot.cs",
@@ -43370,11 +43410,11 @@
     },
     {
       "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
-      "nonBlankLines": 111,
+      "nonBlankLines": 113,
       "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.72
+      "structuralRiskScore": 15.76
     },
     {
       "path": "Modules/Recipes/Domain/Events/RecipeAutoNutritionEnabledDomainEvent.cs",
@@ -43394,19 +43434,27 @@
     },
     {
       "path": "Modules/Recipes/Domain/Nutrition/RecipeNutritionIngredient.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 41,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.82
     },
     {
       "path": "Modules/Recipes/Domain/Nutrition/RecipeNutritionPolicy.cs",
-      "nonBlankLines": 45,
-      "decisionPoints": 21,
+      "nonBlankLines": 39,
+      "decisionPoints": 20,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 32.4
+      "structuralRiskScore": 30.78
+    },
+    {
+      "path": "Modules/Recipes/Domain/Nutrition/RecipeNutritionSource.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
     },
     {
       "path": "Modules/Recipes/Domain/Nutrition/RecipeNutritionValues.cs",
@@ -46338,11 +46386,11 @@
     },
     {
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "nonBlankLines": 374,
+      "nonBlankLines": 386,
       "decisionPoints": 66,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 106.48
+      "structuralRiskScore": 106.72
     },
     {
       "path": "Modules/Users/Domain/Entities/User.Tdee.cs",
@@ -47826,11 +47874,11 @@
     },
     {
       "path": "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
-      "nonBlankLines": 66,
+      "nonBlankLines": 65,
       "decisionPoints": 4,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.32
+      "structuralRiskScore": 9.3
     },
     {
       "path": "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandValidator.cs",
@@ -47914,11 +47962,11 @@
     },
     {
       "path": "Modules/WeeklyGoals/Domain/Entities/WeeklyGoal.cs",
-      "nonBlankLines": 149,
-      "decisionPoints": 19,
+      "nonBlankLines": 154,
+      "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 31.48
+      "structuralRiskScore": 27.08
     },
     {
       "path": "Modules/WeeklyGoals/Domain/Enums/WeeklyGoalType.cs",
@@ -47935,6 +47983,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/WeeklyGoals/Domain/ValueObjects/WeeklyGoalReminderSettings.cs",
+      "nonBlankLines": 36,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.72
     },
     {
       "path": "Modules/WeeklyGoals/Infrastructure/ModuleRegistration.cs",
@@ -52642,7 +52698,7 @@
       "name": "CreateHydrationEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
-      "line": 15,
+      "line": 16,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/HydrationFeatureTests.cs",
@@ -52655,7 +52711,7 @@
       "name": "CreateHydrationFromOperationCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Hydration/Application/Commands/CreateHydrationFromOperation/CreateHydrationFromOperationCommandHandler.cs",
-      "line": 11,
+      "line": 12,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/CreateHydrationFromOperationTests.cs",
@@ -52837,8 +52893,9 @@
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
       "line": 13,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
+        "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/MeasurementDayCommandTests.cs",
         "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
@@ -52850,8 +52907,9 @@
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
       "line": 13,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
+        "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/MeasurementDayCommandTests.cs",
         "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
@@ -53211,7 +53269,7 @@
       "name": "DuplicateRecipeCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
-      "line": 19,
+      "line": 21,
       "testReferenceCount": 3,
       "testReferences": [
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.DuplicateCommandTests.cs",
@@ -53701,12 +53759,13 @@
       "name": "ProcessQueuedBillingWebhookCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/ProcessQueuedBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
-      "line": 10,
-      "testReferenceCount": 3,
+      "line": 11,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.InboxResilienceTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs",
-        "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Workflows.cs"
+        "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Workflows.cs",
+        "Tooling/tests/FoodDiary.ArchitectureTests/BillingWebhookStateUsageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -53908,7 +53967,7 @@
       "name": "RepeatMealCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Meals/Application/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
-      "line": 20,
+      "line": 22,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/MealsFeatureTests.RepeatAndDeleteCommandTests.cs",
@@ -54650,7 +54709,7 @@
       "name": "UpdateHydrationEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
-      "line": 16,
+      "line": 17,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/HydrationFeatureTests.cs",
@@ -54828,9 +54887,10 @@
       "name": "UpdateWaistEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
-      "line": 14,
-      "testReferenceCount": 2,
+      "line": 15,
+      "testReferenceCount": 3,
       "testReferences": [
+        "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/MeasurementDayCommandTests.cs",
         "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
@@ -54841,9 +54901,10 @@
       "name": "UpdateWeightEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
-      "line": 14,
-      "testReferenceCount": 2,
+      "line": 15,
+      "testReferenceCount": 3,
       "testReferences": [
+        "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/MeasurementDayCommandTests.cs",
         "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
@@ -54946,7 +55007,7 @@
       "name": "UpsertWeeklyGoalCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
-      "line": 13,
+      "line": 14,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoalFeatureTests.cs"

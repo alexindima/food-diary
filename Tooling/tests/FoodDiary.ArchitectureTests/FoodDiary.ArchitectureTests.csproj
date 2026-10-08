@@ -104,6 +104,8 @@
     <ProjectReference Include="../../../Modules/RecipeCommunity/Application/FoodDiary.Modules.RecipeCommunity.Application.csproj" />
     <ProjectReference Include="../../../Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj" />
     <ProjectReference Include="../../../Modules/Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" />
+    <ProjectReference Include="../../../Modules/Recipes/Domain.Contracts/FoodDiary.Modules.Recipes.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj" />
     <ProjectReference Include="../../../Modules/Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj" />
     <ProjectReference Include="../../../Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj" />
     <ProjectReference Include="../../../Modules/Usda/Application.Abstractions/FoodDiary.Modules.Usda.Application.Abstractions.csproj" />

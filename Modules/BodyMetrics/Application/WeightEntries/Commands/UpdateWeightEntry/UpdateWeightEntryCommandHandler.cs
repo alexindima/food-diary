@@ -8,6 +8,7 @@ using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Commo
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects;
 using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 
 namespace FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.UpdateWeightEntry;
@@ -48,7 +49,8 @@ public sealed class UpdateWeightEntryCommandHandler(
             return Result.Failure<WeightEntryModel>(WeightEntryErrors.NotAccessible(command.WeightEntryId));
         }
 
-        DateTime normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);
+        var day = MeasurementDay.FromDateTimeEncoding(command.Date);
+        DateTime normalizedDate = day.ToUtcDateTime();
         WeightEntry? duplicate = await weightEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
@@ -59,7 +61,7 @@ public sealed class UpdateWeightEntryCommandHandler(
                 WeightEntryErrors.AlreadyExists(normalizedDate));
         }
 
-        existingEntry.Update(command.WeightKg, normalizedDate);
+        existingEntry.UpdateDetails(command.WeightKg, day);
         await weightEntryRepository.UpdateAsync(existingEntry, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(existingEntry.ToModel());

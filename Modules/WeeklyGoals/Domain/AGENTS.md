@@ -8,6 +8,7 @@ Rules for `Modules/WeeklyGoals/Domain/`.
 
 - Own `WeeklyGoal`, `WeeklyGoalId`, `WeeklyGoalType`, and their invariants.
 - Keep domain behavior independent from application, persistence, transport, and host concerns.
+- Use `WeeklyGoalReminderSettings` for reminder mutations. It keeps local `TimeOnly` and UTC `TimeSpan` offset distinct, normalizes local time to whole minutes, and clears both values when disabled. Keep scalar minute fields for persistence/read projections and primitive aggregate methods as compatibility adapters; reminder dispatch and persisted-state defensive checks retain their behavior.
 
 ## Boundaries
 

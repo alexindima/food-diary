@@ -300,7 +300,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
                     row.ManualCarbs, row.ManualFiber, row.ManualAlcohol), stored);
         }
         return RecipeNutritionPolicy.Calculate(
-            row.Steps.SelectMany(step => step.Ingredients).Select(ingredient => new RecipeNutritionIngredient(
+            row.Steps.SelectMany(step => step.Ingredients).Select(ingredient => RecipeNutritionIngredient.FromStoredSources(
                 ingredient.Amount, ingredient.ProductBaseAmount,
                 new RecipeNutritionValues(ingredient.ProductCaloriesPerBase, ingredient.ProductProteinsPerBase, ingredient.ProductFatsPerBase,
                     ingredient.ProductCarbsPerBase, ingredient.ProductFiberPerBase, ingredient.ProductAlcoholPerBase),

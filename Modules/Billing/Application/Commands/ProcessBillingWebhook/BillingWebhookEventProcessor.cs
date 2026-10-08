@@ -2,6 +2,7 @@ using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Results;
 using FoodDiary.Modules.Billing.Domain.Entities;
+using FoodDiary.Modules.Billing.Domain.Enums;
 
 namespace FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;
 
@@ -27,7 +28,7 @@ public sealed class BillingWebhookEventProcessor(
                 if (inboxEvent is not null) {
                     inboxEvent = await billingWebhookEventRepository.GetByIdAsync(inboxEvent.Id, ct).ConfigureAwait(false)
                         ?? throw new InvalidOperationException("The webhook inbox event no longer exists.");
-                    if (string.Equals(inboxEvent.Status, BillingWebhookEvent.ProcessedStatus, StringComparison.Ordinal)) {
+                    if (inboxEvent.ProcessingState == BillingWebhookProcessingState.Processed) {
                         return;
                     }
                 }

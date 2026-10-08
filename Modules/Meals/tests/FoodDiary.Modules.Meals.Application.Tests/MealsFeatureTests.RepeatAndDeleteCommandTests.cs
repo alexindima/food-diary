@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Domain.ValueObjects;
@@ -76,7 +78,7 @@ public partial class MealsFeatureTests {
     public async Task RepeatMealCommandHandler_WhenNutritionFails_DoesNotAddMealOrEnqueueAchievements(string errorCode) {
         var user = User.Create("repeat-failure@example.com", "hash");
         var sourceMeal = Meal.Create(user.Id, DateTime.UtcNow.AddDays(-1));
-        sourceMeal.AddProduct(ProductId.New(), 100);
+        sourceMeal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(100));
         var repository = new SingleMealRepository(sourceMeal);
         IMealNutritionService nutrition = Substitute.For<IMealNutritionService>();
         var error = new Error(errorCode, "Source is no longer accessible.");
@@ -98,8 +100,8 @@ public partial class MealsFeatureTests {
     public async Task RepeatMealCommandHandler_WithExistingMeal_CopiesItemsAndAppliesNutrition() {
         var user = User.Create("repeat-meal@example.com", "hash");
         var sourceMeal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
-        sourceMeal.AddProduct(ProductId.New(), 200);
-        sourceMeal.AddRecipe(RecipeId.New(), 1);
+        sourceMeal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(200));
+        sourceMeal.AddRecipe(RecipeId.New(), RecipeServingQuantity.FromServings(1));
 
         var repository = new SingleMealRepository(sourceMeal);
         IMealAchievementEvaluationRequest achievementOutbox = Substitute.For<IMealAchievementEvaluationRequest>();

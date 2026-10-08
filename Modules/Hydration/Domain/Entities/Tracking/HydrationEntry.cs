@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Hydration.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Hydration.Domain.ValueObjects;
 using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -6,7 +7,7 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 namespace FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 
 public sealed class HydrationEntry : AggregateRoot<HydrationEntryId> {
-    public const int MaximumAmountMl = 10000;
+    public const int MaximumAmountMl = HydrationAmount.MaximumMilliliters;
 
     public UserId UserId { get; private set; }
     public DateTime Timestamp { get; private set; }
@@ -21,13 +22,18 @@ public sealed class HydrationEntry : AggregateRoot<HydrationEntryId> {
 
     public static HydrationEntry Create(UserId userId, DateTime timestampUtc, int amountMl) {
         EnsureUserId(userId);
-        int normalizedAmountMl = NormalizeAmount(amountMl);
+        return CreateWithAmount(userId, timestampUtc, HydrationAmount.FromMilliliters(amountMl));
+    }
+
+    public static HydrationEntry CreateWithAmount(UserId userId, DateTime timestampUtc, HydrationAmount amount) {
+        EnsureUserId(userId);
+        ArgumentNullException.ThrowIfNull(amount);
         DateTime normalizedTimestamp = Normalize(timestampUtc);
 
         var entry = new HydrationEntry(HydrationEntryId.New()) {
             UserId = userId,
             Timestamp = normalizedTimestamp,
-            AmountMl = normalizedAmountMl,
+            AmountMl = amount.Milliliters,
         };
 
         entry.SetCreated();
@@ -35,7 +41,12 @@ public sealed class HydrationEntry : AggregateRoot<HydrationEntryId> {
     }
 
     public void Update(int? amountMl = null, DateTime? timestampUtc = null) {
-        int? normalizedAmountMl = amountMl.HasValue ? NormalizeAmount(amountMl.Value) : null;
+        HydrationAmount? amount = amountMl.HasValue ? HydrationAmount.FromMilliliters(amountMl.Value) : null;
+        UpdateDetails(amount, timestampUtc);
+    }
+
+    public void UpdateDetails(HydrationAmount? amount = null, DateTime? timestampUtc = null) {
+        int? normalizedAmountMl = amount?.Milliliters;
         DateTime? normalizedTimestamp = timestampUtc.HasValue ? Normalize(timestampUtc.Value) : null;
         bool changed = false;
 
@@ -68,9 +79,4 @@ public sealed class HydrationEntry : AggregateRoot<HydrationEntryId> {
         }
     }
 
-    private static int NormalizeAmount(int value) {
-        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(value, 0);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(value, MaximumAmountMl);
-        return value;
-    }
 }

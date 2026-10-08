@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
@@ -61,8 +63,8 @@ public partial class MealsFeatureTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.SetManualNutrition(200, 10, 4, 20, 2, 0);
 
-        meal.AddProduct(product.Id, 50);
-        meal.AddRecipe(recipe.Id, 1);
+        meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(50));
+        meal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(1));
         meal.AddAiSession(
             imageAssetId: null,
             source: AiRecognitionSource.Text,
@@ -90,7 +92,7 @@ public partial class MealsFeatureTests {
         var userId = UserId.New();
         var meal = Meal.Create(userId, DateTime.UtcNow, MealType.Lunch);
 
-        meal.AddRecipe(RecipeId.New(), 1);
+        meal.AddRecipe(RecipeId.New(), RecipeServingQuantity.FromServings(1));
 
         MealNutritionSummary result = MealNutritionCalculator.Calculate(
             meal,

@@ -3,6 +3,7 @@
 - Own `BillingSubscription`, `BillingPayment`, `BillingWebhookEvent` and payment kinds. Provider names and their pure support predicate belong to Billing Domain.Contracts.
 - Use namespaces matching project and folders. Preserve EF table, column, index and relationship identity.
 - Keep provider SDK, EF, HTTP and secret concerns out of this project.
+- Internal webhook lifecycle decisions use `BillingWebhookProcessingState`; known transitions write storage codes through the typed codec. Keep the mapped `Status` string and exact ordinal codes for persistence/projections. Unrecognized stored rows preserve their raw value and legacy transition behavior. Payment/subscription provider statuses remain open strings; do not classify them with the internal webhook enum.
 
 Generic DomainGuard belongs to FoodDiary.Domain.Primitives, referenced directly. Central Domain grants no friend access. BillingDomainGuard owns numeric(19,3) storage limits and three-ASCII-letter currency validation; do not add these policies to Primitives.
 

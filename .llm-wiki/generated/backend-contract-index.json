@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1337,
     "ambiguousContracts": 29,
-    "consumerEdges": 10434,
+    "consumerEdges": 10448,
     "productionConsumerEdges": 5982,
-    "testConsumerEdges": 4452,
+    "testConsumerEdges": 4466,
     "consumedContracts": 1337,
     "unconsumedContracts": 0
   },
@@ -28489,7 +28489,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
       "isTest": false,
-      "referenceCount": 3
+      "referenceCount": 2
     },
     {
       "contract": "BillingWebhookEvent",
@@ -28541,7 +28541,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessQueuedBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
       "isTest": false,
-      "referenceCount": 3
+      "referenceCount": 1
     },
     {
       "contract": "BillingWebhookEvent",
@@ -28682,6 +28682,19 @@
         "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingWebhookProcessingStateTests.cs",
+      "isTest": true,
+      "referenceCount": 10
+    },
+    {
+      "contract": "BillingWebhookEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingWebhookRetryBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 7
@@ -28698,6 +28711,19 @@
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/Domain/BillingInvariantTests.cs",
       "isTest": true,
       "referenceCount": 6
+    },
+    {
+      "contract": "BillingWebhookEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/WebhookStateMappingTests.cs",
+      "isTest": true,
+      "referenceCount": 8
     },
     {
       "contract": "BillingWebhookEvent",
@@ -35556,6 +35582,19 @@
         "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/MeasurementDayCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "CreateWaistEntryCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 8
@@ -35715,6 +35754,19 @@
       "consumerPath": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Mappings/WeightEntryHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "CreateWeightEntryCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/MeasurementDayCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "CreateWeightEntryCommand",
@@ -70892,6 +70944,19 @@
         "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/MeasurementDayCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -74844,6 +74909,19 @@
         "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BodyMetricsMeasurementDayIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/CommunityPlanningContextIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -75469,6 +75547,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BodyMetricsConcurrencyIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IDomainEventPublisher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BodyMetricsMeasurementDayIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -95021,7 +95112,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/SendWeeklyGoalRemindersCommandHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 10
     },
     {
       "contract": "INotificationWriter",
@@ -117095,7 +117186,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoalFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 15
+      "referenceCount": 17
     },
     {
       "contract": "ISender",
@@ -120449,7 +120540,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/SendWeeklyGoalRemindersCommandHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 10
     },
     {
       "contract": "IUnitOfWork",
@@ -120489,6 +120580,19 @@
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BodyMetricsConcurrencyIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BodyMetricsMeasurementDayIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IUnitOfWork",
@@ -130028,6 +130132,19 @@
         "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/MeasurementDayCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "IWaistEntryWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -130057,6 +130174,19 @@
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BodyMetricsConcurrencyIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IWaistEntryWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WaistEntries/Common/IWaistEntryWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BodyMetricsMeasurementDayIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IWaistEntryWriteRepository",
@@ -131863,7 +131993,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/SendWeeklyGoalRemindersCommandHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 10
     },
     {
       "contract": "IWeeklyGoalRepository",
@@ -131876,7 +132006,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoalFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 19
+      "referenceCount": 23
     },
     {
       "contract": "IWeeklyGoalRepository",
@@ -132212,6 +132342,19 @@
         "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/MeasurementDayCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "IWeightEntryWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -132241,6 +132384,19 @@
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BodyMetricsConcurrencyIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IWeightEntryWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application.Abstractions/WeightEntries/Common/IWeightEntryWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BodyMetricsMeasurementDayIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IWeightEntryWriteRepository",
@@ -136634,7 +136790,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/SendWeeklyGoalRemindersCommandHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "NotificationRequest",
@@ -148281,7 +148437,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/SendWeeklyGoalRemindersCommandHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 7
     },
     {
       "contract": "SendWeeklyGoalRemindersCommand",
@@ -155073,6 +155229,19 @@
         "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/MeasurementDayCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UpdateWaistEntryCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 6
@@ -155205,6 +155374,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Presentation/Features/WeightEntries/Mappings/WeightEntryHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UpdateWeightEntryCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/MeasurementDayCommandTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -156258,7 +156440,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoalFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 11
     },
     {
       "contract": "UpsertWeeklyGoalCommand",

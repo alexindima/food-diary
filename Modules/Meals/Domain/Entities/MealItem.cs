@@ -3,6 +3,8 @@ using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
 
@@ -38,34 +40,34 @@ public sealed class MealItem : Entity<MealItemId> {
 
     private MealItem() { }
 
-    internal static MealItem CreateWithProduct(MealId mealId, ProductId productId, double amount) {
+    internal static MealItem CreateWithProduct(MealId mealId, ProductId productId, ProductUnitQuantity amount) {
         EnsureMealId(mealId);
         EnsureProductId(productId);
-        double normalizedAmount = ValidateAmount(amount, nameof(amount));
+        ArgumentNullException.ThrowIfNull(amount);
 
         var item = new MealItem {
             Id = MealItemId.New(),
             MealId = mealId,
             ProductId = productId,
             RecipeId = null,
-            Amount = normalizedAmount,
+            Amount = amount.Value,
             Origin = MealItemOrigin.Manual,
         };
         item.SetCreated();
         return item;
     }
 
-    internal static MealItem CreateWithRecipe(MealId mealId, RecipeId recipeId, double servings) {
+    internal static MealItem CreateWithRecipe(MealId mealId, RecipeId recipeId, RecipeServingQuantity servings) {
         EnsureMealId(mealId);
         EnsureRecipeId(recipeId);
-        double normalizedServings = ValidateAmount(servings, nameof(servings));
+        ArgumentNullException.ThrowIfNull(servings);
 
         var item = new MealItem {
             Id = MealItemId.New(),
             MealId = mealId,
             ProductId = null,
             RecipeId = recipeId,
-            Amount = normalizedServings,
+            Amount = servings.Value,
             Origin = MealItemOrigin.Manual,
         };
         item.SetCreated();
@@ -123,8 +125,23 @@ public sealed class MealItem : Entity<MealItemId> {
             (totalAlcohol ?? 0) / servings);
     }
 
-    public void UpdateAmount(double amount) {
-        double normalizedAmount = ValidateAmount(amount, nameof(amount));
+    public void UpdateProductQuantity(ProductUnitQuantity amount) {
+        ArgumentNullException.ThrowIfNull(amount);
+        if (!ProductId.HasValue || RecipeId.HasValue) {
+            throw new InvalidOperationException("Product quantity can be applied only to a product meal item.");
+        }
+        ApplyAmount(amount.Value);
+    }
+
+    public void UpdateRecipeServings(RecipeServingQuantity servings) {
+        ArgumentNullException.ThrowIfNull(servings);
+        if (!RecipeId.HasValue || ProductId.HasValue) {
+            throw new InvalidOperationException("Recipe servings can be applied only to a recipe meal item.");
+        }
+        ApplyAmount(servings.Value);
+    }
+
+    private void ApplyAmount(double normalizedAmount) {
         if (Math.Abs(Amount - normalizedAmount) <= ComparisonEpsilon) {
             return;
         }

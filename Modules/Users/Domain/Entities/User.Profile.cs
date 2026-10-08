@@ -118,29 +118,42 @@ public sealed partial class User {
         string? gender = null,
         double? weight = null,
         double? height = null) {
-        UpdatePersonalInfo(new UserPersonalInfoUpdate(
-            Username: username,
-            FirstName: firstName,
-            LastName: lastName,
-            BirthDate: birthDate,
-            Gender: gender,
-            WeightKg: weight,
-            HeightCm: height));
+        UpdatePersonalInfoCore(username, firstName, lastName, birthDate, gender, weight, height, birthDateSpecified: false);
     }
 
     public void UpdatePersonalInfo(UserPersonalInfoUpdate update) {
-        EnsureNotDeleted();
-        (string? username, string? firstName, string? lastName) = (Username, FirstName, LastName);
-        (DateTime? birthDate, string? gender, double? weight, double? height) = (BirthDate, Gender, WeightKg, HeightCm);
-        if (ApplyPersonalInfoChanges(
+        UpdatePersonalInfoCore(
             update.Username,
             update.FirstName,
             update.LastName,
             update.BirthDate,
             update.Gender,
-            update.WeightKg,
-            update.HeightCm,
-            update.BirthDateSpecified)) {
+            update.WeightKg?.Value,
+            update.HeightCm?.Value,
+            update.BirthDateSpecified);
+    }
+
+    private void UpdatePersonalInfoCore(
+        string? nextUsername,
+        string? nextFirstName,
+        string? nextLastName,
+        DateTime? nextBirthDate,
+        string? nextGender,
+        double? nextWeight,
+        double? nextHeight,
+        bool birthDateSpecified) {
+        EnsureNotDeleted();
+        (string? username, string? firstName, string? lastName) = (Username, FirstName, LastName);
+        (DateTime? birthDate, string? gender, double? weight, double? height) = (BirthDate, Gender, WeightKg, HeightCm);
+        if (ApplyPersonalInfoChanges(
+            nextUsername,
+            nextFirstName,
+            nextLastName,
+            nextBirthDate,
+            nextGender,
+            nextWeight,
+            nextHeight,
+            birthDateSpecified)) {
             if (birthDate != BirthDate || !string.Equals(gender, Gender, StringComparison.Ordinal)
                 || !NullableAreClose(weight, WeightKg) || !NullableAreClose(height, HeightCm)) {
                 NutritionProfile.Touch();

@@ -72,7 +72,11 @@ public sealed class UserProfileProjectionIntegrationTests(PostgresDatabaseFixtur
     public async Task ConsumerProfiles_ProjectOnlyRequiredValues() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create("feature-profiles@example.com", "hash");
-        user.UpdatePersonalInfo(birthDate: new DateTime(1990, 3, 1, 0, 0, 0, DateTimeKind.Utc), gender: "M", weight: 80, height: 180);
+        user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
+            BirthDate: new DateTime(1990, 3, 1, 0, 0, 0, DateTimeKind.Utc),
+            Gender: "M",
+            WeightKg: ProfileWeightKg.Create(80.25),
+            HeightCm: ProfileHeightCm.Create(180.5)));
         user.AcceptAiConsent();
         user.SetTimeZone("Asia/Tbilisi");
         user.UpdateGoals(new UserGoalUpdate(
@@ -110,7 +114,7 @@ public sealed class UserProfileProjectionIntegrationTests(PostgresDatabaseFixtur
             () => Assert.Equal(user.HydrationGoal ?? user.WaterGoal, hydration.EffectiveWaterGoal),
             () => Assert.Equal(user.CalculateBmr(), tdee.Bmr),
             () => Assert.Equal(user.CalculateEstimatedTdee(), tdee.EstimatedTdee),
-            () => Assert.Equal(user.WeightKg, tdee.WeightKg),
+            () => Assert.Equal(80.25, tdee.WeightKg),
             () => Assert.Equal(user.DesiredWeightKg, tdee.DesiredWeightKg),
             () => Assert.Equal(user.DailyCalorieTarget, tdee.DailyCalorieTarget),
             () => Assert.Equal(user.DailyCalorieTarget, weeklyCheckIn.DailyCalorieTarget),
@@ -124,6 +128,8 @@ public sealed class UserProfileProjectionIntegrationTests(PostgresDatabaseFixtur
             () => Assert.Equal(user.FirstName, dietologist.FirstName),
             () => Assert.False(dietologist.IsDietologist));
         Assert.NotNull(tdee.Bmr);
+        Assert.Equal(180.5, await context.Users.Where(candidate => candidate.Id == user.Id)
+            .Select(candidate => candidate.NutritionProfile.HeightCm).SingleAsync());
         Assert.Empty(context.ChangeTracker.Entries());
     }
 

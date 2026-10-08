@@ -2,7 +2,7 @@ using System.Globalization;
 
 namespace FoodDiary.Modules.Users.Domain.ValueObjects;
 
-public readonly record struct ProfileWeightKg {
+public sealed record ProfileWeightKg {
     public const double MaxValue = 500d;
 
     public double Value { get; }

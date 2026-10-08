@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Outbox.Infrastructure;
@@ -102,7 +104,7 @@ public sealed class SharedFavoritesContextIntegrationTests(PostgresDatabaseFixtu
             var meal = Meal.Create(owner.Id, DateTime.UtcNow, imageUrl: index == 22 ? "https://example.com/meal.jpg" : null,
                 imageAssetId: index == 0 || index == 22 ? cover.Id : null);
             meal.ApplyNutrition(new FoodDiary.Modules.Meals.Domain.ValueObjects.MealNutritionUpdate(130, 2, 1, 28, 7.5, 0, IsAutoCalculated: true));
-            MealItem mealItem = index == 1 ? meal.AddRecipe(recipe.Id, 1) : meal.AddProduct(product.Id, 100);
+            MealItem mealItem = index == 1 ? meal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(1)) : meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(100));
             if (index > 1) {
                 mealItem.ApplyProductSnapshot("Рис 100%_готовый", imageUrl: "https://example.com/rice.jpg", MeasurementUnit.G, 100, 130, 2, 1, 28, 1, 0);
             }

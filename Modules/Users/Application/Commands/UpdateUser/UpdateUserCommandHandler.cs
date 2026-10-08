@@ -180,8 +180,8 @@ public sealed class UpdateUserCommandHandler(
             LastName: command.LastName?.Trim(),
             BirthDate: command.BirthDate,
             Gender: values.Gender,
-            WeightKg: command.WeightKg,
-            HeightCm: command.HeightCm,
+            WeightKg: command.WeightKg is { } weight ? ProfileWeightKg.Create(weight) : null,
+            HeightCm: command.HeightCm is { } height ? ProfileHeightCm.Create(height) : null,
             BirthDateSpecified: command.BirthDateSpecified));
         user.UpdateActivity(new UserActivityUpdate(
             ActivityLevel: values.ActivityLevel,

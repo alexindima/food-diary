@@ -3,6 +3,7 @@ using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 
@@ -21,12 +22,16 @@ public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
 
     public static WaistEntry Create(UserId userId, DateTime date, double circumference) {
         EnsureUserId(userId);
-        DateTime normalizedDate = NormalizeDate(date);
+        return CreateForDay(userId, MeasurementDay.FromDateTimeEncoding(date), circumference);
+    }
+
+    public static WaistEntry CreateForDay(UserId userId, MeasurementDay day, double circumference) {
+        EnsureUserId(userId);
         double normalizedCircumference = NormalizeCircumference(circumference);
 
         var entry = new WaistEntry(WaistEntryId.New()) {
             UserId = userId,
-            Date = normalizedDate,
+            Date = day.ToUtcDateTime(),
             CircumferenceCm = normalizedCircumference,
         };
 
@@ -35,6 +40,10 @@ public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
     }
 
     public void Update(double? circumference = null, DateTime? date = null) {
+        UpdateDetails(circumference, date.HasValue ? MeasurementDay.FromDateTimeEncoding(date.Value) : null);
+    }
+
+    public void UpdateDetails(double? circumference = null, MeasurementDay? day = null) {
         bool changed = false;
 
         if (circumference.HasValue) {
@@ -45,8 +54,8 @@ public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
             }
         }
 
-        if (date.HasValue) {
-            DateTime normalizedDate = NormalizeDate(date.Value);
+        if (day.HasValue) {
+            DateTime normalizedDate = day.Value.ToUtcDateTime();
             if (Date != normalizedDate) {
                 Date = normalizedDate;
                 changed = true;
@@ -56,16 +65,6 @@ public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
         if (changed) {
             SetModified();
         }
-    }
-
-    private static DateTime NormalizeDate(DateTime value) {
-        if (value.Kind == DateTimeKind.Unspecified) {
-            return DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
-        }
-
-        DateTime utc = value.ToUniversalTime();
-
-        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 
     private static double NormalizeCircumference(double value) {

@@ -8,6 +8,8 @@ MealType and AiRecognitionSource belong to Domain.Contracts with unchanged membe
 MeasurementUnit belongs to Products Domain.Contracts, referenced directly; Visibility belongs to shared Primitives.
 Keep scalar product/recipe/image IDs and nutrition snapshots unchanged.
 
+Meal item mutations distinguish Products `ProductUnitQuantity` from Recipes `RecipeServingQuantity`. Do not restore double add/update overloads or the generic `UpdateAmount` writer. Product amounts retain their source product units; recipe amounts are fractional servings. Keep scalar `Amount` persistence, snapshot bases/units, comparison tolerance, identity and audit behavior. Source-specific item updates reject the opposite item kind before mutation.
+
 User ownership: reference Users Domain.Contracts for UserId and shared user values. Keep foreign keys scalar; foreign aggregate CLR navigations are prohibited. PersistenceModel preserves the relational constraints with typed HasOne<T>() mappings.
 
 Generic DomainGuard belongs to FoodDiary.Domain.Primitives, referenced directly. Central Domain grants no friend access.

@@ -63,11 +63,14 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoalFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/WeeklyGoalIdInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/WeeklyGoalInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/WeeklyGoalReminderSettingsTests.cs`
+- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/WeeklyGoalTypedReminderTests.cs`
 - [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/WeeklyGoals/WeeklyGoalTests.cs`
 - [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/PostgresDatabaseCollection.cs`
 - [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/PostgresDatabaseFixture.cs`
 - [integration] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalRepositoryIntegrationTests.cs`
 - [integration] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalTransactionIntegrationTests.cs`
+- [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalTypedReminderPersistenceTests.cs`
 - [presentation] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Presentation.Tests/WeeklyGoalsControllerTests.cs`
 - [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/WeeklyGoalsModuleExtractionTests.cs`
 

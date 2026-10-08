@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
@@ -193,14 +195,14 @@ public class MealInvariantTests {
     public void AddProduct_WithEmptyProductId_Throws() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
 
-        Assert.Throws<ArgumentException>(() => meal.AddProduct(ProductId.Empty, 100));
+        Assert.Throws<ArgumentException>(() => meal.AddProduct(ProductId.Empty, ProductUnitQuantity.FromUnits(100)));
     }
 
     [Fact]
     public void AddRecipe_WithEmptyRecipeId_Throws() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
 
-        Assert.Throws<ArgumentException>(() => meal.AddRecipe(RecipeId.Empty, 1));
+        Assert.Throws<ArgumentException>(() => meal.AddRecipe(RecipeId.Empty, RecipeServingQuantity.FromServings(1)));
     }
 
     [Fact]
@@ -210,7 +212,7 @@ public class MealInvariantTests {
             BindingFlags.Static | BindingFlags.NonPublic)!;
 
         TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() =>
-            createMethod.Invoke(null, [MealId.Empty, ProductId.New(), 100d]));
+            createMethod.Invoke(null, [MealId.Empty, ProductId.New(), ProductUnitQuantity.FromUnits(100)]));
 
         Assert.IsType<ArgumentException>(ex.InnerException);
     }
@@ -220,7 +222,7 @@ public class MealInvariantTests {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
         var recipeId = RecipeId.New();
 
-        MealItem item = meal.AddRecipe(recipeId, 2);
+        MealItem item = meal.AddRecipe(recipeId, RecipeServingQuantity.FromServings(2));
 
         Assert.Multiple(
             () => Assert.Equal(meal.Id, item.MealId),
@@ -242,7 +244,7 @@ public class MealInvariantTests {
     public void AddProduct_WithInvalidAmount_Throws(double amount) {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => meal.AddProduct(ProductId.New(), amount));
+        Assert.Throws<ArgumentOutOfRangeException>(() => meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(amount)));
     }
 
     [Theory]
@@ -253,7 +255,7 @@ public class MealInvariantTests {
     public void AddRecipe_WithInvalidServings_Throws(double servings) {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => meal.AddRecipe(RecipeId.New(), servings));
+        Assert.Throws<ArgumentOutOfRangeException>(() => meal.AddRecipe(RecipeId.New(), RecipeServingQuantity.FromServings(servings)));
     }
 
     [Fact]
@@ -267,7 +269,7 @@ public class MealInvariantTests {
     public void RemoveItem_WhenItemNotInMeal_DoesNotSetModifiedOnUtc() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
         var anotherMeal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        MealItem foreignItem = anotherMeal.AddProduct(ProductId.New(), 100);
+        MealItem foreignItem = anotherMeal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(100));
 
         meal.RemoveItem(foreignItem);
 
@@ -277,7 +279,7 @@ public class MealInvariantTests {
     [Fact]
     public void RemoveItem_WhenItemExists_RemovesItemAndSetsModifiedOnUtc() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        MealItem item = meal.AddProduct(ProductId.New(), 100);
+        MealItem item = meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(100));
 
         meal.RemoveItem(item);
 
@@ -288,9 +290,9 @@ public class MealInvariantTests {
     [Fact]
     public void MealItem_UpdateAmount_WithSameValue_DoesNotSetModifiedOnUtc() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        MealItem item = meal.AddProduct(ProductId.New(), 100);
+        MealItem item = meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(100));
 
-        item.UpdateAmount(100);
+        item.UpdateProductQuantity(ProductUnitQuantity.FromUnits(100));
 
         Assert.Null(item.ModifiedOnUtc);
     }
@@ -298,9 +300,9 @@ public class MealInvariantTests {
     [Fact]
     public void MealItem_UpdateAmount_WithCloseValue_DoesNotSetModifiedOnUtc() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        MealItem item = meal.AddProduct(ProductId.New(), 100);
+        MealItem item = meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(100));
 
-        item.UpdateAmount(100.0000005);
+        item.UpdateProductQuantity(ProductUnitQuantity.FromUnits(100.0000005));
 
         Assert.Equal(100, item.Amount);
         Assert.Null(item.ModifiedOnUtc);
@@ -309,9 +311,9 @@ public class MealInvariantTests {
     [Fact]
     public void MealItem_UpdateAmount_WithBoundaryValue_UpdatesAmount() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        MealItem item = meal.AddProduct(ProductId.New(), 100);
+        MealItem item = meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(100));
 
-        item.UpdateAmount(1000000d);
+        item.UpdateProductQuantity(ProductUnitQuantity.FromUnits(1000000d));
 
         Assert.Equal(1000000d, item.Amount);
         Assert.NotNull(item.ModifiedOnUtc);
@@ -323,7 +325,7 @@ public class MealInvariantTests {
     [InlineData(double.NegativeInfinity)]
     public void MealItem_ApplyProductSnapshot_WithNonFiniteNutrition_Throws(double caloriesPerBase) {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        MealItem item = meal.AddProduct(ProductId.New(), 100);
+        MealItem item = meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(100));
         Product product = CreateProduct();
         SetPrivateProperty(product, nameof(Product.CaloriesPerBase), caloriesPerBase);
 
@@ -335,7 +337,7 @@ public class MealInvariantTests {
     [Fact]
     public void MealItem_ApplySource_WithSourceAndManualOrigin_Throws() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        MealItem item = meal.AddProduct(ProductId.New(), 100);
+        MealItem item = meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(100));
 
         Assert.Throws<ArgumentException>(() => item.ApplySource(MealAiItemId.New(), MealItemOrigin.Manual));
     }
@@ -343,7 +345,7 @@ public class MealInvariantTests {
     [Fact]
     public void MealItem_ApplySource_WithAiOrigin_UpdatesSourceOriginAndModifiedTimestamp() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        MealItem item = meal.AddProduct(ProductId.New(), 100);
+        MealItem item = meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(100));
         var sourceAiItemId = MealAiItemId.New();
 
         item.ApplySource(sourceAiItemId, MealItemOrigin.AiText);
@@ -365,7 +367,7 @@ public class MealInvariantTests {
     [Fact]
     public void ClearItems_WithExistingItems_RemovesItemsAndSetsModifiedOnUtc() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        meal.AddProduct(ProductId.New(), 100);
+        meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(100));
 
         meal.ClearItems();
 

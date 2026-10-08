@@ -1,0 +1,661 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "a87e311f29ab696469666c48f82799a2f3a6cd41",
+  "capturedAtUtc": "2026-10-07T20:07:40.0197458Z",
+  "summary": {
+    "Modules": 34,
+    "SyntaxErrors": 0.0,
+    "PrimitiveDeclarations": 17720,
+    "Declarations": 4516,
+    "SourceFiles": 4402,
+    "ProjectsWithSources": 296
+  },
+  "interpretation": "Syntax inventory coverage; counts do not imply defects. Reviewed meaning and priorities live in PRIMITIVE_TYPES.md.",
+  "exclusions": [
+    "test sources",
+    "build output",
+    "migrations",
+    "generated API clients",
+    "designer/generated C#"
+  ],
+  "modules": [
+    {
+      "module": "Admin",
+      "sourceFiles": 371,
+      "projects": 7,
+      "primitiveDeclarations": 1447,
+      "domainPrimitiveDeclarations": 13,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "Ai",
+      "sourceFiles": 168,
+      "projects": 7,
+      "primitiveDeclarations": 658,
+      "domainPrimitiveDeclarations": 47,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "Billing",
+      "sourceFiles": 108,
+      "projects": 8,
+      "primitiveDeclarations": 694,
+      "domainPrimitiveDeclarations": 243,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Domain.Contracts",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "BodyMetrics",
+      "sourceFiles": 111,
+      "projects": 9,
+      "primitiveDeclarations": 242,
+      "domainPrimitiveDeclarations": 26,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation",
+        "Presentation.Contracts",
+        "Presentation.Mappings"
+      ]
+    },
+    {
+      "module": "ContentReports",
+      "sourceFiles": 38,
+      "projects": 8,
+      "primitiveDeclarations": 77,
+      "domainPrimitiveDeclarations": 17,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Domain.Contracts",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "Cycles",
+      "sourceFiles": 142,
+      "projects": 10,
+      "primitiveDeclarations": 755,
+      "domainPrimitiveDeclarations": 229,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Domain.Contracts",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation",
+        "Presentation.Contracts",
+        "Presentation.Mappings"
+      ]
+    },
+    {
+      "module": "DailyAdvices",
+      "sourceFiles": 34,
+      "projects": 6,
+      "primitiveDeclarations": 94,
+      "domainPrimitiveDeclarations": 32,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel"
+      ]
+    },
+    {
+      "module": "Dashboard",
+      "sourceFiles": 70,
+      "projects": 6,
+      "primitiveDeclarations": 300,
+      "domainPrimitiveDeclarations": 0,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Presentation",
+        "Presentation.Contracts",
+        "Presentation.Mappings"
+      ]
+    },
+    {
+      "module": "Dietologist",
+      "sourceFiles": 227,
+      "projects": 8,
+      "primitiveDeclarations": 769,
+      "domainPrimitiveDeclarations": 90,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation",
+        "Presentation.Contracts"
+      ]
+    },
+    {
+      "module": "Exercises",
+      "sourceFiles": 43,
+      "projects": 7,
+      "primitiveDeclarations": 146,
+      "domainPrimitiveDeclarations": 34,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "Export",
+      "sourceFiles": 44,
+      "projects": 4,
+      "primitiveDeclarations": 362,
+      "domainPrimitiveDeclarations": 0,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Infrastructure",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "Fasting",
+      "sourceFiles": 164,
+      "projects": 9,
+      "primitiveDeclarations": 621,
+      "domainPrimitiveDeclarations": 211,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation",
+        "Presentation.Contracts",
+        "Presentation.Mappings"
+      ]
+    },
+    {
+      "module": "Favorites",
+      "sourceFiles": 134,
+      "projects": 10,
+      "primitiveDeclarations": 350,
+      "domainPrimitiveDeclarations": 29,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Domain.Contracts",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation",
+        "Presentation.Contracts",
+        "Presentation.Mappings"
+      ]
+    },
+    {
+      "module": "Gamification",
+      "sourceFiles": 53,
+      "projects": 8,
+      "primitiveDeclarations": 193,
+      "domainPrimitiveDeclarations": 68,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Domain.Contracts",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "Hydration",
+      "sourceFiles": 67,
+      "projects": 9,
+      "primitiveDeclarations": 122,
+      "domainPrimitiveDeclarations": 18,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation",
+        "Presentation.Contracts",
+        "Presentation.Mappings"
+      ]
+    },
+    {
+      "module": "Identity",
+      "sourceFiles": 275,
+      "projects": 7,
+      "primitiveDeclarations": 910,
+      "domainPrimitiveDeclarations": 88,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "Images",
+      "sourceFiles": 69,
+      "projects": 8,
+      "primitiveDeclarations": 192,
+      "domainPrimitiveDeclarations": 10,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation",
+        "Service.Contracts"
+      ]
+    },
+    {
+      "module": "Lessons",
+      "sourceFiles": 56,
+      "projects": 8,
+      "primitiveDeclarations": 195,
+      "domainPrimitiveDeclarations": 39,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Domain.Contracts",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "Marketing",
+      "sourceFiles": 42,
+      "projects": 7,
+      "primitiveDeclarations": 266,
+      "domainPrimitiveDeclarations": 43,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "MealPlanning",
+      "sourceFiles": 154,
+      "projects": 6,
+      "primitiveDeclarations": 548,
+      "domainPrimitiveDeclarations": 154,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "Meals",
+      "sourceFiles": 161,
+      "projects": 11,
+      "primitiveDeclarations": 988,
+      "domainPrimitiveDeclarations": 318,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Domain.Contracts",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation",
+        "Presentation.Contracts",
+        "Presentation.Mappings",
+        "Service.Contracts"
+      ]
+    },
+    {
+      "module": "Notifications",
+      "sourceFiles": 140,
+      "projects": 9,
+      "primitiveDeclarations": 392,
+      "domainPrimitiveDeclarations": 47,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation",
+        "Presentation.Contracts",
+        "Presentation.Mappings"
+      ]
+    },
+    {
+      "module": "OpenFoodFacts",
+      "sourceFiles": 29,
+      "projects": 7,
+      "primitiveDeclarations": 153,
+      "domainPrimitiveDeclarations": 50,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "Platform/shared/tooling",
+      "sourceFiles": 492,
+      "projects": 31,
+      "primitiveDeclarations": 2209,
+      "domainPrimitiveDeclarations": 0,
+      "layers": [
+        "FoodDiary.Analyzers",
+        "FoodDiary.Application.Contracts",
+        "FoodDiary.Application.Runtime",
+        "FoodDiary.Audit.Contracts",
+        "FoodDiary.Audit.Infrastructure",
+        "FoodDiary.Audit.PersistenceModel",
+        "FoodDiary.Authentication.Contracts",
+        "FoodDiary.Authentication.Infrastructure",
+        "FoodDiary.Development.Mcp",
+        "FoodDiary.Domain.Primitives",
+        "FoodDiary.Email.Contracts",
+        "FoodDiary.Email.Infrastructure",
+        "FoodDiary.Email.MailRelay",
+        "FoodDiary.Email.PersistenceModel",
+        "FoodDiary.Infrastructure",
+        "FoodDiary.Initializer",
+        "FoodDiary.Integrations.Http",
+        "FoodDiary.JobManager",
+        "FoodDiary.Mediator",
+        "FoodDiary.Nutrition.Contracts",
+        "FoodDiary.Outbox.Abstractions",
+        "FoodDiary.Outbox.Infrastructure",
+        "FoodDiary.Outbox.Management.Contracts",
+        "FoodDiary.Outbox.PersistenceModel",
+        "FoodDiary.Persistence.Abstractions",
+        "FoodDiary.Persistence.Runtime",
+        "FoodDiary.Presentation.Api",
+        "FoodDiary.ReadModel.Composition",
+        "FoodDiary.Results",
+        "FoodDiary.Telegram.Bot",
+        "FoodDiary.Web.Api"
+      ]
+    },
+    {
+      "module": "Products",
+      "sourceFiles": 126,
+      "projects": 9,
+      "primitiveDeclarations": 658,
+      "domainPrimitiveDeclarations": 154,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Domain.Contracts",
+        "FoodQuality",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "RecentItems",
+      "sourceFiles": 23,
+      "projects": 6,
+      "primitiveDeclarations": 24,
+      "domainPrimitiveDeclarations": 9,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel"
+      ]
+    },
+    {
+      "module": "RecipeCommunity",
+      "sourceFiles": 49,
+      "projects": 6,
+      "primitiveDeclarations": 106,
+      "domainPrimitiveDeclarations": 9,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "Recipes",
+      "sourceFiles": 162,
+      "projects": 8,
+      "primitiveDeclarations": 907,
+      "domainPrimitiveDeclarations": 238,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Domain.Contracts",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "Service:BugTriage",
+      "sourceFiles": 29,
+      "projects": 4,
+      "primitiveDeclarations": 111,
+      "domainPrimitiveDeclarations": 0,
+      "layers": [
+        "FoodDiary.BugTriage.Application",
+        "FoodDiary.BugTriage.Infrastructure",
+        "FoodDiary.BugTriage.Presentation",
+        "FoodDiary.BugTriage.WebApi"
+      ]
+    },
+    {
+      "module": "Service:MailInbox",
+      "sourceFiles": 117,
+      "projects": 7,
+      "primitiveDeclarations": 579,
+      "domainPrimitiveDeclarations": 0,
+      "layers": [
+        "FoodDiary.MailInbox.Application",
+        "FoodDiary.MailInbox.Client",
+        "FoodDiary.MailInbox.Domain",
+        "FoodDiary.MailInbox.Infrastructure",
+        "FoodDiary.MailInbox.Initializer",
+        "FoodDiary.MailInbox.Presentation",
+        "FoodDiary.MailInbox.WebApi"
+      ]
+    },
+    {
+      "module": "Service:MailRelay",
+      "sourceFiles": 181,
+      "projects": 7,
+      "primitiveDeclarations": 572,
+      "domainPrimitiveDeclarations": 0,
+      "layers": [
+        "FoodDiary.MailRelay.Application",
+        "FoodDiary.MailRelay.Client",
+        "FoodDiary.MailRelay.Domain",
+        "FoodDiary.MailRelay.Infrastructure",
+        "FoodDiary.MailRelay.Initializer",
+        "FoodDiary.MailRelay.Presentation",
+        "FoodDiary.MailRelay.WebApi"
+      ]
+    },
+    {
+      "module": "Statistics",
+      "sourceFiles": 32,
+      "projects": 2,
+      "primitiveDeclarations": 128,
+      "domainPrimitiveDeclarations": 0,
+      "layers": [
+        "Application",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "Tdee",
+      "sourceFiles": 15,
+      "projects": 5,
+      "primitiveDeclarations": 57,
+      "domainPrimitiveDeclarations": 0,
+      "layers": [
+        "Application",
+        "Contracts",
+        "Presentation",
+        "Presentation.Contracts",
+        "Presentation.Mappings"
+      ]
+    },
+    {
+      "module": "Usda",
+      "sourceFiles": 71,
+      "projects": 7,
+      "primitiveDeclarations": 258,
+      "domainPrimitiveDeclarations": 61,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "Users",
+      "sourceFiles": 287,
+      "projects": 10,
+      "primitiveDeclarations": 1295,
+      "domainPrimitiveDeclarations": 571,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Domain.Contracts",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation",
+        "Presentation.Contracts",
+        "Presentation.Mappings"
+      ]
+    },
+    {
+      "module": "Wearables",
+      "sourceFiles": 71,
+      "projects": 6,
+      "primitiveDeclarations": 179,
+      "domainPrimitiveDeclarations": 35,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "WeeklyCheckIn",
+      "sourceFiles": 15,
+      "projects": 2,
+      "primitiveDeclarations": 60,
+      "domainPrimitiveDeclarations": 0,
+      "layers": [
+        "Application",
+        "Presentation"
+      ]
+    },
+    {
+      "module": "WeeklyGoals",
+      "sourceFiles": 32,
+      "projects": 7,
+      "primitiveDeclarations": 103,
+      "domainPrimitiveDeclarations": 33,
+      "layers": [
+        "Application",
+        "Application.Abstractions",
+        "Contracts",
+        "Domain",
+        "Infrastructure",
+        "PersistenceModel",
+        "Presentation"
+      ]
+    }
+  ]
+}

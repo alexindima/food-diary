@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Domain.ValueObjects;
@@ -514,15 +516,15 @@ public sealed class DiaryPdfGeneratorTests {
         object ruReport = CreateReportData([], cultureName: "ru");
         var meal = Meal.Create(userId, DateTime.UtcNow, MealType.Lunch);
         Product product = CreateProduct(userId, "rice", imageUrl: "");
-        MealItem productItem = meal.AddProduct(product.Id, 50);
+        MealItem productItem = meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(50));
         productItem.ApplyProductSnapshot(product.Name, product.ImageUrl, product.BaseUnit, product.BaseAmount,
             product.CaloriesPerBase, product.ProteinsPerBase, product.FatsPerBase, product.CarbsPerBase,
             product.FiberPerBase, product.AlcoholPerBase);
         var recipe = Recipe.Create(userId, "soup", servings: 2);
         recipe.ApplyComputedNutrition(200, 10, 4, 30, 6, 0);
-        MealItem recipeItem = meal.AddRecipe(recipe.Id, 1);
+        MealItem recipeItem = meal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(1));
         recipeItem.ApplyRecipeSnapshot(recipe.Name, recipe.ImageUrl, recipe.Servings, recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs, recipe.TotalFiber, recipe.TotalAlcohol);
-        MealItem fallbackItem = meal.AddProduct(ProductId.New(), 25);
+        MealItem fallbackItem = meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(25));
         MealAiSession session = meal.AddAiSession(
             imageAssetId: null,
             AiRecognitionSource.Text,
@@ -1011,7 +1013,7 @@ public sealed class DiaryPdfGeneratorTests {
             imageUrl: imageUrl);
 
     private static void AddProductItem(Meal meal, Product product, double amount) {
-        MealItem item = meal.AddProduct(product.Id, amount);
+        MealItem item = meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(amount));
         item.ApplyProductSnapshot(product.Name, product.ImageUrl, product.BaseUnit, product.BaseAmount,
             product.CaloriesPerBase, product.ProteinsPerBase, product.FatsPerBase, product.CarbsPerBase,
             product.FiberPerBase, product.AlcoholPerBase);

@@ -3,6 +3,17 @@
 Module boundaries constrain changes, but do not prove runtime correctness. Prefer
 compiler-enforced local rules and executable boundary tests to additional layers.
 
+## Meaningful domain types
+
+Use validated immutable values where identity, units, date semantics or combined
+invariants matter. Preserve scalar wire and persistence representations at their
+boundaries. The [backend primitive types review](PRIMITIVE_TYPES.md) records
+module priorities and the verified Hydration, WeeklyGoals, BodyMetrics, quantity,
+profile and Billing boundaries. Owning application writes use typed entry points;
+retained scalar methods are explicit compatibility adapters. Meals and Recipes
+quantity mutations expose only their source-specific types, protected by architecture
+tests. Scalar wire and storage contracts remain compatible.
+
 ## Failure handling
 
 FD0019 rejects discarded FoodDiary `Result`/`Result<T>` expressions, including

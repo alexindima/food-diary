@@ -8,7 +8,7 @@ public static class RecipeNutritionCalculator {
         int missing = recipe.Steps.SelectMany(step => step.Ingredients)
             .Sum(ingredient => ingredient.TextName is not null ? 1 : ingredient.NestedRecipe?.MissingIngredientCount ?? 0);
         RecipeNutritionValues values = RecipeNutritionPolicy.Calculate(
-            recipe.Steps.SelectMany(step => step.Ingredients).Select(ingredient => new RecipeNutritionIngredient(
+            recipe.Steps.SelectMany(step => step.Ingredients).Select(ingredient => RecipeNutritionIngredient.FromStoredSources(
                 ingredient.Amount,
                 ingredient.ProductSnapshot?.BaseAmount,
                 ingredient.ProductSnapshot is { } product

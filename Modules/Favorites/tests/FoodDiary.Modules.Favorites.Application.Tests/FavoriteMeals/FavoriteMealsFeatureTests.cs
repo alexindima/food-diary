@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Domain.ValueObjects;
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
@@ -253,7 +254,7 @@ public class FavoriteMealsFeatureTests {
             ManualCarbs: null,
             ManualFiber: null,
             ManualAlcohol: null));
-        meal.AddProduct(ProductId.New(), 100);
+        meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(100));
         var favorite = FavoriteMeal.Create(user.Id, meal.Id, "  Work lunch  ");
         var handler = new GetFavoriteMealsQueryHandler(
             CreateFavoriteMealReadService(CreateFavoriteMealRepository(favorites: [favorite], meal: meal)),
@@ -293,7 +294,7 @@ public class FavoriteMealsFeatureTests {
             ManualCarbs: null,
             ManualFiber: null,
             ManualAlcohol: null));
-        meal.AddProduct(ProductId.New(), 100);
+        meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(100));
         var handler = new AddFavoriteMealCommandHandler(
             CreateFavoriteMealRepository(),
             CreateMealReadService(meal),
@@ -316,7 +317,7 @@ public class FavoriteMealsFeatureTests {
     public void FavoriteMealMappings_ToModel_UsesExplicitMealSource() {
         var user = User.Create("favorite-navigation@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 5, 2, 8, 0, 0, DateTimeKind.Utc), MealType.Breakfast);
-        meal.AddProduct(ProductId.New(), 100);
+        meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(100));
         var favorite = FavoriteMeal.Create(user.Id, meal.Id, "Morning");
 
         FavoriteMealModel model = favorite.ToModel(ToFavoriteMealSourceModel(meal));

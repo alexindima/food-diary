@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Domain.ValueObjects;
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
@@ -37,7 +38,7 @@ public sealed class DashboardMealsReadServiceTests {
             imageUrl: "https://cdn.example.com/rice.webp");
         var aiAsset = ImageAsset.Create(user.Id, "meals/ai.webp", "https://cdn.example.com/ai.webp");
         Meal meal = CreateMeal(user.Id);
-        meal.AddProduct(product.Id, 150);
+        meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(150));
         meal.AddAiSession(
             aiAsset.Id,
             AiRecognitionSource.Photo,

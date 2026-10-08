@@ -2,7 +2,7 @@ using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Mappings;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Modules.BodyMetrics.Application.Common;
+using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
@@ -27,7 +27,8 @@ public sealed class CreateWeightEntryCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        DateTime normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);
+        var day = MeasurementDay.FromDateTimeEncoding(command.Date);
+        DateTime normalizedDate = day.ToUtcDateTime();
         WeightEntry? existing = await weightEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
@@ -37,7 +38,7 @@ public sealed class CreateWeightEntryCommandHandler(
                 WeightEntryErrors.AlreadyExists(normalizedDate));
         }
 
-        var entry = WeightEntry.Create(userId, normalizedDate, command.WeightKg);
+        var entry = WeightEntry.CreateForDay(userId, day, command.WeightKg);
         entry = await weightEntryRepository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(entry.ToModel());

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Infrastructure;
 using FoodDiary.Modules.Recipes.Infrastructure;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
@@ -49,9 +50,9 @@ public sealed class RecipeUsageCompositionIntegrationTests(PostgresDatabaseFixtu
             Recipe? locked = await reads.GetByIdForUpdateAsync(recipe.Id, owner.Id, includePublic: false);
             Assert.NotNull(locked);
             var meal = Meal.Create(owner.Id, DateTime.UtcNow);
-            meal.AddRecipe(recipe.Id, 1);
+            meal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(1));
             var parent = Recipe.Create(owner.Id, "Parent recipe", servings: 1);
-            parent.AddStep(1, "Mix").AddNestedRecipeIngredient(recipe.Id, 1);
+            parent.AddStep(1, "Mix").AddNestedRecipeIngredient(recipe.Id, RecipeServingQuantity.FromServings(1));
             context.AddRange(meal, parent);
             await context.SaveChangesAsync();
             context.ChangeTracker.Clear();

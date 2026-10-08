@@ -68,13 +68,17 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/HydrationValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Time/UtcDateNormalizerTests.cs`
+- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Domain.Tests/HydrationAmountTests.cs`
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Domain.Tests/HydrationEntryInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Domain.Tests/HydrationEntryTypedAmountTests.cs`
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Domain.Tests/HydrationIdConversionTests.cs`
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Domain.Tests/HydrationOperationReceiptTests.cs`
+- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/HydrationAmountMappingTests.cs`
 - [integration] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/HydrationDbContextIntegrationTests.cs`
 - [integration] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/HydrationEntryRepositoryIntegrationTests.cs`
 - [integration] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/HydrationIntervalReadServiceIntegrationTests.cs`
 - [integration] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/HydrationOperationReceiptIntegrationTests.cs`
+- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/HydrationTypedAmountPersistenceTests.cs`
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/PostgresDatabaseCollection.cs`
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/PostgresDatabaseFixture.cs`
 - [presentation] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Presentation.Tests/HydrationHttpMappingsTests.cs`

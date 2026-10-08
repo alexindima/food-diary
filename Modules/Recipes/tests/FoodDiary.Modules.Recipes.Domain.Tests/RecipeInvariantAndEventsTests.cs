@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.Enums;
 using FoodDiary.Modules.Recipes.Domain.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Events;
@@ -16,7 +18,7 @@ public class RecipeInvariantAndEventsTests {
     [Fact]
     public void IngredientSnapshot_RejectsAnotherProductAndDoesNotChangeAmount() {
         var recipe = Recipe.Create(UserId.New(), "Snapshot", 1);
-        RecipeIngredient ingredient = recipe.AddStep(1, "Prepare").AddProductIngredient(ProductId.New(), 50);
+        RecipeIngredient ingredient = recipe.AddStep(1, "Prepare").AddProductIngredient(ProductId.New(), ProductUnitQuantity.FromUnits(50));
         var snapshot = new RecipeIngredientProductSnapshot(ProductId.New(), "Other", FoodDiary.Modules.Products.Domain.Contracts.Enums.MeasurementUnit.G,
             100, 52, 1, 1, 11, 2, 0, Visibility.Public);
         Assert.Throws<ArgumentException>(() => ingredient.SetProductSnapshot(snapshot));
@@ -402,7 +404,7 @@ public class RecipeInvariantAndEventsTests {
         RecipeStep step = recipe.AddStep(1, "Step");
         var nestedRecipeId = RecipeId.New();
 
-        RecipeIngredient ingredient = step.AddNestedRecipeIngredient(nestedRecipeId, 1.5);
+        RecipeIngredient ingredient = step.AddNestedRecipeIngredient(nestedRecipeId, RecipeServingQuantity.FromServings(1.5));
 
         Assert.Multiple(
             () => Assert.Equal(nestedRecipeId, ingredient.NestedRecipeId),
@@ -416,7 +418,7 @@ public class RecipeInvariantAndEventsTests {
     public void Step_RemoveIngredient_WhenIngredientExists_RemovesIngredientAndSetsModifiedOnUtc() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
         RecipeStep step = recipe.AddStep(1, "Step");
-        RecipeIngredient ingredient = step.AddProductIngredient(ProductId.New(), 100);
+        RecipeIngredient ingredient = step.AddProductIngredient(ProductId.New(), ProductUnitQuantity.FromUnits(100));
 
         step.RemoveIngredient(ingredient);
 
@@ -437,7 +439,7 @@ public class RecipeInvariantAndEventsTests {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
         RecipeStep step = recipe.AddStep(1, "Step");
 
-        Assert.Throws<ArgumentException>(() => step.AddProductIngredient(ProductId.Empty, 100));
+        Assert.Throws<ArgumentException>(() => step.AddProductIngredient(ProductId.Empty, ProductUnitQuantity.FromUnits(100)));
     }
 
     [Fact]
@@ -445,7 +447,7 @@ public class RecipeInvariantAndEventsTests {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
         RecipeStep step = recipe.AddStep(1, "Step");
 
-        Assert.Throws<ArgumentException>(() => step.AddNestedRecipeIngredient(RecipeId.Empty, 1));
+        Assert.Throws<ArgumentException>(() => step.AddNestedRecipeIngredient(RecipeId.Empty, RecipeServingQuantity.FromServings(1)));
     }
 
     [Fact]
@@ -470,16 +472,16 @@ public class RecipeInvariantAndEventsTests {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
         RecipeStep step = recipe.AddStep(1, "Step");
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => step.AddProductIngredient(ProductId.New(), amount));
+        Assert.Throws<ArgumentOutOfRangeException>(() => step.AddProductIngredient(ProductId.New(), ProductUnitQuantity.FromUnits(amount)));
     }
 
     [Fact]
     public void Ingredient_UpdateAmount_WithSameValue_DoesNotSetModifiedOnUtc() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
         RecipeStep step = recipe.AddStep(1, "Step");
-        RecipeIngredient ingredient = step.AddProductIngredient(ProductId.New(), 100);
+        RecipeIngredient ingredient = step.AddProductIngredient(ProductId.New(), ProductUnitQuantity.FromUnits(100));
 
-        ingredient.UpdateAmount(100);
+        ingredient.UpdateProductQuantity(ProductUnitQuantity.FromUnits(100));
 
         Assert.Null(ingredient.ModifiedOnUtc);
     }
@@ -488,9 +490,9 @@ public class RecipeInvariantAndEventsTests {
     public void Ingredient_UpdateAmount_WithBoundaryValue_UpdatesAmount() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
         RecipeStep step = recipe.AddStep(1, "Step");
-        RecipeIngredient ingredient = step.AddProductIngredient(ProductId.New(), 100);
+        RecipeIngredient ingredient = step.AddProductIngredient(ProductId.New(), ProductUnitQuantity.FromUnits(100));
 
-        ingredient.UpdateAmount(1000000d);
+        ingredient.UpdateProductQuantity(ProductUnitQuantity.FromUnits(1000000d));
 
         Assert.Equal(1000000d, ingredient.Amount);
         Assert.NotNull(ingredient.ModifiedOnUtc);
@@ -503,7 +505,7 @@ public class RecipeInvariantAndEventsTests {
             System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
 
         TargetInvocationException exception = Assert.Throws<System.Reflection.TargetInvocationException>(() =>
-            method!.Invoke(null, [RecipeStepId.Empty, RecipeId.New(), 1d]));
+            method!.Invoke(null, [RecipeStepId.Empty, RecipeId.New(), RecipeServingQuantity.FromServings(1)]));
 
         Assert.IsType<ArgumentException>(exception.InnerException);
     }
@@ -549,7 +551,7 @@ public class RecipeInvariantAndEventsTests {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
         RecipeStep step = recipe.AddStep(1, "Step");
         RecipeStep otherStep = recipe.AddStep(2, "Another");
-        RecipeIngredient foreignIngredient = otherStep.AddProductIngredient(ProductId.New(), 100);
+        RecipeIngredient foreignIngredient = otherStep.AddProductIngredient(ProductId.New(), ProductUnitQuantity.FromUnits(100));
 
         step.RemoveIngredient(foreignIngredient);
 

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
@@ -36,10 +37,10 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
                 baseAmount: unit == FoodDiary.Modules.Products.Domain.Contracts.Enums.MeasurementUnit.Pcs ? 1 : 100, defaultPortionAmount: null, caloriesPerBase: 100, proteinsPerBase: 1, fatsPerBase: 2,
                 carbsPerBase: 3, fiberPerBase: 0, alcoholPerBase: 0, visibility: FoodDiary.Domain.Primitives.Visibility.Private);
             context.Products.Add(product);
-            step.AddProductIngredient(product.Id, 25);
-            RecipeIngredient authored = step.AddProductIngredient(product.Id, 50);
+            step.AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(25));
+            RecipeIngredient authored = step.AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(50));
             authored.SetPublicDescription("Author name", "Author unit");
-            privateStep.AddProductIngredient(product.Id, 75);
+            privateStep.AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(75));
         }
         step.AddTextIngredient("Salt", "to taste");
         await context.SaveChangesAsync();

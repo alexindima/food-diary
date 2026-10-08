@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Usda.Contracts.Queries.SearchUsdaFoods;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
@@ -589,7 +590,7 @@ public sealed class UsdaQueryHandlerTests {
     }
 
     private static void AddProductItem(Meal meal, Product product, double amount) {
-        MealItem item = meal.AddProduct(product.Id, amount);
+        MealItem item = meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(amount));
         item.ApplyProductSnapshot(product.Name, product.ImageUrl, product.BaseUnit, product.BaseAmount,
             product.CaloriesPerBase, product.ProteinsPerBase, product.FatsPerBase, product.CarbsPerBase,
             product.FiberPerBase, product.AlcoholPerBase);

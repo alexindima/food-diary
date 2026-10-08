@@ -396,7 +396,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(WeightKg: weight)));
+            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(WeightKg: ProfileWeightKg.Create(weight))));
     }
 
     [Theory]
@@ -407,7 +407,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(HeightCm: height)));
+            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(HeightCm: ProfileHeightCm.Create(height))));
     }
 
     [Theory]
@@ -417,7 +417,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(HeightCm: height)));
+            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(HeightCm: ProfileHeightCm.Create(height))));
     }
 
     [Theory]
@@ -427,7 +427,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(WeightKg: weight)));
+            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(WeightKg: ProfileWeightKg.Create(weight))));
     }
 
     [Fact]
@@ -438,8 +438,8 @@ public class UserInvariantTests {
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             LastName: " Doe ",
             BirthDate: birthDate,
-            WeightKg: 82.5,
-            HeightCm: 181.2));
+            WeightKg: ProfileWeightKg.Create(82.5),
+            HeightCm: ProfileHeightCm.Create(181.2)));
 
         Assert.Multiple(
             () => Assert.Equal("Doe", user.LastName),
@@ -1147,7 +1147,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(WeightKg: weightKg, HeightCm: heightCm)));
+            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(WeightKg: ProfileWeightKg.Create(weightKg), HeightCm: ProfileHeightCm.Create(heightCm))));
 
         Assert.Multiple(
             () => Assert.Null(user.WeightKg),
@@ -1162,8 +1162,8 @@ public class UserInvariantTests {
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "M",
-            WeightKg: 80,
-            HeightCm: 180));
+            WeightKg: ProfileWeightKg.Create(80),
+            HeightCm: ProfileHeightCm.Create(180)));
 
         Assert.Equal(1780, user.CalculateBmr());
     }
@@ -1175,8 +1175,8 @@ public class UserInvariantTests {
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "F",
-            WeightKg: 60,
-            HeightCm: 165));
+            WeightKg: ProfileWeightKg.Create(60),
+            HeightCm: ProfileHeightCm.Create(165)));
 
         Assert.Equal(1320, user.CalculateBmr());
     }
@@ -1188,8 +1188,8 @@ public class UserInvariantTests {
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "M",
-            WeightKg: 80,
-            HeightCm: 180));
+            WeightKg: ProfileWeightKg.Create(80),
+            HeightCm: ProfileHeightCm.Create(180)));
         user.UpdateActivity(activityLevel: ActivityLevel.Extreme);
 
         Assert.Equal(3382, user.CalculateEstimatedTdee());
@@ -1206,8 +1206,8 @@ public class UserInvariantTests {
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "M",
-            WeightKg: 80,
-            HeightCm: 180));
+            WeightKg: ProfileWeightKg.Create(80),
+            HeightCm: ProfileHeightCm.Create(180)));
         user.UpdateActivity(activityLevel: activityLevel);
 
         Assert.Equal(expectedTdee, user.CalculateEstimatedTdee());
@@ -1240,8 +1240,8 @@ public class UserInvariantTests {
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "M",
-            WeightKg: 80,
-            HeightCm: 180));
+            WeightKg: ProfileWeightKg.Create(80),
+            HeightCm: ProfileHeightCm.Create(180)));
 
         Assert.Equal(1785, user.CalculateBmr());
     }
@@ -1253,8 +1253,8 @@ public class UserInvariantTests {
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "F",
-            WeightKg: 1,
-            HeightCm: 1));
+            WeightKg: ProfileWeightKg.Create(1),
+            HeightCm: ProfileHeightCm.Create(1)));
 
         Assert.Null(user.CalculateBmr());
     }
@@ -1265,8 +1265,8 @@ public class UserInvariantTests {
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: DateTime.UtcNow.Date,
             Gender: "M",
-            WeightKg: 80,
-            HeightCm: 180));
+            WeightKg: ProfileWeightKg.Create(80),
+            HeightCm: ProfileHeightCm.Create(180)));
 
         Assert.Null(user.CalculateBmr());
         Assert.Null(user.CalculateEstimatedTdee());
