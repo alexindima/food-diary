@@ -84,11 +84,27 @@ if ($runtimeEvalGroups -notcontains 'context-search-evals' -or $runtimeEvalGroup
 }
 $frontendInventoryGroups = @(Get-Groups '.llm-wiki/tools/Test-LlmWikiFrontendSourceInventory.ps1')
 if ($frontendInventoryGroups -notcontains 'index-selection') { throw 'Frontend source inventory omitted its index regressions.' }
+if (@(Get-Groups '.llm-wiki/tools/Test-LlmWikiTelemetryValidationReuse.ps1') -notcontains 'verification-cache') {
+    throw 'Telemetry validation reuse omitted its owning regression group.'
+}
 if ($contextEvalGroups -notcontains 'adaptive-evals' -or $contextEvalGroups -notcontains 'context-search-evals' -or $contextEvalGroups -notcontains 'context-retrieval') {
     throw 'Context-search corpora must run both adaptive evals and the SQL context regression suite.'
 }
 $contextRankingGroups = @(Get-Groups '.llm-wiki/policies/context-search-ranking.json')
 $batchGroups = @(Get-Groups '.llm-wiki/tools/code-graph-batch.mjs')
+foreach ($rankingSource in @(
+    '.llm-wiki/tools/code-graph.mjs'
+    'FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs'
+    'Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.QueryPreparation.cs'
+)) {
+    $rankingGroups = @(Get-Groups $rankingSource)
+    foreach ($required in @('context-search-evals', 'context-retrieval')) {
+        if ($rankingGroups -notcontains $required) { throw "Ranking source '$rankingSource' omitted '$required'." }
+    }
+}
+foreach ($ordinarySource in @('Modules/Products/Domain/Product.cs', 'FoodDiary.Development.Mcp/Wiki/UnregisteredReader.cs')) {
+    if (@(Get-Groups $ordinarySource).Count -ne 0) { throw "Unregistered product source '$ordinarySource' selected Wiki smoke." }
+}
 foreach ($required in @('code-graph-core', 'context-search-evals', 'context-retrieval')) {
     if ($batchGroups -notcontains $required) { throw "Batch snapshot/cache changes omitted '$required'." }
 }

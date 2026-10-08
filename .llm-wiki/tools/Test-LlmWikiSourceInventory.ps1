@@ -99,6 +99,24 @@ try {
     if ($unicodeFile -notin @(Get-LlmWikiSourceFiles -RepositoryRoot $fixtureRepository -Filter '*.cs' | ForEach-Object FullName)) {
         throw 'Source inventory lost a Unicode filename on this runtime.'
     }
+    $forcedExpected = @(Get-ChildItem -LiteralPath $fixtureRepository -Recurse -File -Force -Filter '*.cs' |
+        Where-Object {
+            -not $_.FullName.StartsWith($linkedDirectory + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -and
+            $_.FullName -notmatch '[\\/](tests|obj|bin|\.artifacts|TestResults|Migrations)[\\/]' -and
+            $_.Name -notmatch '\.(Designer|g)\.cs$'
+        } | ForEach-Object FullName | Sort-Object)
+    $forcedActual = @(Get-LlmWikiSourceFiles -RepositoryRoot $fixtureRepository -Filter '*.cs' -Force -ExcludedDirectory @('tests','obj','bin','.artifacts','TestResults','Migrations') |
+        Where-Object { $_.FullName -notmatch '[\\/](tests|obj|bin|\.artifacts|TestResults|Migrations)[\\/]' -and $_.Name -notmatch '\.(Designer|g)\.cs$' } |
+        ForEach-Object FullName | Sort-Object)
+    if (($forcedActual -join [char]0) -cne ($forcedExpected -join [char]0) -or $forcedActual.Count -eq 0) {
+        throw 'Forced source enumeration changed the sensitive-data candidate source set.'
+    }
+    if ($hiddenFile -notin $forcedActual -or (Join-Path $fixtureRepository '.hidden-directory/Hidden.cs') -notin $forcedActual) {
+        throw 'Force mode omitted hidden files or a hidden directory.'
+    }
+    if (@($forcedActual | Where-Object { $_.StartsWith($linkedDirectory + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) }).Count -gt 0) {
+        throw 'Forced source inventory followed an external directory link.'
+    }
     $before = Get-LlmWikiRuntimeTopologyFingerprint -RepositoryRoot $fixtureRepository
     if ($before.sourceFingerprint -cne (Get-ReferenceRuntimeFingerprint)) { throw 'Runtime fingerprint changed from the original normalized-content contract.' }
     $hasher = [Security.Cryptography.SHA256]::Create()

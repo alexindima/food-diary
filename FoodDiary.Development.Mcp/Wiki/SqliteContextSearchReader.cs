@@ -628,6 +628,56 @@ public sealed class SqliteContextSearchReader {
         Dictionary<string, int> testSubjectWeights = stronglyRequestsTest
             ? GetTestIdentityWeights(directQueryTerms, candidates, policy.DirectFileNameAffinity)
             : [];
+        string[] normalizedDirectTerms = [.. directQueryTerms.Select(term =>
+            new string([.. term.Where(char.IsLetterOrDigit)]))];
+        GenericAffinities genericAffinity = policy.GenericAffinities;
+        bool domainIntent = genericAffinity.DomainIntentTerms.Any(term => terms.Contains(term.ToLowerInvariant()));
+        bool hasAdminIntent = rankingTerms.Any(term => policy.AdminIntentTerms.Any(intent =>
+            term.StartsWith(intent, StringComparison.Ordinal)));
+        bool excludesInfrastructureIntent = genericAffinity.InfrastructureExcludedIntentTerms
+            .Any(term => terms.Contains(term.ToLowerInvariant()));
+        string[] requestedRoleTerms = [.. genericAffinity.RoleTerms.Where(term => {
+            string normalizedTerm = term.ToLowerInvariant();
+            return (normalizedTerm is not ("consumer" or "consumers") || terms.Contains("powershell")) &&
+                terms.Contains(normalizedTerm);
+        })];
+        Dictionary<IReadOnlyList<string>, int> genericIntentCounts = [];
+        int CountGenericIntent(IReadOnlyList<string> intentTerms) {
+            if (!genericIntentCounts.TryGetValue(intentTerms, out int count)) {
+                count = intentTerms.Count(term => terms.Contains(term.ToLowerInvariant()));
+                genericIntentCounts.Add(intentTerms, count);
+            }
+            return count;
+        }
+        IdentityBoost[] applicableIdentityBoosts = [.. policy.IdentityBoosts.Where(boost => {
+            HashSet<string> eligibleTerms = boost.DirectOnly ? directTerms : terms;
+            return !(explicitlyRequestsMcp && string.Equals(boost.Id, "explicit-powershell-file-intent", StringComparison.Ordinal)) &&
+                (boost.ChangeTypes is not { Length: > 0 } || boost.ChangeTypes.Any(value =>
+                    string.Equals(value, changeType, StringComparison.OrdinalIgnoreCase))) &&
+                boost.ExcludedQueryTerms?.Any(term => eligibleTerms.Contains(term.ToLowerInvariant())) != true &&
+                boost.QueryTerms.Count(term => eligibleTerms.Contains(term.ToLowerInvariant())) >= boost.MinimumMatches;
+        })];
+        PathBoost[] applicablePathBoosts = [.. policy.PathBoosts.Where(boost => {
+            HashSet<string> eligibleTerms = boost.DirectOnly ? directTerms : terms;
+            return boost.ExcludedQueryTerms?.Any(term => eligibleTerms.Contains(term.ToLowerInvariant())) != true &&
+                boost.QueryTerms.Count(term => eligibleTerms.Contains(term.ToLowerInvariant())) >= boost.MinimumMatches;
+        })];
+        bool requestsDocumentation = policy.DocumentationImplementationPenalty.RequestTerms
+            .Any(term => terms.Contains(term.ToLowerInvariant()));
+        bool implicitImplementationIntent = string.Equals(changeType, "Any", StringComparison.OrdinalIgnoreCase) &&
+            new[] {
+                genericAffinity.DomainIntentTerms, genericAffinity.ApiIntentTerms,
+                genericAffinity.DatabaseIntentTerms, genericAffinity.IntegrationIntentTerms,
+            }.Any(intentTerms => intentTerms.Any(term => terms.Contains(term.ToLowerInvariant())));
+        implicitImplementationIntent |= string.Equals(changeType, "Any", StringComparison.OrdinalIgnoreCase) &&
+            !excludesInfrastructureIntent &&
+            CountGenericIntent(genericAffinity.InfrastructureIntentTerms) >= genericAffinity.InfrastructureMinimumMatches;
+        bool penalizeImplementationDocumentation = !requestsDocumentation &&
+            (implicitImplementationIntent || policy.DocumentationImplementationPenalty.ChangeTypes.Any(candidateChangeType =>
+                string.Equals(candidateChangeType, changeType, StringComparison.OrdinalIgnoreCase)));
+        string trimmedQuery = query.Trim();
+        bool requestsDeclaredSymbolIdentity = Regex.IsMatch(trimmedQuery, @"^[A-Za-z_$][\w$]*$", RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100)) &&
+            Regex.IsMatch(trimmedQuery, @"[a-z][A-Z]", RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100));
         ConversationalAffinity? conversation = policy.ConversationalAffinity;
         bool conversational = conversation is not null && query.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Length >= conversation.MinimumWords &&
             (query.Contains('?', StringComparison.Ordinal) || Regex.IsMatch(query, @"^(?:where|find|locate|which|где|как|какие|найди|нужно|хочу)\b", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100)));
@@ -656,7 +706,6 @@ public sealed class SqliteContextSearchReader {
         for (int index = 0; index < candidates.Count; index++) {
             RawCandidate candidate = candidates[index];
             string normalizedPath = NormalizePath(candidate.Path).ToLowerInvariant();
-            bool domainIntent = policy.GenericAffinities.DomainIntentTerms.Any(term => terms.Contains(term.ToLowerInvariant()));
             string[] selectorPaths = [.. GetRankingPathIdentities(normalizedPath).Where(selectorPath =>
                 string.Equals(selectorPath, normalizedPath, StringComparison.Ordinal) || domainIntent || requestsDomainRole ||
                 !selectorPath.StartsWith("fooddiary.domain/", StringComparison.Ordinal))];
@@ -727,8 +776,6 @@ public sealed class SqliteContextSearchReader {
                 }
             }
             string topLevelModuleIdentity = GetRankingModuleIdentity(normalizedPath);
-            string[] normalizedDirectTerms = [.. directQueryTerms.Select(term =>
-                new string([.. term.Where(char.IsLetterOrDigit)]))];
             int moduleIdentityTermCount = string.Equals(changeType, "Frontend", StringComparison.OrdinalIgnoreCase) &&
                 !normalizedPath.StartsWith("fooddiary.web.client/", StringComparison.Ordinal)
                 ? policy.ModuleIdentityLeadingTermCount : policy.ModuleIdentityAffinityLeadingTermCount;
@@ -743,8 +790,6 @@ public sealed class SqliteContextSearchReader {
                 score += policy.ModuleIdentityScore;
                 reasons.Add($"exact module identity {topLevelModuleIdentity}");
             }
-            bool hasAdminIntent = rankingTerms.Any(term => policy.AdminIntentTerms.Any(intent =>
-                term.StartsWith(intent, StringComparison.Ordinal)));
             string[] adminIdentityEvidence = [.. queryTerms.Where(term =>
                 term.Length >= policy.PathTermAffinity.MinimumTermLength &&
                 searchableIdentity.Contains(term, StringComparison.Ordinal))];
@@ -779,15 +824,8 @@ public sealed class SqliteContextSearchReader {
                 score += directFileNameScore;
                 reasons.Add($"direct file-name affinity {string.Join(", ", directFileNameMatches)}");
             }
-            GenericAffinities genericAffinity = policy.GenericAffinities;
-            string[] explicitRoleMatches = [.. genericAffinity.RoleTerms.Where(term => {
-                string normalizedTerm = term.ToLowerInvariant();
-                if (normalizedTerm is "consumer" or "consumers" && !terms.Contains("powershell")) {
-                    return false;
-                }
-                return terms.Contains(normalizedTerm) &&
-                    fileIdentityWords.Contains(normalizedTerm);
-            })];
+            string[] explicitRoleMatches = [.. requestedRoleTerms.Where(term =>
+                fileIdentityWords.Contains(term.ToLowerInvariant()))];
             int explicitRoleScore = Math.Min(
                 explicitRoleMatches.Sum(term => genericAffinity.RoleScoreOverrides?.TryGetValue(
                     term,
@@ -806,7 +844,7 @@ public sealed class SqliteContextSearchReader {
                 int value,
                 bool suffix = false,
                 int minimumMatches = 1) {
-                int intentMatchCount = intentTerms.Count(term => terms.Contains(term.ToLowerInvariant()));
+                int intentMatchCount = CountGenericIntent(intentTerms);
                 bool intentMatched = intentMatchCount >= minimumMatches;
                 bool pathMatched = pathValues.Any(pathValue => suffix
                     ? normalizedPath.EndsWith(pathValue.ToLowerInvariant(), StringComparison.Ordinal)
@@ -870,8 +908,7 @@ public sealed class SqliteContextSearchReader {
                 genericAffinity.IntegrationIntentTerms,
                 genericAffinity.IntegrationPathPrefixes,
                 genericAffinity.IntegrationScore);
-            bool excludesInfrastructureAffinity = genericAffinity.InfrastructureExcludedIntentTerms
-                .Any(term => terms.Contains(term.ToLowerInvariant())) ||
+            bool excludesInfrastructureAffinity = excludesInfrastructureIntent ||
                 // Moving a provider under its owner must not add a second layer bonus.
                 (normalizedPath.StartsWith("modules/", StringComparison.Ordinal) &&
                     selectorPaths.Any(path => path.StartsWith("fooddiary.integrations/", StringComparison.Ordinal)));
@@ -927,28 +964,10 @@ public sealed class SqliteContextSearchReader {
                 score -= policy.ExplicitTestAffinity.NonTestPenalty;
                 reasons.Add("production candidate penalty for explicit test intent");
             }
-            foreach (IdentityBoost boost in policy.IdentityBoosts) {
-                if (explicitlyRequestsMcp && string.Equals(
-                    boost.Id,
-                    "explicit-powershell-file-intent",
-                    StringComparison.Ordinal)) {
-                    continue;
-                }
-                bool matchesChangeType = boost.ChangeTypes is null ||
-                    boost.ChangeTypes.Length == 0 ||
-                    boost.ChangeTypes.Any(candidateChangeType =>
-                        string.Equals(candidateChangeType, changeType, StringComparison.OrdinalIgnoreCase));
-                if (!matchesChangeType) {
-                    continue;
-                }
-                HashSet<string> eligibleQueryTerms = boost.DirectOnly ? directTerms : terms;
+            foreach (IdentityBoost boost in applicableIdentityBoosts) {
                 if (string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase) &&
                     isTest &&
                     !boost.Id.Contains("test", StringComparison.OrdinalIgnoreCase)) {
-                    continue;
-                }
-                if (boost.ExcludedQueryTerms?.Any(term =>
-                    eligibleQueryTerms.Contains(term.ToLowerInvariant())) == true) {
                     continue;
                 }
                 string eligibleIdentity = boost.IdentityScope?.ToLowerInvariant() switch {
@@ -956,12 +975,9 @@ public sealed class SqliteContextSearchReader {
                     "identity" => searchableIdentity,
                     _ => searchablePath,
                 };
-                int queryMatches = boost.QueryTerms.Count(term =>
-                    eligibleQueryTerms.Contains(term.ToLowerInvariant()));
                 int identityMatchesBoost = boost.IdentityTerms.Count(term =>
                     eligibleIdentity.Contains(term.ToLowerInvariant(), StringComparison.Ordinal));
-                if (queryMatches >= boost.MinimumMatches &&
-                    identityMatchesBoost >= Math.Max(1, boost.MinimumIdentityMatches)) {
+                if (identityMatchesBoost >= Math.Max(1, boost.MinimumIdentityMatches)) {
                     score += boost.Score;
                     matchedRankingPolicy |= string.Equals(
                         boost.IdentityScope,
@@ -1006,17 +1022,10 @@ public sealed class SqliteContextSearchReader {
                 matchedRankingPolicy = true;
                 reasons.Add($"structural role {boost.Id} ({string.Join(", ", queryIdentityMatches)})");
             }
-            foreach (PathBoost boost in policy.PathBoosts) {
-                HashSet<string> eligibleQueryTerms = boost.DirectOnly ? directTerms : terms;
-                if (boost.ExcludedQueryTerms?.Any(term =>
-                    eligibleQueryTerms.Contains(term.ToLowerInvariant())) == true) {
-                    continue;
-                }
-                int matchedTerms = boost.QueryTerms.Count(term =>
-                    eligibleQueryTerms.Contains(term.ToLowerInvariant()));
+            foreach (PathBoost boost in applicablePathBoosts) {
                 bool matchesPath = boost.PathPrefixes.Any(prefix =>
                     selectorPaths.Any(selectorPath => selectorPath.StartsWith(NormalizePath(prefix).ToLowerInvariant(), StringComparison.Ordinal)));
-                if (matchedTerms >= boost.MinimumMatches && matchesPath) {
+                if (matchesPath) {
                     score += boost.Score;
                     matchedRankingPolicy = true;
                     reasons.Add($"ranking policy {boost.Id}");
@@ -1087,8 +1096,6 @@ public sealed class SqliteContextSearchReader {
                 score -= policy.CrossLayerPenalty;
                 reasons.Add("frontend candidate penalty for backend intent");
             }
-            bool requestsDocumentation = policy.DocumentationImplementationPenalty.RequestTerms
-                .Any(term => terms.Contains(term.ToLowerInvariant()));
             bool isDocumentationCandidate =
                 string.Equals(candidate.RecordType, "agent-guide", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(candidate.RecordType, "documentation", StringComparison.OrdinalIgnoreCase) ||
@@ -1097,19 +1104,7 @@ public sealed class SqliteContextSearchReader {
                 string.Equals(normalizedPath, "agents.md", StringComparison.Ordinal) ||
                 (normalizedPath.StartsWith("docs/", StringComparison.Ordinal) &&
                     normalizedPath.EndsWith(".md", StringComparison.Ordinal));
-            bool implicitImplementationIntent = string.Equals(changeType, "Any", StringComparison.OrdinalIgnoreCase) &&
-                new[] {
-                    genericAffinity.DomainIntentTerms, genericAffinity.ApiIntentTerms,
-                    genericAffinity.DatabaseIntentTerms, genericAffinity.IntegrationIntentTerms,
-                }
-                .Any(intentTerms => intentTerms.Any(term => terms.Contains(term.ToLowerInvariant())));
-            implicitImplementationIntent |= string.Equals(changeType, "Any", StringComparison.OrdinalIgnoreCase) &&
-                !genericAffinity.InfrastructureExcludedIntentTerms.Any(term => terms.Contains(term.ToLowerInvariant())) &&
-                genericAffinity.InfrastructureIntentTerms.Count(term => terms.Contains(term.ToLowerInvariant())) >=
-                    genericAffinity.InfrastructureMinimumMatches;
-            if (isDocumentationCandidate && !requestsDocumentation &&
-                (implicitImplementationIntent || policy.DocumentationImplementationPenalty.ChangeTypes.Any(candidateChangeType =>
-                    string.Equals(candidateChangeType, changeType, StringComparison.OrdinalIgnoreCase)))) {
+            if (isDocumentationCandidate && penalizeImplementationDocumentation) {
                 score -= policy.DocumentationImplementationPenalty.Score;
                 reasons.Add("documentation candidate penalty for implementation intent");
             }
@@ -1146,10 +1141,9 @@ public sealed class SqliteContextSearchReader {
                 }
             }
             if (string.Equals(candidate.RecordType, "code", StringComparison.Ordinal) &&
-                Regex.IsMatch(query.Trim(), @"^[A-Za-z_$][\w$]*$", RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100)) &&
-                Regex.IsMatch(query.Trim(), @"[a-z][A-Z]", RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100)) &&
+                requestsDeclaredSymbolIdentity &&
                 candidate.Title.Split('\n')[0].Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)
-                    .Contains(query.Trim(), StringComparer.OrdinalIgnoreCase)) {
+                    .Contains(trimmedQuery, StringComparer.OrdinalIgnoreCase)) {
                 score = 900_000;
                 reasons.Add("exact declared symbol identity");
             }

@@ -33,7 +33,8 @@ $configuredRegistryPath = if (-not [string]::IsNullOrWhiteSpace($RegistryPath)) 
 }
 $registryPath = if ([IO.Path]::IsPathRooted($configuredRegistryPath)) { $configuredRegistryPath } else { Join-Path $repositoryRoot $configuredRegistryPath }
 $policyPath = Join-Path $wikiRoot 'policies/workspace-policies.json'
-$telemetryPolicy = (Get-Content -LiteralPath $policyPath -Raw | ConvertFrom-Json).scheduler.verificationPlanner.failurePrediction.costModel.telemetry
+$policyText = [IO.File]::ReadAllText($policyPath)
+$telemetryPolicy = ($policyText | ConvertFrom-Json).scheduler.verificationPlanner.failurePrediction.costModel.telemetry
 
 function Get-Hash([object]$Value) {
     $json = ConvertTo-Json -InputObject $Value -Depth 30 -Compress
@@ -65,7 +66,8 @@ function Read-Registry {
         $empty = [pscustomobject][ordered]@{ schemaVersion = 1; events = @(); registryHash = '' }
         Write-Registry $empty
     }
-    Get-Content -LiteralPath $registryPath -Raw | ConvertFrom-Json
+    $script:registryText = [IO.File]::ReadAllText($registryPath)
+    $script:registryText | ConvertFrom-Json
 }
 function Write-Registry([object]$Registry) {
     $Registry.registryHash = Get-Hash (Get-RegistryPayload $Registry)
@@ -173,7 +175,25 @@ function Get-Metrics([object[]]$Events) {
 $registryLock = if ($Action -eq 'record') { Enter-RegistryLock } else { $null }
 try {
 $registry = Read-Registry
-$validation = Test-Registry $registry
+# One immutable validation result per process. Every call rereads all inputs;
+# ordinal text equality detects edits even with unchanged file size/timestamp.
+$validatorText = [IO.File]::ReadAllText($PSCommandPath)
+$cachedValidation = Get-Variable -Name LlmWikiTelemetryValidation -Scope Global -ValueOnly -ErrorAction SilentlyContinue
+if ($null -ne $cachedValidation -and
+    [string]::Equals($cachedValidation.path, $registryPath, [StringComparison]::Ordinal) -and
+    [string]::Equals($cachedValidation.registryText, $script:registryText, [StringComparison]::Ordinal) -and
+    [string]::Equals($cachedValidation.policyPath, $policyPath, [StringComparison]::Ordinal) -and
+    [string]::Equals($cachedValidation.policyText, $policyText, [StringComparison]::Ordinal) -and
+    [string]::Equals($cachedValidation.validatorText, $validatorText, [StringComparison]::Ordinal)) {
+    $validation = $cachedValidation.resultJson | ConvertFrom-Json
+} else {
+    $validation = Test-Registry $registry
+    $global:LlmWikiTelemetryValidation = [pscustomobject]@{
+        path=$registryPath; registryText=$script:registryText
+        policyPath=$policyPath; policyText=$policyText; validatorText=$validatorText
+        resultJson=($validation | ConvertTo-Json -Depth 5 -Compress)
+    }
+}
 if ($Action -eq 'verify') {
     $result = [pscustomobject][ordered]@{ action = 'verify'; valid = $validation.valid; totalCount = @($registry.events).Count; registryHash = $registry.registryHash; issues = @($validation.issues) }
 } elseif (-not $validation.valid) {
@@ -182,7 +202,10 @@ if ($Action -eq 'verify') {
     if ([string]::IsNullOrWhiteSpace($CheckId) -or
         [string]::IsNullOrWhiteSpace($Status) -or $DurationSeconds -lt 0) { throw 'record requires CheckId, Status, and non-negative DurationSeconds; WorkspacePath defaults to @wiki.' }
     if (@($registry.events).Count -ge [int]$telemetryPolicy.retentionCount) {
-        throw 'Verification telemetry retention limit is reached; archive history before recording more events.'
+        $errorRecord = [Management.Automation.ErrorRecord]::new(
+            [InvalidOperationException]::new('Verification telemetry retention limit is reached; archive history before recording more events.'),
+            'LlmWikiTelemetryRetentionReached', [Management.Automation.ErrorCategory]::LimitsExceeded, $registryPath)
+        $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
     $workspace = if ([string]::IsNullOrWhiteSpace($WorkspacePath) -or $WorkspacePath -eq '@wiki') { '@wiki' } else { $WorkspacePath.Replace('\', '/').TrimEnd('/') }
     if ($workspace -ne '@wiki' -and ([IO.Path]::IsPathRooted($WorkspacePath) -or $workspace -notmatch '^\.artifacts/llm-wiki/tasks/[^/]+$')) { throw 'WorkspacePath must identify one task workspace or use @wiki for a repository-level check.' }

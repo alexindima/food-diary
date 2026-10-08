@@ -1,5 +1,9 @@
 # Wiki tool performance and reliability audit
 
+Checkpoint note (2026-10-08): the coverage ledger below describes its recorded
+source checkpoint. Later changes and current performance measurements are in
+[the followup report](wiki-performance-2026-10-08.md).
+
 Status: **complete, including the compact handoff followup**. All
 410 current sources were read in full. Followup proposals are separate from the fixes
 that have execution evidence; this is not a claim that every proposal was implemented.

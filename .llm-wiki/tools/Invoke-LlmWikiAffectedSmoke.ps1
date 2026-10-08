@@ -73,7 +73,10 @@ if ($forcedGroups.Count -gt 0 -and -not $hasExplicitChangedPaths) {
 }
 if ($smokeGroups.Count -eq 0) {
     foreach ($path in $paths) {
-        if ($path -notmatch '^\.llm-wiki/') { continue }
+        $additionalMatches = @($smokeCatalog.AdditionalMatches | Where-Object { $path -match $_.Pattern })
+        # Registered runtime/test sources outside .llm-wiki can own Wiki checks.
+        # Ordinary product paths still select nothing unless explicitly registered.
+        if ($path -notmatch '^\.llm-wiki/' -and $additionalMatches.Count -eq 0) { continue }
         $wikiRelevantPathCount++
         $matchedGroup = @($catalogGroups | Where-Object {
             @($_.Patterns | Where-Object { $path -match $_ }).Count -gt 0
@@ -82,7 +85,7 @@ if ($smokeGroups.Count -eq 0) {
             $null = $smokeGroups.Add([string]$matchedGroup[0].Id)
             if ($matchedGroup[0].ContainsKey('Fallback') -and [bool]$matchedGroup[0].Fallback) { $hasUnknownToolChange = $true }
         }
-        foreach ($additional in @($smokeCatalog.AdditionalMatches | Where-Object { $path -match $_.Pattern })) {
+        foreach ($additional in $additionalMatches) {
             foreach ($additionalGroup in @($additional.Groups)) { $null = $smokeGroups.Add([string]$additionalGroup) }
         }
     }
@@ -325,6 +328,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             & (Join-Path $toolsRoot 'Test-LlmWikiVerificationCache.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiOperationalTelemetry.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiTelemetryValidationReuse.ps1')
             if (-not $?) { exit 1 }
         }
         'verification-receipts' {

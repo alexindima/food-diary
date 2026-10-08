@@ -3,6 +3,7 @@ param([switch]$Check)
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiSourceInventory.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $outputPath = Join-Path $wikiRoot 'generated/sensitive-data-index.json'
@@ -25,7 +26,7 @@ $potentialLogging = [System.Collections.Generic.List[object]]::new()
 $boundaryFiles = [System.Collections.Generic.List[object]]::new()
 $externalTransfers = [System.Collections.Generic.List[object]]::new()
 $sourceFiles = @(
-    Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Force -Filter '*.cs' |
+    Get-LlmWikiSourceFiles -RepositoryRoot $repositoryRoot -Filter '*.cs' -Force -ExcludedDirectory @('tests','obj','bin','.artifacts','TestResults','Migrations') |
         Where-Object {
             $_.FullName -notmatch '[\\/](tests|obj|bin|\.artifacts|TestResults|Migrations)[\\/]' -and
             $_.Name -notmatch '\.(Designer|g)\.cs$'

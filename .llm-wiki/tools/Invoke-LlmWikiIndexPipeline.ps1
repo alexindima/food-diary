@@ -275,6 +275,7 @@ if ($AffectedOnly) {
         if ('.llm-wiki/tools/LlmWikiSourceInventory.ps1' -in $normalizedChangedPaths) {
             Add-IndexTool 'Build-LlmWikiDomainDataIndex.ps1'
             Add-IndexTool 'Build-LlmWikiRuntimeTopology.ps1'
+            Add-IndexTool 'Build-LlmWikiSensitiveDataIndex.ps1'
         }
         if ('.llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1' -in $normalizedChangedPaths) {
             Add-IndexTool 'Build-LlmWikiRuntimeTopology.ps1'

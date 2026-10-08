@@ -579,7 +579,11 @@ function Invoke-ObservedWikiStage {
                 -InputFingerprint $fingerprint `
                 -Format Json | Out-Null
         } catch {
-            Write-Warning "Unable to record verification stage telemetry for '$Name': $($_.Exception.Message)"
+            $retentionReached = $_.FullyQualifiedErrorId.Split(',')[0] -ceq 'LlmWikiTelemetryRetentionReached'
+            if (-not $retentionReached -or -not $script:verifyTelemetryRetentionWarned) {
+                Write-Warning "Unable to record verification stage telemetry for '$Name': $($_.Exception.Message)"
+            }
+            if ($retentionReached) { $script:verifyTelemetryRetentionWarned = $true }
         }
     }
     if ($receiptPath -and -not (Test-Path -LiteralPath $receiptPath -PathType Leaf)) {
@@ -758,6 +762,7 @@ switch ($Command) {
             throw "VerifyRunId already exists: $VerifyRunId"
         }
         $script:verifyStageOrdinal = 0
+        $script:verifyTelemetryRetentionWarned = $false
         $script:verifyReceiptRoot = $null
         $script:verifyRunStopwatch = [Diagnostics.Stopwatch]::StartNew()
         $script:verifyStageExpectedSeconds = @{
