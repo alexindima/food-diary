@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence.Recipes;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
@@ -774,7 +776,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Product product = CreateProduct(user.Id, "Rice");
         var recipe = Recipe.Create(user.Id, "Pilaf", servings: 2, description: "Rice dish");
         var meal = Meal.Create(user.Id, DateTime.UtcNow, MealType.Dinner);
-        meal.AddProduct(product.Id, 120);
+        meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(120));
         context.Users.Add(user);
         context.Products.Add(product);
         context.Recipes.Add(recipe);
@@ -954,7 +956,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await owned.SaveChangesAsync();
 
         var meal = Meal.Create(owner.Id, DateTime.UtcNow, MealType.Lunch);
-        meal.AddRecipe(publicRecipe.Id, servings: 1);
+        meal.AddRecipe(publicRecipe.Id, servings: RecipeServingQuantity.FromServings(1));
         context.Meals.Add(meal);
         await context.SaveChangesAsync();
 
@@ -1080,7 +1082,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await owned.SaveChangesAsync();
 
         var meal = Meal.Create(userId, DateTime.UtcNow, MealType.Breakfast);
-        meal.AddProduct(searchable.Id, 200);
+        meal.AddProduct(searchable.Id, ProductUnitQuantity.FromUnits(200));
         context.Meals.Add(meal);
         await context.SaveChangesAsync();
 

@@ -1,6 +1,7 @@
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
+using FoodDiary.Modules.Billing.Domain.Enums;
 
 namespace FoodDiary.Modules.Billing.Domain.Entities;
 
@@ -19,6 +20,12 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
     public string EventType { get; private set; } = string.Empty;
     public string? ExternalObjectId { get; private set; }
     public string Status { get; private set; } = string.Empty;
+    public BillingWebhookProcessingState ProcessingState => Status switch {
+        ReceivedStatus => BillingWebhookProcessingState.Received,
+        FailedStatus => BillingWebhookProcessingState.Failed,
+        ProcessedStatus => BillingWebhookProcessingState.Processed,
+        _ => BillingWebhookProcessingState.Unrecognized,
+    };
     public DateTime ReceivedAtUtc { get; private set; }
     public DateTime? ProcessedAtUtc { get; private set; }
     public int AttemptCount { get; private set; }
@@ -45,11 +52,11 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
             EventId = NormalizeRequired(eventId, EventIdMaxLength, nameof(eventId)),
             EventType = NormalizeRequired(eventType, EventTypeMaxLength, nameof(eventType)),
             ExternalObjectId = NormalizeOptional(externalObjectId, ExternalObjectIdMaxLength, nameof(externalObjectId)),
-            Status = ReceivedStatus,
             ReceivedAtUtc = normalizedReceivedAtUtc,
             PayloadJson = DomainGuard.OptionalJson(payloadJson, JsonMaxLength, nameof(payloadJson)),
             ParsedEventJson = DomainGuard.OptionalJson(parsedEventJson, JsonMaxLength, nameof(parsedEventJson)),
         };
+        webhookEvent.SetProcessingState(BillingWebhookProcessingState.Received);
         webhookEvent.SetCreated(normalizedReceivedAtUtc);
         return webhookEvent;
     }
@@ -67,22 +74,22 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
             EventId = NormalizeRequired(eventId, EventIdMaxLength, nameof(eventId)),
             EventType = NormalizeRequired(eventType, EventTypeMaxLength, nameof(eventType)),
             ExternalObjectId = NormalizeOptional(externalObjectId, ExternalObjectIdMaxLength, nameof(externalObjectId)),
-            Status = ProcessedStatus,
             ReceivedAtUtc = NormalizeRequiredUtc(processedAtUtc, nameof(processedAtUtc)),
             ProcessedAtUtc = NormalizeRequiredUtc(processedAtUtc, nameof(processedAtUtc)),
             PayloadJson = DomainGuard.OptionalJson(payloadJson, JsonMaxLength, nameof(payloadJson)),
         };
+        webhookEvent.SetProcessingState(BillingWebhookProcessingState.Processed);
         webhookEvent.SetCreated(webhookEvent.ReceivedAtUtc);
         return webhookEvent;
     }
 
     public void MarkProcessed(DateTime processedAtUtc) {
-        if (string.Equals(Status, ProcessedStatus, StringComparison.Ordinal)) {
+        if (ProcessingState == BillingWebhookProcessingState.Processed) {
             return;
         }
 
         DateTime normalizedProcessedAt = NormalizeTransitionTimestamp(processedAtUtc, nameof(processedAtUtc));
-        Status = ProcessedStatus;
+        SetProcessingState(BillingWebhookProcessingState.Processed);
         ProcessedAtUtc = normalizedProcessedAt;
         ErrorMessage = null;
         NextAttemptAtUtc = null;
@@ -90,7 +97,7 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
     }
 
     public void MarkFailed(DateTime failedAtUtc, string errorMessage) {
-        if (string.Equals(Status, ProcessedStatus, StringComparison.Ordinal)) {
+        if (ProcessingState == BillingWebhookProcessingState.Processed) {
             throw new InvalidOperationException("A processed webhook event cannot be marked as failed.");
         }
 
@@ -101,10 +108,19 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
         DateTime nextAttemptAtUtc = AddMinutesSaturated(normalizedFailedAtUtc, delayMinutes);
 
         AttemptCount = nextAttemptCount;
-        Status = FailedStatus;
+        SetProcessingState(BillingWebhookProcessingState.Failed);
         ErrorMessage = normalizedError;
         NextAttemptAtUtc = nextAttemptAtUtc;
         SetModified(normalizedFailedAtUtc);
+    }
+
+    private void SetProcessingState(BillingWebhookProcessingState state) {
+        Status = state switch {
+            BillingWebhookProcessingState.Received => ReceivedStatus,
+            BillingWebhookProcessingState.Failed => FailedStatus,
+            BillingWebhookProcessingState.Processed => ProcessedStatus,
+            _ => throw new ArgumentOutOfRangeException(nameof(state), "Unsupported webhook processing state."),
+        };
     }
 
     private static string NormalizeProvider(string provider) {

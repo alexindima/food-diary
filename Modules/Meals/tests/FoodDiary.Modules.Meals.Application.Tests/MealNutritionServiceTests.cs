@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
@@ -35,7 +37,7 @@ public class MealNutritionServiceTests {
         var userId = UserId.New();
         var meal = Meal.Create(userId, DateTime.UtcNow, MealType.Lunch);
         var missingProductId = ProductId.New();
-        meal.AddProduct(missingProductId, 100);
+        meal.AddProduct(missingProductId, ProductUnitQuantity.FromUnits(100));
 
         MealNutritionService service = CreateService(
             products: new Dictionary<ProductId, Product>());
@@ -51,7 +53,7 @@ public class MealNutritionServiceTests {
         var userId = UserId.New();
         var meal = Meal.Create(userId, DateTime.UtcNow, MealType.Dinner);
         var missingRecipeId = RecipeId.New();
-        meal.AddRecipe(missingRecipeId, 1);
+        meal.AddRecipe(missingRecipeId, RecipeServingQuantity.FromServings(1));
 
         MealNutritionService service = CreateService(
             recipes: new Dictionary<RecipeId, Recipe>());
@@ -75,8 +77,8 @@ public class MealNutritionServiceTests {
         var recipe = Recipe.Create(userId, "Salad", servings: 1);
         recipe.SetManualNutrition(150, 5, 10, 8, 3, 0);
 
-        meal.AddProduct(product.Id, 200);
-        meal.AddRecipe(recipe.Id, 1);
+        meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(200));
+        meal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(1));
 
         MealNutritionService service = CreateService(
             products: new Dictionary<ProductId, Product> { [product.Id] = product },

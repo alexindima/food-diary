@@ -83,9 +83,9 @@ public sealed class RetiredDomainAssemblyTests {
     }
 
     [Fact]
-    public void ProductContracts_ContainIdentityClassificationAndMeasurementWithoutAggregateDependencies() {
+    public void ProductContracts_ContainIdentityClassificationMeasurementAndQuantityWithoutAggregateDependencies() {
         string root = ArchitectureTestPaths.FromRoot("Modules/Products/Domain.Contracts");
-        Assert.Equal(["Enums/MeasurementUnit.cs", "Enums/ProductType.cs", "ValueObjects/Ids/ProductId.cs"],
+        Assert.Equal(["Enums/MeasurementUnit.cs", "Enums/ProductType.cs", "ValueObjects/Ids/ProductId.cs", "ValueObjects/ProductUnitQuantity.cs"],
             SourceScanner.SourceFiles(root).Select(path => Path.GetRelativePath(root, path).Replace('\\', '/')), StringComparer.Ordinal);
         Assert.Equal(["FoodDiary.Domain.Primitives"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj"), StringComparer.Ordinal);

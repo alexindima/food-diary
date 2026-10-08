@@ -1,6 +1,7 @@
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Hydration.Application.Mappings;
 using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
+using FoodDiary.Modules.Hydration.Domain.ValueObjects;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Hydration.Application.Abstractions.Common;
@@ -34,7 +35,7 @@ public sealed class CreateHydrationEntryCommandHandler(
         }
 
         DateTime timestampUtc = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(command.TimestampUtc);
-        var entry = HydrationEntry.Create(userId, timestampUtc, command.AmountMl);
+        var entry = HydrationEntry.CreateWithAmount(userId, timestampUtc, HydrationAmount.FromMilliliters(command.AmountMl));
         await repository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(entry.ToModel());

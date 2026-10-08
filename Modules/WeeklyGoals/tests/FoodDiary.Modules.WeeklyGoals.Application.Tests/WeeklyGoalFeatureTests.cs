@@ -180,6 +180,41 @@ public sealed class WeeklyGoalFeatureTests {
     }
 
     [Fact]
+    public async Task UpsertHandler_PreservesMinutePrecisionWithNonWholeHourOffset() {
+        var userId = UserId.New();
+        IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
+        UpsertWeeklyGoalCommandHandler handler = CreateUpsertHandler(repository, Substitute.For<ISender>());
+
+        WeeklyGoalModel model = ResultAssert.Success(await handler.Handle(
+            new UpsertWeeklyGoalCommand(userId.Value, WeekStart, 5, true, new TimeOnly(23, 59, 59, 999), -210),
+            CancellationToken.None));
+
+        Assert.Multiple(() => {
+            Assert.Equal(new TimeOnly(23, 59), model.ReminderTime);
+            Assert.Equal(-210, model.TimeZoneOffsetMinutes);
+        });
+        await repository.Received(1).AddAsync(
+            Arg.Is<WeeklyGoal>(goal => goal.ReminderTimeMinutes == 1439 && goal.TimeZoneOffsetMinutes == -210),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task UpsertHandler_DisabledReminderIgnoresExtraneousInvalidOffset() {
+        IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
+        UpsertWeeklyGoalCommandHandler handler = CreateUpsertHandler(repository, Substitute.For<ISender>());
+
+        WeeklyGoalModel model = ResultAssert.Success(await handler.Handle(
+            new UpsertWeeklyGoalCommand(UserId.New().Value, WeekStart, 5, false, new TimeOnly(9, 30), int.MaxValue),
+            CancellationToken.None));
+
+        Assert.Multiple(() => {
+            Assert.False(model.ReminderEnabled);
+            Assert.Null(model.ReminderTime);
+            Assert.Null(model.TimeZoneOffsetMinutes);
+        });
+    }
+
+    [Fact]
     public async Task UpsertHandler_WhenGoalExists_UpdatesAndMapsDisabledReminder() {
         var userId = UserId.New();
         WeeklyGoal goal = CreateGoal(userId, reminderEnabled: true);

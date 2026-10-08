@@ -20,6 +20,7 @@ This directory contains long-form repository documentation. Keep root-level mark
 - `TESTING_STRATEGY.md` - test project responsibilities and when to run each suite.
 - `frontend/BODY_METRICS_TEST_COVERAGE.md` - weight/waist frontend coverage audit, behavioral matrix, regression command, and remaining gaps.
 - `architecture/TEST_PROJECT_OWNERSHIP.md` - physical test ownership and shared build configuration.
+- `architecture/PRIMITIVE_TYPES.md` - backend primitive inventory, domain type priorities and verified quantity, calendar, reminder, profile and webhook mutation boundaries.
 - `adr/README.md` - architecture decision record index, lifecycle, and authoring guidance.
 
 ## Backend Operations And Governance

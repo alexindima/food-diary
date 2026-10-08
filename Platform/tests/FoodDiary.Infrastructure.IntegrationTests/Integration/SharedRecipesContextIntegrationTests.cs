@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Infrastructure;
 using FoodDiary.Modules.Products.Infrastructure;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
@@ -63,8 +65,8 @@ public sealed class SharedRecipesContextIntegrationTests(PostgresDatabaseFixture
         Recipe recipe = CreateRecipe(user);
         var ingredient = Product.Create(user.Id, "Ingredient", MeasurementUnit.G, 100, 100, 100, 10, 5, 10, 1, 0);
         var nested = Recipe.Create(user.Id, "Nested recipe", servings: 1);
-        recipe.AddStep(1, "Mix").AddProductIngredient(ingredient.Id, 100);
-        recipe.Steps.Single().AddNestedRecipeIngredient(nested.Id, 1);
+        recipe.AddStep(1, "Mix").AddProductIngredient(ingredient.Id, ProductUnitQuantity.FromUnits(100));
+        recipe.Steps.Single().AddNestedRecipeIngredient(nested.Id, RecipeServingQuantity.FromServings(1));
         shared.AddRange(user, ingredient);
         await writes.AddAsync(nested);
         await writes.AddAsync(recipe);

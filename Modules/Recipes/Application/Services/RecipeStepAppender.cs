@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
@@ -105,9 +107,9 @@ internal static class RecipeStepAppender {
             if (ingredient.TextName is not null) {
                 step.AddTextIngredient(ingredient.TextName, ingredient.AmountText);
             } else if (productIdResult.Value.HasValue) {
-                step.AddProductIngredient(productIdResult.Value.Value, ingredient.Amount).SetPublicDescription(ingredient.PublicName, ingredient.PublicUnit);
+                step.AddProductIngredient(productIdResult.Value.Value, ProductUnitQuantity.FromUnits(ingredient.Amount)).SetPublicDescription(ingredient.PublicName, ingredient.PublicUnit);
             } else if (nestedRecipeIdResult.Value.HasValue) {
-                step.AddNestedRecipeIngredient(nestedRecipeIdResult.Value.Value, ingredient.Amount).SetPublicDescription(ingredient.PublicName, ingredient.PublicUnit);
+                step.AddNestedRecipeIngredient(nestedRecipeIdResult.Value.Value, RecipeServingQuantity.FromServings(ingredient.Amount)).SetPublicDescription(ingredient.PublicName, ingredient.PublicUnit);
             }
         }
 

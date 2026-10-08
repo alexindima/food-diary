@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Domain.Entities;
@@ -44,8 +46,8 @@ public sealed class RecipeSnapshotCompatibilityTests {
     [Fact]
     public void MealItem_SourceSnapshotAndRecipeSnapshot_CoverRemainingPaths() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        MealItem source = meal.AddProduct(ProductId.New(), 100);
-        MealItem target = meal.AddRecipe(RecipeId.New(), 2);
+        MealItem source = meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(100));
+        MealItem target = meal.AddRecipe(RecipeId.New(), RecipeServingQuantity.FromServings(2));
         MealAiSession aiSession = meal.AddAiSession(
             imageAssetId: null,
             AiRecognitionSource.Text,
@@ -66,7 +68,7 @@ public sealed class RecipeSnapshotCompatibilityTests {
             ]);
         MealAiItem aiItem = Assert.Single(aiSession.Items);
         RecipeStep step = CreateRecipe().AddStep(1, "Step");
-        RecipeIngredient ingredient = step.AddProductIngredient(ProductId.New(), 100);
+        RecipeIngredient ingredient = step.AddProductIngredient(ProductId.New(), ProductUnitQuantity.FromUnits(100));
         Recipe recipe = CreateRecipe();
 
         source.ApplyProductSnapshot("Apple", imageUrl: null, MeasurementUnit.G, baseAmount: 100,

@@ -1,6 +1,8 @@
 using FoodDiary.Modules.Recipes.Domain.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 
@@ -81,7 +83,7 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
         return ingredient;
     }
 
-    public RecipeIngredient AddProductIngredient(ProductId productId, double amount) {
+    public RecipeIngredient AddProductIngredient(ProductId productId, ProductUnitQuantity amount) {
         var ingredient = RecipeIngredient.CreateWithProduct(Id, productId, amount);
         ingredient.SetPosition(_ingredients.Count == 0 ? 0 : _ingredients.Max(item => item.Position) + 1);
         _ingredients.Add(ingredient);
@@ -89,7 +91,7 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
         return ingredient;
     }
 
-    public RecipeIngredient AddNestedRecipeIngredient(RecipeId nestedRecipeId, double servings) {
+    public RecipeIngredient AddNestedRecipeIngredient(RecipeId nestedRecipeId, RecipeServingQuantity servings) {
         if (nestedRecipeId == RecipeId) {
             throw new ArgumentException("A recipe cannot contain itself as an ingredient.", nameof(nestedRecipeId));
         }

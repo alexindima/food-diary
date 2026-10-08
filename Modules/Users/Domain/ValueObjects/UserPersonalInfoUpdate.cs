@@ -6,6 +6,6 @@ public readonly record struct UserPersonalInfoUpdate(
     string? LastName = null,
     DateTime? BirthDate = null,
     string? Gender = null,
-    double? WeightKg = null,
-    double? HeightCm = null,
+    ProfileWeightKg? WeightKg = null,
+    ProfileHeightCm? HeightCm = null,
     bool BirthDateSpecified = false);

@@ -5,6 +5,7 @@ using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Common;
 using FoodDiary.Modules.WeeklyGoals.Domain.Entities;
 using FoodDiary.Modules.WeeklyGoals.Domain.Enums;
+using FoodDiary.Modules.WeeklyGoals.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.WeeklyGoals.Application.Tests;
@@ -13,6 +14,40 @@ namespace FoodDiary.Modules.WeeklyGoals.Application.Tests;
 public sealed class SendWeeklyGoalRemindersCommandHandlerTests {
     private static readonly DateTime WeekStart = new(2026, 8, 10, 0, 0, 0, DateTimeKind.Utc);
     private static readonly DateTime ReminderUtcTime = new(2026, 8, 10, 17, 5, 0, DateTimeKind.Utc);
+
+    [Theory]
+    [InlineData(345, -330, 15, 0)]
+    [InlineData(-210, 225, 15, 0)]
+    [InlineData(-210, 10289, 1439, 6)]
+    [InlineData(840, -840, 0, 0)]
+    [InlineData(-840, 10919, 1439, 6)]
+    public async Task TypedReminder_UsesLocalWeekAtUtcBoundariesAndDeduplicatesDate(
+        int offsetMinutes, int utcMinutesFromWeekStart, int localTimeMinutes, int localDayOffset) {
+        var goal = WeeklyGoal.CreateWithReminder(
+            UserId.New(), WeekStart, WeeklyGoalType.DiaryLogging, 5,
+            WeeklyGoalReminderSettings.EnabledAt(
+                TimeOnly.FromTimeSpan(TimeSpan.FromMinutes(localTimeMinutes)), TimeSpan.FromMinutes(offsetMinutes)));
+        IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
+        repository.GetReminderCandidatesAsync(
+                Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns([goal]);
+        INotificationWriter writer = Substitute.For<INotificationWriter>();
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        var processor = new SendWeeklyGoalRemindersCommandHandler(
+            repository, writer, unitOfWork, new FixedTimeProvider(WeekStart.AddMinutes(utcMinutesFromWeekStart)));
+
+        int first = await processor.Handle(new SendWeeklyGoalRemindersCommand(), CancellationToken.None);
+        int repeated = await processor.Handle(new SendWeeklyGoalRemindersCommand(), CancellationToken.None);
+
+        Assert.Multiple(() => {
+            Assert.Equal(1, first);
+            Assert.Equal(0, repeated);
+            Assert.Equal(new DateOnly(2026, 8, 10).AddDays(localDayOffset), goal.LastReminderLocalDate);
+        });
+        await writer.Received(1).AddAsync(
+            Arg.Is<NotificationRequest>(notification => notification.UserId == goal.UserId), sendWebPush: true, Arg.Any<CancellationToken>());
+        await unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
 
     [Fact]
     public async Task ProcessAsync_WhenReminderIsDue_SendsOnlyOnceForLocalDate() {

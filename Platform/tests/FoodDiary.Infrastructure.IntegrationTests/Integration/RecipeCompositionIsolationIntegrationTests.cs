@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence.Recipes;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
@@ -36,7 +38,7 @@ public sealed class RecipeCompositionIsolationIntegrationTests(PostgresDatabaseF
             if (Interlocked.Increment(ref attempts) == 2) { bothRead.TrySetResult(); }
             await bothRead.Task.WaitAsync(TimeSpan.FromSeconds(15), token);
             if (cycle) { return Result.Failure(Errors.Validation.Invalid("Recipe", "Cycle")); }
-            recipe.AddStep(1, "Mix").AddNestedRecipeIngredient(to, 1);
+            recipe.AddStep(1, "Mix").AddNestedRecipeIngredient(to, RecipeServingQuantity.FromServings(1));
             return Result.Success();
         }
         Task<Result> firstAttempt = new EfRecipeMutationTransactionRunner(new EfModuleTransactionCoordinator(left, new UnitOfWork(left)))
@@ -79,7 +81,7 @@ public sealed class RecipeCompositionIsolationIntegrationTests(PostgresDatabaseF
             linkedName = await linking.Products.AsNoTracking().Where(item => item.Id == product.Id).Select(item => item.Name).SingleAsync(token);
             Recipe current = await linking.Recipes.SingleAsync(item => item.Id == recipe.Id, token);
             await SynchronizeAsync(token);
-            current.AddStep(1, "Mix").AddProductIngredient(product.Id, 100);
+            current.AddStep(1, "Mix").AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(100));
             return Result.Success();
         });
         await Task.WhenAll(edit, link).WaitAsync(TimeSpan.FromSeconds(45));

@@ -6,10 +6,10 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1656,
+    "candidateFields": 1657,
     "credential": 157,
     "identity": 180,
-    "health": 772,
+    "health": 773,
     "financial": 133,
     "privateContent": 414,
     "boundaryFiles": 223,
@@ -2822,7 +2822,7 @@
       "name": "WeightKg",
       "type": "double",
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WeightEntry.cs",
-      "line": 14
+      "line": 15
     },
     {
       "category": "health",
@@ -4635,56 +4635,56 @@
       "name": "TotalCalories",
       "type": "double",
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
-      "line": 25
+      "line": 27
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
-      "line": 31
+      "line": 33
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
-      "line": 32
+      "line": 34
     },
     {
       "category": "health",
       "name": "PreMealSatietyLevel",
       "type": "int",
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
-      "line": 38
+      "line": 40
     },
     {
       "category": "health",
       "name": "PostMealSatietyLevel",
       "type": "int",
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
-      "line": 39
+      "line": 41
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "Id,",
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
-      "line": 228
+      "line": 230
     },
     {
       "category": "health",
       "name": "PreMealSatietyLevel",
       "type": "ImageAssetId,",
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
-      "line": 286
+      "line": 288
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "IsNutritionAutoCalculated,",
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
-      "line": 309
+      "line": 311
     },
     {
       "category": "health",
@@ -4705,7 +4705,7 @@
       "name": "SnapshotCaloriesPerBase",
       "type": "double?",
       "path": "Modules/Meals/Domain/Entities/MealItem.cs",
-      "line": 30
+      "line": 32
     },
     {
       "category": "health",
@@ -5315,6 +5315,13 @@
       "type": "double",
       "path": "Modules/Recipes/Domain/Entities/RecipeIngredientProductSnapshot.cs",
       "line": 13
+    },
+    {
+      "category": "health",
+      "name": "Nutrition",
+      "type": "RecipeNutritionValues?",
+      "path": "Modules/Recipes/Domain/Nutrition/RecipeNutritionIngredient.cs",
+      "line": 17
     },
     {
       "category": "health",
@@ -6637,35 +6644,35 @@
       "name": "Gender",
       "type": "BirthDate,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 134
+      "line": 147
     },
     {
       "category": "health",
       "name": "HeightCm",
       "type": "WeightKg,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 134
+      "line": 147
     },
     {
       "category": "health",
       "name": "Gender",
       "type": "gender,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 144
+      "line": 157
     },
     {
       "category": "health",
       "name": "HeightCm",
       "type": "height,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 145
+      "line": 158
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "weight,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 145
+      "line": 158
     },
     {
       "category": "health",
@@ -10123,56 +10130,56 @@
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
-      "line": 22
+      "line": 24
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
-      "line": 23
+      "line": 25
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
-      "line": 24
+      "line": 26
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
-      "line": 70
+      "line": 72
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
-      "line": 71
+      "line": 73
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
-      "line": 81
+      "line": 83
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
-      "line": 98
+      "line": 100
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "Comment,",
       "path": "Modules/Meals/Domain/Entities/Meal.cs",
-      "line": 284
+      "line": 286
     },
     {
       "category": "privateContent",
@@ -10200,14 +10207,14 @@
       "name": "SnapshotImageUrl",
       "type": "string?",
       "path": "Modules/Meals/Domain/Entities/MealItem.cs",
-      "line": 27
+      "line": 29
     },
     {
       "category": "privateContent",
       "name": "SnapshotImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Meals/Domain/Entities/MealItem.cs",
-      "line": 191
+      "line": 208
     },
     {
       "category": "privateContent",
@@ -11250,21 +11257,21 @@
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
-      "line": 30
+      "line": 32
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
-      "line": 31
+      "line": 33
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "Modules/Recipes/Domain/Entities/RecipeStep.cs",
-      "line": 116
+      "line": 118
     },
     {
       "category": "privateContent",

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Domain.ValueObjects;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
@@ -68,7 +69,7 @@ public partial class MealsFeatureTests {
             new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc),
             MealType.Lunch,
             comment: "Owner note");
-        meal.AddProduct(ProductId.New(), 150);
+        meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(150));
         meal.ApplyNutrition(new MealNutritionUpdate(350, 20, 12, 30, 4, 0, IsAutoCalculated: true));
 
         var handler = new GetMealByIdQueryHandler(

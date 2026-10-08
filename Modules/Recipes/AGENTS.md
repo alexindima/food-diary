@@ -18,3 +18,5 @@ repository or aggregate capability. See docs/ai/feature-error-retirement.md.
 Current module convention: all projects use `FoodDiary.Modules.Recipes.<Project>` assembly identities and namespaces matching their folders, including tests. Preserve historical migration metadata and database/HTTP contracts during namespace moves.
 
 Domain/Nutrition/RecipeNutritionPolicy owns scalar ingredient scaling, source precedence, rounding, stored-value fallback and manual-value selection. Application and composed-read adapters map their inputs into that policy; do not reimplement the calculation in the shared SQL composition project.
+
+Recipe ingredient mutations use Products `ProductUnitQuantity` and owner `RecipeServingQuantity` from scalar Domain.Contracts. The latter is a fractional consumed/nested serving amount, distinct from the recipe's integer total yield. Do not restore scalar mutation overloads or generic `UpdateAmount`. Nutrition inputs select one immutable source before calculation; stored-source adapters retain product-base precedence, incomplete data and permissive read projection values. Preserve saved snapshots, source units and rounding.

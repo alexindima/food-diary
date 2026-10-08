@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
+using FoodDiary.Modules.Hydration.Domain.ValueObjects;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Hydration.Application.Abstractions.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -38,7 +39,7 @@ public sealed class CreateHydrationFromOperationCommandHandler(
                 : Result.Failure<HydrationOperationModel>(new Error("Hydration.OperationConflict", "The operation was already saved with different input.", ErrorKind.Conflict));
         }
         var timestamp = new DateTime(command.TimestampUtc.Ticks / 10 * 10, DateTimeKind.Utc);
-        var entry = HydrationEntry.Create(userId, timestamp, command.AmountMl);
+        var entry = HydrationEntry.CreateWithAmount(userId, timestamp, HydrationAmount.FromMilliliters(command.AmountMl));
         var receipt = HydrationOperationReceipt.Create(command.OperationId, entry);
         // The serialized transaction saves the entry and permanent receipt together.
         await entries.AddAsync(entry, cancellationToken).ConfigureAwait(false);

@@ -2,7 +2,7 @@ using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Mappings;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Modules.BodyMetrics.Application.Common;
+using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
@@ -27,7 +27,8 @@ public sealed class CreateWaistEntryCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        DateTime normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);
+        var day = MeasurementDay.FromDateTimeEncoding(command.Date);
+        DateTime normalizedDate = day.ToUtcDateTime();
         WaistEntry? existing = await waistEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
@@ -41,7 +42,7 @@ public sealed class CreateWaistEntryCommandHandler(
                 WaistEntryErrors.AlreadyExists(normalizedDate));
         }
 
-        var entry = WaistEntry.Create(userId, normalizedDate, command.CircumferenceCm);
+        var entry = WaistEntry.CreateForDay(userId, day, command.CircumferenceCm);
         entry = await waistEntryRepository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
         return Result.Success(entry.ToModel());
     }

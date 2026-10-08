@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Modules.Meals.Contracts.Models;
@@ -21,10 +22,10 @@ public sealed class MealItemDisplayReadServiceIntegrationTests(PostgresDatabaseF
         var product = Product.Create(user.Id, "Current apple", MeasurementUnit.G, 100, 100, 52, 0.3, 0.2, 14, 2.4, 0, productType: ProductType.Fruit);
         var meal = Meal.Create(user.Id, DateTime.UtcNow);
         var foreignMeal = Meal.Create(other.Id, DateTime.UtcNow);
-        MealItem snapshot = meal.AddProduct(product.Id, 100);
+        MealItem snapshot = meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(100));
         snapshot.ApplyProductSnapshot("Original apple", imageUrl: null, MeasurementUnit.G, 100, 40, 0.2, 0.1, 10, 2, 0);
-        MealItem legacy = meal.AddProduct(product.Id, 150);
-        foreignMeal.AddProduct(product.Id, 200);
+        MealItem legacy = meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(150));
+        foreignMeal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(200));
         context.AddRange(user, other, product, meal, foreignMeal);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();

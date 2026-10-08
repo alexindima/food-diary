@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Recipes.Application.Services;
 using FoodDiary.Modules.Recipes.Domain.Entities;
@@ -49,7 +51,7 @@ public class RecipeNutritionCalculatorTests {
             alcohol: 0);
 
         RecipeStep step = recipe.AddStep(1, "Mix");
-        step.AddProductIngredient(ProductId.New(), amount: 100);
+        step.AddProductIngredient(ProductId.New(), amount: ProductUnitQuantity.FromUnits(100));
 
         RecipeNutritionSummary result = RecipeNutritionCalculator.Calculate(recipe);
 
@@ -82,7 +84,7 @@ public class RecipeNutritionCalculatorTests {
             servings: 1);
 
         RecipeStep step = recipe.AddStep(1, "Mix");
-        step.AddNestedRecipeIngredient(nested.Id, 1);
+        step.AddNestedRecipeIngredient(nested.Id, RecipeServingQuantity.FromServings(1));
         RecipeIngredient ingredient = Assert.Single(step.Ingredients);
         PropertyInfo? nestedRecipeProperty = typeof(RecipeIngredient)
             .GetProperty(nameof(RecipeIngredient.NestedRecipe), BindingFlags.Instance | BindingFlags.Public);

@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Models;
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence.Recipes;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
@@ -118,7 +120,7 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         var recipe = Recipe.Create(user.Id, "Original recipe", servings: 4);
         recipe.SetManualNutrition(400, 20, 10, 60, 8, 0);
         var meal = Meal.Create(user.Id, DateTime.UtcNow);
-        MealItem item = meal.AddRecipe(recipe.Id, 2);
+        MealItem item = meal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(2));
         item.ApplyRecipeSnapshot(recipe.Name, recipe.ImageUrl, recipe.Servings, recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs, recipe.TotalFiber, recipe.TotalAlcohol);
         context.Users.Add(user);
         context.Recipes.Add(recipe);
@@ -149,7 +151,7 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         var nested = Recipe.Create(user.Id, "Sauce", servings: 4);
         nested.SetManualNutrition(320, 12, 20, 24, 6, 2);
         var parent = Recipe.Create(user.Id, "Parent recipe", servings: 1);
-        parent.AddStep(1, "Mix nested recipe").AddNestedRecipeIngredient(nested.Id, 2);
+        parent.AddStep(1, "Mix nested recipe").AddNestedRecipeIngredient(nested.Id, RecipeServingQuantity.FromServings(2));
         context.Users.Add(user);
         context.Recipes.AddRange(nested, parent);
         await context.SaveChangesAsync();
@@ -258,8 +260,8 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         nested.ApplyComputedNutrition(300, 12, 8, 40, 4, 0);
         var outer = Recipe.Create(owner.Id, "Public meal", servings: 2, visibility: Visibility.Public);
         RecipeStep step = outer.AddStep(1, "Combine");
-        step.AddProductIngredient(product.Id, 100).SetPublicDescription("Published ingredient", "G");
-        step.AddNestedRecipeIngredient(nested.Id, 1);
+        step.AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(100)).SetPublicDescription("Published ingredient", "G");
+        step.AddNestedRecipeIngredient(nested.Id, RecipeServingQuantity.FromServings(1));
         outer.ApplyComputedNutrition(350, 16, 9, 50, 4, 0);
         context.AddRange(owner, reader, product, nested, outer);
         await context.SaveChangesAsync();
@@ -389,7 +391,7 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
             fiberPerBase: 0.4,
             alcoholPerBase: 0);
         var recipe = Recipe.Create(user.Id, "Rice bowl", servings: 2);
-        recipe.AddStep(1, "Cook rice").AddProductIngredient(product.Id, 100);
+        recipe.AddStep(1, "Cook rice").AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(100));
         context.Users.Add(user);
         context.Products.Add(product);
         context.Recipes.Add(recipe);
@@ -415,11 +417,11 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         var first = Recipe.Create(owner.Id, "First bowl", 2);
         first.SetManualNutrition(500, 20, 10, 30, 7.5, 0);
         first.AddStep(2, "Serve", imageUrl: "https://example.com/second.jpg");
-        first.AddStep(1, "Cook", imageUrl: "https://example.com/first.jpg").AddProductIngredient(product.Id, 100);
+        first.AddStep(1, "Cook", imageUrl: "https://example.com/first.jpg").AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(100));
         var second = Recipe.Create(other.Id, "Public bowl", 1, visibility: Visibility.Public);
         var hidden = Recipe.Create(other.Id, "Private bowl", 1, visibility: Visibility.Private);
         var privateProduct = Product.Create(other.Id, "Hidden ingredient", MeasurementUnit.G, 100, 100, 100, 1, 1, 1, 1, 0, visibility: Visibility.Private);
-        second.AddStep(1, "Mix").AddProductIngredient(privateProduct.Id, 100);
+        second.AddStep(1, "Mix").AddProductIngredient(privateProduct.Id, ProductUnitQuantity.FromUnits(100));
         context.Products.Add(privateProduct);
         context.Users.AddRange(owner, other);
         context.Products.Add(product);

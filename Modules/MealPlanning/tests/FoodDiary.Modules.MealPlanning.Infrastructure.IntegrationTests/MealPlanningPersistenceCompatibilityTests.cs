@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
@@ -22,7 +23,7 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
         var other = User.Create($"plan-delete-other-{Guid.NewGuid():N}@example.com", "hash");
         var product = Product.Create(owner.Id, "Rice", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
         var recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe.Create(owner.Id, "Rice dish", 2);
-        recipe.AddStep(1, "Cook").AddProductIngredient(product.Id, 250);
+        recipe.AddStep(1, "Cook").AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(250));
         var template = MealPlan.CreateCurated("Template", description: null, DietType.Balanced, durationDays: 1, targetCaloriesPerDay: null);
         MealPlan personal = template.Adopt(owner.Id);
         MealPlanDay day = personal.AddDay(1);
@@ -107,7 +108,7 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
         var user = User.Create($"plan-snapshot-{Guid.NewGuid():N}@example.com", "hash");
         var product = Product.Create(user.Id, "Rice", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
         var recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe.Create(user.Id, "Rice dish", 2);
-        recipe.AddStep(1, "Cook").AddProductIngredient(product.Id, 250);
+        recipe.AddStep(1, "Cook").AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(250));
         var plan = FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan.CreateForUser(user.Id, "Week", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         plan.AddDay(1).AddMeal(MealType.Lunch, recipe.Id, 1);
         context.AddRange(user, product, recipe, plan);

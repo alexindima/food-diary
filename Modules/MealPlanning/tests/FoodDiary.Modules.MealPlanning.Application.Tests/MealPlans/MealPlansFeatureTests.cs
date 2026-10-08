@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
@@ -150,9 +151,9 @@ public class MealPlansFeatureTests {
             category: "Meat");
         var recipe = Recipe.Create(userId, "Chicken bowl", servings: 2);
         RecipeStep step = recipe.AddStep(1, "Cook chicken.");
-        RecipeIngredient ingredient = step.AddProductIngredient(product.Id, 100);
+        RecipeIngredient ingredient = step.AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(100));
         ingredient.SetProductSnapshot(new RecipeIngredientProductSnapshot(product.Id, product.Name, product.BaseUnit, product.BaseAmount, product.CaloriesPerBase, product.ProteinsPerBase, product.FatsPerBase, product.CarbsPerBase, product.FiberPerBase, product.AlcoholPerBase, product.Visibility, product.Category));
-        step.AddProductIngredient(ProductId.New(), 50);
+        step.AddProductIngredient(ProductId.New(), ProductUnitQuantity.FromUnits(50));
 
         var plan = MealPlan.CreateCurated("High protein", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         MealPlanDay day = plan.AddDay(1);

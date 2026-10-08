@@ -22,6 +22,8 @@ Keep User goal collections and UserRole/Role relationships unchanged.
 
 Generic DomainGuard belongs to FoodDiary.Domain.Primitives, referenced directly. Central Domain grants no friend access.
 
+`UserPersonalInfoUpdate` consumes owner-local `ProfileWeightKg` and `ProfileHeightCm` as distinct nullable immutable references. Null means an omitted measurement; neither positive value may have an invalid zero struct default or implicit numeric conversion. The scalar personal-info overload is a compatibility adapter through the same core validation/audit path. Preserve birth-date specified clearing, numeric limits, profile/account partition timestamps and BMR/TDEE calculations; wire/state/persistence numbers remain scalar.
+
 RoleNames belongs to Users Domain.Contracts; role entities and membership invariants remain here.
 
 All module projects and tests use `FoodDiary.Modules.Users.<Project>` identities and namespaces matching physical folders. Projects are siblings, including Application.Abstractions and PersistenceModel. Namespace changes preserve database schema, historical migration metadata, HTTP payloads and runtime behavior.

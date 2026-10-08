@@ -1,6 +1,7 @@
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
-using System.Globalization;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using FoodDiary.Domain.Primitives;
 
 namespace FoodDiary.Modules.Recipes.Domain.Entities;
@@ -51,33 +52,33 @@ public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
     private RecipeIngredient() {
     }
 
-    internal static RecipeIngredient CreateWithProduct(RecipeStepId recipeStepId, ProductId productId, double amount) {
+    internal static RecipeIngredient CreateWithProduct(RecipeStepId recipeStepId, ProductId productId, ProductUnitQuantity amount) {
         EnsureRecipeStepId(recipeStepId);
         EnsureProductId(productId);
-        double normalizedAmount = ValidateAmount(amount, nameof(amount));
+        ArgumentNullException.ThrowIfNull(amount);
 
         var ingredient = new RecipeIngredient {
             Id = RecipeIngredientId.New(),
             RecipeStepId = recipeStepId,
             ProductId = productId,
             NestedRecipeId = null,
-            Amount = normalizedAmount,
+            Amount = amount.Value,
         };
         ingredient.SetCreated();
         return ingredient;
     }
 
-    internal static RecipeIngredient CreateWithRecipe(RecipeStepId recipeStepId, RecipeId nestedRecipeId, double servings) {
+    internal static RecipeIngredient CreateWithRecipe(RecipeStepId recipeStepId, RecipeId nestedRecipeId, RecipeServingQuantity servings) {
         EnsureRecipeStepId(recipeStepId);
         EnsureRecipeId(nestedRecipeId);
-        double normalizedServings = ValidateAmount(servings, nameof(servings));
+        ArgumentNullException.ThrowIfNull(servings);
 
         var ingredient = new RecipeIngredient {
             Id = RecipeIngredientId.New(),
             RecipeStepId = recipeStepId,
             ProductId = null,
             NestedRecipeId = nestedRecipeId,
-            Amount = normalizedServings,
+            Amount = servings.Value,
         };
         ingredient.SetCreated();
         return ingredient;
@@ -101,26 +102,29 @@ public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
         return ingredient;
     }
 
-    public void UpdateAmount(double amount) {
-        double normalizedAmount = ValidateAmount(amount, nameof(amount));
+    public void UpdateProductQuantity(ProductUnitQuantity amount) {
+        ArgumentNullException.ThrowIfNull(amount);
+        if (!ProductId.HasValue || NestedRecipeId.HasValue || TextName is not null) {
+            throw new InvalidOperationException("Product quantity can be applied only to a product ingredient.");
+        }
+        ApplyAmount(amount.Value);
+    }
+
+    public void UpdateRecipeServings(RecipeServingQuantity servings) {
+        ArgumentNullException.ThrowIfNull(servings);
+        if (!NestedRecipeId.HasValue || ProductId.HasValue || TextName is not null) {
+            throw new InvalidOperationException("Recipe servings can be applied only to a nested recipe ingredient.");
+        }
+        ApplyAmount(servings.Value);
+    }
+
+    private void ApplyAmount(double normalizedAmount) {
         if (Math.Abs(Amount - normalizedAmount) <= ComparisonEpsilon) {
             return;
         }
 
         Amount = normalizedAmount;
         SetModified();
-    }
-
-    private static double ValidateAmount(double amount, string paramName) {
-        if (double.IsNaN(amount) || double.IsInfinity(amount)) {
-            throw new ArgumentOutOfRangeException(paramName, "Amount must be a finite number.");
-        }
-
-        if (amount is <= 0 or > MaxAmount) {
-            throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Amount must be in range (0, {MaxAmount}]."));
-        }
-
-        return amount;
     }
 
     private static void EnsureRecipeStepId(RecipeStepId recipeStepId) {

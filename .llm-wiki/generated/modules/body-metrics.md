@@ -75,6 +75,7 @@ No literal attribute-routed controller was associated with this module.
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/HistoryPageSummaryHandlerTests.cs`
+- [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/MeasurementDayCommandTests.cs`
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/MeasurementErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs`
@@ -82,11 +83,14 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Domain.Tests/BodyMetricsIdConversionTests.cs`
+- [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Domain.Tests/Domain/MeasurementDayTests.cs`
+- [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Domain.Tests/Domain/TypedMeasurementDayTests.cs`
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Domain.Tests/Domain/WaistEntryInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Domain.Tests/Domain/WeightEntryInvariantTests.cs`
 - [presentation] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Presentation.Tests/WaistEntryHttpMappingsTests.cs`
 - [presentation] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Presentation.Tests/WeightEntryHttpMappingsTests.cs`
 - [integration] `Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BodyMetricsConcurrencyIntegrationTests.cs`
+- [integration] `Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BodyMetricsMeasurementDayIntegrationTests.cs`
 - [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/BodyMetricsModuleExtractionTests.cs`
 
 ## Working Rule

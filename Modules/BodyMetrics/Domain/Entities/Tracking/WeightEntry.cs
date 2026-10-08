@@ -3,6 +3,7 @@ using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 
@@ -21,12 +22,16 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
 
     public static WeightEntry Create(UserId userId, DateTime date, double weight) {
         EnsureUserId(userId);
-        DateTime normalizedDate = NormalizeDate(date);
+        return CreateForDay(userId, MeasurementDay.FromDateTimeEncoding(date), weight);
+    }
+
+    public static WeightEntry CreateForDay(UserId userId, MeasurementDay day, double weight) {
+        EnsureUserId(userId);
         double normalizedWeight = NormalizeWeight(weight);
 
         var entry = new WeightEntry(WeightEntryId.New()) {
             UserId = userId,
-            Date = normalizedDate,
+            Date = day.ToUtcDateTime(),
             WeightKg = normalizedWeight,
         };
 
@@ -35,6 +40,10 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
     }
 
     public void Update(double? weight = null, DateTime? date = null) {
+        UpdateDetails(weight, date.HasValue ? MeasurementDay.FromDateTimeEncoding(date.Value) : null);
+    }
+
+    public void UpdateDetails(double? weight = null, MeasurementDay? day = null) {
         bool changed = false;
 
         if (weight.HasValue) {
@@ -45,8 +54,8 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
             }
         }
 
-        if (date.HasValue) {
-            DateTime normalizedDate = NormalizeDate(date.Value);
+        if (day.HasValue) {
+            DateTime normalizedDate = day.Value.ToUtcDateTime();
             if (Date != normalizedDate) {
                 Date = normalizedDate;
                 changed = true;
@@ -56,16 +65,6 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
         if (changed) {
             SetModified();
         }
-    }
-
-    private static DateTime NormalizeDate(DateTime value) {
-        if (value.Kind == DateTimeKind.Unspecified) {
-            return DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
-        }
-
-        DateTime utc = value.ToUniversalTime();
-
-        return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 
     private static double NormalizeWeight(double value) {

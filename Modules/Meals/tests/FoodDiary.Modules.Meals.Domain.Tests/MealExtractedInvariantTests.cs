@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Domain.ValueObjects;
@@ -89,7 +90,7 @@ public sealed class MealExtractedInvariantTests {
     [Fact]
     public void MealItemSnapshot_WhenLateValidationFails_IsAtomicAndRejectsInvalidServings() {
         var meal = Meal.Create(UserId.New(), Now);
-        MealItem item = meal.AddProduct(ProductId.New(), 100);
+        MealItem item = meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(100));
         item.ApplyProductSnapshot(
             "Original",
             imageUrl: null,

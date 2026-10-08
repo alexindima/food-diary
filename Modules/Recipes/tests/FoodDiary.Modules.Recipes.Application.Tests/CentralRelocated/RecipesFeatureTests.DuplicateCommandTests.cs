@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
@@ -85,8 +87,8 @@ public partial class RecipesFeatureTests {
             cookTime: 35,
             visibility: Visibility.Public);
         RecipeStep step = original.AddStep(1, "Boil water", "Prep", "https://cdn.test/step.png", ImageAssetId.New());
-        step.AddProductIngredient(ProductId.New(), 200);
-        step.AddNestedRecipeIngredient(nestedRecipeId, 50);
+        step.AddProductIngredient(ProductId.New(), ProductUnitQuantity.FromUnits(200));
+        step.AddNestedRecipeIngredient(nestedRecipeId, RecipeServingQuantity.FromServings(50));
 
         var repository = new SingleRecipeRepository(original);
         DuplicateRecipeCommandHandler handler = DuplicateRecipeHandler(repository);
@@ -118,8 +120,8 @@ public partial class RecipesFeatureTests {
             comment: "Owner-only note",
             visibility: Visibility.Public);
         RecipeStep step = original.AddStep(1, "Cook", imageAssetId: ImageAssetId.New());
-        step.AddProductIngredient(ProductId.New(), 100);
-        step.AddNestedRecipeIngredient(RecipeId.New(), 1);
+        step.AddProductIngredient(ProductId.New(), ProductUnitQuantity.FromUnits(100));
+        step.AddNestedRecipeIngredient(RecipeId.New(), RecipeServingQuantity.FromServings(1));
         var repository = new SingleRecipeRepository(original);
         DuplicateRecipeCommandHandler handler = DuplicateRecipeHandler(repository, new StubUserRepository(caller));
 

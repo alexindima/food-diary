@@ -9,6 +9,7 @@ internal sealed class BillingWebhookEventConfiguration : IEntityTypeConfiguratio
         builder.ToTable("BillingWebhookEvents");
 
         builder.HasKey(e => e.Id);
+        builder.Ignore(e => e.ProcessingState);
 
         builder.Property(e => e.Provider)
             .IsRequired()

@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
@@ -37,13 +39,13 @@ internal static class MealManualItemAppender {
             }
 
             if (productIdResult.Value.HasValue) {
-                MealItem mealItem = meal.AddProduct(productIdResult.Value.Value, item.Amount);
+                MealItem mealItem = meal.AddProduct(productIdResult.Value.Value, ProductUnitQuantity.FromUnits(item.Amount));
                 Result sourceResult = ApplySource(mealItem, item);
                 if (sourceResult.IsFailure) {
                     return sourceResult;
                 }
             } else if (recipeIdResult.Value.HasValue) {
-                MealItem mealItem = meal.AddRecipe(recipeIdResult.Value.Value, item.Amount);
+                MealItem mealItem = meal.AddRecipe(recipeIdResult.Value.Value, RecipeServingQuantity.FromServings(item.Amount));
                 Result sourceResult = ApplySource(mealItem, item);
                 if (sourceResult.IsFailure) {
                     return sourceResult;

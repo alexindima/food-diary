@@ -1,15 +1,13 @@
 using FoodDiary.Modules.WeeklyGoals.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.WeeklyGoals.Domain.ValueObjects;
 using FoodDiary.Modules.WeeklyGoals.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.WeeklyGoals.Domain.Entities;
 
 public sealed class WeeklyGoal : Entity<WeeklyGoalId> {
     private static readonly int[] SupportedTargetDays = [3, 5, 7];
-    private const int MinimumTimeZoneOffsetMinutes = -14 * 60;
-    private const int MaximumTimeZoneOffsetMinutes = 14 * 60;
-    private const int MinutesPerDay = 24 * 60;
 
     public UserId UserId { get; private set; }
     public DateTime WeekStartUtc { get; private set; }
@@ -32,10 +30,24 @@ public sealed class WeeklyGoal : Entity<WeeklyGoalId> {
         int? reminderTimeMinutes,
         int? timeZoneOffsetMinutes) {
         EnsureUserId(userId);
+        _ = NormalizeWeekStart(weekStartUtc);
+        ValidateType(type);
+        ValidateTargetDays(targetDays);
+        var reminder = WeeklyGoalReminderSettings.FromMinutes(reminderEnabled, reminderTimeMinutes, timeZoneOffsetMinutes);
+        return CreateWithReminder(userId, weekStartUtc, type, targetDays, reminder);
+    }
+
+    public static WeeklyGoal CreateWithReminder(
+        UserId userId,
+        DateTime weekStartUtc,
+        WeeklyGoalType type,
+        int targetDays,
+        WeeklyGoalReminderSettings reminder) {
+        EnsureUserId(userId);
         DateTime normalizedWeekStart = NormalizeWeekStart(weekStartUtc);
         ValidateType(type);
         ValidateTargetDays(targetDays);
-        ValidateReminder(reminderEnabled, reminderTimeMinutes, timeZoneOffsetMinutes);
+        ArgumentNullException.ThrowIfNull(reminder);
 
         var goal = new WeeklyGoal {
             Id = WeeklyGoalId.New(),
@@ -43,9 +55,9 @@ public sealed class WeeklyGoal : Entity<WeeklyGoalId> {
             WeekStartUtc = normalizedWeekStart,
             Type = type,
             TargetDays = targetDays,
-            ReminderEnabled = reminderEnabled,
-            ReminderTimeMinutes = reminderEnabled ? reminderTimeMinutes : null,
-            TimeZoneOffsetMinutes = reminderEnabled ? timeZoneOffsetMinutes : null,
+            ReminderEnabled = reminder.IsEnabled,
+            ReminderTimeMinutes = reminder.LocalTimeMinutes,
+            TimeZoneOffsetMinutes = reminder.UtcOffsetMinutes,
         };
         goal.SetCreated();
         return goal;
@@ -58,13 +70,19 @@ public sealed class WeeklyGoal : Entity<WeeklyGoalId> {
         int? timeZoneOffsetMinutes,
         DateTime modifiedAtUtc) {
         ValidateTargetDays(targetDays);
-        ValidateReminder(reminderEnabled, reminderTimeMinutes, timeZoneOffsetMinutes);
+        var reminder = WeeklyGoalReminderSettings.FromMinutes(reminderEnabled, reminderTimeMinutes, timeZoneOffsetMinutes);
+        UpdateWithReminder(targetDays, reminder, modifiedAtUtc);
+    }
+
+    public void UpdateWithReminder(int targetDays, WeeklyGoalReminderSettings reminder, DateTime modifiedAtUtc) {
+        ValidateTargetDays(targetDays);
+        ArgumentNullException.ThrowIfNull(reminder);
         DateTime normalizedModifiedAtUtc = RequiredUtc(modifiedAtUtc, nameof(modifiedAtUtc));
 
-        int? normalizedReminderTimeMinutes = reminderEnabled ? reminderTimeMinutes : null;
-        int? normalizedTimeZoneOffsetMinutes = reminderEnabled ? timeZoneOffsetMinutes : null;
+        int? normalizedReminderTimeMinutes = reminder.LocalTimeMinutes;
+        int? normalizedTimeZoneOffsetMinutes = reminder.UtcOffsetMinutes;
         bool reminderConfigurationChanged =
-            ReminderEnabled != reminderEnabled ||
+            ReminderEnabled != reminder.IsEnabled ||
             ReminderTimeMinutes != normalizedReminderTimeMinutes ||
             TimeZoneOffsetMinutes != normalizedTimeZoneOffsetMinutes;
         if (TargetDays == targetDays && !reminderConfigurationChanged) {
@@ -72,7 +90,7 @@ public sealed class WeeklyGoal : Entity<WeeklyGoalId> {
         }
 
         TargetDays = targetDays;
-        ReminderEnabled = reminderEnabled;
+        ReminderEnabled = reminder.IsEnabled;
         ReminderTimeMinutes = normalizedReminderTimeMinutes;
         TimeZoneOffsetMinutes = normalizedTimeZoneOffsetMinutes;
         if (reminderConfigurationChanged) {
@@ -156,20 +174,6 @@ public sealed class WeeklyGoal : Entity<WeeklyGoalId> {
     private static void ValidateTargetDays(int targetDays) {
         if (!SupportedTargetDays.Contains(targetDays)) {
             throw new ArgumentOutOfRangeException(nameof(targetDays), "Target days must be 3, 5, or 7.");
-        }
-    }
-
-    private static void ValidateReminder(bool enabled, int? timeMinutes, int? offsetMinutes) {
-        if (!enabled) {
-            return;
-        }
-
-        if (timeMinutes is null or < 0 or >= MinutesPerDay) {
-            throw new ArgumentOutOfRangeException(nameof(timeMinutes), "Reminder time must be within a local day.");
-        }
-
-        if (offsetMinutes is null or < MinimumTimeZoneOffsetMinutes or > MaximumTimeZoneOffsetMinutes) {
-            throw new ArgumentOutOfRangeException(nameof(offsetMinutes), "Time zone offset must be between UTC-14 and UTC+14.");
         }
     }
 }

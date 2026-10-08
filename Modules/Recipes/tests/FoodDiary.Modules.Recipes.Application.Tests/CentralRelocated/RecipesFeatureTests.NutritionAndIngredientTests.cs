@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Results;
@@ -58,7 +60,7 @@ public partial class RecipesFeatureTests {
         var userId = UserId.New();
         var recipeId = RecipeId.New();
         var nestedRecipe = Recipe.Create(userId, "Nested", servings: 1);
-        nestedRecipe.AddStep(1, "Mix").AddNestedRecipeIngredient(recipeId, 1);
+        nestedRecipe.AddStep(1, "Mix").AddNestedRecipeIngredient(recipeId, RecipeServingQuantity.FromServings(1));
         var lookup = new GraphRecipeLookupService([
             TestRecipeOverview.From(nestedRecipe, userId),
         ]);
@@ -114,7 +116,7 @@ public partial class RecipesFeatureTests {
         var editedRecipeId = RecipeId.New();
         var firstDependency = Recipe.Create(userId, "First", servings: 1);
         var secondDependency = Recipe.Create(userId, "Second", servings: 1);
-        firstDependency.AddStep(1, "Mix").AddNestedRecipeIngredient(secondDependency.Id, 1);
+        firstDependency.AddStep(1, "Mix").AddNestedRecipeIngredient(secondDependency.Id, RecipeServingQuantity.FromServings(1));
         IReadOnlyList<RecipeOverviewReadItem> recipes = dependencyExists
             ? [TestRecipeOverview.From(firstDependency, userId), TestRecipeOverview.From(secondDependency, userId)]
             : [TestRecipeOverview.From(firstDependency, userId)];
@@ -147,7 +149,7 @@ public partial class RecipesFeatureTests {
         var recipeId = RecipeId.New();
         var sharedDependency = Recipe.Create(userId, "Shared", servings: 1);
         var siblingWithSharedRef = Recipe.Create(userId, "Sibling", servings: 1);
-        siblingWithSharedRef.AddStep(1, "Mix").AddNestedRecipeIngredient(sharedDependency.Id, 1);
+        siblingWithSharedRef.AddStep(1, "Mix").AddNestedRecipeIngredient(sharedDependency.Id, RecipeServingQuantity.FromServings(1));
         var lookup = new GraphRecipeLookupService([
             TestRecipeOverview.From(siblingWithSharedRef, userId),
             TestRecipeOverview.From(sharedDependency, userId),
@@ -203,7 +205,7 @@ public partial class RecipesFeatureTests {
         var recipe = Recipe.Create(userId, "Auto", servings: 1);
         recipe.ApplyComputedNutrition(1, 1, 1, 1, 1, 1);
         RecipeStep step = recipe.AddStep(1, "Mix");
-        step.AddProductIngredient(product.Id, 100);
+        step.AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(100));
         RecipeIngredient ingredient = Assert.Single(step.Ingredients);
         ingredient.SetProductSnapshot(new RecipeIngredientProductSnapshot(product.Id, product.Name, product.BaseUnit, product.BaseAmount, product.CaloriesPerBase, product.ProteinsPerBase, product.FatsPerBase, product.CarbsPerBase, product.FiberPerBase, product.AlcoholPerBase, product.Visibility));
         var repository = new RecordingRecipeNutritionRepository();

@@ -23,13 +23,13 @@
       "sources": [
         {
           "path": "docs/README.md",
-          "sha256": "4662cb91aa31e7c8459dc800604a3fbd85a75a5abef30d4a1912ee5481f5b8c7"
+          "sha256": "758437fb08e73e11be03bce68404804383852fccf2292765939e15d06b1ff397"
         }
       ],
-      "reason": "SDK documentation and navigation now describe 32 user API groups, 205 operations and 23 fully migrated services. Dates keep existing calendar versus instant meaning; nutrient units, zeroes and precision remain unchanged.",
+      "reason": "The documentation index now links PRIMITIVE_TYPES.md and its compact per-module inventory. Verified all 34 module entries and all report links; root Wiki navigation still routes through docs/README.md and current architecture sources. Hydration pilot evidence: 33 domain, 60 application, 8 presentation, 15 infrastructure plus 1 typed PostgreSQL round-trip, 2144 architecture and 4 real-host OpenAPI snapshot tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
-      "reviewedAtUtc": "2026-10-06T18:54:45.5207029Z"
+      "gitHead": "106e810e7014da1f606b1ebf5c136ee505cb5ceb",
+      "reviewedAtUtc": "2026-10-07T20:55:01.8622494Z"
     },
     {
       "pageId": "module.frontend",
@@ -86,18 +86,14 @@
       "pageSha256": "d0fe45b8fb3d5ca4937ec2898e3099d50e3b920c9ccea9fff512a8bc6a618de2",
       "sources": [
         {
-          "path": "docs/architecture/module-dependencies.json",
-          "sha256": "1d5245dc71b27d556527e57c3b7610ee2a3a2278f13c6e77ffd7ebc900db3194"
-        },
-        {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "fb444f0ce2c8574d259df3e852ebfa8166bf893cb0d122db701cd01a9b6d597b"
+          "sha256": "033f05a4f78499ee9c0d13a0214d21773a68b22410a06d3e10e33b42fcec85d4"
         }
       ],
-      "reason": "Reviewed architecture, catalog and ownership pages against the additive Admin Application to BodyMetrics Contracts read edge. The graph, project matrix and 2116 architecture tests agree; existing layer and foreign-write guidance remains accurate.",
+      "reason": "Reviewed current quantity and profile typing sources and refreshed navigation artifacts. Product-unit and fractional-serving scalar owner contracts remain aggregate-free; two direct Recipes references are test-only and match the dependency matrix. Creation/mutation and selected nutrition sources retain units, snapshot precedence and rounding. Profile update fields carry existing kilogram/centimeter meanings through immutable validating references, retaining scalar compatibility, omission/clearing, partition audits and formulas. Full solution build, owner suites, 2158 architecture tests, four public OpenAPI checks and frontend nutrition cases passed. Actual PostgreSQL round-trip evidence remains explicitly pending Docker readiness; static indexes are not runtime evidence. Existing architecture, query, privacy and review guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:06:07.4212621Z"
+      "gitHead": "7ec58395dc7abcc7d523f82b6a9cbcc4b7f46664",
+      "reviewedAtUtc": "2026-10-08T00:06:02.5613544Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -140,13 +136,13 @@
       "sources": [
         {
           "path": "docs/README.md",
-          "sha256": "4662cb91aa31e7c8459dc800604a3fbd85a75a5abef30d4a1912ee5481f5b8c7"
+          "sha256": "758437fb08e73e11be03bce68404804383852fccf2292765939e15d06b1ff397"
         }
       ],
-      "reason": "SDK documentation and navigation now describe 32 user API groups, 205 operations and 23 fully migrated services. Dates keep existing calendar versus instant meaning; nutrient units, zeroes and precision remain unchanged.",
+      "reason": "Read the authority/provenance model and verified that the new primitive-types guide is current repository documentation with an initial source inventory at a87e311f2. Candidate priorities are distinguished from defects and runtime rules remain owned by current code/tests; no knowledge authority or source precedence change.",
       "baseRef": "HEAD",
-      "gitHead": "bca936eeb975345daa4a455a0e5fb14b49a6581a",
-      "reviewedAtUtc": "2026-10-06T18:54:45.9136136Z"
+      "gitHead": "106e810e7014da1f606b1ebf5c136ee505cb5ceb",
+      "reviewedAtUtc": "2026-10-07T20:55:02.9847785Z"
     },
     {
       "pageId": "system.quality-index",
@@ -233,14 +229,14 @@
       "pageSha256": "20d3e15e2bb4fde9b589aafd6671e66c2285642e4cc94f00ffa9e46457598140",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "17d54fa2b5b42491d2869934c275c5e7c81e2becb75e5134510bc4707804c743"
+          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "033f05a4f78499ee9c0d13a0214d21773a68b22410a06d3e10e33b42fcec85d4"
         }
       ],
-      "reason": "All three clients have generation gates; 5520 frontend, 208 bot and 2116 architecture tests passed.",
+      "reason": "Reviewed current quantity and profile typing sources and refreshed navigation artifacts. Product-unit and fractional-serving scalar owner contracts remain aggregate-free; two direct Recipes references are test-only and match the dependency matrix. Creation/mutation and selected nutrition sources retain units, snapshot precedence and rounding. Profile update fields carry existing kilogram/centimeter meanings through immutable validating references, retaining scalar compatibility, omission/clearing, partition audits and formulas. Full solution build, owner suites, 2158 architecture tests, four public OpenAPI checks and frontend nutrition cases passed. Actual PostgreSQL round-trip evidence remains explicitly pending Docker readiness; static indexes are not runtime evidence. Existing architecture, query, privacy and review guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f777062a632366651650bdd9fec53813be7a986e",
-      "reviewedAtUtc": "2026-10-07T11:12:08.0525034Z"
+      "gitHead": "7ec58395dc7abcc7d523f82b6a9cbcc4b7f46664",
+      "reviewedAtUtc": "2026-10-08T00:06:03.2887832Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -249,13 +245,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "b1984cbdbd107cef6e6e3027ba3e0e56bb3243938a0bf7a69b55d7cc387bd7e9"
+          "sha256": "1d2dfa5bc6cab6c2fbd29012dc8e93f4d64d987e9895549dc91fb0580e9eaba8"
         }
       ],
-      "reason": "The isolated SDK view exposes internal telemetry while public Swagger snapshots remain unchanged. Bot consumes fourteen frozen methods.",
+      "reason": "Reviewed Billing internal processing-state enum, exact ordinal storage classification, typed state writes and all application terminal fences against owning source and tests. Mapped string Status, pending SQL filters/Admin projections and provider payment/subscription strings retain their contracts. Unknown persisted states keep raw reads/legacy transitions; retry chronology/saturation and processed-event idempotency remain covered. All 501 Billing tests, full solution build, 2159 architecture checks, four public snapshots and three model/snapshot metadata checks pass; real PostgreSQL workflow evidence remains explicitly pending Docker readiness. Existing workflow guidance is accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f777062a632366651650bdd9fec53813be7a986e",
-      "reviewedAtUtc": "2026-10-07T11:12:09.1934144Z"
+      "gitHead": "7ec58395dc7abcc7d523f82b6a9cbcc4b7f46664",
+      "reviewedAtUtc": "2026-10-08T01:25:35.4333746Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -524,13 +520,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "fc21f636780417f3ce9138efdb30dddad1af9f5c7d53804ff6c9a9fb4954d84a"
+          "sha256": "1d91ae7c9aacf4c773d2601be6a7e91d8a7941abe93c403fe4b9daaa60a8afcb"
         }
       ],
-      "reason": "Expanded release QA verifies current authentication and nutrition behavior, external USDA references and bounded provider resolution, schema migration and rollback, fasting controls, export feedback, locale pairs, dialog names and native keyboard navigation through actual local browser scenarios and focused plus full regression checks.",
+      "reason": "Reviewed Billing internal processing-state enum, exact ordinal storage classification, typed state writes and all application terminal fences against owning source and tests. Mapped string Status, pending SQL filters/Admin projections and provider payment/subscription strings retain their contracts. Unknown persisted states keep raw reads/legacy transitions; retry chronology/saturation and processed-event idempotency remain covered. All 501 Billing tests, full solution build, 2159 architecture checks, four public snapshots and three model/snapshot metadata checks pass; real PostgreSQL workflow evidence remains explicitly pending Docker readiness. Existing workflow guidance is accurate.",
       "baseRef": "HEAD",
-      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "reviewedAtUtc": "2026-10-06T13:13:07.0369215Z"
+      "gitHead": "7ec58395dc7abcc7d523f82b6a9cbcc4b7f46664",
+      "reviewedAtUtc": "2026-10-08T01:25:35.951607Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -594,7 +590,7 @@
       "reason": "Only a scoped concurrently-to-shell-quote security override was added. Frontend visual QA scripts, routes, artifact capture, viewport coverage, and review workflow remain unchanged; no page text update is needed.",
       "baseRef": "HEAD",
       "gitHead": "a87e311f29ab696469666c48f82799a2f3a6cd41",
-      "reviewedAtUtc": "2026-10-07T20:43:10.6032600Z"
+      "reviewedAtUtc": "2026-10-07T20:43:10.60326Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -826,13 +822,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "9857f933991cdb2a049308c09f38f2e0c2eb2f0c898943ef317fb3c4437ac543"
+          "sha256": "fe3fa3815911ccbfe1b8270a01255b5ec85b486f5cfb6e74266e172b6145644f"
         }
       ],
-      "reason": "Telemetry contexts and cookies are unchanged. Credentials remain per-request, signed uploads stay separate, and lease/security-version plus response-size safeguards are preserved.",
+      "reason": "Reviewed current quantity and profile typing sources and refreshed navigation artifacts. Product-unit and fractional-serving scalar owner contracts remain aggregate-free; two direct Recipes references are test-only and match the dependency matrix. Creation/mutation and selected nutrition sources retain units, snapshot precedence and rounding. Profile update fields carry existing kilogram/centimeter meanings through immutable validating references, retaining scalar compatibility, omission/clearing, partition audits and formulas. Full solution build, owner suites, 2158 architecture tests, four public OpenAPI checks and frontend nutrition cases passed. Actual PostgreSQL round-trip evidence remains explicitly pending Docker readiness; static indexes are not runtime evidence. Existing architecture, query, privacy and review guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f777062a632366651650bdd9fec53813be7a986e",
-      "reviewedAtUtc": "2026-10-07T11:12:11.1219928Z"
+      "gitHead": "7ec58395dc7abcc7d523f82b6a9cbcc4b7f46664",
+      "reviewedAtUtc": "2026-10-08T00:06:04.7900749Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -871,13 +867,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "0f7a002d0be21bcd58663dda0d4d54a20ad4381d83e0beb5a49561abddd9ead9"
+          "sha256": "01ebc4915992136bf8bd66eb859e839c7f91b9b96023c2c1e86cab0baede4c00"
         }
       ],
-      "reason": "5520 frontend, 208 bot and 2116 architecture tests passed; all three generated clients have reproducibility and live schema gates. Formatting-only follow-up changes logging-api.service.ts from 42 to 46 nonblank lines; behavior, decision points and critical-symbol counts are unchanged.",
+      "reason": "Reviewed Billing internal processing-state enum, exact ordinal storage classification, typed state writes and all application terminal fences against owning source and tests. Mapped string Status, pending SQL filters/Admin projections and provider payment/subscription strings retain their contracts. Unknown persisted states keep raw reads/legacy transitions; retry chronology/saturation and processed-event idempotency remain covered. All 501 Billing tests, full solution build, 2159 architecture checks, four public snapshots and three model/snapshot metadata checks pass; real PostgreSQL workflow evidence remains explicitly pending Docker readiness. Existing workflow guidance is accurate.",
       "baseRef": "HEAD",
-      "gitHead": "8a64da3402d3ae326754511dc032ced3aa079f2c",
-      "reviewedAtUtc": "2026-10-07T14:44:31.9480623Z"
+      "gitHead": "7ec58395dc7abcc7d523f82b6a9cbcc4b7f46664",
+      "reviewedAtUtc": "2026-10-08T01:25:36.5788312Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -958,13 +954,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "97fc350cc73830927772c316dd125aa111d1f516e945d13801f0128383357466"
+          "sha256": "82497e6f51a4090f91f69eda0034969729142194618e8d8486f669cc7003ae96"
         }
       ],
-      "reason": "Completed user/admin/bot client scopes and regeneration commands are documented. The unused ApiService is retired.",
+      "reason": "Reviewed Billing internal processing-state enum, exact ordinal storage classification, typed state writes and all application terminal fences against owning source and tests. Mapped string Status, pending SQL filters/Admin projections and provider payment/subscription strings retain their contracts. Unknown persisted states keep raw reads/legacy transitions; retry chronology/saturation and processed-event idempotency remain covered. All 501 Billing tests, full solution build, 2159 architecture checks, four public snapshots and three model/snapshot metadata checks pass; real PostgreSQL workflow evidence remains explicitly pending Docker readiness. Existing workflow guidance is accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f777062a632366651650bdd9fec53813be7a986e",
-      "reviewedAtUtc": "2026-10-07T11:12:13.0491472Z"
+      "gitHead": "7ec58395dc7abcc7d523f82b6a9cbcc4b7f46664",
+      "reviewedAtUtc": "2026-10-08T01:25:37.1507542Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -973,25 +969,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "0f7a002d0be21bcd58663dda0d4d54a20ad4381d83e0beb5a49561abddd9ead9"
+          "sha256": "01ebc4915992136bf8bd66eb859e839c7f91b9b96023c2c1e86cab0baede4c00"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "97fc350cc73830927772c316dd125aa111d1f516e945d13801f0128383357466"
+          "sha256": "82497e6f51a4090f91f69eda0034969729142194618e8d8486f669cc7003ae96"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "9857f933991cdb2a049308c09f38f2e0c2eb2f0c898943ef317fb3c4437ac543"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "53e108347e2f884d2ae99673e15834f56ac2b454d3dec0dc96eb1091dbe5706f"
+          "sha256": "fe3fa3815911ccbfe1b8270a01255b5ec85b486f5cfb6e74266e172b6145644f"
         }
       ],
-      "reason": "Preserve the reviewed quality, runtime and sensitive-data source changes from the generated-client migration. The additional ranking change excludes generated frontend SDK roots only from application-service role affinity; security query expansion and evidence/report boundaries are unchanged. Formatting-only follow-up changes logging-api.service.ts from 42 to 46 nonblank lines; behavior, decision points and critical-symbol counts are unchanged.",
+      "reason": "Reviewed Billing internal processing-state enum, exact ordinal storage classification, typed state writes and all application terminal fences against owning source and tests. Mapped string Status, pending SQL filters/Admin projections and provider payment/subscription strings retain their contracts. Unknown persisted states keep raw reads/legacy transitions; retry chronology/saturation and processed-event idempotency remain covered. All 501 Billing tests, full solution build, 2159 architecture checks, four public snapshots and three model/snapshot metadata checks pass; real PostgreSQL workflow evidence remains explicitly pending Docker readiness. Existing workflow guidance is accurate.",
       "baseRef": "HEAD",
-      "gitHead": "8a64da3402d3ae326754511dc032ced3aa079f2c",
-      "reviewedAtUtc": "2026-10-07T14:44:32.3771107Z"
+      "gitHead": "7ec58395dc7abcc7d523f82b6a9cbcc4b7f46664",
+      "reviewedAtUtc": "2026-10-08T01:25:37.8246043Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1244,14 +1236,14 @@
       "pageSha256": "f9ddf22db2cc07f9109f6b518b296525846afc0f92e94ac0b443f5bf8ea4b89a",
       "sources": [
         {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-          "sha256": "6fdff6852b40fc6f83b1b5d60cab1426826c8f5a0008af5f948c5d4e5f2c10a3"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "390f9802c881986528d97f63b19de83901a978a937a06ff04c3952c7a7ecc8dd"
         }
       ],
-      "reason": "Reviewed the combined query workflow against the unchanged tested Wiki reader: lexical and identity recall hydrate bounded rowid pools, older or missing compact features retain SQLite compatibility, and exact fingerprint, stale, cancellation and interactive query states remain explicit. The four performance commits are preserved byte-for-byte.",
+      "reason": "Reviewed current quantity and profile typing sources and refreshed navigation artifacts. Product-unit and fractional-serving scalar owner contracts remain aggregate-free; two direct Recipes references are test-only and match the dependency matrix. Creation/mutation and selected nutrition sources retain units, snapshot precedence and rounding. Profile update fields carry existing kilogram/centimeter meanings through immutable validating references, retaining scalar compatibility, omission/clearing, partition audits and formulas. Full solution build, owner suites, 2158 architecture tests, four public OpenAPI checks and frontend nutrition cases passed. Actual PostgreSQL round-trip evidence remains explicitly pending Docker readiness; static indexes are not runtime evidence. Existing architecture, query, privacy and review guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "75c4520f7907cae0c1e8f23b4ba5597dacb306e8",
-      "reviewedAtUtc": "2026-10-06T17:39:08.8628339Z"
+      "gitHead": "7ec58395dc7abcc7d523f82b6a9cbcc4b7f46664",
+      "reviewedAtUtc": "2026-10-08T00:06:06.7140815Z"
     },
     {
       "pageId": "workflow.review-diff",

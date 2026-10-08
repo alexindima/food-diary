@@ -7,17 +7,11 @@ public static class RecipeNutritionPolicy {
         double calories = 0, proteins = 0, fats = 0, carbs = 0, fiber = 0, alcohol = 0;
         bool hasValues = false;
         foreach (RecipeNutritionIngredient ingredient in ingredients) {
-            RecipeNutritionValues? source;
-            double factor;
-            if (ingredient.ProductBaseAmount is > 0) {
-                source = ingredient.Product;
-                factor = ingredient.Amount / ingredient.ProductBaseAmount.Value;
-            } else if (ingredient.NestedRecipeServings is > 0) {
-                source = ingredient.NestedRecipe;
-                factor = ingredient.Amount / ingredient.NestedRecipeServings.Value;
-            } else {
+            if (ingredient.Kind == RecipeNutritionSource.None) {
                 continue;
             }
+            RecipeNutritionValues? source = ingredient.Nutrition;
+            double factor = ingredient.ScaleFactor;
             if (hasUncalculatedIngredients && source?.TotalCalories is null && source?.TotalProteins is null
                 && source?.TotalFats is null && source?.TotalCarbs is null) {
                 continue;

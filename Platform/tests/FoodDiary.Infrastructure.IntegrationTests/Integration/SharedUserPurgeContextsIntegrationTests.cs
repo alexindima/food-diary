@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Users.Infrastructure;
 using FoodDiary.Modules.Recipes.Infrastructure;
 using FoodDiary.Modules.Products.Infrastructure;
@@ -164,7 +165,7 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
         profile.ConfirmPeriodStart(today.AddDays(-3));
         var recipe = Recipe.Create(peer.Id, "Shared recipe", servings: 1);
         var meal = Meal.Create(user.Id, now);
-        meal.AddRecipe(recipe.Id, 1);
+        meal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(1));
         MealAiSession session = meal.AddAiSession(imageAssetId: null, AiRecognitionSource.Photo, now, notes: null,
             [new MealAiItemData("Apple", nameLocal: null, 100, "g", 52, 0.3, 0.2, 14, 2.4, 0)]);
         var list = ShoppingList.Create(user.Id, "Purge list");

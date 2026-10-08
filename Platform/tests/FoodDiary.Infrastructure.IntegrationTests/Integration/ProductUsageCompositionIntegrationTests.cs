@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Infrastructure;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
@@ -50,9 +51,9 @@ public sealed class ProductUsageCompositionIntegrationTests(PostgresDatabaseFixt
             Product? locked = await writes.GetByIdForUpdateAsync(product.Id, owner.Id, includePublic: false);
             Assert.NotNull(locked);
             var meal = Meal.Create(owner.Id, DateTime.UtcNow);
-            meal.AddProduct(product.Id, 100);
+            meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(100));
             var recipe = Recipe.Create(owner.Id, "Usage recipe", servings: 1);
-            recipe.AddStep(1, "Mix").AddProductIngredient(product.Id, 100);
+            recipe.AddStep(1, "Mix").AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(100));
             context.AddRange(meal, recipe);
             await context.SaveChangesAsync();
             context.ChangeTracker.Clear();

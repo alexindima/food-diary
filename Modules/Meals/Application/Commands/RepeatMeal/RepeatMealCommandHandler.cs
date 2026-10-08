@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Meals.Application.Mappings;
 using FoodDiary.Modules.Meals.Domain.ValueObjects;
@@ -119,9 +121,9 @@ public sealed class RepeatMealCommandHandler(
         foreach (MealItem item in sourceMeal.Items) {
             MealItem? copiedItem = null;
             if (item.ProductId.HasValue) {
-                copiedItem = newMeal.AddProduct(item.ProductId.Value, item.Amount);
+                copiedItem = newMeal.AddProduct(item.ProductId.Value, ProductUnitQuantity.FromUnits(item.Amount));
             } else if (item.RecipeId.HasValue) {
-                copiedItem = newMeal.AddRecipe(item.RecipeId.Value, item.Amount);
+                copiedItem = newMeal.AddRecipe(item.RecipeId.Value, RecipeServingQuantity.FromServings(item.Amount));
             }
 
             copiedItem?.CopySourceAndSnapshotFrom(item);

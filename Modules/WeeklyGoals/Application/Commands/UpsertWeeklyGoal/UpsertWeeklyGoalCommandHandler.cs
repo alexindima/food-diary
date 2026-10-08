@@ -6,6 +6,7 @@ using FoodDiary.Modules.WeeklyGoals.Application.Common;
 using FoodDiary.Modules.WeeklyGoals.Contracts.Models;
 using FoodDiary.Modules.WeeklyGoals.Domain.Entities;
 using FoodDiary.Modules.WeeklyGoals.Domain.Enums;
+using FoodDiary.Modules.WeeklyGoals.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
@@ -44,22 +45,20 @@ public sealed class UpsertWeeklyGoalCommandHandler(
             weekStartUtc,
             async token => {
                 WeeklyGoal? goal = await goalRepository.GetAsync(userId, weekStartUtc, asTracking: true, token).ConfigureAwait(false);
+                var reminder = WeeklyGoalReminderSettings.FromMinutes(
+                    command.ReminderEnabled, reminderMinutes, command.TimeZoneOffsetMinutes);
                 if (goal is null) {
-                    goal = WeeklyGoal.Create(
+                    goal = WeeklyGoal.CreateWithReminder(
                         userId,
                         weekStartUtc,
                         WeeklyGoalType.DiaryLogging,
                         command.TargetDays,
-                        command.ReminderEnabled,
-                        reminderMinutes,
-                        command.TimeZoneOffsetMinutes);
+                        reminder);
                     await goalRepository.AddAsync(goal, token).ConfigureAwait(false);
                 } else {
-                    goal.Update(
+                    goal.UpdateWithReminder(
                         command.TargetDays,
-                        command.ReminderEnabled,
-                        reminderMinutes,
-                        command.TimeZoneOffsetMinutes,
+                        reminder,
                         utcNow);
                 }
 

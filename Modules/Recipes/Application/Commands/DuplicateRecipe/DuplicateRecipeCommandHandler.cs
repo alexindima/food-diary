@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.Enums;
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Recipes.Application.Mappings;
@@ -137,10 +139,10 @@ public sealed class DuplicateRecipeCommandHandler(
                     newStep.AddTextIngredient(ingredient.TextName, ingredient.AmountText);
                 } else if (ingredient.ProductId.HasValue &&
                     (preserveManagedAssets || ingredient.ProductSnapshot?.Visibility == Visibility.Public)) {
-                    newStep.AddProductIngredient(ingredient.ProductId.Value, ingredient.Amount);
+                    newStep.AddProductIngredient(ingredient.ProductId.Value, ProductUnitQuantity.FromUnits(ingredient.Amount));
                 } else if (ingredient.NestedRecipeId.HasValue &&
                     (preserveManagedAssets || ingredient.NestedRecipe?.Visibility == Visibility.Public)) {
-                    newStep.AddNestedRecipeIngredient(ingredient.NestedRecipeId.Value, ingredient.Amount);
+                    newStep.AddNestedRecipeIngredient(ingredient.NestedRecipeId.Value, RecipeServingQuantity.FromServings(ingredient.Amount));
                 }
             }
         }
