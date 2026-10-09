@@ -1,0 +1,8 @@
+{
+    "specVersion": "1.0",
+    "host": {
+        "displayName": "Food Diary",
+        "documentationUrl": "https://fooddiary.club/llms.txt"
+    },
+    "entries": []
+}

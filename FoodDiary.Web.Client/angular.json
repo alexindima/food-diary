@@ -43,6 +43,11 @@
                                 "output": "/"
                             },
                             {
+                                "glob": "*.json",
+                                "input": "assets/.well-known",
+                                "output": "/.well-known"
+                            },
+                            {
                                 "glob": "sitemap.xml",
                                 "input": "assets",
                                 "output": "/"
