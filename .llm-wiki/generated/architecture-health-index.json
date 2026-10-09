@@ -5577,7 +5577,7 @@
       "name": "GetFoodRecognitionQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQueryHandler.cs",
-      "line": 7,
+      "line": 9,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

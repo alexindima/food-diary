@@ -8,16 +8,16 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4537,
-    "symbols": 4469,
+    "sourceFiles": 4544,
+    "symbols": 4476,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
       "class": 2313,
       "enum": 68,
       "interface": 411,
-      "record": 1539,
-      "record struct": 138
+      "record": 1545,
+      "record struct": 139
     },
     "roles": {
       "Command": 230,
@@ -32,17 +32,17 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1825,
+      "Other": 1830,
       "Query": 300,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 99,
-      "Request": 174,
+      "Request": 175,
       "Response": 262,
       "Service": 168,
       "Validator": 236,
-      "ValueObject": 176,
+      "ValueObject": 177,
       "WriteRepository": 47
     }
   },
@@ -5253,14 +5253,14 @@
       "kind": "interface",
       "role": "Other",
       "path": "Modules/Ai/Application.Abstractions/Common/IFoodRecognitionJobReader.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "IFoodRecognitionJobStore",
       "kind": "interface",
       "role": "Other",
       "path": "Modules/Ai/Application.Abstractions/Common/IFoodRecognitionJobStore.cs",
-      "line": 5
+      "line": 7
     },
     {
       "name": "IOpenAiFoodClient",
@@ -5393,7 +5393,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/DeleteFoodRecognition/DeleteFoodRecognitionCommandHandler.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "ImportRecipeCommand",
@@ -5463,7 +5463,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/ProcessNextFoodRecognition/ProcessNextFoodRecognitionCommandHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "StartFoodRecognitionCommand",
@@ -5554,7 +5554,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/GetCompletedFoodRecognition/GetCompletedFoodRecognitionQueryHandler.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "GetFoodRecognitionQuery",
@@ -5568,7 +5568,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQueryHandler.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "GetUserAiUsageSummaryQuery",
@@ -5603,7 +5603,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/ListFoodRecognitions/ListFoodRecognitionsQueryHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "PreviewAiPromptQueryHandler",
@@ -5872,6 +5872,13 @@
       "line": 4
     },
     {
+      "name": "FoodRecognitionJobId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Ai/Domain/ValueObjects/Ids/FoodRecognitionJobId.cs",
+      "line": 4
+    },
+    {
       "name": "AiProviderRegistration",
       "kind": "class",
       "role": "Other",
@@ -5932,7 +5939,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Persistence/FoodRecognitionJobStore.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "OpenAiOptions",
@@ -15154,6 +15161,13 @@
       "line": 2
     },
     {
+      "name": "TelegramAuthorizationCode",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramAuthorizationCode.cs",
+      "line": 2
+    },
+    {
       "name": "TelegramInitData",
       "kind": "record",
       "role": "Other",
@@ -15168,10 +15182,45 @@
       "line": 2
     },
     {
+      "name": "TelegramOAuthState",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOAuthState.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramOidcAuthorizationRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcAuthorizationRequest.cs",
+      "line": 2
+    },
+    {
       "name": "TelegramOidcIdentity",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcIdentity.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramOidcNonce",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcNonce.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramOidcTokenExchange",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcTokenExchange.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramPkceVerifier",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramPkceVerifier.cs",
       "line": 2
     },
     {

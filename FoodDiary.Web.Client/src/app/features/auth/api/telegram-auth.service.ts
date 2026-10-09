@@ -9,6 +9,12 @@ import type { TelegramAuthenticationIntentHttpResponse } from '../../../shared/a
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
 import { requireSdkFields, sdkEnum } from '../../../shared/api/sdk/sdk-response';
 import type { AuthResponse } from '../../../shared/auth/auth.data';
+import {
+    type TelegramLoginTicket,
+    telegramLoginTicket,
+    type TelegramOAuthCode,
+    type TelegramOAuthState,
+} from '../../../shared/auth/telegram-oidc-values';
 import type { TelegramConfiguration, TelegramIntent } from '../models/telegram-auth.data';
 
 @Service()
@@ -36,14 +42,14 @@ export class TelegramAuthService {
         ).pipe(map(intentFromSdk));
     }
 
-    public exchange(code: string, state: string): Observable<TelegramIntent> {
+    public exchange(code: TelegramOAuthCode, state: TelegramOAuthState): Observable<TelegramIntent> {
         return this.sdk.client
             .postAuthTelegramOidcExchange({ version: this.sdk.version, exchangeTelegramOidcHttpRequest: { code, state } })
             .pipe(map(intentFromSdk));
     }
 
     public complete(
-        ticket: string,
+        ticket: TelegramLoginTicket,
         action: 'login' | 'register' | 'link',
         language?: string,
         timeZoneId?: string,
@@ -61,5 +67,9 @@ export class TelegramAuthService {
 
 function intentFromSdk(response: TelegramAuthenticationIntentHttpResponse): TelegramIntent {
     const value = requireSdkFields(response, ['ticket', 'nextAction', 'expiresAtUtc']);
-    return { ...value, nextAction: sdkEnum(value.nextAction, ['login', 'link', 'onboarding'] as const) };
+    return {
+        ...value,
+        ticket: telegramLoginTicket(value.ticket),
+        nextAction: sdkEnum(value.nextAction, ['login', 'link', 'onboarding'] as const),
+    };
 }

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Application.Commands.AnalyzeFoodImage;
 using FoodDiary.Modules.Ai.Application.Commands.DeleteFoodRecognition;
@@ -111,11 +112,11 @@ public sealed class RecognitionImageHandlerTests {
         var command = new DeleteFoodRecognitionCommand(Guid.NewGuid(), Guid.NewGuid());
         using var cancellation = new CancellationTokenSource();
         Result expected = failure ? Result.Failure(AiErrors.Forbidden()) : Result.Success();
-        store.DeleteCompletedAsync(command.UserId, command.Id, cancellation.Token).Returns(expected);
+        store.DeleteCompletedAsync(new UserId(command.UserId), new FoodRecognitionJobId(command.Id), cancellation.Token).Returns(expected);
 
         Result actual = await new DeleteFoodRecognitionCommandHandler(store).Handle(command, cancellation.Token);
 
         Assert.Same(expected, actual);
-        await store.Received(1).DeleteCompletedAsync(command.UserId, command.Id, cancellation.Token);
+        await store.Received(1).DeleteCompletedAsync(new UserId(command.UserId), new FoodRecognitionJobId(command.Id), cancellation.Token);
     }
 }

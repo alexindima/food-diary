@@ -21,19 +21,29 @@ import {
 import { resolveFastingReminderPresetId } from '../../../shared/lib/fasting-reminder-presets';
 import { formatFastingDuration } from '../../../shared/lib/fasting-timer-card-state';
 import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
-import { HOURS_PER_DAY, MS_PER_HOUR, MS_PER_SECOND } from '../../../shared/lib/time.constants';
+import { MS_PER_HOUR, MS_PER_SECOND } from '../../../shared/lib/time.constants';
 import {
     FASTING_PROTOCOLS,
     type FastingInsights,
     type FastingMessage,
     type FastingMode,
     type FastingOverview,
-    type FastingPlanType,
     type FastingProtocol,
     type FastingSession,
     type FastingStats,
 } from '../../../shared/models/fasting.data';
 import { FastingService } from '../api/fasting.service';
+import {
+    cyclicFastingStart,
+    extendedFastingHours,
+    extendedFastingStart,
+    fastingCycleDays,
+    fastingDailyWindow,
+    type FastingStartIntent,
+    intermittentFastingStart,
+    isExtendedFastingProtocol,
+    isIntermittentFastingProtocol,
+} from '../models/fasting-start-intent';
 import { normalizeCyclicDays, normalizeFastingHours, normalizeIntermittentFastHours } from './fasting-input-normalization';
 import { FastingPromptStateStore } from './fasting-prompt-state.store';
 import {
@@ -181,8 +191,13 @@ export class FastingFacade {
     }
 
     public startFasting(): void {
-        const payload = this.buildStartPayload();
-        this.trackRequest(this.isStarting, this.fastingService.start(payload), session => {
+        const intent = this.buildStartIntent();
+        if (intent === null) {
+            this.requestError.set('FASTING.REQUEST_ERROR');
+            this.toastService.error(this.translateService.instant('FASTING.REQUEST_ERROR'));
+            return;
+        }
+        this.trackRequest(this.isStarting, this.fastingService.start(intent), session => {
             this.applyCurrentSessionUpdate(session);
             this.frontendObservability.recordFastingLifecycleEvent('session.started', {
                 sessionId: session.id,
@@ -624,30 +639,23 @@ export class FastingFacade {
         };
     }
 
-    private buildStartPayload(): {
-        protocol?: string;
-        planType?: FastingPlanType;
-        plannedDurationHours?: number;
-        cyclicFastDays?: number;
-        cyclicEatDays?: number;
-        cyclicEatDayFastHours?: number;
-        cyclicEatDayEatingWindowHours?: number;
-    } {
+    private buildStartIntent(): FastingStartIntent | null {
         const selectedMode = this.selectedMode();
         if (selectedMode === 'cyclic') {
-            return {
-                planType: 'Cyclic',
-                cyclicFastDays: this.cyclicFastDays(),
-                cyclicEatDays: this.cyclicEatDays(),
-                cyclicEatDayFastHours: this.cyclicEatDayFastHours(),
-                cyclicEatDayEatingWindowHours: HOURS_PER_DAY - this.cyclicEatDayFastHours(),
-            };
+            return cyclicFastingStart(
+                fastingCycleDays(this.cyclicFastDays()),
+                fastingCycleDays(this.cyclicEatDays()),
+                fastingDailyWindow(this.cyclicEatDayFastHours()),
+            );
         }
 
-        return {
-            planType: selectedMode === 'intermittent' ? 'Intermittent' : 'Extended',
-            protocol: this.selectedProtocol(),
-            plannedDurationHours: this.plannedDurationHours(),
-        };
+        const protocol = this.selectedProtocol();
+        if (selectedMode === 'intermittent' && isIntermittentFastingProtocol(protocol)) {
+            return intermittentFastingStart(protocol, fastingDailyWindow(this.plannedDurationHours()));
+        }
+        if (selectedMode === 'extended' && isExtendedFastingProtocol(protocol)) {
+            return extendedFastingStart(protocol, extendedFastingHours(this.plannedDurationHours()));
+        }
+        return null;
     }
 }

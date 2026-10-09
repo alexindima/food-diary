@@ -602,3 +602,29 @@ top-level checkpoints and callback codecs retain scalars. GUID JSON converters
 preserve legacy nested upload/meal checkpoint shapes and values, including empty
 GUID observations and normal GUID reader rejection. Operation/recognition key
 aliases, owner/security-version checks, leases, retries and undo windows remain.
+
+AI recognition read, deletion, checkpoint and completion ports carry the owner's
+FoodRecognitionJobId and Users UserId. Application handlers decode public command
+and job DTO scalars at their boundaries; infrastructure unwraps the job ID for the
+same GUID predicates. Public recognition DTOs, persistence columns, request hash
+inputs, claim/admission transactions, queue limits, Running-state fences and
+completed-result consistency checks remain compatible. Creation still admits the
+existing public job DTO rather than exposing persistence capability through it.
+
+Telegram OIDC provider inputs group distinct authorization-code, OAuth-state,
+nonce and PKCE-verifier values. Token validation keeps a typed expected nonce.
+Stored attempt records retain their scalar JSON fields for in-flight normal login
+and backup-email attempts. Entropy, ticket purpose/browser/account bindings,
+one-use consumption, PKCE, provider fields and token validation are unchanged.
+Diagnostic formatting of the new opaque values excludes their contents. The
+frontend tags route callbacks, SDK login tickets and checked stored intents;
+generated DTOs and persistent browser records retain their original encodings.
+
+Frontend fasting starts use intermittent, extended or cyclic intents with
+mode-specific protocols and exclusive settings. Validated owner quantities keep
+daily hours, extended hours and cycle days distinct; a daily-window factory derives
+the complementary eating hours. Native editable numbers retain their existing
+normalization and bounds. Incompatible draft mode/protocol combinations use the
+existing request-error UI without sending a malformed request. The API adapter
+encodes the same flat scalar SDK body, including absent versus empty notes.
+Historical read models, backend validation, timing and notification behavior remain.

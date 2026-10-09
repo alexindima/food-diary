@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Ai.Application.Queries.GetCompletedFoodRecognition;
 using FoodDiary.Modules.Ai.Contracts.Queries.GetCompletedFoodRecognition;
@@ -14,7 +16,7 @@ public sealed class FoodRecognitionResultReaderTests {
         IFoodRecognitionJobReader jobs = Substitute.For<IFoodRecognitionJobReader>();
         FoodRecognitionJobModel job = CompleteJob();
         var caller = Guid.NewGuid();
-        jobs.GetAsync(caller, job.Id, Arg.Any<CancellationToken>()).Returns(job);
+        jobs.GetAsync(new UserId(caller), new FoodRecognitionJobId(job.Id), Arg.Any<CancellationToken>()).Returns(job);
         Result<FoodRecognitionJobModel> result = await RequestTestSender.Create(new GetCompletedFoodRecognitionQueryHandler(jobs)).Send(new GetCompletedFoodRecognitionQuery(UserId: caller, JobId: job.Id), CancellationToken.None);
         Assert.Equal("Ai.RecognitionNotFound", result.Error.Code);
     }
@@ -27,7 +29,7 @@ public sealed class FoodRecognitionResultReaderTests {
     public async Task GetCompletedAsync_RejectsIncompleteResults(string status, string? nutritionError, string expectedError) {
         IFoodRecognitionJobReader jobs = Substitute.For<IFoodRecognitionJobReader>();
         FoodRecognitionJobModel job = CompleteJob() with { Status = status, NutritionErrorCode = nutritionError };
-        jobs.GetAsync(job.UserId, job.Id, Arg.Any<CancellationToken>()).Returns(job);
+        jobs.GetAsync(new UserId(job.UserId), new FoodRecognitionJobId(job.Id), Arg.Any<CancellationToken>()).Returns(job);
         Result<FoodRecognitionJobModel> result = await RequestTestSender.Create(new GetCompletedFoodRecognitionQueryHandler(jobs)).Send(new GetCompletedFoodRecognitionQuery(UserId: job.UserId, JobId: job.Id), CancellationToken.None);
         Assert.Equal(expectedError, result.Error.Code);
     }
@@ -36,7 +38,7 @@ public sealed class FoodRecognitionResultReaderTests {
     public async Task GetCompletedAsync_RejectsEmptyFoodResult() {
         IFoodRecognitionJobReader jobs = Substitute.For<IFoodRecognitionJobReader>();
         FoodRecognitionJobModel job = CompleteJob() with { Vision = new FoodVisionModel([]) };
-        jobs.GetAsync(job.UserId, job.Id, Arg.Any<CancellationToken>()).Returns(job);
+        jobs.GetAsync(new UserId(job.UserId), new FoodRecognitionJobId(job.Id), Arg.Any<CancellationToken>()).Returns(job);
         Assert.True((await RequestTestSender.Create(new GetCompletedFoodRecognitionQueryHandler(jobs)).Send(new GetCompletedFoodRecognitionQuery(UserId: job.UserId, JobId: job.Id), CancellationToken.None)).IsFailure);
     }
 
@@ -44,7 +46,7 @@ public sealed class FoodRecognitionResultReaderTests {
     public async Task GetCompletedAsync_ReturnsOwnedCompleteResult() {
         IFoodRecognitionJobReader jobs = Substitute.For<IFoodRecognitionJobReader>();
         FoodRecognitionJobModel job = CompleteJob();
-        jobs.GetAsync(job.UserId, job.Id, Arg.Any<CancellationToken>()).Returns(job);
+        jobs.GetAsync(new UserId(job.UserId), new FoodRecognitionJobId(job.Id), Arg.Any<CancellationToken>()).Returns(job);
         Result<FoodRecognitionJobModel> result = await RequestTestSender.Create(new GetCompletedFoodRecognitionQueryHandler(jobs)).Send(new GetCompletedFoodRecognitionQuery(UserId: job.UserId, JobId: job.Id), CancellationToken.None);
         Assert.True(result.IsSuccess);
         Assert.Equal(job, result.Value);
@@ -57,7 +59,7 @@ public sealed class FoodRecognitionResultReaderTests {
             Vision = new FoodVisionModel([new FoodVisionItemModel("Apple", NameLocal: null, 100, "g", 0.9m),
                 new FoodVisionItemModel("Pear", NameLocal: null, 100, "g", 0.9m)]),
         };
-        jobs.GetAsync(job.UserId, job.Id, Arg.Any<CancellationToken>()).Returns(job);
+        jobs.GetAsync(new UserId(job.UserId), new FoodRecognitionJobId(job.Id), Arg.Any<CancellationToken>()).Returns(job);
         Assert.True((await RequestTestSender.Create(new GetCompletedFoodRecognitionQueryHandler(jobs)).Send(new GetCompletedFoodRecognitionQuery(UserId: job.UserId, JobId: job.Id), CancellationToken.None)).IsFailure);
     }
 

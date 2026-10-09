@@ -11,6 +11,7 @@ import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { TelegramBackupEmailFlowService } from '../../../../shared/auth/telegram-backup-email-flow.service';
+import { telegramOAuthCallbackFromRoute } from '../../../../shared/auth/telegram-oidc-values';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { UserFacade } from '../../../../shared/lib/user.facade';
 import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
@@ -103,8 +104,9 @@ export class TelegramAuthComponent {
         const timeZoneId = new Intl.DateTimeFormat().resolvedOptions().timeZone;
         this.registrationModel.set({ timeZoneId: timeZoneId.length > 0 ? timeZoneId : 'UTC' });
         this.timeZoneOptions.set(telegramTimeZoneOptions(this.registrationModel().timeZoneId, new Date()));
-        const code = this.route.snapshot.queryParamMap.get('code');
-        const state = this.route.snapshot.queryParamMap.get('state');
+        const rawCode = this.route.snapshot.queryParamMap.get('code');
+        const rawState = this.route.snapshot.queryParamMap.get('state');
+        const { code, state } = telegramOAuthCallbackFromRoute(rawCode, rawState);
         const denied = this.route.snapshot.queryParamMap.has('error');
         if (code !== null || state !== null || denied) {
             this.browser.replaceCurrentUrl('/auth/telegram');

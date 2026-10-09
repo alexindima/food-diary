@@ -14,28 +14,31 @@ namespace FoodDiary.Modules.Identity.Infrastructure.Providers.Authentication;
 public sealed class TelegramOidcProvider(HttpClient httpClient, IOptions<TelegramOidcOptions> options, ITelegramOidcTokenValidator tokens)
     : ITelegramOidcProvider {
     public bool IsEnabled => options.Value.Enabled && TelegramOidcOptions.IsValid(options.Value);
-    public Result<string> CreateAuthorizationUrl(string state, string nonce, string codeVerifier) {
+    public Result<string> CreateAuthorizationUrl(TelegramOidcAuthorizationRequest request) {
         if (!options.Value.Enabled || !TelegramOidcOptions.IsValid(options.Value)) {
             return Result.Failure<string>(TelegramIdentityErrors.NotConfigured);
         }
-        string challenge = WebEncoders.Base64UrlEncode(SHA256.HashData(Encoding.ASCII.GetBytes(codeVerifier)));
+        string challenge = WebEncoders.Base64UrlEncode(SHA256.HashData(Encoding.ASCII.GetBytes(request.CodeVerifier.Value)));
         string url = QueryHelpers.AddQueryString("https://oauth.telegram.org/auth", new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["client_id"] = options.Value.ClientId,
             ["redirect_uri"] = options.Value.RedirectUri,
             ["response_type"] = "code",
             ["scope"] = "openid profile",
-            ["state"] = state,
-            ["nonce"] = nonce,
+            ["state"] = request.State.Value,
+            ["nonce"] = request.Nonce.Value,
             ["code_challenge"] = challenge,
             ["code_challenge_method"] = "S256",
         });
         return Result.Success(url);
     }
 
-    public async Task<Result<TelegramOidcIdentity>> ExchangeAsync(string code, string codeVerifier, string nonce, CancellationToken cancellationToken) {
+    public async Task<Result<TelegramOidcIdentity>> ExchangeAsync(TelegramOidcTokenExchange exchange, CancellationToken cancellationToken) {
         if (!options.Value.Enabled || !TelegramOidcOptions.IsValid(options.Value)) {
             return Result.Failure<TelegramOidcIdentity>(TelegramIdentityErrors.NotConfigured);
         }
+        string code = exchange.Code.Value;
+        string codeVerifier = exchange.CodeVerifier.Value;
+        string nonce = exchange.ExpectedNonce.Value;
         if (string.IsNullOrWhiteSpace(code) || code.Length > 4096 || codeVerifier.Length != 43 || string.IsNullOrWhiteSpace(nonce)) {
             return Invalid();
         }
@@ -62,7 +65,7 @@ public sealed class TelegramOidcProvider(HttpClient httpClient, IOptions<Telegra
                 if (!document.RootElement.TryGetProperty("id_token", out JsonElement idToken) || idToken.ValueKind != JsonValueKind.String) {
                     return Invalid();
                 }
-                result = await tokens.ValidateAsync(idToken.GetString()!, nonce, cancellationToken).ConfigureAwait(false);
+                result = await tokens.ValidateAsync(idToken.GetString()!, exchange.ExpectedNonce, cancellationToken).ConfigureAwait(false);
             }
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             throw;

@@ -1,3 +1,5 @@
+import { type TelegramLoginTicket, telegramLoginTicket } from '../../../shared/auth/telegram-oidc-values';
+
 export type TelegramConfiguration = {
     loginEnabled: boolean;
     registrationEnabled: boolean;
@@ -5,12 +7,16 @@ export type TelegramConfiguration = {
 };
 
 export type TelegramIntent = {
-    ticket: string;
+    ticket: TelegramLoginTicket;
     nextAction: 'login' | 'link' | 'onboarding';
     expiresAtUtc: string;
 };
 
 const TELEGRAM_TICKET_LENGTH = 43;
+
+export function telegramIntentFromStorage(value: unknown): TelegramIntent | null {
+    return isTelegramIntent(value) ? { ...value, ticket: telegramLoginTicket(value.ticket) } : null;
+}
 
 export function isTelegramIntent(value: unknown): value is TelegramIntent {
     if (typeof value !== 'object' || value === null) {

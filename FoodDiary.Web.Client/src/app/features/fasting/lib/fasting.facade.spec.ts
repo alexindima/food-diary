@@ -83,6 +83,17 @@ describe('FastingFacade request failures', () => {
         expect(facade.isStarting()).toBe(false);
         expect(facade.requestError()).toBe('FASTING.REQUEST_ERROR');
     });
+
+    it('reports an incompatible draft mode without emitting a malformed request', () => {
+        facade.selectMode('intermittent');
+        facade.selectProtocol('Fast36');
+        facade.startFasting();
+        expect(fastingService.start).not.toHaveBeenCalled();
+        expect(facade.currentSession()).toBeNull();
+        expect(facade.isStarting()).toBe(false);
+        expect(facade.requestError()).toBe('FASTING.REQUEST_ERROR');
+        expect(toastService.error).toHaveBeenCalledWith('FASTING.REQUEST_ERROR');
+    });
 });
 
 describe('FastingFacade overview history', () => {

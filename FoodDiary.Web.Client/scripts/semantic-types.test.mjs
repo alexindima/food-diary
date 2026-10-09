@@ -13,6 +13,7 @@ test('semantic IDs, time meanings and meal quantity branches reject mixed inputs
         [
             path.join(root, 'scripts/semantic-types.fixture.ts'),
             path.join(root, 'scripts/recipe-semantic-types.fixture.ts'),
+            path.join(root, 'scripts/workflow-semantic-types.fixture.ts'),
             path.join(root, 'src/types/barcode-detector.d.ts'),
         ],
         {

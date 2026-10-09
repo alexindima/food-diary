@@ -2,11 +2,12 @@ import { inject, Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../../services/auth.service';
+import type { TelegramOAuthCode, TelegramOAuthState } from '../../../shared/auth/telegram-oidc-values';
 import { TelegramWebAppService } from '../../../shared/auth/telegram-web-app.service';
 import { BrowserStorageService } from '../../../shared/platform/browser-storage.service';
 import { BrowserWindowService } from '../../../shared/platform/browser-window.service';
 import { TelegramAuthService } from '../api/telegram-auth.service';
-import { isTelegramIntent, type TelegramConfiguration, type TelegramIntent } from '../models/telegram-auth.data';
+import { isTelegramIntent, type TelegramConfiguration, type TelegramIntent, telegramIntentFromStorage } from '../models/telegram-auth.data';
 
 const INTENT_STORAGE_KEY = 'fooddiary.telegram.intent';
 
@@ -32,8 +33,8 @@ export class TelegramAuthFacade {
     }
 
     public restoreIntent(): void {
-        const stored = this.storage.getJson('session', INTENT_STORAGE_KEY);
-        if (isTelegramIntent(stored)) {
+        const stored = telegramIntentFromStorage(this.storage.getJson('session', INTENT_STORAGE_KEY));
+        if (stored !== null) {
             this.intent.set(stored);
         } else {
             this.clearIntent();
@@ -73,7 +74,7 @@ export class TelegramAuthFacade {
         }
     }
 
-    public async exchangeAsync(code: string, state: string): Promise<void> {
+    public async exchangeAsync(code: TelegramOAuthCode, state: TelegramOAuthState): Promise<void> {
         this.busy.set(true);
         this.errorKey.set(null);
         this.clearIntent();

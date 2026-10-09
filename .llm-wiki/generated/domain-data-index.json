@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 284,
+    "domainTypes": 285,
     "entities": 91,
-    "valueObjects": 141,
+    "valueObjects": 142,
     "invariants": 641,
     "persistenceMappings": 96,
     "indexes": 177,
@@ -1177,6 +1177,13 @@
       "name": "FertilitySignalId",
       "role": "value-object",
       "path": "Modules/Cycles/Domain/ValueObjects/Ids/FertilitySignalId.cs",
+      "line": 4
+    },
+    {
+      "area": "FoodDiary",
+      "name": "FoodRecognitionJobId",
+      "role": "value-object",
+      "path": "Modules/Ai/Domain/ValueObjects/Ids/FoodRecognitionJobId.cs",
       "line": 4
     },
     {

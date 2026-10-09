@@ -7,6 +7,7 @@ import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
 import { SessionEventsService } from './session-events.service';
 import { TelegramBackupEmailFlowService } from './telegram-backup-email-flow.service';
+import { telegramOAuthCode, telegramOAuthState } from './telegram-oidc-values';
 
 describe('TelegramBackupEmailFlowService', () => {
     const stateLength = 43;
@@ -48,18 +49,18 @@ describe('TelegramBackupEmailFlowService', () => {
     it('returns a successful email request without logging in or completing a normal login intent', async () => {
         await flow.startAsync('backup@example.com');
         expect(browser.open).toHaveBeenCalledOnce();
-        expect(await flow.handleCallbackAsync('code', state, false)).toBe(true);
+        expect(await flow.handleCallbackAsync(telegramOAuthCode('code'), telegramOAuthState(state), false)).toBe(true);
         expect(auth.completeTelegramBackupEmail).toHaveBeenCalledWith('code', state);
         expect(flow.read()?.sentAt).toBeTypeOf('number');
         expect(flow.read()?.state).toBeNull();
-        expect(await flow.handleCallbackAsync('code', state, false)).toBe(false);
+        expect(await flow.handleCallbackAsync(telegramOAuthCode('code'), telegramOAuthState(state), false)).toBe(false);
     });
 
     it.each(['cancelled', 'wrong-state', 'no-code'])('rejects %s without sending a completion', async scenario => {
         await flow.startAsync('backup@example.com');
         await flow.handleCallbackAsync(
-            scenario === 'no-code' ? null : 'code',
-            scenario === 'wrong-state' ? 'foreign' : state,
+            scenario === 'no-code' ? null : telegramOAuthCode('code'),
+            telegramOAuthState(scenario === 'wrong-state' ? 'foreign' : state),
             scenario === 'cancelled',
         );
         expect(auth.completeTelegramBackupEmail).not.toHaveBeenCalled();
@@ -79,7 +80,7 @@ describe('TelegramBackupEmailFlowService', () => {
     it('does not claim an email was sent when completion fails', async () => {
         await flow.startAsync('backup@example.com');
         auth.completeTelegramBackupEmail.mockReturnValue(throwError(() => new Error('expired')));
-        await flow.handleCallbackAsync('code', state, false);
+        await flow.handleCallbackAsync(telegramOAuthCode('code'), telegramOAuthState(state), false);
         expect(flow.read()?.failed).toBe(true);
         expect(flow.read()?.sentAt).toBeNull();
     });

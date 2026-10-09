@@ -23,7 +23,7 @@ public sealed class TelegramOidcTokenValidatorTests {
     public async Task InvalidInput_DoesNotFetchMetadata(int tokenLength, int nonceLength) {
         var configuration = new StaticConfiguration(signingKey: null);
         Result<TelegramOidcIdentity> result = await CreateValidator(configuration)
-            .ValidateAsync(new string('x', tokenLength), new string('n', nonceLength), CancellationToken.None);
+            .ValidateAsync(new string('x', tokenLength), new TelegramOidcNonce(new string('n', nonceLength)), CancellationToken.None);
         Assert.True(result.IsFailure);
         Assert.Equal(0, configuration.FetchCount);
     }
@@ -44,9 +44,9 @@ public sealed class TelegramOidcTokenValidatorTests {
         };
         TelegramOidcTokenValidator validator = CreateValidator(configuration);
         if (callerCancelled) {
-            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => validator.ValidateAsync("token", "nonce", cancellation.Token));
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => validator.ValidateAsync("token", new TelegramOidcNonce("nonce"), cancellation.Token));
         } else {
-            Assert.True((await validator.ValidateAsync("token", "nonce", cancellation.Token)).IsFailure);
+            Assert.True((await validator.ValidateAsync("token", new TelegramOidcNonce("nonce"), cancellation.Token)).IsFailure);
         }
         Assert.Equal(1, configuration.FetchCount);
     }
@@ -59,7 +59,7 @@ public sealed class TelegramOidcTokenValidatorTests {
         var key = new RsaSecurityKey(rsa) { KeyId = "key" };
         TelegramOidcTokenValidator validator = CreateValidator(new StaticConfiguration(key));
 
-        Result<TelegramOidcIdentity> result = await validator.ValidateAsync(CreateToken(key), "nonce", CancellationToken.None);
+        Result<TelegramOidcIdentity> result = await validator.ValidateAsync(CreateToken(key), new TelegramOidcNonce("nonce"), CancellationToken.None);
 
         Assert.True(result.IsSuccess, result.Error.Message);
         Assert.Equal(987654321, result.Value.TelegramUserId);
@@ -83,7 +83,7 @@ public sealed class TelegramOidcTokenValidatorTests {
         claims.Add(new Claim(claimType, value));
 
         Result<TelegramOidcIdentity> result = await CreateValidator(new StaticConfiguration(key))
-            .ValidateAsync(CreateToken(key, claims), "nonce", CancellationToken.None);
+            .ValidateAsync(CreateToken(key, claims), new TelegramOidcNonce("nonce"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -99,7 +99,7 @@ public sealed class TelegramOidcTokenValidatorTests {
         List<Claim> claims = Claims();
         claims.RemoveAll(claim => string.Equals(claim.Type, claimType, StringComparison.Ordinal));
         Result<TelegramOidcIdentity> result = await CreateValidator(new StaticConfiguration(key))
-            .ValidateAsync(CreateToken(key, claims), "nonce", CancellationToken.None);
+            .ValidateAsync(CreateToken(key, claims), new TelegramOidcNonce("nonce"), CancellationToken.None);
         Assert.True(result.IsFailure);
     }
 
@@ -125,7 +125,7 @@ public sealed class TelegramOidcTokenValidatorTests {
             signingCredentials: new SigningCredentials(key, SecurityAlgorithms.RsaSha256));
 
         Result<TelegramOidcIdentity> result = await CreateValidator(new StaticConfiguration(key))
-            .ValidateAsync(new JwtSecurityTokenHandler().WriteToken(token), "nonce", CancellationToken.None);
+            .ValidateAsync(new JwtSecurityTokenHandler().WriteToken(token), new TelegramOidcNonce("nonce"), CancellationToken.None);
         Assert.True(result.IsFailure);
     }
 
@@ -134,8 +134,7 @@ public sealed class TelegramOidcTokenValidatorTests {
         using var trusted = RSA.Create(2048);
         using var untrusted = RSA.Create(2048);
         var configuration = new StaticConfiguration(new RsaSecurityKey(trusted) { KeyId = "trusted" });
-        Result<TelegramOidcIdentity> result = await CreateValidator(configuration).ValidateAsync(
-            CreateToken(new RsaSecurityKey(untrusted) { KeyId = "untrusted" }), "nonce", CancellationToken.None);
+        Result<TelegramOidcIdentity> result = await CreateValidator(configuration).ValidateAsync(CreateToken(new RsaSecurityKey(untrusted) { KeyId = "untrusted" }), new TelegramOidcNonce("nonce"), CancellationToken.None);
         Assert.True(result.IsFailure);
         Assert.True(configuration.RefreshRequested);
     }
@@ -144,7 +143,7 @@ public sealed class TelegramOidcTokenValidatorTests {
     public async Task DisabledProvider_DoesNotFetchMetadata() {
         var configuration = new StaticConfiguration(signingKey: null);
         var validator = new TelegramOidcTokenValidator(MsOptions.Create(new TelegramOidcOptions()), new FixedClock(), configuration);
-        Result<TelegramOidcIdentity> result = await validator.ValidateAsync("token", "nonce", CancellationToken.None);
+        Result<TelegramOidcIdentity> result = await validator.ValidateAsync("token", new TelegramOidcNonce("nonce"), CancellationToken.None);
         Assert.Equal("Authentication.TelegramOidcNotConfigured", result.Error.Code);
         Assert.Equal(0, configuration.FetchCount);
     }

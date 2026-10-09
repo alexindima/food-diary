@@ -8,17 +8,17 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2488,
-    "symbols": 807,
+    "typescriptFiles": 2493,
+    "symbols": 808,
     "routes": 106,
     "features": 46,
-    "specs": 719,
+    "specs": 720,
     "localeFiles": 5,
     "roles": {
       "Component": 483,
       "Directive": 12,
       "Facade": 86,
-      "Other": 30,
+      "Other": 31,
       "Pipe": 4,
       "Service": 192
     }
@@ -683,6 +683,7 @@
         "FastingCheckInSummaryComponent",
         "FastingControlsComponent",
         "FastingCyclicSetupControlsComponent",
+        "FastingDailyWindow",
         "FastingEndConfirmDialogComponent",
         "FastingFacade",
         "FastingHistoryCardComponent",
@@ -730,6 +731,7 @@
         "FoodDiary.Web.Client/src/app/features/fasting/lib/fasting-stage.spec.ts",
         "FoodDiary.Web.Client/src/app/features/fasting/lib/fasting-timer-card-state.spec.ts",
         "FoodDiary.Web.Client/src/app/features/fasting/lib/fasting.facade.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/fasting/models/fasting-start-intent.spec.ts",
         "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/alerts-section/fasting-alerts-section.spec.ts",
         "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/stats-card/fasting-stats-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page/fasting-page.spec.ts"
@@ -3390,7 +3392,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/auth/api/telegram-auth.service.ts",
-      "line": 15
+      "line": 21
     },
     {
       "name": "AuthGoogleSectionComponent",
@@ -3481,7 +3483,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/auth/lib/telegram-auth.facade.ts",
-      "line": 14
+      "line": 15
     },
     {
       "name": "EmailVerificationPendingComponent",
@@ -3523,7 +3525,7 @@
       "role": "Component",
       "selector": "fd-telegram-auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/telegram-auth/telegram-auth.ts",
-      "line": 29
+      "line": 30
     },
     {
       "name": "CyclesService",
@@ -4097,7 +4099,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/fasting/api/fasting.service.ts",
-      "line": 23
+      "line": 24
     },
     {
       "name": "FastingCheckInCardComponent",
@@ -4286,7 +4288,14 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/fasting/lib/fasting.facade.ts",
-      "line": 55
+      "line": 65
+    },
+    {
+      "name": "FastingDailyWindow",
+      "role": "Other",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/features/fasting/models/fasting-start-intent.ts",
+      "line": 13
     },
     {
       "name": "FastingAlertsSectionComponent",
@@ -6365,7 +6374,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 37
+      "line": 38
     },
     {
       "name": "GlobalErrorHandler",
@@ -6876,7 +6885,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/auth/telegram-backup-email-flow.service.ts",
-      "line": 24
+      "line": 25
     },
     {
       "name": "TelegramWebAppService",

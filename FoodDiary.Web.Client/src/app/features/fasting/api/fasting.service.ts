@@ -13,11 +13,12 @@ import type {
     FastingOverview,
     FastingSession,
     ReduceFastingTargetPayload,
-    StartFastingPayload,
     UpdateFastingCheckInPayload,
 } from '../../../shared/models/fasting.data';
 import type { PageOf } from '../../../shared/models/page-of.data';
+import type { FastingStartIntent } from '../models/fasting-start-intent';
 import { FASTING_API_LIMITS } from './fasting-api.tokens';
+import { fastingStartToSdk } from './fasting-start-sdk.mapper';
 
 @Service()
 export class FastingService {
@@ -26,7 +27,8 @@ export class FastingService {
     protected readonly baseUrl = environment.apiUrls.fasting;
     private readonly sdk = createSdkConnection(FastingSdk, this.baseUrl, inject(HttpClient));
 
-    public start(payload: StartFastingPayload): Observable<FastingSession> {
+    public start(intent: FastingStartIntent): Observable<FastingSession> {
+        const payload = fastingStartToSdk(intent);
         return this.sdk.client.postFastingStart({ version: this.sdk.version, startFastingHttpRequest: payload }).pipe(
             map(fastingSessionFromSdk),
             catchError((error: unknown) => rethrowApiError('Start fasting error', error)),

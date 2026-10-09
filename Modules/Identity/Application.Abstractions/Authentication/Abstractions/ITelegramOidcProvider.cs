@@ -4,6 +4,6 @@ namespace FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abs
 
 public interface ITelegramOidcProvider {
     bool IsEnabled { get; }
-    Result<string> CreateAuthorizationUrl(string state, string nonce, string codeVerifier);
-    Task<Result<TelegramOidcIdentity>> ExchangeAsync(string code, string codeVerifier, string nonce, CancellationToken cancellationToken);
+    Result<string> CreateAuthorizationUrl(TelegramOidcAuthorizationRequest request);
+    Task<Result<TelegramOidcIdentity>> ExchangeAsync(TelegramOidcTokenExchange exchange, CancellationToken cancellationToken);
 }

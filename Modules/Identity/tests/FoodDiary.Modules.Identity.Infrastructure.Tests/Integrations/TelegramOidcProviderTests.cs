@@ -20,8 +20,8 @@ public sealed class TelegramOidcProviderTests {
         using var http = new HttpClient(handler);
         var provider = new TelegramOidcProvider(http, MsOptions.Create(new TelegramOidcOptions()), new RecordingValidator());
         Assert.False(provider.IsEnabled);
-        Assert.True(provider.CreateAuthorizationUrl("state", "nonce", Verifier).IsFailure);
-        Assert.True((await provider.ExchangeAsync("code", Verifier, "nonce", CancellationToken.None)).IsFailure);
+        Assert.True(provider.CreateAuthorizationUrl(new TelegramOidcAuthorizationRequest(new TelegramOAuthState("state"), new TelegramOidcNonce("nonce"), new TelegramPkceVerifier(Verifier))).IsFailure);
+        Assert.True((await provider.ExchangeAsync(new TelegramOidcTokenExchange(new TelegramAuthorizationCode("code"), new TelegramPkceVerifier(Verifier), new TelegramOidcNonce("nonce")), CancellationToken.None)).IsFailure);
         Assert.Null(handler.Url);
     }
 
@@ -32,7 +32,7 @@ public sealed class TelegramOidcProviderTests {
     public async Task InvalidExchangeInput_NeverCallsProvider(string code, int verifierLength, string nonce) {
         using var handler = new RecordingHandler();
         using var http = new HttpClient(handler);
-        Assert.True((await CreateProvider(http, new RecordingValidator()).ExchangeAsync(code, new string('a', verifierLength), nonce, CancellationToken.None)).IsFailure);
+        Assert.True((await CreateProvider(http, new RecordingValidator()).ExchangeAsync(new TelegramOidcTokenExchange(new TelegramAuthorizationCode(code), new TelegramPkceVerifier(new string('a', verifierLength)), new TelegramOidcNonce(nonce)), CancellationToken.None)).IsFailure);
         Assert.Null(handler.Url);
     }
 
@@ -49,7 +49,7 @@ public sealed class TelegramOidcProviderTests {
         };
         using var http = new HttpClient(handler);
         var validator = new RecordingValidator();
-        Assert.True((await CreateProvider(http, validator).ExchangeAsync("code", Verifier, "nonce", CancellationToken.None)).IsFailure);
+        Assert.True((await CreateProvider(http, validator).ExchangeAsync(new TelegramOidcTokenExchange(new TelegramAuthorizationCode("code"), new TelegramPkceVerifier(Verifier), new TelegramOidcNonce("nonce")), CancellationToken.None)).IsFailure);
         Assert.Equal(0, validator.CallCount);
     }
 
@@ -60,7 +60,7 @@ public sealed class TelegramOidcProviderTests {
         using var handler = new RecordingHandler { Failure = new OperationCanceledException(cancellation.Token) };
         using var http = new HttpClient(handler);
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => CreateProvider(http, new RecordingValidator())
-            .ExchangeAsync("code", Verifier, "nonce", cancellation.Token));
+            .ExchangeAsync(new TelegramOidcTokenExchange(new TelegramAuthorizationCode("code"), new TelegramPkceVerifier(Verifier), new TelegramOidcNonce("nonce")), cancellation.Token));
     }
 
     [Fact]
@@ -78,7 +78,7 @@ public sealed class TelegramOidcProviderTests {
             },
         };
         Task<Result<TelegramOidcIdentity>> exchange = CreateProvider(http, validator)
-            .ExchangeAsync("code", Verifier, "nonce", cancellation.Token);
+            .ExchangeAsync(new TelegramOidcTokenExchange(new TelegramAuthorizationCode("code"), new TelegramPkceVerifier(Verifier), new TelegramOidcNonce("nonce")), cancellation.Token);
         await entered.Task.WaitAsync(TimeSpan.FromSeconds(10));
         Assert.False(exchange.IsCompleted);
         await cancellation.CancelAsync();
@@ -96,7 +96,7 @@ public sealed class TelegramOidcProviderTests {
             OnValidate = _ => Task.FromException<Result<TelegramOidcIdentity>>(failure),
         };
         InvalidDataException actual = await Assert.ThrowsAsync<InvalidDataException>(() => CreateProvider(http, validator)
-            .ExchangeAsync("code", Verifier, "nonce", CancellationToken.None));
+            .ExchangeAsync(new TelegramOidcTokenExchange(new TelegramAuthorizationCode("code"), new TelegramPkceVerifier(Verifier), new TelegramOidcNonce("nonce")), CancellationToken.None));
         Assert.Same(failure, actual);
     }
 
@@ -105,7 +105,7 @@ public sealed class TelegramOidcProviderTests {
         using var handler = new RecordingHandler();
         using var http = new HttpClient(handler);
         TelegramOidcProvider provider = CreateProvider(http, new RecordingValidator());
-        Result<string> result = provider.CreateAuthorizationUrl("state", "nonce", Verifier);
+        Result<string> result = provider.CreateAuthorizationUrl(new TelegramOidcAuthorizationRequest(new TelegramOAuthState("state"), new TelegramOidcNonce("nonce"), new TelegramPkceVerifier(Verifier)));
         var uri = new Uri(result.Value);
         Dictionary<string, StringValues> query = QueryHelpers.ParseQuery(uri.Query);
         Assert.Equal("oauth.telegram.org", uri.Host);
@@ -123,7 +123,7 @@ public sealed class TelegramOidcProviderTests {
         var validator = new RecordingValidator();
         validator.Identity = new TelegramOidcIdentity("https://oauth.telegram.org", "different-subject", 123, FirstName: null, LastName: null, Username: null);
 
-        Result<TelegramOidcIdentity> result = await CreateProvider(http, validator).ExchangeAsync("code+special", Verifier, "nonce", CancellationToken.None);
+        Result<TelegramOidcIdentity> result = await CreateProvider(http, validator).ExchangeAsync(new TelegramOidcTokenExchange(new TelegramAuthorizationCode("code+special"), new TelegramPkceVerifier(Verifier), new TelegramOidcNonce("nonce")), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("https://oauth.telegram.org/token", handler.Url);
@@ -144,7 +144,7 @@ public sealed class TelegramOidcProviderTests {
         using var handler = new RecordingHandler { ResponseBody = responseBody };
         using var http = new HttpClient(handler);
         var validator = new RecordingValidator();
-        Result<TelegramOidcIdentity> result = await CreateProvider(http, validator).ExchangeAsync("code", Verifier, "nonce", CancellationToken.None);
+        Result<TelegramOidcIdentity> result = await CreateProvider(http, validator).ExchangeAsync(new TelegramOidcTokenExchange(new TelegramAuthorizationCode("code"), new TelegramPkceVerifier(Verifier), new TelegramOidcNonce("nonce")), CancellationToken.None);
         Assert.True(result.IsFailure);
         Assert.Equal(0, validator.CallCount);
     }
@@ -164,10 +164,10 @@ public sealed class TelegramOidcProviderTests {
         public int CallCount { get; private set; }
         public string? Token { get; private set; }
         public string? Nonce { get; private set; }
-        public Task<Result<TelegramOidcIdentity>> ValidateAsync(string idToken, string expectedNonce, CancellationToken cancellationToken) {
+        public Task<Result<TelegramOidcIdentity>> ValidateAsync(string idToken, TelegramOidcNonce expectedNonce, CancellationToken cancellationToken) {
             CallCount++;
             Token = idToken;
-            Nonce = expectedNonce;
+            Nonce = expectedNonce.Value;
             return OnValidate?.Invoke(cancellationToken) ?? Task.FromResult(Result.Success(Identity));
         }
     }

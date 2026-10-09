@@ -32,7 +32,7 @@ public sealed class CompleteTelegramBackupEmailCommandHandler(ITelegramOidcProvi
         if (attempt is null || attempt.UserId != userId) {
             return Result.Failure(TelegramIdentityErrors.InvalidProof);
         }
-        Result<TelegramOidcIdentity> identity = await provider.ExchangeAsync(code, attempt.CodeVerifier, attempt.Nonce, cancellationToken).ConfigureAwait(false);
+        Result<TelegramOidcIdentity> identity = await provider.ExchangeAsync(new TelegramOidcTokenExchange(new TelegramAuthorizationCode(code), new TelegramPkceVerifier(attempt.CodeVerifier), new TelegramOidcNonce(attempt.Nonce)), cancellationToken).ConfigureAwait(false);
         if (identity.IsFailure) {
             return Result.Failure(identity.Error);
         }

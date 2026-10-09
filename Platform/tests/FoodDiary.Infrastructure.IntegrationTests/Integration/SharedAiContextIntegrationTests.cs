@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Email.Infrastructure;
@@ -125,7 +127,7 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
         Assert.Single(await database.Users.AsNoTracking().ToListAsync());
         await using ServiceProvider readerProvider = CreateProvider(connectionString);
         FoodRecognitionJobModel? persisted = await readerProvider.GetRequiredService<IFoodRecognitionJobReader>()
-            .GetAsync(user.Id.Value, job.Id, CancellationToken.None);
+            .GetAsync(new UserId(user.Id.Value), new FoodRecognitionJobId(job.Id), CancellationToken.None);
         Assert.NotNull(persisted);
         Assert.Multiple(
             () => Assert.Equal(job.Id, persisted.Id),

@@ -18,7 +18,7 @@ public sealed class StartTelegramOidcCommandHandler(ITelegramOidcProvider provid
         var attempt = new OidcAttempt(SecurityTokenGenerator.GenerateUrlSafeToken(), SecurityTokenGenerator.GenerateUrlSafeToken(), command.LinkUserId);
         string state = await tickets.CreateAsync(Purpose, command.BrowserBinding, JsonSerializer.Serialize(attempt),
             timeProvider.GetUtcNow().UtcDateTime.AddMinutes(10), cancellationToken).ConfigureAwait(false);
-        Result<string> authorization = provider.CreateAuthorizationUrl(state, attempt.Nonce, attempt.CodeVerifier);
+        Result<string> authorization = provider.CreateAuthorizationUrl(new TelegramOidcAuthorizationRequest(new TelegramOAuthState(state), new TelegramOidcNonce(attempt.Nonce), new TelegramPkceVerifier(attempt.CodeVerifier)));
         return authorization.IsSuccess ? Result.Success(new TelegramOidcStartModel(authorization.Value)) : Result.Failure<TelegramOidcStartModel>(authorization.Error);
     }
 

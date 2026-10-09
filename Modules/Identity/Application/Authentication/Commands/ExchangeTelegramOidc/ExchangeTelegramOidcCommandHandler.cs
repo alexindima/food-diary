@@ -28,7 +28,7 @@ public sealed class ExchangeTelegramOidcCommandHandler(ITelegramOidcProvider pro
         if (attempt is null) {
             return Invalid();
         }
-        Result<TelegramOidcIdentity> identity = await provider.ExchangeAsync(command.Code, attempt.CodeVerifier, attempt.Nonce, cancellationToken).ConfigureAwait(false);
+        Result<TelegramOidcIdentity> identity = await provider.ExchangeAsync(new TelegramOidcTokenExchange(new TelegramAuthorizationCode(command.Code), new TelegramPkceVerifier(attempt.CodeVerifier), new TelegramOidcNonce(attempt.Nonce)), cancellationToken).ConfigureAwait(false);
         if (identity.IsFailure) {
             return Result.Failure<TelegramAuthenticationIntentModel>(identity.Error);
         }

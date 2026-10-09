@@ -35,7 +35,7 @@ public sealed class StartTelegramBackupEmailCommandHandler(ITelegramOidcProvider
             SecurityTokenGenerator.GenerateUrlSafeToken(), SecurityTokenGenerator.GenerateUrlSafeToken());
         string state = await tickets.CreateAsync(TelegramBackupEmailOidcAttempt.Purpose, TelegramBackupEmailOidcAttempt.Binding(browserBinding, userId), JsonSerializer.Serialize(attempt),
             timeProvider.GetUtcNow().UtcDateTime.AddMinutes(5), cancellationToken).ConfigureAwait(false);
-        Result<string> url = provider.CreateAuthorizationUrl(state, attempt.Nonce, attempt.CodeVerifier);
+        Result<string> url = provider.CreateAuthorizationUrl(new TelegramOidcAuthorizationRequest(new TelegramOAuthState(state), new TelegramOidcNonce(attempt.Nonce), new TelegramPkceVerifier(attempt.CodeVerifier)));
         return url.IsSuccess ? Result.Success(new TelegramOidcStartModel(url.Value)) : Result.Failure<TelegramOidcStartModel>(url.Error);
     }
 }

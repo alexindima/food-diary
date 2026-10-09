@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Results;
@@ -8,10 +10,12 @@ namespace FoodDiary.Modules.Ai.Application.Queries.GetCompletedFoodRecognition;
 
 public sealed class GetCompletedFoodRecognitionQueryHandler(IFoodRecognitionJobReader jobs) : IRequestHandler<GetCompletedFoodRecognitionQuery, Result<FoodRecognitionJobModel>> {
     public async Task<Result<FoodRecognitionJobModel>> Handle(GetCompletedFoodRecognitionQuery request, CancellationToken cancellationToken) {
-        Guid userId = request.UserId;
-        Guid jobId = request.JobId;
+        Guid ownerId = request.UserId;
+        Guid recognitionId = request.JobId;
+        var userId = new UserId(ownerId);
+        var jobId = new FoodRecognitionJobId(recognitionId);
         FoodRecognitionJobModel? job = await jobs.GetAsync(userId, jobId, cancellationToken).ConfigureAwait(false);
-        if (job is null || job.UserId != userId || job.Id != jobId) {
+        if (job is null || job.UserId != userId.Value || job.Id != jobId.Value) {
             return Result.Failure<FoodRecognitionJobModel>(new Error("Ai.RecognitionNotFound", "Recognition result was not found.", ErrorKind.NotFound));
         }
         if (string.Equals(job.Status, "Queued", StringComparison.Ordinal) || string.Equals(job.Status, "Running", StringComparison.Ordinal)) {

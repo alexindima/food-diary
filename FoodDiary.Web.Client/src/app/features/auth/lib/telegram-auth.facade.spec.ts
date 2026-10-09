@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../services/auth.service';
 import type { AuthResponse } from '../../../shared/auth/auth.data';
+import { telegramLoginTicket } from '../../../shared/auth/telegram-oidc-values';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import { BrowserStorageService } from '../../../shared/platform/browser-storage.service';
 import { BrowserWindowService } from '../../../shared/platform/browser-window.service';
@@ -12,7 +13,7 @@ import type { TelegramIntent } from '../models/telegram-auth.data';
 import { TelegramAuthFacade } from './telegram-auth.facade';
 
 const FUTURE_EXPIRY = '2099-01-01T00:00:00Z';
-const TICKET = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFG';
+const TICKET = telegramLoginTicket('abcdefghijklmnopqrstuvwxyz0123456789ABCDEFG');
 const intent: TelegramIntent = { ticket: TICKET, nextAction: 'onboarding', expiresAtUtc: FUTURE_EXPIRY };
 
 describe('TelegramAuthFacade', () => {

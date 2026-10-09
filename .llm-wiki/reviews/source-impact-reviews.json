@@ -229,14 +229,14 @@
       "pageSha256": "20d3e15e2bb4fde9b589aafd6671e66c2285642e4cc94f00ffa9e46457598140",
       "sources": [
         {
-          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "6b3dae6223782d01e663b5187152a6cf7bbd4345020e192c5b03aaaa87f74c81"
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "a75b2d697168433d6fe510709e0bfee4b73d22a6d041980d93e5b2aa077f0e27"
         }
       ],
-      "reason": "The updated matrix records intentional direct semantic owner references and new guard tests. Current graph and all 2244 architecture checks pass; provider/schema and compiler-negative proof accompany ownership changes. No removal candidates were acted on. These source review and drift instructions remain accurate.",
+      "reason": "Reviewed current dependency and ownership indexes against unchanged project references and the 2260 passing architecture tests. New owner-local values add no foreign writes or dependency edges; the architecture-health review workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "4661284988a35a76c243cfcbcd9e748dc17811e5",
-      "reviewedAtUtc": "2026-10-09T11:35:51.9288462Z"
+      "gitHead": "c7585ca923e86acea84aace4544e579991d890f5",
+      "reviewedAtUtc": "2026-10-09T15:33:12.8976567Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -245,13 +245,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "13a5d28d3a0da6451481057d022479084a5f6294c6d2ddd1017e34c7c17c4979"
+          "sha256": "865c3534eb344ff7a85ca996fa48954c4fd9a4fc077d9927a6dd81a247992a1c"
         }
       ],
-      "reason": "Rebuilt backend contract index reflects typed internal producer/consumer roles. Reviewed all ten requirement mappings and preserved raw DTO/HTTP and narrow consumer adapters; SDK and actual owner/consumer/provider tests pass. This workflow still requires verification in current sources, matching the evidence in state.json.",
+      "reason": "Reviewed typed AI read/write ports and structured OIDC provider inputs against their actual application, infrastructure and host-test consumers. Scalar HTTP/public DTOs and stored attempts are unchanged; compatibility tests and PRIMITIVE_TYPES.md document the migration.",
       "baseRef": "HEAD",
-      "gitHead": "4661284988a35a76c243cfcbcd9e748dc17811e5",
-      "reviewedAtUtc": "2026-10-09T11:35:51.733398Z"
+      "gitHead": "c7585ca923e86acea84aace4544e579991d890f5",
+      "reviewedAtUtc": "2026-10-09T15:33:13.7716017Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -520,17 +520,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "8b2054a4a5cd99384ebb4b8eb3e5e6ab40ab8773b603dfb72c69af11c18b4bec"
-        },
-        {
-          "path": "Shared/FoodDiary.Domain.Primitives/AGENTS.md",
-          "sha256": "26990e81ef5c22dcd8e59c7315decd075d9c8aeadcb26d8630cf8b5ae3f4d620"
+          "sha256": "9fa399027bf57c04f8c610f47ea54e93ea8982dd4c3c7c4c08c0af2a83c81b6f"
         }
       ],
-      "reason": "Reviewed generated module catalog contract and domain navigation against final production consumer adoption, private immutable constructors and passing6107 unit2214 architecture324 central PostgreSQL checks; test references are navigation rather than execution evidence.",
+      "reason": "Reviewed FoodRecognitionJobId and the nominal private-construction fasting daily window. Numeric bounds, GUID columns, model mappings and DB capabilities remain unchanged; current source-specific factories and compiler tests preserve the documented invariant review procedure.",
       "baseRef": "HEAD",
-      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
-      "reviewedAtUtc": "2026-10-08T19:37:52.6969453Z"
+      "gitHead": "c7585ca923e86acea84aace4544e579991d890f5",
+      "reviewedAtUtc": "2026-10-09T15:33:14.1170200Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -867,13 +863,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "aff6dc7094f1e0e354ff13a097ba0e18491cdb36c8af16803a3c5f01a06609e8"
+          "sha256": "858bf79615a91c46ae917b1e2aa53d4f0918dd41c3b05368927b48d9fd8e3def"
         }
       ],
-      "reason": "Rebuilt quality index includes new semantic constructors/guards and test references. Actual full frontend verification, selected backend tests, corrected full architecture suite, focused provider/HTTP and browser interactions were executed. No claim equates static test-name references with execution coverage. The workflow remains current.",
+      "reason": "Reviewed new compile-negative proofs and owner-level coverage against actual changed source. The 611 owner tests, 2260 architecture tests and two OIDC PostgreSQL flows passed; inventory/test-reference counts remain navigation rather than runtime proof.",
       "baseRef": "HEAD",
-      "gitHead": "4661284988a35a76c243cfcbcd9e748dc17811e5",
-      "reviewedAtUtc": "2026-10-09T11:35:50.4734771Z"
+      "gitHead": "c7585ca923e86acea84aace4544e579991d890f5",
+      "reviewedAtUtc": "2026-10-09T15:33:15.2553311Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -954,13 +950,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "1a2ef6a51023baff6eee0d183c5587a0b652402cae928d7922a5d6344211ec33"
+          "sha256": "6fd7767cbb0bc6c30df9ba3f290f55dfc844e9b510cf6f65ad3bb868de045404"
         }
       ],
-      "reason": "Rebuilt topology lists existing clients/jobs/workers; no external endpoint, scheduling or delivery behavior changes. Telegram lease/checkpoint/transaction and refresh rotation/revocation concurrency tests prove preserved fences and failure semantics. Browser mass lookup cache/error and stale dialog tests passed. The workflow instructions remain applicable.",
+      "reason": "Reviewed AI worker claim/admission/checkpoint/completion, OIDC HTTP requests and browser callback cleanup. Worker scheduling, leases, SQL transactions, provider endpoints and retries are unchanged; runtime impact workflow and topology remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "4661284988a35a76c243cfcbcd9e748dc17811e5",
-      "reviewedAtUtc": "2026-10-09T11:35:50.0544412Z"
+      "gitHead": "c7585ca923e86acea84aace4544e579991d890f5",
+      "reviewedAtUtc": "2026-10-09T15:33:15.6771609Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -969,21 +965,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "aff6dc7094f1e0e354ff13a097ba0e18491cdb36c8af16803a3c5f01a06609e8"
+          "sha256": "858bf79615a91c46ae917b1e2aa53d4f0918dd41c3b05368927b48d9fd8e3def"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "1a2ef6a51023baff6eee0d183c5587a0b652402cae928d7922a5d6344211ec33"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "691aa7f68ba103952586d16da34c36b526c0d275dcc3824ade9ddc7db299de72"
+          "sha256": "6fd7767cbb0bc6c30df9ba3f290f55dfc844e9b510cf6f65ad3bb868de045404"
         }
       ],
-      "reason": "The generated quality/runtime/sensitivity indexes were refreshed. Manual bounded review verified owner scope and token/lease boundaries with real-host/provider tests and technical fingerprints; no production exposure or broad vulnerability-scan claim is made from indexes. Current sources, evidence and this navigation workflow remain aligned.",
+      "reason": "Reviewed browser/account/purpose binding, one-use attempt consumption, PKCE S256 and token nonce/signature/issuer/audience checks. No auth policy or sharing/logging change; new opaque backend values redact diagnostic formatting. Existing abuse tests and real OIDC registration/login/backup-email tests support the preserved boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "4661284988a35a76c243cfcbcd9e748dc17811e5",
-      "reviewedAtUtc": "2026-10-09T11:35:51.1917527Z"
+      "gitHead": "c7585ca923e86acea84aace4544e579991d890f5",
+      "reviewedAtUtc": "2026-10-09T15:33:16.2950020Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1124,17 +1116,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "1611e6b7e75a85e676b2e21c3e461713a7387e8113602f9a309b378be724acc2"
+          "sha256": "9238ebcc82ef1eb0f249e089a9992d15a3ae69450fa6ae71709290ab3f4b5a71"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "7585afd72898d3b445b7376bf6b789af018e16cc609e8f370eebfa87d3405f96"
+          "sha256": "60771a63f9c116181718af6b1136b4b0b9772693307c49329e08e8718679ac57"
         }
       ],
-      "reason": "Reviewed refreshed source instructions and PRIMITIVE_TYPES against all14 implementations, explicit legacy/raw boundaries and current project ownership; admin catalog decoded sources keep wire file data scalar.",
+      "reason": "Verified trace entrypoints and consumers for recognition, OIDC and fasting against current source. Typed ports and the new pure fasting encoder remain on the documented ownership paths; trace tooling and index navigation rules are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
-      "reviewedAtUtc": "2026-10-08T19:37:57.5371642Z"
+      "gitHead": "c7585ca923e86acea84aace4544e579991d890f5",
+      "reviewedAtUtc": "2026-10-09T15:33:16.8779904Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1218,13 +1210,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "1611e6b7e75a85e676b2e21c3e461713a7387e8113602f9a309b378be724acc2"
+          "sha256": "9238ebcc82ef1eb0f249e089a9992d15a3ae69450fa6ae71709290ab3f4b5a71"
         }
       ],
-      "reason": "Reviewed owner typed boundaries against actual unchanged snapshots and SDK outputs; four real-host OpenAPI tests and full frontend SDK verification passed. Scalar transport/storage shapes remain explicit adapters.",
+      "reason": "Traced route, checked storage, facade and SDK boundaries for Telegram and the fasting start adapter. Public templates, UI-kit inputs, locales and generated SDKs are unchanged. Native callback/ticket strings and mode bodies retain encoding; the existing public-contract review guidance remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
-      "reviewedAtUtc": "2026-10-08T19:37:53.3384534Z"
+      "gitHead": "c7585ca923e86acea84aace4544e579991d890f5",
+      "reviewedAtUtc": "2026-10-09T15:33:14.6341316Z"
     },
     {
       "pageId": "workflow.query-context",

@@ -6,12 +6,23 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { environment } from '../../../../environments/environment';
 import { utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
+import {
+    cyclicFastingStart,
+    extendedFastingHours,
+    extendedFastingStart,
+    fastingCycleDays,
+    fastingDailyWindow,
+    intermittentFastingStart,
+} from '../models/fasting-start-intent';
 import { FastingService } from './fasting.service';
 import { FASTING_API_LIMITS } from './fasting-api.tokens';
 
 const BASE_URL = environment.apiUrls.fasting;
 const DEFAULT_HISTORY_PAGE_SIZE = 10;
 const CUSTOM_HISTORY_PAGE_SIZE = 7;
+const INTERMITTENT_FAST_HOURS = 16;
+const EXTENDED_FAST_HOURS = 36;
+const CYCLIC_EAT_DAY_FAST_HOURS = 18;
 const SESSION_RESPONSE = {
     id: entityId<'fasting-session'>('session-1'),
     startedAtUtc: utcInstant('2026-04-12T06:00:00Z'),
@@ -71,6 +82,31 @@ function resetTestingModuleWithCustomHistoryLimit(historyPageSize: number): void
     service = TestBed.inject(FastingService);
     httpMock = TestBed.inject(HttpTestingController);
 }
+
+describe('FastingService start encoding', () => {
+    it.each([
+        [
+            intermittentFastingStart('Fast16Eat8', fastingDailyWindow(INTERMITTENT_FAST_HOURS)),
+            { planType: 'Intermittent', protocol: 'Fast16Eat8', plannedDurationHours: 16 },
+        ],
+        [
+            extendedFastingStart('Custom', extendedFastingHours(EXTENDED_FAST_HOURS), ''),
+            { planType: 'Extended', protocol: 'Custom', plannedDurationHours: 36, notes: '' },
+        ],
+        [
+            cyclicFastingStart(fastingCycleDays(2), fastingCycleDays(1), fastingDailyWindow(CYCLIC_EAT_DAY_FAST_HOURS)),
+            { planType: 'Cyclic', cyclicFastDays: 2, cyclicEatDays: 1, cyclicEatDayFastHours: 18, cyclicEatDayEatingWindowHours: 6 },
+        ],
+    ] as const)('preserves the scalar SDK body for $0.planType', (intent, expectedBody) => {
+        service.start(intent).subscribe(result => {
+            expect(result.id).toBe(SESSION_RESPONSE.id);
+        });
+        const request = httpMock.expectOne(`${BASE_URL}/start`);
+        expect(request.request.method).toBe('POST');
+        expect(request.request.body).toEqual(expectedBody);
+        request.flush(SESSION_RESPONSE);
+    });
+});
 
 describe('FastingService overview', () => {
     it('should request fasting overview', () => {

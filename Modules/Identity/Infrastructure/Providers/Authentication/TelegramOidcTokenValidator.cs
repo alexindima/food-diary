@@ -30,13 +30,13 @@ public sealed class TelegramOidcTokenValidator(IOptions<TelegramOidcOptions> opt
     }
 
     public async Task<Result<TelegramOidcIdentity>> ValidateAsync(
-        string idToken, string expectedNonce, CancellationToken cancellationToken) {
+        string idToken, TelegramOidcNonce expectedNonce, CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
         if (!options.Value.Enabled || !TelegramOidcOptions.IsValid(options.Value)) {
             return Result.Failure<TelegramOidcIdentity>(TelegramIdentityErrors.NotConfigured);
         }
         if (string.IsNullOrWhiteSpace(idToken) || idToken.Length > MaxTokenLength ||
-            string.IsNullOrWhiteSpace(expectedNonce) || expectedNonce.Length > 128) {
+            string.IsNullOrWhiteSpace(expectedNonce.Value) || expectedNonce.Value.Length > 128) {
             return Invalid();
         }
 
@@ -65,7 +65,7 @@ public sealed class TelegramOidcTokenValidator(IOptions<TelegramOidcOptions> opt
             string? nonce = SingleClaim(principal, "nonce");
             string? subject = SingleClaim(principal, "sub");
             string? authorizedParty = SingleClaim(principal, "azp");
-            if (!string.Equals(nonce, expectedNonce, StringComparison.Ordinal) ||
+            if (!string.Equals(nonce, expectedNonce.Value, StringComparison.Ordinal) ||
                 string.IsNullOrWhiteSpace(subject) || subject.Length > 255 ||
                 (authorizedParty is not null && !string.Equals(authorizedParty, options.Value.ClientId, StringComparison.Ordinal)) ||
                 !long.TryParse(SingleClaim(principal, "id"), NumberStyles.None, CultureInfo.InvariantCulture, out long userId) || userId <= 0 ||

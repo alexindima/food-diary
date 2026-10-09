@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1338,
+    "contracts": 1339,
     "ambiguousContracts": 29,
-    "consumerEdges": 10463,
-    "productionConsumerEdges": 5987,
-    "testConsumerEdges": 4476,
-    "consumedContracts": 1338,
+    "consumerEdges": 10478,
+    "productionConsumerEdges": 5992,
+    "testConsumerEdges": 4486,
+    "consumedContracts": 1339,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -20903,6 +20903,23 @@
       ],
       "definitionPaths": [
         "Modules/Identity/Presentation/Features/Auth/Requests/TelegramLoginWidgetHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "TelegramOidcAuthorizationRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcAuthorizationRequest.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -77474,6 +77491,19 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Domain/ValueObjects/Ids/FoodRecognitionJobId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Domain.Contracts/ValueObjects/Ids/BillingPaymentId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -82380,6 +82410,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "IFoodRecognitionJobReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IFoodRecognitionJobReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/WorkflowSemanticBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "IFoodRecognitionJobStore",
       "roles": [
         "Other"
@@ -82532,6 +82575,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/MealsModuleExtractionTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFoodRecognitionJobStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IFoodRecognitionJobStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/WorkflowSemanticBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -119637,6 +119693,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "ITelegramOidcProvider",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/WorkflowSemanticBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "ITelegramOidcTokenValidator",
       "roles": [
         "Validator"
@@ -119687,6 +119756,19 @@
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramOidcProviderTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "ITelegramOidcTokenValidator",
+      "roles": [
+        "Validator"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcTokenValidator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/WorkflowSemanticBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "ITelegramOperationPolicy",
@@ -151252,6 +151334,136 @@
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "TelegramOidcAuthorizationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcAuthorizationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramOidcProvider.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TelegramOidcAuthorizationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcAuthorizationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/StartTelegramBackupEmail/StartTelegramBackupEmailCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TelegramOidcAuthorizationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcAuthorizationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/StartTelegramOidc/StartTelegramOidcCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TelegramOidcAuthorizationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcAuthorizationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcProvider.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TelegramOidcAuthorizationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcAuthorizationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/TelegramOidcPostgresTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "TelegramOidcAuthorizationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcAuthorizationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TelegramOidcAuthorizationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcAuthorizationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailHandlersTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "TelegramOidcAuthorizationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcAuthorizationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramOidcValueFormattingTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TelegramOidcAuthorizationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcAuthorizationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramOidcProviderTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "TelegramOidcAuthorizationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramOidcAuthorizationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/WorkflowSemanticBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "TelegramOidcStartHttpResponse",

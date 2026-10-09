@@ -19,6 +19,7 @@ import type {
 } from '../shared/auth/auth.data';
 import type { GoogleLoginRequest } from '../shared/auth/google-auth.data';
 import { SessionEventsService } from '../shared/auth/session-events.service';
+import type { TelegramOAuthCode, TelegramOAuthState } from '../shared/auth/telegram-oidc-values';
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { fallbackApiError, rethrowApiError } from '../shared/lib/api-error.utils';
 import { getNumberProperty } from '../shared/lib/unknown-value.utils';
@@ -251,7 +252,7 @@ export class AuthService {
             .pipe(map(value => requireSdkFields(value, ['authorizationUrl'])));
     }
 
-    public completeTelegramBackupEmail(code: string, state: string): Observable<void> {
+    public completeTelegramBackupEmail(code: TelegramOAuthCode, state: TelegramOAuthState): Observable<void> {
         return this.telegram.client.postAuthTelegramBackupEmailOidcComplete({
             version: this.telegram.version,
             exchangeTelegramOidcHttpRequest: { code, state },

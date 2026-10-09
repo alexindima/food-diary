@@ -54,7 +54,7 @@ public sealed class TelegramAuthenticationBoundaryTests {
     public async Task Start_BindsAttemptAndPreservesProviderResult(bool succeeds) {
         string binding = new('b', 43);
         _tickets.CreateAsync("telegram-oidc-attempt", binding, Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns("state");
-        _provider.CreateAuthorizationUrl("state", Arg.Any<string>(), Arg.Any<string>()).Returns(succeeds
+        _provider.CreateAuthorizationUrl(Arg.Is<TelegramOidcAuthorizationRequest>(value => value.State.Value == "state")).Returns(succeeds
             ? Result.Success("https://oauth.telegram.org/auth") : Result.Failure<string>(TelegramIdentityErrors.NotConfigured));
         var handler = new StartTelegramOidcCommandHandler(_provider, _tickets, _policy, TimeProvider.System);
         Result<TelegramOidcStartModel> result = await handler.Handle(new StartTelegramOidcCommand(binding), CancellationToken.None);
@@ -92,7 +92,7 @@ public sealed class TelegramAuthenticationBoundaryTests {
     public async Task Exchange_UsesStoredNonceAndVerifierAndPropagatesProviderOutcome(bool succeeds) {
         string payload = JsonSerializer.Serialize(new { Nonce = "nonce", CodeVerifier = "verifier", LinkUserId = (Guid?)null });
         _tickets.ConsumeAsync("state", "telegram-oidc-attempt", "browser", Arg.Any<CancellationToken>()).Returns(payload);
-        _provider.ExchangeAsync("code", "verifier", "nonce", Arg.Any<CancellationToken>()).Returns(succeeds
+        _provider.ExchangeAsync(new TelegramOidcTokenExchange(new TelegramAuthorizationCode("code"), new TelegramPkceVerifier("verifier"), new TelegramOidcNonce("nonce")), Arg.Any<CancellationToken>()).Returns(succeeds
             ? Result.Success(new TelegramOidcIdentity("issuer", "subject", 123, "Alex", LastName: null, Username: null))
             : Result.Failure<TelegramOidcIdentity>(TelegramIdentityErrors.InvalidProof));
         _accounts.IsRegisteredAsync(123, Arg.Any<CancellationToken>()).Returns(Result.Success(value: false));

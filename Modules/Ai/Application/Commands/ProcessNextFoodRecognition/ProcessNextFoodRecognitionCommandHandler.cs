@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.Contracts.Commands.ProcessNextFoodRecognition;
 using System.Security.Cryptography;
 using System.Text;
@@ -19,30 +20,32 @@ public sealed class ProcessNextFoodRecognitionCommandHandler(IFoodRecognitionJob
             return false;
         }
 
+        var jobId = new FoodRecognitionJobId(job.Id);
+
         // A claimed operation is never automatically dispatched again: a lost provider response
         // cannot prove that the paid request was not processed. Maintenance marks it interrupted.
         Result<FoodVisionModel> vision = await sender.Send(new AnalyzeFoodImageCommand(
-            job.UserId, job.ImageAssetId, job.Description, RequestId(job.Id, "vision"), job.IsProductLabel, (job.AdditionalImages ?? []).Select(x => x.ImageAssetId).ToArray()), cancellationToken).ConfigureAwait(false);
+            job.UserId, job.ImageAssetId, job.Description, RequestId(jobId, "vision"), job.IsProductLabel, (job.AdditionalImages ?? []).Select(x => x.ImageAssetId).ToArray()), cancellationToken).ConfigureAwait(false);
         if (vision.IsFailure) {
-            await store.CompleteAsync(job.Id, nutrition: null, vision.Error.Code, nutritionErrorCode: null, cancellationToken).ConfigureAwait(false);
+            await store.CompleteAsync(jobId, nutrition: null, vision.Error.Code, nutritionErrorCode: null, cancellationToken).ConfigureAwait(false);
             return true;
         }
-        if (!await store.SaveVisionAsync(job.Id, vision.Value, cancellationToken).ConfigureAwait(false)) {
+        if (!await store.SaveVisionAsync(jobId, vision.Value, cancellationToken).ConfigureAwait(false)) {
             return true;
         }
         if (job.IsProductLabel || vision.Value.Items.Count == 0) {
-            await store.CompleteAsync(job.Id, nutrition: null, errorCode: null, nutritionErrorCode: null, cancellationToken).ConfigureAwait(false);
+            await store.CompleteAsync(jobId, nutrition: null, errorCode: null, nutritionErrorCode: null, cancellationToken).ConfigureAwait(false);
             return true;
         }
 
         Result<FoodNutritionModel> nutrition = await sender.Send(new CalculateFoodNutritionCommand(
-            job.UserId, vision.Value.Items, RequestId(job.Id, "nutrition")), cancellationToken).ConfigureAwait(false);
+            job.UserId, vision.Value.Items, RequestId(jobId, "nutrition")), cancellationToken).ConfigureAwait(false);
         await store.CompleteAsync(
-            job.Id, nutrition.IsSuccess ? nutrition.Value : null, errorCode: null,
+            jobId, nutrition.IsSuccess ? nutrition.Value : null, errorCode: null,
             nutrition.IsFailure ? nutrition.Error.Code : null, cancellationToken).ConfigureAwait(false);
         return true;
     }
 
-    private static string RequestId(Guid id, string operation) =>
-        Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes($"food-recognition:{id:D}:{operation}")));
+    private static string RequestId(FoodRecognitionJobId id, string operation) =>
+        Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes($"food-recognition:{id.Value:D}:{operation}")));
 }

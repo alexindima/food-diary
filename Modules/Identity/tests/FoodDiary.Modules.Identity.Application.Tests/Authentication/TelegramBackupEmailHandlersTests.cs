@@ -37,7 +37,7 @@ public sealed class TelegramBackupEmailHandlersTests {
 
     [Fact]
     public async Task Start_PreservesAuthorizationProviderFailure() {
-        _provider.CreateAuthorizationUrl(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(Result.Failure<string>(TelegramIdentityErrors.NotConfigured));
+        _provider.CreateAuthorizationUrl(Arg.Any<TelegramOidcAuthorizationRequest>()).Returns(Result.Failure<string>(TelegramIdentityErrors.NotConfigured));
         Assert.Equal(TelegramIdentityErrors.NotConfigured.Code,
             (await Create().Send(new StartTelegramBackupEmailCommand(_user.Id.Value, "backup@example.com", _browser), CancellationToken.None)).Error.Code);
     }
@@ -50,7 +50,7 @@ public sealed class TelegramBackupEmailHandlersTests {
         _stored[("telegram-backup-email-oidc", $"{_browser}:{_user.Id.Value:D}")] = payload;
         Result result = await Create().Send(new CompleteTelegramBackupEmailCommand(_user.Id.Value, "code", "state", _browser), CancellationToken.None);
         Assert.Equal(TelegramIdentityErrors.InvalidProof.Code, result.Error.Code);
-        await _provider.DidNotReceive().ExchangeAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await _provider.DidNotReceive().ExchangeAsync(Arg.Any<TelegramOidcTokenExchange>(), Arg.Any<CancellationToken>());
         Assert.Empty(_mail.ReceivedCalls());
     }
 
@@ -58,7 +58,7 @@ public sealed class TelegramBackupEmailHandlersTests {
     public async Task Complete_PropagatesProviderRejectionWithoutSendingEmail() {
         ISender service = Create();
         await service.Send(new StartTelegramBackupEmailCommand(_user.Id.Value, "backup@example.com", _browser), CancellationToken.None);
-        _provider.ExchangeAsync("code", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(Result.Failure<TelegramOidcIdentity>(TelegramIdentityErrors.InvalidProof));
+        _provider.ExchangeAsync(Arg.Is<TelegramOidcTokenExchange>(value => value.Code.Value == "code"), Arg.Any<CancellationToken>()).Returns(Result.Failure<TelegramOidcIdentity>(TelegramIdentityErrors.InvalidProof));
         Result result = await service.Send(new CompleteTelegramBackupEmailCommand(_user.Id.Value, "code", "state", _browser), CancellationToken.None);
         Assert.Equal(TelegramIdentityErrors.InvalidProof.Code, result.Error.Code);
         Assert.Empty(_mail.ReceivedCalls());
@@ -74,9 +74,9 @@ public sealed class TelegramBackupEmailHandlersTests {
 
     public TelegramBackupEmailHandlersTests() {
         _provider.IsEnabled.Returns(returnThis: true);
-        _provider.CreateAuthorizationUrl(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
+        _provider.CreateAuthorizationUrl(Arg.Any<TelegramOidcAuthorizationRequest>())
             .Returns(Result.Success("https://oauth.telegram.org/auth"));
-        _provider.ExchangeAsync("code", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+        _provider.ExchangeAsync(Arg.Is<TelegramOidcTokenExchange>(value => value.Code.Value == "code"), Arg.Any<CancellationToken>())
             .Returns(Result.Success(new TelegramOidcIdentity("https://oauth.telegram.org", "123", 123, FirstName: null, LastName: null, Username: null)));
         UserAuthenticationPrincipalModel principal = UserAuthenticationIdentityService.ToAuthenticationPrincipal(_user, DateTime.UtcNow);
         _identities.GetAuthenticationPrincipalAsync(_user.Id, Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(Result.Success(principal));
@@ -120,7 +120,7 @@ public sealed class TelegramBackupEmailHandlersTests {
     public async Task Start_RejectsInvalidEmailBeforeProviderOrTicketUse() {
         Assert.True((await Create().Send(new StartTelegramBackupEmailCommand(_user.Id.Value, "invalid", _browser), CancellationToken.None)).IsFailure);
         Assert.Empty(_stored);
-        _provider.DidNotReceive().CreateAuthorizationUrl(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+        _provider.DidNotReceive().CreateAuthorizationUrl(Arg.Any<TelegramOidcAuthorizationRequest>());
     }
 
     private ISender Create() {

@@ -20,17 +20,19 @@ public sealed class TelegramOidcPostgresTests(PostgresApiWebApplicationFactory f
         provider.IsEnabled.Returns(returnThis: true);
         string? expectedNonce = null;
         string? expectedVerifier = null;
-        provider.CreateAuthorizationUrl(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(call => {
-            expectedNonce = call.ArgAt<string>(1);
-            expectedVerifier = call.ArgAt<string>(2);
+        provider.CreateAuthorizationUrl(Arg.Any<TelegramOidcAuthorizationRequest>()).Returns(call => {
+            TelegramOidcAuthorizationRequest request = call.Arg<TelegramOidcAuthorizationRequest>();
+            expectedNonce = request.Nonce.Value;
+            expectedVerifier = request.CodeVerifier.Value;
             Assert.Equal(43, expectedNonce.Length);
             Assert.Equal(43, expectedVerifier.Length);
-            return Result.Success("https://oauth.telegram.org/auth?state=" + call.ArgAt<string>(0));
+            return Result.Success("https://oauth.telegram.org/auth?state=" + request.State.Value);
         });
-        provider.ExchangeAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(call => {
-            Assert.Equal("test-code", call.ArgAt<string>(0));
-            Assert.Equal(expectedVerifier, call.ArgAt<string>(1));
-            Assert.Equal(expectedNonce, call.ArgAt<string>(2));
+        provider.ExchangeAsync(Arg.Any<TelegramOidcTokenExchange>(), Arg.Any<CancellationToken>()).Returns(call => {
+            TelegramOidcTokenExchange exchange = call.Arg<TelegramOidcTokenExchange>();
+            Assert.Equal("test-code", exchange.Code.Value);
+            Assert.Equal(expectedVerifier, exchange.CodeVerifier.Value);
+            Assert.Equal(expectedNonce, exchange.ExpectedNonce.Value);
             return Result.Success(new TelegramOidcIdentity("https://oauth.telegram.org", "distinct-subject", 11223344,
                 FirstName: "Test", LastName: null, Username: null));
         });
@@ -52,7 +54,7 @@ public sealed class TelegramOidcPostgresTests(PostgresApiWebApplicationFactory f
         Guid registered = await CompleteAsync(client, foreignBrowser, "register");
         Guid loggedIn = await CompleteAsync(client, foreignBrowser, "login");
         Assert.Equal(registered, loggedIn);
-        await provider.Received(2).ExchangeAsync("test-code", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await provider.Received(2).ExchangeAsync(Arg.Is<TelegramOidcTokenExchange>(exchange => exchange.Code.Value == "test-code"), Arg.Any<CancellationToken>());
         await VerifyBrowserBackupEmailAsync(client, foreignBrowser, registered);
     }
 

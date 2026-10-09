@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
 import { SessionEventsService } from './session-events.service';
+import { type TelegramOAuthCode, type TelegramOAuthState, telegramOAuthState } from './telegram-oidc-values';
 
 const KEY = 'fooddiary.telegram.backup-email';
 const STATE_LENGTH = 43;
@@ -75,13 +76,13 @@ export class TelegramBackupEmailFlowService {
         });
     }
 
-    public async handleCallbackAsync(code: string | null, state: string | null, denied: boolean): Promise<boolean> {
+    public async handleCallbackAsync(code: TelegramOAuthCode | null, state: TelegramOAuthState | null, denied: boolean): Promise<boolean> {
         const pending = this.read();
         if (typeof pending?.state !== 'string') {
             return false;
         }
         this.clear();
-        if (denied || code === null || state !== pending.state) {
+        if (denied || code === null || state !== telegramOAuthState(pending.state)) {
             this.storage.setJson('session', KEY, { ...pending, state: null, failed: true });
             return true;
         }
