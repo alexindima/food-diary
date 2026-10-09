@@ -138,11 +138,11 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             BotHydrationReceipt receipt = await diary.SaveWaterAsync(token, operationId,
                 incoming.OccurredAtUtc ?? throw new InvalidDataException("Missing water timestamp."),
                 incoming.AmountMl ?? throw new InvalidDataException("Missing water amount."), cancellationToken).ConfigureAwait(false);
-            return checkpoint with { Stage = "water-saved", WaterEntryId = receipt.EntryId };
+            return checkpoint with { Stage = "water-saved", WaterEntryId = receipt.EntryId.Value };
         }
         if (string.Equals(incoming.Kind, "meal-undo", StringComparison.Ordinal)) {
             string result = await diary.UndoRecognizedMealAsync(token,
-                incoming.MealOperationId ?? throw new InvalidDataException("Missing meal operation ID."), cancellationToken).ConfigureAwait(false);
+                new BotOperationId(incoming.MealOperationId ?? throw new InvalidDataException("Missing meal operation ID.")), cancellationToken).ConfigureAwait(false);
             return checkpoint with { Stage = "undo-complete", ErrorCode = result };
         }
         return await AdvanceImageAsync(diary, token, operationId, incoming, checkpoint, cancellationToken).ConfigureAwait(false);
@@ -154,7 +154,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         switch (checkpoint.Stage) {
             case "recognition-ready": {
                     BotRecognizedMeal result = await diary.SaveRecognizedMealAsync(token,
-                        checkpoint.RecognitionId ?? throw new InvalidDataException("Missing recognition ID."),
+                        new BotRecognitionId(checkpoint.RecognitionId ?? throw new InvalidDataException("Missing recognition ID.")),
                         incoming.OccurredAtUtc ?? throw new InvalidDataException("Missing original message time."), cancellationToken).ConfigureAwait(false);
                     return checkpoint with { Stage = "meal-saved", SavedMeal = result };
                 }
@@ -162,7 +162,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
                     byte[] content = await downloader.DownloadAsync(Image(incoming), cancellationToken).ConfigureAwait(false);
                     BotImageUpload upload = await diary.RequestUploadAsync(token, operationId, checkpoint.UploadAttempt,
                         incoming.ContentType!, content.Length, cancellationToken).ConfigureAwait(false);
-                    return checkpoint with { Stage = "upload", Upload = upload, ImageAssetId = upload.AssetId };
+                    return checkpoint with { Stage = "upload", Upload = upload, ImageAssetId = upload.AssetId.Value };
                 }
             case "upload": {
                     BotImageUpload upload = checkpoint.Upload ?? throw new InvalidDataException("Missing upload checkpoint.");
@@ -175,18 +175,18 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
                     return checkpoint with { Stage = "image-ready", Upload = null };
                 }
             case "image-ready": {
-                    Guid imageId = checkpoint.ImageAssetId ?? throw new InvalidDataException("Missing image checkpoint.");
+                    var imageId = new BotImageAssetId(checkpoint.ImageAssetId ?? throw new InvalidDataException("Missing image checkpoint."));
                     BotRecognitionJob job = await diary.StartRecognitionAsync(token, operationId, imageId, incoming.Caption, cancellationToken).ConfigureAwait(false);
-                    if (job.Id != operationId.Value || job.ImageAssetId != imageId) {
+                    if (job.Id.Value != operationId.Value || job.ImageAssetId != imageId) {
                         throw new InvalidDataException("Recognition identity mismatch.");
                     }
-                    return checkpoint with { Stage = "recognizing", RecognitionId = job.Id };
+                    return checkpoint with { Stage = "recognizing", RecognitionId = job.Id.Value };
                 }
         }
         // The state reader rejects unknown stages before processing; the remaining active photo stage is recognizing.
-        Guid jobId = checkpoint.RecognitionId ?? throw new InvalidDataException("Missing recognition checkpoint.");
+        var jobId = new BotRecognitionId(checkpoint.RecognitionId ?? throw new InvalidDataException("Missing recognition checkpoint."));
         BotRecognitionJob recognition = await diary.GetRecognitionAsync(token, jobId, cancellationToken).ConfigureAwait(false);
-        if (recognition.Id != jobId || recognition.ImageAssetId != checkpoint.ImageAssetId) {
+        if (recognition.Id != jobId || recognition.ImageAssetId.Value != checkpoint.ImageAssetId) {
             throw new InvalidDataException("Recognition identity mismatch.");
         }
         return recognition.Status switch {

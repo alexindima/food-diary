@@ -12,6 +12,7 @@ import { parseDecimalInput } from '../../../shared/lib/number.utils';
 import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
 import { RECENT_MEASUREMENT_FETCH_LIMIT } from '../../../shared/measurements/measurement-history.constants';
 import { type MeasurementSystem, MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
+import type { CalendarDate } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { DesiredWeightResponse, WeightGoalHistoryItem } from '../../../shared/models/user.data';
 import type {
@@ -445,7 +446,7 @@ export class WeightHistoryFacade {
             });
     }
 
-    public getEntryHistoryPage(dateTo?: string): ReturnType<WeightEntriesService['getHistoryPage']> {
+    public getEntryHistoryPage(dateTo?: CalendarDate): ReturnType<WeightEntriesService['getHistoryPage']> {
         return this.weightEntriesService.getHistoryPage(dateTo);
     }
 

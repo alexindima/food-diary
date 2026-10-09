@@ -559,3 +559,46 @@ raw form fields decode with the currently displayed unit. Complete gram-only
 ingredient mass, lookup/error fallback, content-key invalidation, fractional
 precision and transient form validation remain. Milliliters and pieces never
 imply gram mass.
+
+Recipe community comments carry separate recipe, comment and author identities,
+plus creation/modification instants, from SDK decoding through mutation ports.
+Report targets link each recipe or comment branch to its owning ID. The SDK
+adapter encodes the original scalar target type and ID; unknown response target
+types remain explicit read-only observations. Optional timestamps and opaque
+legacy identities retain their exact source values.
+
+Weekly goals use CalendarDate for decoded weekStart, request payloads, resource
+keys and dialog inputs. Local Monday selection and calendar arithmetic continue
+to emit the same date-only strings; response encodings remain verbatim. Reminder
+times, timezone offsets, write windows, and stale-request behavior are unchanged.
+
+Shopping selection, list actions and item events preserve ShoppingListId versus
+ShoppingListItemId through component state and facade ports. Native form fields
+remain scalar and decode at their presentation boundary; membership checks,
+optimistic edits, autosave/debounce, sorting and stale-list guards retain their
+existing behavior.
+
+Active sessions decode RefreshTokenSessionId and UtcInstant values once. Their
+revocation state has idle, single-session and other-sessions alternatives, so an
+opaque session string never doubles as an action marker. Current-session guards,
+busy exclusion, recovery, nullable device observations and separate HTTP delete
+routes remain unchanged.
+
+Measurement history rows and pagination cursors require CalendarDate. The pager
+still subtracts one UTC-anchored calendar day and retains original date-only or
+UTC-midnight observations, hidden lookahead refetch, overlap and failure policy.
+Each favorite picker similarly keeps its own FavoriteMealId, FavoriteProductId
+or FavoriteRecipeId in removal, restoration and focus state, distinct from the
+source entity ID. Revision fences, membership and pagination behavior remain.
+
+Public catalog and serving-mass lookup models and ports preserve RecipeId and
+ProductId. Raw route/dialog/form inputs decode at explicit boundaries. Public
+access flags, lightweight lookup projections, source snapshots and missing-mass
+fallbacks do not acquire new validation or quantity limits.
+
+The bot uses local image-asset, recognition, meal and hydration-entry IDs, plus
+its existing operation ID, in adapters and worker observations. Generated DTOs,
+top-level checkpoints and callback codecs retain scalars. GUID JSON converters
+preserve legacy nested upload/meal checkpoint shapes and values, including empty
+GUID observations and normal GUID reader rejection. Operation/recognition key
+aliases, owner/security-version checks, leases, retries and undo windows remain.

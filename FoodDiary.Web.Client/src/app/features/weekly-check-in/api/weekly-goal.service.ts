@@ -7,6 +7,7 @@ import { WeeklyGoalsSdk } from '../../../shared/api/sdk/generated/api/weekly-goa
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
 import { sdkOptional } from '../../../shared/api/sdk/sdk-response';
 import { rethrowApiError } from '../../../shared/lib/api-error.utils';
+import type { CalendarDate } from '../../../shared/models/semantics/date-value';
 import type { UpsertWeeklyGoalPayload, WeeklyGoal } from '../models/weekly-goal.data';
 import { weeklyGoalFromSdk } from './weekly-sdk.mapper';
 
@@ -15,7 +16,7 @@ export class WeeklyGoalService {
     protected readonly baseUrl = environment.apiUrls.weeklyGoals;
     private readonly sdk = createSdkConnection(WeeklyGoalsSdk, this.baseUrl, inject(HttpClient));
 
-    public getGoal(weekStart: string): Observable<WeeklyGoal | null> {
+    public getGoal(weekStart: CalendarDate): Observable<WeeklyGoal | null> {
         return this.sdk.client.getWeeklyGoals({ version: this.sdk.version, weekStart }).pipe(
             map(value => sdkOptional(value, weeklyGoalFromSdk)),
             catchError((error: unknown) => rethrowApiError('Get weekly goal error', error)),

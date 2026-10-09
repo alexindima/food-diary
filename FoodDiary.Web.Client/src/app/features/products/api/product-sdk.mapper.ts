@@ -115,5 +115,11 @@ export function publicProductFromSdk(response: PublicProductHttpResponse): Publi
         'fiber',
         'alcohol',
     ]);
-    return { ...value, brand: value.brand ?? null, imageUrl: value.imageUrl ?? null, images: value.images ?? undefined };
+    return {
+        ...value,
+        id: entityId<'product'>(value.id),
+        brand: value.brand ?? null,
+        imageUrl: value.imageUrl ?? null,
+        images: value.images ?? undefined,
+    };
 }

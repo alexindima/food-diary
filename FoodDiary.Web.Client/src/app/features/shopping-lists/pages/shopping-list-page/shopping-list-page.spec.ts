@@ -310,7 +310,7 @@ describe('ShoppingListPageComponent list management', () => {
     it('confirms before clearing a list by id', async () => {
         const { component, dialogService, facade } = await setupShoppingListPageAsync();
 
-        component['clearListById'](FIRST_LIST_ID);
+        component['clearListById'](entityId<'shopping-list'>(FIRST_LIST_ID));
 
         expect(dialogService.open).toHaveBeenCalledOnce();
         expect(facade.clearListById).toHaveBeenCalledWith(FIRST_LIST_ID);
@@ -340,7 +340,7 @@ describe('ShoppingListPageComponent list management', () => {
     it('renames list through facade', async () => {
         const { component, facade } = await setupShoppingListPageAsync();
 
-        component['renameListById'](SECOND_LIST_ID, 'Weekend groceries');
+        component['renameListById'](entityId<'shopping-list'>(SECOND_LIST_ID), 'Weekend groceries');
 
         expect(facade.renameListById).toHaveBeenCalledWith(SECOND_LIST_ID, 'Weekend groceries');
     });

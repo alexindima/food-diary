@@ -4,13 +4,14 @@ import { FdUiDialogComponent } from 'fd-ui-kit';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
+import type { ShoppingListId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingListPage, ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
 import { ShoppingListBrowserComponent } from '../../components/shopping-list-browser/shopping-list-browser';
-export type ShoppingListBrowserResult = { id: string } | { create: true; name?: string | void };
+export type ShoppingListBrowserResult = { id: ShoppingListId } | { create: true; name?: string | void };
 export type ShoppingListBrowserData = {
     lists: Signal<readonly ShoppingListSummary[]>;
     initialPage: Signal<ShoppingListPage | null>;
-    selectedId: string | null;
+    selectedId: ShoppingListId | null;
 };
 @Component({
     selector: 'fd-shopping-list-browser-dialog',
@@ -24,7 +25,7 @@ export class ShoppingListBrowserDialogComponent {
     protected create(name: string | void): void {
         this.ref.close({ create: true, name });
     }
-    protected close(id?: string): void {
+    protected close(id?: ShoppingListId): void {
         this.ref.close(id === undefined ? undefined : { id });
     }
 }

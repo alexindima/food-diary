@@ -2,6 +2,7 @@ import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import type { PageOf } from '../../../shared/models/page-of.data';
+import type { RecipeCommentId, RecipeId } from '../../../shared/models/semantics/entity-id';
 import { CommentService } from '../api/comment.service';
 import { ExploreService } from '../api/explore.service';
 import { LikeService } from '../api/like.service';
@@ -18,19 +19,19 @@ export class ExploreInteractionsFacade {
     private readonly likeService = inject(LikeService);
     private readonly reportService = inject(ReportService);
 
-    public getComments(recipeId: string, page: number, limit: number): Observable<PageOf<RecipeComment>> {
+    public getComments(recipeId: RecipeId, page: number, limit: number): Observable<PageOf<RecipeComment>> {
         return this.commentService.getComments(recipeId, page, limit);
     }
 
-    public createComment(recipeId: string, dto: CreateCommentDto): Observable<RecipeComment> {
+    public createComment(recipeId: RecipeId, dto: CreateCommentDto): Observable<RecipeComment> {
         return this.commentService.createComment(recipeId, dto);
     }
 
-    public updateComment(recipeId: string, commentId: string, dto: UpdateCommentDto): Observable<RecipeComment> {
+    public updateComment(recipeId: RecipeId, commentId: RecipeCommentId, dto: UpdateCommentDto): Observable<RecipeComment> {
         return this.commentService.updateComment(recipeId, commentId, dto);
     }
 
-    public deleteComment(recipeId: string, commentId: string): Observable<void> {
+    public deleteComment(recipeId: RecipeId, commentId: RecipeCommentId): Observable<void> {
         return this.commentService.deleteComment(recipeId, commentId);
     }
 

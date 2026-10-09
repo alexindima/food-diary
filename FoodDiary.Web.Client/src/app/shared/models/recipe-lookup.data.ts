@@ -1,5 +1,6 @@
+import type { RecipeId } from './semantics/entity-id';
 export type RecipeLookup = {
-    id: string;
+    id: RecipeId;
     servings: number;
     steps: RecipeLookupStep[];
 };

@@ -9036,7 +9036,7 @@
     {
       "category": "privateContent",
       "name": "ImageAssetId",
-      "type": "Guid",
+      "type": "BotImageAssetId",
       "path": "FoodDiary.Telegram.Bot/Operations/BotRecognitionJob.cs",
       "line": 3
     },

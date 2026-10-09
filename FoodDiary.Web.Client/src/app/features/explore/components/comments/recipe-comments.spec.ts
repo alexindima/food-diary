@@ -6,6 +6,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { PageOf } from '../../../../shared/models/page-of.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 import type { RecipeComment } from '../../models/comment.data';
 import { RecipeCommentsComponent } from './recipe-comments';
@@ -37,7 +39,7 @@ beforeEach(() => {
 
     fixture = TestBed.createComponent(RecipeCommentsComponent);
     component = fixture.componentInstance;
-    fixture.componentRef.setInput('recipeId', 'recipe-1');
+    fixture.componentRef.setInput('recipeId', entityId<'recipe'>('recipe-1'));
     fixture.detectChanges();
 });
 
@@ -85,7 +87,9 @@ describe('RecipeCommentsComponent', () => {
     });
 
     it('appends next page on load more', () => {
-        commentService.getComments.mockReturnValueOnce(of(createPage([createComment({ id: 'comment-2', text: 'Second' })])));
+        commentService.getComments.mockReturnValueOnce(
+            of(createPage([createComment({ id: entityId<'recipe-comment'>('comment-2'), text: 'Second' })])),
+        );
 
         component['onLoadMore']();
 
@@ -122,13 +126,13 @@ function createPage(data: RecipeComment[]): PageOf<RecipeComment> {
 
 function createComment(overrides: Partial<RecipeComment> = {}): RecipeComment {
     return {
-        id: 'comment-1',
-        recipeId: 'recipe-1',
-        authorId: 'user-1',
+        id: entityId<'recipe-comment'>('comment-1'),
+        recipeId: entityId<'recipe'>('recipe-1'),
+        authorId: entityId<'user'>('user-1'),
         authorUsername: 'alexi',
         authorFirstName: 'Alex',
         text: 'Nice recipe',
-        createdAtUtc: '2026-05-16T10:00:00.000Z',
+        createdAtUtc: utcInstant('2026-05-16T10:00:00.000Z'),
         modifiedAtUtc: null,
         isOwnedByCurrentUser: true,
         ...overrides,

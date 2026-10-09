@@ -8,16 +8,16 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4532,
-    "symbols": 4464,
+    "sourceFiles": 4537,
+    "symbols": 4469,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2312,
+      "class": 2313,
       "enum": 68,
       "interface": 411,
       "record": 1539,
-      "record struct": 134
+      "record struct": 138
     },
     "roles": {
       "Command": 230,
@@ -26,13 +26,13 @@
       "Controller": 111,
       "Entity": 102,
       "Event": 19,
-      "Factory": 14,
+      "Factory": 15,
       "Handler": 7,
       "LookupRepository": 3,
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1821,
+      "Other": 1825,
       "Query": 300,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
@@ -2071,11 +2071,32 @@
       "line": 2
     },
     {
+      "name": "BotGuidIdJsonConverterFactory",
+      "kind": "class",
+      "role": "Factory",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotGuidIdJsonConverterFactory.cs",
+      "line": 7
+    },
+    {
+      "name": "BotHydrationEntryId",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotHydrationEntryId.cs",
+      "line": 6
+    },
+    {
       "name": "BotHydrationReceipt",
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/BotHydrationReceipt.cs",
       "line": 2
+    },
+    {
+      "name": "BotImageAssetId",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotImageAssetId.cs",
+      "line": 6
     },
     {
       "name": "BotImageUpload",
@@ -2106,6 +2127,13 @@
       "line": 4
     },
     {
+      "name": "BotMealId",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotMealId.cs",
+      "line": 6
+    },
+    {
       "name": "BotMealNutrition",
       "kind": "record",
       "role": "Other",
@@ -2131,7 +2159,7 @@
       "kind": "record struct",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/BotOperationId.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "BotOperationLease",
@@ -2167,6 +2195,13 @@
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/BotRecognitionFailure.cs",
       "line": 2
+    },
+    {
+      "name": "BotRecognitionId",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotRecognitionId.cs",
+      "line": 6
     },
     {
       "name": "BotRecognitionJob",

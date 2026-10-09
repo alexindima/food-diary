@@ -9,6 +9,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { environment } from '../../../../../../environments/environment';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { GoogleIdentityService } from '../../../../../shared/auth/google-identity.service';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { UserManageSecurityCardComponent } from './user-manage-security-card';
 
 describe('UserManageSecurityCardComponent', () => {
@@ -102,19 +104,19 @@ describe('UserManageSecurityCardComponent', () => {
 async function verifySessionDateLocalesAsync(fixture: ComponentFixture<UserManageSecurityCardComponent>): Promise<void> {
     registerLocaleData(localeRu);
     const translate = TestBed.inject(TranslateService);
-    const timestamp = '2026-10-02T19:37:23Z';
+    const timestamp = utcInstant('2026-10-02T19:37:23Z');
     fixture.componentInstance['activeSessions'].isLoading.set(false);
     fixture.componentInstance['activeSessions'].error.set(null);
     fixture.componentInstance['activeSessions'].sessions.set([
         {
-            id: 'current-session',
+            id: entityId<'refresh-token-session'>('current-session'),
             isCurrent: true,
             authProvider: 'password',
             browser: 'Edge',
             operatingSystem: 'Windows',
             deviceType: 'Desktop',
-            createdAtUtc: timestamp,
-            lastActiveAtUtc: timestamp,
+            createdAtUtc: utcInstant(timestamp),
+            lastActiveAtUtc: utcInstant(timestamp),
         },
     ]);
 
@@ -130,9 +132,9 @@ async function verifySessionDateLocalesAsync(fixture: ComponentFixture<UserManag
 
 function verifySessionRecoveryUi(fixture: ComponentFixture<UserManageSecurityCardComponent>): void {
     const activeSessions = fixture.componentInstance['activeSessions'];
-    const timestamp = '2026-10-02T19:37:23Z';
+    const timestamp = utcInstant('2026-10-02T19:37:23Z');
     const currentSession = {
-        id: 'current',
+        id: entityId<'refresh-token-session'>('current'),
         isCurrent: true,
         authProvider: 'password',
         browser: 'Edge',
@@ -142,7 +144,7 @@ function verifySessionRecoveryUi(fixture: ComponentFixture<UserManageSecurityCar
         lastActiveAtUtc: timestamp,
     };
     activeSessions.isLoading.set(false);
-    activeSessions.sessions.set([currentSession, { ...currentSession, id: 'other', isCurrent: false }]);
+    activeSessions.sessions.set([currentSession, { ...currentSession, id: entityId<'refresh-token-session'>('other'), isCurrent: false }]);
     activeSessions.error.set('revoke');
     fixture.detectChanges();
 

@@ -4,6 +4,7 @@ import type { ResolveFn } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 
 import type { SeoData } from '../../../services/seo.service';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { PublicRecipeService } from '../api/public-recipe.service';
 import { publicRecipeSeo } from '../lib/public-recipe.utils';
 import type { PublicRecipe } from '../models/public-recipe.data';
@@ -18,7 +19,7 @@ export const publicRecipeResolver: ResolveFn<PublicRecipePageData> = route => {
         response.headers = headers;
     }
     return inject(PublicRecipeService)
-        .getById(route.paramMap.get('id') ?? '')
+        .getById(entityId<'recipe'>(route.paramMap.get('id') ?? ''))
         .pipe(
             map(recipe => ({ ...publicRecipeSeo(recipe), recipe, error: null })),
             catchError((error: unknown) => {

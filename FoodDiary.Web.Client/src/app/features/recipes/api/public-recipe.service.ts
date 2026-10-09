@@ -6,6 +6,7 @@ import { RecipesSdk } from '../../../shared/api/sdk/generated/api/recipes.servic
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
 import { sdkPage } from '../../../shared/api/sdk/sdk-response';
 import type { PageOf } from '../../../shared/models/page-of.data';
+import type { RecipeId } from '../../../shared/models/semantics/entity-id';
 import type { PublicRecipe, PublicRecipeFilters } from '../models/public-recipe.data';
 import { PUBLIC_RECIPE_API_URL } from './public-recipe-api.token';
 import { publicRecipeFromSdk } from './public-recipe-sdk.mapper';
@@ -25,7 +26,7 @@ export class PublicRecipeService {
         return this.sdk.client.getRecipesPublicCategories({ version: this.sdk.version, search, language });
     }
 
-    public getById(id: string): Observable<PublicRecipe> {
+    public getById(id: RecipeId): Observable<PublicRecipe> {
         return this.sdk.client.getRecipesPublicById({ version: this.sdk.version, id }).pipe(map(publicRecipeFromSdk));
     }
 }

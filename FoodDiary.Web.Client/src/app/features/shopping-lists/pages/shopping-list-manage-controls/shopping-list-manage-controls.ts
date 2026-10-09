@@ -22,6 +22,7 @@ import { FdUiMenuDividerComponent } from 'fd-ui-kit/menu/fd-ui-menu-divider';
 import { FdUiMenuItemComponent } from 'fd-ui-kit/menu/fd-ui-menu-item';
 import { FdUiMenuTriggerDirective } from 'fd-ui-kit/menu/fd-ui-menu-trigger.directive';
 
+import { entityId, optionalEntityId, type ShoppingListId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingListPage, ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
 import { ShoppingListBrowserComponent } from '../../components/shopping-list-browser/shopping-list-browser';
 import {
@@ -52,8 +53,8 @@ const QUICK_LIST_LIMIT = 3;
 export class ShoppingListManageControlsComponent {
     private readonly dialogs = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly slots = signal<string[]>([]);
-    private readonly recency = signal<string[]>([]);
+    private readonly slots = signal<ShoppingListId[]>([]);
+    private readonly recency = signal<ShoppingListId[]>([]);
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
     public readonly listSelectField = input.required<FieldTree<string | null>>();
@@ -62,8 +63,8 @@ export class ShoppingListManageControlsComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly canDeleteList = input.required<boolean>();
     public readonly isMobile = input(false);
-    public readonly renameRequestedListId = input<string | null>(null);
-    protected readonly selectedListId = computed(() => this.listSelectField()().value());
+    public readonly renameRequestedListId = input<ShoppingListId | null>(null);
+    protected readonly selectedListId = computed(() => optionalEntityId<'shopping-list'>(this.listSelectField()().value()));
     protected readonly selectedList = computed(() => this.lists().find(list => list.id === this.selectedListId()));
     protected readonly quickLists = computed(() => {
         const available = this.lists();
@@ -74,17 +75,17 @@ export class ShoppingListManageControlsComponent {
             .slice(0, QUICK_LIST_LIMIT);
     });
     protected readonly listsCount = computed(() => this.lists().length);
-    protected readonly editingListId = signal<string | null>(null);
+    protected readonly editingListId = signal<ShoppingListId | null>(null);
     protected readonly renameDraft = signal('');
 
     public readonly mergeDuplicates = output();
     public readonly createList = output<string | void>();
     public readonly canClearPurchased = input(false);
     public readonly clearPurchased = output();
-    public readonly clearListById = output<string>();
-    public readonly deleteListById = output<string>();
-    public readonly renameListById = output<{ listId: string; name: string }>();
-    public readonly renameRequestHandled = output<string>();
+    public readonly clearListById = output<ShoppingListId>();
+    public readonly deleteListById = output<ShoppingListId>();
+    public readonly renameListById = output<{ listId: ShoppingListId; name: string }>();
+    public readonly renameRequestHandled = output<ShoppingListId>();
 
     public constructor() {
         effect(() => {
@@ -112,7 +113,7 @@ export class ShoppingListManageControlsComponent {
         });
     }
 
-    protected selectList(listId: string): void {
+    protected selectList(listId: ShoppingListId): void {
         if (this.isLoading() || listId === this.selectedListId()) {
             return;
         }
@@ -121,12 +122,12 @@ export class ShoppingListManageControlsComponent {
         this.listSelectField()().value.set(listId);
     }
 
-    private recordUse(id: string): void {
-        const slots: string[] = this.quickLists().map(list => list.id);
+    private recordUse(id: ShoppingListId): void {
+        const slots: ShoppingListId[] = this.quickLists().map(list => list.id);
         if (!slots.includes(id)) {
             const oldest = [...this.recency()].reverse().find(entry => slots.includes(entry));
             const unused = [...slots].reverse().find(entry => !this.recency().includes(entry));
-            const index = slots.indexOf(unused ?? oldest ?? '');
+            const index = slots.indexOf(unused ?? oldest ?? entityId<'shopping-list'>(''));
             slots.splice(Math.max(0, index), 1, id);
         }
         this.slots.set(slots);
@@ -185,7 +186,7 @@ export class ShoppingListManageControlsComponent {
         this.renameDraft.set(target.value);
     }
 
-    protected saveRename(listId: string): void {
+    protected saveRename(listId: ShoppingListId): void {
         if (this.editingListId() !== listId) {
             return;
         }

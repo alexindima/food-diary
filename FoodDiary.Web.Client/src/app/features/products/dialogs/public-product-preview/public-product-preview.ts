@@ -8,6 +8,7 @@ import { catchError, of } from 'rxjs';
 
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
+import type { ProductId } from '../../../../shared/models/semantics/entity-id';
 import { PublicProductGalleryComponent } from '../../components/public-product-gallery/public-product-gallery';
 import { PublicProductDetailsFacade } from '../../lib/public-product-details.facade';
 
@@ -21,7 +22,7 @@ const MAX_PRODUCT_PHOTOS = 5;
     imports: [TranslatePipe, LocalizedNumberPipe, FdUiDialogComponent, FdUiLoaderComponent, PublicProductGalleryComponent],
 })
 export class PublicProductPreviewComponent {
-    private readonly id = inject<string>(FD_UI_DIALOG_DATA);
+    private readonly id = inject<ProductId>(FD_UI_DIALOG_DATA);
     private readonly service = inject(PublicProductDetailsFacade);
     protected readonly ref = inject(FdUiDialogRef);
     protected readonly language = injectCurrentLanguage();

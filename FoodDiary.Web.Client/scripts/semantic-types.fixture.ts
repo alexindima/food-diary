@@ -1,3 +1,5 @@
+import { of } from 'rxjs';
+
 import {
     type CatalogRecipeServings,
     decodeCatalogIngredientSource,
@@ -8,6 +10,11 @@ import {
     adminId,
     adminUtcInstant,
 } from '../projects/fooddiary-admin/src/app/shared/models/semantics/admin-meaning';
+import type { CommentService } from '../src/app/features/explore/api/comment.service';
+import type { ReportService } from '../src/app/features/explore/api/report.service';
+import type { ExploreInteractionsFacade } from '../src/app/features/explore/lib/explore-interactions.facade';
+import type { RecipeComment } from '../src/app/features/explore/models/comment.data';
+import type { ObservedReportTarget, ReportTarget } from '../src/app/features/explore/models/report.data';
 import type { LessonService } from '../src/app/features/lessons/api/lesson.service';
 import type { MealPlanService } from '../src/app/features/meal-plans/api/meal-plan.service';
 import type { MealPlanMeal } from '../src/app/features/meal-plans/models/meal-plan.data';
@@ -18,8 +25,24 @@ import {
     plannedServings,
 } from '../src/app/features/meal-plans/models/meal-plan-values';
 import type { MealActions } from '../src/app/features/meals/contracts/meal-actions';
+import type { MealFavoritesPickerFacade } from '../src/app/features/meals/lib/favorites/meal-favorites-picker.facade';
+import type { PublicProductService } from '../src/app/features/products/api/public-product.service';
+import type { ProductFavoritesPickerFacade } from '../src/app/features/products/lib/favorites/product-favorites-picker.facade';
+import type { ActiveSessionsService } from '../src/app/features/profile/api/active-sessions.service';
+import type { ActiveSessionsFacade } from '../src/app/features/profile/lib/active-sessions.facade';
+import type { SessionRevocation } from '../src/app/features/profile/models/active-session.model';
+import type { PublicRecipeService } from '../src/app/features/recipes/api/public-recipe.service';
+import type { RecipeFavoritesPickerFacade } from '../src/app/features/recipes/lib/favorites/recipe-favorites-picker.facade';
+import type { ShoppingListFacade } from '../src/app/features/shopping-lists/lib/shopping-list.facade';
+import type { ShoppingListItemsPanelComponent } from '../src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel';
+import type { WeeklyCheckInService } from '../src/app/features/weekly-check-in/api/weekly-check-in.service';
+import type { WeeklyGoalService } from '../src/app/features/weekly-check-in/api/weekly-goal.service';
+import type { UpsertWeeklyGoalPayload, WeeklyGoal } from '../src/app/features/weekly-check-in/models/weekly-goal.data';
+import type { WeightEntriesService } from '../src/app/features/weight-history/api/weight-entries.service';
 import type { FoodRecognitionService } from '../src/app/shared/api/food-recognition.service';
+import type { RecipeLookupService } from '../src/app/shared/api/recipe-lookup.service';
 import { anonymousVisitorId, type MarketingAttributionIdentity, marketingSessionId } from '../src/app/shared/marketing/marketing-identity';
+import { MeasurementHistoryPager } from '../src/app/shared/measurements/measurement-history-pager';
 import type { FoodVisionRequest } from '../src/app/shared/models/ai.data';
 import type { UpdateMenstrualEpisodePayload, UpsertCycleDayPayload, UpsertCycleFactorPayload } from '../src/app/shared/models/cycle.data';
 import type { FoodRecognitionJob } from '../src/app/shared/models/food-recognition.data';
@@ -45,6 +68,7 @@ import type { User, WeightGoalHistoryItem } from '../src/app/shared/models/user.
 import type { NotificationService } from '../src/app/shared/notifications/notification.service';
 
 const PRODUCT_UNITS = 100;
+const COMMUNITY_PAGE_SIZE = 10;
 
 export function verifyMeaning(actions: MealActions): void {
     const meal: MealId = entityId<'meal'>('placeholder');
@@ -246,3 +270,129 @@ function attributionIdentityMeanings(): void {
     void identity;
 }
 void attributionIdentityMeanings;
+
+function communityAndWeeklyMeanings(
+    {
+        comments,
+        interactions,
+        reports,
+        goals,
+        weeks,
+    }: {
+        comments: CommentService;
+        interactions: ExploreInteractionsFacade;
+        reports: ReportService;
+        goals: WeeklyGoalService;
+        weeks: WeeklyCheckInService;
+    },
+    { comment, goal, payload }: { comment: RecipeComment; goal: WeeklyGoal; payload: UpsertWeeklyGoalPayload },
+): void {
+    const recipe = entityId<'recipe'>('recipe');
+    const commentId = entityId<'recipe-comment'>('comment');
+    const day = calendarDate('2026-10-05');
+    const instant = utcInstant('2026-10-05T00:00:00Z');
+    comments.updateComment(recipe, commentId, { text: 'Updated' });
+    interactions.deleteComment(recipe, commentId);
+    reports.create({ target: { kind: 'recipe', recipeId: recipe }, reason: 'Spam' });
+    reports.create({ target: { kind: 'comment', commentId }, reason: 'Spam' });
+    goals.getGoal(day);
+    weeks.getData(day);
+    // @ts-expect-error A comment cannot address its parent recipe.
+    comments.getComments(commentId, 1, COMMUNITY_PAGE_SIZE);
+    // @ts-expect-error A recipe cannot address a comment mutation.
+    comments.updateComment(recipe, recipe, { text: 'Updated' });
+    // @ts-expect-error A facade cannot swap recipe and comment roles.
+    interactions.deleteComment(commentId, recipe);
+    // @ts-expect-error Raw IDs must be decoded before invoking a comment mutation.
+    comments.deleteComment('recipe', 'comment');
+    // @ts-expect-error Recipe targets cannot contain comment IDs.
+    const wrongRecipe: ReportTarget = { kind: 'recipe', recipeId: commentId };
+    // @ts-expect-error Comment targets cannot contain recipe IDs.
+    const wrongComment: ReportTarget = { kind: 'comment', commentId: recipe };
+    const observed: ObservedReportTarget = { kind: 'unknown', targetType: 'FutureTarget', targetId: 'opaque' };
+    // @ts-expect-error Unknown response observations cannot become supported mutation targets.
+    reports.create({ target: observed, reason: 'Spam' });
+    // @ts-expect-error A comment author needs an account identity.
+    comment.authorId = recipe;
+    // @ts-expect-error Comment timestamps are instants, not calendar days.
+    comment.createdAtUtc = day;
+    // @ts-expect-error Weekly goal lookup requires a calendar date, not an instant.
+    goals.getGoal(instant);
+    // @ts-expect-error Weekly check-in shares the calendar date contract.
+    weeks.getData(instant);
+    // @ts-expect-error Raw strings must be decoded before a weekly goal lookup.
+    goals.getGoal('2026-10-05');
+    // @ts-expect-error Weekly goal read models retain a calendar date.
+    goal.weekStart = instant;
+    // @ts-expect-error Weekly goal mutation payloads retain a calendar date.
+    payload.weekStart = instant;
+    void wrongRecipe;
+    void wrongComment;
+}
+void communityAndWeeklyMeanings;
+
+function actionAndLookupMeanings(ports: {
+    shopping: ShoppingListFacade;
+    panel: ShoppingListItemsPanelComponent;
+    sessions: ActiveSessionsService;
+    sessionState: ActiveSessionsFacade;
+    recipeFavorites: RecipeFavoritesPickerFacade;
+    productFavorites: ProductFavoritesPickerFacade;
+    mealFavorites: MealFavoritesPickerFacade;
+    recipes: RecipeLookupService;
+    products: PublicProductService;
+    publicRecipes: PublicRecipeService;
+    weights: WeightEntriesService;
+}): void {
+    const list = entityId<'shopping-list'>('list');
+    const item = entityId<'shopping-list-item'>('item');
+    const recipe = entityId<'recipe'>('recipe');
+    const product = entityId<'product'>('product');
+    const session = entityId<'refresh-token-session'>('session');
+    const day = calendarDate('2026-10-09');
+    const instant = utcInstant('2026-10-09T12:00:00Z');
+    ports.shopping.removePurchased(list, [item]);
+    ports.panel.itemCheckedChange.emit({ itemId: item, checked: true });
+    ports.sessions.revoke(session);
+    ports.sessionState.revoke(session);
+    ports.recipes.getById(recipe);
+    ports.products.getById(product);
+    ports.publicRecipes.getById(recipe);
+    ports.weights.getHistoryPage(day);
+    // @ts-expect-error A shopping item cannot address its list or use a list ID as an item.
+    ports.shopping.removePurchased(item, [list]);
+    // @ts-expect-error A recipe cannot address removal of a shopping item.
+    ports.shopping.removeItem(recipe);
+    // @ts-expect-error UI events preserve the shopping item role.
+    ports.panel.itemCheckedChange.emit({ itemId: list, checked: true });
+    // @ts-expect-error A product cannot address a refresh session.
+    ports.sessions.revoke(product);
+    // @ts-expect-error The session facade requires the same session owner meaning.
+    ports.sessionState.revoke(recipe);
+    // @ts-expect-error Revoke-others does not carry a single-session identity.
+    const invalidOthers: SessionRevocation = { kind: 'others', sessionId: session };
+    // @ts-expect-error A single-session state requires a refresh-session identity.
+    const invalidSingle: SessionRevocation = { kind: 'single', sessionId: recipe };
+    // @ts-expect-error A source recipe ID is distinct from the favorite row ID.
+    ports.recipeFavorites.markRestored(recipe);
+    // @ts-expect-error Product favorite IDs cannot address recipe favorite state.
+    ports.recipeFavorites.markRemoved(entityId<'favorite-product'>('favorite'));
+    // @ts-expect-error Recipe favorite IDs cannot address product favorite state.
+    ports.productFavorites.markRemoved(entityId<'favorite-recipe'>('favorite'));
+    // @ts-expect-error Diary meal IDs cannot address meal favorite state.
+    ports.mealFavorites.markRemoved(entityId<'meal'>('meal'));
+    // @ts-expect-error The recipe lookup does not accept product IDs.
+    ports.recipes.getById(product);
+    // @ts-expect-error Public product reads do not accept recipe IDs.
+    ports.products.getById(recipe);
+    // @ts-expect-error Public recipe reads do not accept product IDs.
+    ports.publicRecipes.getById(product);
+    // @ts-expect-error A history cursor is a calendar day, not an instant.
+    ports.weights.getHistoryPage(instant);
+    // @ts-expect-error Instant-based rows cannot become measurement calendar rows.
+    const invalidRows = new MeasurementHistoryPager(() => of([{ id: 'meal', date: instant }]));
+    void invalidOthers;
+    void invalidSingle;
+    void invalidRows;
+}
+void actionAndLookupMeanings;

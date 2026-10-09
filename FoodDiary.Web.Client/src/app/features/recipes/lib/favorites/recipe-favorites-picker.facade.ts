@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, EMPTY, finalize, Subject, switchMap, tap } from 'rxjs';
 
 import type { FavoriteRecipe } from '../../../../shared/models/recipe.data';
+import type { FavoriteRecipeId } from '../../../../shared/models/semantics/entity-id';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 
 @Injectable()
@@ -18,7 +19,7 @@ export class RecipeFavoritesPickerFacade {
     public readonly search = signal('');
     public readonly pageSize = 10;
     public readonly revision = signal(0);
-    public readonly removedIds = signal<ReadonlySet<string>>(new Set());
+    public readonly removedIds = signal<ReadonlySet<FavoriteRecipeId>>(new Set());
     public readonly paginationTotal = computed(() => this.total() + this.removedIds().size);
 
     public constructor() {
@@ -47,7 +48,7 @@ export class RecipeFavoritesPickerFacade {
             .subscribe();
     }
 
-    public markRemoved(id: string): void {
+    public markRemoved(id: FavoriteRecipeId): void {
         if (this.removedIds().has(id) || !this.items().some(item => item.id === id)) {
             return;
         }
@@ -55,7 +56,7 @@ export class RecipeFavoritesPickerFacade {
         this.total.update(total => Math.max(0, total - 1));
     }
 
-    public markRestored(id: string): void {
+    public markRestored(id: FavoriteRecipeId): void {
         if (!this.removedIds().has(id)) {
             return;
         }

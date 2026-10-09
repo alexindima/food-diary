@@ -48,7 +48,7 @@ public sealed class TelegramOperationRecoveryTests {
             string path = request.RequestUri!.AbsolutePath;
             if (path.EndsWith("/upload-url", StringComparison.Ordinal)) {
                 Assert.Equal($"telegram:{scenario.Id:N}:upload:0", Assert.Single(request.Headers.GetValues("Idempotency-Key")));
-                return BotOperationScenario.Json(new BotImageUpload("https://storage.example/upload", "food", DateTime.UtcNow.AddMinutes(5), scenario.ImageId));
+                return BotOperationScenario.Json(new BotImageUpload("https://storage.example/upload", "food", DateTime.UtcNow.AddMinutes(5), new BotImageAssetId(scenario.ImageId)));
             }
             if (string.Equals(path, "/upload", StringComparison.Ordinal)) {
                 uploads++;
@@ -71,7 +71,7 @@ public sealed class TelegramOperationRecoveryTests {
                 saves++;
                 using JsonDocument body = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());
                 Assert.Equal(scenario.Incoming.OccurredAtUtc, body.RootElement.GetProperty("occurredAtUtc").GetDateTime());
-                return BotOperationScenario.Json(new BotRecognizedMeal(scenario.Id, scenario.MealId, DateTime.UtcNow.AddMinutes(10), Undone: false));
+                return BotOperationScenario.Json(new BotRecognizedMeal(new BotOperationId(scenario.Id), new BotMealId(scenario.MealId), DateTime.UtcNow.AddMinutes(10), Undone: false));
             }
             throw new InvalidOperationException(path);
         };
@@ -96,7 +96,7 @@ public sealed class TelegramOperationRecoveryTests {
     public async Task ExpiredUpload_StartsANewAttemptWithoutUploadingToTheExpiredUrl() {
         using var scenario = new BotOperationScenario();
         scenario.State = new BotPhotoCheckpoint("upload", UploadAttempt: 2,
-            Upload: new BotImageUpload("https://storage.example/expired", "food", DateTime.UtcNow.AddMinutes(-1), scenario.ImageId));
+            Upload: new BotImageUpload("https://storage.example/expired", "food", DateTime.UtcNow.AddMinutes(-1), new BotImageAssetId(scenario.ImageId)));
         await scenario.ProcessAsync();
         Assert.Equal(new BotPhotoCheckpoint(UploadAttempt: 3), scenario.State);
         Assert.Single(scenario.BusinessPaths);
@@ -178,7 +178,7 @@ public sealed class TelegramOperationRecoveryTests {
     public async Task AlreadyUndoneMeal_DoesNotOfferUndoOrReportItAsANewMeal(string language) {
         using var scenario = new BotOperationScenario();
         scenario.Incoming = scenario.Incoming with { Language = language };
-        scenario.State = new BotPhotoCheckpoint("meal-saved", SavedMeal: new BotRecognizedMeal(scenario.Id, scenario.MealId, DateTime.UtcNow, Undone: true));
+        scenario.State = new BotPhotoCheckpoint("meal-saved", SavedMeal: new BotRecognizedMeal(new BotOperationId(scenario.Id), new BotMealId(scenario.MealId), DateTime.UtcNow, Undone: true));
         await scenario.ProcessAsync();
         Assert.True(scenario.Completed);
         Assert.Contains(string.Equals(language, "ru", StringComparison.Ordinal) ? "уже отменена" : "already been undone", Assert.Single(scenario.Notices), StringComparison.Ordinal);

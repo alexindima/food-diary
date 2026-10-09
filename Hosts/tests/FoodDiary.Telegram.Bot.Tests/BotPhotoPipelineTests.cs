@@ -142,7 +142,7 @@ public sealed class BotPhotoPipelineTests {
                 using JsonDocument body = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());
                 Assert.Equal(createdAt, body.RootElement.GetProperty("timestampUtc").GetDateTime());
                 Assert.Equal(250, body.RootElement.GetProperty("amountMl").GetInt32());
-                return Json(new BotHydrationReceipt(operationId, entryId, createdAt, 250));
+                return Json(new BotHydrationReceipt(new BotOperationId(operationId), new BotHydrationEntryId(entryId), createdAt, 250));
             }
             if (path.EndsWith("/sendMessage", StringComparison.OrdinalIgnoreCase)) {
                 notices++;
@@ -240,7 +240,7 @@ public sealed class BotPhotoPipelineTests {
         var mealId = Guid.NewGuid();
         DateTime occurredAt = new(2026, 9, 12, 12, 0, 0, DateTimeKind.Utc);
         var incoming = new BotIncomingOperation("photo", 123, 123, 10, occurredAt, "ru", "file", "image/jpeg");
-        var meal = new BotRecognizedMeal(operationId, mealId, DateTime.UtcNow.AddHours(24), Undone: false);
+        var meal = new BotRecognizedMeal(new BotOperationId(operationId), new BotMealId(mealId), DateTime.UtcNow.AddHours(24), Undone: false);
         var checkpoint = new BotPhotoCheckpoint(alreadySaved ? "meal-saved" : "recognition-ready", RecognitionId: operationId,
             SavedMeal: alreadySaved ? meal : null, Nutrition: new BotMealNutrition(432.1m, 12m, 13m, 14m));
         var lease = new BotOperationLease(new BotOperationId(operationId), new BotLeaseId(Guid.NewGuid()), new BotUserId(userId), 1, JsonSerializer.Serialize(incoming),
@@ -309,7 +309,7 @@ public sealed class BotPhotoPipelineTests {
         Assert.Equal(alreadySaved ? 1 : 0, notices);
         Assert.Equal(alreadySaved, completed);
         Assert.Equal("meal-saved", saved?.Stage);
-        Assert.Equal(mealId, saved?.SavedMeal?.MealId);
+        Assert.Equal(mealId, saved?.SavedMeal?.MealId.Value);
         Assert.Equal(432.1m, saved?.Nutrition?.Calories);
     }
 
@@ -373,7 +373,7 @@ public sealed class BotPhotoPipelineTests {
         });
         using var http = new HttpClient(handler);
         var client = new BotDiaryClient(http, Options.Create(new TelegramBotOptions { ApiSecret = "test-operation-secret" }));
-        await client.UploadAsync(new BotImageUpload("https://storage.example.com/upload", "image", DateTime.UtcNow.AddMinutes(5), Guid.NewGuid()),
+        await client.UploadAsync(new BotImageUpload("https://storage.example.com/upload", "image", DateTime.UtcNow.AddMinutes(5), new BotImageAssetId(Guid.NewGuid())),
             "image/jpeg", [255, 216, 255], CancellationToken.None);
     }
 

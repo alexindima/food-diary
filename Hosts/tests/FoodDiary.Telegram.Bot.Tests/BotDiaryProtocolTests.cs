@@ -38,7 +38,7 @@ public sealed class BotDiaryProtocolTests {
     [InlineData("image/jpeg", "jpg")]
     public async Task RequestUploadAsync_UsesStableAttemptKeyAndCorrectExtension(string mime, string extension) {
         var operation = Guid.NewGuid();
-        var receipt = new BotImageUpload("https://storage.example/upload", "food", DateTime.UtcNow.AddMinutes(1), Guid.NewGuid());
+        var receipt = new BotImageUpload("https://storage.example/upload", "food", DateTime.UtcNow.AddMinutes(1), new BotImageAssetId(Guid.NewGuid()));
         using var handler = new Handler(request => {
             Assert.Equal($"telegram:{operation:N}:upload:2", Assert.Single(request.Headers.GetValues("Idempotency-Key")));
             Assert.Equal("Bearer", request.Headers.Authorization?.Scheme);
@@ -58,7 +58,7 @@ public sealed class BotDiaryProtocolTests {
         using var handler = new Handler(_ => throw new InvalidOperationException("No request should be sent"));
         using var http = new HttpClient(handler);
         await Assert.ThrowsAsync<InvalidDataException>(() => Client(http).UploadAsync(
-            new BotImageUpload(url, "food", DateTime.UtcNow, Guid.NewGuid()), "image/jpeg", [255, 216, 255], CancellationToken.None));
+            new BotImageUpload(url, "food", DateTime.UtcNow, new BotImageAssetId(Guid.NewGuid())), "image/jpeg", [255, 216, 255], CancellationToken.None));
     }
 
     [Theory]
@@ -68,7 +68,7 @@ public sealed class BotDiaryProtocolTests {
     public async Task UndoAsync_PreservesSuccessAndExpectedConflicts(HttpStatusCode status, string body, string expected) {
         using var handler = new Handler(_ => new HttpResponseMessage(status) { Content = new StringContent(body, Encoding.UTF8, "application/json") });
         using var http = new HttpClient(handler);
-        Assert.Equal(expected, await Client(http).UndoRecognizedMealAsync("token", Guid.NewGuid(), CancellationToken.None));
+        Assert.Equal(expected, await Client(http).UndoRecognizedMealAsync("token", new BotOperationId(Guid.NewGuid()), CancellationToken.None));
     }
 
     [Theory]
@@ -78,7 +78,7 @@ public sealed class BotDiaryProtocolTests {
         using var handler = new Handler(_ => new HttpResponseMessage(status) { Content = new StringContent("<html>Gateway error</html>") });
         using var http = new HttpClient(handler);
         HttpRequestException error = await Assert.ThrowsAsync<HttpRequestException>(() =>
-            Client(http).StartRecognitionAsync("token", new BotOperationId(Guid.NewGuid()), Guid.NewGuid(), caption: null, CancellationToken.None));
+            Client(http).StartRecognitionAsync("token", new BotOperationId(Guid.NewGuid()), new BotImageAssetId(Guid.NewGuid()), caption: null, CancellationToken.None));
         Assert.Equal(status, error.StatusCode);
     }
 
@@ -86,8 +86,8 @@ public sealed class BotDiaryProtocolTests {
     public async Task EmptySuccessResponse_IsNotTreatedAsARecognition() {
         using var handler = new Handler(_ => Json<object?>(body: null));
         using var http = new HttpClient(handler);
-        await Assert.ThrowsAsync<InvalidDataException>(() => Client(http).GetRecognitionAsync("token", Guid.NewGuid(), CancellationToken.None));
-        await Assert.ThrowsAsync<InvalidDataException>(() => Client(http).UndoRecognizedMealAsync("token", Guid.NewGuid(), CancellationToken.None));
+        await Assert.ThrowsAsync<InvalidDataException>(() => Client(http).GetRecognitionAsync("token", new BotRecognitionId(Guid.NewGuid()), CancellationToken.None));
+        await Assert.ThrowsAsync<InvalidDataException>(() => Client(http).UndoRecognizedMealAsync("token", new BotOperationId(Guid.NewGuid()), CancellationToken.None));
     }
 
     [Theory]
@@ -110,7 +110,7 @@ public sealed class BotDiaryProtocolTests {
     public async Task MealAndWater_RejectMismatchedReceipts() {
         using var handler = new Handler(_ => Json(new { operationId = Guid.NewGuid(), mealId = Guid.NewGuid(), entryId = Guid.NewGuid() }));
         using var http = new HttpClient(handler);
-        await Assert.ThrowsAsync<InvalidDataException>(() => Client(http).SaveRecognizedMealAsync("token", Guid.NewGuid(), DateTime.UtcNow, CancellationToken.None));
+        await Assert.ThrowsAsync<InvalidDataException>(() => Client(http).SaveRecognizedMealAsync("token", new BotRecognitionId(Guid.NewGuid()), DateTime.UtcNow, CancellationToken.None));
         await Assert.ThrowsAsync<InvalidDataException>(() => Client(http).SaveWaterAsync("token", new BotOperationId(Guid.NewGuid()), DateTime.UtcNow, 250, CancellationToken.None));
     }
 
@@ -118,7 +118,7 @@ public sealed class BotDiaryProtocolTests {
     public async Task MissingApiConfiguration_FailsWithoutSendingRequest() {
         using var http = new HttpClient();
         var client = new BotDiaryClient(http, Options.Create(new TelegramBotOptions { ApiBaseUrl = "" }));
-        await Assert.ThrowsAsync<InvalidOperationException>(() => client.GetRecognitionAsync("token", Guid.NewGuid(), CancellationToken.None));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => client.GetRecognitionAsync("token", new BotRecognitionId(Guid.NewGuid()), CancellationToken.None));
     }
 
     private static BotDiaryClient Client(HttpClient http) => new(http, Options.Create(new TelegramBotOptions { ApiBaseUrl = "https://diary.example", ApiSecret = "test-secret" }));

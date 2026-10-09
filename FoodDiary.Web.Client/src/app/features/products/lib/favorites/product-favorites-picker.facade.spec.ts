@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { PageOf } from '../../../../shared/models/page-of.data';
 import type { FavoriteProduct } from '../../../../shared/models/product.data';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FavoriteProductService } from '../../api/favorite-product.service';
 import { ProductFavoritesPickerFacade } from './product-favorites-picker.facade';
 
@@ -59,8 +60,8 @@ describe('ProductFavoritesPickerFacade', () => {
     });
     it('ignores mutations for unknown rows', () => {
         facade.load();
-        facade.markRemoved('unknown');
-        facade.markRestored('unknown');
+        facade.markRemoved(entityId<'favorite-product'>('unknown'));
+        facade.markRestored(entityId<'favorite-product'>('unknown'));
         expect(facade.total()).toBe(TOTAL_ITEMS);
         expect(facade.removedIds().size).toBe(0);
         expect(api.getPage).toHaveBeenCalledTimes(1);

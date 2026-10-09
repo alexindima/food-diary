@@ -2,6 +2,7 @@ import type { WeekSummaryHttpResponse } from '../../../shared/api/sdk/generated/
 import type { WeeklyCheckInHttpResponse } from '../../../shared/api/sdk/generated/model/weekly-check-in-http-response';
 import type { WeeklyGoalHttpResponse } from '../../../shared/api/sdk/generated/model/weekly-goal-http-response';
 import { requireSdkFields, sdkEnum } from '../../../shared/api/sdk/sdk-response';
+import { calendarDate } from '../../../shared/models/semantics/date-value';
 import type { WeeklyCheckInData, WeekSummary } from '../models/weekly-check-in.data';
 import type { WeeklyGoal } from '../models/weekly-goal.data';
 
@@ -9,6 +10,7 @@ export function weeklyGoalFromSdk(response: WeeklyGoalHttpResponse): WeeklyGoal 
     const value = requireSdkFields(response, ['id', 'weekStart', 'type', 'targetDays', 'progressDays', 'isCompleted', 'reminderEnabled']);
     return {
         ...value,
+        weekStart: calendarDate(value.weekStart),
         type: sdkEnum(value.type, ['DiaryLogging'] as const),
         reminderTime: value.reminderTime ?? null,
         timeZoneOffsetMinutes: value.timeZoneOffsetMinutes ?? null,

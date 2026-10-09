@@ -18,7 +18,7 @@ public sealed class BotGeneratedClientTests {
             Content = new StringContent("{\"id\":\"11111111-1111-1111-1111-111111111111\",\"imageAssetId\":\"22222222-2222-2222-2222-222222222222\",\"status\":\"Succeeded\",\"errorCode\":null,\"nutritionErrorCode\":null,\"nutrition\":{\"calories\":0,\"protein\":1.234567890123456789,\"fat\":0,\"carbs\":0}}", Encoding.UTF8, "application/json"),
         }));
         using var http = new HttpClient(handler);
-        BotRecognitionJob result = await Client(http).GetRecognitionAsync("token", Guid.NewGuid(), CancellationToken.None);
+        BotRecognitionJob result = await Client(http).GetRecognitionAsync("token", new BotRecognitionId(Guid.NewGuid()), CancellationToken.None);
         Assert.NotNull(result.Nutrition);
         Assert.Multiple(() => {
             Assert.Equal(expected, result.Nutrition.Protein);
@@ -43,8 +43,8 @@ public sealed class BotGeneratedClientTests {
         Assert.Multiple(() => {
             Assert.Equal(timestamp, result.TimestampUtc);
             Assert.Equal(DateTimeKind.Utc, result.TimestampUtc.Kind);
-            Assert.Equal(operationId, result.OperationId);
-            Assert.Equal(entryId, result.EntryId);
+            Assert.Equal(operationId, result.OperationId.Value);
+            Assert.Equal(entryId, result.EntryId.Value);
         });
     }
 
@@ -73,7 +73,7 @@ public sealed class BotGeneratedClientTests {
         using var handler = new CancellationHandler(entered);
         using var http = new HttpClient(handler);
         using var cancellation = new CancellationTokenSource();
-        Task<BotRecognitionJob> pending = Client(http).GetRecognitionAsync("token", Guid.NewGuid(), cancellation.Token);
+        Task<BotRecognitionJob> pending = Client(http).GetRecognitionAsync("token", new BotRecognitionId(Guid.NewGuid()), cancellation.Token);
         await entered.Task.WaitAsync(TimeSpan.FromSeconds(5));
         await cancellation.CancelAsync();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => pending);

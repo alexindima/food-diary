@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.tokens';
+import { optionalCalendarDate } from '../../../shared/models/semantics/date-value';
 import { calendarDate } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { WaistEntry, WaistEntryFilters } from '../../../shared/models/waist-entry.data';
@@ -206,7 +207,7 @@ describe('Summary and failure contracts', () => {
 describe('Measurement history page requests', () => {
     it.each([undefined, '2026-03-01'])('requests only 21 newest rows up to %s, without global loading', dateTo => {
         const received = vi.fn();
-        service.getHistoryPage(dateTo).subscribe(received);
+        service.getHistoryPage(optionalCalendarDate(dateTo)).subscribe(received);
         const request = httpMock.expectOne(r => r.url === BASE_URL);
         expect(request.request.params.get('limit')).toBe('21');
         expect(request.request.params.get('sort')).toBe('desc');

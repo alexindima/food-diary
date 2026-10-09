@@ -1,15 +1,17 @@
 import { computed, DestroyRef, inject, signal } from '@angular/core';
 import { finalize, type Observable } from 'rxjs';
 
+import type { CalendarDate } from '../models/semantics/date-value';
+import { calendarDate } from '../models/semantics/date-value';
 import { MEASUREMENT_HISTORY_PAGE_SIZE } from './measurement-history.constants';
 
-type DatedMeasurement = { id: string; date: string };
+type DatedMeasurement = { id: string; date: CalendarDate };
 
 /** Date is unique per user in both measurement tables. Keep pagination independent of local time. */
-export function previousMeasurementDay(value: string): string {
+export function previousMeasurementDay(value: CalendarDate): CalendarDate {
     const date = new Date(`${value.split('T')[0]}T00:00:00.000Z`);
     date.setUTCDate(date.getUTCDate() - 1);
-    return date.toISOString().split('T')[0] ?? '';
+    return calendarDate(date.toISOString().split('T')[0] ?? '');
 }
 
 /** Dialog-owned rows include one hidden lookahead for the final visible row's delta. */
@@ -27,9 +29,9 @@ export class MeasurementHistoryPager<T extends DatedMeasurement> {
         return this.loaded() && this.entries().length === 0 ? 'MEASUREMENT_HISTORY_PAGING.EMPTY' : null;
     });
     private readonly destroyRef = inject(DestroyRef);
-    private dateTo: string | undefined;
+    private dateTo: CalendarDate | undefined;
 
-    public constructor(private readonly fetchPage: (dateTo?: string) => Observable<T[]>) {
+    public constructor(private readonly fetchPage: (dateTo?: CalendarDate) => Observable<T[]>) {
         this.loadMore();
     }
 

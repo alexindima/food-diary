@@ -2,9 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { type CalendarDate, calendarDate } from '../models/semantics/date-value';
 import { MeasurementHistoryPager, previousMeasurementDay } from './measurement-history-pager';
 
-type Entry = { id: string; date: string; value: number };
+type Entry = { id: string; date: CalendarDate; value: number };
 const PAGE_SIZE = 20;
 const CALENDAR_DATE_LENGTH = 10;
 const FETCH_SIZE = PAGE_SIZE + 1;
@@ -14,7 +15,7 @@ function entries(count: number, offset = 0): Entry[] {
     return Array.from({ length: count }, (_, i) => {
         const date = new Date('2026-09-21T00:00:00Z');
         date.setUTCDate(date.getUTCDate() - offset - i);
-        return { id: String(offset + i), date: date.toISOString(), value: offset + i };
+        return { id: String(offset + i), date: calendarDate(date.toISOString()), value: offset + i };
     });
 }
 function setup(): { pager: MeasurementHistoryPager<Entry>; fetch: ReturnType<typeof vi.fn>; responses: Array<Subject<Entry[]>> } {
@@ -123,7 +124,7 @@ describe('Measurement history errors and lifecycle', () => {
             of(database.filter(entry => dateTo === undefined || entry.date.slice(0, CALENDAR_DATE_LENGTH) <= dateTo).slice(0, FETCH_SIZE)),
         );
         const pager = TestBed.runInInjectionContext(() => new MeasurementHistoryPager(fetch));
-        database = [{ id: 'new', date: '2026-09-22', value: 0 }, ...database.slice(1)];
+        database = [{ id: 'new', date: calendarDate('2026-09-22'), value: 0 }, ...database.slice(1)];
         while (pager.hasMore()) {
             pager.loadMore();
         }
@@ -140,6 +141,6 @@ describe('Measurement date cursor', () => {
         ['2026-11-02T00:00:00Z', '2026-11-01'],
         ['2026-09-21T00:00:00+04:00', '2026-09-20'],
     ])('moves %s back one calendar day, independent of machine timezone', (value, expected) => {
-        expect(previousMeasurementDay(value)).toBe(expected);
+        expect(previousMeasurementDay(calendarDate(value))).toBe(expected);
     });
 });

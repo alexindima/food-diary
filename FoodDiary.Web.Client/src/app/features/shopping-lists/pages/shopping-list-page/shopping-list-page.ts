@@ -16,6 +16,7 @@ import {
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
+import type { ShoppingListId, ShoppingListItemId } from '../../../../shared/models/semantics/entity-id';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
@@ -107,7 +108,7 @@ export class ShoppingListPageComponent {
             .pipe(skip(1), takeUntilDestroyed(this.destroyRef))
             .subscribe(id => {
                 if (id !== null && id.length > 0) {
-                    this.facade.selectList(id);
+                    this.facade.selectList(entityId<'shopping-list'>(id));
                 }
             });
 
@@ -160,7 +161,7 @@ export class ShoppingListPageComponent {
         });
     }
 
-    protected editItem(itemId: string): void {
+    protected editItem(itemId: ShoppingListItemId): void {
         const item = this.items().find(entry => entry.id === itemId);
         const listId = this.list()?.id;
         if (item === undefined) {
@@ -208,11 +209,11 @@ export class ShoppingListPageComponent {
             });
     }
 
-    protected removeItem(itemId: string): void {
+    protected removeItem(itemId: ShoppingListItemId): void {
         this.facade.removeItem(itemId);
     }
 
-    protected toggleItemChecked(itemId: string, checked: boolean): void {
+    protected toggleItemChecked(itemId: ShoppingListItemId, checked: boolean): void {
         this.facade.toggleItemChecked(itemId, checked);
     }
 
@@ -229,7 +230,7 @@ export class ShoppingListPageComponent {
         this.confirmDeleteList(current.id, current.name);
     }
 
-    protected deleteListById(listId: string): void {
+    protected deleteListById(listId: ShoppingListId): void {
         if (!this.canDeleteList()) {
             return;
         }
@@ -242,15 +243,15 @@ export class ShoppingListPageComponent {
         this.confirmDeleteList(list.id, list.name);
     }
 
-    protected renameListById(listId: string, name: string): void {
+    protected renameListById(listId: ShoppingListId, name: string): void {
         this.facade.renameListById(entityId<'shopping-list'>(listId), name);
     }
 
-    protected clearRenameRequest(listId: string): void {
+    protected clearRenameRequest(listId: ShoppingListId): void {
         this.facade.clearRenameRequest(listId);
     }
 
-    private confirmDeleteList(listId: string, listName: string): void {
+    private confirmDeleteList(listId: ShoppingListId, listName: string): void {
         const data: ConfirmDeleteDialogData = {
             title: this.translateService.instant('CONFIRM_DELETE.TITLE', {
                 type: this.translateService.instant('SHOPPING_LIST.ENTITY_NAME'),
@@ -283,7 +284,7 @@ export class ShoppingListPageComponent {
         this.confirmClearList(current.id, current.name);
     }
 
-    protected clearListById(listId: string): void {
+    protected clearListById(listId: ShoppingListId): void {
         const list = this.lists().find(entry => entry.id === listId);
         if (list === undefined || list.itemsCount === 0 || this.isSaving() || this.isLoading()) {
             return;
@@ -292,7 +293,7 @@ export class ShoppingListPageComponent {
         this.confirmClearList(list.id, list.name);
     }
 
-    private confirmClearList(listId: string, listName: string): void {
+    private confirmClearList(listId: ShoppingListId, listName: string): void {
         const data: ConfirmDeleteDialogData = {
             title: this.translateService.instant('SHOPPING_LIST.CLEAR_CONFIRM_TITLE'),
             message: this.translateService.instant('SHOPPING_LIST.CLEAR_CONFIRM_MESSAGE', {

@@ -1,7 +1,8 @@
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { PublicRecipe } from '../models/public-recipe.data';
 export function publicRecipeFixture(): PublicRecipe {
     return {
-        id: 'recipe',
+        id: entityId<'recipe'>('recipe'),
         name: 'Soup',
         description: 'A soup',
         category: 'main_courses',

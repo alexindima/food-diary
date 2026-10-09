@@ -4,12 +4,13 @@ import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { PublicProductDetailsFacade } from '../../lib/public-product-details.facade';
 import type { PublicProduct } from '../../models/public-product.data';
 import { PublicProductPreviewComponent } from './public-product-preview';
 
 const product: PublicProduct = {
-    id: 'product',
+    id: entityId<'product'>('product'),
     name: 'Granola',
     brand: null,
     imageUrl: null,

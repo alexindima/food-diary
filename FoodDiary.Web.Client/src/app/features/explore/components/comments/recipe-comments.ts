@@ -9,6 +9,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { filter, finalize, switchMap } from 'rxjs';
 
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
+import type { RecipeCommentId, RecipeId } from '../../../../shared/models/semantics/entity-id';
 import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 import type { RecipeComment } from '../../models/comment.data';
 import { COMMENT_MAX_LENGTH, COMMENTS_PAGE_SIZE } from './recipe-comments-lib/recipe-comments.constants';
@@ -30,7 +31,7 @@ export class RecipeCommentsComponent {
     private readonly translateService = inject(TranslateService);
     private readonly languageVersion = signal(0);
 
-    public readonly recipeId = input.required<string>();
+    public readonly recipeId = input.required<RecipeId>();
 
     protected readonly comments = signal<RecipeComment[]>([]);
     protected readonly isLoading = signal(false);
@@ -42,7 +43,7 @@ export class RecipeCommentsComponent {
         required(path.text);
         maxLength(path.text, COMMENT_MAX_LENGTH);
     });
-    protected readonly editingCommentId = signal<string | null>(null);
+    protected readonly editingCommentId = signal<RecipeCommentId | null>(null);
     protected readonly isSubmitting = signal(false);
     protected readonly hasMore = computed(() => this.comments().length < this.totalItems());
     protected readonly submitLabelKey = computed(() => (this.editingCommentId() !== null ? 'COMMON.SAVE' : 'COMMENTS.POST'));

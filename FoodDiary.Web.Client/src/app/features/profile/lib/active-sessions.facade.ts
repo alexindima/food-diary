@@ -1,17 +1,24 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { finalize } from 'rxjs';
 
+import type { RefreshTokenSessionId } from '../../../shared/models/semantics/entity-id';
 import { ActiveSessionsService } from '../api/active-sessions.service';
-import type { ActiveSession } from '../models/active-session.model';
+import type { ActiveSession, SessionRevocation } from '../models/active-session.model';
 
 @Injectable()
 export class ActiveSessionsFacade {
     private readonly api = inject(ActiveSessionsService);
     public readonly sessions = signal<ActiveSession[]>([]);
     public readonly isLoading = signal(false);
-    public readonly revokingId = signal<string | null>(null);
+    public readonly revocation = signal<SessionRevocation>({ kind: 'idle' });
     public readonly error = signal<'load' | 'revoke' | null>(null);
-    public readonly isBusy = computed(() => this.isLoading() || this.revokingId() !== null);
+    public readonly isBusy = computed(() => this.isLoading() || this.revocation().kind !== 'idle');
+    public readonly isRevokingOthers = computed(() => this.revocation().kind === 'others');
+
+    public isRevoking(sessionId: RefreshTokenSessionId): boolean {
+        const state = this.revocation();
+        return state.kind === 'single' && state.sessionId === sessionId;
+    }
 
     public load(): void {
         if (this.isBusy()) {
@@ -36,17 +43,17 @@ export class ActiveSessionsFacade {
             });
     }
 
-    public revoke(sessionId: string): void {
+    public revoke(sessionId: RefreshTokenSessionId): void {
         if (this.isBusy()) {
             return;
         }
         this.error.set(null);
-        this.revokingId.set(sessionId);
+        this.revocation.set({ kind: 'single', sessionId });
         this.api
             .revoke(sessionId)
             .pipe(
                 finalize(() => {
-                    this.revokingId.set(null);
+                    this.revocation.set({ kind: 'idle' });
                 }),
             )
             .subscribe({
@@ -64,12 +71,12 @@ export class ActiveSessionsFacade {
             return;
         }
         this.error.set(null);
-        this.revokingId.set('all');
+        this.revocation.set({ kind: 'others' });
         this.api
             .revokeOthers()
             .pipe(
                 finalize(() => {
-                    this.revokingId.set(null);
+                    this.revocation.set({ kind: 'idle' });
                 }),
             )
             .subscribe({

@@ -15,6 +15,7 @@ import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pi
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
+import type { CalendarDate } from '../../../../shared/models/semantics/date-value';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { WeeklyGoalDialogComponent, type WeeklyGoalDialogData } from '../../dialogs/weekly-goal-dialog/weekly-goal-dialog';
@@ -149,7 +150,7 @@ export class WeeklyCheckInPageComponent {
         });
     }
 
-    private async openGoalDialogAsync(weekStart: string, goal: WeeklyGoal | null, titleKey: string): Promise<void> {
+    private async openGoalDialogAsync(weekStart: CalendarDate, goal: WeeklyGoal | null, titleKey: string): Promise<void> {
         const dialogRef = this.dialogService.open<WeeklyGoalDialogComponent, WeeklyGoalDialogData, WeeklyGoal | null>(
             WeeklyGoalDialogComponent,
             {

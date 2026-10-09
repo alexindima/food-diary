@@ -7,9 +7,10 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
+import type { ShoppingListId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingListItemDto, ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
 
-export type ShoppingListTarget = { id: string | null; name: string };
+export type ShoppingListTarget = { id: ShoppingListId | null; name: string };
 export type ShoppingListPickerData = {
     lists: ShoppingListSummary[];
     name: string;
@@ -61,7 +62,7 @@ export class ShoppingListPickerComponent {
             field?.nativeElement.querySelector<HTMLInputElement>('input')?.focus();
         });
     }
-    protected readonly draft = signal({
+    protected readonly draft = signal<{ id: string; name: string }>({
         id: this.data.selected?.id ?? '',
         name: (this.data.selected?.name ?? this.data.name).slice(0, LIST_NAME_MAX_LENGTH),
     });

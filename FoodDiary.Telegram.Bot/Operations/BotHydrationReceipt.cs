@@ -1,3 +1,3 @@
 namespace FoodDiary.Telegram.Bot.Operations;
 
-internal sealed record BotHydrationReceipt(Guid OperationId, Guid EntryId, DateTime TimestampUtc, int AmountMl);
+internal sealed record BotHydrationReceipt(BotOperationId OperationId, BotHydrationEntryId EntryId, DateTime TimestampUtc, int AmountMl);

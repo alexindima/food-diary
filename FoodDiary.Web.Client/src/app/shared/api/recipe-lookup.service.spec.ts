@@ -46,7 +46,7 @@ describe('RecipeLookupService', () => {
             ],
         };
 
-        service.getById(recipeId).subscribe(response => {
+        service.getById(entityId<'recipe'>(recipeId)).subscribe(response => {
             expect(response.id).toBe(recipeId);
             expect(response.servings).toBe(SERVINGS);
             expect(response.steps.length).toBe(1);
@@ -66,7 +66,7 @@ describe('RecipeLookupService', () => {
             steps: [],
         };
 
-        service.getById(recipeId, false).subscribe(response => {
+        service.getById(entityId<'recipe'>(recipeId), false).subscribe(response => {
             expect(response.id).toBe(recipeId);
         });
 

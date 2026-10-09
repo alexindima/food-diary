@@ -4,6 +4,7 @@ import { of, Subject, throwError } from 'rxjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
+import { type CalendarDate, calendarDate } from '../../../shared/models/semantics/date-value';
 import { WeeklyCheckInService } from '../api/weekly-check-in.service';
 import { WeeklyGoalService } from '../api/weekly-goal.service';
 import type { WeeklyCheckInData } from '../models/weekly-check-in.data';
@@ -20,7 +21,7 @@ const OLD_WEEK_CALORIES = 7000;
 
 const GOAL: WeeklyGoal = {
     id: 'goal',
-    weekStart: '2026-03-23',
+    weekStart: calendarDate('2026-03-23'),
     type: 'DiaryLogging',
     targetDays: 5,
     progressDays: 2,
@@ -79,9 +80,9 @@ function setup(): {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(new Date(TEST_YEAR, 2, CURRENT_DAY, NOON_HOUR));
     TestBed.resetTestingModule();
-    const dataService = { getData: vi.fn((_week: string) => of(createData())) };
+    const dataService = { getData: vi.fn((_week: CalendarDate) => of(createData())) };
     const goals = {
-        getGoal: vi.fn((_week: string) => of<WeeklyGoal | null>(GOAL)),
+        getGoal: vi.fn((_week: CalendarDate) => of<WeeklyGoal | null>(GOAL)),
         upsertGoal: vi.fn((_payload: UpsertWeeklyGoalPayload) => of<WeeklyGoal | null>(GOAL)),
     };
     const measurementSystem = signal<'metric' | 'imperial'>('metric');

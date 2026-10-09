@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { PublicRecipeService } from './public-recipe.service';
 
 describe('PublicRecipeService', () => {
@@ -29,7 +30,7 @@ describe('PublicRecipeService', () => {
     });
     it('propagates not-found instead of pretending a private recipe is public', () => {
         const error = vi.fn();
-        service.getById('private').subscribe({ error });
+        service.getById(entityId<'recipe'>('private')).subscribe({ error });
         http.expectOne(`${environment.apiUrls.recipes}/public/private`).flush({}, { status: 404, statusText: 'Not Found' });
         expect(error).toHaveBeenCalled();
     });

@@ -8,6 +8,7 @@ import { createClientId } from '../../../shared/lib/client-id.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import type { MeasurementUnit } from '../../../shared/models/product.data';
 import { optionalUtcInstant } from '../../../shared/models/semantics/date-value';
+import type { ShoppingListItemId } from '../../../shared/models/semantics/entity-id';
 import type { ShoppingListId } from '../../../shared/models/semantics/entity-id';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { ShoppingList, ShoppingListItem, ShoppingListPage, ShoppingListSummary } from '../../../shared/models/shopping-list.data';
@@ -36,10 +37,10 @@ export class ShoppingListFacade {
         },
     });
 
-    private readonly lastLoadedListId = signal<string | null>(null);
+    private readonly lastLoadedListId = signal<ShoppingListId | null>(null);
     private suppressAutosave = false;
     private pendingSave = false;
-    private pendingSelection: string | null = null;
+    private pendingSelection: ShoppingListId | null = null;
     private activeSave: Promise<boolean> | null = null;
 
     public hasUnsavedChanges(): boolean {
@@ -73,9 +74,9 @@ export class ShoppingListFacade {
     public readonly isLoading = signal(false);
     public readonly isSaving = signal(false);
     public readonly initialPage = signal<ShoppingListPage | null>(null);
-    private loadingListId: string | null = null;
+    private loadingListId: ShoppingListId | null = null;
     public readonly lists = signal<ShoppingListSummary[]>([]);
-    private readonly listCounts = signal<Partial<Record<string, { remaining: number; total: number }>>>({});
+    private readonly listCounts = signal<Partial<Record<ShoppingListId, { remaining: number; total: number }>>>({});
     public readonly navigationLists = computed(() =>
         this.lists().map(summary => {
             const counts =
@@ -90,7 +91,7 @@ export class ShoppingListFacade {
         }),
     );
 
-    public applyConsolidation(listId: string, expected: readonly ShoppingListItem[], items: ShoppingListItem[]): boolean {
+    public applyConsolidation(listId: ShoppingListId, expected: readonly ShoppingListItem[], items: ShoppingListItem[]): boolean {
         if (this.list()?.id !== listId || this.items() !== expected || this.isLoading() || this.isSaving()) {
             this.toastService.error(this.translateService.instant('SHOPPING_LIST.MERGE_STALE'));
             return false;
@@ -109,9 +110,9 @@ export class ShoppingListFacade {
             },
         }));
     }
-    public readonly selectedListId = signal<string | null>(null);
+    public readonly selectedListId = signal<ShoppingListId | null>(null);
     public readonly listName = signal('');
-    public readonly renameRequestedListId = signal<string | null>(null);
+    public readonly renameRequestedListId = signal<ShoppingListId | null>(null);
 
     private readonly pendingCreate = signal(false);
     private readonly creating = signal(false);
@@ -156,7 +157,7 @@ export class ShoppingListFacade {
             });
     }
 
-    public selectList(id: string): void {
+    public selectList(id: ShoppingListId): void {
         if (id.length === 0 || id === this.lastLoadedListId() || id === this.loadingListId) {
             return;
         }
@@ -291,13 +292,13 @@ export class ShoppingListFacade {
         this.scheduleSave();
     }
 
-    public clearRenameRequest(listId: string): void {
+    public clearRenameRequest(listId: ShoppingListId): void {
         if (this.renameRequestedListId() === listId) {
             this.renameRequestedListId.set(null);
         }
     }
 
-    public editItem(itemId: string, draft: ShoppingListDraftItem): void {
+    public editItem(itemId: ShoppingListItemId, draft: ShoppingListDraftItem): void {
         const name = draft.name.trim();
         if (name.length === 0 || !this.items().some(item => item.id === itemId)) {
             return;
@@ -320,7 +321,7 @@ export class ShoppingListFacade {
         this.scheduleSave();
     }
 
-    public removePurchased(listId: string, itemIds: readonly string[]): void {
+    public removePurchased(listId: ShoppingListId, itemIds: readonly ShoppingListItemId[]): void {
         if (this.list()?.id !== listId || this.isLoading() || this.isSaving()) {
             return;
         }
@@ -333,13 +334,13 @@ export class ShoppingListFacade {
         this.scheduleSave();
     }
 
-    public removeItem(itemId: string): void {
+    public removeItem(itemId: ShoppingListItemId): void {
         const filtered = this.items().filter(item => item.id !== itemId);
         this.items.set(rebuildShoppingListSortOrder(filtered));
         this.scheduleSave();
     }
 
-    public toggleItemChecked(itemId: string, checked: boolean): void {
+    public toggleItemChecked(itemId: ShoppingListItemId, checked: boolean): void {
         const nextItems = this.items().map(entry =>
             entry.id === itemId
                 ? {

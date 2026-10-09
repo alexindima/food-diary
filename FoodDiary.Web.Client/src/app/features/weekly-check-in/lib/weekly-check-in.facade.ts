@@ -2,6 +2,7 @@ import { computed, effect, inject, Injectable, resource, signal } from '@angular
 import { firstValueFrom } from 'rxjs';
 
 import { MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
+import { type CalendarDate, calendarDate } from '../../../shared/models/semantics/date-value';
 import { WeeklyCheckInService } from '../api/weekly-check-in.service';
 import { WeeklyGoalService } from '../api/weekly-goal.service';
 import type { WeeklyCheckInData } from '../models/weekly-check-in.data';
@@ -12,7 +13,7 @@ import { buildWeeklyReview } from './weekly-review.mapper';
 const DAYS_PER_WEEK = 7;
 const MONDAY_OFFSET = 6;
 
-type LoadedWeekData = { weekStart: string; data: WeeklyCheckInData };
+type LoadedWeekData = { weekStart: CalendarDate; data: WeeklyCheckInData };
 
 @Injectable()
 export class WeeklyCheckInFacade {
@@ -105,11 +106,11 @@ export class WeeklyCheckInFacade {
     }
 }
 
-function formatLocalDate(date: Date): string {
+function formatLocalDate(date: Date): CalendarDate {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    return calendarDate(`${year}-${month}-${day}`);
 }
 
 function startOfLocalWeek(date: Date): Date {

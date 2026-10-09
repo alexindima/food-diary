@@ -1,5 +1,6 @@
+import type { ProductId } from '../../../shared/models/semantics/entity-id';
 export type PublicProduct = {
-    id: string;
+    id: ProductId;
     name: string;
     brand: string | null;
     imageUrl: string | null;

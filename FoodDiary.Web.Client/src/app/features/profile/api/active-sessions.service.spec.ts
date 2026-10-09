@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { ActiveSessionsService } from './active-sessions.service';
 
 describe('Active sessions generated transport', () => {
@@ -40,7 +41,7 @@ describe('Active sessions generated transport', () => {
 
     it('keeps separate owner-scoped revocation routes and no-content completion', () => {
         let completed = false;
-        service.revoke('session').subscribe(() => {
+        service.revoke(entityId<'refresh-token-session'>('session')).subscribe(() => {
             completed = true;
         });
         const request = http.expectOne(`${base}/session`);

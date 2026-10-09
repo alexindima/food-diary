@@ -6,6 +6,9 @@ import ts from 'typescript';
 
 test('semantic IDs, time meanings and meal quantity branches reject mixed inputs', () => {
     const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+    const config = ts.readConfigFile(path.join(root, 'tsconfig.json'), ts.sys.readFile);
+    assert.equal(config.error, undefined);
+    const workspaceOptions = ts.parseJsonConfigFileContent(config.config, ts.sys, root).options;
     const program = ts.createProgram(
         [
             path.join(root, 'scripts/semantic-types.fixture.ts'),
@@ -13,6 +16,7 @@ test('semantic IDs, time meanings and meal quantity branches reject mixed inputs
             path.join(root, 'src/types/barcode-detector.d.ts'),
         ],
         {
+            ...workspaceOptions,
             strict: true,
             noEmit: true,
             skipLibCheck: true,

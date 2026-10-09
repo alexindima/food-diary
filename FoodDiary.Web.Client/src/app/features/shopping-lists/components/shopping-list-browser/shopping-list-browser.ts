@@ -13,6 +13,7 @@ import {
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiIconComponent, FdUiInputComponent } from 'fd-ui-kit';
 
+import type { ShoppingListId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingListPage, ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
 import { ShoppingListBrowserFacade } from '../../lib/shopping-list-browser.facade';
 
@@ -30,14 +31,14 @@ export class ShoppingListBrowserComponent {
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     public readonly initialPage = input<ShoppingListPage | null>(null);
     public readonly lists = input.required<readonly ShoppingListSummary[]>();
-    public readonly selectedId = input<string | null>(null);
+    public readonly selectedId = input<ShoppingListId | null>(null);
     public readonly focusSearch = input(true);
     public readonly createRequested = output<string | void>();
     protected readonly maxNameLength = 128;
     protected readonly createName = computed(() =>
         !this.browser.loading() && !this.browser.failed() && this.matches().length === 0 ? String(this.search() ?? '').trim() : '',
     );
-    public readonly listSelected = output<string>();
+    public readonly listSelected = output<ShoppingListId>();
     protected readonly search = signal<string | number | null>('');
     protected readonly completedOpen = signal(false);
     protected readonly query = computed(() =>

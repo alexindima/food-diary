@@ -7,6 +7,8 @@ import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 import type { ContentReport, CreateReportDto } from '../../models/report.data';
 import { ReportDialogComponent, type ReportDialogData } from './report-dialog';
@@ -15,8 +17,7 @@ import { REPORT_REASON_MAX_LENGTH } from './report-dialog.tokens';
 const REPORT_REASON_TEST_MAX_LENGTH = 12;
 
 const dialogData: ReportDialogData = {
-    targetType: 'Recipe',
-    targetId: 'recipe-1',
+    target: { kind: 'recipe', recipeId: entityId<'recipe'>('recipe-1') },
 };
 
 let fixture: ComponentFixture<ReportDialogComponent>;
@@ -56,8 +57,7 @@ describe('ReportDialogComponent', () => {
         component['onSubmit']();
 
         expect(reportService.createReport).toHaveBeenCalledWith({
-            targetType: 'Recipe',
-            targetId: 'recipe-1',
+            target: { kind: 'recipe', recipeId: entityId<'recipe'>('recipe-1') },
             reason: 'Spam',
         });
         expect(toastService.success).toHaveBeenCalledWith('REPORT.SUCCESS');
@@ -109,14 +109,13 @@ type ExploreInteractionsFacadeMock = {
 
 function createReport(dto: CreateReportDto): ContentReport {
     return {
-        id: 'report-1',
-        reporterId: 'user-1',
-        targetType: dto.targetType,
-        targetId: dto.targetId,
+        id: entityId<'content-report'>('report-1'),
+        reporterId: entityId<'user'>('user-1'),
+        target: dto.target,
         reason: dto.reason,
         status: 'Pending',
         adminNote: null,
-        createdAtUtc: '2026-05-16T10:00:00.000Z',
+        createdAtUtc: utcInstant('2026-05-16T10:00:00.000Z'),
         reviewedAtUtc: null,
     };
 }

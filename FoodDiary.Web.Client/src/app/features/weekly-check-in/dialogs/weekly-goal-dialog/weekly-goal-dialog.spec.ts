@@ -5,6 +5,7 @@ import { firstValueFrom, Subject } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { calendarDate } from '../../../../shared/models/semantics/date-value';
 import type { WeeklyGoal } from '../../models/weekly-goal.data';
 import { WeeklyGoalDialogComponent, type WeeklyGoalDialogData } from './weekly-goal-dialog';
 
@@ -25,7 +26,7 @@ function setup(disableClose = false): {
             { provide: FdUiDialogRef, useValue: dialogRef },
             {
                 provide: FD_UI_DIALOG_DATA,
-                useValue: { weekStart: '2026-09-28', titleKey: 'COMMON.SAVE', goal: null, saveGoalAsync },
+                useValue: { weekStart: calendarDate('2026-09-28'), titleKey: 'COMMON.SAVE', goal: null, saveGoalAsync },
             },
         ],
     });

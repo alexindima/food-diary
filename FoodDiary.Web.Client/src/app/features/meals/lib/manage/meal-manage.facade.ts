@@ -28,7 +28,7 @@ import {
 } from '../../../../shared/models/meal.data';
 import type { Product } from '../../../../shared/models/product.data';
 import type { Recipe } from '../../../../shared/models/recipe.data';
-import { type RecipeServings,recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
+import { type RecipeServings, recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MealService } from '../../api/meal.service';
 import type {

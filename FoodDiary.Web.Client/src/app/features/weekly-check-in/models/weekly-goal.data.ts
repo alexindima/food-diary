@@ -1,6 +1,8 @@
+import type { CalendarDate } from '../../../shared/models/semantics/date-value';
+
 export type WeeklyGoal = {
     id: string;
-    weekStart: string;
+    weekStart: CalendarDate;
     type: 'DiaryLogging';
     targetDays: number;
     progressDays: number;
@@ -11,7 +13,7 @@ export type WeeklyGoal = {
 };
 
 export type UpsertWeeklyGoalPayload = {
-    weekStart: string;
+    weekStart: CalendarDate;
     targetDays: number;
     reminderEnabled: boolean;
     reminderTime: string | null;

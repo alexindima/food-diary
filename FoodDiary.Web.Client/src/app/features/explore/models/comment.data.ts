@@ -1,12 +1,15 @@
+import type { UtcInstant } from '../../../shared/models/semantics/date-value';
+import type { RecipeCommentId, RecipeId, UserId } from '../../../shared/models/semantics/entity-id';
+
 export type RecipeComment = {
-    id: string;
-    recipeId: string;
-    authorId: string;
+    id: RecipeCommentId;
+    recipeId: RecipeId;
+    authorId: UserId;
     authorUsername?: string | null;
     authorFirstName?: string | null;
     text: string;
-    createdAtUtc: string;
-    modifiedAtUtc?: string | null;
+    createdAtUtc: UtcInstant;
+    modifiedAtUtc?: UtcInstant | null;
     isOwnedByCurrentUser: boolean;
 };
 

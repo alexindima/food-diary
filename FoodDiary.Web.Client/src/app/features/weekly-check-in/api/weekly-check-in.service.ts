@@ -6,6 +6,7 @@ import { environment } from '../../../../environments/environment';
 import { WeeklyCheckInSdk } from '../../../shared/api/sdk/generated/api/weekly-check-in.service';
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
 import { rethrowApiError } from '../../../shared/lib/api-error.utils';
+import type { CalendarDate } from '../../../shared/models/semantics/date-value';
 import type { WeeklyCheckInData } from '../models/weekly-check-in.data';
 import { weeklyCheckInFromSdk } from './weekly-sdk.mapper';
 
@@ -14,7 +15,7 @@ export class WeeklyCheckInService {
     protected readonly baseUrl = environment.apiUrls.weeklyCheckIn;
     private readonly sdk = createSdkConnection(WeeklyCheckInSdk, this.baseUrl, inject(HttpClient));
 
-    public getData(weekStart: string): Observable<WeeklyCheckInData> {
+    public getData(weekStart: CalendarDate): Observable<WeeklyCheckInData> {
         return this.sdk.client.getWeeklyCheckIn({ version: this.sdk.version, weekStart }).pipe(
             map(weeklyCheckInFromSdk),
             catchError((error: unknown) => rethrowApiError('Get weekly check-in error', error)),

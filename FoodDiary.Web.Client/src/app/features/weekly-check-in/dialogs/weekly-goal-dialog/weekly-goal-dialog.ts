@@ -9,13 +9,14 @@ import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd
 import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch';
 import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input';
 
+import type { CalendarDate } from '../../../../shared/models/semantics/date-value';
 import type { UpsertWeeklyGoalPayload, WeeklyGoal } from '../../models/weekly-goal.data';
 
 const DEFAULT_TARGET_DAYS = '5';
 const DEFAULT_REMINDER_TIME = '21:00';
 
 export type WeeklyGoalDialogData = {
-    weekStart: string;
+    weekStart: CalendarDate;
     titleKey: string;
     goal: WeeklyGoal | null;
     saveGoalAsync: (payload: UpsertWeeklyGoalPayload) => Promise<WeeklyGoal | null>;

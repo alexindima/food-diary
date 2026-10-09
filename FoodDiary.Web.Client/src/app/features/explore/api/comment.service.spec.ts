@@ -5,6 +5,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import type { PageOf } from '../../../shared/models/page-of.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { RecipeComment } from '../models/comment.data';
 import { CommentService } from './comment.service';
 
@@ -31,7 +33,7 @@ describe('CommentService', () => {
     it('gets paged comments', () => {
         const page = createPage();
 
-        service.getComments('recipe-1', PAGE, LIMIT).subscribe(result => {
+        service.getComments(entityId<'recipe'>('recipe-1'), PAGE, LIMIT).subscribe(result => {
             expect(result).toEqual(page);
         });
 
@@ -42,7 +44,7 @@ describe('CommentService', () => {
     });
 
     it('returns empty page on comments load failure', () => {
-        service.getComments('recipe-1', PAGE, LIMIT).subscribe(result => {
+        service.getComments(entityId<'recipe'>('recipe-1'), PAGE, LIMIT).subscribe(result => {
             expect(result.data).toEqual([]);
         });
 
@@ -53,7 +55,7 @@ describe('CommentService', () => {
     it('creates, updates, and deletes comments', () => {
         const comment = createComment();
 
-        service.createComment('recipe-1', { text: 'Created' }).subscribe(result => {
+        service.createComment(entityId<'recipe'>('recipe-1'), { text: 'Created' }).subscribe(result => {
             expect(result).toEqual(comment);
         });
         const createReq = httpMock.expectOne(`${BASE_URL}/recipe-1/comments`);
@@ -61,15 +63,17 @@ describe('CommentService', () => {
         expect(createReq.request.body).toEqual({ text: 'Created' });
         createReq.flush(comment);
 
-        service.updateComment('recipe-1', 'comment-1', { text: 'Updated' }).subscribe(result => {
-            expect(result).toEqual(comment);
-        });
+        service
+            .updateComment(entityId<'recipe'>('recipe-1'), entityId<'recipe-comment'>('comment-1'), { text: 'Updated' })
+            .subscribe(result => {
+                expect(result).toEqual(comment);
+            });
         const updateReq = httpMock.expectOne(`${BASE_URL}/recipe-1/comments/comment-1`);
         expect(updateReq.request.method).toBe('PATCH');
         expect(updateReq.request.body).toEqual({ text: 'Updated' });
         updateReq.flush(comment);
 
-        service.deleteComment('recipe-1', 'comment-1').subscribe(result => {
+        service.deleteComment(entityId<'recipe'>('recipe-1'), entityId<'recipe-comment'>('comment-1')).subscribe(result => {
             expect(result).toBeNull();
         });
         const deleteReq = httpMock.expectOne(`${BASE_URL}/recipe-1/comments/comment-1`);
@@ -90,13 +94,13 @@ function createPage(): PageOf<RecipeComment> {
 
 function createComment(): RecipeComment {
     return {
-        id: 'comment-1',
-        recipeId: 'recipe-1',
-        authorId: 'user-1',
+        id: entityId<'recipe-comment'>('comment-1'),
+        recipeId: entityId<'recipe'>('recipe-1'),
+        authorId: entityId<'user'>('user-1'),
         authorUsername: 'alexi',
         authorFirstName: null,
         text: 'Nice',
-        createdAtUtc: '2026-05-16T10:00:00.000Z',
+        createdAtUtc: utcInstant('2026-05-16T10:00:00.000Z'),
         modifiedAtUtc: null,
         isOwnedByCurrentUser: true,
     };

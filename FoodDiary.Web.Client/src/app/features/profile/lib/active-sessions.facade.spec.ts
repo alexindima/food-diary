@@ -2,6 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { ActiveSessionsService } from '../api/active-sessions.service';
 import type { ActiveSession } from '../models/active-session.model';
 import { ActiveSessionsFacade } from './active-sessions.facade';
@@ -46,7 +48,7 @@ describe('ActiveSessionsFacade', () => {
         facade.sessions.set([currentSession, otherSession]);
         facade.revokeOthers();
         expect(facade.sessions()).toEqual([currentSession]);
-        expect(facade.revokingId()).toBeNull();
+        expect(facade.revocation()).toEqual({ kind: 'idle' });
     });
 
     it('surfaces load and revoke failures without dropping known sessions', () => {
@@ -58,7 +60,7 @@ describe('ActiveSessionsFacade', () => {
 
         expect(facade.error()).toBe('revoke');
         expect(facade.sessions()).toEqual([currentSession, otherSession]);
-        expect(facade.revokingId()).toBeNull();
+        expect(facade.revocation()).toEqual({ kind: 'idle' });
     });
 });
 
@@ -113,17 +115,52 @@ describe('ActiveSessionsFacade recovery', () => {
         expect(facade.sessions()).toEqual([currentSession]);
         expect(facade.isLoading()).toBe(false);
     });
+
+    it('keeps an opaque session named all separate from the revoke-others action', () => {
+        const opaque = createSession('all', false);
+        const pending = new Subject<void>();
+        facade.sessions.set([currentSession, opaque]);
+        api.revoke.mockReturnValueOnce(pending);
+
+        facade.revoke(opaque.id);
+
+        expect(facade.isRevoking(opaque.id)).toBe(true);
+        expect(facade.isRevokingOthers()).toBe(false);
+        expect(facade.isBusy()).toBe(true);
+        facade.revokeOthers();
+        expect(api.revokeOthers).not.toHaveBeenCalled();
+        pending.next();
+        pending.complete();
+        expect(facade.sessions()).toEqual([currentSession]);
+        expect(facade.revocation()).toEqual({ kind: 'idle' });
+    });
+
+    it('marks only revoke-others busy and recovers its state after an error', () => {
+        const pending = new Subject<void>();
+        api.revokeOthers.mockReturnValueOnce(pending);
+
+        facade.revokeOthers();
+
+        expect(facade.isRevokingOthers()).toBe(true);
+        expect(facade.isRevoking(otherSession.id)).toBe(false);
+        facade.revoke(otherSession.id);
+        expect(api.revoke).not.toHaveBeenCalled();
+        pending.error(new Error('offline'));
+        expect(facade.revocation()).toEqual({ kind: 'idle' });
+        expect(facade.isBusy()).toBe(false);
+        expect(facade.sessions()).toEqual([currentSession, otherSession]);
+    });
 });
 
 function createSession(id: string, isCurrent: boolean): ActiveSession {
     return {
-        id,
+        id: entityId<'refresh-token-session'>(id),
         isCurrent,
         authProvider: 'password',
         browser: 'Chrome',
         operatingSystem: 'Windows',
         deviceType: 'Desktop',
-        createdAtUtc: '2030-03-28T11:00:00Z',
-        lastActiveAtUtc: '2030-03-28T12:00:00Z',
+        createdAtUtc: utcInstant('2030-03-28T11:00:00Z'),
+        lastActiveAtUtc: utcInstant('2030-03-28T12:00:00Z'),
     };
 }

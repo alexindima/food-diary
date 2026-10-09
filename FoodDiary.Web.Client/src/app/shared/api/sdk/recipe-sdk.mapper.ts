@@ -49,7 +49,7 @@ export function recipeFromSdk(response: RecipeHttpResponse): Recipe {
 export function recipeLookupFromSdk(response: RecipeHttpResponse): RecipeLookup {
     const value = requireSdkFields(response, ['id', 'servings', 'steps']);
     return {
-        id: value.id,
+        id: entityId<'recipe'>(value.id),
         servings: value.servings,
         steps: value.steps.map(step => ({
             ingredients: requireSdkFields(step, ['ingredients']).ingredients.map(ingredient => ({

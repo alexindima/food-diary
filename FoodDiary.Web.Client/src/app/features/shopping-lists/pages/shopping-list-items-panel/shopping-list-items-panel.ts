@@ -13,6 +13,7 @@ import { FdUiMenuItemComponent } from 'fd-ui-kit/menu/fd-ui-menu-item';
 import { FdUiMenuTriggerDirective } from 'fd-ui-kit/menu/fd-ui-menu-trigger.directive';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 
+import type { ShoppingListItemId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingListItem } from '../../../../shared/models/shopping-list.data';
 import type { ShoppingListItemFormModel } from '../../lib/shopping-list-form.types';
 import { buildShoppingListItemViewModels, buildShoppingListUnitOptions } from '../../lib/shopping-list-item.mapper';
@@ -45,7 +46,7 @@ export class ShoppingListItemsPanelComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly activeLang = signal(this.translateService.getCurrentLang());
     protected readonly purchasedOpen = signal(true);
-    private readonly settlingIds = signal<ReadonlySet<string>>(new Set());
+    private readonly settlingIds = signal<ReadonlySet<ShoppingListItemId>>(new Set());
     private readonly settleTimers = new Set<ReturnType<typeof setTimeout>>();
     protected readonly pendingItems = computed(() =>
         this.itemViewModels().filter(item => !item.isChecked || this.settlingIds().has(item.id)),
@@ -67,9 +68,9 @@ export class ShoppingListItemsPanelComponent {
     protected readonly isItemFormInvalid = computed(() => this.itemForm()().invalid());
 
     public readonly itemAdd = output();
-    public readonly itemRemove = output<string>();
-    public readonly itemEdit = output<string>();
-    public readonly itemCheckedChange = output<{ itemId: string; checked: boolean }>();
+    public readonly itemRemove = output<ShoppingListItemId>();
+    public readonly itemEdit = output<ShoppingListItemId>();
+    public readonly itemCheckedChange = output<{ itemId: ShoppingListItemId; checked: boolean }>();
 
     public constructor() {
         this.destroyRef.onDestroy(() => {
@@ -82,7 +83,7 @@ export class ShoppingListItemsPanelComponent {
         });
     }
 
-    protected toggleChecked(itemId: string, checked: boolean): void {
+    protected toggleChecked(itemId: ShoppingListItemId, checked: boolean): void {
         if (checked) {
             this.settlingIds.update(ids => new Set([...ids, itemId]));
             const timer = setTimeout(() => {

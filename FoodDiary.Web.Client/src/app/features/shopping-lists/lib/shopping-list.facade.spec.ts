@@ -65,9 +65,9 @@ describe('ShoppingListFacade navigation and consolidation', () => {
         facade.initialize();
         const expected = facade.items();
         addMilk(facade);
-        expect(facade.applyConsolidation('list-1', expected, [])).toBe(false);
+        expect(facade.applyConsolidation(entityId<'shopping-list'>('list-1'), expected, [])).toBe(false);
         expect(facade.items()).toHaveLength(1);
-        expect(facade.applyConsolidation('list-1', facade.items(), [])).toBe(true);
+        expect(facade.applyConsolidation(entityId<'shopping-list'>('list-1'), facade.items(), [])).toBe(true);
         expect(facade.items()).toHaveLength(0);
     });
 });
@@ -77,8 +77,8 @@ describe('ShoppingListFacade loading and selection', () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
         shoppingListService.getById.mockReturnValue(new Subject<ShoppingList>());
-        facade.selectList('list-2');
-        facade.selectList('list-2');
+        facade.selectList(entityId<'shopping-list'>('list-2'));
+        facade.selectList(entityId<'shopping-list'>('list-2'));
         expect(shoppingListService.getById).toHaveBeenCalledExactlyOnceWith('list-2');
     });
     it('should load lists and current list on initialize', () => {
@@ -88,7 +88,7 @@ describe('ShoppingListFacade loading and selection', () => {
 
         expect(shoppingListService.getOverview).toHaveBeenCalledTimes(1);
         expect(shoppingListService.getPage).not.toHaveBeenCalled();
-        facade.selectList('list-1');
+        facade.selectList(entityId<'shopping-list'>('list-1'));
         expect(shoppingListService.getById).not.toHaveBeenCalled();
         expect(facade.list()?.id).toBe('list-1');
         expect(facade.selectedListId()).toBe('list-1');
@@ -113,8 +113,8 @@ describe('ShoppingListFacade loading and selection', () => {
         facade.initialize();
         shoppingListService.getById.mockClear();
 
-        facade.selectList('');
-        facade.selectList('list-1');
+        facade.selectList(entityId<'shopping-list'>(''));
+        facade.selectList(entityId<'shopping-list'>('list-1'));
 
         expect(shoppingListService.getById).not.toHaveBeenCalled();
     });
@@ -206,7 +206,7 @@ describe('ShoppingListFacade item persistence and errors', () => {
         shoppingListService.update.mockReturnValueOnce(response);
         facade.initialize();
         addMilk(facade);
-        facade.selectList('list-2');
+        facade.selectList(entityId<'shopping-list'>('list-2'));
         expect(shoppingListService.getById).not.toHaveBeenCalledWith('list-2');
         response.next({ ...list, items: facade.items() });
         expect(shoppingListService.getById).toHaveBeenLastCalledWith('list-2');
@@ -217,7 +217,7 @@ describe('ShoppingListFacade item persistence and errors', () => {
         shoppingListService.update.mockReturnValueOnce(throwError(() => new Error('offline')));
         facade.initialize();
         addMilk(facade);
-        facade.selectList('list-2');
+        facade.selectList(entityId<'shopping-list'>('list-2'));
         expect(facade.items()).toEqual([]);
         expect(shoppingListService.getById).not.toHaveBeenCalledWith('list-2');
         expect(toastService.error).toHaveBeenCalled();
@@ -495,9 +495,12 @@ describe('Named creation and purchased cleanup', () => {
                 shoppingListId: entityId<'shopping-list'>(row.shoppingListId),
             },
         ]);
-        facade.removePurchased('other-list', ['confirmed']);
+        facade.removePurchased(entityId<'shopping-list'>('other-list'), [entityId<'shopping-list-item'>('confirmed')]);
         expect(facade.items().map(item => item.id)).toEqual(['confirmed', 'unchecked', 'newly-checked']);
-        facade.removePurchased('list-1', ['confirmed', 'unchecked']);
+        facade.removePurchased(entityId<'shopping-list'>('list-1'), [
+            entityId<'shopping-list-item'>('confirmed'),
+            entityId<'shopping-list-item'>('unchecked'),
+        ]);
         expect(facade.items().map(item => item.id)).toEqual(['unchecked', 'newly-checked']);
     });
 });

@@ -2910,7 +2910,7 @@
       "inputs": [
         {
           "name": "recipeId",
-          "type": "string",
+          "type": "RecipeId",
           "required": true
         }
       ],
@@ -14453,7 +14453,7 @@
         },
         {
           "name": "selectedId",
-          "type": "string | null",
+          "type": "ShoppingListId | null",
           "required": false
         },
         {
@@ -14469,7 +14469,7 @@
         },
         {
           "name": "listSelected",
-          "type": "string"
+          "type": "ShoppingListId"
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/components/shopping-list-browser/shopping-list-browser.spec.ts"
@@ -14509,15 +14509,15 @@
         },
         {
           "name": "itemRemove",
-          "type": "string"
+          "type": "ShoppingListItemId"
         },
         {
           "name": "itemEdit",
-          "type": "string"
+          "type": "ShoppingListItemId"
         },
         {
           "name": "itemCheckedChange",
-          "type": "{ itemId: string; checked: boolean }"
+          "type": "{ itemId: ShoppingListItemId; checked: boolean }"
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.spec.ts"
@@ -14561,7 +14561,7 @@
         },
         {
           "name": "renameRequestedListId",
-          "type": "string | null",
+          "type": "ShoppingListId | null",
           "required": false
         },
         {
@@ -14585,19 +14585,19 @@
         },
         {
           "name": "clearListById",
-          "type": "string"
+          "type": "ShoppingListId"
         },
         {
           "name": "deleteListById",
-          "type": "string"
+          "type": "ShoppingListId"
         },
         {
           "name": "renameListById",
-          "type": "{ listId: string; name: string }"
+          "type": "{ listId: ShoppingListId; name: string }"
         },
         {
           "name": "renameRequestHandled",
-          "type": "string"
+          "type": "ShoppingListId"
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.spec.ts"
@@ -16822,7 +16822,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/recipes/{recipeId}/comments",
       "path": "FoodDiary.Web.Client/src/app/features/explore/api/comment.service.ts",
-      "line": 20,
+      "line": 21,
       "publicMethod": "getComments",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.recipes",
@@ -16834,7 +16834,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/recipes/{recipeId}/comments",
       "path": "FoodDiary.Web.Client/src/app/features/explore/api/comment.service.ts",
-      "line": 29,
+      "line": 30,
       "publicMethod": "createComment",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.recipes",
@@ -16846,7 +16846,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/recipes/{recipeId}/comments/{commentId}",
       "path": "FoodDiary.Web.Client/src/app/features/explore/api/comment.service.ts",
-      "line": 38,
+      "line": 39,
       "publicMethod": "updateComment",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.recipes",
@@ -16858,7 +16858,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/recipes/{recipeId}/comments/{commentId}",
       "path": "FoodDiary.Web.Client/src/app/features/explore/api/comment.service.ts",
-      "line": 52,
+      "line": 53,
       "publicMethod": "deleteComment",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.recipes",
@@ -17602,7 +17602,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/products/public/{id}",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/public-product.service.ts",
-      "line": 14,
+      "line": 15,
       "publicMethod": "getById",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": null,
@@ -17614,7 +17614,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/sessions",
       "path": "FoodDiary.Web.Client/src/app/features/profile/api/active-sessions.service.ts",
-      "line": 20,
+      "line": 23,
       "publicMethod": "getAll",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": null,
@@ -17626,7 +17626,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/sessions/{sessionId}",
       "path": "FoodDiary.Web.Client/src/app/features/profile/api/active-sessions.service.ts",
-      "line": 38,
+      "line": 30,
       "publicMethod": "revoke",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": null,
@@ -17638,7 +17638,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/sessions",
       "path": "FoodDiary.Web.Client/src/app/features/profile/api/active-sessions.service.ts",
-      "line": 42,
+      "line": 34,
       "publicMethod": "revokeOthers",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": null,
@@ -17722,7 +17722,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/recipes/public",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/public-recipe.service.ts",
-      "line": 19,
+      "line": 20,
       "publicMethod": "query",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "inject(PUBLIC_RECIPE_API_URL)",
@@ -17734,7 +17734,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/recipes/public/categories",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/public-recipe.service.ts",
-      "line": 25,
+      "line": 26,
       "publicMethod": "getCategories",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "inject(PUBLIC_RECIPE_API_URL)",
@@ -17746,7 +17746,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/recipes/public/{id}",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/public-recipe.service.ts",
-      "line": 29,
+      "line": 30,
       "publicMethod": "getById",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "inject(PUBLIC_RECIPE_API_URL)",
@@ -18334,7 +18334,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/recipes/{id}",
       "path": "FoodDiary.Web.Client/src/app/shared/api/recipe-lookup.service.ts",
-      "line": 18,
+      "line": 19,
       "publicMethod": "getById",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.recipes",
@@ -18934,7 +18934,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/waist-entries",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/api/waist-entries.service.ts",
-      "line": 31,
+      "line": 32,
       "publicMethod": "getEntries",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.waists",
@@ -18946,7 +18946,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/waist-entries",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/api/waist-entries.service.ts",
-      "line": 45,
+      "line": 46,
       "publicMethod": "getHistoryPage",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.waists",
@@ -18958,7 +18958,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/waist-entries/latest",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/api/waist-entries.service.ts",
-      "line": 56,
+      "line": 57,
       "publicMethod": "getLatest",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.waists",
@@ -18970,7 +18970,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/waist-entries",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/api/waist-entries.service.ts",
-      "line": 63,
+      "line": 64,
       "publicMethod": "create",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.waists",
@@ -18982,7 +18982,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/waist-entries/{id}",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/api/waist-entries.service.ts",
-      "line": 72,
+      "line": 73,
       "publicMethod": "update",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.waists",
@@ -18994,7 +18994,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/waist-entries/{id}",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/api/waist-entries.service.ts",
-      "line": 79,
+      "line": 80,
       "publicMethod": "remove",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.waists",
@@ -19006,7 +19006,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/waist-entries/summary",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/api/waist-entries.service.ts",
-      "line": 86,
+      "line": 87,
       "publicMethod": "getSummary",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.waists",
@@ -19018,7 +19018,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/waist-entries/page-summary",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/api/waist-entries.service.ts",
-      "line": 93,
+      "line": 94,
       "publicMethod": "getPageSummary",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.waists",
@@ -19102,7 +19102,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/weekly-check-in",
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/api/weekly-check-in.service.ts",
-      "line": 18,
+      "line": 19,
       "publicMethod": "getData",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.weeklyCheckIn",
@@ -19114,7 +19114,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/weekly-goals",
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/api/weekly-goal.service.ts",
-      "line": 19,
+      "line": 20,
       "publicMethod": "getGoal",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.weeklyGoals",
@@ -19126,7 +19126,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/weekly-goals",
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/api/weekly-goal.service.ts",
-      "line": 26,
+      "line": 27,
       "publicMethod": "upsertGoal",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.weeklyGoals",
@@ -19138,7 +19138,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/weight-entries",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/api/weight-entries.service.ts",
-      "line": 31,
+      "line": 32,
       "publicMethod": "getEntries",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.weights",
@@ -19150,7 +19150,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/weight-entries",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/api/weight-entries.service.ts",
-      "line": 45,
+      "line": 46,
       "publicMethod": "getHistoryPage",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.weights",
@@ -19162,7 +19162,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/weight-entries/latest",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/api/weight-entries.service.ts",
-      "line": 56,
+      "line": 57,
       "publicMethod": "getLatest",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.weights",
@@ -19174,7 +19174,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/weight-entries",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/api/weight-entries.service.ts",
-      "line": 63,
+      "line": 64,
       "publicMethod": "create",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.weights",
@@ -19186,7 +19186,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/weight-entries/{id}",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/api/weight-entries.service.ts",
-      "line": 70,
+      "line": 71,
       "publicMethod": "update",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.weights",
@@ -19198,7 +19198,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/weight-entries/{id}",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/api/weight-entries.service.ts",
-      "line": 77,
+      "line": 78,
       "publicMethod": "remove",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.weights",
@@ -19210,7 +19210,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/weight-entries/summary",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/api/weight-entries.service.ts",
-      "line": 84,
+      "line": 85,
       "publicMethod": "getSummary",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.weights",
@@ -19222,7 +19222,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/weight-entries/page-summary",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/api/weight-entries.service.ts",
-      "line": 91,
+      "line": 92,
       "publicMethod": "getPageSummary",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.weights",

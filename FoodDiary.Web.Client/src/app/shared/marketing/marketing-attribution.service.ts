@@ -9,7 +9,7 @@ import { createSdkConnection, sdkRequestOptions } from '../api/sdk/sdk-connectio
 import { ClientTelemetrySessionService } from '../observability/client-telemetry-session.service';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
-import { type AnonymousVisitorId, anonymousVisitorId, type MarketingAttributionIdentity,marketingSessionId } from './marketing-identity';
+import { type AnonymousVisitorId, anonymousVisitorId, type MarketingAttributionIdentity, marketingSessionId } from './marketing-identity';
 
 type MarketingAttributionPayload = MarketingAttributionIdentity & {
     timestamp: string;

@@ -1,6 +1,7 @@
 import type { PublicRecipeHttpResponse } from '../../../shared/api/sdk/generated/model/public-recipe-http-response';
 import { requireSdkFields, sdkEnum, sdkNullableFields, sdkOptional } from '../../../shared/api/sdk/sdk-response';
 import { RECIPE_CATEGORIES } from '../../../shared/models/recipe-category';
+import { entityId, optionalEntityId } from '../../../shared/models/semantics/entity-id';
 import type { PublicRecipe } from '../models/public-recipe.data';
 
 export function publicRecipeFromSdk(response: PublicRecipeHttpResponse): PublicRecipe {
@@ -18,6 +19,7 @@ export function publicRecipeFromSdk(response: PublicRecipeHttpResponse): PublicR
             'totalFiber',
             'totalAlcohol',
         ]),
+        id: entityId<'recipe'>(value.id),
         language: value.language ?? undefined,
         category: sdkOptional(value.category, category => sdkEnum(category, RECIPE_CATEGORIES)),
         missingIngredientNames: value.missingIngredientNames ?? undefined,
@@ -26,9 +28,20 @@ export function publicRecipeFromSdk(response: PublicRecipeHttpResponse): PublicR
             return {
                 ...step,
                 title: step.title ?? null,
-                ingredients: step.ingredients.map(ingredient =>
-                    sdkNullableFields(requireSdkFields(ingredient, ['isAvailable']), ['name', 'amount', 'unit', 'amountText', 'recipeId']),
-                ),
+                ingredients: step.ingredients.map(ingredient => {
+                    const observed = sdkNullableFields(requireSdkFields(ingredient, ['isAvailable']), [
+                        'name',
+                        'amount',
+                        'unit',
+                        'amountText',
+                        'recipeId',
+                    ]);
+                    return {
+                        ...observed,
+                        productId: optionalEntityId<'product'>(observed.productId),
+                        recipeId: optionalEntityId<'recipe'>(observed.recipeId),
+                    };
+                }),
             };
         }),
     };

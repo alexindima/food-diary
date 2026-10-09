@@ -1,11 +1,12 @@
 import type { RecipeCategory } from '../../../shared/models/recipe-category';
+import type { ProductId, RecipeId } from '../../../shared/models/semantics/entity-id';
 export type PublicRecipeIngredient = {
-    productId?: string | null;
+    productId?: ProductId | null;
     name: string | null;
     amount: number | null;
     unit: string | null;
     amountText: string | null;
-    recipeId: string | null;
+    recipeId: RecipeId | null;
     isAvailable: boolean;
 };
 
@@ -20,7 +21,7 @@ export type PublicRecipeStep = {
 export type PublicRecipe = {
     authorName?: string | null;
     language?: string;
-    id: string;
+    id: RecipeId;
     name: string;
     description: string | null;
     category: RecipeCategory | null;

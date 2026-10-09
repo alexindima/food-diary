@@ -94,13 +94,15 @@ describe('buildRecipeDetailViewModel preview', () => {
                     instruction: 'Mix',
                     imageUrl: null,
                     imageAssetId: null,
-                    ingredients: Array.from({ length: RECIPE_DETAIL_INGREDIENT_PREVIEW_LIMIT + 1 }, (_, index) => recipeIngredientFromStored({
-                        id: `ingredient-${index}`,
-                        amount: index + 1,
-                        productName: index === 0 ? null : `Ingredient ${index}`,
-                        nestedRecipeName: index === 0 ? null : undefined,
-                        productBaseUnit: index === 1 ? '' : MeasurementUnit.G,
-                    })),
+                    ingredients: Array.from({ length: RECIPE_DETAIL_INGREDIENT_PREVIEW_LIMIT + 1 }, (_, index) =>
+                        recipeIngredientFromStored({
+                            id: `ingredient-${index}`,
+                            amount: index + 1,
+                            productName: index === 0 ? null : `Ingredient ${index}`,
+                            nestedRecipeName: index === 0 ? null : undefined,
+                            productBaseUnit: index === 1 ? '' : MeasurementUnit.G,
+                        }),
+                    ),
                 },
             ],
         });

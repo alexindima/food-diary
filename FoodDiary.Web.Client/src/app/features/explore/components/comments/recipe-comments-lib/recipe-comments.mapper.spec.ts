@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import type { RecipeComment } from '../../../models/comment.data';
 import { DEFAULT_COMMENT_AUTHOR_LABEL } from './recipe-comments.constants';
 import { buildRecipeCommentViewModels, formatRecipeCommentDate } from './recipe-comments.mapper';
@@ -10,9 +12,9 @@ describe('buildRecipeCommentViewModels', () => {
     it('uses first name, username, or fallback author labels', () => {
         const result = buildRecipeCommentViewModels(
             [
-                createComment({ id: 'comment-1', authorFirstName: 'Alex', authorUsername: 'alexi' }),
-                createComment({ id: 'comment-2', authorFirstName: null, authorUsername: 'foodie' }),
-                createComment({ id: 'comment-3', authorFirstName: null, authorUsername: null }),
+                createComment({ id: entityId<'recipe-comment'>('comment-1'), authorFirstName: 'Alex', authorUsername: 'alexi' }),
+                createComment({ id: entityId<'recipe-comment'>('comment-2'), authorFirstName: null, authorUsername: 'foodie' }),
+                createComment({ id: entityId<'recipe-comment'>('comment-3'), authorFirstName: null, authorUsername: null }),
             ],
             'en',
         );
@@ -33,13 +35,13 @@ describe('formatRecipeCommentDate', () => {
 
 function createComment(overrides: Partial<RecipeComment> = {}): RecipeComment {
     return {
-        id: 'comment-1',
-        recipeId: 'recipe-1',
-        authorId: 'user-1',
+        id: entityId<'recipe-comment'>('comment-1'),
+        recipeId: entityId<'recipe'>('recipe-1'),
+        authorId: entityId<'user'>('user-1'),
         authorUsername: 'alexi',
         authorFirstName: 'Alex',
         text: 'Nice recipe',
-        createdAtUtc: VALID_DATE,
+        createdAtUtc: utcInstant(VALID_DATE),
         modifiedAtUtc: null,
         isOwnedByCurrentUser: false,
         ...overrides,

@@ -4,6 +4,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { publicRecipeFixture } from '../../lib/public-recipe.test-helper';
 import { PublicIngredientsComponent } from './public-ingredients';
 
@@ -46,7 +47,15 @@ describe('public ingredient quantities', () => {
     it('sends scaled quantities and free text, with no shopping action for private ingredients', () => {
         const recipe = publicRecipeFixture();
         recipe.steps[0].ingredients = [
-            { name: 'Rice', productId: 'public-rice', amount: 100, unit: 'Gram', amountText: null, recipeId: null, isAvailable: true },
+            {
+                name: 'Rice',
+                productId: entityId<'product'>('public-rice'),
+                amount: 100,
+                unit: 'Gram',
+                amountText: null,
+                recipeId: null,
+                isAvailable: true,
+            },
             { name: 'Salt', amount: null, unit: null, amountText: 'to taste', recipeId: null, isAvailable: true },
             { name: null, amount: null, unit: null, amountText: null, recipeId: null, isAvailable: false },
         ];
@@ -70,6 +79,15 @@ describe('public ingredient quantities', () => {
             item: { name: 'Salt', productId: null, amount: null, unit: null, note: 'to taste', isChecked: false },
         });
     });
+});
+
+describe('public ingredient empty state', () => {
+    beforeEach(() =>
+        TestBed.configureTestingModule({
+            imports: [PublicIngredientsComponent],
+            providers: [provideRouter([]), provideTranslateTesting()],
+        }),
+    );
 
     it('hides the portions hint when the recipe has no ingredients', () => {
         const recipe = publicRecipeFixture();

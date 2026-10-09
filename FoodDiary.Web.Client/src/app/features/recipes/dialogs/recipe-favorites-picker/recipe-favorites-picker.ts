@@ -7,6 +7,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { debounceTime, distinctUntilChanged, finalize, map, type Observable, Subject } from 'rxjs';
 
 import type { FavoriteRecipe } from '../../../../shared/models/recipe.data';
+import type { FavoriteRecipeId } from '../../../../shared/models/semantics/entity-id';
 import { FavoriteRecipeRowComponent } from '../../components/favorite-recipe-row/favorite-recipe-row';
 import { RecipeFavoritesPickerFacade } from '../../lib/favorites/recipe-favorites-picker.facade';
 
@@ -35,14 +36,14 @@ export type RecipeFavoritesPickerData = {
 })
 export class RecipeFavoritesPickerComponent {
     protected readonly facade = inject(RecipeFavoritesPickerFacade);
-    protected readonly savingId = signal<string | null>(null);
-    protected readonly removingId = signal<string | null>(null);
+    protected readonly savingId = signal<FavoriteRecipeId | null>(null);
+    protected readonly removingId = signal<FavoriteRecipeId | null>(null);
     protected readonly removeFailed = signal(false);
-    protected readonly restoringId = signal<string | null>(null);
-    protected readonly restoreErrors = signal<ReadonlySet<string>>(new Set());
+    protected readonly restoringId = signal<FavoriteRecipeId | null>(null);
+    protected readonly restoreErrors = signal<ReadonlySet<FavoriteRecipeId>>(new Set());
     protected readonly busy = computed(() => this.savingId() !== null || this.removingId() !== null || this.restoringId() !== null);
     private readonly rows = viewChildren(FavoriteRecipeRowComponent);
-    private readonly focusTarget = signal<string | null>(null);
+    private readonly focusTarget = signal<FavoriteRecipeId | null>(null);
     protected readonly saveFailed = signal(false);
     protected readonly operationErrorKey = computed(() => {
         if (this.saveFailed()) {

@@ -6,6 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { UserService } from '../../../shared/api/user.service';
 import { MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
+import { optionalCalendarDate } from '../../../shared/models/semantics/date-value';
 import { calendarDate, utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { WaistGoalHistoryItem } from '../../../shared/models/user.data';
@@ -109,7 +110,7 @@ describe('WaistHistoryFacade entry history pagination', () => {
         waistEntriesService.getHistoryPage.mockReturnValueOnce(of(historyEntries));
         const next = vi.fn();
 
-        facade.getEntryHistoryPage(dateTo).subscribe(next);
+        facade.getEntryHistoryPage(optionalCalendarDate(dateTo)).subscribe(next);
 
         expect(waistEntriesService.getHistoryPage).toHaveBeenCalledExactlyOnceWith(dateTo);
         expect(next).toHaveBeenCalledExactlyOnceWith(historyEntries);
@@ -122,7 +123,7 @@ describe('WaistHistoryFacade entry history pagination', () => {
         const next = vi.fn();
         const error = vi.fn();
 
-        facade.getEntryHistoryPage('2026-03-29').subscribe({ next, error });
+        facade.getEntryHistoryPage(calendarDate('2026-03-29')).subscribe({ next, error });
 
         expect(next).not.toHaveBeenCalled();
         expect(error).toHaveBeenCalledExactlyOnceWith(failure);

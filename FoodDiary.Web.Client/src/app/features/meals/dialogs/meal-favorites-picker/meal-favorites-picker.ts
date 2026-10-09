@@ -10,6 +10,7 @@ import { debounceTime, distinctUntilChanged, finalize, map, type Observable, Sub
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { type MealTypeOption, normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import type { FavoriteMeal } from '../../../../shared/models/meal.data';
+import type { FavoriteMealId } from '../../../../shared/models/semantics/entity-id';
 import { FavoriteMealRowComponent } from '../../components/favorite-meal-row/favorite-meal-row';
 import { buildMealTypeSelectOptions } from '../../components/manage/meal-manage-lib/meal-manage-options.mapper';
 import { MealFavoritesPickerFacade } from '../../lib/favorites/meal-favorites-picker.facade';
@@ -47,14 +48,14 @@ export class MealFavoritesPickerComponent {
         return buildMealTypeSelectOptions(this.translateService);
     });
     protected readonly facade = inject(MealFavoritesPickerFacade);
-    protected readonly savingId = signal<string | null>(null);
-    protected readonly removingId = signal<string | null>(null);
+    protected readonly savingId = signal<FavoriteMealId | null>(null);
+    protected readonly removingId = signal<FavoriteMealId | null>(null);
     protected readonly removeFailed = signal(false);
-    protected readonly restoringId = signal<string | null>(null);
-    protected readonly restoreErrors = signal<ReadonlySet<string>>(new Set());
+    protected readonly restoringId = signal<FavoriteMealId | null>(null);
+    protected readonly restoreErrors = signal<ReadonlySet<FavoriteMealId>>(new Set());
     protected readonly busy = computed(() => this.savingId() !== null || this.removingId() !== null || this.restoringId() !== null);
     private readonly rows = viewChildren(FavoriteMealRowComponent);
-    private readonly focusTarget = signal<string | null>(null);
+    private readonly focusTarget = signal<FavoriteMealId | null>(null);
     protected readonly saveFailed = signal(false);
     protected readonly operationErrorKey = computed(() => {
         if (this.saveFailed()) {

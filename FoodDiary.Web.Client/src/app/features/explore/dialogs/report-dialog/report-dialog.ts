@@ -10,12 +10,11 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
 import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
-import type { CreateReportDto } from '../../models/report.data';
+import type { CreateReportDto, ReportTarget } from '../../models/report.data';
 import { REPORT_REASON_MAX_LENGTH } from './report-dialog.tokens';
 
 export type ReportDialogData = {
-    targetType: 'Recipe' | 'Comment';
-    targetId: string;
+    target: ReportTarget;
 };
 
 @Component({
@@ -52,8 +51,7 @@ export class ReportDialogComponent {
 
         this.isSubmitting.set(true);
         const dto: CreateReportDto = {
-            targetType: this.data.targetType,
-            targetId: this.data.targetId,
+            target: this.data.target,
             reason,
         };
 

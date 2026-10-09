@@ -4,19 +4,20 @@ import { catchError, map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { RecipesSdk } from '../../../shared/api/sdk/generated/api/recipes.service';
-import type { RecipeCommentHttpResponse } from '../../../shared/api/sdk/generated/model/recipe-comment-http-response';
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
-import { requireSdkFields, sdkPage } from '../../../shared/api/sdk/sdk-response';
+import { sdkPage } from '../../../shared/api/sdk/sdk-response';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
+import type { RecipeCommentId, RecipeId } from '../../../shared/models/semantics/entity-id';
 import type { CreateCommentDto, RecipeComment, UpdateCommentDto } from '../models/comment.data';
+import { commentFromSdk } from './community-sdk.mapper';
 
 @Service()
 export class CommentService {
     protected readonly baseUrl = environment.apiUrls.recipes;
     private readonly sdk = createSdkConnection(RecipesSdk, this.baseUrl, inject(HttpClient));
 
-    public getComments(recipeId: string, page: number, limit: number): Observable<PageOf<RecipeComment>> {
+    public getComments(recipeId: RecipeId, page: number, limit: number): Observable<PageOf<RecipeComment>> {
         return this.sdk.client.getRecipesByRecipeIdComments({ version: this.sdk.version, recipeId, page, limit }).pipe(
             map(value => sdkPage(value, commentFromSdk)),
             catchError((error: unknown) =>
@@ -25,7 +26,7 @@ export class CommentService {
         );
     }
 
-    public createComment(recipeId: string, dto: CreateCommentDto): Observable<RecipeComment> {
+    public createComment(recipeId: RecipeId, dto: CreateCommentDto): Observable<RecipeComment> {
         return this.sdk.client
             .postRecipesByRecipeIdComments({ version: this.sdk.version, recipeId, createRecipeCommentHttpRequest: dto })
             .pipe(
@@ -34,7 +35,7 @@ export class CommentService {
             );
     }
 
-    public updateComment(recipeId: string, commentId: string, dto: UpdateCommentDto): Observable<RecipeComment> {
+    public updateComment(recipeId: RecipeId, commentId: RecipeCommentId, dto: UpdateCommentDto): Observable<RecipeComment> {
         return this.sdk.client
             .patchRecipesByRecipeIdCommentsByCommentId({
                 version: this.sdk.version,
@@ -48,13 +49,9 @@ export class CommentService {
             );
     }
 
-    public deleteComment(recipeId: string, commentId: string): Observable<void> {
+    public deleteComment(recipeId: RecipeId, commentId: RecipeCommentId): Observable<void> {
         return this.sdk.client
             .deleteRecipesByRecipeIdCommentsByCommentId({ version: this.sdk.version, recipeId, commentId })
             .pipe(catchError((error: unknown) => rethrowApiError('Delete comment error', error)));
     }
-}
-
-function commentFromSdk(value: RecipeCommentHttpResponse): RecipeComment {
-    return requireSdkFields(value, ['id', 'recipeId', 'authorId', 'text', 'createdAtUtc', 'isOwnedByCurrentUser']);
 }

@@ -10,6 +10,7 @@ import { createSdkConnection, sdkRequestOptions } from '../../../shared/api/sdk/
 import { sdkOptional } from '../../../shared/api/sdk/sdk-response';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { MEASUREMENT_HISTORY_FETCH_LIMIT } from '../../../shared/measurements/measurement-history.constants';
+import type { CalendarDate } from '../../../shared/models/semantics/date-value';
 import type { WaistEntryId } from '../../../shared/models/semantics/entity-id';
 import type {
     CreateWaistEntryPayload,
@@ -41,7 +42,7 @@ export class WaistEntriesService {
             );
     }
 
-    public getHistoryPage(dateTo?: string): Observable<WaistEntry[]> {
+    public getHistoryPage(dateTo?: CalendarDate): Observable<WaistEntry[]> {
         return this.sdk.client
             .getWaistEntries(
                 { version: this.sdk.version, limit: MEASUREMENT_HISTORY_FETCH_LIMIT, sort: 'desc', dateTo },

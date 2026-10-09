@@ -3,6 +3,8 @@ import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import type { RecipeComment } from '../../../models/comment.data';
 import type { RecipeCommentViewModel } from '../recipe-comments-lib/recipe-comments.types';
 import { RecipeCommentsListComponent } from './recipe-comments-list';
@@ -75,13 +77,13 @@ function getButtonByText(element: HTMLElement, text: string): HTMLElement {
 
 function createViewModel(): RecipeCommentViewModel {
     const comment: RecipeComment = {
-        id: 'comment-1',
-        recipeId: 'recipe-1',
-        authorId: 'user-1',
+        id: entityId<'recipe-comment'>('comment-1'),
+        recipeId: entityId<'recipe'>('recipe-1'),
+        authorId: entityId<'user'>('user-1'),
         authorUsername: 'alexi',
         authorFirstName: 'Alex',
         text: 'Nice recipe',
-        createdAtUtc: '2026-05-16T10:00:00.000Z',
+        createdAtUtc: utcInstant('2026-05-16T10:00:00.000Z'),
         modifiedAtUtc: null,
         isOwnedByCurrentUser: false,
     };

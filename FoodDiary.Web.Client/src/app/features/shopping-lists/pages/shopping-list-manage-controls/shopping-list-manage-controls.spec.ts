@@ -44,12 +44,12 @@ describe('ShoppingListManageControlsComponent', () => {
             name: `Extra ${number}`,
         }));
         const { component } = await setupManageControlsAsync([...LISTS, ...extra]);
-        component['selectList']('list-5');
+        component['selectList'](entityId<'shopping-list'>('list-5'));
         expect(component['quickLists']().map(list => list.id)).toEqual(['list-1', 'list-2', 'list-5']);
         expect(component['quickLists']().map(list => list.id)).toContain('list-5');
-        component['selectList']('list-2');
+        component['selectList'](entityId<'shopping-list'>('list-2'));
         expect(component['quickLists']().map(list => list.id)).toEqual(['list-1', 'list-2', 'list-5']);
-        component['selectList']('list-4');
+        component['selectList'](entityId<'shopping-list'>('list-4'));
         expect(component['quickLists']().map(list => list.id)).toEqual(['list-4', 'list-2', 'list-5']);
     });
 
@@ -63,7 +63,7 @@ describe('ShoppingListManageControlsComponent', () => {
     it('updates selected list when a card is selected', async () => {
         const { component } = await setupManageControlsAsync();
 
-        component['selectList']('list-2');
+        component['selectList'](entityId<'shopping-list'>('list-2'));
 
         expect(component['selectedListId']()).toBe('list-2');
     });
@@ -104,9 +104,9 @@ describe('ShoppingListManageControlsComponent', () => {
         component.clearListById.subscribe(clearSpy);
 
         component.createList.emit();
-        component.renameListById.emit({ listId: 'list-2', name: 'Weekend groceries' });
-        component.deleteListById.emit('list-2');
-        component.clearListById.emit('list-1');
+        component.renameListById.emit({ listId: entityId<'shopping-list'>('list-2'), name: 'Weekend groceries' });
+        component.deleteListById.emit(entityId<'shopping-list'>('list-2'));
+        component.clearListById.emit(entityId<'shopping-list'>('list-1'));
 
         expect(createSpy).toHaveBeenCalledOnce();
         expect(renameSpy).toHaveBeenCalledWith({ listId: 'list-2', name: 'Weekend groceries' });

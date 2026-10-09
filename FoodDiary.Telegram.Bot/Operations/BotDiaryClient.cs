@@ -59,38 +59,38 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
         response.EnsureSuccessStatusCode();
     }
 
-    internal async Task ConfirmUploadAsync(string token, Guid assetId, CancellationToken cancellationToken) {
-        using HttpResponseMessage response = await new BotImagesApi(CreateTransport()).ConfirmUploadAsync(assetId, "1",
-            $"telegram:{assetId:N}:confirm", new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
+    internal async Task ConfirmUploadAsync(string token, BotImageAssetId assetId, CancellationToken cancellationToken) {
+        using HttpResponseMessage response = await new BotImagesApi(CreateTransport()).ConfirmUploadAsync(assetId.Value, "1",
+            $"telegram:{assetId.Value:N}:confirm", new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
     }
 
-    internal async Task<BotRecognitionJob> StartRecognitionAsync(string token, BotOperationId operationId, Guid assetId,
+    internal async Task<BotRecognitionJob> StartRecognitionAsync(string token, BotOperationId operationId, BotImageAssetId assetId,
         string? caption, CancellationToken cancellationToken) {
         using HttpResponseMessage response = await new BotRecognitionApi(CreateTransport()).StartRecognitionAsync("1",
-            new StartFoodRecognitionHttpRequest { Id = operationId.Value, ImageAssetId = assetId, Description = caption },
+            new StartFoodRecognitionHttpRequest { Id = operationId.Value, ImageAssetId = assetId.Value, Description = caption },
             new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
         return BotApiMapper.Recognition(await ReadAsync<FoodRecognitionJobHttpResponse>(response, cancellationToken).ConfigureAwait(false));
     }
 
-    internal async Task<BotRecognitionJob> GetRecognitionAsync(string token, Guid jobId, CancellationToken cancellationToken) {
-        using HttpResponseMessage response = await new BotRecognitionApi(CreateTransport()).GetRecognitionAsync(jobId, "1",
+    internal async Task<BotRecognitionJob> GetRecognitionAsync(string token, BotRecognitionId jobId, CancellationToken cancellationToken) {
+        using HttpResponseMessage response = await new BotRecognitionApi(CreateTransport()).GetRecognitionAsync(jobId.Value, "1",
             new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
         return BotApiMapper.Recognition(await ReadAsync<FoodRecognitionJobHttpResponse>(response, cancellationToken).ConfigureAwait(false));
     }
 
-    internal async Task<BotRecognizedMeal> SaveRecognizedMealAsync(string token, Guid recognitionId, DateTime occurredAtUtc, CancellationToken cancellationToken) {
-        using HttpResponseMessage response = await new BotMealsApi(CreateTransport()).SaveRecognizedMealAsync(recognitionId, "1",
+    internal async Task<BotRecognizedMeal> SaveRecognizedMealAsync(string token, BotRecognitionId recognitionId, DateTime occurredAtUtc, CancellationToken cancellationToken) {
+        using HttpResponseMessage response = await new BotMealsApi(CreateTransport()).SaveRecognizedMealAsync(recognitionId.Value, "1",
             new CreateMealFromRecognitionHttpRequest { OccurredAtUtc = occurredAtUtc }, new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
         BotRecognizedMeal result = BotApiMapper.Meal(await ReadAsync<RecognizedMealCreationHttpResponse>(response, cancellationToken).ConfigureAwait(false));
-        if (result.OperationId != recognitionId || result.MealId == Guid.Empty) {
+        if (result.OperationId.Value != recognitionId.Value || result.MealId.Value == Guid.Empty) {
             throw new InvalidDataException("Meal receipt identity mismatch.");
         }
         return result;
     }
 
-    internal async Task<string> UndoRecognizedMealAsync(string token, Guid operationId, CancellationToken cancellationToken) {
-        using HttpResponseMessage response = await new BotMealsApi(CreateTransport()).UndoRecognizedMealAsync(operationId, "1",
+    internal async Task<string> UndoRecognizedMealAsync(string token, BotOperationId operationId, CancellationToken cancellationToken) {
+        using HttpResponseMessage response = await new BotMealsApi(CreateTransport()).UndoRecognizedMealAsync(operationId.Value, "1",
             new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
         await response.Content.LoadIntoBufferAsync(MaximumResponseBytes, cancellationToken).ConfigureAwait(false);
         if (response.StatusCode is System.Net.HttpStatusCode.Conflict or System.Net.HttpStatusCode.NotFound) {
@@ -107,7 +107,7 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
             new CreateHydrationFromOperationHttpRequest { TimestampUtc = timestampUtc, AmountMl = amountMl },
             new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
         BotHydrationReceipt receipt = BotApiMapper.Water(await ReadAsync<HydrationOperationHttpResponse>(response, cancellationToken).ConfigureAwait(false));
-        if (receipt.OperationId != operationId.Value || receipt.EntryId == Guid.Empty || receipt.AmountMl != amountMl ||
+        if (receipt.OperationId != operationId || receipt.EntryId.Value == Guid.Empty || receipt.AmountMl != amountMl ||
             receipt.TimestampUtc.Ticks / 10 != timestampUtc.Ticks / 10) {
             throw new InvalidDataException("Water receipt does not match the requested operation.");
         }

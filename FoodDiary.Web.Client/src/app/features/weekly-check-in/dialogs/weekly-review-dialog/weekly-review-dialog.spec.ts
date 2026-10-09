@@ -5,12 +5,13 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { calendarDate } from '../../../../shared/models/semantics/date-value';
 import { WeeklyReviewDialogComponent, type WeeklyReviewDialogData } from './weekly-review-dialog';
 
 const EXPECTED_INSIGHT_COUNT = 3;
 const SAVED_GOAL: NonNullable<WeeklyReviewDialogData['goal']> = {
     id: 'goal-1',
-    weekStart: '2026-10-05',
+    weekStart: calendarDate('2026-10-05'),
     type: 'DiaryLogging',
     targetDays: 3,
     progressDays: 2,
