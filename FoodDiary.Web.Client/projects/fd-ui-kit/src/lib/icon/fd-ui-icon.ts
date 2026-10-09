@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
+import subsetIconNames from './material-icons-subset.json';
+
+const subsetIcons = new Set<string>(subsetIconNames);
+
 export type FdUiIconSize = 'sm' | 'md' | 'lg' | 'xl';
 
 const ICON_SIZE_TOKENS: Record<FdUiIconSize, string> = {
@@ -28,7 +32,13 @@ export class FdUiIconComponent {
     public readonly decorative = input(true);
     public readonly ariaLabel = input<string | null>(null);
     public readonly fontSet = input<string>();
-    protected readonly glyphClass = computed(() => this.fontSet()?.trim() ?? 'material-icons');
+    protected readonly glyphClass = computed(() => {
+        const fontSet = this.fontSet();
+        if (fontSet !== undefined) {
+            return fontSet.trim();
+        }
+        return subsetIcons.has(this.name()) ? 'fd-material-icons' : 'material-icons';
+    });
 
     protected readonly resolvedSize = computed(() => {
         const size = this.size();

@@ -17,6 +17,7 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 - Install: `npm install`
 - Build: `npm run build`
 - Production build: `npm run build:prod`
+- PWA production/staging builds must use the npm build scripts: they emit browser stats and finalize `ngsw.json` so only the startup graph and home landing are prefetched. Other versioned JavaScript loads on demand, with used files updated eagerly. Run `npm run test:performance-build` for the graph/manifest regression checks; a direct `ng build` retains the safe but larger prefetch fallback.
 - Admin build: `npm run build:admin`
 - Lint: `npm run lint`
 - Dependency graph lint: `npm run lint:deps:strict`

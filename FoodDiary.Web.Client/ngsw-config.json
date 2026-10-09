@@ -6,7 +6,23 @@
             "name": "app",
             "installMode": "prefetch",
             "resources": {
-                "files": ["/favicon.ico", "/index.csr.html", "/index.html", "/manifest.webmanifest", "/*.css", "/*.js"]
+                "files": [
+                    "/favicon.ico",
+                    "/index.csr.html",
+                    "/index.html",
+                    "/manifest.webmanifest",
+                    "/*.css",
+                    "/*.js",
+                    "/media/material-icons-subset*.woff2"
+                ]
+            }
+        },
+        {
+            "name": "lazy-javascript",
+            "installMode": "lazy",
+            "updateMode": "prefetch",
+            "resources": {
+                "files": []
             }
         },
         {

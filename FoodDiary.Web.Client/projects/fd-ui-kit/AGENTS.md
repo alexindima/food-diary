@@ -35,6 +35,7 @@ Rules for `FoodDiary.Web.Client/projects/fd-ui-kit/`.
 - Update Storybook documentation when adding token groups, utility patterns, or shared visual primitives.
 - Keep public exports intentional. Consumers should import from the UI kit public surface, not deep paths.
 - Preserve accessibility defaults. Icon-only controls must expose accessible naming APIs.
+- Include `src/lib/icon/material-icons-subset.scss` alongside the full Material Icons stylesheet in consuming apps and Storybook. Known names use the checked-in small font; unknown names and explicit `fontSet` values preserve the full/custom font behavior. Regenerate the subset with `python scripts/generate-icon-subset.py` from the Angular workspace after installing `fonttools[woff]==4.63.0`; Python is not needed by ordinary frontend builds. Commit the generated font and name list together, preserving the adjacent Apache license.
 
 ## Change Policy
 
