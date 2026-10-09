@@ -91,10 +91,56 @@ describe('MarketingAttributionService', () => {
     });
 });
 
+describe('MarketingAttributionService identity lifetimes', () => {
+    it('retains the local visitor across a new session and keeps signup on the first touch', () => {
+        const { service, httpMock, storage, session } = setup();
+        storage.setItem('local', 'fd_marketing_anonymous_id', 'opaque/visitor');
+        service.initialize();
+        const first = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events`);
+        expect(first.request.body).toMatchObject({ anonymousId: 'opaque/visitor', sessionId: 'fd-session-test' });
+        first.flush(null);
+        storage.removeItem('session', 'fd_marketing_session_capture');
+        session.getSessionId = (): string => 'opaque:new-session';
+
+        service.initialize();
+        const second = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events`);
+        expect(second.request.body).toMatchObject({ anonymousId: 'opaque/visitor', sessionId: 'opaque:new-session' });
+        second.flush(null);
+        service.recordSignupCompleted();
+        const signup = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events/signup`);
+        expect(signup.request.body).toMatchObject({ anonymousId: 'opaque/visitor', sessionId: 'fd-session-test' });
+        signup.flush(null);
+        httpMock.verify();
+    });
+
+    it('decodes legacy first-touch strings without a timestamp or UUID format', () => {
+        const { service, httpMock, storage } = setup();
+        storage.setJson('local', 'fd_marketing_first_touch', {
+            anonymousId: 'legacy opaque visitor',
+            sessionId: 'legacy/session',
+            landingPath: '/legacy',
+            utmSource: 'legacy',
+        });
+        service.recordSignupCompleted();
+        const signup = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events/signup`);
+        expect(signup.request.body).toMatchObject({
+            anonymousId: 'legacy opaque visitor',
+            sessionId: 'legacy/session',
+            landingPath: '/legacy',
+            utmSource: 'legacy',
+        });
+        const body = signup.request.body as { timestamp: string };
+        expect(Number.isNaN(Date.parse(body.timestamp))).toBe(false);
+        signup.flush(null);
+        httpMock.verify();
+    });
+});
+
 function setup(overrides: Partial<BrowserWindowMock> = {}): {
     service: MarketingAttributionService;
     httpMock: HttpTestingController;
     storage: BrowserStorageMock;
+    session: { getSessionId: () => string };
 } {
     const storage = new BrowserStorageMock();
     const browserWindow = new BrowserWindowMock(overrides);
@@ -117,6 +163,7 @@ function setup(overrides: Partial<BrowserWindowMock> = {}): {
         service: TestBed.inject(MarketingAttributionService),
         httpMock: TestBed.inject(HttpTestingController),
         storage,
+        session,
     };
 }
 

@@ -39,7 +39,7 @@ public sealed class BotGeneratedClientTests {
             return new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent.Create(new { OperationId = operationId, EntryId = entryId, TimestampUtc = timestamp, AmountMl = 250 }) };
         });
         using var http = new HttpClient(handler);
-        BotHydrationReceipt result = await Client(http).SaveWaterAsync("token", operationId, timestamp, 250, CancellationToken.None);
+        BotHydrationReceipt result = await Client(http).SaveWaterAsync("token", new BotOperationId(operationId), timestamp, 250, CancellationToken.None);
         Assert.Multiple(() => {
             Assert.Equal(timestamp, result.TimestampUtc);
             Assert.Equal(DateTimeKind.Utc, result.TimestampUtc.Kind);

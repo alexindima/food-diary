@@ -1,37 +1,39 @@
+import type { MealPlanDayId, MealPlanId, MealPlanMealId, RecipeId } from '../../../shared/models/semantics/entity-id';
+import type { PlanDayNumber, PlanDurationDays, PlannedMealType, PlannedServings } from './meal-plan-values';
 export type MealPlanSummary = {
-    id: string;
+    id: MealPlanId;
     name: string;
     description?: string | null;
     dietType: DietType;
-    durationDays: number;
+    durationDays: PlanDurationDays;
     targetCaloriesPerDay?: number | null;
     isCurated: boolean;
     totalRecipes: number;
 };
 
 export type MealPlan = {
-    id: string;
+    id: MealPlanId;
     name: string;
     description?: string | null;
     dietType: DietType;
-    durationDays: number;
+    durationDays: PlanDurationDays;
     targetCaloriesPerDay?: number | null;
     isCurated: boolean;
     days: MealPlanDay[];
 };
 
 export type MealPlanDay = {
-    id: string;
-    dayNumber: number;
+    id: MealPlanDayId;
+    dayNumber: PlanDayNumber;
     meals: MealPlanMeal[];
 };
 
 export type MealPlanMeal = {
-    id: string;
-    mealType: string;
-    recipeId: string;
+    id: MealPlanMealId;
+    mealType: PlannedMealType;
+    recipeId: RecipeId;
     recipeName?: string | null;
-    servings: number;
+    servings: PlannedServings;
     calories?: number | null;
     proteins?: number | null;
     fats?: number | null;

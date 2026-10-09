@@ -38,13 +38,29 @@
         }
       },
       "fooddiary.modules.marketing.application.abstractions": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Marketing.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
       },
       "fooddiary.modules.marketing.contracts": {
         "type": "Project",
         "dependencies": {
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.marketing.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.users.domain.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )"
         }
       },
       "fooddiary.results": {

@@ -7,6 +7,7 @@ import { AI_CONSENT_ERROR_KEY, isAiConsentRequiredError } from '../../../shared/
 import { AiFoodFacade } from '../../../shared/lib/ai-food.facade';
 import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem, FoodVisionResponse } from '../../../shared/models/ai.data';
+import type { FoodRecognitionId, ImageAssetId } from '../../../shared/models/semantics/entity-id';
 
 @Injectable()
 export class AiInputBarFacade {
@@ -33,11 +34,11 @@ export class AiInputBarFacade {
         );
     }
 
-    public analyzePhoto(assetId: string): void {
+    public analyzePhoto(assetId: ImageAssetId): void {
         this.runPhotoAnalysis(this.aiFoodFacade.analyzeFoodImage({ imageAssetId: assetId }));
     }
 
-    public resumePhoto(id: string): void {
+    public resumePhoto(id: FoodRecognitionId): void {
         this.runPhotoAnalysis(this.aiFoodFacade.resumeRecognition(id));
     }
 

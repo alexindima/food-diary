@@ -4,7 +4,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
+import { entityId } from '../../../../../../shared/models/semantics/entity-id';
 import type { MealPlanDayViewModel } from '../../../../lib/meal-plan-view.mapper';
+import { plannedServingsFromStored } from '../../../../models/meal-plan-values';
+import { plannedMealTypeFromStored } from '../../../../models/meal-plan-values';
+import { planDayNumberFromStored } from '../../../../models/meal-plan-values';
 import { MealPlanDetailDaysComponent } from './meal-plan-detail-days';
 
 describe('MealPlanDetailDaysComponent', () => {
@@ -54,15 +58,15 @@ function createComponent(days: MealPlanDayViewModel[]): ComponentFixture<MealPla
 
 function createDay(): MealPlanDayViewModel {
     return {
-        id: 'day-1',
-        dayNumber: 1,
+        id: entityId<'meal-plan-day'>('day-1'),
+        dayNumber: planDayNumberFromStored(1),
         meals: [
             {
-                id: 'meal-1',
-                mealType: 'Breakfast',
-                recipeId: 'recipe-1',
+                id: entityId<'meal-plan-meal'>('meal-1'),
+                mealType: plannedMealTypeFromStored('Breakfast'),
+                recipeId: entityId<'recipe'>('recipe-1'),
                 recipeName: 'Omelette',
-                servings: 1,
+                servings: plannedServingsFromStored(1),
                 calories: 450,
                 mealTypeKey: 'MEAL_PLANS.MEAL_TYPE.BREAKFAST',
                 nutritionItems: [

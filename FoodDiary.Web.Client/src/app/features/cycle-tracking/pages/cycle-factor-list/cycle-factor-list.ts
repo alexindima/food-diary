@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import type { CycleFactorId } from '../../../../shared/models/semantics/entity-id';
 import { CycleFactorItemComponent } from '../cycle-factor-item/cycle-factor-item';
 import type { CycleFactorListItemViewModel } from '../cycle-tracking-page-lib/cycle-tracking-page.types';
 
@@ -14,6 +15,6 @@ import type { CycleFactorListItemViewModel } from '../cycle-tracking-page-lib/cy
 export class CycleFactorListComponent {
     public readonly items = input.required<CycleFactorListItemViewModel[]>();
     public readonly isSaving = input(false);
-    public readonly editFactor = output<string>();
-    public readonly endFactor = output<string>();
+    public readonly editFactor = output<CycleFactorId>();
+    public readonly endFactor = output<CycleFactorId>();
 }

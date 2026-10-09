@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
@@ -24,7 +25,7 @@ public sealed class RefreshTokenCommandHandlerTests {
         var generator = new FakeJwtTokenGenerator(user, "test@example.com");
         IJwtTokenGenerator contract = generator;
 
-        string token = contract.GenerateAccessToken(user, "test@example.com", ["Admin"], expiry, 12, Guid.NewGuid());
+        string token = contract.GenerateAccessToken(user, "test@example.com", ["Admin"], expiry, 12, RefreshTokenSessionId.New());
 
         Assert.Equal("unused-access-token", token);
         Assert.Equal((user, "test@example.com", "Admin", expiry, 12L), generator.AccessCall);
@@ -320,7 +321,7 @@ public sealed class RefreshTokenCommandHandlerTests {
             refreshSessions,
             authenticationTokenService);
 
-    private static UserRefreshTokenSession CreateRefreshSession(Guid id, UserId userId, string refreshTokenHash, DateTime nowUtc) =>
+    private static UserRefreshTokenSession CreateRefreshSession(RefreshTokenSessionId id, UserId userId, string refreshTokenHash, DateTime nowUtc) =>
         UserRefreshTokenSession.Create(
             id,
             userId,
@@ -358,7 +359,7 @@ public sealed class RefreshTokenCommandHandlerTests {
     [ExcludeFromCodeCoverage]
     private sealed class FakeJwtTokenGenerator(UserId userId, string? email) : IJwtTokenGenerator {
         public (UserId, string?, string, DateTime?, long)? AccessCall { get; private set; }
-        public Guid RefreshSessionId { get; } = Guid.Parse("f48a7411-0e37-4b0f-8094-c6b7c8bdb931");
+        public RefreshTokenSessionId RefreshSessionId { get; } = new(Guid.Parse("f48a7411-0e37-4b0f-8094-c6b7c8bdb931"));
 
         public string GenerateAccessToken(UserId userId, string? email, IReadOnlyCollection<string> roles, long securityVersion = 0) => "unused-access-token";
         public string GenerateAccessToken(
@@ -381,8 +382,8 @@ public sealed class RefreshTokenCommandHandlerTests {
             string? email,
             IReadOnlyCollection<string> roles,
             bool rememberMe = false,
-            Guid? refreshSessionId = null) => "unused-refresh-token";
-        public (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? ValidateToken(string token) =>
+            RefreshTokenSessionId? refreshSessionId = null) => "unused-refresh-token";
+        public (UserId userId, string? email, bool rememberMe, RefreshTokenSessionId? refreshSessionId)? ValidateToken(string token) =>
             token switch {
                 "current-refresh-token" => (userId, email, false, RefreshSessionId),
                 "remember-refresh-token" => (userId, email, true, RefreshSessionId),
@@ -402,7 +403,7 @@ public sealed class RefreshTokenCommandHandlerTests {
             _sessions.Add(session);
         }
 
-        public InMemoryRefreshTokenSessionRepository(Guid id, UserId userId, string refreshTokenHash) {
+        public InMemoryRefreshTokenSessionRepository(RefreshTokenSessionId id, UserId userId, string refreshTokenHash) {
             _sessions.Add(CreateRefreshSession(
                 id,
                 userId,
@@ -410,7 +411,7 @@ public sealed class RefreshTokenCommandHandlerTests {
                 new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)));
         }
 
-        public Task<UserRefreshTokenSession?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
+        public Task<UserRefreshTokenSession?> GetByIdAsync(RefreshTokenSessionId id, CancellationToken cancellationToken = default) =>
             Task.FromResult<UserRefreshTokenSession?>(_sessions.FirstOrDefault(session => session.Id == id));
 
         public Task<IReadOnlyList<UserRefreshTokenSession>> GetActiveByUserIdAsync(
@@ -428,7 +429,7 @@ public sealed class RefreshTokenCommandHandlerTests {
             Task.CompletedTask;
 
         public Task<bool> TryRotateAsync(
-            Guid id,
+            RefreshTokenSessionId id,
             UserId userId,
             string expectedRefreshTokenHash,
             string newRefreshTokenHash,
@@ -454,7 +455,7 @@ public sealed class RefreshTokenCommandHandlerTests {
         }
 
         public Task RevokeByIdAsync(
-            Guid id,
+            RefreshTokenSessionId id,
             UserId userId,
             DateTime revokedAtUtc,
             CancellationToken cancellationToken = default) {
@@ -463,9 +464,9 @@ public sealed class RefreshTokenCommandHandlerTests {
         }
 
         public Task RevokeOtherByIdAsync(
-            Guid id,
+            RefreshTokenSessionId id,
             UserId userId,
-            Guid currentSessionId,
+            RefreshTokenSessionId currentSessionId,
             DateTime revokedAtUtc,
             CancellationToken cancellationToken = default) {
             bool currentIsActive = _sessions.Any(session =>
@@ -479,7 +480,7 @@ public sealed class RefreshTokenCommandHandlerTests {
 
         public Task RevokeAllOtherAsync(
             UserId userId,
-            Guid currentSessionId,
+            RefreshTokenSessionId currentSessionId,
             DateTime revokedAtUtc,
             CancellationToken cancellationToken = default) {
             bool currentIsActive = _sessions.Any(session =>
@@ -518,7 +519,7 @@ public sealed class RefreshTokenCommandHandlerTests {
 
         public Task<IssuedAuthenticationTokens?> RotateFromPrincipalAsync(
             FoodDiary.Modules.Users.Contracts.Models.UserAuthenticationPrincipalModel principal,
-            Guid refreshSessionId,
+            RefreshTokenSessionId refreshSessionId,
             string expectedRefreshTokenHash,
             bool rememberMe,
             CancellationToken cancellationToken) {

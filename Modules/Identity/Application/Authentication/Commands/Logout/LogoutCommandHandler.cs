@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
@@ -15,9 +16,9 @@ public sealed class LogoutCommandHandler(
             return Result.Success();
         }
 
-        (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? validationResult =
+        (UserId userId, string? email, bool rememberMe, RefreshTokenSessionId? refreshSessionId)? validationResult =
             jwtTokenGenerator.ValidateToken(command.RefreshToken);
-        if (validationResult?.refreshSessionId is not Guid sessionId) {
+        if (validationResult?.refreshSessionId is not RefreshTokenSessionId sessionId) {
             return Result.Success();
         }
 

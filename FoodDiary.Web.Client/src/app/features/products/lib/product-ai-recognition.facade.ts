@@ -5,6 +5,7 @@ import { AiFoodService } from '../../../shared/api/ai-food.service';
 import { FoodRecognitionService } from '../../../shared/api/food-recognition.service';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
 import type { FoodNutritionRequest, FoodNutritionResponse, FoodVisionRequest, FoodVisionResponse } from '../../../shared/models/ai.data';
+import type { FoodRecognitionId } from '../../../shared/models/semantics/entity-id';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 
 @Service()
@@ -17,7 +18,7 @@ export class ProductAiRecognitionFacade {
         return this.recognition.list(1, 1, true).pipe(map(page => page.totalItems));
     }
 
-    public resumeRecognition(id: string): Observable<FoodVisionResponse> {
+    public resumeRecognition(id: FoodRecognitionId): Observable<FoodVisionResponse> {
         return this.recognition.resume(id);
     }
 

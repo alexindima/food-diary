@@ -4,6 +4,7 @@ import { finalize, firstValueFrom } from 'rxjs';
 
 import { normalizeMealType } from '../../../shared/lib/meal-type.util';
 import type { PageOf } from '../../../shared/models/page-of.data';
+import type { MealPlanId, MealPlanMealId } from '../../../shared/models/semantics/entity-id';
 import { resolvePaginationPage } from '../../../shared/navigation/pagination-query.utils';
 import { QuickMealService } from '../../meals/contracts/quick-meal';
 import { RECIPE_LOOKUP } from '../../recipes/contracts/recipe-lookup';
@@ -21,8 +22,8 @@ export class MealPlanFacade {
     private readonly queryState = inject(MEAL_PLAN_LIST_QUERY_STATE, { optional: true });
     private readonly initialQuery: MealPlanListQuery = this.queryState?.initial ?? { page: 1, dietType: null };
     public readonly hasMealDraft = this.quickMeal.hasItems;
-    public readonly addingMealId = signal<string | null>(null);
-    private readonly selectedPlanId = signal<string | null>(null);
+    public readonly addingMealId = signal<MealPlanMealId | null>(null);
+    private readonly selectedPlanId = signal<MealPlanId | null>(null);
 
     public readonly dietTypeFilter = signal(this.initialQuery.dietType);
     public readonly pageIndex = signal(this.initialQuery.page - 1);
@@ -138,7 +139,7 @@ export class MealPlanFacade {
         }
     }
 
-    public loadPlan(id: string): void {
+    public loadPlan(id: MealPlanId): void {
         this.selectedPlanId.set(id);
     }
 
@@ -172,7 +173,7 @@ export class MealPlanFacade {
             });
     }
 
-    public adopt(id: string, onSuccess: () => void): void {
+    public adopt(id: MealPlanId, onSuccess: () => void): void {
         if (this.pendingAction() !== null) {
             return;
         }
@@ -196,7 +197,7 @@ export class MealPlanFacade {
             });
     }
 
-    public generateShoppingList(id: string, onSuccess: () => void): void {
+    public generateShoppingList(id: MealPlanId, onSuccess: () => void): void {
         if (this.pendingAction() !== null) {
             return;
         }
@@ -220,7 +221,7 @@ export class MealPlanFacade {
             });
     }
 
-    public deletePlan(id: string, onSuccess: () => void): void {
+    public deletePlan(id: MealPlanId, onSuccess: () => void): void {
         const plan = this.selectedPlan();
         if (plan?.id !== id || plan.isCurated || this.pendingAction() !== null) {
             return;

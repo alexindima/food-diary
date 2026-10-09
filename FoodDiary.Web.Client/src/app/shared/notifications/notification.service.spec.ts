@@ -6,6 +6,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
 import { AuthService } from '../../services/auth.service';
+import { decodeNotificationKind } from '../models/notification-kind';
+import { utcInstant } from '../models/semantics/date-value';
+import { entityId } from '../models/semantics/entity-id';
 import { NotificationService } from './notification.service';
 
 const UNREAD_COUNT_INITIAL = 4;
@@ -144,19 +147,19 @@ describe('NotificationService read state', () => {
     it('should mark notification as read and update local state', () => {
         service.notifications.set([
             {
-                id: 'n1',
-                type: 'info',
+                id: entityId<'notification'>('n1'),
+                type: decodeNotificationKind('info'),
                 title: 'Title',
                 body: null,
                 targetUrl: null,
                 referenceId: null,
                 isRead: false,
-                createdAtUtc: '2026-01-01T00:00:00Z',
+                createdAtUtc: utcInstant('2026-01-01T00:00:00Z'),
             },
         ]);
         service.unreadCount.set(1);
 
-        service.markAsRead('n1').subscribe();
+        service.markAsRead(entityId<'notification'>('n1')).subscribe();
 
         const req = httpMock.expectOne(`${baseUrl}/n1/read`);
         expect(req.request.method).toBe('PUT');
@@ -169,19 +172,19 @@ describe('NotificationService read state', () => {
     it('should not decrement unread count when notification is already read locally', () => {
         service.notifications.set([
             {
-                id: 'n1',
-                type: 'info',
+                id: entityId<'notification'>('n1'),
+                type: decodeNotificationKind('info'),
                 title: 'Title',
                 body: null,
                 targetUrl: null,
                 referenceId: null,
                 isRead: true,
-                createdAtUtc: '2026-01-01T00:00:00Z',
+                createdAtUtc: utcInstant('2026-01-01T00:00:00Z'),
             },
         ]);
         service.unreadCount.set(UNREAD_COUNT_ALREADY_READ);
 
-        service.markAsRead('n1').subscribe();
+        service.markAsRead(entityId<'notification'>('n1')).subscribe();
 
         const req = httpMock.expectOne(`${baseUrl}/n1/read`);
         expect(req.request.method).toBe('PUT');
@@ -194,24 +197,24 @@ describe('NotificationService read state', () => {
     it('should mark all notifications as read and clear unread count', () => {
         service.notifications.set([
             {
-                id: 'n1',
-                type: 'info',
+                id: entityId<'notification'>('n1'),
+                type: decodeNotificationKind('info'),
                 title: 'Title',
                 body: null,
                 targetUrl: null,
                 referenceId: null,
                 isRead: false,
-                createdAtUtc: '2026-01-01T00:00:00Z',
+                createdAtUtc: utcInstant('2026-01-01T00:00:00Z'),
             },
             {
-                id: 'n2',
-                type: 'info',
+                id: entityId<'notification'>('n2'),
+                type: decodeNotificationKind('info'),
                 title: 'Title 2',
                 body: null,
                 targetUrl: null,
                 referenceId: null,
                 isRead: false,
-                createdAtUtc: '2026-01-01T00:00:00Z',
+                createdAtUtc: utcInstant('2026-01-01T00:00:00Z'),
             },
         ]);
         service.unreadCount.set(2);

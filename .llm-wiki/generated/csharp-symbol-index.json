@@ -8,16 +8,16 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4520,
-    "symbols": 4452,
+    "sourceFiles": 4532,
+    "symbols": 4464,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
       "class": 2312,
       "enum": 68,
       "interface": 411,
-      "record": 1536,
-      "record struct": 125
+      "record": 1539,
+      "record struct": 134
     },
     "roles": {
       "Command": 230,
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1816,
+      "Other": 1821,
       "Query": 300,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
@@ -42,7 +42,7 @@
       "Response": 262,
       "Service": 168,
       "Validator": 236,
-      "ValueObject": 169,
+      "ValueObject": 176,
       "WriteRepository": 47
     }
   },
@@ -2092,6 +2092,13 @@
       "line": 2
     },
     {
+      "name": "BotLeaseId",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotLeaseId.cs",
+      "line": 2
+    },
+    {
       "name": "BotMealActions",
       "kind": "class",
       "role": "Other",
@@ -2118,6 +2125,13 @@
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/BotOperationClient.cs",
       "line": 9
+    },
+    {
+      "name": "BotOperationId",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotOperationId.cs",
+      "line": 2
     },
     {
       "name": "BotOperationLease",
@@ -2174,6 +2188,13 @@
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/BotStatisticsFormatter.cs",
       "line": 4
+    },
+    {
+      "name": "BotUserId",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotUserId.cs",
+      "line": 2
     },
     {
       "name": "DurableTelegramReceiver",
@@ -12176,7 +12197,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Fasting/Application.Abstractions/Models/FastingActiveOccurrenceModel.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "FastingCheckInReadModel",
@@ -12582,7 +12603,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Fasting/Application/Services/FastingCheckInReminderPlanner.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "FastingCheckInSnapshot",
@@ -12652,7 +12673,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Fasting/Application/Services/FastingNotificationCandidatePlanner.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "FastingNotificationFactory",
@@ -15046,7 +15067,7 @@
       "kind": "interface",
       "role": "Other",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "ITelegramAuthValidator",
@@ -15130,14 +15151,14 @@
       "kind": "interface",
       "role": "ReadModelRepository",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "IRefreshTokenSessionReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "IRefreshTokenSessionRepository",
@@ -15151,7 +15172,7 @@
       "kind": "interface",
       "role": "WriteRepository",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "ITelegramAssertionReplayGuard",
@@ -15186,7 +15207,7 @@
       "kind": "interface",
       "role": "Other",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "IUserLoginEventQuery",
@@ -15231,11 +15252,25 @@
       "line": 4
     },
     {
+      "name": "TelegramLeaseId",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/TelegramLeaseId.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramOperationId",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/TelegramOperationId.cs",
+      "line": 2
+    },
+    {
       "name": "TelegramOperationLease",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/TelegramOperationLease.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "AuthenticationClientContext",
@@ -15249,14 +15284,14 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Models/RefreshTokenSessionReadModel.cs",
-      "line": 2
+      "line": 3
     },
     {
       "name": "IAuthenticationTokenService",
       "kind": "interface",
       "role": "Service",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "IssuedAuthenticationTokens",
@@ -15354,7 +15389,7 @@
       "kind": "record",
       "role": "Command",
       "path": "Modules/Identity/Application/Authentication/Commands/CheckpointTelegramOperation/CheckpointTelegramOperationCommand.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "CheckpointTelegramOperationCommandHandler",
@@ -15543,7 +15578,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/Logout/LogoutCommandHandler.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "RefreshTokenCommand",
@@ -15557,7 +15592,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "RefreshTokenCommandValidator",
@@ -15592,7 +15627,7 @@
       "kind": "record",
       "role": "Command",
       "path": "Modules/Identity/Application/Authentication/Commands/RegisterTelegramOperation/RegisterTelegramOperationCommand.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "RegisterTelegramOperationCommandHandler",
@@ -15683,28 +15718,28 @@
       "kind": "record",
       "role": "Command",
       "path": "Modules/Identity/Application/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommand.cs",
-      "line": 5
+      "line": 7
     },
     {
       "name": "RevokeOtherSessionsCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommandHandler.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "RevokeSessionCommand",
       "kind": "record",
       "role": "Command",
       "path": "Modules/Identity/Application/Authentication/Commands/RevokeSession/RevokeSessionCommand.cs",
-      "line": 5
+      "line": 7
     },
     {
       "name": "RevokeSessionCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/RevokeSession/RevokeSessionCommandHandler.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "StartTelegramBackupEmailCommand",
@@ -15851,14 +15886,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Application/Authentication/Common/TelegramOperationChecks.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "ActiveSessionModel",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Identity/Application/Authentication/Models/ActiveSessionModel.cs",
-      "line": 2
+      "line": 3
     },
     {
       "name": "AdminSsoStartModel",
@@ -15893,7 +15928,7 @@
       "kind": "record",
       "role": "Query",
       "path": "Modules/Identity/Application/Authentication/Queries/GetActiveSessions/GetActiveSessionsQuery.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "GetActiveSessionsQueryHandler",
@@ -15942,7 +15977,7 @@
       "kind": "record",
       "role": "Query",
       "path": "Modules/Identity/Application/Authentication/Queries/ListReadyTelegramOperations/ListReadyTelegramOperationsQuery.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "ListReadyTelegramOperationsQueryHandler",
@@ -15956,7 +15991,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "EmailSender",
@@ -16250,7 +16285,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 6
+      "line": 7
+    },
+    {
+      "name": "RefreshTokenSessionId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Identity/Domain/ValueObjects/Ids/RefreshTokenSessionId.cs",
+      "line": 4
     },
     {
       "name": "AdminSsoService",
@@ -16271,7 +16313,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "IdentityAuthenticationRegistration",
@@ -16334,7 +16376,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramOperationStore.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "EmailTemplateProvider",
@@ -16355,14 +16397,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Persistence/Users/AccessTokenSessionReader.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "RefreshTokenSessionRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "UserLoginEventRepository",
@@ -16509,7 +16551,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "EmailTemplateConfiguration",
@@ -16614,7 +16656,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpMappings.cs",
-      "line": 27
+      "line": 29
     },
     {
       "name": "AuthHttpResponseMappings",
@@ -16635,7 +16677,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOperationHttpMappings.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "AdminSsoExchangeHttpRequest",
@@ -17797,7 +17839,7 @@
       "kind": "interface",
       "role": "ReadRepository",
       "path": "Modules/Marketing/Application.Abstractions/Common/IMarketingAttributionEventReadRepository.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "IMarketingAttributionEventRepository",
@@ -17839,7 +17881,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Marketing/Application.Abstractions/Common/MarketingAttributionEventRecord.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "MarketingAttributionRangeFilter",
@@ -17874,21 +17916,21 @@
       "kind": "record",
       "role": "Command",
       "path": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommand.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "RecordMarketingAttributionCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "RecordPremiumConversionCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Marketing/Application/Commands/RecordPremiumConversion/RecordPremiumConversionCommandHandler.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "MarketingAttributionEventTypes",
@@ -17993,7 +18035,14 @@
       "kind": "class",
       "role": "Event",
       "path": "Modules/Marketing/Domain/Entities/Tracking/MarketingAttributionEvent.cs",
-      "line": 6
+      "line": 8
+    },
+    {
+      "name": "AnonymousVisitorId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Marketing/Domain/ValueObjects/AnonymousVisitorId.cs",
+      "line": 2
     },
     {
       "name": "MarketingAttributionEventId",
@@ -18001,6 +18050,13 @@
       "role": "ValueObject",
       "path": "Modules/Marketing/Domain/ValueObjects/Ids/MarketingAttributionEventId.cs",
       "line": 4
+    },
+    {
+      "name": "MarketingSessionId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Marketing/Domain/ValueObjects/MarketingSessionId.cs",
+      "line": 2
     },
     {
       "name": "ModuleRegistration",
@@ -18014,7 +18070,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "MarketingAttributionEventRepository",
@@ -18035,7 +18091,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Marketing/PersistenceModel/Configurations/MarketingAttributionEventConfiguration.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "MarketingPersistenceModelRegistration",
@@ -18063,7 +18119,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Marketing/Presentation/Mappings/MarketingAttributionHttpMappings.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "MarketingAttributionHttpRequest",
@@ -25882,7 +25938,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Users/Contracts/Models/UserFastingReminderModel.cs",
-      "line": 2
+      "line": 3
     },
     {
       "name": "UserGamificationProfileModel",
@@ -26086,6 +26142,27 @@
       "role": "ValueObject",
       "path": "Modules/Users/Domain.Contracts/ValueObjects/DesiredWeightKg.cs",
       "line": 4
+    },
+    {
+      "name": "FastingReminderDelayUpdate",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/FastingReminderDelayUpdate.cs",
+      "line": 7
+    },
+    {
+      "name": "FastingReminderSchedule",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/FastingReminderSchedule.cs",
+      "line": 4
+    },
+    {
+      "name": "FastingReminderSettings",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/FastingReminderSettings.cs",
+      "line": 2
     },
     {
       "name": "UserId",
@@ -26298,6 +26375,13 @@
       "line": 4
     },
     {
+      "name": "ProfileBirthDate",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/ProfileBirthDate.cs",
+      "line": 4
+    },
+    {
       "name": "ProfileHeightCm",
       "kind": "record",
       "role": "ValueObject",
@@ -26435,7 +26519,7 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "Modules/Users/Domain/ValueObjects/UserPreferenceState.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "UserProfileMediaState",
@@ -26456,7 +26540,7 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "UserSecurityState",
@@ -26533,7 +26617,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserRelatedDataReadService.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "UserRepository",

@@ -26,7 +26,7 @@ public sealed class UserRelatedDataReadIntegrationTests(PostgresDatabaseFixture 
         await using FoodDiaryDbContext seed = await databaseFixture.CreateDbContextAsync();
         var active = User.Create("related-active@example.com", "hash");
         active.UpdatePersonalInfo(username: "author", firstName: "Name");
-        active.UpdatePreferences(new UserPreferenceUpdate(FastingCheckInReminderHours: 6, FastingCheckInFollowUpReminderHours: 10));
+        active.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: new FastingReminderDelayUpdate(FirstHours: 6, FollowUpHours: 10)));
         var inactive = User.Create("related-inactive@example.com", "hash");
         inactive.Deactivate();
         var deleted = User.Create("related-deleted@example.com", "hash");

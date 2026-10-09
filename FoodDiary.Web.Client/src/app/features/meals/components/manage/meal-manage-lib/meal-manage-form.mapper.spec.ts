@@ -110,7 +110,7 @@ describe('meal manage DTO mapping', () => {
     });
 
     it('should build manual nutrition DTO and convert recipe grams to servings', () => {
-        const convertRecipeGramsToServings = vi.fn().mockReturnValue(RECIPE_AMOUNT_SERVINGS);
+        const recipeServingsFromDisplayInput = vi.fn().mockReturnValue(RECIPE_AMOUNT_SERVINGS);
         const formValue = {
             ...createBaseFormValue(),
             isNutritionAutoCalculated: false,
@@ -126,10 +126,10 @@ describe('meal manage DTO mapping', () => {
 
         const dto = buildMealManageDto(formValue, {
             ...createDtoCallbacks(),
-            convertRecipeGramsToServings,
+            recipeServingsFromDisplayInput,
         });
 
-        expect(convertRecipeGramsToServings).toHaveBeenCalledWith(recipe, RECIPE_AMOUNT_GRAMS);
+        expect(recipeServingsFromDisplayInput).toHaveBeenCalledWith(recipe, RECIPE_AMOUNT_GRAMS);
         expect(dto.items).toEqual([{ recipeId: recipe.id, productId: null, amount: RECIPE_AMOUNT_SERVINGS, origin: 'Manual' }]);
         expect(dto.manualCalories).toBe(MANUAL_TOTALS.calories);
         expect(dto.manualAlcohol).toBe(MANUAL_TOTALS.alcohol);
@@ -182,7 +182,7 @@ describe('meal manage edit mapping', () => {
     });
 
     it('should convert initial amount only for recipe items', () => {
-        const convertRecipeServingsToGrams = vi.fn().mockReturnValue(RECIPE_AMOUNT_GRAMS);
+        const recipeDisplayValueFromStoredServings = vi.fn().mockReturnValue(RECIPE_AMOUNT_GRAMS);
 
         expect(
             getMealItemInitialAmount(
@@ -194,10 +194,10 @@ describe('meal manage edit mapping', () => {
                     recipe,
                     product: null,
                 },
-                convertRecipeServingsToGrams,
+                recipeDisplayValueFromStoredServings,
             ),
         ).toBe(RECIPE_AMOUNT_GRAMS);
-        expect(convertRecipeServingsToGrams).toHaveBeenCalled();
+        expect(recipeDisplayValueFromStoredServings).toHaveBeenCalled();
         expect(
             getMealItemInitialAmount(
                 {
@@ -208,7 +208,7 @@ describe('meal manage edit mapping', () => {
                     product,
                     recipe: null,
                 },
-                convertRecipeServingsToGrams,
+                recipeDisplayValueFromStoredServings,
             ),
         ).toBe(PRODUCT_AMOUNT);
     });
@@ -247,7 +247,7 @@ function createDtoCallbacks(): Parameters<typeof buildMealManageDto>[1] {
     return {
         aiSessions: AI_SESSIONS,
         buildDateTime: () => SUBMIT_DATE,
-        convertRecipeGramsToServings: () => RECIPE_AMOUNT_SERVINGS,
+        recipeServingsFromDisplayInput: () => RECIPE_AMOUNT_SERVINGS,
         manualTotals: MANUAL_TOTALS,
     };
 }

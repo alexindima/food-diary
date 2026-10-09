@@ -202,7 +202,7 @@ describe('CyclesService mutations', () => {
 
     it('should upsert cycle day', () => {
         const payload: UpsertCycleDayPayload = {
-            date: '2026-03-05',
+            date: calendarDate('2026-03-05'),
             bleeding: {
                 type: BLEEDING_TYPE_BLEEDING,
                 flow: CYCLE_FLOW_MEDIUM,
@@ -279,6 +279,7 @@ describe('CyclesService menstrual episodes', () => {
 describe('CyclesService factor mutations', () => {
     it('should upsert cycle factor', () => {
         const payload: UpsertCycleFactorPayload = {
+            factorId: entityId<'cycle-factor'>('factor-1'),
             type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
             startDate: calendarDate('2026-03-01'),
             endDate: null,

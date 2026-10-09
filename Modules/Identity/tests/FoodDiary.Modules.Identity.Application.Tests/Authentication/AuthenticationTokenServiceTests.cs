@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Application.Mappings;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
@@ -92,7 +93,7 @@ public class AuthenticationTokenServiceTests {
             ["User"],
             AccessTokenCapUtc: null,
             user.ToModel());
-        var refreshSessionId = Guid.Parse("3f0a9db0-72a7-4ce1-a149-395bf13ba8bc");
+        var refreshSessionId = new RefreshTokenSessionId(Guid.Parse("3f0a9db0-72a7-4ce1-a149-395bf13ba8bc"));
         var existingSession = UserRefreshTokenSession.Create(
             refreshSessionId,
             user.Id,
@@ -173,7 +174,7 @@ public class AuthenticationTokenServiceTests {
     private sealed class InMemoryRefreshTokenSessionRepository : IRefreshTokenSessionRepository {
         public List<UserRefreshTokenSession> Items { get; } = [];
 
-        public Task<UserRefreshTokenSession?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
+        public Task<UserRefreshTokenSession?> GetByIdAsync(RefreshTokenSessionId id, CancellationToken cancellationToken = default) =>
             Task.FromResult<UserRefreshTokenSession?>(Items.FirstOrDefault(item => item.Id == id));
 
         public Task<IReadOnlyList<UserRefreshTokenSession>> GetActiveByUserIdAsync(
@@ -191,7 +192,7 @@ public class AuthenticationTokenServiceTests {
             Task.CompletedTask;
 
         public Task<bool> TryRotateAsync(
-            Guid id,
+            RefreshTokenSessionId id,
             UserId userId,
             string expectedRefreshTokenHash,
             string newRefreshTokenHash,
@@ -217,7 +218,7 @@ public class AuthenticationTokenServiceTests {
         }
 
         public Task RevokeByIdAsync(
-            Guid id,
+            RefreshTokenSessionId id,
             UserId userId,
             DateTime revokedAtUtc,
             CancellationToken cancellationToken = default) {
@@ -226,9 +227,9 @@ public class AuthenticationTokenServiceTests {
         }
 
         public Task RevokeOtherByIdAsync(
-            Guid id,
+            RefreshTokenSessionId id,
             UserId userId,
-            Guid currentSessionId,
+            RefreshTokenSessionId currentSessionId,
             DateTime revokedAtUtc,
             CancellationToken cancellationToken = default) {
             bool currentIsActive = Items.Any(session =>
@@ -242,7 +243,7 @@ public class AuthenticationTokenServiceTests {
 
         public Task RevokeAllOtherAsync(
             UserId userId,
-            Guid currentSessionId,
+            RefreshTokenSessionId currentSessionId,
             DateTime revokedAtUtc,
             CancellationToken cancellationToken = default) {
             bool currentIsActive = Items.Any(session =>
@@ -263,9 +264,9 @@ public class AuthenticationTokenServiceTests {
         public string? LastAccessEmail { get; private set; }
         public IReadOnlyCollection<string> LastAccessRoles { get; private set; } = [];
         public DateTime? LastAccessExpiresAtUtc { get; private set; }
-        public Guid? LastAccessRefreshSessionId { get; private set; }
+        public RefreshTokenSessionId? LastAccessRefreshSessionId { get; private set; }
         public bool LastRefreshRememberMe { get; private set; }
-        public Guid? LastRefreshSessionId { get; private set; }
+        public RefreshTokenSessionId? LastRefreshSessionId { get; private set; }
 
         public string GenerateAccessToken(UserId userId, string? email, IReadOnlyCollection<string> roles, long securityVersion = 0) {
             LastAccessUserId = userId;
@@ -294,7 +295,7 @@ public class AuthenticationTokenServiceTests {
             IReadOnlyCollection<string> roles,
             DateTime? expiresAtUtc,
             long securityVersion,
-            Guid refreshSessionId) {
+            RefreshTokenSessionId refreshSessionId) {
             LastAccessUserId = userId;
             LastAccessEmail = email;
             LastAccessRoles = roles.ToArray();
@@ -320,13 +321,13 @@ public class AuthenticationTokenServiceTests {
             string? email,
             IReadOnlyCollection<string> roles,
             bool rememberMe = false,
-            Guid? refreshSessionId = null) {
+            RefreshTokenSessionId? refreshSessionId = null) {
             LastRefreshRememberMe = rememberMe;
             LastRefreshSessionId = refreshSessionId;
             return "refresh-token";
         }
 
-        public (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? ValidateToken(string token) => null;
+        public (UserId userId, string? email, bool rememberMe, RefreshTokenSessionId? refreshSessionId)? ValidateToken(string token) => null;
     }
 
     [ExcludeFromCodeCoverage]

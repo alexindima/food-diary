@@ -16,6 +16,7 @@ import {
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { MealPlanFacade } from '../../lib/meal-plan.facade';
@@ -59,7 +60,7 @@ export class MealPlanDetailPageComponent {
         this.destroyRef.onDestroy(() => this.deleteDialog?.close());
         const id = this.route.snapshot.paramMap.get('id');
         if (id !== null && id.length > 0) {
-            this.facade.loadPlan(id);
+            this.facade.loadPlan(entityId<'meal-plan'>(id));
         }
     }
 

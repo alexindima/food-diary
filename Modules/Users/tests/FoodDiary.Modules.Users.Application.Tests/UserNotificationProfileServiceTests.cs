@@ -16,7 +16,7 @@ public sealed class UserNotificationProfileServiceTests {
 
         Result<UserNotificationProfileModel> result = await service.UpdatePreferencesAsync(
             UserId.New(),
-            new UserPreferenceUpdate(),
+            new UserPreferenceUpdate(ReminderDelays: default),
             CancellationToken.None);
 
         ResultAssert.Failure(result, "Authentication.InvalidToken");

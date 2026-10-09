@@ -172,11 +172,11 @@ public sealed class UpdateUserCommandHandler(
     }
 
     private static void ApplyUpdates(User user, UpdateUserCommand command, UpdateUserValues values) {
-        FieldChange<DateTime> birthDateChange = FieldChanges.Unchanged<DateTime>();
+        FieldChange<ProfileBirthDate> birthDateChange = FieldChanges.Unchanged<ProfileBirthDate>();
         if (command.BirthDate is { } birthDate) {
-            birthDateChange = FieldChanges.Set(birthDate);
+            birthDateChange = FieldChanges.Set(ProfileBirthDate.FromEncodedDateTime(birthDate));
         } else if (command.BirthDateSpecified) {
-            birthDateChange = FieldChanges.Clear<DateTime>();
+            birthDateChange = FieldChanges.Clear<ProfileBirthDate>();
         }
         if (command.TimeZoneId is not null) {
             user.SetTimeZone(command.TimeZoneId);
@@ -194,6 +194,7 @@ public sealed class UpdateUserCommandHandler(
             StepGoal: command.StepGoal,
             HydrationGoal: command.HydrationGoal));
         user.UpdatePreferences(new UserPreferenceUpdate(
+            ReminderDelays: default,
             DashboardLayoutJson: values.DashboardLayoutJson,
             Language: values.Language,
             Theme: values.Theme,

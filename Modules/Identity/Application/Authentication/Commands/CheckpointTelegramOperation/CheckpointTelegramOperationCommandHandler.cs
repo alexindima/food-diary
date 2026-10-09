@@ -9,8 +9,8 @@ namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.Checkpo
 public sealed class CheckpointTelegramOperationCommandHandler(ITelegramOperationStore store, ITelegramOperationPolicy policy,
     IUserAuthenticationIdentityService identities, TimeProvider timeProvider) : ICommandHandler<CheckpointTelegramOperationCommand, Result> {
     public async Task<Result> Handle(CheckpointTelegramOperationCommand command, CancellationToken cancellationToken) {
-        Guid operationId = command.OperationId;
-        Guid leaseId = command.LeaseId;
+        TelegramOperationId operationId = command.OperationId;
+        TelegramLeaseId leaseId = command.LeaseId;
         string checkpoint = command.Checkpoint;
         bool completed = command.Completed;
         DateTime nextAttemptAtUtc = command.NextAttemptAtUtc;

@@ -29,7 +29,7 @@ public sealed class SurfaceStyleCodeTests {
         var user = User.Create("surface@example.com", "hash");
         string? originalTheme = user.Theme;
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdatePreferences(new UserPreferenceUpdate(Theme: "dark", SurfaceStyle: "invalid")));
+            user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, Theme: "dark", SurfaceStyle: "invalid")));
         Assert.Equal(originalTheme, user.Theme);
         Assert.Equal("normal", user.SurfaceStyle);
     }

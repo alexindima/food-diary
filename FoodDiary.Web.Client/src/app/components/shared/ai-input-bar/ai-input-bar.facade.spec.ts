@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AiFoodFacade } from '../../../shared/lib/ai-food.facade';
 import type { FoodNutritionResponse, FoodVisionItem, FoodVisionResponse } from '../../../shared/models/ai.data';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { AiInputBarFacade } from './ai-input-bar.facade';
 
 const item: FoodVisionItem = { nameEn: 'Apple', amount: 100, unit: 'g', confidence: 1 };
@@ -22,7 +23,7 @@ const aiFoodFacade = {
     analyzeFoodImage: vi.fn(() => of({ items: [item] })),
     calculateNutrition: vi.fn(() => of(nutrition)),
     resumeRecognition: vi.fn((): Observable<FoodVisionResponse> =>
-        of({ items: [item], recognition: { id: 'job-1', nutrition, errorCode: null } }),
+        of({ items: [item], recognition: { id: entityId<'food-recognition'>('job-1'), nutrition, errorCode: null } }),
     ),
 };
 let facade: AiInputBarFacade;
@@ -50,7 +51,7 @@ describe('AiInputBarFacade', () => {
     it('ignores a pending photo result after the user clears that channel', () => {
         const pending = new Subject<FoodVisionResponse>();
         aiFoodFacade.analyzeFoodImage.mockReturnValueOnce(pending);
-        facade.analyzePhoto('asset-1');
+        facade.analyzePhoto(entityId<'image-asset'>('asset-1'));
         facade.clear(facade.photo);
         pending.next({ items: [item] });
         expect(facade.photo.results()).toEqual([]);
@@ -59,7 +60,7 @@ describe('AiInputBarFacade', () => {
 
     it('uses saved background nutrition without another calculation', () => {
         aiFoodFacade.analyzeFoodImage.mockReturnValueOnce(of({ items: [item], recognition: { id: 'job-1', nutrition, errorCode: null } }));
-        facade.analyzePhoto('asset-1');
+        facade.analyzePhoto(entityId<'image-asset'>('asset-1'));
         expect(facade.photo.nutrition()).toBe(nutrition);
         expect(aiFoodFacade.calculateNutrition).not.toHaveBeenCalled();
     });
@@ -69,7 +70,7 @@ describe('AiInputBarFacade', () => {
         aiFoodFacade.analyzeFoodImage.mockReturnValueOnce(throwError(() => ({ status: HttpStatusCode.TooManyRequests })));
 
         facade.analyzeText('apple');
-        facade.analyzePhoto('asset-1');
+        facade.analyzePhoto(entityId<'image-asset'>('asset-1'));
 
         expect(facade.text.errorKey()).toBe('AI_INPUT_BAR.TEXT_ERROR_PREMIUM');
         expect(facade.photo.errorKey()).toBe('MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
@@ -93,7 +94,7 @@ describe('AiInputBarFacade saved photo results', () => {
         aiFoodFacade.resumeRecognition.mockReturnValueOnce(
             throwError(() => ({ status: HttpStatusCode.Forbidden, error: { code: 'Ai.ConsentRequired', terminal: true } })),
         );
-        facade.resumePhoto('job-with-revoked-consent');
+        facade.resumePhoto(entityId<'food-recognition'>('job-with-revoked-consent'));
         expect(facade.photo.errorKey()).toBe('AI_RECOGNITION.ERROR_CONSENT');
         expect(facade.photo.analyzing()).toBe(false);
         expect(aiFoodFacade.calculateNutrition).not.toHaveBeenCalled();
@@ -108,7 +109,7 @@ describe('AiInputBarFacade saved photo results', () => {
         expect(aiFoodFacade.calculateNutrition).not.toHaveBeenCalled();
     });
     it('resumes a saved photo without starting another analysis or nutrition calculation', () => {
-        facade.resumePhoto('job-1');
+        facade.resumePhoto(entityId<'food-recognition'>('job-1'));
 
         expect(aiFoodFacade.resumeRecognition).toHaveBeenCalledWith('job-1');
         expect(aiFoodFacade.analyzeFoodImage).not.toHaveBeenCalled();
@@ -120,7 +121,7 @@ describe('AiInputBarFacade saved photo results', () => {
     it('cancels polling a resumed photo when the result is dismissed', () => {
         const pending = new Subject<FoodVisionResponse>();
         aiFoodFacade.resumeRecognition.mockReturnValueOnce(pending);
-        facade.resumePhoto('job-1');
+        facade.resumePhoto(entityId<'food-recognition'>('job-1'));
         expect(facade.photo.analyzing()).toBe(true);
 
         facade.clear(facade.photo);

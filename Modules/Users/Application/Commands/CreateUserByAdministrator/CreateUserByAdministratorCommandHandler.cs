@@ -44,7 +44,7 @@ public sealed class CreateUserByAdministratorCommandHandler(IUserLookupRepositor
         }
 
         var user = User.Create(input.Email, passwordHasher.Hash(input.TemporaryPassword));
-        user.UpdatePersonalInfoChanges(new UserPersonalInfoChanges(Username: null, input.FirstName, input.LastName, FieldChanges.Unchanged<DateTime>(), Gender: null, WeightKg: null, HeightCm: null));
+        user.UpdatePersonalInfoChanges(new UserPersonalInfoChanges(Username: null, input.FirstName, input.LastName, FieldChanges.Unchanged<ProfileBirthDate>(), Gender: null, WeightKg: null, HeightCm: null));
         user.UpdateGoals(new UserGoalUpdate(
             DailyCalorieTarget: 2000,
             ProteinTarget: 150,

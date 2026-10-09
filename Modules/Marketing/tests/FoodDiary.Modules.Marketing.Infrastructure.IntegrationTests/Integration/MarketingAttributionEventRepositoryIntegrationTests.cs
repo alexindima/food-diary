@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Marketing.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
 using FoodDiary.Infrastructure.Persistence;
@@ -9,6 +11,33 @@ namespace FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests.Integratio
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class MarketingAttributionEventRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerFact]
+    public async Task VisitorAndSessionRoles_KeepDistinctCountsAndTheExistingSchema() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var repository = new MarketingAttributionEventRepository(context.MarketingAttributionEvents);
+        var now = new DateTime(2030, 7, 9, 12, 0, 0, DateTimeKind.Utc);
+        MarketingAttributionEventRecord first = CreateRecord("page_landing", now, "opaque/session-a") with {
+            AnonymousId = new AnonymousVisitorId("visitor:a"),
+        };
+        await repository.AddAsync(first);
+        await repository.AddAsync(first with { SessionId = new MarketingSessionId("opaque/session-b") });
+        await repository.AddAsync(first with { AnonymousId = new AnonymousVisitorId("visitor:b"), SessionId = new MarketingSessionId("opaque/session-c") });
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+
+        MarketingAttributionSummaryRecord summary = await repository.GetSummaryAsync(now.AddSeconds(-1));
+
+        Assert.Multiple(
+            () => Assert.Equal(2, summary.AnonymousVisitors),
+            () => Assert.Equal(3, summary.Sessions),
+            () => Assert.Equal(3, summary.Visits),
+            () => Assert.Equal(2, Assert.Single(summary.TopCampaigns).AnonymousVisitors),
+            () => Assert.Equal(3, Assert.Single(summary.TopCampaigns).Sessions),
+            () => Assert.False(context.Database.HasPendingModelChanges()));
+        Assert.Contains(summary.RecentEvents, item => item.AnonymousId == new AnonymousVisitorId("visitor:a") &&
+            item.SessionId == new MarketingSessionId("opaque/session-b"));
+    }
+
     [RequiresDockerFact]
     public async Task Range_DirectChannelExcludesEveryAttributionSignal() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
@@ -23,12 +52,12 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
             ReferrerHost = null,
         };
         await repository.AddAsync(direct);
-        await repository.AddAsync(direct with { EventId = Guid.NewGuid(), SessionId = "tracked", UtmSource = "source" });
+        await repository.AddAsync(direct with { EventId = Guid.NewGuid(), SessionId = new MarketingSessionId("tracked"), UtmSource = "source" });
         await context.SaveChangesAsync();
         var filter = new MarketingAttributionRangeFilter(start, start.AddDays(1), 1, 50, EventType: null, Channel: "direct", Search: null);
         MarketingAttributionRangeRecord result = await repository.GetRangeAsync(filter, CancellationToken.None);
         Assert.Equal(1, result.EventTotal);
-        Assert.Equal("direct", Assert.Single(result.Current.RecentEvents).SessionId);
+        Assert.Equal("direct", Assert.Single(result.Current.RecentEvents).SessionId.Value);
         Assert.Equal(2, result.Current.Events);
     }
 
@@ -53,7 +82,7 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
         Assert.Equal(1, result.Current.Signups);
         Assert.Equal(1, result.Previous.Visits);
         Assert.Equal(2, result.EventTotal);
-        Assert.Equal("first", Assert.Single(result.Current.RecentEvents).SessionId);
+        Assert.Equal("first", Assert.Single(result.Current.RecentEvents).SessionId.Value);
         Assert.Equal(new MarketingAttributionDayRecord(start, Visits: 2, Signups: 1, PremiumStarts: 0), Assert.Single(result.ByDay));
         Assert.Empty(context.ChangeTracker.Entries());
     }
@@ -103,15 +132,15 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
         MarketingAttributionSummaryRecord summary = await repository.GetSummaryAsync(cutoffUtc.AddDays(-10));
         MarketingAttributionEventRecord remaining = Assert.Single(summary.RecentEvents);
         Assert.Equal("premium_started", remaining.EventType);
-        Assert.Equal("session-fresh", remaining.SessionId);
+        Assert.Equal("session-fresh", remaining.SessionId.Value);
         Assert.Equal(1, await context.MarketingAttributionEvents.AsNoTracking().CountAsync());
     }
 
     [RequiresDockerFact]
     public async Task UserScopedQueries_ReturnLatestAndExistenceFlags() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var userId = Guid.NewGuid();
-        var otherUserId = Guid.NewGuid();
+        var userId = UserId.New();
+        var otherUserId = UserId.New();
         var now = new DateTime(2030, 7, 9, 12, 0, 0, DateTimeKind.Utc);
         var repository = new MarketingAttributionEventRepository(context.MarketingAttributionEvents);
 
@@ -123,12 +152,12 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
         MarketingAttributionEventRecord? latest = await repository.GetLatestForUserAsync(userId);
         bool premiumExists = await repository.ExistsForUserAsync(userId, "premium_started");
         bool trialExists = await repository.ExistsForUserAsync(userId, "trial_started");
-        MarketingAttributionEventRecord? missing = await repository.GetLatestForUserAsync(Guid.NewGuid());
+        MarketingAttributionEventRecord? missing = await repository.GetLatestForUserAsync(UserId.New());
 
         Assert.Multiple(
             () => Assert.NotNull(latest),
             () => Assert.Equal("premium_started", latest?.EventType),
-            () => Assert.Equal("session-new", latest?.SessionId),
+            () => Assert.Equal("session-new", latest?.SessionId.Value),
             () => Assert.NotNull(latest?.EventId),
             () => Assert.True(premiumExists),
             () => Assert.False(trialExists),
@@ -138,7 +167,7 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
     [RequiresDockerFact]
     public async Task LifecycleEvents_EnforceOneEventPerUserAndType() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var userId = Guid.NewGuid();
+        var userId = UserId.New();
         var now = new DateTime(2030, 7, 9, 12, 0, 0, DateTimeKind.Utc);
         var repository = new MarketingAttributionEventRepository(context.MarketingAttributionEvents);
         await repository.AddAsync(CreateRecord("premium_started", now, "session-first", userId));
@@ -156,9 +185,9 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
         await context.SaveChangesAsync();
 
         MarketingAttributionEventRecord? trusted = await repository.GetLandingAsync(
-            "anon-session-trusted", "session-trusted", now.AddMinutes(-1));
+            new AnonymousVisitorId("anon-session-trusted"), new MarketingSessionId("session-trusted"), now.AddMinutes(-1));
         MarketingAttributionEventRecord? forged = await repository.GetLandingAsync(
-            "anon-session-trusted", "session-forged", now.AddMinutes(-1));
+            new AnonymousVisitorId("anon-session-trusted"), new MarketingSessionId("session-forged"), now.AddMinutes(-1));
 
         Assert.NotNull(trusted);
         Assert.Null(forged);
@@ -168,13 +197,13 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
         string eventType,
         DateTime occurredAtUtc,
         string sessionId,
-        Guid? userId = null) =>
+        UserId? userId = null) =>
         new(
             eventType,
             occurredAtUtc,
             userId,
-            AnonymousId: $"anon-{sessionId}",
-            sessionId,
+            AnonymousId: new AnonymousVisitorId($"anon-{sessionId}"),
+            new MarketingSessionId(sessionId),
             LandingPath: "/",
             ReferrerHost: null,
             UtmSource: "telegram",

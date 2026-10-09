@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { LessonDetail, LessonPage, LessonSummary } from '../models/lesson.data';
 import { LessonService } from './lesson.service';
 
@@ -80,7 +81,7 @@ describe('LessonService', () => {
     it('loads lesson detail by id', () => {
         const lesson = createDetail();
 
-        service.getById('lesson-1').subscribe(result => {
+        service.getById(entityId<'lesson'>('lesson-1')).subscribe(result => {
             expect(result).toEqual(lesson);
         });
 
@@ -90,7 +91,7 @@ describe('LessonService', () => {
     });
 
     it('marks lesson as read', () => {
-        service.markRead('lesson-1').subscribe(result => {
+        service.markRead(entityId<'lesson'>('lesson-1')).subscribe(result => {
             expect(result).toBeNull();
         });
 
@@ -103,7 +104,7 @@ describe('LessonService', () => {
 
 function createSummary(): LessonSummary {
     return {
-        id: 'lesson-1',
+        id: entityId<'lesson'>('lesson-1'),
         title: 'Macros',
         summary: 'Macro basics',
         category: 'Macronutrients',

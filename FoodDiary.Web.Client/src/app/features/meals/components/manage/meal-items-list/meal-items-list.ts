@@ -8,6 +8,7 @@ import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { MealSourceType } from '../../../../../shared/models/meal.data';
+import { recipeDisplayToServings } from '../../../lib/recipe-serving/recipe-display-amount';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import type { MealItemFormValues, NutritionTotals } from '../meal-manage-lib/meal-manage.types';
 import { formatMealManageAmount, formatMealManageMacro, getEmptyNutritionTotals } from '../meal-manage-lib/meal-manage-view.utils';
@@ -164,7 +165,7 @@ export class MealItemsListComponent {
             return getEmptyNutritionTotals();
         }
 
-        const servingsAmount = this.recipeWeight.convertGramsToServings(recipe, amount);
+        const servingsAmount = recipeDisplayToServings(this.recipeWeight.displayAmountFromInput(recipe, amount));
         return {
             calories: ((recipe.totalCalories ?? 0) / recipe.servings) * servingsAmount,
             proteins: ((recipe.totalProteins ?? 0) / recipe.servings) * servingsAmount,

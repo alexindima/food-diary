@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
@@ -8,7 +9,7 @@ public sealed class RefreshTokenOptionalMetadataTests {
     [Fact]
     public void MiscDomainMethods_CoverRemainingBranches() {
         var session = UserRefreshTokenSession.Create(
-            Guid.NewGuid(),
+            RefreshTokenSessionId.New(),
             UserId.New(),
             " refresh ",
             rememberMe: true,
@@ -18,7 +19,7 @@ public sealed class RefreshTokenOptionalMetadataTests {
             DateTime.UtcNow);
         session.Rotate(" next-refresh ", rememberMe: false, DateTime.UtcNow.AddMinutes(1), TimeSpan.Zero);
         var sessionWithNullOptionals = UserRefreshTokenSession.Create(
-            Guid.NewGuid(),
+            RefreshTokenSessionId.New(),
             UserId.New(),
             "refresh",
             rememberMe: false,

@@ -1124,7 +1124,7 @@ describe('CycleTrackingFacade factors', () => {
     it('loads a factor into the factor form for editing', () => {
         facade.initialize();
 
-        facade.editFactor('factor-1');
+        facade.editFactor(entityId<'cycle-factor'>('factor-1'));
 
         expect(facade.editingFactorId()).toBe('factor-1');
         expect(facade.factorModel()).toEqual({
@@ -1138,7 +1138,7 @@ describe('CycleTrackingFacade factors', () => {
     it('ends an active factor today', () => {
         facade.initialize();
 
-        facade.endFactorToday('factor-1');
+        facade.endFactorToday(entityId<'cycle-factor'>('factor-1'));
 
         const payload = cyclesService.upsertFactor.mock.calls[0][1];
         expect(cyclesService.upsertFactor).toHaveBeenCalledWith('cycle-1', payload);
@@ -1156,7 +1156,7 @@ describe('CycleTrackingFacade factors', () => {
 describe('CycleTrackingFacade factor drafts', () => {
     it('rejects an oversized edited note without losing the draft or sending a request', async () => {
         facade.initialize();
-        facade.editFactor('factor-1');
+        facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         const notes = 'я'.repeat(NOTE_LIMIT + 1);
         facade.factorModel.update(value => ({ ...value, notes }));
         await submit(facade.factorForm);
@@ -1196,7 +1196,7 @@ describe('CycleTrackingFacade factor drafts', () => {
 describe('CycleTrackingFacade factor drafts', () => {
     it('sends the selected id when changing the start date', async () => {
         facade.initialize();
-        facade.editFactor('factor-1');
+        facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         facade.factorModel.update(value => ({ ...value, startDate: calendarDate('2026-04-02') }));
         await submit(facade.factorForm);
         expect(cyclesService.upsertFactor).toHaveBeenCalledWith(
@@ -1207,7 +1207,7 @@ describe('CycleTrackingFacade factor drafts', () => {
 
     it('retains the draft and explains an identity conflict', async () => {
         facade.initialize();
-        facade.editFactor('factor-1');
+        facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         facade.factorModel.update(value => ({ ...value, startDate: calendarDate('2026-04-02'), notes: 'draft' }));
         cyclesService.upsertFactor.mockReturnValue(throwError(() => ({ error: { error: 'Cycle.FactorIdentityConflict' } })));
         await submit(facade.factorForm);
@@ -1218,7 +1218,7 @@ describe('CycleTrackingFacade factor drafts', () => {
 
     it('discards a cancelled draft and resets field interaction state', () => {
         facade.initialize();
-        facade.editFactor('factor-1');
+        facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         facade.factorModel.update(value => ({ ...value, notes: 'cancelled', startDate: null }));
         facade.factorForm().markAsTouched();
 
@@ -1233,7 +1233,7 @@ describe('CycleTrackingFacade factor drafts', () => {
 
     it('clears an existing note when the editor is emptied', async () => {
         facade.initialize();
-        facade.editFactor('factor-1');
+        facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         facade.factorModel.update(value => ({ ...value, notes: '   ' }));
 
         await submit(facade.factorForm);
@@ -1264,7 +1264,7 @@ describe('CycleTrackingFacade factor drafts', () => {
 describe('CycleTrackingFacade factor save lifecycle', () => {
     it('retains a failed draft and resolves submission so the user can retry', async () => {
         facade.initialize();
-        facade.editFactor('factor-1');
+        facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         facade.factorModel.update(value => ({ ...value, notes: 'retry note' }));
         cyclesService.upsertFactor.mockReturnValueOnce(throwError(() => new Error('offline')));
 
@@ -1281,13 +1281,13 @@ describe('CycleTrackingFacade factor save lifecycle', () => {
 
     it('keeps the pending editor stable and prevents overlapping saves', async () => {
         facade.initialize();
-        facade.editFactor('factor-1');
+        facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         const pending = new Subject<CycleResponse>();
         cyclesService.upsertFactor.mockReturnValue(pending);
         const submission = submit(facade.factorForm);
 
         facade.cancelFactorEdit();
-        facade.editFactor('missing-factor');
+        facade.editFactor(entityId<'cycle-factor'>('missing-factor'));
         facade.saveFactor();
 
         expect(facade.editingFactorId()).toBe('factor-1');
@@ -1306,7 +1306,7 @@ describe('CycleTrackingFacade ending factors', () => {
         const cycle = createCycleResponse();
         cyclesService.getCurrent.mockReturnValue(of({ ...cycle, factors: [{ ...cycle.factors[0], startDate: calendarDate(tomorrow) }] }));
         facade.initialize();
-        await facade.endFactorTodayAsync('factor-1');
+        await facade.endFactorTodayAsync(entityId<'cycle-factor'>('factor-1'));
         expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
         expect(facade.factorError()).toBeNull();
     });
@@ -1317,7 +1317,7 @@ describe('CycleTrackingFacade ending factors', () => {
             of({ ...cycle, factors: [{ ...cycle.factors[0], endDate: calendarDate(formatDateInputValue(new Date())) }] }),
         );
         facade.initialize();
-        await facade.endFactorTodayAsync('factor-1');
+        await facade.endFactorTodayAsync(entityId<'cycle-factor'>('factor-1'));
         expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
     });
 
@@ -1325,22 +1325,22 @@ describe('CycleTrackingFacade ending factors', () => {
         facade.initialize();
         cyclesService.upsertFactor.mockReturnValueOnce(throwError(() => new Error('offline')));
 
-        await facade.endFactorTodayAsync('factor-1');
+        await facade.endFactorTodayAsync(entityId<'cycle-factor'>('factor-1'));
 
         expect(facade.factorError()).toBe('CYCLE_TRACKING.END_FACTOR_FAILED');
         expect(facade.factors()[0].endDate).toBeNull();
         expect(facade.isSavingFactor()).toBe(false);
-        await facade.endFactorTodayAsync('factor-1');
+        await facade.endFactorTodayAsync(entityId<'cycle-factor'>('factor-1'));
         expect(cyclesService.upsertFactor).toHaveBeenCalledTimes(2);
         expect(facade.factorError()).toBeNull();
     });
 
     it('protects the editor and prevents saving while a factor is being ended', async () => {
         facade.initialize();
-        facade.editFactor('factor-1');
+        facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         const pending = new Subject<CycleResponse>();
         cyclesService.upsertFactor.mockReturnValue(pending);
-        const ending = facade.endFactorTodayAsync('factor-1');
+        const ending = facade.endFactorTodayAsync(entityId<'cycle-factor'>('factor-1'));
 
         facade.cancelFactorEdit();
         facade.saveFactor();

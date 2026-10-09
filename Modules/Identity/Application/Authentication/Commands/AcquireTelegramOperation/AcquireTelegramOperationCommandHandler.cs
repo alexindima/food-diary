@@ -9,7 +9,7 @@ namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.Acquire
 public sealed class AcquireTelegramOperationCommandHandler(ITelegramOperationStore store, ITelegramOperationPolicy policy,
     IUserAuthenticationIdentityService identities, TimeProvider timeProvider) : ICommandHandler<AcquireTelegramOperationCommand, Result<TelegramOperationLease>> {
     public async Task<Result<TelegramOperationLease>> Handle(AcquireTelegramOperationCommand command, CancellationToken cancellationToken) {
-        Guid operationId = command.OperationId;
+        TelegramOperationId operationId = command.OperationId;
         if (!TelegramOperationChecks.IsEnabled(policy)) {
             return Result.Failure<TelegramOperationLease>(TelegramOperationChecks.Unavailable);
         }

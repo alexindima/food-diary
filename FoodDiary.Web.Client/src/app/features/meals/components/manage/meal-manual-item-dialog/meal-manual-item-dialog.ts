@@ -206,13 +206,13 @@ export class MealManualItemDialogComponent {
     private loadRecipeAmount(recipe: Recipe): void {
         this.isLoadingRecipeAmount.set(true);
         this.servingWeightSubscription = this.recipeWeight
-            .loadServingWeight(recipe)
+            .loadServingMass(recipe)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(servingWeight => {
-                const hasWeight = servingWeight !== null && Number.isFinite(servingWeight) && servingWeight > 0;
+            .subscribe(mass => {
+                const hasWeight = mass.kind === 'known';
                 this.usesRecipeGrams.set(hasWeight);
-                if (hasWeight && this.amountModel() === 1) {
-                    this.amount().value.set(servingWeight);
+                if (mass.kind === 'known' && this.amountModel() === 1) {
+                    this.amount().value.set(mass.gramsPerServing);
                 }
                 this.isLoadingRecipeAmount.set(false);
             });

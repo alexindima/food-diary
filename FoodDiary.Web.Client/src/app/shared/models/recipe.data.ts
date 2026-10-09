@@ -1,6 +1,7 @@
 import type { NutrientData } from './charts.data';
 import type { PageOf } from './page-of.data';
-import type { MeasurementUnit } from './product.data';
+import type { RecipeIngredient } from './recipe-ingredient';
+export type { RecipeIngredient } from './recipe-ingredient';
 import type { QualityGrade } from './quality-grade.data';
 import type { RecipeCategory } from './recipe-category';
 import type { UtcInstant } from './semantics/date-value';
@@ -60,33 +61,6 @@ export type RecipeStep = {
     imageUrl?: string | null;
     imageAssetId?: string | null;
     ingredients: RecipeIngredient[];
-};
-
-export type RecipeIngredient = {
-    textName?: string | null;
-    amountText?: string | null;
-    nestedRecipeMissingIngredientCount?: number;
-    id: string;
-    amount: number;
-    productId?: string | null;
-    productName?: string | null;
-    productBaseUnit?: MeasurementUnit | string | null;
-    productBaseAmount?: number | null;
-    productCaloriesPerBase?: number | null;
-    productProteinsPerBase?: number | null;
-    productFatsPerBase?: number | null;
-    productCarbsPerBase?: number | null;
-    productFiberPerBase?: number | null;
-    productAlcoholPerBase?: number | null;
-    nestedRecipeId?: string | null;
-    nestedRecipeName?: string | null;
-    nestedRecipeServings?: number | null;
-    nestedRecipeTotalCalories?: number | null;
-    nestedRecipeTotalProteins?: number | null;
-    nestedRecipeTotalFats?: number | null;
-    nestedRecipeTotalCarbs?: number | null;
-    nestedRecipeTotalFiber?: number | null;
-    nestedRecipeTotalAlcohol?: number | null;
 };
 
 export type RecipeFilters = {

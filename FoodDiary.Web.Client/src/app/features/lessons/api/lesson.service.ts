@@ -8,6 +8,7 @@ import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
 import { sdkQueryString } from '../../../shared/api/sdk/sdk-query';
 import { sdkEnum } from '../../../shared/api/sdk/sdk-response';
 import { rethrowApiError } from '../../../shared/lib/api-error.utils';
+import type { LessonId } from '../../../shared/models/semantics/entity-id';
 import type { LessonDetail, LessonPage, LessonQuery } from '../models/lesson.data';
 import { lessonDetailFromSdk, lessonPageFromSdk } from './lesson-sdk.mapper';
 
@@ -49,14 +50,14 @@ export class LessonService {
         );
     }
 
-    public getById(id: string): Observable<LessonDetail> {
+    public getById(id: LessonId): Observable<LessonDetail> {
         return this.sdk.client.getLessonsById({ version: this.sdk.version, id }).pipe(
             map(lessonDetailFromSdk),
             catchError((error: unknown) => rethrowApiError('Get lesson error', error)),
         );
     }
 
-    public markRead(id: string): Observable<void> {
+    public markRead(id: LessonId): Observable<void> {
         return this.sdk.client
             .postLessonsByIdRead({ version: this.sdk.version, id })
             .pipe(catchError((error: unknown) => rethrowApiError('Mark lesson read error', error)));

@@ -42,14 +42,23 @@ internal sealed class BotOperationScenario : IDisposable {
     public List<string> BusinessPaths { get; } = [];
     public Func<HttpRequestMessage, Task<HttpResponseMessage>>? BusinessResponse { get; set; }
 
-    public Task ProcessAsync() => _worker.ProcessAsync(_operations, Id, CancellationToken.None);
+    public Task ProcessAsync() => _worker.ProcessAsync(_operations, new BotOperationId(Id), CancellationToken.None);
     public static HttpResponseMessage Json<T>(T body) => new(HttpStatusCode.OK) { Content = JsonContent.Create(body) };
 
     private async Task<HttpResponseMessage> RespondAsync(HttpRequestMessage request) {
         string path = request.RequestUri!.AbsolutePath;
         if (path.EndsWith("/lease", StringComparison.Ordinal)) {
-            return LeaseConflict ? new HttpResponseMessage(HttpStatusCode.Conflict) : Json(new BotOperationLease(Id, Guid.NewGuid(), UserId, 1,
-                JsonSerializer.Serialize(Incoming), JsonSerializer.Serialize(State), DateTime.UtcNow.AddMinutes(2), CreatedAtUtc));
+            return LeaseConflict ? new HttpResponseMessage(HttpStatusCode.Conflict) : Json(new {
+                OperationId = Id,
+                LeaseId = Guid.NewGuid(),
+                UserId,
+                SecurityVersion = 1,
+                Payload =
+                JsonSerializer.Serialize(Incoming),
+                Checkpoint = JsonSerializer.Serialize(State),
+                LeaseExpiresAtUtc = DateTime.UtcNow.AddMinutes(2),
+                CreatedAtUtc,
+            });
         }
         if (path.EndsWith("/checkpoint", StringComparison.Ordinal)) {
             using JsonDocument body = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());

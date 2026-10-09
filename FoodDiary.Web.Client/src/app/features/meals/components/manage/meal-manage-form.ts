@@ -530,7 +530,7 @@ export class MealManageFormComponent {
         return buildMealManageDto(this.getMealFormValue(), {
             aiSessions: this.aiSessions(),
             buildDateTime: () => this.buildDateTime(),
-            convertRecipeGramsToServings: (recipe, amount) => this.mealManageFacade.convertRecipeGramsToServings(recipe, amount),
+            recipeServingsFromDisplayInput: (recipe, amount) => this.mealManageFacade.recipeServingsFromDisplayInput(recipe, amount),
             manualTotals: this.mealManageFacade.getManualNutritionTotalsFromValue(this.mealFormModel()),
         });
     }

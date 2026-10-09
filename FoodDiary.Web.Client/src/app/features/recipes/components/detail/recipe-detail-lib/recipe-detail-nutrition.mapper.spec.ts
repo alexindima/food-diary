@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { MeasurementUnit } from '../../../../../shared/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import { recipeIngredientFromStored } from '../../../../../shared/models/recipe-ingredient';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
 const RECIPE_DETAIL_INGREDIENT_PREVIEW_LIMIT = 5;
@@ -93,7 +94,7 @@ describe('buildRecipeDetailViewModel preview', () => {
                     instruction: 'Mix',
                     imageUrl: null,
                     imageAssetId: null,
-                    ingredients: Array.from({ length: RECIPE_DETAIL_INGREDIENT_PREVIEW_LIMIT + 1 }, (_, index) => ({
+                    ingredients: Array.from({ length: RECIPE_DETAIL_INGREDIENT_PREVIEW_LIMIT + 1 }, (_, index) => recipeIngredientFromStored({
                         id: `ingredient-${index}`,
                         amount: index + 1,
                         productName: index === 0 ? null : `Ingredient ${index}`,
@@ -163,7 +164,7 @@ function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
                 imageUrl: null,
                 imageAssetId: null,
                 ingredients: [
-                    {
+                    recipeIngredientFromStored({
                         id: 'ingredient-1',
                         amount: 200,
                         productId: 'product-1',
@@ -176,7 +177,7 @@ function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
                         productCarbsPerBase: 76,
                         productFiberPerBase: 2,
                         productAlcoholPerBase: 0.5,
-                    },
+                    }),
                 ],
             },
         ],

@@ -2,6 +2,9 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { decodeNotificationKind } from '../../../../shared/models/notification-kind';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { NotificationItem } from '../../../../shared/notifications/notification.service';
 import type { NotificationViewModel } from '../notifications-dialog-lib/notifications-dialog.types';
 import { NotificationsDialogListComponent } from './notifications-dialog-list';
@@ -37,14 +40,14 @@ describe('NotificationsDialogListComponent', () => {
 function createNotificationViewModel(): NotificationViewModel {
     return {
         notification: {
-            id: 'n1',
-            type: 'PasswordSetupSuggested',
+            id: entityId<'notification'>('n1'),
+            type: decodeNotificationKind('PasswordSetupSuggested'),
             title: 'Title',
             body: 'Body',
             targetUrl: '/profile',
             referenceId: 'ref',
             isRead: false,
-            createdAtUtc: '2026-05-17T00:00:00Z',
+            createdAtUtc: utcInstant('2026-05-17T00:00:00Z'),
         },
         isPasswordSetupSuggestion: true,
         isDietologistInvitation: false,

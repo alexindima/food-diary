@@ -5,6 +5,7 @@ import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { LessonService } from '../../api/lesson.service';
 import type { LessonPage, LessonQuery } from '../../models/lesson.data';
 import { LessonFacade } from '../lesson.facade';
@@ -71,7 +72,7 @@ function cachedPage(): LessonPage {
         ...response(),
         items: [
             {
-                id: 'iron-ru',
+                id: entityId<'lesson'>('iron-ru'),
                 title: 'Железо',
                 category: 'Micronutrients',
                 difficulty: 'Intermediate',

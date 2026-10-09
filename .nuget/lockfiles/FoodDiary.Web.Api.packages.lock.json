@@ -2015,6 +2015,7 @@
       "fooddiary.modules.identity.domain": {
         "type": "Project",
         "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
@@ -2056,6 +2057,7 @@
           "FoodDiary.Modules.Identity.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Presentation.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Presentation.Mappings": "[1.0.0, )",
           "FoodDiary.Presentation.Api": "[1.0.0, )"
@@ -2240,11 +2242,17 @@
           "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Marketing.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Marketing.Contracts": "[1.0.0, )"
+          "FoodDiary.Modules.Marketing.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Marketing.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.marketing.application.abstractions": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Marketing.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
       },
       "fooddiary.modules.marketing.contracts": {
         "type": "Project",
@@ -2288,6 +2296,7 @@
           "FoodDiary.Modules.Marketing.Application": "[1.0.0, )",
           "FoodDiary.Modules.Marketing.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Marketing.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },

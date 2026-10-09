@@ -19,12 +19,12 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
         context.ChangeTracker.Clear();
         User loaded = await context.Users.SingleAsync(item => item.Id == user.Id);
         Assert.Equal("normal", loaded.SurfaceStyle);
-        loaded.UpdatePreferences(new FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.UserPreferenceUpdate(SurfaceStyle: "matte"));
+        loaded.UpdatePreferences(new FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.UserPreferenceUpdate(ReminderDelays: default, SurfaceStyle: "matte"));
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
         loaded = await context.Users.SingleAsync(item => item.Id == user.Id);
         Assert.Equal("matte", loaded.SurfaceStyle);
-        loaded.UpdatePreferences(new FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.UserPreferenceUpdate(Theme: "dark"));
+        loaded.UpdatePreferences(new FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.UserPreferenceUpdate(ReminderDelays: default, Theme: "dark"));
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
         loaded = await context.Users.SingleAsync(item => item.Id == user.Id);

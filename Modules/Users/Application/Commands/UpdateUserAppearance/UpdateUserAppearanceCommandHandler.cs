@@ -38,6 +38,7 @@ public sealed class UpdateUserAppearanceCommandHandler(IUserContextService userC
         User user = userResult.Value;
         UserAppearancePreferences preferences = preferencesResult.Value;
         user.UpdatePreferences(new UserPreferenceUpdate(
+            ReminderDelays: default,
             Theme: preferences.Theme,
             UiStyle: preferences.UiStyle,
             SurfaceStyle: preferences.SurfaceStyle));

@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Marketing.Domain.ValueObjects;
 using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
 using FoodDiary.Modules.Marketing.Application.Commands.RecordMarketingAttribution;
 using FoodDiary.Modules.Marketing.Application.Common;
@@ -12,8 +14,8 @@ public sealed class MarketingAttributionCoverageTests {
         var repository = new RecordingRepository();
         var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
-            AnonymousId = "   ",
-            SessionId = new string('s', 120),
+            AnonymousId = new AnonymousVisitorId("   "),
+            SessionId = new MarketingSessionId(new string('s', 120)),
             LandingPath = "  /landing  ",
             UtmSource = "  source  ",
         };
@@ -23,8 +25,8 @@ public sealed class MarketingAttributionCoverageTests {
         ResultAssert.Success(result);
         MarketingAttributionEventRecord record = Assert.IsType<MarketingAttributionEventRecord>(repository.Record);
         Assert.Multiple(
-            () => Assert.Equal("unknown", record.AnonymousId),
-            () => Assert.Equal(96, record.SessionId.Length),
+            () => Assert.Equal("unknown", record.AnonymousId.Value),
+            () => Assert.Equal(96, record.SessionId.Value.Length),
             () => Assert.Equal("/landing", record.LandingPath),
             () => Assert.Equal("source", record.UtmSource));
     }
@@ -82,7 +84,7 @@ public sealed class MarketingAttributionCoverageTests {
         var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             EventType = MarketingAttributionEventTypes.PageLanding,
-            UserId = Guid.NewGuid(),
+            UserId = UserId.New(),
         };
 
         Result result = await handler.Handle(command, CancellationToken.None);
@@ -99,7 +101,7 @@ public sealed class MarketingAttributionCoverageTests {
     public async Task Handle_WithoutAuthenticatedUserOnSignupCompletedEvent_ReturnsValidationFailure(string? userIdText) {
         var repository = new RecordingRepository();
         var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
-        Guid? userId = userIdText is null ? null : Guid.Parse(userIdText);
+        UserId? userId = userIdText is null ? null : new UserId(Guid.Parse(userIdText));
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             EventType = MarketingAttributionEventTypes.SignupCompleted,
             UserId = userId,
@@ -121,7 +123,7 @@ public sealed class MarketingAttributionCoverageTests {
         var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             EventType = MarketingAttributionEventTypes.SignupCompleted,
-            UserId = Guid.NewGuid(),
+            UserId = UserId.New(),
         };
 
         Result result = await handler.Handle(command, CancellationToken.None);
@@ -137,7 +139,7 @@ public sealed class MarketingAttributionCoverageTests {
         var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             EventType = MarketingAttributionEventTypes.SignupCompleted,
-            UserId = Guid.NewGuid(),
+            UserId = UserId.New(),
             UtmSource = "attacker",
         };
 
@@ -153,7 +155,7 @@ public sealed class MarketingAttributionCoverageTests {
         var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             EventType = MarketingAttributionEventTypes.SignupCompleted,
-            UserId = Guid.NewGuid(),
+            UserId = UserId.New(),
         };
 
         Result result = await handler.Handle(command, CancellationToken.None);
@@ -169,7 +171,7 @@ public sealed class MarketingAttributionCoverageTests {
         var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             EventType = MarketingAttributionEventTypes.SignupCompleted,
-            UserId = Guid.NewGuid(),
+            UserId = UserId.New(),
         };
 
         Result result = await handler.Handle(command, CancellationToken.None);
@@ -184,8 +186,8 @@ public sealed class MarketingAttributionCoverageTests {
             EventType: MarketingAttributionEventTypes.PageLanding,
             OccurredAtUtc: new DateTime(2026, 4, 2, 11, 55, 0, DateTimeKind.Utc),
             UserId: null,
-            AnonymousId: "anonymous",
-            SessionId: "session",
+            AnonymousId: new AnonymousVisitorId("anonymous"),
+            SessionId: new MarketingSessionId("session"),
             LandingPath: "/trusted",
             ReferrerHost: null,
             UtmSource: "trusted",
@@ -201,8 +203,8 @@ public sealed class MarketingAttributionCoverageTests {
             EventType: MarketingAttributionEventTypes.PageLanding,
             Timestamp: timestamp,
             UserId: null,
-            AnonymousId: "anonymous",
-            SessionId: "session",
+            AnonymousId: new AnonymousVisitorId("anonymous"),
+            SessionId: new MarketingSessionId("session"),
             LandingPath: "/",
             ReferrerHost: null,
             UtmSource: null,
@@ -231,15 +233,15 @@ public sealed class MarketingAttributionCoverageTests {
         public Task<MarketingAttributionSummaryRecord> GetSummaryAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<MarketingAttributionEventRecord?> GetLandingAsync(string anonymousId, string sessionId, DateTime sinceUtc, CancellationToken cancellationToken = default) {
+        public Task<MarketingAttributionEventRecord?> GetLandingAsync(AnonymousVisitorId anonymousId, MarketingSessionId sessionId, DateTime sinceUtc, CancellationToken cancellationToken = default) {
             LandingLookupCount++;
             return Task.FromResult(Landing);
         }
 
-        public Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(Guid userId, CancellationToken cancellationToken = default) =>
+        public Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult<MarketingAttributionEventRecord?>(null);
 
-        public Task<bool> ExistsForUserAsync(Guid userId, string eventType, CancellationToken cancellationToken = default) =>
+        public Task<bool> ExistsForUserAsync(UserId userId, string eventType, CancellationToken cancellationToken = default) =>
             Task.FromResult(SignupExists);
     }
 

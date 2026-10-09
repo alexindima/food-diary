@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
@@ -10,7 +11,7 @@ public sealed class RefreshTokenChronologyTests {
     [Fact]
     public void RefreshTokenSession_RejectsTimestampsBeforeLastRotationAtomically() {
         var session = UserRefreshTokenSession.Create(
-            Guid.NewGuid(),
+            RefreshTokenSessionId.New(),
             UserId.New(),
             "initial-hash",
             rememberMe: false,

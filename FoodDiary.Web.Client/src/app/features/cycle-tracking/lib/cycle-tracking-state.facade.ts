@@ -17,6 +17,7 @@ import {
     type MenstrualEpisode,
 } from '../../../shared/models/cycle.data';
 import { calendarDate } from '../../../shared/models/semantics/date-value';
+import type { CycleFactorId } from '../../../shared/models/semantics/entity-id';
 import { CyclesService } from '../api/cycles.service';
 import { cycleNutritionRange } from './cycle-nutrition-range';
 import { toCycleDateKey } from './cycle-tracking.mapper';
@@ -91,7 +92,7 @@ export class CycleTrackingStateFacade {
 
     public readonly editingDayDate = signal<string | null>(null);
 
-    public readonly editingFactorId = signal<string | null>(null);
+    public readonly editingFactorId = signal<CycleFactorId | null>(null);
 
     public readonly editingEpisodeId = signal<string | null>(null);
 

@@ -9,11 +9,10 @@ import { createSdkConnection, sdkRequestOptions } from '../api/sdk/sdk-connectio
 import { ClientTelemetrySessionService } from '../observability/client-telemetry-session.service';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
+import { type AnonymousVisitorId, anonymousVisitorId, type MarketingAttributionIdentity,marketingSessionId } from './marketing-identity';
 
-type MarketingAttributionPayload = {
+type MarketingAttributionPayload = MarketingAttributionIdentity & {
     timestamp: string;
-    anonymousId: string;
-    sessionId: string;
     landingPath: string;
     referrerHost?: string;
     utmSource?: string;
@@ -25,6 +24,11 @@ type MarketingAttributionPayload = {
 };
 
 type MarketingSignupAttributionPayload = MarketingAttributionPayload;
+type StoredAttributionPayload = Omit<MarketingAttributionPayload, 'anonymousId' | 'sessionId'> & {
+    anonymousId: string;
+    sessionId: string;
+};
+type MarketingUtmFields = Pick<MarketingAttributionPayload, 'utmSource' | 'utmMedium' | 'utmCampaign' | 'utmContent' | 'utmTerm'>;
 
 const ANONYMOUS_ID_STORAGE_KEY = 'fd_marketing_anonymous_id';
 const FIRST_TOUCH_STORAGE_KEY = 'fd_marketing_first_touch';
@@ -97,7 +101,7 @@ export class MarketingAttributionService {
         const payload: MarketingAttributionPayload = {
             timestamp: new Date().toISOString(),
             anonymousId: this.getAnonymousId(),
-            sessionId: this.telemetrySession.getSessionId(),
+            sessionId: marketingSessionId(this.telemetrySession.getSessionId()),
             landingPath,
             ...(referrerHost !== null ? { referrerHost } : {}),
             ...this.readUtmParams(params),
@@ -131,7 +135,7 @@ export class MarketingAttributionService {
         return {
             timestamp: new Date().toISOString(),
             anonymousId: this.getAnonymousId(),
-            sessionId: this.telemetrySession.getSessionId(),
+            sessionId: marketingSessionId(this.telemetrySession.getSessionId()),
             landingPath: this.getLandingPath(),
             ...(environment.buildVersion !== undefined ? { buildVersion: environment.buildVersion } : {}),
         };
@@ -143,7 +147,7 @@ export class MarketingAttributionService {
             return null;
         }
 
-        return value;
+        return { ...value, anonymousId: anonymousVisitorId(value.anonymousId), sessionId: marketingSessionId(value.sessionId) };
     }
 
     private getLandingPath(): string {
@@ -160,7 +164,7 @@ export class MarketingAttributionService {
         }
     }
 
-    private readUtmParams(params: URLSearchParams): Partial<MarketingAttributionPayload> {
+    private readUtmParams(params: URLSearchParams): Partial<MarketingUtmFields> {
         return {
             ...this.readParam(params, 'utm_source', 'utmSource'),
             ...this.readParam(params, 'utm_medium', 'utmMedium'),
@@ -170,11 +174,7 @@ export class MarketingAttributionService {
         };
     }
 
-    private readParam(
-        params: URLSearchParams,
-        queryKey: string,
-        payloadKey: keyof MarketingAttributionPayload,
-    ): Partial<MarketingAttributionPayload> {
+    private readParam(params: URLSearchParams, queryKey: string, payloadKey: keyof MarketingUtmFields): Partial<MarketingUtmFields> {
         const value = params.get(queryKey)?.trim();
         return value === undefined || value.length === 0 ? {} : { [payloadKey]: value };
     }
@@ -194,10 +194,10 @@ export class MarketingAttributionService {
         }
     }
 
-    private getAnonymousId(): string {
+    private getAnonymousId(): AnonymousVisitorId {
         const stored = this.storage.getItem('local', ANONYMOUS_ID_STORAGE_KEY);
         if (stored !== null && stored.length > 0) {
-            return stored;
+            return anonymousVisitorId(stored);
         }
 
         const anonymousId = this.createAnonymousId();
@@ -205,10 +205,10 @@ export class MarketingAttributionService {
         return anonymousId;
     }
 
-    private createAnonymousId(): string {
+    private createAnonymousId(): AnonymousVisitorId {
         const timestamp = Date.now().toString(RANDOM_RADIX);
         const random = Math.random().toString(RANDOM_RADIX).slice(2);
-        return `${ANONYMOUS_ID_PREFIX}-${timestamp}-${random}`;
+        return anonymousVisitorId(`${ANONYMOUS_ID_PREFIX}-${timestamp}-${random}`);
     }
 
     private persistFirstTouch(payload: MarketingAttributionPayload): void {
@@ -250,7 +250,7 @@ export class MarketingAttributionService {
         );
     }
 
-    private isStoredAttributionPayload(value: unknown): value is MarketingAttributionPayload {
+    private isStoredAttributionPayload(value: unknown): value is StoredAttributionPayload {
         if (typeof value !== 'object' || value === null || Array.isArray(value)) {
             return false;
         }

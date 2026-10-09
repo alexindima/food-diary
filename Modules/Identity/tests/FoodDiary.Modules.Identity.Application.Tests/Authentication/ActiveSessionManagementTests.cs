@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
@@ -20,13 +21,13 @@ public sealed class ActiveSessionManagementTests {
     [Fact]
     public async Task RevokeSession_ForwardsOwnerCurrentSessionClockAndCancellation() {
         var userId = new UserId(Guid.NewGuid());
-        var currentSessionId = Guid.NewGuid();
-        var targetSessionId = Guid.NewGuid();
+        var currentSessionId = RefreshTokenSessionId.New();
+        var targetSessionId = RefreshTokenSessionId.New();
         using var cancellation = new CancellationTokenSource();
         IRefreshTokenSessionWriteRepository repository = Substitute.For<IRefreshTokenSessionWriteRepository>();
         var handler = new RevokeSessionCommandHandler(repository, new FixedTimeProvider());
 
-        Result result = await handler.Handle(new RevokeSessionCommand(userId.Value, currentSessionId, targetSessionId), cancellation.Token);
+        Result result = await handler.Handle(new RevokeSessionCommand(userId, currentSessionId, targetSessionId), cancellation.Token);
 
         ResultAssert.Success(result);
         await repository.Received(1).RevokeOtherByIdAsync(targetSessionId, userId, currentSessionId, FixedNow, cancellation.Token);
@@ -36,12 +37,12 @@ public sealed class ActiveSessionManagementTests {
     [Fact]
     public async Task RevokeOtherSessions_ForwardsOwnerAndPreservesCurrentSession() {
         var userId = new UserId(Guid.NewGuid());
-        var currentSessionId = Guid.NewGuid();
+        var currentSessionId = RefreshTokenSessionId.New();
         using var cancellation = new CancellationTokenSource();
         IRefreshTokenSessionWriteRepository repository = Substitute.For<IRefreshTokenSessionWriteRepository>();
         var handler = new RevokeOtherSessionsCommandHandler(repository, new FixedTimeProvider());
 
-        Result result = await handler.Handle(new RevokeOtherSessionsCommand(userId.Value, currentSessionId), cancellation.Token);
+        Result result = await handler.Handle(new RevokeOtherSessionsCommand(userId, currentSessionId), cancellation.Token);
 
         ResultAssert.Success(result);
         await repository.Received(1).RevokeAllOtherAsync(userId, currentSessionId, FixedNow, cancellation.Token);
@@ -50,7 +51,7 @@ public sealed class ActiveSessionManagementTests {
     [Fact]
     public async Task Logout_WithValidRefreshToken_RevokesSignedSession() {
         var userId = new UserId(Guid.NewGuid());
-        var sessionId = Guid.NewGuid();
+        var sessionId = RefreshTokenSessionId.New();
         IJwtTokenGenerator tokens = Substitute.For<IJwtTokenGenerator>();
         tokens.ValidateToken("refresh-token").Returns((userId, "user@example.com", false, sessionId));
         IRefreshTokenSessionWriteRepository repository = Substitute.For<IRefreshTokenSessionWriteRepository>();
@@ -86,14 +87,14 @@ public sealed class ActiveSessionManagementTests {
         var userId = new UserId(Guid.NewGuid());
         UserRefreshTokenSession activeSession = CreateSession(userId, Guid.NewGuid());
         IRefreshTokenSessionReadModelRepository repository = Substitute.For<IRefreshTokenSessionReadModelRepository>();
-        repository.IsActiveAsync(userId: userId, sessionId: Arg.Any<Guid>(), cancellationToken: CancellationToken.None).Returns(returnThis: false);
+        repository.IsActiveAsync(userId: userId, sessionId: Arg.Any<RefreshTokenSessionId>(), cancellationToken: CancellationToken.None).Returns(returnThis: false);
         repository.GetActivePageReadModelsAsync(userId: userId, page: 1, limit: 50, cancellationToken: CancellationToken.None)
             .Returns(Task.FromResult<IReadOnlyList<RefreshTokenSessionReadModel>>([new(
                 activeSession.Id, activeSession.AuthProvider, activeSession.UserAgent, activeSession.CreatedAtUtc, activeSession.LastRotatedAtUtc)]));
         var handler = new GetActiveSessionsQueryHandler(repository);
 
         Result<IReadOnlyList<ActiveSessionModel>> result = await handler.Handle(
-            new GetActiveSessionsQuery(userId.Value, Guid.NewGuid()),
+            new GetActiveSessionsQuery(userId, RefreshTokenSessionId.New()),
             CancellationToken.None);
 
         ResultAssert.Failure(result, AuthenticationErrors.InvalidToken.Code);
@@ -111,7 +112,7 @@ public sealed class ActiveSessionManagementTests {
         var handler = new GetActiveSessionsQueryHandler(repository);
 
         Result<IReadOnlyList<ActiveSessionModel>> result = await handler.Handle(
-            new GetActiveSessionsQuery(userId.Value, activeSession.Id),
+            new GetActiveSessionsQuery(userId, activeSession.Id),
             CancellationToken.None);
 
         ActiveSessionModel model = Assert.Single(ResultAssert.Success(result));
@@ -124,7 +125,7 @@ public sealed class ActiveSessionManagementTests {
 
     private static UserRefreshTokenSession CreateSession(UserId userId, Guid sessionId) =>
         UserRefreshTokenSession.Create(
-            sessionId,
+            new RefreshTokenSessionId(sessionId),
             userId,
             "refresh-hash",
             rememberMe: false,

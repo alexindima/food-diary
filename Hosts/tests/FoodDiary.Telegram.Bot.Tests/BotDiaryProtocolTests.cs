@@ -27,7 +27,7 @@ public sealed class BotDiaryProtocolTests {
     [InlineData("a.e30.c")]
     [InlineData("a.eyJzZWN1cml0eV92ZXJzaW9uIjoiMiJ9.c")]
     public async Task AuthenticateAsync_RejectsMalformedOrStaleSecurityVersion(string token) {
-        using var handler = new Handler(_ => Json(new { AccessToken = token, User = new { Id = Lease().UserId } }));
+        using var handler = new Handler(_ => Json(new { AccessToken = token, User = new { Id = Lease().UserId.Value } }));
         using var http = new HttpClient(handler);
         await Assert.ThrowsAsync<InvalidDataException>(() => Client(http).AuthenticateAsync(123, Lease(), CancellationToken.None));
     }
@@ -45,7 +45,7 @@ public sealed class BotDiaryProtocolTests {
             return Json(receipt);
         });
         using var http = new HttpClient(handler);
-        Assert.Equal(receipt, await Client(http).RequestUploadAsync("token", operation, 2, mime, 3, CancellationToken.None));
+        Assert.Equal(receipt, await Client(http).RequestUploadAsync("token", new BotOperationId(operation), 2, mime, 3, CancellationToken.None));
         Assert.Contains($"{operation:N}.{extension}", handler.Body, StringComparison.Ordinal);
     }
 
@@ -78,7 +78,7 @@ public sealed class BotDiaryProtocolTests {
         using var handler = new Handler(_ => new HttpResponseMessage(status) { Content = new StringContent("<html>Gateway error</html>") });
         using var http = new HttpClient(handler);
         HttpRequestException error = await Assert.ThrowsAsync<HttpRequestException>(() =>
-            Client(http).StartRecognitionAsync("token", Guid.NewGuid(), Guid.NewGuid(), caption: null, CancellationToken.None));
+            Client(http).StartRecognitionAsync("token", new BotOperationId(Guid.NewGuid()), Guid.NewGuid(), caption: null, CancellationToken.None));
         Assert.Equal(status, error.StatusCode);
     }
 
@@ -111,7 +111,7 @@ public sealed class BotDiaryProtocolTests {
         using var handler = new Handler(_ => Json(new { operationId = Guid.NewGuid(), mealId = Guid.NewGuid(), entryId = Guid.NewGuid() }));
         using var http = new HttpClient(handler);
         await Assert.ThrowsAsync<InvalidDataException>(() => Client(http).SaveRecognizedMealAsync("token", Guid.NewGuid(), DateTime.UtcNow, CancellationToken.None));
-        await Assert.ThrowsAsync<InvalidDataException>(() => Client(http).SaveWaterAsync("token", Guid.NewGuid(), DateTime.UtcNow, 250, CancellationToken.None));
+        await Assert.ThrowsAsync<InvalidDataException>(() => Client(http).SaveWaterAsync("token", new BotOperationId(Guid.NewGuid()), DateTime.UtcNow, 250, CancellationToken.None));
     }
 
     [Fact]
@@ -122,7 +122,7 @@ public sealed class BotDiaryProtocolTests {
     }
 
     private static BotDiaryClient Client(HttpClient http) => new(http, Options.Create(new TelegramBotOptions { ApiBaseUrl = "https://diary.example", ApiSecret = "test-secret" }));
-    private static BotOperationLease Lease() => new(Guid.NewGuid(), Guid.NewGuid(), Guid.Parse("11111111-1111-1111-1111-111111111111"), 1, "payload", Checkpoint: null, DateTime.UtcNow);
+    private static BotOperationLease Lease() => new(new BotOperationId(Guid.NewGuid()), new BotLeaseId(Guid.NewGuid()), new BotUserId(Guid.Parse("11111111-1111-1111-1111-111111111111")), 1, "payload", Checkpoint: null, DateTime.UtcNow);
     private static HttpResponseMessage Json<T>(T body) => new(HttpStatusCode.OK) { Content = JsonContent.Create(body) };
 
     [ExcludeFromCodeCoverage]

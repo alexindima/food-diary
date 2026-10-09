@@ -12,17 +12,18 @@ import type {
 } from '../models/ai.data';
 import { type FoodRecognitionJob, RECOGNITION_PAGE_SIZE } from '../models/food-recognition.data';
 import type { PageOf } from '../models/page-of.data';
+import type { FoodRecognitionId } from '../models/semantics/entity-id';
 
 @Service()
 export class AiFoodFacade {
     private readonly aiFoodService = inject(AiFoodService);
     private readonly recognition = inject(FoodRecognitionService);
 
-    public resumeRecognition(id: string): Observable<FoodVisionResponse> {
+    public resumeRecognition(id: FoodRecognitionId): Observable<FoodVisionResponse> {
         return this.recognition.resume(id);
     }
 
-    public deleteRecognition(id: string): Observable<void> {
+    public deleteRecognition(id: FoodRecognitionId): Observable<void> {
         return this.recognition.deleteRecognition(id);
     }
 

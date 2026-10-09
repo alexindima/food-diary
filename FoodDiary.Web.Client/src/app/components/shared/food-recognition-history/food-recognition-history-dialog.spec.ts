@@ -6,19 +6,22 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { AiFoodFacade } from '../../../shared/lib/ai-food.facade';
 import { type FoodRecognitionJob, RECOGNITION_PAGE_SIZE } from '../../../shared/models/food-recognition.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
+import { publicImageUrl } from '../../../shared/models/semantics/image-location';
 import { FoodRecognitionHistoryDialogComponent } from './food-recognition-history-dialog';
 
 describe('FoodRecognitionHistoryDialogComponent', () => {
     const close = vi.fn();
     const listRecognitions = vi.fn();
     const job: FoodRecognitionJob = {
-        id: 'job-1',
-        imageAssetId: 'asset-1',
-        imageUrl: 'photo.jpg',
+        id: entityId<'food-recognition'>('job-1'),
+        imageAssetId: entityId<'image-asset'>('asset-1'),
+        imageUrl: publicImageUrl('photo.jpg'),
         description: null,
         status: 'Succeeded',
-        createdOnUtc: '2026-05-17T00:00:00Z',
-        updatedOnUtc: '2026-05-17T00:00:00Z',
+        createdOnUtc: utcInstant('2026-05-17T00:00:00Z'),
+        updatedOnUtc: utcInstant('2026-05-17T00:00:00Z'),
         vision: { items: [{ nameEn: 'Apple', amount: 100, unit: 'g', confidence: 1 }] },
         nutrition: null,
         errorCode: null,

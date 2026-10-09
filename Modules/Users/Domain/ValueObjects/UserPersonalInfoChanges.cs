@@ -6,7 +6,7 @@ public sealed record UserPersonalInfoChanges(
     string? Username,
     string? FirstName,
     string? LastName,
-    FieldChange<DateTime> BirthDate,
+    FieldChange<ProfileBirthDate> BirthDate,
     string? Gender,
     ProfileWeightKg? WeightKg,
     ProfileHeightCm? HeightCm);

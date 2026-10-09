@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
+
 namespace FoodDiary.Modules.Users.Domain.ValueObjects;
 
 public readonly record struct UserPreferenceState(
@@ -8,9 +10,10 @@ public readonly record struct UserPreferenceState(
     bool PushNotificationsEnabled,
     bool FastingPushNotificationsEnabled,
     bool SocialPushNotificationsEnabled,
-    int FastingCheckInReminderHours,
-    int FastingCheckInFollowUpReminderHours,
+    FastingReminderSchedule ReminderDelays,
     string SurfaceStyle = "normal") {
+    public int FastingCheckInReminderHours => ReminderDelays.FirstHours;
+    public int FastingCheckInFollowUpReminderHours => ReminderDelays.FollowUpHours;
     public static UserPreferenceState CreateInitial() {
         return new UserPreferenceState(
             DashboardLayoutJson: null,
@@ -20,7 +23,6 @@ public readonly record struct UserPreferenceState(
             PushNotificationsEnabled: false,
             FastingPushNotificationsEnabled: true,
             SocialPushNotificationsEnabled: true,
-            FastingCheckInReminderHours: 12,
-            FastingCheckInFollowUpReminderHours: 20);
+            ReminderDelays: FastingReminderSchedule.Default);
     }
 }

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
@@ -44,7 +45,7 @@ public sealed class RefreshTokenSessionRepository(DbSet<UserRefreshTokenSession>
 
     public async Task<bool> IsActiveAsync(
         UserId userId,
-        Guid sessionId,
+        RefreshTokenSessionId sessionId,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
@@ -54,7 +55,7 @@ public sealed class RefreshTokenSessionRepository(DbSet<UserRefreshTokenSession>
             cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<UserRefreshTokenSession?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) {
+    public async Task<UserRefreshTokenSession?> GetByIdAsync(RefreshTokenSessionId id, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
@@ -91,7 +92,7 @@ public sealed class RefreshTokenSessionRepository(DbSet<UserRefreshTokenSession>
     }
 
     public async Task<bool> TryRotateAsync(
-        Guid id,
+        RefreshTokenSessionId id,
         UserId userId,
         string expectedRefreshTokenHash,
         string newRefreshTokenHash,
@@ -148,7 +149,7 @@ public sealed class RefreshTokenSessionRepository(DbSet<UserRefreshTokenSession>
     }
 
     public async Task RevokeByIdAsync(
-        Guid id,
+        RefreshTokenSessionId id,
         UserId userId,
         DateTime revokedAtUtc,
         CancellationToken cancellationToken = default) {
@@ -178,9 +179,9 @@ public sealed class RefreshTokenSessionRepository(DbSet<UserRefreshTokenSession>
     }
 
     public async Task RevokeOtherByIdAsync(
-        Guid id,
+        RefreshTokenSessionId id,
         UserId userId,
-        Guid currentSessionId,
+        RefreshTokenSessionId currentSessionId,
         DateTime revokedAtUtc,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
@@ -224,7 +225,7 @@ public sealed class RefreshTokenSessionRepository(DbSet<UserRefreshTokenSession>
 
     public async Task RevokeAllOtherAsync(
         UserId userId,
-        Guid currentSessionId,
+        RefreshTokenSessionId currentSessionId,
         DateTime revokedAtUtc,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {

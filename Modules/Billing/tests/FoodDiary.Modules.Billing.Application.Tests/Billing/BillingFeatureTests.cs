@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Marketing.Domain.ValueObjects;
 using FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Mediator;
@@ -779,16 +780,16 @@ public partial class BillingFeatureTests {
         public Task<MarketingAttributionSummaryRecord> GetSummaryAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<MarketingAttributionEventRecord?> GetLandingAsync(string anonymousId, string sessionId, DateTime sinceUtc, CancellationToken cancellationToken = default) =>
+        public Task<MarketingAttributionEventRecord?> GetLandingAsync(AnonymousVisitorId anonymousId, MarketingSessionId sessionId, DateTime sinceUtc, CancellationToken cancellationToken = default) =>
             Task.FromResult<MarketingAttributionEventRecord?>(null);
 
-        public Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(Guid userId, CancellationToken cancellationToken = default) =>
+        public Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult(Records
                 .Where(record => record.UserId == userId)
                 .OrderByDescending(record => record.OccurredAtUtc)
                 .FirstOrDefault());
 
-        public Task<bool> ExistsForUserAsync(Guid userId, string eventType, CancellationToken cancellationToken = default) =>
+        public Task<bool> ExistsForUserAsync(UserId userId, string eventType, CancellationToken cancellationToken = default) =>
             Task.FromResult(Records.Any(record =>
                 record.UserId == userId &&
                 string.Equals(record.EventType, eventType, StringComparison.Ordinal)));

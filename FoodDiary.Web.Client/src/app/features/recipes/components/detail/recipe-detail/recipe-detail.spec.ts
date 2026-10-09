@@ -9,6 +9,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import { recipeIngredientFromStored } from '../../../../../shared/models/recipe-ingredient';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { RecipeService } from '../../../api/recipe.service';
@@ -58,7 +59,7 @@ const mockRecipe: Recipe = {
             stepNumber: 1,
             instruction: 'Mix ingredients',
             ingredients: [
-                {
+                recipeIngredientFromStored({
                     id: 'i1',
                     amount: BASE_AMOUNT,
                     productId: 'p1',
@@ -70,8 +71,8 @@ const mockRecipe: Recipe = {
                     productCarbsPerBase: FLOUR_CARBS_PER_BASE,
                     productFiberPerBase: FLOUR_FIBER_PER_BASE,
                     productAlcoholPerBase: 0,
-                },
-                {
+                }),
+                recipeIngredientFromStored({
                     id: 'i2',
                     amount: SUGAR_AMOUNT,
                     productId: 'p2',
@@ -83,7 +84,7 @@ const mockRecipe: Recipe = {
                     productCarbsPerBase: BASE_AMOUNT,
                     productFiberPerBase: 0,
                     productAlcoholPerBase: 0,
-                },
+                }),
             ],
         },
     ],

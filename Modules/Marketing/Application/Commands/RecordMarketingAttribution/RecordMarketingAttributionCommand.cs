@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Marketing.Domain.ValueObjects;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
@@ -7,9 +9,9 @@ namespace FoodDiary.Modules.Marketing.Application.Commands.RecordMarketingAttrib
 public sealed record RecordMarketingAttributionCommand(
     string EventType,
     string? Timestamp,
-    Guid? UserId,
-    string AnonymousId,
-    string SessionId,
+    UserId? UserId,
+    AnonymousVisitorId AnonymousId,
+    MarketingSessionId SessionId,
     string LandingPath,
     string? ReferrerHost,
     string? UtmSource,

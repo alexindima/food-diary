@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { LessonFacade } from '../../lib/lesson.facade';
 import type { LessonSummary } from '../../models/lesson.data';
 import { LessonsListPageComponent } from './lessons-list-page';
@@ -24,7 +25,7 @@ describe('LessonsListPageComponent', () => {
     });
 
     it('updates server category filter and resets pagination', () => {
-        const facade = createFacadeStub([createSummary({ category: 'Hydration' }), createSummary({ id: 'lesson-2' })]);
+        const facade = createFacadeStub([createSummary({ category: 'Hydration' }), createSummary({ id: entityId<'lesson'>('lesson-2') })]);
         const component = createComponent(facade);
 
         component['filterByCategory']('Hydration');
@@ -37,7 +38,7 @@ describe('LessonsListPageComponent', () => {
     it('updates server search query', () => {
         const facade = createFacadeStub([
             createSummary({ title: 'Protein', summary: 'Muscle recovery' }),
-            createSummary({ id: 'lesson-2', title: 'Hydration', summary: 'Water balance' }),
+            createSummary({ id: entityId<'lesson'>('lesson-2'), title: 'Hydration', summary: 'Water balance' }),
         ]);
         const component = createComponent(facade);
 
@@ -52,7 +53,7 @@ describe('LessonsListPageComponent', () => {
         const router = createRouterStub();
         const component = createComponent(facade, router);
 
-        component['openLesson']('lesson-1');
+        component['openLesson'](entityId<'lesson'>('lesson-1'));
 
         expect(router.navigate).toHaveBeenCalledWith(['/lessons', 'lesson-1']);
     });
@@ -125,7 +126,7 @@ function createFacadeStub(lessons: LessonSummary[] = []): FacadeStub {
 
 function createSummary(overrides: Partial<LessonSummary> = {}): LessonSummary {
     return {
-        id: 'lesson-1',
+        id: entityId<'lesson'>('lesson-1'),
         title: 'Macros',
         summary: 'Macro basics',
         category: 'Macronutrients',

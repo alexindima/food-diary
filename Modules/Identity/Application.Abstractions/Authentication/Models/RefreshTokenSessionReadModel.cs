@@ -1,7 +1,8 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 namespace FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 
 public sealed record RefreshTokenSessionReadModel(
-    Guid Id,
+    RefreshTokenSessionId Id,
     string? AuthProvider,
     string? UserAgent,
     DateTime CreatedAtUtc,

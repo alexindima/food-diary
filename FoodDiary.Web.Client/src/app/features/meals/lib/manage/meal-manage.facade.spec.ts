@@ -21,10 +21,12 @@ import {
 import type { RecipeLookup } from '../../../../shared/models/recipe-lookup.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
+import type { RecipeServings } from '../../../../shared/models/semantics/meal-quantity';
 import { productQuantityFromStored, recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MealService } from '../../api/meal.service';
 import type { MealFormValues, MealItemFormValues } from '../../components/manage/meal-manage-lib/meal-manage.types';
+import { displayRecipeServings, recipeDisplayFromInput, servingMassFromObservation } from '../recipe-serving/recipe-display-amount';
 import { RecipeServingWeightService } from '../recipe-serving/recipe-serving-weight.service';
 import { MealManageFacade } from './meal-manage.facade';
 
@@ -117,9 +119,9 @@ let navigationService: {
 let dialogService: { open: ReturnType<typeof vi.fn> };
 let toastService: { success: ReturnType<typeof vi.fn> };
 let recipeWeightService: {
-    loadServingWeight: ReturnType<typeof vi.fn>;
-    convertGramsToServings: ReturnType<typeof vi.fn>;
-    convertServingsToGrams: ReturnType<typeof vi.fn>;
+    loadServingMass: ReturnType<typeof vi.fn>;
+    displayAmountFromInput: ReturnType<typeof vi.fn>;
+    displayServings: ReturnType<typeof vi.fn>;
 };
 
 const meal: Meal = {
@@ -163,17 +165,21 @@ describe('MealManageFacade', () => {
             success: vi.fn(),
         };
         recipeWeightService = {
-            loadServingWeight: vi.fn(),
-            convertGramsToServings: vi.fn(),
-            convertServingsToGrams: vi.fn((_recipe: unknown, amount: number) => amount * RECIPE_SERVING_WEIGHT),
+            loadServingMass: vi.fn(),
+            displayAmountFromInput: vi.fn(),
+            displayServings: vi.fn((_recipe: unknown, amount: RecipeServings) =>
+                displayRecipeServings(amount, servingMassFromObservation(RECIPE_SERVING_WEIGHT)),
+            ),
         };
 
         mealService.create.mockReturnValue(of(meal));
         mealService.update.mockReturnValue(of(meal));
         authService.isPremium.mockReturnValue(true);
         dialogService.open.mockReturnValue({ afterClosed: () => of('MealList') });
-        recipeWeightService.loadServingWeight.mockReturnValue(of(RECIPE_SERVING_WEIGHT));
-        recipeWeightService.convertGramsToServings.mockImplementation((_recipe: unknown, amount: number) => amount / RECIPE_SERVING_WEIGHT);
+        recipeWeightService.loadServingMass.mockReturnValue(of(servingMassFromObservation(RECIPE_SERVING_WEIGHT)));
+        recipeWeightService.displayAmountFromInput.mockImplementation((_recipe: unknown, amount: number) =>
+            recipeDisplayFromInput(amount, servingMassFromObservation(RECIPE_SERVING_WEIGHT)),
+        );
         navigationService.navigateToHomeAsync.mockResolvedValue(true);
         navigationService.navigateToMealListAsync.mockResolvedValue(true);
         navigationService.navigateToPremiumAccessAsync.mockResolvedValue(true);
@@ -292,9 +298,9 @@ function registerItemSelectionTests(): void {
         it('should resolve recipe servings to grams', async () => {
             const recipe = { ...createEmptyRecipeSnapshot(), id: entityId<'recipe'>('r1') };
 
-            const amount = await facade.resolveRecipeServingsToGramsAsync(recipe, RECIPE_SERVING_AMOUNT);
+            const amount = await facade.resolveRecipeDisplayValueAsync(recipe, recipeServingsFromStored(RECIPE_SERVING_AMOUNT));
 
-            expect(recipeWeightService.loadServingWeight).toHaveBeenCalled();
+            expect(recipeWeightService.loadServingMass).toHaveBeenCalled();
             expect(amount).toBe(EXPECTED_RECIPE_AMOUNT);
         });
 
@@ -316,7 +322,7 @@ function registerItemSelectionTests(): void {
         it('should convert one recipe serving to grams after manual selection', async () => {
             const recipe = { ...createEmptyRecipeSnapshot(), id: entityId<'recipe'>('r1') };
             dialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Recipe', recipe }) });
-            recipeWeightService.loadServingWeight.mockReturnValue(of(MANUAL_RECIPE_WEIGHT));
+            recipeWeightService.loadServingMass.mockReturnValue(of(servingMassFromObservation(MANUAL_RECIPE_WEIGHT)));
 
             const item = await facade.openItemSelectionDialogAsync('Recipe');
 
@@ -485,12 +491,16 @@ function registerManageBoundaryTests(): void {
     });
     it('uses the same serving conversion in both directions', () => {
         const recipe = createNutritionRecipe();
-        expect(facade.convertRecipeGramsToServings(recipe, EXPECTED_RECIPE_AMOUNT)).toBe(RECIPE_SERVING_AMOUNT);
-        expect(facade.convertRecipeServingsToGrams(recipe, RECIPE_SERVING_AMOUNT)).toBe(EXPECTED_RECIPE_AMOUNT);
+        expect(facade.recipeServingsFromDisplayInput(recipe, EXPECTED_RECIPE_AMOUNT)).toBe(RECIPE_SERVING_AMOUNT);
+        expect(facade.recipeDisplayValueFromStoredServings(recipe, recipeServingsFromStored(RECIPE_SERVING_AMOUNT))).toBe(
+            EXPECTED_RECIPE_AMOUNT,
+        );
     });
     it.each([null, 0, -1])('falls back to input servings when weight is unavailable: %s', async weight => {
-        recipeWeightService.loadServingWeight.mockReturnValue(of(weight));
-        expect(await facade.resolveRecipeServingsToGramsAsync(null, RECIPE_SERVING_AMOUNT)).toBe(RECIPE_SERVING_AMOUNT);
+        recipeWeightService.loadServingMass.mockReturnValue(of(servingMassFromObservation(weight)));
+        expect(await facade.resolveRecipeDisplayValueAsync(null, recipeServingsFromStored(RECIPE_SERVING_AMOUNT))).toBe(
+            RECIPE_SERVING_AMOUNT,
+        );
     });
     it('copies all automatic nutrients into a manual patch', () => {
         expect(facade.buildManualNutritionPatchFromTotals(EXPECTED_AUTO_TOTALS)).toEqual({
@@ -630,7 +640,7 @@ describe('MealManageFacade cold recipe amount loading', () => {
         const items = await firstValueFrom(coldFacade.prepareMealItems([recipeItem]));
         expect(getById).toHaveBeenCalledWith(recipe.id);
         expect(items[0]).toMatchObject({ recipe, amount: COLD_MEAL_GRAMS });
-        expect(coldFacade.convertRecipeGramsToServings(recipe, COLD_MEAL_GRAMS)).toBe(COLD_MEAL_SERVINGS);
+        expect(coldFacade.recipeServingsFromDisplayInput(recipe, COLD_MEAL_GRAMS)).toBe(COLD_MEAL_SERVINGS);
         const values = { ...createNutritionFormValue(true), items };
         expect(coldFacade.buildNutritionSummaryStateFromValues(values, [], CALORIE_MISMATCH_THRESHOLD).summaryTotals.calories).toBe(
             COLD_MEAL_CALORIES,
@@ -657,7 +667,7 @@ describe('MealManageFacade cold recipe amount loading', () => {
         const { facade: coldFacade } = setupColdFacade(result);
         const items = await firstValueFrom(coldFacade.prepareMealItems([recipeItem]));
         expect(items[0]).toMatchObject({ recipe, amount: COLD_MEAL_SERVINGS });
-        expect(coldFacade.convertRecipeGramsToServings(recipe, COLD_MEAL_SERVINGS)).toBe(COLD_MEAL_SERVINGS);
+        expect(coldFacade.recipeServingsFromDisplayInput(recipe, COLD_MEAL_SERVINGS)).toBe(COLD_MEAL_SERVINGS);
         expect(
             coldFacade.buildNutritionSummaryStateFromValues({ ...createNutritionFormValue(true), items }, [], CALORIE_MISMATCH_THRESHOLD)
                 .summaryTotals.calories,

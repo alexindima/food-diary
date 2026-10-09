@@ -93,7 +93,7 @@ export class CycleDayFacade {
             const day = await firstValueFrom(
                 this.cyclesService
                     .upsertDay(currentCycle.id, {
-                        date: toCycleDateKey(date),
+                        date: calendarDate(toCycleDateKey(date)),
                         bleeding: this.buildDayBleedingPayload(formValue, notes === undefined),
                         clearBleeding: this.shouldClearBleeding(formValue),
                         symptoms,

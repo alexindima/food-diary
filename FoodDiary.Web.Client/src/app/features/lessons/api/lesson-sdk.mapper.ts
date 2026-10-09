@@ -2,14 +2,17 @@ import type { LessonDetailHttpResponse } from '../../../shared/api/sdk/generated
 import type { LessonPageHttpResponse } from '../../../shared/api/sdk/generated/model/lesson-page-http-response';
 import type { LessonSummaryHttpResponse } from '../../../shared/api/sdk/generated/model/lesson-summary-http-response';
 import { requireSdkFields } from '../../../shared/api/sdk/sdk-response';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { LessonDetail, LessonPage, LessonQuery, LessonSummary } from '../models/lesson.data';
 
 export function lessonSummaryFromSdk(value: LessonSummaryHttpResponse): LessonSummary {
-    return requireSdkFields(value, ['id', 'title', 'category', 'difficulty', 'estimatedReadMinutes', 'isRead']);
+    const lesson = requireSdkFields(value, ['id', 'title', 'category', 'difficulty', 'estimatedReadMinutes', 'isRead']);
+    return { ...lesson, id: entityId<'lesson'>(lesson.id) };
 }
 
 export function lessonDetailFromSdk(value: LessonDetailHttpResponse): LessonDetail {
-    return requireSdkFields(value, ['id', 'title', 'category', 'difficulty', 'estimatedReadMinutes', 'isRead', 'content']);
+    const lesson = requireSdkFields(value, ['id', 'title', 'category', 'difficulty', 'estimatedReadMinutes', 'isRead', 'content']);
+    return { ...lesson, id: entityId<'lesson'>(lesson.id) };
 }
 
 function isLegacyArray(value: LessonPageHttpResponse | LessonSummaryHttpResponse[]): value is LessonSummaryHttpResponse[] {

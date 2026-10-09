@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
 import type { FoodNutritionRequest, FoodTextRequest, FoodVisionRequest } from '../models/ai.data';
+import { entityId } from '../models/semantics/entity-id';
 import { AiFoodService } from './ai-food.service';
 import { FoodRecognitionService } from './food-recognition.service';
 
@@ -72,7 +73,7 @@ describe('AiFoodService', () => {
 describe('AiFoodService analysis', () => {
     it('should delegate photo recognition to durable jobs', () => {
         const request: FoodVisionRequest = {
-            imageAssetId: 'asset-123',
+            imageAssetId: entityId<'image-asset'>('asset-123'),
             description: 'A bowl of salad',
         };
         const response = {

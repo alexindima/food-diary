@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
@@ -156,7 +157,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
         var user = User.Create($"session-race-{Guid.NewGuid():N}@example.com", "hash");
         var session = UserRefreshTokenSession.Create(
-            id: Guid.NewGuid(),
+            id: RefreshTokenSessionId.New(),
             userId: user.Id,
             refreshTokenHash: "expected-hash",
             rememberMe: false,
@@ -1359,7 +1360,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database);
         DateTime now = DateTime.UtcNow;
         var session = UserRefreshTokenSession.Create(
-            Guid.NewGuid(),
+            RefreshTokenSessionId.New(),
             userId,
             "refresh-hash",
             rememberMe: true,
@@ -1368,7 +1369,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             userAgent: "agent",
             now);
         var otherSession = UserRefreshTokenSession.Create(
-            Guid.NewGuid(),
+            RefreshTokenSessionId.New(),
             userId,
             "other-refresh-hash",
             rememberMe: false,
@@ -1423,7 +1424,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.Empty(await repository.GetActiveByUserIdAsync(userId));
 
         var survivingSession = UserRefreshTokenSession.Create(
-            Guid.NewGuid(),
+            RefreshTokenSessionId.New(),
             userId,
             "surviving-refresh-hash",
             rememberMe: false,

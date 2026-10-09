@@ -70,8 +70,8 @@ type QuickMealServiceMock = {
 };
 
 type MealManageFacadeMock = {
-    convertRecipeGramsToServings: ReturnType<typeof vi.fn>;
-    resolveRecipeServingsToGramsAsync: ReturnType<typeof vi.fn>;
+    recipeServingsFromDisplayInput: ReturnType<typeof vi.fn>;
+    resolveRecipeDisplayValueAsync: ReturnType<typeof vi.fn>;
 };
 
 describe('QuickMealDrawerComponent state', () => {
@@ -185,14 +185,14 @@ describe('QuickMealDrawerComponent edit', () => {
         const { component, quickService, mealManageFacade } = await setupComponentAsync([
             { key: 'recipe-recipe-1', type: 'recipe', recipe, amount: RECIPE_SERVINGS },
         ]);
-        mealManageFacade.resolveRecipeServingsToGramsAsync.mockResolvedValue(RECIPE_GRAMS);
+        mealManageFacade.resolveRecipeDisplayValueAsync.mockResolvedValue(RECIPE_GRAMS);
         mockEditDialogResult(createItemValue(MealSourceType.Recipe, null, recipe, RECIPE_GRAMS));
 
         component['edit'](quickService.items()[0]);
         await flushPromisesAsync();
 
-        expect(mealManageFacade.resolveRecipeServingsToGramsAsync).toHaveBeenCalledWith(recipe, RECIPE_SERVINGS);
-        expect(mealManageFacade.convertRecipeGramsToServings).toHaveBeenCalledWith(recipe, RECIPE_GRAMS);
+        expect(mealManageFacade.resolveRecipeDisplayValueAsync).toHaveBeenCalledWith(recipe, RECIPE_SERVINGS);
+        expect(mealManageFacade.recipeServingsFromDisplayInput).toHaveBeenCalledWith(recipe, RECIPE_GRAMS);
         expect(quickService.updateItem).toHaveBeenCalledWith('recipe-recipe-1', {
             key: 'recipe-recipe-1',
             type: 'recipe',
@@ -216,7 +216,7 @@ describe('QuickMealDrawerComponent pending edits', () => {
         expect(root.querySelector<HTMLButtonElement>('.quick-meal__item-action button')?.disabled).toBe(true);
         expect(root.querySelector<HTMLButtonElement>('.quick-meal__save button')?.disabled).toBe(true);
         expect(root.querySelectorAll<HTMLButtonElement>('.quick-meal__header-action button')[1].disabled).toBe(false);
-        expect(mealManageFacade.resolveRecipeServingsToGramsAsync).toHaveBeenCalledTimes(1);
+        expect(mealManageFacade.resolveRecipeDisplayValueAsync).toHaveBeenCalledTimes(1);
         expect(quickService.saveDraft).not.toHaveBeenCalled();
 
         root.querySelectorAll<HTMLButtonElement>('.quick-meal__header-action button')[1].click();
@@ -234,7 +234,7 @@ describe('QuickMealDrawerComponent pending edits', () => {
         await flushPromisesAsync();
         component['edit'](item);
         expect(vi.spyOn(TestBed.inject(FdUiDialogService), 'open')).toHaveBeenCalledTimes(1);
-        expect(mealManageFacade.resolveRecipeServingsToGramsAsync).toHaveBeenCalledTimes(1);
+        expect(mealManageFacade.resolveRecipeDisplayValueAsync).toHaveBeenCalledTimes(1);
 
         closed.next(null);
         await flushPromisesAsync();
@@ -279,7 +279,7 @@ describe('QuickMealDrawerComponent draft changes during editing', () => {
         const { component, quickService, mealManageFacade } = await setupComponentAsync([createRecipeDraftItem()]);
         const first = new Subject<number>();
         const second = new Subject<number>();
-        mealManageFacade.resolveRecipeServingsToGramsAsync
+        mealManageFacade.resolveRecipeDisplayValueAsync
             .mockReturnValueOnce(firstValueFrom(first))
             .mockReturnValueOnce(firstValueFrom(second));
         component['edit'](quickService.items()[0]);
@@ -290,7 +290,7 @@ describe('QuickMealDrawerComponent draft changes during editing', () => {
         first.next(RECIPE_GRAMS);
         await flushPromisesAsync();
         component['edit'](replacement);
-        expect(mealManageFacade.resolveRecipeServingsToGramsAsync).toHaveBeenCalledTimes(2);
+        expect(mealManageFacade.resolveRecipeDisplayValueAsync).toHaveBeenCalledTimes(2);
         expect(vi.spyOn(TestBed.inject(FdUiDialogService), 'open')).not.toHaveBeenCalled();
 
         mockEditDialogResult(null);
@@ -360,7 +360,7 @@ describe('QuickMealDrawerComponent edit ownership', () => {
         await flushPromisesAsync();
 
         expect(vi.spyOn(TestBed.inject(FdUiDialogService), 'open')).not.toHaveBeenCalled();
-        expect(mealManageFacade.resolveRecipeServingsToGramsAsync).not.toHaveBeenCalled();
+        expect(mealManageFacade.resolveRecipeDisplayValueAsync).not.toHaveBeenCalled();
         expect((fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.quick-meal__item-action button')?.disabled).toBe(
             true,
         );
@@ -431,8 +431,8 @@ function createQuickMealServiceMock(items: QuickMealItem[]): QuickMealServiceMoc
 
 function createMealManageFacadeMock(): MealManageFacadeMock {
     return {
-        convertRecipeGramsToServings: vi.fn().mockReturnValue(RECIPE_SERVINGS),
-        resolveRecipeServingsToGramsAsync: vi.fn().mockResolvedValue(RECIPE_GRAMS),
+        recipeServingsFromDisplayInput: vi.fn().mockReturnValue(RECIPE_SERVINGS),
+        resolveRecipeDisplayValueAsync: vi.fn().mockResolvedValue(RECIPE_GRAMS),
     };
 }
 
@@ -451,7 +451,7 @@ function createRecipeDraftItem(): QuickMealItem {
 
 function deferRecipeWeight(facade: MealManageFacadeMock): Subject<number> {
     const weight = new Subject<number>();
-    facade.resolveRecipeServingsToGramsAsync.mockReturnValue(firstValueFrom(weight));
+    facade.resolveRecipeDisplayValueAsync.mockReturnValue(firstValueFrom(weight));
     return weight;
 }
 

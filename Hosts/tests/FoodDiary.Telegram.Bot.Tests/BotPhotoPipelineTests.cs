@@ -20,7 +20,7 @@ public sealed class BotPhotoPipelineTests {
     public async Task InvalidState_CompletesWithoutRepeatingBusinessWork(string? invalidInput, string? checkpoint, bool expectedNotice) {
         var operationId = Guid.NewGuid();
         var incoming = new BotIncomingOperation("photo", 123, 123, 10, DateTime.UtcNow, "en");
-        var lease = new BotOperationLease(operationId, Guid.NewGuid(), Guid.NewGuid(), 1,
+        var lease = new BotOperationLease(new BotOperationId(operationId), new BotLeaseId(Guid.NewGuid()), new BotUserId(Guid.NewGuid()), 1,
             invalidInput ?? JsonSerializer.Serialize(incoming), checkpoint, DateTime.UtcNow.AddMinutes(2));
         int notices = 0;
         bool completed = false;
@@ -48,7 +48,7 @@ public sealed class BotPhotoPipelineTests {
             NullLogger<TelegramOperationWorker>.Instance);
         using HttpClient operationHttp = factory.CreateClient(BotOperationClient.ClientName);
 
-        await worker.ProcessAsync(new BotOperationClient(operationHttp, options), operationId, CancellationToken.None);
+        await worker.ProcessAsync(new BotOperationClient(operationHttp, options), new BotOperationId(operationId), CancellationToken.None);
 
         Assert.True(completed);
         Assert.Equal(expectedNotice ? 1 : 0, notices);
@@ -64,7 +64,7 @@ public sealed class BotPhotoPipelineTests {
         var summary = new BotDiaryStatistics("UTC", 1, 1, 1234, 10, 20, 30, 4, 250, 1, 1234, 2000,
             [new BotDiaryStatisticsDay(new DateOnly(2026, 9, 12), 1234, 10, 20, 30, 4, 250, 1, 2100)]);
         var checkpoint = new BotPhotoCheckpoint(notificationOnly ? "statistics-ready" : "received", Statistics: notificationOnly ? summary : null);
-        var lease = new BotOperationLease(operationId, Guid.NewGuid(), userId, 1, JsonSerializer.Serialize(incoming),
+        var lease = new BotOperationLease(new BotOperationId(operationId), new BotLeaseId(Guid.NewGuid()), new BotUserId(userId), 1, JsonSerializer.Serialize(incoming),
             JsonSerializer.Serialize(checkpoint), DateTime.UtcNow.AddMinutes(2));
         int reads = 0;
         int notices = 0;
@@ -106,7 +106,7 @@ public sealed class BotPhotoPipelineTests {
         var worker = new TelegramOperationWorker(factory, options, new TelegramBotClient("123:test", telegramHttp), TimeProvider.System,
             NullLogger<TelegramOperationWorker>.Instance);
         using HttpClient operationHttp = factory.CreateClient(BotOperationClient.ClientName);
-        await worker.ProcessAsync(new BotOperationClient(operationHttp, options), operationId, CancellationToken.None);
+        await worker.ProcessAsync(new BotOperationClient(operationHttp, options), new BotOperationId(operationId), CancellationToken.None);
         Assert.Multiple(
             () => Assert.Equal(notificationOnly ? 0 : 1, reads),
             () => Assert.Equal(notificationOnly ? 1 : 0, notices),
@@ -123,7 +123,7 @@ public sealed class BotPhotoPipelineTests {
         DateTime createdAt = new(2026, 9, 10, 23, 59, 0, DateTimeKind.Utc);
         var incoming = new BotIncomingOperation("water", 123, 123, 10, OccurredAtUtc: null, "en", AmountMl: 250);
         var checkpoint = new BotPhotoCheckpoint(notificationOnly ? "water-saved" : "received", WaterEntryId: notificationOnly ? entryId : null);
-        var lease = new BotOperationLease(operationId, Guid.NewGuid(), userId, 1, JsonSerializer.Serialize(incoming),
+        var lease = new BotOperationLease(new BotOperationId(operationId), new BotLeaseId(Guid.NewGuid()), new BotUserId(userId), 1, JsonSerializer.Serialize(incoming),
             JsonSerializer.Serialize(checkpoint), DateTime.UtcNow.AddMinutes(2), createdAt);
         int mutations = 0;
         int notices = 0;
@@ -165,7 +165,7 @@ public sealed class BotPhotoPipelineTests {
         var worker = new TelegramOperationWorker(factory, options, new TelegramBotClient("123:test", telegramHttp), TimeProvider.System,
             NullLogger<TelegramOperationWorker>.Instance);
         using HttpClient operationHttp = factory.CreateClient(BotOperationClient.ClientName);
-        await worker.ProcessAsync(new BotOperationClient(operationHttp, options), operationId, CancellationToken.None);
+        await worker.ProcessAsync(new BotOperationClient(operationHttp, options), new BotOperationId(operationId), CancellationToken.None);
         Assert.Equal(notificationOnly ? 0 : 1, mutations);
         Assert.Equal(notificationOnly ? 1 : 0, notices);
         Assert.Equal(notificationOnly, completed);
@@ -180,7 +180,7 @@ public sealed class BotPhotoPipelineTests {
         var userId = Guid.NewGuid();
         var incoming = new BotIncomingOperation("meal-undo", 123, 123, 10, OccurredAtUtc: null, "en", MealOperationId: mealOperationId);
         var checkpoint = new BotPhotoCheckpoint(notificationOnly ? "undo-complete" : "received", ErrorCode: "Meal.RecognitionUndoChanged");
-        var lease = new BotOperationLease(operationId, Guid.NewGuid(), userId, 1, JsonSerializer.Serialize(incoming),
+        var lease = new BotOperationLease(new BotOperationId(operationId), new BotLeaseId(Guid.NewGuid()), new BotUserId(userId), 1, JsonSerializer.Serialize(incoming),
             JsonSerializer.Serialize(checkpoint), DateTime.UtcNow.AddMinutes(2));
         int mutations = 0;
         int notices = 0;
@@ -221,7 +221,7 @@ public sealed class BotPhotoPipelineTests {
             NullLogger<TelegramOperationWorker>.Instance);
         using HttpClient operationHttp = factory.CreateClient(BotOperationClient.ClientName);
 
-        await worker.ProcessAsync(new BotOperationClient(operationHttp, options), operationId, CancellationToken.None);
+        await worker.ProcessAsync(new BotOperationClient(operationHttp, options), new BotOperationId(operationId), CancellationToken.None);
 
         Assert.Equal(notificationOnly ? 0 : 1, mutations);
         Assert.Equal(notificationOnly ? 1 : 0, notices);
@@ -243,7 +243,7 @@ public sealed class BotPhotoPipelineTests {
         var meal = new BotRecognizedMeal(operationId, mealId, DateTime.UtcNow.AddHours(24), Undone: false);
         var checkpoint = new BotPhotoCheckpoint(alreadySaved ? "meal-saved" : "recognition-ready", RecognitionId: operationId,
             SavedMeal: alreadySaved ? meal : null, Nutrition: new BotMealNutrition(432.1m, 12m, 13m, 14m));
-        var lease = new BotOperationLease(operationId, Guid.NewGuid(), userId, 1, JsonSerializer.Serialize(incoming),
+        var lease = new BotOperationLease(new BotOperationId(operationId), new BotLeaseId(Guid.NewGuid()), new BotUserId(userId), 1, JsonSerializer.Serialize(incoming),
             JsonSerializer.Serialize(checkpoint), DateTime.UtcNow.AddMinutes(2));
         int creates = 0;
         int notices = 0;
@@ -293,13 +293,13 @@ public sealed class BotPhotoPipelineTests {
         using HttpClient operationHttp = factory.CreateClient(BotOperationClient.ClientName);
 
         if (loseFirstSaveResponse) {
-            await Assert.ThrowsAsync<HttpRequestException>(() => worker.ProcessAsync(new BotOperationClient(operationHttp, options), operationId, CancellationToken.None));
+            await Assert.ThrowsAsync<HttpRequestException>(() => worker.ProcessAsync(new BotOperationClient(operationHttp, options), new BotOperationId(operationId), CancellationToken.None));
             Assert.Null(saved);
             Assert.Equal(0, notices);
             worker = new TelegramOperationWorker(factory, options, new TelegramBotClient("123:test", telegramHttp),
                 TimeProvider.System, NullLogger<TelegramOperationWorker>.Instance);
         }
-        await worker.ProcessAsync(new BotOperationClient(operationHttp, options), operationId, CancellationToken.None);
+        await worker.ProcessAsync(new BotOperationClient(operationHttp, options), new BotOperationId(operationId), CancellationToken.None);
 
         int expectedCreates = alreadySaved ? 0 : 1;
         if (loseFirstSaveResponse) {
@@ -320,7 +320,7 @@ public sealed class BotPhotoPipelineTests {
         var imageId = Guid.NewGuid();
         var incoming = new BotIncomingOperation("photo", 123, 123, 10, DateTime.UtcNow, "ru", "file", "image/jpeg");
         var checkpoint = new BotPhotoCheckpoint("recognizing", ImageAssetId: imageId, RecognitionId: operationId);
-        var lease = new BotOperationLease(operationId, Guid.NewGuid(), userId, 1, JsonSerializer.Serialize(incoming),
+        var lease = new BotOperationLease(new BotOperationId(operationId), new BotLeaseId(Guid.NewGuid()), new BotUserId(userId), 1, JsonSerializer.Serialize(incoming),
             JsonSerializer.Serialize(checkpoint), DateTime.UtcNow.AddMinutes(2));
         BotPhotoCheckpoint? saved = null;
         int reads = 0;
@@ -356,7 +356,7 @@ public sealed class BotPhotoPipelineTests {
         var bot = new TelegramBotClient("123:test", telegramHttp);
         var worker = new TelegramOperationWorker(factory, options, bot, TimeProvider.System, NullLogger<TelegramOperationWorker>.Instance);
         using HttpClient operationHttp = factory.CreateClient(BotOperationClient.ClientName);
-        await worker.ProcessAsync(new BotOperationClient(operationHttp, options), operationId, CancellationToken.None);
+        await worker.ProcessAsync(new BotOperationClient(operationHttp, options), new BotOperationId(operationId), CancellationToken.None);
         Assert.Equal(1, reads);
         Assert.Equal("recognition-ready", saved?.Stage);
         Assert.Equal(new BotMealNutrition(432.1m, 12m, 13m, 14m), saved?.Nutrition);
@@ -377,7 +377,11 @@ public sealed class BotPhotoPipelineTests {
             "image/jpeg", [255, 216, 255], CancellationToken.None);
     }
 
-    private static HttpResponseMessage Json<T>(T value) => new(HttpStatusCode.OK) { Content = JsonContent.Create(value) };
+    private static HttpResponseMessage Json<T>(T value) => new(HttpStatusCode.OK) {
+        Content = value is BotOperationLease lease
+        ? JsonContent.Create(new { OperationId = lease.OperationId.Value, LeaseId = lease.LeaseId.Value, UserId = lease.UserId.Value, lease.SecurityVersion, lease.Payload, lease.Checkpoint, lease.LeaseExpiresAtUtc, lease.CreatedAtUtc })
+        : JsonContent.Create(value),
+    };
 
     [ExcludeFromCodeCoverage]
     private sealed class Factory(HttpMessageHandler handler) : IHttpClientFactory {

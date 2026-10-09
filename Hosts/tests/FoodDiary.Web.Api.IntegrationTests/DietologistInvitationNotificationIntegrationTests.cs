@@ -205,9 +205,9 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
             [RoleNames.Dietologist],
             expiresAtUtc: null,
             securityVersion,
-            Guid.Parse(new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler()
+            new FoodDiary.Modules.Identity.Domain.ValueObjects.Ids.RefreshTokenSessionId(Guid.Parse(new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler()
                 .ReadJwtToken(user.Client.DefaultRequestHeaders.Authorization!.Parameter!)
-                .Claims.Single(claim => string.Equals(claim.Type, "refresh_session_id", StringComparison.Ordinal)).Value));
+                .Claims.Single(claim => string.Equals(claim.Type, "refresh_session_id", StringComparison.Ordinal)).Value)));
         user.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 

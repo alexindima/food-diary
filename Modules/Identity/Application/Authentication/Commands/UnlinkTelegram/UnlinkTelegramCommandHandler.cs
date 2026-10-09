@@ -37,7 +37,7 @@ public sealed class UnlinkTelegramCommandHandler(ITelegramAuthValidator validato
         Result result = await accounts.UnlinkAsync(principal.Value.UserId, proof.Value.UserId, principal.Value.SecurityVersion, cancellationToken).ConfigureAwait(false);
         if (result.IsSuccess) {
             postCommitActions.Enqueue("auth.telegram.unlink.cancel-operations",
-                ct => operations.CancelUserAsync(principal.Value.UserId.Value, ct));
+                ct => operations.CancelUserAsync(principal.Value.UserId, ct));
         }
         return result;
     }

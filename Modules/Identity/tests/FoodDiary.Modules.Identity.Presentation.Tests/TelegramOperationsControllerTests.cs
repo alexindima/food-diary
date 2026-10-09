@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Modules.Identity.Presentation.Security;
 using System.Reflection;
@@ -24,8 +25,8 @@ public sealed class TelegramOperationsControllerTests {
 
     [Fact]
     public async Task Register_UsesServerOwnedBotIdentityAndReturnsOperationId() {
-        IRequest<Result<Guid>>? sent = null;
-        var operationId = Guid.NewGuid();
+        IRequest<Result<TelegramOperationId>>? sent = null;
+        var operationId = TelegramOperationId.New();
         ISender sender = SubstituteSender.Create(Result.Success(operationId), request => sent = request);
         var controller = new TelegramOperationsController(sender) {
             ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() },
@@ -37,6 +38,6 @@ public sealed class TelegramOperationsControllerTests {
         Assert.Equal(77, command.UpdateId);
         Assert.Equal(123, command.TelegramUserId);
         OkObjectResult response = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal(operationId, Assert.IsType<TelegramOperationRegisteredHttpResponse>(response.Value).OperationId);
+        Assert.Equal(operationId.Value, Assert.IsType<TelegramOperationRegisteredHttpResponse>(response.Value).OperationId);
     }
 }

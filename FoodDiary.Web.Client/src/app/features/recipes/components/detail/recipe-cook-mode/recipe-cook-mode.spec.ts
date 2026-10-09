@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import { recipeIngredientFromStored } from '../../../../../shared/models/recipe-ingredient';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { RecipeCookModeComponent } from './recipe-cook-mode';
@@ -70,7 +71,9 @@ describe('RecipeCookModeComponent', () => {
 
     it('shows portions for a nested recipe', () => {
         const recipe = createRecipe();
-        recipe.steps[0].ingredients = [{ id: 'nested', nestedRecipeId: 'recipe-2', nestedRecipeName: 'Sauce', amount: 0.5 }];
+        recipe.steps[0].ingredients = [
+            recipeIngredientFromStored({ id: 'nested', nestedRecipeId: 'recipe-2', nestedRecipeName: 'Sauce', amount: 0.5 }),
+        ];
         const { component } = setupComponent(recipe);
         expect(component['ingredients']()[0].unitKey).toBe('RECIPE_DETAIL.SUMMARY.SERVINGS_FEW');
     });
@@ -138,13 +141,13 @@ function createRecipe(): Recipe {
                 imageUrl: null,
                 imageAssetId: null,
                 ingredients: [
-                    {
+                    recipeIngredientFromStored({
                         id: 'ingredient-1',
                         amount: 100,
                         productId: 'product-1',
                         productName: 'Flour',
                         productBaseUnit: 'G',
-                    },
+                    }),
                 ],
             },
             {
@@ -189,7 +192,12 @@ describe('RecipeCookModeComponent boundaries', () => {
     it('uses nested recipe names and omits unknown measurement units', () => {
         const recipe = createRecipe();
         recipe.steps[0].ingredients = [
-            { ...recipe.steps[0].ingredients[0], productName: null, nestedRecipeName: 'Sauce', productBaseUnit: null },
+            recipeIngredientFromStored({
+                ...recipe.steps[0].ingredients[0],
+                productName: null,
+                nestedRecipeName: 'Sauce',
+                productBaseUnit: null,
+            }),
         ];
         const { component } = setupComponent(recipe);
         expect(component['ingredients']()[0]).toMatchObject({ name: 'Sauce', unitKey: '' });

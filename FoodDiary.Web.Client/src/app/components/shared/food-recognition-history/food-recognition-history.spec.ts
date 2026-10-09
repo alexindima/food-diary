@@ -6,6 +6,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AiFoodFacade } from '../../../shared/lib/ai-food.facade';
 import type { FoodRecognitionJob } from '../../../shared/models/food-recognition.data';
 import type { PageOf } from '../../../shared/models/page-of.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
+import { publicImageUrl } from '../../../shared/models/semantics/image-location';
 import { FoodRecognitionHistoryComponent } from './food-recognition-history';
 
 const PAGE_SIZE = 20;
@@ -25,19 +28,19 @@ beforeEach(() => {
 describe('recognition history recovery', () => {
     it.each([true, false])('keeps product-label and meal recognition histories separate: %s', productLabel => {
         const meal: FoodRecognitionJob = {
-            id: 'meal',
-            imageAssetId: 'image',
-            imageUrl: 'photo.jpg',
+            id: entityId<'food-recognition'>('meal'),
+            imageAssetId: entityId<'image-asset'>('image'),
+            imageUrl: publicImageUrl('photo.jpg'),
             description: null,
             status: 'Succeeded',
-            createdOnUtc: '2026-09-24T00:00:00Z',
-            updatedOnUtc: '2026-09-24T00:00:00Z',
+            createdOnUtc: utcInstant('2026-09-24T00:00:00Z'),
+            updatedOnUtc: utcInstant('2026-09-24T00:00:00Z'),
             vision: null,
             nutrition: null,
             errorCode: null,
             nutritionErrorCode: null,
         };
-        const entries: FoodRecognitionJob[] = [meal, { ...meal, id: 'label', isProductLabel: true }];
+        const entries: FoodRecognitionJob[] = [meal, { ...meal, id: entityId<'food-recognition'>('label'), isProductLabel: true }];
         listRecognitions.mockReturnValue(of(pageOf(entries.filter(job => (job.isProductLabel ?? false) === productLabel))));
         const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
         fixture.componentRef.setInput('productLabel', productLabel);
@@ -80,13 +83,13 @@ describe('recognition history deletion', () => {
         const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
         const component = fixture.componentInstance;
         const job: FoodRecognitionJob = {
-            id: 'result',
+            id: entityId<'food-recognition'>('result'),
             status: 'Succeeded',
-            imageAssetId: 'asset',
-            imageUrl: 'photo.jpg',
+            imageAssetId: entityId<'image-asset'>('asset'),
+            imageUrl: publicImageUrl('photo.jpg'),
             description: null,
-            createdOnUtc: '2026-09-25T00:00:00Z',
-            updatedOnUtc: '2026-09-25T00:00:00Z',
+            createdOnUtc: utcInstant('2026-09-25T00:00:00Z'),
+            updatedOnUtc: utcInstant('2026-09-25T00:00:00Z'),
             vision: null,
             nutrition: null,
             errorCode: null,
@@ -118,13 +121,13 @@ describe('recognition history deletion', () => {
     it.each(['Queued', 'Running'] as const)('does not delete active jobs: %s', status => {
         const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
         const job: FoodRecognitionJob = {
-            id: 'active',
+            id: entityId<'food-recognition'>('active'),
             status,
-            imageAssetId: 'asset',
-            imageUrl: 'photo.jpg',
+            imageAssetId: entityId<'image-asset'>('asset'),
+            imageUrl: publicImageUrl('photo.jpg'),
             description: null,
-            createdOnUtc: '',
-            updatedOnUtc: '',
+            createdOnUtc: utcInstant(''),
+            updatedOnUtc: utcInstant(''),
             vision: null,
             nutrition: null,
             errorCode: null,
@@ -165,13 +168,13 @@ describe('recognition history pagination', () => {
 });
 
 const historyJob: FoodRecognitionJob = {
-    id: 'history-result',
+    id: entityId<'food-recognition'>('history-result'),
     status: 'Succeeded',
-    imageAssetId: 'asset',
-    imageUrl: '/photo.jpg',
+    imageAssetId: entityId<'image-asset'>('asset'),
+    imageUrl: publicImageUrl('/photo.jpg'),
     description: null,
-    createdOnUtc: '2026-09-25T00:00:00Z',
-    updatedOnUtc: '2026-09-25T00:00:00Z',
+    createdOnUtc: utcInstant('2026-09-25T00:00:00Z'),
+    updatedOnUtc: utcInstant('2026-09-25T00:00:00Z'),
     vision: null,
     nutrition: null,
     errorCode: null,

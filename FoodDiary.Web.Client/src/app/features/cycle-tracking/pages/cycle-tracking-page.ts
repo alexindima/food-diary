@@ -52,6 +52,7 @@ import {
     OVULATION_TEST_RESULT_UNKNOWN,
     type OvulationTestResult,
 } from '../../../shared/models/cycle.data';
+import type { CycleFactorId } from '../../../shared/models/semantics/entity-id';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { CycleExportDialogComponent, type CycleExportSelection } from '../dialogs/cycle-export-dialog/cycle-export-dialog';
@@ -462,7 +463,7 @@ export class CycleTrackingPageComponent {
             });
     }
 
-    protected editFactor(factorId: string): void {
+    protected editFactor(factorId: CycleFactorId): void {
         this.facade.editFactor(factorId);
     }
 
@@ -470,7 +471,7 @@ export class CycleTrackingPageComponent {
         this.facade.cancelFactorEdit();
     }
 
-    protected endFactorToday(factorId: string): void {
+    protected endFactorToday(factorId: CycleFactorId): void {
         this.facade.endFactorToday(factorId);
     }
 

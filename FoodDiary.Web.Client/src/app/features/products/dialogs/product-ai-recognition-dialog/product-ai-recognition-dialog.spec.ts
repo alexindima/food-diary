@@ -10,6 +10,9 @@ import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/m
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { imageSelection } from '../../../../shared/models/image-upload.data';
 import { MeasurementUnit } from '../../../../shared/models/product.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
+import { publicImageUrl } from '../../../../shared/models/semantics/image-location';
 import { ProductAiRecognitionFacade } from '../../lib/product-ai-recognition.facade';
 import { ProductAiRecognitionDialogComponent } from './product-ai-recognition-dialog';
 
@@ -173,13 +176,13 @@ describe('ProductAiRecognitionDialogComponent close', () => {
             }),
         );
         component['onResumeRecognition']({
-            id: 'job-1',
-            imageAssetId: 'asset-1',
-            imageUrl: 'https://example.test/image.jpg',
+            id: entityId<'food-recognition'>('job-1'),
+            imageAssetId: entityId<'image-asset'>('asset-1'),
+            imageUrl: publicImageUrl('https://example.test/image.jpg'),
             description: 'apple',
             status: 'Succeeded',
-            createdOnUtc: '2026-09-11T00:00:00Z',
-            updatedOnUtc: '2026-09-11T00:00:00Z',
+            createdOnUtc: utcInstant('2026-09-11T00:00:00Z'),
+            updatedOnUtc: utcInstant('2026-09-11T00:00:00Z'),
             vision: null,
             nutrition: null,
             errorCode: null,

@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
+import { entityId } from '../../../../../../shared/models/semantics/entity-id';
 import type { LessonDetailViewModel } from '../../../../lib/lesson-view.mapper';
 import { LessonDetailContentComponent } from './lesson-detail-content';
 
@@ -97,7 +98,7 @@ function getElement(fixture: ComponentFixture<LessonDetailContentComponent>): HT
 
 function createLesson(overrides: Partial<LessonDetailViewModel> = {}): LessonDetailViewModel {
     return {
-        id: 'lesson-1',
+        id: entityId<'lesson'>('lesson-1'),
         title: 'Macros',
         summary: 'Macro basics',
         category: 'Macronutrients',

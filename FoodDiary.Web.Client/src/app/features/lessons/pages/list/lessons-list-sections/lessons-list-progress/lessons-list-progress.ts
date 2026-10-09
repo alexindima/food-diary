@@ -4,6 +4,7 @@ import { FdUiLevelIndicatorComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
+import type { LessonId } from '../../../../../../shared/models/semantics/entity-id';
 import type { LessonListItemViewModel, LessonProgressViewModel } from '../../../../lib/lesson-view.mapper';
 
 @Component({
@@ -16,7 +17,7 @@ import type { LessonListItemViewModel, LessonProgressViewModel } from '../../../
 export class LessonsListProgressComponent {
     public readonly progress = input.required<LessonProgressViewModel | null>();
     public readonly nextLesson = input.required<LessonListItemViewModel | null>();
-    public readonly lessonOpen = output<string>();
+    public readonly lessonOpen = output<LessonId>();
     protected readonly headingKey = computed(() => (this.progress()?.read === 0 ? 'LESSONS.START_LEARNING' : 'LESSONS.CONTINUE_LEARNING'));
     protected readonly actionKey = computed(() => (this.progress()?.read === 0 ? 'LESSONS.START' : 'LESSONS.CONTINUE'));
 }

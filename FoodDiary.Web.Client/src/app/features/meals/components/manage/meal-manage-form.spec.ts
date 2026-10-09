@@ -43,8 +43,8 @@ type MealManageFacadeMock = {
     addAiSession: ReturnType<typeof vi.fn>;
     buildManualNutritionPatchFromTotals: ReturnType<typeof vi.fn>;
     buildNutritionSummaryStateFromValues: ReturnType<typeof vi.fn>;
-    convertRecipeGramsToServings: ReturnType<typeof vi.fn>;
-    convertRecipeServingsToGrams: ReturnType<typeof vi.fn<MealManageFacade['convertRecipeServingsToGrams']>>;
+    recipeServingsFromDisplayInput: ReturnType<typeof vi.fn>;
+    recipeDisplayValueFromStoredServings: ReturnType<typeof vi.fn<MealManageFacade['recipeDisplayValueFromStoredServings']>>;
     configureItemType: ReturnType<typeof vi.fn>;
     confirmDiscardChangesAsync: ReturnType<typeof vi.fn>;
     createMealItem: ReturnType<typeof vi.fn<MealManageFacade['createMealItem']>>;
@@ -455,8 +455,8 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
         buildNutritionSummaryStateFromValues: vi.fn((_formValue, _aiSessions, _threshold) => createNutritionSummaryState()),
         confirmDiscardChangesAsync: vi.fn().mockResolvedValue(true),
         configureItemType: vi.fn((item: MealItemFormValues) => item),
-        convertRecipeGramsToServings: vi.fn((_recipe, amount: number) => amount),
-        convertRecipeServingsToGrams: vi.fn((_recipe, amount: number) => amount),
+        recipeServingsFromDisplayInput: vi.fn((_recipe, amount: number) => amount),
+        recipeDisplayValueFromStoredServings: vi.fn((_recipe, amount: number) => amount),
         createMealItem: vi.fn(() => createMealItemValue()),
         ensurePremiumAccess: vi.fn().mockReturnValue(true),
         getManualNutritionTotalsFromValue: vi.fn().mockReturnValue(EMPTY_TOTALS),
@@ -478,7 +478,7 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
                           item.sourceType === MealSourceType.Product ? (item.product ?? null) : null,
                           item.sourceType === MealSourceType.Recipe ? (item.recipe ?? null) : null,
                           item.sourceType === MealSourceType.Recipe
-                              ? facade.convertRecipeServingsToGrams(item.recipe ?? null, item.amount)
+                              ? facade.recipeDisplayValueFromStoredServings(item.recipe ?? null, item.amount)
                               : item.amount,
                           item.sourceType,
                       ),
@@ -640,8 +640,8 @@ describe('MealManageForm existing meal editing', () => {
             ],
         });
         mealManageFacade.createMealItem.mockImplementation(createMealItemValue);
-        mealManageFacade.convertRecipeServingsToGrams.mockReturnValue(PRODUCT_AMOUNT);
-        mealManageFacade.convertRecipeGramsToServings.mockReturnValue(2);
+        mealManageFacade.recipeDisplayValueFromStoredServings.mockReturnValue(PRODUCT_AMOUNT);
+        mealManageFacade.recipeServingsFromDisplayInput.mockReturnValue(2);
         fixture.componentRef.setInput('meal', original);
         fixture.detectChanges();
         expect(component['mealFormModel']().items[0].amount).toBe(PRODUCT_AMOUNT);

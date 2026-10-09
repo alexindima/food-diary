@@ -68,7 +68,7 @@ public sealed class FastingOccurrenceRepository(DbSet<FastingOccurrence> entries
             occurrences.Select(occurrence => occurrence.UserId).Distinct().ToArray(), cancellationToken).ConfigureAwait(false);
         return occurrences.Where(occurrence => settings.ContainsKey(occurrence.UserId))
             .Select(occurrence => new FastingActiveOccurrenceModel(occurrence,
-                settings[occurrence.UserId].ReminderHours, settings[occurrence.UserId].FollowUpReminderHours))
+                settings[occurrence.UserId].ReminderDelays))
             .ToArray();
     }
 

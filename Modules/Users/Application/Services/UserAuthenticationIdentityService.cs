@@ -432,6 +432,6 @@ internal sealed class UserAuthenticationIdentityService(
             }
         }
 
-        user.UpdatePersonalInfoChanges(new UserPersonalInfoChanges(identity.FirstName, identity.LastName, LastName: null, FieldChanges.Unchanged<DateTime>(), Gender: null, WeightKg: null, HeightCm: null));
+        user.UpdatePersonalInfoChanges(new UserPersonalInfoChanges(identity.FirstName, identity.LastName, LastName: null, FieldChanges.Unchanged<ProfileBirthDate>(), Gender: null, WeightKg: null, HeightCm: null));
     }
 }

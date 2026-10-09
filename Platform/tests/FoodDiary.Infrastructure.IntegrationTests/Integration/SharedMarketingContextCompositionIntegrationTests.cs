@@ -42,7 +42,7 @@ public sealed class SharedMarketingContextCompositionIntegrationTests(PostgresDa
         var user = User.Create($"marketing-{Guid.NewGuid():N}@example.com", "hash");
         MarketingAttributionEventRecord record = CreateRecord(DateTime.UtcNow) with {
             EventType = "signup_completed",
-            UserId = user.Id.Value,
+            UserId = user.Id,
         };
         central.Users.Add(user);
         await repository.AddAsync(record);
@@ -82,7 +82,9 @@ public sealed class SharedMarketingContextCompositionIntegrationTests(PostgresDa
     }
 
     private static MarketingAttributionEventRecord CreateRecord(DateTime occurredAtUtc) => new(
-        "page_landing", occurredAtUtc, UserId: null, "anonymous", "session", "/",
+        "page_landing", occurredAtUtc, UserId: null,
+        new FoodDiary.Modules.Marketing.Domain.ValueObjects.AnonymousVisitorId("anonymous"),
+        new FoodDiary.Modules.Marketing.Domain.ValueObjects.MarketingSessionId("session"), "/",
         ReferrerHost: null, UtmSource: null, UtmMedium: null, UtmCampaign: null,
         UtmContent: null, UtmTerm: null, BuildVersion: null, EventId: Guid.NewGuid());
 

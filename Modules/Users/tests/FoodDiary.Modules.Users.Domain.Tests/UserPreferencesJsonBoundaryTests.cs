@@ -8,7 +8,7 @@ public sealed class UserPreferencesJsonBoundaryTests {
     [Fact]
     public void JsonBackedValues_RejectInvalidJson() {
         var user = User.Create("json@example.com", "hash");
-        Assert.Throws<ArgumentException>(() => user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: "{invalid")));
+        Assert.Throws<ArgumentException>(() => user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, DashboardLayoutJson: "{invalid")));
     }
 
     [Fact]
@@ -16,7 +16,7 @@ public sealed class UserPreferencesJsonBoundaryTests {
         string oversizedJson = $"\"{new string('x', 65536)}\"";
         var user = User.Create("json-size@example.com", "hash");
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: oversizedJson)));
+            user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, DashboardLayoutJson: oversizedJson)));
     }
 
     [Fact]
@@ -24,6 +24,6 @@ public sealed class UserPreferencesJsonBoundaryTests {
         string oversizedJson = new string(' ', 65536) + "{}";
         var user = User.Create("json-whitespace@example.com", "hash");
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: oversizedJson)));
+            user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, DashboardLayoutJson: oversizedJson)));
     }
 }

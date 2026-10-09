@@ -739,14 +739,14 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdatePreferences(new UserPreferenceUpdate(Language: "de")));
+            user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, Language: "de")));
     }
 
     [Fact]
     public void UpdateProfile_WithSupportedLanguage_UpdatesValue() {
         var user = User.Create("test@example.com", "hash");
 
-        user.UpdatePreferences(new UserPreferenceUpdate(Language: "ru"));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, Language: "ru"));
 
         Assert.Equal("ru", user.Language);
     }
@@ -755,7 +755,7 @@ public class UserInvariantTests {
     public void UpdatePreferences_WithSupportedLanguage_UpdatesValue() {
         var user = User.Create("test@example.com", "hash");
 
-        user.UpdatePreferences(new UserPreferenceUpdate(Language: "ru"));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, Language: "ru"));
 
         Assert.Equal("ru", user.Language);
     }
@@ -765,14 +765,14 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdatePreferences(new UserPreferenceUpdate(Theme: "sunset")));
+            user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, Theme: "sunset")));
     }
 
     [Fact]
     public void UpdatePreferences_WithSupportedTheme_UpdatesValue() {
         var user = User.Create("test@example.com", "hash");
 
-        user.UpdatePreferences(new UserPreferenceUpdate(Theme: "leaf"));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, Theme: "leaf"));
 
         Assert.Equal("leaf", user.Theme);
     }
@@ -782,14 +782,14 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdatePreferences(new UserPreferenceUpdate(UiStyle: "retro")));
+            user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, UiStyle: "retro")));
     }
 
     [Fact]
     public void UpdatePreferences_WithSupportedUiStyle_UpdatesValue() {
         var user = User.Create("test@example.com", "hash");
 
-        user.UpdatePreferences(new UserPreferenceUpdate(UiStyle: "modern"));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, UiStyle: "modern"));
 
         Assert.Equal("modern", user.UiStyle);
     }
@@ -798,9 +798,7 @@ public class UserInvariantTests {
     public void UpdatePreferences_WithTypedUpdate_UpdatesDashboardLayoutAndLanguage() {
         var user = User.Create("test@example.com", "hash");
 
-        user.UpdatePreferences(new UserPreferenceUpdate(
-            DashboardLayoutJson: "{\"layout\":\"compact\"}",
-            Language: "ru"));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, DashboardLayoutJson: "{\"layout\":\"compact\"}", Language: "ru"));
 
         Assert.Equal("{\"layout\":\"compact\"}", user.DashboardLayoutJson);
         Assert.Equal("ru", user.Language);
@@ -810,12 +808,7 @@ public class UserInvariantTests {
     public void UpdatePreferences_WithNotificationAndReminderSettings_UpdatesState() {
         var user = User.Create("test@example.com", "hash");
 
-        user.UpdatePreferences(new UserPreferenceUpdate(
-            PushNotificationsEnabled: true,
-            FastingPushNotificationsEnabled: true,
-            SocialPushNotificationsEnabled: true,
-            FastingCheckInReminderHours: 12,
-            FastingCheckInFollowUpReminderHours: 36));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: new FastingReminderDelayUpdate(FirstHours: 12, FollowUpHours: 36), PushNotificationsEnabled: true, FastingPushNotificationsEnabled: true, SocialPushNotificationsEnabled: true));
 
         Assert.Multiple(
             () => Assert.True(user.PushNotificationsEnabled),
@@ -835,16 +828,14 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdatePreferences(new UserPreferenceUpdate(
-                FastingCheckInReminderHours: firstReminder,
-                FastingCheckInFollowUpReminderHours: followUpReminder)));
+            user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: new FastingReminderDelayUpdate(FirstHours: firstReminder, FollowUpHours: followUpReminder))));
     }
 
     [Fact]
     public void UpdatePreferences_WithNoChanges_DoesNotSetModifiedOnUtc() {
         var user = User.Create("test@example.com", "hash");
 
-        user.UpdatePreferences(new UserPreferenceUpdate());
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default));
 
         Assert.Null(user.ModifiedOnUtc);
         Assert.Null(user.Preferences.ModifiedOnUtc);
@@ -853,9 +844,9 @@ public class UserInvariantTests {
     [Fact]
     public void UpdatePreferences_WithWhitespaceDashboardLayout_NormalizesToNull() {
         var user = User.Create("test@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: "{\"layout\":\"compact\"}"));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, DashboardLayoutJson: "{\"layout\":\"compact\"}"));
 
-        user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: "   "));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, DashboardLayoutJson: "   "));
 
         Assert.Null(user.DashboardLayoutJson);
         Assert.NotNull(user.Preferences.ModifiedOnUtc);

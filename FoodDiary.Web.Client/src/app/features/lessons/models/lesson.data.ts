@@ -1,5 +1,6 @@
+import type { LessonId } from '../../../shared/models/semantics/entity-id';
 export type LessonSummary = {
-    id: string;
+    id: LessonId;
     title: string;
     summary?: string | null;
     category: string;
@@ -30,7 +31,7 @@ export type LessonQuery = {
 };
 
 export type LessonDetail = {
-    id: string;
+    id: LessonId;
     title: string;
     content: string;
     summary?: string | null;

@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 280,
+    "domainTypes": 284,
     "entities": 91,
-    "valueObjects": 137,
-    "invariants": 643,
+    "valueObjects": 141,
+    "invariants": 641,
     "persistenceMappings": 96,
     "indexes": 177,
     "relationships": 39
@@ -386,7 +386,7 @@
       "name": "MarketingAttributionEvent",
       "role": "entity",
       "path": "Modules/Marketing/Domain/Entities/Tracking/MarketingAttributionEvent.cs",
-      "line": 6
+      "line": 8
     },
     {
       "area": "FoodDiary",
@@ -694,7 +694,7 @@
       "name": "UserRefreshTokenSession",
       "role": "entity",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 6
+      "line": 7
     },
     {
       "area": "FoodDiary",
@@ -947,6 +947,13 @@
       "role": "value-object",
       "path": "Modules/Ai/Domain/ValueObjects/Ids/AiUsageId.cs",
       "line": 4
+    },
+    {
+      "area": "FoodDiary",
+      "name": "AnonymousVisitorId",
+      "role": "value-object",
+      "path": "Modules/Marketing/Domain/ValueObjects/AnonymousVisitorId.cs",
+      "line": 2
     },
     {
       "area": "FoodDiary",
@@ -1230,6 +1237,13 @@
     },
     {
       "area": "FoodDiary",
+      "name": "MarketingSessionId",
+      "role": "value-object",
+      "path": "Modules/Marketing/Domain/ValueObjects/MarketingSessionId.cs",
+      "line": 2
+    },
+    {
+      "area": "FoodDiary",
       "name": "MealAiItemState",
       "role": "value-object",
       "path": "Modules/Meals/Domain/ValueObjects/MealAiItemState.cs",
@@ -1454,6 +1468,13 @@
     },
     {
       "area": "FoodDiary",
+      "name": "ProfileBirthDate",
+      "role": "value-object",
+      "path": "Modules/Users/Domain/ValueObjects/ProfileBirthDate.cs",
+      "line": 4
+    },
+    {
+      "area": "FoodDiary",
       "name": "ProfileHeightCm",
       "role": "value-object",
       "path": "Modules/Users/Domain/ValueObjects/ProfileHeightCm.cs",
@@ -1569,6 +1590,13 @@
       "name": "RecommendationTemplateId",
       "role": "value-object",
       "path": "Modules/Dietologist/Domain/ValueObjects/Ids/RecommendationTemplateId.cs",
+      "line": 4
+    },
+    {
+      "area": "FoodDiary",
+      "name": "RefreshTokenSessionId",
+      "role": "value-object",
+      "path": "Modules/Identity/Domain/ValueObjects/Ids/RefreshTokenSessionId.cs",
       "line": 4
     },
     {
@@ -1758,7 +1786,7 @@
       "name": "UserPreferenceState",
       "role": "value-object",
       "path": "Modules/Users/Domain/ValueObjects/UserPreferenceState.cs",
-      "line": 2
+      "line": 4
     },
     {
       "area": "FoodDiary",
@@ -1779,7 +1807,7 @@
       "name": "UserProfileState",
       "role": "value-object",
       "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
-      "line": 5
+      "line": 6
     },
     {
       "area": "FoodDiary",
@@ -3811,49 +3839,49 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Session id must not be empty.\", nameof(id))",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 33
+      "line": 34
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"User id must not be empty.\", nameof(userId))",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 37
+      "line": 38
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Revoked refresh token session cannot be rotated.\")",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 60
+      "line": 61
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Value is required.\", paramName)",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 91
+      "line": 92
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 96
+      "line": 97
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 110
+      "line": 111
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Timestamp cannot be earlier than the last token rotation.\")",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 115
+      "line": 116
     },
     {
       "area": "FoodDiary",
@@ -3951,21 +3979,21 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Value is required.\", paramName)",
       "path": "Modules/Marketing/Domain/Entities/Tracking/MarketingAttributionEvent.cs",
-      "line": 73
+      "line": 75
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\")) : normalized",
       "path": "Modules/Marketing/Domain/Entities/Tracking/MarketingAttributionEvent.cs",
-      "line": 82
+      "line": 84
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
       "path": "Modules/Marketing/Domain/Entities/Tracking/MarketingAttributionEvent.cs",
-      "line": 86
+      "line": 88
     },
     {
       "area": "FoodDiary",
@@ -5848,77 +5876,63 @@
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(telegramUserId))",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 50
+      "line": 49
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Disconnect the current Telegram identity before linking another one.\")",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 56
+      "line": 55
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Link Telegram before binding its OIDC identity.\")",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 66
+      "line": 65
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"The Telegram OIDC identity does not match the linked identity.\")",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 73
+      "line": 72
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Add another sign-in method before disconnecting Telegram.\")",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 90
+      "line": 89
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"An IANA time zone is required.\", nameof(timeZoneId))",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 104
+      "line": 103
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(changes)",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 126
+      "line": 125
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(changes.BirthDate, nameof(changes))",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 127
+      "line": 126
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(surfaceStyle), \"Surface style must be one of the supported codes.\")",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 363
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(",
-      "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 376
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"Reminder hour must be between 1 and 168.\")",
-      "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 449
+      "line": 362
     },
     {
       "area": "FoodDiary",
@@ -6394,14 +6408,14 @@
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Only a set field change has a value.\")",
       "path": "Shared/FoodDiary.Domain.Primitives/FieldChange.cs",
-      "line": 19
+      "line": 18
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(value)",
       "path": "Shared/FoodDiary.Domain.Primitives/FieldChange.cs",
-      "line": 22
+      "line": 21
     },
     {
       "area": "FoodDiary",

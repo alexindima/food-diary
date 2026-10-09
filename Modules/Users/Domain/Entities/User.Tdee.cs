@@ -21,13 +21,13 @@ public sealed partial class User {
         ArgumentNullException.ThrowIfNull(input);
         double? weightKg = input.WeightKg;
         double? heightCm = input.HeightCm;
-        DateTime? birthDate = input.BirthDate;
+        ProfileBirthDate? birthDate = input.BirthDate;
         string? gender = input.Gender;
         if (weightKg is null || heightCm is null || birthDate is null || gender is null) {
             return null;
         }
 
-        int age = CalculateAge(birthDate.Value, DomainTime.UtcNow);
+        int age = CalculateAge(birthDate, DomainTime.UtcNow);
         if (age <= 0) {
             return null;
         }
@@ -74,9 +74,10 @@ public sealed partial class User {
         };
     }
 
-    private static int CalculateAge(DateTime birthDate, DateTime now) {
+    private static int CalculateAge(ProfileBirthDate profileBirthDate, DateTime now) {
+        DateOnly birthDate = profileBirthDate.CalendarDay;
         int age = now.Year - birthDate.Year;
-        if (now.Date < birthDate.Date.AddYears(age)) {
+        if (DateOnly.FromDateTime(now) < birthDate.AddYears(age)) {
             age--;
         }
 

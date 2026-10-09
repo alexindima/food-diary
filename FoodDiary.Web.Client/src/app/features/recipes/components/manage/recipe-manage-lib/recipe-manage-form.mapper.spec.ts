@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, ProductVisibility } from '../../../../../shared/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import { recipeIngredientFromStored } from '../../../../../shared/models/recipe-ingredient';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import type { NutritionScaleMode, RecipeFormValues } from './recipe-manage.types';
@@ -29,7 +30,7 @@ describe('text ingredient persistence', () => {
                 id: 'step',
                 stepNumber: 1,
                 instruction: 'Season',
-                ingredients: [{ id: 'salt', amount: 0, textName: 'Salt', amountText: 'to taste' }],
+                ingredients: [recipeIngredientFromStored({ id: 'salt', amount: 0, textName: 'Salt', amountText: 'to taste' })],
             },
             { selectIngredient: 'Select', unknownProduct: 'Unknown' },
         );
@@ -265,14 +266,14 @@ describe('recipe snapshot unit casing', () => {
                 imageUrl: null,
                 imageAssetId: null,
                 ingredients: [
-                    {
+                    recipeIngredientFromStored({
                         id: 'unit-ingredient',
                         amount: PRODUCT_AMOUNT,
                         productId: 'product-unit',
                         productName: 'Milk',
                         productBaseUnit: unit,
                         productBaseAmount: DEFAULT_BASE_AMOUNT,
-                    },
+                    }),
                 ],
             },
             { selectIngredient: 'Select ingredient', unknownProduct: 'Unknown product' },
@@ -293,7 +294,7 @@ describe('recipe ingredient edit mapping', () => {
                 imageUrl: null,
                 imageAssetId: null,
                 ingredients: [
-                    {
+                    recipeIngredientFromStored({
                         id: 'ingredient-1',
                         amount: PRODUCT_AMOUNT,
                         productId: 'product-1',
@@ -301,13 +302,13 @@ describe('recipe ingredient edit mapping', () => {
                         productBaseUnit: 'INVALID',
                         productBaseAmount: DEFAULT_BASE_AMOUNT,
                         productCaloriesPerBase: 350,
-                    },
-                    {
+                    }),
+                    recipeIngredientFromStored({
                         id: 'ingredient-2',
                         amount: 1,
                         nestedRecipeId: 'nested-1',
                         nestedRecipeName: null,
-                    },
+                    }),
                 ],
             },
             {

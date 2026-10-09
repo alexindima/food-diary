@@ -20,6 +20,7 @@ import type {
     WebPushSubscriptionItem,
     WebPushSubscriptionRequest,
 } from '../models/notification.data';
+import type { NotificationId } from '../models/semantics/entity-id';
 export type {
     NotificationItem,
     NotificationPreferences,
@@ -125,7 +126,7 @@ export class NotificationService {
         this.loadNotifications();
     }
 
-    public markAsRead(notificationId: string): Observable<void> {
+    public markAsRead(notificationId: NotificationId): Observable<void> {
         return this.sdk.client.putNotificationsByNotificationIdRead({ version: this.sdk.version, notificationId }).pipe(
             tap(() => {
                 const notification = this.notifications().find(item => item.id === notificationId);

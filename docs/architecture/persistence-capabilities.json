@@ -274,7 +274,7 @@
         "write:TelegramOperation"
       ],
       "reason": "Identity-owned Telegram operation journal. Parameterized insert deduplicates bot/update pairs; conditional bulk updates enforce leases and cancellation. Pending payloads and checkpoints are protected per operation. Terminal content is erased immediately; bounded bot-scoped cleanup removes legacy completed content while retaining deduplication identities. User cancellation clears terminal content too. No foreign aggregate access or shared SaveChanges.",
-      "technicalSourceSha256": "b238a1f814e2e02f7987e317feb02fae23ecefdd9f72cfa6b590a3d88ede55f7"
+      "technicalSourceSha256": "2a313890103914df30b04b8cdb55317cd27adbcdb2f147fbcc57edb87f08efbe"
     },
     "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramLoginTicketStore.cs": {
       "module": "Identity",
@@ -869,7 +869,7 @@
         "write:UserRefreshTokenSession"
       ],
       "reason": "Identity owns session rotation/revocation, including atomic bulk updates. Active-session listing uses a minimized no-tracking projection. No User aggregate writes.",
-      "technicalSourceSha256": "b617d2912f1bc2ecaf3204c81d36adac99104d7a71140abb648c7fd09ac5df96"
+      "technicalSourceSha256": "96cd70adbc9a02b95429277df5309c63fbd6016c6f526d8c48a5657d07548a58"
     },
     "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs": {
       "module": "Identity",

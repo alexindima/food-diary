@@ -23,7 +23,7 @@ public sealed class AuthSessionLifecycleControllerTests {
         var sessionId = Guid.NewGuid();
         IRequest<Result<IReadOnlyList<ActiveSessionModel>>>? sentRequest = null;
         IReadOnlyList<ActiveSessionModel> sessions = [new(
-            sessionId,
+            new FoodDiary.Modules.Identity.Domain.ValueObjects.Ids.RefreshTokenSessionId(sessionId),
             IsCurrent: true,
             "password",
             "Chrome",
@@ -52,9 +52,9 @@ public sealed class AuthSessionLifecycleControllerTests {
         var otherSessionId = Guid.NewGuid();
 
         Assert.IsType<NoContentResult>(await controller.RevokeSession(userId, currentSessionId, otherSessionId));
-        Assert.Equal(otherSessionId, Assert.IsType<RevokeSessionCommand>(sentRequest).SessionId);
+        Assert.Equal(otherSessionId, Assert.IsType<RevokeSessionCommand>(sentRequest).SessionId.Value);
         Assert.IsType<NoContentResult>(await controller.RevokeOtherSessions(userId, currentSessionId));
-        Assert.Equal(currentSessionId, Assert.IsType<RevokeOtherSessionsCommand>(sentRequest).CurrentSessionId);
+        Assert.Equal(currentSessionId, Assert.IsType<RevokeOtherSessionsCommand>(sentRequest).CurrentSessionId.Value);
     }
     [Fact]
     public async Task Logout_RevokesCookieSessionAndExpiresRefreshCookie() {

@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Marketing.Domain.ValueObjects;
 using System.Globalization;
 using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
@@ -42,7 +44,7 @@ public sealed class RecordMarketingAttributionCommandHandler(
         }
 
         if (string.Equals(request.EventType, MarketingAttributionEventTypes.SignupCompleted, StringComparison.Ordinal) &&
-            (request.UserId is not { } userId || userId == Guid.Empty)) {
+            (request.UserId is not { } userId || userId == UserId.Empty)) {
             return Result.Failure(Errors.Validation.Invalid(
                 nameof(request.UserId),
                 "Signup attribution requires an authenticated user identity."));
@@ -60,8 +62,8 @@ public sealed class RecordMarketingAttributionCommandHandler(
             }
 
             trustedLanding = await repository.GetLandingAsync(
-                NormalizeRequired(request.AnonymousId, AnonymousIdMaxLength, "unknown"),
-                NormalizeRequired(request.SessionId, SessionIdMaxLength, "unknown"),
+                new AnonymousVisitorId(NormalizeRequired(request.AnonymousId.Value, AnonymousIdMaxLength, "unknown")),
+                new MarketingSessionId(NormalizeRequired(request.SessionId.Value, SessionIdMaxLength, "unknown")),
                 timeProvider.GetUtcNow().UtcDateTime - MaximumPastTimestampAge,
                 cancellationToken).ConfigureAwait(false);
             if (trustedLanding is null) {
@@ -73,8 +75,8 @@ public sealed class RecordMarketingAttributionCommandHandler(
             NormalizeRequired(request.EventType, EventTypeMaxLength, "page_landing"),
             timestampResult.Value,
             request.UserId,
-            trustedLanding?.AnonymousId ?? NormalizeRequired(request.AnonymousId, AnonymousIdMaxLength, "unknown"),
-            trustedLanding?.SessionId ?? NormalizeRequired(request.SessionId, SessionIdMaxLength, "unknown"),
+            trustedLanding?.AnonymousId ?? new AnonymousVisitorId(NormalizeRequired(request.AnonymousId.Value, AnonymousIdMaxLength, "unknown")),
+            trustedLanding?.SessionId ?? new MarketingSessionId(NormalizeRequired(request.SessionId.Value, SessionIdMaxLength, "unknown")),
             trustedLanding?.LandingPath ?? NormalizeRequired(request.LandingPath, LandingPathMaxLength, "/"),
             trustedLanding?.ReferrerHost ?? NormalizeOptional(request.ReferrerHost, ReferrerHostMaxLength),
             trustedLanding?.UtmSource ?? NormalizeOptional(request.UtmSource, UtmValueMaxLength),

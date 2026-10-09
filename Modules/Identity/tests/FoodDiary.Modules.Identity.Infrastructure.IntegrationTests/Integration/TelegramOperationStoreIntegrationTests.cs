@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence.Authentication;
@@ -18,10 +19,10 @@ public sealed class TelegramOperationStoreIntegrationTests(PostgresDatabaseFixtu
     public async Task InvalidRegistrationOrRetryInput_DoesNotPersistOrLeaseWork() {
         await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         var store = new TelegramOperationStore(context, new EphemeralDataProtectionProvider(), new Clock());
-        await Assert.ThrowsAsync<ArgumentException>(() => store.RegisterAsync(0, 1, Guid.NewGuid(), 1, "payload", CancellationToken.None));
-        await Assert.ThrowsAsync<ArgumentException>(() => store.RegisterAsync(123, 1, Guid.NewGuid(), 1, new string('я', 16385), CancellationToken.None));
-        await Assert.ThrowsAsync<ArgumentException>(() => store.CheckpointAsync(123, Guid.NewGuid(), Guid.NewGuid(), "checkpoint", completed: false, Now.AddDays(2), CancellationToken.None));
-        Assert.Null(await store.GetLeaseAsync(123, Guid.NewGuid(), Guid.NewGuid(), CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentException>(() => store.RegisterAsync(0, 1, UserId.New(), 1, "payload", CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentException>(() => store.RegisterAsync(123, 1, UserId.New(), 1, new string('я', 16385), CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentException>(() => store.CheckpointAsync(123, TelegramOperationId.New(), TelegramLeaseId.New(), "checkpoint", completed: false, Now.AddDays(2), CancellationToken.None));
+        Assert.Null(await store.GetLeaseAsync(123, TelegramOperationId.New(), TelegramLeaseId.New(), CancellationToken.None));
         Assert.Empty(await context.Set<TelegramOperation>().ToArrayAsync());
     }
 
@@ -31,15 +32,15 @@ public sealed class TelegramOperationStoreIntegrationTests(PostgresDatabaseFixtu
         var clock = new Clock();
         var originalProtection = new EphemeralDataProtectionProvider();
         var originalStore = new TelegramOperationStore(context, originalProtection, clock);
-        Guid? original = await originalStore.RegisterAsync(123, 10, Guid.NewGuid(), 1, "original-photo", CancellationToken.None);
+        TelegramOperationId? original = await originalStore.RegisterAsync(123, 10, UserId.New(), 1, "original-photo", CancellationToken.None);
         Assert.NotNull(original);
         var replacementStore = new TelegramOperationStore(context, new EphemeralDataProtectionProvider(), clock);
-        Guid? other = await replacementStore.RegisterAsync(123, 11, Guid.NewGuid(), 1, "other-photo", CancellationToken.None);
+        TelegramOperationId? other = await replacementStore.RegisterAsync(123, 11, UserId.New(), 1, "other-photo", CancellationToken.None);
         Assert.NotNull(other);
 
         await Assert.ThrowsAsync<CryptographicException>(() => replacementStore.AcquireAsync(123, original.Value, CancellationToken.None));
 
-        TelegramOperation stored = await context.Set<TelegramOperation>().AsNoTracking().SingleAsync(item => item.Id == original.Value);
+        TelegramOperation stored = await context.Set<TelegramOperation>().AsNoTracking().SingleAsync(item => item.Id == original.Value.Value);
         Assert.False(stored.Completed);
         Assert.NotEmpty(stored.ProtectedPayload);
         Assert.DoesNotContain(original.Value, await replacementStore.ListReadyAsync(123, CancellationToken.None));
@@ -58,8 +59,8 @@ public sealed class TelegramOperationStoreIntegrationTests(PostgresDatabaseFixtu
     public async Task Registration_DeduplicatesAndRejectsChangedPayloadOrBinding() {
         await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         var store = new TelegramOperationStore(context, new EphemeralDataProtectionProvider(), new Clock());
-        var userId = Guid.NewGuid();
-        Guid? operation = await store.RegisterAsync(123, 10, userId, 1, "private-photo-reference", CancellationToken.None);
+        var userId = UserId.New();
+        TelegramOperationId? operation = await store.RegisterAsync(123, 10, userId, 1, "private-photo-reference", CancellationToken.None);
         Assert.NotNull(operation);
         Assert.Equal(operation, await store.RegisterAsync(123, 10, userId, 1, "private-photo-reference", CancellationToken.None));
         Assert.Null(await store.RegisterAsync(123, 10, userId, 1, "changed", CancellationToken.None));
@@ -73,7 +74,7 @@ public sealed class TelegramOperationStoreIntegrationTests(PostgresDatabaseFixtu
         await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         var clock = new Clock();
         var store = new TelegramOperationStore(context, new EphemeralDataProtectionProvider(), clock);
-        Guid? id = await store.RegisterAsync(123, 10, Guid.NewGuid(), 1, "payload", CancellationToken.None);
+        TelegramOperationId? id = await store.RegisterAsync(123, 10, UserId.New(), 1, "payload", CancellationToken.None);
         Assert.NotNull(id);
         TelegramOperationLease? first = await store.AcquireAsync(123, id.Value, CancellationToken.None);
         Assert.NotNull(first);
@@ -96,21 +97,21 @@ public sealed class TelegramOperationStoreIntegrationTests(PostgresDatabaseFixtu
     public async Task TerminalCleanup_ErasesOldContentButPreservesDeduplicationAndPendingWork() {
         await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         var store = new TelegramOperationStore(context, new EphemeralDataProtectionProvider(), new Clock());
-        var userId = Guid.NewGuid();
-        Guid? done = await store.RegisterAsync(123, 10, userId, 1, "original-payload", CancellationToken.None);
-        Guid? pending = await store.RegisterAsync(123, 11, userId, 1, "pending-payload", CancellationToken.None);
+        var userId = UserId.New();
+        TelegramOperationId? done = await store.RegisterAsync(123, 10, userId, 1, "original-payload", CancellationToken.None);
+        TelegramOperationId? pending = await store.RegisterAsync(123, 11, userId, 1, "pending-payload", CancellationToken.None);
         Assert.NotNull(done);
         Assert.NotNull(pending);
         TelegramOperationLease? lease = await store.AcquireAsync(123, done.Value, CancellationToken.None);
         Assert.NotNull(lease);
         Assert.True(await store.CheckpointAsync(123, done.Value, lease.LeaseId, "private-checkpoint", completed: true, Now, CancellationToken.None));
-        await context.Set<TelegramOperation>().Where(item => item.Id == done.Value)
+        await context.Set<TelegramOperation>().Where(item => item.Id == done.Value.Value)
             .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.ProtectedCheckpoint, "legacy-encrypted-content"));
 
-        IReadOnlyList<Guid> ready = await store.ListReadyAsync(123, CancellationToken.None);
+        IReadOnlyList<TelegramOperationId> ready = await store.ListReadyAsync(123, CancellationToken.None);
 
         Assert.Equal(pending.Value, Assert.Single(ready));
-        TelegramOperation record = await context.Set<TelegramOperation>().AsNoTracking().SingleAsync(item => item.Id == done.Value);
+        TelegramOperation record = await context.Set<TelegramOperation>().AsNoTracking().SingleAsync(item => item.Id == done.Value.Value);
         Assert.Empty(record.ProtectedPayload);
         Assert.Null(record.ProtectedCheckpoint);
         Assert.Equal(done, await store.RegisterAsync(123, 10, userId, 1, "original-payload", CancellationToken.None));
@@ -125,9 +126,9 @@ public sealed class TelegramOperationStoreIntegrationTests(PostgresDatabaseFixtu
         await using IdentityDbContext setup = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         string connection = setup.Database.GetConnectionString()!;
         var protection = new EphemeralDataProtectionProvider();
-        var userId = Guid.NewGuid();
+        var userId = UserId.New();
         var store = new TelegramOperationStore(setup, protection, new Clock());
-        Guid? id = await store.RegisterAsync(123, 10, userId, 1, "payload", CancellationToken.None);
+        TelegramOperationId? id = await store.RegisterAsync(123, 10, userId, 1, "payload", CancellationToken.None);
         Assert.NotNull(id);
         var start = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         Task<TelegramOperationLease?>[] attempts = [.. Enumerable.Range(0, 4).Select(_ => AcquireAsync())];

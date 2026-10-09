@@ -2,6 +2,7 @@ import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
 
+import type { CycleFactorId } from '../../../shared/models/semantics/entity-id';
 import { CyclesService } from '../api/cycles.service';
 import { CycleDayFacade } from './cycle-day.facade';
 import { CycleEpisodeFacade } from './cycle-episode.facade';
@@ -86,16 +87,16 @@ export class CycleTrackingFacade {
     public saveFactor(): void {
         this.factor.saveFactor();
     }
-    public editFactor(factorId: string): void {
+    public editFactor(factorId: CycleFactorId): void {
         this.factor.editFactor(factorId);
     }
     public cancelFactorEdit(): void {
         this.factor.cancelFactorEdit();
     }
-    public endFactorToday(factorId: string): void {
+    public endFactorToday(factorId: CycleFactorId): void {
         this.factor.endFactorToday(factorId);
     }
-    public async endFactorTodayAsync(factorId: string): Promise<void> {
+    public async endFactorTodayAsync(factorId: CycleFactorId): Promise<void> {
         return this.factor.endFactorTodayAsync(factorId);
     }
     public clearDay(date: string): void {

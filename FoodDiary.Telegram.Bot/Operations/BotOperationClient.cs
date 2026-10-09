@@ -11,7 +11,7 @@ internal sealed class BotOperationClient(HttpClient client, IOptions<TelegramBot
     internal const string ClientName = "TelegramOperations";
     private const long MaximumResponseBytes = 131072;
 
-    internal async Task<Guid> RegisterAsync(long updateId, long telegramUserId, string payload, CancellationToken cancellationToken) {
+    internal async Task<BotOperationId> RegisterAsync(long updateId, long telegramUserId, string payload, CancellationToken cancellationToken) {
         using HttpResponseMessage response = await CreateSdk().RegisterAsync("1",
             new RegisterTelegramOperationHttpRequest { UpdateId = updateId, TelegramUserId = telegramUserId, Payload = payload },
             RequestContext(), cancellationToken).ConfigureAwait(false);
@@ -23,23 +23,24 @@ internal sealed class BotOperationClient(HttpClient client, IOptions<TelegramBot
         if (registered.OperationId == Guid.Empty) {
             throw new InvalidDataException("The API returned an invalid operation ID.");
         }
-        return registered.OperationId;
+        return new BotOperationId(registered.OperationId);
     }
 
-    internal async Task<IReadOnlyList<Guid>> ListReadyAsync(CancellationToken cancellationToken) {
+    internal async Task<IReadOnlyList<BotOperationId>> ListReadyAsync(CancellationToken cancellationToken) {
         using HttpResponseMessage response = await CreateSdk().ListReadyAsync("1", RequestContext(), cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
-        return await ReadAsync<Guid[]>(response, cancellationToken).ConfigureAwait(false);
+        Guid[] ids = await ReadAsync<Guid[]>(response, cancellationToken).ConfigureAwait(false);
+        return ids.Select(id => new BotOperationId(id)).ToArray();
     }
 
-    internal async Task<BotOperationLease?> AcquireAsync(Guid operationId, CancellationToken cancellationToken) {
-        using HttpResponseMessage response = await CreateSdk().AcquireAsync(operationId, "1", RequestContext(), cancellationToken).ConfigureAwait(false);
+    internal async Task<BotOperationLease?> AcquireAsync(BotOperationId operationId, CancellationToken cancellationToken) {
+        using HttpResponseMessage response = await CreateSdk().AcquireAsync(operationId.Value, "1", RequestContext(), cancellationToken).ConfigureAwait(false);
         if (response.StatusCode == HttpStatusCode.Conflict) {
             return null;
         }
         response.EnsureSuccessStatusCode();
         BotOperationLease lease = BotApiMapper.Lease(await ReadAsync<TelegramOperationLeaseHttpResponse>(response, cancellationToken).ConfigureAwait(false));
-        if (lease.OperationId != operationId || lease.LeaseId == Guid.Empty || lease.UserId == Guid.Empty) {
+        if (lease.OperationId != operationId || lease.LeaseId == BotLeaseId.Empty || lease.UserId == BotUserId.Empty) {
             throw new InvalidDataException("The API returned an invalid operation lease.");
         }
         return lease;
@@ -47,8 +48,8 @@ internal sealed class BotOperationClient(HttpClient client, IOptions<TelegramBot
 
     internal async Task<bool> CheckpointAsync(BotOperationLease lease, string checkpoint, bool completed,
         DateTime nextAttemptAtUtc, CancellationToken cancellationToken) {
-        using HttpResponseMessage response = await CreateSdk().CheckpointAsync(lease.OperationId, "1",
-            new CheckpointTelegramOperationHttpRequest { LeaseId = lease.LeaseId, Checkpoint = checkpoint, Completed = completed, NextAttemptAtUtc = nextAttemptAtUtc },
+        using HttpResponseMessage response = await CreateSdk().CheckpointAsync(lease.OperationId.Value, "1",
+            new CheckpointTelegramOperationHttpRequest { LeaseId = lease.LeaseId.Value, Checkpoint = checkpoint, Completed = completed, NextAttemptAtUtc = nextAttemptAtUtc },
             RequestContext(), cancellationToken).ConfigureAwait(false);
         if (response.StatusCode == HttpStatusCode.Conflict) {
             return false;

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
@@ -177,7 +178,7 @@ public sealed partial class AuthenticationCommandHandlerTests : IDisposable {
 
         public Task<IssuedAuthenticationTokens?> RotateFromPrincipalAsync(
             UserAuthenticationPrincipalModel principal,
-            Guid refreshSessionId,
+            RefreshTokenSessionId refreshSessionId,
             string expectedRefreshTokenHash,
             bool rememberMe,
             CancellationToken cancellationToken) =>

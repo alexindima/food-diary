@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ namespace FoodDiary.Modules.Identity.PersistenceModel.Configurations.Authenticat
 internal sealed class UserRefreshTokenSessionConfiguration : IEntityTypeConfiguration<UserRefreshTokenSession> {
     public void Configure(EntityTypeBuilder<UserRefreshTokenSession> builder) {
         builder.Property<uint>("xmin").IsRowVersion();
+        builder.Property(e => e.Id).HasConversion(id => id.Value, value => new RefreshTokenSessionId(value));
 
         builder.Property(e => e.UserId).HasConversion(
             id => id.Value,

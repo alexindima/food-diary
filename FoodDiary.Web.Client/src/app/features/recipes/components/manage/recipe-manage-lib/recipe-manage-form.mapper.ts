@@ -3,6 +3,7 @@ import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import { type Recipe, type RecipeDto, type RecipeIngredient, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import { isRecipeCategory } from '../../../../../shared/models/recipe-category';
+import { ingredientEditorSource } from '../../../../../shared/models/recipe-ingredient';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import type { IngredientFormValues, NutritionScaleMode, RecipeFormValues, StepFormValues } from './recipe-manage.types';
@@ -248,17 +249,17 @@ function resolveRecipeManualNutritionValue(manual: number | null | undefined, to
 }
 
 function mapIngredientToFormValue(ingredient: RecipeIngredient, labels: RecipeIngredientMappingLabels): IngredientFormValues | null {
-    if (typeof ingredient.textName === 'string') {
+    if (ingredientEditorSource(ingredient) === 'text' && typeof ingredient.textName === 'string') {
         return createRecipeIngredientValue({ textName: ingredient.textName, amountText: ingredient.amountText });
     }
-    if (ingredient.nestedRecipeId !== null && ingredient.nestedRecipeId !== undefined && ingredient.nestedRecipeId.length > 0) {
+    if (ingredientEditorSource(ingredient) === 'recipe') {
         return {
             food: null,
             productId: null,
             amount: ingredient.amount,
             foodName: ingredient.nestedRecipeName ?? labels.selectIngredient,
             nestedRecipe: buildNestedRecipe(ingredient),
-            nestedRecipeId: ingredient.nestedRecipeId,
+            nestedRecipeId: ingredient.nestedRecipeId ?? null,
             nestedRecipeName: ingredient.nestedRecipeName ?? null,
         };
     }

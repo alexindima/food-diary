@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Users.Contracts.Models;
 
@@ -12,7 +13,7 @@ public interface IAuthenticationTokenService {
 
     Task<IssuedAuthenticationTokens?> RotateFromPrincipalAsync(
         UserAuthenticationPrincipalModel principal,
-        Guid refreshSessionId,
+        RefreshTokenSessionId refreshSessionId,
         string expectedRefreshTokenHash,
         bool rememberMe,
         CancellationToken cancellationToken);

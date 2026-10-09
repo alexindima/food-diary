@@ -8,24 +8,24 @@ using FoodDiary.Modules.Users.Contracts.Models;
 namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.RegisterTelegramOperation;
 
 public sealed class RegisterTelegramOperationCommandHandler(ITelegramOperationStore store, ITelegramOperationPolicy policy,
-    IUserAuthenticationIdentityService identities, TimeProvider timeProvider) : ICommandHandler<RegisterTelegramOperationCommand, Result<Guid>> {
-    public async Task<Result<Guid>> Handle(RegisterTelegramOperationCommand command, CancellationToken cancellationToken) {
+    IUserAuthenticationIdentityService identities, TimeProvider timeProvider) : ICommandHandler<RegisterTelegramOperationCommand, Result<TelegramOperationId>> {
+    public async Task<Result<TelegramOperationId>> Handle(RegisterTelegramOperationCommand command, CancellationToken cancellationToken) {
         long updateId = command.UpdateId;
         long telegramUserId = command.TelegramUserId;
         string payload = command.Payload;
         if (!TelegramOperationChecks.IsEnabled(policy)) {
-            return Result.Failure<Guid>(TelegramOperationChecks.Unavailable);
+            return Result.Failure<TelegramOperationId>(TelegramOperationChecks.Unavailable);
         }
         if (updateId < 0 || telegramUserId <= 0 || !TelegramOperationChecks.ValidPayload(payload)) {
-            return Result.Failure<Guid>(TelegramOperationChecks.Invalid);
+            return Result.Failure<TelegramOperationId>(TelegramOperationChecks.Invalid);
         }
         Result<UserAuthenticationPrincipalModel> principal = await identities.AuthenticateTelegramAsync(telegramUserId,
             timeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false);
         if (principal.IsFailure) {
-            return Result.Failure<Guid>(principal.Error);
+            return Result.Failure<TelegramOperationId>(principal.Error);
         }
-        Guid? id = await store.RegisterAsync(policy.BotId, updateId, principal.Value.UserId.Value,
+        TelegramOperationId? id = await store.RegisterAsync(policy.BotId, updateId, principal.Value.UserId,
             principal.Value.SecurityVersion, payload, cancellationToken).ConfigureAwait(false);
-        return id.HasValue ? Result.Success(id.Value) : Result.Failure<Guid>(TelegramOperationChecks.Conflict);
+        return id.HasValue ? Result.Success(id.Value) : Result.Failure<TelegramOperationId>(TelegramOperationChecks.Conflict);
     }
 }

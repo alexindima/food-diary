@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Marketing.Domain.ValueObjects;
 using FoodDiary.Modules.Marketing.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Marketing.Domain.Entities.Tracking;
 using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
@@ -93,8 +95,8 @@ public sealed partial class MarketingAttributionEventRepository(DbSet<MarketingA
     }
 
     public async Task<MarketingAttributionEventRecord?> GetLandingAsync(
-        string anonymousId,
-        string sessionId,
+        AnonymousVisitorId anonymousId,
+        MarketingSessionId sessionId,
         DateTime sinceUtc,
         CancellationToken cancellationToken = default) {
         return await attributionEvents
@@ -110,7 +112,7 @@ public sealed partial class MarketingAttributionEventRepository(DbSet<MarketingA
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(Guid userId, CancellationToken cancellationToken = default) {
+    public async Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(UserId userId, CancellationToken cancellationToken = default) {
         return await attributionEvents
             .AsNoTracking()
             .Where(x => x.UserId == userId)
@@ -133,7 +135,7 @@ public sealed partial class MarketingAttributionEventRepository(DbSet<MarketingA
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public Task<bool> ExistsForUserAsync(Guid userId, string eventType, CancellationToken cancellationToken = default) {
+    public Task<bool> ExistsForUserAsync(UserId userId, string eventType, CancellationToken cancellationToken = default) {
         return attributionEvents
             .AsNoTracking()
             .AnyAsync(x =>

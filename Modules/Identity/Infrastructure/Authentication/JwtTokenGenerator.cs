@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Authentication.Contracts.Options;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
@@ -69,7 +70,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
         IReadOnlyCollection<string> roles,
         DateTime? expiresAtUtc,
         long securityVersion,
-        Guid refreshSessionId) =>
+        RefreshTokenSessionId refreshSessionId) =>
         GenerateToken(
             userId,
             email,
@@ -118,7 +119,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
         string? email,
         IReadOnlyCollection<string> roles,
         bool rememberMe = false,
-        Guid? refreshSessionId = null) =>
+        RefreshTokenSessionId? refreshSessionId = null) =>
         GenerateToken(
             userId,
             email,
@@ -131,7 +132,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
             rememberMe,
             refreshSessionId);
 
-    public (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? ValidateToken(string token) {
+    public (UserId userId, string? email, bool rememberMe, RefreshTokenSessionId? refreshSessionId)? ValidateToken(string token) {
         try {
             var tokenHandler = new JwtSecurityTokenHandler();
             tokenHandler.ValidateToken(token, new TokenValidationParameters {
@@ -159,8 +160,8 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
                 string.Equals(x.Value, "true", StringComparison.OrdinalIgnoreCase));
             string? refreshSessionIdClaim = jwtToken.Claims.FirstOrDefault(static x =>
                 string.Equals(x.Type, JwtClaimNames.RefreshSessionId, StringComparison.Ordinal))?.Value;
-            Guid? refreshSessionId = Guid.TryParse(refreshSessionIdClaim, out Guid parsedRefreshSessionId)
-                ? parsedRefreshSessionId
+            RefreshTokenSessionId? refreshSessionId = Guid.TryParse(refreshSessionIdClaim, out Guid parsedRefreshSessionId)
+                ? new RefreshTokenSessionId(parsedRefreshSessionId)
                 : null;
 
             return (new UserId(userIdValue), email, rememberMe, refreshSessionId);
@@ -179,7 +180,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
         JwtImpersonationContext? impersonation,
         long? securityVersion,
         bool rememberMe = false,
-        Guid? refreshSessionId = null) {
+        RefreshTokenSessionId? refreshSessionId = null) {
         var credentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim> {

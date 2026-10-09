@@ -23,18 +23,18 @@ public sealed class TelegramOperationHandlersTests {
     public async Task Register_BindsOperationToAuthenticatedOwnerAndGeneration(string outcome) {
         var user = User.CreateTelegram(456, "hash");
         UserAuthenticationPrincipalModel principal = UserAuthenticationIdentityService.ToAuthenticationPrincipal(user, DateTime.UtcNow);
-        var operation = Guid.NewGuid();
+        var operation = TelegramOperationId.New();
         bool missing = string.Equals(outcome, "missing", StringComparison.Ordinal);
         bool created = string.Equals(outcome, "created", StringComparison.Ordinal);
         _identities.AuthenticateTelegramAsync(456, Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(missing
             ? Result.Failure<UserAuthenticationPrincipalModel>(UserErrors.NotFound()) : Result.Success(principal));
-        _store.RegisterAsync(123, 1, user.Id.Value, principal.SecurityVersion, "payload", Arg.Any<CancellationToken>()).Returns(created ? operation : (Guid?)null);
+        _store.RegisterAsync(123, 1, user.Id, principal.SecurityVersion, "payload", Arg.Any<CancellationToken>()).Returns(created ? operation : (TelegramOperationId?)null);
 
-        Result<Guid> result = await CreateSender().Send(new RegisterTelegramOperationCommand(1, 456, "payload"), CancellationToken.None);
+        Result<TelegramOperationId> result = await CreateSender().Send(new RegisterTelegramOperationCommand(1, 456, "payload"), CancellationToken.None);
 
         Assert.Equal(created, result.IsSuccess);
         if (created) { Assert.Equal(operation, result.Value); }
-        await _store.Received(missing ? 0 : 1).RegisterAsync(123, 1, user.Id.Value, principal.SecurityVersion, "payload", Arg.Any<CancellationToken>());
+        await _store.Received(missing ? 0 : 1).RegisterAsync(123, 1, user.Id, principal.SecurityVersion, "payload", Arg.Any<CancellationToken>());
     }
 
     [Theory]
@@ -43,7 +43,7 @@ public sealed class TelegramOperationHandlersTests {
     public async Task Checkpoint_PropagatesAtomicStoreOutcome(bool stored) {
         var user = User.CreateTelegram(456, "hash");
         UserAuthenticationPrincipalModel principal = UserAuthenticationIdentityService.ToAuthenticationPrincipal(user, DateTime.UtcNow);
-        var lease = new TelegramOperationLease(Guid.NewGuid(), Guid.NewGuid(), user.Id.Value, principal.SecurityVersion, "private", Checkpoint: null, DateTime.UtcNow.AddMinutes(2));
+        var lease = new TelegramOperationLease(TelegramOperationId.New(), TelegramLeaseId.New(), user.Id, principal.SecurityVersion, "private", Checkpoint: null, DateTime.UtcNow.AddMinutes(2));
         _store.GetLeaseAsync(123, lease.OperationId, lease.LeaseId, Arg.Any<CancellationToken>()).Returns(lease);
         _identities.GetAuthenticationPrincipalAsync(user.Id, Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(Result.Success(principal));
         _store.CheckpointAsync(123, lease.OperationId, lease.LeaseId, "result", completed: true, Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(stored);
@@ -64,14 +64,14 @@ public sealed class TelegramOperationHandlersTests {
         _policy.OperationsEnabled.Returns(!string.Equals(scenario, "disabled", StringComparison.Ordinal));
         string payload = scenario switch { "empty" => "", "oversized" => new string('я', 16385), _ => "checkpoint" };
         DateTime next = scenario switch { "local-time" => DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified), "future" => DateTime.UtcNow.AddDays(2), _ => DateTime.UtcNow };
-        Result result = await CreateSender().Send(new CheckpointTelegramOperationCommand(Guid.NewGuid(), Guid.NewGuid(), payload, Completed: false, next), CancellationToken.None);
+        Result result = await CreateSender().Send(new CheckpointTelegramOperationCommand(TelegramOperationId.New(), TelegramLeaseId.New(), payload, Completed: false, next), CancellationToken.None);
         Assert.True(result.IsFailure);
         Assert.Empty(_store.ReceivedCalls());
     }
 
     [Fact]
     public async Task Register_RejectsInvalidInputBeforeAuthentication() {
-        Result<Guid> result = await CreateSender().Send(new RegisterTelegramOperationCommand(-1, 456, "payload"), CancellationToken.None);
+        Result<TelegramOperationId> result = await CreateSender().Send(new RegisterTelegramOperationCommand(-1, 456, "payload"), CancellationToken.None);
         Assert.Equal("Telegram.InvalidOperation", result.Error.Code);
         Assert.Empty(_identities.ReceivedCalls());
     }
@@ -89,8 +89,8 @@ public sealed class TelegramOperationHandlersTests {
     public async Task DisabledOperations_DoNotReadPayloadOrAuthenticate() {
         _policy.OperationsEnabled.Returns(returnThis: false);
         Assert.True((await CreateSender().Send(new RegisterTelegramOperationCommand(1, 456, "payload"), CancellationToken.None)).IsFailure);
-        Assert.True((await CreateSender().Send(new AcquireTelegramOperationCommand(Guid.NewGuid()), CancellationToken.None)).IsFailure);
-        await _store.DidNotReceive().AcquireAsync(Arg.Any<long>(), Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+        Assert.True((await CreateSender().Send(new AcquireTelegramOperationCommand(TelegramOperationId.New()), CancellationToken.None)).IsFailure);
+        await _store.DidNotReceive().AcquireAsync(Arg.Any<long>(), Arg.Any<TelegramOperationId>(), Arg.Any<CancellationToken>());
         await _identities.DidNotReceive().AuthenticateTelegramAsync(Arg.Any<long>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>());
     }
 
@@ -98,7 +98,7 @@ public sealed class TelegramOperationHandlersTests {
     public async Task StaleGeneration_CancelsOnlyStaleOperationAndDoesNotExposePayload() {
         var user = User.CreateTelegram(456, "hash");
         UserAuthenticationPrincipalModel principal = UserAuthenticationIdentityService.ToAuthenticationPrincipal(user, DateTime.UtcNow);
-        var lease = new TelegramOperationLease(Guid.NewGuid(), Guid.NewGuid(), user.Id.Value,
+        var lease = new TelegramOperationLease(TelegramOperationId.New(), TelegramLeaseId.New(), user.Id,
             principal.SecurityVersion + 1, "private", Checkpoint: null, DateTime.UtcNow.AddMinutes(2));
         _store.AcquireAsync(123, lease.OperationId, Arg.Any<CancellationToken>()).Returns(lease);
         _identities.GetAuthenticationPrincipalAsync(user.Id, Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(Result.Success(principal));
@@ -107,14 +107,14 @@ public sealed class TelegramOperationHandlersTests {
 
         Assert.True(result.IsFailure);
         await _store.Received(1).CancelOperationAsync(123, lease.OperationId, Arg.Any<CancellationToken>());
-        await _store.DidNotReceive().CancelUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+        await _store.DidNotReceive().CancelUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task ValidGeneration_ReturnsWorkWithoutChangingIdentity() {
         var user = User.CreateTelegram(456, "hash");
         UserAuthenticationPrincipalModel principal = UserAuthenticationIdentityService.ToAuthenticationPrincipal(user, DateTime.UtcNow);
-        var lease = new TelegramOperationLease(Guid.NewGuid(), Guid.NewGuid(), user.Id.Value,
+        var lease = new TelegramOperationLease(TelegramOperationId.New(), TelegramLeaseId.New(), user.Id,
             principal.SecurityVersion, "private", Checkpoint: null, DateTime.UtcNow.AddMinutes(2));
         _store.AcquireAsync(123, lease.OperationId, Arg.Any<CancellationToken>()).Returns(lease);
         _identities.GetAuthenticationPrincipalAsync(user.Id, Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(Result.Success(principal));
@@ -127,15 +127,15 @@ public sealed class TelegramOperationHandlersTests {
 
     [Fact]
     public async Task Checkpoint_AfterAccountBlocked_DoesNotPersistWork() {
-        var lease = new TelegramOperationLease(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), 1, "private", Checkpoint: null, DateTime.UtcNow.AddMinutes(2));
+        var lease = new TelegramOperationLease(TelegramOperationId.New(), TelegramLeaseId.New(), UserId.New(), 1, "private", Checkpoint: null, DateTime.UtcNow.AddMinutes(2));
         _store.GetLeaseAsync(123, lease.OperationId, lease.LeaseId, Arg.Any<CancellationToken>()).Returns(lease);
-        _identities.GetAuthenticationPrincipalAsync(new UserId(lease.UserId), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+        _identities.GetAuthenticationPrincipalAsync(lease.UserId, Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
             .Returns(Result.Failure<UserAuthenticationPrincipalModel>(UserErrors.NotFound()));
 
         Result result = await CreateSender().Send(new CheckpointTelegramOperationCommand(lease.OperationId, lease.LeaseId, "result", Completed: false, DateTime.UtcNow), CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        await _store.DidNotReceive().CheckpointAsync(Arg.Any<long>(), Arg.Any<Guid>(), Arg.Any<Guid>(), Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>());
+        await _store.DidNotReceive().CheckpointAsync(Arg.Any<long>(), Arg.Any<TelegramOperationId>(), Arg.Any<TelegramLeaseId>(), Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>());
     }
 
     private ISender CreateSender() => RequestTestSender.Create(

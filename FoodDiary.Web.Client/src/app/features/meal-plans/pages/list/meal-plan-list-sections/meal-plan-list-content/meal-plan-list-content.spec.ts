@@ -3,8 +3,12 @@ import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+const TEST_PLAN_DURATION_DAYS = 7;
+
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
+import { entityId } from '../../../../../../shared/models/semantics/entity-id';
 import type { MealPlanCardViewModel } from '../../../../lib/meal-plan-view.mapper';
+import { planDurationDaysFromStored } from '../../../../models/meal-plan-values';
 import { MealPlanListContentComponent } from './meal-plan-list-content';
 
 describe('MealPlanListContentComponent', () => {
@@ -70,7 +74,9 @@ describe('MealPlanListContentComponent', () => {
         ['ru', 11, 'MANY'],
         ['ru', 21, 'ONE'],
     ])('updates card plural labels for %s count %i', (language, count, category) => {
-        const fixture = createComponent({ plans: [{ ...createPlanCard(), durationDays: Number(count), totalRecipes: Number(count) }] });
+        const fixture = createComponent({
+            plans: [{ ...createPlanCard(), durationDays: planDurationDaysFromStored(Number(count)), totalRecipes: Number(count) }],
+        });
         TestBed.inject(TranslateService).use(String(language));
         fixture.detectChanges();
         const text = getElement(fixture).querySelector('.meal-plan-card__meta')?.textContent;
@@ -97,11 +103,11 @@ function getElement(fixture: ComponentFixture<MealPlanListContentComponent>): HT
 
 function createPlanCard(): MealPlanCardViewModel {
     return {
-        id: 'plan-1',
+        id: entityId<'meal-plan'>('plan-1'),
         name: 'Keto plan',
         description: null,
         dietType: 'Keto',
-        durationDays: 7,
+        durationDays: planDurationDaysFromStored(TEST_PLAN_DURATION_DAYS),
         targetCaloriesPerDay: 1800,
         isCurated: true,
         totalRecipes: 21,

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 
@@ -67,7 +68,6 @@ public readonly record struct UserProfileState(
         PushNotificationsEnabled,
         FastingPushNotificationsEnabled,
         SocialPushNotificationsEnabled,
-        FastingCheckInReminderHours,
-        FastingCheckInFollowUpReminderHours,
+        FastingReminderSchedule.FromStoredHours(FastingCheckInReminderHours, FastingCheckInFollowUpReminderHours),
         SurfaceStyle);
 }

@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1338,
     "ambiguousContracts": 29,
-    "consumerEdges": 10454,
-    "productionConsumerEdges": 5986,
-    "testConsumerEdges": 4468,
+    "consumerEdges": 10463,
+    "productionConsumerEdges": 5987,
+    "testConsumerEdges": 4476,
     "consumedContracts": 1338,
     "unconsumedContracts": 0
   },
@@ -42747,6 +42747,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetActiveSessionsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Queries/GetActiveSessions/GetActiveSessionsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/RefreshSessionSemanticBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
       "contract": "GetAdminAchievementDefinitionsQuery",
       "roles": [
         "Query"
@@ -77903,6 +77916,19 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Domain/ValueObjects/Ids/RefreshTokenSessionId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/Contracts/ValueObjects/Ids/ImageAssetId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -85812,6 +85838,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "IJwtTokenGenerator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/RefreshSessionSemanticBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "ILessonProgressTransactionRunner",
       "roles": [
         "Other"
@@ -87264,6 +87303,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMarketingAttributionEventReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Marketing/Application.Abstractions/Common/IMarketingAttributionEventReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/MarketingIdentitySemanticBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -108457,6 +108509,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "IRefreshTokenSessionWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/RefreshSessionSemanticBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "IRelayDeliveryTransport",
       "roles": [
         "Other"
@@ -119869,6 +119934,19 @@
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedIdentityContextIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "ITelegramOperationStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/IdentityOperationSemanticBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "ITelegramOperationStore",
@@ -134831,7 +134909,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Domain.Tests/MarketingAttributionEventInvariantTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 5
     },
     {
       "contract": "MarketingAttributionEvent",
@@ -134845,6 +134923,19 @@
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedMarketingContextCompositionIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "MarketingAttributionEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Marketing/Domain/Entities/Tracking/MarketingAttributionEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/MarketingIdentitySemanticBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "MarketingAttributionHttpRequest",
@@ -144100,6 +144191,19 @@
       "referenceCount": 7
     },
     {
+      "contract": "RecordMarketingAttributionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/MarketingIdentitySemanticBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "RecordPremiumConversionCommand",
       "roles": [
         "Command"
@@ -147298,6 +147402,19 @@
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthSessionLifecycleControllerTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "RevokeSessionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Commands/RevokeSession/RevokeSessionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/RefreshSessionSemanticBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "SaveCatalogMealPlanCommand",

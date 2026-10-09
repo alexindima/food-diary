@@ -14,6 +14,7 @@
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Identity.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Identity.Domain.csproj" />
     <ProjectReference Include="../../Admin/Contracts/FoodDiary.Modules.Admin.Contracts.csproj" />
+    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Users/Presentation.Contracts/FoodDiary.Modules.Users.Presentation.Contracts.csproj" />
     <ProjectReference Include="../../Users/Presentation.Mappings/FoodDiary.Modules.Users.Presentation.Mappings.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />

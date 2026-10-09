@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, form, required, validate } from '@angular/forms/signals';
 import { firstValueFrom } from 'rxjs';
 
+import { calendarDate } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import { CyclesService } from '../api/cycles.service';
 import type { MenstrualEpisodeFormModel } from './cycle-tracking.form-models';
@@ -56,8 +57,8 @@ export class CycleEpisodeFacade {
 
         this.state.episodeError.set(null);
         this.episodeModel.set({
-            startDate: toCycleDateKey(episode.startDate),
-            endDate: episode.endDate === undefined || episode.endDate === null ? null : toCycleDateKey(episode.endDate),
+            startDate: calendarDate(toCycleDateKey(episode.startDate)),
+            endDate: episode.endDate === undefined || episode.endDate === null ? null : calendarDate(toCycleDateKey(episode.endDate)),
         });
         this.state.editingEpisodeId.set(episodeId);
     }
@@ -97,8 +98,11 @@ export class CycleEpisodeFacade {
             const cycle = await firstValueFrom(
                 this.cyclesService
                     .updateMenstrualEpisode(currentCycle.id, entityId<'menstrual-episode'>(episodeId), {
-                        startDate: toCycleDateKey(formValue.startDate),
-                        endDate: formValue.endDate === null || formValue.endDate.length === 0 ? null : toCycleDateKey(formValue.endDate),
+                        startDate: calendarDate(toCycleDateKey(formValue.startDate)),
+                        endDate:
+                            formValue.endDate === null || formValue.endDate.length === 0
+                                ? null
+                                : calendarDate(toCycleDateKey(formValue.endDate)),
                     })
                     .pipe(takeUntilDestroyed(this.destroyRef)),
             );
@@ -124,8 +128,11 @@ export class CycleEpisodeFacade {
             const cycle = await firstValueFrom(
                 this.cyclesService
                     .updateMenstrualEpisode(currentCycle.id, entityId<'menstrual-episode'>(episodeId), {
-                        startDate: toCycleDateKey(episode.startDate),
-                        endDate: episode.endDate === undefined || episode.endDate === null ? null : toCycleDateKey(episode.endDate),
+                        startDate: calendarDate(toCycleDateKey(episode.startDate)),
+                        endDate:
+                            episode.endDate === undefined || episode.endDate === null
+                                ? null
+                                : calendarDate(toCycleDateKey(episode.endDate)),
                         excludedFromPredictions: !episode.excludedFromPredictions,
                     })
                     .pipe(takeUntilDestroyed(this.destroyRef)),

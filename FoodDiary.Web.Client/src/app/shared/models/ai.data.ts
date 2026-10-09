@@ -1,3 +1,4 @@
+import type { FoodRecognitionId, ImageAssetId } from './semantics/entity-id';
 export type FoodVisionItem = {
     nameEn: string;
     nameLocal?: string | null;
@@ -13,7 +14,7 @@ export type FoodVisionResponse = {
     items: FoodVisionItem[];
     notes?: string | null;
     productLabel?: ProductLabel | null;
-    recognition?: { id: string; nutrition: FoodNutritionResponse | null; errorCode: string | null };
+    recognition?: { id: FoodRecognitionId; nutrition: FoodNutritionResponse | null; errorCode: string | null };
 };
 
 export type ProductLabel = {
@@ -32,8 +33,8 @@ export type ProductLabel = {
 
 export type FoodVisionRequest = {
     isProductLabel?: boolean;
-    additionalImageAssetIds?: string[];
-    imageAssetId: string;
+    additionalImageAssetIds?: ImageAssetId[];
+    imageAssetId: ImageAssetId;
     description?: string | null;
 };
 

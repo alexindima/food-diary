@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
@@ -15,6 +16,6 @@ public interface IRefreshTokenSessionReadModelRepository {
 
     Task<bool> IsActiveAsync(
         UserId userId,
-        Guid sessionId,
+        RefreshTokenSessionId sessionId,
         CancellationToken cancellationToken = default);
 }

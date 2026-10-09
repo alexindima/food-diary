@@ -1,17 +1,18 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 
 public interface IRefreshTokenSessionWriteRepository {
-    Task<UserRefreshTokenSession?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<UserRefreshTokenSession?> GetByIdAsync(RefreshTokenSessionId id, CancellationToken cancellationToken = default);
 
     Task AddAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default);
 
     Task UpdateAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default);
 
     Task<bool> TryRotateAsync(
-        Guid id,
+        RefreshTokenSessionId id,
         UserId userId,
         string expectedRefreshTokenHash,
         string newRefreshTokenHash,
@@ -22,21 +23,21 @@ public interface IRefreshTokenSessionWriteRepository {
     Task RevokeAllAsync(UserId userId, DateTime revokedAtUtc, CancellationToken cancellationToken = default);
 
     Task RevokeByIdAsync(
-        Guid id,
+        RefreshTokenSessionId id,
         UserId userId,
         DateTime revokedAtUtc,
         CancellationToken cancellationToken = default);
 
     Task RevokeOtherByIdAsync(
-        Guid id,
+        RefreshTokenSessionId id,
         UserId userId,
-        Guid currentSessionId,
+        RefreshTokenSessionId currentSessionId,
         DateTime revokedAtUtc,
         CancellationToken cancellationToken = default);
 
     Task RevokeAllOtherAsync(
         UserId userId,
-        Guid currentSessionId,
+        RefreshTokenSessionId currentSessionId,
         DateTime revokedAtUtc,
         CancellationToken cancellationToken = default);
 }

@@ -22,5 +22,5 @@ internal static class BotApiMapper {
     internal static BotHydrationReceipt Water(HydrationOperationHttpResponse value) => new(value.OperationId, value.EntryId, value.TimestampUtc, value.AmountMl);
 
     internal static BotOperationLease Lease(TelegramOperationLeaseHttpResponse value) => new(
-        value.OperationId, value.LeaseId, value.UserId, value.SecurityVersion, value.Payload, value.Checkpoint, value.LeaseExpiresAtUtc, value.CreatedAtUtc);
+        new BotOperationId(value.OperationId), new BotLeaseId(value.LeaseId), new BotUserId(value.UserId), value.SecurityVersion, value.Payload, value.Checkpoint, value.LeaseExpiresAtUtc, value.CreatedAtUtc);
 }

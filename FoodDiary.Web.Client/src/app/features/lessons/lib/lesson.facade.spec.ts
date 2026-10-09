@@ -5,6 +5,7 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { LessonService } from '../api/lesson.service';
 import type { LessonDetail, LessonPage, LessonSummary } from '../models/lesson.data';
 import { LessonFacade } from './lesson.facade';
@@ -30,7 +31,7 @@ describe('LessonFacade', () => {
 
     it('distinguishes a missing lesson from a temporary loading failure', async () => {
         lessonService.getById.mockReturnValue(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.NotFound })));
-        facade.loadLesson('missing');
+        facade.loadLesson(entityId<'lesson'>('missing'));
         await waitForAsync(() => facade.hasDetailError());
         expect(facade.isLessonMissing()).toBe(true);
         lessonService.getById.mockReturnValue(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable })));
@@ -42,7 +43,7 @@ describe('LessonFacade', () => {
 
     it('exposes detail loading failure and recovers the selected lesson', async () => {
         lessonService.getById.mockReturnValue(throwError(() => new Error('Unavailable')));
-        facade.loadLesson('lesson-1');
+        facade.loadLesson(entityId<'lesson'>('lesson-1'));
         await waitForAsync(() => facade.hasDetailError());
         expect(facade.hasDetailError()).toBe(true);
         expect(facade.selectedLesson()).toBeNull();
@@ -54,12 +55,12 @@ describe('LessonFacade', () => {
     });
 
     it('prevents duplicate read requests and retains unread state on failure until retry succeeds', async () => {
-        facade.loadLesson('lesson-1');
+        facade.loadLesson(entityId<'lesson'>('lesson-1'));
         await waitForAsync(() => facade.selectedLesson() !== null);
         const request = new Subject<void>();
         lessonService.markRead.mockReturnValue(request);
-        facade.markRead('lesson-1');
-        facade.markRead('lesson-1');
+        facade.markRead(entityId<'lesson'>('lesson-1'));
+        facade.markRead(entityId<'lesson'>('lesson-1'));
         expect(lessonService.markRead).toHaveBeenCalledTimes(1);
         expect(facade.isMarkingRead()).toBe(true);
         request.error(new Error('Unavailable'));
@@ -68,7 +69,7 @@ describe('LessonFacade', () => {
         expect(facade.selectedLesson()?.isRead).toBe(false);
 
         lessonService.markRead.mockReturnValue(of(undefined));
-        facade.markRead('lesson-1');
+        facade.markRead(entityId<'lesson'>('lesson-1'));
         expect(facade.markReadFailed()).toBe(false);
         expect(facade.selectedLesson()?.isRead).toBe(true);
         expect(facade.isMarkingRead()).toBe(false);
@@ -145,7 +146,7 @@ describe('LessonFacade catalogue', () => {
     it('loads selected lesson detail and returns null for empty selection', async () => {
         expect(facade.selectedLesson()).toBeNull();
 
-        facade.loadLesson('lesson-1');
+        facade.loadLesson(entityId<'lesson'>('lesson-1'));
         await waitForAsync(() => facade.selectedLesson() !== null);
 
         expect(lessonService.getById).toHaveBeenCalledWith('lesson-1');
@@ -153,10 +154,10 @@ describe('LessonFacade catalogue', () => {
     });
 
     it('marks loaded lessons and selected lesson as read after service succeeds', async () => {
-        facade.loadLesson('lesson-1');
+        facade.loadLesson(entityId<'lesson'>('lesson-1'));
         await waitForAsync(() => facade.selectedLesson() !== null);
 
-        facade.markRead('lesson-1');
+        facade.markRead(entityId<'lesson'>('lesson-1'));
         await waitForAsync(() => facade.selectedLesson()?.isRead === true);
 
         expect(lessonService.markRead).toHaveBeenCalledWith('lesson-1');
@@ -181,7 +182,7 @@ describe('LessonFacade refresh state', () => {
 
         nextPage.next({
             ...createPage(),
-            items: [{ ...createSummary(), id: 'lesson-2', category: 'Micronutrients' }],
+            items: [{ ...createSummary(), id: entityId<'lesson'>('lesson-2'), category: 'Micronutrients' }],
             availableCategories: ['Macronutrients', 'Micronutrients'],
         });
         nextPage.complete();
@@ -228,7 +229,7 @@ async function waitForAsync(predicate: () => boolean): Promise<void> {
 
 function createSummary(): LessonSummary {
     return {
-        id: 'lesson-1',
+        id: entityId<'lesson'>('lesson-1'),
         title: 'Macros',
         summary: 'Macro basics',
         category: 'Macronutrients',

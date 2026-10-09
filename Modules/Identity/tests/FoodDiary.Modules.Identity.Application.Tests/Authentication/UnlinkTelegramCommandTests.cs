@@ -71,11 +71,11 @@ public sealed class UnlinkTelegramCommandTests {
 
         Assert.Equal(succeeds, result.IsSuccess);
         await accounts.Received(succeeds || !accountAllowsUnlink ? 1 : 0).UnlinkAsync(Arg.Any<UserId>(), Arg.Any<long>(), Arg.Any<long>(), Arg.Any<CancellationToken>());
-        await operations.DidNotReceive().CancelUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+        await operations.DidNotReceive().CancelUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>());
         if (succeeds) {
             Assert.NotNull(afterCommit);
             await afterCommit(CancellationToken.None);
-            await operations.Received(1).CancelUserAsync(user.Id.Value, CancellationToken.None);
+            await operations.Received(1).CancelUserAsync(user.Id, CancellationToken.None);
         } else {
             Assert.Null(afterCommit);
         }

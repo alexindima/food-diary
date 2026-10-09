@@ -134,7 +134,9 @@ public partial class UsersFeatureTests {
         user.UpdateActivity(ActivityLevel.High, stepGoal: 9000, hydrationGoal: 2.4);
         user.UpdateGoals(new UserGoalUpdate(2200, 130, 70, 240, 32, 2.5, DesiredWeightKg.FromOptional(78), DesiredWaistCm.FromOptional(84), CalorieCyclingEnabled: true, 2100, 2150, 2200, 2250, 2300, 2350, 2050));
         string layoutJson = JsonSerializer.Serialize(new DashboardLayoutModel(["meals", "weight"], ["summary"]));
-        user.UpdatePreferences(new UserPreferenceUpdate(layoutJson, "ru", "dark", "modern", PushNotificationsEnabled: true, FastingPushNotificationsEnabled: false, SocialPushNotificationsEnabled: false, 10, 18));
+        user.UpdatePreferences(new UserPreferenceUpdate(new FastingReminderDelayUpdate(FirstHours: 10, FollowUpHours: 18),
+            layoutJson, "ru", "dark", "modern", PushNotificationsEnabled: true,
+            FastingPushNotificationsEnabled: false, SocialPushNotificationsEnabled: false));
         user.ReplaceRoles([Role.Create(RoleNames.Admin), Role.Create(RoleNames.Support)]);
         user.SetEmailConfirmed(isConfirmed: true);
         user.LinkTelegram(123456);

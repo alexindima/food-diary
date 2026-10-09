@@ -6,6 +6,9 @@ import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
+import { decodeNotificationKind } from '../../../shared/models/notification-kind';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { type NotificationItem, NotificationService } from '../../../shared/notifications/notification.service';
 import { NotificationsDialogComponent } from './notifications-dialog';
 
@@ -55,6 +58,21 @@ function setupNotificationsDialog(notifications: NotificationItem[]): Notificati
 }
 
 describe('NotificationsDialogComponent invitations', () => {
+    it('keeps a future notification generic and follows its server target rather than its reference', () => {
+        const notification: NotificationItem = {
+            ...createInvitationNotification(),
+            type: decodeNotificationKind('FutureNotification'),
+            targetUrl: '/profile?from=notice',
+            referenceId: 'inv-1',
+        };
+        const { component, fixture, notificationService, router } = setupNotificationsDialog([notification]);
+        expect((component as NotificationsDialogComponentTestApi).notificationItems()[0].icon).toBe('notifications');
+        const host = fixture.nativeElement as HTMLElement;
+        host.querySelector<HTMLButtonElement>('.notifications-dialog__item')?.click();
+        expect(notificationService.markAsRead).toHaveBeenCalledWith('n1');
+        expect(router.navigateByUrl).toHaveBeenCalledWith('/profile?from=notice');
+    });
+
     it('renders a highlighted dietologist invitation card', () => {
         const { component, fixture } = setupNotificationsDialog([createInvitationNotification()]);
 
@@ -112,39 +130,39 @@ describe('NotificationsDialogComponent recommendations', () => {
 
 function createInvitationNotification(): NotificationItem {
     return {
-        id: 'n1',
-        type: 'DietologistInvitationReceived',
+        id: entityId<'notification'>('n1'),
+        type: decodeNotificationKind('DietologistInvitationReceived'),
         title: 'Dietologist invitation',
         body: 'Client invited you',
         targetUrl: '/dietologist-invitations/inv-1',
         referenceId: 'inv-1',
         isRead: false,
-        createdAtUtc: '2026-04-15T00:00:00Z',
+        createdAtUtc: utcInstant('2026-04-15T00:00:00Z'),
     };
 }
 
 function createPasswordSetupNotification(): NotificationItem {
     return {
-        id: 'n2',
-        type: 'PasswordSetupSuggested',
+        id: entityId<'notification'>('n2'),
+        type: decodeNotificationKind('PasswordSetupSuggested'),
         title: 'Add a backup password',
         body: 'Set a password to keep a backup sign-in method besides Google.',
         targetUrl: '/profile?intent=set-password',
         referenceId: 'password-setup:user-1',
         isRead: false,
-        createdAtUtc: '2026-04-15T00:00:00Z',
+        createdAtUtc: utcInstant('2026-04-15T00:00:00Z'),
     };
 }
 
 function createRecommendationNotification(): NotificationItem {
     return {
-        id: 'n3',
-        type: 'NewRecommendation',
+        id: entityId<'notification'>('n3'),
+        type: decodeNotificationKind('NewRecommendation'),
         title: 'New recommendation',
         body: null,
         targetUrl: '/recommendations?recommendationId=rec-1',
         referenceId: 'rec-1',
         isRead: false,
-        createdAtUtc: '2026-04-15T00:00:00Z',
+        createdAtUtc: utcInstant('2026-04-15T00:00:00Z'),
     };
 }

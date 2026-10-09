@@ -18,8 +18,8 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             try {
                 using HttpClient http = clients.CreateClient(BotOperationClient.ClientName);
                 var operations = new BotOperationClient(http, options);
-                IReadOnlyList<Guid> ready = await operations.ListReadyAsync(stoppingToken).ConfigureAwait(false);
-                foreach (Guid id in ready) {
+                IReadOnlyList<BotOperationId> ready = await operations.ListReadyAsync(stoppingToken).ConfigureAwait(false);
+                foreach (BotOperationId id in ready) {
                     try {
                         using var deadline = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
                         deadline.CancelAfter(TimeSpan.FromSeconds(90));
@@ -39,7 +39,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         }
     }
 
-    internal async Task ProcessAsync(BotOperationClient operations, Guid id, CancellationToken cancellationToken) {
+    internal async Task ProcessAsync(BotOperationClient operations, BotOperationId id, CancellationToken cancellationToken) {
         BotOperationLease? lease = await operations.AcquireAsync(id, cancellationToken).ConfigureAwait(false);
         if (lease is null) {
             return;
@@ -127,7 +127,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         }
     }
 
-    private async Task<BotPhotoCheckpoint> AdvanceOperationAsync(BotDiaryClient diary, string token, Guid operationId,
+    private async Task<BotPhotoCheckpoint> AdvanceOperationAsync(BotDiaryClient diary, string token, BotOperationId operationId,
         BotIncomingOperation incoming, BotPhotoCheckpoint checkpoint, CancellationToken cancellationToken) {
         if (string.Equals(incoming.Kind, "statistics", StringComparison.Ordinal)) {
             BotDiaryStatistics statistics = await diary.GetStatisticsAsync(token,
@@ -148,7 +148,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         return await AdvanceImageAsync(diary, token, operationId, incoming, checkpoint, cancellationToken).ConfigureAwait(false);
     }
 
-    private async Task<BotPhotoCheckpoint> AdvanceImageAsync(BotDiaryClient diary, string token, Guid operationId,
+    private async Task<BotPhotoCheckpoint> AdvanceImageAsync(BotDiaryClient diary, string token, BotOperationId operationId,
         BotIncomingOperation incoming, BotPhotoCheckpoint checkpoint, CancellationToken cancellationToken) {
         var downloader = new TelegramImageDownloader(bot);
         switch (checkpoint.Stage) {
@@ -177,7 +177,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             case "image-ready": {
                     Guid imageId = checkpoint.ImageAssetId ?? throw new InvalidDataException("Missing image checkpoint.");
                     BotRecognitionJob job = await diary.StartRecognitionAsync(token, operationId, imageId, incoming.Caption, cancellationToken).ConfigureAwait(false);
-                    if (job.Id != operationId || job.ImageAssetId != imageId) {
+                    if (job.Id != operationId.Value || job.ImageAssetId != imageId) {
                         throw new InvalidDataException("Recognition identity mismatch.");
                     }
                     return checkpoint with { Stage = "recognizing", RecognitionId = job.Id };

@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Marketing.Domain.ValueObjects;
 using FoodDiary.Modules.Marketing.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Marketing.Domain.Entities.Tracking;
 using Microsoft.EntityFrameworkCore;
@@ -13,15 +15,21 @@ internal sealed class MarketingAttributionEventConfiguration : IEntityTypeConfig
                 value => new MarketingAttributionEventId(value))
             .ValueGeneratedNever();
 
+        builder.Property(e => e.UserId)
+            .HasConversion(id => id.HasValue ? id.Value.Value : (Guid?)null,
+                value => value.HasValue ? new UserId(value.Value) : (UserId?)null);
+
         builder.Property(e => e.EventType)
             .IsRequired()
             .HasMaxLength(32);
 
         builder.Property(e => e.AnonymousId)
+            .HasConversion(id => id.Value, value => new AnonymousVisitorId(value))
             .IsRequired()
             .HasMaxLength(96);
 
         builder.Property(e => e.SessionId)
+            .HasConversion(id => id.Value, value => new MarketingSessionId(value))
             .IsRequired()
             .HasMaxLength(96);
 

@@ -30,7 +30,7 @@ public sealed class UserIndependentStateIntegrationTests(PostgresDatabaseFixture
         User preferencesUser = await GetUserAsync(preferences);
         User nutritionUser = await GetUserAsync(nutrition);
         User authenticationUser = await GetUserAsync(authentication);
-        preferencesUser.UpdatePreferences(new UserPreferenceUpdate(Theme: "dark"));
+        preferencesUser.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, Theme: "dark"));
         nutritionUser.UpdateGoals(dailyCalorieTarget: 2100);
         authenticationUser.RecordAuthenticationActivity(DateTime.UtcNow);
         await authentication.ServiceProvider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
@@ -61,8 +61,8 @@ public sealed class UserIndependentStateIntegrationTests(PostgresDatabaseFixture
             firstUser.UpdateGoals(dailyCalorieTarget: 2000);
             secondUser.UpdateGoals(dailyCalorieTarget: 2200);
         } else {
-            firstUser.UpdatePreferences(new UserPreferenceUpdate(Theme: "dark"));
-            secondUser.UpdatePreferences(new UserPreferenceUpdate(Theme: "leaf"));
+            firstUser.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, Theme: "dark"));
+            secondUser.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, Theme: "leaf"));
         }
         await first.ServiceProvider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
         await Assert.ThrowsAsync<DbUpdateConcurrencyException>(() => second.ServiceProvider.GetRequiredService<IUnitOfWork>().SaveChangesAsync());
@@ -80,7 +80,7 @@ public sealed class UserIndependentStateIntegrationTests(PostgresDatabaseFixture
         await using ServiceProvider provider = CreateProvider(seed.Database.GetConnectionString()!);
         await using AsyncServiceScope stale = provider.CreateAsyncScope();
         User staleUser = await GetUserAsync(stale);
-        staleUser.UpdatePreferences(new UserPreferenceUpdate(Theme: "dark"));
+        staleUser.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, Theme: "dark"));
         switch (revocation) {
             case "deleted": user.MarkDeleted(DateTime.UtcNow); break;
             case "inactive": user.Deactivate(); break;

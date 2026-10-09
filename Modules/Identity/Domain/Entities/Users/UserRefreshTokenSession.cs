@@ -1,10 +1,11 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Identity.Domain.Entities.Users;
 
-public sealed class UserRefreshTokenSession : Entity<Guid> {
+public sealed class UserRefreshTokenSession : Entity<RefreshTokenSessionId> {
     public UserId UserId { get; private set; }
     public string RefreshTokenHash { get; private set; } = string.Empty;
     public bool RememberMe { get; private set; }
@@ -21,7 +22,7 @@ public sealed class UserRefreshTokenSession : Entity<Guid> {
     }
 
     public static UserRefreshTokenSession Create(
-        Guid id,
+        RefreshTokenSessionId id,
         UserId userId,
         string refreshTokenHash,
         bool rememberMe,
@@ -29,7 +30,7 @@ public sealed class UserRefreshTokenSession : Entity<Guid> {
         string? ipAddress,
         string? userAgent,
         DateTime nowUtc) {
-        if (id == Guid.Empty) {
+        if (id == RefreshTokenSessionId.Empty) {
             throw new ArgumentException("Session id must not be empty.", nameof(id));
         }
 

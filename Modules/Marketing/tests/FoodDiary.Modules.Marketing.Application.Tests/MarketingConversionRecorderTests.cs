@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Marketing.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Marketing.Application.Commands.RecordPremiumConversion;
 using FoodDiary.Modules.Marketing.Contracts.Commands.RecordPremiumConversion;
@@ -43,9 +45,9 @@ public sealed class MarketingConversionRecorderTests {
             new MarketingAttributionEventRecord(
                 "signup_completed",
                 Now.AddMinutes(-5),
-                userId,
-                "anon-1",
-                "session-1",
+                new UserId(userId),
+                new AnonymousVisitorId("anon-1"),
+                new MarketingSessionId("session-1"),
                 "/?utm_source=telegram",
                 "t.me",
                 "telegram",
@@ -60,13 +62,13 @@ public sealed class MarketingConversionRecorderTests {
 
         MarketingAttributionEventRecord premiumEvent = Assert.Single(repository.Records, record =>
             string.Equals(record.EventType, "premium_started", StringComparison.Ordinal));
-        Assert.Equal(userId, premiumEvent.UserId);
+        Assert.Equal(userId, premiumEvent.UserId?.Value);
         Assert.Equal(Now, premiumEvent.OccurredAtUtc);
         Assert.Equal("telegram", premiumEvent.UtmSource);
         Assert.Equal("social", premiumEvent.UtmMedium);
         Assert.Equal("2026_07_launch", premiumEvent.UtmCampaign);
-        Assert.Equal("anon-1", premiumEvent.AnonymousId);
-        Assert.Equal("session-1", premiumEvent.SessionId);
+        Assert.Equal("anon-1", premiumEvent.AnonymousId.Value);
+        Assert.Equal("session-1", premiumEvent.SessionId.Value);
     }
 
     [Fact]
@@ -76,9 +78,9 @@ public sealed class MarketingConversionRecorderTests {
             new MarketingAttributionEventRecord(
                 "premium_started",
                 Now.AddMinutes(-1),
-                userId,
-                "anon-1",
-                "session-1",
+                new UserId(userId),
+                new AnonymousVisitorId("anon-1"),
+                new MarketingSessionId("session-1"),
                 "/",
                 ReferrerHost: null,
                 UtmSource: null,
@@ -117,10 +119,10 @@ public sealed class MarketingConversionRecorderTests {
         public Task<MarketingAttributionSummaryRecord> GetSummaryAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<MarketingAttributionEventRecord?> GetLandingAsync(string anonymousId, string sessionId, DateTime sinceUtc, CancellationToken cancellationToken = default) =>
+        public Task<MarketingAttributionEventRecord?> GetLandingAsync(AnonymousVisitorId anonymousId, MarketingSessionId sessionId, DateTime sinceUtc, CancellationToken cancellationToken = default) =>
             Task.FromResult<MarketingAttributionEventRecord?>(null);
 
-        public Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(Guid userId, CancellationToken cancellationToken = default) {
+        public Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(UserId userId, CancellationToken cancellationToken = default) {
             GetLatestForUserCallCount++;
             return Task.FromResult(Records
                 .Where(record => record.UserId == userId)
@@ -128,7 +130,7 @@ public sealed class MarketingConversionRecorderTests {
                 .FirstOrDefault());
         }
 
-        public Task<bool> ExistsForUserAsync(Guid userId, string eventType, CancellationToken cancellationToken = default) {
+        public Task<bool> ExistsForUserAsync(UserId userId, string eventType, CancellationToken cancellationToken = default) {
             ExistsForUserCallCount++;
             return Task.FromResult(Records.Any(record =>
                 record.UserId == userId &&

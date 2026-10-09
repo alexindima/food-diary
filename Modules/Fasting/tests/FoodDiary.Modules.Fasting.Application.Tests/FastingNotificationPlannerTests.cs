@@ -3,6 +3,7 @@ using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Modules.Fasting.Application.Services;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using System.Globalization;
 
 namespace FoodDiary.Modules.Fasting.Application.Tests;
@@ -10,6 +11,22 @@ namespace FoodDiary.Modules.Fasting.Application.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class FastingNotificationPlannerTests {
     private static readonly DateTime FixedNow = new(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc);
+
+    [Theory]
+    [InlineData(20, 12)]
+    [InlineData(12, 12)]
+    [InlineData(0, 20)]
+    public void CheckInReminderPlanner_PreservesStoredLegacyReferenceOrderAndDeduplication(int first, int followUp) {
+        var user = User.Create("planner-legacy@example.com", "hash");
+        var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.Fast36, 36, FixedNow.AddDays(-1));
+        var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay,
+            FixedNow.AddDays(-1), sequenceNumber: 1, targetHours: 36);
+        IReadOnlyList<string> actual = FastingCheckInReminderPlanner.GetDueReferenceIds(occurrence, checkIns: null, FixedNow,
+            FastingReminderSchedule.FromStoredHours(first, followUp));
+        string[] expected = [.. new[] { first, followUp }.Distinct().Order().Select(hour => string.Create(
+            CultureInfo.InvariantCulture, $"fasting-check-in-reminder:{occurrence.Id.Value}:{hour}"))];
+        Assert.Equal(expected, actual);
+    }
 
     [Fact]
     public void CheckInReminderPlanner_WhenNoCheckInAndThresholdElapsed_ReturnsDueReferenceIds() {
@@ -27,7 +44,7 @@ public sealed class FastingNotificationPlannerTests {
         IReadOnlyList<string> referenceIds = FastingCheckInReminderPlanner.GetDueReferenceIds(
             occurrence,
             checkIns: null,
-            FixedNow, user.FastingCheckInReminderHours, user.FastingCheckInFollowUpReminderHours);
+            FixedNow, FastingReminderSchedule.FromStoredHours(user.FastingCheckInReminderHours, user.FastingCheckInFollowUpReminderHours));
 
         Assert.Equal(
             [
@@ -54,7 +71,7 @@ public sealed class FastingNotificationPlannerTests {
         IReadOnlyList<string> referenceIds = FastingCheckInReminderPlanner.GetDueReferenceIds(
             occurrence,
             [checkIn],
-            FixedNow, user.FastingCheckInReminderHours, user.FastingCheckInFollowUpReminderHours);
+            FixedNow, FastingReminderSchedule.FromStoredHours(user.FastingCheckInReminderHours, user.FastingCheckInFollowUpReminderHours));
 
         Assert.Empty(referenceIds);
     }
@@ -75,7 +92,7 @@ public sealed class FastingNotificationPlannerTests {
         IReadOnlyList<string> referenceIds = FastingCheckInReminderPlanner.GetDueReferenceIds(
             occurrence,
             checkIns: null,
-            FixedNow, user.FastingCheckInReminderHours, user.FastingCheckInFollowUpReminderHours);
+            FixedNow, FastingReminderSchedule.FromStoredHours(user.FastingCheckInReminderHours, user.FastingCheckInFollowUpReminderHours));
 
         Assert.Empty(referenceIds);
     }

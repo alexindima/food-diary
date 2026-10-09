@@ -1,6 +1,9 @@
 import type { FoodNutritionResponse, FoodVisionResponse, ProductLabel } from '../../models/ai.data';
 import type { FoodRecognitionJob } from '../../models/food-recognition.data';
 import type { RecipeImportResult } from '../../models/recipe-import.data';
+import { utcInstant } from '../../models/semantics/date-value';
+import { entityId } from '../../models/semantics/entity-id';
+import { publicImageUrl } from '../../models/semantics/image-location';
 import type { FoodNutritionHttpResponse } from './generated/model/food-nutrition-http-response';
 import type { FoodRecognitionJobHttpResponse } from './generated/model/food-recognition-job-http-response';
 import type { FoodVisionHttpResponse } from './generated/model/food-vision-http-response';
@@ -38,8 +41,16 @@ export function recognitionJobFromSdk(response: FoodRecognitionJobHttpResponse):
     const value = requireSdkFields(response, ['id', 'imageAssetId', 'imageUrl', 'status', 'createdOnUtc', 'updatedOnUtc']);
     return {
         ...sdkNullableFields(value, ['description', 'errorCode', 'nutritionErrorCode']),
+        id: entityId<'food-recognition'>(value.id),
+        imageAssetId: entityId<'image-asset'>(value.imageAssetId),
+        imageUrl: publicImageUrl(value.imageUrl),
+        createdOnUtc: utcInstant(value.createdOnUtc),
+        updatedOnUtc: utcInstant(value.updatedOnUtc),
         status: sdkEnum(value.status, ['Queued', 'Running', 'Succeeded', 'Failed'] as const),
-        additionalImages: value.additionalImages?.map(image => requireSdkFields(image, ['imageAssetId', 'imageUrl'])),
+        additionalImages: value.additionalImages?.map(responseImage => {
+            const image = requireSdkFields(responseImage, ['imageAssetId', 'imageUrl']);
+            return { ...image, imageAssetId: entityId<'image-asset'>(image.imageAssetId), imageUrl: publicImageUrl(image.imageUrl) };
+        }),
         vision: sdkOptional(value.vision, foodVisionFromSdk),
         nutrition: sdkOptional(value.nutrition, foodNutritionFromSdk),
     };

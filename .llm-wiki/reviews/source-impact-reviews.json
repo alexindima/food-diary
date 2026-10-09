@@ -91,13 +91,13 @@
       "sources": [
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "a91cbacfeb58a0f6b069e7c81cbf1608baecc20b8d8f8f75e4cd43d7655cafb4"
+          "sha256": "6b3dae6223782d01e663b5187152a6cf7bbd4345020e192c5b03aaaa87f74c81"
         }
       ],
-      "reason": "Reviewed refreshed source instructions and PRIMITIVE_TYPES against all14 implementations, explicit legacy/raw boundaries and current project ownership; admin catalog decoded sources keep wire file data scalar.",
+      "reason": "The explicit owner-contract edges in ProjectDependencyMatrixTests were reviewed. 2244 architecture tests and current architecture-health (1666 production/1511 test edges) confirm allowed directions, closure and cycles. Typed identities/settings remain in existing owners; runtime shape, transaction and composition rules on this page remain current. Durable scalar boundaries are in PRIMITIVE_TYPES.md.",
       "baseRef": "HEAD",
-      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
-      "reviewedAtUtc": "2026-10-08T19:37:49.4216613Z"
+      "gitHead": "4661284988a35a76c243cfcbcd9e748dc17811e5",
+      "reviewedAtUtc": "2026-10-09T11:35:50.689581Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -142,7 +142,7 @@
       "reason": "Reviewed root instructions, frontend boundaries and knowledge provenance. The new scalar RecipeCommunity guide and shared frontend semantic model folder obey feature/layer ownership. Updated PRIMITIVE_TYPES.md and scoped guides document all eight implementations and compatibility; compiled navigation remains subordinate to current source and tests.",
       "baseRef": "HEAD",
       "gitHead": "429cf221cccfbe0cf000a221467fad327fc13cf1",
-      "reviewedAtUtc": "2026-10-08T13:20:21.8031140Z"
+      "reviewedAtUtc": "2026-10-08T13:20:21.803114Z"
     },
     {
       "pageId": "system.quality-index",
@@ -229,18 +229,14 @@
       "pageSha256": "20d3e15e2bb4fde9b589aafd6671e66c2285642e4cc94f00ffa9e46457598140",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "02115e85b52f8b53beb6c571be0a4722ce642ce88459c9700fe2aedfa9258418"
-        },
-        {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "a91cbacfeb58a0f6b069e7c81cbf1608baecc20b8d8f8f75e4cd43d7655cafb4"
+          "sha256": "6b3dae6223782d01e663b5187152a6cf7bbd4345020e192c5b03aaaa87f74c81"
         }
       ],
-      "reason": "Reviewed generated module catalog contract and domain navigation against final production consumer adoption, private immutable constructors and passing6107 unit2214 architecture324 central PostgreSQL checks; test references are navigation rather than execution evidence.",
+      "reason": "The updated matrix records intentional direct semantic owner references and new guard tests. Current graph and all 2244 architecture checks pass; provider/schema and compiler-negative proof accompany ownership changes. No removal candidates were acted on. These source review and drift instructions remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
-      "reviewedAtUtc": "2026-10-08T19:37:51.1555264Z"
+      "gitHead": "4661284988a35a76c243cfcbcd9e748dc17811e5",
+      "reviewedAtUtc": "2026-10-09T11:35:51.9288462Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -249,13 +245,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "0c8f96db9ea1d72ed26da55cc893dd3cbd263ced2861e18e88b1c1bf5f16a622"
+          "sha256": "13a5d28d3a0da6451481057d022479084a5f6294c6d2ddd1017e34c7c17c4979"
         }
       ],
-      "reason": "Reviewed owner typed boundaries against actual unchanged snapshots and SDK outputs; four real-host OpenAPI tests and full frontend SDK verification passed. Scalar transport/storage shapes remain explicit adapters.",
+      "reason": "Rebuilt backend contract index reflects typed internal producer/consumer roles. Reviewed all ten requirement mappings and preserved raw DTO/HTTP and narrow consumer adapters; SDK and actual owner/consumer/provider tests pass. This workflow still requires verification in current sources, matching the evidence in state.json.",
       "baseRef": "HEAD",
-      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
-      "reviewedAtUtc": "2026-10-08T19:37:52.1034578Z"
+      "gitHead": "4661284988a35a76c243cfcbcd9e748dc17811e5",
+      "reviewedAtUtc": "2026-10-09T11:35:51.733398Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -826,13 +822,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "492731ea645e544585c8e9f6bcf4694b1e45b628448363bb832f00b0d8e86e67"
+          "sha256": "691aa7f68ba103952586d16da34c36b526c0d275dcc3824ade9ddc7db299de72"
         }
       ],
-      "reason": "Reviewed current source and owner/provider regressions: existing health identity financial access scopes, retention, deletion, leases and provider destinations remain intact. No credentials or live user data were used in browser fixtures.",
+      "reason": "Rebuilt sensitivity index identifies the same identity/health/attribution lifecycle. This refactor does not add storage, sharing, retention, deletion or sensitive diagnostics; date encodings and visitor/session lifetimes remain. Provider and browser evidence supports bounded reviewed claims; this navigation workflow remains current.",
       "baseRef": "HEAD",
-      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
-      "reviewedAtUtc": "2026-10-08T19:37:53.9130063Z"
+      "gitHead": "4661284988a35a76c243cfcbcd9e748dc17811e5",
+      "reviewedAtUtc": "2026-10-09T11:35:52.1618393Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -871,13 +867,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fe6adc9ff2f7279dd9d9e826cb8daf6180fab695f713a076cbe63d79f7b75832"
+          "sha256": "aff6dc7094f1e0e354ff13a097ba0e18491cdb36c8af16803a3c5f01a06609e8"
         }
       ],
-      "reason": "Reviewed generated module catalog contract and domain navigation against final production consumer adoption, private immutable constructors and passing6107 unit2214 architecture324 central PostgreSQL checks; test references are navigation rather than execution evidence.",
+      "reason": "Rebuilt quality index includes new semantic constructors/guards and test references. Actual full frontend verification, selected backend tests, corrected full architecture suite, focused provider/HTTP and browser interactions were executed. No claim equates static test-name references with execution coverage. The workflow remains current.",
       "baseRef": "HEAD",
-      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
-      "reviewedAtUtc": "2026-10-08T19:37:54.6726561Z"
+      "gitHead": "4661284988a35a76c243cfcbcd9e748dc17811e5",
+      "reviewedAtUtc": "2026-10-09T11:35:50.4734771Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -958,13 +954,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "5658b3371e867dbaef37d8fd8c6aeb8af8908d87931862945259ae249f255119"
+          "sha256": "1a2ef6a51023baff6eee0d183c5587a0b652402cae928d7922a5d6344211ec33"
         }
       ],
-      "reason": "Reviewed refreshed source instructions and PRIMITIVE_TYPES against all14 implementations, explicit legacy/raw boundaries and current project ownership; admin catalog decoded sources keep wire file data scalar.",
+      "reason": "Rebuilt topology lists existing clients/jobs/workers; no external endpoint, scheduling or delivery behavior changes. Telegram lease/checkpoint/transaction and refresh rotation/revocation concurrency tests prove preserved fences and failure semantics. Browser mass lookup cache/error and stale dialog tests passed. The workflow instructions remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
-      "reviewedAtUtc": "2026-10-08T19:37:56.0135977Z"
+      "gitHead": "4661284988a35a76c243cfcbcd9e748dc17811e5",
+      "reviewedAtUtc": "2026-10-09T11:35:50.0544412Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -973,21 +969,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fe6adc9ff2f7279dd9d9e826cb8daf6180fab695f713a076cbe63d79f7b75832"
+          "sha256": "aff6dc7094f1e0e354ff13a097ba0e18491cdb36c8af16803a3c5f01a06609e8"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "5658b3371e867dbaef37d8fd8c6aeb8af8908d87931862945259ae249f255119"
+          "sha256": "1a2ef6a51023baff6eee0d183c5587a0b652402cae928d7922a5d6344211ec33"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "492731ea645e544585c8e9f6bcf4694b1e45b628448363bb832f00b0d8e86e67"
+          "sha256": "691aa7f68ba103952586d16da34c36b526c0d275dcc3824ade9ddc7db299de72"
         }
       ],
-      "reason": "Reviewed current source and owner/provider regressions: existing health identity financial access scopes, retention, deletion, leases and provider destinations remain intact. No credentials or live user data were used in browser fixtures.",
+      "reason": "The generated quality/runtime/sensitivity indexes were refreshed. Manual bounded review verified owner scope and token/lease boundaries with real-host/provider tests and technical fingerprints; no production exposure or broad vulnerability-scan claim is made from indexes. Current sources, evidence and this navigation workflow remain aligned.",
       "baseRef": "HEAD",
-      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
-      "reviewedAtUtc": "2026-10-08T19:37:56.7882824Z"
+      "gitHead": "4661284988a35a76c243cfcbcd9e748dc17811e5",
+      "reviewedAtUtc": "2026-10-09T11:35:51.1917527Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

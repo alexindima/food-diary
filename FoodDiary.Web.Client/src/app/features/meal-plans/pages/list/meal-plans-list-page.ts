@@ -8,6 +8,7 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
+import type { MealPlanId } from '../../../../shared/models/semantics/entity-id';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { MEAL_PLAN_LIST_QUERY_STATE } from '../../lib/list/meal-plan-list-query-state';
@@ -56,7 +57,7 @@ export class MealPlansListPageComponent {
         this.facade.loadPlans(type);
     }
 
-    protected openPlan(id: string): void {
+    protected openPlan(id: MealPlanId): void {
         void this.router.navigate(['/meal-plans', id]);
     }
 

@@ -31,19 +31,19 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
             new TelegramBotAuthHttpRequest { TelegramUserId = telegramUserId }, new BotApiRequestContext(ApiSecret: options.Value.ApiSecret),
             cancellationToken).ConfigureAwait(false);
         AuthenticationHttpResponse reply = await ReadAsync<AuthenticationHttpResponse>(response, cancellationToken).ConfigureAwait(false);
-        if (reply.User is null || reply.User.Id != lease.UserId || string.IsNullOrWhiteSpace(reply.AccessToken) ||
+        if (reply.User is null || new BotUserId(reply.User.Id) != lease.UserId || string.IsNullOrWhiteSpace(reply.AccessToken) ||
             !MatchesSecurityVersion(reply.AccessToken, lease.SecurityVersion)) {
             throw new InvalidDataException("Telegram authentication no longer matches the operation owner.");
         }
         return reply.AccessToken;
     }
 
-    internal async Task<BotImageUpload> RequestUploadAsync(string token, Guid operationId, int attempt, string contentType,
+    internal async Task<BotImageUpload> RequestUploadAsync(string token, BotOperationId operationId, int attempt, string contentType,
         int sizeBytes, CancellationToken cancellationToken) {
         string extension = contentType switch { "image/png" => "png", "image/webp" => "webp", _ => "jpg" };
         using HttpResponseMessage response = await new BotImagesApi(CreateTransport()).RequestUploadAsync("1",
-            $"telegram:{operationId:N}:upload:{attempt.ToString(CultureInfo.InvariantCulture)}",
-            new GetImageUploadUrlHttpRequest { FileName = $"{operationId:N}.{extension}", ContentType = contentType, FileSizeBytes = sizeBytes },
+            $"telegram:{operationId.Value:N}:upload:{attempt.ToString(CultureInfo.InvariantCulture)}",
+            new GetImageUploadUrlHttpRequest { FileName = $"{operationId.Value:N}.{extension}", ContentType = contentType, FileSizeBytes = sizeBytes },
             new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
         return BotApiMapper.Upload(await ReadAsync<GetImageUploadUrlHttpResponse>(response, cancellationToken).ConfigureAwait(false));
     }
@@ -65,10 +65,10 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
         response.EnsureSuccessStatusCode();
     }
 
-    internal async Task<BotRecognitionJob> StartRecognitionAsync(string token, Guid operationId, Guid assetId,
+    internal async Task<BotRecognitionJob> StartRecognitionAsync(string token, BotOperationId operationId, Guid assetId,
         string? caption, CancellationToken cancellationToken) {
         using HttpResponseMessage response = await new BotRecognitionApi(CreateTransport()).StartRecognitionAsync("1",
-            new StartFoodRecognitionHttpRequest { Id = operationId, ImageAssetId = assetId, Description = caption },
+            new StartFoodRecognitionHttpRequest { Id = operationId.Value, ImageAssetId = assetId, Description = caption },
             new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
         return BotApiMapper.Recognition(await ReadAsync<FoodRecognitionJobHttpResponse>(response, cancellationToken).ConfigureAwait(false));
     }
@@ -102,12 +102,12 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
         return reply?.Status ?? throw new InvalidDataException("Missing undo result.");
     }
 
-    internal async Task<BotHydrationReceipt> SaveWaterAsync(string token, Guid operationId, DateTime timestampUtc, int amountMl, CancellationToken cancellationToken) {
-        using HttpResponseMessage response = await new BotHydrationApi(CreateTransport()).SaveWaterAsync(operationId, "1",
+    internal async Task<BotHydrationReceipt> SaveWaterAsync(string token, BotOperationId operationId, DateTime timestampUtc, int amountMl, CancellationToken cancellationToken) {
+        using HttpResponseMessage response = await new BotHydrationApi(CreateTransport()).SaveWaterAsync(operationId.Value, "1",
             new CreateHydrationFromOperationHttpRequest { TimestampUtc = timestampUtc, AmountMl = amountMl },
             new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
         BotHydrationReceipt receipt = BotApiMapper.Water(await ReadAsync<HydrationOperationHttpResponse>(response, cancellationToken).ConfigureAwait(false));
-        if (receipt.OperationId != operationId || receipt.EntryId == Guid.Empty || receipt.AmountMl != amountMl ||
+        if (receipt.OperationId != operationId.Value || receipt.EntryId == Guid.Empty || receipt.AmountMl != amountMl ||
             receipt.TimestampUtc.Ticks / 10 != timestampUtc.Ticks / 10) {
             throw new InvalidDataException("Water receipt does not match the requested operation.");
         }

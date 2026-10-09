@@ -16,6 +16,9 @@ import { UserFacade } from '../../../shared/lib/user.facade';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
 import type { FoodRecognitionJob } from '../../../shared/models/food-recognition.data';
 import { imageSelection } from '../../../shared/models/image-upload.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
+import { publicImageUrl } from '../../../shared/models/semantics/image-location';
 import { type SpeechRecognitionFailure, SpeechRecognitionService } from '../../../shared/platform/speech-recognition.service';
 import { FoodRecognitionHistoryDialogComponent } from '../food-recognition-history/food-recognition-history-dialog';
 import { AiInputBarComponent } from './ai-input-bar';
@@ -51,13 +54,13 @@ const MEAL_DETAILS: AiInputBarMealDetails = {
     comment: 'Breakfast',
 };
 const RECENT_JOB: FoodRecognitionJob = {
-    id: 'job-1',
-    imageAssetId: 'asset-1',
-    imageUrl: 'https://example.com/photo.jpg',
+    id: entityId<'food-recognition'>('job-1'),
+    imageAssetId: entityId<'image-asset'>('asset-1'),
+    imageUrl: publicImageUrl('https://example.com/photo.jpg'),
     description: null,
     status: 'Succeeded',
-    createdOnUtc: '2026-05-17T00:00:00Z',
-    updatedOnUtc: '2026-05-17T00:00:00Z',
+    createdOnUtc: utcInstant('2026-05-17T00:00:00Z'),
+    updatedOnUtc: utcInstant('2026-05-17T00:00:00Z'),
     vision: { items: VISION_ITEMS },
     nutrition: NUTRITION,
     errorCode: null,

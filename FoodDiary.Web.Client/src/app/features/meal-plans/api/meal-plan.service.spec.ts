@@ -3,11 +3,14 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+const TEST_PLAN_DURATION_DAYS = 7;
+
 import { environment } from '../../../../environments/environment';
 import { utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { ShoppingList } from '../../../shared/models/shopping-list.data';
 import type { MealPlan, MealPlanSummary } from '../models/meal-plan.data';
+import { planDurationDaysFromStored } from '../models/meal-plan-values';
 import { MealPlanService } from './meal-plan.service';
 
 describe('MealPlanService', () => {
@@ -56,7 +59,7 @@ describe('MealPlanService', () => {
     it('loads meal plan detail by id', () => {
         const plan = createMealPlan();
 
-        service.getById('plan-1').subscribe(result => {
+        service.getById(entityId<'meal-plan'>('plan-1')).subscribe(result => {
             expect(result).toEqual(plan);
         });
 
@@ -68,7 +71,7 @@ describe('MealPlanService', () => {
     it('adopts meal plan', () => {
         const plan = createMealPlan();
 
-        service.adopt('plan-1').subscribe(result => {
+        service.adopt(entityId<'meal-plan'>('plan-1')).subscribe(result => {
             expect(result).toEqual(plan);
         });
 
@@ -79,7 +82,7 @@ describe('MealPlanService', () => {
 
     it('deletes a personal plan through the owner-scoped endpoint', () => {
         let completed = false;
-        service.deletePlan('plan-1').subscribe(() => {
+        service.deletePlan(entityId<'meal-plan'>('plan-1')).subscribe(() => {
             completed = true;
         });
         const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}/plan-1`);
@@ -91,7 +94,7 @@ describe('MealPlanService', () => {
     it('generates shopping list from meal plan', () => {
         const shoppingList = createShoppingList();
 
-        service.generateShoppingList('plan-1').subscribe(result => {
+        service.generateShoppingList(entityId<'meal-plan'>('plan-1')).subscribe(result => {
             expect(result).toEqual(shoppingList);
         });
 
@@ -103,11 +106,11 @@ describe('MealPlanService', () => {
 
 function createSummary(): MealPlanSummary {
     return {
-        id: 'plan-1',
+        id: entityId<'meal-plan'>('plan-1'),
         name: 'Keto plan',
         description: null,
         dietType: 'Keto',
-        durationDays: 7,
+        durationDays: planDurationDaysFromStored(TEST_PLAN_DURATION_DAYS),
         targetCaloriesPerDay: 1800,
         isCurated: true,
         totalRecipes: 21,

@@ -24,7 +24,7 @@ public static class AuthHttpResponseMappings {
     extension(ActiveSessionModel model) {
         public ActiveSessionHttpResponse ToHttpResponse() =>
             new(
-                model.Id,
+                model.Id.Value,
                 model.IsCurrent,
                 model.AuthProvider,
                 model.Browser,

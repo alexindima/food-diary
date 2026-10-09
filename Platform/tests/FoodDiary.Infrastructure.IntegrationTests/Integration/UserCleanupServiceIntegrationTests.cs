@@ -156,8 +156,8 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         await using var identity = new IdentityDbContext(new DbContextOptionsBuilder<IdentityDbContext>()
             .UseNpgsql(context.Database.GetDbConnection()).Options);
         var telegram = new TelegramOperationStore(identity, new EphemeralDataProtectionProvider(), TimeProvider.System);
-        await telegram.RegisterAsync(123, 1, deletedUser.Id.Value, 0, "deleted-user-photo", CancellationToken.None);
-        Guid? survivorOperation = await telegram.RegisterAsync(123, 2, survivingUser.Id.Value, 0, "survivor-photo", CancellationToken.None);
+        await telegram.RegisterAsync(123, 1, deletedUser.Id, 0, "deleted-user-photo", CancellationToken.None);
+        TelegramOperationId? survivorOperation = await telegram.RegisterAsync(123, 2, survivingUser.Id, 0, "survivor-photo", CancellationToken.None);
         Assert.NotNull(survivorOperation);
 
         var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
@@ -291,7 +291,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         await using var identity = new IdentityDbContext(new DbContextOptionsBuilder<IdentityDbContext>()
             .UseNpgsql(context.Database.GetDbConnection()).Options);
         var telegram = new TelegramOperationStore(identity, new EphemeralDataProtectionProvider(), TimeProvider.System);
-        Guid? operation = await telegram.RegisterAsync(123, 1, deleted.Id.Value, 0, "recoverable-photo", CancellationToken.None);
+        TelegramOperationId? operation = await telegram.RegisterAsync(123, 1, deleted.Id, 0, "recoverable-photo", CancellationToken.None);
         Assert.NotNull(operation);
         await using ServiceProvider provider = CreateServiceProvider(context, new RecordingImageObjectDeletionOutbox(), out UserCleanupService service, new FailingParticipant(context));
 

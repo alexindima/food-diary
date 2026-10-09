@@ -6,6 +6,7 @@ import type {
     CycleSymptomEntry,
     FertilitySignal,
 } from '../../../../shared/models/cycle.data';
+import type { CycleFactorId } from '../../../../shared/models/semantics/entity-id';
 
 export type CycleViewModel = {
     cycle: CycleResponse;
@@ -49,7 +50,7 @@ export type CycleActiveFactorViewModel = {
 };
 
 export type CycleFactorListItemViewModel = {
-    id: string;
+    id: CycleFactorId;
     labelKey: string;
     dateRangeLabel: string;
     statusLabelKey: string;

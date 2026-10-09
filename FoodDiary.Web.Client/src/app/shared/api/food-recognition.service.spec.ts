@@ -7,6 +7,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
 import type { FoodRecognitionJob } from '../models/food-recognition.data';
+import { utcInstant } from '../models/semantics/date-value';
+import { entityId } from '../models/semantics/entity-id';
+import { publicImageUrl } from '../models/semantics/image-location';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { FoodRecognitionService } from './food-recognition.service';
 
@@ -41,20 +44,20 @@ vi.mock('@microsoft/signalr', () => ({
     },
 }));
 const url = `${environment.apiUrls.ai}/food/recognitions`;
-const request = { imageAssetId: 'image-1' };
+const request = { imageAssetId: entityId<'image-asset'>('image-1') };
 const user = signal<string | null>('user-1');
 let service: FoodRecognitionService;
 let http: HttpTestingController;
 let storage: Map<string, string>;
 function job(id: string, status: FoodRecognitionJob['status'] = 'Running'): FoodRecognitionJob {
     return {
-        id,
-        imageAssetId: request.imageAssetId,
-        imageUrl: 'https://example.com/photo.jpg',
+        id: entityId<'food-recognition'>(id),
+        imageAssetId: entityId<'image-asset'>(request.imageAssetId),
+        imageUrl: publicImageUrl('https://example.com/photo.jpg'),
         description: null,
         status,
-        createdOnUtc: '2026-09-11T00:00:00Z',
-        updatedOnUtc: '2026-09-11T00:00:00Z',
+        createdOnUtc: utcInstant('2026-09-11T00:00:00Z'),
+        updatedOnUtc: utcInstant('2026-09-11T00:00:00Z'),
         vision: status === 'Succeeded' ? { items: [], notes: null } : null,
         nutrition: null,
         errorCode: null,
@@ -100,7 +103,11 @@ afterEach(() => {
 describe('durable food recognition', () => {
     it('includes product mode and every photo in the request fingerprint and releases the completed request', async () => {
         const digest = vi.spyOn(crypto.subtle, 'digest');
-        const productRequest = { ...request, isProductLabel: true, additionalImageAssetIds: ['image-2', 'image-3'] };
+        const productRequest = {
+            ...request,
+            isProductLabel: true,
+            additionalImageAssetIds: [entityId<'image-asset'>('image-2'), entityId<'image-asset'>('image-3')],
+        };
         const result = vi.fn();
         service.start(productRequest).subscribe(result);
         await vi.advanceTimersByTimeAsync(0);
@@ -112,7 +119,7 @@ describe('durable food recognition', () => {
             isProductLabel: true,
             additionalImages: productRequest.additionalImageAssetIds.map(imageAssetId => ({
                 imageAssetId,
-                imageUrl: 'https://example.com/label.jpg',
+                imageUrl: publicImageUrl('https://example.com/label.jpg'),
             })),
         };
         accepted.flush(completed);
@@ -159,7 +166,7 @@ describe('durable food recognition', () => {
         waiting.unsubscribe();
         expect(storage.size).toBe(1);
         const result = vi.fn();
-        service.resume(id).subscribe(result);
+        service.resume(entityId<'food-recognition'>(id)).subscribe(result);
         await vi.advanceTimersByTimeAsync(0);
         http.expectOne(`${url}/${id}`).flush(job(id, 'Succeeded'));
         await vi.advanceTimersByTimeAsync(0);
@@ -172,7 +179,7 @@ describe('durable food recognition', () => {
 describe('recognition notifications', () => {
     it('uses SignalR only as a hint and fetches the owner-scoped saved result', async () => {
         const result = vi.fn();
-        const subscription = service.resume('job-1').subscribe(result);
+        const subscription = service.resume(entityId<'food-recognition'>('job-1')).subscribe(result);
         await vi.advanceTimersByTimeAsync(0);
         http.expectOne(`${url}/job-1`).flush(job('job-1'));
         hub.handlers.get('RecognitionChanged')?.('another-job');
@@ -208,7 +215,7 @@ describe('recognition terminal states', () => {
     it('does not display an in-flight response after the signed-in user changes', async () => {
         const result = vi.fn();
         const error = vi.fn();
-        service.resume('job-1').subscribe({ next: result, error });
+        service.resume(entityId<'food-recognition'>('job-1')).subscribe({ next: result, error });
         await vi.advanceTimersByTimeAsync(0);
         const pending = http.expectOne(`${url}/job-1`);
         user.set('user-2');
@@ -222,7 +229,7 @@ describe('recognition terminal states', () => {
 
 it('deletes only the requested recognition endpoint', () => {
     const done = vi.fn();
-    service.deleteRecognition('completed-id').subscribe(done);
+    service.deleteRecognition(entityId<'food-recognition'>('completed-id')).subscribe(done);
     const deletion = http.expectOne(`${url}/completed-id`);
     expect(deletion.request.method).toBe('DELETE');
     deletion.flush(null);

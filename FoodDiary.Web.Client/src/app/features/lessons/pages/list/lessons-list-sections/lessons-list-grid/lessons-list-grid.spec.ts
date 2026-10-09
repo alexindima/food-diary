@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
+import { entityId } from '../../../../../../shared/models/semantics/entity-id';
 import type { LessonListItemViewModel } from '../../../../lib/lesson-view.mapper';
 import { LessonsListGridComponent } from './lessons-list-grid';
 
@@ -70,7 +71,7 @@ function getElement(fixture: ComponentFixture<LessonsListGridComponent>): HTMLEl
 
 function createLesson(): LessonListItemViewModel {
     return {
-        id: 'lesson-1',
+        id: entityId<'lesson'>('lesson-1'),
         title: 'Macros',
         summary: 'Macro basics',
         category: 'Macronutrients',

@@ -5,9 +5,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { RecipeLookupService } from '../../../../shared/api/recipe-lookup.service';
 import { MeasurementUnit } from '../../../../shared/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
+import { recipeIngredientFromStored } from '../../../../shared/models/recipe-ingredient';
 import type { RecipeLookup } from '../../../../shared/models/recipe-lookup.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
+import { recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
+import { recipeDisplayToServings, servingMassFromObservation, UNKNOWN_SERVING_MASS } from './recipe-display-amount';
 import { RecipeServingWeightService } from './recipe-serving-weight.service';
 
 const SERVINGS = 2;
@@ -26,21 +29,21 @@ describe('RecipeServingWeightService', () => {
         setupService();
         const recipe = createRecipe();
 
-        service.loadServingWeight(recipe).subscribe(result => {
-            expect(result).toBe(SERVING_WEIGHT);
+        service.loadServingMass(recipe).subscribe(result => {
+            expect(result).toEqual(servingMassFromObservation(SERVING_WEIGHT));
         });
 
         expect(recipeLookupService.getById).not.toHaveBeenCalled();
-        expect(service.convertServingsToGrams(recipe, SERVINGS)).toBe(TOTAL_WEIGHT);
-        expect(service.convertGramsToServings(recipe, TOTAL_WEIGHT)).toBe(SERVINGS);
+        expect(service.displayServings(recipe, recipeServingsFromStored(SERVINGS)).value).toBe(TOTAL_WEIGHT);
+        expect(recipeDisplayToServings(service.displayAmountFromInput(recipe, TOTAL_WEIGHT))).toBe(SERVINGS);
     });
 
     it('should load full recipe when list recipe has no ingredient weights', () => {
         setupService(createRecipeLookup());
         const recipe = createRecipe({ steps: [] });
 
-        service.loadServingWeight(recipe).subscribe(result => {
-            expect(result).toBe(SERVING_WEIGHT);
+        service.loadServingMass(recipe).subscribe(result => {
+            expect(result).toEqual(servingMassFromObservation(SERVING_WEIGHT));
         });
 
         expect(recipeLookupService.getById).toHaveBeenCalledWith('recipe-1');
@@ -50,35 +53,35 @@ describe('RecipeServingWeightService', () => {
         setupService(createRecipeLookup());
         const recipe = createRecipe({ steps: [] });
 
-        service.loadServingWeight(recipe).subscribe();
-        service.loadServingWeight(recipe).subscribe(result => {
-            expect(result).toBe(SERVING_WEIGHT);
+        service.loadServingMass(recipe).subscribe();
+        service.loadServingMass(recipe).subscribe(result => {
+            expect(result).toEqual(servingMassFromObservation(SERVING_WEIGHT));
         });
 
         expect(recipeLookupService.getById).toHaveBeenCalledTimes(1);
     });
 
-    it('should return null for missing recipe id and keep conversions unchanged', () => {
+    it('keeps an explicit servings display for a missing recipe id', () => {
         setupService(createUnsupportedRecipeLookup());
         const recipe = createRecipe({ id: entityId<'recipe'>('') });
 
-        service.loadServingWeight(recipe).subscribe(result => {
-            expect(result).toBeNull();
+        service.loadServingMass(recipe).subscribe(result => {
+            expect(result).toEqual(UNKNOWN_SERVING_MASS);
         });
 
-        expect(service.convertServingsToGrams(recipe, SERVINGS)).toBe(SERVINGS);
-        expect(service.convertGramsToServings(recipe, TOTAL_WEIGHT)).toBe(TOTAL_WEIGHT);
+        expect(service.displayServings(recipe, recipeServingsFromStored(SERVINGS)).value).toBe(SERVINGS);
+        expect(recipeDisplayToServings(service.displayAmountFromInput(recipe, TOTAL_WEIGHT))).toBe(TOTAL_WEIGHT);
     });
 
-    it('should cache null when lookup fails', () => {
+    it('caches unknown mass when lookup fails', () => {
         setupService(null, true);
         const recipe = createRecipe({ steps: [] });
 
-        service.loadServingWeight(recipe).subscribe(result => {
-            expect(result).toBeNull();
+        service.loadServingMass(recipe).subscribe(result => {
+            expect(result).toEqual(UNKNOWN_SERVING_MASS);
         });
-        service.loadServingWeight(recipe).subscribe(result => {
-            expect(result).toBeNull();
+        service.loadServingMass(recipe).subscribe(result => {
+            expect(result).toEqual(UNKNOWN_SERVING_MASS);
         });
 
         expect(recipeLookupService.getById).toHaveBeenCalledTimes(1);
@@ -93,15 +96,15 @@ describe('RecipeServingWeightService', () => {
                     stepNumber: 1,
                     instruction: '',
                     ingredients: [
-                        { id: 'i1', amount: 0, productBaseUnit: MeasurementUnit.G },
-                        { id: 'i2', amount: FIRST_AMOUNT, productBaseUnit: 'PCS' },
+                        recipeIngredientFromStored({ id: 'i1', amount: 0, productBaseUnit: MeasurementUnit.G }),
+                        recipeIngredientFromStored({ id: 'i2', amount: FIRST_AMOUNT, productBaseUnit: 'PCS' }),
                     ],
                 },
             ],
         });
 
-        service.loadServingWeight(recipe).subscribe(result => {
-            expect(result).toBeNull();
+        service.loadServingMass(recipe).subscribe(result => {
+            expect(result).toEqual(UNKNOWN_SERVING_MASS);
         });
     });
 });
@@ -127,17 +130,17 @@ function registerIncompleteMassTests(): void {
                     stepNumber: 1,
                     instruction: '',
                     ingredients: [
-                        { id: 'gram-item', amount: FIRST_AMOUNT, productBaseUnit: 'G' },
-                        { id: 'unknown-item', amount: SECOND_AMOUNT, productBaseUnit: unit },
+                        recipeIngredientFromStored({ id: 'gram-item', amount: FIRST_AMOUNT, productBaseUnit: 'G' }),
+                        recipeIngredientFromStored({ id: 'unknown-item', amount: SECOND_AMOUNT, productBaseUnit: unit }),
                     ],
                 },
             ],
         });
-        service.loadServingWeight(recipe).subscribe(weight => {
-            expect(weight).toBeNull();
+        service.loadServingMass(recipe).subscribe(weight => {
+            expect(weight).toEqual(UNKNOWN_SERVING_MASS);
         });
         expect(service.hasServingWeight(recipe)).toBe(false);
-        expect(service.convertServingsToGrams(recipe, SERVINGS)).toBe(SERVINGS);
+        expect(service.displayServings(recipe, recipeServingsFromStored(SERVINGS)).value).toBe(SERVINGS);
     });
 }
 
@@ -145,24 +148,36 @@ describe('Recipe serving weight after recipe changes', () => {
     it('refreshes the cached mass when ingredient amounts and serving count change', async () => {
         setupService();
         const original = createRecipe();
-        service.loadServingWeight(original).subscribe();
+        service.loadServingMass(original).subscribe();
         const changed = createRecipe({
             servings: 1,
-            steps: [{ ...original.steps[0], ingredients: [{ ...original.steps[0].ingredients[0], amount: UPDATED_WEIGHT }] }],
+            steps: [
+                {
+                    ...original.steps[0],
+                    ingredients: [recipeIngredientFromStored({ ...original.steps[0].ingredients[0], amount: UPDATED_WEIGHT })],
+                },
+            ],
         });
-        expect(await firstValueFrom(service.loadServingWeight(changed))).toBe(UPDATED_WEIGHT);
-        expect(service.convertServingsToGrams(changed, 1)).toBe(UPDATED_WEIGHT);
+        expect(await firstValueFrom(service.loadServingMass(changed))).toEqual(servingMassFromObservation(UPDATED_WEIGHT));
+        expect(service.displayServings(changed, recipeServingsFromStored(1)).value).toBe(UPDATED_WEIGHT);
     });
 
     it('stops offering grams when a cached gram recipe gains an ingredient without known mass', async () => {
         setupService(createUnsupportedRecipeLookup());
-        service.loadServingWeight(createRecipe()).subscribe();
+        service.loadServingMass(createRecipe()).subscribe();
         const changed = createRecipe({
-            steps: [{ id: 'changed', stepNumber: 1, instruction: '', ingredients: [{ id: 'pcs', amount: 1, productBaseUnit: 'Pcs' }] }],
+            steps: [
+                {
+                    id: 'changed',
+                    stepNumber: 1,
+                    instruction: '',
+                    ingredients: [recipeIngredientFromStored({ id: 'pcs', amount: 1, productBaseUnit: 'Pcs' })],
+                },
+            ],
         });
-        expect(await firstValueFrom(service.loadServingWeight(changed))).toBeNull();
+        expect(await firstValueFrom(service.loadServingMass(changed))).toEqual(UNKNOWN_SERVING_MASS);
         expect(service.hasServingWeight(changed)).toBe(false);
-        expect(service.convertServingsToGrams(changed, 1)).toBe(1);
+        expect(service.displayServings(changed, recipeServingsFromStored(1)).value).toBe(1);
     });
 });
 
@@ -194,8 +209,8 @@ function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
                 stepNumber: 1,
                 instruction: '',
                 ingredients: [
-                    { id: 'i1', amount: FIRST_AMOUNT, productBaseUnit: MeasurementUnit.G },
-                    { id: 'i2', amount: SECOND_AMOUNT, productBaseUnit: MeasurementUnit.G },
+                    recipeIngredientFromStored({ id: 'i1', amount: FIRST_AMOUNT, productBaseUnit: MeasurementUnit.G }),
+                    recipeIngredientFromStored({ id: 'i2', amount: SECOND_AMOUNT, productBaseUnit: MeasurementUnit.G }),
                 ],
             },
         ],

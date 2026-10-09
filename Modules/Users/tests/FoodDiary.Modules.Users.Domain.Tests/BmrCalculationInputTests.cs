@@ -21,9 +21,9 @@ public sealed class BmrCalculationInputTests {
     public void TypedMeasurements_KeepKilogramsAndCentimetersInTheirSlots() {
         using IDisposable scope = DomainTime.Override(new CalculationTimeProvider());
         var birthDate = new DateTime(2000, 6, 1);
-        var input = BmrCalculationInput.FromMeasurements(ProfileWeightKg.Create(80), ProfileHeightCm.Create(180), birthDate, "F");
+        var input = BmrCalculationInput.FromMeasurements(ProfileWeightKg.Create(80), ProfileHeightCm.Create(180), ProfileBirthDate.FromEncodedDateTime(birthDate), "F");
         Assert.Equal(1634, User.CalculateBmrFromProfile(input));
-        Assert.Null(User.CalculateBmrFromProfile(BmrCalculationInput.FromMeasurements(weight: null, height: null, birthDate, "F")));
+        Assert.Null(User.CalculateBmrFromProfile(BmrCalculationInput.FromMeasurements(weight: null, height: null, ProfileBirthDate.FromEncodedDateTime(birthDate), "F")));
     }
 
     [ExcludeFromCodeCoverage]

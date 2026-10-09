@@ -26,6 +26,7 @@ import { UserFacade } from '../../../shared/lib/user.facade';
 import type { FoodRecognitionJob } from '../../../shared/models/food-recognition.data';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
 import { imageSelection } from '../../../shared/models/image-upload.data';
+import type { ImageAssetId } from '../../../shared/models/semantics/entity-id';
 import { type SpeechRecognitionFailure, SpeechRecognitionService } from '../../../shared/platform/speech-recognition.service';
 import { AiConsentDialogComponent } from '../ai-consent-dialog/ai-consent-dialog';
 import { FoodRecognitionHistoryDialogComponent } from '../food-recognition-history/food-recognition-history-dialog';
@@ -407,7 +408,7 @@ export class AiInputBarComponent {
         this.recognition.analyzeText(text);
     }
 
-    private runPhotoAnalysis(assetId: string): void {
+    private runPhotoAnalysis(assetId: ImageAssetId): void {
         this.recognition.analyzePhoto(assetId);
     }
 

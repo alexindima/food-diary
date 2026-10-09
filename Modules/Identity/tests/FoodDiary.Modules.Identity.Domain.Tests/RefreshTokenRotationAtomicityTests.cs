@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
@@ -10,7 +11,7 @@ public sealed class RefreshTokenRotationAtomicityTests {
     [Fact]
     public void RefreshTokenRotation_WhenValidationFails_IsAtomic() {
         var session = UserRefreshTokenSession.Create(
-            Guid.NewGuid(),
+            RefreshTokenSessionId.New(),
             UserId.New(),
             "original-hash",
             rememberMe: true,
@@ -24,7 +25,7 @@ public sealed class RefreshTokenRotationAtomicityTests {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             session.Rotate("next-hash", rememberMe: false, DateTime.SpecifyKind(DateTime.MaxValue, DateTimeKind.Utc), TimeSpan.FromTicks(1)));
         Assert.Throws<ArgumentOutOfRangeException>(() => UserRefreshTokenSession.Create(
-            Guid.NewGuid(),
+            RefreshTokenSessionId.New(),
             UserId.New(),
             new string('h', 513),
             rememberMe: false,

@@ -4,6 +4,7 @@ import { FdUiLevelIndicatorComponent } from 'fd-ui-kit';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 
+import type { LessonId } from '../../../../../../shared/models/semantics/entity-id';
 import { FdCardHoverDirective } from '../../../../../../shared/ui/card-hover.directive';
 import type { LessonListItemViewModel } from '../../../../lib/lesson-view.mapper';
 
@@ -18,5 +19,5 @@ export class LessonsListGridComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly lessons = input.required<LessonListItemViewModel[]>();
 
-    public readonly lessonOpen = output<string>();
+    public readonly lessonOpen = output<LessonId>();
 }

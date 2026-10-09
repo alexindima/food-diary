@@ -127,7 +127,7 @@ public sealed class UserAdministrationReadRepositoryIntegrationTests(PostgresDat
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create("profile@example.com", "hash", hasPassword: false);
         user.UpdatePersonalInfo(username: "profile-user", firstName: "Saved", lastName: "Profile", birthDate: new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc), gender: "M", weight: 80, height: 180);
-        user.UpdatePreferences(new UserPreferenceUpdate(Language: "ru", Theme: "dark"));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, Language: "ru", Theme: "dark"));
         user.LinkTelegram(456789);
         user.StartWeightGoal(70, 80, DateTime.UtcNow);
         user.StartWaistGoal(80, 90, DateTime.UtcNow);

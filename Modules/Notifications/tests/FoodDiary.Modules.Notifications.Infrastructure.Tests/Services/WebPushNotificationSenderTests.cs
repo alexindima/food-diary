@@ -84,9 +84,7 @@ public sealed class WebPushNotificationSenderTests {
     [Fact]
     public async Task SendAsync_WhenCategoryDisabled_DoesNotLoadSubscriptions() {
         var user = User.Create("user@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(
-            PushNotificationsEnabled: true,
-            FastingPushNotificationsEnabled: false));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: false));
         var subscriptionRepository = new RecordingSubscriptionRepository();
         WebPushNotificationSender sender = CreateSender(FixedTime, subscriptionRepository, new SingleUserRepository(user));
         var notification = Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}");
@@ -99,9 +97,7 @@ public sealed class WebPushNotificationSenderTests {
     [Fact]
     public async Task SendAsync_WhenCategoryEnabled_LoadsSubscriptions() {
         var user = User.Create("user@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(
-            PushNotificationsEnabled: true,
-            SocialPushNotificationsEnabled: true));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, PushNotificationsEnabled: true, SocialPushNotificationsEnabled: true));
         var subscriptionRepository = new RecordingSubscriptionRepository();
         WebPushNotificationSender sender = CreateSender(FixedTime, subscriptionRepository, new SingleUserRepository(user));
         var notification = Notification.Create(user.Id, NotificationTypes.NewComment, "{}");
@@ -114,9 +110,7 @@ public sealed class WebPushNotificationSenderTests {
     [Fact]
     public async Task SendAsync_WhenAudienceExceedsLimit_SendsOnlyMaximumAllowedSubscriptions() {
         var user = User.Create("bounded-push@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(
-            PushNotificationsEnabled: true,
-            FastingPushNotificationsEnabled: true));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: true));
         WebPushSubscription[] subscriptions = [.. Enumerable
             .Range(0, WebPushDeliveryLimits.MaximumSubscriptionsPerUser + 2)
             .Select(index => {
@@ -166,9 +160,7 @@ public sealed class WebPushNotificationSenderTests {
     [Fact]
     public async Task SendAsync_WhenCancellationIsRequested_PropagatesCancellation() {
         var user = User.Create("user@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(
-            PushNotificationsEnabled: true,
-            FastingPushNotificationsEnabled: true));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: true));
         var activeSubscription = WebPushSubscription.Create(
             user.Id,
             "https://push.example.com/subscriptions/active",
@@ -193,9 +185,7 @@ public sealed class WebPushNotificationSenderTests {
     [Fact]
     public async Task SendAsync_WhenSubscriptionExpired_PrunesItBeforeSending() {
         var user = User.Create("user@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(
-            PushNotificationsEnabled: true,
-            FastingPushNotificationsEnabled: true));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: true));
         var expiredSubscription = WebPushSubscription.Create(
             user.Id,
             "https://push.example.com/subscriptions/expired",
@@ -303,10 +293,7 @@ public sealed class WebPushNotificationSenderTests {
         bool socialEnabled,
         bool expected) {
         var user = User.Create("user@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(
-            PushNotificationsEnabled: true,
-            FastingPushNotificationsEnabled: fastingEnabled,
-            SocialPushNotificationsEnabled: socialEnabled));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: fastingEnabled, SocialPushNotificationsEnabled: socialEnabled));
 
         bool result = InvokeAudiencePrivateStatic<bool>("IsCategoryEnabled", ToNotificationProfile(user), notificationType);
 
@@ -340,9 +327,7 @@ public sealed class WebPushNotificationSenderTests {
     [Fact]
     public async Task SendAsync_WhenPushClientReportsExpiredSubscription_DeletesInvalidSubscriptions() {
         var user = User.Create("expired@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(
-            PushNotificationsEnabled: true,
-            FastingPushNotificationsEnabled: true));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: true));
         var activeSubscription = WebPushSubscription.Create(
             user.Id,
             "https://push.example.com/subscriptions/expired",
@@ -381,9 +366,7 @@ public sealed class WebPushNotificationSenderTests {
     [Fact]
     public async Task SendAsync_WhenPushClientSucceeds_DoesNotDeleteSubscriptions() {
         var user = User.Create("delivered@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(
-            PushNotificationsEnabled: true,
-            FastingPushNotificationsEnabled: true));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: true));
         var activeSubscription = WebPushSubscription.Create(
             user.Id,
             "https://push.example.com/subscriptions/active",
@@ -418,9 +401,7 @@ public sealed class WebPushNotificationSenderTests {
     [Fact]
     public async Task SendAsync_WhenPushClientFailsUnexpectedly_RequiresRetryWithoutDeletingSubscription() {
         var user = User.Create("failed-push@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(
-            PushNotificationsEnabled: true,
-            FastingPushNotificationsEnabled: true));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: true));
         WebPushSubscription subscription = CreateActiveSubscription(user, "failed");
         var repository = new RecordingSubscriptionRepository([subscription]);
         var webPushClient = new StubWebPushClientAdapter(new InvalidOperationException("transport failed"));
@@ -441,9 +422,7 @@ public sealed class WebPushNotificationSenderTests {
     [Fact]
     public async Task SendAsync_WhenCallerCancelsDuringDelivery_PropagatesCancellation() {
         var user = User.Create("canceled-push@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(
-            PushNotificationsEnabled: true,
-            FastingPushNotificationsEnabled: true));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: true));
         WebPushSubscription subscription = CreateActiveSubscription(user, "cancel");
         var repository = new RecordingSubscriptionRepository([subscription]);
         var webPushClient = new BlockingWebPushClientAdapter();
@@ -467,9 +446,7 @@ public sealed class WebPushNotificationSenderTests {
     [Fact]
     public async Task SendAsync_WhenDeliveryDeadlineExpires_RequiresRetryWithoutDeletingSubscription() {
         var user = User.Create("deadline-push@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(
-            PushNotificationsEnabled: true,
-            FastingPushNotificationsEnabled: true));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: true));
         WebPushSubscription subscription = CreateActiveSubscription(user, "deadline");
         var repository = new RecordingSubscriptionRepository([subscription]);
         var webPushClient = new BlockingWebPushClientAdapter();

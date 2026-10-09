@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { MeasurementUnit } from '../../../../../shared/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import { recipeIngredientFromStored } from '../../../../../shared/models/recipe-ingredient';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import type { StepFormValues } from './recipe-manage.types';
@@ -122,11 +123,11 @@ function createRecipe(): Recipe {
                 imageUrl: null,
                 imageAssetId: null,
                 ingredients: [
-                    {
+                    recipeIngredientFromStored({
                         id: 'ingredient-1',
                         amount: 100,
                         productId: 'missing-product',
-                    },
+                    }),
                 ],
             },
             {
@@ -137,7 +138,7 @@ function createRecipe(): Recipe {
                 imageUrl: null,
                 imageAssetId: null,
                 ingredients: [
-                    {
+                    recipeIngredientFromStored({
                         id: 'ingredient-2',
                         amount: 200,
                         productId: 'product-1',
@@ -150,7 +151,7 @@ function createRecipe(): Recipe {
                         productCarbsPerBase: 76,
                         productFiberPerBase: 2,
                         productAlcoholPerBase: 0,
-                    },
+                    }),
                 ],
             },
         ],

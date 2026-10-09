@@ -6,10 +6,10 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1681,
+    "candidateFields": 1679,
     "credential": 158,
     "identity": 180,
-    "health": 785,
+    "health": 783,
     "financial": 138,
     "privateContent": 420,
     "boundaryFiles": 224,
@@ -456,21 +456,21 @@
       "name": "RefreshTokenHash",
       "type": "string",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 9
+      "line": 10
     },
     {
       "category": "credential",
       "name": "PreviousRefreshTokenHash",
       "type": "string?",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 16
+      "line": 17
     },
     {
       "category": "credential",
       "name": "PreviousRefreshTokenValidUntilUtc",
       "type": "DateTime?",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 17
+      "line": 18
     },
     {
       "category": "credential",
@@ -2017,7 +2017,7 @@
       "name": "ITransactionalCommand",
       "type": "IRequest<Result>,",
       "path": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommand.cs",
-      "line": 21
+      "line": 23
     },
     {
       "category": "financial",
@@ -6714,35 +6714,35 @@
       "name": "Gender",
       "type": "BirthDate,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 158
+      "line": 157
     },
     {
       "category": "health",
       "name": "HeightCm",
       "type": "WeightKg,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 158
+      "line": 157
     },
     {
       "category": "health",
       "name": "Gender",
       "type": "gender,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 168
+      "line": 167
     },
     {
       "category": "health",
       "name": "HeightCm",
       "type": "height,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 169
+      "line": 168
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "weight,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 169
+      "line": 168
     },
     {
       "category": "health",
@@ -6901,7 +6901,7 @@
     {
       "category": "health",
       "name": "BirthDate",
-      "type": "DateTime?",
+      "type": "ProfileBirthDate?",
       "path": "Modules/Users/Domain/ValueObjects/BmrCalculationInput.cs",
       "line": 6
     },
@@ -6936,7 +6936,7 @@
     {
       "category": "health",
       "name": "BirthDate",
-      "type": "FieldChange<DateTime>",
+      "type": "FieldChange<ProfileBirthDate>",
       "path": "Modules/Users/Domain/ValueObjects/UserPersonalInfoChanges.cs",
       "line": 9
     },
@@ -7001,112 +7001,98 @@
       "name": "FastingPushNotificationsEnabled",
       "type": "bool",
       "path": "Modules/Users/Domain/ValueObjects/UserPreferenceState.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInReminderHours",
-      "type": "int",
-      "path": "Modules/Users/Domain/ValueObjects/UserPreferenceState.cs",
       "line": 11
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInFollowUpReminderHours",
-      "type": "int",
-      "path": "Modules/Users/Domain/ValueObjects/UserPreferenceState.cs",
-      "line": 12
     },
     {
       "category": "health",
       "name": "BirthDate",
       "type": "DateTime?",
       "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
-      "line": 10
+      "line": 11
     },
     {
       "category": "health",
       "name": "Gender",
       "type": "string?",
       "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
-      "line": 11
-    },
-    {
-      "category": "health",
-      "name": "WeightKg",
-      "type": "double?",
-      "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
       "line": 12
     },
     {
       "category": "health",
-      "name": "HeightCm",
+      "name": "WeightKg",
       "type": "double?",
       "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
       "line": 13
     },
     {
       "category": "health",
+      "name": "HeightCm",
+      "type": "double?",
+      "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
       "name": "ActivityLevel",
       "type": "ActivityLevel",
       "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
-      "line": 14
+      "line": 15
     },
     {
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "bool",
       "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
-      "line": 22
+      "line": 23
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
-      "type": "int",
-      "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
-      "line": 24
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInFollowUpReminderHours",
       "type": "int",
       "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
       "line": 25
     },
     {
       "category": "health",
+      "name": "FastingCheckInFollowUpReminderHours",
+      "type": "int",
+      "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
+      "line": 26
+    },
+    {
+      "category": "health",
       "name": "BirthDate",
       "type": "LastName,",
       "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
-      "line": 53
+      "line": 54
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "Gender,",
       "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
-      "line": 55
+      "line": 56
     },
     {
       "category": "health",
       "name": "ActivityLevel",
       "type": "HeightCm,",
       "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
-      "line": 57
+      "line": 58
     },
     {
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "PushNotificationsEnabled,",
       "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
-      "line": 67
+      "line": 68
     },
     {
       "category": "health",
-      "name": "FastingCheckInReminderHours",
-      "type": "SocialPushNotificationsEnabled,",
+      "name": "FastingCheckInFollowUpReminderHours",
+      "type": "FastingCheckInReminderHours,",
       "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
-      "line": 69
+      "line": 71
     },
     {
       "category": "health",
@@ -8142,7 +8128,7 @@
       "name": "UserAgent",
       "type": "string?",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Models/RefreshTokenSessionReadModel.cs",
-      "line": 6
+      "line": 7
     },
     {
       "category": "identity",
@@ -8163,7 +8149,7 @@
       "name": "TelegramUserId",
       "type": "long",
       "path": "Modules/Identity/Application/Authentication/Commands/RegisterTelegramOperation/RegisterTelegramOperationCommand.cs",
-      "line": 6
+      "line": 7
     },
     {
       "category": "identity",
@@ -8310,14 +8296,14 @@
       "name": "IpAddress",
       "type": "string?",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 12
+      "line": 13
     },
     {
       "category": "identity",
       "name": "UserAgent",
       "type": "string?",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 13
+      "line": 14
     },
     {
       "category": "identity",
@@ -11754,14 +11740,14 @@
       "name": "ProfileImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
-      "line": 16
+      "line": 17
     },
     {
       "category": "privateContent",
       "name": "ProfileImageAssetId",
       "type": "ProfileImage,",
       "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
-      "line": 60
+      "line": 61
     },
     {
       "category": "privateContent",

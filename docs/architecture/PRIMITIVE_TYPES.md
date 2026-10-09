@@ -470,3 +470,92 @@ micromatch with no available braces fix. External dependency versions and the np
 lockfile are unchanged. Detailed execution logs, TRX files, the per-requirement
 audit and summary are stored under `.artifacts/primitive-types-wave3/`; browser
 screenshots and temporary scripts stay outside the repository.
+
+## Further boundary refinements
+
+Telegram operation journals use distinct `TelegramOperationId`, `TelegramLeaseId`
+and the owning `UserId` throughout commands, store ports and handlers. The bot
+keeps its own operation, lease and user types without backend dependencies.
+Explicit HTTP and persistence adapters retain GUID encodings, parameterized SQL,
+lease fencing, retry/expiry rules and per-operation encryption purposes. Compile
+negative cases reject identity swaps; PostgreSQL regressions cover recovery,
+stale writers, cancellation, cleanup and shared-transaction rollback.
+
+Nested cycle mutation inputs use `CalendarDate` and `CycleFactorId`. Transient
+form values are decoded after the existing calendar-key conversion; omission,
+clear flags, nullable end dates and date encodings retain their existing behavior.
+Factor identity remains typed through selection state and component events.
+
+Notification UI models decode `NotificationId`, `UtcInstant` and a known/unknown
+notification kind at the SDK boundary. Realtime invalidation reloads through that
+same decoder. One exhaustive presentation table supplies flags, icons, badges
+and actions. Unknown codes retain the generic presentation and their original
+code; navigation continues to use the server-provided target URL, independently
+of the reference string.
+
+Meal-plan, plan-day, planned-meal, lesson and food-recognition identities remain
+typed through UI models, selection state, component events and owning API calls.
+Routes, SDK responses, stored pending task IDs and realtime events attach meaning
+at their boundaries without changing scalar encodings. Recognition snapshots
+also distinguish image assets, displayed image URLs and UTC timestamps; internal
+polling and session checks retain the user identity role.
+
+Planning duration/day values use distinct 1..31 meanings. Planned servings are
+positive integers without the consumption cap; stored projections preserve
+historical values. A shared numeric marker prevents retagging consumed servings
+as planned servings, durations or day ordinals. Meal type codes preserve their
+casing, unknown values and existing diary-selection fallback.
+
+Attribution uses distinct opaque `AnonymousVisitorId` and `MarketingSessionId`
+values and the existing `UserId` in internal commands, records, owner state and
+lookups. EF converters retain varchar(96), nullable UUID columns, indexes and
+exact stored values. HTTP and consumer models unwrap their original scalars;
+event vocabulary, timestamp parsing, normalization/fallback order, retention and
+stable premium-conversion IDs remain unchanged. Visitor/session SQL distinct
+counts remain separate. Browser decoding retains local visitor lifetime, session
+lifetime, capture keys and first-touch precedence, including legacy non-UUID
+stored identities. Compiler-negative cases reject identity-role swaps.
+
+Fasting reminder updates carry one `FastingReminderDelayUpdate`. The User facade
+retains individual-field and appearance validation order, merges omitted fields
+against current settings and checks follow-up ordering before applying or auditing
+changes. Immutable `FastingReminderSettings` owns valid 1..168 elapsed-hour pairs
+and defaults 12/20. `FastingReminderSchedule` explicitly preserves legacy stored
+fields while exposing the original sorted/distinct due sequence; equivalent
+schedules have value equality so no-op updates remain unaudited. Users.Contracts
+passes that schedule to Fasting repositories and planners without a Users.Domain
+dependency. Reference codes, persisted fields and HTTP payloads retain their
+existing representations; scalar compatibility constructors decode into groups.
+
+Users personal-info field changes and measured BMR inputs use immutable
+`ProfileBirthDate`. It exposes the encoded calendar day while retaining original
+DateTime ticks/Kind for the profile owner's existing UTC-midnight normalization.
+Decoding does not move future validation or alter its ordering. BMR uses that
+calendar day with the established birthday/AddYears age policy; stored-profile
+and scalar calculation adapters preserve historical missing/invalid measurements
+and date encodings. Set/clear/omission, profile-only audit no-ops, wire fields and
+persisted DateTime columns retain their existing behavior.
+
+Identity owns `RefreshTokenSessionId` with no implicit GUID conversions. Session
+entity keys, lifecycle requests, repository models/ports and JWT/token-service
+internals require it; lifecycle owners use `UserId`. EF converters and explicit
+claim/HTTP adapters retain UUID columns, GUID strings, cookies and safe session
+response fields. Rotation still fences by owner, active session and expected
+hash; revocation still verifies the current active owner session and excludes
+it when revoking others. Concurrent logout, legacy token paths, previous-token
+grace, expiry and security-version behavior remain. Provider tests prove no
+schema delta and the reviewed technical repository fingerprint remains exact.
+
+Recipe ingredients decode at the SDK boundary into product, nested-recipe and
+text alternatives with owning IDs and distinct quantity meanings. Explicit
+legacy observations retain missing/deleted or contradictory sources, original
+snapshots and each consumer's established precedence. Ingredient quantities
+do not acquire meal-consumption caps; forms and outgoing DTOs retain scalars.
+
+Recipe serving mass is either known finite positive grams per serving or
+unknown. Display amounts carry grams plus the mass used for conversion, or
+servings when mass is unknown. The conversion core requires those meanings;
+raw form fields decode with the currently displayed unit. Complete gram-only
+ingredient mass, lookup/error fallback, content-key invalidation, fractional
+precision and transient form validation remain. Milliliters and pieces never
+imply gram mass.

@@ -1,5 +1,6 @@
 import { type Recipe, RecipeVisibility } from '../../models/recipe.data';
 import { RECIPE_CATEGORIES } from '../../models/recipe-category';
+import { recipeIngredientFromStored } from '../../models/recipe-ingredient';
 import type { RecipeLookup } from '../../models/recipe-lookup.data';
 import { utcInstant } from '../../models/semantics/date-value';
 import { entityId, optionalEntityId } from '../../models/semantics/entity-id';
@@ -33,7 +34,7 @@ export function recipeFromSdk(response: RecipeHttpResponse): Recipe {
             return {
                 ...step,
                 images: step.images?.map(image => requireSdkFields(image, ['imageAssetId', 'imageUrl'])),
-                ingredients: step.ingredients.map(ingredient => requireSdkFields(ingredient, ['id', 'amount'])),
+                ingredients: step.ingredients.map(ingredient => recipeIngredientFromStored(requireSdkFields(ingredient, ['id', 'amount']))),
             };
         }),
 

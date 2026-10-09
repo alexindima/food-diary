@@ -38,8 +38,7 @@ public sealed partial class User {
             pushNotificationsEnabled: null,
             fastingPushNotificationsEnabled: null,
             socialPushNotificationsEnabled: null,
-            fastingCheckInReminderHours: null,
-            fastingCheckInFollowUpReminderHours: null)) {
+            reminderDelays: default)) {
             Preferences.Touch();
         }
     }
@@ -127,7 +126,7 @@ public sealed partial class User {
         ArgumentNullException.ThrowIfNull(changes.BirthDate, nameof(changes));
         UpdatePersonalInfo(new UserPersonalInfoUpdate(
             changes.Username, changes.FirstName, changes.LastName,
-            changes.BirthDate.IsSet ? changes.BirthDate.Value : null,
+            changes.BirthDate.IsSet ? changes.BirthDate.Value.EncodedDateTime : null,
             changes.Gender, changes.WeightKg, changes.HeightCm,
             BirthDateSpecified: !changes.BirthDate.IsUnchanged));
     }
@@ -200,8 +199,7 @@ public sealed partial class User {
             update.PushNotificationsEnabled,
             update.FastingPushNotificationsEnabled,
             update.SocialPushNotificationsEnabled,
-            update.FastingCheckInReminderHours,
-            update.FastingCheckInFollowUpReminderHours,
+            update.ReminderDelays,
             update.SurfaceStyle)) {
             Preferences.Touch();
         }
@@ -346,16 +344,17 @@ public sealed partial class User {
         bool? pushNotificationsEnabled,
         bool? fastingPushNotificationsEnabled,
         bool? socialPushNotificationsEnabled,
-        int? fastingCheckInReminderHours,
-        int? fastingCheckInFollowUpReminderHours,
+        FastingReminderDelayUpdate reminderDelays,
         string? surfaceStyle = null) {
         UserPreferenceState state = GetPreferenceState();
+        int? fastingCheckInReminderHours = reminderDelays.FirstHours;
+        int? fastingCheckInFollowUpReminderHours = reminderDelays.FollowUpHours;
 
         EnsureLanguage(language, nameof(language));
         EnsureTheme(theme, nameof(theme));
         EnsureUiStyle(uiStyle, nameof(uiStyle));
-        EnsureReminderHours(fastingCheckInReminderHours, nameof(fastingCheckInReminderHours));
-        EnsureReminderHours(fastingCheckInFollowUpReminderHours, nameof(fastingCheckInFollowUpReminderHours));
+        FastingReminderSettings.EnsureHour(fastingCheckInReminderHours, nameof(fastingCheckInReminderHours));
+        FastingReminderSettings.EnsureHour(fastingCheckInFollowUpReminderHours, nameof(fastingCheckInFollowUpReminderHours));
 
         UserPreferenceState nextState = ApplyPreferenceTextChanges(state, dashboardLayoutJson, language, theme, uiStyle);
         if (surfaceStyle is not null) {
@@ -370,13 +369,7 @@ public sealed partial class User {
             pushNotificationsEnabled,
             fastingPushNotificationsEnabled,
             socialPushNotificationsEnabled);
-        nextState = ApplyReminderPreferenceChanges(nextState, fastingCheckInReminderHours, fastingCheckInFollowUpReminderHours);
-
-        if (nextState.FastingCheckInFollowUpReminderHours <= nextState.FastingCheckInReminderHours) {
-            throw new ArgumentOutOfRangeException(
-                nameof(fastingCheckInFollowUpReminderHours),
-                "Follow-up reminder hour must be greater than the first reminder hour.");
-        }
+        nextState = nextState with { ReminderDelays = nextState.ReminderDelays.Merge(reminderDelays) };
 
         if (nextState == state) {
             return false;
@@ -419,18 +412,6 @@ public sealed partial class User {
             : state;
     }
 
-    private static UserPreferenceState ApplyReminderPreferenceChanges(
-        UserPreferenceState state,
-        int? fastingCheckInReminderHours,
-        int? fastingCheckInFollowUpReminderHours) {
-        state = fastingCheckInReminderHours.HasValue
-            ? state with { FastingCheckInReminderHours = fastingCheckInReminderHours.Value }
-            : state;
-        return fastingCheckInFollowUpReminderHours.HasValue
-            ? state with { FastingCheckInFollowUpReminderHours = fastingCheckInFollowUpReminderHours.Value }
-            : state;
-    }
-
     private static UserPreferenceState ApplyStringPreference(
         UserPreferenceState state,
         string? value,
@@ -441,12 +422,4 @@ public sealed partial class User {
             : apply(state, normalize(value));
     }
 
-    private static void EnsureReminderHours(int? value, string paramName) {
-        switch (value) {
-            case null:
-                return;
-            case < 1 or > 168:
-                throw new ArgumentOutOfRangeException(paramName, "Reminder hour must be between 1 and 168.");
-        }
-    }
 }

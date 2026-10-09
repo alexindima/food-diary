@@ -28,6 +28,7 @@ import {
 } from '../../../../shared/models/meal.data';
 import type { Product } from '../../../../shared/models/product.data';
 import type { Recipe } from '../../../../shared/models/recipe.data';
+import { type RecipeServings,recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MealService } from '../../api/meal.service';
 import type {
@@ -39,6 +40,7 @@ import type {
 } from '../../components/manage/meal-manage-lib/meal-manage.types';
 import { createMealItemValue } from '../../components/manage/meal-manage-lib/meal-manage-form.mapper';
 import type { MealPhotoRecognitionDialogComponent } from '../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog';
+import { displayRecipeServings, recipeDisplayToServings } from '../recipe-serving/recipe-display-amount';
 import { RecipeServingWeightService } from '../recipe-serving/recipe-serving-weight.service';
 import { MEAL_MANAGE_DEFAULT_ITEM_AMOUNT } from './meal-manage.config';
 
@@ -153,10 +155,10 @@ export class MealManageFacade {
             items.map(item => {
                 const recipe = item.sourceType === MealSourceType.Recipe ? (item.recipe ?? null) : null;
                 const amount =
-                    recipe !== null
+                    recipe !== null && item.sourceType === MealSourceType.Recipe
                         ? this.recipeWeight
-                              .loadServingWeight(recipe)
-                              .pipe(map(() => this.convertRecipeServingsToGrams(recipe, item.amount)))
+                              .loadServingMass(recipe)
+                              .pipe(map(() => this.recipeDisplayValueFromStoredServings(recipe, item.amount)))
                         : of(item.amount);
 
                 return amount.pipe(
@@ -218,23 +220,24 @@ export class MealManageFacade {
             return createMealItemValue(selection.product, null, this.resolveProductAmount(selection.product), MealSourceType.Product);
         }
 
-        const amount = await this.resolveRecipeServingsToGramsAsync(selection.recipe, MEAL_MANAGE_DEFAULT_ITEM_AMOUNT);
+        const amount = await this.resolveRecipeDisplayValueAsync(
+            selection.recipe,
+            recipeServingsFromStored(MEAL_MANAGE_DEFAULT_ITEM_AMOUNT),
+        );
         return createMealItemValue(null, selection.recipe, amount, MealSourceType.Recipe);
     }
 
-    public async resolveRecipeServingsToGramsAsync(recipe: Recipe | null, servingsAmount: number): Promise<number> {
-        const servingWeight = await firstValueFrom(this.recipeWeight.loadServingWeight(recipe));
-        return servingWeight !== null && Number.isFinite(servingWeight) && servingWeight > 0
-            ? servingsAmount * servingWeight
-            : servingsAmount;
+    public async resolveRecipeDisplayValueAsync(recipe: Recipe | null, servingsAmount: RecipeServings): Promise<number> {
+        const mass = await firstValueFrom(this.recipeWeight.loadServingMass(recipe));
+        return displayRecipeServings(servingsAmount, mass).value;
     }
 
-    public convertRecipeGramsToServings(recipe: Recipe | null, grams: number): number {
-        return this.recipeWeight.convertGramsToServings(recipe, grams);
+    public recipeServingsFromDisplayInput(recipe: Recipe | null, amount: number): RecipeServings {
+        return recipeDisplayToServings(this.recipeWeight.displayAmountFromInput(recipe, amount));
     }
 
-    public convertRecipeServingsToGrams(recipe: Recipe | null, servings: number): number {
-        return this.recipeWeight.convertServingsToGrams(recipe, servings);
+    public recipeDisplayValueFromStoredServings(recipe: Recipe | null, servings: RecipeServings): number {
+        return this.recipeWeight.displayServings(recipe, servings).value;
     }
 
     public buildNutritionSummaryStateFromValues(
@@ -329,7 +332,7 @@ export class MealManageFacade {
         const carbsPerServing = (recipe.totalCarbs ?? 0) / recipe.servings;
         const fiberPerServing = (recipe.totalFiber ?? 0) / recipe.servings;
         const alcoholPerServing = (recipe.totalAlcohol ?? 0) / recipe.servings;
-        const servingsAmount = this.recipeWeight.convertGramsToServings(recipe, amount);
+        const servingsAmount = this.recipeServingsFromDisplayInput(recipe, amount);
 
         totals.calories += caloriesPerServing * servingsAmount;
         totals.proteins += proteinsPerServing * servingsAmount;

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
@@ -10,11 +11,10 @@ internal static class FastingNotificationCandidatePlanner {
         FastingPlan plan,
         IReadOnlyList<FastingCheckIn>? checkIns,
         DateTime nowUtc,
-        int reminderHours,
-        int followUpReminderHours) {
+        FastingReminderSchedule reminderDelays) {
         var notifications = new List<FastingNotificationCandidate>();
 
-        foreach (string referenceId in FastingCheckInReminderPlanner.GetDueReferenceIds(occurrence, checkIns, nowUtc, reminderHours, followUpReminderHours)) {
+        foreach (string referenceId in FastingCheckInReminderPlanner.GetDueReferenceIds(occurrence, checkIns, nowUtc, reminderDelays)) {
             notifications.Add(FastingNotificationCandidate.Create(
                 occurrence,
                 plan,

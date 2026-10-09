@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Infrastructure;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
@@ -146,7 +147,7 @@ public sealed class SharedUsersContextIntegrationTests(PostgresDatabaseFixture d
     }
 
     private static UserRefreshTokenSession CreateSession(UserId userId) =>
-        UserRefreshTokenSession.Create(Guid.NewGuid(), userId, "synthetic", rememberMe: true, authProvider: "password", ipAddress: null, userAgent: null, nowUtc: DateTime.UtcNow);
+        UserRefreshTokenSession.Create(RefreshTokenSessionId.New(), userId, "synthetic", rememberMe: true, authProvider: "password", ipAddress: null, userAgent: null, nowUtc: DateTime.UtcNow);
 
     private static ServiceProvider CreateProvider(string connectionString) {
         var services = new ServiceCollection();

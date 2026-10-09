@@ -2,7 +2,6 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using System.Text;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
-using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Common;
@@ -14,7 +13,7 @@ internal static class TelegramOperationChecks {
     internal static bool IsEnabled(ITelegramOperationPolicy policy) => policy.OperationsEnabled && policy.BotId > 0;
 
     internal static async Task<bool> IsCurrentAsync(TelegramOperationLease lease, ITelegramOperationStore store, ITelegramOperationPolicy policy, IUserAuthenticationIdentityService identities, TimeProvider timeProvider, CancellationToken cancellationToken) {
-        Result<UserAuthenticationPrincipalModel> principal = await identities.GetAuthenticationPrincipalAsync(new UserId(lease.UserId),
+        Result<UserAuthenticationPrincipalModel> principal = await identities.GetAuthenticationPrincipalAsync(lease.UserId,
             timeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false);
         if (principal.IsSuccess && principal.Value.User.HasTelegramIdentity && principal.Value.SecurityVersion == lease.SecurityVersion) {
             return true;

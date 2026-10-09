@@ -16,6 +16,7 @@ import { normalizeProductType } from '../../../../shared/lib/product-type.utils'
 import { resolveRecipeImageUrl } from '../../../../shared/lib/recipe-image.util';
 import { MealSourceType } from '../../../../shared/models/meal.data';
 import { ProductType } from '../../../../shared/models/product.data';
+import { recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { type QuickMealItem, QuickMealService } from '../../lib/quick/quick-meal.service';
 import type { MealItemFormValues } from '../manage/meal-manage-lib/meal-manage.types';
@@ -268,7 +269,7 @@ export class QuickMealDrawerComponent {
         const sourceType = item.type === 'recipe' ? MealSourceType.Recipe : MealSourceType.Product;
         const amount =
             sourceType === MealSourceType.Recipe
-                ? await this.mealManageFacade.resolveRecipeServingsToGramsAsync(item.recipe ?? null, item.amount)
+                ? await this.mealManageFacade.resolveRecipeDisplayValueAsync(item.recipe ?? null, recipeServingsFromStored(item.amount))
                 : item.amount;
 
         return {
@@ -305,7 +306,7 @@ export class QuickMealDrawerComponent {
             key: `recipe-${recipe.id}`,
             type: 'recipe',
             recipe,
-            amount: this.mealManageFacade.convertRecipeGramsToServings(recipe, amount),
+            amount: this.mealManageFacade.recipeServingsFromDisplayInput(recipe, amount),
         };
     }
 }

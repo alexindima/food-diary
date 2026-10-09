@@ -11,7 +11,10 @@ import type { ShoppingList } from '../../../shared/models/shopping-list.data';
 import { QuickMealService } from '../../meals/contracts/quick-meal';
 import { RECIPE_LOOKUP } from '../../recipes/contracts/recipe-lookup';
 import { MealPlanService } from '../api/meal-plan.service';
-import type { MealPlan, MealPlanSummary } from '../models/meal-plan.data';
+import type { MealPlan, MealPlanMeal, MealPlanSummary } from '../models/meal-plan.data';
+import { planDurationDaysFromStored } from '../models/meal-plan-values';
+import { plannedServingsFromStored } from '../models/meal-plan-values';
+import { plannedMealTypeFromStored } from '../models/meal-plan-values';
 import { MealPlanFacade } from './meal-plan.facade';
 
 const PAGE_SIZE = 50;
@@ -63,23 +66,23 @@ beforeEach(() => {
 
 describe('MealPlanFacade personal deletion', () => {
     it('rejects a curated plan and an unrelated selected id before issuing DELETE', async () => {
-        facade.loadPlan('plan-1');
+        facade.loadPlan(entityId<'meal-plan'>('plan-1'));
         await waitForAsync(() => facade.selectedPlan() !== null);
-        facade.deletePlan('plan-1', vi.fn());
-        facade.deletePlan('other', vi.fn());
+        facade.deletePlan(entityId<'meal-plan'>('plan-1'), vi.fn());
+        facade.deletePlan(entityId<'meal-plan'>('other'), vi.fn());
         expect(mealPlanService.deletePlan).not.toHaveBeenCalled();
     });
 
     it('locks repeated actions while deleting, reports errors and permits retry without losing the plan', async () => {
         mealPlanService.getById.mockReturnValue(of({ ...createMealPlan(), isCurated: false }));
-        facade.loadPlan('plan-1');
+        facade.loadPlan(entityId<'meal-plan'>('plan-1'));
         await waitForAsync(() => facade.selectedPlan() !== null);
         const response = new Subject<void>();
         mealPlanService.deletePlan.mockReturnValueOnce(response);
         const onSuccess = vi.fn();
-        facade.deletePlan('plan-1', onSuccess);
-        facade.deletePlan('plan-1', onSuccess);
-        facade.generateShoppingList('plan-1', vi.fn());
+        facade.deletePlan(entityId<'meal-plan'>('plan-1'), onSuccess);
+        facade.deletePlan(entityId<'meal-plan'>('plan-1'), onSuccess);
+        facade.generateShoppingList(entityId<'meal-plan'>('plan-1'), vi.fn());
         expect(facade.pendingAction()).toBe('delete');
         expect(mealPlanService.deletePlan).toHaveBeenCalledOnce();
         expect(mealPlanService.generateShoppingList).not.toHaveBeenCalled();
@@ -88,7 +91,7 @@ describe('MealPlanFacade personal deletion', () => {
         expect(facade.actionErrorKey()).toBe('MEAL_PLANS.ERROR_DELETE');
         expect(facade.selectedPlan()?.id).toBe('plan-1');
         expect(onSuccess).not.toHaveBeenCalled();
-        facade.deletePlan('plan-1', onSuccess);
+        facade.deletePlan(entityId<'meal-plan'>('plan-1'), onSuccess);
         expect(facade.actionErrorKey()).toBeNull();
         expect(onSuccess).toHaveBeenCalledOnce();
         await waitForAsync(() => facade.selectedPlan() === null);
@@ -98,13 +101,13 @@ describe('MealPlanFacade personal deletion', () => {
 describe('MealPlanFacade', () => {
     it('prepares the selected plan meal with its servings and type before navigating', () => {
         const onSuccess = vi.fn();
-        facade.addMealToDiary({ id: 'meal-1', recipeId: 'recipe-1', mealType: 'Breakfast', servings: 2, calories: 200 }, onSuccess);
+        facade.addMealToDiary(createPlannedMeal(), onSuccess);
         expect(quickMeal.addRecipe).toHaveBeenCalledWith({ id: 'recipe-1' }, 2);
         expect(quickMeal.updateDetails).toHaveBeenCalledWith({ mealType: 'BREAKFAST' });
         expect(onSuccess).toHaveBeenCalledOnce();
     });
     it('preserves an existing diary draft and reports an unavailable recipe', () => {
-        const meal = { id: 'meal-1', recipeId: 'recipe-1', mealType: 'Breakfast', servings: 2, calories: 200 };
+        const meal = createPlannedMeal();
         quickMeal.hasItems.set(true);
         facade.addMealToDiary(meal, vi.fn());
         expect(recipeLookup.getById).not.toHaveBeenCalled();
@@ -126,11 +129,11 @@ describe('MealPlanFacade', () => {
     it('loads selected plan detail and ignores empty ids', async () => {
         expect(facade.selectedPlan()).toBeNull();
 
-        facade.loadPlan('');
+        facade.loadPlan(entityId<'meal-plan'>(''));
         await waitForAsync(() => mealPlanService.getById.mock.calls.length === 0);
         expect(facade.selectedPlan()).toBeNull();
 
-        facade.loadPlan('plan-1');
+        facade.loadPlan(entityId<'meal-plan'>('plan-1'));
         await waitForAsync(() => facade.selectedPlan() !== null);
 
         expect(mealPlanService.getById).toHaveBeenCalledWith('plan-1');
@@ -140,7 +143,7 @@ describe('MealPlanFacade', () => {
     it('runs success callback after adopting a meal plan', () => {
         const onSuccess = vi.fn();
 
-        facade.adopt('plan-1', onSuccess);
+        facade.adopt(entityId<'meal-plan'>('plan-1'), onSuccess);
 
         expect(mealPlanService.adopt).toHaveBeenCalledWith('plan-1');
         expect(onSuccess).toHaveBeenCalledOnce();
@@ -163,7 +166,7 @@ describe('MealPlanFacade', () => {
     it('runs success callback after generating a shopping list', () => {
         const onSuccess = vi.fn();
 
-        facade.generateShoppingList('plan-1', onSuccess);
+        facade.generateShoppingList(entityId<'meal-plan'>('plan-1'), onSuccess);
 
         expect(mealPlanService.generateShoppingList).toHaveBeenCalledWith('plan-1');
         expect(onSuccess).toHaveBeenCalledOnce();
@@ -173,9 +176,9 @@ describe('MealPlanFacade', () => {
         const response = new Subject<ShoppingList>();
         mealPlanService.generateShoppingList.mockReturnValueOnce(response);
         const onSuccess = vi.fn();
-        facade.generateShoppingList('plan-1', onSuccess);
-        facade.generateShoppingList('plan-1', onSuccess);
-        facade.adopt('plan-1', onSuccess);
+        facade.generateShoppingList(entityId<'meal-plan'>('plan-1'), onSuccess);
+        facade.generateShoppingList(entityId<'meal-plan'>('plan-1'), onSuccess);
+        facade.adopt(entityId<'meal-plan'>('plan-1'), onSuccess);
         expect(mealPlanService.generateShoppingList).toHaveBeenCalledOnce();
         expect(mealPlanService.adopt).not.toHaveBeenCalled();
         expect(facade.pendingAction()).toBe('shopping');
@@ -185,7 +188,7 @@ describe('MealPlanFacade', () => {
         expect(facade.actionErrorKey()).toBe('MEAL_PLANS.ERROR_SHOPPING_LIST');
         expect(onSuccess).not.toHaveBeenCalled();
 
-        facade.generateShoppingList('plan-1', onSuccess);
+        facade.generateShoppingList(entityId<'meal-plan'>('plan-1'), onSuccess);
         expect(facade.actionErrorKey()).toBeNull();
         expect(onSuccess).toHaveBeenCalledOnce();
         expect(facade.pendingAction()).toBeNull();
@@ -262,13 +265,23 @@ async function waitForAsync(predicate: () => boolean): Promise<void> {
     }
 }
 
+function createPlannedMeal(): MealPlanMeal {
+    return {
+        id: entityId<'meal-plan-meal'>('meal-1'),
+        recipeId: entityId<'recipe'>('recipe-1'),
+        mealType: plannedMealTypeFromStored('Breakfast'),
+        servings: plannedServingsFromStored(2),
+        calories: 200,
+    };
+}
+
 function createSummary(): MealPlanSummary {
     return {
-        id: 'plan-1',
+        id: entityId<'meal-plan'>('plan-1'),
         name: 'Keto plan',
         description: null,
         dietType: 'Keto',
-        durationDays: PLAN_DAYS,
+        durationDays: planDurationDaysFromStored(PLAN_DAYS),
         targetCaloriesPerDay: TARGET_CALORIES,
         isCurated: true,
         totalRecipes: TOTAL_RECIPES,
@@ -277,7 +290,7 @@ function createSummary(): MealPlanSummary {
 
 function createPage(page: number, totalItems: number): PageOf<MealPlanSummary> {
     return {
-        data: [{ ...createSummary(), id: `page-${page}` }],
+        data: [{ ...createSummary(), id: entityId<'meal-plan'>(`page-${page}`) }],
         page,
         limit: PAGE_SIZE,
         totalPages: Math.ceil(totalItems / PAGE_SIZE),

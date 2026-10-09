@@ -40,7 +40,7 @@ public sealed class SendFastingNotificationsCommandHandler(IFastingOccurrenceRea
             }
 
             checkInLookup.TryGetValue(occurrence.Id, out IReadOnlyList<FastingCheckIn>? occurrenceCheckIns);
-            foreach (FastingNotificationCandidate notification in FastingNotificationCandidatePlanner.GetDueNotifications(occurrence, plan, occurrenceCheckIns, now, active.ReminderHours, active.FollowUpReminderHours)) {
+            foreach (FastingNotificationCandidate notification in FastingNotificationCandidatePlanner.GetDueNotifications(occurrence, plan, occurrenceCheckIns, now, active.ReminderDelays)) {
                 bool created = await TryCreateAsync(
                     notification,
                     cancellationToken).ConfigureAwait(false);

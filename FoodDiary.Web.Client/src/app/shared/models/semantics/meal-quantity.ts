@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion -- these constructors attach a phantom meaning without changing scalar wire values */
-declare const quantityMeaning: unique symbol;
+import type { SemanticQuantity, UnbrandedQuantity } from './quantity-meaning';
 
-export type ProductQuantity = number & { readonly [quantityMeaning]: 'product-quantity' };
-export type RecipeServings = number & { readonly [quantityMeaning]: 'recipe-servings' };
-type UnbrandedQuantity = number & { readonly [quantityMeaning]?: never };
+export type ProductQuantity = SemanticQuantity<'product-quantity'>;
+export type RecipeServings = SemanticQuantity<'recipe-servings'>;
 
 const MAXIMUM_CONSUMED_QUANTITY = 1_000_000;
 

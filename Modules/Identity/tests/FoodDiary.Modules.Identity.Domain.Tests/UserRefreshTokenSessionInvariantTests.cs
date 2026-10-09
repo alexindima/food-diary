@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
@@ -8,7 +9,7 @@ public sealed class UserRefreshTokenSessionInvariantTests {
     [Fact]
     public void RefreshTokenSession_Create_WithEmptySessionId_Throws() {
         Assert.Throws<ArgumentException>(() => UserRefreshTokenSession.Create(
-            Guid.Empty,
+            RefreshTokenSessionId.Empty,
             UserId.New(),
             "hash",
             rememberMe: false,
@@ -21,7 +22,7 @@ public sealed class UserRefreshTokenSessionInvariantTests {
     [Fact]
     public void RefreshTokenSession_Create_WithEmptyUserId_Throws() {
         Assert.Throws<ArgumentException>(() => UserRefreshTokenSession.Create(
-            Guid.NewGuid(),
+            RefreshTokenSessionId.New(),
             UserId.Empty,
             "hash",
             rememberMe: false,
@@ -36,7 +37,7 @@ public sealed class UserRefreshTokenSessionInvariantTests {
     [InlineData(" ")]
     public void RefreshTokenSession_Create_WithBlankRefreshTokenHash_Throws(string refreshTokenHash) {
         Assert.Throws<ArgumentException>(() => UserRefreshTokenSession.Create(
-            Guid.NewGuid(),
+            RefreshTokenSessionId.New(),
             UserId.New(),
             refreshTokenHash,
             rememberMe: false,
@@ -86,7 +87,7 @@ public sealed class UserRefreshTokenSessionInvariantTests {
 
     private static UserRefreshTokenSession CreateRefreshTokenSession() =>
         UserRefreshTokenSession.Create(
-            Guid.NewGuid(),
+            RefreshTokenSessionId.New(),
             UserId.New(),
             "refresh-hash",
             rememberMe: false,

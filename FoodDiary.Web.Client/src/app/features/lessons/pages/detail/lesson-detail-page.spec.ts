@@ -4,6 +4,7 @@ import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { LessonFacade } from '../../lib/lesson.facade';
 import type { LessonDetail } from '../../models/lesson.data';
 import { LessonDetailPageComponent } from './lesson-detail-page';
@@ -103,7 +104,7 @@ function createFacadeStub(lesson: LessonDetail | null): FacadeStub {
 
 function createDetail(overrides: Partial<LessonDetail> = {}): LessonDetail {
     return {
-        id: 'lesson-1',
+        id: entityId<'lesson'>('lesson-1'),
         title: 'Macros',
         summary: 'Macro basics',
         category: 'Macronutrients',

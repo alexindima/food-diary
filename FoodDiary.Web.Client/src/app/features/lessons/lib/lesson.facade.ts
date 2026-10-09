@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { debounceTime, distinctUntilChanged, finalize, firstValueFrom } from 'rxjs';
 
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
+import type { LessonId } from '../../../shared/models/semantics/entity-id';
 import { resolvePaginationPage } from '../../../shared/navigation/pagination-query.utils';
 import { LessonService } from '../api/lesson.service';
 import type { LessonDetail, LessonPage } from '../models/lesson.data';
@@ -27,8 +28,8 @@ export class LessonFacade {
         difficulty: null,
         sort: 'recommended',
     };
-    private readonly selectedLessonId = signal<string | null>(null);
-    private readonly markedReadIds = signal<Set<string>>(new Set());
+    private readonly selectedLessonId = signal<LessonId | null>(null);
+    private readonly markedReadIds = signal<Set<LessonId>>(new Set());
     private readonly lastLoadedPage = signal<{ key: string; page: LessonPage } | null>(null);
 
     public readonly categoryFilter = signal(this.initialQuery.category);
@@ -121,7 +122,7 @@ export class LessonFacade {
         this.lessonsResource.reload();
     }
 
-    public loadLesson(id: string): void {
+    public loadLesson(id: LessonId): void {
         this.markReadFailed.set(false);
         this.selectedLessonId.set(id);
     }
@@ -130,7 +131,7 @@ export class LessonFacade {
         this.selectedLessonResource.reload();
     }
 
-    public markRead(id: string): void {
+    public markRead(id: LessonId): void {
         if (this.isMarkingRead() || this.markedReadIds().has(id)) {
             return;
         }

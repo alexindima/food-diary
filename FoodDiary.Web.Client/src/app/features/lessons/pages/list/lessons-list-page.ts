@@ -11,6 +11,7 @@ import { merge, startWith } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
+import type { LessonId } from '../../../../shared/models/semantics/entity-id';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { LessonFacade } from '../../lib/lesson.facade';
@@ -110,7 +111,7 @@ export class LessonsListPageComponent {
         this.facade.resetPage();
     }
 
-    protected openLesson(id: string): void {
+    protected openLesson(id: LessonId): void {
         void this.router.navigate(['/lessons', id]);
     }
 

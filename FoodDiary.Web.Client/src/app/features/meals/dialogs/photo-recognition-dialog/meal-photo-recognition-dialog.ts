@@ -27,6 +27,7 @@ import type { FoodRecognitionJob } from '../../../../shared/models/food-recognit
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { imageSelection } from '../../../../shared/models/image-upload.data';
 import type { MealAiSessionManageDto } from '../../../../shared/models/meal.data';
+import type { FoodRecognitionId, ImageAssetId } from '../../../../shared/models/semantics/entity-id';
 import { MealPhotoEditListComponent } from './meal-photo-edit-list/meal-photo-edit-list';
 import { MealPhotoNutritionSummaryComponent } from './meal-photo-nutrition-summary/meal-photo-nutrition-summary';
 import type {
@@ -364,7 +365,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.runAnalysis(job.imageAssetId, job.id);
     }
 
-    private runAnalysis(assetId: string, jobId?: string): void {
+    private runAnalysis(assetId: ImageAssetId, jobId?: FoodRecognitionId): void {
         this.resetAnalysisState();
         this.subscribeToAnalysis(assetId, jobId);
     }
@@ -389,7 +390,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.nutritionErrorKey.set(null);
     }
 
-    private subscribeToAnalysis(assetId: string, jobId?: string): void {
+    private subscribeToAnalysis(assetId: ImageAssetId, jobId?: FoodRecognitionId): void {
         this.analysisSubscription = (
             jobId === undefined ? this.aiFoodFacade.analyzeFoodImage({ imageAssetId: assetId }) : this.aiFoodFacade.resumeRecognition(jobId)
         )

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Email.Infrastructure;
@@ -70,9 +71,9 @@ public sealed class SharedIdentityContextIntegrationTests(PostgresDatabaseFixtur
                 "context-test", "browser", "synthetic payload", DateTime.UtcNow.AddMinutes(5), CancellationToken.None);
             Assert.Equal(43, ticket.Length);
             Assert.True(await provider.GetRequiredService<ITelegramAssertionReplayGuard>().TryConsumeAsync("synthetic assertion", DateTime.UtcNow.AddMinutes(5)));
-            Assert.NotNull(await provider.GetRequiredService<ITelegramOperationStore>().RegisterAsync(123, 1, user.Id.Value, 0, "synthetic operation", CancellationToken.None));
+            Assert.NotNull(await provider.GetRequiredService<ITelegramOperationStore>().RegisterAsync(123, 1, user.Id, 0, "synthetic operation", CancellationToken.None));
             ITelegramOperationStore operations = provider.GetRequiredService<ITelegramOperationStore>();
-            Guid operationId = Assert.Single(await operations.ListReadyAsync(123, CancellationToken.None));
+            TelegramOperationId operationId = Assert.Single(await operations.ListReadyAsync(123, CancellationToken.None));
             TelegramOperationLease? lease = await operations.AcquireAsync(123, operationId, CancellationToken.None);
             Assert.NotNull(lease);
             Assert.True(await operations.CheckpointAsync(123, operationId, lease.LeaseId, "checkpoint", completed: true, DateTime.UtcNow, CancellationToken.None));
@@ -118,7 +119,7 @@ public sealed class SharedIdentityContextIntegrationTests(PostgresDatabaseFixtur
         Assert.Single(await provider.GetRequiredService<IRefreshTokenSessionReadModelRepository>().GetActiveReadModelsAsync(user.Id));
         await writes.UpdateAsync(current);
         UserRefreshTokenSession[] others = [.. Enumerable.Range(0, 3).Select(_ =>
-            UserRefreshTokenSession.Create(Guid.NewGuid(), user.Id, "other", rememberMe: true, "password", ipAddress: null, userAgent: null, DateTime.UtcNow))];
+            UserRefreshTokenSession.Create(RefreshTokenSessionId.New(), user.Id, "other", rememberMe: true, "password", ipAddress: null, userAgent: null, DateTime.UtcNow))];
         foreach (UserRefreshTokenSession session in others) { await writes.AddAsync(session); }
         await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
         await writes.RevokeByIdAsync(others[0].Id, user.Id, DateTime.UtcNow);
@@ -135,7 +136,7 @@ public sealed class SharedIdentityContextIntegrationTests(PostgresDatabaseFixtur
     private static async Task<(User User, UserRefreshTokenSession Session)> SeedAsync(ServiceProvider provider) {
         FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
         var user = User.Create("identity-context@example.com", "hash");
-        var session = UserRefreshTokenSession.Create(Guid.NewGuid(), user.Id, "initial", rememberMe: true,
+        var session = UserRefreshTokenSession.Create(RefreshTokenSessionId.New(), user.Id, "initial", rememberMe: true,
             "password", ipAddress: null, userAgent: null, DateTime.UtcNow);
         shared.Users.Add(user);
         await provider.GetRequiredService<IRefreshTokenSessionWriteRepository>().AddAsync(session);

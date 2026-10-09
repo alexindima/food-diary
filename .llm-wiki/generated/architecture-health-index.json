@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1659,
+    "productionProjectEdges": 1666,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 111,
     "routedStandaloneComponents": 67,
-    "componentsWithoutDirectSpecs": 127,
+    "componentsWithoutDirectSpecs": 126,
     "criticalSymbolsWithoutTestReferences": 46,
     "explicitDebtMarkers": 12
   },
@@ -2236,11 +2236,11 @@
       "outputs": [
         {
           "name": "editFactor",
-          "type": "string"
+          "type": "CycleFactorId"
         },
         {
           "name": "endFactor",
-          "type": "string"
+          "type": "CycleFactorId"
         }
       ],
       "specPath": null
@@ -2266,11 +2266,11 @@
       "outputs": [
         {
           "name": "editFactor",
-          "type": "string"
+          "type": "CycleFactorId"
         },
         {
           "name": "endFactor",
-          "type": "string"
+          "type": "CycleFactorId"
         }
       ],
       "specPath": null
@@ -3821,42 +3821,6 @@
         {
           "name": "contentContext",
           "type": "Record<string, unknown> | null",
-          "required": false
-        }
-      ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "FdUiIconComponent",
-      "selector": "fd-ui-icon",
-      "feature": "fd-ui-kit",
-      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.html",
-      "inputs": [
-        {
-          "name": "name",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "size",
-          "type": "FdUiIconSize | number | null",
-          "required": false
-        },
-        {
-          "name": "decorative",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "ariaLabel",
-          "type": "string | null",
-          "required": false
-        },
-        {
-          "name": "fontSet",
-          "type": "string",
           "required": false
         }
       ],

@@ -7,6 +7,7 @@ import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 import { map } from 'rxjs';
 
 import { LocalizedNumberPipe } from '../../../../../../shared/i18n/localized-number.pipe';
+import type { MealPlanId } from '../../../../../../shared/models/semantics/entity-id';
 import { FdCardHoverDirective } from '../../../../../../shared/ui/card-hover.directive';
 import type { MealPlanCardViewModel } from '../../../../lib/meal-plan-view.mapper';
 
@@ -26,7 +27,7 @@ export class MealPlanListContentComponent {
     public readonly plans = input.required<MealPlanCardViewModel[]>();
     public readonly filtered = input(false);
     public readonly filterReset = output();
-    public readonly planOpen = output<string>();
+    public readonly planOpen = output<MealPlanId>();
 
     protected countLabelKey(type: 'DAYS' | 'RECIPES', count: number): string {
         return `MEAL_PLANS.${type}_${new Intl.PluralRules(this.language()).select(count).toUpperCase()}`;

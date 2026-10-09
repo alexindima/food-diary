@@ -26,8 +26,8 @@ internal static class MarketingAttributionMappings {
             [.. summary.RecentEvents.Select(static x => new MarketingAttributionRecentEventModel(
                     x.OccurredAtUtc,
                     x.EventType,
-                    x.AnonymousId,
-                    x.SessionId,
+                    x.AnonymousId.Value,
+                    x.SessionId.Value,
                     x.LandingPath,
                     x.ReferrerHost,
                     x.UtmSource,

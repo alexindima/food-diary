@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
@@ -21,12 +22,12 @@ public sealed class RefreshTokenCommandHandler(
     IRefreshTokenSessionWriteRepository refreshTokenSessionRepository,
     IAuthenticationTokenService authenticationTokenService) : ICommandHandler<RefreshTokenCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(RefreshTokenCommand command, CancellationToken cancellationToken) {
-        (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? validationResult = jwtTokenGenerator.ValidateToken(command.RefreshToken);
+        (UserId userId, string? email, bool rememberMe, RefreshTokenSessionId? refreshSessionId)? validationResult = jwtTokenGenerator.ValidateToken(command.RefreshToken);
         if (validationResult == null) {
             return Result.Failure<AuthenticationModel>(AuthenticationErrors.InvalidToken);
         }
 
-        (UserId userId, string? _, bool rememberMe, Guid? refreshSessionId) = validationResult.Value;
+        (UserId userId, string? _, bool rememberMe, RefreshTokenSessionId? refreshSessionId) = validationResult.Value;
         if (!refreshSessionId.HasValue) {
             return Result.Failure<AuthenticationModel>(AuthenticationErrors.InvalidToken);
         }

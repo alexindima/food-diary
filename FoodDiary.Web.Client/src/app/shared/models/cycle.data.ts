@@ -328,7 +328,7 @@ export type CycleLogDay = {
 };
 
 export type UpsertCycleDayPayload = {
-    date: string;
+    date: CalendarDate;
     bleeding?: BleedingLogPayload | null;
     clearBleeding?: boolean;
     symptoms: SymptomLogPayload[];
@@ -340,16 +340,16 @@ export type UpsertCycleDayPayload = {
 };
 
 export type UpsertCycleFactorPayload = {
-    factorId?: string;
+    factorId?: CycleFactorId;
     type: CycleFactorType;
-    startDate: string;
-    endDate?: string | null;
+    startDate: CalendarDate;
+    endDate?: CalendarDate | null;
     notes?: string | null;
     clearNotes: boolean;
 };
 
 export type UpdateMenstrualEpisodePayload = {
-    startDate: string;
-    endDate?: string | null;
+    startDate: CalendarDate;
+    endDate?: CalendarDate | null;
     excludedFromPredictions?: boolean;
 };

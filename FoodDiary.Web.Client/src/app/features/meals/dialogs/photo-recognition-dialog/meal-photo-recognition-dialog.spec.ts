@@ -10,6 +10,9 @@ import { AiFoodFacade } from '../../../../shared/lib/ai-food.facade';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import { imageSelection } from '../../../../shared/models/image-upload.data';
 import type { MealAiSessionManageDto } from '../../../../shared/models/meal.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
+import { publicImageUrl } from '../../../../shared/models/semantics/image-location';
 import { MealPhotoRecognitionDialogComponent } from './meal-photo-recognition-dialog';
 
 const SOURCE_AMOUNT = 100;
@@ -373,13 +376,13 @@ describe('Meal photo recovered jobs and editor controls', () => {
         aiFoodService.resumeRecognition.mockReturnValue(of({ items: [visionItem], recognition: { nutrition, errorCode } }));
         const { component } = await setupComponentAsync();
         component['onResumeRecognition']({
-            id: 'job-1',
-            imageAssetId: 'asset-1',
-            imageUrl: '/image.jpg',
+            id: entityId<'food-recognition'>('job-1'),
+            imageAssetId: entityId<'image-asset'>('asset-1'),
+            imageUrl: publicImageUrl('/image.jpg'),
             status: 'Succeeded',
             description: null,
-            createdOnUtc: '2026-01-01T12:00:00Z',
-            updatedOnUtc: '2026-01-01T12:01:00Z',
+            createdOnUtc: utcInstant('2026-01-01T12:00:00Z'),
+            updatedOnUtc: utcInstant('2026-01-01T12:01:00Z'),
             vision: null,
             nutrition,
             errorCode: null,

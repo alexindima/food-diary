@@ -5,10 +5,17 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+const TEST_PLAN_DURATION_DAYS = 7;
+
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { MealPlanFacade } from '../../lib/meal-plan.facade';
 import type { MealPlan } from '../../models/meal-plan.data';
+import { plannedServingsFromStored } from '../../models/meal-plan-values';
+import { plannedMealTypeFromStored } from '../../models/meal-plan-values';
+import { planDayNumberFromStored } from '../../models/meal-plan-values';
+import { planDurationDaysFromStored } from '../../models/meal-plan-values';
 import { MealPlanDetailPageComponent } from './meal-plan-detail-page';
 
 describe('MealPlanDetailPageComponent', () => {
@@ -152,24 +159,24 @@ describe('Meal plan deletion confirmation', () => {
 
 function createMealPlan(): MealPlan {
     return {
-        id: 'plan-1',
+        id: entityId<'meal-plan'>('plan-1'),
         name: 'Meal plan',
         description: null,
         dietType: 'Balanced',
-        durationDays: 7,
+        durationDays: planDurationDaysFromStored(TEST_PLAN_DURATION_DAYS),
         targetCaloriesPerDay: 2000,
         isCurated: true,
         days: [
             {
-                id: 'day-1',
-                dayNumber: 1,
+                id: entityId<'meal-plan-day'>('day-1'),
+                dayNumber: planDayNumberFromStored(1),
                 meals: [
                     {
-                        id: 'meal-1',
-                        mealType: 'Lunch',
-                        recipeId: 'recipe-1',
+                        id: entityId<'meal-plan-meal'>('meal-1'),
+                        mealType: plannedMealTypeFromStored('Lunch'),
+                        recipeId: entityId<'recipe'>('recipe-1'),
                         recipeName: null,
-                        servings: 1,
+                        servings: plannedServingsFromStored(1),
                         calories: 500,
                     },
                 ],

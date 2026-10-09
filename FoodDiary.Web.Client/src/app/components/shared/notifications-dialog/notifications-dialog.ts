@@ -9,6 +9,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { type NotificationItem, NotificationService } from '../../../shared/notifications/notification.service';
+import { notificationPresentation } from './notifications-dialog-lib/notification-presentation';
 import type { NotificationViewModel } from './notifications-dialog-lib/notifications-dialog.types';
 import { NotificationsDialogListComponent } from './notifications-dialog-list/notifications-dialog-list';
 
@@ -98,28 +99,9 @@ export class NotificationsDialogComponent {
 
     private buildNotificationViewModel(notification: NotificationItem): NotificationViewModel {
         this.languageVersion();
-        const isDietologistInvitation = notification.type === 'DietologistInvitationReceived';
-        const isDietologistRecommendation =
-            notification.type === 'NewRecommendation' ||
-            notification.type === 'NewRecommendationComment' ||
-            notification.type === 'NewRecommendationCommentForDietologist';
-        const isClientTask =
-            notification.type === 'NewClientTask' ||
-            notification.type === 'ClientTaskChangedForDietologist' ||
-            notification.type === 'ClientTaskCancelled' ||
-            notification.type === 'ClientTaskDueSoon';
-        const isPasswordSetupSuggestion = notification.type === 'PasswordSetupSuggested';
-        const hasAccentIcon = isDietologistInvitation || isDietologistRecommendation || isClientTask || isPasswordSetupSuggestion;
-
         return {
             notification,
-            isDietologistInvitation,
-            isDietologistRecommendation,
-            isPasswordSetupSuggestion,
-            hasAccentIcon,
-            icon: this.resolveNotificationIcon(notification.type),
-            badgeKey: this.resolveNotificationBadgeKey(notification.type),
-            actionKey: this.resolveNotificationActionKey(notification.type),
+            ...notificationPresentation(notification.type),
             ariaLabel: [notification.title.trim(), notification.body?.trim()].filter(Boolean).join('. '),
             dateLabel: this.formatDateTime(notification.createdAtUtc),
         };
@@ -142,81 +124,5 @@ export class NotificationsDialogComponent {
 
     private resolveLocale(): string {
         return resolveAppLocale(this.translateService.getCurrentLang());
-    }
-
-    private resolveNotificationIcon(type: string): string {
-        if (
-            type === 'DietologistInvitationReceived' ||
-            type === 'NewRecommendation' ||
-            type === 'NewRecommendationComment' ||
-            type === 'NewRecommendationCommentForDietologist'
-        ) {
-            return 'medical_information';
-        }
-
-        if (
-            type === 'NewClientTask' ||
-            type === 'ClientTaskChangedForDietologist' ||
-            type === 'ClientTaskCancelled' ||
-            type === 'ClientTaskDueSoon'
-        ) {
-            return 'task_alt';
-        }
-
-        if (type === 'PasswordSetupSuggested') {
-            return 'password';
-        }
-
-        return 'notifications';
-    }
-
-    private resolveNotificationBadgeKey(type: string): string | null {
-        if (type === 'DietologistInvitationReceived') {
-            return 'NOTIFICATIONS.DIETOLOGIST_INVITATION_BADGE';
-        }
-
-        if (type === 'NewRecommendation' || type === 'NewRecommendationComment' || type === 'NewRecommendationCommentForDietologist') {
-            return 'NOTIFICATIONS.RECOMMENDATION_BADGE';
-        }
-
-        if (
-            type === 'NewClientTask' ||
-            type === 'ClientTaskChangedForDietologist' ||
-            type === 'ClientTaskCancelled' ||
-            type === 'ClientTaskDueSoon'
-        ) {
-            return 'NOTIFICATIONS.TASK_BADGE';
-        }
-
-        if (type === 'PasswordSetupSuggested') {
-            return 'NOTIFICATIONS.PASSWORD_SETUP_BADGE';
-        }
-
-        return null;
-    }
-
-    private resolveNotificationActionKey(type: string): string | null {
-        if (type === 'DietologistInvitationReceived') {
-            return 'NOTIFICATIONS.DIETOLOGIST_INVITATION_ACTION';
-        }
-
-        if (type === 'NewRecommendation' || type === 'NewRecommendationComment' || type === 'NewRecommendationCommentForDietologist') {
-            return 'NOTIFICATIONS.RECOMMENDATION_ACTION';
-        }
-
-        if (
-            type === 'NewClientTask' ||
-            type === 'ClientTaskChangedForDietologist' ||
-            type === 'ClientTaskCancelled' ||
-            type === 'ClientTaskDueSoon'
-        ) {
-            return 'NOTIFICATIONS.TASK_ACTION';
-        }
-
-        if (type === 'PasswordSetupSuggested') {
-            return 'NOTIFICATIONS.PASSWORD_SETUP_ACTION';
-        }
-
-        return null;
     }
 }

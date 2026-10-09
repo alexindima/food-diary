@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AiFoodService } from '../api/ai-food.service';
 import { FoodRecognitionService } from '../api/food-recognition.service';
 import type { FoodVisionResponse } from '../models/ai.data';
+import { entityId } from '../models/semantics/entity-id';
 import { AiFoodFacade } from './ai-food.facade';
 
 describe('AiFoodFacade transport delegation', () => {
@@ -25,13 +26,13 @@ describe('AiFoodFacade transport delegation', () => {
         ai.calculateNutrition.mockReturnValue(response);
         jobs.resume.mockReturnValue(response);
         jobs.list.mockReturnValue(response);
-        expect(facade.analyzeFoodImage({ imageAssetId: 'asset' })).toBe(response);
+        expect(facade.analyzeFoodImage({ imageAssetId: entityId<'image-asset'>('asset') })).toBe(response);
         expect(ai.analyzeFoodImage).toHaveBeenCalledWith({ imageAssetId: 'asset' });
         expect(facade.parseFoodText({ text: 'apple' })).toBe(response);
         expect(ai.parseFoodText).toHaveBeenCalledWith({ text: 'apple' });
         expect(facade.calculateNutrition({ items: [] })).toBe(response);
         expect(ai.calculateNutrition).toHaveBeenCalledWith({ items: [] });
-        expect(facade.resumeRecognition('job')).toBe(response);
+        expect(facade.resumeRecognition(entityId<'food-recognition'>('job'))).toBe(response);
         expect(jobs.resume).toHaveBeenCalledWith('job');
         expect(facade.listRecognitions()).toBe(response);
         expect(jobs.list).toHaveBeenCalledOnce();
@@ -40,13 +41,13 @@ describe('AiFoodFacade transport delegation', () => {
         const pending = new Subject<FoodVisionResponse>();
         jobs.resume.mockReturnValue(pending);
         const error = vi.fn();
-        facade.resumeRecognition('job').subscribe({ error });
+        facade.resumeRecognition(entityId<'food-recognition'>('job')).subscribe({ error });
         const failure = new Error('offline');
         pending.error(failure);
         expect(error).toHaveBeenCalledWith(failure);
         const next = new Subject<FoodVisionResponse>();
         jobs.resume.mockReturnValue(next);
-        const subscription = facade.resumeRecognition('next').subscribe();
+        const subscription = facade.resumeRecognition(entityId<'food-recognition'>('next')).subscribe();
         subscription.unsubscribe();
         expect(next.observed).toBe(false);
     });

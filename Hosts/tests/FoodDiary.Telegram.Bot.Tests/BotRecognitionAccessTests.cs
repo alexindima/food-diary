@@ -15,7 +15,7 @@ public sealed class BotRecognitionAccessTests {
         using var http = new HttpClient(handler);
         var client = new BotDiaryClient(http, Options.Create(new TelegramBotOptions { ApiBaseUrl = "https://diary.example" }));
         BotRecognitionAccessException error = await Assert.ThrowsAsync<BotRecognitionAccessException>(() =>
-            client.StartRecognitionAsync("token", Guid.NewGuid(), Guid.NewGuid(), caption: null, CancellationToken.None));
+            client.StartRecognitionAsync("token", new BotOperationId(Guid.NewGuid()), Guid.NewGuid(), caption: null, CancellationToken.None));
         Assert.Equal(code, error.Code);
     }
 
@@ -25,7 +25,7 @@ public sealed class BotRecognitionAccessTests {
         using var http = new HttpClient(handler);
         var client = new BotDiaryClient(http, Options.Create(new TelegramBotOptions { ApiBaseUrl = "https://diary.example" }));
         HttpRequestException error = await Assert.ThrowsAsync<HttpRequestException>(() =>
-            client.StartRecognitionAsync("token", Guid.NewGuid(), Guid.NewGuid(), caption: null, CancellationToken.None));
+            client.StartRecognitionAsync("token", new BotOperationId(Guid.NewGuid()), Guid.NewGuid(), caption: null, CancellationToken.None));
         Assert.Equal(HttpStatusCode.TooManyRequests, error.StatusCode);
     }
 

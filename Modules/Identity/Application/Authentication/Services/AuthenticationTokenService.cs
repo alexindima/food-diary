@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
@@ -21,7 +22,7 @@ public sealed class AuthenticationTokenService(
         CancellationToken cancellationToken,
         AuthenticationClientContext? clientContext = null,
         bool rememberMe = false) {
-        var resolvedRefreshSessionId = Guid.NewGuid();
+        var resolvedRefreshSessionId = RefreshTokenSessionId.New();
         string accessToken = jwtTokenGenerator.GenerateAccessToken(
             principal.UserId,
             principal.Email,
@@ -50,7 +51,7 @@ public sealed class AuthenticationTokenService(
 
     public async Task<IssuedAuthenticationTokens?> RotateFromPrincipalAsync(
         UserAuthenticationPrincipalModel principal,
-        Guid refreshSessionId,
+        RefreshTokenSessionId refreshSessionId,
         string expectedRefreshTokenHash,
         bool rememberMe,
         CancellationToken cancellationToken) {
@@ -83,7 +84,7 @@ public sealed class AuthenticationTokenService(
         UserId userId,
         string hashedRefreshToken,
         bool rememberMe,
-        Guid resolvedRefreshSessionId,
+        RefreshTokenSessionId resolvedRefreshSessionId,
         AuthenticationClientContext? clientContext,
         DateTime nowUtc,
         CancellationToken cancellationToken) {

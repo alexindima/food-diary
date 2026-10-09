@@ -4,4 +4,4 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.AcquireTelegramOperation;
 
-public sealed record AcquireTelegramOperationCommand(Guid OperationId) : ICommand<Result<TelegramOperationLease>>;
+public sealed record AcquireTelegramOperationCommand(TelegramOperationId OperationId) : ICommand<Result<TelegramOperationLease>>;

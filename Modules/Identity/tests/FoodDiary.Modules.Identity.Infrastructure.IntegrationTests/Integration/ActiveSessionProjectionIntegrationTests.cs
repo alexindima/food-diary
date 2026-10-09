@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
@@ -17,11 +18,11 @@ public sealed class ActiveSessionProjectionIntegrationTests(PostgresDatabaseFixt
         var user = User.Create($"session-projection-{Guid.NewGuid():N}@example.com", "hash");
         var other = User.Create($"session-other-{Guid.NewGuid():N}@example.com", "hash");
         DateTime now = DateTime.UtcNow;
-        var older = UserRefreshTokenSession.Create(Guid.NewGuid(), user.Id, "old-hash", rememberMe: false, authProvider: "password", ipAddress: null, userAgent: "older-agent", nowUtc: now.AddMinutes(-1));
-        var newer = UserRefreshTokenSession.Create(Guid.NewGuid(), user.Id, "new-hash", rememberMe: false, authProvider: "password", ipAddress: null, userAgent: "newer-agent", nowUtc: now);
-        var revoked = UserRefreshTokenSession.Create(Guid.NewGuid(), user.Id, "revoked-hash", rememberMe: false, authProvider: "password", ipAddress: null, userAgent: null, nowUtc: now);
+        var older = UserRefreshTokenSession.Create(RefreshTokenSessionId.New(), user.Id, "old-hash", rememberMe: false, authProvider: "password", ipAddress: null, userAgent: "older-agent", nowUtc: now.AddMinutes(-1));
+        var newer = UserRefreshTokenSession.Create(RefreshTokenSessionId.New(), user.Id, "new-hash", rememberMe: false, authProvider: "password", ipAddress: null, userAgent: "newer-agent", nowUtc: now);
+        var revoked = UserRefreshTokenSession.Create(RefreshTokenSessionId.New(), user.Id, "revoked-hash", rememberMe: false, authProvider: "password", ipAddress: null, userAgent: null, nowUtc: now);
         revoked.Revoke(now);
-        var foreign = UserRefreshTokenSession.Create(Guid.NewGuid(), other.Id, "foreign-hash", rememberMe: false, authProvider: "password", ipAddress: null, userAgent: null, nowUtc: now);
+        var foreign = UserRefreshTokenSession.Create(RefreshTokenSessionId.New(), other.Id, "foreign-hash", rememberMe: false, authProvider: "password", ipAddress: null, userAgent: null, nowUtc: now);
         context.Users.AddRange(user, other);
         context.UserRefreshTokenSessions.AddRange(older, newer, revoked, foreign);
         await context.SaveChangesAsync();

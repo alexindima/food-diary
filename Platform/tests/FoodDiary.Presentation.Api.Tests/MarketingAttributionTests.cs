@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Marketing.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using System.ComponentModel.DataAnnotations;
 using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
 using FoodDiary.Modules.Marketing.Application.Commands.RecordMarketingAttribution;
@@ -108,8 +110,8 @@ public sealed class MarketingAttributionTests {
 
         Assert.IsType<NoContentResult>(result);
         RecordMarketingAttributionCommand command = Assert.IsType<RecordMarketingAttributionCommand>(sentRequest);
-        Assert.Equal("fd-anon-test", command.AnonymousId);
-        Assert.Null(command.UserId);
+        Assert.Equal("fd-anon-test", command.AnonymousId.Value);
+        Assert.Null(command.UserId?.Value);
         Assert.Equal("page_landing", command.EventType);
         Assert.Equal("telegram", command.UtmSource);
         Assert.Equal("launch", command.UtmCampaign);
@@ -137,7 +139,7 @@ public sealed class MarketingAttributionTests {
 
         Assert.IsType<NoContentResult>(result);
         RecordMarketingAttributionCommand command = Assert.IsType<RecordMarketingAttributionCommand>(sentRequest);
-        Assert.Equal(userId, command.UserId);
+        Assert.Equal(userId, command.UserId?.Value);
         Assert.Equal("signup_completed", command.EventType);
         Assert.Equal(eventId, command.EventId);
     }
@@ -240,8 +242,8 @@ public sealed class MarketingAttributionTests {
             EventType: "page_landing",
             OccurredAtUtc: now.AddHours(-1),
             UserId: null,
-            AnonymousId: "anon-1",
-            SessionId: "session-1",
+            AnonymousId: new AnonymousVisitorId("anon-1"),
+            SessionId: new MarketingSessionId("session-1"),
             LandingPath: "/?utm_source=telegram&utm_medium=social&utm_campaign=launch",
             ReferrerHost: "t.me",
             UtmSource: "telegram",
@@ -254,8 +256,8 @@ public sealed class MarketingAttributionTests {
             EventType: "page_landing",
             OccurredAtUtc: now.AddHours(-2),
             UserId: null,
-            AnonymousId: "anon-2",
-            SessionId: "session-2",
+            AnonymousId: new AnonymousVisitorId("anon-2"),
+            SessionId: new MarketingSessionId("session-2"),
             LandingPath: "/",
             ReferrerHost: null,
             UtmSource: null,
@@ -298,8 +300,8 @@ public sealed class MarketingAttributionTests {
             EventType: "page_landing",
             OccurredAtUtc: now.AddHours(-1),
             UserId: null,
-            AnonymousId: "anon-referral",
-            SessionId: "session-referral",
+            AnonymousId: new AnonymousVisitorId("anon-referral"),
+            SessionId: new MarketingSessionId("session-referral"),
             LandingPath: "/",
             ReferrerHost: "example.test",
             UtmSource: null,
@@ -332,8 +334,8 @@ public sealed class MarketingAttributionTests {
                 "page_landing",
                 DateTime.UtcNow.ToString("O"),
                 UserId: null,
-                longValue,
-                longValue,
+                new AnonymousVisitorId(longValue),
+                new MarketingSessionId(longValue),
                 longValue,
                 longValue,
                 longValue,
@@ -347,8 +349,8 @@ public sealed class MarketingAttributionTests {
 
         MarketingAttributionEventRecord record = Assert.Single(repository.Events);
         Assert.Equal("page_landing", record.EventType);
-        Assert.Equal(96, record.AnonymousId.Length);
-        Assert.Equal(96, record.SessionId.Length);
+        Assert.Equal(96, record.AnonymousId.Value.Length);
+        Assert.Equal(96, record.SessionId.Value.Length);
         Assert.Equal(160, record.UtmSource?.Length);
         Assert.Equal(64, record.BuildVersion?.Length);
     }
@@ -411,9 +413,9 @@ public sealed class MarketingAttributionTests {
         new(
             eventType,
             DateTime.UtcNow.ToString("O"),
-            userId,
-            "anon-1",
-            "session-1",
+            userId.HasValue ? new UserId(userId.Value) : (UserId?)null,
+            new AnonymousVisitorId("anon-1"),
+            new MarketingSessionId("session-1"),
             "/",
             ReferrerHost: null,
             UtmSource: null,
@@ -467,8 +469,8 @@ public sealed class MarketingAttributionTests {
                 events.Count, events.Count(x => string.Equals(x.EventType, "page_landing", StringComparison.Ordinal)),
                 events.Count(x => string.Equals(x.EventType, "signup_completed", StringComparison.Ordinal)),
                 events.Count(x => string.Equals(x.EventType, "premium_started", StringComparison.Ordinal)),
-                events.Select(x => x.AnonymousId).Distinct(StringComparer.Ordinal).Count(),
-                events.Select(x => x.SessionId).Distinct(StringComparer.Ordinal).Count(), events.Count(IsAttributed),
+                events.Select(x => x.AnonymousId.Value).Distinct(StringComparer.Ordinal).Count(),
+                events.Select(x => x.SessionId.Value).Distinct(StringComparer.Ordinal).Count(), events.Count(IsAttributed),
                 events.Count(x => string.Equals(x.EventType, "page_landing", StringComparison.Ordinal) && IsAttributed(x)),
                 events.MaxBy(x => x.OccurredAtUtc)?.OccurredAtUtc,
                 BuildBreakdown([.. events.Where(x => x.UtmCampaign is not null)], includeCampaign: true),
@@ -489,27 +491,27 @@ public sealed class MarketingAttributionTests {
                     group.Count(x => string.Equals(x.EventType, "page_landing", StringComparison.Ordinal)),
                     group.Count(x => string.Equals(x.EventType, "signup_completed", StringComparison.Ordinal)),
                     group.Count(x => string.Equals(x.EventType, "premium_started", StringComparison.Ordinal)),
-                    group.Select(x => x.AnonymousId).Distinct(StringComparer.Ordinal).Count(),
-                    group.Select(x => x.SessionId).Distinct(StringComparer.Ordinal).Count(),
+                    group.Select(x => x.AnonymousId.Value).Distinct(StringComparer.Ordinal).Count(),
+                    group.Select(x => x.SessionId.Value).Distinct(StringComparer.Ordinal).Count(),
                     group.Max(x => (DateTime?)x.OccurredAtUtc)))
                 .OrderByDescending(x => x.Events)
                 .Take(10)];
 
-        public Task<MarketingAttributionEventRecord?> GetLandingAsync(string anonymousId, string sessionId, DateTime sinceUtc, CancellationToken cancellationToken = default) =>
+        public Task<MarketingAttributionEventRecord?> GetLandingAsync(AnonymousVisitorId anonymousId, MarketingSessionId sessionId, DateTime sinceUtc, CancellationToken cancellationToken = default) =>
             Task.FromResult(_events.Where(x =>
                 string.Equals(x.EventType, "page_landing", StringComparison.Ordinal) &&
-                string.Equals(x.AnonymousId, anonymousId, StringComparison.Ordinal) &&
-                string.Equals(x.SessionId, sessionId, StringComparison.Ordinal) &&
+                x.AnonymousId == anonymousId &&
+                x.SessionId == sessionId &&
                 x.OccurredAtUtc >= sinceUtc).MaxBy(x => x.OccurredAtUtc));
 
-        public Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(Guid userId, CancellationToken cancellationToken = default) {
+        public Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(UserId userId, CancellationToken cancellationToken = default) {
             return Task.FromResult(_events
                 .Where(x => x.UserId == userId)
                 .OrderByDescending(x => x.OccurredAtUtc)
                 .FirstOrDefault());
         }
 
-        public Task<bool> ExistsForUserAsync(Guid userId, string eventType, CancellationToken cancellationToken = default) {
+        public Task<bool> ExistsForUserAsync(UserId userId, string eventType, CancellationToken cancellationToken = default) {
             return Task.FromResult(_events.Any(x =>
                 x.UserId == userId &&
                 string.Equals(x.EventType, eventType, StringComparison.Ordinal)));

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
@@ -71,9 +72,9 @@ public sealed class IdentityAuthenticationRegistrationTests {
         IJwtTokenGenerator tokens = provider.GetRequiredService<IJwtTokenGenerator>();
         IPasswordHasher hasher = provider.GetRequiredService<IPasswordHasher>();
         var userId = UserId.New();
-        var sessionId = Guid.NewGuid();
+        var sessionId = RefreshTokenSessionId.New();
         string refresh = tokens.GenerateRefreshToken(userId, "test@example.com", ["Admin"], rememberMe: true, refreshSessionId: sessionId);
-        (UserId userId, string? email, bool rememberMe, Guid? refreshSessionId)? validated = tokens.ValidateToken(refresh);
+        (UserId userId, string? email, bool rememberMe, RefreshTokenSessionId? refreshSessionId)? validated = tokens.ValidateToken(refresh);
 
         Assert.NotNull(validated);
         Assert.Multiple(

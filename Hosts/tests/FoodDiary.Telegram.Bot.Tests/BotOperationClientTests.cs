@@ -35,7 +35,7 @@ public sealed class BotOperationClientTests {
     public async Task CheckpointAsync_ReportsLostLeaseWithoutPretendingItWasSaved() {
         using var handler = new Handler(_ => Task.FromResult(new HttpResponseMessage(HttpStatusCode.Conflict)));
         using var http = new HttpClient(handler);
-        var lease = new BotOperationLease(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), 1, "payload", Checkpoint: null, DateTime.UtcNow);
+        var lease = new BotOperationLease(new BotOperationId(Guid.NewGuid()), new BotLeaseId(Guid.NewGuid()), new BotUserId(Guid.NewGuid()), 1, "payload", Checkpoint: null, DateTime.UtcNow);
         Assert.False(await CreateClient(http).CheckpointAsync(lease, "{}", completed: false, DateTime.UtcNow, CancellationToken.None));
     }
 
@@ -57,23 +57,23 @@ public sealed class BotOperationClientTests {
             return new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent.Create(new { OperationId = id }) };
         });
         using var http = new HttpClient(handler);
-        Guid actual = await CreateClient(http).RegisterAsync(10, 123, "stable-payload", CancellationToken.None);
-        Assert.Equal(id, actual);
+        BotOperationId actual = await CreateClient(http).RegisterAsync(10, 123, "stable-payload", CancellationToken.None);
+        Assert.Equal(id, actual.Value);
     }
 
     [Fact]
     public async Task AcquireAsync_ConflictDoesNotPretendWorkWasGranted() {
         using var handler = new Handler(_ => Task.FromResult(new HttpResponseMessage(HttpStatusCode.Conflict)));
         using var http = new HttpClient(handler);
-        Assert.Null(await CreateClient(http).AcquireAsync(Guid.NewGuid(), CancellationToken.None));
+        Assert.Null(await CreateClient(http).AcquireAsync(new BotOperationId(Guid.NewGuid()), CancellationToken.None));
     }
 
     [Fact]
     public async Task AcquireAsync_RejectsLeaseForDifferentOperation() {
-        var lease = new BotOperationLease(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), 1, "payload", Checkpoint: null, DateTime.UtcNow.AddMinutes(2));
-        using var handler = new Handler(_ => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent.Create(lease) }));
+        var lease = new BotOperationLease(new BotOperationId(Guid.NewGuid()), new BotLeaseId(Guid.NewGuid()), new BotUserId(Guid.NewGuid()), 1, "payload", Checkpoint: null, DateTime.UtcNow.AddMinutes(2));
+        using var handler = new Handler(_ => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent.Create(new { OperationId = lease.OperationId.Value, LeaseId = lease.LeaseId.Value, UserId = lease.UserId.Value, lease.SecurityVersion, lease.Payload, lease.Checkpoint, lease.LeaseExpiresAtUtc, lease.CreatedAtUtc }) }));
         using var http = new HttpClient(handler);
-        await Assert.ThrowsAsync<InvalidDataException>(() => CreateClient(http).AcquireAsync(Guid.NewGuid(), CancellationToken.None));
+        await Assert.ThrowsAsync<InvalidDataException>(() => CreateClient(http).AcquireAsync(new BotOperationId(Guid.NewGuid()), CancellationToken.None));
     }
 
     [Fact]

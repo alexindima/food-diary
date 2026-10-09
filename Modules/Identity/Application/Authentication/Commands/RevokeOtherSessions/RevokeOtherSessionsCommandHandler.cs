@@ -1,6 +1,5 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
-using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.RevokeOtherSessions;
@@ -10,7 +9,7 @@ public sealed class RevokeOtherSessionsCommandHandler(
     TimeProvider timeProvider) : ICommandHandler<RevokeOtherSessionsCommand, Result> {
     public async Task<Result> Handle(RevokeOtherSessionsCommand command, CancellationToken cancellationToken) {
         await repository.RevokeAllOtherAsync(
-            (UserId)command.UserId,
+            command.UserId,
             command.CurrentSessionId,
             timeProvider.GetUtcNow().UtcDateTime,
             cancellationToken).ConfigureAwait(false);

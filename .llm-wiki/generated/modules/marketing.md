@@ -85,6 +85,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [integration] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests/Integration/MarketingAttributionEventRepositoryIntegrationTests.cs`
 - [integration] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests/MarketingModuleRegistrationTests.cs`
 - [presentation] `Platform/tests/FoodDiary.Presentation.Api.Tests/MarketingAttributionTests.cs`
+- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/MarketingIdentitySemanticBoundaryTests.cs`
 - [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/MarketingModuleExtractionTests.cs`
 
 ## Working Rule

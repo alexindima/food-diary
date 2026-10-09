@@ -32,16 +32,16 @@ public sealed class TelegramOperationsController(ISender mediator) : BaseApiCont
     [ProducesResponseType<TelegramOperationRegisteredHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> Register([FromBody] RegisterTelegramOperationHttpRequest request) =>
         HandleOk(request.ToCommand(),
-            static id => new TelegramOperationRegisteredHttpResponse(id));
+            static id => new TelegramOperationRegisteredHttpResponse(id.Value));
 
     [HttpGet("ready")]
     [ProducesResponseType<IReadOnlyList<Guid>>(StatusCodes.Status200OK)]
-    public Task<IActionResult> ListReady() => HandleOk(TelegramOperationHttpMappings.ToReadyQuery(), static ids => ids);
+    public Task<IActionResult> ListReady() => HandleOk(TelegramOperationHttpMappings.ToReadyQuery(), static ids => ids.Select(id => id.Value).ToArray());
 
     [HttpPost("{operationId:guid}/lease")]
     [ProducesResponseType<TelegramOperationLeaseHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> Acquire(Guid operationId) => HandleOk(operationId.ToAcquireCommand(),
-        static lease => new TelegramOperationLeaseHttpResponse(lease.OperationId, lease.LeaseId, lease.UserId, lease.SecurityVersion,
+        static lease => new TelegramOperationLeaseHttpResponse(lease.OperationId.Value, lease.LeaseId.Value, lease.UserId.Value, lease.SecurityVersion,
             lease.Payload, lease.Checkpoint, lease.LeaseExpiresAtUtc, lease.CreatedAtUtc));
 
     [HttpPost("{operationId:guid}/checkpoint")]

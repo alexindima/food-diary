@@ -13,6 +13,7 @@ import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '.
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
+import { servingMassFromObservation, type ServingMassResult } from '../../../lib/recipe-serving/recipe-display-amount';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import type { MealItemFormValues } from '../meal-manage-lib/meal-manage.types';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from './meal-manual-item-dialog';
@@ -123,7 +124,7 @@ async function setupComponentAsync(
             {
                 provide: RecipeServingWeightService,
                 useValue: {
-                    loadServingWeight: vi.fn().mockReturnValue(of(RECIPE_SERVING_WEIGHT)),
+                    loadServingMass: vi.fn().mockReturnValue(of(servingMassFromObservation(RECIPE_SERVING_WEIGHT))),
                     hasServingWeight: vi.fn().mockReturnValue(values.servingWeightAvailable ?? true),
                 },
             },
@@ -196,8 +197,8 @@ function createRecipe(): Recipe {
 describe('MealManualItemDialogComponent asynchronous serving weight', () => {
     it.each([RECIPE_SERVING_WEIGHT, null])('blocks amount editing and save until weight resolves to %s', async servingWeight => {
         const { component, fixture, dialogRef } = await setupComponentAsync();
-        const weight = new Subject<number | null>();
-        vi.spyOn(TestBed.inject(RecipeServingWeightService), 'loadServingWeight').mockReturnValue(weight);
+        const weight = new Subject<ServingMassResult>();
+        vi.spyOn(TestBed.inject(RecipeServingWeightService), 'loadServingMass').mockReturnValue(weight);
         component['onRecipeSelected'](createRecipe());
         fixture.detectChanges();
         const amountInput = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('input[type="number"]');
@@ -206,7 +207,7 @@ describe('MealManualItemDialogComponent asynchronous serving weight', () => {
         component['save']();
         expect(dialogRef.close).not.toHaveBeenCalled();
 
-        weight.next(servingWeight);
+        weight.next(servingMassFromObservation(servingWeight));
         fixture.detectChanges();
         expect(component['canSave']()).toBe(true);
         expect(amountInput?.disabled).toBe(false);
@@ -229,8 +230,8 @@ describe('MealManualItemDialogComponent asynchronous serving weight', () => {
     });
     it.each(['product', 'amount', 'destroy'] as const)('does not overwrite newer state after %s', async action => {
         const { component, fixture } = await setupComponentAsync();
-        const weight = new Subject<number | null>();
-        vi.spyOn(TestBed.inject(RecipeServingWeightService), 'loadServingWeight').mockReturnValue(weight);
+        const weight = new Subject<ServingMassResult>();
+        vi.spyOn(TestBed.inject(RecipeServingWeightService), 'loadServingMass').mockReturnValue(weight);
         component['onRecipeSelected'](createRecipe());
         if (action === 'product') {
             component['onSourceTypeChange']('Product');
@@ -241,7 +242,7 @@ describe('MealManualItemDialogComponent asynchronous serving weight', () => {
             fixture.destroy();
         }
         const expected = component['amountModel']();
-        weight.next(RECIPE_SERVING_WEIGHT);
+        weight.next(servingMassFromObservation(RECIPE_SERVING_WEIGHT));
         expect(component['amountModel']()).toBe(expected);
         if (action !== 'amount') {
             expect(weight.observed).toBe(false);
@@ -279,7 +280,7 @@ describe('MealManualItemDialogComponent validation and selection boundaries', ()
     });
     it.each([null, 0, -1])('keeps the fallback amount when serving weight is %s', async weight => {
         const { component } = await setupComponentAsync();
-        vi.spyOn(TestBed.inject(RecipeServingWeightService), 'loadServingWeight').mockReturnValue(of(weight));
+        vi.spyOn(TestBed.inject(RecipeServingWeightService), 'loadServingMass').mockReturnValue(of(servingMassFromObservation(weight)));
         component['onRecipeSelected'](createRecipe());
         expect(component['amountModel']()).toBe(1);
     });

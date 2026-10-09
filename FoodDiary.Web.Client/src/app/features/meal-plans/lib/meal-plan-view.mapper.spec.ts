@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
+const TEST_PLAN_DURATION_DAYS = 7;
+
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { MealPlan, MealPlanSummary } from '../models/meal-plan.data';
+import { plannedServingsFromStored } from '../models/meal-plan-values';
+import { plannedMealTypeFromStored } from '../models/meal-plan-values';
+import { planDayNumberFromStored } from '../models/meal-plan-values';
+import { planDurationDaysFromStored } from '../models/meal-plan-values';
 import { buildMealPlanCards, buildMealPlanDetailView, buildMealPlanDietFilterOptions } from './meal-plan-view.mapper';
 
 describe('meal plan view mapper', () => {
@@ -50,11 +57,11 @@ describe('meal plan view mapper', () => {
 
 function createSummary(overrides: Partial<MealPlanSummary> = {}): MealPlanSummary {
     return {
-        id: 'plan-1',
+        id: entityId<'meal-plan'>('plan-1'),
         name: 'Balanced plan',
         description: 'Plan description',
         dietType: 'Balanced',
-        durationDays: 7,
+        durationDays: planDurationDaysFromStored(TEST_PLAN_DURATION_DAYS),
         targetCaloriesPerDay: 2000,
         isCurated: true,
         totalRecipes: 21,
@@ -64,24 +71,24 @@ function createSummary(overrides: Partial<MealPlanSummary> = {}): MealPlanSummar
 
 function createMealPlan(): MealPlan {
     return {
-        id: 'plan-1',
+        id: entityId<'meal-plan'>('plan-1'),
         name: 'Balanced plan',
         description: null,
         dietType: 'Balanced',
-        durationDays: 7,
+        durationDays: planDurationDaysFromStored(TEST_PLAN_DURATION_DAYS),
         targetCaloriesPerDay: 2000,
         isCurated: true,
         days: [
             {
-                id: 'day-1',
-                dayNumber: 1,
+                id: entityId<'meal-plan-day'>('day-1'),
+                dayNumber: planDayNumberFromStored(1),
                 meals: [
                     {
-                        id: 'meal-1',
-                        mealType: 'Breakfast',
-                        recipeId: 'recipe-1',
+                        id: entityId<'meal-plan-meal'>('meal-1'),
+                        mealType: plannedMealTypeFromStored('Breakfast'),
+                        recipeId: entityId<'recipe'>('recipe-1'),
                         recipeName: 'Omelette',
-                        servings: 1,
+                        servings: plannedServingsFromStored(1),
                         calories: 450,
                         proteins: 30,
                         fats: 0,

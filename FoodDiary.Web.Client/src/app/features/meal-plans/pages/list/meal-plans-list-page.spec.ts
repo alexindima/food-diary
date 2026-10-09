@@ -3,9 +3,13 @@ import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { describe, expect, it, vi } from 'vitest';
 
+const TEST_PLAN_DURATION_DAYS = 7;
+
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { MealPlanFacade } from '../../lib/meal-plan.facade';
 import type { DietType, MealPlanSummary } from '../../models/meal-plan.data';
+import { planDurationDaysFromStored } from '../../models/meal-plan-values';
 import { MealPlansListPageComponent } from './meal-plans-list-page';
 
 describe('MealPlansListPageComponent', () => {
@@ -34,7 +38,7 @@ describe('MealPlansListPageComponent', () => {
         const router = createRouterStub();
         const component = createComponent(facade, router);
 
-        component['openPlan']('plan-1');
+        component['openPlan'](entityId<'meal-plan'>('plan-1'));
 
         expect(router.navigate).toHaveBeenCalledWith(['/meal-plans', 'plan-1']);
     });
@@ -78,11 +82,11 @@ function createFacadeStub(plans: MealPlanSummary[] = []): FacadeStub {
 
 function createSummary(overrides: Partial<MealPlanSummary> = {}): MealPlanSummary {
     return {
-        id: 'plan-1',
+        id: entityId<'meal-plan'>('plan-1'),
         name: 'Meal plan',
         description: null,
         dietType: 'Balanced',
-        durationDays: 7,
+        durationDays: planDurationDaysFromStored(TEST_PLAN_DURATION_DAYS),
         targetCaloriesPerDay: 2000,
         isCurated: true,
         totalRecipes: 21,

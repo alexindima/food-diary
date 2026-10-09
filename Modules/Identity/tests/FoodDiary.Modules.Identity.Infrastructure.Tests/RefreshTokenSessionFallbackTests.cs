@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence.Users;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -52,7 +53,7 @@ public sealed class RefreshTokenSessionFallbackTests {
         await context.SaveChangesAsync();
         var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database);
 
-        await repository.RevokeByIdAsync(Guid.NewGuid(), owner, Now);
+        await repository.RevokeByIdAsync(RefreshTokenSessionId.New(), owner, Now);
         await repository.RevokeByIdAsync(session.Id, UserId.New(), Now);
         Assert.True(session.IsActive);
         await repository.RevokeByIdAsync(session.Id, owner, Now);
@@ -68,7 +69,7 @@ public sealed class RefreshTokenSessionFallbackTests {
         await context.SaveChangesAsync();
         var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database);
 
-        Assert.False(await repository.TryRotateAsync(Guid.NewGuid(), owner, "hash", "new", rememberMe: true, Now));
+        Assert.False(await repository.TryRotateAsync(RefreshTokenSessionId.New(), owner, "hash", "new", rememberMe: true, Now));
         Assert.False(await repository.TryRotateAsync(session.Id, UserId.New(), "hash", "new", rememberMe: true, Now));
         Assert.False(await repository.TryRotateAsync(session.Id, owner, "wrong", "new", rememberMe: true, Now));
         Assert.True(await repository.TryRotateAsync(session.Id, owner, "hash", "new", rememberMe: true, Now));
@@ -84,5 +85,5 @@ public sealed class RefreshTokenSessionFallbackTests {
         .UseInMemoryDatabase(Guid.NewGuid().ToString("N")).Options);
 
     private static UserRefreshTokenSession CreateSession(UserId owner) => UserRefreshTokenSession.Create(
-        Guid.NewGuid(), owner, "hash", rememberMe: false, authProvider: "password", ipAddress: null, userAgent: null, Now.AddMinutes(-1));
+        RefreshTokenSessionId.New(), owner, "hash", rememberMe: false, authProvider: "password", ipAddress: null, userAgent: null, Now.AddMinutes(-1));
 }

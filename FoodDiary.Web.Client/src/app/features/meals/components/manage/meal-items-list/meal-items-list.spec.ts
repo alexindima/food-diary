@@ -8,6 +8,11 @@ import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '.
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
+import {
+    recipeDisplayFromInput,
+    servingMassFromObservation,
+    UNKNOWN_SERVING_MASS,
+} from '../../../lib/recipe-serving/recipe-display-amount';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import { MealItemsListComponent, type MealItemsListItemState } from './meal-items-list';
 
@@ -44,13 +49,18 @@ describe('MealItemsListComponent rows', () => {
 
     it('should build recipe row with serving weight conversion', async () => {
         const recipe = createRecipe();
-        const recipeWeight = { convertGramsToServings: vi.fn().mockReturnValue(2), hasServingWeight: vi.fn().mockReturnValue(true) };
+        const recipeWeight = {
+            displayAmountFromInput: vi
+                .fn()
+                .mockReturnValue(recipeDisplayFromInput(RECIPE_AMOUNT_GRAMS, servingMassFromObservation(RECIPE_SERVING_WEIGHT))),
+            hasServingWeight: vi.fn().mockReturnValue(true),
+        };
         const { component } = await setupComponentAsync({
             items: [createItemState({ sourceType: MealSourceType.Recipe, recipe, amount: RECIPE_AMOUNT_GRAMS })],
             recipeWeight,
         });
 
-        expect(recipeWeight.convertGramsToServings).toHaveBeenCalledWith(recipe, RECIPE_AMOUNT_GRAMS);
+        expect(recipeWeight.displayAmountFromInput).toHaveBeenCalledWith(recipe, RECIPE_AMOUNT_GRAMS);
         expect(component['manualItemRows']()).toEqual([
             expect.objectContaining({
                 index: 0,
@@ -77,7 +87,7 @@ describe('MealItemsListComponent rows', () => {
     });
     it('displays recipe servings and matching nutrition when weight is unavailable', async () => {
         const recipeWeight = {
-            convertGramsToServings: vi.fn().mockReturnValue(RECIPE_FALLBACK_SERVINGS),
+            displayAmountFromInput: vi.fn().mockReturnValue(recipeDisplayFromInput(RECIPE_FALLBACK_SERVINGS, UNKNOWN_SERVING_MASS)),
             hasServingWeight: vi.fn().mockReturnValue(false),
         };
         const { component } = await setupComponentAsync({
@@ -153,14 +163,16 @@ type MealItemsListSetupOptions = {
     arrayError?: string | null;
     hasExternalItems?: boolean;
     items?: MealItemsListItemState[];
-    recipeWeight?: { convertGramsToServings: ReturnType<typeof vi.fn>; hasServingWeight: ReturnType<typeof vi.fn> };
+    recipeWeight?: { displayAmountFromInput: ReturnType<typeof vi.fn>; hasServingWeight: ReturnType<typeof vi.fn> };
 };
 
 async function setupComponentAsync(
     options: MealItemsListSetupOptions = {},
 ): Promise<{ component: MealItemsListComponent; fixture: ComponentFixture<MealItemsListComponent> }> {
     const recipeWeight = options.recipeWeight ?? {
-        convertGramsToServings: vi.fn().mockReturnValue(RECIPE_AMOUNT_GRAMS / RECIPE_SERVING_WEIGHT),
+        displayAmountFromInput: vi
+            .fn()
+            .mockReturnValue(recipeDisplayFromInput(RECIPE_AMOUNT_GRAMS, servingMassFromObservation(RECIPE_SERVING_WEIGHT))),
         hasServingWeight: vi.fn().mockReturnValue(true),
     };
 

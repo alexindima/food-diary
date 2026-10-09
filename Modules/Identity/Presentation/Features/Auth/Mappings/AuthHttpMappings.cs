@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoExchange;
 using FoodDiary.Modules.Admin.Contracts.Commands.ExchangeAdminImpersonation;
@@ -147,13 +149,13 @@ public static class AuthHttpMappings {
 
     extension(Guid userId) {
         public GetActiveSessionsQuery ToGetActiveSessionsQuery(Guid currentSessionId, int page, int limit) =>
-            new(userId, currentSessionId, page, limit);
+            new(new UserId(userId), new RefreshTokenSessionId(currentSessionId), page, limit);
 
         public RevokeSessionCommand ToRevokeSessionCommand(Guid currentSessionId, Guid sessionId) =>
-            new(userId, currentSessionId, sessionId);
+            new(new UserId(userId), new RefreshTokenSessionId(currentSessionId), new RefreshTokenSessionId(sessionId));
 
         public RevokeOtherSessionsCommand ToRevokeOtherSessionsCommand(Guid currentSessionId) =>
-            new(userId, currentSessionId);
+            new(new UserId(userId), new RefreshTokenSessionId(currentSessionId));
 
         public ResendEmailVerificationCommand ToResendVerificationCommand(string? clientOrigin = null) {
             return new ResendEmailVerificationCommand(

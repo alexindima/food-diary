@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "summary": {
     "components": 488,
-    "componentsWithoutDirectSpecs": 127,
+    "componentsWithoutDirectSpecs": 126,
     "inputs": 1570,
     "outputs": 543,
     "apiCalls": 314,
@@ -1473,11 +1473,11 @@
       "outputs": [
         {
           "name": "editFactor",
-          "type": "string"
+          "type": "CycleFactorId"
         },
         {
           "name": "endFactor",
-          "type": "string"
+          "type": "CycleFactorId"
         }
       ],
       "specPath": null
@@ -1503,11 +1503,11 @@
       "outputs": [
         {
           "name": "editFactor",
-          "type": "string"
+          "type": "CycleFactorId"
         },
         {
           "name": "endFactor",
-          "type": "string"
+          "type": "CycleFactorId"
         }
       ],
       "specPath": null
@@ -5240,7 +5240,7 @@
         }
       ],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.spec.ts"
     },
     {
       "class": "FdUiImagePreviewDialogComponent",
@@ -7707,7 +7707,7 @@
       "outputs": [
         {
           "name": "lessonOpen",
-          "type": "string"
+          "type": "LessonId"
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-grid/lessons-list-grid.spec.ts"
@@ -7743,7 +7743,7 @@
       "outputs": [
         {
           "name": "lessonOpen",
-          "type": "string"
+          "type": "LessonId"
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-sections/lessons-list-progress/lessons-list-progress.spec.ts"
@@ -7853,7 +7853,7 @@
         },
         {
           "name": "planOpen",
-          "type": "string"
+          "type": "MealPlanId"
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plan-list-sections/meal-plan-list-content/meal-plan-list-content.spec.ts"
@@ -17122,7 +17122,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/lessons",
       "path": "FoodDiary.Web.Client/src/app/features/lessons/api/lesson.service.ts",
-      "line": 23,
+      "line": 24,
       "publicMethod": "getAll",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.lessons",
@@ -17134,7 +17134,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/lessons/{id}",
       "path": "FoodDiary.Web.Client/src/app/features/lessons/api/lesson.service.ts",
-      "line": 53,
+      "line": 54,
       "publicMethod": "getById",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.lessons",
@@ -17146,7 +17146,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/lessons/{id}/read",
       "path": "FoodDiary.Web.Client/src/app/features/lessons/api/lesson.service.ts",
-      "line": 60,
+      "line": 61,
       "publicMethod": "markRead",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.lessons",
@@ -17158,7 +17158,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/meal-plans",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/api/meal-plan.service.ts",
-      "line": 25,
+      "line": 26,
       "publicMethod": "getPage",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.mealPlans",
@@ -17170,7 +17170,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/meal-plans/{id}",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/api/meal-plan.service.ts",
-      "line": 32,
+      "line": 33,
       "publicMethod": "getById",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.mealPlans",
@@ -17182,7 +17182,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/meal-plans/{id}/adopt",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/api/meal-plan.service.ts",
-      "line": 39,
+      "line": 40,
       "publicMethod": "adopt",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.mealPlans",
@@ -17194,7 +17194,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/meal-plans/{id}",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/api/meal-plan.service.ts",
-      "line": 46,
+      "line": 47,
       "publicMethod": "deletePlan",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.mealPlans",
@@ -17206,7 +17206,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/meal-plans/{id}/shopping-list",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/api/meal-plan.service.ts",
-      "line": 52,
+      "line": 53,
       "publicMethod": "generateShoppingList",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.mealPlans",
@@ -18238,7 +18238,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/ai/food/recognitions",
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 81,
+      "line": 86,
       "publicMethod": "submit",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
@@ -18250,7 +18250,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/ai/food/recognitions/{id}",
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 106,
+      "line": 111,
       "publicMethod": "deleteRecognition",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
@@ -18262,7 +18262,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/ai/food/recognitions/page",
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 110,
+      "line": 115,
       "publicMethod": "list",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
@@ -18274,7 +18274,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/ai/food/recognitions/{id}",
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 122,
+      "line": 127,
       "publicMethod": "waitForResult",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
@@ -18610,7 +18610,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/marketing/attribution-events",
       "path": "FoodDiary.Web.Client/src/app/shared/marketing/marketing-attribution.service.ts",
-      "line": 58,
+      "line": 62,
       "publicMethod": "initialize",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.marketing}/attribution-events`",
@@ -18622,7 +18622,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/marketing/attribution-events/signup",
       "path": "FoodDiary.Web.Client/src/app/shared/marketing/marketing-attribution.service.ts",
-      "line": 79,
+      "line": 83,
       "publicMethod": "recordSignupCompleted",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.marketing}/attribution-events`",
@@ -18634,7 +18634,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/unread-count",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 83,
+      "line": 84,
       "publicMethod": "fetchUnreadCount",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -18646,7 +18646,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/{notificationId}/read",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 129,
+      "line": 130,
       "publicMethod": "markAsRead",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -18658,7 +18658,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/read-all",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 142,
+      "line": 143,
       "publicMethod": "markAllRead",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -18670,7 +18670,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/test/schedule",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 151,
+      "line": 152,
       "publicMethod": "scheduleTestNotification",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -18682,7 +18682,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/preferences",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 157,
+      "line": 158,
       "publicMethod": "getNotificationPreferences",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -18694,7 +18694,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/preferences",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 161,
+      "line": 162,
       "publicMethod": "updateNotificationPreferences",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -18706,7 +18706,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/push/subscriptions",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 167,
+      "line": 168,
       "publicMethod": "getWebPushSubscriptions",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -18718,7 +18718,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/push/config",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 173,
+      "line": 174,
       "publicMethod": "getWebPushConfiguration",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -18730,7 +18730,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/push/subscription",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 179,
+      "line": 180,
       "publicMethod": "upsertWebPushSubscription",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -18742,7 +18742,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/push/subscription",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 186,
+      "line": 187,
       "publicMethod": "removeWebPushSubscription",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -18754,7 +18754,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 211,
+      "line": 212,
       "publicMethod": "loadNotifications",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",

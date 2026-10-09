@@ -10,6 +10,7 @@ import { sdkPage } from '../../../shared/api/sdk/sdk-response';
 import { shoppingListFromSdk } from '../../../shared/api/sdk/shopping-sdk.mapper';
 import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
+import type { MealPlanId } from '../../../shared/models/semantics/entity-id';
 import type { ShoppingList } from '../../../shared/models/shopping-list.data';
 import type { MealPlan, MealPlanSummary } from '../models/meal-plan.data';
 import { mealPlanFromSdk, mealPlanSummaryFromSdk } from './meal-plan-sdk.mapper';
@@ -28,27 +29,27 @@ export class MealPlanService {
         );
     }
 
-    public getById(id: string): Observable<MealPlan> {
+    public getById(id: MealPlanId): Observable<MealPlan> {
         return this.sdk.client.getMealPlansById({ version: this.sdk.version, id }).pipe(
             map(mealPlanFromSdk),
             catchError((error: unknown) => rethrowApiError('Get meal plan error', error)),
         );
     }
 
-    public adopt(id: string): Observable<MealPlan> {
+    public adopt(id: MealPlanId): Observable<MealPlan> {
         return this.sdk.client.postMealPlansByIdAdopt({ version: this.sdk.version, id }).pipe(
             map(mealPlanFromSdk),
             catchError((error: unknown) => rethrowApiError('Adopt meal plan error', error)),
         );
     }
 
-    public deletePlan(id: string): Observable<void> {
+    public deletePlan(id: MealPlanId): Observable<void> {
         return this.sdk.client
             .deleteMealPlansById({ version: this.sdk.version, id })
             .pipe(catchError((error: unknown) => rethrowApiError('Delete meal plan error', error)));
     }
 
-    public generateShoppingList(id: string): Observable<ShoppingList> {
+    public generateShoppingList(id: MealPlanId): Observable<ShoppingList> {
         return this.sdk.client.postMealPlansByIdShoppingList({ version: this.sdk.version, id }).pipe(
             map(shoppingListFromSdk),
             catchError((error: unknown) => rethrowApiError('Generate shopping list error', error)),

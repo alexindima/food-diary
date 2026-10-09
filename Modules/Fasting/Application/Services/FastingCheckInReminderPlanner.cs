@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using System.Globalization;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 
@@ -8,8 +9,7 @@ internal static class FastingCheckInReminderPlanner {
         FastingOccurrence occurrence,
         IReadOnlyList<FastingCheckIn>? checkIns,
         DateTime nowUtc,
-        int reminderHours,
-        int followUpReminderHours) {
+        FastingReminderSchedule reminderDelays) {
         if (HasExistingCheckIn(occurrence, checkIns)) {
             return [];
         }
@@ -19,12 +19,7 @@ internal static class FastingCheckInReminderPlanner {
             return [];
         }
 
-        return [.. new[] {
-                reminderHours,
-                followUpReminderHours,
-            }
-            .Distinct()
-            .Order()
+        return [.. reminderDelays.DueHours
             .Where(hour => elapsed.TotalHours >= hour)
             .Select(hour => string.Create(
                 CultureInfo.InvariantCulture,

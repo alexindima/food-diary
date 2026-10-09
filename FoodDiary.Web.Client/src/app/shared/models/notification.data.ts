@@ -1,12 +1,16 @@
+import type { NotificationKind } from './notification-kind';
+import type { UtcInstant } from './semantics/date-value';
+import type { NotificationId } from './semantics/entity-id';
+
 export type NotificationItem = {
-    id: string;
-    type: string;
+    id: NotificationId;
+    type: NotificationKind;
     title: string;
     body: string | null;
     targetUrl: string | null;
     referenceId: string | null;
     isRead: boolean;
-    createdAtUtc: string;
+    createdAtUtc: UtcInstant;
 };
 
 export type ScheduleTestNotificationRequest = {

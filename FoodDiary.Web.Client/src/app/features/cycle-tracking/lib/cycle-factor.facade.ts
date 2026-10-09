@@ -6,6 +6,8 @@ import { firstValueFrom } from 'rxjs';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
 import { CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION, type UpsertCycleFactorPayload } from '../../../shared/models/cycle.data';
+import { calendarDate } from '../../../shared/models/semantics/date-value';
+import type { CycleFactorId } from '../../../shared/models/semantics/entity-id';
 import { CyclesService } from '../api/cycles.service';
 import { getCycleFactorStatus } from './cycle-factor-status.utils';
 import { MAX_CYCLE_NOTES_LENGTH } from './cycle-tracking.config';
@@ -105,14 +107,14 @@ export class CycleFactorFacade {
         return {
             ...(factorId === null ? {} : { factorId }),
             type: formValue.type,
-            startDate: toCycleDateKey(formValue.startDate),
-            endDate: formValue.endDate === null || formValue.endDate.length === 0 ? null : toCycleDateKey(formValue.endDate),
+            startDate: calendarDate(toCycleDateKey(formValue.startDate)),
+            endDate: formValue.endDate === null || formValue.endDate.length === 0 ? null : calendarDate(toCycleDateKey(formValue.endDate)),
             notes,
             clearNotes: this.state.editingFactorId() !== null && notes === undefined,
         };
     }
 
-    public editFactor(factorId: string): void {
+    public editFactor(factorId: CycleFactorId): void {
         if (this.state.isSavingFactor()) {
             return;
         }
@@ -124,8 +126,8 @@ export class CycleFactorFacade {
         this.state.factorError.set(null);
         this.factorForm().reset({
             type: factor.type,
-            startDate: toCycleDateKey(factor.startDate),
-            endDate: factor.endDate === null || factor.endDate === undefined ? null : toCycleDateKey(factor.endDate),
+            startDate: calendarDate(toCycleDateKey(factor.startDate)),
+            endDate: factor.endDate === null || factor.endDate === undefined ? null : calendarDate(toCycleDateKey(factor.endDate)),
             notes: factor.notes ?? null,
         });
         this.state.editingFactorId.set(factorId);
@@ -149,11 +151,11 @@ export class CycleFactorFacade {
         });
     }
 
-    public endFactorToday(factorId: string): void {
+    public endFactorToday(factorId: CycleFactorId): void {
         void this.endFactorTodayAsync(factorId);
     }
 
-    public async endFactorTodayAsync(factorId: string): Promise<void> {
+    public async endFactorTodayAsync(factorId: CycleFactorId): Promise<void> {
         const currentCycle = this.state.cycle();
         const factor = this.state.factors().find(item => item.id === factorId);
         const today = formatDateInputValue(new Date());
@@ -174,8 +176,8 @@ export class CycleFactorFacade {
                     .upsertFactor(currentCycle.id, {
                         factorId: factor.id,
                         type: factor.type,
-                        startDate: toCycleDateKey(factor.startDate),
-                        endDate: today,
+                        startDate: calendarDate(toCycleDateKey(factor.startDate)),
+                        endDate: calendarDate(today),
                         notes: factor.notes ?? undefined,
                         clearNotes: false,
                     })

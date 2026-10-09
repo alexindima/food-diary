@@ -5,11 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="NSubstitute" />
-    <PackageReference Include="coverlet.collector" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio" />
+    <ProjectReference Include="../../Domain/FoodDiary.Modules.Identity.Domain.csproj" />
+    <ProjectReference Include="../../Presentation/FoodDiary.Modules.Identity.Presentation.csproj" />
+    <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Presentation/FoodDiary.Modules.Identity.Presentation.csproj" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
     <Compile Include="../../../../Platform/tests/FoodDiary.Presentation.Api.Tests/CapturedSender.cs" Link="Support/CapturedSender.cs" />

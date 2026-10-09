@@ -27,6 +27,7 @@ import { buildRealtimeHubUrl } from '../lib/realtime-hub-url.utils';
 import type { FoodVisionRequest, FoodVisionResponse } from '../models/ai.data';
 import { type FoodRecognitionJob, RECOGNITION_PAGE_SIZE } from '../models/food-recognition.data';
 import type { PageOf } from '../models/page-of.data';
+import { entityId, type FoodRecognitionId, optionalEntityId, type UserId } from '../models/semantics/entity-id';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { recognitionJobFromSdk } from './sdk/ai-sdk.mapper';
 import { AiSdk } from './sdk/generated/api/ai.service';
@@ -44,14 +45,14 @@ export class FoodRecognitionService {
     private readonly storage = inject(BrowserStorageService);
     private readonly baseUrl = `${environment.apiUrls.ai}/food/recognitions`;
     private readonly sdk = createSdkConnection(AiSdk, this.baseUrl, this.http);
-    private readonly changes = new Subject<string | null>();
+    private readonly changes = new Subject<FoodRecognitionId | null>();
     private connection: HubConnection | null = null;
     private connecting: Promise<void> | null = null;
-    private sessionUser: string | null = null;
+    private sessionUser: UserId | null = null;
 
     public constructor() {
         effect(() => {
-            const user = this.auth.getUserId();
+            const user = this.currentUserId();
             if (user !== this.sessionUser) {
                 this.sessionUser = user;
                 const old = this.connection;
@@ -64,9 +65,13 @@ export class FoodRecognitionService {
         });
     }
 
+    private currentUserId(): UserId | null {
+        return optionalEntityId<'user'>(this.auth.getUserId());
+    }
+
     public start(request: FoodVisionRequest): Observable<FoodVisionResponse> {
         return defer(() => {
-            const user = this.auth.getUserId();
+            const user = this.currentUserId();
             if (user === null) {
                 return throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Unauthorized }));
             }
@@ -74,8 +79,8 @@ export class FoodRecognitionService {
         });
     }
 
-    private submit(key: string, user: string, request: FoodVisionRequest): Observable<FoodVisionResponse> {
-        const id = this.storage.getItem('session', key) ?? crypto.randomUUID();
+    private submit(key: string, user: UserId, request: FoodVisionRequest): Observable<FoodVisionResponse> {
+        const id = entityId<'food-recognition'>(this.storage.getItem('session', key) ?? crypto.randomUUID());
         // Persist before POST. A lost acceptance response retries the same durable task.
         this.storage.setItem('session', key, id);
         return this.sdk.client
@@ -93,16 +98,16 @@ export class FoodRecognitionService {
             );
     }
 
-    public resume(id: string): Observable<FoodVisionResponse> {
+    public resume(id: FoodRecognitionId): Observable<FoodVisionResponse> {
         return defer(() => {
-            const user = this.auth.getUserId();
+            const user = this.currentUserId();
             return user === null
                 ? throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Unauthorized }))
                 : this.waitForResult(id, user);
         });
     }
 
-    public deleteRecognition(id: string): Observable<void> {
+    public deleteRecognition(id: FoodRecognitionId): Observable<void> {
         return this.sdk.client.deleteAiFoodRecognitionsById({ version: this.sdk.version, id });
     }
 
@@ -112,11 +117,11 @@ export class FoodRecognitionService {
             .pipe(map(value => sdkPage(value, recognitionJobFromSdk)));
     }
 
-    private waitForResult(id: string, user: string): Observable<FoodVisionResponse> {
+    private waitForResult(id: FoodRecognitionId, user: UserId): Observable<FoodVisionResponse> {
         void this.connectAsync(user);
         return merge(timer(0, POLL_INTERVAL_MS), this.changes.pipe(filter(changed => changed === null || changed === id))).pipe(
             exhaustMap(() => {
-                if (this.auth.getUserId() !== user) {
+                if (this.currentUserId() !== user) {
                     return throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Unauthorized }));
                 }
                 return this.sdk.client.getAiFoodRecognitionsById({ version: this.sdk.version, id }).pipe(
@@ -131,8 +136,8 @@ export class FoodRecognitionService {
         );
     }
 
-    private toResult(job: FoodRecognitionJob, user: string): Observable<FoodVisionResponse> {
-        if (this.auth.getUserId() !== user) {
+    private toResult(job: FoodRecognitionJob, user: UserId): Observable<FoodVisionResponse> {
+        if (this.currentUserId() !== user) {
             return throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Unauthorized }));
         }
         if (job.vision === null) {
@@ -150,7 +155,7 @@ export class FoodRecognitionService {
         });
     }
 
-    private async connectAsync(user: string): Promise<void> {
+    private async connectAsync(user: UserId): Promise<void> {
         if (this.connection !== null) {
             return;
         }
@@ -163,10 +168,10 @@ export class FoodRecognitionService {
         return this.connecting;
     }
 
-    private async openConnectionAsync(user: string): Promise<void> {
+    private async openConnectionAsync(user: UserId): Promise<void> {
         try {
             const { HubConnectionBuilder, LogLevel } = await import('@microsoft/signalr');
-            if (this.auth.getUserId() !== user) {
+            if (this.currentUserId() !== user) {
                 return;
             }
             const connection = new HubConnectionBuilder()
@@ -178,7 +183,7 @@ export class FoodRecognitionService {
                 .build();
             this.connection = connection;
             connection.on('RecognitionChanged', (id: string) => {
-                this.changes.next(id);
+                this.changes.next(entityId<'food-recognition'>(id));
             });
             connection.onreconnected(() => {
                 this.changes.next(null);
@@ -189,7 +194,7 @@ export class FoodRecognitionService {
                 }
             });
             await connection.start();
-            if (this.auth.getUserId() !== user) {
+            if (this.currentUserId() !== user) {
                 await connection.stop();
                 return;
             }
@@ -215,7 +220,7 @@ export class FoodRecognitionService {
         );
     }
 
-    private async releaseRequestAsync(user: string, job: FoodRecognitionJob): Promise<FoodRecognitionJob> {
+    private async releaseRequestAsync(user: UserId, job: FoodRecognitionJob): Promise<FoodRecognitionJob> {
         const key = await this.requestKeyAsync(user, {
             imageAssetId: job.imageAssetId,
             description: job.description,
@@ -228,7 +233,7 @@ export class FoodRecognitionService {
         return job;
     }
 
-    private async requestKeyAsync(user: string, request: FoodVisionRequest): Promise<string> {
+    private async requestKeyAsync(user: UserId, request: FoodVisionRequest): Promise<string> {
         const bytes = new TextEncoder().encode(
             JSON.stringify({
                 imageAssetId: request.imageAssetId,

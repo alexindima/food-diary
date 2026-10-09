@@ -46,12 +46,7 @@ public sealed class UpdateNotificationPreferencesCommandHandler(
                     "Follow-up reminder hour must be greater than the first reminder hour."));
         }
 
-        var update = new UserPreferenceUpdate(
-            PushNotificationsEnabled: command.PushNotificationsEnabled,
-            FastingPushNotificationsEnabled: command.FastingPushNotificationsEnabled,
-            SocialPushNotificationsEnabled: command.SocialPushNotificationsEnabled,
-            FastingCheckInReminderHours: command.FastingCheckInReminderHours,
-            FastingCheckInFollowUpReminderHours: command.FastingCheckInFollowUpReminderHours);
+        var update = new UserPreferenceUpdate(ReminderDelays: new FastingReminderDelayUpdate(FirstHours: command.FastingCheckInReminderHours, FollowUpHours: command.FastingCheckInFollowUpReminderHours), PushNotificationsEnabled: command.PushNotificationsEnabled, FastingPushNotificationsEnabled: command.FastingPushNotificationsEnabled, SocialPushNotificationsEnabled: command.SocialPushNotificationsEnabled);
 
         Result<NotificationPreferencesUpdateResult> updateResult = await UpdateAsync(
             userId,

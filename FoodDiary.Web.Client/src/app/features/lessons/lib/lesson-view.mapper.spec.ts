@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { LessonDetail, LessonSummary } from '../models/lesson.data';
 import { buildLessonCategoryOptions, buildLessonDetailView, buildLessonListItems, buildLessonProgress } from './lesson-view.mapper';
 
@@ -54,7 +55,7 @@ describe('lesson view mapper', () => {
 
 function createSummary(overrides: Partial<LessonSummary> = {}): LessonSummary {
     return {
-        id: 'lesson-1',
+        id: entityId<'lesson'>('lesson-1'),
         title: 'Macros',
         summary: 'Macro basics',
         category: 'Macronutrients',

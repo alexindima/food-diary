@@ -62,10 +62,7 @@ public sealed class NotificationReadServiceCoverageTests {
     [Fact]
     public async Task WebPushDeliveryAudienceService_GetActiveAudienceAsync_RemovesExpiredAndMapsActiveSubscription() {
         var user = User.Create("push-audience@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(
-            PushNotificationsEnabled: true,
-            FastingPushNotificationsEnabled: true,
-            SocialPushNotificationsEnabled: true));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: true, SocialPushNotificationsEnabled: true));
         var utcNow = new DateTime(2026, 7, 13, 9, 0, 0, DateTimeKind.Utc);
         var active = WebPushSubscription.Create(
             user.Id, "https://push.example.com/active", "p256", "auth", utcNow.AddHours(1), "en");
@@ -93,9 +90,7 @@ public sealed class NotificationReadServiceCoverageTests {
     [Fact]
     public async Task WebPushDeliveryAudienceService_GetActiveAudienceAsync_WithoutExpiredSubscriptions_DoesNotDelete() {
         var user = User.Create("push-active-only@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(
-            PushNotificationsEnabled: true,
-            SocialPushNotificationsEnabled: true));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, PushNotificationsEnabled: true, SocialPushNotificationsEnabled: true));
         var utcNow = new DateTime(2026, 7, 25, 9, 0, 0, DateTimeKind.Utc);
         var active = WebPushSubscription.Create(
             user.Id, "https://push.example.com/active-only", "p256", "auth", utcNow.AddHours(1), "en");
@@ -141,9 +136,7 @@ public sealed class NotificationReadServiceCoverageTests {
     [Fact]
     public async Task WebPushDeliveryAudienceService_GetActiveAudienceAsync_WhenCategoryDisabled_ReturnsEmpty() {
         var user = User.Create("push-disabled@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(
-            PushNotificationsEnabled: true,
-            FastingPushNotificationsEnabled: false));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: false));
         IWebPushSubscriptionReadRepository reader = Substitute.For<IWebPushSubscriptionReadRepository>();
         IUserNotificationProfileService users = CreateUserProfileService(user);
         var service = new WebPushDeliveryAudienceService(
@@ -200,10 +193,7 @@ public sealed class NotificationReadServiceCoverageTests {
     [InlineData("UnknownType")]
     public void WebPushDeliveryAudienceService_IsCategoryEnabled_CoversEveryNotificationCategory(string notificationType) {
         var user = User.Create("push-category@example.com", "hash");
-        user.UpdatePreferences(new UserPreferenceUpdate(
-            PushNotificationsEnabled: true,
-            FastingPushNotificationsEnabled: true,
-            SocialPushNotificationsEnabled: true));
+        user.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: default, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: true, SocialPushNotificationsEnabled: true));
 
         bool result = WebPushDeliveryAudienceService.IsCategoryEnabled(ToNotificationProfile(user), notificationType);
 

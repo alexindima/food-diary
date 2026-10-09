@@ -15,7 +15,7 @@ public sealed class GetActiveSessionsQueryHandler(IRefreshTokenSessionReadModelR
     public async Task<Result<IReadOnlyList<ActiveSessionModel>>> Handle(
         GetActiveSessionsQuery query,
         CancellationToken cancellationToken) {
-        var userId = (UserId)query.UserId;
+        UserId userId = query.UserId;
         if (!await repository.IsActiveAsync(userId, query.CurrentSessionId, cancellationToken).ConfigureAwait(false)) {
             return Result.Failure<IReadOnlyList<ActiveSessionModel>>(AuthenticationErrors.InvalidToken);
         }
