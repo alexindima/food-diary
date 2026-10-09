@@ -3,6 +3,7 @@ import type { HealthAreaScoreHttpResponse } from '../../../shared/api/sdk/genera
 import type { HealthAreaScoresHttpResponse } from '../../../shared/api/sdk/generated/model/health-area-scores-http-response';
 import type { UsdaFoodDetailHttpResponse } from '../../../shared/api/sdk/generated/model/usda-food-detail-http-response';
 import { requireSdkFields, sdkEnum } from '../../../shared/api/sdk/sdk-response';
+import { usdaFoodId } from '../../../shared/models/semantics/usda-food-id';
 import type { DailyMicronutrientSummary, HealthAreaScore, HealthAreaScores, UsdaFoodDetail } from '../../../shared/models/usda.data';
 
 function healthScoreFromSdk(value: HealthAreaScoreHttpResponse): HealthAreaScore {
@@ -28,6 +29,7 @@ export function usdaDetailFromSdk(response: UsdaFoodDetailHttpResponse): UsdaFoo
     const value = requireSdkFields(response, ['fdcId', 'description', 'nutrients', 'portions']);
     return {
         ...value,
+        fdcId: usdaFoodId(value.fdcId),
         foodCategory: value.foodCategory ?? null,
         healthScores: healthScoresFromSdk(value.healthScores),
         nutrients: value.nutrients.map(itemResponse => {

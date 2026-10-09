@@ -12,7 +12,7 @@ public static class MailRelayQueueRowMapper {
                              ?? throw new InvalidOperationException("Mail relay queue row contains invalid recipients JSON.");
 
         return new QueuedEmailMessage(
-            reader.GetGuid(0),
+            new QueuedEmailId(reader.GetGuid(0)),
             reader.GetString(1),
             reader.GetString(2),
             recipients,
@@ -32,8 +32,8 @@ public static class MailRelayQueueRowMapper {
 
     public static MailRelayOutboxMessage ReadOutboxMessage(NpgsqlDataReader reader) =>
         new(
-            reader.GetGuid(0),
-            reader.GetGuid(1),
+            new MailRelayOutboxId(reader.GetGuid(0)),
+            new QueuedEmailId(reader.GetGuid(1)),
             reader.GetInt32(2));
 
     public static async Task<MailRelaySuppressionEntry> ReadSuppressionEntryAsync(

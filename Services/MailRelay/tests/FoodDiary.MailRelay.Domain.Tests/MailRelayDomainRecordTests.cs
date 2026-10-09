@@ -115,34 +115,14 @@ public sealed class MailRelayDomainRecordTests {
 
     [Fact]
     public void QueuedEmail_MarkFailedAttempt_WithBlankError_Throws() {
-        var email = QueuedEmail.FromPersistence(new QueuedEmailMessage(
-            Guid.NewGuid(),
-            "relay@example.com",
-            "FoodDiary",
-            ["user@example.com"],
-            "Subject",
-            "<p>Body</p>",
-            TextBody: null,
-            CorrelationId: null,
-            AttemptCount: 1,
-            MaxAttempts: 3));
+        var email = QueuedEmail.FromPersistence(new QueuedEmailMessage(new QueuedEmailId(Guid.NewGuid()), "relay@example.com", "FoodDiary", ["user@example.com"], "Subject", "<p>Body</p>", TextBody: null, CorrelationId: null, AttemptCount: 1, MaxAttempts: 3));
 
         Assert.Throws<ArgumentException>(() => email.MarkFailedAttempt(" "));
     }
 
     [Fact]
     public void QueuedEmail_MarkSuppressed_UpdatesStatusAndModifiedTimestamp() {
-        var email = QueuedEmail.FromPersistence(new QueuedEmailMessage(
-            Guid.NewGuid(),
-            "relay@example.com",
-            "FoodDiary",
-            ["user@example.com"],
-            "Subject",
-            "<p>Body</p>",
-            TextBody: null,
-            CorrelationId: null,
-            AttemptCount: 1,
-            MaxAttempts: 3));
+        var email = QueuedEmail.FromPersistence(new QueuedEmailMessage(new QueuedEmailId(Guid.NewGuid()), "relay@example.com", "FoodDiary", ["user@example.com"], "Subject", "<p>Body</p>", TextBody: null, CorrelationId: null, AttemptCount: 1, MaxAttempts: 3));
 
         email.MarkSuppressed();
 

@@ -119,12 +119,13 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
     private async Task ProcessDeliveryAsync(IChannel channel, BasicDeliverEventArgs eventArgs, CancellationToken cancellationToken) {
         ulong deliveryTag = eventArgs.DeliveryTag;
         string bodyText = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
-        if (!Guid.TryParse(bodyText, out Guid queuedEmailId)) {
+        if (!Guid.TryParse(bodyText, out Guid rawQueuedEmailId)) {
             logger.LogWarning("RabbitMQ relay message payload is not a valid email id: {Payload}", bodyText);
             await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: cancellationToken).ConfigureAwait(false);
             return;
         }
 
+        var queuedEmailId = new QueuedEmailId(rawQueuedEmailId);
         QueuedEmailMessage? claimedMessage = await queueStore.TryClaimMessageByIdAsync(queuedEmailId, cancellationToken).ConfigureAwait(false);
         if (claimedMessage is null) {
             logger.LogDebug("Queued email {QueuedEmailId} was not claimable when RabbitMQ delivered it.", queuedEmailId);
@@ -136,7 +137,7 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
         await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    private async Task ProcessClaimedMessageAsync(Guid queuedEmailId, QueuedEmailMessage claimedMessage, CancellationToken cancellationToken) {
+    private async Task ProcessClaimedMessageAsync(QueuedEmailId queuedEmailId, QueuedEmailMessage claimedMessage, CancellationToken cancellationToken) {
         MailRelayProcessResult result = await messageProcessor.ProcessAsync(claimedMessage, cancellationToken).ConfigureAwait(false);
         if (result.Succeeded) {
             return;

@@ -4,7 +4,7 @@ import { disabled, form, required, validate } from '@angular/forms/signals';
 import { firstValueFrom } from 'rxjs';
 
 import { calendarDate } from '../../../shared/models/semantics/date-value';
-import { entityId } from '../../../shared/models/semantics/entity-id';
+import type { MenstrualEpisodeId } from '../../../shared/models/semantics/entity-id';
 import { CyclesService } from '../api/cycles.service';
 import type { MenstrualEpisodeFormModel } from './cycle-tracking.form-models';
 import { toCycleDateKey } from './cycle-tracking.mapper';
@@ -46,7 +46,7 @@ export class CycleEpisodeFacade {
         },
     );
 
-    public editMenstrualEpisode(episodeId: string): void {
+    public editMenstrualEpisode(episodeId: MenstrualEpisodeId): void {
         if (this.state.isEpisodeBusy()) {
             return;
         }
@@ -97,7 +97,7 @@ export class CycleEpisodeFacade {
         try {
             const cycle = await firstValueFrom(
                 this.cyclesService
-                    .updateMenstrualEpisode(currentCycle.id, entityId<'menstrual-episode'>(episodeId), {
+                    .updateMenstrualEpisode(currentCycle.id, episodeId, {
                         startDate: calendarDate(toCycleDateKey(formValue.startDate)),
                         endDate:
                             formValue.endDate === null || formValue.endDate.length === 0
@@ -115,7 +115,7 @@ export class CycleEpisodeFacade {
         }
     }
 
-    public async toggleMenstrualEpisodePredictionAsync(episodeId: string): Promise<void> {
+    public async toggleMenstrualEpisodePredictionAsync(episodeId: MenstrualEpisodeId): Promise<void> {
         const currentCycle = this.state.cycle();
         const episode = this.state.menstrualEpisodes().find(item => item.id === episodeId);
         if (currentCycle === null || episode?.status !== 1 || this.hasPendingEpisodeAction()) {
@@ -127,7 +127,7 @@ export class CycleEpisodeFacade {
         try {
             const cycle = await firstValueFrom(
                 this.cyclesService
-                    .updateMenstrualEpisode(currentCycle.id, entityId<'menstrual-episode'>(episodeId), {
+                    .updateMenstrualEpisode(currentCycle.id, episodeId, {
                         startDate: calendarDate(toCycleDateKey(episode.startDate)),
                         endDate:
                             episode.endDate === undefined || episode.endDate === null
@@ -145,7 +145,7 @@ export class CycleEpisodeFacade {
         }
     }
 
-    public async deleteMenstrualEpisodeAsync(episodeId: string): Promise<void> {
+    public async deleteMenstrualEpisodeAsync(episodeId: MenstrualEpisodeId): Promise<void> {
         const currentCycle = this.state.cycle();
         if (currentCycle === null || this.hasPendingEpisodeAction()) {
             return;
@@ -155,9 +155,7 @@ export class CycleEpisodeFacade {
         this.state.deletingEpisodeId.set(episodeId);
         try {
             const cycle = await firstValueFrom(
-                this.cyclesService
-                    .deleteMenstrualEpisode(currentCycle.id, entityId<'menstrual-episode'>(episodeId))
-                    .pipe(takeUntilDestroyed(this.destroyRef)),
+                this.cyclesService.deleteMenstrualEpisode(currentCycle.id, episodeId).pipe(takeUntilDestroyed(this.destroyRef)),
             );
             this.state.cycle.set(cycle);
             if (this.state.editingEpisodeId() === episodeId) {

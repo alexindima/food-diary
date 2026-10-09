@@ -5,6 +5,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { USDA_NUTRIENT_IDS } from '../../../shared/lib/usda-nutrient.constants';
+import { entityId } from '../../../shared/models/semantics/entity-id';
+import { usdaFoodId } from '../../../shared/models/semantics/usda-food-id';
 import type { DailyMicronutrientSummary, UsdaFood, UsdaFoodDetail } from '../../../shared/models/usda.data';
 import { UsdaService } from './usda.service';
 import { USDA_SEARCH_LIMIT } from './usda-api.tokens';
@@ -17,12 +19,12 @@ const PRODUCT_ID = 'product-1';
 const ENERGY_AMOUNT = 203;
 const PROTEIN_AMOUNT = 1.35;
 const FOOD: UsdaFood = {
-    fdcId: FDC_ID,
+    fdcId: usdaFoodId(FDC_ID),
     description: 'Apple',
     foodCategory: 'Fruit',
 };
 const FOOD_DETAIL: UsdaFoodDetail = {
-    fdcId: FDC_ID,
+    fdcId: usdaFoodId(FDC_ID),
     description: 'Apple',
     foodCategory: 'Fruit',
     nutrients: [],
@@ -89,7 +91,7 @@ describe('UsdaService foods', () => {
     });
 
     it('gets food detail', () => {
-        service.getFoodDetail(FDC_ID).subscribe(detail => {
+        service.getFoodDetail(usdaFoodId(FDC_ID)).subscribe(detail => {
             expect(detail).toEqual(FOOD_DETAIL);
         });
 
@@ -118,7 +120,7 @@ describe('UsdaService foods', () => {
             },
         ];
 
-        service.getFoodDetail(FDC_ID).subscribe(detail => {
+        service.getFoodDetail(usdaFoodId(FDC_ID)).subscribe(detail => {
             expect(detail).toEqual({
                 ...FOOD_DETAIL,
                 nutrients: [
@@ -136,14 +138,14 @@ describe('UsdaService foods', () => {
 
 describe('UsdaService product link', () => {
     it('links and unlinks product', () => {
-        service.linkProduct(PRODUCT_ID, FDC_ID).subscribe();
+        service.linkProduct(entityId<'product'>(PRODUCT_ID), usdaFoodId(FDC_ID)).subscribe();
 
         const linkReq = httpMock.expectOne(`${BASE_URL}/products/${PRODUCT_ID}/link`);
         expect(linkReq.request.method).toBe('PUT');
-        expect(linkReq.request.body).toEqual({ fdcId: FDC_ID });
+        expect(linkReq.request.body).toEqual({ fdcId: usdaFoodId(FDC_ID) });
         linkReq.flush(null);
 
-        service.unlinkProduct(PRODUCT_ID).subscribe();
+        service.unlinkProduct(entityId<'product'>(PRODUCT_ID)).subscribe();
 
         const unlinkReq = httpMock.expectOne(`${BASE_URL}/products/${PRODUCT_ID}/link`);
         expect(unlinkReq.request.method).toBe('DELETE');

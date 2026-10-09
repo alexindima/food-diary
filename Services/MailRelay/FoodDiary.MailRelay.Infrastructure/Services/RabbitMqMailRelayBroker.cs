@@ -109,28 +109,28 @@ public sealed class RabbitMqMailRelayBroker(
             cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    public Task PublishOutboundAsync(Guid emailId, CancellationToken cancellationToken) {
+    public Task PublishOutboundAsync(QueuedEmailId emailId, CancellationToken cancellationToken) {
         return PublishAsync(_brokerOptions.OutboundExchangeName, _brokerOptions.OutboundRoutingKey, emailId, cancellationToken);
     }
 
-    public Task PublishRetryAsync(Guid emailId, TimeSpan delay, CancellationToken cancellationToken) {
+    public Task PublishRetryAsync(QueuedEmailId emailId, TimeSpan delay, CancellationToken cancellationToken) {
         TimeSpan boundedDelay = delay > TimeSpan.Zero
             ? delay
             : TimeSpan.FromMilliseconds(_brokerOptions.RetryDelayMilliseconds);
         return PublishAsync(_brokerOptions.RetryExchangeName, _brokerOptions.RetryRoutingKey, emailId, boundedDelay, cancellationToken);
     }
 
-    public Task PublishDeadLetterAsync(Guid emailId, CancellationToken cancellationToken) {
+    public Task PublishDeadLetterAsync(QueuedEmailId emailId, CancellationToken cancellationToken) {
         return PublishAsync(_brokerOptions.DeadLetterExchangeName, _brokerOptions.DeadLetterRoutingKey, emailId, delay: null, cancellationToken);
     }
 
-    private Task PublishAsync(string exchangeName, string routingKey, Guid emailId, CancellationToken cancellationToken) =>
+    private Task PublishAsync(string exchangeName, string routingKey, QueuedEmailId emailId, CancellationToken cancellationToken) =>
         PublishAsync(exchangeName, routingKey, emailId, delay: null, cancellationToken);
 
     private async Task PublishAsync(
         string exchangeName,
         string routingKey,
-        Guid emailId,
+        QueuedEmailId emailId,
         TimeSpan? delay,
         CancellationToken cancellationToken) {
         if (!IsEnabled) {
@@ -149,11 +149,11 @@ public sealed class RabbitMqMailRelayBroker(
                 cancellationToken).ConfigureAwait(false);
             await using (channel.ConfigureAwait(false)) {
 
-                byte[] body = Encoding.UTF8.GetBytes(emailId.ToString("D"));
+                byte[] body = Encoding.UTF8.GetBytes(emailId.Value.ToString("D"));
                 var properties = new BasicProperties {
                     Persistent = true,
                     ContentType = "text/plain",
-                    MessageId = emailId.ToString("D"),
+                    MessageId = emailId.Value.ToString("D"),
                 };
                 if (delay is { } retryDelay) {
                     properties.Expiration = Math.Max(1, (long)retryDelay.TotalMilliseconds).ToString(CultureInfo.InvariantCulture);

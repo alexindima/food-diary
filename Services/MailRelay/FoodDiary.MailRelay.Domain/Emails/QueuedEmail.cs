@@ -45,7 +45,7 @@ public sealed class QueuedEmail : AggregateRoot<QueuedEmailId> {
 
     public static QueuedEmail FromPersistence(QueuedEmailMessage message) {
         var email = new QueuedEmail(
-            (QueuedEmailId)message.Id,
+            message.Id,
             message.FromAddress,
             message.FromName,
             message.To,

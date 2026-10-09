@@ -38,7 +38,7 @@ public sealed class EnqueueMailRelayEmailLimitsTests {
         Assert.True(result.IsFailure);
         Assert.False((await new EnqueueMailRelayEmailCommandValidator().ValidateAsync(new EnqueueMailRelayEmailCommand(request), CancellationToken.None)).IsValid);
         await queue.DidNotReceiveWithAnyArgs().EnqueueAsync(default!, default);
-        await notifier.DidNotReceiveWithAnyArgs().NotifyQueuedAsync(default, default);
+        await notifier.DidNotReceiveWithAnyArgs().NotifyQueuedAsync(new QueuedEmailId(default), default);
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public sealed class EnqueueMailRelayEmailLimitsTests {
         IMailRelayQueueStore queue = Substitute.For<IMailRelayQueueStore>();
         IMailRelayDispatchNotifier notifier = Substitute.For<IMailRelayDispatchNotifier>();
         var id = Guid.NewGuid();
-        queue.EnqueueAsync(request, CancellationToken.None).Returns(id);
+        queue.EnqueueAsync(request, CancellationToken.None).Returns(new QueuedEmailId(id));
         var useCases = new MailRelayEmailUseCases(queue, notifier, new NoOpMailRelayDeliveryPolicy());
 
         Result<Guid> result = await useCases.EnqueueAsync(request, CancellationToken.None);
@@ -59,7 +59,7 @@ public sealed class EnqueueMailRelayEmailLimitsTests {
         Assert.True(result.IsSuccess);
         Assert.Equal(id, result.Value);
         Assert.True((await new EnqueueMailRelayEmailCommandValidator().ValidateAsync(new EnqueueMailRelayEmailCommand(request), CancellationToken.None)).IsValid);
-        await notifier.Received(1).NotifyQueuedAsync(id, CancellationToken.None);
+        await notifier.Received(1).NotifyQueuedAsync(new QueuedEmailId(id), CancellationToken.None);
     }
 
     private static RelayEmailMessageRequest ValidRequest() => new("noreply@example.com", "FoodDiary", ["user@example.com"], "Invitation", "<p>Hello</p>", "Hello");

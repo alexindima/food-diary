@@ -1,7 +1,7 @@
 namespace FoodDiary.MailRelay.Domain.Emails;
 
 public sealed record QueuedEmailMessage(
-    Guid Id,
+    QueuedEmailId Id,
     string FromAddress,
     string FromName,
     IReadOnlyList<string> To,

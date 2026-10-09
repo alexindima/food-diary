@@ -2,7 +2,7 @@ import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
 
-import type { CycleFactorId } from '../../../shared/models/semantics/entity-id';
+import type { CycleFactorId, MenstrualEpisodeId } from '../../../shared/models/semantics/entity-id';
 import { CyclesService } from '../api/cycles.service';
 import { CycleDayFacade } from './cycle-day.facade';
 import { CycleEpisodeFacade } from './cycle-episode.facade';
@@ -105,16 +105,16 @@ export class CycleTrackingFacade {
     public confirmPeriodStart(date: string): void {
         this.day.confirmPeriodStart(date);
     }
-    public editMenstrualEpisode(episodeId: string): void {
+    public editMenstrualEpisode(episodeId: MenstrualEpisodeId): void {
         this.episode.editMenstrualEpisode(episodeId);
     }
     public cancelMenstrualEpisodeEdit(): void {
         this.episode.cancelMenstrualEpisodeEdit();
     }
-    public async toggleMenstrualEpisodePredictionAsync(episodeId: string): Promise<void> {
+    public async toggleMenstrualEpisodePredictionAsync(episodeId: MenstrualEpisodeId): Promise<void> {
         return this.episode.toggleMenstrualEpisodePredictionAsync(episodeId);
     }
-    public async deleteMenstrualEpisodeAsync(episodeId: string): Promise<void> {
+    public async deleteMenstrualEpisodeAsync(episodeId: MenstrualEpisodeId): Promise<void> {
         return this.episode.deleteMenstrualEpisodeAsync(episodeId);
     }
     public exportCycle(range?: CycleExportRange): void {

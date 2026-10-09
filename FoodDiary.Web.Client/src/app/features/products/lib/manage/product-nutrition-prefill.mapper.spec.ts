@@ -4,6 +4,7 @@ import { KJ_TO_KCAL_FACTOR } from '../../../../shared/lib/nutrition.constants';
 import { USDA_NUTRIENT_IDS } from '../../../../shared/lib/usda-nutrient.constants';
 import { imageSelection } from '../../../../shared/models/image-upload.data';
 import { MeasurementUnit, type ProductSearchSuggestion, ProductType, ProductVisibility } from '../../../../shared/models/product.data';
+import { usdaFoodId } from '../../../../shared/models/semantics/usda-food-id';
 import type { UsdaFoodDetail } from '../../../../shared/models/usda.data';
 import type { ProductFormValues } from '../../components/manage/product-manage-lib/product-manage-form.types';
 import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
@@ -13,6 +14,8 @@ import {
     buildSourceProductPrefillPatch,
     buildUsdaFoodDetailPrefillPatch,
 } from './product-nutrition-prefill.mapper';
+
+const USDA_FOOD_KEY = 123;
 
 const DEFAULT_BASE_AMOUNT = 100;
 const EMPTY_FORM_VALUES: ProductFormValues = {
@@ -112,7 +115,7 @@ describe('USDA nutrition prefill mapper', () => {
     it('should build USDA detail patch using nutrient ids, name fallback, and kJ conversion', () => {
         const energyKj = 450;
         const detail: UsdaFoodDetail = {
-            fdcId: 123,
+            fdcId: usdaFoodId(USDA_FOOD_KEY),
             description: 'USDA product',
             foodCategory: 'Dairy',
             nutrients: [

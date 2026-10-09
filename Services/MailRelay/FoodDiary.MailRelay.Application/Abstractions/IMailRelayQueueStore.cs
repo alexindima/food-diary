@@ -1,12 +1,12 @@
 namespace FoodDiary.MailRelay.Application.Abstractions;
 
 public interface IMailRelayQueueStore {
-    Task<Guid> EnqueueAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken);
+    Task<QueuedEmailId> EnqueueAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken);
     Task<IReadOnlyList<QueuedEmailMessage>> ClaimDueBatchAsync(CancellationToken cancellationToken);
-    Task<QueuedEmailMessage?> TryClaimMessageByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<QueuedEmailMessage?> TryClaimMessageByIdAsync(QueuedEmailId id, CancellationToken cancellationToken);
     Task<IReadOnlyList<MailRelayOutboxMessage>> ClaimOutboxBatchAsync(CancellationToken cancellationToken);
-    Task MarkOutboxPublishedAsync(Guid id, CancellationToken cancellationToken);
-    Task MarkOutboxFailedAsync(Guid id, int attemptCount, string error, CancellationToken cancellationToken);
+    Task MarkOutboxPublishedAsync(MailRelayOutboxId id, CancellationToken cancellationToken);
+    Task MarkOutboxFailedAsync(MailRelayOutboxId id, int attemptCount, string error, CancellationToken cancellationToken);
     Task<MailRelayInboxClaimResult> TryClaimInboxMessageAsync(
         string consumerName,
         string messageKey,
@@ -15,9 +15,9 @@ public interface IMailRelayQueueStore {
     Task MarkInboxFailedAsync(Guid id, string error, CancellationToken cancellationToken);
     // AttemptCount is a monotonically increasing fencing token for the claimed message.
     TimeSpan ClaimRenewalInterval => TimeSpan.FromSeconds(30);
-    Task<bool> RenewClaimAsync(Guid id, int attemptCount, CancellationToken cancellationToken);
-    Task MarkSentAsync(Guid id, int attemptCount, CancellationToken cancellationToken);
-    Task MarkSuppressedAsync(Guid id, int attemptCount, IReadOnlyCollection<string> recipients, CancellationToken cancellationToken);
+    Task<bool> RenewClaimAsync(QueuedEmailId id, int attemptCount, CancellationToken cancellationToken);
+    Task MarkSentAsync(QueuedEmailId id, int attemptCount, CancellationToken cancellationToken);
+    Task MarkSuppressedAsync(QueuedEmailId id, int attemptCount, IReadOnlyCollection<string> recipients, CancellationToken cancellationToken);
     Task<IReadOnlyList<MailRelaySuppressionEntry>> GetSuppressionsAsync(string? email, CancellationToken cancellationToken);
     async Task<MailRelayPage<MailRelaySuppressionEntry>> GetSuppressionsPageAsync(string? email, int page, int limit, CancellationToken cancellationToken) {
         int normalizedPage = Math.Clamp(page, 1, 10_000);
@@ -46,6 +46,6 @@ public interface IMailRelayQueueStore {
         IReadOnlyCollection<string> recipients,
         CancellationToken cancellationToken);
     Task<MailRelayQueueStats> GetStatsAsync(CancellationToken cancellationToken);
-    Task<MailRelayMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken);
+    Task<MailRelayMessageDetails?> GetMessageDetailsAsync(QueuedEmailId id, CancellationToken cancellationToken);
     Task<DateTimeOffset?> MarkFailedAttemptAsync(QueuedEmailFailureDecision decision, CancellationToken cancellationToken);
 }

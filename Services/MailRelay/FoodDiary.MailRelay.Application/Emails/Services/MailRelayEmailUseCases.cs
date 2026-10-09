@@ -14,9 +14,9 @@ public sealed class MailRelayEmailUseCases(
             return Result.Failure<Guid>(policyResult.Error!);
         }
 
-        Guid queuedEmailId = await queueStore.EnqueueAsync(request, cancellationToken).ConfigureAwait(false);
+        QueuedEmailId queuedEmailId = await queueStore.EnqueueAsync(request, cancellationToken).ConfigureAwait(false);
         await dispatchNotifier.NotifyQueuedAsync(queuedEmailId, cancellationToken).ConfigureAwait(false);
-        return Result.Success(queuedEmailId);
+        return Result.Success(queuedEmailId.Value);
     }
 
     public Task<MailRelayQueueStats> GetStatsAsync(CancellationToken cancellationToken) {
@@ -24,7 +24,7 @@ public sealed class MailRelayEmailUseCases(
     }
 
     public Task<MailRelayMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken) {
-        return queueStore.GetMessageDetailsAsync(id, cancellationToken);
+        return queueStore.GetMessageDetailsAsync(new QueuedEmailId(id), cancellationToken);
     }
 
     public Task<MailRelayPage<MailRelaySuppressionEntry>> GetSuppressionsPageAsync(

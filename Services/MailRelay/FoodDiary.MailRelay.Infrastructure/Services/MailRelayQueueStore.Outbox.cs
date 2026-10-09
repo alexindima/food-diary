@@ -37,7 +37,7 @@ public sealed partial class MailRelayQueueStore {
             cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task MarkOutboxPublishedAsync(Guid id, CancellationToken cancellationToken) {
+    public async Task MarkOutboxPublishedAsync(MailRelayOutboxId id, CancellationToken cancellationToken) {
         const string sql = """
                            update mailrelay_outbox_messages
                            set status = 'published',
@@ -47,11 +47,11 @@ public sealed partial class MailRelayQueueStore {
                            where id = @id;
                            """;
 
-        await ExecuteStatusCommandAsync(sql, id, cancellationToken).ConfigureAwait(false);
+        await ExecuteStatusCommandAsync(sql, id.Value, cancellationToken).ConfigureAwait(false);
         MailRelayTelemetry.RecordOutboxEvent("published");
     }
 
-    public async Task MarkOutboxFailedAsync(Guid id, int attemptCount, string error, CancellationToken cancellationToken) {
+    public async Task MarkOutboxFailedAsync(MailRelayOutboxId id, int attemptCount, string error, CancellationToken cancellationToken) {
         bool shouldRetry = attemptCount < _queueOptions.MaxAttempts;
         DateTimeOffset? nextAvailableAt = shouldRetry
             ? timeProvider.GetUtcNow().Add(ComputeBackoff(attemptCount))
@@ -70,7 +70,7 @@ public sealed partial class MailRelayQueueStore {
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
-                command.Parameters.AddWithValue("id", id);
+                command.Parameters.AddWithValue("id", id.Value);
                 command.Parameters.AddWithValue("status", shouldRetry ? "retry" : "failed");
                 command.Parameters.AddWithValue("availableAtUtc", (object?)nextAvailableAt ?? DBNull.Value);
                 command.Parameters.AddWithValue("lastError", Truncate(error, 4000));

@@ -103,11 +103,11 @@ public sealed partial class MailRelayQueueStore {
                                                 null::timestamp with time zone as modified_at_utc, purpose, reply_to, in_reply_to, auto_submitted;
                                             """;
 
-    public async Task<Guid> EnqueueAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
+    public async Task<QueuedEmailId> EnqueueAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
         ValidateRequest(request);
 
-        var emailId = Guid.NewGuid();
-        var outboxId = Guid.NewGuid();
+        var emailId = QueuedEmailId.New();
+        var outboxId = new MailRelayOutboxId(Guid.NewGuid());
         DateTimeOffset now = timeProvider.GetUtcNow();
 
         return await _executor.InTransactionAsync(
@@ -145,7 +145,7 @@ public sealed partial class MailRelayQueueStore {
         NpgsqlConnection connection,
         NpgsqlTransaction transaction,
         RelayEmailMessageRequest request,
-        Guid id,
+        QueuedEmailId id,
         DateTimeOffset now,
         CancellationToken cancellationToken) {
         return await _executor.QueryInTransactionAsync(
@@ -153,7 +153,7 @@ public sealed partial class MailRelayQueueStore {
             transaction,
             InsertEmailSql,
             command => {
-                command.Parameters.AddWithValue("id", id);
+                command.Parameters.AddWithValue("id", id.Value);
                 command.Parameters.AddWithValue("fromAddress", request.FromAddress);
                 command.Parameters.AddWithValue("fromName", request.FromName);
                 command.Parameters.AddWithValue("toRecipientsJson", JsonSerializer.Serialize(request.To, JsonOptions));
@@ -172,7 +172,7 @@ public sealed partial class MailRelayQueueStore {
             },
             async (reader, token) => {
                 await RequireReturnedRowAsync(reader, token, "Mail relay queue insert did not return an id.").ConfigureAwait(false);
-                return new InsertQueuedEmailResult(reader.GetGuid(0), reader.GetBoolean(1));
+                return new InsertQueuedEmailResult(new QueuedEmailId(reader.GetGuid(0)), reader.GetBoolean(1));
             },
             cancellationToken).ConfigureAwait(false);
     }
@@ -180,14 +180,14 @@ public sealed partial class MailRelayQueueStore {
     private static async Task InsertOutboxMessageAsync(
         NpgsqlConnection connection,
         NpgsqlTransaction transaction,
-        Guid outboxId,
-        Guid emailId,
+        MailRelayOutboxId outboxId,
+        QueuedEmailId emailId,
         DateTimeOffset now,
         CancellationToken cancellationToken) {
         var command = new NpgsqlCommand(InsertOutboxSql, connection, transaction);
         await using (command.ConfigureAwait(false)) {
-            command.Parameters.AddWithValue("id", outboxId);
-            command.Parameters.AddWithValue("emailId", emailId);
+            command.Parameters.AddWithValue("id", outboxId.Value);
+            command.Parameters.AddWithValue("emailId", emailId.Value);
             command.Parameters.AddWithValue("availableAtUtc", now);
             command.Parameters.AddWithValue("createdAtUtc", now);
             await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
@@ -213,7 +213,7 @@ public sealed partial class MailRelayQueueStore {
     }
 
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-    public async Task<QueuedEmailMessage?> TryClaimMessageByIdAsync(Guid id, CancellationToken cancellationToken) {
+    public async Task<QueuedEmailMessage?> TryClaimMessageByIdAsync(QueuedEmailId id, CancellationToken cancellationToken) {
         const string sql = """
                            update mailrelay_outbound_emails
                            set status = 'processing',
@@ -242,7 +242,7 @@ public sealed partial class MailRelayQueueStore {
         return await _executor.QueryAsync(
             sql,
             command => {
-                command.Parameters.AddWithValue("id", id);
+                command.Parameters.AddWithValue("id", id.Value);
                 command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
             },
             async (reader, token) => {
@@ -257,7 +257,7 @@ public sealed partial class MailRelayQueueStore {
 
     public TimeSpan ClaimRenewalInterval => TimeSpan.FromSeconds(_queueOptions.LockTimeoutSeconds / 3d);
 
-    public async Task<bool> RenewClaimAsync(Guid id, int attemptCount, CancellationToken cancellationToken) {
+    public async Task<bool> RenewClaimAsync(QueuedEmailId id, int attemptCount, CancellationToken cancellationToken) {
         const string sql = """
                            update mailrelay_outbound_emails
                            set locked_at_utc = now()
@@ -267,7 +267,7 @@ public sealed partial class MailRelayQueueStore {
         return await ExecuteClaimCommandAsync(sql, id, attemptCount, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task MarkSentAsync(Guid id, int attemptCount, CancellationToken cancellationToken) {
+    public async Task MarkSentAsync(QueuedEmailId id, int attemptCount, CancellationToken cancellationToken) {
         const string sql = """
                            update mailrelay_outbound_emails
                            set status = 'sent',
@@ -284,7 +284,7 @@ public sealed partial class MailRelayQueueStore {
     }
 
     public async Task MarkSuppressedAsync(
-        Guid id,
+        QueuedEmailId id,
         int attemptCount,
         IReadOnlyCollection<string> recipients,
         CancellationToken cancellationToken) {
@@ -301,7 +301,7 @@ public sealed partial class MailRelayQueueStore {
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
-                command.Parameters.AddWithValue("id", id);
+                command.Parameters.AddWithValue("id", id.Value);
                 command.Parameters.AddWithValue("attemptCount", attemptCount);
                 command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
                 command.Parameters.AddWithValue("lastError", Truncate($"Suppressed recipient(s): {string.Join(", ", recipients)}", 4000));
@@ -333,7 +333,7 @@ public sealed partial class MailRelayQueueStore {
             cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<MailRelayMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken) {
+    public async Task<MailRelayMessageDetails?> GetMessageDetailsAsync(QueuedEmailId id, CancellationToken cancellationToken) {
         const string sql = """
                            select
                                id,
@@ -354,7 +354,7 @@ public sealed partial class MailRelayQueueStore {
 
         return await _executor.QueryAsync(
             sql,
-            command => command.Parameters.AddWithValue("id", id),
+            command => command.Parameters.AddWithValue("id", id.Value),
             async (reader, token) => {
                 if (!await reader.ReadAsync(token).ConfigureAwait(false)) {
                     return null;
@@ -404,8 +404,8 @@ public sealed partial class MailRelayQueueStore {
                     await InsertOutboxMessageAsync(
                         connection,
                         transaction,
-                        Guid.NewGuid(),
-                        decision.Id.Value,
+                        new MailRelayOutboxId(Guid.NewGuid()),
+                        decision.Id,
                         retryAt,
                         cancellationToken).ConfigureAwait(false);
                 }
@@ -417,12 +417,12 @@ public sealed partial class MailRelayQueueStore {
         }
     }
 
-    private async Task<bool> ExecuteClaimCommandAsync(string sql, Guid id, int attemptCount, CancellationToken cancellationToken) {
+    private async Task<bool> ExecuteClaimCommandAsync(string sql, QueuedEmailId id, int attemptCount, CancellationToken cancellationToken) {
         NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
-                command.Parameters.AddWithValue("id", id);
+                command.Parameters.AddWithValue("id", id.Value);
                 command.Parameters.AddWithValue("attemptCount", attemptCount);
                 command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
                 return await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false) == 1;

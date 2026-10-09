@@ -55,5 +55,5 @@ public sealed partial class MailRelayQueueStore(
         }
     }
 
-    private sealed record InsertQueuedEmailResult(Guid Id, bool Inserted);
+    private sealed record InsertQueuedEmailResult(QueuedEmailId Id, bool Inserted);
 }

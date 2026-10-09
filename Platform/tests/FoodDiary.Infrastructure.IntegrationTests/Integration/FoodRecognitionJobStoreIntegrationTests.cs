@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -38,7 +39,7 @@ public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixt
         Assert.Single(claimed.AdditionalImages!);
         var label = new ProductLabelModel("Yogurt", Brand: null, 100, "g", 63, 5, 2, 6, Fiber: null, Alcohol: null, Notes: null);
         Assert.True(await store.SaveVisionAsync(new FoodRecognitionJobId(job.Id), new FoodVisionModel([], ProductLabel: label), CancellationToken.None));
-        await store.CompleteAsync(new FoodRecognitionJobId(job.Id), nutrition: null, errorCode: null, nutritionErrorCode: null, CancellationToken.None);
+        await store.CompleteAsync(new FoodRecognitionJobId(job.Id), FoodRecognitionCompletion.WithoutNutrition, CancellationToken.None);
         Assert.Equal(label, (await store.GetAsync(new UserId(job.UserId), new FoodRecognitionJobId(job.Id), CancellationToken.None))!.Vision!.ProductLabel);
         var usage = new ImageAssetUsageQuery(context);
         Assert.True(await usage.IsAssetInUseAsync(labelPhoto.Id));
@@ -113,7 +114,7 @@ public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixt
         Assert.True(await store.SaveVisionAsync(new FoodRecognitionJobId(job.Id), vision, CancellationToken.None));
         clock.Now = clock.Now.AddMinutes(6);
         await store.MaintainAsync(CancellationToken.None);
-        await store.CompleteAsync(new FoodRecognitionJobId(job.Id), nutrition: null, errorCode: null, nutritionErrorCode: null, CancellationToken.None);
+        await store.CompleteAsync(new FoodRecognitionJobId(job.Id), FoodRecognitionCompletion.WithoutNutrition, CancellationToken.None);
         FoodRecognitionJobModel? interrupted = await store.GetAsync(new UserId(job.UserId), new FoodRecognitionJobId(job.Id), CancellationToken.None);
         Assert.NotNull(interrupted);
         Assert.Equal("Failed", interrupted.Status);
@@ -140,7 +141,7 @@ public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixt
         Assert.Equal("Ai.RecognitionInProgress", (await store.DeleteCompletedAsync(new UserId(job.UserId), new FoodRecognitionJobId(job.Id), CancellationToken.None)).Error.Code);
         await store.ClaimAsync(CancellationToken.None);
         Assert.Equal("Ai.RecognitionInProgress", (await store.DeleteCompletedAsync(new UserId(job.UserId), new FoodRecognitionJobId(job.Id), CancellationToken.None)).Error.Code);
-        await store.CompleteAsync(new FoodRecognitionJobId(job.Id), nutrition: null, string.Equals(status, "Failed", StringComparison.Ordinal) ? "Ai.OpenAiFailed" : null, nutritionErrorCode: null, CancellationToken.None);
+        await store.CompleteAsync(new FoodRecognitionJobId(job.Id), string.Equals(status, "Failed", StringComparison.Ordinal) ? FoodRecognitionCompletion.VisionFailed("Ai.OpenAiFailed") : FoodRecognitionCompletion.WithoutNutrition, CancellationToken.None);
         Assert.Equal("Ai.RecognitionNotFound", (await store.DeleteCompletedAsync(new UserId(Guid.NewGuid()), new FoodRecognitionJobId(job.Id), CancellationToken.None)).Error.Code);
         Assert.NotNull(await store.GetAsync(new UserId(job.UserId), new FoodRecognitionJobId(job.Id), CancellationToken.None));
         Assert.True((await store.DeleteCompletedAsync(new UserId(job.UserId), new FoodRecognitionJobId(job.Id), CancellationToken.None)).IsSuccess);

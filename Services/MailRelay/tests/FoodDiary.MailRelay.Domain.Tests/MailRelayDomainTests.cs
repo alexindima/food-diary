@@ -59,17 +59,7 @@ public sealed class MailRelayDomainTests {
         int maxAttempts,
         string expectedStatus,
         bool expectedTerminalFailure) {
-        var email = QueuedEmail.FromPersistence(new QueuedEmailMessage(
-            Guid.NewGuid(),
-            "relay@example.com",
-            "FoodDiary",
-            ["user@example.com"],
-            "Subject",
-            "<p>Body</p>",
-            TextBody: null,
-            "correlation",
-            attemptCount,
-            maxAttempts));
+        var email = QueuedEmail.FromPersistence(new QueuedEmailMessage(new QueuedEmailId(Guid.NewGuid()), "relay@example.com", "FoodDiary", ["user@example.com"], "Subject", "<p>Body</p>", TextBody: null, "correlation", attemptCount, maxAttempts));
 
         QueuedEmailFailureDecision decision = email.MarkFailedAttempt("SMTP failure");
 
@@ -81,17 +71,7 @@ public sealed class MailRelayDomainTests {
 
     [Fact]
     public void QueuedEmail_ToSubmissionRequest_PreservesMessageFields() {
-        var message = new QueuedEmailMessage(
-            Guid.NewGuid(),
-            "relay@example.com",
-            "FoodDiary",
-            ["user@example.com"],
-            "Subject",
-            "<p>Body</p>",
-            "Body",
-            "correlation",
-            1,
-            3);
+        var message = new QueuedEmailMessage(new QueuedEmailId(Guid.NewGuid()), "relay@example.com", "FoodDiary", ["user@example.com"], "Subject", "<p>Body</p>", "Body", "correlation", 1, 3);
         var email = QueuedEmail.FromPersistence(message);
 
         RelayEmailMessageRequest request = email.ToSubmissionRequest();
@@ -103,25 +83,14 @@ public sealed class MailRelayDomainTests {
         Assert.Equal(message.HtmlBody, request.HtmlBody);
         Assert.Equal(message.TextBody, request.TextBody);
         Assert.Equal(message.CorrelationId, request.CorrelationId);
-        Assert.Equal($"{message.Id:N}@mailrelay.invalid", request.MessageId);
+        Assert.Equal($"{message.Id.Value:N}@mailrelay.invalid", request.MessageId);
     }
 
     [Fact]
     public void QueuedEmail_FromPersistence_SetsAuditTimestamp() {
         var createdAtUtc = new DateTimeOffset(2026, 6, 14, 10, 15, 0, TimeSpan.Zero);
 
-        var email = QueuedEmail.FromPersistence(new QueuedEmailMessage(
-            Guid.NewGuid(),
-            "relay@example.com",
-            "FoodDiary",
-            ["user@example.com"],
-            "Subject",
-            "<p>Body</p>",
-            TextBody: null,
-            "correlation",
-            1,
-            3,
-            createdAtUtc));
+        var email = QueuedEmail.FromPersistence(new QueuedEmailMessage(new QueuedEmailId(Guid.NewGuid()), "relay@example.com", "FoodDiary", ["user@example.com"], "Subject", "<p>Body</p>", TextBody: null, "correlation", 1, 3, createdAtUtc));
 
         Assert.Equal(createdAtUtc.UtcDateTime, email.CreatedOnUtc);
         Assert.Equal(DateTimeKind.Utc, email.CreatedOnUtc.Kind);
@@ -132,19 +101,7 @@ public sealed class MailRelayDomainTests {
         var createdAtUtc = new DateTimeOffset(2026, 6, 14, 10, 15, 0, TimeSpan.Zero);
         var modifiedAtUtc = new DateTimeOffset(2026, 6, 14, 10, 20, 0, TimeSpan.Zero);
 
-        var email = QueuedEmail.FromPersistence(new QueuedEmailMessage(
-            Guid.NewGuid(),
-            "relay@example.com",
-            "FoodDiary",
-            ["user@example.com"],
-            "Subject",
-            "<p>Body</p>",
-            TextBody: null,
-            "correlation",
-            1,
-            3,
-            createdAtUtc,
-            modifiedAtUtc));
+        var email = QueuedEmail.FromPersistence(new QueuedEmailMessage(new QueuedEmailId(Guid.NewGuid()), "relay@example.com", "FoodDiary", ["user@example.com"], "Subject", "<p>Body</p>", TextBody: null, "correlation", 1, 3, createdAtUtc, modifiedAtUtc));
 
         Assert.Equal(modifiedAtUtc.UtcDateTime, email.ModifiedOnUtc);
         Assert.Equal(DateTimeKind.Utc, email.ModifiedOnUtc?.Kind);
@@ -152,17 +109,7 @@ public sealed class MailRelayDomainTests {
 
     [Fact]
     public void QueuedEmail_MarkSent_UpdatesModifiedAuditTimestamp() {
-        var email = QueuedEmail.FromPersistence(new QueuedEmailMessage(
-            Guid.NewGuid(),
-            "relay@example.com",
-            "FoodDiary",
-            ["user@example.com"],
-            "Subject",
-            "<p>Body</p>",
-            TextBody: null,
-            "correlation",
-            1,
-            3));
+        var email = QueuedEmail.FromPersistence(new QueuedEmailMessage(new QueuedEmailId(Guid.NewGuid()), "relay@example.com", "FoodDiary", ["user@example.com"], "Subject", "<p>Body</p>", TextBody: null, "correlation", 1, 3));
 
         email.MarkSent();
 

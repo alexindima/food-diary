@@ -1,6 +1,6 @@
 namespace FoodDiary.MailRelay.Application.Queue.Models;
 
 public sealed record MailRelayOutboxMessage(
-    Guid Id,
-    Guid EmailId,
+    MailRelayOutboxId Id,
+    QueuedEmailId EmailId,
     int AttemptCount);

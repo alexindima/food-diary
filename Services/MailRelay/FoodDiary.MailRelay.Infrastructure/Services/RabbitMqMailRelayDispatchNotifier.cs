@@ -3,7 +3,7 @@ namespace FoodDiary.MailRelay.Infrastructure.Services;
 public sealed class RabbitMqMailRelayDispatchNotifier(
     RabbitMqMailRelayBroker broker,
     ILogger<RabbitMqMailRelayDispatchNotifier> logger) : IMailRelayDispatchNotifier {
-    public async Task NotifyQueuedAsync(Guid queuedEmailId, CancellationToken cancellationToken) {
+    public async Task NotifyQueuedAsync(QueuedEmailId queuedEmailId, CancellationToken cancellationToken) {
         if (!broker.IsEnabled) {
             return;
         }

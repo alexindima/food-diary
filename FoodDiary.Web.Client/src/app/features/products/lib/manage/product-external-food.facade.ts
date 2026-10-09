@@ -1,6 +1,8 @@
 import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
+import type { ProductId } from '../../../../shared/models/semantics/entity-id';
+import type { UsdaFoodId } from '../../../../shared/models/semantics/usda-food-id';
 import type { UsdaFoodDetail } from '../../../../shared/models/usda.data';
 import { USDA_PRODUCT_LINK } from '../../../usda/contracts/usda-product-link';
 import { OpenFoodFactsService } from '../../api/open-food-facts.service';
@@ -15,15 +17,15 @@ export class ProductExternalFoodFacade {
         return this.openFoodFactsService.searchByBarcode(barcode);
     }
 
-    public getUsdaFoodDetail(fdcId: number): Observable<UsdaFoodDetail> {
+    public getUsdaFoodDetail(fdcId: UsdaFoodId): Observable<UsdaFoodDetail> {
         return this.usdaService.getFoodDetail(fdcId);
     }
 
-    public linkUsdaProduct(productId: string, fdcId: number): Observable<void> {
+    public linkUsdaProduct(productId: ProductId, fdcId: UsdaFoodId): Observable<void> {
         return this.usdaService.linkProduct(productId, fdcId);
     }
 
-    public unlinkUsdaProduct(productId: string): Observable<void> {
+    public unlinkUsdaProduct(productId: ProductId): Observable<void> {
         return this.usdaService.unlinkProduct(productId);
     }
 }

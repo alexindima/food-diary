@@ -133,7 +133,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
     public async Task NoOpMailRelayDispatchNotifier_CompletesWithoutPublishing() {
         var notifier = new NoOpMailRelayDispatchNotifier();
 
-        await notifier.NotifyQueuedAsync(Guid.NewGuid(), CancellationToken.None);
+        await notifier.NotifyQueuedAsync(new QueuedEmailId(Guid.NewGuid()), CancellationToken.None);
     }
 
     [Fact]
@@ -147,7 +147,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
             broker,
             NullLogger<RabbitMqMailRelayDispatchNotifier>.Instance);
 
-        await notifier.NotifyQueuedAsync(Guid.NewGuid(), CancellationToken.None);
+        await notifier.NotifyQueuedAsync(new QueuedEmailId(Guid.NewGuid()), CancellationToken.None);
     }
 
     [Fact]
@@ -160,9 +160,9 @@ public sealed class MailRelayInfrastructureOptionsTests {
 
         await broker.DeclareTopologyAsync(CancellationToken.None);
         await broker.CheckReadyAsync(CancellationToken.None);
-        await broker.PublishOutboundAsync(Guid.NewGuid(), CancellationToken.None);
-        await broker.PublishRetryAsync(Guid.NewGuid(), TimeSpan.Zero, CancellationToken.None);
-        await broker.PublishDeadLetterAsync(Guid.NewGuid(), CancellationToken.None);
+        await broker.PublishOutboundAsync(new QueuedEmailId(Guid.NewGuid()), CancellationToken.None);
+        await broker.PublishRetryAsync(new QueuedEmailId(Guid.NewGuid()), TimeSpan.Zero, CancellationToken.None);
+        await broker.PublishDeadLetterAsync(new QueuedEmailId(Guid.NewGuid()), CancellationToken.None);
     }
 
     [Fact]

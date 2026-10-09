@@ -26,7 +26,7 @@ public sealed class ProcessNextFoodRecognitionCommandHandlerTests {
         Assert.True(await new ProcessNextFoodRecognitionCommandHandler(store, sender).Handle(new ProcessNextFoodRecognitionCommand(), CancellationToken.None));
         await sender.Received(1).Send(Arg.Is<AnalyzeFoodImageCommand>(command => command.IsProductLabel && command.AdditionalImageAssetIds!.Single() == extra.ImageAssetId), Arg.Any<CancellationToken>());
         await sender.DidNotReceive().Send(Arg.Any<CalculateFoodNutritionCommand>(), Arg.Any<CancellationToken>());
-        await store.Received(1).CompleteAsync(new FoodRecognitionJobId(job.Id), nutrition: null, errorCode: null, nutritionErrorCode: null, Arg.Any<CancellationToken>());
+        await store.Received(1).CompleteAsync(new FoodRecognitionJobId(job.Id), FoodRecognitionCompletion.WithoutNutrition, Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -41,7 +41,7 @@ public sealed class ProcessNextFoodRecognitionCommandHandlerTests {
 
         Assert.True(await new ProcessNextFoodRecognitionCommandHandler(store, sender).Handle(new ProcessNextFoodRecognitionCommand(), CancellationToken.None));
 
-        await store.Received(1).CompleteAsync(new FoodRecognitionJobId(job.Id), nutrition: null, errorCode: null, nutritionErrorCode: null, Arg.Any<CancellationToken>());
+        await store.Received(1).CompleteAsync(new FoodRecognitionJobId(job.Id), FoodRecognitionCompletion.WithoutNutrition, Arg.Any<CancellationToken>());
         await sender.DidNotReceive().Send(Arg.Any<CalculateFoodNutritionCommand>(), Arg.Any<CancellationToken>());
     }
 
@@ -65,7 +65,7 @@ public sealed class ProcessNextFoodRecognitionCommandHandlerTests {
             _ = sender.Send(Arg.Any<AnalyzeFoodImageCommand>(), Arg.Any<CancellationToken>());
             _ = store.SaveVisionAsync(new FoodRecognitionJobId(job.Id), vision, Arg.Any<CancellationToken>());
             _ = sender.Send(Arg.Any<CalculateFoodNutritionCommand>(), Arg.Any<CancellationToken>());
-            _ = store.CompleteAsync(new FoodRecognitionJobId(job.Id), nutrition, errorCode: null, nutritionErrorCode: null, Arg.Any<CancellationToken>());
+            _ = store.CompleteAsync(new FoodRecognitionJobId(job.Id), FoodRecognitionCompletion.WithNutrition(nutrition), Arg.Any<CancellationToken>());
         });
         var first = (AnalyzeFoodImageCommand)sender.ReceivedCalls().First().GetArguments()[0]!;
         var second = (CalculateFoodNutritionCommand)sender.ReceivedCalls().Last().GetArguments()[0]!;
@@ -86,7 +86,7 @@ public sealed class ProcessNextFoodRecognitionCommandHandlerTests {
         Assert.True(await processor.Handle(new ProcessNextFoodRecognitionCommand(), CancellationToken.None));
         Assert.False(await processor.Handle(new ProcessNextFoodRecognitionCommand(), CancellationToken.None));
 
-        await store.Received(1).CompleteAsync(new FoodRecognitionJobId(job.Id), nutrition: null, "Ai.OpenAiFailed", nutritionErrorCode: null, Arg.Any<CancellationToken>());
+        await store.Received(1).CompleteAsync(new FoodRecognitionJobId(job.Id), FoodRecognitionCompletion.VisionFailed("Ai.OpenAiFailed"), Arg.Any<CancellationToken>());
         await sender.Received(1).Send(Arg.Any<AnalyzeFoodImageCommand>(), Arg.Any<CancellationToken>());
         await sender.DidNotReceive().Send(Arg.Any<CalculateFoodNutritionCommand>(), Arg.Any<CancellationToken>());
     }
@@ -104,7 +104,7 @@ public sealed class ProcessNextFoodRecognitionCommandHandlerTests {
         await new ProcessNextFoodRecognitionCommandHandler(store, sender).Handle(new ProcessNextFoodRecognitionCommand(), CancellationToken.None);
 
         await sender.DidNotReceive().Send(Arg.Any<CalculateFoodNutritionCommand>(), Arg.Any<CancellationToken>());
-        await store.DidNotReceive().CompleteAsync(Arg.Any<FoodRecognitionJobId>(), Arg.Any<FoodNutritionModel?>(), Arg.Any<string?>(), Arg.Any<string?>(), Arg.Any<CancellationToken>());
+        await store.DidNotReceive().CompleteAsync(Arg.Any<FoodRecognitionJobId>(), Arg.Any<FoodRecognitionCompletion>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -121,7 +121,7 @@ public sealed class ProcessNextFoodRecognitionCommandHandlerTests {
 
         await new ProcessNextFoodRecognitionCommandHandler(store, sender).Handle(new ProcessNextFoodRecognitionCommand(), CancellationToken.None);
 
-        await store.Received(1).CompleteAsync(new FoodRecognitionJobId(job.Id), nutrition: null, errorCode: null, "Ai.QuotaExceeded", Arg.Any<CancellationToken>());
+        await store.Received(1).CompleteAsync(new FoodRecognitionJobId(job.Id), FoodRecognitionCompletion.NutritionFailed("Ai.QuotaExceeded"), Arg.Any<CancellationToken>());
     }
 
     private static FoodRecognitionJobModel Job() => new(

@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1339,
     "ambiguousContracts": 29,
-    "consumerEdges": 10478,
-    "productionConsumerEdges": 5992,
-    "testConsumerEdges": 4486,
+    "consumerEdges": 10480,
+    "productionConsumerEdges": 5993,
+    "testConsumerEdges": 4487,
     "consumedContracts": 1339,
     "unconsumedContracts": 0
   },
@@ -78362,6 +78362,19 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "MailRelay",
+      "consumerPath": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/MailRelayOutboxId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "MailRelay",
       "consumerPath": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -87153,6 +87166,19 @@
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/MailRelayArchitectureTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IMailRelayQueueStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/MailRelayIdentityBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IMailRelayReadinessChecker",

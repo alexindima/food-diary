@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 285,
+    "domainTypes": 286,
     "entities": 91,
     "valueObjects": 142,
     "invariants": 641,
@@ -1955,6 +1955,13 @@
       "role": "domain-type",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayDeliveryEventEntry.cs",
       "line": 2
+    },
+    {
+      "area": "MailRelay",
+      "name": "MailRelayOutboxId",
+      "role": "domain-type",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/MailRelayOutboxId.cs",
+      "line": 4
     },
     {
       "area": "MailRelay",

@@ -1,5 +1,7 @@
+import type { UsdaFoodId } from './semantics/usda-food-id';
+
 export type UsdaFood = {
-    fdcId: number;
+    fdcId: UsdaFoodId;
     description: string;
     foodCategory: string | null;
 };
@@ -23,7 +25,7 @@ export type UsdaFoodPortion = {
 };
 
 export type UsdaFoodDetail = {
-    fdcId: number;
+    fdcId: UsdaFoodId;
     description: string;
     foodCategory: string | null;
     nutrients: Micronutrient[];

@@ -1,3 +1,4 @@
+using FoodDiary.MailRelay.Domain.Emails;
 using System.Text;
 using FoodDiary.MailRelay.Infrastructure.Options;
 using FoodDiary.MailRelay.Infrastructure.Services;
@@ -23,15 +24,15 @@ public sealed class RabbitMqMailRelayBrokerIntegrationTests(MailRelayEnvironment
         await broker.CheckReadyAsync(CancellationToken.None);
 
         var outboundId = Guid.NewGuid();
-        await broker.PublishOutboundAsync(outboundId, CancellationToken.None);
+        await broker.PublishOutboundAsync(new QueuedEmailId(outboundId), CancellationToken.None);
         Assert.Equal(outboundId.ToString("D"), await WaitForRabbitMessageAsync(options, options.QueueName));
 
         var deadLetterId = Guid.NewGuid();
-        await broker.PublishDeadLetterAsync(deadLetterId, CancellationToken.None);
+        await broker.PublishDeadLetterAsync(new QueuedEmailId(deadLetterId), CancellationToken.None);
         Assert.Equal(deadLetterId.ToString("D"), await WaitForRabbitMessageAsync(options, options.DeadLetterQueueName));
 
         var retryId = Guid.NewGuid();
-        await broker.PublishRetryAsync(retryId, TimeSpan.FromMilliseconds(50), CancellationToken.None);
+        await broker.PublishRetryAsync(new QueuedEmailId(retryId), TimeSpan.FromMilliseconds(50), CancellationToken.None);
         Assert.Equal(retryId.ToString("D"), await WaitForRabbitMessageAsync(options, options.QueueName));
     }
 

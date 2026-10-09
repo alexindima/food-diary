@@ -115,17 +115,17 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
                 cancellationToken).ConfigureAwait(false) == 1;
     }
 
-    public async Task CompleteAsync(FoodRecognitionJobId jobId, FoodNutritionModel? nutrition, string? errorCode, string? nutritionErrorCode, CancellationToken cancellationToken) {
+    public async Task CompleteAsync(FoodRecognitionJobId jobId, FoodRecognitionCompletion completion, CancellationToken cancellationToken) {
         var context = new AiDbContext(options);
         await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
-        string? json = nutrition is null ? null : JsonSerializer.Serialize(nutrition, JsonOptions);
+        string? json = completion.Nutrition is null ? null : JsonSerializer.Serialize(completion.Nutrition, JsonOptions);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
-        string status = errorCode is null ? "Succeeded" : "Failed";
+        string status = completion.Status;
         // Terminal/expired tasks cannot be overwritten by late workers.
         await context.Set<FoodRecognitionJob>().Where(x => x.Id == jobId.Value && x.Status == "Running")
             .ExecuteUpdateAsync(set => set.SetProperty(x => x.Status, status)
-                .SetProperty(x => x.NutritionJson, json).SetProperty(x => x.ErrorCode, errorCode)
-                .SetProperty(x => x.NutritionErrorCode, nutritionErrorCode).SetProperty(x => x.UpdatedOnUtc, now),
+                .SetProperty(x => x.NutritionJson, json).SetProperty(x => x.ErrorCode, completion.ErrorCode)
+                .SetProperty(x => x.NutritionErrorCode, completion.NutritionErrorCode).SetProperty(x => x.UpdatedOnUtc, now),
                 cancellationToken).ConfigureAwait(false);
     }
 

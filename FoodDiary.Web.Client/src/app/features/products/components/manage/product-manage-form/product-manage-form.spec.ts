@@ -16,6 +16,7 @@ import {
     ProductVisibility,
 } from '../../../../../shared/models/product.data';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
+import { usdaFoodId } from '../../../../../shared/models/semantics/usda-food-id';
 import type { UsdaFoodDetail } from '../../../../../shared/models/usda.data';
 import { ProductService } from '../../../api/product.service';
 import { ProductExternalFoodFacade } from '../../../lib/manage/product-external-food.facade';
@@ -850,7 +851,7 @@ function patchProductForm(component: ProductManageFormComponent, patch: Partial<
 
 function createUsdaFoodDetail(fdcId: number, description: string): UsdaFoodDetail {
     return {
-        fdcId,
+        fdcId: usdaFoodId(fdcId),
         description,
         foodCategory: null,
         portions: [],

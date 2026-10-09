@@ -1376,7 +1376,7 @@ describe('CycleTrackingFacade ending factors', () => {
 describe('CycleTrackingFacade menstrual episodes', () => {
     it('handles a failed date save without discarding the draft or persisted episode', async () => {
         facade.initialize();
-        facade.editMenstrualEpisode('episode-1');
+        facade.editMenstrualEpisode(entityId<'menstrual-episode'>('episode-1'));
         facade.episodeModel.update(value => ({ ...value, startDate: calendarDate('2026-03-31') }));
         const draft = facade.episodeModel();
         const original = facade.cycle();
@@ -1399,12 +1399,12 @@ describe('CycleTrackingFacade menstrual episodes', () => {
         const original = facade.cycle();
         cyclesService.updateMenstrualEpisode.mockReturnValueOnce(throwError(() => new Error('unavailable')));
 
-        await expect(facade.toggleMenstrualEpisodePredictionAsync('episode-1')).resolves.toBeUndefined();
+        await expect(facade.toggleMenstrualEpisodePredictionAsync(entityId<'menstrual-episode'>('episode-1'))).resolves.toBeUndefined();
 
         expect(facade.cycle()).toEqual(original);
         expect(facade.excludingEpisodeId()).toBeNull();
         expect(facade.episodeError()).toBe('CYCLE_TRACKING.EPISODE_PREDICTION_FAILED');
-        await facade.toggleMenstrualEpisodePredictionAsync('episode-1');
+        await facade.toggleMenstrualEpisodePredictionAsync(entityId<'menstrual-episode'>('episode-1'));
         expect(facade.episodeError()).toBeNull();
         expect(facade.menstrualEpisodes()[0]?.excludedFromPredictions).toBe(true);
     });
@@ -1414,19 +1414,19 @@ describe('CycleTrackingFacade menstrual episodes', () => {
         const original = facade.cycle();
         cyclesService.deleteMenstrualEpisode.mockReturnValueOnce(throwError(() => new Error('unavailable')));
 
-        await expect(facade.deleteMenstrualEpisodeAsync('episode-1')).resolves.toBeUndefined();
+        await expect(facade.deleteMenstrualEpisodeAsync(entityId<'menstrual-episode'>('episode-1'))).resolves.toBeUndefined();
 
         expect(facade.cycle()).toEqual(original);
         expect(facade.deletingEpisodeId()).toBeNull();
         expect(facade.episodeError()).toBe('CYCLE_TRACKING.EPISODE_DELETE_FAILED');
-        await facade.deleteMenstrualEpisodeAsync('episode-1');
+        await facade.deleteMenstrualEpisodeAsync(entityId<'menstrual-episode'>('episode-1'));
         expect(facade.episodeError()).toBeNull();
         expect(facade.menstrualEpisodes()).toEqual([]);
     });
 
     it('preserves a pending date save and prevents overlapping episode actions', async () => {
         facade.initialize();
-        facade.editMenstrualEpisode('episode-1');
+        facade.editMenstrualEpisode(entityId<'menstrual-episode'>('episode-1'));
         const draft = facade.episodeModel();
         const pending = new Subject<CycleResponse>();
         cyclesService.updateMenstrualEpisode.mockReturnValue(pending);
@@ -1434,9 +1434,9 @@ describe('CycleTrackingFacade menstrual episodes', () => {
         expect(facade.isEpisodeBusy()).toBe(true);
         expect(facade.episodeForm.startDate().disabled()).toBe(true);
         facade.cancelMenstrualEpisodeEdit();
-        facade.editMenstrualEpisode('episode-1');
-        await facade.toggleMenstrualEpisodePredictionAsync('episode-1');
-        await facade.deleteMenstrualEpisodeAsync('episode-1');
+        facade.editMenstrualEpisode(entityId<'menstrual-episode'>('episode-1'));
+        await facade.toggleMenstrualEpisodePredictionAsync(entityId<'menstrual-episode'>('episode-1'));
+        await facade.deleteMenstrualEpisodeAsync(entityId<'menstrual-episode'>('episode-1'));
         expect(facade.episodeModel()).toEqual(draft);
         expect(facade.editingEpisodeId()).toBe('episode-1');
         expect(cyclesService.updateMenstrualEpisode).toHaveBeenCalledOnce();
@@ -1452,7 +1452,7 @@ describe('CycleTrackingFacade menstrual episodes', () => {
 describe('CycleTrackingFacade menstrual episode success', () => {
     it('rejects an episode end before its start without sending a request', async () => {
         facade.initialize();
-        facade.editMenstrualEpisode('episode-1');
+        facade.editMenstrualEpisode(entityId<'menstrual-episode'>('episode-1'));
         facade.episodeModel.update(value => ({ ...value, endDate: calendarDate('2026-03-31') }));
 
         await submit(facade.episodeForm);
@@ -1464,7 +1464,7 @@ describe('CycleTrackingFacade menstrual episode success', () => {
 
     it.each([null, '2026-04-01', '2026-04-02'])('accepts valid episode end %s', endDate => {
         facade.initialize();
-        facade.editMenstrualEpisode('episode-1');
+        facade.editMenstrualEpisode(entityId<'menstrual-episode'>('episode-1'));
         facade.episodeModel.update(value => ({ ...value, endDate }));
         expect(facade.episodeForm().invalid()).toBe(false);
     });
@@ -1472,7 +1472,7 @@ describe('CycleTrackingFacade menstrual episode success', () => {
     it('toggles prediction exclusion and applies the returned cycle', async () => {
         facade.initialize();
 
-        await facade.toggleMenstrualEpisodePredictionAsync('episode-1');
+        await facade.toggleMenstrualEpisodePredictionAsync(entityId<'menstrual-episode'>('episode-1'));
 
         expect(cyclesService.updateMenstrualEpisode).toHaveBeenCalledWith('cycle-1', 'episode-1', {
             startDate: calendarDate('2026-04-01'),
@@ -1485,7 +1485,7 @@ describe('CycleTrackingFacade menstrual episode success', () => {
     it('deletes a confirmed episode and applies the returned cycle', async () => {
         facade.initialize();
 
-        await facade.deleteMenstrualEpisodeAsync('episode-1');
+        await facade.deleteMenstrualEpisodeAsync(entityId<'menstrual-episode'>('episode-1'));
 
         expect(cyclesService.deleteMenstrualEpisode).toHaveBeenCalledWith('cycle-1', 'episode-1');
         expect(facade.menstrualEpisodes()).toEqual([]);

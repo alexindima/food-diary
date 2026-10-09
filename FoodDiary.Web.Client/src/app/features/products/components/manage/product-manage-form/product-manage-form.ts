@@ -18,6 +18,7 @@ import { NavigationService } from '../../../../../services/navigation.service';
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
 import { getRecordProperty } from '../../../../../shared/lib/unknown-value.utils';
 import type { Product } from '../../../../../shared/models/product.data';
+import { usdaFoodId } from '../../../../../shared/models/semantics/usda-food-id';
 import type { UsdaFoodDetail } from '../../../../../shared/models/usda.data';
 import { LocalizedTourDefinitionService } from '../../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
@@ -476,7 +477,7 @@ export class ProductManageFormComponent {
             this.nameSearch.setSelectedSuggestion(suggestion);
             const requestId = ++this.usdaDetailRequestId;
             this.externalFoodFacade
-                .getUsdaFoodDetail(fdcId)
+                .getUsdaFoodDetail(usdaFoodId(fdcId))
                 .pipe(
                     catchError(() => of<UsdaFoodDetail | null>(null)),
                     takeUntilDestroyed(this.destroyRef),
@@ -560,7 +561,7 @@ export class ProductManageFormComponent {
         }
 
         if (nextFdcId !== null) {
-            await firstValueFrom(this.externalFoodFacade.linkUsdaProduct(savedProduct.id, nextFdcId));
+            await firstValueFrom(this.externalFoodFacade.linkUsdaProduct(savedProduct.id, usdaFoodId(nextFdcId)));
             return;
         }
 

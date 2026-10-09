@@ -8,7 +8,7 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2493,
+    "typescriptFiles": 2496,
     "symbols": 808,
     "routes": 106,
     "features": 46,
@@ -5044,7 +5044,7 @@
       "role": "Component",
       "selector": "fd-product-manage-form",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts",
-      "line": 91
+      "line": 92
     },
     {
       "name": "ProductNutritionEditorComponent",
@@ -5149,7 +5149,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/manage/product-external-food.facade.ts",
-      "line": 10
+      "line": 12
     },
     {
       "name": "ProductNameSearchFacade",
@@ -6038,7 +6038,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/usda/api/usda.service.ts",
-      "line": 14
+      "line": 16
     },
     {
       "name": "DailyMicronutrientCardComponent",

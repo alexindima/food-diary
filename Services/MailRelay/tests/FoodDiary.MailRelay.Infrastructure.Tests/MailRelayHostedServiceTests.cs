@@ -68,7 +68,7 @@ public sealed class MailRelayHostedServiceTests {
     [Fact]
     public async Task OutboxPublisher_WhenPublishFails_MarksOutboxMessageFailed() {
         var store = new RecordingQueueStore {
-            OutboxBatch = [new MailRelayOutboxMessage(Guid.NewGuid(), Guid.NewGuid(), AttemptCount: 2)],
+            OutboxBatch = [new MailRelayOutboxMessage(new MailRelayOutboxId(Guid.NewGuid()), new QueuedEmailId(Guid.NewGuid()), AttemptCount: 2)],
         };
         MailRelayBrokerOptions options = CreateRabbitOptions(port: 1);
         var service = new MailRelayOutboxPublisherHostedService(
@@ -532,7 +532,7 @@ public sealed class MailRelayHostedServiceTests {
 
     private static QueuedEmailMessage CreateQueuedMessage() =>
         new(
-            Guid.NewGuid(),
+            QueuedEmailId.New(),
             "sender@example.com",
             "Sender",
             ["recipient@example.com"],
@@ -582,8 +582,8 @@ public sealed class MailRelayHostedServiceTests {
 
         public Task WaitForOutboxFailureAsync() => _outboxFailed.Task.WaitAsync(TimeSpan.FromSeconds(5));
 
-        public Task<Guid> EnqueueAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) =>
-            Task.FromResult(Guid.NewGuid());
+        public Task<QueuedEmailId> EnqueueAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) =>
+            Task.FromResult(new QueuedEmailId(Guid.NewGuid()));
 
         public Task<IReadOnlyList<QueuedEmailMessage>> ClaimDueBatchAsync(CancellationToken cancellationToken) {
             QueueClaimed = true;
@@ -597,7 +597,7 @@ public sealed class MailRelayHostedServiceTests {
                 : Task.FromException<IReadOnlyList<QueuedEmailMessage>>(ClaimQueueException);
         }
 
-        public Task<QueuedEmailMessage?> TryClaimMessageByIdAsync(Guid id, CancellationToken cancellationToken) {
+        public Task<QueuedEmailMessage?> TryClaimMessageByIdAsync(QueuedEmailId id, CancellationToken cancellationToken) {
             MessageClaimed = true;
             ClaimedMessageId = id;
             if (ThrowCancellationOnMessageClaim) {
@@ -621,9 +621,9 @@ public sealed class MailRelayHostedServiceTests {
                 : Task.FromException<IReadOnlyList<MailRelayOutboxMessage>>(ClaimOutboxException);
         }
 
-        public Task MarkOutboxPublishedAsync(Guid id, CancellationToken cancellationToken) => Task.CompletedTask;
+        public Task MarkOutboxPublishedAsync(MailRelayOutboxId id, CancellationToken cancellationToken) => Task.CompletedTask;
 
-        public Task MarkOutboxFailedAsync(Guid id, int attemptCount, string error, CancellationToken cancellationToken) {
+        public Task MarkOutboxFailedAsync(MailRelayOutboxId id, int attemptCount, string error, CancellationToken cancellationToken) {
             FailedOutboxAttemptCount = attemptCount;
             FailedOutboxError = error;
             _outboxFailed.TrySetResult();
@@ -640,14 +640,14 @@ public sealed class MailRelayHostedServiceTests {
 
         public Task MarkInboxFailedAsync(Guid id, string error, CancellationToken cancellationToken) => Task.CompletedTask;
 
-        public Task<bool> RenewClaimAsync(Guid id, int attemptCount, CancellationToken cancellationToken) => Task.FromResult(true);
+        public Task<bool> RenewClaimAsync(QueuedEmailId id, int attemptCount, CancellationToken cancellationToken) => Task.FromResult(true);
 
-        public Task MarkSentAsync(Guid id, int attemptCount, CancellationToken cancellationToken) {
+        public Task MarkSentAsync(QueuedEmailId id, int attemptCount, CancellationToken cancellationToken) {
             SentMessageId = id;
             return Task.CompletedTask;
         }
 
-        public Task MarkSuppressedAsync(Guid id, int attemptCount, IReadOnlyCollection<string> recipients, CancellationToken cancellationToken) {
+        public Task MarkSuppressedAsync(QueuedEmailId id, int attemptCount, IReadOnlyCollection<string> recipients, CancellationToken cancellationToken) {
             SuppressedMessageId = id;
             return Task.CompletedTask;
         }
@@ -686,7 +686,7 @@ public sealed class MailRelayHostedServiceTests {
         public Task<MailRelayQueueStats> GetStatsAsync(CancellationToken cancellationToken) =>
             Task.FromResult(new MailRelayQueueStats(0, 0, 0, 0, 0, 0));
 
-        public Task<MailRelayMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken) =>
+        public Task<MailRelayMessageDetails?> GetMessageDetailsAsync(QueuedEmailId id, CancellationToken cancellationToken) =>
             Task.FromResult<MailRelayMessageDetails?>(null);
 
         public Task<DateTimeOffset?> MarkFailedAttemptAsync(QueuedEmailFailureDecision decision, CancellationToken cancellationToken) =>

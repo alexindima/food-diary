@@ -27,22 +27,23 @@ public sealed class ProcessNextFoodRecognitionCommandHandler(IFoodRecognitionJob
         Result<FoodVisionModel> vision = await sender.Send(new AnalyzeFoodImageCommand(
             job.UserId, job.ImageAssetId, job.Description, RequestId(jobId, "vision"), job.IsProductLabel, (job.AdditionalImages ?? []).Select(x => x.ImageAssetId).ToArray()), cancellationToken).ConfigureAwait(false);
         if (vision.IsFailure) {
-            await store.CompleteAsync(jobId, nutrition: null, vision.Error.Code, nutritionErrorCode: null, cancellationToken).ConfigureAwait(false);
+            await store.CompleteAsync(jobId, FoodRecognitionCompletion.VisionFailed(vision.Error.Code), cancellationToken).ConfigureAwait(false);
             return true;
         }
         if (!await store.SaveVisionAsync(jobId, vision.Value, cancellationToken).ConfigureAwait(false)) {
             return true;
         }
         if (job.IsProductLabel || vision.Value.Items.Count == 0) {
-            await store.CompleteAsync(jobId, nutrition: null, errorCode: null, nutritionErrorCode: null, cancellationToken).ConfigureAwait(false);
+            await store.CompleteAsync(jobId, FoodRecognitionCompletion.WithoutNutrition, cancellationToken).ConfigureAwait(false);
             return true;
         }
 
         Result<FoodNutritionModel> nutrition = await sender.Send(new CalculateFoodNutritionCommand(
             job.UserId, vision.Value.Items, RequestId(jobId, "nutrition")), cancellationToken).ConfigureAwait(false);
-        await store.CompleteAsync(
-            jobId, nutrition.IsSuccess ? nutrition.Value : null, errorCode: null,
-            nutrition.IsFailure ? nutrition.Error.Code : null, cancellationToken).ConfigureAwait(false);
+        FoodRecognitionCompletion completion = nutrition.IsSuccess
+            ? FoodRecognitionCompletion.WithNutrition(nutrition.Value)
+            : FoodRecognitionCompletion.NutritionFailed(nutrition.Error.Code);
+        await store.CompleteAsync(jobId, completion, cancellationToken).ConfigureAwait(false);
         return true;
     }
 

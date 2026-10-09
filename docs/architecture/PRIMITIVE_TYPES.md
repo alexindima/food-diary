@@ -628,3 +628,29 @@ normalization and bounds. Incompatible draft mode/protocol combinations use the
 existing request-error UI without sending a malformed request. The API adapter
 encodes the same flat scalar SDK body, including absent versus empty notes.
 Historical read models, backend validation, timing and notification behavior remain.
+
+MailRelay reuses QueuedEmailId in claimed message models, admission and active
+delivery ports, and adds the distinct MailRelayOutboxId for publication records.
+PostgreSQL parameters and RabbitMQ body/MessageId encoding unwrap the original
+GUID values at adapter boundaries. Public HTTP/client DTOs remain scalar. Separate
+IDs, admission/idempotency, SKIP LOCKED claims, renewal, attempt fences, outbox
+retry counters, suppression and terminal decisions preserve their prior behavior.
+
+AI completion is an immutable owner-local four-outcome value: vision failure,
+vision-only success, nutrition failure and completed nutrition. The adapter maps
+it to the existing status, nutrition JSON and error columns. Successful vision
+still has Succeeded status when nutrition fails or is omitted for label/empty
+vision; completed-result readers retain their consistency checks. Nullable or
+mixed historical observations are not rewritten by this mutation contract.
+
+USDA link capabilities retain ProductId and a narrowly scoped UsdaFoodId. The
+existing erased numeric meaning marker is shared by quantity and external-key
+types so constructors cannot silently retag one as the other. Native forms and
+stored product references stay scalar and decode at their outgoing boundary;
+SDK food selection/detail models tag keys without new format/range rules. Link
+bodies, provider/reference fallback, access checks and unlink semantics remain.
+
+Cycle episode page actions, orchestration, edits and busy state carry their
+existing MenstrualEpisodeId to the already typed API. Mutation consumers no
+longer restamp decoded episode identifiers. Calendar encodings, confirmation,
+membership/status guards, independent edit/busy state and consent remain.

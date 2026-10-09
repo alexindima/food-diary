@@ -8,16 +8,16 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4544,
-    "symbols": 4476,
+    "sourceFiles": 4546,
+    "symbols": 4478,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
       "class": 2313,
       "enum": 68,
       "interface": 411,
-      "record": 1545,
-      "record struct": 139
+      "record": 1546,
+      "record struct": 140
     },
     "roles": {
       "Command": 230,
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1830,
+      "Other": 1832,
       "Query": 300,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
@@ -5198,6 +5198,13 @@
       "role": "Other",
       "path": "Modules/Ai/Application.Abstractions/Common/AiUsageTotals.cs",
       "line": 2
+    },
+    {
+      "name": "FoodRecognitionCompletion",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionCompletion.cs",
+      "line": 4
     },
     {
       "name": "FoodRecognitionJobUpdate",
@@ -29397,6 +29404,13 @@
       "role": "Request",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/CreateSuppressionRequest.cs",
       "line": 2
+    },
+    {
+      "name": "MailRelayOutboxId",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/MailRelayOutboxId.cs",
+      "line": 4
     },
     {
       "name": "MailRelaySuppressionEntry",

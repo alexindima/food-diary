@@ -52,7 +52,7 @@ import {
     OVULATION_TEST_RESULT_UNKNOWN,
     type OvulationTestResult,
 } from '../../../shared/models/cycle.data';
-import type { CycleFactorId } from '../../../shared/models/semantics/entity-id';
+import type { CycleFactorId, MenstrualEpisodeId } from '../../../shared/models/semantics/entity-id';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { CycleExportDialogComponent, type CycleExportSelection } from '../dialogs/cycle-export-dialog/cycle-export-dialog';
@@ -406,7 +406,7 @@ export class CycleTrackingPageComponent {
         this.isHistoryExpanded.update(isExpanded => !isExpanded);
     }
 
-    protected editMenstrualEpisode(episodeId: string): void {
+    protected editMenstrualEpisode(episodeId: MenstrualEpisodeId): void {
         this.facade.editMenstrualEpisode(episodeId);
     }
 
@@ -414,11 +414,11 @@ export class CycleTrackingPageComponent {
         this.facade.cancelMenstrualEpisodeEdit();
     }
 
-    protected toggleMenstrualEpisodePrediction(episodeId: string): void {
+    protected toggleMenstrualEpisodePrediction(episodeId: MenstrualEpisodeId): void {
         void this.facade.toggleMenstrualEpisodePredictionAsync(episodeId);
     }
 
-    protected deleteMenstrualEpisode(episodeId: string): void {
+    protected deleteMenstrualEpisode(episodeId: MenstrualEpisodeId): void {
         this.dialogService
             .open(FdUiConfirmDialogComponent, {
                 size: 'sm',

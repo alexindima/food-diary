@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../config/runtime-ui.tokens';
+import { usdaFoodId } from '../../../shared/models/semantics/usda-food-id';
 import type { UsdaFood } from '../../../shared/models/usda.data';
 import { UsdaService } from '../api/usda.service';
 import { UsdaFoodSearchFacade } from './usda-food-search.facade';
@@ -12,12 +13,12 @@ const FDC_ID = 17_000;
 const SECOND_FDC_ID = 18_000;
 const SEARCH_DEBOUNCE_MS = 1;
 const FOOD: UsdaFood = {
-    fdcId: FDC_ID,
+    fdcId: usdaFoodId(FDC_ID),
     description: 'Apple',
     foodCategory: 'Fruit',
 };
 const SECOND_FOOD: UsdaFood = {
-    fdcId: SECOND_FDC_ID,
+    fdcId: usdaFoodId(SECOND_FDC_ID),
     description: 'Banana',
     foodCategory: 'Fruit',
 };

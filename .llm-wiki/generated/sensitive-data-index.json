@@ -6,10 +6,10 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1679,
+    "candidateFields": 1682,
     "credential": 158,
     "identity": 180,
-    "health": 783,
+    "health": 786,
     "financial": 138,
     "privateContent": 420,
     "boundaryFiles": 224,
@@ -2697,6 +2697,27 @@
       "type": "DateTime?",
       "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
       "line": 56
+    },
+    {
+      "category": "health",
+      "name": "Nutrition",
+      "type": "FoodNutritionModel?",
+      "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionCompletion.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "NutritionErrorCode",
+      "type": "string?",
+      "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionCompletion.cs",
+      "line": 8
+    },
+    {
+      "category": "health",
+      "name": "WithoutNutrition",
+      "type": "FoodRecognitionCompletion",
+      "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionCompletion.cs",
+      "line": 17
     },
     {
       "category": "health",
@@ -8756,7 +8777,7 @@
     {
       "category": "identity",
       "name": "EmailId",
-      "type": "Guid",
+      "type": "QueuedEmailId",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayOutboxMessage.cs",
       "line": 5
     },
