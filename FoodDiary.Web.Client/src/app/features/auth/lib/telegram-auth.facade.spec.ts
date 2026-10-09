@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../services/auth.service';
 import type { AuthResponse } from '../../../shared/auth/auth.data';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { BrowserStorageService } from '../../../shared/platform/browser-storage.service';
 import { BrowserWindowService } from '../../../shared/platform/browser-window.service';
 import { TelegramAuthService } from '../api/telegram-auth.service';
@@ -78,7 +79,7 @@ describe('TelegramAuthFacade', () => {
         const response: AuthResponse = {
             accessToken: 'access',
             user: {
-                id: 'user',
+                id: entityId<'user'>('user'),
                 email: null,
                 hasPassword: false,
                 isActive: true,

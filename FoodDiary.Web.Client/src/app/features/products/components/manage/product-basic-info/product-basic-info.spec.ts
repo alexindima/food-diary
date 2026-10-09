@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import {
     getProductMaxAmountForUnit,
@@ -230,8 +231,8 @@ function createProductSignalForm(model = createProductForm()): FieldTree<Product
 describe('Product cover management', () => {
     it('uses the first upload as cover, reorders explicitly and promotes the next remaining photo', () => {
         setRequiredInputs();
-        const first = { assetId: 'first', url: '/first.jpg' };
-        const second = { assetId: 'second', url: '/second.jpg' };
+        const first = imageSelection('/first.jpg', 'first');
+        const second = imageSelection('/second.jpg', 'second');
         component['setPhotos']([first, second]);
         expect(component.form().imageUrl().value()).toEqual(first);
         component['setCover'](second);

@@ -2,6 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { firstValueFrom, type Observable } from 'rxjs';
 
 import type { PageOf } from '../../../shared/models/page-of.data';
+import type { RecipeId } from '../../../shared/models/semantics/entity-id';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { QuickMealService } from '../../meals/contracts/quick-meal';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import { PublicRecipeService } from '../api/public-recipe.service';
@@ -23,15 +25,15 @@ export class PublicRecipesFacade {
         return this.api.getCategories(search, language);
     }
 
-    public isFavorite(id: string): Observable<boolean> {
+    public isFavorite(id: RecipeId): Observable<boolean> {
         return this.favorites.isFavorite(id);
     }
 
     public async saveAsync(recipe: PublicRecipe): Promise<void> {
-        await firstValueFrom(this.favorites.add(recipe.id, recipe.name));
+        await firstValueFrom(this.favorites.add(entityId<'recipe'>(recipe.id), recipe.name));
     }
 
-    public async addToDiaryAsync(id: string): Promise<void> {
+    public async addToDiaryAsync(id: RecipeId): Promise<void> {
         const recipe = await firstValueFrom(this.recipes.getById(id));
         if (recipe === null) {
             throw new Error('Recipe unavailable');

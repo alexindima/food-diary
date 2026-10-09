@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Modules.RecipeCommunity.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.RecipeCommunity.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Social;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;

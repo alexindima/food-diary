@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids;
 using System.Globalization;
 using System.Net;
 using System.Security.Cryptography;
@@ -2053,14 +2054,7 @@ public sealed partial class BillingGatewayTests {
             }));
 
         Result<BillingRecurringPaymentModel> result = await gateway.CreateRecurringPaymentAsync(
-            new BillingRecurringPaymentRequestModel(
-                Guid.NewGuid(),
-                Guid.NewGuid(),
-                "customer",
-                "pm_123",
-                "monthly",
-                CurrentPeriodEndUtc: new DateTime(2026, 5, 5, 0, 0, 0, DateTimeKind.Utc),
-                IdempotenceKey: "billing-renewal:test"),
+            new BillingRecurringPaymentRequestModel(Guid.NewGuid(), new BillingSubscriptionId(Guid.NewGuid()), "customer", "pm_123", "monthly", CurrentPeriodEndUtc: new DateTime(2026, 5, 5, 0, 0, 0, DateTimeKind.Utc), IdempotenceKey: "billing-renewal:test"),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -2095,14 +2089,7 @@ public sealed partial class BillingGatewayTests {
             MsOptions.Create(ValidYooKassaOptions()));
 
         Result<BillingRecurringPaymentModel> result = await gateway.CreateRecurringPaymentAsync(
-            new BillingRecurringPaymentRequestModel(
-                Guid.NewGuid(),
-                Guid.NewGuid(),
-                "customer",
-                "pm_123",
-                "monthly",
-                CurrentPeriodEndUtc: null,
-                IdempotenceKey: "billing-renewal:test"),
+            new BillingRecurringPaymentRequestModel(Guid.NewGuid(), new BillingSubscriptionId(Guid.NewGuid()), "customer", "pm_123", "monthly", CurrentPeriodEndUtc: null, IdempotenceKey: "billing-renewal:test"),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -2116,7 +2103,7 @@ public sealed partial class BillingGatewayTests {
             MsOptions.Create(new YooKassaOptions()));
 
         Result<BillingRecurringPaymentModel> result = await gateway.CreateRecurringPaymentAsync(
-            new BillingRecurringPaymentRequestModel(Guid.NewGuid(), Guid.NewGuid(), "customer", "pm_123", "monthly", CurrentPeriodEndUtc: null, "renewal"),
+            new BillingRecurringPaymentRequestModel(Guid.NewGuid(), new BillingSubscriptionId(Guid.NewGuid()), "customer", "pm_123", "monthly", CurrentPeriodEndUtc: null, "renewal"),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -2134,7 +2121,7 @@ public sealed partial class BillingGatewayTests {
             MsOptions.Create(ValidYooKassaOptions()));
 
         Result<BillingRecurringPaymentModel> result = await gateway.CreateRecurringPaymentAsync(
-            new BillingRecurringPaymentRequestModel(Guid.NewGuid(), Guid.NewGuid(), "customer", "pm_123", "monthly", CurrentPeriodEndUtc: null, "renewal"),
+            new BillingRecurringPaymentRequestModel(Guid.NewGuid(), new BillingSubscriptionId(Guid.NewGuid()), "customer", "pm_123", "monthly", CurrentPeriodEndUtc: null, "renewal"),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -2162,7 +2149,7 @@ public sealed partial class BillingGatewayTests {
             MsOptions.Create(ValidYooKassaOptions()));
 
         Result<BillingRecurringPaymentModel> result = await gateway.CreateRecurringPaymentAsync(
-            new BillingRecurringPaymentRequestModel(Guid.NewGuid(), Guid.NewGuid(), "customer", "pm_123", "yearly", CurrentPeriodEndUtc: null, "renewal"),
+            new BillingRecurringPaymentRequestModel(Guid.NewGuid(), new BillingSubscriptionId(Guid.NewGuid()), "customer", "pm_123", "yearly", CurrentPeriodEndUtc: null, "renewal"),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess, result.Error.Message);
@@ -2184,7 +2171,7 @@ public sealed partial class BillingGatewayTests {
             }));
 
         Result<BillingRecurringPaymentModel> result = await gateway.CreateRecurringPaymentAsync(
-            new BillingRecurringPaymentRequestModel(Guid.NewGuid(), Guid.NewGuid(), "customer", "", "monthly", CurrentPeriodEndUtc: null, "renewal"),
+            new BillingRecurringPaymentRequestModel(Guid.NewGuid(), new BillingSubscriptionId(Guid.NewGuid()), "customer", "", "monthly", CurrentPeriodEndUtc: null, "renewal"),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);

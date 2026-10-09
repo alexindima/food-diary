@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Billing.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Contracts.Queries.GetUserBillingProfile;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
@@ -181,24 +182,31 @@ public sealed class CreateCheckoutSessionCommandHandler(
         string provider,
         BillingCheckoutSessionModel session,
         CancellationToken cancellationToken) {
-        var payment = BillingPayment.Create(
-            subscription.UserId,
-            subscription.Id,
-            provider,
-            session.SessionId,
-            session.CustomerId,
+        var payment = BillingPayment.CreateWithFinancials(
+            userId: subscription.UserId,
+            billingSubscriptionId: subscription.TypedId,
+            provider: provider,
+            externalPaymentId: session.SessionId,
+            externalCustomerId: session.CustomerId,
             externalSubscriptionId: null,
             externalPaymentMethodId: null,
-            session.PriceId,
-            session.Plan,
-            BillingSubscription.PendingCheckoutStatus,
-            BillingPaymentKinds.Checkout,
+            externalPriceId: session.PriceId,
+            plan: session.Plan,
+            status: BillingSubscription.PendingCheckoutStatus,
+            kind: BillingPaymentKinds.Checkout,
+            financials: BillingPaymentFinancials.FromFields(
             amount: null,
             currency: null,
+            tax: null,
+            fee: null,
+            earnings: null,
+            payoutCurrency: null,
+            payoutEarnings: null),
             currentPeriodStartUtc: null,
             currentPeriodEndUtc: null,
             webhookEventId: null,
-            providerMetadataJson: null);
+            providerMetadataJson: null,
+            occurredAtUtc: null);
         await billingPaymentRepository.AddAsync(payment, cancellationToken).ConfigureAwait(false);
     }
 }

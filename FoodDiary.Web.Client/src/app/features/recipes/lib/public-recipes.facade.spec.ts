@@ -3,6 +3,8 @@ import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { beforeEach, expect, it, vi } from 'vitest';
 
 import { type Recipe, RecipeVisibility } from '../../../shared/models/recipe.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { QuickMealService } from '../../meals/contracts/quick-meal';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import { PublicRecipeService } from '../api/public-recipe.service';
@@ -42,7 +44,7 @@ it('preserves public catalog filters, results and language-specific categories',
 
 it('reads the current favorite state and waits for the save request', async () => {
     favorites.isFavorite.mockReturnValue(of(true));
-    expect(await firstValueFrom(facade.isFavorite('recipe'))).toBe(true);
+    expect(await firstValueFrom(facade.isFavorite(entityId<'recipe'>('recipe')))).toBe(true);
     expect(favorites.isFavorite).toHaveBeenCalledWith('recipe');
     const saved = new Subject<void>();
     favorites.add.mockReturnValue(saved);
@@ -63,19 +65,19 @@ it('propagates a failed favorite write', async () => {
 
 it('loads the complete recipe before opening the quick meal flow', async () => {
     const recipe: Recipe = {
-        id: 'recipe',
+        id: entityId<'recipe'>('recipe'),
         name: 'Soup',
         servings: 2,
         visibility: RecipeVisibility.Public,
         usageCount: 0,
-        createdAt: '2026-09-01T00:00:00Z',
+        createdAt: utcInstant('2026-09-01T00:00:00Z'),
         isOwnedByCurrentUser: false,
         isNutritionAutoCalculated: true,
         steps: [],
     };
     const response = new Subject<Recipe>();
     recipes.getById.mockReturnValue(response);
-    const adding = facade.addToDiaryAsync('recipe');
+    const adding = facade.addToDiaryAsync(entityId<'recipe'>('recipe'));
     expect(recipes.getById).toHaveBeenCalledWith('recipe');
     expect(quickMeal.addRecipe).not.toHaveBeenCalled();
     response.next(recipe);
@@ -86,12 +88,12 @@ it('loads the complete recipe before opening the quick meal flow', async () => {
 
 it('does not open the quick meal flow for an unavailable recipe', async () => {
     recipes.getById.mockReturnValue(of(null));
-    await expect(facade.addToDiaryAsync('deleted')).rejects.toThrow('Recipe unavailable');
+    await expect(facade.addToDiaryAsync(entityId<'recipe'>('deleted'))).rejects.toThrow('Recipe unavailable');
     expect(quickMeal.addRecipe).not.toHaveBeenCalled();
 });
 
 it('propagates recipe lookup errors without opening the quick meal flow', async () => {
     recipes.getById.mockReturnValue(throwError(() => new Error('Offline')));
-    await expect(facade.addToDiaryAsync('recipe')).rejects.toThrow('Offline');
+    await expect(facade.addToDiaryAsync(entityId<'recipe'>('recipe'))).rejects.toThrow('Offline');
     expect(quickMeal.addRecipe).not.toHaveBeenCalled();
 });

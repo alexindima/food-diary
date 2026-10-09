@@ -4,6 +4,7 @@ import { type LangChangeEvent, TranslateService, type TranslationChangeEvent } f
 import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { User } from '../../../shared/models/user.data';
 import type { SidebarActionItem, SidebarRouteItem } from '../sidebar-lib/sidebar.models';
 import { SidebarDesktopComponent } from './sidebar-desktop';
@@ -29,7 +30,7 @@ const primaryActionItems: SidebarActionItem[] = [
 ];
 
 const user: User = {
-    id: 'user-1',
+    id: entityId<'user'>('user-1'),
     email: 'user@example.com',
     username: 'Alex',
     hasPassword: true,

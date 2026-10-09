@@ -3,8 +3,6 @@ using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
-using FoodDiary.Modules.Notifications.Application.Common;
-using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
@@ -24,14 +22,14 @@ public sealed class DeliverTestNotificationCommandHandler(
 
         UserId userId = userIdResult.Value;
         string referenceId = $"test-notification:{command.Type}:{Guid.NewGuid():N}";
-        Notification notification = command.Type switch {
-            NotificationTypes.FastingCheckInReminder => NotificationFactory.CreateFastingCheckInReminder(userId, referenceId),
-            NotificationTypes.EatingWindowStarted => NotificationFactory.CreateEatingWindowStarted(userId, "Intermittent", "EatingWindow", referenceId),
-            NotificationTypes.FastingWindowStarted => NotificationFactory.CreateFastingWindowStarted(userId, "Intermittent", "FastingWindow", referenceId),
-            _ => NotificationFactory.CreateFastingCompleted(userId, "Extended", "FastDay", referenceId),
+        NotificationIntent intent = command.Type switch {
+            NotificationTypes.FastingCheckInReminder => NotificationIntent.FastingCheckInReminder(referenceId),
+            NotificationTypes.EatingWindowStarted => NotificationIntent.EatingWindowStarted(new FastingPhaseNotificationPayload("Intermittent", "EatingWindow"), referenceId),
+            NotificationTypes.FastingWindowStarted => NotificationIntent.FastingWindowStarted(new FastingPhaseNotificationPayload("Intermittent", "FastingWindow"), referenceId),
+            _ => NotificationIntent.FastingCompleted(new FastingPhaseNotificationPayload("Extended", "FastDay"), referenceId),
         };
 
-        var request = new NotificationRequest(notification.UserId, notification.Type, notification.PayloadJson, notification.ReferenceId);
+        var request = new NotificationRequest(userId, intent);
         await notificationWriter.AddAsync(request, sendWebPush: true, cancellationToken).ConfigureAwait(false);
         await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         await clientRefreshService.RefreshAsync(userId, pushChanged: true, cancellationToken).ConfigureAwait(false);

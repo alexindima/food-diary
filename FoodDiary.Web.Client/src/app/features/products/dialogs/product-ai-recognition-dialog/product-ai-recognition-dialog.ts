@@ -15,6 +15,7 @@ import { FoodRecognitionHistoryComponent } from '../../../../components/shared/f
 import type { FoodNutritionResponse, FoodVisionItem, FoodVisionResponse, ProductLabel } from '../../../../shared/models/ai.data';
 import type { FoodRecognitionJob } from '../../../../shared/models/food-recognition.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
+import { imageSelection } from '../../../../shared/models/image-upload.data';
 import { ProductAiRecognitionFacade } from '../../lib/product-ai-recognition.facade';
 import type { ProductAiDialogData, ProductAiRecognitionResult } from './product-ai-recognition-dialog.types';
 import {
@@ -240,8 +241,8 @@ export class ProductAiRecognitionDialogComponent {
         this.historyOpen.set(false);
         this.useAsCover.set(false);
         this.replacementAccepted.set(false);
-        const selection = { assetId: job.imageAssetId, url: job.imageUrl };
-        this.photos.set([selection, ...(job.additionalImages ?? []).map(image => ({ assetId: image.imageAssetId, url: image.imageUrl }))]);
+        const selection = imageSelection(job.imageUrl, job.imageAssetId);
+        this.photos.set([selection, ...(job.additionalImages ?? []).map(image => imageSelection(image.imageUrl, image.imageAssetId))]);
         this.cover.set(null);
         this.selection.set(selection);
         this.productLabel.set(null);
@@ -276,7 +277,8 @@ export class ProductAiRecognitionDialogComponent {
                       isProductLabel: true,
                       additionalImageAssetIds: this.photos()
                           .map(photo => photo.assetId)
-                          .filter((id): id is string => id !== null && id !== assetId),
+                          .filter(id => id !== null)
+                          .filter(id => id !== assetId),
                       description: this.getDescription(),
                   })
                 : this.productAiRecognitionFacade.resumeRecognition(jobId)

@@ -8,6 +8,7 @@ import { ClientTasksSdk } from '../../../shared/api/sdk/generated/api/client-tas
 import { clientTaskFromSdk } from '../../../shared/api/sdk/recommendation-sdk.mapper';
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
 import type { ClientTask, ClientTaskStatus } from '../../../shared/models/dietologist.data';
+import type { ClientTaskId } from '../../../shared/models/semantics/entity-id';
 
 @Service()
 export class ClientTasksService {
@@ -20,7 +21,7 @@ export class ClientTasksService {
         );
     }
 
-    public changeStatus(taskId: string, status: Extract<ClientTaskStatus, 'Open' | 'Completed'>): Observable<ClientTask> {
+    public changeStatus(taskId: ClientTaskId, status: Extract<ClientTaskStatus, 'Open' | 'Completed'>): Observable<ClientTask> {
         return this.sdk.client
             .putClientTasksByTaskIdStatus({ version: this.sdk.version, taskId, changeClientTaskStatusHttpRequest: { status } })
             .pipe(map(clientTaskFromSdk));

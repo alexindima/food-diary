@@ -1,10 +1,11 @@
+import type { AdminId, AdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 export type AdminTemplateRevision = {
-    id: string;
+    id: AdminId<'template-revision'>;
     subject: string | null;
     htmlBody: string | null;
     textBody: string;
     isActive: boolean;
     version: number | null;
-    savedOnUtc: string;
-    archivedOnUtc: string;
+    savedOnUtc: AdminUtcInstant;
+    archivedOnUtc: AdminUtcInstant;
 };

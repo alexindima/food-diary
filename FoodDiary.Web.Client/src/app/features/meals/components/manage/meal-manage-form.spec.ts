@@ -17,6 +17,9 @@ import {
     type MealManageDto,
     MealSourceType,
 } from '../../../../shared/models/meal.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
+import { productQuantityFromStored, recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { MealManageFormComponent } from './meal-manage-form';
 import type { MealItemFormValues, MealNutritionSummaryState, NutritionTotals } from './meal-manage-lib/meal-manage.types';
@@ -92,7 +95,7 @@ describe('MealManageFormComponent native submit behavior', () => {
             mealType: 'BREAKFAST',
             items: [
                 createMealItemValue(
-                    { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
+                    { ...createEmptyProductSnapshot(), id: entityId<'product'>('product-1'), name: 'Apple' },
                     null,
                     PRODUCT_AMOUNT,
                     MealSourceType.Product,
@@ -127,7 +130,7 @@ describe('MealManageFormComponent submit behavior', () => {
         component['patchMealFormModel']({
             items: [
                 createMealItemValue(
-                    { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
+                    { ...createEmptyProductSnapshot(), id: entityId<'product'>('product-1'), name: 'Apple' },
                     null,
                     PRODUCT_AMOUNT,
                     MealSourceType.Product,
@@ -158,7 +161,7 @@ describe('MealManageFormComponent submit behavior', () => {
             date: '',
             items: [
                 createMealItemValue(
-                    { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
+                    { ...createEmptyProductSnapshot(), id: entityId<'product'>('product-1'), name: 'Apple' },
                     null,
                     PRODUCT_AMOUNT,
                     MealSourceType.Product,
@@ -185,7 +188,7 @@ describe('MealManageFormComponent submit behavior', () => {
         component['patchMealFormModel']({
             items: [
                 createMealItemValue(
-                    { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
+                    { ...createEmptyProductSnapshot(), id: entityId<'product'>('product-1'), name: 'Apple' },
                     null,
                     PRODUCT_AMOUNT,
                     MealSourceType.Product,
@@ -207,7 +210,7 @@ describe('MealManageFormComponent network recovery', () => {
         mealManageFacade.submitMealAsync.mockRejectedValue(new HttpErrorResponse({ status: 0, error: new TypeError('Failed to fetch') }));
         const items = [
             createMealItemValue(
-                { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
+                { ...createEmptyProductSnapshot(), id: entityId<'product'>('product-1'), name: 'Apple' },
                 null,
                 PRODUCT_AMOUNT,
                 MealSourceType.Product,
@@ -256,7 +259,7 @@ describe('MealManageFormComponent duplicate submit guard', () => {
             mealType: 'BREAKFAST',
             items: [
                 createMealItemValue(
-                    { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
+                    { ...createEmptyProductSnapshot(), id: entityId<'product'>('product-1'), name: 'Apple' },
                     null,
                     PRODUCT_AMOUNT,
                     MealSourceType.Product,
@@ -506,8 +509,8 @@ function createNutritionSummaryStateWithCalories(calories: number): MealNutritio
 function createMeal(overrides: Partial<Meal> = {}): Meal {
     const totalCalories = overrides.totalCalories ?? TOTAL_CALORIES;
     return {
-        id: 'meal-1',
-        date: '2026-04-05T10:30:00',
+        id: entityId<'meal'>('meal-1'),
+        date: utcInstant('2026-04-05T10:30:00'),
         mealType: 'Breakfast',
         comment: totalCalories === UPDATED_TOTAL_CALORIES ? 'Updated comment' : 'Comment',
         totalCalories,
@@ -527,8 +530,19 @@ describe('MealManageForm recipe amount loading', () => {
         const { component, fixture, mealManageFacade } = await setupComponentAsync();
         const prepared = new Subject<MealItemFormValues[]>();
         mealManageFacade.prepareMealItems.mockReturnValue(prepared);
-        const recipe = { ...createEmptyRecipeSnapshot(), id: 'r', name: 'Soup' };
-        const original = createMeal({ items: [{ id: 'i', mealId: 'meal-1', amount: 2, sourceType: MealSourceType.Recipe, recipe }] });
+        const recipe = { ...createEmptyRecipeSnapshot(), id: entityId<'recipe'>('r'), name: 'Soup' };
+        const original = createMeal({
+            items: [
+                {
+                    id: entityId<'meal-item'>('i'),
+                    mealId: entityId<'meal'>('meal-1'),
+                    amount: recipeServingsFromStored(2),
+                    sourceType: MealSourceType.Recipe,
+                    recipe,
+                    product: null,
+                },
+            ],
+        });
         fixture.componentRef.setInput('meal', original);
         fixture.detectChanges();
         const nativeElement = fixture.nativeElement as HTMLElement;
@@ -576,9 +590,18 @@ describe('MealManageForm recipe amount loading', () => {
 describe('MealManageForm existing meal editing', () => {
     it.each([false, true])('submits an existing product meal and preserves entered values on failure=%s', async fail => {
         const { component, fixture, mealManageFacade } = await setupComponentAsync();
-        const product = { ...createEmptyProductSnapshot(), id: 'p', name: 'Apple' };
+        const product = { ...createEmptyProductSnapshot(), id: entityId<'product'>('p'), name: 'Apple' };
         const original = createMeal({
-            items: [{ id: 'i', mealId: 'meal-1', amount: PRODUCT_AMOUNT, sourceType: MealSourceType.Product, product }],
+            items: [
+                {
+                    id: entityId<'meal-item'>('i'),
+                    mealId: entityId<'meal'>('meal-1'),
+                    amount: productQuantityFromStored(PRODUCT_AMOUNT),
+                    sourceType: MealSourceType.Product,
+                    product,
+                    recipe: null,
+                },
+            ],
         });
         mealManageFacade.createMealItem.mockImplementation(createMealItemValue);
         fixture.componentRef.setInput('meal', original);
@@ -603,8 +626,19 @@ describe('MealManageForm existing meal editing', () => {
     });
     it('converts saved recipe servings into editable grams and back into the update payload', async () => {
         const { component, fixture, mealManageFacade } = await setupComponentAsync();
-        const recipe = { ...createEmptyRecipeSnapshot(), id: 'r', name: 'Soup' };
-        const original = createMeal({ items: [{ id: 'i', mealId: 'meal-1', amount: 2, sourceType: MealSourceType.Recipe, recipe }] });
+        const recipe = { ...createEmptyRecipeSnapshot(), id: entityId<'recipe'>('r'), name: 'Soup' };
+        const original = createMeal({
+            items: [
+                {
+                    id: entityId<'meal-item'>('i'),
+                    mealId: entityId<'meal'>('meal-1'),
+                    amount: recipeServingsFromStored(2),
+                    sourceType: MealSourceType.Recipe,
+                    recipe,
+                    product: null,
+                },
+            ],
+        });
         mealManageFacade.createMealItem.mockImplementation(createMealItemValue);
         mealManageFacade.convertRecipeServingsToGrams.mockReturnValue(PRODUCT_AMOUNT);
         mealManageFacade.convertRecipeGramsToServings.mockReturnValue(2);
@@ -623,8 +657,12 @@ describe('MealManageForm existing meal editing', () => {
 describe('MealManageForm manual item dialog', () => {
     it.each([true, false])('updates an item only when selection is accepted=%s', async accepted => {
         const { component } = await setupComponentAsync();
-        const original = createMealItemValue({ ...createEmptyProductSnapshot(), id: 'original' }, null, PRODUCT_AMOUNT);
-        const selected = createMealItemValue({ ...createEmptyProductSnapshot(), id: 'new' }, null, PRODUCT_AMOUNT);
+        const original = createMealItemValue(
+            { ...createEmptyProductSnapshot(), id: entityId<'product'>('original') },
+            null,
+            PRODUCT_AMOUNT,
+        );
+        const selected = createMealItemValue({ ...createEmptyProductSnapshot(), id: entityId<'product'>('new') }, null, PRODUCT_AMOUNT);
         component['patchMealFormModel']({ items: [original] });
         const dialogs = TestBed.inject(FdUiDialogService);
         vi.spyOn(dialogs, 'open').mockReturnValue({ afterClosed: () => of(accepted ? selected : null) } as unknown as ReturnType<
@@ -678,7 +716,9 @@ describe('Meal form selected amount validation', () => {
     it.each([null, 0, -1, Number.NaN, Number.POSITIVE_INFINITY])('does not send an item with amount %s', async amount => {
         const { component, fixture, mealManageFacade } = await setupComponentAsync();
         setValidManualMeal(component);
-        component['patchMealFormModel']({ items: [createMealItemValue({ ...createEmptyProductSnapshot(), id: 'p' }, null, amount)] });
+        component['patchMealFormModel']({
+            items: [createMealItemValue({ ...createEmptyProductSnapshot(), id: entityId<'product'>('p') }, null, amount)],
+        });
         fixture.detectChanges();
         await component['onSubmitAsync']();
         expect(component['itemListItems']()[0].amountError).not.toBeNull();
@@ -719,16 +759,24 @@ function setValidManualMeal(component: MealManageFormComponent): void {
         manualCarbs: 0,
         manualFiber: 0,
         manualAlcohol: 0,
-        items: [createMealItemValue({ ...createEmptyProductSnapshot(), id: 'p' }, null, PRODUCT_AMOUNT)],
+        items: [createMealItemValue({ ...createEmptyProductSnapshot(), id: entityId<'product'>('p') }, null, PRODUCT_AMOUNT)],
     });
 }
 
 describe('Meal form delayed item dialog', () => {
     it('does not overwrite another row when the edited item was removed while its dialog was open', async () => {
         const { component } = await setupComponentAsync();
-        const original = createMealItemValue({ ...createEmptyProductSnapshot(), id: 'original' }, null, PRODUCT_AMOUNT);
-        const other = createMealItemValue({ ...createEmptyProductSnapshot(), id: 'other' }, null, PRODUCT_AMOUNT);
-        const selected = createMealItemValue({ ...createEmptyProductSnapshot(), id: 'selected' }, null, PRODUCT_AMOUNT);
+        const original = createMealItemValue(
+            { ...createEmptyProductSnapshot(), id: entityId<'product'>('original') },
+            null,
+            PRODUCT_AMOUNT,
+        );
+        const other = createMealItemValue({ ...createEmptyProductSnapshot(), id: entityId<'product'>('other') }, null, PRODUCT_AMOUNT);
+        const selected = createMealItemValue(
+            { ...createEmptyProductSnapshot(), id: entityId<'product'>('selected') },
+            null,
+            PRODUCT_AMOUNT,
+        );
         component['patchMealFormModel']({ items: [original, other] });
         const response = new Subject<MealItemFormValues | null>();
         const dialogs = TestBed.inject(FdUiDialogService);
@@ -772,7 +820,8 @@ describe('Meal form custom controls preserve unsaved changes', () => {
         mealManageFacade.confirmDiscardChangesAsync.mockResolvedValue(false);
         const dialogs = TestBed.inject(FdUiDialogService);
         vi.spyOn(dialogs, 'open').mockReturnValue({
-            afterClosed: () => of(createMealItemValue({ ...createEmptyProductSnapshot(), id: 'p' }, null, PRODUCT_AMOUNT)),
+            afterClosed: () =>
+                of(createMealItemValue({ ...createEmptyProductSnapshot(), id: entityId<'product'>('p') }, null, PRODUCT_AMOUNT)),
         } as unknown as ReturnType<typeof dialogs.open>);
         component['onItemSourceClick'](0);
         await waitForAsyncTasksAsync();

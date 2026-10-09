@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
@@ -6,6 +7,7 @@ using FoodDiary.Modules.Billing.Domain.Enums;
 namespace FoodDiary.Modules.Billing.Domain.Entities;
 
 public sealed class BillingWebhookEvent : Entity<Guid> {
+    public BillingWebhookEventId TypedId => new(Id);
     private const int JsonMaxLength = 65536;
     public const string ReceivedStatus = "received";
     public const string ProcessedStatus = "processed";

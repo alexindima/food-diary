@@ -15,6 +15,8 @@ import { UnsavedChangesService } from '../../../../services/unsaved-changes.serv
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { FASTING_REMINDER_PRESETS } from '../../../../shared/lib/fasting-reminder-presets';
 import type { DietologistRelationship } from '../../../../shared/models/dietologist.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { Gender, type User } from '../../../../shared/models/user.data';
 import { NotificationService, type WebPushSubscriptionItem } from '../../../../shared/notifications/notification.service';
 import { PushNotificationService } from '../../../../shared/notifications/push-notification.service';
@@ -60,7 +62,7 @@ describe('UserManageComponent dietologist invite state', () => {
 
     it('applies pending relationship state and disables email editing', async () => {
         await createComponentAsync({
-            invitationId: 'inv-1',
+            invitationId: entityId<'dietologist-invitation'>('inv-1'),
             status: 'Pending',
             email: 'diet@example.com',
             firstName: null,
@@ -76,8 +78,8 @@ describe('UserManageComponent dietologist invite state', () => {
                 shareHydration: false,
                 shareFasting: true,
             },
-            createdAtUtc: '2026-04-15T00:00:00Z',
-            expiresAtUtc: '2026-04-22T00:00:00Z',
+            createdAtUtc: utcInstant('2026-04-15T00:00:00Z'),
+            expiresAtUtc: utcInstant('2026-04-22T00:00:00Z'),
             acceptedAtUtc: null,
         });
 
@@ -118,12 +120,12 @@ describe('UserManageComponent dietologist profile sharing', () => {
 describe('UserManageComponent dietologist permission failure recovery', () => {
     it('keeps the save error visible after restoring failed permission changes', async () => {
         await createComponentAsync({
-            invitationId: 'inv-1',
+            invitationId: entityId<'dietologist-invitation'>('inv-1'),
             status: 'Accepted',
             email: 'diet@example.com',
             firstName: null,
             lastName: null,
-            dietologistUserId: 'diet-1',
+            dietologistUserId: entityId<'user'>('diet-1'),
             permissions: {
                 shareProfile: true,
                 shareMeals: true,
@@ -134,9 +136,9 @@ describe('UserManageComponent dietologist permission failure recovery', () => {
                 shareHydration: true,
                 shareFasting: true,
             },
-            createdAtUtc: '2026-04-15T00:00:00Z',
-            expiresAtUtc: '2026-04-22T00:00:00Z',
-            acceptedAtUtc: '2026-04-15T01:00:00Z',
+            createdAtUtc: utcInstant('2026-04-15T00:00:00Z'),
+            expiresAtUtc: utcInstant('2026-04-22T00:00:00Z'),
+            acceptedAtUtc: utcInstant('2026-04-15T01:00:00Z'),
         });
         dietologistService.updatePermissions.mockReturnValueOnce(throwError(() => new Error('Unavailable')));
 
@@ -159,12 +161,12 @@ describe('UserManageComponent dietologist permission failure recovery', () => {
 describe('UserManageComponent dietologist permissions', () => {
     it('autosaves permissions when a relationship toggle changes', async () => {
         await createComponentAsync({
-            invitationId: 'inv-1',
+            invitationId: entityId<'dietologist-invitation'>('inv-1'),
             status: 'Accepted',
             email: 'diet@example.com',
             firstName: null,
             lastName: null,
-            dietologistUserId: 'diet-1',
+            dietologistUserId: entityId<'user'>('diet-1'),
             permissions: {
                 shareProfile: true,
                 shareMeals: true,
@@ -175,9 +177,9 @@ describe('UserManageComponent dietologist permissions', () => {
                 shareHydration: true,
                 shareFasting: true,
             },
-            createdAtUtc: '2026-04-15T00:00:00Z',
-            expiresAtUtc: '2026-04-22T00:00:00Z',
-            acceptedAtUtc: '2026-04-15T01:00:00Z',
+            createdAtUtc: utcInstant('2026-04-15T00:00:00Z'),
+            expiresAtUtc: utcInstant('2026-04-22T00:00:00Z'),
+            acceptedAtUtc: utcInstant('2026-04-15T01:00:00Z'),
         });
 
         component['updateDietologistPermission']('shareFasting', false);
@@ -196,12 +198,12 @@ describe('UserManageComponent dietologist permissions', () => {
 
     it('updates relationship permissions without reloading the dietologist section', async () => {
         await createComponentAsync({
-            invitationId: 'inv-1',
+            invitationId: entityId<'dietologist-invitation'>('inv-1'),
             status: 'Accepted',
             email: 'diet@example.com',
             firstName: null,
             lastName: null,
-            dietologistUserId: 'diet-1',
+            dietologistUserId: entityId<'user'>('diet-1'),
             permissions: {
                 shareProfile: true,
                 shareMeals: true,
@@ -212,9 +214,9 @@ describe('UserManageComponent dietologist permissions', () => {
                 shareHydration: true,
                 shareFasting: true,
             },
-            createdAtUtc: '2026-04-15T00:00:00Z',
-            expiresAtUtc: '2026-04-22T00:00:00Z',
-            acceptedAtUtc: '2026-04-15T01:00:00Z',
+            createdAtUtc: utcInstant('2026-04-15T00:00:00Z'),
+            expiresAtUtc: utcInstant('2026-04-22T00:00:00Z'),
+            acceptedAtUtc: utcInstant('2026-04-15T01:00:00Z'),
         });
 
         component['updateDietologistPermission']('shareMeals', false);
@@ -229,12 +231,12 @@ describe('UserManageComponent dietologist disconnect', () => {
     it('asks for confirmation before disconnecting an accepted dietologist relationship', async () => {
         await createComponentAsync(
             {
-                invitationId: 'inv-1',
+                invitationId: entityId<'dietologist-invitation'>('inv-1'),
                 status: 'Accepted',
                 email: 'diet@example.com',
                 firstName: null,
                 lastName: null,
-                dietologistUserId: 'diet-1',
+                dietologistUserId: entityId<'user'>('diet-1'),
                 permissions: {
                     shareProfile: true,
                     shareMeals: true,
@@ -245,9 +247,9 @@ describe('UserManageComponent dietologist disconnect', () => {
                     shareHydration: true,
                     shareFasting: true,
                 },
-                createdAtUtc: '2026-04-15T00:00:00Z',
-                expiresAtUtc: '2026-04-22T00:00:00Z',
-                acceptedAtUtc: '2026-04-15T01:00:00Z',
+                createdAtUtc: utcInstant('2026-04-15T00:00:00Z'),
+                expiresAtUtc: utcInstant('2026-04-22T00:00:00Z'),
+                acceptedAtUtc: utcInstant('2026-04-15T01:00:00Z'),
             },
             false,
         );
@@ -261,12 +263,12 @@ describe('UserManageComponent dietologist disconnect', () => {
     it('disconnects after confirmation for an accepted relationship', async () => {
         await createComponentAsync(
             {
-                invitationId: 'inv-1',
+                invitationId: entityId<'dietologist-invitation'>('inv-1'),
                 status: 'Accepted',
                 email: 'diet@example.com',
                 firstName: null,
                 lastName: null,
-                dietologistUserId: 'diet-1',
+                dietologistUserId: entityId<'user'>('diet-1'),
                 permissions: {
                     shareProfile: true,
                     shareMeals: true,
@@ -277,9 +279,9 @@ describe('UserManageComponent dietologist disconnect', () => {
                     shareHydration: true,
                     shareFasting: true,
                 },
-                createdAtUtc: '2026-04-15T00:00:00Z',
-                expiresAtUtc: '2026-04-22T00:00:00Z',
-                acceptedAtUtc: '2026-04-15T01:00:00Z',
+                createdAtUtc: utcInstant('2026-04-15T00:00:00Z'),
+                expiresAtUtc: utcInstant('2026-04-22T00:00:00Z'),
+                acceptedAtUtc: utcInstant('2026-04-15T01:00:00Z'),
             },
             true,
         );
@@ -525,7 +527,7 @@ describe('UserManageComponent explicit profile save feedback', () => {
 
     it('clears unsaved state after the profile save succeeds', async () => {
         await createComponentAsync(null, false, {
-            id: 'u1',
+            id: entityId<'user'>('u1'),
             email: 'user@example.com',
             hasPassword: true,
             firstName: 'Before',
@@ -567,7 +569,7 @@ describe('UserManageComponent explicit profile save feedback', () => {
 
     it('keeps select changes local until save', async () => {
         await createComponentAsync(null, false, {
-            id: 'u1',
+            id: entityId<'user'>('u1'),
             email: 'user@example.com',
             hasPassword: true,
             gender: 'M',
@@ -612,7 +614,7 @@ describe('UserManageComponent profile normalization and intents', () => {
 
     it('normalizes legacy profile select values from user overview', async () => {
         await createComponentAsync(null, false, {
-            id: 'u1',
+            id: entityId<'user'>('u1'),
             email: 'user@example.com',
             hasPassword: true,
             username: 'alexi',
@@ -642,7 +644,7 @@ describe('UserManageComponent profile normalization and intents', () => {
             null,
             false,
             {
-                id: 'u1',
+                id: entityId<'user'>('u1'),
                 email: 'user@example.com',
                 hasPassword: false,
                 pushNotificationsEnabled: true,

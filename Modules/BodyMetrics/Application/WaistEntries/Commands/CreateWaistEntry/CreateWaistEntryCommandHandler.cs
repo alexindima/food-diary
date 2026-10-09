@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Mappings;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
@@ -42,7 +43,7 @@ public sealed class CreateWaistEntryCommandHandler(
                 WaistEntryErrors.AlreadyExists(normalizedDate));
         }
 
-        var entry = WaistEntry.CreateForDay(userId, day, command.CircumferenceCm);
+        var entry = WaistEntry.CreateWithMeasurement(userId, day, MeasuredWaistCm.Create(command.CircumferenceCm));
         entry = await waistEntryRepository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
         return Result.Success(entry.ToModel());
     }

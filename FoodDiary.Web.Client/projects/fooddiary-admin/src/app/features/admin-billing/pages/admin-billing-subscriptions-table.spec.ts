@@ -3,12 +3,13 @@ import { provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import type { AdminBillingSubscriptionViewModel } from '../models/admin-billing-view.models';
 import { AdminBillingSubscriptionsTableComponent } from './admin-billing-subscriptions-table';
 
 const subscription: AdminBillingSubscriptionViewModel = {
-    id: 'subscription-1',
-    userId: 'user-1',
+    id: adminId<'billing-subscription'>('subscription-1'),
+    userId: adminId<'user'>('user-1'),
     userEmail: 'subscriber@example.com',
     provider: 'Stripe',
     externalCustomerId: 'cus_123',
@@ -17,14 +18,14 @@ const subscription: AdminBillingSubscriptionViewModel = {
     externalPriceId: 'price_123',
     plan: 'Premium',
     status: 'Active',
-    currentPeriodStartUtc: '2026-01-01T00:00:00Z',
-    currentPeriodEndUtc: '2026-02-01T00:00:00Z',
+    currentPeriodStartUtc: adminUtcInstant('2026-01-01T00:00:00Z'),
+    currentPeriodEndUtc: adminUtcInstant('2026-02-01T00:00:00Z'),
     cancelAtPeriodEnd: true,
-    nextBillingAttemptUtc: '2026-02-01T00:00:00Z',
-    lastWebhookEventId: 'webhook-1',
-    lastSyncedAtUtc: '2026-01-05T00:00:00Z',
-    createdOnUtc: '2026-01-01T00:00:00Z',
-    modifiedOnUtc: '2026-01-05T00:00:00Z',
+    nextBillingAttemptUtc: adminUtcInstant('2026-02-01T00:00:00Z'),
+    lastWebhookEventId: adminId<'billing-webhook-event'>('webhook-1'),
+    lastSyncedAtUtc: adminUtcInstant('2026-01-05T00:00:00Z'),
+    createdOnUtc: adminUtcInstant('2026-01-01T00:00:00Z'),
+    modifiedOnUtc: adminUtcInstant('2026-01-05T00:00:00Z'),
     currentPeriodStartText: 'Jan 1, 2026',
     currentPeriodEndText: 'Feb 1, 2026',
     nextBillingAttemptText: 'Feb 1, 2026',

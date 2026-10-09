@@ -1,3 +1,4 @@
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects;
 using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.MealPlanning.Application.Common.Validation;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
@@ -37,16 +38,16 @@ public sealed class SaveCatalogMealPlanCommandHandler(IMealPlanCatalogRepository
         DietType dietType = SharedEnumValueParser.ParseRequired<DietType>(command.DietType, nameof(command.DietType), "Invalid diet type.").Value;
         MealPlan? plan = command.Id.HasValue
             ? await catalog.GetForUpdateAsync(planId, cancellationToken).ConfigureAwait(false)
-            : MealPlan.CreateCurated(command.Name, command.Description, dietType, command.DurationDays, command.TargetCaloriesPerDay);
+            : MealPlan.CreateCuratedWithDuration(command.Name, command.Description, dietType, PlanDurationDays.FromDays(command.DurationDays), command.TargetCaloriesPerDay);
         if (plan is null) { return Result.Failure<MealPlanModel>(MealPlanErrors.NotFound(command.Id!.Value)); }
 
-        plan.UpdateCatalogDetails(command.Name, command.Description, dietType,
-            command.DurationDays, command.TargetCaloriesPerDay, command.IsPublished);
+        plan.UpdateCatalogWithDuration(command.Name, command.Description, dietType,
+            PlanDurationDays.FromDays(command.DurationDays), command.TargetCaloriesPerDay, command.IsPublished);
         IReadOnlyDictionary<RecipeId, MealPlanRecipeSnapshot> snapshots = await composition.GetRecipeSnapshotsAsync([.. recipeIds.Select(id => new RecipeId(id))], cancellationToken).ConfigureAwait(false);
         foreach (CatalogDayInput input in command.Days.OrderBy(day => day.DayNumber)) {
-            MealPlanDay day = plan.AddDay(input.DayNumber);
+            MealPlanDay day = plan.AddTypedDay(PlanDayNumber.FromIndex(input.DayNumber));
             foreach (CatalogMealInput meal in input.Meals) {
-                day.AddMeal(SharedEnumValueParser.ParseRequired<MealType>(meal.MealType, nameof(meal.MealType), "Invalid meal type.").Value, new RecipeId(meal.RecipeId), meal.Servings)
+                day.AddMealWithServings(SharedEnumValueParser.ParseRequired<MealType>(meal.MealType, nameof(meal.MealType), "Invalid meal type.").Value, new RecipeId(meal.RecipeId), PlannedServings.FromCount(meal.Servings))
                     .SetRecipeSnapshot(snapshots.GetValueOrDefault(new RecipeId(meal.RecipeId)));
             }
         }

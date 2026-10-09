@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import type { ProductAiRecognitionResult } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
 import {
     buildAiResultPatch,
@@ -16,7 +18,7 @@ import type { ProductFormValues } from './product-manage-form.types';
 
 const DEFAULT_BASE_AMOUNT = 100;
 const PRODUCT: Product = {
-    id: 'product-1',
+    id: entityId<'product'>('product-1'),
     name: 'Test product',
     barcode: '4600000000000',
     brand: 'Brand',
@@ -25,7 +27,7 @@ const PRODUCT: Product = {
     description: 'Description',
     comment: 'Comment',
     imageUrl: 'https://example.test/product.jpg',
-    imageAssetId: 'asset-1',
+    imageAssetId: entityId<'image-asset'>('asset-1'),
     baseUnit: MeasurementUnit.G,
     baseAmount: 50,
     defaultPortionAmount: 125,
@@ -65,10 +67,7 @@ describe('product manage form creation', () => {
 
 describe('product manage request mapping', () => {
     it('should build product request and normalize portion nutrition back to base', () => {
-        const image: ImageSelection = {
-            url: 'https://example.test/image.png',
-            assetId: 'asset-42',
-        };
+        const image: ImageSelection = imageSelection('https://example.test/image.png', 'asset-42');
         const form = {
             ...createProductForm(),
             name: 'Portion product',
@@ -120,10 +119,7 @@ describe('product manage request mapping', () => {
             productType: ProductType.Dairy,
             description: PRODUCT.description,
             comment: PRODUCT.comment,
-            imageUrl: {
-                url: PRODUCT.imageUrl,
-                assetId: PRODUCT.imageAssetId,
-            },
+            imageUrl: imageSelection(PRODUCT.imageUrl, PRODUCT.imageAssetId),
             baseAmount: DEFAULT_BASE_AMOUNT,
             defaultPortionAmount: PRODUCT.defaultPortionAmount,
             baseUnit: MeasurementUnit.G,
@@ -178,7 +174,7 @@ describe('product nutrition precision', () => {
 
 describe('product nutrition prefill mapping', () => {
     it('should build AI result patch while preserving existing optional values when AI leaves them empty', () => {
-        const image: ImageSelection = { url: 'https://example.test/current.png', assetId: 'current-asset' };
+        const image: ImageSelection = imageSelection('https://example.test/current.png', 'current-asset');
         const form = {
             ...createProductForm(),
             name: 'Existing name',
@@ -239,9 +235,9 @@ describe('product nutrition prefill mapping', () => {
 
 describe('product gallery mapping', () => {
     it('imports every recognition photo while retaining existing photos and selected cover', () => {
-        const existing = { assetId: 'existing', url: '/existing.jpg' };
-        const cover = { assetId: 'cover', url: '/cover.jpg' };
-        const label = { assetId: 'label', url: '/label.jpg' };
+        const existing = imageSelection('/existing.jpg', 'existing');
+        const cover = imageSelection('/cover.jpg', 'cover');
+        const label = imageSelection('/label.jpg', 'label');
         const result: ProductAiRecognitionResult = {
             name: 'Recognized product',
             description: null,
@@ -281,7 +277,7 @@ describe('product gallery mapping', () => {
         ];
         const values = {
             ...createProductForm(),
-            ...buildProductFormPatch({ ...PRODUCT, images, imageAssetId: 'label', imageUrl: '/label.jpg' }),
+            ...buildProductFormPatch({ ...PRODUCT, images, imageAssetId: entityId<'image-asset'>('label'), imageUrl: '/label.jpg' }),
         };
         expect(values.images?.map(image => image.assetId)).toEqual(['label', 'front']);
         expect(buildProductData(values, 'base').imageAssetIds).toEqual(['label', 'front']);

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Marketing.Contracts.Commands.RecordPremiumConversion;
@@ -562,7 +563,7 @@ public partial class BillingFeatureTests {
             return Task.FromResult(webhookEvent);
         }
 
-        public Task<BillingWebhookEvent?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
+        public Task<BillingWebhookEvent?> GetByIdAsync(BillingWebhookEventId id, CancellationToken cancellationToken = default) =>
             Task.FromResult(Events.SingleOrDefault(webhookEvent => webhookEvent.Id == id));
 
         public Task<IReadOnlyList<BillingWebhookEvent>> GetPendingAsync(

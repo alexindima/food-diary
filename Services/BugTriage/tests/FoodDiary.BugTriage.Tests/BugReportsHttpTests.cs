@@ -1,3 +1,4 @@
+using FoodDiary.BugTriage.Application.Reports.Identifiers;
 using System.Net;
 using System.Net.Http.Json;
 using FoodDiary.BugTriage.Application.Abstractions;
@@ -82,10 +83,10 @@ public sealed class BugReportsHttpTests {
         await using var factory = new Factory();
         var id = Guid.NewGuid();
         var token = Guid.NewGuid();
-        factory.Store.GetMimeAsync(Arg.Any<Guid>(), Arg.Any<Guid>(), Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>()).Returns(Task.FromResult<byte[]?>(result: null));
-        factory.Store.RenewAsync(id, token, Arg.Any<DateTimeOffset>(), Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>()).Returns(returnThis: true);
-        factory.Store.CompleteAsync(id, token, Arg.Any<ReportCompletion>(), Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>()).Returns(returnThis: true);
-        factory.Store.GetMimeAsync(id, token, Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>()).Returns([0, 255, 13, 10]);
+        factory.Store.GetMimeAsync(Arg.Any<BugReportId>(), Arg.Any<LeaseToken>(), Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>()).Returns(Task.FromResult<byte[]?>(result: null));
+        factory.Store.RenewAsync((BugReportId)id, (LeaseToken)token, Arg.Any<DateTimeOffset>(), Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>()).Returns(returnThis: true);
+        factory.Store.CompleteAsync((BugReportId)id, (LeaseToken)token, Arg.Any<ReportCompletion>(), Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>()).Returns(returnThis: true);
+        factory.Store.GetMimeAsync((BugReportId)id, (LeaseToken)token, Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>()).Returns([0, 255, 13, 10]);
         using HttpClient client = factory.CreateClient();
         client.DefaultRequestHeaders.Add("X-BugTriage-Key", Factory.Key);
         client.DefaultRequestHeaders.Add("X-BugTriage-Lease", token.ToString());

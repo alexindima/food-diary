@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Application.Mappings;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Application.Contracts.Common.Abstractions.Results;
@@ -43,7 +44,7 @@ public sealed class CreateUserByAdministratorCommandHandler(IUserLookupRepositor
         }
 
         var user = User.Create(input.Email, passwordHasher.Hash(input.TemporaryPassword));
-        user.UpdatePersonalInfo(firstName: input.FirstName, lastName: input.LastName);
+        user.UpdatePersonalInfoChanges(new UserPersonalInfoChanges(Username: null, input.FirstName, input.LastName, FieldChanges.Unchanged<DateTime>(), Gender: null, WeightKg: null, HeightCm: null));
         user.UpdateGoals(new UserGoalUpdate(
             DailyCalorieTarget: 2000,
             ProteinTarget: 150,

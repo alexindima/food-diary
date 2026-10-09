@@ -7,6 +7,7 @@ import { environment } from '../../../../environments/environment';
 import { loadPagedCollection } from '../../../shared/api/load-paged-collection';
 import { AdminAchievementsSdk } from '../../../shared/api/sdk/generated/api/admin-achievements.service';
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
+import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 import type {
     AdminAchievementDefinition,
     CreateAdminAchievementDefinitionRequest,
@@ -34,7 +35,10 @@ export class AdminAchievementsService {
             .pipe(map(adminAchievementDefinitionFromSdk));
     }
 
-    public update(id: string, request: UpdateAdminAchievementDefinitionRequest): Observable<AdminAchievementDefinition> {
+    public update(
+        id: AdminId<'achievement-definition'>,
+        request: UpdateAdminAchievementDefinitionRequest,
+    ): Observable<AdminAchievementDefinition> {
         return this.sdk.client
             .putAdminAchievementDefinitionsById({ version: this.sdk.version, id, updateAdminAchievementDefinitionHttpRequest: request })
             .pipe(map(adminAchievementDefinitionFromSdk));

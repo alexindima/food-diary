@@ -7,6 +7,7 @@ using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
 using FoodDiary.Modules.ContentReports.Application.Common;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects;
 
 namespace FoodDiary.Modules.ContentReports.Application.Commands.CreateContentReport;
 
@@ -34,21 +35,22 @@ public sealed class CreateContentReportCommandHandler(
             return Result.Failure<ContentReportModel>(targetTypeResult.Error);
         }
 
+        var target = ReportTarget.FromFields(targetTypeResult.Value, command.TargetId);
         bool targetExists = await targetReadService
-            .IsReportableAsync(userIdResult.Value, targetTypeResult.Value, command.TargetId, cancellationToken)
+            .IsReportableAsync(userIdResult.Value, target, cancellationToken)
             .ConfigureAwait(false);
         if (!targetExists) {
             return Result.Failure<ContentReportModel>(ContentReportErrors.TargetNotFound);
         }
 
         bool alreadyReported = await reportRepository.HasUserReportedAsync(
-            userIdResult.Value, targetTypeResult.Value, command.TargetId, cancellationToken).ConfigureAwait(false);
+            userIdResult.Value, target, cancellationToken).ConfigureAwait(false);
 
         if (alreadyReported) {
             return Result.Failure<ContentReportModel>(ContentReportErrors.AlreadyReported);
         }
 
-        var report = ContentReport.Create(userIdResult.Value, targetTypeResult.Value, command.TargetId, command.Reason);
+        var report = ContentReport.CreateWithTarget(userIdResult.Value, target, command.Reason);
         await reportRepository.AddAsync(report, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new ContentReportModel(

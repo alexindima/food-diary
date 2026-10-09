@@ -8,6 +8,8 @@ import type { ClientSummary, DietologistPermissions } from '../../../../../share
 import type { DietologistClientGoals, DietologistRecommendation } from '../../../../../shared/models/dietologist.data';
 import type { FastingSession } from '../../../../../shared/models/fasting.data';
 import type { Meal, MealItem, MealItemResponseDto, MealResponseDto } from '../../../../../shared/models/meal.data';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { type ClientValueFormatting, DEFAULT_CLIENT_VALUE_FORMATTING, formatClientHeight } from '../../../lib/client-value-formatting';
 import type { DietologistDashboardSnapshot } from '../../../lib/dietologist-dashboard.data';
 
@@ -275,9 +277,9 @@ export function buildMealViews(
     }
 
     return snapshot.meals.items.map(meal => ({
-        id: meal.id,
+        id: entityId<'meal'>(meal.id),
         title: translate(`MEAL_TYPES.${normalizeMealType(meal.mealType) ?? 'OTHER'}`),
-        date: meal.date,
+        date: utcInstant(meal.date),
         calories: formatting.number(meal.totalCalories, 'kcal'),
         macros: formatting.macros(meal.totalProteins, meal.totalFats, meal.totalCarbs),
         itemSummary: formatMealItems(meal, formatting, translate, language),

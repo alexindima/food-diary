@@ -1,5 +1,6 @@
+import type { AdminId, AdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 export type AdminLesson = {
-    id: string;
+    id: AdminId<'lesson'>;
     title: string;
     content: string;
     summary: string | null;
@@ -9,8 +10,8 @@ export type AdminLesson = {
     estimatedReadMinutes: number;
     sortOrder: number;
     isPublished?: boolean;
-    createdOnUtc: string;
-    modifiedOnUtc: string | null;
+    createdOnUtc: AdminUtcInstant;
+    modifiedOnUtc: AdminUtcInstant | null;
     completedCount?: number;
 };
 

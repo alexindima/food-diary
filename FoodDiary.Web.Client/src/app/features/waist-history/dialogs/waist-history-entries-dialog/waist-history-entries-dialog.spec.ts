@@ -5,6 +5,8 @@ import { of } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { calendarDate } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { WaistEntry } from '../../../../shared/models/waist-entry.data';
 import { WaistHistoryFacade } from '../../lib/waist-history.facade';
 import { WaistHistoryEntriesDialogComponent } from './waist-history-entries-dialog';
@@ -15,7 +17,12 @@ const FIXTURE_NOON_HOUR = 12;
 const FIXTURE_REFERENCE_MEASUREMENT = 80;
 const FIXTURE_PREVIOUS_MEASUREMENT = 82;
 const FIXTURE_NEGATIVE_2 = -2;
-const entry = (id: string, date: string, value: number): WaistEntry => ({ id, userId: 'u', date, circumferenceCm: value });
+const entry = (id: string, date: string, value: number): WaistEntry => ({
+    id: entityId<'waist-entry'>(id),
+    userId: entityId<'user'>('u'),
+    date: calendarDate(date),
+    circumferenceCm: value,
+});
 function setup(entries: WaistEntry[]): {
     fixture: ComponentFixture<WaistHistoryEntriesDialogComponent>;
     component: WaistHistoryEntriesDialogComponent;

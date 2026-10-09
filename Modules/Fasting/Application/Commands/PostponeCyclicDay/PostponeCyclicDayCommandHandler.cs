@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Fasting.Domain.ValueObjects.Settings;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Fasting.Application.Common;
@@ -44,7 +45,7 @@ public sealed class PostponeCyclicDayCommandHandler(
         try {
             var postponedUntil = DateTime.SpecifyKind(now.Date.AddDays(1), DateTimeKind.Utc);
             current.Postpone(now, postponedUntil);
-            plan.ScheduleNextCyclicPhase(postponedUntil);
+            plan.ScheduleNextCyclicDay(FastingCycleDay.FromDateTimeEncoding(postponedUntil, "nextPhaseDateUtc"));
         } catch (ArgumentOutOfRangeException) {
             return Result.Failure<FastingSessionModel>(FastingErrors.InvalidCyclicAction("The cyclic period can only be postponed to a later date."));
         } catch (InvalidOperationException) {

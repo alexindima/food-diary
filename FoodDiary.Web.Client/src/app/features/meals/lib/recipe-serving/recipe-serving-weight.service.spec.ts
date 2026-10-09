@@ -6,6 +6,8 @@ import { RecipeLookupService } from '../../../../shared/api/recipe-lookup.servic
 import { MeasurementUnit } from '../../../../shared/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
 import type { RecipeLookup } from '../../../../shared/models/recipe-lookup.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { RecipeServingWeightService } from './recipe-serving-weight.service';
 
 const SERVINGS = 2;
@@ -58,7 +60,7 @@ describe('RecipeServingWeightService', () => {
 
     it('should return null for missing recipe id and keep conversions unchanged', () => {
         setupService(createUnsupportedRecipeLookup());
-        const recipe = createRecipe({ id: '' });
+        const recipe = createRecipe({ id: entityId<'recipe'>('') });
 
         service.loadServingWeight(recipe).subscribe(result => {
             expect(result).toBeNull();
@@ -107,7 +109,7 @@ describe('RecipeServingWeightService', () => {
 function registerIncompleteMassTests(): void {
     it.each(['ML', 'Pcs', null])('keeps servings when a gram ingredient is mixed with %s without a mass conversion', unit => {
         setupService({
-            id: 'recipe-1',
+            id: entityId<'recipe'>('recipe-1'),
             servings: SERVINGS,
             steps: [
                 {
@@ -178,12 +180,12 @@ function setupService(lookup: RecipeLookup | null = null, shouldFail = false): v
 
 function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
     return {
-        id: 'recipe-1',
+        id: entityId<'recipe'>('recipe-1'),
         name: 'Soup',
         servings: SERVINGS,
         visibility: RecipeVisibility.Private,
         usageCount: 0,
-        createdAt: '2026-05-14T00:00:00Z',
+        createdAt: utcInstant('2026-05-14T00:00:00Z'),
         isOwnedByCurrentUser: true,
         isNutritionAutoCalculated: true,
         steps: [
@@ -203,7 +205,7 @@ function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
 
 function createRecipeLookup(): RecipeLookup {
     return {
-        id: 'recipe-1',
+        id: entityId<'recipe'>('recipe-1'),
         servings: SERVINGS,
         steps: [
             {
@@ -218,7 +220,7 @@ function createRecipeLookup(): RecipeLookup {
 
 function createUnsupportedRecipeLookup(): RecipeLookup {
     return {
-        id: 'recipe-1',
+        id: entityId<'recipe'>('recipe-1'),
         servings: SERVINGS,
         steps: [
             {

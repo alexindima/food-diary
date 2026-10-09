@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Billing.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Contracts.Queries.GetUserBillingProfileIncludingDeleted;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Billing.Contracts.Commands.RenewDueSubscriptions;
@@ -260,34 +261,57 @@ public sealed class RenewDueSubscriptionsCommandHandler(
             bool isCurrentPayment = existingPayment.OccurredAtUtc is not { } recordedAt ||
                 (renewal.OccurredAtUtc is { } receivedAt && receivedAt >= recordedAt);
             if (isCurrentPayment && existingPayment.Status is "pending" or "past_due") {
-                existingPayment.ApplyProviderResult(existingPayment.BillingSubscriptionId,
-                    snapshot.Request.CustomerId, renewal.PaymentId, renewal.PaymentMethodId,
-                    renewal.PriceId, renewal.Plan, renewal.Status, BillingPaymentKinds.Renewal,
-                    renewal.Amount, renewal.Currency, renewal.CurrentPeriodStartUtc, renewal.CurrentPeriodEndUtc,
-                    renewal.EventId, renewal.ProviderMetadataJson, occurredAtUtc: renewal.OccurredAtUtc);
+                existingPayment.ApplyProviderObservation(
+            billingSubscriptionId: existingPayment.SubscriptionReference,
+            externalCustomerId: snapshot.Request.CustomerId,
+            externalSubscriptionId: renewal.PaymentId,
+            externalPaymentMethodId: renewal.PaymentMethodId,
+            externalPriceId: renewal.PriceId,
+            plan: renewal.Plan,
+            status: renewal.Status,
+            kind: BillingPaymentKinds.Renewal,
+            financials: BillingPaymentFinancials.FromFields(
+            amount: renewal.Amount,
+            currency: renewal.Currency,
+            tax: null,
+            fee: null,
+            earnings: null,
+            payoutCurrency: null,
+            payoutEarnings: null),
+            currentPeriodStartUtc: renewal.CurrentPeriodStartUtc,
+            currentPeriodEndUtc: renewal.CurrentPeriodEndUtc,
+            webhookEventId: renewal.EventId,
+            providerMetadataJson: renewal.ProviderMetadataJson,
+            occurredAtUtc: renewal.OccurredAtUtc);
                 await billingPaymentRepository.UpdateAsync(existingPayment, cancellationToken).ConfigureAwait(false);
             }
             return;
         }
 
-        var payment = BillingPayment.Create(
-            new UserId(snapshot.Request.UserId),
-            subscription.Id == snapshot.Request.BillingSubscriptionId ? subscription.Id : null,
-            provider,
-            renewal.PaymentId,
-            snapshot.Request.CustomerId,
-            renewal.PaymentId,
-            renewal.PaymentMethodId,
-            renewal.PriceId,
-            renewal.Plan,
-            renewal.Status,
-            BillingPaymentKinds.Renewal,
-            renewal.Amount,
-            renewal.Currency,
-            renewal.CurrentPeriodStartUtc,
-            renewal.CurrentPeriodEndUtc,
-            renewal.EventId,
-            renewal.ProviderMetadataJson,
+        var payment = BillingPayment.CreateWithFinancials(
+            userId: new UserId(snapshot.Request.UserId),
+            billingSubscriptionId: subscription.TypedId == snapshot.Request.BillingSubscriptionId ? subscription.TypedId : null,
+            provider: provider,
+            externalPaymentId: renewal.PaymentId,
+            externalCustomerId: snapshot.Request.CustomerId,
+            externalSubscriptionId: renewal.PaymentId,
+            externalPaymentMethodId: renewal.PaymentMethodId,
+            externalPriceId: renewal.PriceId,
+            plan: renewal.Plan,
+            status: renewal.Status,
+            kind: BillingPaymentKinds.Renewal,
+            financials: BillingPaymentFinancials.FromFields(
+            amount: renewal.Amount,
+            currency: renewal.Currency,
+            tax: null,
+            fee: null,
+            earnings: null,
+            payoutCurrency: null,
+            payoutEarnings: null),
+            currentPeriodStartUtc: renewal.CurrentPeriodStartUtc,
+            currentPeriodEndUtc: renewal.CurrentPeriodEndUtc,
+            webhookEventId: renewal.EventId,
+            providerMetadataJson: renewal.ProviderMetadataJson,
             occurredAtUtc: renewal.OccurredAtUtc);
         await billingPaymentRepository.AddAsync(payment, cancellationToken).ConfigureAwait(false);
     }
@@ -338,7 +362,7 @@ public sealed class RenewDueSubscriptionsCommandHandler(
     private static string SerializeReason(string reason) => JsonSerializer.Serialize(new { reason });
 
     private static RenewalSnapshot Capture(BillingSubscription subscription) => new(
-        new BillingRecurringPaymentRequestModel(subscription.UserId.Value, subscription.Id,
+        new BillingRecurringPaymentRequestModel(subscription.UserId.Value, subscription.TypedId,
             subscription.ExternalCustomerId, subscription.ExternalPaymentMethodId!, subscription.Plan!,
             subscription.CurrentPeriodEndUtc, BuildRenewalIdempotenceKey(subscription)),
         subscription.Provider, subscription.ExternalSubscriptionId, subscription.LastWebhookEventId,

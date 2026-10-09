@@ -6,6 +6,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { UserService } from '../../../shared/api/user.service';
 import { MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
+import { calendarDate, utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
+import type { WeightGoalHistoryItem } from '../../../shared/models/user.data';
 import type { WeightHistoryPageSummary } from '../../../shared/models/weight-entry.data';
 import { WeightEntriesService } from '../api/weight-entries.service';
 import { WeightHistoryFacade } from './weight-history.facade';
@@ -81,7 +84,14 @@ describe('WeightHistoryFacade entry history pagination', () => {
         TestBed.tick();
         expect(weightEntriesService.getHistoryPage).not.toHaveBeenCalled();
         const recentEntries = facade.entries();
-        const historyEntries = [{ id: 'older-entry', userId: 'user-1', date: '2026-03-01T00:00:00Z', weightKg: 80 }];
+        const historyEntries = [
+            {
+                id: entityId<'weight-entry'>('older-entry'),
+                userId: entityId<'user'>('user-1'),
+                date: calendarDate('2026-03-01T00:00:00Z'),
+                weightKg: 80,
+            },
+        ];
         weightEntriesService.getHistoryPage.mockReturnValueOnce(of(historyEntries));
         const next = vi.fn();
 
@@ -177,7 +187,12 @@ describe('WeightHistoryFacade measurement boundary', () => {
     it.each(['metric', 'imperial'] as const)('preserves precise stored weight when saving an unchanged %s edit', system => {
         const preciseWeight = 75.25;
         measurements.setSystem(system);
-        const entry = { id: 'precise', userId: 'u', date: '2026-04-02', weightKg: preciseWeight };
+        const entry = {
+            id: entityId<'weight-entry'>('precise'),
+            userId: entityId<'user'>('u'),
+            date: calendarDate('2026-04-02'),
+            weightKg: preciseWeight,
+        };
         facade.startEdit(entry);
         expect(Number(facade.formModel().weight)).toBe(system === 'metric' ? preciseWeight : measurements.displayWeight(preciseWeight, 2));
         facade.submit();
@@ -190,7 +205,7 @@ describe('WeightHistoryFacade measurement boundary', () => {
         facade.submit();
 
         expect(weightEntriesService.create).toHaveBeenCalledWith({
-            date: '2026-04-02T00:00:00.000Z',
+            date: calendarDate('2026-04-02T00:00:00.000Z'),
             weightKg: UPDATED_ENTRY_WEIGHT,
         });
     });
@@ -198,7 +213,12 @@ describe('WeightHistoryFacade measurement boundary', () => {
 
 describe('WeightHistoryFacade delete failure', () => {
     it('retains the entry, suppresses pending duplicates and allows retry', () => {
-        const entry = { id: 'delete-test', userId: 'u', date: '2026-04-02', weightKg: 75 };
+        const entry = {
+            id: entityId<'weight-entry'>('delete-test'),
+            userId: entityId<'user'>('u'),
+            date: calendarDate('2026-04-02'),
+            weightKg: 75,
+        };
         facade.entries.set([entry]);
         const request = new Subject<void>();
         weightEntriesService.remove.mockReturnValue(request);
@@ -248,7 +268,7 @@ describe('WeightHistoryFacade entries', () => {
         facade.submit();
 
         expect(weightEntriesService.create).toHaveBeenCalledWith({
-            date: '2026-04-02T00:00:00.000Z',
+            date: calendarDate('2026-04-02T00:00:00.000Z'),
             weightKg: UPDATED_ENTRY_WEIGHT,
         });
         await vi.waitFor(() => {
@@ -284,9 +304,16 @@ describe('WeightHistoryFacade entries', () => {
         expect(weightEntriesService.getEntries).not.toHaveBeenCalled();
         expect(weightEntriesService.getSummary).not.toHaveBeenCalled();
     });
+});
 
+describe('WeightHistoryFacade entry editing', () => {
     it('switches to edit mode and updates the existing entry', async () => {
-        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weightKg: 74.2 };
+        const entry = {
+            id: entityId<'weight-entry'>('entry-1'),
+            userId: entityId<'user'>('user-1'),
+            date: calendarDate('2026-04-01T00:00:00Z'),
+            weightKg: 74.2,
+        };
 
         facade.startEdit(entry);
         facade.submit();
@@ -295,15 +322,33 @@ describe('WeightHistoryFacade entries', () => {
             expect(facade.isEditing()).toBe(false);
         });
         expect(weightEntriesService.update).toHaveBeenCalledWith('entry-1', {
-            date: '2026-04-01T00:00:00.000Z',
+            date: calendarDate('2026-04-01T00:00:00.000Z'),
             weightKg: 74.2,
         });
     });
 
     it('cancels editing and restores latest weight in the form', () => {
-        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weightKg: 74.2 };
-        facade.entries.set([entry, { id: 'entry-2', userId: 'user-1', date: '2026-05-01T00:00:00Z', weightKg: 73.1 }]);
-        facade.latestEntry.set({ id: 'entry-2', userId: 'user-1', date: '2026-05-01T00:00:00Z', weightKg: 73.1 });
+        const entry = {
+            id: entityId<'weight-entry'>('entry-1'),
+            userId: entityId<'user'>('user-1'),
+            date: calendarDate('2026-04-01T00:00:00Z'),
+            weightKg: 74.2,
+        };
+        facade.entries.set([
+            entry,
+            {
+                id: entityId<'weight-entry'>('entry-2'),
+                userId: entityId<'user'>('user-1'),
+                date: calendarDate('2026-05-01T00:00:00Z'),
+                weightKg: 73.1,
+            },
+        ]);
+        facade.latestEntry.set({
+            id: entityId<'weight-entry'>('entry-2'),
+            userId: entityId<'user'>('user-1'),
+            date: calendarDate('2026-05-01T00:00:00Z'),
+            weightKg: 73.1,
+        });
 
         facade.startEdit(entry);
         facade.cancelEdit();
@@ -313,7 +358,12 @@ describe('WeightHistoryFacade entries', () => {
     });
 
     it('deletes entry and exits edit mode when edited entry is removed', () => {
-        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weightKg: 74.2 };
+        const entry = {
+            id: entityId<'weight-entry'>('entry-1'),
+            userId: entityId<'user'>('user-1'),
+            date: calendarDate('2026-04-01T00:00:00Z'),
+            weightKg: 74.2,
+        };
         facade.startEdit(entry);
 
         facade.deleteEntry(entry);
@@ -388,21 +438,56 @@ describe('WeightHistoryFacade desired weight', () => {
 function createWeightEntriesServiceMock(): typeof weightEntriesService {
     return {
         getPageSummary: vi.fn().mockReturnValue(of(createWeightPageSummary())),
-        getLatest: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weightKg: 74.2 })),
+        getLatest: vi.fn().mockReturnValue(
+            of({
+                id: entityId<'weight-entry'>('entry-1'),
+                userId: entityId<'user'>('user-1'),
+                date: calendarDate('2026-04-01T00:00:00Z'),
+                weightKg: 74.2,
+            }),
+        ),
         getHistoryPage: vi.fn().mockReturnValue(of([])),
         getEntries: vi.fn().mockReturnValue(
             of([
-                { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weightKg: 74.2 },
-                { id: 'entry-2', userId: 'user-1', date: '2026-03-30T00:00:00Z', weightKg: 75.1 },
+                {
+                    id: entityId<'weight-entry'>('entry-1'),
+                    userId: entityId<'user'>('user-1'),
+                    date: calendarDate('2026-04-01T00:00:00Z'),
+                    weightKg: 74.2,
+                },
+                {
+                    id: entityId<'weight-entry'>('entry-2'),
+                    userId: entityId<'user'>('user-1'),
+                    date: calendarDate('2026-03-30T00:00:00Z'),
+                    weightKg: 75.1,
+                },
             ]),
         ),
-        getSummary: vi
-            .fn()
-            .mockReturnValue(of([{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageWeightKg: 74.2 }])),
-        create: vi
-            .fn()
-            .mockReturnValue(of({ id: 'entry-3', userId: 'user-1', date: '2026-04-02T00:00:00Z', weightKg: UPDATED_ENTRY_WEIGHT })),
-        update: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weightKg: 74.2 })),
+        getSummary: vi.fn().mockReturnValue(
+            of([
+                {
+                    startDate: calendarDate('2026-04-01T00:00:00Z'),
+                    endDate: calendarDate('2026-04-01T23:59:59Z'),
+                    averageWeightKg: 74.2,
+                },
+            ]),
+        ),
+        create: vi.fn().mockReturnValue(
+            of({
+                id: entityId<'weight-entry'>('entry-3'),
+                userId: entityId<'user'>('user-1'),
+                date: calendarDate('2026-04-02T00:00:00Z'),
+                weightKg: UPDATED_ENTRY_WEIGHT,
+            }),
+        ),
+        update: vi.fn().mockReturnValue(
+            of({
+                id: entityId<'weight-entry'>('entry-1'),
+                userId: entityId<'user'>('user-1'),
+                date: calendarDate('2026-04-01T00:00:00Z'),
+                weightKg: 74.2,
+            }),
+        ),
         remove: vi.fn().mockReturnValue(of(void 0)),
     };
 }
@@ -411,16 +496,23 @@ function createWeightPageSummary(latestWeight = LATEST_WEIGHT): WeightHistoryPag
     return {
         entries: [
             {
-                id: 'entry-1',
-                userId: 'user-1',
-                date: latestWeight === INDEPENDENT_LATEST_WEIGHT ? '2026-05-10T00:00:00Z' : '2026-04-01T00:00:00Z',
+                id: entityId<'weight-entry'>('entry-1'),
+                userId: entityId<'user'>('user-1'),
+                date: calendarDate(latestWeight === INDEPENDENT_LATEST_WEIGHT ? '2026-05-10T00:00:00Z' : '2026-04-01T00:00:00Z'),
                 weightKg: latestWeight,
             },
-            { id: 'entry-2', userId: 'user-1', date: '2026-03-30T00:00:00Z', weightKg: 75.1 },
+            {
+                id: entityId<'weight-entry'>('entry-2'),
+                userId: entityId<'user'>('user-1'),
+                date: calendarDate('2026-03-30T00:00:00Z'),
+                weightKg: 75.1,
+            },
         ],
-        summary: [{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageWeightKg: 74.2 }],
+        summary: [
+            { startDate: calendarDate('2026-04-01T00:00:00Z'), endDate: calendarDate('2026-04-01T23:59:59Z'), averageWeightKg: 74.2 },
+        ],
         heightCm: 180,
-        goal: { desiredWeightKg: TARGET_WEIGHT, startWeightKg: 75, startedAtUtc: '2026-01-01T00:00:00Z' },
+        goal: { desiredWeightKg: TARGET_WEIGHT, startWeightKg: 75, startedAtUtc: utcInstant('2026-01-01T00:00:00Z') },
         goalHistory: [],
     };
 }
@@ -430,7 +522,7 @@ describe('Facade boundary regressions', () => {
         facade.formModel.set({ date: '2026-04-02', weight: '75,5' });
         facade.submit();
         await vi.waitFor(() => {
-            expect(weightEntriesService.create).toHaveBeenCalledWith({ date: '2026-04-02T00:00:00.000Z', weightKg: 75.5 });
+            expect(weightEntriesService.create).toHaveBeenCalledWith({ date: calendarDate('2026-04-02T00:00:00.000Z'), weightKg: 75.5 });
         });
     });
     it.each(['not-a-date', '2026-02-30', '2026-13-01'])('rejects invalid calendar date %s', date => {
@@ -469,7 +561,12 @@ describe('Facade boundary regressions', () => {
     it('keeps pending save open and preserves edit input on failure', async () => {
         const pending = new Subject<unknown>();
         weightEntriesService.update.mockReturnValue(pending);
-        facade.startEdit({ id: 'editing', userId: 'u', date: '2026-04-02', weightKg: 75 });
+        facade.startEdit({
+            id: entityId<'weight-entry'>('editing'),
+            userId: entityId<'user'>('u'),
+            date: calendarDate('2026-04-02'),
+            weightKg: 75,
+        });
         facade.submit();
         expect(facade.isSaving()).toBe(true);
         expect(facade.entrySaveVersion()).toBe(0);
@@ -502,7 +599,12 @@ describe('Facade editing and goal boundaries', () => {
         const pending = new Subject<ReturnType<typeof createWeightPageSummary>>();
         weightEntriesService.getPageSummary.mockReturnValue(pending);
         facade.initialize();
-        facade.startEdit({ id: 'editing', userId: 'u', date: '2026-04-02', weightKg: 80 });
+        facade.startEdit({
+            id: entityId<'weight-entry'>('editing'),
+            userId: entityId<'user'>('u'),
+            date: calendarDate('2026-04-02'),
+            weightKg: 80,
+        });
         pending.next(createWeightPageSummary());
         pending.complete();
         TestBed.tick();
@@ -513,7 +615,12 @@ describe('Facade editing and goal boundaries', () => {
     it('converts edited canonical data and goal when units change', () => {
         facade.initialize();
         TestBed.tick();
-        const entry = { id: 'old-outside-preview', userId: 'u', date: '2020-01-01', weightKg: 90 };
+        const entry = {
+            id: entityId<'weight-entry'>('old-outside-preview'),
+            userId: entityId<'user'>('u'),
+            date: calendarDate('2020-01-01'),
+            weightKg: 90,
+        };
         facade.startEdit(entry);
         measurements.setSystem('imperial');
         TestBed.tick();
@@ -562,7 +669,10 @@ describe('Form actions, period readiness and goal lifecycle', () => {
     it('saves through the configured Signal Forms action', async () => {
         facade.formModel.set({ date: '2026-04-02', weight: '75,5' });
         await submit(facade.form);
-        expect(weightEntriesService.create).toHaveBeenCalledWith({ date: '2026-04-02T00:00:00.000Z', weightKg: FIXTURE_LOCALIZED_DECIMAL });
+        expect(weightEntriesService.create).toHaveBeenCalledWith({
+            date: calendarDate('2026-04-02T00:00:00.000Z'),
+            weightKg: FIXTURE_LOCALIZED_DECIMAL,
+        });
         expect(facade.entrySaveVersion()).toBe(1);
     });
     it('waits for both custom dates and avoids duplicate requests for the same range', () => {
@@ -580,6 +690,9 @@ describe('Form actions, period readiness and goal lifecycle', () => {
         TestBed.tick();
         expect(weightEntriesService.getSummary).toHaveBeenCalledOnce();
     });
+});
+
+describe('Goal lifecycle', () => {
     it('keeps cancellation pending until the server acknowledges it', () => {
         facade.initialize();
         TestBed.tick();
@@ -601,16 +714,21 @@ describe('Form actions, period readiness and goal lifecycle', () => {
         expect(weightEntriesService.getPageSummary).toHaveBeenCalledTimes(2);
     });
     it('identifies completed goals without treating the active goal as completed', () => {
-        const active = {
-            id: 'active',
+        const active: WeightGoalHistoryItem = {
+            id: entityId<'weight-goal'>('active'),
             targetWeightKg: 75,
             startWeightKg: 80,
             endWeightKg: null,
-            startedAtUtc: '2026-01-01',
+            startedAtUtc: utcInstant('2026-01-01'),
             endedAtUtc: null,
             status: 'Active' as const,
         };
-        const completed = { ...active, id: 'completed', status: 'Cancelled' as const, endedAtUtc: '2026-02-01' };
+        const completed: WeightGoalHistoryItem = {
+            ...active,
+            id: entityId<'weight-goal'>('completed'),
+            status: 'Cancelled' as const,
+            endedAtUtc: utcInstant('2026-02-01'),
+        };
         facade.weightGoalHistory.set([active]);
         expect(facade.hasCompletedWeightGoals()).toBe(false);
         expect(facade.lastCompletedWeightGoal()).toBeNull();
@@ -619,7 +737,12 @@ describe('Form actions, period readiness and goal lifecycle', () => {
         expect(facade.lastCompletedWeightGoal()).toEqual(completed);
     });
     it('resets editing when the edited record is deleted', () => {
-        const entry = { id: 'editing', userId: 'u', date: '2026-04-02', weightKg: 80 };
+        const entry = {
+            id: entityId<'weight-entry'>('editing'),
+            userId: entityId<'user'>('u'),
+            date: calendarDate('2026-04-02'),
+            weightKg: 80,
+        };
         facade.startEdit(entry);
         facade.deleteEntry(entry);
         expect(facade.isEditing()).toBe(false);
@@ -633,7 +756,7 @@ describe('Summary and display resets', () => {
         TestBed.tick();
         facade.changeRange('year');
         TestBed.tick();
-        const points = [{ startDate: '2026-04-01', endDate: '2026-04-01', averageWeightKg: 80 }];
+        const points = [{ startDate: calendarDate('2026-04-01'), endDate: calendarDate('2026-04-01'), averageWeightKg: 80 }];
         weightEntriesService.getSummary.mockReturnValue(of(points));
         facade.changeRange('month');
         TestBed.tick();
@@ -680,7 +803,9 @@ describe('WeightHistoryFacade loading recovery', () => {
         facade.changeRange('year');
         TestBed.tick();
         const entry = facade.entries()[0];
-        const recoveredPoints = [{ startDate: '2026-04-02T00:00:00Z', endDate: '2026-04-02T23:59:59Z', averageWeightKg: 75 }];
+        const recoveredPoints = [
+            { startDate: calendarDate('2026-04-02T00:00:00Z'), endDate: calendarDate('2026-04-02T23:59:59Z'), averageWeightKg: 75 },
+        ];
         weightEntriesService.getSummary.mockReturnValueOnce(throwError(() => new Error('Month refresh unavailable')));
         facade.deleteEntry(entry);
         expect(weightEntriesService.remove).toHaveBeenCalledExactlyOnceWith(entry.id);

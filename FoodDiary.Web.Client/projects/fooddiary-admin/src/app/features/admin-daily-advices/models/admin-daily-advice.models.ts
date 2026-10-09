@@ -1,3 +1,4 @@
+import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 export type AdminDailyAdviceItem = {
     value: string;
     locale: string;
@@ -6,7 +7,7 @@ export type AdminDailyAdviceItem = {
 };
 
 export type AdminDailyAdvice = {
-    id: string;
+    id: AdminId<'daily-advice'>;
     ru: string | null;
     en: string | null;
     weight: number;

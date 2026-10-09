@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
+import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, ProductVisibility } from '../../../../../shared/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import type { NutritionScaleMode, RecipeFormValues } from './recipe-manage.types';
 import {
     buildRecipeDto,
@@ -50,19 +53,19 @@ describe('text ingredient persistence', () => {
 });
 
 const RECIPE: Recipe = {
-    id: 'recipe-1',
+    id: entityId<'recipe'>('recipe-1'),
     name: 'Test recipe',
     description: 'Description',
     comment: 'Comment',
     category: 'main_courses',
     imageUrl: 'https://example.test/recipe.jpg',
-    imageAssetId: 'asset-1',
+    imageAssetId: entityId<'image-asset'>('asset-1'),
     prepTime: 15,
     cookTime: 30,
     servings: DEFAULT_SERVINGS,
     visibility: RecipeVisibility.Private,
     usageCount: 0,
-    createdAt: '2026-01-01T00:00:00Z',
+    createdAt: utcInstant('2026-01-01T00:00:00Z'),
     isOwnedByCurrentUser: true,
     totalCalories: 500,
     totalProteins: 40,
@@ -102,7 +105,7 @@ describe('recipe manage form creation', () => {
     it('should create ingredient value from selected product defaults', () => {
         const ingredient = createRecipeIngredientValue({
             food: {
-                id: 'product-1',
+                id: entityId<'product'>('product-1'),
                 name: 'Product',
                 baseUnit: MeasurementUnit.G,
                 baseAmount: DEFAULT_BASE_AMOUNT,
@@ -230,10 +233,7 @@ describe('recipe manage edit mapping', () => {
             description: RECIPE.description,
             comment: RECIPE.comment,
             category: RECIPE.category,
-            imageUrl: {
-                url: RECIPE.imageUrl,
-                assetId: RECIPE.imageAssetId,
-            },
+            imageUrl: imageSelection(RECIPE.imageUrl, RECIPE.imageAssetId),
             prepTime: RECIPE.prepTime,
             cookTime: RECIPE.cookTime,
             servings: RECIPE.servings,
@@ -356,7 +356,7 @@ function createManualRecipeFormValue(): RecipeFormValues {
         description: '',
         comment: null,
         category: 'main_courses',
-        imageUrl: { url: 'https://example.test/image.jpg', assetId: 'asset-2' },
+        imageUrl: imageSelection('https://example.test/image.jpg', 'asset-2'),
         prepTime: null,
         cookTime: 45,
         servings: DEFAULT_SERVINGS,
@@ -407,10 +407,7 @@ describe('step gallery mapping', () => {
     it('preserves step photos through editing and sends reordered or cleared galleries', () => {
         const step = createRecipeStepValue({
             ...createRecipeStepValue(),
-            images: [
-                { assetId: 'second', url: '/2.jpg' },
-                { assetId: 'first', url: '/1.jpg' },
-            ],
+            images: [imageSelection('/2.jpg', 'second'), imageSelection('/1.jpg', 'first')],
         });
         const values = createManualRecipeFormValue();
         step.ingredients = values.steps[0].ingredients;

@@ -67,6 +67,23 @@ public sealed class Product : AggregateRoot<ProductId> {
     private Product() {
     }
 
+    public static Product CreateWithMeasurements(
+        UserId userId, string name, ProductMeasurementBasis basis, ProductDefaultPortion? defaultPortion,
+        double caloriesPerBase, double proteinsPerBase, double fatsPerBase, double carbsPerBase,
+        double fiberPerBase, double alcoholPerBase, string? barcode = null, string? brand = null,
+        ProductType productType = ProductType.Unknown, string? category = null, string? description = null,
+        string? comment = null, string? imageUrl = null, ImageAssetId? imageAssetId = null,
+        Visibility visibility = Visibility.Public, ProductId? importId = null) {
+        EnsureUserId(userId);
+        ArgumentNullException.ThrowIfNull(basis);
+        if (defaultPortion is not null && defaultPortion.Unit != basis.Unit) {
+            throw new ArgumentException("Default portion must use the product measurement unit.", nameof(defaultPortion));
+        }
+        return Create(userId, name, basis.Unit, basis.Amount, defaultPortion?.Amount,
+            caloriesPerBase, proteinsPerBase, fatsPerBase, carbsPerBase, fiberPerBase, alcoholPerBase,
+            barcode, brand, productType, category, description, comment, imageUrl, imageAssetId, visibility, importId);
+    }
+
     public static Product Create(
         UserId userId,
         string name,
@@ -211,6 +228,26 @@ public sealed class Product : AggregateRoot<ProductId> {
         ApplyIdentityStateIfChanged(state);
     }
 
+    public void UpdateCoreIdentityChanges(ProductCoreIdentityChanges changes) {
+        ArgumentNullException.ThrowIfNull(changes);
+        ArgumentNullException.ThrowIfNull(changes.Barcode, nameof(changes));
+        ArgumentNullException.ThrowIfNull(changes.Brand, nameof(changes));
+        UpdateCoreIdentity(changes.Name,
+            changes.Barcode.IsSet ? changes.Barcode.Value : null, changes.Barcode.IsClear,
+            changes.Brand.IsSet ? changes.Brand.Value : null, changes.Brand.IsClear, changes.ProductType);
+    }
+
+    public void UpdateDescriptiveIdentityChanges(ProductDescriptiveIdentityChanges changes) {
+        ArgumentNullException.ThrowIfNull(changes);
+        ArgumentNullException.ThrowIfNull(changes.Category, nameof(changes));
+        ArgumentNullException.ThrowIfNull(changes.Description, nameof(changes));
+        ArgumentNullException.ThrowIfNull(changes.Comment, nameof(changes));
+        UpdateDescriptiveIdentity(
+            changes.Category.IsSet ? changes.Category.Value : null, changes.Category.IsClear,
+            changes.Description.IsSet ? changes.Description.Value : null, changes.Description.IsClear,
+            changes.Comment.IsSet ? changes.Comment.Value : null, changes.Comment.IsClear);
+    }
+
     public void UpdateIdentity(ProductIdentityUpdate update) {
         ValidateIdentityUpdate(update);
         UpdateCoreIdentity(
@@ -276,6 +313,20 @@ public sealed class Product : AggregateRoot<ProductId> {
             AlcoholPerBase: alcoholPerBase));
     }
 
+    public void UpdateMeasurementNutritionChanges(ProductMeasurementNutritionChanges changes) {
+        ArgumentNullException.ThrowIfNull(changes);
+        MeasurementUnit unit = changes.Basis?.Unit ?? BaseUnit;
+        if (changes.DefaultPortion is not null && changes.DefaultPortion.Unit != unit) {
+            throw new ArgumentException("Default portion must use the product measurement unit.", nameof(changes));
+        }
+        UpdateMeasurementAndNutrition(new ProductMeasurementNutritionUpdate(
+            BaseUnit: changes.Basis?.Unit, BaseAmount: changes.Basis?.Amount,
+            DefaultPortionAmount: changes.DefaultPortion?.Amount,
+            CaloriesPerBase: changes.CaloriesPerBase, ProteinsPerBase: changes.ProteinsPerBase,
+            FatsPerBase: changes.FatsPerBase, CarbsPerBase: changes.CarbsPerBase,
+            FiberPerBase: changes.FiberPerBase, AlcoholPerBase: changes.AlcoholPerBase));
+    }
+
     public void UpdateMeasurementAndNutrition(ProductMeasurementNutritionUpdate update) {
         ProductMeasurementState currentMeasurement = GetMeasurementState();
         ProductMeasurementState updatedMeasurement = currentMeasurement;
@@ -333,6 +384,14 @@ public sealed class Product : AggregateRoot<ProductId> {
             ApplyNutrition(updatedNutrition);
         }
         SetModified();
+    }
+
+    public void UpdateMediaChanges(ProductMediaChanges changes) {
+        ArgumentNullException.ThrowIfNull(changes);
+        ArgumentNullException.ThrowIfNull(changes.ImageUrl, nameof(changes));
+        ArgumentNullException.ThrowIfNull(changes.ImageAssetId, nameof(changes));
+        UpdateMedia(changes.ImageUrl.IsSet ? changes.ImageUrl.Value : null, changes.ImageUrl.IsClear,
+            changes.ImageAssetId.IsSet ? changes.ImageAssetId.Value : null, changes.ImageAssetId.IsClear);
     }
 
     public void UpdateMedia(
@@ -439,7 +498,7 @@ public sealed class Product : AggregateRoot<ProductId> {
             : normalized;
     }
 
-    private static double NormalizeBaseAmount(MeasurementUnit unit, double value, string paramName) {
+    internal static double NormalizeBaseAmount(MeasurementUnit unit, double value, string paramName) {
         RequirePositive(value, paramName);
         double canonicalAmount = GetCanonicalBaseAmount(unit);
         return !AreClose(value, canonicalAmount)
@@ -469,7 +528,7 @@ public sealed class Product : AggregateRoot<ProductId> {
                AreClose(value, GetCanonicalBaseAmount(unit));
     }
 
-    private static double NormalizeDefaultPortionAmount(MeasurementUnit unit, double value, string paramName) {
+    internal static double NormalizeDefaultPortionAmount(MeasurementUnit unit, double value, string paramName) {
         RequirePositive(value, paramName);
         EnsureDefaultPortionAmountWithinLimit(unit, value, paramName);
         return value;
@@ -503,7 +562,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         }
     }
 
-    private static double GetCanonicalBaseAmount(MeasurementUnit unit) {
+    internal static double GetCanonicalBaseAmount(MeasurementUnit unit) {
         return unit == MeasurementUnit.Pcs ? 1d : 100d;
     }
 

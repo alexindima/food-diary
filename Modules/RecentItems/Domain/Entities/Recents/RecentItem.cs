@@ -2,6 +2,7 @@ using FoodDiary.Modules.RecentItems.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.RecentItems.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.RecentItems.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.RecentItems.Domain.Entities.Recents;
 
@@ -13,6 +14,11 @@ public sealed class RecentItem : Entity<RecentItemId> {
     public int UsageCount { get; private set; }
 
     private RecentItem() {
+    }
+
+    public static RecentItem CreateWithReference(UserId userId, RecentItemReference reference, DateTime? usedAtUtc = null) {
+        ArgumentNullException.ThrowIfNull(reference);
+        return Create(userId, reference.Kind, reference.Id, usedAtUtc);
     }
 
     public static RecentItem Create(UserId userId, RecentItemType itemType, Guid itemId, DateTime? usedAtUtc = null) {

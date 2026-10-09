@@ -4,6 +4,8 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../../services/auth.service';
+import type { ShoppingListId } from '../../../shared/models/semantics/entity-id';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { ShoppingList, ShoppingListItemDto } from '../../../shared/models/shopping-list.data';
 import { PublicAuthDialogService } from '../../public/contracts/auth-dialog';
 import { ShoppingListService } from '../api/shopping-list.service';
@@ -102,7 +104,7 @@ export class ShoppingListAddFacade {
     private async saveAsync(target: ShoppingListTarget, items: ShoppingListItemDto[]): Promise<ShoppingList> {
         return target.id === null
             ? firstValueFrom(this.api.create({ name: target.name, items: appendShoppingItems([], items) }))
-            : this.appendAsync(target.id, items);
+            : this.appendAsync(entityId<'shopping-list'>(target.id), items);
     }
     private async prepareAsync(item: ShoppingListItemDto, count: number, confirm: boolean): Promise<boolean> {
         if (!(await this.ensureAuthenticatedAsync())) {
@@ -113,7 +115,7 @@ export class ShoppingListAddFacade {
     private async ensureTargetAsync(item: ShoppingListItemDto): Promise<boolean> {
         return this.target() !== null || this.chooseTargetAsync(item);
     }
-    private async appendAsync(id: string, items: ShoppingListItemDto[]): Promise<ShoppingList> {
+    private async appendAsync(id: ShoppingListId, items: ShoppingListItemDto[]): Promise<ShoppingList> {
         const list = await firstValueFrom(this.api.getById(id));
         if (list === null) {
             this.target.set(null);

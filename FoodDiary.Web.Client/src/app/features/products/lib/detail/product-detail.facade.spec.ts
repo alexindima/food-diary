@@ -12,6 +12,8 @@ import {
     ProductType,
     ProductVisibility,
 } from '../../../../shared/models/product.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FavoriteProductService } from '../../api/favorite-product.service';
 import { ProductService } from '../../api/product.service';
 import { ProductDetailActionResult } from '../../components/detail/product-detail-lib/product-detail.types';
@@ -52,7 +54,7 @@ beforeEach(() => {
         open: vi.fn(),
     };
 
-    productService.duplicate.mockReturnValue(of(createProduct({ id: 'duplicated-product' })));
+    productService.duplicate.mockReturnValue(of(createProduct({ id: entityId<'product'>('duplicated-product') })));
     favoriteProductService.isFavorite.mockReturnValue(of(false));
     favoriteProductService.add.mockReturnValue(of(createFavoriteProduct()));
     favoriteProductService.remove.mockReturnValue(of(null));
@@ -102,7 +104,7 @@ describe('ProductDetailFacade favorites', () => {
     });
 
     it('removes favorite by current favorite id', () => {
-        const product = createProduct({ isFavorite: true, favoriteProductId: 'favorite-1' });
+        const product = createProduct({ isFavorite: true, favoriteProductId: entityId<'favorite-product'>('favorite-1') });
         favoriteProductService.isFavorite.mockReturnValueOnce(of(true));
         facade.initialize(product);
 
@@ -180,7 +182,7 @@ describe('ProductDetailFacade duplicate', () => {
 
 function createProduct(overrides: Partial<Product> = {}): Product {
     return {
-        id: 'product-1',
+        id: entityId<'product'>('product-1'),
         name: 'Test product',
         barcode: null,
         brand: null,
@@ -213,10 +215,10 @@ function createProduct(overrides: Partial<Product> = {}): Product {
 
 function createFavoriteProduct(): FavoriteProduct {
     return {
-        id: 'favorite-1',
-        productId: 'product-1',
+        id: entityId<'favorite-product'>('favorite-1'),
+        productId: entityId<'product'>('product-1'),
         name: 'Test product',
-        createdAtUtc: '2026-01-01T00:00:00Z',
+        createdAtUtc: utcInstant('2026-01-01T00:00:00Z'),
         productName: 'Test product',
         brand: null,
         barcode: null,
@@ -261,7 +263,7 @@ describe('Product detail pending requests', () => {
     });
     it('keeps favorite state and permits retry after removal fails', () => {
         favoriteProductService.isFavorite.mockReturnValue(of(true));
-        const product = createProduct({ isFavorite: true, favoriteProductId: 'favorite-1' });
+        const product = createProduct({ isFavorite: true, favoriteProductId: entityId<'favorite-product'>('favorite-1') });
         facade.initialize(product);
         favoriteProductService.remove.mockReturnValueOnce(throwError(() => new Error('offline')));
         facade.toggleFavorite(product);

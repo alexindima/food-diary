@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -20,9 +21,9 @@ internal sealed class ImagesUserDataPurgeParticipant(
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         foreach (var image in deletedImages.DistinctBy(static image => new { image.ObjectKey, image.IsConfirmed })) {
-            await imageObjectDeletionOutbox.EnqueueAsync(image.ObjectKey, image.IsConfirmed, cancellationToken).ConfigureAwait(false);
+            await imageObjectDeletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(image.ObjectKey), image.IsConfirmed, cancellationToken).ConfigureAwait(false);
             if (!image.IsConfirmed) {
-                await imageObjectDeletionOutbox.EnqueueAsync(image.ObjectKey, isConfirmed: true, cancellationToken).ConfigureAwait(false);
+                await imageObjectDeletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(image.ObjectKey), isConfirmed: true, cancellationToken).ConfigureAwait(false);
             }
         }
 

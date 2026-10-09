@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using FoodDiary.BugTriage.Application.Reports.Identifiers;
 using FoodDiary.BugTriage.Application.Abstractions;
 using FoodDiary.BugTriage.Application.Reports;
 using FoodDiary.BugTriage.Infrastructure.Options;
@@ -23,7 +24,7 @@ public sealed class MailInboxBugSource(IMailInboxExportClient client, IBugReport
             }
             foreach (MailInboxExportEntryResponse entry in page) {
                 cancellationToken.ThrowIfCancellationRequested();
-                if (await store.ContainsAsync(entry.Id, cancellationToken).ConfigureAwait(false)) {
+                if (await store.ContainsAsync((SourceMessageId)entry.Id, cancellationToken).ConfigureAwait(false)) {
                     continue;
                 }
                 if (imported >= options.Value.MaxImportsPerPoll) {
@@ -34,7 +35,7 @@ public sealed class MailInboxBugSource(IMailInboxExportClient client, IBugReport
                     ? await client.GetMimeAsync(entry.Id, options.Value.Recipient, cancellationToken).ConfigureAwait(false)
                     : null;
                 if (mime is null) {
-                    yield return new ImportedReport(entry.Id, entry.ReceivedAtUtc, "Content unavailable", string.Empty, RawMime: null);
+                    yield return new ImportedReport((SourceMessageId)entry.Id, entry.ReceivedAtUtc, "Content unavailable", string.Empty, RawMime: null);
                     continue;
                 }
                 ImportedReport report;
@@ -43,9 +44,9 @@ public sealed class MailInboxBugSource(IMailInboxExportClient client, IBugReport
                     await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable streamScope = stream.ConfigureAwait(false);
                     using MimeMessage message = await MimeMessage.LoadAsync(stream, cancellationToken).ConfigureAwait(false);
                     string body = message.TextBody ?? message.HtmlBody ?? string.Empty;
-                    report = new ImportedReport(entry.Id, entry.ReceivedAtUtc, Bound(message.Subject ?? "(no subject)", 1000), Bound(body, 100_000), mime);
+                    report = new ImportedReport((SourceMessageId)entry.Id, entry.ReceivedAtUtc, Bound(message.Subject ?? "(no subject)", 1000), Bound(body, 100_000), mime);
                 } catch (FormatException) {
-                    report = new ImportedReport(entry.Id, entry.ReceivedAtUtc, "Unparseable email", string.Empty, mime);
+                    report = new ImportedReport((SourceMessageId)entry.Id, entry.ReceivedAtUtc, "Unparseable email", string.Empty, mime);
                 }
                 yield return report;
             }

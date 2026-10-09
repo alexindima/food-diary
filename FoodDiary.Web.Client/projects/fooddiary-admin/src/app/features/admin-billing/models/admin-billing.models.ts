@@ -1,3 +1,4 @@
+import type { AdminId, AdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 export type AdminBillingTab = 'subscriptions' | 'payments' | 'webhook-events';
 
 export type AdminBillingFilters = {
@@ -10,8 +11,8 @@ export type AdminBillingFilters = {
 };
 
 export type AdminBillingSubscription = {
-    id: string;
-    userId: string;
+    id: AdminId<'billing-subscription'>;
+    userId: AdminId<'user'>;
     userEmail: string | null;
     provider: string;
     externalCustomerId: string;
@@ -20,21 +21,21 @@ export type AdminBillingSubscription = {
     externalPriceId?: string | null;
     plan?: string | null;
     status: string;
-    currentPeriodStartUtc?: string | null;
-    currentPeriodEndUtc?: string | null;
+    currentPeriodStartUtc?: AdminUtcInstant | null;
+    currentPeriodEndUtc?: AdminUtcInstant | null;
     cancelAtPeriodEnd: boolean;
-    nextBillingAttemptUtc?: string | null;
-    lastWebhookEventId?: string | null;
-    lastSyncedAtUtc?: string | null;
-    createdOnUtc: string;
-    modifiedOnUtc?: string | null;
+    nextBillingAttemptUtc?: AdminUtcInstant | null;
+    lastWebhookEventId?: AdminId<'billing-webhook-event'> | null;
+    lastSyncedAtUtc?: AdminUtcInstant | null;
+    createdOnUtc: AdminUtcInstant;
+    modifiedOnUtc?: AdminUtcInstant | null;
 };
 
 export type AdminBillingPayment = {
-    id: string;
-    userId: string;
+    id: AdminId<'billing-payment'>;
+    userId: AdminId<'user'>;
     userEmail: string | null;
-    billingSubscriptionId?: string | null;
+    billingSubscriptionId?: AdminId<'billing-subscription'> | null;
     provider: string;
     externalPaymentId: string;
     externalCustomerId?: string | null;
@@ -51,29 +52,29 @@ export type AdminBillingPayment = {
     earnings?: number | null;
     payoutCurrency?: string | null;
     payoutEarnings?: number | null;
-    currentPeriodStartUtc?: string | null;
-    currentPeriodEndUtc?: string | null;
-    webhookEventId?: string | null;
+    currentPeriodStartUtc?: AdminUtcInstant | null;
+    currentPeriodEndUtc?: AdminUtcInstant | null;
+    webhookEventId?: AdminId<'billing-webhook-event'> | null;
     providerMetadataJson?: string | null;
-    createdOnUtc: string;
-    modifiedOnUtc?: string | null;
+    createdOnUtc: AdminUtcInstant;
+    modifiedOnUtc?: AdminUtcInstant | null;
 };
 
 export type AdminBillingWebhookEvent = {
-    id: string;
+    id: AdminId<'billing-webhook-event'>;
     provider: string;
     eventId: string;
     eventType: string;
     externalObjectId?: string | null;
     status: string;
-    processedAtUtc?: string | null;
-    receivedAtUtc?: string | null;
+    processedAtUtc?: AdminUtcInstant | null;
+    receivedAtUtc?: AdminUtcInstant | null;
     attemptCount?: number;
-    nextAttemptAtUtc?: string | null;
+    nextAttemptAtUtc?: AdminUtcInstant | null;
     payloadJson?: string | null;
     errorMessage?: string | null;
-    createdOnUtc: string;
-    modifiedOnUtc?: string | null;
+    createdOnUtc: AdminUtcInstant;
+    modifiedOnUtc?: AdminUtcInstant | null;
 };
 
 export type AdminBillingRevenueCurrency = {

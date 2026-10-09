@@ -521,6 +521,7 @@
     <Project Path="Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Infrastructure.Tests/FoodDiary.Modules.RecentItems.Infrastructure.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/RecipeCommunity/">
+    <Project Path="Modules/RecipeCommunity/Domain.Contracts/FoodDiary.Modules.RecipeCommunity.Domain.Contracts.csproj" />
     <Project Path="Modules/RecipeCommunity/Application/FoodDiary.Modules.RecipeCommunity.Application.csproj" />
     <Project Path="Modules/RecipeCommunity/Application.Abstractions/FoodDiary.Modules.RecipeCommunity.Application.Abstractions.csproj" />
     <Project Path="Modules/RecipeCommunity/Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj" />

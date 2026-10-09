@@ -15,6 +15,7 @@ import { finalize } from 'rxjs';
 
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import type { AttentionSignal, AttentionSignalSettings, ClientSummary } from '../../../../shared/models/dietologist.data';
+import type { AttentionSignalId, UserId } from '../../../../shared/models/semantics/entity-id';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 import { buildClientCardViewModels, formatClientConnectedDate } from './dietologist-clients-lib/dietologist-clients.mapper';
@@ -68,7 +69,7 @@ export class DietologistClientsPageComponent {
     protected readonly loading = signal(true);
     protected readonly loadError = signal(false);
     protected readonly attentionSignals = signal<AttentionSignal[]>([]);
-    protected readonly pendingAttentionIds = signal<ReadonlySet<string>>(new Set<string>());
+    protected readonly pendingAttentionIds = signal<ReadonlySet<AttentionSignalId>>(new Set<AttentionSignalId>());
     protected readonly attentionItems = computed(() => {
         this.languageVersion();
         const language = resolveTranslateLanguage(this.translateService);
@@ -87,7 +88,7 @@ export class DietologistClientsPageComponent {
         weightChangePercent: 3,
         lookbackDays: 14,
     });
-    protected readonly selectedClientIds = signal<ReadonlySet<string>>(new Set<string>());
+    protected readonly selectedClientIds = signal<ReadonlySet<UserId>>(new Set<UserId>());
     protected readonly bulkSending = signal(false);
     private readonly bulkRequest = signal<{ key: string; fingerprint: string } | null>(null);
     protected readonly bulkModel = signal({ text: '' });
@@ -154,7 +155,7 @@ export class DietologistClientsPageComponent {
         this.setAttentionState(attentionSignal, 'Snooze', snoozedUntilUtc);
     }
 
-    protected toggleClientSelection(clientId: string, selected: boolean): void {
+    protected toggleClientSelection(clientId: UserId, selected: boolean): void {
         this.selectedClientIds.update(ids => {
             const next = new Set(ids);
             if (selected) {
@@ -264,7 +265,7 @@ export class DietologistClientsPageComponent {
             });
     }
 
-    private executeBulkRecommendation(clientIds: string[], text: string): void {
+    private executeBulkRecommendation(clientIds: UserId[], text: string): void {
         const fingerprint = JSON.stringify([text, [...clientIds].sort()]);
         const previousRequest = this.bulkRequest();
         const idempotencyKey = previousRequest?.fingerprint === fingerprint ? previousRequest.key : crypto.randomUUID();

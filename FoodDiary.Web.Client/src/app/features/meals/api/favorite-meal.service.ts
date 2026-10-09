@@ -10,6 +10,7 @@ import { sdkPage } from '../../../shared/api/sdk/sdk-response';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { FavoriteMeal } from '../../../shared/models/meal.data';
 import type { PageOf } from '../../../shared/models/page-of.data';
+import type { FavoriteMealId, MealId } from '../../../shared/models/semantics/entity-id';
 
 const FAVORITE_PAGE_SIZE = 10;
 
@@ -35,27 +36,27 @@ export class FavoriteMealService {
         );
     }
 
-    public isFavorite(mealId: string): Observable<boolean> {
+    public isFavorite(mealId: MealId): Observable<boolean> {
         return this.sdk.client
             .getFavoriteMealsCheckByMealId({ version: this.sdk.version, mealId })
             .pipe(catchError((error: unknown) => fallbackApiError('Check favorite meal error', error, false)));
     }
 
-    public add(mealId: string, name?: string): Observable<FavoriteMeal> {
+    public add(mealId: MealId, name?: string): Observable<FavoriteMeal> {
         return this.sdk.client.postFavoriteMeals({ version: this.sdk.version, addFavoriteMealHttpRequest: { mealId, name } }).pipe(
             map(favoriteMealFromSdk),
             catchError((error: unknown) => rethrowApiError('Add favorite meal error', error)),
         );
     }
 
-    public restore(id: string): Observable<FavoriteMeal> {
+    public restore(id: FavoriteMealId): Observable<FavoriteMeal> {
         return this.sdk.client.postFavoriteMealsByIdRestore({ version: this.sdk.version, id }).pipe(
             map(favoriteMealFromSdk),
             catchError((error: unknown) => rethrowApiError('Restore favorite meal error', error)),
         );
     }
 
-    public remove(id: string): Observable<void> {
+    public remove(id: FavoriteMealId): Observable<void> {
         return this.sdk.client.deleteFavoriteMealsById({ version: this.sdk.version, id }).pipe(
             map(() => {}),
             catchError((error: unknown) => rethrowApiError('Remove favorite meal error', error)),

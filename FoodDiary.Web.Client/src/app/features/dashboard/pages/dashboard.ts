@@ -29,6 +29,7 @@ import { NavigationService } from '../../../services/navigation.service';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
 import { UserFacade } from '../../../shared/lib/user.facade';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { ViewportService } from '../../../shared/platform/viewport.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
@@ -488,6 +489,10 @@ export class DashboardComponent {
 
         this.resizeObserver.observe(element);
         this.destroyRef.onDestroy(() => this.resizeObserver?.disconnect());
+    }
+
+    protected onMealFavoriteToggle(id: string): void {
+        this.facade.toggleMealFavorite(entityId<'meal'>(id));
     }
 
     protected onBeforeUnload(event: BeforeUnloadEvent): void {

@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, form, required, validate } from '@angular/forms/signals';
 import { firstValueFrom } from 'rxjs';
 
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { CyclesService } from '../api/cycles.service';
 import type { MenstrualEpisodeFormModel } from './cycle-tracking.form-models';
 import { toCycleDateKey } from './cycle-tracking.mapper';
@@ -95,7 +96,7 @@ export class CycleEpisodeFacade {
         try {
             const cycle = await firstValueFrom(
                 this.cyclesService
-                    .updateMenstrualEpisode(currentCycle.id, episodeId, {
+                    .updateMenstrualEpisode(currentCycle.id, entityId<'menstrual-episode'>(episodeId), {
                         startDate: toCycleDateKey(formValue.startDate),
                         endDate: formValue.endDate === null || formValue.endDate.length === 0 ? null : toCycleDateKey(formValue.endDate),
                     })
@@ -122,7 +123,7 @@ export class CycleEpisodeFacade {
         try {
             const cycle = await firstValueFrom(
                 this.cyclesService
-                    .updateMenstrualEpisode(currentCycle.id, episodeId, {
+                    .updateMenstrualEpisode(currentCycle.id, entityId<'menstrual-episode'>(episodeId), {
                         startDate: toCycleDateKey(episode.startDate),
                         endDate: episode.endDate === undefined || episode.endDate === null ? null : toCycleDateKey(episode.endDate),
                         excludedFromPredictions: !episode.excludedFromPredictions,
@@ -147,7 +148,9 @@ export class CycleEpisodeFacade {
         this.state.deletingEpisodeId.set(episodeId);
         try {
             const cycle = await firstValueFrom(
-                this.cyclesService.deleteMenstrualEpisode(currentCycle.id, episodeId).pipe(takeUntilDestroyed(this.destroyRef)),
+                this.cyclesService
+                    .deleteMenstrualEpisode(currentCycle.id, entityId<'menstrual-episode'>(episodeId))
+                    .pipe(takeUntilDestroyed(this.destroyRef)),
             );
             this.state.cycle.set(cycle);
             if (this.state.editingEpisodeId() === episodeId) {

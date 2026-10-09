@@ -10,6 +10,8 @@ internal sealed class BillingPaymentConfiguration : IEntityTypeConfiguration<Bil
         builder.ToTable("BillingPayments");
 
         builder.HasKey(e => e.Id);
+        builder.Ignore(e => e.TypedId);
+        builder.Ignore(e => e.SubscriptionReference);
 
         ConfigureIdentifiers(builder);
         ConfigurePaymentDetails(builder);

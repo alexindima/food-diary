@@ -2,17 +2,19 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { calendarDate } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { CycleDayViewModel } from '../cycle-tracking-page-lib/cycle-tracking-page.types';
 import { CycleDaysCardComponent } from './cycle-days-card';
 
 const ITEMS: CycleDayViewModel[] = [
     {
-        date: '2026-04-02T00:00:00.000Z',
+        date: calendarDate('2026-04-02T00:00:00.000Z'),
         bleedingEntries: [
             {
-                id: 'bleeding-1',
-                cycleProfileId: 'cycle-1',
-                date: '2026-04-02T00:00:00.000Z',
+                id: entityId<'bleeding-entry'>('bleeding-1'),
+                cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                date: calendarDate('2026-04-02T00:00:00.000Z'),
                 type: 0,
                 flow: 2,
                 painImpact: 5,
@@ -21,18 +23,18 @@ const ITEMS: CycleDayViewModel[] = [
         ],
         symptoms: [
             {
-                id: 'symptom-1',
-                cycleProfileId: 'cycle-1',
-                date: '2026-04-02T00:00:00.000Z',
+                id: entityId<'cycle-symptom-entry'>('symptom-1'),
+                cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                date: calendarDate('2026-04-02T00:00:00.000Z'),
                 category: 0,
                 intensity: 5,
                 tags: [],
                 note: null,
             },
             {
-                id: 'symptom-2',
-                cycleProfileId: 'cycle-1',
-                date: '2026-04-02T00:00:00.000Z',
+                id: entityId<'cycle-symptom-entry'>('symptom-2'),
+                cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                date: calendarDate('2026-04-02T00:00:00.000Z'),
                 category: 3,
                 intensity: 6,
                 tags: [],
@@ -61,9 +63,9 @@ const ITEMS: CycleDayViewModel[] = [
         ],
         additionalSymptomCount: 0,
         fertilitySignal: {
-            id: 'signal-1',
-            cycleProfileId: 'cycle-1',
-            date: '2026-04-02T00:00:00.000Z',
+            id: entityId<'fertility-signal'>('signal-1'),
+            cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+            date: calendarDate('2026-04-02T00:00:00.000Z'),
             basalBodyTemperatureCelsius: 36.62,
             ovulationTestResult: 1,
             cervicalFluid: 'egg white',

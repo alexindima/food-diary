@@ -13,6 +13,7 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { LocalizedDatePipe } from '../../../../shared/i18n/localized-date.pipe';
 import type { ClientTask, ClientTaskStatus, DietologistRecommendation } from '../../../../shared/models/dietologist.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { RecommendationThreadComponent } from '../../components/recommendation-thread/recommendation-thread';
@@ -95,7 +96,9 @@ export class RecommendationsPageComponent {
                 next: () => {
                     this.recommendations.update(items =>
                         items.map(item =>
-                            item.id === recommendation.id ? { ...item, isRead: true, readAtUtc: new Date().toISOString() } : item,
+                            item.id === recommendation.id
+                                ? { ...item, isRead: true, readAtUtc: utcInstant(new Date().toISOString()) }
+                                : item,
                         ),
                     );
                     this.markingReadIds.update(ids => {

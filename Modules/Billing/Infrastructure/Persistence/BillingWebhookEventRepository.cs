@@ -24,9 +24,10 @@ public sealed class BillingWebhookEventRepository(DbSet<BillingWebhookEvent> web
         return Task.FromResult(webhookEvent);
     }
 
-    public async Task<BillingWebhookEvent?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) {
+    public async Task<BillingWebhookEvent?> GetByIdAsync(FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingWebhookEventId id, CancellationToken cancellationToken = default) {
         await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
-        return await webhookEvents.SingleOrDefaultAsync(webhookEvent => webhookEvent.Id == id, cancellationToken).ConfigureAwait(false);
+        Guid storedId = id.Value;
+        return await webhookEvents.SingleOrDefaultAsync(webhookEvent => webhookEvent.Id == storedId, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<BillingWebhookEvent>> GetPendingAsync(

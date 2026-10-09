@@ -5,6 +5,7 @@ import {
     ProductType,
     ProductVisibility,
 } from '../../../../shared/models/product.data';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { ProductListFiltersDialogResult } from '../../components/list/product-list-filters-dialog/product-list-filters-dialog.types';
 
 const FAVORITE_GRAM_BASE_AMOUNT = 100;
@@ -60,7 +61,7 @@ export function buildFavoriteProductSnapshot(favorite: FavoriteProduct): Product
     const name = favorite.name?.trim();
 
     return {
-        id: favorite.productId,
+        id: entityId<'product'>(favorite.productId),
         name: name !== undefined && name.length > 0 ? name : favorite.productName,
         barcode: favorite.barcode ?? null,
         brand: favorite.brand ?? null,
@@ -87,7 +88,7 @@ export function buildFavoriteProductSnapshot(favorite: FavoriteProduct): Product
         qualityScore: favorite.qualityScore,
         qualityGrade: favorite.qualityGrade,
         isFavorite: true,
-        favoriteProductId: favorite.id,
+        favoriteProductId: entityId<'favorite-product'>(favorite.id),
     };
 }
 

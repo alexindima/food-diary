@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Gamification.Domain.ValueObjects;
 using FoodDiary.Modules.Gamification.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
 using FoodDiary.Modules.Gamification.Contracts.Commands.UpdateAchievementDefinition;
@@ -31,8 +32,8 @@ public sealed class UpdateAchievementDefinitionCommandHandler(IAchievementDefini
         }
 
         try {
-            definition.Update(
-                input.Category, metric.Value, input.Threshold, input.TitleRu, input.TitleEn,
+            definition.UpdateTarget(
+                input.Category, AchievementTarget.FromFields(metric.Value, input.Threshold), input.TitleRu, input.TitleEn,
                 input.DescriptionRu, input.DescriptionEn, input.Icon, input.SortOrder, input.IsActive);
             await store.UpdateAsync(definition, cancellationToken).ConfigureAwait(false);
             return Result.Success(ToModel(definition));

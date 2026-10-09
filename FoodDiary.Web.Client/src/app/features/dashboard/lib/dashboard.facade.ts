@@ -15,6 +15,8 @@ import type { CycleResponse } from '../../../shared/models/cycle.data';
 import type { DashboardSnapshot } from '../../../shared/models/dashboard.data';
 import type { FastingSession } from '../../../shared/models/fasting.data';
 import type { Meal } from '../../../shared/models/meal.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import type { FavoriteMealId, MealId } from '../../../shared/models/semantics/entity-id';
 import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import { CALORIE_GOAL_ACTIONS } from '../../goals/contracts/calorie-goal-actions';
 import { HYDRATION_ACTIONS } from '../../hydration/contracts/hydration-actions';
@@ -52,7 +54,7 @@ export class DashboardFacade {
     private readonly favoriteMealService = inject(FAVORITE_MEAL_ACTIONS);
     private readonly toastService = inject(FdUiToastService);
     public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set());
-    private readonly favoriteStates = signal<Record<string, { isFavorite: boolean; favoriteMealId: string | null }>>({});
+    private readonly favoriteStates = signal<Record<string, { isFavorite: boolean; favoriteMealId: FavoriteMealId | null }>>({});
     private readonly dashboardService = inject(DashboardService);
     private readonly hydrationService = inject(HYDRATION_ACTIONS);
     private readonly goalsService = inject(CALORIE_GOAL_ACTIONS);
@@ -93,7 +95,7 @@ export class DashboardFacade {
             const targetDate = new Date();
             await firstValueFrom<Meal | void>(
                 result.action === 'Repeat'
-                    ? this.mealService.repeat(result.id, targetDate.toISOString(), resolveMealTypeByTime(targetDate))
+                    ? this.mealService.repeat(result.id, utcInstant(targetDate.toISOString()), resolveMealTypeByTime(targetDate))
                     : this.mealService.deleteById(result.id),
             );
             this.invalidation.reportMealMutation();
@@ -102,13 +104,13 @@ export class DashboardFacade {
             this.toastService.error(this.translateService.instant('MEAL_LIST.OPERATION_ERROR_MESSAGE'));
         }
     }
-    public toggleMealFavorite(mealId: string): void {
+    public toggleMealFavorite(mealId: MealId): void {
         const meal = this.meals().find(item => item.id === mealId);
         if (meal === undefined || this.favoriteLoadingIds().has(mealId)) {
             return;
         }
         this.favoriteLoadingIds.update(ids => new Set([...ids, mealId]));
-        const request$: Observable<{ isFavorite: boolean; favoriteMealId: string | null }> =
+        const request$: Observable<{ isFavorite: boolean; favoriteMealId: FavoriteMealId | null }> =
             meal.isFavorite === true
                 ? ((meal.favoriteMealId?.length ?? 0) > 0
                       ? of(meal.favoriteMealId)

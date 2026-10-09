@@ -5,6 +5,8 @@ import { of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { ShoppingListSummary } from '../../../shared/models/shopping-list.data';
 import { ShoppingListService } from '../api/shopping-list.service';
 import { ShoppingListBrowserFacade } from './shopping-list-browser.facade';
@@ -19,7 +21,7 @@ describe('Shopping list lazy loading', () => {
         const { service, facade } = setup();
         service.getPage.mockReturnValue(of([]));
         facade.seed({
-            items: [{ id: 'first', name: 'First', createdAt: '', itemsCount: 0, remainingCount: 0 }],
+            items: [{ id: entityId<'shopping-list'>('first'), name: 'First', createdAt: utcInstant(''), itemsCount: 0, remainingCount: 0 }],
             hasMore: true,
             nextPage: 2,
         });
@@ -32,9 +34,9 @@ describe('Shopping list lazy loading', () => {
         const { service, facade } = setup();
         const count = 20;
         const rows = Array.from({ length: count }, (_, index) => ({
-            id: String(index),
+            id: entityId<'shopping-list'>(String(index)),
             name: 'List',
-            createdAt: '',
+            createdAt: utcInstant(''),
             itemsCount: 0,
             remainingCount: 0,
         }));
@@ -62,7 +64,7 @@ describe('Shopping list lazy loading', () => {
         facade.reset('old');
         facade.cancelSearch();
         facade.reset('new');
-        old.next([{ id: 'stale', name: 'Old', createdAt: '', itemsCount: 0 }]);
+        old.next([{ id: entityId<'shopping-list'>('stale'), name: 'Old', createdAt: utcInstant(''), itemsCount: 0 }]);
         expect(facade.lists()).toEqual([]);
         expect(facade.failed()).toBe(true);
         facade.loadMore();
@@ -78,8 +80,8 @@ describe('Shopping list browser HTTP recovery', () => {
         });
         const facade = TestBed.inject(ShoppingListBrowserFacade);
         const http = TestBed.inject(HttpTestingController);
-        const first = { id: 'first', name: 'First', createdAt: '', itemsCount: 0, completed: false };
-        const second = { id: 'second', name: 'Second', createdAt: '', itemsCount: 0 };
+        const first = { id: entityId<'shopping-list'>('first'), name: 'First', createdAt: utcInstant(''), itemsCount: 0, completed: false };
+        const second = { id: entityId<'shopping-list'>('second'), name: 'Second', createdAt: utcInstant(''), itemsCount: 0 };
         if (search === '') {
             facade.seed({ items: [first], hasMore: true, nextPage: 2 });
             facade.loadMore();

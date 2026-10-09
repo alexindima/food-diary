@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import { MeasurementUnit } from '../../../../../shared/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import type { StepFormValues } from './recipe-manage.types';
 import { RecipeStepFormManager } from './recipe-step-form.manager';
 
@@ -96,7 +98,7 @@ type RecipeStepState = {
 
 function createRecipe(): Recipe {
     return {
-        id: 'recipe-1',
+        id: entityId<'recipe'>('recipe-1'),
         name: 'Recipe',
         description: null,
         comment: null,
@@ -108,7 +110,7 @@ function createRecipe(): Recipe {
         servings: 2,
         visibility: RecipeVisibility.Public,
         usageCount: 0,
-        createdAt: '2026-01-01T00:00:00Z',
+        createdAt: utcInstant('2026-01-01T00:00:00Z'),
         isOwnedByCurrentUser: true,
         isNutritionAutoCalculated: true,
         steps: [

@@ -113,13 +113,13 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/FavoriteInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/FavoriteMealRestoreTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/FavoritePortionIdempotencyTests.cs`
+- [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/PreferredProductQuantityTests.cs`
 - [presentation] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealHttpMappingsTests.cs`
 - [presentation] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteMealsRestoreControllerTests.cs`
 - [presentation] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductHttpMappingsTests.cs`
 - [presentation] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs`
 - [presentation] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipeHttpMappingsTests.cs`
 - [presentation] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipesControllerTests.cs`
-- [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/FavoritesContractOwnershipTests.cs`
 
 ## Working Rule
 

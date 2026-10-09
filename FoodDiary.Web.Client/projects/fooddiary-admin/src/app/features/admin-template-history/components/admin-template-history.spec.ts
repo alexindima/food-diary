@@ -3,6 +3,7 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminTemplateHistoryFacade } from '../lib/admin-template-history.facade';
 import type { AdminTemplateRevision } from '../models/admin-template-revision';
 import { AdminTemplateHistoryComponent } from './admin-template-history';
@@ -10,14 +11,14 @@ import { AdminTemplateHistoryComponent } from './admin-template-history';
 describe('AdminTemplateHistoryComponent', () => {
     const getRevisions = vi.fn();
     const revision: AdminTemplateRevision = {
-        id: 'old',
+        id: adminId<'template-revision'>('old'),
         subject: 'Previous',
         htmlBody: '<script>unsafe()</script>',
         textBody: 'Previous text',
         isActive: true,
         version: null,
-        savedOnUtc: '2026-01-01T00:00:00Z',
-        archivedOnUtc: '2026-01-02T00:00:00Z',
+        savedOnUtc: adminUtcInstant('2026-01-01T00:00:00Z'),
+        archivedOnUtc: adminUtcInstant('2026-01-02T00:00:00Z'),
     };
 
     beforeEach(async () => {
@@ -43,7 +44,7 @@ describe('AdminTemplateHistoryComponent', () => {
         const fixture = create();
         fixture.componentRef.setInput('locale', 'ru');
         fixture.detectChanges();
-        pending.next([{ ...revision, id: 'stale' }]);
+        pending.next([{ ...revision, id: adminId<'template-revision'>('stale') }]);
         fixture.detectChanges();
         expect(fixture.componentInstance['revisions']()).toEqual([revision]);
         expect((fixture.nativeElement as HTMLElement).querySelector('script')).toBeNull();

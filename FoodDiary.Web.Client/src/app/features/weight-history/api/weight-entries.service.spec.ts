@@ -6,15 +6,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.tokens';
+import { calendarDate } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { WeightEntry, WeightEntryFilters } from '../../../shared/models/weight-entry.data';
 import { WeightEntriesService } from './weight-entries.service';
 
 const BASE_URL = environment.apiUrls.weights;
 const ENTRY_LIMIT = 10;
 const MOCK_ENTRY: WeightEntry = {
-    id: 'w-1',
-    userId: 'user-1',
-    date: '2026-03-01',
+    id: entityId<'weight-entry'>('w-1'),
+    userId: entityId<'user'>('user-1'),
+    date: calendarDate('2026-03-01'),
     weightKg: 75.5,
 };
 
@@ -104,7 +106,7 @@ describe('WeightEntriesService latest', () => {
 
 describe('WeightEntriesService mutations', () => {
     it('should create entry', () => {
-        const payload = { date: '2026-03-28', weightKg: 76 };
+        const payload = { date: calendarDate('2026-03-28'), weightKg: 76 };
 
         service.create(payload).subscribe(entry => {
             expect(entry).toEqual(MOCK_ENTRY);
@@ -117,10 +119,10 @@ describe('WeightEntriesService mutations', () => {
     });
 
     it('should update entry', () => {
-        const payload = { date: '2026-03-28', weightKg: 77 };
+        const payload = { date: calendarDate('2026-03-28'), weightKg: 77 };
         const updated = { ...MOCK_ENTRY, weightKg: 77 };
 
-        service.update('w-1', payload).subscribe(entry => {
+        service.update(entityId<'weight-entry'>('w-1'), payload).subscribe(entry => {
             expect(entry).toEqual(updated);
         });
 
@@ -131,7 +133,7 @@ describe('WeightEntriesService mutations', () => {
     });
 
     it('should remove entry', () => {
-        service.remove('w-1').subscribe();
+        service.remove(entityId<'weight-entry'>('w-1')).subscribe();
 
         const req = httpMock.expectOne(`${BASE_URL}/w-1`);
         expect(req.request.method).toBe('DELETE');
@@ -150,7 +152,7 @@ describe('Summary and failure contracts', () => {
             ...filters,
             quantizationDays: '1',
         });
-        const buckets = [{ startDate: filters.dateFrom, endDate: filters.dateTo, averageWeightKg: 75 }];
+        const buckets = [{ startDate: calendarDate(filters.dateFrom), endDate: calendarDate(filters.dateTo), averageWeightKg: 75 }];
         request.flush(buckets);
         expect(received).toHaveBeenCalledWith(buckets);
     });
@@ -183,14 +185,14 @@ describe('Summary and failure contracts', () => {
     it.each(['create', 'update', 'remove', 'page'] as const)('propagates %s failures', operation => {
         const next = vi.fn();
         const error = vi.fn();
-        const payload = { date: '2026-04-01', weightKg: 75 };
+        const payload = { date: calendarDate('2026-04-01'), weightKg: 75 };
         const response: Observable<unknown> =
             operation === 'create'
                 ? service.create(payload)
                 : operation === 'update'
-                  ? service.update('id', payload)
+                  ? service.update(entityId<'weight-entry'>('id'), payload)
                   : operation === 'remove'
-                    ? service.remove('id')
+                    ? service.remove(entityId<'weight-entry'>('id'))
                     : service.getPageSummary({ ...filters, entriesLimit: 10 });
         response.subscribe({ next, error });
         const body = { error: 'Metric.AlreadyExists' };

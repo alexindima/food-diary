@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Fasting.Domain.ValueObjects.Settings;
 using FoodDiary.Modules.Fasting.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Domain.Primitives;
@@ -42,23 +43,7 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
         DateTime startedAtUtc,
         string? title = null) {
         EnsureUserId(userId);
-        EnsureIntermittentProtocol(protocol);
-        EnsureIntermittentHours(fastHours, eatingWindowHours);
-
-        var plan = new FastingPlan {
-            Id = FastingPlanId.New(),
-            UserId = userId,
-            Type = FastingPlanType.Intermittent,
-            Status = FastingPlanStatus.Active,
-            Protocol = protocol,
-            Title = NormalizeTitle(title),
-            StartedAtUtc = NormalizeTimestamp(startedAtUtc, nameof(startedAtUtc)),
-            IntermittentFastHours = fastHours,
-            IntermittentEatingWindowHours = eatingWindowHours,
-        };
-
-        plan.SetCreated();
-        return plan;
+        return CreateWithSettings(userId, IntermittentFastingSettings.Create(protocol, fastHours, eatingWindowHours), startedAtUtc, title);
     }
 
     public static FastingPlan CreateExtended(
@@ -68,22 +53,7 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
         DateTime startedAtUtc,
         string? title = null) {
         EnsureUserId(userId);
-        EnsureExtendedProtocol(protocol);
-        EnsureExtendedTargetHours(targetHours);
-
-        var plan = new FastingPlan {
-            Id = FastingPlanId.New(),
-            UserId = userId,
-            Type = FastingPlanType.Extended,
-            Status = FastingPlanStatus.Active,
-            Protocol = protocol,
-            Title = NormalizeTitle(title),
-            StartedAtUtc = NormalizeTimestamp(startedAtUtc, nameof(startedAtUtc)),
-            ExtendedTargetHours = targetHours,
-        };
-
-        plan.SetCreated();
-        return plan;
+        return CreateWithSettings(userId, ExtendedFastingSettings.Create(protocol, targetHours), startedAtUtc, title);
     }
 
     public static FastingPlan CreateCyclic(
@@ -96,26 +66,44 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
         DateTime startedAtUtc,
         string? title = null) {
         EnsureUserId(userId);
-        EnsureCyclicDays(fastDays, eatDays);
-        EnsureIntermittentHours(eatDayFastHours, eatDayEatingWindowHours);
+        return CreateWithSettings(userId,
+            CyclicFastingSettings.FromDateTimeEncoding(fastDays, eatDays, eatDayFastHours, eatDayEatingWindowHours, anchorDateUtc),
+            startedAtUtc, title);
+    }
 
-        DateTime normalizedAnchorDate = NormalizeDate(anchorDateUtc, nameof(anchorDateUtc));
-
+    public static FastingPlan CreateWithSettings(UserId userId, FastingPlanSettings settings, DateTime startedAtUtc, string? title = null) {
+        EnsureUserId(userId);
+        ArgumentNullException.ThrowIfNull(settings);
+        if (settings is not (IntermittentFastingSettings or ExtendedFastingSettings or CyclicFastingSettings)) {
+            throw new ArgumentOutOfRangeException(nameof(settings), "Unsupported fasting plan settings.");
+        }
         var plan = new FastingPlan {
             Id = FastingPlanId.New(),
             UserId = userId,
-            Type = FastingPlanType.Cyclic,
+            Type = settings.Type,
             Status = FastingPlanStatus.Active,
             Title = NormalizeTitle(title),
             StartedAtUtc = NormalizeTimestamp(startedAtUtc, nameof(startedAtUtc)),
-            CyclicFastDays = fastDays,
-            CyclicEatDays = eatDays,
-            CyclicEatDayFastHours = eatDayFastHours,
-            CyclicEatDayEatingWindowHours = eatDayEatingWindowHours,
-            CyclicAnchorDateUtc = normalizedAnchorDate,
-            CyclicNextPhaseDateUtc = normalizedAnchorDate,
         };
-
+        switch (settings) {
+            case IntermittentFastingSettings intermittent:
+                plan.Protocol = intermittent.Protocol;
+                plan.IntermittentFastHours = intermittent.Window.FastHours;
+                plan.IntermittentEatingWindowHours = intermittent.Window.EatingWindowHours;
+                break;
+            case ExtendedFastingSettings extended:
+                plan.Protocol = extended.Protocol;
+                plan.ExtendedTargetHours = extended.TargetHours;
+                break;
+            case CyclicFastingSettings cyclic:
+                plan.CyclicFastDays = cyclic.FastDays;
+                plan.CyclicEatDays = cyclic.EatDays;
+                plan.CyclicEatDayFastHours = cyclic.EatingDayWindow.FastHours;
+                plan.CyclicEatDayEatingWindowHours = cyclic.EatingDayWindow.EatingWindowHours;
+                plan.CyclicAnchorDateUtc = cyclic.AnchorDay.ToUtcDateTime();
+                plan.CyclicNextPhaseDateUtc = plan.CyclicAnchorDateUtc;
+                break;
+        }
         plan.SetCreated();
         return plan;
     }
@@ -177,6 +165,8 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
         SetModified();
     }
 
+    public void ScheduleNextCyclicDay(FastingCycleDay day) => ScheduleNextCyclicPhase(day.ToUtcDateTime());
+
     private static DateTime NormalizeTimestamp(DateTime value, string paramName) {
         return value.Kind == DateTimeKind.Unspecified ? throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.") : value.ToUniversalTime();
     }
@@ -203,19 +193,19 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
         }
     }
 
-    private static void EnsureIntermittentProtocol(FastingProtocol protocol) {
+    internal static void EnsureIntermittentProtocol(FastingProtocol protocol) {
         if (protocol is not (FastingProtocol.Fast16Eat8 or FastingProtocol.Fast18Eat6 or FastingProtocol.Fast20Eat4 or FastingProtocol.CustomIntermittent)) {
             throw new ArgumentOutOfRangeException(nameof(protocol), "Protocol is not valid for intermittent fasting.");
         }
     }
 
-    private static void EnsureExtendedProtocol(FastingProtocol protocol) {
+    internal static void EnsureExtendedProtocol(FastingProtocol protocol) {
         if (protocol is not (FastingProtocol.Fast24 or FastingProtocol.Fast36 or FastingProtocol.Fast72 or FastingProtocol.Custom)) {
             throw new ArgumentOutOfRangeException(nameof(protocol), "Protocol is not valid for extended fasting.");
         }
     }
 
-    private static void EnsureIntermittentHours(int fastHours, int eatingWindowHours) {
+    internal static void EnsureIntermittentHours(int fastHours, int eatingWindowHours) {
         if (fastHours is < MinIntermittentHours or > 23) {
             throw new ArgumentOutOfRangeException(nameof(fastHours), "Fast hours must be in range [1, 23].");
         }
@@ -229,13 +219,13 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
         }
     }
 
-    private static void EnsureExtendedTargetHours(int targetHours) {
+    internal static void EnsureExtendedTargetHours(int targetHours) {
         if (targetHours is < MinIntermittentHours or > MaxExtendedHours) {
             throw new ArgumentOutOfRangeException(nameof(targetHours), $"Extended fasting target must be between {MinIntermittentHours} and {MaxExtendedHours} hours.");
         }
     }
 
-    private static void EnsureCyclicDays(int fastDays, int eatDays) {
+    internal static void EnsureCyclicDays(int fastDays, int eatDays) {
         if (fastDays is < 1 or > MaxCycleDays) {
             throw new ArgumentOutOfRangeException(nameof(fastDays), $"Fast days must be in range [1, {MaxCycleDays}].");
         }

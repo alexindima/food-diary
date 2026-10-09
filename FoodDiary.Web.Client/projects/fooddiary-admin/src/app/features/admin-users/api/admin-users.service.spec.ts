@@ -5,6 +5,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import type { AdminUser } from '../models/admin-user.models';
 import { AdminUsersService } from './admin-users.service';
 
@@ -39,11 +40,11 @@ describe('AdminUsersService', () => {
         const response = {
             data: [
                 {
-                    id: 'u1',
+                    id: adminId<'user'>('u1'),
                     email: 'user@example.com',
                     isActive: true,
                     isEmailConfirmed: true,
-                    createdOnUtc: '2026-01-01T00:00:00Z',
+                    createdOnUtc: adminUtcInstant('2026-01-01T00:00:00Z'),
                     roles: ['Admin'],
                 },
             ],
@@ -87,7 +88,7 @@ describe('AdminUsersService', () => {
             language: 'ru',
         };
 
-        service.updateUser('u1', payload).subscribe(result => {
+        service.updateUser(adminId<'user'>('u1'), payload).subscribe(result => {
             expect(result.id).toBe('u1');
             expect(result.language).toBe('ru');
         });
@@ -107,7 +108,7 @@ describe('AdminUsersService', () => {
     });
 
     it('should patch user password payload', () => {
-        service.setPassword('u1', { newPassword: 'NewPassword123!' }).subscribe(result => {
+        service.setPassword(adminId<'user'>('u1'), { newPassword: 'NewPassword123!' }).subscribe(result => {
             expect(result).toBeNull();
         });
 
@@ -118,7 +119,7 @@ describe('AdminUsersService', () => {
     });
 
     it('should request user details by id', () => {
-        service.getUser('u1').subscribe(result => {
+        service.getUser(adminId<'user'>('u1')).subscribe(result => {
             expect(result.id).toBe('u1');
         });
 
@@ -157,7 +158,7 @@ describe('AdminUsersService', () => {
     });
 
     it('should request user role audit by user id', () => {
-        service.getUserRoleAudit('u1', ROLE_AUDIT_LIMIT).subscribe(result => {
+        service.getUserRoleAudit(adminId<'user'>('u1'), ROLE_AUDIT_LIMIT).subscribe(result => {
             expect(result).toEqual([]);
         });
 

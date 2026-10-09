@@ -4,6 +4,8 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { FastingService } from './fasting.service';
 import { FASTING_API_LIMITS } from './fasting-api.tokens';
 
@@ -11,8 +13,8 @@ const BASE_URL = environment.apiUrls.fasting;
 const DEFAULT_HISTORY_PAGE_SIZE = 10;
 const CUSTOM_HISTORY_PAGE_SIZE = 7;
 const SESSION_RESPONSE = {
-    id: 'session-1',
-    startedAtUtc: '2026-04-12T06:00:00Z',
+    id: entityId<'fasting-session'>('session-1'),
+    startedAtUtc: utcInstant('2026-04-12T06:00:00Z'),
     endedAtUtc: null,
     initialPlannedDurationHours: 16,
     addedDurationHours: 0,

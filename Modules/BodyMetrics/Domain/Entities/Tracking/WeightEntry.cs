@@ -1,4 +1,3 @@
-using System.Globalization;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -8,8 +7,6 @@ using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects;
 namespace FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 
 public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
-    private const double MaxWeight = DesiredWeightKg.MaxValue;
-
     public UserId UserId { get; private set; }
     public DateTime Date { get; private set; }
     public double WeightKg { get; private set; }
@@ -27,12 +24,17 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
 
     public static WeightEntry CreateForDay(UserId userId, MeasurementDay day, double weight) {
         EnsureUserId(userId);
-        double normalizedWeight = NormalizeWeight(weight);
+        return CreateWithMeasurement(userId, day, MeasuredWeightKg.Create(weight));
+    }
+
+    public static WeightEntry CreateWithMeasurement(UserId userId, MeasurementDay day, MeasuredWeightKg weight) {
+        EnsureUserId(userId);
+        ArgumentNullException.ThrowIfNull(weight);
 
         var entry = new WeightEntry(WeightEntryId.New()) {
             UserId = userId,
             Date = day.ToUtcDateTime(),
-            WeightKg = normalizedWeight,
+            WeightKg = weight.Value,
         };
 
         entry.SetCreated();
@@ -44,10 +46,14 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
     }
 
     public void UpdateDetails(double? weight = null, MeasurementDay? day = null) {
+        UpdateMeasurement(weight.HasValue ? MeasuredWeightKg.Create(weight.Value) : null, day);
+    }
+
+    public void UpdateMeasurement(MeasuredWeightKg? weight = null, MeasurementDay? day = null) {
         bool changed = false;
 
-        if (weight.HasValue) {
-            double normalizedWeight = NormalizeWeight(weight.Value);
+        if (weight is not null) {
+            double normalizedWeight = weight.Value;
             if (!AreSame(WeightKg, normalizedWeight)) {
                 WeightKg = normalizedWeight;
                 changed = true;
@@ -65,16 +71,6 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
         if (changed) {
             SetModified();
         }
-    }
-
-    private static double NormalizeWeight(double value) {
-        if (double.IsNaN(value) || double.IsInfinity(value)) {
-            throw new ArgumentOutOfRangeException(nameof(value), "WeightKg must be a finite number.");
-        }
-
-        return value is <= 0 or > MaxWeight
-            ? throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $"WeightKg must be in range (0, {MaxWeight}]."))
-            : value;
     }
 
     private static void EnsureUserId(UserId userId) {

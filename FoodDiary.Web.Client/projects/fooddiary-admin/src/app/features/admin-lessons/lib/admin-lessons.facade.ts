@@ -1,6 +1,7 @@
 import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
+import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminLessonsService } from '../api/admin-lessons.service';
 import type {
     AdminLesson,
@@ -22,7 +23,7 @@ export class AdminLessonsFacade {
         return this.lessonsService.create(request);
     }
 
-    public update(id: string, request: AdminLessonUpdateRequest): Observable<AdminLesson> {
+    public update(id: AdminId<'lesson'>, request: AdminLessonUpdateRequest): Observable<AdminLesson> {
         return this.lessonsService.update(id, request);
     }
 
@@ -30,7 +31,7 @@ export class AdminLessonsFacade {
         return this.lessonsService.importLessons(request);
     }
 
-    public delete(id: string): Observable<void> {
+    public delete(id: AdminId<'lesson'>): Observable<void> {
         return this.lessonsService.delete(id);
     }
 }

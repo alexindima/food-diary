@@ -8,6 +8,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
 import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
+import { imageSelection } from '../../../shared/models/image-upload.data';
 import { ImageUploadFieldComponent } from '../image-upload-field/image-upload-field';
 import { ImageGalleryEditorComponent } from './image-gallery-editor';
 
@@ -25,7 +26,7 @@ describe('ImageGalleryEditorComponent upload errors', () => {
         });
         vi.spyOn(TestBed.inject(TranslateService), 'instant').mockReturnValue('Only images');
         const fixture = TestBed.createComponent(ImageGalleryEditorComponent);
-        const photo = { assetId: 'existing-photo', url: 'https://example.com/photo.png' };
+        const photo = imageSelection('https://example.com/photo.png', 'existing-photo');
         fixture.componentRef.setInput('editor', true);
         fixture.componentRef.setInput('photos', [photo]);
         fixture.detectChanges();
@@ -63,8 +64,8 @@ describe('ImageGalleryEditorComponent preview focus', () => {
         const fixture = TestBed.createComponent(ImageGalleryEditorComponent);
         fixture.componentRef.setInput('editor', true);
         fixture.componentRef.setInput('photos', [
-            { assetId: 'photo-1', url: 'https://example.com/one.png' },
-            { assetId: 'photo-2', url: 'https://example.com/two.png' },
+            imageSelection('https://example.com/one.png', 'photo-1'),
+            imageSelection('https://example.com/two.png', 'photo-2'),
         ]);
         fixture.detectChanges();
         const host = fixture.nativeElement as HTMLElement;

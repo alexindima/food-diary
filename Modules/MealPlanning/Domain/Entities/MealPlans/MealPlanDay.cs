@@ -1,3 +1,4 @@
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
@@ -34,6 +35,11 @@ public sealed class MealPlanDay : Entity<MealPlanDayId> {
         };
         day.SetCreated();
         return day;
+    }
+
+    public MealPlanMeal AddMealWithServings(MealType mealType, RecipeId recipeId, PlannedServings servings) {
+        ArgumentNullException.ThrowIfNull(servings);
+        return AddMeal(mealType, recipeId, servings.Value);
     }
 
     public MealPlanMeal AddMeal(MealType mealType, RecipeId recipeId, int servings = 1) =>

@@ -7,12 +7,13 @@ import { describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { User } from '../../../../shared/models/user.data';
 import type { AuthResponse, ConfirmPasswordResetRequest } from '../../models/auth.data';
 import { PasswordResetComponent } from './password-reset';
 
 const USER: User = {
-    id: 'user-1',
+    id: entityId<'user'>('user-1'),
     email: 'user@example.com',
     hasPassword: true,
     pushNotificationsEnabled: true,

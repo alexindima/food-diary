@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -19,6 +20,13 @@ public sealed class ImageAsset : Entity<ImageAssetId> {
         ObjectKey = objectKey;
         Url = url;
         IsConfirmed = isConfirmed;
+    }
+
+    public static ImageAsset CreateWithLocation(UserId userId, ObjectStorageKey objectKey, PublicImageUrl url) {
+        EnsureUserId(userId);
+        ArgumentNullException.ThrowIfNull(objectKey);
+        ArgumentNullException.ThrowIfNull(url);
+        return Create(userId, objectKey.Value, url.Value);
     }
 
     public static ImageAsset Create(UserId userId, string objectKey, string url) {

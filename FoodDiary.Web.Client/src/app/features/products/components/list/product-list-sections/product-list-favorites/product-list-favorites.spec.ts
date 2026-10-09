@@ -6,6 +6,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../../../services/auth.service';
 import type { FavoriteProduct } from '../../../../../../shared/models/product.data';
+import { utcInstant } from '../../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../../shared/models/semantics/entity-id';
 import { ProductListFavoritesComponent } from './product-list-favorites';
 
 const DEFAULT_PORTION_AMOUNT = 100;
@@ -100,10 +102,10 @@ async function setupComponentAsync(
 
 function createFavoriteProduct(): FavoriteProduct {
     return {
-        id: 'favorite-1',
-        productId: 'product-1',
+        id: entityId<'favorite-product'>('favorite-1'),
+        productId: entityId<'product'>('product-1'),
         name: 'Apple',
-        createdAtUtc: '2026-04-05T10:30:00Z',
+        createdAtUtc: utcInstant('2026-04-05T10:30:00Z'),
         productName: 'Apple',
         brand: 'Garden',
         barcode: '1234567890123',

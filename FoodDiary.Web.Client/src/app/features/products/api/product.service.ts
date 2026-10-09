@@ -16,6 +16,7 @@ import type {
     ProductSearchSuggestion,
     UpdateProductRequest,
 } from '../../../shared/models/product.data';
+import type { ProductId } from '../../../shared/models/semantics/entity-id';
 import { PRODUCT_API_LIMITS } from './product-api.tokens';
 import { productFromSdk, productOverviewFromSdk, productPageFromSdk } from './product-sdk.mapper';
 
@@ -44,7 +45,7 @@ export class ProductService {
             );
     }
 
-    public getById(id: string): Observable<Product | null> {
+    public getById(id: ProductId): Observable<Product | null> {
         return this.sdk.client.getProductById({ version: this.sdk.version, id }).pipe(
             map(productFromSdk),
             catchError((error: unknown) => fallbackApiError('Get product error', error, null)),
@@ -115,21 +116,21 @@ export class ProductService {
         );
     }
 
-    public update(id: string, data: UpdateProductRequest): Observable<Product> {
+    public update(id: ProductId, data: UpdateProductRequest): Observable<Product> {
         return this.sdk.client.updateProduct({ version: this.sdk.version, id, updateProductHttpRequest: data }).pipe(
             map(productFromSdk),
             catchError((error: unknown) => rethrowApiError('Update product error', error)),
         );
     }
 
-    public deleteById(id: string): Observable<void> {
+    public deleteById(id: ProductId): Observable<void> {
         return this.sdk.client.deleteProduct({ version: this.sdk.version, id }).pipe(
             map(() => {}),
             catchError((error: unknown) => rethrowApiError('Delete product error', error)),
         );
     }
 
-    public duplicate(id: string): Observable<Product> {
+    public duplicate(id: ProductId): Observable<Product> {
         return this.sdk.client.duplicateProduct({ version: this.sdk.version, id }).pipe(
             map(productFromSdk),
             catchError((error: unknown) => rethrowApiError('Duplicate product error', error)),

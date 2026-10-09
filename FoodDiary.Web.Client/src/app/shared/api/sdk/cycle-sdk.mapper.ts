@@ -1,3 +1,5 @@
+import type { MenstrualEpisode } from '../../models/cycle.data';
+import type { CycleFactor } from '../../models/cycle.data';
 import type {
     BleedingEntry,
     CycleLogDay,
@@ -8,7 +10,10 @@ import type {
 } from '../../models/cycle.data';
 import type { CyclePredictionRevision, CyclePredictions } from '../../models/cycle.data';
 import * as cycleValues from '../../models/cycle.data';
+import { calendarDate, optionalCalendarDate, optionalUtcInstant, utcInstant } from '../../models/semantics/date-value';
+import { entityId } from '../../models/semantics/entity-id';
 import type { BleedingEntryHttpResponse } from './generated/model/bleeding-entry-http-response';
+import type { CycleFactorHttpResponse } from './generated/model/cycle-factor-http-response';
 import type { CycleHttpResponse } from './generated/model/cycle-http-response';
 import type { CycleLogDayHttpResponse } from './generated/model/cycle-log-day-http-response';
 import type { CycleNutritionSummaryHttpResponse } from './generated/model/cycle-nutrition-summary-http-response';
@@ -16,6 +21,7 @@ import type { CyclePredictionRevisionHttpResponse } from './generated/model/cycl
 import type { CyclePredictionsHttpResponse } from './generated/model/cycle-predictions-http-response';
 import type { CycleSymptomEntryHttpResponse } from './generated/model/cycle-symptom-entry-http-response';
 import type { FertilitySignalHttpResponse } from './generated/model/fertility-signal-http-response';
+import type { MenstrualEpisodeHttpResponse } from './generated/model/menstrual-episode-http-response';
 import { requireSdkFields, sdkEnum, sdkMaybe } from './sdk-response';
 
 function bleedingFromSdk(response: BleedingEntryHttpResponse): BleedingEntry {
@@ -29,6 +35,10 @@ function bleedingFromSdk(response: BleedingEntryHttpResponse): BleedingEntry {
             cycleValues.CYCLE_FLOW_MEDIUM,
             cycleValues.CYCLE_FLOW_HEAVY,
         ] as const),
+
+        id: entityId<'bleeding-entry'>(value.id),
+        cycleProfileId: entityId<'cycle-profile'>(value.cycleProfileId),
+        date: calendarDate(value.date),
     };
 }
 
@@ -51,12 +61,22 @@ function symptomFromSdk(response: CycleSymptomEntryHttpResponse): CycleSymptomEn
             cycleValues.CYCLE_SYMPTOM_CATEGORY_LIBIDO,
             cycleValues.CYCLE_SYMPTOM_CATEGORY_OTHER,
         ] as const),
+
+        id: entityId<'cycle-symptom-entry'>(value.id),
+        cycleProfileId: entityId<'cycle-profile'>(value.cycleProfileId),
+        date: calendarDate(value.date),
     };
 }
 
 function fertilityFromSdk(response: FertilitySignalHttpResponse): FertilitySignal {
     const value = requireSdkFields(response, ['id', 'cycleProfileId', 'date']);
-    return { ...value, ovulationTestResult: sdkMaybe(value.ovulationTestResult, result => sdkEnum(result, [0, 1, 2] as const)) };
+    return {
+        ...value,
+        ovulationTestResult: sdkMaybe(value.ovulationTestResult, result => sdkEnum(result, [0, 1, 2] as const)),
+        id: entityId<'fertility-signal'>(value.id),
+        cycleProfileId: entityId<'cycle-profile'>(value.cycleProfileId),
+        date: calendarDate(value.date),
+    };
 }
 
 export function cycleDayFromSdk(response: CycleLogDayHttpResponse): CycleLogDay {
@@ -66,6 +86,40 @@ export function cycleDayFromSdk(response: CycleLogDayHttpResponse): CycleLogDay 
         bleedingEntries: value.bleedingEntries.map(bleedingFromSdk),
         symptoms: value.symptoms.map(symptomFromSdk),
         fertilitySignal: sdkMaybe(value.fertilitySignal, fertilityFromSdk),
+
+        cycleProfileId: entityId<'cycle-profile'>(value.cycleProfileId),
+        date: calendarDate(value.date),
+    };
+}
+
+function factorFromSdk(responseFactor: CycleFactorHttpResponse): CycleFactor {
+    const factor = requireSdkFields(responseFactor, ['id', 'cycleProfileId', 'type', 'startDate']);
+    return {
+        ...factor,
+        id: entityId<'cycle-factor'>(factor.id),
+        cycleProfileId: entityId<'cycle-profile'>(factor.cycleProfileId),
+        startDate: calendarDate(factor.startDate),
+        endDate: optionalCalendarDate(factor.endDate),
+        type: sdkEnum(factor.type, [
+            cycleValues.CYCLE_FACTOR_TYPE_PREGNANCY,
+            cycleValues.CYCLE_FACTOR_TYPE_LACTATION,
+            cycleValues.CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+            cycleValues.CYCLE_FACTOR_TYPE_NON_HORMONAL_CONTRACEPTION,
+            cycleValues.CYCLE_FACTOR_TYPE_POSTPARTUM,
+            cycleValues.CYCLE_FACTOR_TYPE_PERIMENOPAUSE,
+            cycleValues.CYCLE_FACTOR_TYPE_NO_PERIOD,
+        ] as const),
+    };
+}
+
+function episodeFromSdk(episode: MenstrualEpisodeHttpResponse): MenstrualEpisode {
+    const mapped = requireSdkFields(episode, ['id', 'cycleProfileId', 'startDate', 'status', 'excludedFromPredictions']);
+    return {
+        ...mapped,
+        id: entityId<'menstrual-episode'>(mapped.id),
+        cycleProfileId: entityId<'cycle-profile'>(mapped.cycleProfileId),
+        startDate: calendarDate(mapped.startDate),
+        endDate: optionalCalendarDate(mapped.endDate),
     };
 }
 
@@ -119,32 +173,29 @@ export function cycleFromSdk(response: CycleHttpResponse): CycleResponse {
         ] as const),
         bleedingEntries: value.bleedingEntries.map(bleedingFromSdk),
         symptoms: value.symptoms.map(symptomFromSdk),
-        factors: value.factors.map(responseFactor => {
-            const factor = requireSdkFields(responseFactor, ['id', 'cycleProfileId', 'type', 'startDate']);
-            return {
-                ...factor,
-                type: sdkEnum(factor.type, [
-                    cycleValues.CYCLE_FACTOR_TYPE_PREGNANCY,
-                    cycleValues.CYCLE_FACTOR_TYPE_LACTATION,
-                    cycleValues.CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
-                    cycleValues.CYCLE_FACTOR_TYPE_NON_HORMONAL_CONTRACEPTION,
-                    cycleValues.CYCLE_FACTOR_TYPE_POSTPARTUM,
-                    cycleValues.CYCLE_FACTOR_TYPE_PERIMENOPAUSE,
-                    cycleValues.CYCLE_FACTOR_TYPE_NO_PERIOD,
-                ] as const),
-            };
-        }),
+        factors: value.factors.map(factorFromSdk),
         fertilitySignals: value.fertilitySignals.map(fertilityFromSdk),
-        menstrualEpisodes: value.menstrualEpisodes?.map(episode =>
-            requireSdkFields(episode, ['id', 'cycleProfileId', 'startDate', 'status', 'excludedFromPredictions']),
-        ),
+        menstrualEpisodes: value.menstrualEpisodes?.map(episodeFromSdk),
         consents: value.consents?.map(responseConsent => {
             const consent = requireSdkFields(responseConsent, ['id', 'purpose', 'grantedAtUtc', 'isActive']);
-            return { ...consent, purpose: sdkEnum(consent.purpose, [0, 1, 2] as const) };
+            return {
+                ...consent,
+                id: entityId<'cycle-consent'>(consent.id),
+                grantedAtUtc: utcInstant(consent.grantedAtUtc),
+                revokedAtUtc: optionalUtcInstant(consent.revokedAtUtc),
+                purpose: sdkEnum(consent.purpose, [0, 1, 2] as const),
+            };
         }),
-        dayNotes: value.dayNotes?.map(note => requireSdkFields(note, ['date', 'notes'])),
+        dayNotes: value.dayNotes?.map(note => {
+            const mapped = requireSdkFields(note, ['date', 'notes']);
+            return { ...mapped, date: calendarDate(mapped.date) };
+        }),
         predictions: sdkMaybe(value.predictions, predictionsFromSdk),
         predictionRevisions: value.predictionRevisions?.map(predictionRevisionFromSdk),
+
+        id: entityId<'cycle-profile'>(value.id),
+        userId: entityId<'user'>(value.userId),
+        trackingStartDate: calendarDate(value.trackingStartDate),
     };
 }
 
@@ -156,11 +207,18 @@ function predictionsFromSdk(response: CyclePredictionsHttpResponse): CyclePredic
         patternConsistency: value.patternConsistency ?? undefined,
         reasonCodes: value.reasonCodes ?? undefined,
         algorithmVersion: value.algorithmVersion ?? undefined,
+
+        nextPeriodStartFrom: optionalCalendarDate(value.nextPeriodStartFrom),
+        nextPeriodStartTo: optionalCalendarDate(value.nextPeriodStartTo),
+        ovulationFrom: optionalCalendarDate(value.ovulationFrom),
+        ovulationTo: optionalCalendarDate(value.ovulationTo),
+        pmsWindowStart: optionalCalendarDate(value.pmsWindowStart),
+        pmsWindowEnd: optionalCalendarDate(value.pmsWindowEnd),
     };
 }
 
 function predictionRevisionFromSdk(value: CyclePredictionRevisionHttpResponse): CyclePredictionRevision {
-    return requireSdkFields(value, [
+    const mapped = requireSdkFields(value, [
         'id',
         'generatedAtUtc',
         'confidence',
@@ -171,6 +229,13 @@ function predictionRevisionFromSdk(value: CyclePredictionRevisionHttpResponse): 
         'reasonCodes',
         'algorithmVersion',
     ]);
+    return {
+        ...mapped,
+        id: entityId<'cycle-prediction-revision'>(mapped.id),
+        generatedAtUtc: utcInstant(mapped.generatedAtUtc),
+        nextPeriodStartFrom: optionalCalendarDate(mapped.nextPeriodStartFrom),
+        nextPeriodStartTo: optionalCalendarDate(mapped.nextPeriodStartTo),
+    };
 }
 
 export function cycleNutritionFromSdk(response: CycleNutritionSummaryHttpResponse): CycleNutritionSummary {
@@ -192,5 +257,8 @@ export function cycleNutritionFromSdk(response: CycleNutritionSummaryHttpRespons
         dataSufficiency: value.dataSufficiency ?? undefined,
         reasonCodes: value.reasonCodes ?? undefined,
         algorithmVersion: value.algorithmVersion ?? undefined,
+
+        dateFrom: calendarDate(value.dateFrom),
+        dateTo: calendarDate(value.dateTo),
     };
 }

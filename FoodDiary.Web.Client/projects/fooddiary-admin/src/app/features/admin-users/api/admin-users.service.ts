@@ -6,6 +6,7 @@ import { environment } from '../../../../environments/environment';
 import { AdminUsersSdk } from '../../../shared/api/sdk/generated/api/admin-users.service';
 import { createSdkConnection, sdkRequestOptions } from '../../../shared/api/sdk/sdk-connection';
 import { sdkPage } from '../../../shared/api/sdk/sdk-response';
+import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 import type {
     AdminImpersonationSession,
     AdminImpersonationStart,
@@ -77,13 +78,13 @@ export class AdminUsersService {
             );
     }
 
-    public updateUser(userId: string, payload: AdminUserUpdate): Observable<AdminUser> {
+    public updateUser(userId: AdminId<'user'>, payload: AdminUserUpdate): Observable<AdminUser> {
         return this.sdk.client
             .patchAdminUsersById({ version: this.sdk.version, id: userId, adminUserUpdateHttpRequest: payload })
             .pipe(map(adminUserFromSdk));
     }
 
-    public setPassword(userId: string, payload: AdminUserSetPassword): Observable<void> {
+    public setPassword(userId: AdminId<'user'>, payload: AdminUserSetPassword): Observable<void> {
         return this.sdk.client.patchAdminUsersByIdPassword({
             version: this.sdk.version,
             id: userId,
@@ -91,18 +92,18 @@ export class AdminUsersService {
         });
     }
 
-    public getUser(userId: string): Observable<AdminUser> {
+    public getUser(userId: AdminId<'user'>): Observable<AdminUser> {
         return this.sdk.client.getAdminUsersById({ version: this.sdk.version, id: userId }).pipe(map(adminUserFromSdk));
     }
 
-    public getUserRoleAudit(userId: string, limit = DEFAULT_ROLE_AUDIT_LIMIT): Observable<AdminUserRoleAuditEvent[]> {
+    public getUserRoleAudit(userId: AdminId<'user'>, limit = DEFAULT_ROLE_AUDIT_LIMIT): Observable<AdminUserRoleAuditEvent[]> {
         const params = new HttpParams().set('limit', limit);
         return this.sdk.client
             .getAdminUsersByIdRoleAudit({ version: this.sdk.version, id: userId }, 'body', false, sdkRequestOptions(undefined, params))
             .pipe(map(items => items.map(adminUserRoleAuditEventFromSdk)));
     }
 
-    public startImpersonation(userId: string, reason: string): Observable<AdminImpersonationStart> {
+    public startImpersonation(userId: AdminId<'user'>, reason: string): Observable<AdminImpersonationStart> {
         return this.sdk.client
             .postAdminUsersByIdImpersonation({ version: this.sdk.version, id: userId, adminImpersonationStartHttpRequest: { reason } })
             .pipe(map(adminImpersonationStartFromSdk));

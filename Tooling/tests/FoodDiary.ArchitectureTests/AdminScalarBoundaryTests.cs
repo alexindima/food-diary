@@ -33,8 +33,12 @@ public sealed class AdminScalarBoundaryTests {
     public void Scalars_HaveOneNarrowOwner(Type type, string owner, string folder) {
         string projectName = $"FoodDiary.Modules.{owner}.Domain.Contracts";
         Assert.Equal(projectName, type.Assembly.GetName().Name);
-        string[] expectedReferences = string.Equals(owner, "ContentReports", StringComparison.Ordinal)
-            ? ["FoodDiary.Domain.Primitives"] : [];
+        string[] expectedReferences = owner switch {
+            "Billing" => ["FoodDiary.Domain.Primitives"],
+            "ContentReports" => ["FoodDiary.Domain.Primitives", "FoodDiary.Modules.RecipeCommunity.Domain.Contracts", "FoodDiary.Modules.Recipes.Domain.Contracts"],
+            "Gamification" => [],
+            _ => throw new ArgumentOutOfRangeException(nameof(owner)),
+        };
         Assert.Equal(expectedReferences, ProjectReferenceReader.ReadProjectReferences(
             $"Modules/{owner}/Domain.Contracts/{projectName}.csproj"));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
@@ -43,8 +47,8 @@ public sealed class AdminScalarBoundaryTests {
             $"Modules/{owner}/Domain/{folder}/{type.Name}.cs")));
 
         string[] expectedTypes = owner switch {
-            "Billing" => ["FoodDiary.Modules.Billing.Domain.Contracts.BillingPremiumAccessPolicy", "FoodDiary.Modules.Billing.Domain.Contracts.BillingProviderNames"],
-            "ContentReports" => ["FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportStatus", "FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportTargetType", "FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.Ids.ContentReportId"],
+            "Billing" => ["FoodDiary.Modules.Billing.Domain.Contracts.BillingPremiumAccessPolicy", "FoodDiary.Modules.Billing.Domain.Contracts.BillingProviderNames", "FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingPaymentId", "FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingSubscriptionId", "FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingWebhookEventId"],
+            "ContentReports" => ["FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportStatus", "FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportTargetType", "FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.Ids.ContentReportId", "FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.ReportTarget"],
             "Gamification" => ["FoodDiary.Modules.Gamification.Domain.Contracts.Entities.Achievements.AchievementDefinitionLimits", "FoodDiary.Modules.Gamification.Domain.Contracts.Enums.AchievementMetric"],
             _ => throw new ArgumentOutOfRangeException(nameof(owner)),
         };

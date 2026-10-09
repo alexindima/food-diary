@@ -2,6 +2,7 @@ import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
+import { imageSelection } from '../../../shared/models/image-upload.data';
 import { type ActivityLevelOption, Gender, UpdateUserDto, type User } from '../../../shared/models/user.data';
 import {
     APP_THEMES,
@@ -191,7 +192,7 @@ function isActivityLevelOption(value: string): value is ActivityLevelOption {
 
 function mapUserProfileImage(user: User): ImageSelection | null {
     const profileImage = user.profileImage ?? '';
-    return profileImage.length > 0 ? { url: profileImage, assetId: toNullable(user.profileImageAssetId) } : null;
+    return profileImage.length > 0 ? imageSelection(profileImage, toNullable(user.profileImageAssetId)) : null;
 }
 
 function toNullable<T>(value: T | null | undefined): T | null {

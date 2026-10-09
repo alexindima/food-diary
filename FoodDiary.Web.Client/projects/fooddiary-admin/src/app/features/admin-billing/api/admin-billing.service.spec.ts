@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import type { AdminBillingPayment } from '../models/admin-billing.models';
 import { AdminBillingService } from './admin-billing.service';
 
@@ -157,8 +158,8 @@ function createPaymentsResponse(): {
     return {
         data: [
             {
-                id: 'payment-1',
-                userId: 'user-1',
+                id: adminId<'billing-payment'>('payment-1'),
+                userId: adminId<'user'>('user-1'),
                 userEmail: 'buyer@example.com',
                 provider: 'Paddle',
                 externalPaymentId: 'pay_123',
@@ -166,7 +167,7 @@ function createPaymentsResponse(): {
                 kind: 'webhook',
                 amount: 7.99,
                 currency: 'USD',
-                createdOnUtc: '2026-04-28T00:00:00Z',
+                createdOnUtc: adminUtcInstant('2026-04-28T00:00:00Z'),
             },
         ],
         page: PAGE,

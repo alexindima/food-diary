@@ -5,6 +5,7 @@ import { type Observable, of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { adminId, adminUtcInstant, optionalAdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminMailMessageDialogComponent } from '../dialogs/admin-mail-message-dialog';
 import { AdminMailInboxFacade } from '../lib/admin-mail-inbox.facade';
 import type { AdminMailInboxMessagePage } from '../models/admin-mail-inbox.data';
@@ -27,15 +28,15 @@ describe('AdminMailInboxComponent row activation', () => {
                                 totalItems: 1,
                                 items: [
                                     {
-                                        id: 'mail-1',
+                                        id: adminId<'mail-inbox-message'>('mail-1'),
                                         subject: 'Test message',
                                         fromAddress: 'sender@example.com',
                                         toRecipients: ['bugs@example.com'],
                                         category: 'general',
                                         status: 'received',
                                         isTrustedRelay: true,
-                                        receivedAtUtc: '2026-09-07T00:00:00Z',
-                                        readAtUtc,
+                                        receivedAtUtc: adminUtcInstant('2026-09-07T00:00:00Z'),
+                                        readAtUtc: optionalAdminUtcInstant(readAtUtc),
                                     },
                                 ],
                             }),

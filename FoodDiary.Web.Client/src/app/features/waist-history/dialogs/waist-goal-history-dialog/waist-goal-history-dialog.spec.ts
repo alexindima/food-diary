@@ -5,6 +5,8 @@ import { of } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { optionalUtcInstant, utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { WaistGoalHistoryItem } from '../../../../shared/models/user.data';
 import { WaistHistoryFacade } from '../../lib/waist-history.facade';
 import { WaistGoalHistoryDialogComponent } from './waist-goal-history-dialog';
@@ -36,12 +38,12 @@ function setup({
 } {
     const history = signal<WaistGoalHistoryItem[]>([
         {
-            id: 'goal',
+            id: entityId<'waist-goal'>('goal'),
             startWaistCm: start,
             targetWaistCm: target,
             endWaistCm: end,
-            startedAtUtc: '2026-01-01',
-            endedAtUtc: status === 'Active' ? null : '2026-02-01',
+            startedAtUtc: utcInstant('2026-01-01'),
+            endedAtUtc: optionalUtcInstant(status === 'Active' ? null : '2026-02-01'),
             status,
         },
     ]);
@@ -97,7 +99,7 @@ describe('Waist goal history dialog', () => {
     });
     it('handles an invalid stored start date without crashing', () => {
         const { fixture, component, history } = setup();
-        history.update(goals => goals.map(g => ({ ...g, startedAtUtc: 'invalid' })));
+        history.update(goals => goals.map(g => ({ ...g, startedAtUtc: utcInstant('invalid') })));
         fixture.detectChanges();
         expect(component['goals']()[0].startDate).toBe('');
     });
@@ -106,7 +108,7 @@ describe('Waist goal history dialog', () => {
 it('places the active goal first without mutating source order and labels historical change', () => {
     const { fixture, history, revision } = setup();
     const active = history()[0];
-    history.set([{ ...active, id: 'cancelled', status: 'Cancelled', endedAtUtc: active.startedAtUtc }, active]);
+    history.set([{ ...active, id: entityId<'waist-goal'>('cancelled'), status: 'Cancelled', endedAtUtc: active.startedAtUtc }, active]);
     revision.update(value => value + 1);
     fixture.detectChanges();
     const root = fixture.nativeElement as HTMLElement;

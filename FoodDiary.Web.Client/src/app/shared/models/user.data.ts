@@ -1,5 +1,7 @@
 import { normalizeStartOfUtcDay, parseDateValue } from '../lib/local-date.utils';
-import type { ImageSelection } from './image-upload.data';
+import type { ImageSelectionFields } from './image-upload.data';
+import type { CalendarDate, UtcInstant } from './semantics/date-value';
+import type { ImageAssetId, UserId, WaistGoalId, WeightGoalId } from './semantics/entity-id';
 
 export type ActivityLevelOption = 'MINIMAL' | 'LIGHT' | 'MODERATE' | 'HIGH' | 'EXTREME';
 export type UiStyleOption = 'classic' | 'modern';
@@ -10,7 +12,7 @@ export type DashboardLayoutSettings = {
 };
 
 export type User = {
-    id: string;
+    id: UserId;
     email: string | null;
     hasPassword: boolean;
     hasGoogleIdentity?: boolean;
@@ -20,7 +22,7 @@ export type User = {
     username?: string;
     firstName?: string;
     lastName?: string;
-    birthDate?: Date | string;
+    birthDate?: CalendarDate;
     gender?: string;
     weightKg?: number;
     desiredWeightKg?: number;
@@ -45,12 +47,12 @@ export type User = {
     fastingCheckInReminderHours: number;
     fastingCheckInFollowUpReminderHours: number;
     profileImage?: string;
-    profileImageAssetId?: string;
+    profileImageAssetId?: ImageAssetId;
     dashboardLayout?: DashboardLayoutSettings | null;
     isActive: boolean;
     isEmailConfirmed: boolean;
-    lastLoginAtUtc?: string | null;
-    aiConsentAcceptedAt?: string | null;
+    lastLoginAtUtc?: UtcInstant | null;
+    aiConsentAcceptedAt?: UtcInstant | null;
     calories?: number;
 };
 
@@ -66,7 +68,7 @@ export type UpdateUserFormValues = {
     activityLevel: ActivityLevelOption | null;
     stepGoal: number | null;
     hydrationGoal?: number | null;
-    profileImage: ImageSelection | string | null;
+    profileImage: ImageSelectionFields | string | null;
     pushNotificationsEnabled?: boolean | null;
     fastingPushNotificationsEnabled?: boolean | null;
     socialPushNotificationsEnabled?: boolean | null;
@@ -185,7 +187,9 @@ const normalizeUiStyle = normalizeLowercaseString;
 
 const normalizeBoolean = (value: boolean | null | undefined): boolean | undefined => value ?? undefined;
 
-const normalizeProfileImage = (value: ImageSelection | string | null | undefined): { url: string; assetId?: string } | null | undefined => {
+const normalizeProfileImage = (
+    value: ImageSelectionFields | string | null | undefined,
+): { url: string; assetId?: string } | null | undefined => {
     if (value === undefined) {
         return undefined;
     }
@@ -220,32 +224,32 @@ export type SetPasswordRequest = {
 export type DesiredWeightResponse = {
     desiredWeightKg: number | null;
     startWeightKg: number | null;
-    startedAtUtc: string | null;
+    startedAtUtc: UtcInstant | null;
 };
 
 export type WeightGoalHistoryItem = {
-    id: string;
+    id: WeightGoalId;
     targetWeightKg: number;
     startWeightKg: number;
     endWeightKg: number | null;
-    startedAtUtc: string;
-    endedAtUtc: string | null;
+    startedAtUtc: UtcInstant;
+    endedAtUtc: UtcInstant | null;
     status: 'Active' | 'Replaced' | 'Cancelled';
 };
 
 export type DesiredWaistResponse = {
     desiredWaistCm: number | null;
     startWaistCm: number | null;
-    startedAtUtc: string | null;
+    startedAtUtc: UtcInstant | null;
 };
 
 export type WaistGoalHistoryItem = {
-    id: string;
+    id: WaistGoalId;
     targetWaistCm: number;
     startWaistCm: number;
     endWaistCm: number | null;
-    startedAtUtc: string;
-    endedAtUtc: string | null;
+    startedAtUtc: UtcInstant;
+    endedAtUtc: UtcInstant | null;
     status: 'Active' | 'Replaced' | 'Cancelled';
 };
 

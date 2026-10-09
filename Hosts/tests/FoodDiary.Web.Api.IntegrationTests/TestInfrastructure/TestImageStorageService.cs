@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 using System.Globalization;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
@@ -43,25 +44,25 @@ public sealed class TestImageStorageService(IOptions<S3Options> options) : IImag
         string uploadUrl = $"{_options.ServiceUrl!.TrimEnd('/')}/{_options.StagingBucket}/{objectKey}";
 
         return Task.FromResult(new PresignedUpload(
-            uploadUrl,
-            $"https://cdn.test.local/{objectKey}",
-            objectKey,
+                SignedImageUploadUrl.FromProviderValue(uploadUrl),
+                PublicImageUrl.FromProviderValue($"https://cdn.test.local/{objectKey}"),
+                ObjectStorageKey.FromStoredValue(objectKey),
             expiresAt));
     }
 
-    public Task DeleteAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken) => Task.CompletedTask;
+    public Task DeleteAsync(ObjectStorageKey key, bool isConfirmed, CancellationToken cancellationToken) => Task.CompletedTask;
 
-    public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) => Task.CompletedTask;
+    public Task DeleteAsync(ObjectStorageKey key, CancellationToken cancellationToken) => Task.CompletedTask;
 
     public Task<ImageObjectValidationResult> ConfirmUploadedObjectAsync(
-        string objectKey,
+        ObjectStorageKey key,
         CancellationToken cancellationToken) =>
         Task.FromResult(new ImageObjectValidationResult(IsValid: true));
 
     public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
-        string objectKey,
+        ObjectStorageKey key,
         CancellationToken cancellationToken) =>
-        ConfirmUploadedObjectAsync(objectKey, cancellationToken);
+        ConfirmUploadedObjectAsync(key, cancellationToken);
 
     private static string NormalizeFileName(string fileName) {
         string nameOnly = Path.GetFileName(fileName);

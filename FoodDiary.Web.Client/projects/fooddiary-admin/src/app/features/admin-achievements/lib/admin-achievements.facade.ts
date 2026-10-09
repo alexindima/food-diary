@@ -1,6 +1,7 @@
 import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
+import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminAchievementsService } from '../api/admin-achievements.service';
 import type {
     AdminAchievementDefinition,
@@ -17,7 +18,10 @@ export class AdminAchievementsFacade {
     public create(request: CreateAdminAchievementDefinitionRequest): Observable<AdminAchievementDefinition> {
         return this.api.create(request);
     }
-    public update(id: string, request: UpdateAdminAchievementDefinitionRequest): Observable<AdminAchievementDefinition> {
+    public update(
+        id: AdminId<'achievement-definition'>,
+        request: UpdateAdminAchievementDefinitionRequest,
+    ): Observable<AdminAchievementDefinition> {
         return this.api.update(id, request);
     }
 }

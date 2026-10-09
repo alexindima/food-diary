@@ -1,3 +1,4 @@
+using FoodDiary.BugTriage.Application.Reports.Identifiers;
 using FoodDiary.BugTriage.Application.Abstractions;
 using FoodDiary.BugTriage.Application.Reports;
 using Npgsql;
@@ -25,10 +26,10 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource, IOptions<B
         return reports;
     }
 
-    public async Task<bool> ContainsAsync(Guid sourceMessageId, CancellationToken cancellationToken) {
+    public async Task<bool> ContainsAsync(SourceMessageId sourceMessageId, CancellationToken cancellationToken) {
         NpgsqlCommand command = dataSource.CreateCommand("select exists(select 1 from bugtriage_reports where source_message_id = @source)");
         await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
-        command.Parameters.AddWithValue("source", sourceMessageId);
+        command.Parameters.AddWithValue("source", sourceMessageId.Value);
         return (bool)(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false))!;
     }
 
@@ -40,7 +41,7 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource, IOptions<B
             """);
         await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
         command.Parameters.AddWithValue("id", Guid.NewGuid());
-        command.Parameters.AddWithValue("source", report.SourceMessageId);
+        command.Parameters.AddWithValue("source", report.SourceMessageId.Value);
         command.Parameters.AddWithValue("received", report.ReceivedAtUtc);
         command.Parameters.AddWithValue("subject", report.Subject);
         command.Parameters.AddWithValue("body", report.TextBody);
@@ -89,15 +90,15 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource, IOptions<B
         NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
         await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable readerScope = reader.ConfigureAwait(false);
         ReportLease? lease = await reader.ReadAsync(cancellationToken).ConfigureAwait(false)
-            ? new ReportLease(reader.GetGuid(0), reader.GetGuid(1), reader.GetString(2), reader.GetString(3),
-                reader.GetGuid(4), await reader.GetFieldValueAsync<DateTimeOffset>(5, cancellationToken).ConfigureAwait(false), reader.GetInt32(6),
+            ? new ReportLease((BugReportId)reader.GetGuid(0), (SourceMessageId)reader.GetGuid(1), reader.GetString(2), reader.GetString(3),
+                (LeaseToken)reader.GetGuid(4), await reader.GetFieldValueAsync<DateTimeOffset>(5, cancellationToken).ConfigureAwait(false), reader.GetInt32(6),
                 await reader.GetFieldValueAsync<DateTimeOffset>(7, cancellationToken).ConfigureAwait(false)) : null;
         await reader.CloseAsync().ConfigureAwait(false);
         await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
         return lease;
     }
 
-    public async Task<bool> RenewAsync(Guid id, Guid token, DateTimeOffset now, TimeSpan duration, CancellationToken cancellationToken) {
+    public async Task<bool> RenewAsync(BugReportId id, LeaseToken token, DateTimeOffset now, TimeSpan duration, CancellationToken cancellationToken) {
         NpgsqlCommand command = dataSource.CreateCommand("""
             update bugtriage_reports set lease_expires_at_utc = least(@expires, expires_at_utc)
             where id = @id and lease_token = @token and status = 'in_progress'
@@ -109,7 +110,7 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource, IOptions<B
         return await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false) == 1;
     }
 
-    public async Task<bool> CompleteAsync(Guid id, Guid token, ReportCompletion completion, DateTimeOffset now, CancellationToken cancellationToken) {
+    public async Task<bool> CompleteAsync(BugReportId id, LeaseToken token, ReportCompletion completion, DateTimeOffset now, CancellationToken cancellationToken) {
         if (!completion.IsValid()) {
             throw new ArgumentException("Invalid report completion.", nameof(completion));
         }
@@ -129,7 +130,7 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource, IOptions<B
         return await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false) == 1;
     }
 
-    public async Task<byte[]?> GetMimeAsync(Guid id, Guid token, DateTimeOffset now, CancellationToken cancellationToken) {
+    public async Task<byte[]?> GetMimeAsync(BugReportId id, LeaseToken token, DateTimeOffset now, CancellationToken cancellationToken) {
         NpgsqlCommand command = dataSource.CreateCommand("""
             select raw_mime from bugtriage_reports where id = @id and lease_token = @token
                 and status = 'in_progress' and lease_expires_at_utc > @now and expires_at_utc > @now
@@ -150,9 +151,9 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource, IOptions<B
         await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    private static void AddLeaseParameters(NpgsqlCommand command, Guid id, Guid token, DateTimeOffset now) {
-        command.Parameters.AddWithValue("id", id);
-        command.Parameters.AddWithValue("token", token);
+    private static void AddLeaseParameters(NpgsqlCommand command, BugReportId id, LeaseToken token, DateTimeOffset now) {
+        command.Parameters.AddWithValue("id", id.Value);
+        command.Parameters.AddWithValue("token", token.Value);
         command.Parameters.AddWithValue("now", now);
     }
 }

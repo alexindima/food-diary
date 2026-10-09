@@ -16,6 +16,7 @@ import {
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
@@ -242,7 +243,7 @@ export class ShoppingListPageComponent {
     }
 
     protected renameListById(listId: string, name: string): void {
-        this.facade.renameListById(listId, name);
+        this.facade.renameListById(entityId<'shopping-list'>(listId), name);
     }
 
     protected clearRenameRequest(listId: string): void {
@@ -268,7 +269,7 @@ export class ShoppingListPageComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(confirmed => {
                 if (confirmed === true) {
-                    this.facade.deleteListById(listId);
+                    this.facade.deleteListById(entityId<'shopping-list'>(listId));
                 }
             });
     }
@@ -310,7 +311,7 @@ export class ShoppingListPageComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(confirmed => {
                 if (confirmed === true) {
-                    this.facade.clearListById(listId);
+                    this.facade.clearListById(entityId<'shopping-list'>(listId));
                 }
             });
     }

@@ -122,6 +122,25 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         return recipe;
     }
 
+    public void UpdateIdentityChanges(RecipeIdentityChanges changes) {
+        ArgumentNullException.ThrowIfNull(changes);
+        ArgumentNullException.ThrowIfNull(changes.Description, nameof(changes));
+        ArgumentNullException.ThrowIfNull(changes.Comment, nameof(changes));
+        ArgumentNullException.ThrowIfNull(changes.Category, nameof(changes));
+        UpdateIdentity(changes.Name,
+            changes.Description.IsSet ? changes.Description.Value : null, changes.Description.IsClear,
+            changes.Comment.IsSet ? changes.Comment.Value : null, changes.Comment.IsClear,
+            changes.Category.IsSet ? changes.Category.Value : null, changes.Category.IsClear);
+    }
+
+    public void UpdateMediaChanges(RecipeMediaChanges changes) {
+        ArgumentNullException.ThrowIfNull(changes);
+        ArgumentNullException.ThrowIfNull(changes.ImageUrl, nameof(changes));
+        ArgumentNullException.ThrowIfNull(changes.ImageAssetId, nameof(changes));
+        UpdateMedia(changes.ImageUrl.IsSet ? changes.ImageUrl.Value : null, changes.ImageUrl.IsClear,
+            changes.ImageAssetId.IsSet ? changes.ImageAssetId.Value : null, changes.ImageAssetId.IsClear);
+    }
+
     public void Update(RecipeUpdate update) {
         ValidateUpdate(update);
         if (update.Visibility.HasValue) {

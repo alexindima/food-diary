@@ -1,5 +1,6 @@
 using FoodDiary.Modules.ContentReports.Domain.Entities;
 using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
 using FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -25,7 +26,10 @@ internal sealed class ContentReportRepository(DbSet<ContentReport> reports) : IC
     }
 
     public async Task<bool> HasUserReportedAsync(
-        UserId userId, ReportTargetType targetType, Guid targetId, CancellationToken cancellationToken = default) {
+        UserId userId, ReportTarget target, CancellationToken cancellationToken = default) {
+        ArgumentNullException.ThrowIfNull(target);
+        ReportTargetType targetType = target.Kind;
+        Guid targetId = target.Id;
         return await reports
             .AsNoTracking()
             .AnyAsync(r => r.UserId == userId && r.TargetType == targetType && r.TargetId == targetId, cancellationToken).ConfigureAwait(false);

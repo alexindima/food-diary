@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Tdee.Application.Common;
 using FoodDiary.Modules.Tdee.Contracts.Models;
 using FoodDiary.Modules.Exercises.Contracts.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
@@ -72,6 +73,17 @@ public static class TdeeCalculator {
             daysWithCalories,
             weightTrendPerWeek);
     }
+
+    public static double? SuggestCalorieTargetForProfile(
+        EstimatedDailyEnergyKcal tdee, CalculationMeasuredWeight? currentWeight, CalculationDesiredWeight? desiredWeight) {
+        ArgumentNullException.ThrowIfNull(tdee);
+        return SuggestCalorieTarget(tdee.Value, currentWeight?.Value, desiredWeight?.Value);
+    }
+
+    public static string? GetGoalAdjustmentHintForProfile(
+        EstimatedDailyEnergyKcal? tdee, DailyCalorieTargetKcal? target,
+        CalculationMeasuredWeight? currentWeight, CalculationDesiredWeight? desiredWeight) =>
+        GetGoalAdjustmentHint(tdee?.Value, target?.Value, currentWeight?.Value, desiredWeight?.Value);
 
     public static double? SuggestCalorieTarget(
         double adaptiveTdee,

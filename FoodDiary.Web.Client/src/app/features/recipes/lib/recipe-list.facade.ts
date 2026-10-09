@@ -8,6 +8,7 @@ import { catchError, EMPTY, filter, finalize, firstValueFrom, map, type Observab
 import { NavigationService } from '../../../services/navigation.service';
 import { PagedData } from '../../../shared/lib/paged-data.data';
 import type { FavoriteRecipe, Recipe, RecipeFilters, RecipeOverview } from '../../../shared/models/recipe.data';
+import type { FavoriteRecipeId, RecipeId } from '../../../shared/models/semantics/entity-id';
 import { resolvePaginationPage } from '../../../shared/navigation/pagination-query.utils';
 import { QuickMealService } from '../../meals/contracts/quick-meal';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
@@ -319,7 +320,7 @@ export class RecipeListFacade {
         return this.recipeService.getById(favorite.recipeId);
     }
 
-    public async getRecipeDetailAsync(recipeId: string): Promise<Recipe | null> {
+    public async getRecipeDetailAsync(recipeId: RecipeId): Promise<Recipe | null> {
         const recipe = await firstValueFrom(this.recipeService.getById(recipeId, true).pipe(catchError(() => of(null))));
         if (recipe === null) {
             this.toastService.error(this.translateService.instant('ERRORS.LOAD_FAILED_MESSAGE'));
@@ -378,7 +379,7 @@ export class RecipeListFacade {
         return this.hasSearchValue(search);
     }
 
-    private syncRecipeFavoriteState(recipeId: string, isFavorite: boolean, favoriteRecipeId: string | null): void {
+    private syncRecipeFavoriteState(recipeId: string, isFavorite: boolean, favoriteRecipeId: FavoriteRecipeId | null): void {
         this.recipeData.items.update(items =>
             items.map(recipe => (recipe.id === recipeId ? { ...recipe, isFavorite, favoriteRecipeId } : recipe)),
         );

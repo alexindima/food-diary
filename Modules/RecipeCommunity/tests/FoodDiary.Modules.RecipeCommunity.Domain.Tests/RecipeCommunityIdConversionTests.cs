@@ -1,4 +1,4 @@
-using FoodDiary.Modules.RecipeCommunity.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.RecipeCommunity.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.RecipeCommunity.Domain.Tests;
 

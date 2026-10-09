@@ -1,3 +1,4 @@
+using FoodDiary.BugTriage.Application.Reports.Identifiers;
 using FoodDiary.BugTriage.Application.Reports;
 using FoodDiary.BugTriage.Infrastructure.Persistence;
 using Npgsql;
@@ -10,11 +11,11 @@ namespace FoodDiary.BugTriage.Tests;
 public sealed class ReportStoreTests : IAsyncLifetime {
     [Fact]
     public async Task Journal_FiltersBeforePagingAndRedactsExpiredContentBeforePurge() {
-        await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now.AddMinutes(-2), "literal_%", "private", [1]), Now.AddDays(1), CancellationToken.None);
+        await _store.ImportAsync(new ImportedReport(SourceMessageId.New(), Now.AddMinutes(-2), "literal_%", "private", [1]), Now.AddDays(1), CancellationToken.None);
         ReportLease lease = Assert.IsType<ReportLease>(await _store.ClaimAsync(Now, TimeSpan.FromMinutes(5), 3, CancellationToken.None));
         await _store.CompleteAsync(lease.Id, lease.LeaseToken, new ReportCompletion(ReportOutcome.DraftReady, "private summary", "https://example.test/pull/1"), Now, CancellationToken.None);
-        await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now.AddMinutes(-1), "literal_%", "private", [1]), Now.AddDays(1), CancellationToken.None);
-        await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now, "other", "private", [1]), Now.AddDays(1), CancellationToken.None);
+        await _store.ImportAsync(new ImportedReport(SourceMessageId.New(), Now.AddMinutes(-1), "literal_%", "private", [1]), Now.AddDays(1), CancellationToken.None);
+        await _store.ImportAsync(new ImportedReport(SourceMessageId.New(), Now, "other", "private", [1]), Now.AddDays(1), CancellationToken.None);
         var journal = new NpgsqlBugReportJournal(_dataSource);
         var filter = new BugReportJournalFilter(Page: 2, Limit: 1, FromUtc: Now.AddMinutes(-3), ToUtc: Now,
             Status: null, Search: "_%", Id: null);
@@ -22,8 +23,8 @@ public sealed class ReportStoreTests : IAsyncLifetime {
         BugReportJournalPage page = await journal.GetPageAsync(filter, Now, CancellationToken.None);
 
         Assert.Equal(2, page.TotalItems);
-        Assert.Equal(lease.Id, Assert.Single(page.Items).Id);
-        BugReportJournalPage expired = await journal.GetPageAsync(filter with { Page = 1, Search = null, Id = lease.Id }, Now.AddDays(2), CancellationToken.None);
+        Assert.Equal(lease.Id.Value, Assert.Single(page.Items).Id);
+        BugReportJournalPage expired = await journal.GetPageAsync(filter with { Page = 1, Search = null, Id = lease.Id.Value }, Now.AddDays(2), CancellationToken.None);
         BugReportJournalEntry entry = Assert.Single(expired.Items);
         Assert.True(entry.ContentExpired);
         Assert.Equal("expired", entry.Status);
@@ -83,12 +84,12 @@ public sealed class ReportStoreTests : IAsyncLifetime {
     [Fact]
     public async Task RecentReports_ExcludeExpiredOrderNewestFirstAndMapCompletion() {
         Assert.Empty(await _store.GetRecentAsync(Now, CancellationToken.None));
-        await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now.AddMinutes(-2), "older", "body", [1]), Now.AddDays(1), CancellationToken.None);
+        await _store.ImportAsync(new ImportedReport(SourceMessageId.New(), Now.AddMinutes(-2), "older", "body", [1]), Now.AddDays(1), CancellationToken.None);
         ReportLease lease = Assert.IsType<ReportLease>(await _store.ClaimAsync(Now, TimeSpan.FromMinutes(5), 3, CancellationToken.None));
         var completion = new ReportCompletion(ReportOutcome.DraftReady, "Verified regression", "https://github.com/example/repo/pull/2");
         Assert.True(await _store.CompleteAsync(lease.Id, lease.LeaseToken, completion, Now, CancellationToken.None));
-        await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now.AddMinutes(-1), "newer", "body", [1]), Now.AddDays(1), CancellationToken.None);
-        await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now, "expired", "body", [1]), Now, CancellationToken.None);
+        await _store.ImportAsync(new ImportedReport(SourceMessageId.New(), Now.AddMinutes(-1), "newer", "body", [1]), Now.AddDays(1), CancellationToken.None);
+        await _store.ImportAsync(new ImportedReport(SourceMessageId.New(), Now, "expired", "body", [1]), Now, CancellationToken.None);
 
         IReadOnlyList<ReportSummary> reports = await _store.GetRecentAsync(Now, CancellationToken.None);
 
@@ -98,16 +99,16 @@ public sealed class ReportStoreTests : IAsyncLifetime {
             () => Assert.Equal(0, reports[0].Attempt),
             () => Assert.Null(reports[0].Summary),
             () => Assert.Null(reports[0].MergeRequestUrl),
-            () => Assert.Equal(new ReportSummary(lease.Id, ReportOutcome.DraftReady, 1, completion.Summary, completion.MergeRequestUrl), reports[1]));
+            () => Assert.Equal(new ReportSummary(lease.Id.Value, ReportOutcome.DraftReady, 1, completion.Summary, completion.MergeRequestUrl), reports[1]));
         for (int index = 0; index < 51; index++) {
-            await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now.AddSeconds(index), "new", "body", RawMime: null), Now.AddDays(1), CancellationToken.None);
+            await _store.ImportAsync(new ImportedReport(SourceMessageId.New(), Now.AddSeconds(index), "new", "body", RawMime: null), Now.AddDays(1), CancellationToken.None);
         }
         Assert.Equal(50, (await _store.GetRecentAsync(Now, CancellationToken.None)).Count);
     }
 
     [Fact]
     public async Task CompleteAsync_RejectsInvalidOutcomeBeforeWriting() {
-        await Assert.ThrowsAsync<ArgumentException>(() => _store.CompleteAsync(Guid.NewGuid(), Guid.NewGuid(),
+        await Assert.ThrowsAsync<ArgumentException>(() => _store.CompleteAsync(BugReportId.New(), LeaseToken.New(),
             new ReportCompletion("invalid", "summary", MergeRequestUrl: null), Now, CancellationToken.None));
     }
 
@@ -132,7 +133,7 @@ public sealed class ReportStoreTests : IAsyncLifetime {
 
     [Fact]
     public async Task ConcurrentImportsAndClaims_ProduceOneLease_AndFenceStaleCompletion() {
-        var report = new ImportedReport(Guid.NewGuid(), Now, "Broken button", "Steps", [1, 2, 3]);
+        var report = new ImportedReport(SourceMessageId.New(), Now, "Broken button", "Steps", [1, 2, 3]);
         await Task.WhenAll(Enumerable.Range(0, 6).Select(_ => _store.ImportAsync(report, Now.AddDays(1), CancellationToken.None)));
         ReportLease?[] claims = await Task.WhenAll(Enumerable.Range(0, 6).Select(_ =>
             _store.ClaimAsync(Now, TimeSpan.FromMinutes(5), 3, CancellationToken.None)));
@@ -150,13 +151,13 @@ public sealed class ReportStoreTests : IAsyncLifetime {
 
     [Fact]
     public async Task RetentionPurgesContentButKeepsReceipt_AndCannotReviveLease() {
-        var report = new ImportedReport(Guid.NewGuid(), Now, "Private", "Private body", [5, 6, 7]);
+        var report = new ImportedReport(SourceMessageId.New(), Now, "Private", "Private body", [5, 6, 7]);
         await _store.ImportAsync(report, Now.AddMinutes(3), CancellationToken.None);
         ReportLease? lease = await _store.ClaimAsync(Now, TimeSpan.FromMinutes(30), 3, CancellationToken.None);
         Assert.NotNull(lease);
         Assert.Equal(Now.AddMinutes(3), lease.LeaseExpiresAtUtc);
         Assert.Equal(report.RawMime, await _store.GetMimeAsync(lease.Id, lease.LeaseToken, Now, CancellationToken.None));
-        Assert.Null(await _store.GetMimeAsync(lease.Id, Guid.NewGuid(), Now, CancellationToken.None));
+        Assert.Null(await _store.GetMimeAsync(lease.Id, LeaseToken.New(), Now, CancellationToken.None));
         await _store.PurgeAsync(Now.AddMinutes(4), CancellationToken.None);
         Assert.True(await _store.ContainsAsync(report.SourceMessageId, CancellationToken.None));
         await _store.ImportAsync(report, Now.AddDays(1), CancellationToken.None);
@@ -178,7 +179,7 @@ public sealed class ReportStoreTests : IAsyncLifetime {
         _store = new NpgsqlBugReportStore(_dataSource, Microsoft.Extensions.Options.Options.Create(
             new FoodDiary.BugTriage.Infrastructure.Options.BugTriageOptions { MaxConcurrentReports = capacity }));
         for (int index = 0; index < 6; index++) {
-            await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now.AddSeconds(index), "Bug", "Steps", [1]),
+            await _store.ImportAsync(new ImportedReport(SourceMessageId.New(), Now.AddSeconds(index), "Bug", "Steps", [1]),
                 Now.AddDays(1), CancellationToken.None);
         }
         ReportLease?[] claims = await Task.WhenAll(Enumerable.Range(0, 6).Select(_ =>
@@ -195,7 +196,7 @@ public sealed class ReportStoreTests : IAsyncLifetime {
 
     [Fact]
     public async Task ExpiredAttemptsStopAtConfiguredLimit() {
-        await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now, "Bug", "Steps", [1]), Now.AddDays(1), CancellationToken.None);
+        await _store.ImportAsync(new ImportedReport(SourceMessageId.New(), Now, "Bug", "Steps", [1]), Now.AddDays(1), CancellationToken.None);
         Assert.NotNull(await _store.ClaimAsync(Now, TimeSpan.FromMinutes(1), 1, CancellationToken.None));
         Assert.Null(await _store.ClaimAsync(Now.AddMinutes(2), TimeSpan.FromMinutes(1), 1, CancellationToken.None));
         await using NpgsqlCommand command = _dataSource.CreateCommand("select status from bugtriage_reports");

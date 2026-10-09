@@ -63,3 +63,5 @@ Shared outbox claiming, processing, policy, options and telemetry now belong to 
 Use canonical FoodDiary.Modules.Gamification project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.
 
 Outbox evaluation dispatches ReconcileAchievementsCommand through ISender. The outbox engine owns saving and transaction/fencing; the request has no automatic transactional-command marker. AchievementAwardService remains shared between reconciliation and the authenticated overview handler.
+
+AchievementTarget binds metric to a positive integer threshold through streak-days, meal-count or article-count factories, without a new upper cap. Definition mutations and eligibility/grant calculations consume that target. Internal stored decoding retains historical thresholds; version/no-op behavior and scalar relational fields remain unchanged.

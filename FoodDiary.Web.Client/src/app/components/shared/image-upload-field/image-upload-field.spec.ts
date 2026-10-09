@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
 import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
+import { imageSelection } from '../../../shared/models/image-upload.data';
 import { ImageUploadFieldComponent } from './image-upload-field';
 
 type ImageUploadFieldTestContext = {
@@ -36,7 +37,7 @@ afterEach(() => {
 
 async function setupImageUploadFieldAsync(): Promise<ImageUploadFieldTestContext> {
     const imageUploadService = {
-        upload: vi.fn().mockReturnValue(of({ url: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' })),
+        upload: vi.fn().mockReturnValue(of(imageSelection('https://cdn.example.com/image.jpg', 'asset-1'))),
         deleteAsset: vi.fn().mockReturnValue(of(void 0)),
     };
     const logger = { warn: vi.fn() };
@@ -61,11 +62,11 @@ describe('ImageUploadFieldComponent control value', () => {
         const { component, fixture } = await setupImageUploadFieldAsync();
         fixture.detectChanges();
 
-        component.value.set({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        component.value.set(imageSelection('https://example.com/image.jpg', 'asset-1'));
         fixture.componentRef.setInput('disabled', true);
         fixture.detectChanges();
 
-        expect(component['selection']()).toEqual({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        expect(component['selection']()).toEqual(imageSelection('https://example.com/image.jpg', 'asset-1'));
         expect(component.disabled()).toBe(true);
     });
 });
@@ -93,8 +94,8 @@ describe('ImageUploadFieldComponent upload', () => {
         await fixture.whenStable();
 
         expect(imageUploadService.upload).toHaveBeenCalledOnce();
-        expect(component['selection']()).toEqual({ url: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' });
-        expect(changeSpy).toHaveBeenCalledWith({ url: 'https://cdn.example.com/image.jpg', assetId: 'asset-1' });
+        expect(component['selection']()).toEqual(imageSelection('https://cdn.example.com/image.jpg', 'asset-1'));
+        expect(changeSpy).toHaveBeenCalledWith(imageSelection('https://cdn.example.com/image.jpg', 'asset-1'));
     });
 
     it('rejects oversized files before requesting upload URL', async () => {
@@ -128,26 +129,26 @@ describe('ImageUploadFieldComponent clearing', () => {
     it('clears selection when the external clear request changes', async () => {
         const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
         fixture.componentRef.setInput('deleteOnClear', true);
-        component.value.set({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        component.value.set(imageSelection('https://example.com/image.jpg', 'asset-1'));
         fixture.detectChanges();
 
         fixture.componentRef.setInput('clearRequest', 1);
         fixture.detectChanges();
 
-        expect(component.value()).toEqual({ url: null, assetId: null });
+        expect(component.value()).toEqual(imageSelection(null, null));
         expect(imageUploadService.deleteAsset).toHaveBeenCalledWith('asset-1');
     });
 
     it('clears selection and deletes asset when configured', async () => {
         const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
         fixture.componentRef.setInput('deleteOnClear', true);
-        component.value.set({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        component.value.set(imageSelection('https://example.com/image.jpg', 'asset-1'));
         fixture.detectChanges();
 
         component['clearImage']();
 
-        expect(component['selection']()).toEqual({ url: null, assetId: null });
-        expect(component.value()).toEqual({ url: null, assetId: null });
+        expect(component['selection']()).toEqual(imageSelection(null, null));
+        expect(component.value()).toEqual(imageSelection(null, null));
         expect(component.touched()).toBe(true);
         expect(imageUploadService.deleteAsset).toHaveBeenCalledWith('asset-1');
     });
@@ -156,12 +157,12 @@ describe('ImageUploadFieldComponent clearing', () => {
         const { component, fixture, imageUploadService, logger } = await setupImageUploadFieldAsync();
         imageUploadService.deleteAsset.mockReturnValueOnce(throwError(() => new Error('delete failed')));
         fixture.componentRef.setInput('deleteOnClear', true);
-        component.value.set({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        component.value.set(imageSelection('https://example.com/image.jpg', 'asset-1'));
         fixture.detectChanges();
 
         component['clearImage']();
 
-        expect(component['selection']()).toEqual({ url: null, assetId: null });
+        expect(component['selection']()).toEqual(imageSelection(null, null));
         expect(logger.warn).toHaveBeenCalledWith('Failed to delete orphan image asset', expect.any(Error));
     });
 });
@@ -190,7 +191,7 @@ describe('ImageUploadFieldComponent interactions', () => {
         fixture.detectChanges();
         component['onZoneClick'](fileInput);
         fixture.componentRef.setInput('disabled', false);
-        component.value.set({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        component.value.set(imageSelection('https://example.com/image.jpg', 'asset-1'));
         fixture.detectChanges();
         component['onZoneClick'](fileInput);
 
@@ -276,13 +277,13 @@ describe('ImageUploadFieldComponent multiple uploads', () => {
         fixture.componentRef.setInput('multiple', true);
         fixture.componentRef.setInput('maxFiles', 2);
         imageUploadService.upload
-            .mockReturnValueOnce(of({ assetId: 'one', url: '/one.png' }))
+            .mockReturnValueOnce(of(imageSelection('/one.png', 'one')))
             .mockReturnValueOnce(throwError(() => new Error('failed')));
         const added = vi.fn();
         component.imagesAdded.subscribe(added);
         component['onDrop']({ preventDefault: vi.fn(), stopPropagation: vi.fn(), dataTransfer: { files } } as unknown as DragEvent);
         await vi.waitFor(() => {
-            expect(added).toHaveBeenCalledWith([{ assetId: 'one', url: '/one.png' }]);
+            expect(added).toHaveBeenCalledWith([imageSelection('/one.png', 'one')]);
         });
         expect(component['error']()).toBeTruthy();
         expect(component['isUploading']()).toBe(false);
@@ -294,7 +295,7 @@ describe('ImageUploadFieldComponent crop failures', () => {
 
     it('closes a failed decode, preserves the saved selection and releases the preparation preview', async () => {
         const { component, fixture, imageUploadService, translateService } = await setupImageUploadFieldAsync();
-        const previousSelection = { url: 'https://example.com/saved-avatar.png', assetId: 'saved-avatar' };
+        const previousSelection = imageSelection('https://example.com/saved-avatar.png', 'saved-avatar');
         const failed = vi.fn();
         const revokePreview = vi.spyOn(URL, 'revokeObjectURL');
         vi.spyOn(translateService, 'instant').mockReturnValue('Could not read image');
@@ -347,7 +348,7 @@ describe('ImageUploadFieldComponent crop failures', () => {
 
     it('reports canvas failures and preserves the saved image instead of leaving the cropper stuck', async () => {
         const { component, imageUploadService, translateService } = await setupImageUploadFieldAsync();
-        const previousSelection = { url: 'https://example.com/saved-avatar.png', assetId: 'saved-avatar' };
+        const previousSelection = imageSelection('https://example.com/saved-avatar.png', 'saved-avatar');
         vi.spyOn(translateService, 'instant').mockReturnValue('Image processing failed');
         vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
         component.value.set(previousSelection);

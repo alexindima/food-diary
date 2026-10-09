@@ -132,7 +132,7 @@ public partial class UsersFeatureTests {
         var user = User.Create("mapped@example.com", "hash");
         user.UpdatePersonalInfo("mapped", "Alex", "Tester", new DateTime(1990, 1, 2), "M", 82, 181);
         user.UpdateActivity(ActivityLevel.High, stepGoal: 9000, hydrationGoal: 2.4);
-        user.UpdateGoals(new UserGoalUpdate(2200, 130, 70, 240, 32, 2.5, 78, 84, CalorieCyclingEnabled: true, 2100, 2150, 2200, 2250, 2300, 2350, 2050));
+        user.UpdateGoals(new UserGoalUpdate(2200, 130, 70, 240, 32, 2.5, DesiredWeightKg.FromOptional(78), DesiredWaistCm.FromOptional(84), CalorieCyclingEnabled: true, 2100, 2150, 2200, 2250, 2300, 2350, 2050));
         string layoutJson = JsonSerializer.Serialize(new DashboardLayoutModel(["meals", "weight"], ["summary"]));
         user.UpdatePreferences(new UserPreferenceUpdate(layoutJson, "ru", "dark", "modern", PushNotificationsEnabled: true, FastingPushNotificationsEnabled: false, SocialPushNotificationsEnabled: false, 10, 18));
         user.ReplaceRoles([Role.Create(RoleNames.Admin), Role.Create(RoleNames.Support)]);
@@ -1041,15 +1041,7 @@ public partial class UsersFeatureTests {
     [Fact]
     public async Task GetUserGoalsHandler_ReturnsCurrentGoals() {
         var user = User.Create("goals-query-success@example.com", "hash");
-        user.UpdateGoals(new UserGoalUpdate(
-            DailyCalorieTarget: 2100,
-            ProteinTarget: 140,
-            FatTarget: 70,
-            CarbTarget: 220,
-            FiberTarget: 30,
-            WaterGoal: 2.1,
-            DesiredWeightKg: 73,
-            DesiredWaistCm: 78));
+        user.UpdateGoals(new UserGoalUpdate(DailyCalorieTarget: 2100, ProteinTarget: 140, FatTarget: 70, CarbTarget: 220, FiberTarget: 30, WaterGoal: 2.1, DesiredWeightKg: DesiredWeightKg.FromOptional(73), DesiredWaistCm: DesiredWaistCm.FromOptional(78)));
         var handler = new GetUserGoalsQueryHandler(new SingleUserRepository(user), new SingleUserRepository(user));
 
         Result<GoalsModel> result = await handler.Handle(new GetUserGoalsQuery(user.Id.Value), CancellationToken.None);
@@ -1089,15 +1081,7 @@ public partial class UsersFeatureTests {
     [Fact]
     public async Task UserContextService_GetGoalsAsync_WhenUserAccessible_ReturnsGoals() {
         var user = User.Create("goals-context@example.com", "hash");
-        user.UpdateGoals(new UserGoalUpdate(
-            DailyCalorieTarget: 2150,
-            ProteinTarget: 125,
-            FatTarget: 65,
-            CarbTarget: 250,
-            FiberTarget: 28,
-            WaterGoal: 2.2,
-            DesiredWeightKg: 72,
-            DesiredWaistCm: 77));
+        user.UpdateGoals(new UserGoalUpdate(DailyCalorieTarget: 2150, ProteinTarget: 125, FatTarget: 65, CarbTarget: 250, FiberTarget: 28, WaterGoal: 2.2, DesiredWeightKg: DesiredWeightKg.FromOptional(72), DesiredWaistCm: DesiredWaistCm.FromOptional(77)));
         IUserLookupRepository userLookupRepository = Substitute.For<IUserLookupRepository>();
         userLookupRepository.GetByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Task.FromResult<User?>(user));
         var service = new UserContextService(userLookupRepository, Substitute.For<IUserWriteRepository>());

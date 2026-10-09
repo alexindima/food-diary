@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Favorites.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
@@ -55,7 +56,7 @@ public sealed class UpdateFavoriteProductCommandHandler(
         }
 
         favorite.UpdateName(command.Name);
-        favorite.UpdatePreferredPortionAmount(command.PreferredPortionAmount);
+        favorite.UpdatePreferredQuantity(command.PreferredPortionAmount is { } amount ? PreferredProductQuantity.FromAmount(amount) : null);
 
         await favoriteProductRepository.UpdateAsync(favorite, cancellationToken).ConfigureAwait(false);
         return Result.Success(favorite.ToModel(sourceResult.Value));

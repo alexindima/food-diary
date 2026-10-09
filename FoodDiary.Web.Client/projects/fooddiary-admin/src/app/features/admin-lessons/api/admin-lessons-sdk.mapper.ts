@@ -1,6 +1,7 @@
 import type { AdminLessonHttpResponse } from '../../../shared/api/sdk/generated/model/admin-lesson-http-response';
 import type { AdminLessonsImportHttpResponse } from '../../../shared/api/sdk/generated/model/admin-lessons-import-http-response';
 import { requireSdkFields } from '../../../shared/api/sdk/sdk-response';
+import { adminId, adminUtcInstant, optionalAdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import type { AdminLesson, AdminLessonsImportResponse } from '../models/admin-lesson.data';
 
 export function adminLessonFromSdk(response: AdminLessonHttpResponse): AdminLesson {
@@ -15,7 +16,13 @@ export function adminLessonFromSdk(response: AdminLessonHttpResponse): AdminLess
         'sortOrder',
         'createdOnUtc',
     ]);
-    return { ...value, summary: value.summary ?? null, modifiedOnUtc: value.modifiedOnUtc ?? null };
+    return {
+        ...value,
+        summary: value.summary ?? null,
+        modifiedOnUtc: optionalAdminUtcInstant(value.modifiedOnUtc ?? null),
+        id: adminId<'lesson'>(value.id),
+        createdOnUtc: adminUtcInstant(value.createdOnUtc),
+    };
 }
 
 export function adminLessonsImportFromSdk(response: AdminLessonsImportHttpResponse): AdminLessonsImportResponse {

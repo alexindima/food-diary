@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Modules.RecipeCommunity.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.RecipeCommunity.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Models;
 using FoodDiary.Modules.Users.Contracts.Common;

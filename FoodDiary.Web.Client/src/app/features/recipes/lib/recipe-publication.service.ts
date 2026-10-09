@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { ProductVisibility } from '../../../shared/models/product.data';
 import { type RecipeDto, RecipeVisibility } from '../../../shared/models/recipe.data';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { ProductPublicationService } from '../../products/contracts/product-publication';
 import {
     type RecipePublicationChoice,
@@ -57,7 +58,7 @@ export class RecipePublicationService {
             steps: data.steps.map(step => ({
                 ...step,
                 ingredients: step.ingredients.map(ingredient => {
-                    const product = byId.get(ingredient.productId ?? '');
+                    const product = byId.get(entityId<'product'>(ingredient.productId ?? ''));
                     if (product === undefined) {
                         return ingredient;
                     }

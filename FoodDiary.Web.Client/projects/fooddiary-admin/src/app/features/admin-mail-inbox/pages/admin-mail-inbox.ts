@@ -10,6 +10,7 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 import type { Subscription } from 'rxjs';
 
+import type { AdminId, AdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
@@ -166,7 +167,7 @@ export class AdminMailInboxComponent {
             data: {
                 id: message.id,
                 subject: message.subject,
-                onRead: (id: string, readAtUtc: string) => {
+                onRead: (id: AdminId<'mail-inbox-message'>, readAtUtc: AdminUtcInstant) => {
                     this.messages.update(messages => messages.map(item => (item.id === id ? { ...item, readAtUtc } : item)));
                     this.loadMessages();
                 },
@@ -187,7 +188,7 @@ export class AdminMailInboxComponent {
         return category === 'dmarc-report' ? 'DMARC' : 'Mail';
     }
 
-    private formatReadState(readAtUtc: string | null | undefined): string {
+    private formatReadState(readAtUtc: AdminUtcInstant | null | undefined): string {
         return readAtUtc === null || readAtUtc === undefined ? 'Unread' : 'Read';
     }
 }

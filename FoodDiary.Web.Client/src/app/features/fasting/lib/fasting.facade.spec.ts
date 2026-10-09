@@ -8,6 +8,8 @@ import { FrontendObservabilityService } from '../../../services/frontend-observa
 import { UserService } from '../../../shared/api/user.service';
 import type { FastingMessage, FastingOverview, FastingSession } from '../../../shared/models/fasting.data';
 import type { PageOf } from '../../../shared/models/page-of.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { FastingService } from '../api/fasting.service';
 import { FastingFacade } from './fasting.facade';
 
@@ -124,7 +126,11 @@ describe('FastingFacade overview history', () => {
                 },
             }),
         );
-        const olderSession = { ...activeSession, id: 'session-2', startedAtUtc: '2026-04-11T06:00:00Z' };
+        const olderSession = {
+            ...activeSession,
+            id: entityId<'fasting-session'>('session-2'),
+            startedAtUtc: utcInstant('2026-04-11T06:00:00Z'),
+        };
         fastingService.getHistory.mockReturnValueOnce(
             of({
                 data: [olderSession],
@@ -172,7 +178,7 @@ describe('FastingFacade history recovery', () => {
         expect(facade.historyPage()).toBe(1);
         expect(facade.historyTotalPages()).toBe(HISTORY_PAGE);
 
-        const older = { ...activeSession, id: 'older-session' };
+        const older = { ...activeSession, id: entityId<'fasting-session'>('older-session') };
         fastingService.getHistory.mockReturnValueOnce(
             of({
                 data: [older],
@@ -201,7 +207,7 @@ describe('FastingFacade check-ins', () => {
         fastingService.updateCheckIn.mockReturnValueOnce(
             of({
                 ...activeSession,
-                checkInAtUtc: '2026-04-12T10:00:00Z',
+                checkInAtUtc: utcInstant('2026-04-12T10:00:00Z'),
                 hungerLevel: HUNGER_LEVEL,
                 energyLevel: ENERGY_LEVEL,
                 moodLevel: MOOD_LEVEL,
@@ -225,7 +231,7 @@ describe('FastingFacade check-ins', () => {
                 ...baseOverview,
                 currentSession: {
                     ...activeSession,
-                    checkInAtUtc: '2026-04-12T10:00:00Z',
+                    checkInAtUtc: utcInstant('2026-04-12T10:00:00Z'),
                     hungerLevel: HUNGER_LEVEL,
                     energyLevel: ENERGY_LEVEL,
                     moodLevel: MOOD_LEVEL,
@@ -284,7 +290,7 @@ describe('FastingFacade check-in refresh failures', () => {
         fastingService.updateCheckIn.mockReturnValueOnce(
             of({
                 ...activeSession,
-                checkInAtUtc: '2026-04-12T10:00:00Z',
+                checkInAtUtc: utcInstant('2026-04-12T10:00:00Z'),
                 hungerLevel: HUNGER_LEVEL,
                 energyLevel: ENERGY_LEVEL,
                 moodLevel: MOOD_LEVEL,
@@ -319,7 +325,7 @@ describe('FastingFacade session completion', () => {
         fastingService.end.mockReturnValueOnce(
             of({
                 ...activeSession,
-                endedAtUtc: '2026-04-12T12:00:00Z',
+                endedAtUtc: utcInstant('2026-04-12T12:00:00Z'),
                 status: 'Completed',
                 isCompleted: true,
             }),
@@ -342,7 +348,7 @@ describe('FastingFacade session completion', () => {
         fastingService.end.mockReturnValueOnce(
             of({
                 ...activeSession,
-                endedAtUtc: '2026-04-12T12:00:00Z',
+                endedAtUtc: utcInstant('2026-04-12T12:00:00Z'),
                 status: 'Completed',
                 isCompleted: true,
             }),
@@ -378,7 +384,7 @@ describe('FastingFacade session start and cycle actions', () => {
     it('applies cyclic day updates before refreshing overview', () => {
         const nextSession = {
             ...activeSession,
-            id: 'session-2',
+            id: entityId<'fasting-session'>('session-2'),
             occurrenceKind: 'EatingWindow',
             cyclicPhaseDayNumber: 2,
         } satisfies FastingSession;
@@ -454,7 +460,7 @@ describe('FastingFacade setup modes and target changes', () => {
     it('does not reduce target beyond the remaining full hours', () => {
         facade.currentSession.set({
             ...activeSession,
-            startedAtUtc: '2026-04-12T10:00:00Z',
+            startedAtUtc: utcInstant('2026-04-12T10:00:00Z'),
             protocol: 'F24',
             planType: 'Extended',
             occurrenceKind: 'FastDay',
@@ -518,7 +524,9 @@ describe('FastingFacade lifecycle regression (1)', () => {
     });
     it('updates elapsed and remaining times and stops the timer after destruction', () => {
         const startedAtUtc = new Date(Date.now() - 2 * MINUTES_PER_HOUR * MINUTES_PER_HOUR * TIMER_TICK_MS).toISOString();
-        fastingService.getOverview.mockReturnValueOnce(of({ ...baseOverview, currentSession: { ...activeSession, startedAtUtc } }));
+        fastingService.getOverview.mockReturnValueOnce(
+            of({ ...baseOverview, currentSession: { ...activeSession, startedAtUtc: utcInstant(startedAtUtc) } }),
+        );
         facade.initialize();
         expect(facade.isActive()).toBe(true);
         expect(facade.elapsedFormatted()).toBe('02:00:00');
@@ -603,7 +611,7 @@ describe('FastingFacade lifecycle regression (4)', () => {
     });
     it('does not save a check-in without an active session', () => {
         facade.saveCheckIn();
-        facade.currentSession.set({ ...activeSession, endedAtUtc: new Date().toISOString() });
+        facade.currentSession.set({ ...activeSession, endedAtUtc: utcInstant(new Date().toISOString()) });
         facade.saveCheckIn();
         expect(fastingService.updateCheckIn).not.toHaveBeenCalled();
     });
@@ -617,7 +625,7 @@ describe('FastingFacade prompt visibility', () => {
     it('hides prompts without a running session or a message', () => {
         expect(facade.isPromptVisible(null, prompt)).toBe(false);
         expect(facade.isPromptVisible(activeSession, null)).toBe(false);
-        expect(facade.isPromptVisible({ ...activeSession, endedAtUtc: new Date().toISOString() }, prompt)).toBe(false);
+        expect(facade.isPromptVisible({ ...activeSession, endedAtUtc: utcInstant(new Date().toISOString()) }, prompt)).toBe(false);
         facade.dismissPrompt(prompt.id);
         facade.snoozePrompt(prompt.id);
         expect(facade.promptState()).toEqual({});
@@ -628,7 +636,7 @@ describe('FastingFacade prompt visibility', () => {
         expect(facade.isPromptVisible(activeSession, prompt)).toBe(true);
         facade.dismissPrompt(prompt.id);
         expect(facade.isPromptVisible(activeSession, prompt)).toBe(false);
-        expect(facade.isPromptVisible({ ...activeSession, id: 'another' }, prompt)).toBe(true);
+        expect(facade.isPromptVisible({ ...activeSession, id: entityId<'fasting-session'>('another') }, prompt)).toBe(true);
         expect(Object.values(facade.promptState())).toEqual([{ dismissed: true }]);
     });
 
@@ -717,8 +725,8 @@ function createFastingServiceMock(overview: FastingOverview): FastingServiceMock
 
 function createActiveSession(): FastingSession {
     return {
-        id: 'session-1',
-        startedAtUtc: '2026-04-12T06:00:00Z',
+        id: entityId<'fasting-session'>('session-1'),
+        startedAtUtc: utcInstant('2026-04-12T06:00:00Z'),
         endedAtUtc: null,
         initialPlannedDurationHours: DEFAULT_FASTING_HOURS,
         addedDurationHours: 0,

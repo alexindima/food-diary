@@ -8,19 +8,21 @@ import {
     type CyclePredictions,
     type CycleResponse,
 } from '../../../../shared/models/cycle.data';
+import { calendarDate } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { CycleSummaryCardComponent } from './cycle-summary-card';
 
 const CYCLE_DAY = 5;
 const DAYS_TO_PERIOD = 24;
 const CYCLE: CycleResponse = {
-    id: 'cycle-1',
-    userId: 'user-1',
+    id: entityId<'cycle-profile'>('cycle-1'),
+    userId: entityId<'user'>('user-1'),
     mode: CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE,
     goal: 0,
     reproductiveState: 0,
     hideFromDashboard: false,
     confidence: 1,
-    trackingStartDate: '2026-05-01T00:00:00.000Z',
+    trackingStartDate: calendarDate('2026-05-01T00:00:00.000Z'),
     averageCycleLength: 28,
     averagePeriodLength: 5,
     lutealLength: 14,
@@ -32,10 +34,10 @@ const CYCLE: CycleResponse = {
     symptoms: [],
     factors: [
         {
-            id: 'factor-1',
-            cycleProfileId: 'cycle-1',
+            id: entityId<'cycle-factor'>('factor-1'),
+            cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
             type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
-            startDate: '2026-05-02T00:00:00.000Z',
+            startDate: calendarDate('2026-05-02T00:00:00.000Z'),
             endDate: null,
             notes: null,
         },
@@ -52,8 +54,8 @@ describe('CycleSummaryCardComponent', () => {
             predictions: {
                 ovulationFrom: null,
                 ovulationTo: null,
-                nextPeriodStartFrom: '2026-05-29',
-                nextPeriodStartTo: '2026-05-31',
+                nextPeriodStartFrom: calendarDate('2026-05-29'),
+                nextPeriodStartTo: calendarDate('2026-05-31'),
                 pmsWindowStart: null,
                 pmsWindowEnd: null,
                 confidence: 'Moderate',

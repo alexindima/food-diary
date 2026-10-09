@@ -5,6 +5,8 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { HOURS_PER_DAY, MS_PER_HOUR, MS_PER_SECOND } from '../../../../shared/lib/time.constants';
 import type { FastingSession } from '../../../../shared/models/fasting.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { shouldPrioritizeDashboardFasting } from '../../lib/dashboard-fasting-priority';
 import { DashboardFastingCardComponent } from './dashboard-fasting-card';
 import { buildDashboardFastingCycle, buildDashboardFastingDayTicks, buildDashboardFastingTimeline } from './dashboard-fasting-timeline';
@@ -25,8 +27,8 @@ describe('dashboard fasting priority', () => {
         const now = Date.parse('2026-04-12T12:00:00Z');
         expect(shouldPrioritizeDashboardFasting(session, now)).toBe(true);
         expect(shouldPrioritizeDashboardFasting(null, now)).toBe(false);
-        expect(shouldPrioritizeDashboardFasting({ ...session, endedAtUtc: '2026-04-12T11:00:00Z' }, now)).toBe(false);
-        expect(shouldPrioritizeDashboardFasting({ ...session, startedAtUtc: '2026-04-13T00:00:00Z' }, now)).toBe(false);
+        expect(shouldPrioritizeDashboardFasting({ ...session, endedAtUtc: utcInstant('2026-04-12T11:00:00Z') }, now)).toBe(false);
+        expect(shouldPrioritizeDashboardFasting({ ...session, startedAtUtc: utcInstant('2026-04-13T00:00:00Z') }, now)).toBe(false);
     });
 
     it('distinguishes intermittent fasting from eating, including the next cycle', () => {
@@ -88,7 +90,7 @@ describe('DashboardFastingCardComponent', () => {
         expect(host.textContent).toContain('12:00:01');
     });
     it('freezes completed sessions at their recorded end', () => {
-        fixture.componentRef.setInput('session', { ...createSession(), endedAtUtc: '2026-04-12T06:00:00Z' });
+        fixture.componentRef.setInput('session', { ...createSession(), endedAtUtc: utcInstant('2026-04-12T06:00:00Z') });
         fixture.detectChanges();
         vi.advanceTimersByTime(MS_PER_SECOND);
         fixture.detectChanges();
@@ -151,8 +153,8 @@ describe('dashboard fasting timeline', () => {
 
 function createSession(): FastingSession {
     return {
-        id: 'session-1',
-        startedAtUtc: '2026-04-12T00:00:00Z',
+        id: entityId<'fasting-session'>('session-1'),
+        startedAtUtc: utcInstant('2026-04-12T00:00:00Z'),
         endedAtUtc: null,
         initialPlannedDurationHours: HOURS_PER_DAY,
         addedDurationHours: 0,

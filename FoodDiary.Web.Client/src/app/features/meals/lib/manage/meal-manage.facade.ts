@@ -18,6 +18,7 @@ import type {
 } from '../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import { calculateCalorieMismatchWarning, roundNutrient } from '../../../../shared/lib/nutrition-form.utils';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
+import { imageSelection } from '../../../../shared/models/image-upload.data';
 import {
     type Meal,
     type MealAiSessionManageDto,
@@ -99,7 +100,7 @@ export class MealManageFacade {
             await import('../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog');
         const selection: ImageSelection | null =
             session.imageUrl !== null && session.imageUrl !== undefined && session.imageUrl.length > 0
-                ? { url: session.imageUrl ?? null, assetId: session.imageAssetId ?? null }
+                ? imageSelection(session.imageUrl ?? null, session.imageAssetId ?? null)
                 : null;
 
         return (

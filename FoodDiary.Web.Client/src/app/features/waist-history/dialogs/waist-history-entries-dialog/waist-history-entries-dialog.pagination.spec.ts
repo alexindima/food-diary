@@ -5,6 +5,8 @@ import { Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { calendarDate } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { WaistEntry } from '../../../../shared/models/waist-entry.data';
 import { WaistHistoryFacade } from '../../lib/waist-history.facade';
 import { WaistHistoryEntriesDialogComponent } from './waist-history-entries-dialog';
@@ -41,9 +43,9 @@ function setup(): {
 }
 function page(): WaistEntry[] {
     return Array.from({ length: FETCH_SIZE }, (_, index) => ({
-        id: String(index),
-        userId: 'u',
-        date: `2026-09-${String(FETCH_SIZE - index).padStart(2, '0')}`,
+        id: entityId<'waist-entry'>(String(index)),
+        userId: entityId<'user'>('u'),
+        date: calendarDate(`2026-09-${String(FETCH_SIZE - index).padStart(2, '0')}`),
         circumferenceCm: BASE_MEASUREMENT + index,
     }));
 }

@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { CHART_COLORS } from '../../../../../constants/chart-colors';
 import { DEFAULT_NUTRITION_BASE_AMOUNT, PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { buildProductDetailNutritionViewModel } from './product-detail-nutrition.mapper';
 
 const PRODUCT_CALORIES = 250;
@@ -55,7 +56,7 @@ describe('buildProductDetailNutritionViewModel', () => {
 
 function createProduct(overrides: Partial<Product> = {}): Product {
     return {
-        id: 'product-1',
+        id: entityId<'product'>('product-1'),
         name: 'Test Product',
         barcode: null,
         brand: null,

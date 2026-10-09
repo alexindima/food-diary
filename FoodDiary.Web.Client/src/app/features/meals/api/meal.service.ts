@@ -12,6 +12,8 @@ import { requireSdkFields, sdkPage } from '../../../shared/api/sdk/sdk-response'
 import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { Meal, MealFilters, MealManageDto, MealOverview } from '../../../shared/models/meal.data';
 import type { PageOf } from '../../../shared/models/page-of.data';
+import type { UtcInstant } from '../../../shared/models/semantics/date-value';
+import type { MealId } from '../../../shared/models/semantics/entity-id';
 import { MEAL_API_DEFAULT_FAVORITE_LIMIT } from './meal-api.config';
 
 @Service()
@@ -56,7 +58,7 @@ export class MealService {
             );
     }
 
-    public getById(id: string): Observable<Meal | null> {
+    public getById(id: MealId): Observable<Meal | null> {
         return this.sdk.client.getMealsById({ version: this.sdk.version, id }).pipe(
             map(response => mealFromSdk(response)),
             catchError(() => of(null)),
@@ -70,20 +72,20 @@ export class MealService {
         );
     }
 
-    public update(id: string, data: MealManageDto): Observable<Meal> {
+    public update(id: MealId, data: MealManageDto): Observable<Meal> {
         return this.sdk.client.patchMealsById({ version: this.sdk.version, id, updateMealHttpRequest: mealRequestToSdk(data) }).pipe(
             map(response => mealFromSdk(response)),
             catchError((error: unknown) => rethrowApiError('Update meal error', error)),
         );
     }
 
-    public deleteById(id: string): Observable<void> {
+    public deleteById(id: MealId): Observable<void> {
         return this.sdk.client
             .deleteMealsById({ version: this.sdk.version, id })
             .pipe(catchError((error: unknown) => rethrowApiError('Delete meal error', error)));
     }
 
-    public repeat(id: string, targetDate: string, mealType?: string): Observable<Meal> {
+    public repeat(id: MealId, targetDate: UtcInstant, mealType?: string): Observable<Meal> {
         return this.sdk.client.postMealsByIdRepeat({ version: this.sdk.version, id, repeatMealHttpRequest: { targetDate, mealType } }).pipe(
             map(response => mealFromSdk(response)),
             catchError((error: unknown) => rethrowApiError('Repeat meal error', error)),

@@ -1,5 +1,6 @@
+import type { AdminId, AdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 export type AdminMailInboxMessageSummary = {
-    id: string;
+    id: AdminId<'mail-inbox-message'>;
     fromAddress?: string | null;
     envelopeFromAddress?: string | null;
     isTrustedRelay: boolean;
@@ -7,8 +8,8 @@ export type AdminMailInboxMessageSummary = {
     subject?: string | null;
     category: string;
     status: string;
-    readAtUtc?: string | null;
-    receivedAtUtc: string;
+    readAtUtc?: AdminUtcInstant | null;
+    receivedAtUtc: AdminUtcInstant;
 };
 
 export type AdminMailInboxMessagePage = {
@@ -23,7 +24,7 @@ export type AdminMailInboxMessageDetails = AdminMailInboxMessageSummary & {
     textBody?: string | null;
     htmlBody?: string | null;
     rawMime?: string | null;
-    contentPurgedAtUtc?: string | null;
+    contentPurgedAtUtc?: AdminUtcInstant | null;
     dmarcReport?: AdminMailInboxDmarcReport | null;
 };
 
@@ -31,8 +32,8 @@ export type AdminMailInboxDmarcReport = {
     organizationName?: string | null;
     reportId?: string | null;
     domain?: string | null;
-    dateRangeStartUtc?: string | null;
-    dateRangeEndUtc?: string | null;
+    dateRangeStartUtc?: AdminUtcInstant | null;
+    dateRangeEndUtc?: AdminUtcInstant | null;
     records: AdminMailInboxDmarcRecord[];
 };
 

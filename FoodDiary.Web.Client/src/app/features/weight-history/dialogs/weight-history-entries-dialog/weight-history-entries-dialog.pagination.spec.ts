@@ -5,6 +5,8 @@ import { Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { calendarDate } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { WeightEntry } from '../../../../shared/models/weight-entry.data';
 import { WeightHistoryFacade } from '../../lib/weight-history.facade';
 import { WeightHistoryEntriesDialogComponent } from './weight-history-entries-dialog';
@@ -41,9 +43,9 @@ function setup(): {
 }
 function page(): WeightEntry[] {
     return Array.from({ length: FETCH_SIZE }, (_, index) => ({
-        id: String(index),
-        userId: 'u',
-        date: `2026-09-${String(FETCH_SIZE - index).padStart(2, '0')}`,
+        id: entityId<'weight-entry'>(String(index)),
+        userId: entityId<'user'>('u'),
+        date: calendarDate(`2026-09-${String(FETCH_SIZE - index).padStart(2, '0')}`),
         weightKg: BASE_MEASUREMENT + index,
     }));
 }

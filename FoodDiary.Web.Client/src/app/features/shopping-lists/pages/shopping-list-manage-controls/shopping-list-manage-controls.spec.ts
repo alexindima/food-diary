@@ -5,12 +5,14 @@ import { provideRouter } from '@angular/router';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
 import { ShoppingListManageControlsComponent } from './shopping-list-manage-controls';
 
 const LISTS: ShoppingListSummary[] = [
-    { id: 'list-1', name: 'Groceries', createdAt: '2026-05-17T00:00:00Z', itemsCount: 1 },
-    { id: 'list-2', name: 'Weekend', createdAt: '2026-05-18T00:00:00Z', itemsCount: 0 },
+    { id: entityId<'shopping-list'>('list-1'), name: 'Groceries', createdAt: utcInstant('2026-05-17T00:00:00Z'), itemsCount: 1 },
+    { id: entityId<'shopping-list'>('list-2'), name: 'Weekend', createdAt: utcInstant('2026-05-18T00:00:00Z'), itemsCount: 0 },
 ];
 
 async function setupManageControlsAsync(lists: ShoppingListSummary[] = LISTS): Promise<{
@@ -36,7 +38,11 @@ async function setupManageControlsAsync(lists: ShoppingListSummary[] = LISTS): P
 
 describe('ShoppingListManageControlsComponent', () => {
     it('keeps tab order stable and replaces the least recently used slot', async () => {
-        const extra = ['3', '4', '5'].map(number => ({ ...LISTS[0], id: `list-${number}`, name: `Extra ${number}` }));
+        const extra = ['3', '4', '5'].map(number => ({
+            ...LISTS[0],
+            id: entityId<'shopping-list'>(`list-${number}`),
+            name: `Extra ${number}`,
+        }));
         const { component } = await setupManageControlsAsync([...LISTS, ...extra]);
         component['selectList']('list-5');
         expect(component['quickLists']().map(list => list.id)).toEqual(['list-1', 'list-2', 'list-5']);
@@ -65,9 +71,9 @@ describe('ShoppingListManageControlsComponent', () => {
     it('starts renaming the requested list after it appears in summaries', async () => {
         const { component, fixture } = await setupManageControlsAsync();
         const newList: ShoppingListSummary = {
-            id: 'list-3',
+            id: entityId<'shopping-list'>('list-3'),
             name: 'New shopping list',
-            createdAt: '2026-06-06T00:00:00Z',
+            createdAt: utcInstant('2026-06-06T00:00:00Z'),
             itemsCount: 0,
         };
         const handledSpy = vi.fn();

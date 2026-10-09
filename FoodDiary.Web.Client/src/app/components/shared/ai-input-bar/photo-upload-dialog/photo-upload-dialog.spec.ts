@@ -6,6 +6,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { FrontendLoggerService } from '../../../../services/frontend-logger.service';
 import { ImageUploadFacade } from '../../../../shared/lib/image-upload.facade';
+import { imageSelection } from '../../../../shared/models/image-upload.data';
 import { PhotoUploadDialogComponent } from './photo-upload-dialog';
 
 type PhotoUploadDialogTestContext = {
@@ -41,11 +42,11 @@ describe('PhotoUploadDialogComponent', () => {
         const component = fixture.componentInstance;
         fixture.detectChanges();
 
-        component['onImageChanged']({ url: 'https://example.com/image.jpg', assetId: null });
-        component['onImageChanged']({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        component['onImageChanged'](imageSelection('https://example.com/image.jpg', null));
+        component['onImageChanged'](imageSelection('https://example.com/image.jpg', 'asset-1'));
 
         expect(dialogRef.close).toHaveBeenCalledOnce();
-        expect(dialogRef.close).toHaveBeenCalledWith({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        expect(dialogRef.close).toHaveBeenCalledWith(imageSelection('https://example.com/image.jpg', 'asset-1'));
     });
 
     it('closes with null on cancel', async () => {

@@ -134,12 +134,12 @@ public sealed class SyncWearableDataCommandHandler(
                 .GetAsync(userId, provider, point.DataType, date, cancellationToken)
                 .ConfigureAwait(false);
             if (existing is not null) {
-                existing.UpdateValue(point.Value);
+                existing.UpdateReading(point.ToReading());
                 await syncRepository.UpdateAsync(existing, cancellationToken).ConfigureAwait(false);
                 continue;
             }
 
-            var entry = WearableSyncEntry.Create(userId, provider, point.DataType, date, point.Value);
+            var entry = WearableSyncEntry.CreateWithReading(userId, provider, WearableSyncDay.FromDate(date), point.ToReading());
             await syncRepository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
         }
     }

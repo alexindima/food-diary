@@ -13,6 +13,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
 import { AdminCatalogFilterComponent, matchesAdminCatalog } from '../../../shared/catalog/admin-catalog-filter';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import { adminId } from '../../../shared/models/semantics/admin-meaning';
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPage } from '../../../shared/period/admin-query';
 import { AdminAchievementsFacade } from '../lib/admin-achievements.facade';
@@ -188,7 +189,7 @@ export class AdminAchievementsComponent {
         const operation =
             editingId === null || editingVersion === null
                 ? this.facade.create(request)
-                : this.facade.update(editingId, {
+                : this.facade.update(adminId<'achievement-definition'>(editingId), {
                       category: request.category,
                       metric: request.metric,
                       threshold: request.threshold,

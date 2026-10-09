@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Gamification.Domain.ValueObjects;
 using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
 using FoodDiary.Modules.Gamification.Contracts.Commands.CreateAchievementDefinition;
 using FoodDiary.Application.Contracts.Common.Validation;
@@ -19,8 +20,8 @@ public sealed class CreateAchievementDefinitionCommandHandler(IAchievementDefini
         }
 
         try {
-            var definition = AchievementDefinition.Create(
-                input.Key, input.Category, metric.Value, input.Threshold, input.TitleRu, input.TitleEn,
+            var definition = AchievementDefinition.CreateWithTarget(
+                input.Key, input.Category, AchievementTarget.FromFields(metric.Value, input.Threshold), input.TitleRu, input.TitleEn,
                 input.DescriptionRu, input.DescriptionEn, input.Icon, input.SortOrder, input.IsActive);
             bool added = await store.TryAddAsync(definition, cancellationToken).ConfigureAwait(false);
             if (!added) {

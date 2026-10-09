@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1337,
+    "contracts": 1338,
     "ambiguousContracts": 29,
-    "consumerEdges": 10448,
-    "productionConsumerEdges": 5982,
-    "testConsumerEdges": 4466,
-    "consumedContracts": 1337,
+    "consumerEdges": 10454,
+    "productionConsumerEdges": 5986,
+    "testConsumerEdges": 4468,
+    "consumedContracts": 1338,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -19674,6 +19674,23 @@
       ],
       "definitionPaths": [
         "Modules/Billing/Contracts/Commands/ReplayFailedPaddleNotifications/ReplayFailedPaddleNotificationsCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "ReportLeaseHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/ReportLeaseHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -62551,6 +62568,19 @@
       "referenceCount": 6
     },
     {
+      "contract": "IBugReportStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugReportStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Services/BugTriage/tests/FoodDiary.BugTriage.Tests/ReportIdentityTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
       "contract": "IChangeSetSnapshotService",
       "roles": [
         "Service"
@@ -77431,6 +77461,45 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Domain.Contracts/ValueObjects/Ids/BillingPaymentId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Domain.Contracts/ValueObjects/Ids/BillingSubscriptionId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Domain.Contracts/ValueObjects/Ids/BillingWebhookEventId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Domain/ValueObjects/Ids/WaistEntryId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -78068,7 +78137,7 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/RecipeCommunity/Domain/ValueObjects/Ids/RecipeCommentId.cs",
+      "consumerPath": "Modules/RecipeCommunity/Domain.Contracts/ValueObjects/Ids/RecipeCommentId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -78081,7 +78150,7 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/RecipeCommunity/Domain/ValueObjects/Ids/RecipeLikeId.cs",
+      "consumerPath": "Modules/RecipeCommunity/Domain.Contracts/ValueObjects/Ids/RecipeLikeId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -136504,7 +136573,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Common/DietologistNotificationFactory.cs",
       "isTest": false,
-      "referenceCount": 8
+      "referenceCount": 15
     },
     {
       "contract": "NotificationRequest",
@@ -146307,6 +146376,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/WorkerWorkflowBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ReportLeaseHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/ReportLeaseHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ReportLeaseHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/ReportLeaseHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Services/BugTriage/tests/FoodDiary.BugTriage.Tests/ContractSnapshotTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

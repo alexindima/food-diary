@@ -6,6 +6,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { UserService } from '../../../shared/api/user.service';
 import { MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
+import { calendarDate, utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
+import type { WaistGoalHistoryItem } from '../../../shared/models/user.data';
 import type { WaistHistoryPageSummary } from '../../../shared/models/waist-entry.data';
 import { WaistEntriesService } from '../api/waist-entries.service';
 import { WaistHistoryFacade } from './waist-history.facade';
@@ -74,7 +77,12 @@ describe('WaistHistoryFacade edit precision', () => {
     it.each(['metric', 'imperial'] as const)('preserves stored circumference in an unchanged %s edit', system => {
         const preciseWaist = 82.55;
         measurements.setSystem(system);
-        const entry = { id: 'precise', userId: 'u', date: '2026-04-02', circumferenceCm: preciseWaist };
+        const entry = {
+            id: entityId<'waist-entry'>('precise'),
+            userId: entityId<'user'>('u'),
+            date: calendarDate('2026-04-02'),
+            circumferenceCm: preciseWaist,
+        };
         facade.startEdit(entry);
         expect(Number(facade.formModel().circumference)).toBe(
             system === 'metric' ? preciseWaist : measurements.displayLength(preciseWaist, 2),
@@ -90,7 +98,14 @@ describe('WaistHistoryFacade entry history pagination', () => {
         TestBed.tick();
         expect(waistEntriesService.getHistoryPage).not.toHaveBeenCalled();
         const recentEntries = facade.entries();
-        const historyEntries = [{ id: 'older-entry', userId: 'user-1', date: '2026-03-01T00:00:00Z', circumferenceCm: 80 }];
+        const historyEntries = [
+            {
+                id: entityId<'waist-entry'>('older-entry'),
+                userId: entityId<'user'>('user-1'),
+                date: calendarDate('2026-03-01T00:00:00Z'),
+                circumferenceCm: 80,
+            },
+        ];
         waistEntriesService.getHistoryPage.mockReturnValueOnce(of(historyEntries));
         const next = vi.fn();
 
@@ -116,7 +131,12 @@ describe('WaistHistoryFacade entry history pagination', () => {
 
 describe('WaistHistoryFacade delete failure', () => {
     it('retains the entry, suppresses pending duplicates and allows retry', () => {
-        const entry = { id: 'delete-test', userId: 'u', date: '2026-04-02', circumferenceCm: 82 };
+        const entry = {
+            id: entityId<'waist-entry'>('delete-test'),
+            userId: entityId<'user'>('u'),
+            date: calendarDate('2026-04-02'),
+            circumferenceCm: 82,
+        };
         facade.entries.set([entry]);
         const request = new Subject<void>();
         waistEntriesService.remove.mockReturnValue(request);
@@ -180,7 +200,7 @@ describe('WaistHistoryFacade entries', () => {
         facade.submit();
 
         expect(waistEntriesService.create).toHaveBeenCalledWith({
-            date: '2026-04-02T00:00:00.000Z',
+            date: calendarDate('2026-04-02T00:00:00.000Z'),
             circumferenceCm: 81.79,
         });
     });
@@ -199,7 +219,7 @@ describe('WaistHistoryFacade entries', () => {
         facade.submit();
 
         expect(waistEntriesService.create).toHaveBeenCalledWith({
-            date: '2026-04-02T00:00:00.000Z',
+            date: calendarDate('2026-04-02T00:00:00.000Z'),
             circumferenceCm: 81.7,
         });
         await vi.waitFor(() => {
@@ -235,9 +255,16 @@ describe('WaistHistoryFacade entries', () => {
         expect(waistEntriesService.getEntries).not.toHaveBeenCalled();
         expect(waistEntriesService.getSummary).not.toHaveBeenCalled();
     });
+});
 
+describe('WaistHistoryFacade entry editing', () => {
     it('switches to edit mode and updates the existing entry', async () => {
-        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumferenceCm: 82 };
+        const entry = {
+            id: entityId<'waist-entry'>('entry-1'),
+            userId: entityId<'user'>('user-1'),
+            date: calendarDate('2026-04-01T00:00:00Z'),
+            circumferenceCm: 82,
+        };
 
         facade.startEdit(entry);
         facade.submit();
@@ -246,14 +273,27 @@ describe('WaistHistoryFacade entries', () => {
             expect(facade.isEditing()).toBe(false);
         });
         expect(waistEntriesService.update).toHaveBeenCalledWith('entry-1', {
-            date: '2026-04-01T00:00:00.000Z',
+            date: calendarDate('2026-04-01T00:00:00.000Z'),
             circumferenceCm: 82,
         });
     });
 
     it('cancels editing and restores latest circumference in the form', () => {
-        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumferenceCm: 82 };
-        facade.entries.set([entry, { id: 'entry-2', userId: 'user-1', date: '2026-05-01T00:00:00Z', circumferenceCm: 80.5 }]);
+        const entry = {
+            id: entityId<'waist-entry'>('entry-1'),
+            userId: entityId<'user'>('user-1'),
+            date: calendarDate('2026-04-01T00:00:00Z'),
+            circumferenceCm: 82,
+        };
+        facade.entries.set([
+            entry,
+            {
+                id: entityId<'waist-entry'>('entry-2'),
+                userId: entityId<'user'>('user-1'),
+                date: calendarDate('2026-05-01T00:00:00Z'),
+                circumferenceCm: 80.5,
+            },
+        ]);
 
         facade.startEdit(entry);
         facade.cancelEdit();
@@ -263,7 +303,12 @@ describe('WaistHistoryFacade entries', () => {
     });
 
     it('deletes entry and exits edit mode when edited entry is removed', () => {
-        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumferenceCm: 82 };
+        const entry = {
+            id: entityId<'waist-entry'>('entry-1'),
+            userId: entityId<'user'>('user-1'),
+            date: calendarDate('2026-04-01T00:00:00Z'),
+            circumferenceCm: 82,
+        };
         facade.startEdit(entry);
 
         facade.deleteEntry(entry);
@@ -328,16 +373,53 @@ function createWaistEntriesServiceMock(): typeof waistEntriesService {
         getHistoryPage: vi.fn().mockReturnValue(of([])),
         getEntries: vi.fn().mockReturnValue(
             of([
-                { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumferenceCm: 82 },
-                { id: 'entry-2', userId: 'user-1', date: '2026-03-30T00:00:00Z', circumferenceCm: 83.5 },
+                {
+                    id: entityId<'waist-entry'>('entry-1'),
+                    userId: entityId<'user'>('user-1'),
+                    date: calendarDate('2026-04-01T00:00:00Z'),
+                    circumferenceCm: 82,
+                },
+                {
+                    id: entityId<'waist-entry'>('entry-2'),
+                    userId: entityId<'user'>('user-1'),
+                    date: calendarDate('2026-03-30T00:00:00Z'),
+                    circumferenceCm: 83.5,
+                },
             ]),
         ),
-        getSummary: vi
-            .fn()
-            .mockReturnValue(of([{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageCircumferenceCm: 82 }])),
-        getLatest: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumferenceCm: 82 })),
-        create: vi.fn().mockReturnValue(of({ id: 'entry-3', userId: 'user-1', date: '2026-04-02T00:00:00Z', circumferenceCm: 81.7 })),
-        update: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumferenceCm: 82 })),
+        getSummary: vi.fn().mockReturnValue(
+            of([
+                {
+                    startDate: calendarDate('2026-04-01T00:00:00Z'),
+                    endDate: calendarDate('2026-04-01T23:59:59Z'),
+                    averageCircumferenceCm: 82,
+                },
+            ]),
+        ),
+        getLatest: vi.fn().mockReturnValue(
+            of({
+                id: entityId<'waist-entry'>('entry-1'),
+                userId: entityId<'user'>('user-1'),
+                date: calendarDate('2026-04-01T00:00:00Z'),
+                circumferenceCm: 82,
+            }),
+        ),
+        create: vi.fn().mockReturnValue(
+            of({
+                id: entityId<'waist-entry'>('entry-3'),
+                userId: entityId<'user'>('user-1'),
+                date: calendarDate('2026-04-02T00:00:00Z'),
+                circumferenceCm: 81.7,
+            }),
+        ),
+        update: vi.fn().mockReturnValue(
+            of({
+                id: entityId<'waist-entry'>('entry-1'),
+                userId: entityId<'user'>('user-1'),
+                date: calendarDate('2026-04-01T00:00:00Z'),
+                circumferenceCm: 82,
+            }),
+        ),
         remove: vi.fn().mockReturnValue(of(void 0)),
     };
 }
@@ -345,12 +427,24 @@ function createWaistEntriesServiceMock(): typeof waistEntriesService {
 function createWaistPageSummary(): WaistHistoryPageSummary {
     return {
         entries: [
-            { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumferenceCm: 82 },
-            { id: 'entry-2', userId: 'user-1', date: '2026-03-30T00:00:00Z', circumferenceCm: 83.5 },
+            {
+                id: entityId<'waist-entry'>('entry-1'),
+                userId: entityId<'user'>('user-1'),
+                date: calendarDate('2026-04-01T00:00:00Z'),
+                circumferenceCm: 82,
+            },
+            {
+                id: entityId<'waist-entry'>('entry-2'),
+                userId: entityId<'user'>('user-1'),
+                date: calendarDate('2026-03-30T00:00:00Z'),
+                circumferenceCm: 83.5,
+            },
         ],
-        summary: [{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageCircumferenceCm: 82 }],
+        summary: [
+            { startDate: calendarDate('2026-04-01T00:00:00Z'), endDate: calendarDate('2026-04-01T23:59:59Z'), averageCircumferenceCm: 82 },
+        ],
         heightCm: 180,
-        goal: { desiredWaistCm: TARGET_WAIST, startWaistCm: 84, startedAtUtc: '2026-03-01T00:00:00Z' },
+        goal: { desiredWaistCm: TARGET_WAIST, startWaistCm: 84, startedAtUtc: utcInstant('2026-03-01T00:00:00Z') },
         goalHistory: [],
     };
 }
@@ -360,7 +454,10 @@ describe('Facade boundary regressions', () => {
         facade.formModel.set({ date: '2026-04-02', circumference: '75,5' });
         facade.submit();
         await vi.waitFor(() => {
-            expect(waistEntriesService.create).toHaveBeenCalledWith({ date: '2026-04-02T00:00:00.000Z', circumferenceCm: 75.5 });
+            expect(waistEntriesService.create).toHaveBeenCalledWith({
+                date: calendarDate('2026-04-02T00:00:00.000Z'),
+                circumferenceCm: 75.5,
+            });
         });
     });
     it.each(['not-a-date', '2026-02-30', '2026-13-01'])('rejects invalid calendar date %s', date => {
@@ -399,7 +496,12 @@ describe('Facade boundary regressions', () => {
     it('keeps pending save open and preserves edit input on failure', async () => {
         const pending = new Subject<unknown>();
         waistEntriesService.update.mockReturnValue(pending);
-        facade.startEdit({ id: 'editing', userId: 'u', date: '2026-04-02', circumferenceCm: 75 });
+        facade.startEdit({
+            id: entityId<'waist-entry'>('editing'),
+            userId: entityId<'user'>('u'),
+            date: calendarDate('2026-04-02'),
+            circumferenceCm: 75,
+        });
         facade.submit();
         expect(facade.isSaving()).toBe(true);
         expect(facade.entrySaveVersion()).toBe(0);
@@ -432,7 +534,12 @@ describe('Facade editing and goal boundaries', () => {
         const pending = new Subject<ReturnType<typeof createWaistPageSummary>>();
         waistEntriesService.getPageSummary.mockReturnValue(pending);
         facade.initialize();
-        facade.startEdit({ id: 'editing', userId: 'u', date: '2026-04-02', circumferenceCm: 80 });
+        facade.startEdit({
+            id: entityId<'waist-entry'>('editing'),
+            userId: entityId<'user'>('u'),
+            date: calendarDate('2026-04-02'),
+            circumferenceCm: 80,
+        });
         pending.next(createWaistPageSummary());
         pending.complete();
         TestBed.tick();
@@ -443,7 +550,12 @@ describe('Facade editing and goal boundaries', () => {
     it('converts edited canonical data and goal when units change', () => {
         facade.initialize();
         TestBed.tick();
-        const entry = { id: 'old-outside-preview', userId: 'u', date: '2020-01-01', circumferenceCm: 90 };
+        const entry = {
+            id: entityId<'waist-entry'>('old-outside-preview'),
+            userId: entityId<'user'>('u'),
+            date: calendarDate('2020-01-01'),
+            circumferenceCm: 90,
+        };
         facade.startEdit(entry);
         measurements.setSystem('imperial');
         TestBed.tick();
@@ -493,7 +605,7 @@ describe('Form actions, period readiness and goal lifecycle', () => {
         facade.formModel.set({ date: '2026-04-02', circumference: '75,5' });
         await submit(facade.form);
         expect(waistEntriesService.create).toHaveBeenCalledWith({
-            date: '2026-04-02T00:00:00.000Z',
+            date: calendarDate('2026-04-02T00:00:00.000Z'),
             circumferenceCm: FIXTURE_LOCALIZED_DECIMAL,
         });
         expect(facade.entrySaveVersion()).toBe(1);
@@ -513,6 +625,9 @@ describe('Form actions, period readiness and goal lifecycle', () => {
         TestBed.tick();
         expect(waistEntriesService.getSummary).toHaveBeenCalledOnce();
     });
+});
+
+describe('Goal lifecycle', () => {
     it('keeps cancellation pending until the server acknowledges it', () => {
         facade.initialize();
         TestBed.tick();
@@ -534,16 +649,21 @@ describe('Form actions, period readiness and goal lifecycle', () => {
         expect(waistEntriesService.getPageSummary).toHaveBeenCalledTimes(2);
     });
     it('identifies completed goals without treating the active goal as completed', () => {
-        const active = {
-            id: 'active',
+        const active: WaistGoalHistoryItem = {
+            id: entityId<'waist-goal'>('active'),
             targetWaistCm: 75,
             startWaistCm: 80,
             endWaistCm: null,
-            startedAtUtc: '2026-01-01',
+            startedAtUtc: utcInstant('2026-01-01'),
             endedAtUtc: null,
             status: 'Active' as const,
         };
-        const completed = { ...active, id: 'completed', status: 'Cancelled' as const, endedAtUtc: '2026-02-01' };
+        const completed: WaistGoalHistoryItem = {
+            ...active,
+            id: entityId<'waist-goal'>('completed'),
+            status: 'Cancelled' as const,
+            endedAtUtc: utcInstant('2026-02-01'),
+        };
         facade.waistGoalHistory.set([active]);
         expect(facade.hasCompletedWaistGoals()).toBe(false);
         expect(facade.lastCompletedWaistGoal()).toBeNull();
@@ -552,7 +672,12 @@ describe('Form actions, period readiness and goal lifecycle', () => {
         expect(facade.lastCompletedWaistGoal()).toEqual(completed);
     });
     it('resets editing when the edited record is deleted', () => {
-        const entry = { id: 'editing', userId: 'u', date: '2026-04-02', circumferenceCm: 80 };
+        const entry = {
+            id: entityId<'waist-entry'>('editing'),
+            userId: entityId<'user'>('u'),
+            date: calendarDate('2026-04-02'),
+            circumferenceCm: 80,
+        };
         facade.startEdit(entry);
         facade.deleteEntry(entry);
         expect(facade.isEditing()).toBe(false);
@@ -566,7 +691,7 @@ describe('Summary and display resets', () => {
         TestBed.tick();
         facade.changeRange('year');
         TestBed.tick();
-        const points = [{ startDate: '2026-04-01', endDate: '2026-04-01', averageCircumferenceCm: 80 }];
+        const points = [{ startDate: calendarDate('2026-04-01'), endDate: calendarDate('2026-04-01'), averageCircumferenceCm: 80 }];
         waistEntriesService.getSummary.mockReturnValue(of(points));
         facade.changeRange('month');
         TestBed.tick();
@@ -613,7 +738,9 @@ describe('WaistHistoryFacade loading recovery', () => {
         facade.changeRange('year');
         TestBed.tick();
         const entry = facade.entries()[0];
-        const recoveredPoints = [{ startDate: '2026-04-02T00:00:00Z', endDate: '2026-04-02T23:59:59Z', averageCircumferenceCm: 75 }];
+        const recoveredPoints = [
+            { startDate: calendarDate('2026-04-02T00:00:00Z'), endDate: calendarDate('2026-04-02T23:59:59Z'), averageCircumferenceCm: 75 },
+        ];
         waistEntriesService.getSummary.mockReturnValueOnce(throwError(() => new Error('Month refresh unavailable')));
         facade.deleteEntry(entry);
         expect(waistEntriesService.remove).toHaveBeenCalledExactlyOnceWith(entry.id);

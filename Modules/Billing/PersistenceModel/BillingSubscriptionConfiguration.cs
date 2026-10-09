@@ -10,6 +10,7 @@ internal sealed class BillingSubscriptionConfiguration : IEntityTypeConfiguratio
         builder.ToTable("BillingSubscriptions");
 
         builder.HasKey(e => e.Id);
+        builder.Ignore(e => e.TypedId);
 
         ConfigureIdentifiers(builder);
         ConfigureStatusAndPeriods(builder);

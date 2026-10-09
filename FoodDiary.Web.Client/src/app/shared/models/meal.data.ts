@@ -2,14 +2,19 @@ import type { PageOf } from './page-of.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from './product.data';
 import type { QualityGrade } from './quality-grade.data';
 import { type Recipe, RecipeVisibility } from './recipe.data';
+import type { UtcInstant } from './semantics/date-value';
+import { utcInstant } from './semantics/date-value';
+import type { FavoriteMealId, ImageAssetId, MealId, MealItemId } from './semantics/entity-id';
+import { entityId } from './semantics/entity-id';
+import { type ProductQuantity, productQuantityFromStored, type RecipeServings, recipeServingsFromStored } from './semantics/meal-quantity';
 
 export type Meal = {
-    id: string;
-    date: string;
+    id: MealId;
+    date: UtcInstant;
     mealType?: string | null;
     comment?: string | null;
     imageUrl?: string | null;
-    imageAssetId?: string | null;
+    imageAssetId?: ImageAssetId | null;
     totalCalories: number;
     totalProteins: number;
     totalFats: number;
@@ -28,21 +33,64 @@ export type Meal = {
     qualityScore?: number | null;
     qualityGrade?: QualityGrade | null;
     isFavorite?: boolean;
-    favoriteMealId?: string | null;
+    favoriteMealId?: FavoriteMealId | null;
     items: MealItem[];
     aiSessions?: MealAiSession[];
 };
 
-export type MealItem = {
-    id: string;
-    mealId: string;
-    amount: number;
-    sourceType: MealSourceType;
+type MealItemIdentity = {
+    id: MealItemId;
+    mealId: MealId;
     sourceAiItemId?: string | null;
     origin?: string | null;
-    product?: Product | null;
-    recipe?: Recipe | null;
 };
+
+export type ProductMealItem = MealItemIdentity & {
+    sourceType: MealSourceType.Product;
+    amount: ProductQuantity;
+    product: Product | null;
+    recipe: null;
+};
+
+export type RecipeMealItem = MealItemIdentity & {
+    sourceType: MealSourceType.Recipe;
+    amount: RecipeServings;
+    product: null;
+    recipe: Recipe | null;
+};
+
+export type LegacyDualSourceMealItem = MealItemIdentity & {
+    sourceType: MealSourceType.Product;
+    amount: ProductQuantity;
+    product: Product;
+    recipe: Recipe;
+    legacyDualSource: true;
+};
+
+export type MealItem = ProductMealItem | RecipeMealItem | LegacyDualSourceMealItem;
+
+/** Existing projections prefer the product when both sources occur; retain both snapshots. */
+export function mealItemFromStored(
+    identity: MealItemIdentity,
+    amount: number,
+    sources: { product: Product | null; recipe: Recipe | null; sourceType?: MealSourceType },
+): MealItem {
+    const { product, recipe } = sources;
+    const sourceType = sources.sourceType ?? (product === null ? MealSourceType.Recipe : MealSourceType.Product);
+    if (product !== null && recipe !== null) {
+        return {
+            ...identity,
+            sourceType: MealSourceType.Product,
+            amount: productQuantityFromStored(amount),
+            product,
+            recipe,
+            legacyDualSource: true,
+        };
+    }
+    return sourceType === MealSourceType.Product
+        ? { ...identity, sourceType: MealSourceType.Product, amount: productQuantityFromStored(amount), product, recipe: null }
+        : { ...identity, sourceType: MealSourceType.Recipe, amount: recipeServingsFromStored(amount), product: null, recipe };
+}
 
 export type MealAiSession = {
     id: string;
@@ -238,7 +286,7 @@ export type MealAiItemManageDto = {
 };
 
 export const createEmptyProductSnapshot = (): Product => ({
-    id: '',
+    id: entityId<'product'>(''),
     name: '',
     productType: ProductType.Unknown,
     baseUnit: MeasurementUnit.G,
@@ -259,13 +307,13 @@ export const createEmptyProductSnapshot = (): Product => ({
 });
 
 export const createEmptyRecipeSnapshot = (): Recipe => ({
-    id: '',
+    id: entityId<'recipe'>(''),
     name: '',
     comment: null,
     servings: 1,
     visibility: RecipeVisibility.Private,
     usageCount: 0,
-    createdAt: '',
+    createdAt: utcInstant(''),
     isOwnedByCurrentUser: true,
     isNutritionAutoCalculated: true,
     steps: [],
@@ -276,11 +324,11 @@ export type FavoriteMeal = {
     imageUrl?: string | null;
     totalFiber?: number;
     itemNames?: string[];
-    id: string;
-    mealId: string;
+    id: FavoriteMealId;
+    mealId: MealId;
     name: string | null;
-    createdAtUtc: string;
-    mealDate: string;
+    createdAtUtc: UtcInstant;
+    mealDate: UtcInstant;
     mealType: string | null;
     totalCalories: number;
     totalProteins: number;

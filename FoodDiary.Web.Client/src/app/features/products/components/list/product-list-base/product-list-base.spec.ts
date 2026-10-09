@@ -10,6 +10,8 @@ import {
     ProductType,
     ProductVisibility,
 } from '../../../../../shared/models/product.data';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { ProductListFacade } from '../../../lib/list/product-list.facade';
 import type { OpenFoodFactsProduct } from '../../../models/open-food-facts.data';
 import { ProductListBaseComponent } from './product-list-base';
@@ -69,7 +71,7 @@ describe('ProductListBaseComponent', () => {
 
     it('opens favorite product through regular product click flow', () => {
         const { component, facade } = setupComponent();
-        const product = createProduct({ id: 'favorite-product' });
+        const product = createProduct({ id: entityId<'product'>('favorite-product') });
         const clickSpy = vi.spyOn(component as unknown as { onProductClick: (value: Product) => void }, 'onProductClick');
         facade.openFavoriteProduct.mockImplementation((_favorite: FavoriteProduct, openProduct: (value: Product) => void) => {
             openProduct(product);
@@ -191,7 +193,7 @@ function createProductListFacadeMock(): ProductListFacadeMock {
 
 function createProduct(overrides: Partial<Product> = {}): Product {
     return {
-        id: 'product-1',
+        id: entityId<'product'>('product-1'),
         name: 'Apple',
         barcode: null,
         brand: 'Garden',
@@ -222,10 +224,10 @@ function createProduct(overrides: Partial<Product> = {}): Product {
 
 function createFavoriteProduct(overrides: Partial<FavoriteProduct> = {}): FavoriteProduct {
     return {
-        id: 'favorite-1',
-        productId: 'product-1',
+        id: entityId<'favorite-product'>('favorite-1'),
+        productId: entityId<'product'>('product-1'),
         name: 'Favorite apple',
-        createdAtUtc: '2026-01-01T00:00:00Z',
+        createdAtUtc: utcInstant('2026-01-01T00:00:00Z'),
         productName: 'Apple',
         brand: 'Garden',
         barcode: null,

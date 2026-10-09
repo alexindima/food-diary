@@ -558,7 +558,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await context.SaveChangesAsync();
 
         Assert.True(await webhookRepository.ExistsAsync(BillingProviderNames.Stripe, webhookEvent.EventId));
-        Assert.Same(webhookEvent, await webhookRepository.GetByIdAsync(webhookEvent.Id));
+        Assert.Same(webhookEvent, await webhookRepository.GetByIdAsync(webhookEvent.TypedId));
         Assert.Contains(webhookEvent, await webhookRepository.GetPendingAsync(limit: 10));
         webhookEvent.MarkProcessed(DateTime.UtcNow);
         await webhookRepository.UpdateAsync(webhookEvent);

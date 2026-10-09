@@ -4,6 +4,8 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { DietologistService } from './dietologist.service';
 
 const BASE_URL = environment.apiUrls.dietologist;
@@ -55,18 +57,18 @@ describe('DietologistService relationship reads', () => {
         expect(relationshipReq.request.method).toBe('GET');
         relationshipReq.flush(null);
 
-        service.getInvitationForCurrentUser('inv-1').subscribe();
+        service.getInvitationForCurrentUser(entityId<'dietologist-invitation'>('inv-1')).subscribe();
         const invitationReq = httpMock.expectOne(`${BASE_URL}/invitations/inv-1/current-user`);
         expect(invitationReq.request.method).toBe('GET');
         invitationReq.flush({
-            invitationId: 'inv-1',
-            clientUserId: 'client-1',
+            invitationId: entityId<'dietologist-invitation'>('inv-1'),
+            clientUserId: entityId<'user'>('client-1'),
             clientEmail: 'client@example.com',
             clientFirstName: null,
             clientLastName: null,
             status: 'Pending',
-            createdAtUtc: '2026-04-15T00:00:00Z',
-            expiresAtUtc: '2026-04-22T00:00:00Z',
+            createdAtUtc: utcInstant('2026-04-15T00:00:00Z'),
+            expiresAtUtc: utcInstant('2026-04-22T00:00:00Z'),
         });
     });
 });
@@ -74,7 +76,7 @@ describe('DietologistService relationship reads', () => {
 describe('DietologistService client workspace', () => {
     it('loads client dashboard, goals and recommendations', () => {
         service
-            .getClientDashboard('client-1', {
+            .getClientDashboard(entityId<'user'>('client-1'), {
                 dateFrom: new Date(LOCAL_DATE_YEAR, MAY_MONTH_INDEX, PERIOD_START_DAY),
                 dateTo: new Date(LOCAL_DATE_YEAR, MAY_MONTH_INDEX, PERIOD_END_DAY),
                 locale: 'en',
@@ -96,31 +98,31 @@ describe('DietologistService client workspace', () => {
             meals: { items: [], total: 0 },
         });
 
-        service.getClientGoals('client-1').subscribe();
+        service.getClientGoals(entityId<'user'>('client-1')).subscribe();
         const goalsReq = httpMock.expectOne(`${BASE_URL}/clients/client-1/goals`);
         expect(goalsReq.request.method).toBe('GET');
         goalsReq.flush({ id: 'client-1', email: 'client@example.com' });
 
-        service.getRecommendationsForClient('client-1').subscribe();
+        service.getRecommendationsForClient(entityId<'user'>('client-1')).subscribe();
         const recommendationsReq = httpMock.expectOne(`${BASE_URL}/clients/client-1/recommendations?page=1&limit=100`);
         expect(recommendationsReq.request.method).toBe('GET');
         recommendationsReq.flush([]);
     });
 
     it('creates recommendations and disconnects client', () => {
-        service.createRecommendation('client-1', { text: 'Please add more protein.' }).subscribe();
+        service.createRecommendation(entityId<'user'>('client-1'), { text: 'Please add more protein.' }).subscribe();
         const createReq = httpMock.expectOne(`${BASE_URL}/clients/client-1/recommendations`);
         expect(createReq.request.method).toBe('POST');
         expect(createReq.request.body).toEqual({ text: 'Please add more protein.' });
         createReq.flush({
-            id: 'recommendation-1',
-            dietologistUserId: 'dietologist-1',
+            id: entityId<'recommendation'>('recommendation-1'),
+            dietologistUserId: entityId<'user'>('dietologist-1'),
             text: 'Please add more protein.',
             isRead: false,
-            createdAtUtc: '2026-05-17T10:00:00Z',
+            createdAtUtc: utcInstant('2026-05-17T10:00:00Z'),
         });
 
-        service.disconnectClient('client-1').subscribe();
+        service.disconnectClient(entityId<'user'>('client-1')).subscribe();
         const disconnectReq = httpMock.expectOne(`${BASE_URL}/clients/client-1`);
         expect(disconnectReq.request.method).toBe('DELETE');
         disconnectReq.flush(null);
@@ -138,13 +140,13 @@ describe('DietologistService invitations', () => {
         });
         inviteReq.flush(null);
 
-        service.acceptInvitationForCurrentUser('inv-1').subscribe();
+        service.acceptInvitationForCurrentUser(entityId<'dietologist-invitation'>('inv-1')).subscribe();
         const acceptReq = httpMock.expectOne(`${BASE_URL}/invitations/inv-1/accept-current-user`);
         expect(acceptReq.request.method).toBe('POST');
         expect(acceptReq.request.body).toBeNull();
         acceptReq.flush(null);
 
-        service.declineInvitationForCurrentUser('inv-1').subscribe();
+        service.declineInvitationForCurrentUser(entityId<'dietologist-invitation'>('inv-1')).subscribe();
         const declineReq = httpMock.expectOne(`${BASE_URL}/invitations/inv-1/decline-current-user`);
         expect(declineReq.request.method).toBe('POST');
         expect(declineReq.request.body).toBeNull();

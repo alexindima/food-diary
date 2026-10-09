@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import { toLocalDayEndIso, toLocalDayStartIso } from '../../../shared/lib/local-date.utils';
 import type { Meal } from '../../../shared/models/meal.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import {
     buildMealDateTime,
     buildMealManageDto,
@@ -26,8 +28,8 @@ describe('Meal calendar round trip in the process timezone', () => {
                 manualTotals: NO_NUTRIENTS,
             });
             const stored: Meal = {
-                id: 'meal',
-                date: payload.date.toISOString(),
+                id: entityId<'meal'>('meal'),
+                date: utcInstant(payload.date.toISOString()),
                 items: [],
                 isNutritionAutoCalculated: true,
                 totalCalories: 0,

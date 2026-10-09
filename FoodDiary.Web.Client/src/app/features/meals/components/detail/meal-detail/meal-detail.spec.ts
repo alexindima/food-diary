@@ -8,9 +8,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { type Meal, MealSourceType } from '../../../../../shared/models/meal.data';
 import { MeasurementUnit, type Product, ProductVisibility } from '../../../../../shared/models/product.data';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
+import { productQuantityFromStored } from '../../../../../shared/models/semantics/meal-quantity';
 import { MealDetailComponent } from './meal-detail';
 
 const BASE_AMOUNT = 100;
+const DISPLAY_AMOUNT = 180;
 const TOTAL_CALORIES = 500;
 const TOTAL_PROTEINS = 30;
 const TOTAL_FATS = 20;
@@ -23,7 +27,7 @@ const SECOND_ITEM_AMOUNT = 120;
 const THIRD_ITEM_AMOUNT = 140;
 
 const createProduct = (id: string, name: string): Product => ({
-    id,
+    id: entityId<'product'>(id),
     name,
     baseUnit: MeasurementUnit.G,
     baseAmount: BASE_AMOUNT,
@@ -43,8 +47,8 @@ const createProduct = (id: string, name: string): Product => ({
 });
 
 const mockMeal: Meal = {
-    id: '1',
-    date: '2024-03-15T08:30:00Z',
+    id: entityId<'meal'>('1'),
+    date: utcInstant('2024-03-15T08:30:00Z'),
     mealType: 'breakfast',
     comment: null,
     imageUrl: null,
@@ -163,11 +167,12 @@ describe('MealDetailComponent item previews', () => {
             ...mockMeal,
             items: [
                 {
-                    id: 'item-1',
-                    mealId: '1',
-                    amount: 180,
+                    id: entityId<'meal-item'>('item-1'),
+                    mealId: entityId<'meal'>('1'),
+                    amount: productQuantityFromStored(DISPLAY_AMOUNT),
                     sourceType: MealSourceType.Product,
                     product: createProduct('p1', 'Manual item'),
+                    recipe: null,
                 },
             ],
             aiSessions: [
@@ -217,25 +222,28 @@ describe('MealDetailComponent macro blocks and expanded preview', () => {
             ...mockMeal,
             items: [
                 {
-                    id: 'item-1',
-                    mealId: '1',
-                    amount: BASE_AMOUNT,
+                    id: entityId<'meal-item'>('item-1'),
+                    mealId: entityId<'meal'>('1'),
+                    amount: productQuantityFromStored(BASE_AMOUNT),
                     sourceType: MealSourceType.Product,
                     product: createProduct('p1', 'First item'),
+                    recipe: null,
                 },
                 {
-                    id: 'item-2',
-                    mealId: '1',
-                    amount: SECOND_ITEM_AMOUNT,
+                    id: entityId<'meal-item'>('item-2'),
+                    mealId: entityId<'meal'>('1'),
+                    amount: productQuantityFromStored(SECOND_ITEM_AMOUNT),
                     sourceType: MealSourceType.Product,
                     product: createProduct('p2', 'Second item'),
+                    recipe: null,
                 },
                 {
-                    id: 'item-3',
-                    mealId: '1',
-                    amount: THIRD_ITEM_AMOUNT,
+                    id: entityId<'meal-item'>('item-3'),
+                    mealId: entityId<'meal'>('1'),
+                    amount: productQuantityFromStored(THIRD_ITEM_AMOUNT),
                     sourceType: MealSourceType.Product,
                     product: createProduct('p3', 'Third item'),
+                    recipe: null,
                 },
             ],
             aiSessions: [],

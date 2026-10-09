@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { formatDateInputValue, parseLocalDateInputValue } from '../../../shared/lib/local-date.utils';
 import { measurementMonthRange, toMeasurementDateIso } from '../../../shared/lib/measurement-date.utils';
+import { calendarDate } from '../../../shared/models/semantics/date-value';
 import { formatWaistHistoryNumericDate } from '../../waist-history/lib/waist-history-chart.mapper';
 import { buildWaistHistoryFiltersForRange } from '../../waist-history/lib/waist-history-range.utils';
 import { buildWeightHistoryChartPoints, formatWeightHistoryNumericDate } from '../../weight-history/lib/weight-history-chart.mapper';
@@ -66,7 +67,11 @@ describe('measurement calendar dates in the host time zone', () => {
         expect(formatDateInputValue(month.start)).toBe(`${value.slice(0, monthPrefixLength)}-01`);
         expect(formatDateInputValue(month.end).slice(0, monthPrefixLength)).toBe(value.slice(0, monthPrefixLength));
         expect(
-            buildWeightHistoryChartPoints([{ startDate: value, endDate: value, averageWeightKg: 70 }], 'ru', year)[0]?.label.split('\n')[0],
+            buildWeightHistoryChartPoints(
+                [{ startDate: calendarDate(value), endDate: calendarDate(value), averageWeightKg: 70 }],
+                'ru',
+                year,
+            )[0]?.label.split('\n')[0],
         ).toBe(value.slice(dayPrefixLength));
     });
 

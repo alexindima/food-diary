@@ -8,14 +8,15 @@ import { ImageUploadFieldComponent } from '../../../../../components/shared/imag
 import { FrontendLoggerService } from '../../../../../services/frontend-logger.service';
 import { ImageUploadFacade } from '../../../../../shared/lib/image-upload.facade';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MealPhotoUploadPanelComponent } from './meal-photo-upload-panel';
 
 const RESIZE_MAX_DIMENSION = 1536;
 
 describe('MealPhotoUploadPanelComponent', () => {
     it('should pass image upload inputs and emit image changes', async () => {
-        const initialSelection: ImageSelection = { url: 'https://example.com/photo.jpg', assetId: 'asset-1' };
-        const nextSelection: ImageSelection = { url: 'https://example.com/next.jpg', assetId: 'asset-2' };
+        const initialSelection: ImageSelection = imageSelection('https://example.com/photo.jpg', 'asset-1');
+        const nextSelection: ImageSelection = imageSelection('https://example.com/next.jpg', 'asset-2');
         const { component, fixture } = await setupComponentAsync({ initialSelection });
         const imageChangedSpy = vi.fn();
         component['imageChanged'].subscribe(imageChangedSpy);

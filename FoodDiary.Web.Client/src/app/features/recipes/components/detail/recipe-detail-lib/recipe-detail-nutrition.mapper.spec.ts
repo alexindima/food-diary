@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import { MeasurementUnit } from '../../../../../shared/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 const RECIPE_DETAIL_INGREDIENT_PREVIEW_LIMIT = 5;
 const RECIPE_DETAIL_MACRO_SUMMARY_LIMIT = 4;
 import { buildRecipeDetailViewModel } from './recipe-detail-nutrition.mapper';
@@ -123,7 +125,7 @@ describe('buildRecipeDetailViewModel preview', () => {
 
 function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
     return {
-        id: 'recipe-1',
+        id: entityId<'recipe'>('recipe-1'),
         name: 'Recipe',
         description: null,
         comment: null,
@@ -135,7 +137,7 @@ function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
         servings: 2,
         visibility: RecipeVisibility.Public,
         usageCount: 0,
-        createdAt: '2026-01-01T00:00:00Z',
+        createdAt: utcInstant('2026-01-01T00:00:00Z'),
         isOwnedByCurrentUser: true,
         qualityScore: QUALITY_SCORE,
         qualityGrade: 'green',

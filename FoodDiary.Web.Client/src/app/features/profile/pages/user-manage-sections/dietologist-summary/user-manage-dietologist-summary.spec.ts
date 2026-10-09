@@ -6,6 +6,8 @@ import { describe, expect, it } from 'vitest';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import type { DietologistRelationship } from '../../../../../shared/models/dietologist.data';
+import { optionalUtcInstant, utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId, optionalEntityId } from '../../../../../shared/models/semantics/entity-id';
 import { createDietologistFormModel } from '../../../lib/user-manage-form.mapper';
 import { UserManageDietologistSummaryComponent } from './user-manage-dietologist-summary';
 
@@ -123,12 +125,12 @@ async function createComponentAsync(
 
 function createRelationship(status: DietologistRelationship['status']): DietologistRelationship {
     return {
-        invitationId: 'invitation-1',
+        invitationId: entityId<'dietologist-invitation'>('invitation-1'),
         status,
         email: 'diet@example.com',
         firstName: 'Diet',
         lastName: 'Doctor',
-        dietologistUserId: status === 'Accepted' ? 'dietologist-1' : null,
+        dietologistUserId: optionalEntityId<'user'>(status === 'Accepted' ? 'dietologist-1' : null),
         permissions: {
             shareProfile: true,
             shareMeals: true,
@@ -139,8 +141,8 @@ function createRelationship(status: DietologistRelationship['status']): Dietolog
             shareHydration: true,
             shareFasting: true,
         },
-        createdAtUtc: '2026-05-01T00:00:00Z',
-        expiresAtUtc: '2026-05-08T00:00:00Z',
-        acceptedAtUtc: status === 'Accepted' ? '2026-05-02T00:00:00Z' : null,
+        createdAtUtc: utcInstant('2026-05-01T00:00:00Z'),
+        expiresAtUtc: utcInstant('2026-05-08T00:00:00Z'),
+        acceptedAtUtc: optionalUtcInstant(status === 'Accepted' ? '2026-05-02T00:00:00Z' : null),
     };
 }

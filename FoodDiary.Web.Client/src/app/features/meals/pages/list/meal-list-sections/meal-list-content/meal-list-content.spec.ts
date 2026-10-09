@@ -10,6 +10,8 @@ import { ErrorStateComponent } from '../../../../../../components/shared/error-s
 import { MealCardComponent } from '../../../../../../components/shared/meal-card/meal-card';
 import { AuthService } from '../../../../../../services/auth.service';
 import type { Meal } from '../../../../../../shared/models/meal.data';
+import { utcInstant } from '../../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../../shared/models/semantics/entity-id';
 import type { MealDateGroupView } from '../../meal-list-lib/meal-list.types';
 import { MealListContentComponent } from './meal-list-content';
 
@@ -204,8 +206,8 @@ function createGroup(items: Meal[]): MealDateGroupView {
 
 function createMeal(overrides: Partial<Meal> = {}): Meal {
     return {
-        id: 'meal-1',
-        date: '2026-05-14T12:00:00Z',
+        id: entityId<'meal'>('meal-1'),
+        date: utcInstant('2026-05-14T12:00:00Z'),
         mealType: 'LUNCH',
         comment: null,
         imageUrl: null,

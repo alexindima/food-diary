@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { publicRecipeFromSdk } from './public-recipe-sdk.mapper';
 
 describe('Public recipe SDK ingredients', () => {
     it('preserves unavailable public ingredients without inferring missing nutrition', () => {
         const recipe = publicRecipeFromSdk({
-            id: 'recipe',
+            id: entityId<'recipe'>('recipe'),
             name: 'Public recipe',
             images: [],
             servings: 2,

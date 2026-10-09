@@ -12,6 +12,7 @@ import { type UserProfileOverview, UserService } from '../../../shared/api/user.
 import { TelegramBackupEmailFlowService } from '../../../shared/auth/telegram-backup-email-flow.service';
 import { TelegramWebAppService } from '../../../shared/auth/telegram-web-app.service';
 import { LocalizationService } from '../../../shared/i18n/localization.service';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { UpdateUserDto, type User } from '../../../shared/models/user.data';
 import { NotificationService } from '../../../shared/notifications/notification.service';
 import { BrowserWindowService } from '../../../shared/platform/browser-window.service';
@@ -20,7 +21,7 @@ import { ProfileMeasurementsService } from '../api/profile-measurements.service'
 import { ProfileManageFacade } from './profile-manage.facade';
 
 const user: User = {
-    id: 'u1',
+    id: entityId<'user'>('u1'),
     email: 'test@example.com',
     hasPassword: false,
     language: 'ru',

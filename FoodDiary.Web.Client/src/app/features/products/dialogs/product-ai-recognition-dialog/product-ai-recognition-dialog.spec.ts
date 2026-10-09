@@ -8,6 +8,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { FrontendLoggerService } from '../../../../services/frontend-logger.service';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
+import { imageSelection } from '../../../../shared/models/image-upload.data';
 import { MeasurementUnit } from '../../../../shared/models/product.data';
 import { ProductAiRecognitionFacade } from '../../lib/product-ai-recognition.facade';
 import { ProductAiRecognitionDialogComponent } from './product-ai-recognition-dialog';
@@ -193,10 +194,7 @@ describe('ProductAiRecognitionDialogComponent close', () => {
 });
 
 function createImageSelection(): ImageSelection {
-    return {
-        assetId: 'asset-1',
-        url: 'https://example.test/image.jpg',
-    };
+    return imageSelection('https://example.test/image.jpg', 'asset-1');
 }
 
 function createVisionItem(): FoodVisionItem {
@@ -326,7 +324,7 @@ describe('product label recognition', () => {
             notes: 'Fiber not on label',
         };
         productAiRecognitionFacade.analyzeFoodImage.mockReturnValue(of({ items: [], productLabel: label }));
-        const second = { assetId: 'asset-2', url: 'https://example.test/label.jpg' };
+        const second = imageSelection('https://example.test/label.jpg', 'asset-2');
         component['onPhotosChanged']([createImageSelection(), second]);
         component['onCoverChanged'](second);
         component['startAnalysis']();
@@ -385,7 +383,7 @@ describe('product label recognition', () => {
 });
 
 it('prefills existing photos without starting recognition or mutating the form photo array', () => {
-    const photos = [createImageSelection(), { assetId: 'second', url: '/second.jpg' }];
+    const photos = [createImageSelection(), imageSelection('/second.jpg', 'second')];
     Object.assign(TestBed.inject(FD_UI_DIALOG_DATA), { initialPhotos: photos });
     const prefilled = TestBed.createComponent(ProductAiRecognitionDialogComponent).componentInstance;
     expect(prefilled['photos']()).toEqual(photos);
@@ -466,7 +464,7 @@ describe('recognition count lifecycle', () => {
 });
 
 it('ignores an empty legacy cover when opening recognition for a product without photos', () => {
-    Object.assign(TestBed.inject(FD_UI_DIALOG_DATA), { initialPhotos: [{ url: null, assetId: null }] });
+    Object.assign(TestBed.inject(FD_UI_DIALOG_DATA), { initialPhotos: [imageSelection(null, null)] });
     const empty = TestBed.createComponent(ProductAiRecognitionDialogComponent).componentInstance;
     expect(empty['photos']()).toEqual([]);
     expect(empty['cover']()).toBeNull();

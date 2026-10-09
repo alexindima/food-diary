@@ -10,6 +10,7 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 
 import { AdminCatalogFilterComponent, matchesAdminCatalog } from '../../../shared/catalog/admin-catalog-filter';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPage } from '../../../shared/period/admin-query';
 import { AdminEmailTemplateEditDialogComponent } from '../dialogs/admin-email-template-edit-dialog';
@@ -120,14 +121,14 @@ export class AdminEmailTemplatesComponent {
 
     protected openCreate(): void {
         const dialogData: AdminEmailTemplate & { isNew: boolean } = {
-            id: '',
+            id: adminId<'email-template'>(''),
             key: '',
             locale: '',
             subject: '',
             htmlBody: '',
             textBody: '',
             isActive: true,
-            createdOnUtc: new Date().toISOString(),
+            createdOnUtc: adminUtcInstant(new Date().toISOString()),
             updatedOnUtc: null,
             isNew: true,
         };

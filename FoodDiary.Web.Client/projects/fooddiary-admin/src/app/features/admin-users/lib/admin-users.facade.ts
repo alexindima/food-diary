@@ -1,6 +1,7 @@
 import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
+import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminUsersService } from '../api/admin-users.service';
 import type {
     AdminImpersonationSession,
@@ -33,23 +34,23 @@ export class AdminUsersFacade {
         return this.usersService.getUsers(page, limit, search, filters);
     }
 
-    public updateUser(userId: string, payload: AdminUserUpdate): Observable<AdminUser> {
+    public updateUser(userId: AdminId<'user'>, payload: AdminUserUpdate): Observable<AdminUser> {
         return this.usersService.updateUser(userId, payload);
     }
 
-    public setPassword(userId: string, payload: AdminUserSetPassword): Observable<void> {
+    public setPassword(userId: AdminId<'user'>, payload: AdminUserSetPassword): Observable<void> {
         return this.usersService.setPassword(userId, payload);
     }
 
-    public getUser(userId: string): Observable<AdminUser> {
+    public getUser(userId: AdminId<'user'>): Observable<AdminUser> {
         return this.usersService.getUser(userId);
     }
 
-    public getUserRoleAudit(userId: string): Observable<AdminUserRoleAuditEvent[]> {
+    public getUserRoleAudit(userId: AdminId<'user'>): Observable<AdminUserRoleAuditEvent[]> {
         return this.usersService.getUserRoleAudit(userId);
     }
 
-    public startImpersonation(userId: string, reason: string): Observable<AdminImpersonationStart> {
+    public startImpersonation(userId: AdminId<'user'>, reason: string): Observable<AdminImpersonationStart> {
         return this.usersService.startImpersonation(userId, reason);
     }
 

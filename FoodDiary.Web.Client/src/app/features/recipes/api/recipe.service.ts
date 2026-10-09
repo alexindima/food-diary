@@ -12,6 +12,7 @@ import { requireSdkFields, sdkOptional, sdkPage } from '../../../shared/api/sdk/
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { Recipe, RecipeDto, RecipeFilters, RecipeOverview } from '../../../shared/models/recipe.data';
+import type { RecipeId } from '../../../shared/models/semantics/entity-id';
 import { RECIPE_API_LIMITS } from './recipe-api.tokens';
 
 export type RecipeOverviewQuery = {
@@ -39,7 +40,7 @@ export class RecipeService {
         );
     }
 
-    public getById(id: string, includePublic = true): Observable<Recipe | null> {
+    public getById(id: RecipeId, includePublic = true): Observable<Recipe | null> {
         return this.sdk.client.getRecipesById({ version: this.sdk.version, id, includePublic }).pipe(
             map(value => sdkOptional(value, recipeFromSdk)),
             catchError((error: unknown) => fallbackApiError('Get recipe error', error, null)),
@@ -99,20 +100,20 @@ export class RecipeService {
         };
     }
 
-    public update(id: string, data: RecipeDto): Observable<Recipe> {
+    public update(id: RecipeId, data: RecipeDto): Observable<Recipe> {
         return this.sdk.client.patchRecipesById({ version: this.sdk.version, id, updateRecipeHttpRequest: data }).pipe(
             map(recipeFromSdk),
             catchError((error: unknown) => rethrowApiError('Update recipe error', error)),
         );
     }
 
-    public deleteById(id: string): Observable<void> {
+    public deleteById(id: RecipeId): Observable<void> {
         return this.sdk.client
             .deleteRecipesById({ version: this.sdk.version, id })
             .pipe(catchError((error: unknown) => rethrowApiError('Delete recipe error', error)));
     }
 
-    public duplicate(id: string): Observable<Recipe> {
+    public duplicate(id: RecipeId): Observable<Recipe> {
         return this.sdk.client.postRecipesByIdDuplicate({ version: this.sdk.version, id }).pipe(
             map(recipeFromSdk),
             catchError((error: unknown) => rethrowApiError('Duplicate recipe error', error)),

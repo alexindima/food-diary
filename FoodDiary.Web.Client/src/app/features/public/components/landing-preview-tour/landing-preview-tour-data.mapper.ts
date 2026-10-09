@@ -8,6 +8,8 @@ import type {
 import type { Meal } from '../../../../shared/models/meal.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../shared/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { QuickMealItem } from '../../../meals/contracts/quick-meal';
 
 export type LandingPreviewContent = {
@@ -131,8 +133,8 @@ function buildHeroSummaryCard(): LandingPreviewContent['heroSummaryCard'] {
 function buildGuestMeals(translate: TranslateFn, now: Date): MealPreviewEntry[] {
     const comment = translate('LANDING_PREVIEW_TOUR.PREVIEW_DATA.MEAL_COMMENT');
     const lunch: Meal = {
-        id: 'guest-lunch',
-        date: now.toISOString(),
+        id: entityId<'meal'>('guest-lunch'),
+        date: utcInstant(now.toISOString()),
         mealType: 'LUNCH',
         totalCalories: 430,
         totalProteins: 24,
@@ -172,7 +174,7 @@ function buildPreviewProducts(translate: TranslateFn, now: Date): Product[] {
 
     return [
         {
-            id: 'preview-yogurt',
+            id: entityId<'product'>('preview-yogurt'),
             name: yogurtName,
             baseUnit: MeasurementUnit.G,
             baseAmount: 100,
@@ -199,7 +201,7 @@ function buildPreviewProducts(translate: TranslateFn, now: Date): Product[] {
             qualityGrade: 'green',
         },
         {
-            id: 'preview-granola',
+            id: entityId<'product'>('preview-granola'),
             name: granolaName,
             baseUnit: MeasurementUnit.G,
             baseAmount: 50,
@@ -234,7 +236,7 @@ function buildPreviewRecipes(translate: TranslateFn, now: Date): Recipe[] {
 
 function buildPreviewBowlRecipe(translate: TranslateFn, now: Date): Recipe {
     return {
-        id: 'preview-bowl',
+        id: entityId<'recipe'>('preview-bowl'),
         name: translate('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.BOWL.NAME'),
         description: translate('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.BOWL.DESCRIPTION'),
         category: 'main_courses',
@@ -245,7 +247,7 @@ function buildPreviewBowlRecipe(translate: TranslateFn, now: Date): Recipe {
         servings: 2,
         visibility: RecipeVisibility.Public,
         usageCount: 0,
-        createdAt: now.toISOString(),
+        createdAt: utcInstant(now.toISOString()),
         isOwnedByCurrentUser: true,
         qualityScore: 81,
         qualityGrade: 'green',
@@ -275,7 +277,7 @@ function buildPreviewBowlRecipe(translate: TranslateFn, now: Date): Recipe {
 
 function buildPreviewSaladRecipe(translate: TranslateFn, now: Date): Recipe {
     return {
-        id: 'preview-salad',
+        id: entityId<'recipe'>('preview-salad'),
         name: translate('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.SALAD.NAME'),
         description: translate('LANDING_PREVIEW_TOUR.PREVIEW_DATA.RECIPES.SALAD.DESCRIPTION'),
         category: 'salads',
@@ -286,7 +288,7 @@ function buildPreviewSaladRecipe(translate: TranslateFn, now: Date): Recipe {
         servings: 1,
         visibility: RecipeVisibility.Public,
         usageCount: 0,
-        createdAt: now.toISOString(),
+        createdAt: utcInstant(now.toISOString()),
         isOwnedByCurrentUser: true,
         qualityScore: 76,
         qualityGrade: 'green',

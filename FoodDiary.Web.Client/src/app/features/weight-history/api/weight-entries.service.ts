@@ -10,6 +10,7 @@ import { createSdkConnection, sdkRequestOptions } from '../../../shared/api/sdk/
 import { sdkOptional } from '../../../shared/api/sdk/sdk-response';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { MEASUREMENT_HISTORY_FETCH_LIMIT } from '../../../shared/measurements/measurement-history.constants';
+import type { WeightEntryId } from '../../../shared/models/semantics/entity-id';
 import type {
     CreateWeightEntryPayload,
     UpdateWeightEntryPayload,
@@ -65,14 +66,14 @@ export class WeightEntriesService {
         );
     }
 
-    public update(id: string, payload: UpdateWeightEntryPayload): Observable<WeightEntry> {
+    public update(id: WeightEntryId, payload: UpdateWeightEntryPayload): Observable<WeightEntry> {
         return this.sdk.client.putWeightEntriesById({ version: this.sdk.version, id, updateWeightEntryHttpRequest: payload }).pipe(
             map(weightEntryFromSdk),
             catchError((error: unknown) => rethrowApiError('Update weight entry error', error)),
         );
     }
 
-    public remove(id: string): Observable<void> {
+    public remove(id: WeightEntryId): Observable<void> {
         return this.sdk.client.deleteWeightEntriesById({ version: this.sdk.version, id }).pipe(
             map(() => {}),
             catchError((error: unknown) => rethrowApiError('Delete weight entry error', error)),

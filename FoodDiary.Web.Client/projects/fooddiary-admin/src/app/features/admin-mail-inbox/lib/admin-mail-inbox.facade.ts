@@ -1,6 +1,7 @@
 import { inject, Service } from '@angular/core';
 import type { Observable } from 'rxjs';
 
+import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminMailInboxService } from '../api/admin-mail-inbox.service';
 import type {
     AdminMailInboxFilters,
@@ -21,11 +22,11 @@ export class AdminMailInboxFacade {
         return this.mailInboxService.getMessages(limit, recipient, category, unread);
     }
 
-    public getMessage(id: string): Observable<AdminMailInboxMessageDetails> {
+    public getMessage(id: AdminId<'mail-inbox-message'>): Observable<AdminMailInboxMessageDetails> {
         return this.mailInboxService.getMessage(id);
     }
 
-    public markMessageRead(id: string): Observable<void> {
+    public markMessageRead(id: AdminId<'mail-inbox-message'>): Observable<void> {
         return this.mailInboxService.markMessageRead(id);
     }
 }

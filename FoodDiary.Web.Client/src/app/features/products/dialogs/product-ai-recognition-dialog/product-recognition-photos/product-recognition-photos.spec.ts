@@ -3,10 +3,11 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { ProductRecognitionPhotosComponent } from './product-recognition-photos';
 const MAX_PHOTOS = 5;
 const openPreview = vi.fn();
-const photo = (index: number): ImageSelection => ({ assetId: `image-${index}`, url: `https://example.test/${index}.jpg` });
+const photo = (index: number): ImageSelection => imageSelection(`https://example.test/${index}.jpg`, `image-${index}`);
 beforeEach(() => {
     TestBed.configureTestingModule({
         imports: [ProductRecognitionPhotosComponent],

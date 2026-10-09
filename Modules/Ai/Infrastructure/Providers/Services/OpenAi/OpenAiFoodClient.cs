@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Domain.ValueObjects;
 using System.Globalization;
 using FoodDiary.Integrations.Http.Services;
 using System.Net;
@@ -586,7 +587,7 @@ public sealed partial class OpenAiFoodClient(
             new KeyValuePair<string, object?>("fooddiary.ai.outcome", outcome));
     }
 
-    private static AiUsageTokens? ExtractUsage(JsonDocument json) {
+    private static AiTokenUsage? ExtractUsage(JsonDocument json) {
         if (json.RootElement.ValueKind != JsonValueKind.Object ||
             !json.RootElement.TryGetProperty("usage", out JsonElement usage) ||
             usage.ValueKind != JsonValueKind.Object) {
@@ -614,7 +615,7 @@ public sealed partial class OpenAiFoodClient(
             total = (int)computedTotal;
         }
 
-        return new AiUsageTokens(input, output, total);
+        return AiTokenUsage.TryFromProviderCounts(input, output, total, out AiTokenUsage? tokenUsage) ? tokenUsage : null;
     }
 
     private static bool TryGetNonNegativeInt32(JsonElement parent, string propertyName, out int value) {

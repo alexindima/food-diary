@@ -10,6 +10,7 @@ import {
     type ConfirmDeleteDialogData,
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import type { Recipe } from '../../../../shared/models/recipe.data';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
@@ -135,7 +136,7 @@ export class RecipeDetailFacade {
         const favoriteId = this.favoriteRecipeId;
         const request$ =
             favoriteId !== null && favoriteId.length > 0
-                ? this.favoriteRecipeService.remove(favoriteId)
+                ? this.favoriteRecipeService.remove(entityId<'favorite-recipe'>(favoriteId))
                 : this.favoriteRecipeService.getLookupPage().pipe(
                       switchMap(favorites => {
                           const match = favorites.find(favorite => favorite.recipeId === recipe.id);

@@ -7,15 +7,17 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { FavoriteMeal, Meal } from '../../../../shared/models/meal.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealDetailFacade } from './meal-detail.facade';
 
 const favoriteMeal: FavoriteMeal = {
-    id: 'favorite-1',
-    mealId: 'meal-1',
+    id: entityId<'favorite-meal'>('favorite-1'),
+    mealId: entityId<'meal'>('meal-1'),
     name: 'Lunch',
-    createdAtUtc: '2026-05-14T10:00:00Z',
-    mealDate: '2026-05-14T09:00:00Z',
+    createdAtUtc: utcInstant('2026-05-14T10:00:00Z'),
+    mealDate: utcInstant('2026-05-14T09:00:00Z'),
     mealType: 'Lunch',
     totalCalories: 500,
     totalProteins: 30,
@@ -25,8 +27,8 @@ const favoriteMeal: FavoriteMeal = {
 };
 
 const meal: Meal = {
-    id: 'meal-1',
-    date: '2026-05-14T09:00:00Z',
+    id: entityId<'meal'>('meal-1'),
+    date: utcInstant('2026-05-14T09:00:00Z'),
     mealType: 'Lunch',
     comment: null,
     imageUrl: null,
@@ -118,7 +120,7 @@ describe('MealDetailFacade favorite state', () => {
     });
 
     it('should remove favorite by known favorite id', () => {
-        const favoriteMealData = { ...meal, isFavorite: true, favoriteMealId: 'favorite-1' };
+        const favoriteMealData = { ...meal, isFavorite: true, favoriteMealId: entityId<'favorite-meal'>('favorite-1') };
         favoriteMealService.isFavorite.mockReturnValue(of(true));
         facade.initialize(favoriteMealData);
 

@@ -3,13 +3,15 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { FavoriteRecipe } from '../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FavoriteRecipeRowComponent } from './favorite-recipe-row';
 
 const recipe: FavoriteRecipe = {
-    id: 'f1',
-    recipeId: 'r1',
+    id: entityId<'favorite-recipe'>('f1'),
+    recipeId: entityId<'recipe'>('r1'),
     recipeName: 'Rice',
-    createdAtUtc: '2026-01-01T00:00:00Z',
+    createdAtUtc: utcInstant('2026-01-01T00:00:00Z'),
     servings: 2,
     ingredientCount: 1,
     ingredientNames: ['Rice'],

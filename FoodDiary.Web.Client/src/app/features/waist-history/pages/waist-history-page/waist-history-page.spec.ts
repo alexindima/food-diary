@@ -10,6 +10,8 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { ConfirmDeleteDialogComponent } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import { NavigationService } from '../../../../services/navigation.service';
 import { UserService } from '../../../../shared/api/user.service';
+import { calendarDate } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { WaistEntriesService } from '../../api/waist-entries.service';
@@ -29,7 +31,12 @@ const FIXTURE_CURRENT_MEASUREMENT = 78;
 const FIXTURE_TARGET_MEASUREMENT = 75;
 const FIXTURE_ABOVE_GOAL_MEASUREMENT = 85;
 const FIXTURE_GOAL_DISTANCE = 5;
-const ENTRY = { id: 'entry', userId: 'u', date: '2026-06-20', circumferenceCm: 80 };
+const ENTRY = {
+    id: entityId<'waist-entry'>('entry'),
+    userId: entityId<'user'>('u'),
+    date: calendarDate('2026-06-20'),
+    circumferenceCm: 80,
+};
 async function setupAsync(): Promise<{
     fixture: ComponentFixture<WaistHistoryPageComponent>;
     component: WaistHistoryPageComponent;
@@ -231,7 +238,7 @@ describe('Measurement deletion confirmation', () => {
 describe('History page periods and KPI states', () => {
     it.each([null, 'invalid', '2026-06-20'])('shows latest measurement month safely for %s', date => {
         const { component, facade } = context;
-        facade.latestEntry.set(date === null ? null : { ...ENTRY, date });
+        facade.latestEntry.set(date === null ? null : { ...ENTRY, date: calendarDate(date) });
         component['showLatestMeasurement']();
         expect(facade.selectedRange()).toBe(date === '2026-06-20' ? 'custom' : 'month');
         if (date === '2026-06-20') {
@@ -260,9 +267,9 @@ describe('History page periods and KPI states', () => {
         const { component, facade } = context;
         facade.waistGoal.set({ desiredWaistCm: goal, startWaistCm: 100, startedAtUtc: null });
         facade.rollingMonthSummaryPoints.set([
-            { startDate: '2026-06-01', endDate: '2026-06-01', averageCircumferenceCm: first },
-            { startDate: '2026-06-02', endDate: '2026-06-02', averageCircumferenceCm: 0 },
-            { startDate: '2026-06-03', endDate: '2026-06-03', averageCircumferenceCm: last },
+            { startDate: calendarDate('2026-06-01'), endDate: calendarDate('2026-06-01'), averageCircumferenceCm: first },
+            { startDate: calendarDate('2026-06-02'), endDate: calendarDate('2026-06-02'), averageCircumferenceCm: 0 },
+            { startDate: calendarDate('2026-06-03'), endDate: calendarDate('2026-06-03'), averageCircumferenceCm: last },
         ]);
         expect(component['waistChange']()).toEqual({ value: last - first, tone });
     });

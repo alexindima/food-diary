@@ -1,13 +1,14 @@
+import type { AdminId, AdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 export type AdminEmailTemplate = {
-    id: string;
+    id: AdminId<'email-template'>;
     key: string;
     locale: string;
     subject: string;
     htmlBody: string;
     textBody: string;
     isActive: boolean;
-    createdOnUtc: string;
-    updatedOnUtc?: string | null;
+    createdOnUtc: AdminUtcInstant;
+    updatedOnUtc?: AdminUtcInstant | null;
 };
 
 export type AdminEmailTemplateUpsertRequest = {

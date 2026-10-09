@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
+import { imageSelection } from '../../../shared/models/image-upload.data';
 import { buildPhotoAiInputBarResult, buildTextAiInputBarResult, mapNutritionItemsToAiInputBarItems } from './ai-input-bar.mapper';
 import type { AiInputBarMealDetails } from './ai-input-bar.types';
 
@@ -66,7 +67,7 @@ describe('ai input bar mapper', () => {
         const result = buildPhotoAiInputBarResult({
             mealType: 'Dinner',
             recognizedAtUtc: RECOGNIZED_AT_UTC,
-            selection: { assetId: 'asset-1', url: 'https://example.test/image.jpg' },
+            selection: imageSelection('https://example.test/image.jpg', 'asset-1'),
             details: DETAILS,
             nutrition: createNutrition({ notes: 'Looks like fruit' }),
             results: [createVisionItem()],

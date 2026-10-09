@@ -10,6 +10,7 @@ import {
     type ConfirmDeleteDialogData,
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import type { Product } from '../../../../shared/models/product.data';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FavoriteProductService } from '../../api/favorite-product.service';
 import { ProductService } from '../../api/product.service';
 import { ProductDetailActionResult } from '../../components/detail/product-detail-lib/product-detail.types';
@@ -127,7 +128,7 @@ export class ProductDetailFacade {
         const favoriteId = this.favoriteProductId;
         const request$ =
             favoriteId !== null && favoriteId.length > 0
-                ? this.favoriteProductService.remove(favoriteId)
+                ? this.favoriteProductService.remove(entityId<'favorite-product'>(favoriteId))
                 : this.favoriteProductService.getLookupPage().pipe(
                       switchMap(favorites => {
                           const match = favorites.find(favorite => favorite.productId === product.id);

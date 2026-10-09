@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.ValueObjects;
 using FoodDiary.Modules.Products.Application.Mappings;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
@@ -36,12 +37,11 @@ public sealed class CreateProductCommandHandler(
     private static Product CreateProduct(
         CreateProductCommand command,
         CreateProductValues values) =>
-        Product.Create(
+        Product.CreateWithMeasurements(
             userId: values.UserId,
             name: command.Name,
-            baseUnit: values.BaseUnit,
-            baseAmount: command.BaseAmount,
-            defaultPortionAmount: command.DefaultPortionAmount,
+            basis: ProductMeasurementBasis.FromFields(values.BaseUnit, command.BaseAmount),
+            defaultPortion: command.DefaultPortionAmount is { } amount ? ProductDefaultPortion.FromAmount(values.BaseUnit, amount) : null,
             caloriesPerBase: command.CaloriesPerBase,
             proteinsPerBase: command.ProteinsPerBase,
             fatsPerBase: command.FatsPerBase,

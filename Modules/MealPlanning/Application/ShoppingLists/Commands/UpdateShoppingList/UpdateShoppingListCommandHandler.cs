@@ -1,3 +1,4 @@
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Mappings;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Contracts.Common.Abstractions.Results;
@@ -112,11 +113,10 @@ public sealed class UpdateShoppingListCommandHandler(
         foreach (ShoppingListItemData item in itemsResult.Value) {
             ShoppingListItem? existing = item.Id.HasValue ? list.FindItem(item.Id.Value) : null;
             if (existing is null) {
-                ShoppingListItem added = list.AddItem(
+                ShoppingListItem added = list.AddItemWithQuantity(
                     item.Name,
                     item.ProductId,
-                    item.Amount,
-                    item.Unit,
+                    ShoppingQuantity.FromFields(item.Amount, item.Unit),
                     item.Category,
                     item.IsChecked,
                     item.SortOrder,
@@ -128,11 +128,10 @@ public sealed class UpdateShoppingListCommandHandler(
                 continue;
             }
 
-            existing.UpdateDetails(
+            existing.UpdateWithQuantity(
                 item.Name,
                 item.ProductId,
-                item.Amount,
-                item.Unit,
+                ShoppingQuantity.FromFields(item.Amount, item.Unit),
                 item.Category,
                 item.Aisle,
                 item.Note,

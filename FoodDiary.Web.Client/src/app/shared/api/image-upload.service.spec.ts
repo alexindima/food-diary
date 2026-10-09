@@ -5,6 +5,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_AUTH } from '../../constants/http-context.tokens';
+import { entityId } from '../models/semantics/entity-id';
+import { signedImageUploadUrl } from '../models/semantics/image-location';
 import { ImageUploadService } from './image-upload.service';
 
 describe('ImageUploadService', () => {
@@ -59,7 +61,7 @@ describe('ImageUploadService', () => {
         const file = new File(['image-data'], 'photo.png', { type: 'image/png' });
         const presignedUrl = 'https://s3.example.com/upload?signed=xyz';
 
-        service.uploadToPresignedUrl(presignedUrl, file).subscribe();
+        service.uploadToPresignedUrl(signedImageUploadUrl(presignedUrl), file).subscribe();
 
         const req = httpMock.expectOne(presignedUrl);
         expect(req.request.method).toBe('PUT');
@@ -70,7 +72,7 @@ describe('ImageUploadService', () => {
     it('should confirm an uploaded asset before use', () => {
         const assetId = 'asset-to-confirm';
 
-        service.confirmUpload(assetId).subscribe(response => {
+        service.confirmUpload(entityId<'image-asset'>(assetId)).subscribe(response => {
             expect(response).toEqual({ assetId, fileUrl: 'https://cdn.example.com/photo.jpg' });
         });
 
@@ -84,7 +86,7 @@ describe('ImageUploadService', () => {
         const file = new File(['image-data'], 'photo.png', { type: 'image/png' });
         const presignedUrl = 'https://s3.example.com/upload?signed=xyz';
 
-        service.uploadToPresignedUrl(presignedUrl, file).subscribe();
+        service.uploadToPresignedUrl(signedImageUploadUrl(presignedUrl), file).subscribe();
 
         const req = httpMock.expectOne(presignedUrl);
         expect(req.request.context.get(SKIP_AUTH)).toBe(true);
@@ -94,7 +96,7 @@ describe('ImageUploadService', () => {
     it('should delete asset', () => {
         const assetId = 'asset-to-delete';
 
-        service.deleteAsset(assetId).subscribe();
+        service.deleteAsset(entityId<'image-asset'>(assetId)).subscribe();
 
         const req = httpMock.expectOne(`${baseUrl}/${assetId}`);
         expect(req.request.method).toBe('DELETE');

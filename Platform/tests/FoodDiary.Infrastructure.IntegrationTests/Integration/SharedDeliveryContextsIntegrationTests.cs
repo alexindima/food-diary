@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Infrastructure;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Notifications.Infrastructure;
@@ -63,7 +64,7 @@ public sealed partial class SharedDeliveryContextsIntegrationTests(PostgresDatab
         await provider.GetRequiredService<INotificationWriteRepository>().AddAsync(notification);
         await provider.GetRequiredService<INotificationWebPushOutbox>().EnqueueAsync(notification.Id);
         await provider.GetRequiredService<IImageAssetWriteRepository>().AddAsync(ImageAsset.Create(user.Id, "owned-image", "https://example.com/image"));
-        await provider.GetRequiredService<IImageObjectDeletionOutbox>().EnqueueAsync("old-image", isConfirmed: true);
+        await provider.GetRequiredService<IImageObjectDeletionOutbox>().EnqueueAsync(ObjectStorageKey.FromStoredValue("old-image"), isConfirmed: true);
         Assert.Empty(central.ChangeTracker.Entries<Notification>());
         Assert.Empty(central.ChangeTracker.Entries<ImageAsset>());
         await Assert.ThrowsAsync<InvalidOperationException>(() => provider.GetRequiredService<IImageObjectDeletionOutboxProcessor>().ProcessDueAsync(1));
@@ -128,7 +129,7 @@ public sealed partial class SharedDeliveryContextsIntegrationTests(PostgresDatab
         Assert.True(await repository.IsAssetInUseAsync(image.Id));
         Assert.Empty(await provider.GetRequiredService<FoodDiary.Modules.Images.Application.Abstractions.Common.IImageAssetUsageQuery>().GetUnusedCandidatesOlderThanAsync(DateTime.UtcNow.AddDays(1), 10));
         await repository.DeleteAsync(image);
-        await provider.GetRequiredService<IImageObjectDeletionOutbox>().EnqueueAsync(image.ObjectKey);
+        await provider.GetRequiredService<IImageObjectDeletionOutbox>().EnqueueAsync(ObjectStorageKey.FromStoredValue(image.ObjectKey));
         await Assert.ThrowsAsync<DbUpdateException>(() => provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync());
         await using FoodDiaryDbContext read = databaseFixture.CreateDbContext(central.Database.GetConnectionString()!);
         Assert.True(await read.ImageAssets.AnyAsync(item => item.Id == image.Id));

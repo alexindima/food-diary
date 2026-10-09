@@ -7,6 +7,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { MeasurementUnit } from '../../../../shared/models/product.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingList, ShoppingListItem, ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { ShoppingListFacade } from '../../lib/shopping-list.facade';
@@ -16,8 +18,8 @@ const FIRST_LIST_ID = 'list-1';
 const SECOND_LIST_ID = 'list-2';
 
 const SHOPPING_LIST_ITEM: ShoppingListItem = {
-    id: 'item-1',
-    shoppingListId: FIRST_LIST_ID,
+    id: entityId<'shopping-list-item'>('item-1'),
+    shoppingListId: entityId<'shopping-list'>(FIRST_LIST_ID),
     name: 'Eggs',
     amount: 12,
     unit: 'pcs',
@@ -31,15 +33,15 @@ const SHOPPING_LIST_ITEM: ShoppingListItem = {
 };
 
 const SHOPPING_LIST: ShoppingList = {
-    id: FIRST_LIST_ID,
+    id: entityId<'shopping-list'>(FIRST_LIST_ID),
     name: 'Groceries',
-    createdAt: '2026-05-17T00:00:00Z',
+    createdAt: utcInstant('2026-05-17T00:00:00Z'),
     items: [SHOPPING_LIST_ITEM],
 };
 
 const SHOPPING_LISTS: ShoppingListSummary[] = [
-    { id: FIRST_LIST_ID, name: 'Groceries', createdAt: '2026-05-17T00:00:00Z', itemsCount: 1 },
-    { id: SECOND_LIST_ID, name: 'Party', createdAt: '2026-05-18T00:00:00Z', itemsCount: 0 },
+    { id: entityId<'shopping-list'>(FIRST_LIST_ID), name: 'Groceries', createdAt: utcInstant('2026-05-17T00:00:00Z'), itemsCount: 1 },
+    { id: entityId<'shopping-list'>(SECOND_LIST_ID), name: 'Party', createdAt: utcInstant('2026-05-18T00:00:00Z'), itemsCount: 0 },
 ];
 
 type ShoppingListFacadeMock = {
@@ -135,7 +137,7 @@ async function setupShoppingListPageAsync(): Promise<ShoppingListPageTestContext
 describe('ShoppingListPageComponent form and item actions', () => {
     it('passes the product link to the item editor', async () => {
         const { component, facade, dialogService } = await setupShoppingListPageAsync();
-        facade.items.set([{ ...SHOPPING_LIST_ITEM, productId: 'product-1' }]);
+        facade.items.set([{ ...SHOPPING_LIST_ITEM, productId: entityId<'product'>('product-1') }]);
         dialogService.open.mockReturnValueOnce({ afterClosed: () => of(undefined) });
 
         component['editItem'](SHOPPING_LIST_ITEM.id);
@@ -353,7 +355,7 @@ async function flushSignalEffectsAsync(): Promise<void> {
 describe('Shopping list merge preview', () => {
     it('applies the preview only after confirmation', async () => {
         const { component, facade } = await setupShoppingListPageAsync();
-        const original = [SHOPPING_LIST_ITEM, { ...SHOPPING_LIST_ITEM, id: 'duplicate' }];
+        const original = [SHOPPING_LIST_ITEM, { ...SHOPPING_LIST_ITEM, id: entityId<'shopping-list-item'>('duplicate') }];
         facade.items.set(original);
         component['mergeDuplicates']();
         expect(facade.applyConsolidation).toHaveBeenCalledWith(FIRST_LIST_ID, original, [expect.objectContaining({ amount: 24 })]);

@@ -8,6 +8,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AiFoodFacade } from '../../../../shared/lib/ai-food.facade';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
+import { imageSelection } from '../../../../shared/models/image-upload.data';
 import type { MealAiSessionManageDto } from '../../../../shared/models/meal.data';
 import { MealPhotoRecognitionDialogComponent } from './meal-photo-recognition-dialog';
 
@@ -70,7 +71,7 @@ describe('MealPhotoRecognitionDialogComponent analysis', () => {
     it('should analyze selected image and calculate nutrition', async () => {
         const { component } = await setupComponentAsync();
 
-        component['onImageChanged']({ assetId: 'asset-1', url: 'https://example.test/photo.jpg' });
+        component['onImageChanged'](imageSelection('https://example.test/photo.jpg', 'asset-1'));
 
         expect(aiFoodService.analyzeFoodImage).toHaveBeenCalledWith({ imageAssetId: 'asset-1' });
         expect(aiFoodService.calculateNutrition).toHaveBeenCalledWith({ items: [visionItem] });
@@ -82,7 +83,7 @@ describe('MealPhotoRecognitionDialogComponent analysis', () => {
     it('should build photo annotations and let the user hide them', async () => {
         const { component } = await setupComponentAsync();
 
-        component['onImageChanged']({ assetId: 'asset-1', url: 'https://example.test/photo.jpg' });
+        component['onImageChanged'](imageSelection('https://example.test/photo.jpg', 'asset-1'));
 
         expect(component['annotations']()).toEqual([
             expect.objectContaining({
@@ -102,7 +103,7 @@ describe('MealPhotoRecognitionDialogComponent analysis', () => {
         aiFoodService.analyzeFoodImage.mockReturnValue(throwError(() => ({ status: HttpStatusCode.Forbidden })));
         const { component } = await setupComponentAsync();
 
-        component['onImageChanged']({ assetId: 'asset-1', url: null });
+        component['onImageChanged'](imageSelection(null, 'asset-1'));
 
         expect(component['errorKey']()).toBe('MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM');
         expect(component['hasAnalyzed']()).toBe(true);
@@ -113,7 +114,7 @@ describe('MealPhotoRecognitionDialogComponent analysis', () => {
         aiFoodService.calculateNutrition.mockReturnValue(throwError(() => ({ status: HttpStatusCode.TooManyRequests })));
         const { component } = await setupComponentAsync();
 
-        component['onImageChanged']({ assetId: 'asset-1', url: null });
+        component['onImageChanged'](imageSelection(null, 'asset-1'));
 
         expect(component['nutritionErrorKey']()).toBe('MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
         expect(component['nutrition']()).toBeNull();
@@ -196,7 +197,7 @@ describe('MealPhotoRecognitionDialogComponent session payload', () => {
     it('should restore initial session in edit mode and close with mapped payload', async () => {
         const session = createSession();
         const { component } = await setupComponentAsync({
-            initialSelection: { assetId: 'asset-1', url: 'https://example.test/photo.jpg' },
+            initialSelection: imageSelection('https://example.test/photo.jpg', 'asset-1'),
             initialSession: session,
             mode: 'edit',
         });
@@ -310,11 +311,11 @@ describe('Meal photo asynchronous requests', () => {
         aiFoodService.analyzeFoodImage.mockReturnValueOnce(analysis);
         aiFoodService.calculateNutrition.mockReturnValueOnce(calculation);
         const { component, fixture } = await setupComponentAsync();
-        component['onImageChanged']({ assetId: 'first', url: null });
+        component['onImageChanged'](imageSelection(null, 'first'));
         expect(component['isLoading']()).toBe(true);
         analysis.next({ items: [visionItem] });
         expect(component['isNutritionLoading']()).toBe(true);
-        component['onImageChanged']({ assetId: 'second', url: null });
+        component['onImageChanged'](imageSelection(null, 'second'));
         expect(analysis.observed).toBe(false);
         expect(calculation.observed).toBe(false);
         calculation.next({ ...nutrition, calories: 999 });
@@ -325,13 +326,13 @@ describe('Meal photo asynchronous requests', () => {
         const pending = new Subject<{ items: FoodVisionItem[] }>();
         aiFoodService.analyzeFoodImage.mockReturnValue(pending);
         const { component, fixture } = await setupComponentAsync();
-        component['onImageChanged']({ assetId: 'first', url: null });
+        component['onImageChanged'](imageSelection(null, 'first'));
         fixture.destroy();
         expect(pending.observed).toBe(false);
     });
     it('does not reuse review items from the previous image after clearing selection', async () => {
         const { component } = await setupComponentAsync();
-        component['onImageChanged']({ assetId: 'first', url: null });
+        component['onImageChanged'](imageSelection(null, 'first'));
         expect(component['reviewItems']().length).toBe(1);
         component['onImageChanged'](null);
         expect(component['reviewItems']()).toEqual([]);
@@ -343,7 +344,7 @@ describe('Meal photo asynchronous requests', () => {
         async status => {
             aiFoodService.analyzeFoodImage.mockReturnValueOnce(throwError(() => ({ status })));
             const { component } = await setupComponentAsync();
-            component['onImageChanged']({ assetId: 'first', url: null });
+            component['onImageChanged'](imageSelection(null, 'first'));
             expect(component['isLoading']()).toBe(false);
             expect(component['errorKey']()).toContain(status === HttpStatusCode.TooManyRequests ? 'ERROR_QUOTA' : 'ERROR_GENERIC');
             component['onReanalyze']();
@@ -354,7 +355,7 @@ describe('Meal photo asynchronous requests', () => {
     it('handles an empty recognition without calling nutrition', async () => {
         aiFoodService.analyzeFoodImage.mockReturnValue(of({ items: [] }));
         const { component } = await setupComponentAsync();
-        component['onImageChanged']({ assetId: 'empty', url: null });
+        component['onImageChanged'](imageSelection(null, 'empty'));
         expect(component['hasAnalyzed']()).toBe(true);
         expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
         component['onImageChanged'](null);
@@ -411,7 +412,7 @@ describe('Meal photo recovered jobs and editor controls', () => {
     it('allows retry after a nutrition network failure', async () => {
         aiFoodService.calculateNutrition.mockReturnValueOnce(throwError(() => new Error('offline')));
         const { component } = await setupComponentAsync();
-        component['onImageChanged']({ assetId: 'asset-1', url: '/image.jpg' });
+        component['onImageChanged'](imageSelection('/image.jpg', 'asset-1'));
         expect(component['nutritionErrorKey']()).toBe('MEAL_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR');
         component['onReanalyze']();
         expect(component['nutrition']()).toEqual(nutrition);

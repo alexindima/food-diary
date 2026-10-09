@@ -1,5 +1,7 @@
 import type { DietologistRelationship } from '../../models/dietologist.data';
 import type { NotificationPreferences, WebPushSubscriptionItem } from '../../models/notification.data';
+import { optionalCalendarDate, optionalUtcInstant, utcInstant } from '../../models/semantics/date-value';
+import { entityId, optionalEntityId } from '../../models/semantics/entity-id';
 import type {
     DesiredWaistResponse,
     DesiredWeightResponse,
@@ -60,6 +62,11 @@ export function userFromSdk(response: UserHttpResponse): User {
             'profileImage',
             'profileImageAssetId',
         ]),
+        id: entityId<'user'>(value.id),
+        birthDate: optionalCalendarDate(value.birthDate ?? undefined),
+        profileImageAssetId: optionalEntityId<'image-asset'>(value.profileImageAssetId ?? undefined),
+        lastLoginAtUtc: optionalUtcInstant(value.lastLoginAtUtc),
+        aiConsentAcceptedAt: optionalUtcInstant(value.aiConsentAcceptedAt),
         email: value.email ?? null,
         activityLevel:
             activityLevel === undefined
@@ -85,11 +92,13 @@ export function profileOverviewFromSdk(response: ProfileOverviewHttpResponse): {
 }
 
 export function weightGoalFromSdk(value: UserDesiredWeightHttpResponse): DesiredWeightResponse {
-    return sdkNullableFields(value, ['desiredWeightKg', 'startWeightKg', 'startedAtUtc']);
+    const normalized = sdkNullableFields(value, ['desiredWeightKg', 'startWeightKg', 'startedAtUtc']);
+    return { ...normalized, startedAtUtc: optionalUtcInstant(normalized.startedAtUtc) };
 }
 
 export function waistGoalFromSdk(value: UserDesiredWaistHttpResponse): DesiredWaistResponse {
-    return sdkNullableFields(value, ['desiredWaistCm', 'startWaistCm', 'startedAtUtc']);
+    const normalized = sdkNullableFields(value, ['desiredWaistCm', 'startWaistCm', 'startedAtUtc']);
+    return { ...normalized, startedAtUtc: optionalUtcInstant(normalized.startedAtUtc) };
 }
 
 export function weightGoalPageFromSdk(response: WeightGoalHistoryPageHttpResponse): GoalHistoryPage<WeightGoalHistoryItem> {
@@ -100,6 +109,9 @@ export function weightGoalPageFromSdk(response: WeightGoalHistoryPageHttpRespons
             const item = requireSdkFields(row, ['id', 'targetWeightKg', 'startWeightKg', 'startedAtUtc', 'status']);
             return {
                 ...sdkNullableFields(item, ['endWeightKg', 'endedAtUtc']),
+                id: entityId<'weight-goal'>(item.id),
+                startedAtUtc: utcInstant(item.startedAtUtc),
+                endedAtUtc: optionalUtcInstant(item.endedAtUtc ?? null),
                 status: sdkEnum(item.status, ['Active', 'Replaced', 'Cancelled'] as const),
             };
         }),
@@ -114,6 +126,9 @@ export function waistGoalPageFromSdk(response: WaistGoalHistoryPageHttpResponse)
             const item = requireSdkFields(row, ['id', 'targetWaistCm', 'startWaistCm', 'startedAtUtc', 'status']);
             return {
                 ...sdkNullableFields(item, ['endWaistCm', 'endedAtUtc']),
+                id: entityId<'waist-goal'>(item.id),
+                startedAtUtc: utcInstant(item.startedAtUtc),
+                endedAtUtc: optionalUtcInstant(item.endedAtUtc ?? null),
                 status: sdkEnum(item.status, ['Active', 'Replaced', 'Cancelled'] as const),
             };
         }),

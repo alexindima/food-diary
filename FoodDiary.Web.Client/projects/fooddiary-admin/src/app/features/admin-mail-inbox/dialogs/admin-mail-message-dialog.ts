@@ -7,6 +7,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 
+import { type AdminId, type AdminUtcInstant, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminMailInboxFacade } from '../lib/admin-mail-inbox.facade';
 import type { AdminMailInboxMessageDetails } from '../models/admin-mail-inbox.data';
 
@@ -15,7 +16,11 @@ type AdminMailInboxMessageDetailsViewModel = AdminMailInboxMessageDetails & {
     readStateLabel: string;
     toRecipientsLabel: string;
 };
-export type AdminMailMessageDialogData = { id: string; subject?: string | null; onRead: (id: string, readAtUtc: string) => void };
+export type AdminMailMessageDialogData = {
+    id: AdminId<'mail-inbox-message'>;
+    subject?: string | null;
+    onRead: (id: AdminId<'mail-inbox-message'>, readAtUtc: AdminUtcInstant) => void;
+};
 @Component({
     selector: 'fd-admin-mail-message-dialog',
     imports: [CommonModule, RouterLink, TranslatePipe, FdUiButtonComponent, FdUiDialogComponent],
@@ -104,11 +109,11 @@ export class AdminMailMessageDialogComponent {
         return category === 'dmarc-report' ? 'DMARC' : 'Mail';
     }
 
-    private formatReadState(readAtUtc: string | null | undefined): string {
+    private formatReadState(readAtUtc: AdminUtcInstant | null | undefined): string {
         return readAtUtc === null || readAtUtc === undefined ? 'Unread' : 'Read';
     }
 
-    private markMessageRead(id: string): void {
+    private markMessageRead(id: AdminId<'mail-inbox-message'>): void {
         if (this.markingRead()) {
             return;
         }
@@ -120,7 +125,7 @@ export class AdminMailMessageDialogComponent {
                 next: () => {
                     this.markingRead.set(false);
                     this.readFailed.set(false);
-                    const readAtUtc = new Date().toISOString();
+                    const readAtUtc = adminUtcInstant(new Date().toISOString());
                     this.data.onRead(id, readAtUtc);
                     this.selectedMessage.update(message => (message?.id === id ? { ...message, readAtUtc } : message));
                 },

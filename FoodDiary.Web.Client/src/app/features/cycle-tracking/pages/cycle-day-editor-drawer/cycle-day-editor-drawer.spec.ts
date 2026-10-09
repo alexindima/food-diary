@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { BLEEDING_TYPE_BLEEDING, BLEEDING_TYPE_SPOTTING, CYCLE_FLOW_LIGHT } from '../../../../shared/models/cycle.data';
+import { calendarDate } from '../../../../shared/models/semantics/date-value';
 import type { CycleDayFormModel } from '../../lib/cycle-tracking.facade';
 import { CycleDayEditorDrawerComponent } from './cycle-day-editor-drawer';
 
@@ -13,7 +14,7 @@ const MODERATE_SYMPTOM_INTENSITY = 5;
 const SEVERE_SYMPTOM_INTENSITY = 9;
 
 const INITIAL_DAY: CycleDayFormModel = {
-    date: '2026-08-17',
+    date: calendarDate('2026-08-17'),
     isBleeding: false,
     bleedingType: BLEEDING_TYPE_BLEEDING,
     flow: CYCLE_FLOW_LIGHT,

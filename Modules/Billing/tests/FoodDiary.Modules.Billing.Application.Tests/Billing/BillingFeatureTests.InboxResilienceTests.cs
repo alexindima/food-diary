@@ -67,7 +67,7 @@ public partial class BillingFeatureTests {
         User user = CreatePremiumUser("bookkeeping-inbox@example.com");
         BillingWebhookEvent inbox = CreateReceivedEvent(CreateWebhookPaymentEvent(user, "evt_bookkeeping", "pay_bookkeeping"));
         IBillingWebhookEventWriteRepository events = Substitute.For<IBillingWebhookEventWriteRepository>();
-        events.GetByIdAsync(inbox.Id, Arg.Any<CancellationToken>()).Returns(inbox);
+        events.GetByIdAsync(inbox.TypedId, Arg.Any<CancellationToken>()).Returns(inbox);
         var failure = new InvalidOperationException("Cannot persist retry");
         events.UpdateAsync(inbox, Arg.Any<CancellationToken>()).Returns<Task>(_ => throw failure);
         ISender users = Substitute.For<ISender>();
@@ -86,7 +86,7 @@ public partial class BillingFeatureTests {
         User user = CreatePremiumUser("concurrent-inbox@example.com");
         BillingWebhookEvent inbox = CreateReceivedEvent(CreateWebhookPaymentEvent(user, "evt_concurrent", "pay_concurrent"));
         IBillingWebhookEventWriteRepository events = Substitute.For<IBillingWebhookEventWriteRepository>();
-        events.GetByIdAsync(inbox.Id, Arg.Any<CancellationToken>()).Returns(inbox);
+        events.GetByIdAsync(inbox.TypedId, Arg.Any<CancellationToken>()).Returns(inbox);
         ISender users = Substitute.For<ISender>();
         users.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: user.Id), Arg.Any<CancellationToken>())
             .Returns<Task<UserBillingProfileModel?>>(_ => {

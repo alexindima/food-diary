@@ -6,13 +6,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingListItem } from '../../../../shared/models/shopping-list.data';
 import type { ShoppingListItemFormModel } from '../../lib/shopping-list-form.types';
 import { ShoppingListItemsPanelComponent } from './shopping-list-items-panel';
 
 const CHECKED_ITEM: ShoppingListItem = {
-    id: 'item-1',
-    shoppingListId: 'list-1',
+    id: entityId<'shopping-list-item'>('item-1'),
+    shoppingListId: entityId<'shopping-list'>('list-1'),
     name: 'Milk',
     amount: 2,
     unit: 'l',
@@ -77,7 +78,10 @@ describe('ShoppingListItemsPanelComponent', () => {
     });
 
     it('separates purchased items and returns unchecked items to the shopping rows', async () => {
-        const { component, fixture } = await setupItemsPanelAsync([CHECKED_ITEM, { ...CHECKED_ITEM, id: 'pending', isChecked: false }]);
+        const { component, fixture } = await setupItemsPanelAsync([
+            CHECKED_ITEM,
+            { ...CHECKED_ITEM, id: entityId<'shopping-list-item'>('pending'), isChecked: false },
+        ]);
         expect(component['purchasedItems']().map(item => item.id)).toEqual(['item-1']);
         expect(component['pendingItems']().map(item => item.id)).toEqual(['pending']);
         fixture.componentRef.setInput('items', [{ ...CHECKED_ITEM, isChecked: false }]);

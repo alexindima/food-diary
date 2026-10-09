@@ -1,10 +1,10 @@
 # RecipeCommunity module
 
-Own RecipeComments and RecipeLikes as separate feature groups. Application uses canonical assembly and folder namespaces. Ports and errors live in Application.Abstractions; entities and IDs in Domain; repositories in Infrastructure/Persistence; EF configurations in PersistenceModel.
+Own RecipeComments and RecipeLikes as separate feature groups. Application uses canonical assembly and folder namespaces. Ports and errors live in Application.Abstractions; entities in Domain and scalar RecipeCommentId/RecipeLikeId in Domain.Contracts; repositories in Infrastructure/Persistence; EF configurations in PersistenceModel.
 
 Domain references Users and Recipes Domain.Contracts for scalar IDs. Preserve the foreign keys with typed HasOne<T>().WithMany() mappings, cascade behavior and the unique user/recipe like index; no foreign aggregate CLR navigation remains. Recipes remains a separate Domain owner; do not transfer its ownership into RecipeCommunity or introduce provider behavior changes.
 
-Hosts compose AddRecipeCommunityModule; shared DbContext applies ApplyRecipeCommunityPersistenceModel explicitly. Shared migrations/snapshot, HTTP, cross-module PostgreSQL tests and ContentReports reportability stay with their current owner. RecipeCommentErrors is called directly; the central compatibility facade is retired. No separate Contracts layer is justified by current consumers.
+Hosts compose AddRecipeCommunityModule; shared DbContext applies ApplyRecipeCommunityPersistenceModel explicitly. Shared migrations/snapshot, HTTP, cross-module PostgreSQL tests and ContentReports reportability stay with their current owner. RecipeCommentErrors is called directly; the central compatibility facade is retired. Domain.Contracts is the narrow scalar ID boundary shared with report targets; it exposes no aggregate or use-case capability. A separate consumer use-case Contracts layer is not currently needed.
 
 Preserve current-user and recipe access contracts, author/recipe-owner deletion rules, pagination, cancellation and transaction boundaries. Comment notification creation stays through Notifications INotificationWriter. Do not alter shared outbox or provider infrastructure.
 

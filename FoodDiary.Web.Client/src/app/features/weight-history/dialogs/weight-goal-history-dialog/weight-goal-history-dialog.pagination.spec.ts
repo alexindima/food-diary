@@ -5,6 +5,8 @@ import { Subject } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { GoalHistoryPage, WeightGoalHistoryItem } from '../../../../shared/models/user.data';
 import { WeightHistoryFacade } from '../../lib/weight-history.facade';
 import { WeightGoalHistoryDialogComponent } from './weight-goal-history-dialog';
@@ -12,15 +14,20 @@ import { WeightGoalHistoryDialogComponent } from './weight-goal-history-dialog';
 const CURRENT_MEASUREMENT = 80;
 const TOTAL_LOADED_ROWS = 3;
 const active: WeightGoalHistoryItem = {
-    id: 'active',
+    id: entityId<'weight-goal'>('active'),
     startWeightKg: 90,
     targetWeightKg: 70,
     endWeightKg: null,
-    startedAtUtc: '2026-08-01',
+    startedAtUtc: utcInstant('2026-08-01'),
     endedAtUtc: null,
     status: 'Active',
 };
-const closed: WeightGoalHistoryItem = { ...active, id: 'closed', status: 'Cancelled', endedAtUtc: '2026-08-01' };
+const closed: WeightGoalHistoryItem = {
+    ...active,
+    id: entityId<'weight-goal'>('closed'),
+    status: 'Cancelled',
+    endedAtUtc: utcInstant('2026-08-01'),
+};
 function setup(): {
     fixture: ComponentFixture<WeightGoalHistoryDialogComponent>;
     request: Mock;
@@ -68,7 +75,7 @@ describe('Weight history pagination wiring', () => {
         more?.click();
         fixture.detectChanges();
         expect(request).toHaveBeenLastCalledWith('second');
-        pages[1].next({ items: [{ ...closed, id: 'older' }], nextCursor: null });
+        pages[1].next({ items: [{ ...closed, id: entityId<'weight-goal'>('older') }], nextCursor: null });
         pages[1].complete();
         fixture.detectChanges();
         expect(root.querySelectorAll('article')).toHaveLength(TOTAL_LOADED_ROWS);

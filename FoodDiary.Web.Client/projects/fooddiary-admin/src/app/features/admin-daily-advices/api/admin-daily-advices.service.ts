@@ -7,6 +7,7 @@ import { environment } from '../../../../environments/environment';
 import { loadPagedCollection } from '../../../shared/api/load-paged-collection';
 import { AdminDailyAdvicesSdk } from '../../../shared/api/sdk/generated/api/admin-daily-advices.service';
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
+import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 import type {
     AdminDailyAdvice,
     AdminDailyAdvicesImportRequest,
@@ -46,13 +47,13 @@ export class AdminDailyAdvicesService {
         return response.pipe(map(adminDailyAdvicesImportFromSdk));
     }
 
-    public update(id: string, request: AdminDailyAdviceUpdate): Observable<AdminDailyAdvice> {
+    public update(id: AdminId<'daily-advice'>, request: AdminDailyAdviceUpdate): Observable<AdminDailyAdvice> {
         return this.sdk.client
             .putAdminDailyAdvicesGroupsById({ version: this.sdk.version, id, adminDailyAdviceGroupUpdateHttpRequest: request })
             .pipe(map(adminDailyAdviceGroupFromSdk));
     }
 
-    public delete(id: string): Observable<void> {
+    public delete(id: AdminId<'daily-advice'>): Observable<void> {
         return this.sdk.client.deleteAdminDailyAdvicesGroupsById({ version: this.sdk.version, id });
     }
 }

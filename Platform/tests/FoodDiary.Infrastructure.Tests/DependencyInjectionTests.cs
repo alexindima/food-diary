@@ -204,7 +204,7 @@ public sealed class DependencyInjectionTests {
                 1024,
                 CancellationToken.None));
         ImageObjectValidationResult validation = await imageStorage.ValidateUploadedObjectAsync(
-            "users/test/meal.webp",
+            FoodDiary.Modules.Images.Domain.ValueObjects.ObjectStorageKey.FromStoredValue("users/test/meal.webp"),
             CancellationToken.None);
 
         Assert.Contains("not configured", exception.Message, StringComparison.OrdinalIgnoreCase);

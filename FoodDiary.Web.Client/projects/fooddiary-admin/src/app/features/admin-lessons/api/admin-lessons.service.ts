@@ -7,6 +7,7 @@ import { environment } from '../../../../environments/environment';
 import { loadPagedCollection } from '../../../shared/api/load-paged-collection';
 import { AdminLessonsSdk } from '../../../shared/api/sdk/generated/api/admin-lessons.service';
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
+import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 import type {
     AdminLesson,
     AdminLessonCreateRequest,
@@ -34,7 +35,7 @@ export class AdminLessonsService {
             .pipe(map(adminLessonFromSdk));
     }
 
-    public update(id: string, request: AdminLessonUpdateRequest): Observable<AdminLesson> {
+    public update(id: AdminId<'lesson'>, request: AdminLessonUpdateRequest): Observable<AdminLesson> {
         return this.sdk.client
             .putAdminLessonsById({ version: this.sdk.version, id, adminLessonUpdateHttpRequest: request })
             .pipe(map(adminLessonFromSdk));
@@ -47,7 +48,7 @@ export class AdminLessonsService {
             .pipe(map(adminLessonsImportFromSdk));
     }
 
-    public delete(id: string): Observable<void> {
+    public delete(id: AdminId<'lesson'>): Observable<void> {
         return this.sdk.client.deleteAdminLessonsById({ version: this.sdk.version, id });
     }
 }

@@ -6,15 +6,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.tokens';
+import { calendarDate } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { WaistEntry, WaistEntryFilters } from '../../../shared/models/waist-entry.data';
 import { WaistEntriesService } from './waist-entries.service';
 
 const BASE_URL = environment.apiUrls.waists;
 const ENTRY_LIMIT = 10;
 const MOCK_ENTRY: WaistEntry = {
-    id: 'wa-1',
-    userId: 'user-1',
-    date: '2026-03-01',
+    id: entityId<'waist-entry'>('wa-1'),
+    userId: entityId<'user'>('user-1'),
+    date: calendarDate('2026-03-01'),
     circumferenceCm: 82,
 };
 
@@ -104,7 +106,7 @@ describe('WaistEntriesService latest', () => {
 
 describe('WaistEntriesService mutations', () => {
     it('should create entry', () => {
-        const payload = { date: '2026-03-28', circumferenceCm: 80 };
+        const payload = { date: calendarDate('2026-03-28'), circumferenceCm: 80 };
 
         service.create(payload).subscribe(entry => {
             expect(entry).toEqual(MOCK_ENTRY);
@@ -118,10 +120,10 @@ describe('WaistEntriesService mutations', () => {
     });
 
     it('should update entry', () => {
-        const payload = { date: '2026-03-28', circumferenceCm: 81 };
+        const payload = { date: calendarDate('2026-03-28'), circumferenceCm: 81 };
         const updated = { ...MOCK_ENTRY, circumferenceCm: 81 };
 
-        service.update('wa-1', payload).subscribe(entry => {
+        service.update(entityId<'waist-entry'>('wa-1'), payload).subscribe(entry => {
             expect(entry).toEqual(updated);
         });
 
@@ -132,7 +134,7 @@ describe('WaistEntriesService mutations', () => {
     });
 
     it('should remove entry', () => {
-        service.remove('wa-1').subscribe();
+        service.remove(entityId<'waist-entry'>('wa-1')).subscribe();
 
         const req = httpMock.expectOne(`${BASE_URL}/wa-1`);
         expect(req.request.method).toBe('DELETE');
@@ -151,7 +153,7 @@ describe('Summary and failure contracts', () => {
             ...filters,
             quantizationDays: '1',
         });
-        const buckets = [{ startDate: filters.dateFrom, endDate: filters.dateTo, averageCircumferenceCm: 75 }];
+        const buckets = [{ startDate: calendarDate(filters.dateFrom), endDate: calendarDate(filters.dateTo), averageCircumferenceCm: 75 }];
         request.flush(buckets);
         expect(received).toHaveBeenCalledWith(buckets);
     });
@@ -184,14 +186,14 @@ describe('Summary and failure contracts', () => {
     it.each(['create', 'update', 'remove', 'page'] as const)('propagates %s failures', operation => {
         const next = vi.fn();
         const error = vi.fn();
-        const payload = { date: '2026-04-01', circumferenceCm: 75 };
+        const payload = { date: calendarDate('2026-04-01'), circumferenceCm: 75 };
         const response: Observable<unknown> =
             operation === 'create'
                 ? service.create(payload)
                 : operation === 'update'
-                  ? service.update('id', payload)
+                  ? service.update(entityId<'waist-entry'>('id'), payload)
                   : operation === 'remove'
-                    ? service.remove('id')
+                    ? service.remove(entityId<'waist-entry'>('id'))
                     : service.getPageSummary({ ...filters, entriesLimit: 10 });
         response.subscribe({ next, error });
         const body = { error: 'Metric.AlreadyExists' };

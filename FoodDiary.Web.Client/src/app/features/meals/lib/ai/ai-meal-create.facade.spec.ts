@@ -6,6 +6,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import type { Meal } from '../../../../shared/models/meal.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { AiMealCreateFacade } from './ai-meal-create.facade';
 import { AiMealCreateService } from './ai-meal-create.service';
@@ -115,8 +117,8 @@ function setupFacade(response$: Observable<Meal>): {
 
 function createMeal(): Meal {
     return {
-        id: 'meal-1',
-        date: '2026-05-17T12:30:00.000Z',
+        id: entityId<'meal'>('meal-1'),
+        date: utcInstant('2026-05-17T12:30:00.000Z'),
         mealType: 'SNACK',
         comment: null,
         imageUrl: null,

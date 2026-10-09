@@ -2,6 +2,7 @@ using FoodDiary.Modules.Wearables.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Wearables.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Wearables.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.Wearables.Domain.Entities;
 
@@ -13,6 +14,23 @@ public sealed class WearableSyncEntry : AggregateRoot<WearableSyncEntryId> {
     public double Value { get; private set; }
 
     private WearableSyncEntry() {
+    }
+
+    public static WearableSyncEntry CreateWithReading(
+        UserId userId, WearableProvider provider, WearableSyncDay day, WearableReading reading) {
+        EnsureUserId(userId);
+        DomainGuard.Defined(provider, nameof(provider));
+        ArgumentNullException.ThrowIfNull(day);
+        ArgumentNullException.ThrowIfNull(reading);
+        return Create(userId, provider, reading.DataType, day.Value, reading.Value);
+    }
+
+    public void UpdateReading(WearableReading reading) {
+        ArgumentNullException.ThrowIfNull(reading);
+        if (reading.DataType != DataType) {
+            throw new ArgumentException("Reading type must match the entry.", nameof(reading));
+        }
+        UpdateValue(reading.Value);
     }
 
     public static WearableSyncEntry Create(

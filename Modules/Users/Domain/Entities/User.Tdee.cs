@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.Users.Domain.Entities;
 
@@ -10,9 +11,18 @@ public sealed partial class User {
     /// Calculates Basal Metabolic Rate using the Mifflin-St Jeor equation.
     /// Returns null if required profile data (weight, height, birth date, gender) is missing.
     /// </summary>
-    public double? CalculateBmr() => CalculateBmr(WeightKg, HeightCm, BirthDate, Gender);
+    public double? CalculateBmr() => CalculateBmrFromProfile(BmrCalculationInput.FromStoredProfile(WeightKg, HeightCm, BirthDate, Gender));
 
     public static double? CalculateBmr(double? weightKg, double? heightCm, DateTime? birthDate, string? gender) {
+        return CalculateBmrFromProfile(BmrCalculationInput.FromStoredProfile(weightKg, heightCm, birthDate, gender));
+    }
+
+    public static double? CalculateBmrFromProfile(BmrCalculationInput input) {
+        ArgumentNullException.ThrowIfNull(input);
+        double? weightKg = input.WeightKg;
+        double? heightCm = input.HeightCm;
+        DateTime? birthDate = input.BirthDate;
+        string? gender = input.Gender;
         if (weightKg is null || heightCm is null || birthDate is null || gender is null) {
             return null;
         }

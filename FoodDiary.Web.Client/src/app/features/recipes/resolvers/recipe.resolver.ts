@@ -4,6 +4,7 @@ import { catchError, map, of } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
 import type { Recipe } from '../../../shared/models/recipe.data';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { RecipeService } from '../api/recipe.service';
 
 export const recipeResolver: ResolveFn<Recipe | null> = route => {
@@ -16,7 +17,7 @@ export const recipeResolver: ResolveFn<Recipe | null> = route => {
         return of(null);
     }
 
-    return recipeService.getById(recipeId, false).pipe(
+    return recipeService.getById(entityId<'recipe'>(recipeId), false).pipe(
         map(recipe => {
             if (recipe === null || !recipe.isOwnedByCurrentUser || recipe.usageCount > 0) {
                 void navigationService.navigateToRecipeListAsync();

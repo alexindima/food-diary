@@ -23,6 +23,7 @@ import { finalize, firstValueFrom } from 'rxjs';
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
 import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
+import { imageSelection } from '../../../shared/models/image-upload.data';
 import {
     calculateImageResizeDimensions,
     canResizeImageType,
@@ -112,7 +113,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     protected readonly cropTitleId = createImageUploadId('image-upload-crop-title');
     protected readonly cropSubtitleId = createImageUploadId('image-upload-crop-subtitle');
 
-    protected readonly selection = signal<ImageSelection>({ url: null, assetId: null });
+    protected readonly selection = signal<ImageSelection>(imageSelection(null, null));
     protected readonly isDragging = signal(false);
     protected readonly isUploading = signal(false);
     protected readonly error = signal<string | null>(null);
@@ -156,10 +157,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
 
             const initial = this.initialSelection();
             if (this.hasInitialSelection(initial)) {
-                const selection = {
-                    url: initial.url ?? null,
-                    assetId: initial.assetId ?? null,
-                };
+                const selection = imageSelection(initial.url ?? null, initial.assetId ?? null);
                 this.selection.set(selection);
                 this.imageChanged.emit(selection);
             }
@@ -263,7 +261,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
 
     protected clearImage(): void {
         const assetId = this.selection().assetId;
-        const selection: ImageSelection = { url: null, assetId: null };
+        const selection: ImageSelection = imageSelection(null, null);
         this.selection.set(selection);
         this.error.set(null);
         this.value.set(selection);

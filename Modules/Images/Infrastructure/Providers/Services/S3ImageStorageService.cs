@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Integrations.Http.Services;
 using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 using System.Globalization;
@@ -59,7 +60,7 @@ public sealed class S3ImageStorageService(
             string fileUrl = BuildPublicUrl(key);
 
             IntegrationsTelemetry.RecordStorageOperation("presign", "success");
-            var result = new PresignedUpload(uploadUrl, fileUrl, key, expiresAt);
+            var result = new PresignedUpload(SignedImageUploadUrl.FromProviderValue(uploadUrl), PublicImageUrl.FromProviderValue(fileUrl), ObjectStorageKey.FromStoredValue(key), expiresAt);
             return Task.FromResult(result);
         } catch (Exception ex) {
             string outcome;
@@ -77,7 +78,8 @@ public sealed class S3ImageStorageService(
         }
     }
 
-    public async Task DeleteAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken) {
+    public async Task DeleteAsync(ObjectStorageKey key, bool isConfirmed, CancellationToken cancellationToken) {
+        string objectKey = key.Value;
         try {
             cancellationToken.ThrowIfCancellationRequested();
             if (string.IsNullOrWhiteSpace(objectKey)) {
@@ -96,12 +98,13 @@ public sealed class S3ImageStorageService(
         }
     }
 
-    public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) =>
-        DeleteAsync(objectKey, isConfirmed: true, cancellationToken);
+    public Task DeleteAsync(ObjectStorageKey key, CancellationToken cancellationToken) =>
+        DeleteAsync(key, isConfirmed: true, cancellationToken);
 
     public async Task<ImageObjectValidationResult> ConfirmUploadedObjectAsync(
-        string objectKey,
+        ObjectStorageKey key,
         CancellationToken cancellationToken) {
+        string objectKey = key.Value;
         string outcome = "success";
         string? errorType = null;
         try {
@@ -162,9 +165,9 @@ public sealed class S3ImageStorageService(
     }
 
     public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
-        string objectKey,
+        ObjectStorageKey key,
         CancellationToken cancellationToken) =>
-        ConfirmUploadedObjectAsync(objectKey, cancellationToken);
+        ConfirmUploadedObjectAsync(key, cancellationToken);
 
     private Task PublishValidatedContentAsync(
         string objectKey,

@@ -165,10 +165,9 @@ public sealed class MailRelayDomainRecordTests {
 
         var decision = new QueuedEmailFailureDecision(
             id,
-            AttemptCount: 2,
-            QueuedEmailStatus.Retry,
-            IsTerminalFailure: false,
-            Error: "SMTP failure");
+            attemptCount: 2,
+            QueuedEmailProcessingState.Retry,
+            error: "SMTP failure");
 
         Assert.Equal(id, decision.Id);
     }

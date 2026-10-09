@@ -1,6 +1,7 @@
 using FoodDiary.Modules.Images.Infrastructure.Providers.Services;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
+using FoodDiary.Modules.Ai.Domain.ValueObjects;
 using FoodDiary.Results;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -19,12 +20,12 @@ internal static class TelegramRecognitionProvider {
         ai.AnalyzeFoodImageAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<string?>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 Assert.StartsWith("data:image/png;base64,", call.ArgAt<string>(0), StringComparison.Ordinal);
-                return Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(vision, "vision", "test-model", new AiUsageTokens(10, 5, 15)));
+                return Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(vision, "vision", "test-model", AiTokenUsage.FromCounts(10, 5, 15)));
             });
         var nutrition = new FoodNutritionModel(52, 0, 0, 14, 2, 0,
             [new FoodNutritionItemModel("Apple", 100, "g", 52, 0, 0, 14, 2, 0)]);
         ai.CalculateNutritionAsync(Arg.Any<IReadOnlyList<FoodVisionItemModel>>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Success(new OpenAiFoodClientResponse<FoodNutritionModel>(nutrition, "nutrition", "test-model", new AiUsageTokens(10, 5, 15))));
+            .Returns(Result.Success(new OpenAiFoodClientResponse<FoodNutritionModel>(nutrition, "nutrition", "test-model", AiTokenUsage.FromCounts(10, 5, 15))));
         services.Replace(ServiceDescriptor.Singleton(ai));
 
         byte[] png = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=");

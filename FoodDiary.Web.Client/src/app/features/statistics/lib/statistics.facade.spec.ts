@@ -7,6 +7,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ExportService } from '../../../shared/api/export.service';
 import { UserService } from '../../../shared/api/user.service';
+import { calendarDate } from '../../../shared/models/semantics/date-value';
 import { StatisticsService } from '../api/statistics.service';
 import type { AggregatedStatistics, StatisticsSummary } from '../models/statistics.data';
 import { StatisticsFacade } from './statistics.facade';
@@ -124,10 +125,18 @@ describe('StatisticsFacade stale requests', () => {
 
         expect(facade.chartStatisticsData()?.calories).toEqual([RETRY_TOTAL_CALORIES]);
         expect(facade.weightSummaryPoints()).toEqual([
-            { startDate: '2026-04-02T00:00:00Z', endDate: '2026-04-02T23:59:59Z', averageWeightKg: SECOND_WEIGHT_AVERAGE },
+            {
+                startDate: calendarDate('2026-04-02T00:00:00Z'),
+                endDate: calendarDate('2026-04-02T23:59:59Z'),
+                averageWeightKg: SECOND_WEIGHT_AVERAGE,
+            },
         ]);
         expect(facade.waistSummaryPoints()).toEqual([
-            { startDate: '2026-04-02T00:00:00Z', endDate: '2026-04-02T23:59:59Z', averageCircumferenceCm: SECOND_WAIST_AVERAGE },
+            {
+                startDate: calendarDate('2026-04-02T00:00:00Z'),
+                endDate: calendarDate('2026-04-02T23:59:59Z'),
+                averageCircumferenceCm: SECOND_WAIST_AVERAGE,
+            },
         ]);
     });
 });
@@ -250,8 +259,8 @@ function createStatisticsSummary(
 ): StatisticsSummary {
     return {
         nutrition: createStatisticsResponse(totalCalories),
-        weight: [{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageWeightKg }],
-        waist: [{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageCircumferenceCm }],
+        weight: [{ startDate: calendarDate('2026-04-01T00:00:00Z'), endDate: calendarDate('2026-04-01T23:59:59Z'), averageWeightKg }],
+        waist: [{ startDate: calendarDate('2026-04-01T00:00:00Z'), endDate: calendarDate('2026-04-01T23:59:59Z'), averageCircumferenceCm }],
     };
 }
 
@@ -272,8 +281,16 @@ function setupStaleRangeRequests(): StaleRangeRequests {
 
 function completeLatestRangeRequests(requests: StaleRangeRequests): void {
     const summary = createStatisticsSummary(RETRY_TOTAL_CALORIES, SECOND_WEIGHT_AVERAGE, SECOND_WAIST_AVERAGE);
-    summary.weight[0] = { ...summary.weight[0], startDate: '2026-04-02T00:00:00Z', endDate: '2026-04-02T23:59:59Z' };
-    summary.waist[0] = { ...summary.waist[0], startDate: '2026-04-02T00:00:00Z', endDate: '2026-04-02T23:59:59Z' };
+    summary.weight[0] = {
+        ...summary.weight[0],
+        startDate: calendarDate('2026-04-02T00:00:00Z'),
+        endDate: calendarDate('2026-04-02T23:59:59Z'),
+    };
+    summary.waist[0] = {
+        ...summary.waist[0],
+        startDate: calendarDate('2026-04-02T00:00:00Z'),
+        endDate: calendarDate('2026-04-02T23:59:59Z'),
+    };
     requests.secondSummary$.next(summary);
     requests.secondSummary$.complete();
     TestBed.tick();

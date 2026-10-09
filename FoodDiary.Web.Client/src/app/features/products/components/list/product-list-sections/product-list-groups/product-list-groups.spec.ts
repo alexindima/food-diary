@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../../shared/models/product.data';
+import { entityId } from '../../../../../../shared/models/semantics/entity-id';
 import type { ProductCardViewModel } from '../../product-list.types';
 import { ProductListGroupsComponent } from './product-list-groups';
 
@@ -75,7 +76,7 @@ function createItem(product: Product): ProductCardViewModel {
 
 function createProduct(id: string, name: string): Product {
     return {
-        id,
+        id: entityId<'product'>(id),
         name,
         productType: ProductType.Fruit,
         baseUnit: MeasurementUnit.G,

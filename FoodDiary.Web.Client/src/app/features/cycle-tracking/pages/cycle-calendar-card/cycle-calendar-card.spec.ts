@@ -3,20 +3,22 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { CycleResponse } from '../../../../shared/models/cycle.data';
+import { calendarDate } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { CycleCalendarCardComponent } from './cycle-calendar-card';
 
 const SELECTED_YEAR = 2025;
 const MARCH_INDEX = 2;
 const SELECTED_DAY = 15;
 const CYCLE: CycleResponse = {
-    id: 'cycle-1',
-    userId: 'user-1',
+    id: entityId<'cycle-profile'>('cycle-1'),
+    userId: entityId<'user'>('user-1'),
     mode: 0,
     goal: 0,
     reproductiveState: 0,
     hideFromDashboard: false,
     confidence: 2,
-    trackingStartDate: '2025-03-01T00:00:00Z',
+    trackingStartDate: calendarDate('2025-03-01T00:00:00Z'),
     averageCycleLength: 28,
     averagePeriodLength: 5,
     lutealLength: 14,
@@ -26,9 +28,9 @@ const CYCLE: CycleResponse = {
     discreetNotifications: false,
     bleedingEntries: [
         {
-            id: 'bleeding-1',
-            cycleProfileId: 'cycle-1',
-            date: '2025-03-15T00:00:00Z',
+            id: entityId<'bleeding-entry'>('bleeding-1'),
+            cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+            date: calendarDate('2025-03-15T00:00:00Z'),
             type: 0,
             flow: 2,
         },
@@ -38,17 +40,17 @@ const CYCLE: CycleResponse = {
     fertilitySignals: [],
     menstrualEpisodes: [
         {
-            id: 'episode-1',
-            cycleProfileId: 'cycle-1',
-            startDate: '2025-03-14T00:00:00Z',
-            endDate: '2025-03-16T00:00:00Z',
+            id: entityId<'menstrual-episode'>('episode-1'),
+            cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+            startDate: calendarDate('2025-03-14T00:00:00Z'),
+            endDate: calendarDate('2025-03-16T00:00:00Z'),
             status: 1,
             excludedFromPredictions: false,
         },
     ],
     predictions: {
-        nextPeriodStartFrom: '2025-04-11T00:00:00Z',
-        nextPeriodStartTo: '2025-04-13T00:00:00Z',
+        nextPeriodStartFrom: calendarDate('2025-04-11T00:00:00Z'),
+        nextPeriodStartTo: calendarDate('2025-04-13T00:00:00Z'),
         confidence: 'medium',
         rationale: 'test',
     },

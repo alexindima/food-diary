@@ -9,6 +9,7 @@ import { SessionEventsService } from '../auth/session-events.service';
 import { fallbackApiError, rethrowApiError } from '../lib/api-error.utils';
 import type { DietologistRelationship } from '../models/dietologist.data';
 import type { NotificationPreferences, WebPushSubscriptionItem } from '../models/notification.data';
+import { utcInstant } from '../models/semantics/date-value';
 import type { GoalHistoryPage } from '../models/user.data';
 import type {
     ChangePasswordRequest,
@@ -168,7 +169,7 @@ export class UserService {
             tap(() => {
                 const current = this.userSignal();
                 if (current !== null) {
-                    this.userSignal.set({ ...current, aiConsentAcceptedAt: new Date().toISOString() });
+                    this.userSignal.set({ ...current, aiConsentAcceptedAt: utcInstant(new Date().toISOString()) });
                 }
             }),
             catchError((error: unknown) => rethrowApiError('Accept AI consent error', error)),

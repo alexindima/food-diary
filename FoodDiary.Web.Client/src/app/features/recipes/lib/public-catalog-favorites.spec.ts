@@ -6,6 +6,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../services/auth.service';
 import type { FavoriteRecipe } from '../../../shared/models/recipe.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { PublicAuthDialogService } from '../../public/contracts/auth-dialog';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import { PublicCatalogFavorites } from './public-catalog-favorites.facade';
@@ -88,7 +90,14 @@ describe('PublicCatalogFavorites', () => {
             expect(api.add).toHaveBeenCalledTimes(1);
             authenticated.set(false);
             TestBed.tick();
-            pending.next({ id: 'late', recipeId: 'recipe', recipeName: 'Soup', createdAtUtc: '', servings: 2, ingredientCount: 0 });
+            pending.next({
+                id: entityId<'favorite-recipe'>('late'),
+                recipeId: entityId<'recipe'>('recipe'),
+                recipeName: 'Soup',
+                createdAtUtc: utcInstant(''),
+                servings: 2,
+                ingredientCount: 0,
+            });
             pending.complete();
             await action;
             expect(favorites.savedIds().size).toBe(0);

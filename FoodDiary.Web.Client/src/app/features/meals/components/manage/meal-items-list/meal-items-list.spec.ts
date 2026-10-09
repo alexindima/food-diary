@@ -6,6 +6,8 @@ import { provideTranslateTesting } from '../../../../../../testing/translate-tes
 import { MealSourceType } from '../../../../../shared/models/meal.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import { MealItemsListComponent, type MealItemsListItemState } from './meal-items-list';
 
@@ -197,7 +199,7 @@ function createItemState(values: Partial<MealItemsListItemState> = {}): MealItem
 
 function createProduct(): Product {
     return {
-        id: 'product-1',
+        id: entityId<'product'>('product-1'),
         name: 'Apple',
         imageUrl: 'https://example.test/apple.jpg',
         productType: ProductType.Unknown,
@@ -221,14 +223,14 @@ function createProduct(): Product {
 
 function createRecipe(): Recipe {
     return {
-        id: 'recipe-1',
+        id: entityId<'recipe'>('recipe-1'),
         name: 'Soup',
         imageUrl: 'https://example.test/soup.jpg',
         comment: null,
         servings: 4,
         visibility: RecipeVisibility.Private,
         usageCount: 0,
-        createdAt: '2026-04-05T10:30:00Z',
+        createdAt: utcInstant('2026-04-05T10:30:00Z'),
         isOwnedByCurrentUser: true,
         isNutritionAutoCalculated: true,
         totalCalories: 600,

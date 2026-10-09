@@ -14,6 +14,7 @@ import type {
     RecommendationComment,
 } from '../../../shared/models/dietologist.data';
 import type { PageOf } from '../../../shared/models/page-of.data';
+import type { RecommendationId } from '../../../shared/models/semantics/entity-id';
 
 @Service()
 export class RecommendationsService {
@@ -28,18 +29,21 @@ export class RecommendationsService {
         );
     }
 
-    public markAsRead(recommendationId: string): Observable<void> {
+    public markAsRead(recommendationId: RecommendationId): Observable<void> {
         return this.sdk.client.putRecommendationsByRecommendationIdRead({ version: this.sdk.version, recommendationId });
     }
 
-    public getComments(recommendationId: string): Observable<RecommendationComment[]> {
+    public getComments(recommendationId: RecommendationId): Observable<RecommendationComment[]> {
         return this.getCommentPage(recommendationId, 1).pipe(
             expand(response => (response.page < response.totalPages ? this.getCommentPage(recommendationId, response.page + 1) : EMPTY)),
             reduce((comments, response) => [...comments, ...response.data], [] as RecommendationComment[]),
         );
     }
 
-    public createComment(recommendationId: string, request: CreateRecommendationCommentRequest): Observable<RecommendationComment> {
+    public createComment(
+        recommendationId: RecommendationId,
+        request: CreateRecommendationCommentRequest,
+    ): Observable<RecommendationComment> {
         return this.sdk.client
             .postRecommendationsByRecommendationIdComments({
                 version: this.sdk.version,
@@ -49,7 +53,7 @@ export class RecommendationsService {
             .pipe(map(recommendationCommentFromSdk));
     }
 
-    private getCommentPage(recommendationId: string, page: number): Observable<PageOf<RecommendationComment>> {
+    private getCommentPage(recommendationId: RecommendationId, page: number): Observable<PageOf<RecommendationComment>> {
         return this.sdk.client
             .getRecommendationsByRecommendationIdComments({ version: this.sdk.version, recommendationId, page, limit: 50 })
             .pipe(map(value => sdkPage(value, recommendationCommentFromSdk)));

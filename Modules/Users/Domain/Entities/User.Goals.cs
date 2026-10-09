@@ -1,6 +1,7 @@
 using FoodDiary.Modules.Users.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Entities.Tracking;
 using FoodDiary.Modules.Users.Domain.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 
 namespace FoodDiary.Modules.Users.Domain.Entities;
 
@@ -21,18 +22,20 @@ public sealed partial class User {
         double? waterGoal = null,
         double? desiredWeight = null,
         double? desiredWaist = null) {
-        UpdateGoals(new UserGoalUpdate(
+        UpdateGoalsCore(new UserGoalUpdate(
             DailyCalorieTarget: dailyCalorieTarget,
             ProteinTarget: proteinTarget,
             FatTarget: fatTarget,
             CarbTarget: carbTarget,
             FiberTarget: fiberTarget,
-            WaterGoal: waterGoal,
-            DesiredWeightKg: desiredWeight,
-            DesiredWaistCm: desiredWaist));
+            WaterGoal: waterGoal), desiredWeight, desiredWaist);
     }
 
     public void UpdateGoals(UserGoalUpdate update) {
+        UpdateGoalsCore(update, update.DesiredWeightKg?.Value, update.DesiredWaistCm?.Value);
+    }
+
+    private void UpdateGoalsCore(UserGoalUpdate update, double? desiredWeight, double? desiredWaist) {
         EnsureNotDeleted();
         UserNutritionGoals updatedGoals = GetNutritionGoals().With(
             dailyCalorieTarget: update.DailyCalorieTarget,
@@ -42,8 +45,8 @@ public sealed partial class User {
             fiberTarget: update.FiberTarget,
             waterGoal: update.WaterGoal);
 
-        EnsureDesiredWeight(update.DesiredWeightKg, nameof(update.DesiredWeightKg));
-        EnsureDesiredWaist(update.DesiredWaistCm, nameof(update.DesiredWaistCm));
+        EnsureDesiredWeight(desiredWeight, nameof(update.DesiredWeightKg));
+        EnsureDesiredWaist(desiredWaist, nameof(update.DesiredWaistCm));
         EnsureDayCalorieTarget(update.MondayCalories, nameof(update.MondayCalories));
         EnsureDayCalorieTarget(update.TuesdayCalories, nameof(update.TuesdayCalories));
         EnsureDayCalorieTarget(update.WednesdayCalories, nameof(update.WednesdayCalories));
@@ -59,8 +62,8 @@ public sealed partial class User {
             CarbTarget: updatedGoals.CarbTarget,
             FiberTarget: updatedGoals.FiberTarget,
             WaterGoal: updatedGoals.WaterGoal,
-            DesiredWeightKg: update.DesiredWeightKg ?? DesiredWeightKg,
-            DesiredWaistCm: update.DesiredWaistCm ?? DesiredWaistCm,
+            DesiredWeightKg: desiredWeight ?? DesiredWeightKg,
+            DesiredWaistCm: desiredWaist ?? DesiredWaistCm,
             CalorieCyclingEnabled: update.CalorieCyclingEnabled ?? CalorieCyclingEnabled,
             MondayCalories: update.MondayCalories ?? MondayCalories,
             TuesdayCalories: update.TuesdayCalories ?? TuesdayCalories,
@@ -92,11 +95,22 @@ public sealed partial class User {
     public WeightGoal StartWeightGoal(double targetWeight, double startWeight, DateTime startedAtUtc) {
         EnsureNotDeleted();
         var goal = WeightGoal.Start(Id, targetWeight, startWeight, startedAtUtc);
+        return AttachWeightGoal(goal, startWeight);
+    }
+
+    public WeightGoal StartWeightGoalWithMeasurements(DesiredWeightKg targetWeight, MeasuredWeightKg startWeight, DateTime startedAtUtc) {
+        EnsureNotDeleted();
+        ArgumentNullException.ThrowIfNull(targetWeight);
+        ArgumentNullException.ThrowIfNull(startWeight);
+        var goal = WeightGoal.StartWithMeasurements(Id, targetWeight, startWeight, startedAtUtc);
+        return AttachWeightGoal(goal, startWeight.Value);
+    }
+
+    private WeightGoal AttachWeightGoal(WeightGoal goal, double startWeight) {
         WeightGoal? activeGoal = _weightGoals.SingleOrDefault(candidate => candidate.Status == WeightGoalStatus.Active);
         activeGoal?.Replace(goal.StartedAtUtc, startWeight);
-
         _weightGoals.Add(goal);
-        UpdateDesiredWeight(targetWeight);
+        UpdateDesiredWeight(goal.TargetWeightKg);
         return goal;
     }
 
@@ -104,6 +118,16 @@ public sealed partial class User {
         EnsureNotDeleted();
         WeightGoal? activeGoal = _weightGoals.SingleOrDefault(goal => goal.Status == WeightGoalStatus.Active);
         activeGoal?.Cancel(endedAtUtc, endWeight);
+        UpdateDesiredWeight(desiredWeight: null);
+    }
+
+    public void CancelWeightGoalWithMeasurement(DateTime endedAtUtc, MeasuredWeightKg? endWeight) {
+        EnsureNotDeleted();
+        WeightGoal? activeGoal = _weightGoals.SingleOrDefault(goal => goal.Status == WeightGoalStatus.Active);
+        if (activeGoal is not null) {
+            ArgumentNullException.ThrowIfNull(endWeight);
+            activeGoal.CancelWithMeasurement(endedAtUtc, endWeight);
+        }
         UpdateDesiredWeight(desiredWeight: null);
     }
 
@@ -117,11 +141,22 @@ public sealed partial class User {
     public WaistGoal StartWaistGoal(double targetWaist, double startWaist, DateTime startedAtUtc) {
         EnsureNotDeleted();
         var goal = WaistGoal.Start(Id, targetWaist, startWaist, startedAtUtc);
+        return AttachWaistGoal(goal, startWaist);
+    }
+
+    public WaistGoal StartWaistGoalWithMeasurements(DesiredWaistCm targetWaist, MeasuredWaistCm startWaist, DateTime startedAtUtc) {
+        EnsureNotDeleted();
+        ArgumentNullException.ThrowIfNull(targetWaist);
+        ArgumentNullException.ThrowIfNull(startWaist);
+        var goal = WaistGoal.StartWithMeasurements(Id, targetWaist, startWaist, startedAtUtc);
+        return AttachWaistGoal(goal, startWaist.Value);
+    }
+
+    private WaistGoal AttachWaistGoal(WaistGoal goal, double startWaist) {
         WaistGoal? activeGoal = _waistGoals.SingleOrDefault(candidate => candidate.Status == WaistGoalStatus.Active);
         activeGoal?.Replace(goal.StartedAtUtc, startWaist);
-
         _waistGoals.Add(goal);
-        UpdateDesiredWaist(targetWaist);
+        UpdateDesiredWaist(goal.TargetWaistCm);
         return goal;
     }
 
@@ -129,6 +164,16 @@ public sealed partial class User {
         EnsureNotDeleted();
         WaistGoal? activeGoal = _waistGoals.SingleOrDefault(goal => goal.Status == WaistGoalStatus.Active);
         activeGoal?.Cancel(endedAtUtc, endWaist);
+        UpdateDesiredWaist(desiredWaist: null);
+    }
+
+    public void CancelWaistGoalWithMeasurement(DateTime endedAtUtc, MeasuredWaistCm? endWaist) {
+        EnsureNotDeleted();
+        WaistGoal? activeGoal = _waistGoals.SingleOrDefault(goal => goal.Status == WaistGoalStatus.Active);
+        if (activeGoal is not null) {
+            ArgumentNullException.ThrowIfNull(endWaist);
+            activeGoal.CancelWithMeasurement(endedAtUtc, endWaist);
+        }
         UpdateDesiredWaist(desiredWaist: null);
     }
 

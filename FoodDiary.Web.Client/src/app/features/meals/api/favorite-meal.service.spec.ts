@@ -5,17 +5,19 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
 import type { FavoriteMeal } from '../../../shared/models/meal.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { FavoriteMealService } from './favorite-meal.service';
 
 const PAGE_SIZE = 10;
 const BASE_URL = 'http://localhost:5300/api/v1/favorite-meals';
 
 const favoriteMeal: FavoriteMeal = {
-    id: 'favorite-1',
-    mealId: 'meal-1',
+    id: entityId<'favorite-meal'>('favorite-1'),
+    mealId: entityId<'meal'>('meal-1'),
     name: 'Lunch',
-    createdAtUtc: '2026-05-14T10:00:00Z',
-    mealDate: '2026-05-14T09:00:00Z',
+    createdAtUtc: utcInstant('2026-05-14T10:00:00Z'),
+    mealDate: utcInstant('2026-05-14T09:00:00Z'),
     mealType: 'Lunch',
     totalCalories: 500,
     totalProteins: 30,
@@ -80,7 +82,7 @@ describe('FavoriteMealService mutations and legacy reads', () => {
     });
 
     it('loads every bounded page for lookup consumers', () => {
-        const secondFavorite = { ...favoriteMeal, id: 'favorite-2', mealId: 'meal-2' };
+        const secondFavorite = { ...favoriteMeal, id: entityId<'favorite-meal'>('favorite-2'), mealId: entityId<'meal'>('meal-2') };
         service.getLookupPage().subscribe(result => {
             expect(result).toEqual([favoriteMeal, secondFavorite]);
         });
@@ -103,7 +105,7 @@ describe('FavoriteMealService mutations and legacy reads', () => {
     });
 
     it('should check favorite state by meal id', () => {
-        service.isFavorite('meal-1').subscribe(result => {
+        service.isFavorite(entityId<'meal'>('meal-1')).subscribe(result => {
             expect(result).toBe(true);
         });
 
@@ -113,7 +115,7 @@ describe('FavoriteMealService mutations and legacy reads', () => {
     });
 
     it('should return false when favorite check fails', () => {
-        service.isFavorite('meal-1').subscribe(result => {
+        service.isFavorite(entityId<'meal'>('meal-1')).subscribe(result => {
             expect(result).toBe(false);
         });
 
@@ -122,7 +124,7 @@ describe('FavoriteMealService mutations and legacy reads', () => {
     });
 
     it('should add favorite meal with optional name', () => {
-        service.add('meal-1', 'Lunch').subscribe(result => {
+        service.add(entityId<'meal'>('meal-1'), 'Lunch').subscribe(result => {
             expect(result).toEqual(favoriteMeal);
         });
 
@@ -133,7 +135,7 @@ describe('FavoriteMealService mutations and legacy reads', () => {
     });
 
     it('should rethrow add favorite errors', () => {
-        service.add('meal-1').subscribe({
+        service.add(entityId<'meal'>('meal-1')).subscribe({
             next: () => {
                 expect.fail('Expected add to fail');
             },
@@ -147,7 +149,7 @@ describe('FavoriteMealService mutations and legacy reads', () => {
     });
 
     it('should remove favorite meal by favorite id', () => {
-        service.remove('favorite-1').subscribe();
+        service.remove(entityId<'favorite-meal'>('favorite-1')).subscribe();
 
         const req = httpMock.expectOne(`${BASE_URL}/favorite-1`);
         expect(req.request.method).toBe('DELETE');
@@ -155,7 +157,7 @@ describe('FavoriteMealService mutations and legacy reads', () => {
     });
 
     it('should rethrow remove favorite errors', () => {
-        service.remove('favorite-1').subscribe({
+        service.remove(entityId<'favorite-meal'>('favorite-1')).subscribe({
             next: () => {
                 expect.fail('Expected remove to fail');
             },
@@ -174,7 +176,7 @@ describe('FavoriteMealService restore failures', () => {
         'propagates HTTP %s without inventing a restored favorite',
         status => {
             let errorStatus: number | undefined;
-            service.restore('removed').subscribe({
+            service.restore(entityId<'favorite-meal'>('removed')).subscribe({
                 next: () => {
                     throw new Error('must fail');
                 },

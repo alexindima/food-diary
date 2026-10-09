@@ -11,6 +11,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import type { DietologistInvitationForCurrentUser } from '../../../../shared/models/dietologist.data';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 
 type InvitationPageState = 'loading' | 'ready' | 'accepted' | 'declined' | 'expired' | 'revoked' | 'error';
@@ -156,7 +157,7 @@ export class DietologistInvitationPageComponent {
             return EMPTY;
         }
 
-        return this.dietologistFacade.getInvitationForCurrentUser(invitationId).pipe(
+        return this.dietologistFacade.getInvitationForCurrentUser(entityId<'dietologist-invitation'>(invitationId)).pipe(
             catchError(() => {
                 this.state.set('error');
                 this.errorMessage.set(this.translateService.instant('DIETOLOGIST_INVITATION.ERROR_LOAD'));

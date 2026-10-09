@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import type { RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
 import type { RecipeFormValues } from './recipe-manage.types';
 import { createRecipeFormValue } from './recipe-manage-form.mapper';
@@ -256,12 +258,12 @@ type TestRecipeNutritionFormState = {
 
 function createRecipe(): Recipe {
     return {
-        id: 'recipe-1',
+        id: entityId<'recipe'>('recipe-1'),
         name: 'Recipe',
         servings: 1,
         visibility: RecipeVisibility.Public,
         usageCount: 0,
-        createdAt: '2026-01-01T00:00:00Z',
+        createdAt: utcInstant('2026-01-01T00:00:00Z'),
         isOwnedByCurrentUser: true,
         isNutritionAutoCalculated: true,
         steps: [],

@@ -4,6 +4,7 @@ import { of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminBillingService } from '../api/admin-billing.service';
 import { AdminBillingFacade } from '../lib/admin-billing.facade';
 import type { AdminBillingSubscription } from '../models/admin-billing.models';
@@ -103,14 +104,14 @@ function createBillingServiceMock(): BillingApiMock {
 const subscriptionsPage = {
     items: [
         {
-            id: 'subscription-1',
-            userId: 'user-1',
+            id: adminId<'billing-subscription'>('subscription-1'),
+            userId: adminId<'user'>('user-1'),
             userEmail: 'premium@example.com',
             provider: 'Paddle',
             externalCustomerId: 'cus_123',
             status: 'active',
             cancelAtPeriodEnd: false,
-            createdOnUtc: '2026-04-28T00:00:00Z',
+            createdOnUtc: adminUtcInstant('2026-04-28T00:00:00Z'),
         },
     ],
     page: 1,
@@ -135,14 +136,14 @@ describe('AdminBillingComponent loading', () => {
         await fixture.whenStable();
         billing.payments.set([
             {
-                id: 'payment-precision',
-                userId: 'user-1',
+                id: adminId<'billing-payment'>('payment-precision'),
+                userId: adminId<'user'>('user-1'),
                 userEmail: null,
                 provider: 'Stripe',
                 externalPaymentId: 'in_paid',
                 status: 'completed',
                 kind: 'transaction',
-                createdOnUtc: '2026-04-28T00:00:00Z',
+                createdOnUtc: adminUtcInstant('2026-04-28T00:00:00Z'),
                 amount,
                 currency: 'BHD',
             },

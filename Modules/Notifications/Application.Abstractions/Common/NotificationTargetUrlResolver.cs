@@ -32,9 +32,9 @@ public static class NotificationTargetUrlResolver {
     }
 
     private static string? ResolveDietologistRecommendationCommentUrl(string referenceId) {
-        string[] parts = referenceId.Split('|', 2, StringSplitOptions.TrimEntries);
-        return parts.Length == 2 && Guid.TryParse(parts[0], out _) && Guid.TryParse(parts[1], out _)
-            ? $"/dietologist/clients/{parts[0]}?recommendationId={parts[1]}"
+        var target = RecommendationCommentTarget.ParseDietologistReference(referenceId);
+        return target is not null
+            ? $"/dietologist/clients/{target.ClientUserId}?recommendationId={target.RecommendationId}"
             : null;
     }
 }

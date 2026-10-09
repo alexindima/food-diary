@@ -5,20 +5,21 @@ import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminEmailTemplatesFacade } from '../lib/admin-email-templates.facade';
 import type { AdminEmailTemplate } from '../models/admin-email-template.data';
 import { AdminEmailTemplatesComponent } from './admin-email-templates';
 
 const templates: AdminEmailTemplate[] = [
     {
-        id: 't1',
+        id: adminId<'email-template'>('t1'),
         key: 'email_verification',
         locale: 'en',
         subject: 'Verify email',
         htmlBody: '<p>Hello</p>',
         textBody: 'Hello',
         isActive: true,
-        createdOnUtc: '2026-01-01T00:00:00Z',
+        createdOnUtc: adminUtcInstant('2026-01-01T00:00:00Z'),
         updatedOnUtc: null,
     },
 ];
@@ -58,7 +59,9 @@ describe('AdminEmailTemplatesComponent', () => {
     });
 
     it('pages the list and clamps the last page after records are removed', () => {
-        component['templates'].set(Array.from({ length: 21 }, (_, index) => ({ ...templates[0], id: `t${index}` })));
+        component['templates'].set(
+            Array.from({ length: 21 }, (_, index) => ({ ...templates[0], id: adminId<'email-template'>(`t${index}`) })),
+        );
         expect(component['pageItems']()).toHaveLength(component['pageSize']);
         component['requestedPage'].set(1);
         expect(component['pageItems']().map(item => item.id)).toEqual(['t20']);

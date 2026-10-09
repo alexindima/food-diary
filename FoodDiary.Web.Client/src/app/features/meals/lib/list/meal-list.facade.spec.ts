@@ -8,6 +8,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NavigationService } from '../../../../services/navigation.service';
 import type { FavoriteMeal, Meal, MealOverview } from '../../../../shared/models/meal.data';
 import type { PageOf } from '../../../../shared/models/page-of.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId, optionalEntityId } from '../../../../shared/models/semantics/entity-id';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealService } from '../../api/meal.service';
@@ -48,8 +50,8 @@ let toastService: { error: ReturnType<typeof vi.fn> };
 
 function createMeal(overrides: Partial<Meal> = {}): Meal {
     return {
-        id: 'meal-1',
-        date: '2026-05-05T10:00:00Z',
+        id: entityId<'meal'>('meal-1'),
+        date: utcInstant('2026-05-05T10:00:00Z'),
         mealType: 'breakfast',
         comment: null,
         imageUrl: null,
@@ -71,11 +73,11 @@ function createMeal(overrides: Partial<Meal> = {}): Meal {
 
 function createFavorite(overrides: Partial<FavoriteMeal> = {}): FavoriteMeal {
     return {
-        id: 'favorite-1',
-        mealId: 'meal-1',
+        id: entityId<'favorite-meal'>('favorite-1'),
+        mealId: entityId<'meal'>('meal-1'),
         name: 'Breakfast',
-        createdAtUtc: '2026-05-05T10:00:00Z',
-        mealDate: '2026-05-05T10:00:00Z',
+        createdAtUtc: utcInstant('2026-05-05T10:00:00Z'),
+        mealDate: utcInstant('2026-05-05T10:00:00Z'),
         mealType: 'breakfast',
         totalCalories: DEFAULT_CALORIES,
         totalProteins: DEFAULT_PROTEINS,
@@ -242,9 +244,11 @@ function registerMutationTests(): void {
             facade.currentPageIndex.set(1);
             let result = false;
 
-            facade.repeatMeal('meal-1', '2026-05-05T08:30:00.000Z', 'BREAKFAST', emptyMealFilters()).subscribe(value => {
-                result = value;
-            });
+            facade
+                .repeatMeal(entityId<'meal'>('meal-1'), utcInstant('2026-05-05T08:30:00.000Z'), 'BREAKFAST', emptyMealFilters())
+                .subscribe(value => {
+                    result = value;
+                });
 
             expect(result).toBe(true);
             expect(TestBed.inject(NutritionDataInvalidationService).dashboardVersion()).toBe(1);
@@ -261,9 +265,11 @@ function registerMutationTests(): void {
             mealService.repeat.mockReturnValue(throwError(() => new Error('repeat failed')));
             let result = true;
 
-            facade.repeatMeal('meal-1', '2026-05-05T08:30:00.000Z', 'BREAKFAST', emptyMealFilters()).subscribe(value => {
-                result = value;
-            });
+            facade
+                .repeatMeal(entityId<'meal'>('meal-1'), utcInstant('2026-05-05T08:30:00.000Z'), 'BREAKFAST', emptyMealFilters())
+                .subscribe(value => {
+                    result = value;
+                });
 
             expect(result).toBe(false);
             expect(toastService.error).toHaveBeenCalledWith('MEAL_LIST.OPERATION_ERROR_MESSAGE');
@@ -274,7 +280,7 @@ function registerMutationTests(): void {
             facade.currentPageIndex.set(1);
             let result = false;
 
-            facade.deleteMeal('meal-1', emptyMealFilters()).subscribe(value => {
+            facade.deleteMeal(entityId<'meal'>('meal-1'), emptyMealFilters()).subscribe(value => {
                 result = value;
             });
 
@@ -348,8 +354,8 @@ function registerUndoTests(): void {
 
 function registerFavoriteMutationTests(): void {
     it('removes a known favorite and preserves other meal cards', () => {
-        const meal = createMeal({ isFavorite: true, favoriteMealId: 'favorite-1' });
-        const other = createMeal({ id: 'other' });
+        const meal = createMeal({ isFavorite: true, favoriteMealId: entityId<'favorite-meal'>('favorite-1') });
+        const other = createMeal({ id: entityId<'meal'>('other') });
         facade.mealData.items.set([meal, other]);
         facade.toggleMealFavorite(meal);
         expect(favoriteMealService.remove).toHaveBeenCalledExactlyOnceWith('favorite-1');
@@ -357,13 +363,13 @@ function registerFavoriteMutationTests(): void {
         expect(facade.favoriteLoadingIds().size).toBe(0);
     });
     it.each([null, undefined, ''])('rejects removing a favorite with missing id %s', favoriteMealId => {
-        facade.toggleMealFavorite(createMeal({ isFavorite: true, favoriteMealId }));
+        facade.toggleMealFavorite(createMeal({ isFavorite: true, favoriteMealId: optionalEntityId<'favorite-meal'>(favoriteMealId) }));
         expect(favoriteMealService.remove).not.toHaveBeenCalled();
         expect(facade.favoriteLoadingIds().size).toBe(0);
         expect(toastService.error).toHaveBeenCalled();
     });
     it.each([true, false])('preserves state and unlocks after favorite failure (was favorite %s)', isFavorite => {
-        const meal = createMeal({ isFavorite, favoriteMealId: 'favorite-1' });
+        const meal = createMeal({ isFavorite, favoriteMealId: entityId<'favorite-meal'>('favorite-1') });
         facade.mealData.items.set([meal]);
         favoriteMealService.remove.mockReturnValue(throwError(() => new Error('offline')));
         favoriteMealService.add.mockReturnValue(throwError(() => new Error('offline')));
@@ -412,7 +418,7 @@ function registerListFailureTests(): void {
     it('does not invalidate nutrition or reload after failed deletion', () => {
         const invalidation = vi.spyOn(TestBed.inject(NutritionDataInvalidationService), 'reportMealMutation');
         mealService.deleteById.mockReturnValue(throwError(() => new Error('offline')));
-        facade.deleteMeal('meal-1', emptyMealFilters()).subscribe(result => {
+        facade.deleteMeal(entityId<'meal'>('meal-1'), emptyMealFilters()).subscribe(result => {
             expect(result).toBe(false);
         });
         expect(invalidation).not.toHaveBeenCalled();
@@ -439,9 +445,9 @@ function registerListRaceTests(): void {
         facade.loadInitialOverview(emptyMealFilters()).subscribe();
         facade.loadMeals(2, emptyMealFilters({ hasImage: true })).subscribe();
         expect(old.observed).toBe(false);
-        current.next(createOverview([createMeal({ id: 'new' })], 2));
+        current.next(createOverview([createMeal({ id: entityId<'meal'>('new') })], 2));
         current.complete();
-        old.next(createOverview([createMeal({ id: 'old' })]));
+        old.next(createOverview([createMeal({ id: entityId<'meal'>('old') })]));
         expect(facade.mealData.items()[0].id).toBe('new');
         expect(facade.currentPageIndex()).toBe(1);
     });

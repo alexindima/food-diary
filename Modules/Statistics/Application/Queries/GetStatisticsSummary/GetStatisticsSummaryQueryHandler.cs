@@ -61,26 +61,22 @@ public sealed class GetStatisticsSummaryQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        DateTime statisticsFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateFrom);
-        DateTime statisticsTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateTo);
-        DateTime bodyFrom = request.BodyDateFrom?.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc)
-            ?? UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.DateFrom);
-        DateTime bodyTo = request.BodyDateTo?.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc)
-            ?? UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.DateTo);
+        var statisticsPeriod = StatisticsInstantPeriod.FromRequest(request.DateFrom, request.DateTo, request.TimeZoneId);
+        var bodyPeriod = StatisticsBodyPeriod.Resolve(request.BodyDateFrom, request.BodyDateTo, request.DateFrom, request.DateTo);
 
         Result<IReadOnlyList<MealNutritionStatisticsBucket>> statisticsResult = await sender.Send(new ReadMealNutritionStatisticsQuery(
             userId,
-            statisticsFrom,
-            statisticsTo,
+            statisticsPeriod.From,
+            statisticsPeriod.To,
             request.QuantizationDays,
-            request.TimeZoneId),
+            statisticsPeriod.TimeZoneId),
             cancellationToken).ConfigureAwait(false);
         if (statisticsResult.IsFailure) {
             return Result.Failure<StatisticsSummaryModel>(statisticsResult.Error);
         }
 
-        IReadOnlyList<WeightEntrySummaryModel> weight = await sender.Send(new ReadWeightSummariesQuery(UserId: userId, DateFrom: bodyFrom, DateTo: bodyTo, QuantizationDays: request.QuantizationDays), cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<WaistEntrySummaryModel> waist = await sender.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: bodyFrom, DateTo: bodyTo, QuantizationDays: request.QuantizationDays), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WeightEntrySummaryModel> weight = await sender.Send(new ReadWeightSummariesQuery(UserId: userId, DateFrom: bodyPeriod.From, DateTo: bodyPeriod.To, QuantizationDays: request.QuantizationDays), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WaistEntrySummaryModel> waist = await sender.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: bodyPeriod.From, DateTo: bodyPeriod.To, QuantizationDays: request.QuantizationDays), cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new StatisticsSummaryModel(
             [.. statisticsResult.Value.Select(StatisticsMappings.ToModel)],

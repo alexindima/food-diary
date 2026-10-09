@@ -8,6 +8,8 @@ import {
     getFastingProtocolBaseLabel,
 } from '../../../shared/lib/fasting-timer-card-state';
 import type { FastingSession } from '../../../shared/models/fasting.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 
 const MS_PER_HOUR = 3_600_000;
 const MS_PER_MINUTE = 60_000;
@@ -134,7 +136,7 @@ function registerIntermittentWindowTests(): void {
 
         it('builds completed intermittent sessions with fallback elapsed progress instead of cycle-window state', () => {
             const state = buildFastingTimerCardComputedState({
-                session: createSession({ endedAtUtc: '2026-04-12T22:00:00Z', isCompleted: true, status: 'Completed' }),
+                session: createSession({ endedAtUtc: utcInstant('2026-04-12T22:00:00Z'), isCompleted: true, status: 'Completed' }),
                 elapsedMs: hours(HOURS_16),
                 translate,
             });
@@ -352,8 +354,8 @@ describe('formatFastingDuration', () => {
 
 function createSession(overrides: Partial<FastingSession> = {}): FastingSession {
     return {
-        id: 'session-1',
-        startedAtUtc: '2026-04-12T06:00:00Z',
+        id: entityId<'fasting-session'>('session-1'),
+        startedAtUtc: utcInstant('2026-04-12T06:00:00Z'),
         endedAtUtc: null,
         initialPlannedDurationHours: HOURS_16,
         addedDurationHours: 0,

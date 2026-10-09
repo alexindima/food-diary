@@ -37,9 +37,7 @@ public sealed class SendWeeklyGoalRemindersCommandHandler(
                 await notificationWriter.AddAsync(
                     new NotificationRequest(
                         goal.UserId,
-                        NotificationTypes.WeeklyGoalReminder,
-                        NotificationPayloads.Empty(),
-                        goal.Id.Value.ToString()),
+                        NotificationIntent.WeeklyGoalReminder(goal.Id.Value.ToString())),
                     sendWebPush: true,
                     cancellationToken).ConfigureAwait(false);
                 goal.MarkReminderSent(localDate, utcNow);

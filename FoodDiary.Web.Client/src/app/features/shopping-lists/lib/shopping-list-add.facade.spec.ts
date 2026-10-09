@@ -6,6 +6,8 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../services/auth.service';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { ShoppingList } from '../../../shared/models/shopping-list.data';
 import { PublicAuthDialogService } from '../../public/contracts/auth-dialog';
 import { ShoppingListService } from '../api/shopping-list.service';
@@ -16,7 +18,7 @@ const authenticated = signal(true);
 const api = { getSelectionPage: vi.fn(), getById: vi.fn(), create: vi.fn(), update: vi.fn() };
 const dialogs = { open: vi.fn() };
 const authDialog = { openAsync: vi.fn() };
-const list: ShoppingList = { id: 'list-1', name: 'Soup', createdAt: '', items: [] };
+const list: ShoppingList = { id: entityId<'shopping-list'>('list-1'), name: 'Soup', createdAt: utcInstant(''), items: [] };
 let facade: ShoppingListAddFacade;
 beforeEach(() => {
     vi.resetAllMocks();

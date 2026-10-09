@@ -6,6 +6,9 @@ import { environment } from '../../../environments/environment';
 import { SKIP_AUTH } from '../../constants/http-context.tokens';
 import { rethrowApiError } from '../lib/api-error.utils';
 import type { ConfirmImageUploadResponse, ImageUploadUrlResponse } from '../models/image-upload.data';
+import { utcInstant } from '../models/semantics/date-value';
+import { entityId, type ImageAssetId } from '../models/semantics/entity-id';
+import { publicImageUrl, type SignedImageUploadUrl, signedImageUploadUrl } from '../models/semantics/image-location';
 import { ImagesSdk } from './sdk/generated/api/images.service';
 import { createSdkConnection } from './sdk/sdk-connection';
 import { requireSdkFields } from './sdk/sdk-response';
@@ -24,12 +27,21 @@ export class ImageUploadService {
         };
 
         return this.sdk.client.postImagesUploadUrl({ version: this.sdk.version, getImageUploadUrlHttpRequest: body }).pipe(
-            map(value => requireSdkFields(value, ['assetId', 'uploadUrl', 'fileUrl', 'expiresAtUtc'])),
+            map(response => {
+                const value = requireSdkFields(response, ['assetId', 'uploadUrl', 'fileUrl', 'expiresAtUtc']);
+                return {
+                    ...value,
+                    assetId: entityId<'image-asset'>(value.assetId),
+                    uploadUrl: signedImageUploadUrl(value.uploadUrl),
+                    fileUrl: publicImageUrl(value.fileUrl),
+                    expiresAtUtc: utcInstant(value.expiresAtUtc),
+                };
+            }),
             catchError((error: unknown) => rethrowApiError('Failed to request image upload URL', error)),
         );
     }
 
-    public uploadToPresignedUrl(uploadUrl: string, file: File): Observable<void> {
+    public uploadToPresignedUrl(uploadUrl: SignedImageUploadUrl, file: File): Observable<void> {
         const headers = new HttpHeaders({
             'Content-Type': file.type,
         });
@@ -42,14 +54,17 @@ export class ImageUploadService {
         );
     }
 
-    public confirmUpload(assetId: string): Observable<ConfirmImageUploadResponse> {
+    public confirmUpload(assetId: ImageAssetId): Observable<ConfirmImageUploadResponse> {
         return this.sdk.client.postImagesByAssetIdConfirm({ version: this.sdk.version, assetId }).pipe(
-            map(value => requireSdkFields(value, ['assetId', 'fileUrl'])),
+            map(response => {
+                const value = requireSdkFields(response, ['assetId', 'fileUrl']);
+                return { ...value, assetId: entityId<'image-asset'>(value.assetId), fileUrl: publicImageUrl(value.fileUrl) };
+            }),
             catchError((error: unknown) => rethrowApiError('Failed to confirm image upload', error)),
         );
     }
 
-    public deleteAsset(assetId: string): Observable<void> {
+    public deleteAsset(assetId: ImageAssetId): Observable<void> {
         return this.sdk.client
             .deleteImagesByAssetId({ version: this.sdk.version, assetId })
             .pipe(catchError((error: unknown) => rethrowApiError('Failed to delete image asset', error)));

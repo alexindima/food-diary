@@ -10,6 +10,8 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { ConfirmDeleteDialogComponent } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import { NavigationService } from '../../../../services/navigation.service';
 import { UserService } from '../../../../shared/api/user.service';
+import { calendarDate } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { WeightEntriesService } from '../../api/weight-entries.service';
@@ -27,7 +29,7 @@ const FIXTURE_JUNE_LAST_DAY = 30;
 const FIXTURE_REFERENCE_MEASUREMENT = 80;
 const FIXTURE_CURRENT_MEASUREMENT = 78;
 const FIXTURE_TARGET_MEASUREMENT = 75;
-const ENTRY = { id: 'entry', userId: 'u', date: '2026-06-20', weightKg: 80 };
+const ENTRY = { id: entityId<'weight-entry'>('entry'), userId: entityId<'user'>('u'), date: calendarDate('2026-06-20'), weightKg: 80 };
 async function setupAsync(renderEntries = true): Promise<{
     fixture: ComponentFixture<WeightHistoryPageComponent>;
     component: WeightHistoryPageComponent;
@@ -246,7 +248,7 @@ describe('Measurement deletion confirmation', () => {
 describe('History page periods and KPI states', () => {
     it.each([null, 'invalid', '2026-06-20'])('shows latest measurement month safely for %s', date => {
         const { component, facade } = context;
-        facade.latestEntry.set(date === null ? null : { ...ENTRY, date });
+        facade.latestEntry.set(date === null ? null : { ...ENTRY, date: calendarDate(date) });
         component['showLatestMeasurement']();
         expect(facade.selectedRange()).toBe(date === '2026-06-20' ? 'custom' : 'month');
         if (date === '2026-06-20') {
@@ -275,9 +277,9 @@ describe('History page periods and KPI states', () => {
         const { component, facade } = context;
         facade.weightGoal.set({ desiredWeightKg: goal, startWeightKg: 100, startedAtUtc: null });
         facade.rollingMonthSummaryPoints.set([
-            { startDate: '2026-06-01', endDate: '2026-06-01', averageWeightKg: first },
-            { startDate: '2026-06-02', endDate: '2026-06-02', averageWeightKg: 0 },
-            { startDate: '2026-06-03', endDate: '2026-06-03', averageWeightKg: last },
+            { startDate: calendarDate('2026-06-01'), endDate: calendarDate('2026-06-01'), averageWeightKg: first },
+            { startDate: calendarDate('2026-06-02'), endDate: calendarDate('2026-06-02'), averageWeightKg: 0 },
+            { startDate: calendarDate('2026-06-03'), endDate: calendarDate('2026-06-03'), averageWeightKg: last },
         ]);
         expect(component['weightChange']()).toEqual({ value: last - first, tone });
     });

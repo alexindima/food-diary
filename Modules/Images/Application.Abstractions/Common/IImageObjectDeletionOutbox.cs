@@ -1,8 +1,9 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 namespace FoodDiary.Modules.Images.Application.Abstractions.Common;
 
 public interface IImageObjectDeletionOutbox {
-    Task EnqueueAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken = default);
+    Task EnqueueAsync(ObjectStorageKey key, bool isConfirmed, CancellationToken cancellationToken = default);
 
-    Task EnqueueAsync(string objectKey, CancellationToken cancellationToken = default) =>
-        EnqueueAsync(objectKey, isConfirmed: true, cancellationToken);
+    Task EnqueueAsync(ObjectStorageKey key, CancellationToken cancellationToken = default) =>
+        EnqueueAsync(key, isConfirmed: true, cancellationToken);
 }

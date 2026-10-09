@@ -9,6 +9,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import type { FastingSession } from '../../../../shared/models/fasting.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FastingFacade } from '../../lib/fasting.facade';
 import { FastingTimerCardComponent } from './fasting-timer-card';
 
@@ -164,7 +166,7 @@ function registerProgressTests(): void {
             const fixture = await createHostFixtureAsync();
 
             fixture.componentInstance['layout'].set(layout);
-            setSession(fixture, createExtendedSession({ startedAtUtc: getStartedAtUtc(EXTENDED_OVERTIME_HOURS) }));
+            setSession(fixture, createExtendedSession({ startedAtUtc: utcInstant(getStartedAtUtc(EXTENDED_OVERTIME_HOURS)) }));
             fixture.detectChanges();
 
             const percent = requireElement(fixture, '.fasting-timer-card__percent');
@@ -175,7 +177,7 @@ function registerProgressTests(): void {
             const fixture = await createHostFixtureAsync();
 
             fixture.componentInstance['layout'].set(layout);
-            setSession(fixture, createExtendedSession({ startedAtUtc: getStartedAtUtc(RING_TEST_HOURS) }));
+            setSession(fixture, createExtendedSession({ startedAtUtc: utcInstant(getStartedAtUtc(RING_TEST_HOURS)) }));
             fixture.detectChanges();
 
             const progressRing = requireSvgCircleElement(fixture, '.fasting-timer-card__ring-progress');
@@ -217,7 +219,7 @@ function registerTimerDisplayTests(): void {
                 createExtendedSession({
                     plannedDurationHours: TIMER_PLANNED_HOURS,
                     initialPlannedDurationHours: TIMER_PLANNED_HOURS,
-                    startedAtUtc: getStartedAtUtc(TIMER_ELAPSED_HOURS),
+                    startedAtUtc: utcInstant(getStartedAtUtc(TIMER_ELAPSED_HOURS)),
                 }),
             );
             fixture.detectChanges();
@@ -237,7 +239,7 @@ function registerTimerDisplayTests(): void {
                 createExtendedSession({
                     plannedDurationHours: TIMER_PLANNED_HOURS,
                     initialPlannedDurationHours: TIMER_PLANNED_HOURS,
-                    startedAtUtc: getStartedAtUtc(1),
+                    startedAtUtc: utcInstant(getStartedAtUtc(1)),
                 }),
             );
             getFacadeStub(fixture).elapsedMs.set(TIMER_ELAPSED_HOURS * MS_PER_HOUR);
@@ -486,8 +488,8 @@ function getStartedAtUtc(hoursAgo: number): string {
 
 function createSession(overrides: Partial<FastingSession> = {}): FastingSession {
     return {
-        id: 'session-1',
-        startedAtUtc: '2026-04-12T06:00:00Z',
+        id: entityId<'fasting-session'>('session-1'),
+        startedAtUtc: utcInstant('2026-04-12T06:00:00Z'),
         endedAtUtc: null,
         initialPlannedDurationHours: DEFAULT_FASTING_HOURS,
         addedDurationHours: 0,

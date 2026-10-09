@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Favorites.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
@@ -51,7 +52,7 @@ public sealed class AddFavoriteProductCommandHandler(
             return Result.Failure<FavoriteProductModel>(FavoriteProductErrors.AlreadyExists);
         }
 
-        var favorite = FavoriteProduct.Create(userId, productId, command.Name, command.PreferredPortionAmount ?? product.DefaultPortionAmount);
+        var favorite = FavoriteProduct.CreateWithPreferredQuantity(userId, productId, command.Name, PreferredProductQuantity.FromAmount(command.PreferredPortionAmount ?? product.DefaultPortionAmount));
         await favoriteProductRepository.AddAsync(favorite, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(favorite.ToModel(product));

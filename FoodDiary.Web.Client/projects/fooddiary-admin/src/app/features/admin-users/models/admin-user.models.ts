@@ -1,16 +1,17 @@
+import type { AdminCalendarDate, AdminId, AdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 export type AdminUser = {
-    id: string;
+    id: AdminId<'user'>;
     email: string | null;
     hasPassword?: boolean;
     mustChangePassword?: boolean;
     username?: string | null;
     firstName?: string | null;
     lastName?: string | null;
-    birthDate?: string | null;
+    birthDate?: AdminCalendarDate | null;
     gender?: string | null;
     weightKg?: number | null;
     latestWeightKg?: number | null;
-    latestWeightDate?: string | null;
+    latestWeightDate?: AdminCalendarDate | null;
     desiredWeightKg?: number | null;
     desiredWaistCm?: number | null;
     heightCm?: number | null;
@@ -32,7 +33,7 @@ export type AdminUser = {
     saturdayCalories?: number | null;
     sundayCalories?: number | null;
     profileImage?: string | null;
-    profileImageAssetId?: string | null;
+    profileImageAssetId?: AdminId<'image-asset'> | null;
     dashboardLayoutJson?: string | null;
     language?: string | null;
     theme?: string | null;
@@ -45,9 +46,9 @@ export type AdminUser = {
     telegramUserId?: number | null;
     isActive: boolean;
     isEmailConfirmed: boolean;
-    createdOnUtc: string;
-    deletedAt?: string | null;
-    lastLoginAtUtc?: string | null;
+    createdOnUtc: AdminUtcInstant;
+    deletedAt?: AdminUtcInstant | null;
+    lastLoginAtUtc?: AdminUtcInstant | null;
     roles: string[];
     aiInputTokenLimit?: number;
     aiOutputTokenLimit?: number;
@@ -88,27 +89,27 @@ export type AdminUserSetPassword = {
 
 export type AdminImpersonationStart = {
     code: string;
-    targetUserId: string;
+    targetUserId: AdminId<'user'>;
     targetEmail: string | null;
-    actorUserId: string;
+    actorUserId: AdminId<'user'>;
     reason: string;
 };
 
 export type AdminImpersonationSession = {
-    id: string;
-    actorUserId: string;
+    id: AdminId<'impersonation-session'>;
+    actorUserId: AdminId<'user'>;
     actorEmail: string | null;
-    targetUserId: string;
+    targetUserId: AdminId<'user'>;
     targetEmail: string | null;
     reason: string;
     actorIpAddress?: string | null;
     actorUserAgent?: string | null;
-    startedAtUtc: string;
+    startedAtUtc: AdminUtcInstant;
 };
 
 export type AdminUserLoginEvent = {
-    id: string;
-    userId: string;
+    id: AdminId<'login-event'>;
+    userId: AdminId<'user'>;
     userEmail: string | null;
     authProvider: string;
     maskedIpAddress?: string | null;
@@ -117,24 +118,24 @@ export type AdminUserLoginEvent = {
     browserVersion?: string | null;
     operatingSystem?: string | null;
     deviceType?: string | null;
-    loggedInAtUtc: string;
+    loggedInAtUtc: AdminUtcInstant;
 };
 
 export type AdminUserRoleAuditEvent = {
-    id: string;
-    userId: string;
+    id: AdminId<'role-audit-event'>;
+    userId: AdminId<'user'>;
     roleName: string;
     action: string;
-    actorUserId?: string | null;
+    actorUserId?: AdminId<'user'> | null;
     actorEmail?: string | null;
     source: string;
-    occurredAtUtc: string;
+    occurredAtUtc: AdminUtcInstant;
 };
 
 export type AdminUserLoginDeviceSummary = {
     key: string;
     count: number;
-    lastSeenAtUtc: string;
+    lastSeenAtUtc: AdminUtcInstant;
 };
 
 export type PagedResponse<T> = {

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence.Recipes;
@@ -622,16 +623,16 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await repository.UpdateAsync(tracked);
         await context.SaveChangesAsync();
 
-        bool hasReported = await repository.HasUserReportedAsync(user.Id, ReportTargetType.Recipe, targetId);
+        bool hasReported = await repository.HasUserReportedAsync(user.Id, ReportTarget.FromFields(ReportTargetType.Recipe, targetId));
         (IReadOnlyList<ContentReportAdminReadModel> pendingReadModels, int pendingReadModelTotal) =
             await readService.GetPagedAdminReadModelsAsync(ReportStatus.Pending, page: 1, limit: 10);
         (IReadOnlyList<ContentReportAdminReadModel> allItems, int allTotal) =
             await readService.GetPagedAdminReadModelsAsync(status: null, page: 1, limit: 1);
         int dismissedCount = await readService.CountByStatusAsync(ReportStatus.Dismissed);
-        bool recipeExists = await readService.IsReportableAsync(user.Id, ReportTargetType.Recipe, recipe.Id.Value);
-        bool commentExists = await readService.IsReportableAsync(user.Id, ReportTargetType.Comment, comment.Id.Value);
-        bool missingTargetExists = await readService.IsReportableAsync(user.Id, ReportTargetType.Recipe, Guid.NewGuid());
-        bool privateTargetExists = await readService.IsReportableAsync(user.Id, ReportTargetType.Recipe, privateRecipe.Id.Value);
+        bool recipeExists = await readService.IsReportableAsync(user.Id, ReportTarget.FromFields(ReportTargetType.Recipe, recipe.Id.Value));
+        bool commentExists = await readService.IsReportableAsync(user.Id, ReportTarget.FromFields(ReportTargetType.Comment, comment.Id.Value));
+        bool missingTargetExists = await readService.IsReportableAsync(user.Id, ReportTarget.FromFields(ReportTargetType.Recipe, Guid.NewGuid()));
+        bool privateTargetExists = await readService.IsReportableAsync(user.Id, ReportTarget.FromFields(ReportTargetType.Recipe, privateRecipe.Id.Value));
 
         Assert.True(hasReported);
         Assert.Equal(otherReport.Id.Value, Assert.Single(pendingReadModels).Id);
@@ -656,9 +657,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.True(commentExists);
         Assert.False(missingTargetExists);
         Assert.False(privateTargetExists);
-        Assert.True(await readService.IsReportableAsync(otherUser.Id, ReportTargetType.Recipe, recipe.Id.Value));
-        Assert.False(await readService.IsReportableAsync(user.Id, ReportTargetType.Comment, privateComment.Id.Value));
-        Assert.True(await readService.IsReportableAsync(otherUser.Id, ReportTargetType.Comment, privateComment.Id.Value));
+        Assert.True(await readService.IsReportableAsync(otherUser.Id, ReportTarget.FromFields(ReportTargetType.Recipe, recipe.Id.Value)));
+        Assert.False(await readService.IsReportableAsync(user.Id, ReportTarget.FromFields(ReportTargetType.Comment, privateComment.Id.Value)));
+        Assert.True(await readService.IsReportableAsync(otherUser.Id, ReportTarget.FromFields(ReportTargetType.Comment, privateComment.Id.Value)));
 
         await repository.AddAsync(ContentReport.Create(user.Id, ReportTargetType.Recipe, targetId, "Duplicate"));
         await Assert.ThrowsAsync<DbUpdateException>(() => context.SaveChangesAsync());
@@ -1592,7 +1593,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             ct => webhookRepository.UpdateAsync(inboxEvent, ct));
         context.ChangeTracker.Clear();
 
-        BillingWebhookEvent? persistedInboxEvent = await webhookRepository.GetByIdAsync(inboxEvent.Id);
+        BillingWebhookEvent? persistedInboxEvent = await webhookRepository.GetByIdAsync(inboxEvent.TypedId);
         Assert.NotNull(persistedInboxEvent);
         Assert.NotNull(persistedInboxEvent.ProcessedAtUtc);
         Assert.Multiple(

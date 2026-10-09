@@ -3,16 +3,17 @@ import { provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import type { AdminBillingPaymentViewModel } from '../models/admin-billing-view.models';
 import { AdminBillingPaymentsTableComponent } from './admin-billing-payments-table';
 
 const METADATA_JSON = '{"source":"stripe"}';
 
 const payment: AdminBillingPaymentViewModel = {
-    id: 'payment-1',
-    userId: 'user-1',
+    id: adminId<'billing-payment'>('payment-1'),
+    userId: adminId<'user'>('user-1'),
     userEmail: 'payer@example.com',
-    billingSubscriptionId: 'subscription-1',
+    billingSubscriptionId: adminId<'billing-subscription'>('subscription-1'),
     provider: 'Stripe',
     externalPaymentId: 'pi_123',
     externalCustomerId: 'cus_123',
@@ -24,11 +25,11 @@ const payment: AdminBillingPaymentViewModel = {
     kind: 'Invoice',
     amount: 1299,
     currency: 'USD',
-    currentPeriodStartUtc: '2026-01-01T00:00:00Z',
-    currentPeriodEndUtc: '2026-02-01T00:00:00Z',
-    webhookEventId: 'webhook-1',
+    currentPeriodStartUtc: adminUtcInstant('2026-01-01T00:00:00Z'),
+    currentPeriodEndUtc: adminUtcInstant('2026-02-01T00:00:00Z'),
+    webhookEventId: adminId<'billing-webhook-event'>('webhook-1'),
     providerMetadataJson: METADATA_JSON,
-    createdOnUtc: '2026-01-05T00:00:00Z',
+    createdOnUtc: adminUtcInstant('2026-01-05T00:00:00Z'),
     modifiedOnUtc: null,
     createdText: 'Jan 5, 2026',
     amountText: '$12.99',

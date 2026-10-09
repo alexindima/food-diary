@@ -1,5 +1,6 @@
 import { DEFAULT_NUTRITION_BASE_AMOUNT, KJ_TO_KCAL_FACTOR } from '../../../../shared/lib/nutrition.constants';
 import { USDA_NUTRIENT_IDS } from '../../../../shared/lib/usda-nutrient.constants';
+import { imageSelection } from '../../../../shared/models/image-upload.data';
 import { MeasurementUnit, type ProductSearchSuggestion } from '../../../../shared/models/product.data';
 import type { Micronutrient, UsdaFoodDetail } from '../../../../shared/models/usda.data';
 import { buildResetNutritionPatch, roundProductNutrientValue } from '../../components/manage/product-manage-lib/product-manage-form.mapper';
@@ -22,10 +23,7 @@ export function buildOpenFoodFactsLookupPatch(values: ProductFormValues, offProd
         patch.brand = offProduct.brand;
     }
     if (values.imageUrl === null && hasText(offProduct.imageUrl)) {
-        patch.imageUrl = {
-            url: offProduct.imageUrl,
-            assetId: null,
-        };
+        patch.imageUrl = imageSelection(offProduct.imageUrl, null);
     }
 
     applyNutritionSourcePatch(patch, values, offProduct, false);
@@ -45,10 +43,7 @@ export function buildSourceProductPrefillPatch(product: NutritionSourceProduct):
         patch.brand = product.brand;
     }
     if (hasText(product.imageUrl)) {
-        patch.imageUrl = {
-            url: product.imageUrl,
-            assetId: null,
-        };
+        patch.imageUrl = imageSelection(product.imageUrl, null);
     }
 
     applyNutritionSourcePatch(patch, null, product, true);

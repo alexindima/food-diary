@@ -40,3 +40,7 @@ Also apply `FoodDiary.Web.Client/AGENTS.md`.
 - Lint: `cd FoodDiary.Web.Client && npm run lint`
 - Dependency graph: `cd FoodDiary.Web.Client && npm run lint:deps:strict`
 - App tests: `cd FoodDiary.Web.Client && npm run test:ci:app`
+
+Application models use semantic owner IDs and CalendarDate/UtcInstant under shared/models/semantics. Tag raw route/SDK/local placeholder scalars at explicit boundaries without tightening their format or rewriting date encodings. Keep generated SDK/wire DTOs scalar. MealItem is a source-specific union with ProductQuantity versus RecipeServings; deleted snapshots remain nullable, and historical dual-source snapshots use the explicit legacy branch with existing product precedence. Stored projection factories preserve legacy numeric values; validated mutation factories enforce consumption bounds. Phantom assertions belong only in the semantic constructors, never in consumers; semantic compile-negative tests run with test:sdk.
+
+The follow-up extends owner IDs/calendar meanings to profiles, goal history, dietologist/recommendation/cycle models and mutation ports. ImageSelection is a closed empty/remote/uploaded/legacy-asset-only union; PublicImageUrl and SignedImageUploadUrl cannot be interchanged. Native User form inputs retain separate scalar ImageSelectionFields; outgoing SDK bodies preserve omission/clear and wire schemas.

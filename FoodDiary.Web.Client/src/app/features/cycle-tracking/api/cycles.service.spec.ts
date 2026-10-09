@@ -17,18 +17,20 @@ import {
     type UpsertCycleDayPayload,
     type UpsertCycleFactorPayload,
 } from '../../../shared/models/cycle.data';
+import { calendarDate } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { CyclesService } from './cycles.service';
 
 const BASE_URL = environment.apiUrls.cycles;
 const MOCK_CYCLE: CycleResponse = {
-    id: 'c-1',
-    userId: 'user-1',
+    id: entityId<'cycle-profile'>('c-1'),
+    userId: entityId<'user'>('user-1'),
     mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
     goal: 0,
     reproductiveState: 0,
     hideFromDashboard: false,
     confidence: 1,
-    trackingStartDate: '2026-03-01',
+    trackingStartDate: calendarDate('2026-03-01'),
     averageCycleLength: 28,
     averagePeriodLength: 5,
     lutealLength: 14,
@@ -44,13 +46,13 @@ const MOCK_CYCLE: CycleResponse = {
     predictions: null,
 };
 const MOCK_DAY: CycleLogDay = {
-    cycleProfileId: 'c-1',
-    date: '2026-03-05',
+    cycleProfileId: entityId<'cycle-profile'>('c-1'),
+    date: calendarDate('2026-03-05'),
     bleedingEntries: [
         {
-            id: 'b-1',
-            cycleProfileId: 'c-1',
-            date: '2026-03-05',
+            id: entityId<'bleeding-entry'>('b-1'),
+            cycleProfileId: entityId<'cycle-profile'>('c-1'),
+            date: calendarDate('2026-03-05'),
             type: BLEEDING_TYPE_BLEEDING,
             flow: CYCLE_FLOW_MEDIUM,
             painImpact: 2,
@@ -61,8 +63,8 @@ const MOCK_DAY: CycleLogDay = {
     fertilitySignal: null,
 };
 const MOCK_NUTRITION_SUMMARY: CycleNutritionSummary = {
-    dateFrom: '2026-03-01T00:00:00.000Z',
-    dateTo: '2026-03-31T23:59:59.999Z',
+    dateFrom: calendarDate('2026-03-01T00:00:00.000Z'),
+    dateTo: calendarDate('2026-03-31T23:59:59.999Z'),
     loggedCycleDays: 4,
     daysWithMeals: 3,
     bleedingDays: 2,
@@ -129,9 +131,11 @@ describe('CyclesService current cycle', () => {
     });
 
     it('should get nutrition summary', () => {
-        service.getNutritionSummary('2026-03-01T00:00:00.000Z', '2026-03-31T23:59:59.999Z').subscribe(summary => {
-            expect(summary).toEqual(MOCK_NUTRITION_SUMMARY);
-        });
+        service
+            .getNutritionSummary(calendarDate('2026-03-01T00:00:00.000Z'), calendarDate('2026-03-31T23:59:59.999Z'))
+            .subscribe(summary => {
+                expect(summary).toEqual(MOCK_NUTRITION_SUMMARY);
+            });
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/current/nutrition-summary` && r.method === 'GET');
         expect(req.request.params.get('dateFrom')).toBe('2026-03-01T00:00:00.000Z');
@@ -143,7 +147,7 @@ describe('CyclesService current cycle', () => {
 describe('CyclesService mutations', () => {
     it('should create cycle', () => {
         const payload: CreateCyclePayload = {
-            trackingStartDate: '2026-03-01',
+            trackingStartDate: calendarDate('2026-03-01'),
             mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
             averageCycleLength: 28,
             averagePeriodLength: 5,
@@ -176,7 +180,7 @@ describe('CyclesService mutations', () => {
             discreetNotifications: true,
         };
 
-        service.updateSettings('c-1', payload).subscribe(cycle => {
+        service.updateSettings(entityId<'cycle-profile'>('c-1'), payload).subscribe(cycle => {
             expect(cycle).toEqual(MOCK_CYCLE);
         });
 
@@ -187,7 +191,7 @@ describe('CyclesService mutations', () => {
     });
 
     it('should delete the cycle profile', () => {
-        service.deleteCycle('c-1').subscribe(result => {
+        service.deleteCycle(entityId<'cycle-profile'>('c-1')).subscribe(result => {
             expect(result).toBeNull();
         });
 
@@ -210,7 +214,7 @@ describe('CyclesService mutations', () => {
             fertilitySignal: null,
         };
 
-        service.upsertDay('c-1', payload).subscribe(day => {
+        service.upsertDay(entityId<'cycle-profile'>('c-1'), payload).subscribe(day => {
             expect(day).toEqual(MOCK_DAY);
         });
 
@@ -221,7 +225,7 @@ describe('CyclesService mutations', () => {
     });
 
     it('should clear cycle day', () => {
-        service.clearDay('c-1', '2026-03-05T00:00:00.000Z').subscribe(result => {
+        service.clearDay(entityId<'cycle-profile'>('c-1'), calendarDate('2026-03-05T00:00:00.000Z')).subscribe(result => {
             expect(result).toBeNull();
         });
 
@@ -233,7 +237,7 @@ describe('CyclesService mutations', () => {
 
 describe('CyclesService menstrual episodes', () => {
     it('should confirm a period start', () => {
-        service.confirmPeriodStart('c-1', '2026-03-05T00:00:00.000Z').subscribe(cycle => {
+        service.confirmPeriodStart(entityId<'cycle-profile'>('c-1'), calendarDate('2026-03-05T00:00:00.000Z')).subscribe(cycle => {
             expect(cycle).toEqual(MOCK_CYCLE);
         });
 
@@ -245,13 +249,15 @@ describe('CyclesService menstrual episodes', () => {
 
     it('should update menstrual episode dates', () => {
         const payload = {
-            startDate: '2026-03-04T00:00:00.000Z',
-            endDate: '2026-03-08T23:59:59.999Z',
+            startDate: calendarDate('2026-03-04T00:00:00.000Z'),
+            endDate: calendarDate('2026-03-08T23:59:59.999Z'),
         };
 
-        service.updateMenstrualEpisode('c-1', 'episode-1', payload).subscribe(cycle => {
-            expect(cycle).toEqual(MOCK_CYCLE);
-        });
+        service
+            .updateMenstrualEpisode(entityId<'cycle-profile'>('c-1'), entityId<'menstrual-episode'>('episode-1'), payload)
+            .subscribe(cycle => {
+                expect(cycle).toEqual(MOCK_CYCLE);
+            });
 
         const req = httpMock.expectOne(`${BASE_URL}/c-1/menstrual-episodes/episode-1`);
         expect(req.request.method).toBe('PUT');
@@ -260,7 +266,7 @@ describe('CyclesService menstrual episodes', () => {
     });
 
     it('should delete a confirmed menstrual episode', () => {
-        service.deleteMenstrualEpisode('c-1', 'episode-1').subscribe(cycle => {
+        service.deleteMenstrualEpisode(entityId<'cycle-profile'>('c-1'), entityId<'menstrual-episode'>('episode-1')).subscribe(cycle => {
             expect(cycle).toEqual(MOCK_CYCLE);
         });
 
@@ -274,13 +280,13 @@ describe('CyclesService factor mutations', () => {
     it('should upsert cycle factor', () => {
         const payload: UpsertCycleFactorPayload = {
             type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
-            startDate: '2026-03-01',
+            startDate: calendarDate('2026-03-01'),
             endDate: null,
             notes: 'pill',
             clearNotes: false,
         };
 
-        service.upsertFactor('c-1', payload).subscribe(cycle => {
+        service.upsertFactor(entityId<'cycle-profile'>('c-1'), payload).subscribe(cycle => {
             expect(cycle).toEqual(MOCK_CYCLE);
         });
 

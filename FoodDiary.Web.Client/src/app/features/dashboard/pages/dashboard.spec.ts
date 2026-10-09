@@ -15,6 +15,8 @@ import { NavigationService } from '../../../services/navigation.service';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
 import { UserFacade } from '../../../shared/lib/user.facade';
 import type { FastingSession } from '../../../shared/models/fasting.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { ViewportService } from '../../../shared/platform/viewport.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
@@ -363,8 +365,8 @@ async function setupAsync(fasting = false, initiallyLoading = false): Promise<Da
 
 function activeFast(): FastingSession {
     return {
-        id: 'fast-1',
-        startedAtUtc: new Date(Date.now() - ONE_HOUR_MS).toISOString(),
+        id: entityId<'fasting-session'>('fast-1'),
+        startedAtUtc: utcInstant(new Date(Date.now() - ONE_HOUR_MS).toISOString()),
         endedAtUtc: null,
         initialPlannedDurationHours: 24,
         addedDurationHours: 0,

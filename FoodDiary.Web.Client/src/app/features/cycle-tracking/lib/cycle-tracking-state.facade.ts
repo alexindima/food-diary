@@ -16,6 +16,7 @@ import {
     type FertilitySignal,
     type MenstrualEpisode,
 } from '../../../shared/models/cycle.data';
+import { calendarDate } from '../../../shared/models/semantics/date-value';
 import { CyclesService } from '../api/cycles.service';
 import { cycleNutritionRange } from './cycle-nutrition-range';
 import { toCycleDateKey } from './cycle-tracking.mapper';
@@ -134,7 +135,7 @@ export class CycleTrackingStateFacade {
         const requestId = this.nutritionLoad.begin();
         const range = cycleNutritionRange(toCycleDateKey(cycle.trackingStartDate), formatDateInputValue(new Date()));
         this.nutritionRead = this.cyclesService
-            .getNutritionSummary(range.dateFrom, range.dateTo)
+            .getNutritionSummary(calendarDate(range.dateFrom), calendarDate(range.dateTo))
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: summary => {

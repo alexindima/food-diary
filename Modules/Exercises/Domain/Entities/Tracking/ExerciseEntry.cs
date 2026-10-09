@@ -3,6 +3,7 @@ using FoodDiary.Modules.Exercises.Domain.Enums;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Exercises.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.Exercises.Domain.Entities.Tracking;
 
@@ -21,6 +22,22 @@ public sealed class ExerciseEntry : AggregateRoot<ExerciseEntryId> {
     public string? Notes { get; private set; }
 
     private ExerciseEntry() {
+    }
+
+    public static ExerciseEntry CreateWithValues(
+        UserId userId, ExerciseDay day, ExerciseType exerciseType, ExerciseDuration duration,
+        BurnedEnergy energy, string? name = null, string? notes = null) {
+        EnsureUserId(userId);
+        DomainGuard.Defined(exerciseType, nameof(exerciseType));
+        ArgumentNullException.ThrowIfNull(duration);
+        ArgumentNullException.ThrowIfNull(energy);
+        return Create(userId, day.ToUtcDateTime(), exerciseType, duration.Minutes, energy.Kilocalories, name, notes);
+    }
+
+    public void UpdateValues(
+        ExerciseType? exerciseType = null, ExerciseDuration? duration = null, BurnedEnergy? energy = null,
+        string? name = null, bool clearName = false, string? notes = null, bool clearNotes = false, ExerciseDay? day = null) {
+        Update(exerciseType, duration?.Minutes, energy?.Kilocalories, name, clearName, notes, clearNotes, day?.ToUtcDateTime());
     }
 
     public static ExerciseEntry Create(

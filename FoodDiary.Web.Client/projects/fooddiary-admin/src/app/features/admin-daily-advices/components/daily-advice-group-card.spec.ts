@@ -3,12 +3,13 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { adminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminDailyAdvicesFacade } from '../lib/admin-daily-advices.facade';
 import type { AdminDailyAdvice } from '../models/admin-daily-advice.models';
 import { DailyAdviceGroupCardComponent } from './daily-advice-group-card';
 
 const advice: AdminDailyAdvice = {
-    id: '11111111-1111-1111-1111-111111111111',
+    id: adminId<'daily-advice'>('11111111-1111-1111-1111-111111111111'),
     ru: 'Russian text',
     en: 'English text',
     weight: 1,

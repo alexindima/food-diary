@@ -1,3 +1,4 @@
+using FoodDiary.BugTriage.Application.Reports.Identifiers;
 using System.Runtime.CompilerServices;
 using FoodDiary.BugTriage.Application.Abstractions;
 using FoodDiary.BugTriage.Application.Reports;
@@ -15,7 +16,7 @@ public sealed class ImportBugReportsTests {
     [InlineData(1, true)]
     public async Task RunAsync_PurgesFirstAndRetainsContentOnlyBeforeExpiry(int secondsUntilExpiry, bool retainContent) {
         var retention = TimeSpan.FromDays(30);
-        var report = new ImportedReport(Guid.NewGuid(), Now.Subtract(retention).AddSeconds(secondsUntilExpiry), "subject", "body", [0, 255]);
+        var report = new ImportedReport(SourceMessageId.New(), Now.Subtract(retention).AddSeconds(secondsUntilExpiry), "subject", "body", [0, 255]);
         IBugReportStore store = Substitute.For<IBugReportStore>();
         var source = new ReportSource(report, store);
         using var cancellation = new CancellationTokenSource();

@@ -6,6 +6,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import type { PageOf } from '../../../shared/models/page-of.data';
 import { type Recipe, type RecipeDto, RecipeVisibility } from '../../../shared/models/recipe.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { RecipeService } from './recipe.service';
 import { RECIPE_API_LIMITS } from './recipe-api.tokens';
 
@@ -28,7 +30,7 @@ const NEW_RECIPE_PREP_MINUTES = 10;
 const NEW_RECIPE_COOK_MINUTES = 20;
 const NEW_RECIPE_SERVINGS = 4;
 const MOCK_RECIPE: Recipe = {
-    id: 'r1',
+    id: entityId<'recipe'>('r1'),
     name: 'Grilled Chicken Salad',
     description: null,
     comment: null,
@@ -40,7 +42,7 @@ const MOCK_RECIPE: Recipe = {
     servings: RECIPE_SERVINGS,
     visibility: RecipeVisibility.Private,
     usageCount: 0,
-    createdAt: '2026-01-01',
+    createdAt: utcInstant('2026-01-01'),
     isOwnedByCurrentUser: true,
     totalCalories: RECIPE_TOTAL_CALORIES,
     totalProteins: RECIPE_TOTAL_PROTEINS,
@@ -116,7 +118,7 @@ describe('RecipeService query', () => {
 
 describe('RecipeService reads', () => {
     it('should get recipe by id with includePublic param', () => {
-        service.getById('r1').subscribe(result => {
+        service.getById(entityId<'recipe'>('r1')).subscribe(result => {
             expect(result).toEqual(MOCK_RECIPE);
         });
 
@@ -126,7 +128,7 @@ describe('RecipeService reads', () => {
     });
 
     it('should get recipe by id with includePublic false', () => {
-        service.getById('r1', false).subscribe(result => {
+        service.getById(entityId<'recipe'>('r1'), false).subscribe(result => {
             expect(result).toEqual(MOCK_RECIPE);
         });
 
@@ -136,7 +138,7 @@ describe('RecipeService reads', () => {
     });
 
     it('should return null on getById failure', () => {
-        service.getById('r1').subscribe(result => {
+        service.getById(entityId<'recipe'>('r1')).subscribe(result => {
             expect(result).toBeNull();
         });
 
@@ -162,7 +164,7 @@ describe('RecipeService mutations', () => {
     it('should update recipe via PATCH', () => {
         const updateData = createRecipeDto('Updated Recipe');
 
-        service.update('r1', updateData).subscribe(result => {
+        service.update(entityId<'recipe'>('r1'), updateData).subscribe(result => {
             expect(result).toEqual(MOCK_RECIPE);
         });
 
@@ -173,7 +175,7 @@ describe('RecipeService mutations', () => {
     });
 
     it('should delete recipe by id', () => {
-        service.deleteById('r1').subscribe();
+        service.deleteById(entityId<'recipe'>('r1')).subscribe();
 
         const req = httpMock.expectOne(`${BASE_URL}/r1`);
         expect(req.request.method).toBe('DELETE');
@@ -181,7 +183,7 @@ describe('RecipeService mutations', () => {
     });
 
     it('should duplicate recipe', () => {
-        service.duplicate('r1').subscribe(result => {
+        service.duplicate(entityId<'recipe'>('r1')).subscribe(result => {
             expect(result).toEqual(MOCK_RECIPE);
         });
 
@@ -343,9 +345,9 @@ describe('RecipeService mutation failures and filters', () => {
     it.each(['create', 'update', 'delete', 'duplicate'] as const)('propagates %s errors to the caller', operation => {
         const requests = {
             create: (): Observable<unknown> => service.create(createRecipeDto('Rice')),
-            update: (): Observable<unknown> => service.update('r1', createRecipeDto('Rice')),
-            delete: (): Observable<unknown> => service.deleteById('r1'),
-            duplicate: (): Observable<unknown> => service.duplicate('r1'),
+            update: (): Observable<unknown> => service.update(entityId<'recipe'>('r1'), createRecipeDto('Rice')),
+            delete: (): Observable<unknown> => service.deleteById(entityId<'recipe'>('r1')),
+            duplicate: (): Observable<unknown> => service.duplicate(entityId<'recipe'>('r1')),
         };
         let status = 0;
         const request: Observable<unknown> = requests[operation]();

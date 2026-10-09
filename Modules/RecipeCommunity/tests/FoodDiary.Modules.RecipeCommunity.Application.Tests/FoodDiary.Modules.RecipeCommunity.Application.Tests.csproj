@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="../../Application.Abstractions/FoodDiary.Modules.RecipeCommunity.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Application/FoodDiary.Modules.RecipeCommunity.Application.csproj" />
+    <ProjectReference Include="../../Domain.Contracts/FoodDiary.Modules.RecipeCommunity.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Notifications/Contracts/FoodDiary.Modules.Notifications.Contracts.csproj" />
     <ProjectReference Include="../../../Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj" />

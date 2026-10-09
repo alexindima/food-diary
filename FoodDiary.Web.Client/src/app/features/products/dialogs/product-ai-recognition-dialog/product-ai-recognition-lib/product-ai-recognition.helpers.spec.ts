@@ -2,6 +2,7 @@ import { HttpStatusCode } from '@angular/common/http';
 import { describe, expect, it } from 'vitest';
 
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../../shared/models/ai.data';
+import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit } from '../../../../../shared/models/product.data';
 import {
     buildProductAiRecognitionModelFromNutrition,
@@ -88,7 +89,7 @@ describe('product AI recognition helpers', () => {
 
     it('should build dialog result with fallback name and copied image', () => {
         const model = createProductAiRecognitionFormModel();
-        const image = { assetId: 'asset-1', url: 'https://example.test/image.jpg' };
+        const image = imageSelection('https://example.test/image.jpg', 'asset-1');
 
         const result = buildProductAiRecognitionResult({
             model,

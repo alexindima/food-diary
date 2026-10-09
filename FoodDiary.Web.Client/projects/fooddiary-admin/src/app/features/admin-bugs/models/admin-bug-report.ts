@@ -1,7 +1,8 @@
+import type { AdminId, AdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 export type AdminBugReport = {
-    id: string;
-    sourceMessageId: string;
-    receivedAtUtc: string;
+    id: AdminId<'bug-report'>;
+    sourceMessageId: AdminId<'mail-inbox-message'>;
+    receivedAtUtc: AdminUtcInstant;
     subject: string;
     status: string;
     attempt: number;

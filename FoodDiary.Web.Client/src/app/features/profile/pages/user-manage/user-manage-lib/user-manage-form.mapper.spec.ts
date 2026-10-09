@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
+import { imageSelection } from '../../../../../shared/models/image-upload.data';
+import { calendarDate } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { Gender, type User } from '../../../../../shared/models/user.data';
 import {
     buildUserManageSelectOptions,
@@ -12,13 +15,13 @@ import {
 } from '../../../lib/user-manage-form.mapper';
 
 const USER: User = {
-    id: 'user-1',
+    id: entityId<'user'>('user-1'),
     email: 'user@example.test',
     hasPassword: true,
     username: 'alex',
     firstName: 'Alex',
     lastName: 'Ivanov',
-    birthDate: new Date('1990-05-10T12:00:00Z'),
+    birthDate: calendarDate('1990-05-10T12:00:00Z'),
     gender: 'M',
     heightCm: 180,
     activityLevel: 'MODERATE',
@@ -32,7 +35,7 @@ const USER: User = {
     fastingCheckInReminderHours: 12,
     fastingCheckInFollowUpReminderHours: 20,
     profileImage: 'https://example.test/avatar.png',
-    profileImageAssetId: 'asset-1',
+    profileImageAssetId: entityId<'image-asset'>('asset-1'),
     isActive: true,
     isEmailConfirmed: true,
 };
@@ -79,10 +82,7 @@ describe('user manage form mapper', () => {
             heightCm: USER.heightCm,
             activityLevel: USER.activityLevel,
             stepGoal: USER.stepGoal,
-            profileImage: {
-                url: USER.profileImage,
-                assetId: USER.profileImageAssetId,
-            },
+            profileImage: imageSelection(USER.profileImage, USER.profileImageAssetId),
         });
     });
 
@@ -140,7 +140,7 @@ describe('user manage DOM value mapper', () => {
             ...createUserManageFormModel(),
             email: USER.email,
             username: USER.username ?? null,
-            profileImage: { url: USER.profileImage ?? '', assetId: USER.profileImageAssetId ?? null },
+            profileImage: imageSelection(USER.profileImage ?? '', USER.profileImageAssetId ?? null),
         };
 
         expect(buildUserUpdateDto(form)).toMatchObject({

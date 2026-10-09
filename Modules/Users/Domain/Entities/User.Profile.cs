@@ -121,6 +121,17 @@ public sealed partial class User {
         UpdatePersonalInfoCore(username, firstName, lastName, birthDate, gender, weight, height, birthDateSpecified: false);
     }
 
+    public void UpdatePersonalInfoChanges(UserPersonalInfoChanges changes) {
+        EnsureNotDeleted();
+        ArgumentNullException.ThrowIfNull(changes);
+        ArgumentNullException.ThrowIfNull(changes.BirthDate, nameof(changes));
+        UpdatePersonalInfo(new UserPersonalInfoUpdate(
+            changes.Username, changes.FirstName, changes.LastName,
+            changes.BirthDate.IsSet ? changes.BirthDate.Value : null,
+            changes.Gender, changes.WeightKg, changes.HeightCm,
+            BirthDateSpecified: !changes.BirthDate.IsUnchanged));
+    }
+
     public void UpdatePersonalInfo(UserPersonalInfoUpdate update) {
         UpdatePersonalInfoCore(
             update.Username,

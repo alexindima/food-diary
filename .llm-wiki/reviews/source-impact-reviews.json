@@ -22,14 +22,14 @@
       "pageSha256": "2d76f3b5a011cedacee04e17c3814e1adb42c22493cd93cbb52f0c7607e67ded",
       "sources": [
         {
-          "path": "docs/README.md",
-          "sha256": "792d3331e19346bd646bf83977edcabaf86c69930f7194ec18868aa37dcec9ba"
+          "path": "AGENTS.md",
+          "sha256": "f73d5260b3e18a69b419e8afc8b539c68bd5acd13caedb7d6a33137c6374d5a0"
         }
       ],
-      "reason": "Performance reports describe measured local operations and their limits, including Windows-only measurements and parallel resource contention. Generated navigation is rebuilt from the merged code and reviewed with source hashes. The master documentation change adds the primitive-type guide to docs/README; the Wiki index and knowledge authority model remain accurate. Contract and privacy workflows retain current SQLite selection, source freshness and explicit diagnostic behavior after their source inventories are regenerated.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:16:20.7691102Z"
+      "reason": "Reviewed root instructions, frontend boundaries and knowledge provenance. The new scalar RecipeCommunity guide and shared frontend semantic model folder obey feature/layer ownership. Updated PRIMITIVE_TYPES.md and scoped guides document all eight implementations and compatibility; compiled navigation remains subordinate to current source and tests.",
+      "baseRef": "HEAD",
+      "gitHead": "429cf221cccfbe0cf000a221467fad327fc13cf1",
+      "reviewedAtUtc": "2026-10-08T13:20:18.9188111Z"
     },
     {
       "pageId": "module.frontend",
@@ -37,18 +37,22 @@
       "pageSha256": "56878c764cc5ff357a30b22c59daa99a2396117da578f1d71b719cb2315a8ffb",
       "sources": [
         {
-          "path": "docs/frontend/API_SDK.md",
-          "sha256": "1ff061d92e101b4ba6d24a626578dcd5fb26bf5c0138c45bfc306a7078f8b914"
+          "path": "FoodDiary.Web.Client/projects/fooddiary-admin/AGENTS.md",
+          "sha256": "973d85ff39c3cf4f86a52463237a53ec84f313f3eedbfca6e9cb201a88d5da96"
         },
         {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "89324d1bcd02dcca654322486bdb9679469435c7588d8b9e77c9a426aae6a912"
+          "path": "FoodDiary.Web.Client/src/app/AGENTS.md",
+          "sha256": "8b6385621170cecb815d041c32d0d9581767972c153d8395fa328a707c21e865"
+        },
+        {
+          "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
+          "sha256": "70587d840ce71c1830b0574f8d03446224c7c646ad04e6aa22b94a841e3fbe7e"
         }
       ],
-      "reason": "Verified the generated-client source policy against check-api-client-usage.mjs and 36 negative/positive fixtures, the real 1139-file scan, and 20 bot/Wiring tests in GeneratedApiClientUsageTests. Updated the module page with lint/CI/pre-push enforcement and explicit method/verb/target exceptions. Runtime API adapters and generated contracts are unchanged from the previously verified migration.",
+      "reason": "Reviewed refreshed source instructions and PRIMITIVE_TYPES against all14 implementations, explicit legacy/raw boundaries and current project ownership; admin catalog decoded sources keep wire file data scalar.",
       "baseRef": "HEAD",
-      "gitHead": "f95615c4f191b12b5013634654ca600874e345a1",
-      "reviewedAtUtc": "2026-10-07T13:48:31.2878483Z"
+      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
+      "reviewedAtUtc": "2026-10-08T19:37:48.1641735Z"
     },
     {
       "pageId": "module.mail-services",
@@ -68,17 +72,17 @@
     {
       "pageId": "module.primary-backend",
       "pagePath": ".llm-wiki/modules/primary-backend.md",
-      "pageSha256": "c159de7d87fab3af4797d412e925d9c35188294ad7e4ddd0a25f0a5b256bd8be",
+      "pageSha256": "22d451dce128566c39c8a170ad3287bb53c91c70b38e751a906ec296f68d05d3",
       "sources": [
         {
-          "path": "FoodDiary.Presentation.Api/AGENTS.md",
-          "sha256": "6a0aadccdb87e464248f52be0ead10052ea3707acddc01f09b2003df241ccb98"
+          "path": "Shared/FoodDiary.Domain.Primitives/AGENTS.md",
+          "sha256": "26990e81ef5c22dcd8e59c7315decd075d9c8aeadcb26d8630cf8b5ae3f4d620"
         }
       ],
-      "reason": "Reviewed Users scalar TDEE read extension, preserved legacy method and HTTP routes/payloads; latest dated weight is read through BodyMetrics contract; full solution build, 43 TDEE tests and 2 public-product tests pass. Public ProductId conversion now occurs at presentation boundary.",
+      "reason": "Reviewed owner typed boundaries against actual unchanged snapshots and SDK outputs; four real-host OpenAPI tests and full frontend SDK verification passed. Scalar transport/storage shapes remain explicit adapters.",
       "baseRef": "HEAD",
-      "gitHead": "33e0068649c203e03e211fb4fdca4ee7ca1645af",
-      "reviewedAtUtc": "2026-09-30T16:48:36.2983843Z"
+      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
+      "reviewedAtUtc": "2026-10-08T19:37:48.8095876Z"
     },
     {
       "pageId": "system.architecture",
@@ -87,13 +91,13 @@
       "sources": [
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "033f05a4f78499ee9c0d13a0214d21773a68b22410a06d3e10e33b42fcec85d4"
+          "sha256": "a91cbacfeb58a0f6b069e7c81cbf1608baecc20b8d8f8f75e4cd43d7655cafb4"
         }
       ],
-      "reason": "Reviewed current quantity and profile typing sources and refreshed navigation artifacts. Product-unit and fractional-serving scalar owner contracts remain aggregate-free; two direct Recipes references are test-only and match the dependency matrix. Creation/mutation and selected nutrition sources retain units, snapshot precedence and rounding. Profile update fields carry existing kilogram/centimeter meanings through immutable validating references, retaining scalar compatibility, omission/clearing, partition audits and formulas. Full solution build, owner suites, 2158 architecture tests, four public OpenAPI checks and frontend nutrition cases passed. Actual PostgreSQL round-trip evidence remains explicitly pending Docker readiness; static indexes are not runtime evidence. Existing architecture, query, privacy and review guidance remains accurate.",
+      "reason": "Reviewed refreshed source instructions and PRIMITIVE_TYPES against all14 implementations, explicit legacy/raw boundaries and current project ownership; admin catalog decoded sources keep wire file data scalar.",
       "baseRef": "HEAD",
-      "gitHead": "7ec58395dc7abcc7d523f82b6a9cbcc4b7f46664",
-      "reviewedAtUtc": "2026-10-08T00:06:02.5613544Z"
+      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
+      "reviewedAtUtc": "2026-10-08T19:37:49.4216613Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -116,18 +120,14 @@
       "pageSha256": "ffe52aa56bac185d19cfbca9407b7807223ca7f5ad4dcf3e5eb4b37c742c7d5e",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "89324d1bcd02dcca654322486bdb9679469435c7588d8b9e77c9a426aae6a912"
-        },
-        {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "3cb03a99e8b9b4174efc7bd7f693e5f08a9c0cf999d6bb1da10b369d836157a6"
+          "sha256": "39d5bad4a97ae377f7201cba10b9268f6a88ad422c6409b09bfd706ae249013e"
         }
       ],
-      "reason": "Coverage exclusions affect only generated SDK roots; Angular source discovery, compiler inventory and handwritten adapter coverage remain unchanged.",
+      "reason": "Reviewed refreshed source instructions and PRIMITIVE_TYPES against all14 implementations, explicit legacy/raw boundaries and current project ownership; admin catalog decoded sources keep wire file data scalar.",
       "baseRef": "HEAD",
-      "gitHead": "63d3954ebf974ed5a2a8165ff4abd09d6bae58c6",
-      "reviewedAtUtc": "2026-10-07T15:28:39.1134897Z"
+      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
+      "reviewedAtUtc": "2026-10-08T19:37:50.0194212Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -135,14 +135,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "docs/README.md",
-          "sha256": "792d3331e19346bd646bf83977edcabaf86c69930f7194ec18868aa37dcec9ba"
+          "path": "AGENTS.md",
+          "sha256": "f73d5260b3e18a69b419e8afc8b539c68bd5acd13caedb7d6a33137c6374d5a0"
         }
       ],
-      "reason": "Performance reports describe measured local operations and their limits, including Windows-only measurements and parallel resource contention. Generated navigation is rebuilt from the merged code and reviewed with source hashes. The master documentation change adds the primitive-type guide to docs/README; the Wiki index and knowledge authority model remain accurate. Contract and privacy workflows retain current SQLite selection, source freshness and explicit diagnostic behavior after their source inventories are regenerated.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:16:21.1040690Z"
+      "reason": "Reviewed root instructions, frontend boundaries and knowledge provenance. The new scalar RecipeCommunity guide and shared frontend semantic model folder obey feature/layer ownership. Updated PRIMITIVE_TYPES.md and scoped guides document all eight implementations and compatibility; compiled navigation remains subordinate to current source and tests.",
+      "baseRef": "HEAD",
+      "gitHead": "429cf221cccfbe0cf000a221467fad327fc13cf1",
+      "reviewedAtUtc": "2026-10-08T13:20:21.8031140Z"
     },
     {
       "pageId": "system.quality-index",
@@ -166,13 +166,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "3cb03a99e8b9b4174efc7bd7f693e5f08a9c0cf999d6bb1da10b369d836157a6"
+          "sha256": "39d5bad4a97ae377f7201cba10b9268f6a88ad422c6409b09bfd706ae249013e"
         }
       ],
-      "reason": "Only test coverage scope changes; projects, routes, build targets, dependencies and runtime ownership are unchanged.",
+      "reason": "Reviewed refreshed source instructions and PRIMITIVE_TYPES against all14 implementations, explicit legacy/raw boundaries and current project ownership; admin catalog decoded sources keep wire file data scalar.",
       "baseRef": "HEAD",
-      "gitHead": "63d3954ebf974ed5a2a8165ff4abd09d6bae58c6",
-      "reviewedAtUtc": "2026-10-07T15:28:39.309793Z"
+      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
+      "reviewedAtUtc": "2026-10-08T19:37:50.5902704Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -195,14 +195,18 @@
       "pageSha256": "bf06c7515995b5983125ae2d8469bc357431d468feed457a4ae9ab443288c4a4",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "75ba917cefa45d83e45b871b41d27a8e20954bfc5c38ef4147338b624f628234"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
+          "sha256": "a8bb234d92a449d1cddf43929f4a73c018a68e5cf142c70f926cc189bfbe8560"
         }
       ],
-      "reason": "Combined outcome metrics reuse one fully validated registry and one profile calculation for model/context health and instruction candidates. Default and standalone views match the previous implementation on fixed valid histories. Tests protect invalid/restored/missing journals, updated policy/current instruction hashes and retained workspace receipt verification. Catalog and fingerprint inputs include all owning helpers and new fixtures.",
+      "reason": "Reviewed the affected tooling guides against request-local reuse of the freshly checked repository, HEAD and content fingerprint. Normal scoped cache callers preserve their identity; dependency hashing remains independent and module discovery is deferred only for cache hits. Cache regressions and the unchanged latency gate pass. Seven counterbalanced pairs measure median warm context from 1050ms to 595ms; static reference indexes were regenerated and do not represent execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
-      "reviewedAtUtc": "2026-10-08T10:44:28.7073604Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:28.8073013Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -225,14 +229,18 @@
       "pageSha256": "20d3e15e2bb4fde9b589aafd6671e66c2285642e4cc94f00ffa9e46457598140",
       "sources": [
         {
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "02115e85b52f8b53beb6c571be0a4722ce642ce88459c9700fe2aedfa9258418"
+        },
+        {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "033f05a4f78499ee9c0d13a0214d21773a68b22410a06d3e10e33b42fcec85d4"
+          "sha256": "a91cbacfeb58a0f6b069e7c81cbf1608baecc20b8d8f8f75e4cd43d7655cafb4"
         }
       ],
-      "reason": "Reviewed current quantity and profile typing sources and refreshed navigation artifacts. Product-unit and fractional-serving scalar owner contracts remain aggregate-free; two direct Recipes references are test-only and match the dependency matrix. Creation/mutation and selected nutrition sources retain units, snapshot precedence and rounding. Profile update fields carry existing kilogram/centimeter meanings through immutable validating references, retaining scalar compatibility, omission/clearing, partition audits and formulas. Full solution build, owner suites, 2158 architecture tests, four public OpenAPI checks and frontend nutrition cases passed. Actual PostgreSQL round-trip evidence remains explicitly pending Docker readiness; static indexes are not runtime evidence. Existing architecture, query, privacy and review guidance remains accurate.",
+      "reason": "Reviewed generated module catalog contract and domain navigation against final production consumer adoption, private immutable constructors and passing6107 unit2214 architecture324 central PostgreSQL checks; test references are navigation rather than execution evidence.",
       "baseRef": "HEAD",
-      "gitHead": "7ec58395dc7abcc7d523f82b6a9cbcc4b7f46664",
-      "reviewedAtUtc": "2026-10-08T00:06:03.2887832Z"
+      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
+      "reviewedAtUtc": "2026-10-08T19:37:51.1555264Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -241,17 +249,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "1d2dfa5bc6cab6c2fbd29012dc8e93f4d64d987e9895549dc91fb0580e9eaba8"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "11aa0db8397575d80835ab09042412cf21b46a20848410229bd33871ca276da8"
+          "sha256": "0c8f96db9ea1d72ed26da55cc893dd3cbd263ced2861e18e88b1c1bf5f16a622"
         }
       ],
-      "reason": "The merged backend-contract index includes the accepted master internal type changes and the Wiki context reader source surface. Wiki changes preserve public CLI/MCP shapes, default action outputs, ranked identities and bounded result contracts; no HTTP route or snapshot change belongs to the incoming Wiki delta. The backend-contract workflow still distinguishes compile, mapping, serializer, HTTP and test consumers, and requires current source lineage rather than treating refresh as compatibility proof.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:16:57.4996550Z"
+      "reason": "Reviewed owner typed boundaries against actual unchanged snapshots and SDK outputs; four real-host OpenAPI tests and full frontend SDK verification passed. Scalar transport/storage shapes remain explicit adapters.",
+      "baseRef": "HEAD",
+      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
+      "reviewedAtUtc": "2026-10-08T19:37:52.1034578Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -298,25 +302,17 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "59e4d3519b22c1f11de331406c84660a02fa5a9a5d9be957517489b439ce4afd",
+      "pageSha256": "0ac679ef2682cda58904cad9b5fd081e1541eb5c061f16522ae55dc1bd030f6f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "11aa0db8397575d80835ab09042412cf21b46a20848410229bd33871ca276da8"
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "98f15c1985cd043fd437b4c29a955c72672b7a0a1f497c950244507d72b17c4e"
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-          "sha256": "f088433a6202b4aee7b5f9dbd2452fd702c69ea4d5716f567157daa568e44815"
+          "path": ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
+          "sha256": "eff28ecb416b3624cd5f0de9a8f2bb203a52efd7021d4b439a4ade4ae61b5287"
         }
       ],
-      "reason": "Reviewed query-local preparation in Node and .NET, unchanged SQL recall and complete fixed-candidate output parity. Corpus/retrieval selection now includes explicitly registered runtime/test paths outside the Wiki directory; unregistered product paths remain excluded. Batch threshold/exclusion/change-type coverage and measured ranking/query costs are recorded in wiki-ranking-performance.md.",
+      "reason": "Reviewed current corpus pool, ordered case coverage and failure/timeout/cancellation cleanup against LlmWikiCorpusEvaluation.ps1 and Test-LlmWikiCorpusEvaluation.ps1. Retrieval identity, thresholds and corpus scheduling are unchanged. Controlled Linux subreaper diagnostics reproduce a terminated zombie reported alive by HasExited; updated process termination checks pass all three failure paths and retain rejection of a live descendant.",
       "baseRef": "HEAD",
-      "gitHead": "7ec58395dc7abcc7d523f82b6a9cbcc4b7f46664",
-      "reviewedAtUtc": "2026-10-08T09:15:38.1994368Z"
+      "gitHead": "d618f4b90cfc9b8b86854ead921110cee2935023",
+      "reviewedAtUtc": "2026-10-05T21:58:54.0190701Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -354,14 +350,14 @@
       "pageSha256": "6905a9cfcb2c8ed64f714f760c972c46d47fa98b70bb6db940780fa6be0b34e0",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "03e5557aed0fa12e809720c2e35b674b414d71adc4e323e37286eb1727bc9fc0"
         }
       ],
-      "reason": "The followup distinguishes cold/warm journal-view measurements from entire handoff or CI performance; raw owned fixtures and evidence are retained.",
+      "reason": "Reviewed affected bundle, impact and maintenance guidance: every context request still probes current source bytes, including same-size edits with unchanged timestamps, and validates dependent files before cache reuse. Ranking, output bounds, ambiguity, snapshot isolation, governed workflows and writer recovery are preserved.",
       "baseRef": "HEAD",
-      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
-      "reviewedAtUtc": "2026-10-08T10:44:29.4055490Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:30.3730331Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -418,14 +414,14 @@
       "pageSha256": "e4de9df2c7adeae34ec774eebca8f821c2a90f1b85fe27d16d59d8d581495c23",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextOutcome.ps1",
-          "sha256": "4e810d581b579a8a1fef6408e44e3e066a40ddeb107e80f0ac05091549b8cb3e"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "The followup distinguishes cold/warm journal-view measurements from entire handoff or CI performance; raw owned fixtures and evidence are retained.",
-      "baseRef": "HEAD",
-      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
-      "reviewedAtUtc": "2026-10-08T10:44:30.2150627Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:34.9788762Z"
     },
     {
       "pageId": "workflow-controlled-learning-promotion",
@@ -433,18 +429,14 @@
       "pageSha256": "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Performance reports describe measured local operations and their limits, including Windows-only measurements and parallel resource contention. Generated navigation is rebuilt from the merged code and reviewed with source hashes.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:43.1147235Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:35.2888549Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -452,18 +444,14 @@
       "pageSha256": "1a4c6620169d6fbe556feae253e1e80b1f7a4f4d232962b8fe8b13635bfb608a",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Performance reports describe measured local operations and their limits, including Windows-only measurements and parallel resource contention. Generated navigation is rebuilt from the merged code and reviewed with source hashes.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:43.9934314Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:35.5745515Z"
     },
     {
       "pageId": "workflow-cost-aware-verification",
@@ -513,17 +501,21 @@
     {
       "pageId": "workflow-developer-experience",
       "pagePath": ".llm-wiki/workflows/developer-experience.md",
-      "pageSha256": "f702d51cb0969966de791175e831339c9ad37670e9d6dcc0d07718b04266b23f",
+      "pageSha256": "ef6996bd5373a4f25ad072892d14337856ea9365ee9154206096bd3743a9f7c3",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "98f15c1985cd043fd437b4c29a955c72672b7a0a1f497c950244507d72b17c4e"
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "75ba917cefa45d83e45b871b41d27a8e20954bfc5c38ef4147338b624f628234"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
+          "sha256": "a8bb234d92a449d1cddf43929f4a73c018a68e5cf142c70f926cc189bfbe8560"
         }
       ],
-      "reason": "Reviewed Force-preserving pruned enumeration, one-entry telemetry validation with fresh exact input reads, and per-run typed retention warning handling. Public results, mandatory test inventory, snapshot invalidation and failed-stage behavior remain covered by owned regressions; new tests are routed and fingerprinted.",
+      "reason": "Reviewed the affected tooling guides against request-local reuse of the freshly checked repository, HEAD and content fingerprint. Normal scoped cache callers preserve their identity; dependency hashing remains independent and module discovery is deferred only for cache hits. Cache regressions and the unchanged latency gate pass. Seven counterbalanced pairs measure median warm context from 1050ms to 595ms; static reference indexes were regenerated and do not represent execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "7ec58395dc7abcc7d523f82b6a9cbcc4b7f46664",
-      "reviewedAtUtc": "2026-10-08T00:05:03.7839030Z"
+      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
+      "reviewedAtUtc": "2026-10-04T20:51:30.9074539Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -532,13 +524,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "1d91ae7c9aacf4c773d2601be6a7e91d8a7941abe93c403fe4b9daaa60a8afcb"
+          "sha256": "8b2054a4a5cd99384ebb4b8eb3e5e6ab40ab8773b603dfb72c69af11c18b4bec"
+        },
+        {
+          "path": "Shared/FoodDiary.Domain.Primitives/AGENTS.md",
+          "sha256": "26990e81ef5c22dcd8e59c7315decd075d9c8aeadcb26d8630cf8b5ae3f4d620"
         }
       ],
-      "reason": "Reviewed Billing internal processing-state enum, exact ordinal storage classification, typed state writes and all application terminal fences against owning source and tests. Mapped string Status, pending SQL filters/Admin projections and provider payment/subscription strings retain their contracts. Unknown persisted states keep raw reads/legacy transitions; retry chronology/saturation and processed-event idempotency remain covered. All 501 Billing tests, full solution build, 2159 architecture checks, four public snapshots and three model/snapshot metadata checks pass; real PostgreSQL workflow evidence remains explicitly pending Docker readiness. Existing workflow guidance is accurate.",
+      "reason": "Reviewed generated module catalog contract and domain navigation against final production consumer adoption, private immutable constructors and passing6107 unit2214 architecture324 central PostgreSQL checks; test references are navigation rather than execution evidence.",
       "baseRef": "HEAD",
-      "gitHead": "7ec58395dc7abcc7d523f82b6a9cbcc4b7f46664",
-      "reviewedAtUtc": "2026-10-08T01:25:35.951607Z"
+      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
+      "reviewedAtUtc": "2026-10-08T19:37:52.6969453Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -546,18 +542,14 @@
       "pageSha256": "95480b241c0d18016bd62e851be9ae87207340be4b90243c591d7d6da7fb608e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Performance reports describe measured local operations and their limits, including Windows-only measurements and parallel resource contention. Generated navigation is rebuilt from the merged code and reviewed with source hashes.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:45.0198404Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:37.0833427Z"
     },
     {
       "pageId": "workflow-failure-knowledge",
@@ -595,18 +587,14 @@
       "pageSha256": "2b42317f0646f66ef48a014336e0cd5c11895a45ad80f867af0b849c6192652e",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "89324d1bcd02dcca654322486bdb9679469435c7588d8b9e77c9a426aae6a912"
-        },
-        {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "b7b6d4484b9932ad0f78076957bd8e99aa4824d5ec0c5069dbbcc65f67e81e19"
+          "sha256": "18495e3842aef6ea698e0ee1a54281f2e783c8fc0a3ace0f230664afa3e2799e"
         }
       ],
-      "reason": "Only a scoped concurrently-to-shell-quote security override was added. Frontend visual QA scripts, routes, artifact capture, viewport coverage, and review workflow remain unchanged; no page text update is needed.",
+      "reason": "Reviewed changed compiled catalog, domain, quality and frontend navigation against the current sibling project, direct dependency matrix, immutable values and passing owner/architecture/frontend tests. Existing trace/review/evidence workflows remain valid and do not infer test execution from references.",
       "baseRef": "HEAD",
-      "gitHead": "a87e311f29ab696469666c48f82799a2f3a6cd41",
-      "reviewedAtUtc": "2026-10-07T20:43:10.60326Z"
+      "gitHead": "429cf221cccfbe0cf000a221467fad327fc13cf1",
+      "reviewedAtUtc": "2026-10-08T13:20:28.3694073Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -630,21 +618,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "11aa0db8397575d80835ab09042412cf21b46a20848410229bd33871ca276da8"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
+          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
         }
       ],
-      "reason": "Performance reports describe measured local operations and their limits, including Windows-only measurements and parallel resource contention. Generated navigation is rebuilt from the merged code and reviewed with source hashes.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:45.9529344Z"
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
+      "baseRef": "HEAD",
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:22.5932749Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -679,69 +659,37 @@
       "pageSha256": "d93e8bf4522a803da1d1a59bd2cd49e0d6a6b39360281f4df4f1792621027fb1",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Performance reports describe measured local operations and their limits, including Windows-only measurements and parallel resource contention. Generated navigation is rebuilt from the merged code and reviewed with source hashes.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:46.9895049Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:39.1824496Z"
     },
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "6b64ca4ac27d3943fd857807d1cd3d1eca584ffd397913bef4f4b2d5db056473",
+      "pageSha256": "8c8aff64bfc1811147a58a435a34a10950c1448a9d57bfc50802f9d45ffdbbf7",
       "sources": [
         {
-          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "87fca7de75fb791316efdd580d871b9f31836ff8a622ed1c7130b1bd3784ac4d"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "60e7a5752c9cae946f8c696e71a6e4e44ff2355658e995f646a9321882a8d1fb"
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
-          "sha256": "a1b652e0034fa16895b822a312731570af00df533b44d68185e0033757f0df0f"
+          "path": ".llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1",
+          "sha256": "6c99ef1b5fc2031f71247880d34eceddce86af53fde20ff39d0c95f5439d6c15"
         },
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-          "sha256": "3de74957962168431c7a19448c3226b772712ef6f7de77eb5f4d219a40d47605"
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-          "sha256": "7a108941b21d47ddedd6655850320518bc68646bc00a4786fe5d0083577a2c78"
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiSourceInventory.ps1",
-          "sha256": "be2e7dd77335188fa7e558cb4d14c11f02642140c568203b0a4dd492b51d0b9e"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
-          "sha256": "98d466e0306c51f3dcdd5d0e21e38ed8e16cf66251363098c82cd0522b187a18"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiPortable.ps1",
-          "sha256": "d457207134164cc1ed505f14fa16698bec6ff4d7fc34d418841bc3b055db9d3f"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiSourceInventory.ps1",
-          "sha256": "b347e09a0a243575ce22d98d6a6cda50437885e6d2c4149ecd9fd45ff611c6cd"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiStageFingerprint.ps1",
-          "sha256": "fbdfed8b3c570646d75f5f31d8e23166b160cda215d001b76dfddc3bf8fa16c5"
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "98f15c1985cd043fd437b4c29a955c72672b7a0a1f497c950244507d72b17c4e"
+          "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
+          "sha256": "72e8cbb8ab5c25efde3664ac547aa20924991ebc5060a8e9997ae8568b072b84"
         }
       ],
-      "reason": "The integrated master retains all Wiki optimizations: source walks, ordinal ranking and query-local validation, dispatch and outcome view reuse, exact JSON hash compatibility, and explicit portability/receipt invalidation regressions. Master domain changes merge without code conflicts. Conflicting compiled indexes were regenerated from the combined canonical sources; original review ledgers were retained and current source/page hashes determine receipt validity. Focused Wiki and MCP regressions verify the combined revision.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:48.1247899Z"
+      "reason": "Core smoke now validates the current generated linkGoogle transport and retains its POST method and endpoint assertions; focused frontend-contract tests enforce the same contract.",
+      "baseRef": "HEAD",
+      "gitHead": "63d3954ebf974ed5a2a8165ff4abd09d6bae58c6",
+      "reviewedAtUtc": "2026-10-07T15:28:39.6767599Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -749,14 +697,14 @@
       "pageSha256": "61d91d7cbe073b4d9d81be15b1391daea4fc698ef9abec557da5a9d9b45c26bb",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiInstructionOutcome.ps1",
-          "sha256": "a0a0ac7b688b195748048b4d55b99fdfd4ce36667ea781fbe5aec7692dc0be32"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "The followup distinguishes cold/warm journal-view measurements from entire handoff or CI performance; raw owned fixtures and evidence are retained.",
-      "baseRef": "HEAD",
-      "gitHead": "c177b3130def767cfb40b828575bdc2074270428",
-      "reviewedAtUtc": "2026-10-08T10:44:35.1946544Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:39.7487443Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -783,18 +731,14 @@
       "pageSha256": "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
+          "path": ".llm-wiki/evals/cases.json",
+          "sha256": "acef17559a23db9ff1ac529cbe582e4b560a3b0e993b09a1110f4831f1e58e0e"
         }
       ],
-      "reason": "Performance reports describe measured local operations and their limits, including Windows-only measurements and parallel resource contention. Generated navigation is rebuilt from the merged code and reviewed with source hashes.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:48.9911254Z"
+      "reason": "Reviewed the sole cases.json edit: it corrects the static billing-security source path after module extraction, while retaining all expected classifications. No promoted case, event chain, approval state, retrospective or evaluation lifecycle behavior changes.",
+      "baseRef": "HEAD",
+      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
+      "reviewedAtUtc": "2026-09-14T13:58:06.762685Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -802,14 +746,18 @@
       "pageSha256": "f2175e29d46c5bf4aca0b8bb756b10ce36fb1049494ab8ee1309f48f3f75fbe6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiModelRoutingOutcome.ps1",
-          "sha256": "79f707c628b4c3b3c4206ba6dd3144609b5cfb4bdcd103c052063a4f5b4133be"
+          "path": ".llm-wiki/tools/Manage-LlmWikiModelRouting.ps1",
+          "sha256": "c1dc42d2862b62fc0847143f69bc99320b2e80e06786e86c0b3f4db6356f6128"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+          "sha256": "6a12c8e82a68b9b3ee77a0c893544614dfa921d4e6f9245c35156c419f7b9313"
         }
       ],
-      "reason": "Performance reports describe measured local operations and their limits, including Windows-only measurements and parallel resource contention. Generated navigation is rebuilt from the merged code and reviewed with source hashes.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:49.7512770Z"
+      "reason": "Reviewed workflow documentation impact; behavior remains the same except empty and legacy identifier collections no longer terminate strict-mode facade execution.",
+      "baseRef": "HEAD",
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:42:09.1598456Z"
     },
     {
       "pageId": "workflow-ownership-impact",
@@ -844,21 +792,17 @@
     {
       "pageId": "workflow-plan-diff-conformance",
       "pagePath": ".llm-wiki/workflows/plan-diff-conformance.md",
-      "pageSha256": "82ddb1109ba7b26835924019c29df7bbb942e5c0c321ea41bdebadf360848e00",
+      "pageSha256": "bd822668f34d604e09bbacb4af4315b22b23dda78800c8fb26fe105ae693db36",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Performance reports describe measured local operations and their limits, including Windows-only measurements and parallel resource contention. Generated navigation is rebuilt from the merged code and reviewed with source hashes.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:50.4911248Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:40.7898583Z"
     },
     {
       "pageId": "workflow-post-task-retrospective",
@@ -866,18 +810,14 @@
       "pageSha256": "dbcac0a7ae8c9e8975807cd711fc7680b3c731e74459583b85917d9bb8e1827d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "The integrated master retains all Wiki optimizations: source walks, ordinal ranking and query-local validation, dispatch and outcome view reuse, exact JSON hash compatibility, and explicit portability/receipt invalidation regressions. Master domain changes merge without code conflicts. Conflicting compiled indexes were regenerated from the combined canonical sources; original review ledgers were retained and current source/page hashes determine receipt validity. Focused Wiki and MCP regressions verify the combined revision.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:51.3315142Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:41.096778Z"
     },
     {
       "pageId": "workflow-privacy-review",
@@ -886,17 +826,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "fe3fa3815911ccbfe1b8270a01255b5ec85b486f5cfb6e74266e172b6145644f"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "11aa0db8397575d80835ab09042412cf21b46a20848410229bd33871ca276da8"
+          "sha256": "492731ea645e544585c8e9f6bcf4694b1e45b628448363bb832f00b0d8e86e67"
         }
       ],
-      "reason": "No journal-verdict, process-wide or persisted validation bypass is added. All schema/event/source/chain/policy/threshold checks remain mandatory, along with current instruction-source hashes and workspace receipt checks. Ranking readers remain read-only, and source walks only prune excluded trees. Private query content is not added to telemetry.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:16:57.8436211Z"
+      "reason": "Reviewed current source and owner/provider regressions: existing health identity financial access scopes, retention, deletion, leases and provider destinations remain intact. No credentials or live user data were used in browser fixtures.",
+      "baseRef": "HEAD",
+      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
+      "reviewedAtUtc": "2026-10-08T19:37:53.9130063Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -919,18 +855,14 @@
       "pageSha256": "7622935ab3aa92e0641117a4b5afc2b8faada090a2a8a83e9ea27a575f549281",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "6c4cd9d5ee6fdfcfd6398dc79f588b570b9f935a59795918d74447a4f1fc6181"
         }
       ],
-      "reason": "Performance reports describe measured local operations and their limits, including Windows-only measurements and parallel resource contention. Generated navigation is rebuilt from the merged code and reviewed with source hashes.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:52.0130139Z"
+      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "baseRef": "HEAD",
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:04:10.4408799Z"
     },
     {
       "pageId": "workflow-quality-risk",
@@ -939,13 +871,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f18f863e75c31dcffeb27ea995ec8c8cbad7a55efebbfd8e344d824e22c740e1"
+          "sha256": "fe6adc9ff2f7279dd9d9e826cb8daf6180fab695f713a076cbe63d79f7b75832"
         }
       ],
-      "reason": "The integrated master retains all Wiki optimizations: source walks, ordinal ranking and query-local validation, dispatch and outcome view reuse, exact JSON hash compatibility, and explicit portability/receipt invalidation regressions. Master domain changes merge without code conflicts. Conflicting compiled indexes were regenerated from the combined canonical sources; original review ledgers were retained and current source/page hashes determine receipt validity. Focused Wiki and MCP regressions verify the combined revision.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:52.9450546Z"
+      "reason": "Reviewed generated module catalog contract and domain navigation against final production consumer adoption, private immutable constructors and passing6107 unit2214 architecture324 central PostgreSQL checks; test references are navigation rather than execution evidence.",
+      "baseRef": "HEAD",
+      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
+      "reviewedAtUtc": "2026-10-08T19:37:54.6726561Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -980,18 +912,14 @@
       "pageSha256": "d6032fccda979d114e265f30e4f14d9593ded53c6b79d85a2dfc467b07fa3a61",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "6c4cd9d5ee6fdfcfd6398dc79f588b570b9f935a59795918d74447a4f1fc6181"
         }
       ],
-      "reason": "Performance reports describe measured local operations and their limits, including Windows-only measurements and parallel resource contention. Generated navigation is rebuilt from the merged code and reviewed with source hashes.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:54.4594672Z"
+      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "baseRef": "HEAD",
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:04:12.2194054Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -1014,18 +942,14 @@
       "pageSha256": "19ab27e4988b8393d632a38bade21f376fc170acef7dd22a5d10744eb4a972a8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+          "sha256": "6a12c8e82a68b9b3ee77a0c893544614dfa921d4e6f9245c35156c419f7b9313"
         }
       ],
-      "reason": "Performance reports describe measured local operations and their limits, including Windows-only measurements and parallel resource contention. Generated navigation is rebuilt from the merged code and reviewed with source hashes.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:55.1195242Z"
+      "reason": "Reviewed workflow documentation impact; behavior remains the same except empty and legacy identifier collections no longer terminate strict-mode facade execution.",
+      "baseRef": "HEAD",
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:42:10.6568318Z"
     },
     {
       "pageId": "workflow-runtime-impact",
@@ -1034,13 +958,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "f2b9e68a6a8af70f3e4f583fbbe70694d940875f734deb71acbaaf8afc9aba77"
+          "sha256": "5658b3371e867dbaef37d8fd8c6aeb8af8908d87931862945259ae249f255119"
         }
       ],
-      "reason": "Performance reports describe measured local operations and their limits, including Windows-only measurements and parallel resource contention. Generated navigation is rebuilt from the merged code and reviewed with source hashes.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:55.8813332Z"
+      "reason": "Reviewed refreshed source instructions and PRIMITIVE_TYPES against all14 implementations, explicit legacy/raw boundaries and current project ownership; admin catalog decoded sources keep wire file data scalar.",
+      "baseRef": "HEAD",
+      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
+      "reviewedAtUtc": "2026-10-08T19:37:56.0135977Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1049,21 +973,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f18f863e75c31dcffeb27ea995ec8c8cbad7a55efebbfd8e344d824e22c740e1"
+          "sha256": "fe6adc9ff2f7279dd9d9e826cb8daf6180fab695f713a076cbe63d79f7b75832"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "f2b9e68a6a8af70f3e4f583fbbe70694d940875f734deb71acbaaf8afc9aba77"
+          "sha256": "5658b3371e867dbaef37d8fd8c6aeb8af8908d87931862945259ae249f255119"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "fe3fa3815911ccbfe1b8270a01255b5ec85b486f5cfb6e74266e172b6145644f"
+          "sha256": "492731ea645e544585c8e9f6bcf4694b1e45b628448363bb832f00b0d8e86e67"
         }
       ],
-      "reason": "No journal-verdict, process-wide or persisted validation bypass is added. All schema/event/source/chain/policy/threshold checks remain mandatory, along with current instruction-source hashes and workspace receipt checks. Ranking readers remain read-only, and source walks only prune excluded trees. Private query content is not added to telemetry.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:16:58.4384724Z"
+      "reason": "Reviewed current source and owner/provider regressions: existing health identity financial access scopes, retention, deletion, leases and provider destinations remain intact. No credentials or live user data were used in browser fixtures.",
+      "baseRef": "HEAD",
+      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
+      "reviewedAtUtc": "2026-10-08T19:37:56.7882824Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1071,18 +995,14 @@
       "pageSha256": "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
+          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
+          "sha256": "41e8243a3c0581d8bea51a52304d88c87ba5b1a891d367a315990468a6b7a7bc"
         }
       ],
-      "reason": "The integrated master retains all Wiki optimizations: source walks, ordinal ranking and query-local validation, dispatch and outcome view reuse, exact JSON hash compatibility, and explicit portability/receipt invalidation regressions. Master domain changes merge without code conflicts. Conflicting compiled indexes were regenerated from the combined canonical sources; original review ledgers were retained and current source/page hashes determine receipt validity. Focused Wiki and MCP regressions verify the combined revision.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:57.5094781Z"
+      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "baseRef": "HEAD",
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:04:15.4784073Z"
     },
     {
       "pageId": "workflow-task-brief",
@@ -1125,17 +1045,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
+          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
         }
       ],
-      "reason": "The integrated master retains all Wiki optimizations: source walks, ordinal ranking and query-local validation, dispatch and outcome view reuse, exact JSON hash compatibility, and explicit portability/receipt invalidation regressions. Master domain changes merge without code conflicts. Conflicting compiled indexes were regenerated from the combined canonical sources; original review ledgers were retained and current source/page hashes determine receipt validity. Focused Wiki and MCP regressions verify the combined revision.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:58.2975044Z"
+      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
+      "reviewedAtUtc": "2026-08-25T14:42:06.5229114Z"
     },
     {
       "pageId": "workflow-task-dispatch-receipts",
@@ -1143,18 +1059,14 @@
       "pageSha256": "e796ff74731a2dda404ebab68170be7eaccc7c57268fc23f141a91c228e1a49f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
-          "sha256": "3e23391148a7f00e465becfa746f489b2b020bbd76cc36da93b5f6bbb0f5db6e"
-        },
-        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "98f15c1985cd043fd437b4c29a955c72672b7a0a1f497c950244507d72b17c4e"
+          "sha256": "a96eb644887aa12666707da019e0d36366620e5e6936bb07e83f3dfdfc081e30"
         }
       ],
-      "reason": "The integrated master retains all Wiki optimizations: source walks, ordinal ranking and query-local validation, dispatch and outcome view reuse, exact JSON hash compatibility, and explicit portability/receipt invalidation regressions. Master domain changes merge without code conflicts. Conflicting compiled indexes were regenerated from the combined canonical sources; original review ledgers were retained and current source/page hashes determine receipt validity. Focused Wiki and MCP regressions verify the combined revision.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:59.1533809Z"
+      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "baseRef": "HEAD",
+      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
+      "reviewedAtUtc": "2026-10-04T16:04:16.6351724Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1162,49 +1074,33 @@
       "pageSha256": "b202a96ec11daaeb6c19f06965768c28baf9b143f2a3264db07c52d6039f6768",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
+          "path": ".llm-wiki/tools/Get-LlmWikiDispatchMetrics.ps1",
+          "sha256": "0e43e46d416f56357dfe0079897e4a678e4c1be6de59c222726e7ef1660fc137"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiDispatchMetricsReuse.ps1",
-          "sha256": "3e23391148a7f00e465becfa746f489b2b020bbd76cc36da93b5f6bbb0f5db6e"
+          "sha256": "4b494860416229ffc50057a8d78b84ff98712134bc1ed246bf2aaa839474f1a5"
         }
       ],
-      "reason": "The integrated master retains all Wiki optimizations: source walks, ordinal ranking and query-local validation, dispatch and outcome view reuse, exact JSON hash compatibility, and explicit portability/receipt invalidation regressions. Master domain changes merge without code conflicts. Conflicting compiled indexes were regenerated from the combined canonical sources; original review ledgers were retained and current source/page hashes determine receipt validity. Focused Wiki and MCP regressions verify the combined revision.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:59.8634392Z"
+      "reason": "Metrics preserve deserialized date timezone when converting to UTC; strict-mode regression covers terminal dates across midnight with positive and negative offsets. Receipt lifecycle and scheduler registry reuse remain unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "f99ac78e7703560d7fde0cf0023a9c046186dd46",
+      "reviewedAtUtc": "2026-09-23T00:11:56.0026213Z"
     },
     {
       "pageId": "workflow-task-workspace",
       "pagePath": ".llm-wiki/workflows/task-workspace.md",
-      "pageSha256": "e7bbcdd3bf36678ac1f01992447ea0fb84eb6b4044cf3f613edd8328576d21ba",
+      "pageSha256": "389153ec6bdaa0031c64a5294d755935731286a3500b49527087672f334804b2",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "131d823c1aac6724d0f371f352f4575a5fb293fa7a11d2362bf51cf1f5f6e000"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
-          "sha256": "5b95e85a324f01d5e77a17a9a591cb0753f2b83a5b328229816a007b18ac528c"
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiJson.ps1",
-          "sha256": "5e3b6909937f375fb408fcec488afba6ca84129a1f344613cb31dbdeb00604d4"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
-          "sha256": "351f9af3276feca84f845b319cb265306cdf645c428d803b5197e85f84bab097"
+          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
+          "sha256": "c8232abe0b30042b156af01acbc49a55669378c5ff9b0dc2466837d5abd1d841"
         }
       ],
-      "reason": "The integrated master retains all Wiki optimizations: source walks, ordinal ranking and query-local validation, dispatch and outcome view reuse, exact JSON hash compatibility, and explicit portability/receipt invalidation regressions. Master domain changes merge without code conflicts. Conflicting compiled indexes were regenerated from the combined canonical sources; original review ledgers were retained and current source/page hashes determine receipt validity. Focused Wiki and MCP regressions verify the combined revision.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:04:00.6160908Z"
+      "reason": "Reviewed the exact API transition acceptance and readiness collection normalization. Strict task completion and evidence requirements still apply; initialization, refresh, sealing and handoff behavior remain unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "028efbba467e3bdece84fe1e43412aead89d2ae5",
+      "reviewedAtUtc": "2026-10-03T21:06:28.3147196Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1232,17 +1128,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "0342716867a408db5db9e535fecb5b0b94840092f6d7f60604904b288c0778ca"
+          "sha256": "1611e6b7e75a85e676b2e21c3e461713a7387e8113602f9a309b378be724acc2"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "f79ce3585747390a176781aadaa66b89ff1f842ddf2152c73c8885eb6532ac40"
+          "sha256": "7585afd72898d3b445b7376bf6b789af018e16cc609e8f370eebfa87d3405f96"
         }
       ],
-      "reason": "Completed user/admin/bot client scopes and regeneration commands are documented. The unused ApiService is retired.",
+      "reason": "Reviewed refreshed source instructions and PRIMITIVE_TYPES against all14 implementations, explicit legacy/raw boundaries and current project ownership; admin catalog decoded sources keep wire file data scalar.",
       "baseRef": "HEAD",
-      "gitHead": "f777062a632366651650bdd9fec53813be7a986e",
-      "reviewedAtUtc": "2026-10-07T11:12:14.6523961Z"
+      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
+      "reviewedAtUtc": "2026-10-08T19:37:57.5371642Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1265,29 +1161,29 @@
       "pageSha256": "9155cfe3bfc300002234149cf92c8cecde096d0c583d322dc9b86538f0e3d14d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationTelemetry.ps1",
-          "sha256": "3791dbca361b766dcb901ceb0536c3df4676126ea92fa8700030dce0fa8a6bf2"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed Force-preserving pruned enumeration, one-entry telemetry validation with fresh exact input reads, and per-run typed retention warning handling. Public results, mandatory test inventory, snapshot invalidation and failed-stage behavior remain covered by owned regressions; new tests are routed and fingerprinted.",
-      "baseRef": "HEAD",
-      "gitHead": "7ec58395dc7abcc7d523f82b6a9cbcc4b7f46664",
-      "reviewedAtUtc": "2026-10-08T00:05:08.8424207Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:45.3905648Z"
     },
     {
       "pageId": "workflow.change-policy",
       "pagePath": ".llm-wiki/workflows/change-policy.md",
-      "pageSha256": "5a76c906b2df2376fbdf59ad6c1f5eead5e7056deda2e4eaa69a24f00491cca0",
+      "pageSha256": "f6340562c9cb1b9400acafcbeba632603a678221b6481c07dda81d8fd55d8714",
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "9114f904ec6f4d02fcef940b263f1894808c807226a71e58358794264e860935"
+          "sha256": "f73d5260b3e18a69b419e8afc8b539c68bd5acd13caedb7d6a33137c6374d5a0"
         }
       ],
-      "reason": "Reviewed architecture, catalog, index, ownership and mail-service summaries against current manifests and guides. The modular monolith, client-only mail boundary and host-composed SQL ownership remain accurate; current concrete changes are in ARCHITECTURE, BACKEND_MODULE_MAP and proposed ADR 0049.",
+      "reason": "Reviewed root instructions, frontend boundaries and knowledge provenance. The new scalar RecipeCommunity guide and shared frontend semantic model folder obey feature/layer ownership. Updated PRIMITIVE_TYPES.md and scoped guides document all eight implementations and compatibility; compiled navigation remains subordinate to current source and tests.",
       "baseRef": "HEAD",
-      "gitHead": "5964a4a69d3e00f9f568e082472afa3f822c4933",
-      "reviewedAtUtc": "2026-09-19T08:17:35.7636541Z"
+      "gitHead": "429cf221cccfbe0cf000a221467fad327fc13cf1",
+      "reviewedAtUtc": "2026-10-08T13:20:25.2337198Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1325,18 +1221,14 @@
       "pageSha256": "31a43fb31fa630969babe869c21458771cfbe6ed2e9b0234c47cc7e1511d5725",
       "sources": [
         {
-          "path": "docs/frontend/API_SDK.md",
-          "sha256": "1ff061d92e101b4ba6d24a626578dcd5fb26bf5c0138c45bfc306a7078f8b914"
-        },
-        {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "89324d1bcd02dcca654322486bdb9679469435c7588d8b9e77c9a426aae6a912"
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "1611e6b7e75a85e676b2e21c3e461713a7387e8113602f9a309b378be724acc2"
         }
       ],
-      "reason": "Updated review guidance to require the generated API usage guard alongside schema drift and behavior checks, preserving current owner and normalization boundaries. Legacy ApiService discovery remains scanner support, while application consumers use generated methods.",
+      "reason": "Reviewed owner typed boundaries against actual unchanged snapshots and SDK outputs; four real-host OpenAPI tests and full frontend SDK verification passed. Scalar transport/storage shapes remain explicit adapters.",
       "baseRef": "HEAD",
-      "gitHead": "f95615c4f191b12b5013634654ca600874e345a1",
-      "reviewedAtUtc": "2026-10-07T13:48:33.9187707Z"
+      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
+      "reviewedAtUtc": "2026-10-08T19:37:53.3384534Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1345,21 +1237,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "be4e5bdd522ce57a66513ec3fc1338fab7393333d04c0e47997bbffa480b83c4"
+          "sha256": "f13d439eee8914d3d064a9a60f3ebde04549804ffd81a988314859b4542b5368"
         },
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "11aa0db8397575d80835ab09042412cf21b46a20848410229bd33871ca276da8"
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-          "sha256": "f088433a6202b4aee7b5f9dbd2452fd702c69ea4d5716f567157daa568e44815"
+          "path": "AGENTS.md",
+          "sha256": "f73d5260b3e18a69b419e8afc8b539c68bd5acd13caedb7d6a33137c6374d5a0"
         }
       ],
-      "reason": "Performance reports describe measured local operations and their limits, including Windows-only measurements and parallel resource contention. Generated navigation is rebuilt from the merged code and reviewed with source hashes.",
-      "baseRef": "master",
-      "gitHead": "c31765658a895610f3d105e3630f867bce3dfd09",
-      "reviewedAtUtc": "2026-10-08T13:03:53.7238398Z"
+      "reason": "Reviewed refreshed source instructions and PRIMITIVE_TYPES against all14 implementations, explicit legacy/raw boundaries and current project ownership; admin catalog decoded sources keep wire file data scalar.",
+      "baseRef": "HEAD",
+      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
+      "reviewedAtUtc": "2026-10-08T19:37:55.3911353Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1367,14 +1255,14 @@
       "pageSha256": "8b14b705356df0c8d113abdeadffa966c12a7457195b815ec996cddc6c344ffb",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "98f15c1985cd043fd437b4c29a955c72672b7a0a1f497c950244507d72b17c4e"
+          "path": "AGENTS.md",
+          "sha256": "f73d5260b3e18a69b419e8afc8b539c68bd5acd13caedb7d6a33137c6374d5a0"
         }
       ],
-      "reason": "Reviewed Force-preserving pruned enumeration, one-entry telemetry validation with fresh exact input reads, and per-run typed retention warning handling. Public results, mandatory test inventory, snapshot invalidation and failed-stage behavior remain covered by owned regressions; new tests are routed and fingerprinted.",
+      "reason": "Reviewed changed compiled catalog, domain, quality and frontend navigation against the current sibling project, direct dependency matrix, immutable values and passing owner/architecture/frontend tests. Existing trace/review/evidence workflows remain valid and do not infer test execution from references.",
       "baseRef": "HEAD",
-      "gitHead": "7ec58395dc7abcc7d523f82b6a9cbcc4b7f46664",
-      "reviewedAtUtc": "2026-10-08T00:05:06.4403948Z"
+      "gitHead": "429cf221cccfbe0cf000a221467fad327fc13cf1",
+      "reviewedAtUtc": "2026-10-08T13:20:32.7321252Z"
     },
     {
       "pageId": "workflow.self-maintenance",
@@ -1382,18 +1270,30 @@
       "pageSha256": "891ba091baab5bb5ebac52ec2d8482eba48976374cc43486fa4fbbe800d24fa2",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "11aa0db8397575d80835ab09042412cf21b46a20848410229bd33871ca276da8"
+          "path": ".llm-wiki/tools/code-graph-context-projection.mjs",
+          "sha256": "5a243e38926bddf04aec7ccd1ad903e0e5ee78a476e63d9d39287810ab971237"
         },
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "98f15c1985cd043fd437b4c29a955c72672b7a0a1f497c950244507d72b17c4e"
+          "path": ".llm-wiki/tools/code-graph-context-projection.test.mjs",
+          "sha256": "2507430dbd19d7d85b8fd6b23bf713169e6e0139b472ac573de86740a0b44b12"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-maintenance.mjs",
+          "sha256": "44f305954c59613348776401ad650df6c959c361f36a97d45a63664fe3f238eb"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
+          "sha256": "95e5bb441bba5cc7538a4ed0f879160e2555a02ac77e2b0cfeb785e9663c7487"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
         }
       ],
-      "reason": "Performance evidence distinguishes fixed-candidate ranking from actual SQLite batch cost and the earlier local followup. The temporary benchmark lock is explicitly excluded from the intended implementation scope.",
+      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
       "baseRef": "HEAD",
-      "gitHead": "7ec58395dc7abcc7d523f82b6a9cbcc4b7f46664",
-      "reviewedAtUtc": "2026-10-08T09:15:43.9886881Z"
+      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
+      "reviewedAtUtc": "2026-10-05T08:37:25.6783599Z"
     }
   ]
 }

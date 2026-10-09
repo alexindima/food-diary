@@ -2,6 +2,7 @@ import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutriti
 import { getControlNumericValue, scaleNutrientInput } from '../../../../../shared/lib/nutrition-form.utils';
 import { normalizeProductType as normalizeProductTypeValue } from '../../../../../shared/lib/product-type.utils';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import {
     type CreateProductRequest,
     MeasurementUnit,
@@ -78,7 +79,7 @@ export function buildProductData(values: ProductFormValues, nutritionMode: Nutri
     const defaultPortionAmount = getProductControlNumberValue(values.defaultPortionAmount);
     const normalizeFactor = nutritionMode === 'portion' && defaultPortionAmount > 0 ? baseAmount / defaultPortionAmount : 1;
     const nutritionValues = getNormalizedNutritionValues(values, normalizeFactor);
-    const imageSelection = values.imageUrl;
+    const selectedImage = values.imageUrl;
     const productType = values.productType;
 
     return {
@@ -89,11 +90,9 @@ export function buildProductData(values: ProductFormValues, nutritionMode: Nutri
         category: productType,
         description: values.description,
         comment: values.comment,
-        imageUrl: imageSelection?.url ?? null,
-        imageAssetId: imageSelection?.assetId ?? null,
-        ...(values.images !== undefined
-            ? { imageAssetIds: values.images.map(image => image.assetId).filter((id): id is string => id !== null) }
-            : {}),
+        imageUrl: selectedImage?.url ?? null,
+        imageAssetId: selectedImage?.assetId ?? null,
+        ...(values.images !== undefined ? { imageAssetIds: values.images.map(image => image.assetId).filter(id => id !== null) } : {}),
         baseAmount,
         defaultPortionAmount,
         baseUnit: values.baseUnit,
@@ -237,10 +236,7 @@ function roundOptionalProductNutrientValue(value: number | null, factor: number)
 }
 
 function getProductImageSelection(product: Product): ImageSelection {
-    return {
-        url: product.imageUrl ?? null,
-        assetId: product.imageAssetId ?? null,
-    };
+    return imageSelection(product.imageUrl ?? null, product.imageAssetId ?? null);
 }
 
 function normalizeProductVisibility(value: ProductVisibility | null | string | undefined): ProductVisibility {
@@ -253,7 +249,7 @@ function normalizeProductVisibility(value: ProductVisibility | null | string | u
 
 function getProductGallery(product: Product): ImageSelection[] | undefined {
     return product.images?.some(image => image.imageAssetId !== null) === true
-        ? product.images.map(image => ({ assetId: image.imageAssetId, url: image.imageUrl }))
+        ? product.images.map(image => imageSelection(image.imageUrl, image.imageAssetId))
         : undefined;
 }
 

@@ -5,6 +5,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import type { PageOf } from '../../../shared/models/page-of.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { ShoppingList } from '../../../shared/models/shopping-list.data';
 import { QuickMealService } from '../../meals/contracts/quick-meal';
 import { RECIPE_LOOKUP } from '../../recipes/contracts/recipe-lookup';
@@ -292,9 +294,9 @@ function createMealPlan(): MealPlan {
 
 function createShoppingList(): ShoppingList {
     return {
-        id: 'shopping-list-1',
+        id: entityId<'shopping-list'>('shopping-list-1'),
         name: 'Keto plan',
         items: [],
-        createdAt: '2026-05-15T00:00:00Z',
+        createdAt: utcInstant('2026-05-15T00:00:00Z'),
     };
 }

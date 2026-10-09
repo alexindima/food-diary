@@ -9,6 +9,7 @@ import { sdkPage } from '../../../shared/api/sdk/sdk-response';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { FavoriteProduct } from '../../../shared/models/product.data';
+import type { FavoriteProductId, ProductId } from '../../../shared/models/semantics/entity-id';
 import { favoriteProductFromSdk } from './product-sdk.mapper';
 
 const FAVORITE_PAGE_SIZE = 10;
@@ -35,13 +36,13 @@ export class FavoriteProductService {
         );
     }
 
-    public isFavorite(productId: string): Observable<boolean> {
+    public isFavorite(productId: ProductId): Observable<boolean> {
         return this.sdk.client
             .getFavoriteProductsCheckByProductId({ version: this.sdk.version, productId })
             .pipe(catchError((error: unknown) => fallbackApiError('Check favorite product error', error, false)));
     }
 
-    public add(productId: string, name?: string, preferredPortionAmount?: number): Observable<FavoriteProduct> {
+    public add(productId: ProductId, name?: string, preferredPortionAmount?: number): Observable<FavoriteProduct> {
         return this.sdk.client
             .postFavoriteProducts({ version: this.sdk.version, addFavoriteProductHttpRequest: { productId, name, preferredPortionAmount } })
             .pipe(
@@ -50,7 +51,7 @@ export class FavoriteProductService {
             );
     }
 
-    public update(id: string, name: string | null, preferredPortionAmount: number): Observable<FavoriteProduct> {
+    public update(id: FavoriteProductId, name: string | null, preferredPortionAmount: number): Observable<FavoriteProduct> {
         return this.sdk.client
             .putFavoriteProductsById({ version: this.sdk.version, id, updateFavoriteProductHttpRequest: { name, preferredPortionAmount } })
             .pipe(
@@ -59,7 +60,7 @@ export class FavoriteProductService {
             );
     }
 
-    public remove(id: string): Observable<void> {
+    public remove(id: FavoriteProductId): Observable<void> {
         return this.sdk.client.deleteFavoriteProductsById({ version: this.sdk.version, id }).pipe(
             map(() => {}),
             catchError((error: unknown) => rethrowApiError('Remove favorite product error', error)),

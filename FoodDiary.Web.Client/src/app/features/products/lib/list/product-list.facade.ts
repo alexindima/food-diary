@@ -32,6 +32,8 @@ import { RequestPagedData } from '../../../../shared/lib/request-paged-data';
 import { RequestStateController } from '../../../../shared/lib/request-state';
 import type { PageOf } from '../../../../shared/models/page-of.data';
 import { type FavoriteProduct, type Product, ProductFilters, ProductType } from '../../../../shared/models/product.data';
+import type { FavoriteProductId, ProductId } from '../../../../shared/models/semantics/entity-id';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { resolvePaginationPage } from '../../../../shared/navigation/pagination-query.utils';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { QuickMealService } from '../../../meals/contracts/quick-meal';
@@ -527,7 +529,7 @@ export class ProductListFacade {
         this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchValue()).subscribe();
     }
 
-    public deleteProductAndReload(productId: string): Observable<void> {
+    public deleteProductAndReload(productId: ProductId): Observable<void> {
         this.deletingProduct.set(true);
         return this.productService.deleteById(productId).pipe(
             switchMap(() => this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchValue())),
@@ -565,7 +567,7 @@ export class ProductListFacade {
 
         this.isDeleteInProgress = true;
         try {
-            await firstValueFrom(this.deleteProductAndReload(result.id));
+            await firstValueFrom(this.deleteProductAndReload(entityId<'product'>(result.id)));
             return true;
         } catch {
             this.deletingProduct.set(false);
@@ -695,7 +697,7 @@ export class ProductListFacade {
         );
     }
 
-    private syncProductFavoriteState(productId: string, isFavorite: boolean, favoriteProductId: string | null): void {
+    private syncProductFavoriteState(productId: string, isFavorite: boolean, favoriteProductId: FavoriteProductId | null): void {
         this.productData.updateItems(items =>
             items.map(product => (product.id === productId ? { ...product, isFavorite, favoriteProductId } : product)),
         );

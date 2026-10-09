@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
@@ -29,9 +30,9 @@ public sealed class ImageAssetCleanupService(
     }
 
     private async Task EnqueueObjectDeletionAsync(ImageAsset asset, CancellationToken cancellationToken) {
-        await imageObjectDeletionOutbox.EnqueueAsync(asset.ObjectKey, asset.IsConfirmed, cancellationToken).ConfigureAwait(false);
+        await imageObjectDeletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), asset.IsConfirmed, cancellationToken).ConfigureAwait(false);
         if (!asset.IsConfirmed) {
-            await imageObjectDeletionOutbox.EnqueueAsync(asset.ObjectKey, isConfirmed: true, cancellationToken).ConfigureAwait(false);
+            await imageObjectDeletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), isConfirmed: true, cancellationToken).ConfigureAwait(false);
         }
     }
 }

@@ -1,7 +1,10 @@
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
+import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import { type Recipe, type RecipeDto, type RecipeIngredient, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import { isRecipeCategory } from '../../../../../shared/models/recipe-category';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import type { IngredientFormValues, NutritionScaleMode, RecipeFormValues, StepFormValues } from './recipe-manage.types';
 
 export const RECIPE_TEXT_NAME_MAX_LENGTH = 256;
@@ -104,7 +107,7 @@ export function buildRecipeDto(
         imageUrl: formValue.imageUrl?.url ?? null,
         imageAssetId: formValue.imageUrl?.assetId ?? null,
         ...(formValue.images?.every(image => image.assetId !== null) === true
-            ? { imageAssetIds: formValue.images.map(image => image.assetId).filter((id): id is string => id !== null) }
+            ? { imageAssetIds: formValue.images.map(image => image.assetId) }
             : {}),
         prepTime: formValue.prepTime,
         cookTime: formValue.cookTime,
@@ -120,16 +123,13 @@ export function buildRecipeFormPatchValue(recipeData: Recipe): Partial<RecipeFor
     return {
         language: recipeData.language ?? 'en',
         ...((recipeData.images?.length ?? 0) > 0
-            ? { images: (recipeData.images ?? []).map(image => ({ assetId: image.imageAssetId, url: image.imageUrl })) }
+            ? { images: (recipeData.images ?? []).map(image => imageSelection(image.imageUrl, image.imageAssetId)) }
             : {}),
         name: recipeData.name,
         description: recipeData.description ?? '',
         comment: toNullable(recipeData.comment),
         category: recipeData.category ?? 'other',
-        imageUrl: {
-            url: toNullable(recipeData.imageUrl),
-            assetId: toNullable(recipeData.imageAssetId),
-        },
+        imageUrl: imageSelection(toNullable(recipeData.imageUrl), toNullable(recipeData.imageAssetId)),
         prepTime: withDefault(recipeData.prepTime, 0),
         cookTime: toNullable(recipeData.cookTime),
         servings: recipeData.servings,
@@ -143,12 +143,9 @@ export function mapRecipeStepToFormValue(step: Recipe['steps'][number], labels: 
     return {
         title: step.title ?? null,
         ...((step.images?.length ?? 0) > 0
-            ? { images: (step.images ?? []).map(image => ({ assetId: image.imageAssetId, url: image.imageUrl })) }
+            ? { images: (step.images ?? []).map(image => imageSelection(image.imageUrl, image.imageAssetId)) }
             : {}),
-        imageUrl: {
-            url: step.imageUrl ?? null,
-            assetId: step.imageAssetId ?? null,
-        },
+        imageUrl: imageSelection(step.imageUrl ?? null, step.imageAssetId ?? null),
         description: step.instruction,
         ingredients: step.ingredients
             .map(ingredient => mapIngredientToFormValue(ingredient, labels))
@@ -179,9 +176,7 @@ function mapRecipeStepToDto(step: RecipeFormValues['steps'][number], publish: bo
         title: step.title ?? null,
         imageUrl: step.imageUrl?.url ?? null,
         imageAssetId: step.imageUrl?.assetId ?? null,
-        ...(step.images?.every(image => image.assetId !== null) === true
-            ? { imageAssetIds: step.images.map(image => image.assetId).filter((id): id is string => id !== null) }
-            : {}),
+        ...(step.images?.every(image => image.assetId !== null) === true ? { imageAssetIds: step.images.map(image => image.assetId) } : {}),
         description: step.description,
         ingredients: step.ingredients
             .filter(ingredient => typeof ingredient.textName === 'string' || hasProductId(ingredient) || hasNestedRecipeId(ingredient))
@@ -291,7 +286,7 @@ function buildNestedRecipe(ingredient: RecipeIngredient): Recipe | null {
     }
 
     return {
-        id: nestedRecipeId,
+        id: entityId<'recipe'>(nestedRecipeId),
         name: ingredient.nestedRecipeName ?? '',
         description: null,
         comment: null,
@@ -303,7 +298,7 @@ function buildNestedRecipe(ingredient: RecipeIngredient): Recipe | null {
         servings: ingredient.nestedRecipeServings ?? 1,
         visibility: RecipeVisibility.Public,
         usageCount: 0,
-        createdAt: new Date().toISOString(),
+        createdAt: utcInstant(new Date().toISOString()),
         isOwnedByCurrentUser: true,
         missingIngredientCount: ingredient.nestedRecipeMissingIngredientCount ?? 0,
         ...buildNestedRecipeNutrition(ingredient),
@@ -335,7 +330,7 @@ function buildIngredientProduct(ingredient: RecipeIngredient, unknownProductName
     const baseAmount = ingredient.productBaseAmount ?? DEFAULT_NUTRITION_BASE_AMOUNT;
 
     return {
-        id: ingredient.productId,
+        id: entityId<'product'>(ingredient.productId),
         name: ingredient.productName ?? unknownProductName,
         baseUnit: unit,
         productType: ProductType.Unknown,

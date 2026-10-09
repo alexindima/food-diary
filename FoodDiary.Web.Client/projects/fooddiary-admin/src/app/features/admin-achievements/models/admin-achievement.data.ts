@@ -1,7 +1,8 @@
+import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 export type AchievementMetric = 'LongestStreak' | 'TotalMeals' | 'TotalAcademyArticlesRead';
 
 export type AdminAchievementDefinition = {
-    id: string;
+    id: AdminId<'achievement-definition'>;
     key: string;
     category: string;
     metric: AchievementMetric;

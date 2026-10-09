@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
+import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import {
     createEmptyProductSnapshot,
     createEmptyRecipeSnapshot,
@@ -8,6 +9,9 @@ import {
     type MealAiSessionManageDto,
     MealSourceType,
 } from '../../../../../shared/models/meal.data';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId, optionalEntityId } from '../../../../../shared/models/semantics/entity-id';
+import { productQuantityFromStored, recipeServingsFromStored } from '../../../../../shared/models/semantics/meal-quantity';
 import type { MealFormValues, MealItemFormValues, NutritionTotals } from './meal-manage.types';
 import {
     buildMealDateTime,
@@ -42,16 +46,13 @@ const AI_SESSIONS: MealAiSessionManageDto[] = [
 
 const product = {
     ...createEmptyProductSnapshot(),
-    id: 'product-1',
+    id: entityId<'product'>('product-1'),
 };
 const recipe = {
     ...createEmptyRecipeSnapshot(),
-    id: 'recipe-1',
+    id: entityId<'recipe'>('recipe-1'),
 };
-const image: ImageSelection = {
-    url: 'https://example.test/meal.jpg',
-    assetId: 'asset-1',
-};
+const image: ImageSelection = imageSelection('https://example.test/meal.jpg', 'asset-1');
 
 describe('meal manage form creation', () => {
     it('should create signal form value with fixed date, time and one item', () => {
@@ -138,12 +139,12 @@ describe('meal manage DTO mapping', () => {
 describe('meal manage edit mapping', () => {
     it('should build form patch and prefer manual nutrition over totals', () => {
         const meal: Meal = {
-            id: 'meal-1',
-            date: '2026-04-05T09:07:00',
+            id: entityId<'meal'>('meal-1'),
+            date: utcInstant('2026-04-05T09:07:00'),
             mealType: 'breakfast',
             comment: 'Comment',
             imageUrl: image.url,
-            imageAssetId: image.assetId,
+            imageAssetId: optionalEntityId<'image-asset'>(image.assetId),
             totalCalories: 600,
             totalProteins: 50,
             totalFats: 25,
@@ -186,11 +187,12 @@ describe('meal manage edit mapping', () => {
         expect(
             getMealItemInitialAmount(
                 {
-                    id: 'item-1',
-                    mealId: 'meal-1',
-                    amount: RECIPE_AMOUNT_SERVINGS,
+                    id: entityId<'meal-item'>('item-1'),
+                    mealId: entityId<'meal'>('meal-1'),
+                    amount: recipeServingsFromStored(RECIPE_AMOUNT_SERVINGS),
                     sourceType: MealSourceType.Recipe,
                     recipe,
+                    product: null,
                 },
                 convertRecipeServingsToGrams,
             ),
@@ -199,11 +201,12 @@ describe('meal manage edit mapping', () => {
         expect(
             getMealItemInitialAmount(
                 {
-                    id: 'item-2',
-                    mealId: 'meal-1',
-                    amount: PRODUCT_AMOUNT,
+                    id: entityId<'meal-item'>('item-2'),
+                    mealId: entityId<'meal'>('meal-1'),
+                    amount: productQuantityFromStored(PRODUCT_AMOUNT),
                     sourceType: MealSourceType.Product,
                     product,
+                    recipe: null,
                 },
                 convertRecipeServingsToGrams,
             ),

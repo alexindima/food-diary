@@ -8,6 +8,7 @@ import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { ImageGalleryEditorComponent } from '../../../../../components/shared/image-gallery-editor/image-gallery-editor';
+import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import type { RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import { createRecipeFormValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
@@ -18,8 +19,8 @@ describe('RecipeBasicInfoComponent', () => {
         const { fixture, formModel } = setupComponent();
         const gallery = fixture.debugElement.query(By.directive(ImageGalleryEditorComponent))
             .componentInstance as ImageGalleryEditorComponent;
-        const first = { url: '/first.jpg', assetId: 'first' };
-        const second = { url: '/second.jpg', assetId: 'second' };
+        const first = imageSelection('/first.jpg', 'first');
+        const second = imageSelection('/second.jpg', 'second');
         gallery.photos.set([first, second]);
         fixture.detectChanges();
         expect(formModel().imageUrl).toEqual(first);
@@ -43,7 +44,7 @@ describe('RecipeBasicInfoComponent photo edit state', () => {
             .componentInstance as ImageGalleryEditorComponent;
         expect(recipeForm().dirty()).toBe(false);
 
-        gallery.photos.set([{ url: '/first.jpg', assetId: 'first' }]);
+        gallery.photos.set([imageSelection('/first.jpg', 'first')]);
         fixture.detectChanges();
 
         expect(recipeForm().dirty()).toBe(true);
@@ -51,8 +52,8 @@ describe('RecipeBasicInfoComponent photo edit state', () => {
 
     it('marks the provided form dirty when the cover changes', () => {
         const { fixture, formModel, recipeForm } = setupComponent();
-        const first = { url: '/first.jpg', assetId: 'first' };
-        const second = { url: '/second.jpg', assetId: 'second' };
+        const first = imageSelection('/first.jpg', 'first');
+        const second = imageSelection('/second.jpg', 'second');
         formModel.update(value => ({ ...value, images: [first, second], imageUrl: first }));
         fixture.detectChanges();
         expect(recipeForm().dirty()).toBe(false);
@@ -70,14 +71,14 @@ describe('RecipeBasicInfoComponent photo edit state', () => {
         const { fixture, formModel, recipeForm } = setupComponent();
         formModel.update(value => ({
             ...value,
-            images: [{ url: '/first.jpg', assetId: 'first' }],
-            imageUrl: { url: '/first.jpg', assetId: 'first' },
+            images: [imageSelection('/first.jpg', 'first')],
+            imageUrl: imageSelection('/first.jpg', 'first'),
         }));
         fixture.detectChanges();
         const gallery = fixture.debugElement.query(By.directive(ImageGalleryEditorComponent))
             .componentInstance as ImageGalleryEditorComponent;
 
-        gallery.photos.set([{ assetId: 'first', url: '/first.jpg' }]);
+        gallery.photos.set([imageSelection('/first.jpg', 'first')]);
         fixture.detectChanges();
 
         expect(recipeForm().dirty()).toBe(false);

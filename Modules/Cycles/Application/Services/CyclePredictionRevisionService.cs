@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Cycles.Domain.ValueObjects;
 using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 
@@ -11,18 +12,18 @@ public static class CyclePredictionRevisionService {
         ArgumentNullException.ThrowIfNull(profile);
         ArgumentNullException.ThrowIfNull(predictions);
 
-        profile.RecordPredictionRevision(
+        profile.RecordPredictionAssessment(
             (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime,
-            predictions.NextPeriodStartFrom,
-            predictions.NextPeriodStartTo,
-            predictions.Confidence,
-            predictions.DataSufficiency,
-            predictions.PatternConsistency,
+            new CyclePredictionAssessment(
+                PredictionWindow.FromEndpoints(predictions.NextPeriodStartFrom, predictions.NextPeriodStartTo),
+                PredictionConfidence.FromCode(predictions.Confidence),
+                PredictionDataSufficiency.FromCode(predictions.DataSufficiency),
+                PredictionPatternConsistency.FromCode(predictions.PatternConsistency),
+                predictions.ReasonCodes.Select(PredictionReasonCode.FromCode).ToArray()),
             predictions.CompletedCycleCount,
             predictions.CalibrationSampleCount,
             predictions.HistoricalCoveragePercent,
             predictions.MeanAbsoluteErrorDays,
-            predictions.ReasonCodes,
             predictions.AlgorithmVersion);
     }
 }

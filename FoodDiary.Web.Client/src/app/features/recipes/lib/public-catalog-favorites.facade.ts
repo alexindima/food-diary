@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../../services/auth.service';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { PublicAuthDialogService } from '../../public/contracts/auth-dialog';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import type { PublicRecipe } from '../models/public-recipe.data';
@@ -80,13 +81,13 @@ export class PublicCatalogFavorites {
     private async changeAsync(recipe: PublicRecipe, session: number): Promise<void> {
         const favoriteId = this.ids.get(recipe.id);
         if (favoriteId !== undefined) {
-            await firstValueFrom(this.api.remove(favoriteId));
+            await firstValueFrom(this.api.remove(entityId<'favorite-recipe'>(favoriteId)));
             if (!this.isCurrent(session)) {
                 return;
             }
             this.ids.delete(recipe.id);
         } else {
-            const favorite = await firstValueFrom(this.api.add(recipe.id, recipe.name));
+            const favorite = await firstValueFrom(this.api.add(entityId<'recipe'>(recipe.id), recipe.name));
             if (!this.isCurrent(session)) {
                 return;
             }

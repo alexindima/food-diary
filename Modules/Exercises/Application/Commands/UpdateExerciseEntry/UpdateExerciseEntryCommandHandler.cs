@@ -10,6 +10,7 @@ using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Exercises.Application.Mappings;
 using FoodDiary.Modules.Exercises.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Exercises.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.Exercises.Application.Commands.UpdateExerciseEntry;
 
@@ -59,15 +60,15 @@ public sealed class UpdateExerciseEntryCommandHandler(
             exerciseType = parsed;
         }
 
-        entry.Update(
+        entry.UpdateValues(
             exerciseType,
-            command.DurationMinutes,
-            command.CaloriesBurned,
+            command.DurationMinutes is { } minutes ? ExerciseDuration.FromMinutes(minutes) : null,
+            command.CaloriesBurned is { } calories ? BurnedEnergy.FromKilocalories(calories) : null,
             command.Name,
             command.ClearName,
             command.Notes,
             command.ClearNotes,
-            command.Date);
+            command.Date is { } date ? ExerciseDay.FromDateTimeEncoding(date) : null);
 
         await repository.UpdateAsync(entry, cancellationToken).ConfigureAwait(false);
         return Result.Success(entry.ToModel());

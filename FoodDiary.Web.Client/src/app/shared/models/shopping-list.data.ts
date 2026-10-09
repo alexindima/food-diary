@@ -1,16 +1,18 @@
 import type { MeasurementUnit } from './product.data';
+import type { UtcInstant } from './semantics/date-value';
+import type { ProductId, ShoppingListId, ShoppingListItemId } from './semantics/entity-id';
 
 export type ShoppingList = {
-    id: string;
+    id: ShoppingListId;
     name: string;
-    createdAt: string;
+    createdAt: UtcInstant;
     items: ShoppingListItem[];
 };
 
 export type ShoppingListItem = {
-    id: string;
-    shoppingListId: string;
-    productId?: string | null;
+    id: ShoppingListItemId;
+    shoppingListId: ShoppingListId;
+    productId?: ProductId | null;
     name: string;
     amount?: number | null;
     unit?: MeasurementUnit | string | null;
@@ -18,7 +20,7 @@ export type ShoppingListItem = {
     aisle?: string | null;
     note?: string | null;
     isChecked: boolean;
-    checkedOnUtc?: string | null;
+    checkedOnUtc?: UtcInstant | null;
     sortOrder: number;
     sources?: ShoppingListItemSource[];
 };
@@ -37,9 +39,9 @@ export type ShoppingListItemSource = {
 };
 
 export type ShoppingListSummary = {
-    id: string;
+    id: ShoppingListId;
     name: string;
-    createdAt: string;
+    createdAt: UtcInstant;
     itemsCount: number;
     remainingCount?: number;
     completed?: boolean;

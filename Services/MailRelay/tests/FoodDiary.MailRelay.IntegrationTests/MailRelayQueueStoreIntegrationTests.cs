@@ -36,7 +36,7 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
             store.MarkSuppressedAsync(id, first.AttemptCount, ["blocked@example.com"], CancellationToken.None));
         await Assert.ThrowsAsync<FoodDiary.MailRelay.Application.Emails.Services.MailRelayClaimLostException>(() =>
             store.MarkFailedAttemptAsync(new QueuedEmailFailureDecision((QueuedEmailId)id, first.AttemptCount,
-                QueuedEmailStatus.Retry, IsTerminalFailure: false, "stale failure"), CancellationToken.None));
+                QueuedEmailProcessingState.Retry, "stale failure"), CancellationToken.None));
         Assert.Equal(QueuedEmailStatus.Sent, (await store.GetMessageDetailsAsync(id, CancellationToken.None))!.Status);
         Assert.Equal(outboxCount, await CountRowsAsync(dataSource, "mailrelay_outbox_messages"));
     }
@@ -129,7 +129,7 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
         QueuedEmailMessage message = (await store.ClaimDueBatchAsync(CancellationToken.None)).Single();
 
         await store.MarkFailedAttemptAsync(
-            new QueuedEmailFailureDecision((QueuedEmailId)id, message.AttemptCount, QueuedEmailStatus.Retry, IsTerminalFailure: false, "SMTP failed"),
+            new QueuedEmailFailureDecision((QueuedEmailId)id, message.AttemptCount, QueuedEmailProcessingState.Retry, "SMTP failed"),
             CancellationToken.None);
 
         MailRelayMessageDetails? details = await store.GetMessageDetailsAsync(id, CancellationToken.None);
@@ -272,7 +272,7 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
         await store.MarkSuppressedAsync(suppressedId, claimed.Single(message => message.Id == suppressedId).AttemptCount, ["blocked@example.com"], CancellationToken.None);
         QueuedEmailMessage retryMessage = claimed.Single(message => message.Id == retryId);
         await store.MarkFailedAttemptAsync(
-            new QueuedEmailFailureDecision((QueuedEmailId)retryId, retryMessage.AttemptCount, QueuedEmailStatus.Retry, IsTerminalFailure: false, "retry"),
+            new QueuedEmailFailureDecision((QueuedEmailId)retryId, retryMessage.AttemptCount, QueuedEmailProcessingState.Retry, "retry"),
             CancellationToken.None);
 
         MailRelayQueueStats stats = await store.GetStatsAsync(CancellationToken.None);

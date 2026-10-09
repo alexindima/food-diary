@@ -12,6 +12,7 @@ import { parseDecimalInput } from '../../../shared/lib/number.utils';
 import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
 import { RECENT_MEASUREMENT_FETCH_LIMIT } from '../../../shared/measurements/measurement-history.constants';
 import { type MeasurementSystem, MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { DesiredWaistResponse, WaistGoalHistoryItem } from '../../../shared/models/user.data';
 import type {
     CreateWaistEntryPayload,
@@ -204,7 +205,9 @@ export class WaistHistoryFacade {
 
         const editingId = this.editingEntryId();
         const request$ =
-            editingId !== null ? this.waistEntriesService.update(editingId, payload) : this.waistEntriesService.create(payload);
+            editingId !== null
+                ? this.waistEntriesService.update(entityId<'waist-entry'>(editingId), payload)
+                : this.waistEntriesService.create(payload);
 
         this.isSaving.set(true);
         this.entryError.set(null);

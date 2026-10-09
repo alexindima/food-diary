@@ -24,3 +24,5 @@ Rules for `Modules/Tdee/`.
 Own TdeeInsightModel, TdeeConfidence and GetTdeeInsightQuery consumed by Dashboard. Keep calculations, repositories and handlers in Application. See `Contracts/AGENTS.md` and ADR 0033.
 
 Current module convention: all projects use `FoodDiary.Modules.Tdee.<Project>` assembly identities and namespaces matching their folders, including tests. Preserve historical migration metadata and database/HTTP contracts during namespace moves.
+
+Calculation profiles distinguish basal energy, estimated daily energy, calorie targets, measured weights and desired weights. Valid observations reuse Users-owned measured/desired values; stored adapters preserve legacy values and missing-data/fallback behavior. Production target/hint consumers use these typed profiles without changing formulas, smoothing, confidence or rounding.

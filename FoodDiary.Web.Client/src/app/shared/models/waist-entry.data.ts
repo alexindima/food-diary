@@ -1,7 +1,9 @@
+import type { CalendarDate } from './semantics/date-value';
+import type { UserId, WaistEntryId } from './semantics/entity-id';
 export type WaistEntry = {
-    id: string;
-    userId: string;
-    date: string;
+    id: WaistEntryId;
+    userId: UserId;
+    date: CalendarDate;
     circumferenceCm: number;
 };
 
@@ -20,8 +22,8 @@ export type WaistEntryFilters = {
 };
 
 export type WaistEntrySummaryPoint = {
-    startDate: string;
-    endDate: string;
+    startDate: CalendarDate;
+    endDate: CalendarDate;
     averageCircumferenceCm: number;
 };
 

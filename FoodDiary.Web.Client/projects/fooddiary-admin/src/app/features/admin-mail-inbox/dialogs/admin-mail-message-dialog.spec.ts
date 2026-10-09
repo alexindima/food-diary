@@ -5,17 +5,18 @@ import { type Observable, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminMailInboxFacade } from '../lib/admin-mail-inbox.facade';
 import type { AdminMailInboxMessageDetails } from '../models/admin-mail-inbox.data';
 import { AdminMailMessageDialogComponent } from './admin-mail-message-dialog';
 
 const message: AdminMailInboxMessageDetails = {
-    id: 'message-id',
+    id: adminId<'mail-inbox-message'>('message-id'),
     isTrustedRelay: true,
     toRecipients: ['fd.qa.test@example.com'],
     category: 'general',
     status: 'processed',
-    receivedAtUtc: '2026-10-06T00:00:00Z',
+    receivedAtUtc: adminUtcInstant('2026-10-06T00:00:00Z'),
     readAtUtc: null,
     textBody: 'QA message',
 };

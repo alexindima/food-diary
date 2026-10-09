@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Domain.ValueObjects;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using System.Linq.Expressions;
 using FoodDiary.Modules.Users.Application.Abstractions.Common;
@@ -112,8 +113,8 @@ public sealed class UserProfileProjectionService(DbSet<User> users, Func<Cancell
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
         return await ReadAsync(userId, user => new UserTdeeProfileModel(
-            User.CalculateBmr(currentWeightKg ?? user.NutritionProfile.WeightKg, user.NutritionProfile.HeightCm, user.NutritionProfile.BirthDate, user.NutritionProfile.Gender),
-            User.CalculateEstimatedTdee(User.CalculateBmr(currentWeightKg ?? user.NutritionProfile.WeightKg, user.NutritionProfile.HeightCm, user.NutritionProfile.BirthDate, user.NutritionProfile.Gender), user.NutritionProfile.ActivityLevel),
+            User.CalculateBmrFromProfile(BmrCalculationInput.FromStoredProfile(currentWeightKg ?? user.NutritionProfile.WeightKg, user.NutritionProfile.HeightCm, user.NutritionProfile.BirthDate, user.NutritionProfile.Gender)),
+            User.CalculateEstimatedTdee(User.CalculateBmrFromProfile(BmrCalculationInput.FromStoredProfile(currentWeightKg ?? user.NutritionProfile.WeightKg, user.NutritionProfile.HeightCm, user.NutritionProfile.BirthDate, user.NutritionProfile.Gender)), user.NutritionProfile.ActivityLevel),
             currentWeightKg ?? user.NutritionProfile.WeightKg, user.NutritionProfile.DesiredWeightKg, user.NutritionProfile.DailyCalorieTarget), cancellationToken).ConfigureAwait(false);
     }
 

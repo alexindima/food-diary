@@ -9,6 +9,7 @@ using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Exercises.Application.Mappings;
 using FoodDiary.Modules.Exercises.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Exercises.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.Exercises.Application.Commands.CreateExerciseEntry;
 
@@ -42,12 +43,12 @@ public sealed class CreateExerciseEntryCommandHandler(
             exerciseType = ExerciseType.Other;
         }
 
-        var entry = ExerciseEntry.Create(
+        var entry = ExerciseEntry.CreateWithValues(
             userIdResult.Value,
-            command.Date,
+            ExerciseDay.FromDateTimeEncoding(command.Date),
             exerciseType,
-            command.DurationMinutes,
-            command.CaloriesBurned,
+            ExerciseDuration.FromMinutes(command.DurationMinutes),
+            BurnedEnergy.FromKilocalories(command.CaloriesBurned),
             command.Name,
             command.Notes);
 

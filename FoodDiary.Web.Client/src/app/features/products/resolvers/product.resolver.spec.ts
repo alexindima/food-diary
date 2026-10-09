@@ -5,13 +5,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
 import type { Product } from '../../../shared/models/product.data';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { ProductService } from '../api/product.service';
 import { productResolver } from './product.resolver';
 
 let productServiceSpy: { getById: ReturnType<typeof vi.fn> };
 let navSpy: { navigateToProductListAsync: ReturnType<typeof vi.fn> };
 
-const mockProduct: Partial<Product> = { id: 'product-1', isOwnedByCurrentUser: true, usageCount: 0 };
+const mockProduct: Partial<Product> = { id: entityId<'product'>('product-1'), isOwnedByCurrentUser: true, usageCount: 0 };
 const mockState = {} as unknown as RouterStateSnapshot;
 
 describe('productResolver', () => {

@@ -6,6 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuthService } from '../../../../../services/auth.service';
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import { MarketingAttributionService } from '../../../../../shared/marketing/marketing-attribution.service';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import type { AuthResponse } from '../../../models/auth.data';
 import { AuthFlowFacade } from './auth-flow.facade';
 
@@ -150,7 +151,7 @@ function createAuthResponse(language: string): AuthResponse {
     return {
         accessToken: 'access-token',
         user: {
-            id: 'user-id',
+            id: entityId<'user'>('user-id'),
             email: 'user@example.com',
             hasPassword: true,
             language,

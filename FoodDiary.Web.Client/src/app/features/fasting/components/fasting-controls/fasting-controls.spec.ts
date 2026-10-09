@@ -9,6 +9,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import type { FastingProtocol, FastingSession } from '../../../../shared/models/fasting.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FastingFacade } from '../../lib/fasting.facade';
 import { FastingControlsComponent } from './fasting-controls';
 
@@ -393,8 +395,8 @@ function createFacadeSignals(): Omit<FastingFacadeMock, keyof ReturnType<typeof 
 
 function createCyclicSession(): FastingSession {
     return {
-        id: 'session-1',
-        startedAtUtc: '2026-04-12T06:00:00Z',
+        id: entityId<'fasting-session'>('session-1'),
+        startedAtUtc: utcInstant('2026-04-12T06:00:00Z'),
         endedAtUtc: null,
         initialPlannedDurationHours: DEFAULT_EXTEND_HOURS,
         addedDurationHours: 0,
@@ -424,7 +426,7 @@ function createCyclicSession(): FastingSession {
 function createExtendedSession(): FastingSession {
     return {
         ...createCyclicSession(),
-        id: 'extended-session-1',
+        id: entityId<'fasting-session'>('extended-session-1'),
         protocol: 'F24',
         planType: 'Extended',
         occurrenceKind: 'FastDay',

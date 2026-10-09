@@ -1,18 +1,20 @@
 import { describe, expect, it } from 'vitest';
 
 import type { DietologistRelationship } from '../../../../../shared/models/dietologist.data';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { getDietologistPermissions, mapDietologistRelationshipToForm } from '../../../lib/user-manage-dietologist-form.mapper';
 
 const RELATIONSHIP: DietologistRelationship = {
-    invitationId: 'invitation-1',
+    invitationId: entityId<'dietologist-invitation'>('invitation-1'),
     status: 'Accepted',
     email: 'diet@example.test',
     firstName: null,
     lastName: null,
-    dietologistUserId: 'user-1',
-    createdAtUtc: '2025-12-01T00:00:00Z',
-    acceptedAtUtc: '2026-01-01T00:00:00Z',
-    expiresAtUtc: '2026-02-01T00:00:00Z',
+    dietologistUserId: entityId<'user'>('user-1'),
+    createdAtUtc: utcInstant('2025-12-01T00:00:00Z'),
+    acceptedAtUtc: utcInstant('2026-01-01T00:00:00Z'),
+    expiresAtUtc: utcInstant('2026-02-01T00:00:00Z'),
     permissions: {
         shareProfile: true,
         shareMeals: false,

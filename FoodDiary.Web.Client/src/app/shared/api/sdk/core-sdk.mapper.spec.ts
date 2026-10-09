@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { utcInstant } from '../../models/semantics/date-value';
+import { entityId } from '../../models/semantics/entity-id';
 import { dashboardSnapshotFromSdk } from './dashboard-sdk.mapper';
 import type { DashboardSnapshotHttpResponse } from './generated/model/dashboard-snapshot-http-response';
 
@@ -21,8 +23,8 @@ describe('Dashboard SDK snapshots', () => {
                 total: 1,
                 items: [
                     {
-                        id: 'meal',
-                        date: instant,
+                        id: entityId<'meal'>('meal'),
+                        date: utcInstant(instant),
                         isNutritionAutoCalculated: true,
                         totalCalories: 311.21,
                         totalProteins: 0,

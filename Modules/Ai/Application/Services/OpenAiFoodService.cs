@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -220,7 +221,7 @@ public sealed partial class OpenAiFoodService(
         string requestId,
         OpenAiFoodClientResponse<T> response,
         AiProviderTokenBudget budget) {
-        AiUsageTokens usage = response.Usage ?? new AiUsageTokens(
+        AiTokenUsage usage = response.Usage ?? AiTokenUsage.FromCounts(
             checked((int)budget.InputTokens),
             checked((int)budget.MaximumOutputTokens),
             checked((int)(budget.InputTokens + budget.MaximumOutputTokens)));
@@ -230,9 +231,7 @@ public sealed partial class OpenAiFoodService(
             new AiQuotaUsage(
                 response.Operation,
                 response.Model,
-                usage.InputTokens,
-                usage.OutputTokens,
-                usage.TotalTokens),
+                usage),
             timeout.Token).ConfigureAwait(false);
         ApplicationAiTelemetry.RecordQuotaReconciliation(response.Operation, response.Usage is null ? "estimated" : "actual");
     }

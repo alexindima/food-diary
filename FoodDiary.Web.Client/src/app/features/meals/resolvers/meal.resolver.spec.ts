@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
 import type { Meal } from '../../../shared/models/meal.data';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { MealService } from '../api/meal.service';
 import { mealResolver } from './meal.resolver';
 
@@ -12,7 +13,7 @@ describe('mealResolver', () => {
     let mealServiceSpy: { getById: ReturnType<typeof vi.fn> };
     let navSpy: { navigateToMealListAsync: ReturnType<typeof vi.fn> };
 
-    const mockMeal: Partial<Meal> = { id: 'meal-1' };
+    const mockMeal: Partial<Meal> = { id: entityId<'meal'>('meal-1') };
 
     const mockRoute = {
         paramMap: {

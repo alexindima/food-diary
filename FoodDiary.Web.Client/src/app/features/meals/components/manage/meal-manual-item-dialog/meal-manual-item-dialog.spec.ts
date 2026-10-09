@@ -11,6 +11,8 @@ import { ItemSelectDialogComponent } from '../../../../../shared/dialogs/item-se
 import { MealSourceType } from '../../../../../shared/models/meal.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import type { MealItemFormValues } from '../meal-manage-lib/meal-manage.types';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from './meal-manual-item-dialog';
@@ -155,7 +157,7 @@ function createItemValue(values: Partial<{ product: Product; recipe: Recipe; amo
 
 function createProduct(): Product {
     return {
-        id: 'product-1',
+        id: entityId<'product'>('product-1'),
         name: 'Apple',
         productType: ProductType.Unknown,
         baseUnit: MeasurementUnit.G,
@@ -178,13 +180,13 @@ function createProduct(): Product {
 
 function createRecipe(): Recipe {
     return {
-        id: 'recipe-1',
+        id: entityId<'recipe'>('recipe-1'),
         name: 'Soup',
         comment: null,
         servings: 2,
         visibility: RecipeVisibility.Private,
         usageCount: 0,
-        createdAt: '2026-04-05T10:30:00Z',
+        createdAt: utcInstant('2026-04-05T10:30:00Z'),
         isOwnedByCurrentUser: true,
         isNutritionAutoCalculated: true,
         steps: [],

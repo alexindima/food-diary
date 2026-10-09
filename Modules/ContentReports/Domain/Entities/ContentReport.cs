@@ -2,6 +2,7 @@ using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects;
 
 namespace FoodDiary.Modules.ContentReports.Domain.Entities;
 
@@ -19,6 +20,11 @@ public sealed class ContentReport : AggregateRoot<ContentReportId> {
     public DateTime? ReviewedAtUtc { get; private set; }
 
     private ContentReport() {
+    }
+
+    public static ContentReport CreateWithTarget(UserId userId, ReportTarget target, string reason) {
+        ArgumentNullException.ThrowIfNull(target);
+        return Create(userId, target.Kind, target.Id, reason);
     }
 
     public static ContentReport Create(UserId userId, ReportTargetType targetType, Guid targetId, string reason) {

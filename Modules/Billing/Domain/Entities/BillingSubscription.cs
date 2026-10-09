@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
@@ -6,6 +7,7 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 namespace FoodDiary.Modules.Billing.Domain.Entities;
 
 public sealed class BillingSubscription : Entity<Guid> {
+    public BillingSubscriptionId TypedId => new(Id);
     private const int JsonMaxLength = 65536;
     public const string PendingCheckoutStatus = "pending_checkout";
     private const int ProviderMaxLength = 32;

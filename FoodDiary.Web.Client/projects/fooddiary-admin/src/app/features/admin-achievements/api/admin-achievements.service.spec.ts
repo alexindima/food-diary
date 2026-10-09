@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { adminId } from '../../../shared/models/semantics/admin-meaning';
 import type { CreateAdminAchievementDefinitionRequest, UpdateAdminAchievementDefinitionRequest } from '../models/admin-achievement.data';
 import { AdminAchievementsService } from './admin-achievements.service';
 
@@ -47,7 +48,7 @@ describe('AdminAchievementsService', () => {
         createRequest.flush({ id: 'definition-id', version: 1, ...create });
 
         const { key: _key, ...update } = { ...create, version: 1 };
-        service.update('definition-id', update).subscribe();
+        service.update(adminId<'achievement-definition'>('definition-id'), update).subscribe();
         const updateRequest = http.expectOne(`${BASE_URL}/definition-id`);
         const updateBody = updateRequest.request.body as unknown as UpdateAdminAchievementDefinitionRequest;
         expect(updateRequest.request.method).toBe('PUT');

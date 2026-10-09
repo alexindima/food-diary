@@ -56,9 +56,7 @@ public sealed class CreateRecipeCommentCommandHandler(
 
         var notification = new NotificationRequest(
             recipe.UserId,
-            NotificationTypes.NewComment,
-            NotificationPayloads.Empty(),
-            recipe.Id.Value.ToString());
+            NotificationIntent.NewComment(recipe.Id.Value.ToString()));
         await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new RecipeCommentModel(

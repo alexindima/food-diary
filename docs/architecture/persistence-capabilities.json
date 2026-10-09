@@ -348,7 +348,7 @@
         "call:AiQuotaReservation.MarkOrphaned",
         "call:AiQuotaReservation.Reacquire",
         "call:AiQuotaReservation.Release",
-        "call:AiUsage.Create",
+        "call:AiUsage.CreateWithTokens",
         "context:ConfigureAwait",
         "context:Database",
         "context:SaveChangesAsync",
@@ -361,8 +361,8 @@
         "write:AiQuotaReservation",
         "write:AiUsage"
       ],
-      "reason": "AI quota reservation/reconciliation owns its isolated short context and transaction; row locks and upsert protect quota periods/reservations and usage accounting.",
-      "technicalSourceSha256": "f4378c355b9de3cb5d5e21b26a90f0c1893261671d1b396fafe31c46a89e056f"
+      "reason": "AI owns per-operation quota contexts, retry strategy, row locks and independent transactions. Reviewed token-group migration only: usage creation now consumes validated counts; SQL, reservation checks, lock order, reconciliation/save/rollback, orphan and compensation semantics are unchanged.",
+      "technicalSourceSha256": "6028b3e075065105ee4e7a5ff85d5da6cbbbbf281d847791249ba0fe453a785c"
     },
     "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs": {
       "module": "Ai",
@@ -925,8 +925,8 @@
         "tracked:ImageAsset",
         "write:ImageAsset"
       ],
-      "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity.",
-      "technicalSourceSha256": "7c0d2612212c2cc8496be86c189818649d360a851a06edcb99acb468cd228728"
+      "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity. Reviewed storage-key port grouping: enqueue now takes ObjectStorageKey.FromStoredValue for the same scalar persisted key. User filters, two-phase image cleanup, transaction synchronization and enqueue persistence are unchanged.",
+      "technicalSourceSha256": "2350f180d3fa9834c32aa21a0b3d62ebc7dadce206496712e9b1b7c93f71b6af"
     },
     "Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs": {
       "module": "Lessons",
@@ -1119,7 +1119,7 @@
     "Modules/RecentItems/Infrastructure/Persistence/RecentItems/RecentItemRepository.cs": {
       "module": "RecentItems",
       "capabilities": [
-        "call:RecentItem.Create",
+        "call:RecentItem.CreateWithReference",
         "call:RecentItem.Touch",
         "context:ChangeTracker",
         "context:Database",
@@ -1127,8 +1127,8 @@
         "tracked:RecentItem",
         "write:RecentItem"
       ],
-      "reason": "RecentItems owns recency upsert/pruning. Tracker inspection merges pending own records; SQL handles conflict-safe usage and bounded retention.",
-      "technicalSourceSha256": "705f5e7f4bb3e9dcb92e59120bb0258cea6bab8d6df831d360452043582c809b"
+      "reason": "RecentItems owns recency upsert/pruning. Typed owner references feed the existing tracked creation path. Reviewed: SQL, transaction synchronization, tracker inspection, conflict-safe usage and bounded retention remain unchanged; no foreign writes or new technical capabilities.",
+      "technicalSourceSha256": "198fdc7c37d2794847aae7f4b74d5ed2cd1a700e090af237ed7b08dadda208de"
     },
     "Modules/RecentItems/Infrastructure/Persistence/RecentItemsUserDataPurgeParticipant.cs": {
       "module": "RecentItems",
@@ -1247,14 +1247,14 @@
     "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs": {
       "module": "Users",
       "capabilities": [
-        "call:User.CalculateBmr",
+        "call:User.CalculateBmrFromProfile",
         "call:User.CalculateEstimatedTdee",
         "entity:Role",
         "entity:User",
         "entity:UserNutritionProfile",
         "entity:UserPreferences"
       ],
-      "reason": "Persisted no-tracking consumer profile projections read the separate Users-owned state. Account-access predicates, role checks and pure static nutrition calculations remain; no aggregate loading or saves."
+      "reason": "Persisted no-tracking consumer profile projections read the separate Users-owned state. Account-access predicates, role checks and pure static nutrition calculations remain; no aggregate loading or saves. Reviewed BMR input grouping: same accessible no-tracking profile projection and owner calculation/rounding; the stored-profile adapter adds no entity writes or broader persistence capability."
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserRelatedDataReadService.cs": {
       "module": "Users",

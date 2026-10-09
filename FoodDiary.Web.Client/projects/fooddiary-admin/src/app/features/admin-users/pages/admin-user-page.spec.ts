@@ -5,6 +5,7 @@ import { BehaviorSubject, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { adminCalendarDate, adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog';
 import { AdminUserSetPasswordDialogComponent } from '../dialogs/admin-user-set-password-dialog';
@@ -35,12 +36,12 @@ type TestContext = {
 };
 
 const baseUser: AdminUser = {
-    id: 'user-1',
+    id: adminId<'user'>('user-1'),
     email: 'jane@example.com',
     username: 'jane',
     firstName: 'Jane',
     lastName: 'Doe',
-    birthDate: '1991-01-02T00:00:00Z',
+    birthDate: adminCalendarDate('1991-01-02T00:00:00Z'),
     gender: 'Female',
     weightKg: 71,
     desiredWeightKg: 65,
@@ -64,7 +65,7 @@ const baseUser: AdminUser = {
     saturdayCalories: 2300,
     sundayCalories: 1900,
     profileImage: null,
-    profileImageAssetId: 'asset-1',
+    profileImageAssetId: adminId<'image-asset'>('asset-1'),
     dashboardLayoutJson: '',
     language: 'en',
     theme: 'dark',
@@ -78,9 +79,9 @@ const baseUser: AdminUser = {
     isActive: true,
     isEmailConfirmed: true,
     hasPassword: true,
-    createdOnUtc: '2026-01-01T00:00:00Z',
+    createdOnUtc: adminUtcInstant('2026-01-01T00:00:00Z'),
     deletedAt: null,
-    lastLoginAtUtc: '2026-02-01T00:00:00Z',
+    lastLoginAtUtc: adminUtcInstant('2026-02-01T00:00:00Z'),
     roles: ['User'],
     aiInputTokenLimit: 1000,
     aiOutputTokenLimit: 2000,
@@ -88,7 +89,7 @@ const baseUser: AdminUser = {
 };
 
 const loginEvent: AdminUserLoginEvent = {
-    id: 'login-1',
+    id: adminId<'login-event'>('login-1'),
     userId: baseUser.id,
     userEmail: baseUser.email,
     authProvider: 'Password',
@@ -98,18 +99,18 @@ const loginEvent: AdminUserLoginEvent = {
     browserVersion: '120',
     operatingSystem: 'Windows',
     deviceType: 'Desktop',
-    loggedInAtUtc: '2026-02-02T00:00:00Z',
+    loggedInAtUtc: adminUtcInstant('2026-02-02T00:00:00Z'),
 };
 
 const roleAuditEvent: AdminUserRoleAuditEvent = {
-    id: 'role-1',
+    id: adminId<'role-audit-event'>('role-1'),
     userId: baseUser.id,
     roleName: 'Support',
     action: 'Added',
-    actorUserId: 'actor-1',
+    actorUserId: adminId<'user'>('actor-1'),
     actorEmail: 'admin@example.com',
     source: 'AdminPanel',
-    occurredAtUtc: '2026-02-03T00:00:00Z',
+    occurredAtUtc: adminUtcInstant('2026-02-03T00:00:00Z'),
 };
 
 function pagedLogins(items: AdminUserLoginEvent[]): PagedResponse<AdminUserLoginEvent> {
@@ -255,7 +256,7 @@ describe('AdminUserPageComponent actions and navigation', () => {
 
         expect(component['canImpersonate']()).toBe(false);
 
-        component['user'].set({ ...baseUser, deletedAt: '2026-03-01T00:00:00Z' });
+        component['user'].set({ ...baseUser, deletedAt: adminUtcInstant('2026-03-01T00:00:00Z') });
 
         expect(component['canImpersonate']()).toBe(false);
     });

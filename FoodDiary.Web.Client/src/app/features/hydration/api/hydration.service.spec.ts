@@ -5,6 +5,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import type { HydrationDaily, HydrationEntry } from '../../../shared/models/hydration.data';
+import { calendarDate, utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { HydrationService } from './hydration.service';
 
 const ENTRY_AMOUNT_ML = 250;
@@ -13,13 +15,13 @@ const TEST_DAY = 28;
 const BASE_URL = environment.apiUrls.hydration;
 const TEST_DATE = new Date('2026-03-28T12:00:00.000Z');
 const MOCK_DAILY: HydrationDaily = {
-    dateUtc: '2026-03-28T00:00:00.000Z',
+    dateUtc: calendarDate('2026-03-28T00:00:00.000Z'),
     totalMl: 1500,
     goalMl: 2500,
 };
 const MOCK_ENTRY: HydrationEntry = {
-    id: 'h-1',
-    timestampUtc: '2026-03-28T12:00:00.000Z',
+    id: entityId<'hydration-entry'>('h-1'),
+    timestampUtc: utcInstant('2026-03-28T12:00:00.000Z'),
     amountMl: ENTRY_AMOUNT_ML,
 };
 

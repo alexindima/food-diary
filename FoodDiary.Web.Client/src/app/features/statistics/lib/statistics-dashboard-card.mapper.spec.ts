@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
+import { entityId } from '../../../shared/models/semantics/entity-id';
 /* eslint-disable @typescript-eslint/no-magic-numbers -- Compact fixture values make the mapper expectations readable. */
 import type { User } from '../../../shared/models/user.data';
 import type { MappedStatistics } from '../models/statistics.data';
 import { buildStatisticsDashboardCardsView } from './statistics-dashboard-card.mapper';
 
 const USER: User = {
-    id: 'user-id',
+    id: entityId<'user'>('user-id'),
     email: 'user@example.com',
     hasPassword: true,
     pushNotificationsEnabled: false,

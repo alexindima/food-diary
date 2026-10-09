@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../environments/environment';
 import type { RecipeLookup } from '../models/recipe-lookup.data';
+import { entityId } from '../models/semantics/entity-id';
 import { RecipeLookupService } from './recipe-lookup.service';
 
 const SERVINGS = 4;
@@ -36,7 +37,7 @@ describe('RecipeLookupService', () => {
         const recipeId = 'recipe-123';
 
         const mockResponse: RecipeLookup = {
-            id: recipeId,
+            id: entityId<'recipe'>(recipeId),
             servings: SERVINGS,
             steps: [
                 {
@@ -60,7 +61,7 @@ describe('RecipeLookupService', () => {
         const recipeId = 'recipe-456';
 
         const mockResponse: RecipeLookup = {
-            id: recipeId,
+            id: entityId<'recipe'>(recipeId),
             servings: 2,
             steps: [],
         };

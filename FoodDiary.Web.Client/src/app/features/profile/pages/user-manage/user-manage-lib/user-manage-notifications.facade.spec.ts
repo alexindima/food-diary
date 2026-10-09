@@ -9,6 +9,7 @@ import { provideTranslateTesting } from '../../../../../../testing/translate-tes
 import { FrontendObservabilityService } from '../../../../../services/frontend-observability.service';
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import { FASTING_REMINDER_PRESETS } from '../../../../../shared/lib/fasting-reminder-presets';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import type { User } from '../../../../../shared/models/user.data';
 import { NotificationService, type WebPushSubscriptionItem } from '../../../../../shared/notifications/notification.service';
 import { PushNotificationService } from '../../../../../shared/notifications/push-notification.service';
@@ -384,7 +385,7 @@ function createFrontendObservabilityServiceMock(): {
 
 function createUser(overrides: Partial<User> = {}): User {
     return {
-        id: 'user-1',
+        id: entityId<'user'>('user-1'),
         email: 'user@example.com',
         username: 'alexi',
         firstName: 'Alex',

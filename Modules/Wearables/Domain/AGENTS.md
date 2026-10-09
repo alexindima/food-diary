@@ -9,3 +9,5 @@ User ownership: reference Users Domain.Contracts for UserId and shared user valu
 Generic DomainGuard belongs to FoodDiary.Domain.Primitives, referenced directly. Central Domain grants no friend access. This domain has no central Domain dependency.
 
 All module projects and tests use `FoodDiary.Modules.Wearables.<Project>` identities and namespaces matching physical folders. Projects are siblings, including Application.Abstractions and PersistenceModel. Namespace changes preserve database schema, historical migration metadata, HTTP payloads and runtime behavior.
+
+WearableReading binds each source metric to a nonnegative finite double; preserve fractional provider observations and avoid new integrality/caps. WearableSyncDay retains existing UTC-day normalization. Typed create/update reject cross-metric updates; the raw WearableDataPoint port remains a provider observation decoded at the established owning mutation boundary.

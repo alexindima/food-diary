@@ -8,6 +8,8 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import type { DietologistInvitationForCurrentUser } from '../../../../shared/models/dietologist.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 import { DietologistInvitationPageComponent } from './dietologist-invitation-page';
 
@@ -28,7 +30,7 @@ let authService: {
 };
 
 beforeEach(() => {
-    routeParams = new BehaviorSubject(convertToParamMap({ invitationId: 'inv-1' }));
+    routeParams = new BehaviorSubject(convertToParamMap({ invitationId: entityId<'dietologist-invitation'>('inv-1') }));
     dietologistService = {
         getInvitationForCurrentUser: vi.fn(),
         acceptInvitationForCurrentUser: vi.fn(),
@@ -47,14 +49,14 @@ describe('DietologistInvitationPageComponent accepted state', () => {
     it('shows accepted state when invitation is already accepted', () => {
         dietologistService.getInvitationForCurrentUser.mockReturnValue(
             of({
-                invitationId: 'inv-1',
-                clientUserId: 'client-1',
+                invitationId: entityId<'dietologist-invitation'>('inv-1'),
+                clientUserId: entityId<'user'>('client-1'),
                 clientEmail: 'client@example.com',
                 clientFirstName: 'Client',
                 clientLastName: 'Name',
                 status: 'Accepted',
-                createdAtUtc: '2026-04-15T00:00:00Z',
-                expiresAtUtc: '2026-04-22T00:00:00Z',
+                createdAtUtc: utcInstant('2026-04-15T00:00:00Z'),
+                expiresAtUtc: utcInstant('2026-04-22T00:00:00Z'),
             }),
         );
 
@@ -70,19 +72,19 @@ describe('DietologistInvitationPageComponent route changes', () => {
     it('loads the new invitation and ignores a late response from the old one', () => {
         const oldRequest = new Subject<DietologistInvitationForCurrentUser>();
         const newInvitation: DietologistInvitationForCurrentUser = {
-            invitationId: 'inv-2',
-            clientUserId: 'client-2',
+            invitationId: entityId<'dietologist-invitation'>('inv-2'),
+            clientUserId: entityId<'user'>('client-2'),
             clientEmail: 'client2@example.invalid',
             clientFirstName: 'New',
             clientLastName: null,
             status: 'Pending',
-            createdAtUtc: '2026-04-15T00:00:00Z',
-            expiresAtUtc: '2026-04-22T00:00:00Z',
+            createdAtUtc: utcInstant('2026-04-15T00:00:00Z'),
+            expiresAtUtc: utcInstant('2026-04-22T00:00:00Z'),
         };
         dietologistService.getInvitationForCurrentUser.mockReturnValueOnce(oldRequest).mockReturnValueOnce(of(newInvitation));
         createComponent();
-        routeParams.next(convertToParamMap({ invitationId: 'inv-2' }));
-        oldRequest.next({ ...newInvitation, invitationId: 'inv-1', status: 'Revoked' });
+        routeParams.next(convertToParamMap({ invitationId: entityId<'dietologist-invitation'>('inv-2') }));
+        oldRequest.next({ ...newInvitation, invitationId: entityId<'dietologist-invitation'>('inv-1'), status: 'Revoked' });
         fixture.detectChanges();
         expect(component['state']()).toBe('ready');
         expect(component['invitation']()?.invitationId).toBe('inv-2');
@@ -113,14 +115,14 @@ describe('DietologistInvitationPageComponent action recovery', () => {
     ] as const)('keeps the invitation actionable after a failed $action and allows retry', ({ action, method, success, error }) => {
         dietologistService.getInvitationForCurrentUser.mockReturnValue(
             of({
-                invitationId: 'inv-1',
-                clientUserId: 'client-1',
+                invitationId: entityId<'dietologist-invitation'>('inv-1'),
+                clientUserId: entityId<'user'>('client-1'),
                 clientEmail: 'client@example.com',
                 clientFirstName: 'Client',
                 clientLastName: null,
                 status: 'Pending',
-                createdAtUtc: '2026-04-15T00:00:00Z',
-                expiresAtUtc: '2026-04-22T00:00:00Z',
+                createdAtUtc: utcInstant('2026-04-15T00:00:00Z'),
+                expiresAtUtc: utcInstant('2026-04-22T00:00:00Z'),
             }),
         );
         dietologistService[method]
@@ -156,7 +158,7 @@ function createComponent(): void {
                 useValue: {
                     paramMap: routeParams.asObservable(),
                     snapshot: {
-                        paramMap: convertToParamMap({ invitationId: 'inv-1' }),
+                        paramMap: convertToParamMap({ invitationId: entityId<'dietologist-invitation'>('inv-1') }),
                     },
                 },
             },

@@ -21,3 +21,7 @@ repository batch-projects recipe/product data; domain objects never retain their
 mutable aggregates. EF ignores RecipeSnapshot and preserves the original Recipe FK.
 
 MealType is owned by Meals Domain.Contracts; the planning domain has no Meals aggregate assembly reference.
+
+ShoppingQuantity groups optional amount and unit while retaining every absence combination, enum validation and the positive finite amount limit of 1,000,000. ShoppingSourceQuantity deliberately has its separate positive finite unbounded amount contract and retains historical source unit values. Mutations use AddItemWithQuantity/CreateWithQuantity/UpdateWithQuantity/AddMealPlanSourceWithQuantity. Preserve free-text items, source provenance, sorting and partial field update behavior; no blanket quantity limit or unit conversion.
+
+PlanDurationDays and PlanDayNumber retain1..31 bounds and the aggregate duration-relative day check. PlannedServings is a positive integral count with no new cap; do not substitute fractional RecipeServingQuantity. Catalog mutation paths consume these owner values; persisted plan fields and adopted-plan copying remain compatible.

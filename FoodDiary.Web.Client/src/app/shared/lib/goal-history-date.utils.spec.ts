@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { calendarDate } from '../models/semantics/date-value';
 import { formatGoalHistoryDates } from './goal-history-date.utils';
 
 describe('goal history date labels', () => {
@@ -16,7 +17,7 @@ describe('goal history date labels', () => {
     });
     it('keeps an open interval and handles invalid stored dates', () => {
         expect(formatGoalHistoryDates('2026-08-06T10:00:00', null, 'en')).toEqual({
-            startDate: 'Aug 6, 2026',
+            startDate: calendarDate('Aug 6, 2026'),
             endDate: null,
             dateRange: 'Aug 6, 2026',
         });

@@ -5,6 +5,7 @@ import { AiFoodService } from '../../../shared/api/ai-food.service';
 import { FoodRecognitionService } from '../../../shared/api/food-recognition.service';
 import { ImageUploadService } from '../../../shared/api/image-upload.service';
 import type { FoodNutritionRequest, FoodNutritionResponse, FoodVisionRequest, FoodVisionResponse } from '../../../shared/models/ai.data';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 
 @Service()
 export class ProductAiRecognitionFacade {
@@ -29,6 +30,6 @@ export class ProductAiRecognitionFacade {
     }
 
     public deleteAsset(assetId: string): Observable<void> {
-        return this.imageUploadService.deleteAsset(assetId);
+        return this.imageUploadService.deleteAsset(entityId<'image-asset'>(assetId));
     }
 }

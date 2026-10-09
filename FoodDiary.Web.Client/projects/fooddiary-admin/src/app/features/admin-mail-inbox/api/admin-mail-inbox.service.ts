@@ -6,6 +6,7 @@ import { map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { AdminMailInboxSdk } from '../../../shared/api/sdk/generated/api/admin-mail-inbox.service';
 import { createSdkConnection, sdkRequestOptions } from '../../../shared/api/sdk/sdk-connection';
+import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 import type {
     AdminMailInboxFilters,
     AdminMailInboxMessageDetails,
@@ -63,13 +64,13 @@ export class AdminMailInboxService {
             .pipe(map(items => items.map(adminMailInboxMessageSummaryFromSdk)));
     }
 
-    public getMessage(id: string): Observable<AdminMailInboxMessageDetails> {
+    public getMessage(id: AdminId<'mail-inbox-message'>): Observable<AdminMailInboxMessageDetails> {
         return this.sdk.client
             .getAdminMailInboxMessagesById({ version: this.sdk.version, id })
             .pipe(map(adminMailInboxMessageDetailsFromSdk));
     }
 
-    public markMessageRead(id: string): Observable<void> {
+    public markMessageRead(id: AdminId<'mail-inbox-message'>): Observable<void> {
         return this.sdk.client.postAdminMailInboxMessagesByIdRead({ version: this.sdk.version, id });
     }
 }

@@ -2,7 +2,7 @@ using System.Globalization;
 
 namespace FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 
-public readonly record struct DesiredWeightKg {
+public sealed record DesiredWeightKg {
     public const double MaxValue = 500d;
 
     public double Value { get; }
@@ -10,6 +10,8 @@ public readonly record struct DesiredWeightKg {
     private DesiredWeightKg(double value) {
         Value = value;
     }
+
+    public static DesiredWeightKg? FromOptional(double? value) => value.HasValue ? Create(value.Value) : null;
 
     public static DesiredWeightKg Create(double value) {
         if (double.IsNaN(value) || double.IsInfinity(value)) {

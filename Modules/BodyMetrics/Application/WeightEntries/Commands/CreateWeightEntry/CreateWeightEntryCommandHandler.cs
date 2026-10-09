@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Mappings;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
@@ -38,7 +39,7 @@ public sealed class CreateWeightEntryCommandHandler(
                 WeightEntryErrors.AlreadyExists(normalizedDate));
         }
 
-        var entry = WeightEntry.CreateForDay(userId, day, command.WeightKg);
+        var entry = WeightEntry.CreateWithMeasurement(userId, day, MeasuredWeightKg.Create(command.WeightKg));
         entry = await weightEntryRepository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(entry.ToModel());

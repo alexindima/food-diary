@@ -1,4 +1,6 @@
 import type { FastingMessage, FastingOverview, FastingSession } from '../../models/fasting.data';
+import { optionalUtcInstant, utcInstant } from '../../models/semantics/date-value';
+import { entityId } from '../../models/semantics/entity-id';
 import type { FastingMessageHttpResponse } from './generated/model/fasting-message-http-response';
 import type { FastingOverviewHttpResponse } from './generated/model/fasting-overview-http-response';
 import type { FastingSessionHttpResponse } from './generated/model/fasting-session-http-response';
@@ -43,6 +45,11 @@ export function fastingSessionFromSdk(response: FastingSessionHttpResponse): Fas
             const item = requireSdkFields(checkInResponse, ['id', 'checkedInAtUtc', 'hungerLevel', 'energyLevel', 'moodLevel', 'symptoms']);
             return { ...item, notes: item.notes ?? null };
         }),
+
+        id: entityId<'fasting-session'>(nullable.id),
+        startedAtUtc: utcInstant(nullable.startedAtUtc),
+        endedAtUtc: optionalUtcInstant(nullable.endedAtUtc),
+        checkInAtUtc: optionalUtcInstant(nullable.checkInAtUtc),
     };
 }
 

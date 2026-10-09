@@ -5,6 +5,8 @@ import { Subject } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { GoalHistoryPage, WaistGoalHistoryItem } from '../../../../shared/models/user.data';
 import { WaistHistoryFacade } from '../../lib/waist-history.facade';
 import { WaistGoalHistoryDialogComponent } from './waist-goal-history-dialog';
@@ -12,15 +14,20 @@ import { WaistGoalHistoryDialogComponent } from './waist-goal-history-dialog';
 const CURRENT_MEASUREMENT = 80;
 const TOTAL_LOADED_ROWS = 3;
 const active: WaistGoalHistoryItem = {
-    id: 'active',
+    id: entityId<'waist-goal'>('active'),
     startWaistCm: 90,
     targetWaistCm: 70,
     endWaistCm: null,
-    startedAtUtc: '2026-08-01',
+    startedAtUtc: utcInstant('2026-08-01'),
     endedAtUtc: null,
     status: 'Active',
 };
-const closed: WaistGoalHistoryItem = { ...active, id: 'closed', status: 'Cancelled', endedAtUtc: '2026-08-01' };
+const closed: WaistGoalHistoryItem = {
+    ...active,
+    id: entityId<'waist-goal'>('closed'),
+    status: 'Cancelled',
+    endedAtUtc: utcInstant('2026-08-01'),
+};
 function setup(): {
     fixture: ComponentFixture<WaistGoalHistoryDialogComponent>;
     request: Mock;
@@ -68,7 +75,7 @@ describe('Waist history pagination wiring', () => {
         more?.click();
         fixture.detectChanges();
         expect(request).toHaveBeenLastCalledWith('second');
-        pages[1].next({ items: [{ ...closed, id: 'older' }], nextCursor: null });
+        pages[1].next({ items: [{ ...closed, id: entityId<'waist-goal'>('older') }], nextCursor: null });
         pages[1].complete();
         fixture.detectChanges();
         expect(root.querySelectorAll('article')).toHaveLength(TOTAL_LOADED_ROWS);

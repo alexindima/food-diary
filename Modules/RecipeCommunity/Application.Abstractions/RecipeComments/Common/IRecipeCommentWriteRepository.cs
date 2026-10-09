@@ -1,4 +1,4 @@
-using FoodDiary.Modules.RecipeCommunity.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.RecipeCommunity.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Recipes;
 
 namespace FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common;

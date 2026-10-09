@@ -1,3 +1,4 @@
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Mappings;
 using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
@@ -15,25 +16,23 @@ internal sealed class ShoppingListCreationService(IShoppingListWriteRepository s
         CancellationToken cancellationToken) {
         var shoppingList = ShoppingList.Create(request.UserId, request.Name);
         foreach (ShoppingListCreationItem item in request.Items.OrderBy(static item => item.SortOrder)) {
-            ShoppingListItem shoppingListItem = shoppingList.AddItem(
+            ShoppingListItem shoppingListItem = shoppingList.AddItemWithQuantity(
                 item.Name,
                 item.ProductId,
-                item.Amount,
-                item.Unit,
+                ShoppingQuantity.FromFields(item.Amount, item.Unit),
                 item.Category,
                 isChecked: false,
                 item.SortOrder);
 
             foreach (ShoppingListCreationSource source in item.Sources) {
-                shoppingListItem.AddMealPlanSource(
+                shoppingListItem.AddMealPlanSourceWithQuantity(
                     source.MealPlanId,
                     source.MealPlanMealId,
                     source.RecipeId,
                     source.Label,
                     source.DayNumber,
                     source.MealType,
-                    source.Amount,
-                    source.Unit);
+                    ShoppingSourceQuantity.FromFields(source.Amount, source.Unit));
             }
         }
 

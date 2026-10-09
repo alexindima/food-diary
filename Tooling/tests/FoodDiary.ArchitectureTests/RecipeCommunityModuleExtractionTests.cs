@@ -25,7 +25,7 @@ public sealed class RecipeCommunityModuleExtractionTests {
     public void ExtractedRecipeCommunityAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/RecipeCommunity/Application/FoodDiary.Modules.RecipeCommunity.Application.csproj");
-        string[] expectedReferences = ["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Notifications.Contracts", "FoodDiary.Modules.RecipeCommunity.Application.Abstractions", "FoodDiary.Modules.RecipeCommunity.Domain", "FoodDiary.Modules.Recipes.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"];
+        string[] expectedReferences = ["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Notifications.Contracts", "FoodDiary.Modules.RecipeCommunity.Application.Abstractions", "FoodDiary.Modules.RecipeCommunity.Domain", "FoodDiary.Modules.RecipeCommunity.Domain.Contracts", "FoodDiary.Modules.Recipes.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"];
 
         Assert.Equal(expectedReferences, references);
     }
@@ -41,8 +41,8 @@ public sealed class RecipeCommunityModuleExtractionTests {
     [Theory]
     [InlineData("Domain/Entities/Recipes/RecipeComment.cs", "FoodDiary.Domain/Entities/Recipes/RecipeComment.cs")]
     [InlineData("Domain/Entities/Social/RecipeLike.cs", "FoodDiary.Domain/Entities/Social/RecipeLike.cs")]
-    [InlineData("Domain/ValueObjects/Ids/RecipeCommentId.cs", "FoodDiary.Domain/ValueObjects/Ids/RecipeCommentId.cs")]
-    [InlineData("Domain/ValueObjects/Ids/RecipeLikeId.cs", "FoodDiary.Domain/ValueObjects/Ids/RecipeLikeId.cs")]
+    [InlineData("Domain.Contracts/ValueObjects/Ids/RecipeCommentId.cs", "FoodDiary.Domain/ValueObjects/Ids/RecipeCommentId.cs")]
+    [InlineData("Domain.Contracts/ValueObjects/Ids/RecipeLikeId.cs", "FoodDiary.Domain/ValueObjects/Ids/RecipeLikeId.cs")]
     [InlineData("Infrastructure/Persistence/RecipeComments/RecipeCommentRepository.cs", "FoodDiary.Infrastructure/Persistence/RecipeComments/RecipeCommentRepository.cs")]
     [InlineData("Infrastructure/Persistence/RecipeLikes/RecipeLikeRepository.cs", "FoodDiary.Infrastructure/Persistence/RecipeLikes/RecipeLikeRepository.cs")]
     public void OwnedSource_HasOneModuleLocation(string modulePath, string donorPath) {

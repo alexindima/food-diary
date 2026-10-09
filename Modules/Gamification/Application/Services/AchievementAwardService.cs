@@ -35,7 +35,7 @@ public sealed class AchievementAwardService(
             .Where(badge => definitionsByKey[badge.Key].IsActive && badge.IsEarned && !existingKeys.Contains(badge.Key))
             .Select(badge => {
                 AchievementDefinition definition = definitionsByKey[badge.Key];
-                int earnedValue = GamificationCalculator.GetMetricValue(definition.Metric, metrics);
+                int earnedValue = GamificationCalculator.GetTargetMetricValue(definition.GetTarget(), metrics);
                 return new AchievementGrantModel(
                     badge.Key,
                     normalizedEarnedAtUtc,

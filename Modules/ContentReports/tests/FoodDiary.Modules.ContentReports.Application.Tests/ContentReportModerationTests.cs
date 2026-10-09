@@ -1,3 +1,4 @@
+using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.ContentReports.Application.Commands.ReviewContentReport;
 using FoodDiary.Modules.ContentReports.Application.Commands.DismissContentReport;
 using FoodDiary.Modules.ContentReports.Contracts.Commands.ReviewContentReport;
@@ -129,6 +130,6 @@ public sealed class ContentReportModerationTests {
 
         public Task<ContentReport> AddAsync(ContentReport report, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task<bool> HasUserReportedAsync(UserId userId, ReportTargetType targetType, Guid targetId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<bool> HasUserReportedAsync(UserId userId, ReportTarget target, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }

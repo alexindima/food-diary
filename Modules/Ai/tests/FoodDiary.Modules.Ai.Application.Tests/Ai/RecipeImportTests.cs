@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Domain.ValueObjects;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Application.Services;
 using FoodDiary.Modules.Ai.Contracts.Models;
@@ -67,7 +68,7 @@ public sealed class RecipeImportTests {
     public async Task Import_WithNoRecipe_ReconcilesSuccessfulProviderUsage() {
         OpenAiFoodService service = CreateService();
         _client.ImportRecipeAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(
-            Result.Success(new OpenAiFoodClientResponse<RecipeImportDraftModel>(Draft() with { Ingredients = [] }, "recipe-import", "text", new AiUsageTokens(20, 10, 30))));
+            Result.Success(new OpenAiFoodClientResponse<RecipeImportDraftModel>(Draft() with { Ingredients = [] }, "recipe-import", "text", AiTokenUsage.FromCounts(20, 10, 30))));
         Result<RecipeImportDraftModel> result = await service.ImportRecipeAsync(sourceUrl: null, "not a recipe", _userId, RequestId, CancellationToken.None);
         ResultAssert.Failure(result);
         Assert.Equal("Ai.RecipeNotFound", result.Error.Code);
@@ -78,7 +79,7 @@ public sealed class RecipeImportTests {
         _profiles.GetAiProfileAsync(_userId, Arg.Any<CancellationToken>()).Returns(Result.Success(new UserAiProfileModel(_userId, "ru", 10000, 10000, consent)));
         _client.GetRecipeImportTokenBudgetAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(Result.Success(new AiProviderTokenBudget(100, 100)));
         _client.ImportRecipeAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(
-            Result.Success(new OpenAiFoodClientResponse<RecipeImportDraftModel>(Draft(), "recipe-import", "text", new AiUsageTokens(20, 10, 30))));
+            Result.Success(new OpenAiFoodClientResponse<RecipeImportDraftModel>(Draft(), "recipe-import", "text", AiTokenUsage.FromCounts(20, 10, 30))));
         _quota.ReserveAsync(Arg.Any<AiQuotaReservationRequest>(), Arg.Any<CancellationToken>()).Returns(AiQuotaReservationStatus.Acquired);
         return new OpenAiFoodService(_client, _quota, _profiles, TimeProvider.System, Substitute.For<IAiPromptProvider>(), recipeSourceReader: _source);
     }

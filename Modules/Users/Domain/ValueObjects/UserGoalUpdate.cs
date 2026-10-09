@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
+
 namespace FoodDiary.Modules.Users.Domain.ValueObjects;
 
 public readonly record struct UserGoalUpdate(
@@ -7,8 +9,8 @@ public readonly record struct UserGoalUpdate(
     double? CarbTarget = null,
     double? FiberTarget = null,
     double? WaterGoal = null,
-    double? DesiredWeightKg = null,
-    double? DesiredWaistCm = null,
+    DesiredWeightKg? DesiredWeightKg = null,
+    DesiredWaistCm? DesiredWaistCm = null,
     bool? CalorieCyclingEnabled = null,
     double? MondayCalories = null,
     double? TuesdayCalories = null,

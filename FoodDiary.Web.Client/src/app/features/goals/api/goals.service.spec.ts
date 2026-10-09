@@ -6,12 +6,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { environment } from '../../../../environments/environment';
 import { UserService } from '../../../shared/api/user.service';
 import type { GoalsResponse, UpdateGoalsRequest } from '../../../shared/models/goals.data';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { User } from '../../../shared/models/user.data';
 import { GoalsService } from './goals.service';
 
 const UPDATED_CALORIE_TARGET = 2500;
 const MOCK_USER: User = {
-    id: 'user-1',
+    id: entityId<'user'>('user-1'),
     email: null,
     hasPassword: true,
     isActive: true,

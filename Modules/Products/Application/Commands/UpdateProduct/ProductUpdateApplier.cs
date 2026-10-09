@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Products.Domain.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Entities;
 
@@ -20,13 +21,11 @@ internal static class ProductUpdateApplier {
             command.Brand is not null ||
             command.ClearBrand ||
             values.ProductType.HasValue) {
-            product.UpdateCoreIdentity(
-                name: command.Name,
-                barcode: command.Barcode,
-                clearBarcode: command.ClearBarcode,
-                brand: command.Brand,
-                clearBrand: command.ClearBrand,
-                productType: values.ProductType);
+            product.UpdateCoreIdentityChanges(new ProductCoreIdentityChanges(
+                command.Name,
+                FieldChanges.FromOptionalText(command.Barcode, command.ClearBarcode),
+                FieldChanges.FromOptionalText(command.Brand, command.ClearBrand),
+                values.ProductType));
         }
 
         if (command.Category is not null ||
@@ -35,13 +34,10 @@ internal static class ProductUpdateApplier {
             command.ClearDescription ||
             command.Comment is not null ||
             command.ClearComment) {
-            product.UpdateDescriptiveIdentity(
-                category: command.Category,
-                clearCategory: command.ClearCategory,
-                description: command.Description,
-                clearDescription: command.ClearDescription,
-                comment: command.Comment,
-                clearComment: command.ClearComment);
+            product.UpdateDescriptiveIdentityChanges(new ProductDescriptiveIdentityChanges(
+                FieldChanges.FromOptionalText(command.Category, command.ClearCategory),
+                FieldChanges.FromOptionalText(command.Description, command.ClearDescription),
+                FieldChanges.FromOptionalText(command.Comment, command.ClearComment)));
         }
     }
 
@@ -58,10 +54,16 @@ internal static class ProductUpdateApplier {
             command.CarbsPerBase.HasValue ||
             command.FiberPerBase.HasValue ||
             command.AlcoholPerBase.HasValue) {
-            product.UpdateMeasurementAndNutrition(new ProductMeasurementNutritionUpdate(
-                BaseUnit: values.Unit,
-                BaseAmount: command.BaseAmount,
-                DefaultPortionAmount: command.DefaultPortionAmount,
+            FoodDiary.Modules.Products.Domain.Contracts.Enums.MeasurementUnit unit = values.Unit ?? product.BaseUnit;
+            ProductMeasurementBasis? basis = null;
+            if (command.BaseAmount is { } baseAmount) {
+                basis = ProductMeasurementBasis.FromFields(unit, baseAmount);
+            } else if (values.Unit.HasValue) {
+                basis = ProductMeasurementBasis.Canonical(unit);
+            }
+            product.UpdateMeasurementNutritionChanges(new ProductMeasurementNutritionChanges(
+                Basis: basis,
+                DefaultPortion: command.DefaultPortionAmount is { } amount ? ProductDefaultPortion.FromAmount(unit, amount) : null,
                 CaloriesPerBase: command.CaloriesPerBase,
                 ProteinsPerBase: command.ProteinsPerBase,
                 FatsPerBase: command.FatsPerBase,
@@ -76,11 +78,9 @@ internal static class ProductUpdateApplier {
         UpdateProductCommand command,
         ProductUpdateValues values) {
         if (command.ImageUrl is not null || command.ClearImageUrl || command.ImageAssetId.HasValue || command.ClearImageAssetId) {
-            product.UpdateMedia(
-                imageUrl: values.ImageUrl,
-                clearImageUrl: !values.HasResolvedImageAsset && command.ClearImageUrl,
-                imageAssetId: values.ImageAssetId,
-                clearImageAssetId: command.ClearImageAssetId);
+            product.UpdateMediaChanges(new ProductMediaChanges(
+                FieldChanges.FromOptionalText(values.ImageUrl, !values.HasResolvedImageAsset && command.ClearImageUrl),
+                FieldChanges.FromOptionalValue(values.ImageAssetId, command.ClearImageAssetId)));
         }
 
         if (values.Visibility.HasValue) {

@@ -196,7 +196,7 @@
                             (add)="addMealAsync($event)"
                             (aiMealCreateRequested)="onAiMealCreateRequested($event)"
                             (open)="openMeal($event)"
-                            (favoriteToggle)="facade.toggleMealFavorite($event.id)"
+                            (favoriteToggle)="onMealFavoriteToggle($event.id)"
                         />
 
                         <ng-template #fastingBlock>

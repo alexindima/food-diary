@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../shared/models/product.data';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { ProductListDialogContentComponent } from './product-list-dialog-content';
 
 const PRODUCT_CALORIES = 120;
@@ -154,7 +155,7 @@ function getText(fixture: ComponentFixture<ProductListDialogContentComponent>): 
 
 function createProduct(overrides: Partial<Product> = {}): Product {
     return {
-        id: 'product-1',
+        id: entityId<'product'>('product-1'),
         name: 'Apple',
         barcode: null,
         brand: 'Garden',

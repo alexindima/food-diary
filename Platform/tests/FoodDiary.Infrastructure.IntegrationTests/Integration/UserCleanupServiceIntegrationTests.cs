@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Application.Abstractions.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Infrastructure;
@@ -456,8 +457,8 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
             .Select(static request => request.ObjectKey)
             .Distinct(StringComparer.Ordinal)];
 
-        public Task EnqueueAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken = default) {
-            _requests.Add((objectKey, isConfirmed));
+        public Task EnqueueAsync(ObjectStorageKey key, bool isConfirmed, CancellationToken cancellationToken = default) {
+            _requests.Add((key.Value, isConfirmed));
             return Task.CompletedTask;
         }
     }

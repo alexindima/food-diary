@@ -6,13 +6,14 @@ import { type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminLessonEditDialogComponent } from '../dialogs/admin-lesson-edit-dialog';
 import { AdminLessonsFacade } from '../lib/admin-lessons.facade';
 import type { AdminLesson } from '../models/admin-lesson.data';
 import { AdminLessonsComponent } from './admin-lessons';
 
 const LESSON: AdminLesson = {
-    id: 'qa-lesson',
+    id: adminId<'lesson'>('qa-lesson'),
     title: 'QA lesson',
     content: '<p>QA content</p>',
     summary: null,
@@ -22,7 +23,7 @@ const LESSON: AdminLesson = {
     estimatedReadMinutes: 3,
     sortOrder: 0,
     isPublished: false,
-    createdOnUtc: '2026-10-06T00:00:00Z',
+    createdOnUtc: adminUtcInstant('2026-10-06T00:00:00Z'),
     modifiedOnUtc: null,
 };
 

@@ -3,17 +3,19 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { CycleResponse } from '../../../../shared/models/cycle.data';
+import { calendarDate } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { CycleCurrentCardComponent } from './cycle-current-card';
 
 const CYCLE: CycleResponse = {
-    id: 'cycle-1',
-    userId: 'user-1',
+    id: entityId<'cycle-profile'>('cycle-1'),
+    userId: entityId<'user'>('user-1'),
     mode: 0,
     goal: 0,
     reproductiveState: 0,
     hideFromDashboard: false,
     confidence: 1,
-    trackingStartDate: '2026-04-01T00:00:00.000Z',
+    trackingStartDate: calendarDate('2026-04-01T00:00:00.000Z'),
     averageCycleLength: 28,
     averagePeriodLength: 5,
     lutealLength: 14,

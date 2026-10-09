@@ -19,6 +19,8 @@ import type {
     UpsertCycleDayPayload,
     UpsertCycleFactorPayload,
 } from '../../../shared/models/cycle.data';
+import type { CalendarDate } from '../../../shared/models/semantics/date-value';
+import type { CycleProfileId, MenstrualEpisodeId } from '../../../shared/models/semantics/entity-id';
 
 @Service()
 export class CyclesService {
@@ -32,7 +34,7 @@ export class CyclesService {
         );
     }
 
-    public getNutritionSummary(dateFrom: string, dateTo: string): Observable<CycleNutritionSummary | null> {
+    public getNutritionSummary(dateFrom: CalendarDate, dateTo: CalendarDate): Observable<CycleNutritionSummary | null> {
         return this.sdk.client.getCyclesCurrentNutritionSummary({ version: this.sdk.version, dateFrom, dateTo }).pipe(
             map(value => sdkOptional(value, cycleNutritionFromSdk)),
             catchError((error: unknown) => fallbackApiError('Cycle nutrition summary fetch error', error, null)),
@@ -46,7 +48,7 @@ export class CyclesService {
         );
     }
 
-    public updateSettings(cycleProfileId: string, payload: UpdateCycleSettingsPayload): Observable<CycleResponse> {
+    public updateSettings(cycleProfileId: CycleProfileId, payload: UpdateCycleSettingsPayload): Observable<CycleResponse> {
         return this.sdk.client
             .putCyclesByCycleProfileIdSettings({ version: this.sdk.version, cycleProfileId, updateCycleSettingsHttpRequest: payload })
             .pipe(
@@ -55,7 +57,7 @@ export class CyclesService {
             );
     }
 
-    public updateConsent(cycleProfileId: string, purpose: number, payload: UpdateCycleConsentPayload): Observable<CycleResponse> {
+    public updateConsent(cycleProfileId: CycleProfileId, purpose: number, payload: UpdateCycleConsentPayload): Observable<CycleResponse> {
         return this.sdk.client
             .putCyclesByCycleProfileIdConsentsByPurpose({
                 version: this.sdk.version,
@@ -69,13 +71,13 @@ export class CyclesService {
             );
     }
 
-    public deleteCycle(cycleProfileId: string): Observable<void> {
+    public deleteCycle(cycleProfileId: CycleProfileId): Observable<void> {
         return this.sdk.client
             .deleteCyclesByCycleProfileId({ version: this.sdk.version, cycleProfileId })
             .pipe(catchError((error: unknown) => rethrowApiError('Cycle delete error', error)));
     }
 
-    public upsertDay(cycleProfileId: string, payload: UpsertCycleDayPayload): Observable<CycleLogDay> {
+    public upsertDay(cycleProfileId: CycleProfileId, payload: UpsertCycleDayPayload): Observable<CycleLogDay> {
         return this.sdk.client
             .putCyclesByCycleProfileIdDays({
                 version: this.sdk.version,
@@ -88,13 +90,13 @@ export class CyclesService {
             );
     }
 
-    public clearDay(cycleProfileId: string, date: string): Observable<void> {
+    public clearDay(cycleProfileId: CycleProfileId, date: CalendarDate): Observable<void> {
         return this.sdk.client
             .deleteCyclesByCycleProfileIdDays({ version: this.sdk.version, cycleProfileId, date })
             .pipe(catchError((error: unknown) => rethrowApiError('Cycle day clear error', error)));
     }
 
-    public confirmPeriodStart(cycleProfileId: string, date: string): Observable<CycleResponse> {
+    public confirmPeriodStart(cycleProfileId: CycleProfileId, date: CalendarDate): Observable<CycleResponse> {
         return this.sdk.client
             .putCyclesByCycleProfileIdPeriodStart({ version: this.sdk.version, cycleProfileId, confirmPeriodStartHttpRequest: { date } })
             .pipe(
@@ -104,8 +106,8 @@ export class CyclesService {
     }
 
     public updateMenstrualEpisode(
-        cycleProfileId: string,
-        menstrualEpisodeId: string,
+        cycleProfileId: CycleProfileId,
+        menstrualEpisodeId: MenstrualEpisodeId,
         payload: UpdateMenstrualEpisodePayload,
     ): Observable<CycleResponse> {
         return this.sdk.client
@@ -121,7 +123,7 @@ export class CyclesService {
             );
     }
 
-    public deleteMenstrualEpisode(cycleProfileId: string, menstrualEpisodeId: string): Observable<CycleResponse> {
+    public deleteMenstrualEpisode(cycleProfileId: CycleProfileId, menstrualEpisodeId: MenstrualEpisodeId): Observable<CycleResponse> {
         return this.sdk.client
             .deleteCyclesByCycleProfileIdMenstrualEpisodesByMenstrualEpisodeId({
                 version: this.sdk.version,
@@ -134,7 +136,7 @@ export class CyclesService {
             );
     }
 
-    public upsertFactor(cycleProfileId: string, payload: UpsertCycleFactorPayload): Observable<CycleResponse> {
+    public upsertFactor(cycleProfileId: CycleProfileId, payload: UpsertCycleFactorPayload): Observable<CycleResponse> {
         return this.sdk.client
             .putCyclesByCycleProfileIdFactors({ version: this.sdk.version, cycleProfileId, upsertCycleFactorHttpRequest: payload })
             .pipe(

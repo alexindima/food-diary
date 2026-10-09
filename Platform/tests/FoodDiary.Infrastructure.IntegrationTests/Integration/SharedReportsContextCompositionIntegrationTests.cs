@@ -1,3 +1,4 @@
+using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
@@ -31,7 +32,7 @@ public sealed class SharedReportsContextCompositionIntegrationTests(PostgresData
         await using var central = new FoodDiaryDbContext(new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseNpgsql("Host=localhost;Database=model_only").Options);
         var reader = new ContentReportReadService(central);
-        Assert.False(await reader.IsReportableAsync(UserId.New(), (ReportTargetType)int.MaxValue, Guid.NewGuid()));
+        Assert.False(await reader.IsReportableAsync(UserId.New(), ReportTarget.FromFields((ReportTargetType)int.MaxValue, Guid.NewGuid())));
     }
 
     [RequiresDockerFact]
@@ -86,8 +87,8 @@ public sealed class SharedReportsContextCompositionIntegrationTests(PostgresData
         IContentReportWriteRepository firstReports = firstProvider.GetRequiredService<IContentReportWriteRepository>();
         IContentReportWriteRepository secondReports = secondProvider.GetRequiredService<IContentReportWriteRepository>();
         // Both requests pass the duplicate check before either transaction saves.
-        Assert.False(await firstReports.HasUserReportedAsync(reporter.Id, targetType, targetId));
-        Assert.False(await secondReports.HasUserReportedAsync(reporter.Id, targetType, targetId));
+        Assert.False(await firstReports.HasUserReportedAsync(reporter.Id, ReportTarget.FromFields(targetType, targetId)));
+        Assert.False(await secondReports.HasUserReportedAsync(reporter.Id, ReportTarget.FromFields(targetType, targetId)));
         await firstReports.AddAsync(ContentReport.Create(reporter.Id, targetType, targetId, "Spam"));
         await secondReports.AddAsync(ContentReport.Create(reporter.Id, targetType, targetId, "Spam"));
         var firstSideEffect = User.Create("report-first@example.com", "hash");

@@ -18,6 +18,7 @@ import { NUTRIENT_ROUNDING_FACTOR } from '../../../shared/lib/nutrition.constant
 import { scaleNutrientInput } from '../../../shared/lib/nutrition-form.utils';
 import { UserFacade } from '../../../shared/lib/user.facade';
 import type { Recipe, RecipeDto } from '../../../shared/models/recipe.data';
+import type { RecipeId } from '../../../shared/models/semantics/entity-id';
 import { RecipeService } from '../api/recipe.service';
 import type { IngredientFormValues, NutritionScaleMode, StepFormValues } from '../components/manage/recipe-manage-lib/recipe-manage.types';
 import {
@@ -295,7 +296,7 @@ export class RecipeManageFacade {
             });
     }
 
-    public updateRecipe(id: string, recipeData: RecipeDto): void {
+    public updateRecipe(id: RecipeId, recipeData: RecipeDto): void {
         if (this.isSubmitting()) {
             return;
         }

@@ -1,6 +1,6 @@
 using FoodDiary.Modules.ContentReports.Domain.Entities;
 using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
@@ -13,8 +13,7 @@ public interface IContentReportWriteRepository {
 
     Task<bool> HasUserReportedAsync(
         UserId userId,
-        ReportTargetType targetType,
-        Guid targetId,
+        ReportTarget target,
         CancellationToken cancellationToken = default);
 
     Task<ContentReport> AddAsync(ContentReport report, CancellationToken cancellationToken = default);

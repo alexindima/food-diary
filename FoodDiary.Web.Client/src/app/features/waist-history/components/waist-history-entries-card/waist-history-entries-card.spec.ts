@@ -3,6 +3,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
+import { calendarDate } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { WaistEntry } from '../../../../shared/models/waist-entry.data';
 import { WaistHistoryEntriesCardComponent } from './waist-history-entries-card';
 
@@ -73,9 +75,9 @@ function getText(fixture: ComponentFixture<WaistHistoryEntriesCardComponent>): s
 
 function createEntry(): WaistEntry {
     return {
-        id: 'entry-1',
-        userId: 'user-1',
-        date: '2026-05-15T00:00:00Z',
+        id: entityId<'waist-entry'>('entry-1'),
+        userId: entityId<'user'>('user-1'),
+        date: calendarDate('2026-05-15T00:00:00Z'),
         circumferenceCm: ENTRY_CIRCUMFERENCE,
     };
 }
@@ -89,7 +91,7 @@ describe('Recent entries visibility and pagination', () => {
     ])('shows $visible of $count records', ({ count, visible, more }) => {
         const entries = Array.from({ length: count }, (_, index) => ({
             ...createEntry(),
-            id: `entry-${index}`,
+            id: entityId<'waist-entry'>(`entry-${index}`),
             circumferenceCm: index + 1,
         }));
         const { component, fixture } = setupComponent(entries);
@@ -117,8 +119,8 @@ describe('Recent entries visibility and pagination', () => {
 describe('Waist measurement change semantics', () => {
     it('distinguishes an unchanged measurement from missing comparison and makes the hint keyboard reachable', () => {
         const { fixture } = setupComponent([
-            { ...createEntry(), id: 'new' },
-            { ...createEntry(), id: 'old', date: '2026-05-14' },
+            { ...createEntry(), id: entityId<'waist-entry'>('new') },
+            { ...createEntry(), id: entityId<'waist-entry'>('old'), date: calendarDate('2026-05-14') },
         ]);
         const root = fixture.nativeElement as HTMLElement;
         const changes = root.querySelectorAll<HTMLElement>('.waist-history-page__entry-change');

@@ -8,6 +8,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import type { FastingInsights, FastingProtocol, FastingSession, FastingStats } from '../../../../shared/models/fasting.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { FastingCheckInChartDialogData } from '../../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog';
 import { FastingSessionManagementDialogComponent } from '../../components/fasting-session-management-dialog/fasting-session-management-dialog';
 import { FastingFacade } from '../../lib/fasting.facade';
@@ -223,8 +225,8 @@ describe('FastingPageComponent history labels', () => {
         const early = {
             ...createSession(),
             status: 'Completed' as const,
-            startedAtUtc: '2026-10-05T08:00:00Z',
-            endedAtUtc: '2026-10-05T09:00:00Z',
+            startedAtUtc: utcInstant('2026-10-05T08:00:00Z'),
+            endedAtUtc: utcInstant('2026-10-05T09:00:00Z'),
         };
         expect(component['getHistoryBadgeKey'](early.status, early)).toBe('FASTING.BADGE_ENDED_EARLY');
         expect(component['getHistoryAccentColor'](early)).toBe('var(--fd-color-orange-500)');
@@ -306,7 +308,7 @@ describe('FastingPageComponent check-in history', () => {
     it('does not allow chart for single legacy summary check-in fallback', () => {
         const session = {
             ...createHistorySession('session-5', 0),
-            checkInAtUtc: '2026-04-12T10:00:00Z',
+            checkInAtUtc: utcInstant('2026-04-12T10:00:00Z'),
             hungerLevel: CHECK_IN_HUNGER_LEVEL,
             energyLevel: CHECK_IN_ENERGY_LEVEL,
             moodLevel: CHECK_IN_ENERGY_LEVEL,
@@ -555,8 +557,8 @@ function createFacadeState(): Omit<FastingFacadeMock, keyof ReturnType<typeof cr
 
 function createSession(): FastingSession {
     return {
-        id: 'session-1',
-        startedAtUtc: '2026-04-12T06:00:00Z',
+        id: entityId<'fasting-session'>('session-1'),
+        startedAtUtc: utcInstant('2026-04-12T06:00:00Z'),
         endedAtUtc: null,
         initialPlannedDurationHours: DEFAULT_SESSION_HOURS,
         addedDurationHours: 0,
@@ -596,7 +598,7 @@ function createHistorySession(id: string, checkInCount: number): FastingSession 
 
     return {
         ...createSession(),
-        id,
+        id: entityId<'fasting-session'>(id),
         checkIns,
         ...createLatestCheckInSessionFields(checkIns[0]),
     };
@@ -615,7 +617,7 @@ function createLatestCheckInSessionFields(checkIn: FastingSession['checkIns'][nu
     }
 
     return {
-        checkInAtUtc: checkIn.checkedInAtUtc,
+        checkInAtUtc: utcInstant(checkIn.checkedInAtUtc),
         hungerLevel: checkIn.hungerLevel,
         energyLevel: checkIn.energyLevel,
         moodLevel: checkIn.moodLevel,

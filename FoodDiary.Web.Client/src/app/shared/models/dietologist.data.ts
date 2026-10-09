@@ -1,3 +1,13 @@
+import type { CalendarDate, UtcInstant } from './semantics/date-value';
+import type {
+    AttentionSignalId,
+    ClientTaskId,
+    DietologistInvitationId,
+    RecommendationCommentId,
+    RecommendationId,
+    RecommendationTemplateId,
+    UserId,
+} from './semantics/entity-id';
 export type DietologistPermissions = {
     shareProfile: boolean;
     shareMeals: boolean;
@@ -10,21 +20,21 @@ export type DietologistPermissions = {
 };
 
 export type ClientSummary = {
-    userId: string;
+    userId: UserId;
     email: string | null;
     firstName: string | null;
     lastName: string | null;
     profileImage: string | null;
-    birthDate: string | null;
+    birthDate: CalendarDate | null;
     gender: string | null;
     heightCm: number | null;
     activityLevel: string | null;
     permissions: DietologistPermissions;
-    acceptedAtUtc: string;
+    acceptedAtUtc: UtcInstant;
 };
 
 export type DietologistClientGoals = {
-    id: string;
+    id: UserId;
     email: string | null;
     dailyCalorieTarget?: number | null;
     proteinTarget?: number | null;
@@ -39,14 +49,14 @@ export type DietologistClientGoals = {
 };
 
 export type DietologistRecommendation = {
-    id: string;
-    dietologistUserId: string;
+    id: RecommendationId;
+    dietologistUserId: UserId;
     dietologistFirstName: string | null;
     dietologistLastName: string | null;
     text: string;
     isRead: boolean;
-    createdAtUtc: string;
-    readAtUtc: string | null;
+    createdAtUtc: UtcInstant;
+    readAtUtc: UtcInstant | null;
 };
 
 export type CreateRecommendationRequest = {
@@ -54,14 +64,14 @@ export type CreateRecommendationRequest = {
 };
 
 export type RecommendationComment = {
-    id: string;
-    recommendationId: string;
-    authorUserId: string;
+    id: RecommendationCommentId;
+    recommendationId: RecommendationId;
+    authorUserId: UserId;
     authorFirstName: string | null;
     authorLastName: string | null;
     authorEmail: string | null;
     text: string;
-    createdAtUtc: string;
+    createdAtUtc: UtcInstant;
 };
 
 export type CreateRecommendationCommentRequest = {
@@ -71,16 +81,16 @@ export type CreateRecommendationCommentRequest = {
 export type ClientTaskStatus = 'Open' | 'Completed' | 'Cancelled';
 
 export type ClientTask = {
-    id: string;
-    dietologistUserId: string;
-    clientUserId: string;
+    id: ClientTaskId;
+    dietologistUserId: UserId;
+    clientUserId: UserId;
     title: string;
     details: string | null;
-    dueAtUtc: string | null;
+    dueAtUtc: UtcInstant | null;
     status: ClientTaskStatus;
     isOverdue: boolean;
-    createdAtUtc: string;
-    statusChangedAtUtc: string | null;
+    createdAtUtc: UtcInstant;
+    statusChangedAtUtc: UtcInstant | null;
 };
 
 export type CreateClientTaskRequest = {
@@ -90,12 +100,12 @@ export type CreateClientTaskRequest = {
 };
 
 export type RecommendationTemplate = {
-    id: string;
+    id: RecommendationTemplateId;
     name: string;
     text: string;
     isArchived: boolean;
-    createdAtUtc: string;
-    modifiedAtUtc: string | null;
+    createdAtUtc: UtcInstant;
+    modifiedAtUtc: UtcInstant | null;
 };
 
 export type RecommendationTemplateRequest = {
@@ -104,9 +114,9 @@ export type RecommendationTemplateRequest = {
 };
 
 export type BulkRecommendationRecipientResult = {
-    clientUserId: string;
+    clientUserId: UserId;
     succeeded: boolean;
-    recommendationId: string | null;
+    recommendationId: RecommendationId | null;
     wasAlreadyProcessed: boolean;
     errorCode: string | null;
 };
@@ -117,13 +127,13 @@ export type BulkRecommendationResult = {
 };
 
 export type AttentionSignal = {
-    id: string;
-    clientUserId: string;
+    id: AttentionSignalId;
+    clientUserId: UserId;
     clientDisplayName: string | null;
     type: 'DiaryInactivity' | 'CalorieTargetDeviation' | 'MaterialWeightChange';
     severity: 'High' | 'Medium' | 'Low';
     reason: 'NoRecentDiaryEntries' | 'InsufficientDiaryData' | 'SustainedCalorieTargetDeviation' | 'MaterialWeightChange';
-    detectedAtUtc: string;
+    detectedAtUtc: UtcInstant;
     snoozedUntilUtc: string | null;
 };
 
@@ -136,27 +146,27 @@ export type AttentionSignalSettings = {
 };
 
 export type DietologistRelationship = {
-    invitationId: string;
+    invitationId: DietologistInvitationId;
     status: string;
     email: string | null;
     firstName: string | null;
     lastName: string | null;
-    dietologistUserId: string | null;
+    dietologistUserId: UserId | null;
     permissions: DietologistPermissions;
-    createdAtUtc: string;
-    expiresAtUtc: string;
-    acceptedAtUtc: string | null;
+    createdAtUtc: UtcInstant;
+    expiresAtUtc: UtcInstant;
+    acceptedAtUtc: UtcInstant | null;
 };
 
 export type DietologistInvitationForCurrentUser = {
-    invitationId: string;
-    clientUserId: string;
+    invitationId: DietologistInvitationId;
+    clientUserId: UserId;
     clientEmail: string | null;
     clientFirstName: string | null;
     clientLastName: string | null;
     status: string;
-    createdAtUtc: string;
-    expiresAtUtc: string;
+    createdAtUtc: UtcInstant;
+    expiresAtUtc: UtcInstant;
 };
 
 export type InviteDietologistRequest = {

@@ -8,6 +8,8 @@ import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { type FavoriteRecipe, type Recipe, type RecipeFilters, RecipeVisibility } from '../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
 import { createRecipeListQuery } from '../../lib/list/recipe-list-query';
@@ -269,12 +271,12 @@ async function waitForAsync(predicate: () => boolean): Promise<void> {
 
 function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
     return {
-        id: 'recipe-1',
+        id: entityId<'recipe'>('recipe-1'),
         name: 'Recipe',
         servings: 1,
         visibility: RecipeVisibility.Public,
         usageCount: 0,
-        createdAt: '2026-01-01T00:00:00Z',
+        createdAt: utcInstant('2026-01-01T00:00:00Z'),
         isOwnedByCurrentUser: true,
         isNutritionAutoCalculated: true,
         imageUrl: null,
@@ -285,10 +287,10 @@ function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
 
 function createFavoriteRecipe(): FavoriteRecipe {
     return {
-        id: 'favorite-1',
-        recipeId: 'recipe-1',
+        id: entityId<'favorite-recipe'>('favorite-1'),
+        recipeId: entityId<'recipe'>('recipe-1'),
         name: 'Recipe',
-        createdAtUtc: '2026-01-01T00:00:00Z',
+        createdAtUtc: utcInstant('2026-01-01T00:00:00Z'),
         recipeName: 'Recipe',
         servings: 1,
         totalTimeMinutes: null,

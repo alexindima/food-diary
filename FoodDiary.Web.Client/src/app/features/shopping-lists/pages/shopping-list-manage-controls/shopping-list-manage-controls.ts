@@ -122,7 +122,7 @@ export class ShoppingListManageControlsComponent {
     }
 
     private recordUse(id: string): void {
-        const slots = this.quickLists().map(list => list.id);
+        const slots: string[] = this.quickLists().map(list => list.id);
         if (!slots.includes(id)) {
             const oldest = [...this.recency()].reverse().find(entry => slots.includes(entry));
             const unused = [...slots].reverse().find(entry => !this.recency().includes(entry));

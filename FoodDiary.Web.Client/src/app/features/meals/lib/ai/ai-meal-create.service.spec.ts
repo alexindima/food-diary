@@ -3,6 +3,8 @@ import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { Meal } from '../../../../shared/models/meal.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { MealService } from '../../api/meal.service';
 import { AiMealCreateService } from './ai-meal-create.service';
 
@@ -56,8 +58,8 @@ function setupService(): {
 
 function createMeal(): Meal {
     return {
-        id: 'meal-1',
-        date: '2026-05-02T23:50:00.000Z',
+        id: entityId<'meal'>('meal-1'),
+        date: utcInstant('2026-05-02T23:50:00.000Z'),
         mealType: 'SNACK',
         comment: null,
         imageUrl: null,

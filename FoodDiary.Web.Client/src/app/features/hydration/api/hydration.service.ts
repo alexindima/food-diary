@@ -9,6 +9,8 @@ import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
 import { requireSdkFields } from '../../../shared/api/sdk/sdk-response';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { CreateHydrationEntryPayload, HydrationDaily, HydrationEntry } from '../../../shared/models/hydration.data';
+import { calendarDate, utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 
 @Service()
 export class HydrationService {
@@ -18,10 +20,13 @@ export class HydrationService {
     public getDaily(dateUtc: Date): Observable<HydrationDaily> {
         const date = this.toCalendarDate(dateUtc);
         return this.sdk.client.getHydrationDaily({ version: this.sdk.version, dateUtc: date }).pipe(
-            map(response => ({ ...requireSdkFields(response, ['dateUtc', 'totalMl']), goalMl: response.goalMl ?? null })),
+            map(response => {
+                const value = requireSdkFields(response, ['dateUtc', 'totalMl']);
+                return { ...value, dateUtc: calendarDate(value.dateUtc), goalMl: response.goalMl ?? null };
+            }),
             catchError((error: unknown) =>
                 fallbackApiError('Hydration daily fetch error', error, {
-                    dateUtc: date,
+                    dateUtc: calendarDate(date),
                     totalMl: 0,
                     goalMl: null,
                 }),
@@ -59,5 +64,6 @@ export class HydrationService {
 }
 
 function hydrationEntryFromSdk(response: HydrationEntryHttpResponse): HydrationEntry {
-    return requireSdkFields(response, ['id', 'timestampUtc', 'amountMl']);
+    const value = requireSdkFields(response, ['id', 'timestampUtc', 'amountMl']);
+    return { ...value, id: entityId<'hydration-entry'>(value.id), timestampUtc: utcInstant(value.timestampUtc) };
 }

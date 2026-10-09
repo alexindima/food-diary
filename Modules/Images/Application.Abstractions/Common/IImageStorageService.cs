@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Images.Application.Abstractions.Common;
@@ -10,13 +11,13 @@ public interface IImageStorageService {
         long fileSizeBytes,
         CancellationToken cancellationToken);
 
-    Task DeleteAsync(string objectKey, CancellationToken cancellationToken);
+    Task DeleteAsync(ObjectStorageKey key, CancellationToken cancellationToken);
 
-    Task DeleteAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken) =>
-        DeleteAsync(objectKey, cancellationToken);
+    Task DeleteAsync(ObjectStorageKey key, bool isConfirmed, CancellationToken cancellationToken) =>
+        DeleteAsync(key, cancellationToken);
 
-    Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(string objectKey, CancellationToken cancellationToken);
+    Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(ObjectStorageKey key, CancellationToken cancellationToken);
 
-    Task<ImageObjectValidationResult> ConfirmUploadedObjectAsync(string objectKey, CancellationToken cancellationToken) =>
-        ValidateUploadedObjectAsync(objectKey, cancellationToken);
+    Task<ImageObjectValidationResult> ConfirmUploadedObjectAsync(ObjectStorageKey key, CancellationToken cancellationToken) =>
+        ValidateUploadedObjectAsync(key, cancellationToken);
 }

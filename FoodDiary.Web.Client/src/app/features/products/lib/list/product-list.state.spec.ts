@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import { MeasurementUnit, ProductType } from '../../../../shared/models/product.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { buildFavoriteProductSnapshot, getProductListActiveFilterCount, resolveProductListFilterChanges } from './product-list.state';
 
 const CALORIES_FROM = 100;
@@ -67,8 +69,8 @@ describe('product list state', () => {
 
 function createFavorite(baseUnit: string): Parameters<typeof buildFavoriteProductSnapshot>[0] {
     return {
-        id: 'favorite-1',
-        productId: 'product-1',
+        id: entityId<'favorite-product'>('favorite-1'),
+        productId: entityId<'product'>('product-1'),
         productName: 'Fallback name',
         name: '   ',
         barcode: null,
@@ -84,7 +86,7 @@ function createFavorite(baseUnit: string): Parameters<typeof buildFavoriteProduc
         carbsPerBase: 4,
         fiberPerBase: 5,
         alcoholPerBase: 0,
-        createdAtUtc: '2026-04-12T10:00:00Z',
+        createdAtUtc: utcInstant('2026-04-12T10:00:00Z'),
         isOwnedByCurrentUser: true,
         qualityScore: 0,
         qualityGrade: 'red',

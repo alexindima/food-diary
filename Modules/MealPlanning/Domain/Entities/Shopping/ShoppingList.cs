@@ -4,6 +4,7 @@ using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.MealPlanning.Domain.Events;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 
@@ -110,6 +111,13 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId> {
             item.CheckedOnUtc,
             item.SortOrder));
         return item;
+    }
+
+    public ShoppingListItem AddItemWithQuantity(
+        string name, ProductId? productId, ShoppingQuantity quantity, string? category, bool isChecked, int sortOrder,
+        string? aisle = null, string? note = null, DateTime? checkedOnUtc = null, ShoppingListItemId? id = null) {
+        ArgumentNullException.ThrowIfNull(quantity);
+        return AddItem(name, productId, quantity.Amount, quantity.Unit, category, isChecked, sortOrder, aisle, note, checkedOnUtc, id);
     }
 
     private static string NormalizeRequiredName(string value) {

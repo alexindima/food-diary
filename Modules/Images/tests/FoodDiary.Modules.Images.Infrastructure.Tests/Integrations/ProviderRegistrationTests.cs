@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Modules.Images.Infrastructure.Providers.Services;
 using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 using Amazon.S3;
@@ -16,7 +17,7 @@ public sealed class ProviderRegistrationTests {
         Assert.Same(services, services.AddImagesProvider(new ConfigurationBuilder().Build()));
         await using ServiceProvider provider = services.BuildServiceProvider();
         UnconfiguredImageStorageService storage = Assert.IsType<UnconfiguredImageStorageService>(provider.GetRequiredService<IImageStorageService>());
-        ImageObjectValidationResult result = await storage.ConfirmUploadedObjectAsync("key", CancellationToken.None);
+        ImageObjectValidationResult result = await storage.ConfirmUploadedObjectAsync(ObjectStorageKey.FromStoredValue("key"), CancellationToken.None);
         Assert.Multiple(
             () => Assert.False(result.IsValid),
             () => Assert.Same(storage, provider.GetRequiredService<IImageStorageService>()),

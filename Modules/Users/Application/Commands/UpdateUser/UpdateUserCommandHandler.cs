@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Application.Mappings;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
@@ -171,18 +172,23 @@ public sealed class UpdateUserCommandHandler(
     }
 
     private static void ApplyUpdates(User user, UpdateUserCommand command, UpdateUserValues values) {
+        FieldChange<DateTime> birthDateChange = FieldChanges.Unchanged<DateTime>();
+        if (command.BirthDate is { } birthDate) {
+            birthDateChange = FieldChanges.Set(birthDate);
+        } else if (command.BirthDateSpecified) {
+            birthDateChange = FieldChanges.Clear<DateTime>();
+        }
         if (command.TimeZoneId is not null) {
             user.SetTimeZone(command.TimeZoneId);
         }
-        user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
+        user.UpdatePersonalInfoChanges(new UserPersonalInfoChanges(
             Username: command.Username?.Trim(),
             FirstName: command.FirstName?.Trim(),
             LastName: command.LastName?.Trim(),
-            BirthDate: command.BirthDate,
+            BirthDate: birthDateChange,
             Gender: values.Gender,
             WeightKg: command.WeightKg is { } weight ? ProfileWeightKg.Create(weight) : null,
-            HeightCm: command.HeightCm is { } height ? ProfileHeightCm.Create(height) : null,
-            BirthDateSpecified: command.BirthDateSpecified));
+            HeightCm: command.HeightCm is { } height ? ProfileHeightCm.Create(height) : null));
         user.UpdateActivity(new UserActivityUpdate(
             ActivityLevel: values.ActivityLevel,
             StepGoal: command.StepGoal,

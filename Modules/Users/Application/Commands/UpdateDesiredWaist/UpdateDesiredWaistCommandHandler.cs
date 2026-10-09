@@ -5,6 +5,7 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 
 namespace FoodDiary.Modules.Users.Application.Commands.UpdateDesiredWaist;
 
@@ -48,9 +49,9 @@ public sealed class UpdateDesiredWaistCommandHandler(
         double? activeGoalStartWaist = activeGoal?.StartWaistCm;
         double currentWaist = trackedWaist ?? activeGoalStartWaist ?? command.DesiredWaistCm ?? 1;
         if (command.DesiredWaistCm.HasValue) {
-            currentUser.StartWaistGoal(command.DesiredWaistCm.Value, currentWaist, nowUtc);
+            currentUser.StartWaistGoalWithMeasurements(DesiredWaistCm.Create(command.DesiredWaistCm.Value), MeasuredWaistCm.FromGoalValue(currentWaist), nowUtc);
         } else {
-            currentUser.CancelWaistGoal(nowUtc, currentWaist);
+            currentUser.CancelWaistGoalWithMeasurement(nowUtc, activeGoal is null ? null : MeasuredWaistCm.FromGoalValue(currentWaist));
         }
         await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
 

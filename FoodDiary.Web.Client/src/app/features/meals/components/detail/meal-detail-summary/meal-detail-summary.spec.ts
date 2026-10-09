@@ -5,6 +5,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { Meal } from '../../../../../shared/models/meal.data';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { MealDetailItemPreviewComponent } from '../meal-detail-item-preview/meal-detail-item-preview';
 import { MEAL_DETAIL_DEFAULT_QUALITY_GRADE } from '../meal-detail-lib/meal-detail.config';
 import type { MealDetailItemPreview, MealMacroBlock, MealSatietyMeta } from '../meal-detail-lib/meal-detail.types';
@@ -135,8 +137,8 @@ async function setupComponentAsync(
 
 function createMeal(overrides: Partial<Meal> = {}): Meal {
     return {
-        id: 'meal-1',
-        date: '2026-05-14T12:00:00Z',
+        id: entityId<'meal'>('meal-1'),
+        date: utcInstant('2026-05-14T12:00:00Z'),
         mealType: 'LUNCH',
         comment: null,
         imageUrl: null,

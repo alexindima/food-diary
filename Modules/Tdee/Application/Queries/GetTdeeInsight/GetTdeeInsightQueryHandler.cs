@@ -82,25 +82,25 @@ public sealed class GetTdeeInsightQueryHandler(
         IReadOnlyList<ExerciseEntryModel> exercises = await sender.Send(new ReadExerciseEntriesQuery(userId, periodStart, today), cancellationToken)
             .ConfigureAwait(false);
 
-        double? bmr = profile.Bmr;
-        double? estimatedTdee = profile.EstimatedTdee;
+        double? bmr = profile.Bmr?.Value;
+        double? estimatedTdee = profile.EstimatedTdee?.Value;
 
         AdaptiveTdeeResult adaptiveResult = CalculateAdaptive(weights, dailyCaloriesResult.Value, exercises);
 
         double? effectiveTdee = adaptiveResult.HasData ? adaptiveResult.AdaptiveTdee : estimatedTdee;
         double? suggestedTarget = effectiveTdee.HasValue
-            ? TdeeCalculator.SuggestCalorieTarget(effectiveTdee.Value, profile.Weight, profile.DesiredWeight)
+            ? TdeeCalculator.SuggestCalorieTargetForProfile(EstimatedDailyEnergyKcal.FromOptional(effectiveTdee)!, profile.Weight, profile.DesiredWeight)
             : null;
 
-        string? hint = TdeeCalculator.GetGoalAdjustmentHint(
-            effectiveTdee, profile.DailyCalorieTarget, profile.Weight, profile.DesiredWeight);
+        string? hint = TdeeCalculator.GetGoalAdjustmentHintForProfile(
+            EstimatedDailyEnergyKcal.FromOptional(effectiveTdee), profile.DailyCalorieTarget, profile.Weight, profile.DesiredWeight);
 
         return Result.Success(new TdeeInsightModel(
             EstimatedTdee: estimatedTdee,
             AdaptiveTdee: adaptiveResult.AdaptiveTdee,
             Bmr: bmr,
             SuggestedCalorieTarget: suggestedTarget,
-            CurrentCalorieTarget: profile.DailyCalorieTarget,
+            CurrentCalorieTarget: profile.DailyCalorieTarget?.Value,
             WeightTrendPerWeek: adaptiveResult.WeightTrendPerWeek,
             Confidence: adaptiveResult.HasData ? adaptiveResult.Confidence : TdeeConfidence.None,
             DataDaysUsed: adaptiveResult.DataDaysUsed,
@@ -127,10 +127,10 @@ public sealed class GetTdeeInsightQueryHandler(
 
         UserTdeeProfileModel profile = profileResult.Value;
         return Result.Success(new TdeeUserProfile(
-            profile.Bmr,
-            profile.EstimatedTdee,
-            profile.WeightKg,
-            profile.DesiredWeightKg,
-            profile.DailyCalorieTarget));
+            BasalEnergyKcal.FromOptional(profile.Bmr),
+            EstimatedDailyEnergyKcal.FromOptional(profile.EstimatedTdee),
+            CalculationMeasuredWeight.FromOptionalStoredValue(profile.WeightKg),
+            CalculationDesiredWeight.FromOptionalStoredValue(profile.DesiredWeightKg),
+            DailyCalorieTargetKcal.FromOptional(profile.DailyCalorieTarget)));
     }
 }

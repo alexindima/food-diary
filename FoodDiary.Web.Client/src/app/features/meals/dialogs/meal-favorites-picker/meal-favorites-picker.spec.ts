@@ -6,6 +6,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { FavoriteMeal } from '../../../../shared/models/meal.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealFavoritesPickerComponent } from './meal-favorites-picker';
 
@@ -15,12 +17,12 @@ const LAST_PAGE = 3;
 const SINGLE_LAST_PAGE_TOTAL = 21;
 
 const favorite: FavoriteMeal = {
-    id: 'f1',
-    mealId: 'm1',
+    id: entityId<'favorite-meal'>('f1'),
+    mealId: entityId<'meal'>('m1'),
     name: null,
     itemNames: ['Rice', 'Chicken'],
-    createdAtUtc: '',
-    mealDate: '',
+    createdAtUtc: utcInstant(''),
+    mealDate: utcInstant(''),
     mealType: null,
     totalCalories: 500,
     totalProteins: 30,
@@ -154,7 +156,7 @@ function registerPickerTests(): void {
 function registerUndoTests(): void {
     it('restores any removed row independently and preserves every original slot', () => {
         const component = TestBed.createComponent(MealFavoritesPickerComponent).componentInstance;
-        const second = { ...favorite, id: 'f2', mealId: 'm2', name: 'Saved dinner' };
+        const second = { ...favorite, id: entityId<'favorite-meal'>('f2'), mealId: entityId<'meal'>('m2'), name: 'Saved dinner' };
         component['facade'].items.set([favorite, second]);
         component['facade'].total.set(2);
         component['remove'](favorite);
@@ -215,7 +217,7 @@ function registerUndoTests(): void {
 
 function registerUndoRenderingTests(): void {
     it('renders several inline undo rows and restores the clicked row in place', async () => {
-        const second = { ...favorite, id: 'f2', name: 'Dinner' };
+        const second = { ...favorite, id: entityId<'favorite-meal'>('f2'), name: 'Dinner' };
         api.getPage.mockReturnValue(of({ data: [favorite, second], totalItems: 2 }));
         const fixture = TestBed.createComponent(MealFavoritesPickerComponent);
         fixture.detectChanges();

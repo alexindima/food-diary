@@ -9,6 +9,7 @@ using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 
 namespace FoodDiary.Modules.Users.Application.Commands.UpdateGoals;
 
@@ -63,7 +64,7 @@ public sealed class UpdateGoalsCommandHandler(
                     .ConfigureAwait(false);
                 double startWeight = trackedWeight ?? currentUser.WeightKg ?? command.DesiredWeightKg.Value;
                 DateTime startedAtUtc = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
-                currentUser.StartWeightGoal(command.DesiredWeightKg.Value, startWeight, startedAtUtc);
+                currentUser.StartWeightGoalWithMeasurements(DesiredWeightKg.Create(command.DesiredWeightKg.Value), MeasuredWeightKg.FromGoalValue(startWeight), startedAtUtc);
             }
 
             if (command.DesiredWaistCm.HasValue && command.DesiredWaistCm != currentUser.DesiredWaistCm) {
@@ -72,7 +73,7 @@ public sealed class UpdateGoalsCommandHandler(
                     .ConfigureAwait(false);
                 double startWaist = trackedWaist ?? command.DesiredWaistCm.Value;
                 DateTime startedAtUtc = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
-                currentUser.StartWaistGoal(command.DesiredWaistCm.Value, startWaist, startedAtUtc);
+                currentUser.StartWaistGoalWithMeasurements(DesiredWaistCm.Create(command.DesiredWaistCm.Value), MeasuredWaistCm.FromGoalValue(startWaist), startedAtUtc);
             }
         } catch (ArgumentOutOfRangeException ex) {
             return Result.Failure<GoalsModel>(

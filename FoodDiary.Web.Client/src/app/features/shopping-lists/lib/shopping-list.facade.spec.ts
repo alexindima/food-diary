@@ -6,6 +6,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { MeasurementUnit } from '../../../shared/models/product.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { ShoppingList, ShoppingListOverview, ShoppingListSummary } from '../../../shared/models/shopping-list.data';
 import { ShoppingListService } from '../api/shopping-list.service';
 import { ShoppingListFacade } from './shopping-list.facade';
@@ -38,8 +40,8 @@ describe('ShoppingListFacade navigation and consolidation', () => {
         shoppingListService.getOverview.mockReturnValueOnce(
             of(
                 makeOverview([
-                    { id: 'list-1', name: 'Main', createdAt: '', itemsCount: 0, remainingCount: 0 },
-                    { id: 'list-2', name: 'Other', createdAt: '', itemsCount: 1, remainingCount: 0 },
+                    { id: entityId<'shopping-list'>('list-1'), name: 'Main', createdAt: utcInstant(''), itemsCount: 0, remainingCount: 0 },
+                    { id: entityId<'shopping-list'>('list-2'), name: 'Other', createdAt: utcInstant(''), itemsCount: 1, remainingCount: 0 },
                 ]),
             ),
         );
@@ -169,7 +171,7 @@ describe('ShoppingListFacade saves before leaving', () => {
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
         facade.toggleItemChecked(facade.items()[0].id, true);
         const navigation = facade.saveBeforeLeaveAsync();
-        first.next({ ...list, items: [{ ...facade.items()[0], id: 'saved-item', isChecked: false }] });
+        first.next({ ...list, items: [{ ...facade.items()[0], id: entityId<'shopping-list-item'>('saved-item'), isChecked: false }] });
         await waitForAsyncTasksAsync();
         expect(shoppingListService.update).toHaveBeenCalledTimes(2);
         second.next({ ...list, items: facade.items() });
@@ -187,7 +189,7 @@ describe('ShoppingListFacade item persistence and errors', () => {
         const draft = facade.items()[0];
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
         facade.toggleItemChecked(draft.id, true);
-        response.next({ ...list, items: [{ ...draft, id: 'saved-item' }] });
+        response.next({ ...list, items: [{ ...draft, id: entityId<'shopping-list-item'>('saved-item') }] });
         expect(facade.items()[0]).toMatchObject({ id: 'saved-item', isChecked: true });
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
         expect(shoppingListService.update).toHaveBeenLastCalledWith(
@@ -258,15 +260,15 @@ describe('ShoppingListFacade persistence operations', () => {
         shoppingListService.getOverview.mockReturnValueOnce(
             of(
                 makeOverview([
-                    { id: 'list-1', name: 'Main list', createdAt: '', itemsCount: 0 },
-                    { id: 'list-2', name: 'Weekend', createdAt: '', itemsCount: 0 },
+                    { id: entityId<'shopping-list'>('list-1'), name: 'Main list', createdAt: utcInstant(''), itemsCount: 0 },
+                    { id: entityId<'shopping-list'>('list-2'), name: 'Weekend', createdAt: utcInstant(''), itemsCount: 0 },
                 ]),
             ),
         );
         facade.initialize();
         await waitForAsyncTasksAsync();
 
-        facade.deleteListById('list-2');
+        facade.deleteListById(entityId<'shopping-list'>('list-2'));
 
         expect(shoppingListService.deleteById).toHaveBeenCalledWith('list-2');
         expect(facade.list()).toEqual(list);
@@ -321,7 +323,7 @@ describe('ShoppingListFacade autosave', () => {
         facade.initialize();
         await waitForAsyncTasksAsync();
 
-        facade.renameListById('list-1', ' Inline rename ');
+        facade.renameListById(entityId<'shopping-list'>('list-1'), ' Inline rename ');
 
         expect(shoppingListService.update).toHaveBeenCalledWith('list-1', { name: 'Inline rename' });
         expect(facade.listName()).toBe('Inline rename');
@@ -330,9 +332,9 @@ describe('ShoppingListFacade autosave', () => {
     it('should expose a newly created list summary before the list reload finishes', () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
         const createdList: ShoppingList = {
-            id: 'list-2',
+            id: entityId<'shopping-list'>('list-2'),
             name: 'New list',
-            createdAt: '2026-06-06T00:00:00Z',
+            createdAt: utcInstant('2026-06-06T00:00:00Z'),
             items: [],
         };
         shoppingListService.create.mockReturnValueOnce(of(createdList));
@@ -373,9 +375,9 @@ function setupShoppingListFacade(language = 'ru'): ShoppingListFacadeContext {
     vi.useFakeTimers();
 
     const list: ShoppingList = {
-        id: 'list-1',
+        id: entityId<'shopping-list'>('list-1'),
         name: 'Main list',
-        createdAt: '2026-01-01T00:00:00Z',
+        createdAt: utcInstant('2026-01-01T00:00:00Z'),
         items: [],
     };
     const shoppingListService = createShoppingListServiceMock(list);
@@ -410,7 +412,11 @@ function createShoppingListServiceMock(list: ShoppingList): ShoppingListServiceM
                 },
             }),
         ),
-        getPage: vi.fn().mockReturnValue(of([{ id: 'list-1', name: 'Main list', createdAt: '', itemsCount: 0 }])),
+        getPage: vi
+            .fn()
+            .mockReturnValue(
+                of([{ id: entityId<'shopping-list'>('list-1'), name: 'Main list', createdAt: utcInstant(''), itemsCount: 0 }]),
+            ),
         getById: vi.fn().mockReturnValue(of(list)),
         create: vi.fn().mockReturnValue(of(list)),
         update: vi.fn().mockReturnValue(of(list)),
@@ -470,9 +476,24 @@ describe('Named creation and purchased cleanup', () => {
         facade.initialize();
         const row = { shoppingListId: 'list-1', name: 'Milk', sortOrder: 0 };
         facade.items.set([
-            { ...row, id: 'confirmed', isChecked: true },
-            { ...row, id: 'unchecked', isChecked: false },
-            { ...row, id: 'newly-checked', isChecked: true },
+            {
+                ...row,
+                id: entityId<'shopping-list-item'>('confirmed'),
+                isChecked: true,
+                shoppingListId: entityId<'shopping-list'>(row.shoppingListId),
+            },
+            {
+                ...row,
+                id: entityId<'shopping-list-item'>('unchecked'),
+                isChecked: false,
+                shoppingListId: entityId<'shopping-list'>(row.shoppingListId),
+            },
+            {
+                ...row,
+                id: entityId<'shopping-list-item'>('newly-checked'),
+                isChecked: true,
+                shoppingListId: entityId<'shopping-list'>(row.shoppingListId),
+            },
         ]);
         facade.removePurchased('other-list', ['confirmed']);
         expect(facade.items().map(item => item.id)).toEqual(['confirmed', 'unchecked', 'newly-checked']);

@@ -12,6 +12,7 @@ import { filter, switchMap } from 'rxjs';
 
 import { AdminCatalogFilterComponent, matchesAdminCatalog } from '../../../shared/catalog/admin-catalog-filter';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPage } from '../../../shared/period/admin-query';
 import { AdminLessonEditDialogComponent } from '../dialogs/admin-lesson-edit-dialog';
@@ -114,7 +115,7 @@ export class AdminLessonsComponent {
 
     protected openCreate(): void {
         const dialogData: AdminLesson & { isNew: boolean } = {
-            id: '',
+            id: adminId<'lesson'>(''),
             title: '',
             content: '',
             summary: null,
@@ -124,7 +125,7 @@ export class AdminLessonsComponent {
             estimatedReadMinutes: DEFAULT_ESTIMATED_READ_MINUTES,
             sortOrder: 0,
             isPublished: false,
-            createdOnUtc: new Date().toISOString(),
+            createdOnUtc: adminUtcInstant(new Date().toISOString()),
             modifiedOnUtc: null,
             isNew: true,
         };

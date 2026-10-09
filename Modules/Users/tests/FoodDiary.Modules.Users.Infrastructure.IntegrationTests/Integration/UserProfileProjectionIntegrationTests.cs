@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using System.Data.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
@@ -79,15 +80,7 @@ public sealed class UserProfileProjectionIntegrationTests(PostgresDatabaseFixtur
             HeightCm: ProfileHeightCm.Create(180.5)));
         user.AcceptAiConsent();
         user.SetTimeZone("Asia/Tbilisi");
-        user.UpdateGoals(new UserGoalUpdate(
-            DailyCalorieTarget: 2050,
-            ProteinTarget: null,
-            FatTarget: null,
-            CarbTarget: null,
-            FiberTarget: null,
-            WaterGoal: 2.4,
-            DesiredWeightKg: 71,
-            DesiredWaistCm: null));
+        user.UpdateGoals(new UserGoalUpdate(DailyCalorieTarget: 2050, ProteinTarget: null, FatTarget: null, CarbTarget: null, FiberTarget: null, WaterGoal: 2.4, DesiredWeightKg: DesiredWeightKg.FromOptional(71), DesiredWaistCm: null));
         context.Users.Add(user);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();

@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { CHART_COLORS } from '../../../../../constants/chart-colors';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import type { ProductDetailMacroBlock } from '../product-detail-lib/product-detail-nutrition.mapper';
 import { ProductDetailSummaryComponent } from './product-detail-summary';
 
@@ -69,7 +70,7 @@ function createMacroBlocks(): ProductDetailMacroBlock[] {
 
 function createProduct(overrides: Partial<Product> = {}): Product {
     return {
-        id: 'product-1',
+        id: entityId<'product'>('product-1'),
         name: 'Apple',
         barcode: '4600000000000',
         brand: 'Garden',

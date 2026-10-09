@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { calendarDate, optionalCalendarDate } from '../../../shared/models/semantics/date-value';
 import { getCycleFactorStatus } from './cycle-factor-status.utils';
 
 describe('cycle factor date status', () => {
@@ -14,7 +15,7 @@ describe('cycle factor date status', () => {
         ['2026-04-01', '2026-04-01', 'ENDED', false, false],
     ] as const)('resolves %s to %s on the current calendar day', (...values) => {
         const [startDate, endDate, label, isActive, canEndToday] = values;
-        expect(getCycleFactorStatus({ startDate, endDate }, '2026-04-02')).toEqual({
+        expect(getCycleFactorStatus({ startDate: calendarDate(startDate), endDate: optionalCalendarDate(endDate) }, '2026-04-02')).toEqual({
             statusLabelKey: `CYCLE_TRACKING.FACTOR_${label}`,
             isActive,
             canEndToday,
@@ -23,7 +24,10 @@ describe('cycle factor date status', () => {
 
     it('compares calendar dates without shifting timestamp offsets', () => {
         expect(
-            getCycleFactorStatus({ startDate: '2026-04-02T00:00:00+14:00', endDate: '2026-04-02T23:00:00-12:00' }, '2026-04-02'),
+            getCycleFactorStatus(
+                { startDate: calendarDate('2026-04-02T00:00:00+14:00'), endDate: calendarDate('2026-04-02T23:00:00-12:00') },
+                '2026-04-02',
+            ),
         ).toEqual({ statusLabelKey: 'CYCLE_TRACKING.FACTOR_ENDS_TODAY', isActive: true, canEndToday: false });
     });
 });

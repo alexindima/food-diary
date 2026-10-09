@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import { MS_PER_HOUR } from '../../../shared/lib/time.constants';
 import type { FastingSession } from '../../../shared/models/fasting.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import {
     calculateFastingElapsedMs,
     calculateFastingProgressPercent,
@@ -23,10 +25,10 @@ describe('fasting session state', () => {
         const session = createSession();
 
         expect(calculateFastingElapsedMs(session, new Date('2026-04-12T10:00:00Z'))).toBe(HOURS_4 * MS_PER_HOUR);
-        expect(calculateFastingElapsedMs({ ...session, endedAtUtc: '2026-04-12T08:00:00Z' }, new Date('2026-04-12T12:00:00Z'))).toBe(
-            HOURS_2 * MS_PER_HOUR,
-        );
-        expect(calculateFastingElapsedMs({ ...session, startedAtUtc: 'invalid' }, new Date())).toBe(0);
+        expect(
+            calculateFastingElapsedMs({ ...session, endedAtUtc: utcInstant('2026-04-12T08:00:00Z') }, new Date('2026-04-12T12:00:00Z')),
+        ).toBe(HOURS_2 * MS_PER_HOUR);
+        expect(calculateFastingElapsedMs({ ...session, startedAtUtc: utcInstant('invalid') }, new Date())).toBe(0);
         expect(calculateFastingElapsedMs(null, new Date())).toBe(0);
     });
 
@@ -46,16 +48,18 @@ describe('fasting session state', () => {
     });
 
     it('reports rounded completed duration and rejects active or invalid sessions', () => {
-        expect(getFastingSessionDurationHours({ ...createSession(), endedAtUtc: '2026-04-12T08:15:00Z' })).toBe(ROUNDED_HOURS_2_3);
+        expect(getFastingSessionDurationHours({ ...createSession(), endedAtUtc: utcInstant('2026-04-12T08:15:00Z') })).toBe(
+            ROUNDED_HOURS_2_3,
+        );
         expect(getFastingSessionDurationHours(createSession())).toBe(0);
-        expect(getFastingSessionDurationHours({ ...createSession(), endedAtUtc: 'invalid' })).toBe(0);
+        expect(getFastingSessionDurationHours({ ...createSession(), endedAtUtc: utcInstant('invalid') })).toBe(0);
     });
 });
 
 function createSession(): FastingSession {
     return {
-        id: 'session-1',
-        startedAtUtc: '2026-04-12T06:00:00Z',
+        id: entityId<'fasting-session'>('session-1'),
+        startedAtUtc: utcInstant('2026-04-12T06:00:00Z'),
         endedAtUtc: null,
         initialPlannedDurationHours: HOURS_16,
         addedDurationHours: 0,

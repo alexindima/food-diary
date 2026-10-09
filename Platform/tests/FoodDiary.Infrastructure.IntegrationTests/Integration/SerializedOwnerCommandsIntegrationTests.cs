@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
@@ -89,7 +90,7 @@ public sealed class SerializedOwnerCommandsIntegrationTests(PostgresDatabaseFixt
         var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         IImageStorageService storage = Substitute.For<IImageStorageService>();
-        storage.ConfirmUploadedObjectAsync(asset.ObjectKey, Arg.Any<CancellationToken>()).Returns(async _ => {
+        storage.ConfirmUploadedObjectAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), Arg.Any<CancellationToken>()).Returns(async _ => {
             entered.TrySetResult();
             await release.Task.WaitAsync(timeout.Token);
             return new ImageObjectValidationResult(IsValid: true);
@@ -101,8 +102,8 @@ public sealed class SerializedOwnerCommandsIntegrationTests(PostgresDatabaseFixt
         release.TrySetResult();
         Result<ConfirmImageUploadResult>[] results = await Task.WhenAll(first, second);
         Assert.All(results, result => Assert.True(result.IsSuccess));
-        await storage.Received(1).ConfirmUploadedObjectAsync(asset.ObjectKey, Arg.Any<CancellationToken>());
-        await storage.DidNotReceive().DeleteAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
+        await storage.Received(1).ConfirmUploadedObjectAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), Arg.Any<CancellationToken>());
+        await storage.DidNotReceive().DeleteAsync(Arg.Any<ObjectStorageKey>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
         Assert.True((await firstContext.ImageAssets.AsNoTracking().SingleAsync(row => row.Id == asset.Id)).IsConfirmed);
     }
 

@@ -1,7 +1,8 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 namespace FoodDiary.Modules.Images.Application.Abstractions.Common;
 
 public sealed record PresignedUpload(
-    string UploadUrl,
-    string FileUrl,
-    string ObjectKey,
+    SignedImageUploadUrl UploadUrl,
+    PublicImageUrl FileUrl,
+    ObjectStorageKey ObjectKey,
     DateTime ExpirationUtc);

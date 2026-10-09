@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Domain.ValueObjects;
 using System.Diagnostics.Metrics;
 using System.Net;
 using System.Net.Http.Headers;
@@ -1070,7 +1071,7 @@ public sealed class OpenAiFoodServiceTests {
     public void ExtractUsage_WhenUsageIsMissing_ReturnsNull() {
         using var json = JsonDocument.Parse("""{"output":[]}""");
 
-        Assert.Null(InvokePrivateStatic<AiUsageTokens?>("ExtractUsage", json));
+        Assert.Null(InvokePrivateStatic<AiTokenUsage?>("ExtractUsage", json));
     }
 
     [Theory]
@@ -1080,7 +1081,7 @@ public sealed class OpenAiFoodServiceTests {
     public void ExtractUsage_WhenRequiredTokenCountIsMissing_ReturnsNull(string payload) {
         using var json = JsonDocument.Parse(payload);
 
-        Assert.Null(InvokePrivateStatic<AiUsageTokens?>("ExtractUsage", json));
+        Assert.Null(InvokePrivateStatic<AiTokenUsage?>("ExtractUsage", json));
     }
 
     [Theory]
@@ -1089,16 +1090,22 @@ public sealed class OpenAiFoodServiceTests {
     public void ExtractUsage_WhenTotalTokenCountIsInvalid_ReturnsNull(string payload) {
         using var json = JsonDocument.Parse(payload);
 
-        Assert.Null(InvokePrivateStatic<AiUsageTokens?>("ExtractUsage", json));
+        Assert.Null(InvokePrivateStatic<AiTokenUsage?>("ExtractUsage", json));
+    }
+
+    [Fact]
+    public void ExtractUsage_WhenPositiveTotalIsBelowInputAndOutput_ReturnsNull() {
+        using var json = JsonDocument.Parse("""{"usage":{"input_tokens":12,"output_tokens":7,"total_tokens":1}}""");
+        Assert.Null(InvokePrivateStatic<AiTokenUsage?>("ExtractUsage", json));
     }
 
     [Fact]
     public void ExtractUsage_WhenTotalTokenCountIsMissing_ComputesTotal() {
         using var json = JsonDocument.Parse("""{"usage":{"input_tokens":12,"output_tokens":7}}""");
 
-        AiUsageTokens? usage = InvokePrivateStatic<AiUsageTokens?>("ExtractUsage", json);
+        AiTokenUsage? usage = InvokePrivateStatic<AiTokenUsage?>("ExtractUsage", json);
 
-        Assert.Equal(new AiUsageTokens(12, 7, 19), usage);
+        Assert.Equal(AiTokenUsage.FromCounts(12, 7, 19), usage);
     }
 
     [Fact]
@@ -1106,7 +1113,7 @@ public sealed class OpenAiFoodServiceTests {
         using var json = JsonDocument.Parse(
             """{"usage":{"input_tokens":2147483647,"output_tokens":2147483647}}""");
 
-        Assert.Null(InvokePrivateStatic<AiUsageTokens?>("ExtractUsage", json));
+        Assert.Null(InvokePrivateStatic<AiTokenUsage?>("ExtractUsage", json));
     }
 
     [Fact]

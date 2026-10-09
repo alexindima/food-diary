@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Application.Mappings;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Application.Contracts.Common.Abstractions.Results;
@@ -431,6 +432,6 @@ internal sealed class UserAuthenticationIdentityService(
             }
         }
 
-        user.UpdatePersonalInfo(identity.FirstName, identity.LastName);
+        user.UpdatePersonalInfoChanges(new UserPersonalInfoChanges(identity.FirstName, identity.LastName, LastName: null, FieldChanges.Unchanged<DateTime>(), Gender: null, WeightKg: null, HeightCm: null));
     }
 }

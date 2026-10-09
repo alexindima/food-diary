@@ -8,16 +8,16 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4452,
-    "symbols": 4384,
+    "sourceFiles": 4520,
+    "symbols": 4452,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 73,
     "kinds": {
-      "class": 2306,
-      "enum": 67,
+      "class": 2312,
+      "enum": 68,
       "interface": 411,
-      "record": 1480,
-      "record struct": 120
+      "record": 1536,
+      "record struct": 125
     },
     "roles": {
       "Command": 230,
@@ -32,17 +32,17 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1798,
+      "Other": 1816,
       "Query": 300,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 99,
       "Request": 174,
-      "Response": 261,
+      "Response": 262,
       "Service": 168,
       "Validator": 236,
-      "ValueObject": 120,
+      "ValueObject": 169,
       "WriteRepository": 47
     }
   },
@@ -1515,7 +1515,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/ContentReports/ContentReportReadService.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "DashboardBodyReadService",
@@ -5134,14 +5134,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Ai/Application.Abstractions/Common/AiQuotaUsage.cs",
-      "line": 2
-    },
-    {
-      "name": "AiUsageTokens",
-      "kind": "record struct",
-      "role": "Other",
-      "path": "Modules/Ai/Application.Abstractions/Common/AiUsageTokens.cs",
-      "line": 6
+      "line": 4
     },
     {
       "name": "AiUsageTotals",
@@ -5246,7 +5239,7 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Ai/Application.Abstractions/Common/OpenAiFoodClientResponse.cs",
-      "line": 2
+      "line": 3
     },
     {
       "name": "ProductImageAnalysis",
@@ -5575,7 +5568,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "OpenAiFoodService",
@@ -5799,7 +5792,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Ai/Domain/Entities/AiUsage.cs",
-      "line": 7
+      "line": 8
+    },
+    {
+      "name": "AiTokenUsage",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Ai/Domain/ValueObjects/AiTokenUsage.cs",
+      "line": 2
     },
     {
       "name": "AiPromptTemplateId",
@@ -5911,7 +5911,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 18
+      "line": 19
     },
     {
       "name": "OpenAiFoodClient",
@@ -6359,7 +6359,7 @@
       "kind": "interface",
       "role": "WriteRepository",
       "path": "Modules/Billing/Application.Abstractions/Common/IBillingWebhookEventWriteRepository.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "IPaddleNotificationRecoveryGateway",
@@ -6443,7 +6443,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "CreateCheckoutSessionCommandValidator",
@@ -6492,7 +6492,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "BillingWebhookPremiumRoleSyncer",
@@ -6555,14 +6555,14 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/ProcessQueuedBillingWebhook/ProcessQueuedBillingWebhookCommandHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "RenewDueSubscriptionsCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs",
-      "line": 19
+      "line": 20
     },
     {
       "name": "ReplayFailedPaddleNotificationsCommandHandler",
@@ -6691,6 +6691,27 @@
       "line": 2
     },
     {
+      "name": "BillingPaymentId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Billing/Domain.Contracts/ValueObjects/Ids/BillingPaymentId.cs",
+      "line": 4
+    },
+    {
+      "name": "BillingSubscriptionId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Billing/Domain.Contracts/ValueObjects/Ids/BillingSubscriptionId.cs",
+      "line": 4
+    },
+    {
+      "name": "BillingWebhookEventId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Billing/Domain.Contracts/ValueObjects/Ids/BillingWebhookEventId.cs",
+      "line": 4
+    },
+    {
       "name": "BillingDomainGuard",
       "kind": "class",
       "role": "Entity",
@@ -6702,7 +6723,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Billing/Domain/Entities/BillingPayment.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "BillingPaymentKinds",
@@ -6716,20 +6737,48 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Billing/Domain/Entities/BillingSubscription.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "BillingWebhookEvent",
       "kind": "class",
       "role": "Event",
       "path": "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "BillingWebhookProcessingState",
       "kind": "enum",
       "role": "Other",
       "path": "Modules/Billing/Domain/Enums/BillingWebhookProcessingState.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingAmount",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Billing/Domain/ValueObjects/BillingAmount.cs",
+      "line": 4
+    },
+    {
+      "name": "BillingCurrencyCode",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Billing/Domain/ValueObjects/BillingCurrencyCode.cs",
+      "line": 4
+    },
+    {
+      "name": "BillingMoneyObservation",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Billing/Domain/ValueObjects/BillingMoneyObservation.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingPaymentFinancials",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Billing/Domain/ValueObjects/BillingPaymentFinancials.cs",
       "line": 2
     },
     {
@@ -7087,7 +7136,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "CreateWaistEntryCommandValidator",
@@ -7129,7 +7178,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "UpdateWaistEntryCommandValidator",
@@ -7262,7 +7311,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "CreateWeightEntryCommandValidator",
@@ -7304,7 +7353,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "UpdateWeightEntryCommandValidator",
@@ -7500,14 +7549,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WaistEntry.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "WeightEntry",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WeightEntry.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "WaistEntryId",
@@ -7808,7 +7857,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/ContentReports/Application/Commands/CreateContentReport/CreateContentReportCommandHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "CreateContentReportCommandValidator",
@@ -7951,11 +8000,18 @@
       "line": 4
     },
     {
+      "name": "ReportTarget",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/ContentReports/Domain.Contracts/ValueObjects/ReportTarget.cs",
+      "line": 6
+    },
+    {
       "name": "ContentReport",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/ContentReports/Domain/Entities/ContentReport.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ContentReportsDomainGuard",
@@ -7976,7 +8032,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/ContentReports/Infrastructure/Persistence/ContentReportRepository.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ContentReportsDbContext",
@@ -8410,14 +8466,14 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Cycles/Application/Services/CyclePredictionRevisionService.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "CyclePredictionService",
       "kind": "class",
       "role": "Service",
       "path": "Modules/Cycles/Application/Services/CyclePredictionService.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "CycleErrors",
@@ -8634,7 +8690,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "CycleProfileSettings",
@@ -8663,6 +8719,13 @@
       "role": "Entity",
       "path": "Modules/Cycles/Domain/Entities/MenstrualEpisode.cs",
       "line": 6
+    },
+    {
+      "name": "CyclePredictionAssessment",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Cycles/Domain/ValueObjects/CyclePredictionAssessment.cs",
+      "line": 2
     },
     {
       "name": "BleedingEntryId",
@@ -8726,6 +8789,41 @@
       "role": "ValueObject",
       "path": "Modules/Cycles/Domain/ValueObjects/Ids/MenstrualEpisodeId.cs",
       "line": 4
+    },
+    {
+      "name": "PredictionConfidence",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Cycles/Domain/ValueObjects/PredictionConfidence.cs",
+      "line": 4
+    },
+    {
+      "name": "PredictionDataSufficiency",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Cycles/Domain/ValueObjects/PredictionDataSufficiency.cs",
+      "line": 4
+    },
+    {
+      "name": "PredictionPatternConsistency",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Cycles/Domain/ValueObjects/PredictionPatternConsistency.cs",
+      "line": 4
+    },
+    {
+      "name": "PredictionReasonCode",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Cycles/Domain/ValueObjects/PredictionReasonCode.cs",
+      "line": 4
+    },
+    {
+      "name": "PredictionWindow",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Cycles/Domain/ValueObjects/PredictionWindow.cs",
+      "line": 2
     },
     {
       "name": "ModuleRegistration",
@@ -11371,7 +11469,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Exercises/Application/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "CreateExerciseEntryCommandValidator",
@@ -11406,7 +11504,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Exercises/Application/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "UpdateExerciseEntryCommandValidator",
@@ -11511,13 +11609,34 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "ExerciseType",
       "kind": "enum",
       "role": "Other",
       "path": "Modules/Exercises/Domain/Enums/ExerciseType.cs",
+      "line": 2
+    },
+    {
+      "name": "BurnedEnergy",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Exercises/Domain/ValueObjects/BurnedEnergy.cs",
+      "line": 4
+    },
+    {
+      "name": "ExerciseDay",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Exercises/Domain/ValueObjects/ExerciseDay.cs",
+      "line": 2
+    },
+    {
+      "name": "ExerciseDuration",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Exercises/Domain/ValueObjects/ExerciseDuration.cs",
       "line": 2
     },
     {
@@ -11675,6 +11794,13 @@
       "line": 2
     },
     {
+      "name": "CycleExportPeriod",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Export/Application/Queries/ExportCycle/CycleExportPeriod.cs",
+      "line": 2
+    },
+    {
       "name": "ExportCycleQuery",
       "kind": "record",
       "role": "Query",
@@ -11694,6 +11820,20 @@
       "role": "Validator",
       "path": "Modules/Export/Application/Queries/ExportCycle/ExportCycleQueryValidator.cs",
       "line": 7
+    },
+    {
+      "name": "DiaryDisplayOffset",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Export/Application/Queries/ExportDiary/DiaryDisplayOffset.cs",
+      "line": 2
+    },
+    {
+      "name": "DiaryExportPeriod",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Export/Application/Queries/ExportDiary/DiaryExportPeriod.cs",
+      "line": 2
     },
     {
       "name": "ExportDiaryDateRangePolicy",
@@ -12120,7 +12260,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "PostponeCyclicDayCommandValidator",
@@ -12183,7 +12323,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "SkipCyclicDayCommandValidator",
@@ -12197,7 +12337,7 @@
       "kind": "class",
       "role": "Factory",
       "path": "Modules/Fasting/Application/Commands/StartFasting/FastingStartFactory.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "StartFastingCommand",
@@ -12687,7 +12827,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "FastingSession",
@@ -12779,6 +12919,48 @@
       "role": "ValueObject",
       "path": "Modules/Fasting/Domain/ValueObjects/Ids/FastingTelemetryEventId.cs",
       "line": 4
+    },
+    {
+      "name": "CyclicFastingSettings",
+      "kind": "class",
+      "role": "ValueObject",
+      "path": "Modules/Fasting/Domain/ValueObjects/Settings/CyclicFastingSettings.cs",
+      "line": 5
+    },
+    {
+      "name": "DailyFastingWindow",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Fasting/Domain/ValueObjects/Settings/DailyFastingWindow.cs",
+      "line": 4
+    },
+    {
+      "name": "ExtendedFastingSettings",
+      "kind": "class",
+      "role": "ValueObject",
+      "path": "Modules/Fasting/Domain/ValueObjects/Settings/ExtendedFastingSettings.cs",
+      "line": 5
+    },
+    {
+      "name": "FastingCycleDay",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Fasting/Domain/ValueObjects/Settings/FastingCycleDay.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingPlanSettings",
+      "kind": "class",
+      "role": "ValueObject",
+      "path": "Modules/Fasting/Domain/ValueObjects/Settings/FastingPlanSettings.cs",
+      "line": 4
+    },
+    {
+      "name": "IntermittentFastingSettings",
+      "kind": "class",
+      "role": "ValueObject",
+      "path": "Modules/Fasting/Domain/ValueObjects/Settings/IntermittentFastingSettings.cs",
+      "line": 5
     },
     {
       "name": "ModuleRegistration",
@@ -13338,7 +13520,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "AddFavoriteProductCommandValidator",
@@ -13373,7 +13555,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "UpdateFavoriteProductCommandValidator",
@@ -13758,7 +13940,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Favorites/Domain/Entities/FavoriteProducts/FavoriteProduct.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "FavoriteRecipe",
@@ -13766,6 +13948,13 @@
       "role": "Entity",
       "path": "Modules/Favorites/Domain/Entities/FavoriteRecipes/FavoriteRecipe.cs",
       "line": 7
+    },
+    {
+      "name": "PreferredProductQuantity",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Favorites/Domain/ValueObjects/PreferredProductQuantity.cs",
+      "line": 2
     },
     {
       "name": "ModuleRegistration",
@@ -14017,7 +14206,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Gamification/Application/Commands/CreateAchievementDefinition/CreateAchievementDefinitionCommandHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "ReconcileAchievementsCommandHandler",
@@ -14031,7 +14220,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Gamification/Application/Commands/UpdateAchievementDefinition/UpdateAchievementDefinitionCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "IAchievementAwardService",
@@ -14101,7 +14290,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Gamification/Application/Services/GamificationCalculator.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "IAchievementEvaluationOutbox",
@@ -14178,7 +14367,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Gamification/Domain/Entities/Achievements/AchievementDefinition.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "UserAchievement",
@@ -14186,6 +14375,13 @@
       "role": "Entity",
       "path": "Modules/Gamification/Domain/Entities/Achievements/UserAchievement.cs",
       "line": 6
+    },
+    {
+      "name": "AchievementTarget",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Gamification/Domain/ValueObjects/AchievementTarget.cs",
+      "line": 4
     },
     {
       "name": "AchievementDefinitionId",
@@ -16768,7 +16964,7 @@
       "kind": "interface",
       "role": "Other",
       "path": "Modules/Images/Application.Abstractions/Common/IImageObjectDeletionOutbox.cs",
-      "line": 2
+      "line": 3
     },
     {
       "name": "IImageObjectDeletionOutboxProcessor",
@@ -16782,7 +16978,7 @@
       "kind": "interface",
       "role": "Service",
       "path": "Modules/Images/Application.Abstractions/Common/IImageStorageService.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "ImageErrors",
@@ -16803,7 +16999,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Images/Application.Abstractions/Common/PresignedUpload.cs",
-      "line": 2
+      "line": 3
     },
     {
       "name": "ImageCleanupCandidate",
@@ -16831,7 +17027,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Images/Application/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "ConfirmImageUploadResult",
@@ -16894,7 +17090,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Images/Application/Services/ImageAssetCleanupService.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ImageAssetId",
@@ -16908,7 +17104,28 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Images/Domain/Entities/Assets/ImageAsset.cs",
-      "line": 6
+      "line": 7
+    },
+    {
+      "name": "ObjectStorageKey",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Images/Domain/ValueObjects/ObjectStorageKey.cs",
+      "line": 2
+    },
+    {
+      "name": "PublicImageUrl",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Images/Domain/ValueObjects/PublicImageUrl.cs",
+      "line": 2
+    },
+    {
+      "name": "SignedImageUploadUrl",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Images/Domain/ValueObjects/SignedImageUploadUrl.cs",
+      "line": 2
     },
     {
       "name": "DependencyInjection",
@@ -16971,14 +17188,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutbox.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "ImageObjectDeletionOutboxProcessor",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "ImagesDbContext",
@@ -16992,7 +17209,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/Persistence/ImagesUserDataPurgeParticipant.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "S3Options",
@@ -17013,7 +17230,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Images/Infrastructure/Providers/Services/S3ImageStorageService.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "S3ObjectStorageClient",
@@ -17034,7 +17251,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Images/Infrastructure/Providers/Services/UnconfiguredImageStorageService.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "UserProfileImageService",
@@ -18147,7 +18364,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Commands/SaveCatalogMealPlan/SaveCatalogMealPlanCommandHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "SaveCatalogMealPlanCommandValidator",
@@ -18287,7 +18504,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/MealPlanning/Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandHandler.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "CreateShoppingListCommandValidator",
@@ -18329,7 +18546,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/MealPlanning/Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandHandler.cs",
-      "line": 18
+      "line": 19
     },
     {
       "name": "UpdateShoppingListCommandValidator",
@@ -18518,7 +18735,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/MealPlanning/Application/ShoppingLists/Services/ShoppingListCreationService.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "ShoppingListItemBuilder",
@@ -18539,14 +18756,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlan.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "MealPlanDay",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlanDay.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "MealPlanMeal",
@@ -18574,14 +18791,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingList.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ShoppingListItem",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ShoppingListItemSource",
@@ -18665,6 +18882,41 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/ShoppingListItemSourceId.cs",
+      "line": 4
+    },
+    {
+      "name": "PlanDayNumber",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/MealPlanning/Domain/ValueObjects/PlanDayNumber.cs",
+      "line": 2
+    },
+    {
+      "name": "PlanDurationDays",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/MealPlanning/Domain/ValueObjects/PlanDurationDays.cs",
+      "line": 2
+    },
+    {
+      "name": "PlannedServings",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/MealPlanning/Domain/ValueObjects/PlannedServings.cs",
+      "line": 2
+    },
+    {
+      "name": "ShoppingQuantity",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/MealPlanning/Domain/ValueObjects/ShoppingQuantity.cs",
+      "line": 6
+    },
+    {
+      "name": "ShoppingSourceQuantity",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/MealPlanning/Domain/ValueObjects/ShoppingSourceQuantity.cs",
       "line": 4
     },
     {
@@ -20261,7 +20513,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Notifications/Application/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
-      "line": 12
+      "line": 10
     },
     {
       "name": "MarkAllNotificationsReadCommand",
@@ -20380,7 +20632,7 @@
       "kind": "class",
       "role": "Factory",
       "path": "Modules/Notifications/Application/Common/NotificationFactory.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "NotificationIdParser",
@@ -20670,6 +20922,13 @@
       "line": 2
     },
     {
+      "name": "NotificationIntent",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Contracts/Common/NotificationIntent.cs",
+      "line": 2
+    },
+    {
       "name": "NotificationPayloads",
       "kind": "class",
       "role": "Other",
@@ -20695,6 +20954,13 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Contracts/Common/NotificationTypes.cs",
+      "line": 2
+    },
+    {
+      "name": "RecommendationCommentTarget",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Notifications/Contracts/Common/RecommendationCommentTarget.cs",
       "line": 2
     },
     {
@@ -21248,7 +21514,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductCommandHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "CreateProductCommandValidator",
@@ -21304,7 +21570,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Products/Application/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "DuplicateProductCommandValidator",
@@ -21332,7 +21598,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateApplier.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "ProductUpdateLimitValidator",
@@ -21755,6 +22021,27 @@
       "line": 3
     },
     {
+      "name": "ProductCoreIdentityChanges",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Products/Domain/ValueObjects/ProductCoreIdentityChanges.cs",
+      "line": 5
+    },
+    {
+      "name": "ProductDefaultPortion",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Products/Domain/ValueObjects/ProductDefaultPortion.cs",
+      "line": 6
+    },
+    {
+      "name": "ProductDescriptiveIdentityChanges",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Products/Domain/ValueObjects/ProductDescriptiveIdentityChanges.cs",
+      "line": 4
+    },
+    {
       "name": "ProductIdentityState",
       "kind": "record struct",
       "role": "ValueObject",
@@ -21769,6 +22056,20 @@
       "line": 4
     },
     {
+      "name": "ProductMeasurementBasis",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Products/Domain/ValueObjects/ProductMeasurementBasis.cs",
+      "line": 6
+    },
+    {
+      "name": "ProductMeasurementNutritionChanges",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Products/Domain/ValueObjects/ProductMeasurementNutritionChanges.cs",
+      "line": 2
+    },
+    {
       "name": "ProductMeasurementNutritionUpdate",
       "kind": "record struct",
       "role": "ValueObject",
@@ -21781,6 +22082,13 @@
       "role": "ValueObject",
       "path": "Modules/Products/Domain/ValueObjects/ProductMeasurementState.cs",
       "line": 7
+    },
+    {
+      "name": "ProductMediaChanges",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Products/Domain/ValueObjects/ProductMediaChanges.cs",
+      "line": 5
     },
     {
       "name": "ProductMediaState",
@@ -22137,7 +22445,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/RecentItems/Domain/Entities/Recents/RecentItem.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "RecentItemType",
@@ -22152,6 +22460,13 @@
       "role": "ValueObject",
       "path": "Modules/RecentItems/Domain/ValueObjects/Ids/RecentItemId.cs",
       "line": 4
+    },
+    {
+      "name": "RecentItemReference",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/RecentItems/Domain/ValueObjects/RecentItemReference.cs",
+      "line": 7
     },
     {
       "name": "ModuleRegistration",
@@ -22172,7 +22487,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/RecentItems/Infrastructure/Persistence/RecentItems/RecentItemRepository.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "RecentItemsDbContext",
@@ -22378,6 +22693,20 @@
       "line": 11
     },
     {
+      "name": "RecipeCommentId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/RecipeCommunity/Domain.Contracts/ValueObjects/Ids/RecipeCommentId.cs",
+      "line": 4
+    },
+    {
+      "name": "RecipeLikeId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/RecipeCommunity/Domain.Contracts/ValueObjects/Ids/RecipeLikeId.cs",
+      "line": 4
+    },
+    {
       "name": "RecipeComment",
       "kind": "class",
       "role": "Entity",
@@ -22390,20 +22719,6 @@
       "role": "Entity",
       "path": "Modules/RecipeCommunity/Domain/Entities/Social/RecipeLike.cs",
       "line": 7
-    },
-    {
-      "name": "RecipeCommentId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Modules/RecipeCommunity/Domain/ValueObjects/Ids/RecipeCommentId.cs",
-      "line": 4
-    },
-    {
-      "name": "RecipeLikeId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Modules/RecipeCommunity/Domain/ValueObjects/Ids/RecipeLikeId.cs",
-      "line": 4
     },
     {
       "name": "ModuleRegistration",
@@ -22676,7 +22991,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/RecipeUpdateApplier.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "RecipeUpdateAssetCleanup",
@@ -23288,6 +23603,20 @@
       "line": 6
     },
     {
+      "name": "RecipeIdentityChanges",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Recipes/Domain/ValueObjects/RecipeIdentityChanges.cs",
+      "line": 4
+    },
+    {
+      "name": "RecipeMediaChanges",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Recipes/Domain/ValueObjects/RecipeMediaChanges.cs",
+      "line": 5
+    },
+    {
       "name": "RecipeNutrition",
       "kind": "record struct",
       "role": "ValueObject",
@@ -23673,11 +24002,25 @@
       "line": 2
     },
     {
+      "name": "StatisticsBodyPeriod",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Statistics/Application/Common/StatisticsBodyPeriod.cs",
+      "line": 2
+    },
+    {
       "name": "StatisticsCalendarRangePolicy",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Statistics/Application/Common/StatisticsCalendarRangePolicy.cs",
       "line": 4
+    },
+    {
+      "name": "StatisticsInstantPeriod",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Statistics/Application/Common/StatisticsInstantPeriod.cs",
+      "line": 2
     },
     {
       "name": "UtcDateNormalizer",
@@ -23869,6 +24212,41 @@
       "line": 5
     },
     {
+      "name": "BasalEnergyKcal",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Tdee/Application/Common/BasalEnergyKcal.cs",
+      "line": 2
+    },
+    {
+      "name": "CalculationDesiredWeight",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Tdee/Application/Common/CalculationDesiredWeight.cs",
+      "line": 4
+    },
+    {
+      "name": "CalculationMeasuredWeight",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Tdee/Application/Common/CalculationMeasuredWeight.cs",
+      "line": 4
+    },
+    {
+      "name": "DailyCalorieTargetKcal",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Tdee/Application/Common/DailyCalorieTargetKcal.cs",
+      "line": 2
+    },
+    {
+      "name": "EstimatedDailyEnergyKcal",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Tdee/Application/Common/EstimatedDailyEnergyKcal.cs",
+      "line": 2
+    },
+    {
       "name": "TdeeUserProfile",
       "kind": "record",
       "role": "Other",
@@ -23908,7 +24286,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Tdee/Application/Services/TdeeCalculator.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "TdeeConfidence",
@@ -24573,7 +24951,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommandHandler.cs",
-      "line": 18
+      "line": 19
     },
     {
       "name": "DeleteUserCommand",
@@ -24671,7 +25049,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "UpdateDesiredWaistCommandValidator",
@@ -24692,7 +25070,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "UpdateDesiredWeightCommandValidator",
@@ -24713,7 +25091,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/UpdateGoals/UpdateGoalsCommandHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "UpdateGoalsCommandValidator",
@@ -24734,7 +25112,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "UpdateUserCommandValidator",
@@ -25063,7 +25441,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
-      "line": 18
+      "line": 19
     },
     {
       "name": "UserAuthenticationRegistrationService",
@@ -25091,7 +25469,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Application/Services/UserTelegramAccountService.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "CleanupDeletedUsersCommand",
@@ -25697,14 +26075,14 @@
     },
     {
       "name": "DesiredWaistCm",
-      "kind": "record struct",
+      "kind": "record",
       "role": "ValueObject",
       "path": "Modules/Users/Domain.Contracts/ValueObjects/DesiredWaistCm.cs",
       "line": 4
     },
     {
       "name": "DesiredWeightKg",
-      "kind": "record struct",
+      "kind": "record",
       "role": "ValueObject",
       "path": "Modules/Users/Domain.Contracts/ValueObjects/DesiredWeightKg.cs",
       "line": 4
@@ -25722,6 +26100,20 @@
       "role": "ValueObject",
       "path": "Modules/Users/Domain.Contracts/ValueObjects/LanguageCode.cs",
       "line": 2
+    },
+    {
+      "name": "MeasuredWaistCm",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/MeasuredWaistCm.cs",
+      "line": 4
+    },
+    {
+      "name": "MeasuredWeightKg",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/MeasuredWeightKg.cs",
+      "line": 4
     },
     {
       "name": "UserCalorieSchedule",
@@ -25784,7 +26176,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Users/Domain/Entities/User.Goals.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "User",
@@ -25805,7 +26197,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Users/Domain/Entities/User.Tdee.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "UserNutritionProfile",
@@ -25869,6 +26261,13 @@
       "role": "Event",
       "path": "Modules/Users/Domain/Events/UserRestoredDomainEvent.cs",
       "line": 5
+    },
+    {
+      "name": "BmrCalculationInput",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/BmrCalculationInput.cs",
+      "line": 2
     },
     {
       "name": "GenderCode",
@@ -26001,7 +26400,7 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "Modules/Users/Domain/ValueObjects/UserGoalUpdate.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "UserNutritionGoals",
@@ -26009,6 +26408,13 @@
       "role": "ValueObject",
       "path": "Modules/Users/Domain/ValueObjects/UserNutritionGoals.cs",
       "line": 6
+    },
+    {
+      "name": "UserPersonalInfoChanges",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserPersonalInfoChanges.cs",
+      "line": 4
     },
     {
       "name": "UserPersonalInfoUpdate",
@@ -26113,7 +26519,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "UserProfileWriteGuardInterceptor",
@@ -26547,7 +26953,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Wearables/Application.Abstractions/Models/WearableDataPoint.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "WearableSyncEntryReadModel",
@@ -26729,7 +27135,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Wearables/Domain/Entities/WearableSyncEntry.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "WearableDataType",
@@ -26765,6 +27171,20 @@
       "role": "ValueObject",
       "path": "Modules/Wearables/Domain/ValueObjects/ProtectedWearableToken.cs",
       "line": 4
+    },
+    {
+      "name": "WearableReading",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Wearables/Domain/ValueObjects/WearableReading.cs",
+      "line": 5
+    },
+    {
+      "name": "WearableSyncDay",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Wearables/Domain/ValueObjects/WearableSyncDay.cs",
+      "line": 2
     },
     {
       "name": "WearableOAuthStateService",
@@ -27254,7 +27674,7 @@
       "kind": "interface",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugReportStore.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "BugReportJournalEntry",
@@ -27278,6 +27698,27 @@
       "line": 2
     },
     {
+      "name": "BugReportId",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/Identifiers/BugReportId.cs",
+      "line": 2
+    },
+    {
+      "name": "LeaseToken",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/Identifiers/LeaseToken.cs",
+      "line": 2
+    },
+    {
+      "name": "SourceMessageId",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/Identifiers/SourceMessageId.cs",
+      "line": 2
+    },
+    {
       "name": "ImportBugReports",
       "kind": "class",
       "role": "Other",
@@ -27289,7 +27730,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/ImportedReport.cs",
-      "line": 2
+      "line": 3
     },
     {
       "name": "ReportCompletion",
@@ -27303,7 +27744,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/ReportLease.cs",
-      "line": 2
+      "line": 3
     },
     {
       "name": "ReportOutcome",
@@ -27331,7 +27772,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Mail/MailInboxBugSource.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "BugTriageOptions",
@@ -27359,7 +27800,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlBugReportStore.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "BugMailImportWorker",
@@ -27394,7 +27835,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "CompleteReportHttpRequest",
@@ -27409,6 +27850,13 @@
       "role": "Request",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/RenewReportHttpRequest.cs",
       "line": 2
+    },
+    {
+      "name": "ReportLeaseHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/ReportLeaseHttpResponse.cs",
+      "line": 4
     },
     {
       "name": "BugTriageHttpOptions",
@@ -28818,6 +29266,20 @@
       "line": 2
     },
     {
+      "name": "QueuedEmailProcessingState",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailProcessingState.cs",
+      "line": 2
+    },
+    {
+      "name": "QueuedEmailStateCodec",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailStateCodec.cs",
+      "line": 2
+    },
+    {
       "name": "QueuedEmailStatus",
       "kind": "class",
       "role": "Other",
@@ -29943,6 +30405,20 @@
       "role": "Entity",
       "path": "Shared/FoodDiary.Domain.Primitives/Entity.cs",
       "line": 4
+    },
+    {
+      "name": "FieldChange",
+      "kind": "record",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Domain.Primitives/FieldChange.cs",
+      "line": 2
+    },
+    {
+      "name": "FieldChanges",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Domain.Primitives/FieldChanges.cs",
+      "line": 2
     },
     {
       "name": "IAggregateWithEvents",

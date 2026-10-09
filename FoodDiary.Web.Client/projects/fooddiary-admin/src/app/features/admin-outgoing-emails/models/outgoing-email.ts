@@ -1,12 +1,13 @@
+import type { AdminId, AdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 export type OutgoingEmail = {
-    id: string;
+    id: AdminId<'outgoing-email'>;
     status: string;
     purpose: string;
     fromAddress: string;
     to: string[];
     subject: string;
-    createdAtUtc: string;
-    sentAtUtc: string | null;
+    createdAtUtc: AdminUtcInstant;
+    sentAtUtc: AdminUtcInstant | null;
     attemptCount: number;
     maxAttempts: number;
     correlationId: string | null;

@@ -2,6 +2,8 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { calendarDate } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { WeightEntry } from '../../../../shared/models/weight-entry.data';
 import { WeightHistoryEntriesCardComponent } from './weight-history-entries-card';
 
@@ -55,7 +57,12 @@ describe('WeightHistoryEntriesCardComponent', () => {
 
     it('renders weight loss as negative when the goal requires weight gain', () => {
         const latestEntry = createEntry();
-        const olderEntry = { ...createEntry(), id: 'entry-2', date: '2026-05-14T00:00:00Z', weightKg: OLDER_ENTRY_WEIGHT };
+        const olderEntry = {
+            ...createEntry(),
+            id: entityId<'weight-entry'>('entry-2'),
+            date: calendarDate('2026-05-14T00:00:00Z'),
+            weightKg: OLDER_ENTRY_WEIGHT,
+        };
         const { fixture } = setupComponent([latestEntry, olderEntry], GAIN_DESIRED_WEIGHT);
         const element = fixture.nativeElement as HTMLElement;
 
@@ -94,9 +101,9 @@ function getText(fixture: ComponentFixture<WeightHistoryEntriesCardComponent>): 
 
 function createEntry(): WeightEntry {
     return {
-        id: 'entry-1',
-        userId: 'user-1',
-        date: '2026-05-15T00:00:00Z',
+        id: entityId<'weight-entry'>('entry-1'),
+        userId: entityId<'user'>('user-1'),
+        date: calendarDate('2026-05-15T00:00:00Z'),
         weightKg: ENTRY_WEIGHT,
     };
 }
@@ -108,7 +115,11 @@ describe('Recent entries visibility and pagination', () => {
         { count: 5, visible: 5, more: false },
         { count: 6, visible: 5, more: true },
     ])('shows $visible of $count records', ({ count, visible, more }) => {
-        const entries = Array.from({ length: count }, (_, index) => ({ ...createEntry(), id: `entry-${index}`, weightKg: index + 1 }));
+        const entries = Array.from({ length: count }, (_, index) => ({
+            ...createEntry(),
+            id: entityId<'weight-entry'>(`entry-${index}`),
+            weightKg: index + 1,
+        }));
         const { component, fixture } = setupComponent(entries);
         const showAll = vi.fn();
         component.showAllEntries.subscribe(showAll);
@@ -134,8 +145,8 @@ describe('Recent entries visibility and pagination', () => {
 describe('Weight measurement change semantics', () => {
     it('distinguishes an unchanged measurement from missing comparison and makes the hint keyboard reachable', () => {
         const { fixture } = setupComponent([
-            { ...createEntry(), id: 'new' },
-            { ...createEntry(), id: 'old', date: '2026-05-14' },
+            { ...createEntry(), id: entityId<'weight-entry'>('new') },
+            { ...createEntry(), id: entityId<'weight-entry'>('old'), date: calendarDate('2026-05-14') },
         ]);
         const root = fixture.nativeElement as HTMLElement;
         const changes = root.querySelectorAll<HTMLElement>('.weight-history-page__entry-change');

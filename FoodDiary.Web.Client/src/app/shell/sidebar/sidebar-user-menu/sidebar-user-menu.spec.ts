@@ -6,6 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { User } from '../../../shared/models/user.data';
 import { SidebarUserMenuComponent } from './sidebar-user-menu';
 
@@ -15,7 +16,7 @@ import { SidebarUserMenuComponent } from './sidebar-user-menu';
 class DummyRouteComponent {}
 
 const user: User = {
-    id: 'user-1',
+    id: entityId<'user'>('user-1'),
     email: 'user@example.com',
     username: 'Alex',
     hasPassword: true,

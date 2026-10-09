@@ -14,6 +14,8 @@ import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../shared/lib/nutrition.con
 import { UserFacade } from '../../../shared/lib/user.facade';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../../shared/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../shared/models/recipe.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { RecipeService } from '../api/recipe.service';
 import type { IngredientFormValues } from '../components/manage/recipe-manage-lib/recipe-manage.types';
 import { type RecipeIngredientSelectionTarget, RecipeManageFacade, type RecipeStepsNutritionState } from './recipe-manage.facade';
@@ -109,7 +111,7 @@ describe('RecipeManageFacade submit', () => {
     });
 
     it('updates recipe and navigates on success', async () => {
-        facade.updateRecipe('recipe-1', {
+        facade.updateRecipe(entityId<'recipe'>('recipe-1'), {
             name: 'Recipe',
             steps: [],
             servings: 1,
@@ -193,7 +195,7 @@ describe('RecipeManageFacade selection', () => {
         facade.applyItemSelection(ingredientGroup, {
             type: 'Product',
             product: {
-                id: 'product-1',
+                id: entityId<'product'>('product-1'),
                 name: 'Apple',
                 baseUnit: MeasurementUnit.G,
                 baseAmount: DEFAULT_NUTRITION_BASE_AMOUNT,
@@ -346,7 +348,7 @@ function getIngredientNutritionName(food: IngredientFormValues['food'], nestedRe
 
 function createNutritionProduct(): NonNullable<IngredientFormValues['food']> {
     return {
-        id: 'product-1',
+        id: entityId<'product'>('product-1'),
         name: 'Ingredient',
         baseUnit: MeasurementUnit.G,
         baseAmount: DEFAULT_NUTRITION_BASE_AMOUNT,
@@ -374,7 +376,7 @@ function createNutritionProduct(): NonNullable<IngredientFormValues['food']> {
 
 function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
     return {
-        id: 'recipe-1',
+        id: entityId<'recipe'>('recipe-1'),
         name: 'Nested recipe',
         description: null,
         comment: null,
@@ -386,7 +388,7 @@ function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
         servings: 1,
         visibility: RecipeVisibility.Public,
         usageCount: 0,
-        createdAt: new Date().toISOString(),
+        createdAt: utcInstant(new Date().toISOString()),
         isOwnedByCurrentUser: true,
         totalCalories: null,
         totalProteins: null,
@@ -474,26 +476,26 @@ describe('RecipeManageFacade submission recovery', () => {
 
     it.each([null, undefined, 'offline', [], { error: {} }])('uses a safe fallback error and permits update retry: %s', error => {
         recipeService.update.mockReturnValueOnce(throwError(() => error));
-        facade.updateRecipe('r1', dto);
+        facade.updateRecipe(entityId<'recipe'>('r1'), dto);
         expect(facade.isSubmitting()).toBe(false);
         expect(facade.globalError()).toBe('FORM_ERRORS.UNKNOWN');
-        facade.updateRecipe('r1', dto);
+        facade.updateRecipe(entityId<'recipe'>('r1'), dto);
         expect(facade.globalError()).toBeNull();
         expect(recipeService.update).toHaveBeenCalledTimes(2);
     });
 
     it('prevents a duplicate update', () => {
         facade.isSubmitting.set(true);
-        facade.updateRecipe('r1', dto);
+        facade.updateRecipe(entityId<'recipe'>('r1'), dto);
         expect(recipeService.update).not.toHaveBeenCalled();
     });
 
     it('shows a localized connection error and allows retry after an offline save', () => {
         recipeService.update.mockReturnValueOnce(throwError(() => ({ status: 0, error: { message: 'Failed to fetch' } })));
-        facade.updateRecipe('r1', dto);
+        facade.updateRecipe(entityId<'recipe'>('r1'), dto);
         expect(facade.globalError()).toBe('FORM_ERRORS.SAVE_CONNECTION');
         expect(facade.isSubmitting()).toBe(false);
-        facade.updateRecipe('r1', dto);
+        facade.updateRecipe(entityId<'recipe'>('r1'), dto);
         expect(recipeService.update).toHaveBeenCalledTimes(2);
         expect(facade.globalError()).toBeNull();
     });

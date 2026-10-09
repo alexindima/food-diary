@@ -11,6 +11,7 @@ import {
     ProductType,
     ProductVisibility,
 } from '../../../../shared/models/product.data';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { ProductListFacade } from '../../lib/list/product-list.facade';
 import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
 import { ProductListPageComponent } from './product-list-page';
@@ -144,7 +145,7 @@ async function handleProductClickAsync(component: ProductListPageComponent, prod
 
 function createProduct(overrides: Partial<Product> = {}): Product {
     return {
-        id: 'product-1',
+        id: entityId<'product'>('product-1'),
         name: 'Apple',
         barcode: null,
         brand: 'Garden',

@@ -4,6 +4,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../shared/models/product.data';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { ProductAddDialogComponent } from './product-add-dialog';
 
 const PRODUCT_CALORIES = 120;
@@ -38,13 +39,13 @@ describe('ProductAddDialogComponent without initial product', () => {
 
 describe('ProductAddDialogComponent with initial product', () => {
     beforeEach(() => {
-        setupComponent(createProduct({ id: 'initial-product' }));
+        setupComponent(createProduct({ id: entityId<'product'>('initial-product') }));
     });
 
     it('returns initial product when cancelled', () => {
         component['onCancel']();
 
-        expect(dialogRef.close).toHaveBeenCalledWith(createProduct({ id: 'initial-product' }));
+        expect(dialogRef.close).toHaveBeenCalledWith(createProduct({ id: entityId<'product'>('initial-product') }));
     });
 });
 
@@ -71,7 +72,7 @@ function setupComponent(initialProduct?: Product): void {
 
 function createProduct(overrides: Partial<Product> = {}): Product {
     return {
-        id: 'product-1',
+        id: entityId<'product'>('product-1'),
         name: 'Test product',
         barcode: null,
         brand: null,

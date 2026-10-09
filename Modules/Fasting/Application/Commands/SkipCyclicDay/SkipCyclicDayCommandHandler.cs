@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Fasting.Domain.ValueObjects.Settings;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Fasting.Application.Common;
@@ -43,7 +44,7 @@ public sealed class SkipCyclicDayCommandHandler(
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
         try {
             current.Skip(now);
-            plan.ScheduleNextCyclicPhase(DateTime.SpecifyKind(now.Date.AddDays(1), DateTimeKind.Utc));
+            plan.ScheduleNextCyclicDay(FastingCycleDay.FromDateTimeEncoding(DateTime.SpecifyKind(now.Date.AddDays(1), DateTimeKind.Utc), "nextPhaseDateUtc"));
         } catch (InvalidOperationException) {
             return Result.Failure<FastingSessionModel>(FastingErrors.InvalidCyclicAction("The current cyclic period cannot be skipped."));
         }

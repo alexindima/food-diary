@@ -7,6 +7,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { MeasurementUnit, type Product, ProductVisibility } from '../../../../../shared/models/product.data';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { QuickMealService } from '../../../../meals/contracts/quick-meal';
 import { FavoriteProductService } from '../../../api/favorite-product.service';
 import { ProductService } from '../../../api/product.service';
@@ -20,7 +21,7 @@ const MACRO_SUMMARY_BLOCK_COUNT = 3;
 const FAVORITE_ID = 'favorite-1';
 
 const mockProduct: Product = {
-    id: '1',
+    id: entityId<'product'>('1'),
     name: 'Test Product',
     isOwnedByCurrentUser: true,
     baseUnit: MeasurementUnit.G,
@@ -78,7 +79,7 @@ const mockFdDialogService = {
 };
 
 const mockProductService = {
-    duplicate: vi.fn().mockReturnValue(of({ ...mockProduct, id: '2', name: 'Test Product (Copy)' })),
+    duplicate: vi.fn().mockReturnValue(of({ ...mockProduct, id: entityId<'product'>('2'), name: 'Test Product (Copy)' })),
 };
 
 const mockFavoriteProductService = {
@@ -114,7 +115,7 @@ async function createComponentAsync(product: Product = mockProduct): Promise<Pro
 beforeEach(async () => {
     vi.clearAllMocks();
     mockConfirmDialogRef.afterClosed.mockReturnValue(of(true));
-    mockProductService.duplicate.mockReturnValue(of({ ...mockProduct, id: '2', name: 'Test Product (Copy)' }));
+    mockProductService.duplicate.mockReturnValue(of({ ...mockProduct, id: entityId<'product'>('2'), name: 'Test Product (Copy)' }));
     mockFavoriteProductService.isFavorite.mockReturnValue(of(false));
     mockFavoriteProductService.add.mockReturnValue(of(mockFavoriteProduct));
     mockFavoriteProductService.remove.mockReturnValue(of(void 0));
@@ -258,7 +259,7 @@ describe('ProductDetailComponent favorite flow', () => {
 
     it('should remove product from favorites by known favorite id', async () => {
         mockFavoriteProductService.isFavorite.mockReturnValue(of(true));
-        const favoriteProduct: Product = { ...mockProduct, isFavorite: true, favoriteProductId: FAVORITE_ID };
+        const favoriteProduct: Product = { ...mockProduct, isFavorite: true, favoriteProductId: entityId<'favorite-product'>(FAVORITE_ID) };
         const favoriteComponent = await createComponentAsync(favoriteProduct);
 
         favoriteComponent['toggleFavorite']();

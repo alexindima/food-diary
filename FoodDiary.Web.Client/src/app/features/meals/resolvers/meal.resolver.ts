@@ -4,6 +4,7 @@ import { catchError, map, of } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
 import type { Meal } from '../../../shared/models/meal.data';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { MealService } from '../api/meal.service';
 
 export const mealResolver: ResolveFn<Meal | null> = route => {
@@ -16,7 +17,7 @@ export const mealResolver: ResolveFn<Meal | null> = route => {
         return of(null);
     }
 
-    return mealService.getById(mealId).pipe(
+    return mealService.getById(entityId<'meal'>(mealId)).pipe(
         map(meal => {
             if (meal !== null) {
                 return meal;

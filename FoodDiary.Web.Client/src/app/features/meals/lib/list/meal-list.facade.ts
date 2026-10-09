@@ -11,6 +11,8 @@ import { toLocalDayEndIso, toLocalDayStartIso } from '../../../../shared/lib/loc
 import { resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import type { FavoriteMeal, Meal, MealDaySummary, MealFilters } from '../../../../shared/models/meal.data';
+import { type UtcInstant, utcInstant } from '../../../../shared/models/semantics/date-value';
+import type { FavoriteMealId, MealId } from '../../../../shared/models/semantics/entity-id';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealService } from '../../api/meal.service';
@@ -91,9 +93,12 @@ export class MealListFacade {
         }
         if (result.action === 'Repeat') {
             const targetDate = new Date();
-            return firstValueFrom(this.repeatMeal(result.id, targetDate.toISOString(), resolveMealTypeByTime(targetDate), filters), {
-                defaultValue: false,
-            });
+            return firstValueFrom(
+                this.repeatMeal(result.id, utcInstant(targetDate.toISOString()), resolveMealTypeByTime(targetDate), filters),
+                {
+                    defaultValue: false,
+                },
+            );
         }
         return firstValueFrom(this.deleteMeal(result.id, filters), { defaultValue: false });
     }
@@ -142,7 +147,12 @@ export class MealListFacade {
         });
     }
 
-    public repeatMeal(mealId: string, targetDate: string, mealType: string, filtersModel: MealListStructuredFilters): Observable<boolean> {
+    public repeatMeal(
+        mealId: MealId,
+        targetDate: UtcInstant,
+        mealType: string,
+        filtersModel: MealListStructuredFilters,
+    ): Observable<boolean> {
         return this.mealService.repeat(mealId, targetDate, mealType).pipe(
             tap(() => {
                 this.invalidation.reportMealMutation();
@@ -156,7 +166,7 @@ export class MealListFacade {
         );
     }
 
-    public deleteMeal(mealId: string, filtersModel: MealListStructuredFilters): Observable<boolean> {
+    public deleteMeal(mealId: MealId, filtersModel: MealListStructuredFilters): Observable<boolean> {
         return this.mealService.deleteById(mealId).pipe(
             tap(() => {
                 this.invalidation.reportMealMutation();
@@ -231,7 +241,7 @@ export class MealListFacade {
             });
     }
 
-    public syncMealFavoriteState(mealId: string, isFavorite: boolean, favoriteMealId: string | null): void {
+    public syncMealFavoriteState(mealId: string, isFavorite: boolean, favoriteMealId: FavoriteMealId | null): void {
         this.mealData.items.update(items => items.map(item => (item.id === mealId ? { ...item, isFavorite, favoriteMealId } : item)));
     }
 

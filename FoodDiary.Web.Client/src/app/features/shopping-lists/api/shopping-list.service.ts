@@ -8,6 +8,7 @@ import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
 import { sdkOptional } from '../../../shared/api/sdk/sdk-response';
 import { shoppingListFromSdk, shoppingOverviewFromSdk, shoppingSummaryFromSdk } from '../../../shared/api/sdk/shopping-sdk.mapper';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
+import type { ShoppingListId } from '../../../shared/models/semantics/entity-id';
 import type {
     ShoppingList,
     ShoppingListCreateDto,
@@ -49,7 +50,7 @@ export class ShoppingListService {
         );
     }
 
-    public getById(id: string): Observable<ShoppingList | null> {
+    public getById(id: ShoppingListId): Observable<ShoppingList | null> {
         return this.sdk.client.getShoppingListsById({ version: this.sdk.version, id }).pipe(
             map(value => sdkOptional(value, shoppingListFromSdk)),
             catchError((error: unknown) => fallbackApiError('Get shopping list error', error, null)),
@@ -63,14 +64,14 @@ export class ShoppingListService {
         );
     }
 
-    public update(id: string, data: ShoppingListUpdateDto): Observable<ShoppingList> {
+    public update(id: ShoppingListId, data: ShoppingListUpdateDto): Observable<ShoppingList> {
         return this.sdk.client.patchShoppingListsById({ version: this.sdk.version, id, updateShoppingListHttpRequest: data }).pipe(
             map(shoppingListFromSdk),
             catchError((error: unknown) => rethrowApiError('Update shopping list error', error)),
         );
     }
 
-    public deleteById(id: string): Observable<void> {
+    public deleteById(id: ShoppingListId): Observable<void> {
         return this.sdk.client.deleteShoppingListsById({ version: this.sdk.version, id }).pipe(
             map(() => {}),
             catchError((error: unknown) => rethrowApiError('Delete shopping list error', error)),

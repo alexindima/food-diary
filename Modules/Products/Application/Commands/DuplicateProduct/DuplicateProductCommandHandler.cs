@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Products.Application.Mappings;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
@@ -51,12 +52,11 @@ public sealed class DuplicateProductCommandHandler(
         }
 
         bool isOwnedByCurrentUser = original.UserId == userId;
-        var duplicate = Product.Create(
+        var duplicate = Product.CreateWithMeasurements(
             userId,
             original.Name,
-            original.BaseUnit,
-            original.BaseAmount,
-            original.DefaultPortionAmount,
+            ProductMeasurementBasis.FromFields(original.BaseUnit, original.BaseAmount),
+            ProductDefaultPortion.FromAmount(original.BaseUnit, original.DefaultPortionAmount),
             original.CaloriesPerBase,
             original.ProteinsPerBase,
             original.FatsPerBase,

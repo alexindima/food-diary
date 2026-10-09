@@ -21,3 +21,5 @@ Rules for `Modules/Export/Application/`.
 - Guardrails: `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
 Use the canonical project name as the namespace root and match folders. Projects are siblings. Public owner use cases are Contracts requests dispatched through ISender; keep outbound source ports and reusable algorithms separate. Preserve authorization, cancellation, wire shapes and persistence semantics.
+
+DiaryExportPeriod/DiaryDisplayOffset describe inclusive normalized instants and display offsets; CycleExportPeriod describes inclusive calendar dates. Preserve366-day limits, offset inference/fallback and overflow checks, CSV/PDF filenames and sensitive-cycle credential checks. Raw date-range policy/DTO adapters remain compatibility seams.

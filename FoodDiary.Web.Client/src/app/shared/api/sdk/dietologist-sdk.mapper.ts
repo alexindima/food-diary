@@ -8,6 +8,8 @@ import type {
     DietologistRelationship,
     RecommendationTemplate,
 } from '../../models/dietologist.data';
+import { optionalCalendarDate, optionalUtcInstant, utcInstant } from '../../models/semantics/date-value';
+import { entityId, optionalEntityId } from '../../models/semantics/entity-id';
 import type { AttentionSignalHttpResponse } from './generated/model/attention-signal-http-response';
 import type { BulkRecommendationResultHttpResponse } from './generated/model/bulk-recommendation-result-http-response';
 import type { ClientSummaryHttpResponse } from './generated/model/client-summary-http-response';
@@ -35,34 +37,56 @@ export function relationshipFromSdk(response: DietologistRelationshipHttpRespons
     const value = requireSdkFields(response, ['invitationId', 'status', 'permissions', 'createdAtUtc', 'expiresAtUtc']);
     return {
         ...sdkNullableFields(value, ['email', 'firstName', 'lastName', 'dietologistUserId', 'acceptedAtUtc']),
+        invitationId: entityId<'dietologist-invitation'>(value.invitationId),
+        dietologistUserId: optionalEntityId<'user'>(value.dietologistUserId ?? null),
+        createdAtUtc: utcInstant(value.createdAtUtc),
+        expiresAtUtc: utcInstant(value.expiresAtUtc),
+        acceptedAtUtc: optionalUtcInstant(value.acceptedAtUtc ?? null),
+
         permissions: permissionsFromSdk(value.permissions),
     };
 }
 
 export function invitationFromSdk(response: DietologistInvitationForCurrentUserHttpResponse): DietologistInvitationForCurrentUser {
-    return sdkNullableFields(requireSdkFields(response, ['invitationId', 'clientUserId', 'status', 'createdAtUtc', 'expiresAtUtc']), [
-        'clientEmail',
-        'clientFirstName',
-        'clientLastName',
-    ]);
+    const mapped = sdkNullableFields(
+        requireSdkFields(response, ['invitationId', 'clientUserId', 'status', 'createdAtUtc', 'expiresAtUtc']),
+        ['clientEmail', 'clientFirstName', 'clientLastName'],
+    );
+    return {
+        ...mapped,
+        invitationId: entityId<'dietologist-invitation'>(mapped.invitationId),
+        clientUserId: entityId<'user'>(mapped.clientUserId),
+        createdAtUtc: utcInstant(mapped.createdAtUtc),
+        expiresAtUtc: utcInstant(mapped.expiresAtUtc),
+    };
 }
 
 export function clientSummaryFromSdk(response: ClientSummaryHttpResponse): ClientSummary {
     const value = requireSdkFields(response, ['userId', 'permissions', 'acceptedAtUtc']);
     return {
         ...sdkNullableFields(value, ['email', 'firstName', 'lastName', 'profileImage', 'birthDate', 'gender', 'heightCm', 'activityLevel']),
+        userId: entityId<'user'>(value.userId),
+        birthDate: optionalCalendarDate(value.birthDate ?? null),
+        acceptedAtUtc: utcInstant(value.acceptedAtUtc),
+
         permissions: permissionsFromSdk(value.permissions),
     };
 }
 
 export function clientGoalsFromSdk(value: UserHttpResponse): DietologistClientGoals {
-    return sdkNullableFields(requireSdkFields(value, ['id']), ['email']);
+    const mapped = sdkNullableFields(requireSdkFields(value, ['id']), ['email']);
+    return { ...mapped, id: entityId<'user'>(mapped.id) };
 }
 
 export function attentionSignalFromSdk(response: AttentionSignalHttpResponse): AttentionSignal {
     const value = requireSdkFields(response, ['id', 'clientUserId', 'type', 'severity', 'reason', 'detectedAtUtc']);
     return {
         ...sdkNullableFields(value, ['clientDisplayName', 'snoozedUntilUtc']),
+        id: entityId<'attention-signal'>(value.id),
+        clientUserId: entityId<'user'>(value.clientUserId),
+        detectedAtUtc: utcInstant(value.detectedAtUtc),
+        snoozedUntilUtc: optionalUtcInstant(value.snoozedUntilUtc ?? null),
+
         type: sdkEnum(value.type, ['DiaryInactivity', 'CalorieTargetDeviation', 'MaterialWeightChange'] as const),
         severity: sdkEnum(value.severity, ['High', 'Medium', 'Low'] as const),
         reason: sdkEnum(value.reason, [
@@ -75,18 +99,29 @@ export function attentionSignalFromSdk(response: AttentionSignalHttpResponse): A
 }
 
 export function recommendationTemplateFromSdk(value: RecommendationTemplateHttpResponse): RecommendationTemplate {
-    return sdkNullableFields(requireSdkFields(value, ['id', 'name', 'text', 'isArchived', 'createdAtUtc']), ['modifiedAtUtc']);
+    const mapped = sdkNullableFields(requireSdkFields(value, ['id', 'name', 'text', 'isArchived', 'createdAtUtc']), ['modifiedAtUtc']);
+    return {
+        ...mapped,
+        id: entityId<'recommendation-template'>(mapped.id),
+        createdAtUtc: utcInstant(mapped.createdAtUtc),
+        modifiedAtUtc: optionalUtcInstant(mapped.modifiedAtUtc),
+    };
 }
 
 export function bulkRecommendationsFromSdk(response: BulkRecommendationResultHttpResponse): BulkRecommendationResult {
     const value = requireSdkFields(response, ['idempotencyKey', 'recipients']);
     return {
         ...value,
-        recipients: value.recipients.map(recipient =>
-            sdkNullableFields(requireSdkFields(recipient, ['clientUserId', 'succeeded', 'wasAlreadyProcessed']), [
+        recipients: value.recipients.map(recipient => {
+            const mapped = sdkNullableFields(requireSdkFields(recipient, ['clientUserId', 'succeeded', 'wasAlreadyProcessed']), [
                 'recommendationId',
                 'errorCode',
-            ]),
-        ),
+            ]);
+            return {
+                ...mapped,
+                clientUserId: entityId<'user'>(mapped.clientUserId),
+                recommendationId: optionalEntityId<'recommendation'>(mapped.recommendationId),
+            };
+        }),
     };
 }

@@ -5,6 +5,7 @@ import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import type { AdminUser, PagedResponse } from '../models/admin-user.models';
 import { AdminUsersComponent } from './admin-users';
@@ -27,13 +28,13 @@ let dialogService: { open: ReturnType<typeof vi.fn> };
 const pagedUsers: PagedResponse<AdminUser> = {
     items: [
         {
-            id: 'u1',
+            id: adminId<'user'>('u1'),
             email: 'user@example.com',
             username: 'alex',
             isActive: true,
             isEmailConfirmed: true,
-            createdOnUtc: '2026-01-01T00:00:00Z',
-            lastLoginAtUtc: '2026-05-23T02:06:10Z',
+            createdOnUtc: adminUtcInstant('2026-01-01T00:00:00Z'),
+            lastLoginAtUtc: adminUtcInstant('2026-05-23T02:06:10Z'),
             roles: ['Admin'],
         },
     ],

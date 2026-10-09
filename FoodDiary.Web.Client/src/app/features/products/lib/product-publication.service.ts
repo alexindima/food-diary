@@ -2,6 +2,7 @@ import { inject, Service } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { type Product, ProductVisibility } from '../../../shared/models/product.data';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { ProductService } from '../api/product.service';
 
 @Service()
@@ -9,7 +10,9 @@ export class ProductPublicationService {
     private readonly products = inject(ProductService);
 
     public async loadAsync(ids: readonly string[]): Promise<Product[]> {
-        const products = await Promise.all([...new Set(ids)].map(async id => firstValueFrom(this.products.getById(id))));
+        const products = await Promise.all(
+            [...new Set(ids)].map(async id => firstValueFrom(this.products.getById(entityId<'product'>(id)))),
+        );
         if (products.includes(null)) {
             throw new Error('Cannot verify ingredient visibility');
         }

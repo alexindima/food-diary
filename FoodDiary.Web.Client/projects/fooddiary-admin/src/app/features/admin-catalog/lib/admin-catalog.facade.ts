@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { firstValueFrom, from, mergeMap, type Observable, toArray } from 'rxjs';
 
 import { AdminCatalogService } from '../api/admin-catalog.service';
+import { catalogProductReference, decodeCatalogIngredientSource } from '../models/catalog-ingredient-source';
 import type { CatalogFile, CatalogKind, CatalogProduct, CatalogRecipe, CatalogReportRow, CatalogResult } from '../models/catalog-transfer';
 import { MAX_CATALOG_FILE_BYTES, orderCatalogRecipes, parseCatalogFile } from './catalog-file';
 
@@ -59,7 +60,10 @@ export class AdminCatalogFacade {
             if (
                 newRecipes.some(item =>
                     item.steps.some(step =>
-                        step.ingredients.some(ingredient => ingredient.productId !== null && !productIds.has(ingredient.productId)),
+                        step.ingredients.some(ingredient => {
+                            const productId = catalogProductReference(decodeCatalogIngredientSource(ingredient));
+                            return productId !== null && !productIds.has(productId);
+                        }),
                     ),
                 )
             ) {

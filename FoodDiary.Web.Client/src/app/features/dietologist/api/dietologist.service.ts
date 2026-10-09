@@ -36,6 +36,7 @@ import type {
     RecommendationTemplate,
     RecommendationTemplateRequest,
 } from '../../../shared/models/dietologist.data';
+import type { ClientTaskId, DietologistInvitationId, RecommendationTemplateId, UserId } from '../../../shared/models/semantics/entity-id';
 import type { DietologistDashboardSnapshot } from '../lib/dietologist-dashboard.data';
 
 const DEFAULT_CLIENT_DASHBOARD_PAGE_SIZE = 5;
@@ -61,7 +62,7 @@ export class DietologistService {
             .pipe(map(value => sdkOptional(value, relationshipFromSdk)));
     }
 
-    public getInvitationForCurrentUser(invitationId: string): Observable<DietologistInvitationForCurrentUser> {
+    public getInvitationForCurrentUser(invitationId: DietologistInvitationId): Observable<DietologistInvitationForCurrentUser> {
         return this.sdk.client
             .getDietologistInvitationsByInvitationIdCurrentUser({ version: this.sdk.version, invitationId })
             .pipe(map(invitationFromSdk));
@@ -93,7 +94,7 @@ export class DietologistService {
         });
     }
 
-    public getClientDashboard(clientUserId: string, query: DietologistClientDashboardQuery): Observable<DietologistDashboardSnapshot> {
+    public getClientDashboard(clientUserId: UserId, query: DietologistClientDashboardQuery): Observable<DietologistDashboardSnapshot> {
         const {
             dateFrom,
             dateTo,
@@ -119,13 +120,13 @@ export class DietologistService {
             .pipe(map(dashboardSnapshotFromSdk));
     }
 
-    public getClientGoals(clientUserId: string): Observable<DietologistClientGoals> {
+    public getClientGoals(clientUserId: UserId): Observable<DietologistClientGoals> {
         return this.sdk.client
             .getDietologistClientsByClientUserIdGoals({ version: this.sdk.version, clientUserId })
             .pipe(map(clientGoalsFromSdk));
     }
 
-    public getRecommendationsForClient(clientUserId: string): Observable<DietologistRecommendation[]> {
+    public getRecommendationsForClient(clientUserId: UserId): Observable<DietologistRecommendation[]> {
         return loadPagedCollection((page, limit) =>
             this.sdk.client
                 .getDietologistClientsByClientUserIdRecommendations({ version: this.sdk.version, clientUserId, page, limit })
@@ -133,11 +134,11 @@ export class DietologistService {
         );
     }
 
-    public disconnectClient(clientUserId: string): Observable<void> {
+    public disconnectClient(clientUserId: UserId): Observable<void> {
         return this.sdk.client.deleteDietologistClientsByClientUserId({ version: this.sdk.version, clientUserId });
     }
 
-    public createRecommendation(clientUserId: string, request: CreateRecommendationRequest): Observable<DietologistRecommendation> {
+    public createRecommendation(clientUserId: UserId, request: CreateRecommendationRequest): Observable<DietologistRecommendation> {
         return this.sdk.client
             .postDietologistClientsByClientUserIdRecommendations({
                 version: this.sdk.version,
@@ -147,7 +148,7 @@ export class DietologistService {
             .pipe(map(recommendationFromSdk));
     }
 
-    public getTasksForClient(clientUserId: string): Observable<ClientTask[]> {
+    public getTasksForClient(clientUserId: UserId): Observable<ClientTask[]> {
         return loadPagedCollection((page, limit) =>
             this.sdk.client
                 .getDietologistClientsByClientUserIdTasks({ version: this.sdk.version, clientUserId, page, limit })
@@ -155,13 +156,13 @@ export class DietologistService {
         );
     }
 
-    public createTask(clientUserId: string, request: CreateClientTaskRequest): Observable<ClientTask> {
+    public createTask(clientUserId: UserId, request: CreateClientTaskRequest): Observable<ClientTask> {
         return this.sdk.client
             .postDietologistClientsByClientUserIdTasks({ version: this.sdk.version, clientUserId, createClientTaskHttpRequest: request })
             .pipe(map(clientTaskFromSdk));
     }
 
-    public cancelTask(taskId: string): Observable<ClientTask> {
+    public cancelTask(taskId: ClientTaskId): Observable<ClientTask> {
         return this.sdk.client.putDietologistClientsTasksByTaskIdCancel({ version: this.sdk.version, taskId }).pipe(map(clientTaskFromSdk));
     }
 
@@ -179,7 +180,10 @@ export class DietologistService {
             .pipe(map(recommendationTemplateFromSdk));
     }
 
-    public updateRecommendationTemplate(templateId: string, request: RecommendationTemplateRequest): Observable<RecommendationTemplate> {
+    public updateRecommendationTemplate(
+        templateId: RecommendationTemplateId,
+        request: RecommendationTemplateRequest,
+    ): Observable<RecommendationTemplate> {
         return this.sdk.client
             .putDietologistRecommendationTemplatesByTemplateId({
                 version: this.sdk.version,
@@ -189,11 +193,11 @@ export class DietologistService {
             .pipe(map(recommendationTemplateFromSdk));
     }
 
-    public archiveRecommendationTemplate(templateId: string): Observable<void> {
+    public archiveRecommendationTemplate(templateId: RecommendationTemplateId): Observable<void> {
         return this.sdk.client.deleteDietologistRecommendationTemplatesByTemplateId({ version: this.sdk.version, templateId });
     }
 
-    public bulkCreateRecommendations(clientUserIds: string[], text: string, idempotencyKey: string): Observable<BulkRecommendationResult> {
+    public bulkCreateRecommendations(clientUserIds: UserId[], text: string, idempotencyKey: string): Observable<BulkRecommendationResult> {
         return this.sdk.client
             .postDietologistRecommendationsBulk({
                 version: this.sdk.version,
@@ -206,11 +210,11 @@ export class DietologistService {
         return this.sdk.client.postDietologistInvite({ version: this.sdk.version, inviteDietologistHttpRequest: request });
     }
 
-    public acceptInvitationForCurrentUser(invitationId: string): Observable<void> {
+    public acceptInvitationForCurrentUser(invitationId: DietologistInvitationId): Observable<void> {
         return this.sdk.client.postDietologistInvitationsByInvitationIdAcceptCurrentUser({ version: this.sdk.version, invitationId });
     }
 
-    public declineInvitationForCurrentUser(invitationId: string): Observable<void> {
+    public declineInvitationForCurrentUser(invitationId: DietologistInvitationId): Observable<void> {
         return this.sdk.client.postDietologistInvitationsByInvitationIdDeclineCurrentUser({ version: this.sdk.version, invitationId });
     }
 

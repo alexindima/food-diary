@@ -19,8 +19,14 @@ public sealed class WeightGoal : Entity<WeightGoalId> {
     }
 
     public static WeightGoal Start(UserId userId, double targetWeight, double startWeight, DateTime startedAtUtc) {
-        _ = DesiredWeightKg.Create(targetWeight);
-        _ = DesiredWeightKg.Create(startWeight);
+        var target = DesiredWeightKg.Create(targetWeight);
+        var start = MeasuredWeightKg.FromGoalValue(startWeight);
+        return StartWithMeasurements(userId, target, start, startedAtUtc);
+    }
+
+    public static WeightGoal StartWithMeasurements(UserId userId, DesiredWeightKg targetWeight, MeasuredWeightKg startWeight, DateTime startedAtUtc) {
+        ArgumentNullException.ThrowIfNull(targetWeight);
+        ArgumentNullException.ThrowIfNull(startWeight);
         if (userId.Value == Guid.Empty) {
             throw new ArgumentException("User id is required.", nameof(userId));
         }
@@ -28,8 +34,8 @@ public sealed class WeightGoal : Entity<WeightGoalId> {
         var goal = new WeightGoal {
             Id = WeightGoalId.New(),
             UserId = userId,
-            TargetWeightKg = targetWeight,
-            StartWeightKg = startWeight,
+            TargetWeightKg = targetWeight.Value,
+            StartWeightKg = startWeight.Value,
             StartedAtUtc = NormalizeUtc(startedAtUtc),
             Status = WeightGoalStatus.Active,
         };
@@ -40,6 +46,16 @@ public sealed class WeightGoal : Entity<WeightGoalId> {
     public void Replace(DateTime endedAtUtc, double endWeight) => End(WeightGoalStatus.Replaced, endedAtUtc, endWeight);
 
     public void Cancel(DateTime endedAtUtc, double endWeight) => End(WeightGoalStatus.Cancelled, endedAtUtc, endWeight);
+
+    public void ReplaceWithMeasurement(DateTime endedAtUtc, MeasuredWeightKg endWeight) {
+        ArgumentNullException.ThrowIfNull(endWeight);
+        Replace(endedAtUtc, endWeight.Value);
+    }
+
+    public void CancelWithMeasurement(DateTime endedAtUtc, MeasuredWeightKg endWeight) {
+        ArgumentNullException.ThrowIfNull(endWeight);
+        Cancel(endedAtUtc, endWeight.Value);
+    }
 
     private void End(WeightGoalStatus status, DateTime endedAtUtc, double endWeight) {
         if (Status != WeightGoalStatus.Active) {

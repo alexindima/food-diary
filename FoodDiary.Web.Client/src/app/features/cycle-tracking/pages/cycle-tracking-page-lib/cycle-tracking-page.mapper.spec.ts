@@ -16,6 +16,8 @@ import {
     CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE,
     OVULATION_TEST_RESULT_POSITIVE,
 } from '../../../../shared/models/cycle.data';
+import { calendarDate } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { DEFAULT_DAY_ACCENT_COLOR, PERIOD_DAY_ACCENT_COLOR } from './cycle-tracking-page.config';
 import {
     buildCycleCurrentView,
@@ -28,14 +30,14 @@ import {
 } from './cycle-tracking-page.mapper';
 
 const CYCLE: CycleResponse = {
-    id: 'cycle-1',
-    userId: 'user-1',
+    id: entityId<'cycle-profile'>('cycle-1'),
+    userId: entityId<'user'>('user-1'),
     mode: CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE,
     goal: 0,
     reproductiveState: 0,
     hideFromDashboard: false,
     confidence: 1,
-    trackingStartDate: '2026-04-01T00:00:00.000Z',
+    trackingStartDate: calendarDate('2026-04-01T00:00:00.000Z'),
     averageCycleLength: 28,
     averagePeriodLength: 5,
     lutealLength: 14,
@@ -47,19 +49,19 @@ const CYCLE: CycleResponse = {
     symptoms: [],
     factors: [
         {
-            id: 'factor-1',
-            cycleProfileId: 'cycle-1',
+            id: entityId<'cycle-factor'>('factor-1'),
+            cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
             type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
-            startDate: '2026-04-02T00:00:00.000Z',
+            startDate: calendarDate('2026-04-02T00:00:00.000Z'),
             endDate: null,
             notes: null,
         },
         {
-            id: 'factor-2',
-            cycleProfileId: 'cycle-1',
+            id: entityId<'cycle-factor'>('factor-2'),
+            cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
             type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
-            startDate: '2026-03-02T00:00:00.000Z',
-            endDate: '2026-03-10T00:00:00.000Z',
+            startDate: calendarDate('2026-03-02T00:00:00.000Z'),
+            endDate: calendarDate('2026-03-10T00:00:00.000Z'),
             notes: null,
         },
     ],
@@ -79,8 +81,8 @@ const EPISODE_START_DAY = 10;
 const EXPECTED_CYCLE_DAY = 7;
 const OVERVIEW_DAY_COUNT = 11;
 const NUTRITION_SUMMARY: CycleNutritionSummary = {
-    dateFrom: '2026-04-01T00:00:00.000Z',
-    dateTo: '2026-04-30T23:59:59.999Z',
+    dateFrom: calendarDate('2026-04-01T00:00:00.000Z'),
+    dateTo: calendarDate('2026-04-30T23:59:59.999Z'),
     loggedCycleDays: NUTRITION_LOGGED_CYCLE_DAYS,
     daysWithMeals: 3,
     bleedingDays: 2,
@@ -93,9 +95,9 @@ const NUTRITION_SUMMARY: CycleNutritionSummary = {
 };
 
 const BLEEDING_ENTRY: BleedingEntry = {
-    id: 'bleeding-1',
-    cycleProfileId: 'cycle-1',
-    date: '2026-04-02T00:00:00.000Z',
+    id: entityId<'bleeding-entry'>('bleeding-1'),
+    cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+    date: calendarDate('2026-04-02T00:00:00.000Z'),
     type: BLEEDING_TYPE_BLEEDING,
     flow: CYCLE_FLOW_MEDIUM,
     painImpact: 5,
@@ -103,9 +105,9 @@ const BLEEDING_ENTRY: BleedingEntry = {
 };
 
 const SYMPTOM_ENTRY: CycleSymptomEntry = {
-    id: 'symptom-1',
-    cycleProfileId: 'cycle-1',
-    date: '2026-04-03T00:00:00.000Z',
+    id: entityId<'cycle-symptom-entry'>('symptom-1'),
+    cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+    date: calendarDate('2026-04-03T00:00:00.000Z'),
     category: 0,
     intensity: 4,
     tags: [],
@@ -113,9 +115,9 @@ const SYMPTOM_ENTRY: CycleSymptomEntry = {
 };
 
 const FERTILITY_SIGNAL: FertilitySignal = {
-    id: 'signal-1',
-    cycleProfileId: 'cycle-1',
-    date: '2026-04-03T00:00:00.000Z',
+    id: entityId<'fertility-signal'>('signal-1'),
+    cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+    date: calendarDate('2026-04-03T00:00:00.000Z'),
     basalBodyTemperatureCelsius: 36.62,
     ovulationTestResult: OVULATION_TEST_RESULT_POSITIVE,
     cervicalFluid: 'egg white',
@@ -163,7 +165,7 @@ describe('cycle tracking overview mapper', () => {
                 bleedingEntries: [],
                 symptoms: [],
                 fertilitySignals: [],
-                dayNotes: [{ date: '2026-04-16T00:00:00Z', notes: 'Quiet day' }],
+                dayNotes: [{ date: calendarDate('2026-04-16T00:00:00Z'), notes: 'Quiet day' }],
             },
             'en-US',
             new Date(OVERVIEW_YEAR, OVERVIEW_MONTH_INDEX, OVERVIEW_DAY),
@@ -177,13 +179,13 @@ describe('cycle tracking overview mapper', () => {
         const view = buildCycleOverviewView(
             {
                 ...CYCLE,
-                bleedingEntries: [{ ...BLEEDING_ENTRY, date: '2026-04-16T00:00:00.000Z' }],
+                bleedingEntries: [{ ...BLEEDING_ENTRY, date: calendarDate('2026-04-16T00:00:00.000Z') }],
                 menstrualEpisodes: [
                     {
-                        id: 'episode-1',
+                        id: entityId<'menstrual-episode'>('episode-1'),
                         cycleProfileId: CYCLE.id,
-                        startDate: '2026-04-10T00:00:00.000Z',
-                        endDate: '2026-04-14T00:00:00.000Z',
+                        startDate: calendarDate('2026-04-10T00:00:00.000Z'),
+                        endDate: calendarDate('2026-04-14T00:00:00.000Z'),
                         status: 1,
                         excludedFromPredictions: false,
                     },
@@ -191,8 +193,8 @@ describe('cycle tracking overview mapper', () => {
                 predictions: {
                     confidence: 'Low',
                     rationale: '',
-                    nextPeriodStartFrom: '2026-04-19T00:00:00.000Z',
-                    nextPeriodStartTo: '2026-04-20T00:00:00.000Z',
+                    nextPeriodStartFrom: calendarDate('2026-04-19T00:00:00.000Z'),
+                    nextPeriodStartTo: calendarDate('2026-04-20T00:00:00.000Z'),
                 },
             },
             'en-US',
@@ -211,10 +213,10 @@ describe('cycle tracking overview mapper', () => {
                 ...CYCLE,
                 menstrualEpisodes: [
                     {
-                        id: 'episode-1',
+                        id: entityId<'menstrual-episode'>('episode-1'),
                         cycleProfileId: CYCLE.id,
-                        startDate: '2026-04-10T00:00:00.000Z',
-                        endDate: '2026-04-14T00:00:00.000Z',
+                        startDate: calendarDate('2026-04-10T00:00:00.000Z'),
+                        endDate: calendarDate('2026-04-14T00:00:00.000Z'),
                         status: 1,
                         excludedFromPredictions: false,
                     },
@@ -239,10 +241,10 @@ describe('cycle tracking prediction mapper', () => {
     it('builds prediction labels using UTC dates', () => {
         const view = buildCyclePredictionView(
             {
-                nextPeriodStartFrom: '2026-04-29T23:00:00.000Z',
-                nextPeriodStartTo: '2026-05-01T00:00:00.000Z',
-                ovulationFrom: '2026-04-15T00:00:00.000Z',
-                ovulationTo: '2026-04-16T00:00:00.000Z',
+                nextPeriodStartFrom: calendarDate('2026-04-29T23:00:00.000Z'),
+                nextPeriodStartTo: calendarDate('2026-05-01T00:00:00.000Z'),
+                ovulationFrom: calendarDate('2026-04-15T00:00:00.000Z'),
+                ovulationTo: calendarDate('2026-04-16T00:00:00.000Z'),
                 pmsWindowStart: null,
                 pmsWindowEnd: null,
                 confidence: 'Moderate',
@@ -282,9 +284,9 @@ describe('cycle tracking prediction mapper', () => {
     it('preserves invalid date values for diagnostics', () => {
         const view = buildCyclePredictionView(
             {
-                nextPeriodStartFrom: 'not-a-date',
+                nextPeriodStartFrom: calendarDate('not-a-date'),
                 nextPeriodStartTo: null,
-                ovulationFrom: '',
+                ovulationFrom: calendarDate(''),
                 ovulationTo: null,
                 pmsWindowStart: undefined,
                 pmsWindowEnd: undefined,
@@ -372,7 +374,7 @@ describe('cycle tracking factor mapper', () => {
     it('shows a future start as planned', () => {
         const now = new Date();
         const tomorrow = formatDateInputValue(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1));
-        const view = buildCycleFactorItems([{ ...CYCLE.factors[0], startDate: tomorrow, endDate: null }], 'en-US');
+        const view = buildCycleFactorItems([{ ...CYCLE.factors[0], startDate: calendarDate(tomorrow), endDate: null }], 'en-US');
         expect(view[0].statusLabelKey).toBe('CYCLE_TRACKING.FACTOR_PLANNED');
         expect(view[0].isActive).toBe(false);
     });
@@ -380,13 +382,13 @@ describe('cycle tracking factor mapper', () => {
     it('keeps a factor active until its future end date', () => {
         const now = new Date();
         const tomorrow = formatDateInputValue(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1));
-        const view = buildCycleFactorItems([{ ...CYCLE.factors[0], endDate: tomorrow }], 'en-US');
+        const view = buildCycleFactorItems([{ ...CYCLE.factors[0], endDate: calendarDate(tomorrow) }], 'en-US');
         expect(view[0].statusLabelKey).toBe('CYCLE_TRACKING.FACTOR_ACTIVE');
         expect(view[0].isActive).toBe(true);
     });
 
     it('shows that a factor ends today', () => {
-        const view = buildCycleFactorItems([{ ...CYCLE.factors[0], endDate: formatDateInputValue(new Date()) }], 'en-US');
+        const view = buildCycleFactorItems([{ ...CYCLE.factors[0], endDate: calendarDate(formatDateInputValue(new Date())) }], 'en-US');
         expect(view[0].statusLabelKey).toBe('CYCLE_TRACKING.FACTOR_ENDS_TODAY');
     });
 
@@ -465,10 +467,32 @@ describe('cycle tracking day item mapper', () => {
 describe('cycle observations mapper', () => {
     it('builds descriptive observations from active journal entries', () => {
         const symptoms: CycleSymptomEntry[] = [
-            { ...SYMPTOM_ENTRY, id: 'pain-1', date: '2026-04-01T00:00:00.000Z', intensity: 4 },
-            { ...SYMPTOM_ENTRY, id: 'pain-2', date: '2026-04-02T00:00:00.000Z', intensity: 8 },
-            { ...SYMPTOM_ENTRY, id: 'sleep-1', date: '2026-04-03T00:00:00.000Z', category: 3, intensity: 5 },
-            { ...SYMPTOM_ENTRY, id: 'ignored-zero', date: '2026-04-03T00:00:00.000Z', category: 7, intensity: 0 },
+            {
+                ...SYMPTOM_ENTRY,
+                id: entityId<'cycle-symptom-entry'>('pain-1'),
+                date: calendarDate('2026-04-01T00:00:00.000Z'),
+                intensity: 4,
+            },
+            {
+                ...SYMPTOM_ENTRY,
+                id: entityId<'cycle-symptom-entry'>('pain-2'),
+                date: calendarDate('2026-04-02T00:00:00.000Z'),
+                intensity: 8,
+            },
+            {
+                ...SYMPTOM_ENTRY,
+                id: entityId<'cycle-symptom-entry'>('sleep-1'),
+                date: calendarDate('2026-04-03T00:00:00.000Z'),
+                category: 3,
+                intensity: 5,
+            },
+            {
+                ...SYMPTOM_ENTRY,
+                id: entityId<'cycle-symptom-entry'>('ignored-zero'),
+                date: calendarDate('2026-04-03T00:00:00.000Z'),
+                category: 7,
+                intensity: 0,
+            },
         ];
         const items = buildCycleDayItems([BLEEDING_ENTRY], symptoms, [], 'en-US');
 
@@ -492,10 +516,10 @@ describe('cycle period metadata mapper', () => {
             locale: 'en-US',
             menstrualEpisodes: [
                 {
-                    id: '',
-                    cycleProfileId: 'cycle-1',
-                    startDate: BLEEDING_ENTRY.date,
-                    endDate: BLEEDING_ENTRY.date,
+                    id: entityId<'menstrual-episode'>(''),
+                    cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                    startDate: calendarDate(BLEEDING_ENTRY.date),
+                    endDate: calendarDate(BLEEDING_ENTRY.date),
                     status: 0,
                     excludedFromPredictions: false,
                 },
@@ -505,10 +529,10 @@ describe('cycle period metadata mapper', () => {
             locale: 'en-US',
             menstrualEpisodes: [
                 {
-                    id: 'episode-1',
-                    cycleProfileId: 'cycle-1',
-                    startDate: BLEEDING_ENTRY.date,
-                    endDate: BLEEDING_ENTRY.date,
+                    id: entityId<'menstrual-episode'>('episode-1'),
+                    cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                    startDate: calendarDate(BLEEDING_ENTRY.date),
+                    endDate: calendarDate(BLEEDING_ENTRY.date),
                     status: 1,
                     excludedFromPredictions: false,
                 },
@@ -523,9 +547,9 @@ describe('cycle period metadata mapper', () => {
         const bleedingEntries = Array.from({ length: PROLONGED_BLEEDING_DAYS }, (_, index): BleedingEntry => {
             const date = new Date(Date.UTC(CARE_PROMPT_YEAR, APRIL_MONTH_INDEX, index + 1)).toISOString();
             return {
-                id: `bleeding-${index + 1}`,
-                cycleProfileId: 'cycle-1',
-                date,
+                id: entityId<'bleeding-entry'>(`bleeding-${index + 1}`),
+                cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                date: calendarDate(date),
                 type: BLEEDING_TYPE_BLEEDING,
                 flow: index === LAST_PROLONGED_BLEEDING_INDEX ? CYCLE_FLOW_HEAVY : CYCLE_FLOW_MEDIUM,
                 painImpact: index === LAST_PROLONGED_BLEEDING_INDEX ? SEVERE_PAIN_VALUE : null,
@@ -549,7 +573,7 @@ describe('Notes-only day history', () => {
         const items = buildCycleDayItems([], [], [], {
             locale: 'ru',
             menstrualEpisodes: [],
-            dayNotes: [{ date: '2026-04-02', notes: 'Quiet day' }],
+            dayNotes: [{ date: calendarDate('2026-04-02'), notes: 'Quiet day' }],
         });
         expect(items).toHaveLength(1);
         expect(items[0].notes).toBe('Quiet day');

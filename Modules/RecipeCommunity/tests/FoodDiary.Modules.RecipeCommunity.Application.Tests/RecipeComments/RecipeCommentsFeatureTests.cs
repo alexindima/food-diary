@@ -1,5 +1,5 @@
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Modules.RecipeCommunity.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.RecipeCommunity.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Modules.RecipeCommunity.Application.RecipeComments.Commands.CreateRecipeComment;

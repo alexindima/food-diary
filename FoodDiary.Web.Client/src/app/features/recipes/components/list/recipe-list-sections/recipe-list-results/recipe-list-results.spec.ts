@@ -3,6 +3,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import { type Recipe, RecipeVisibility } from '../../../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../../shared/models/semantics/entity-id';
 import { RecipeListResultsComponent } from './recipe-list-results';
 
 describe('RecipeListResultsComponent', () => {
@@ -75,13 +77,13 @@ function createRecipeItems(count: number): Array<{ recipe: Recipe; imageUrl: str
 
 function createRecipe(id: string): Recipe {
     return {
-        id,
+        id: entityId<'recipe'>(id),
         name: 'Recipe',
         servings: 2,
         totalCalories: 600,
         visibility: RecipeVisibility.Private,
         usageCount: 0,
-        createdAt: '2026-01-01T00:00:00Z',
+        createdAt: utcInstant('2026-01-01T00:00:00Z'),
         isOwnedByCurrentUser: true,
         isNutritionAutoCalculated: true,
         steps: [],

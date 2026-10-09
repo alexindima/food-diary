@@ -8,6 +8,7 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { RecipeLookupService } from '../../../../shared/api/recipe-lookup.service';
+import { imageSelection } from '../../../../shared/models/image-upload.data';
 import {
     createEmptyProductSnapshot,
     createEmptyRecipeSnapshot,
@@ -18,6 +19,9 @@ import {
     MealSourceType,
 } from '../../../../shared/models/meal.data';
 import type { RecipeLookup } from '../../../../shared/models/recipe-lookup.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
+import { productQuantityFromStored, recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MealService } from '../../api/meal.service';
 import type { MealFormValues, MealItemFormValues } from '../../components/manage/meal-manage-lib/meal-manage.types';
@@ -119,8 +123,8 @@ let recipeWeightService: {
 };
 
 const meal: Meal = {
-    id: 'c1',
-    date: '2026-04-02T12:00:00Z',
+    id: entityId<'meal'>('c1'),
+    date: utcInstant('2026-04-02T12:00:00Z'),
     totalCalories: 0,
     totalProteins: 0,
     totalFats: 0,
@@ -135,6 +139,8 @@ const mealData: MealManageDto = {
     items: [],
     isNutritionAutoCalculated: true,
 };
+
+const CONSUMED_AMOUNT = 125;
 
 describe('MealManageFacade', () => {
     beforeEach(() => {
@@ -284,7 +290,7 @@ function registerItemSelectionTests(): void {
         });
 
         it('should resolve recipe servings to grams', async () => {
-            const recipe = { ...createEmptyRecipeSnapshot(), id: 'r1' };
+            const recipe = { ...createEmptyRecipeSnapshot(), id: entityId<'recipe'>('r1') };
 
             const amount = await facade.resolveRecipeServingsToGramsAsync(recipe, RECIPE_SERVING_AMOUNT);
 
@@ -295,7 +301,7 @@ function registerItemSelectionTests(): void {
         it('should use product default portion amount after manual selection', async () => {
             const product = {
                 ...createEmptyProductSnapshot(),
-                id: 'p1',
+                id: entityId<'product'>('p1'),
                 defaultPortionAmount: PRODUCT_PORTION_AMOUNT,
                 baseAmount: RECIPE_AMOUNT,
             };
@@ -308,7 +314,7 @@ function registerItemSelectionTests(): void {
         });
 
         it('should convert one recipe serving to grams after manual selection', async () => {
-            const recipe = { ...createEmptyRecipeSnapshot(), id: 'r1' };
+            const recipe = { ...createEmptyRecipeSnapshot(), id: entityId<'recipe'>('r1') };
             dialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Recipe', recipe }) });
             recipeWeightService.loadServingWeight.mockReturnValue(of(MANUAL_RECIPE_WEIGHT));
 
@@ -349,7 +355,7 @@ function registerNutritionSummaryTests(): void {
 function createNutritionProduct(): ReturnType<typeof createEmptyProductSnapshot> {
     return {
         ...createEmptyProductSnapshot(),
-        id: 'p1',
+        id: entityId<'product'>('p1'),
         baseAmount: RECIPE_AMOUNT,
         caloriesPerBase: PRODUCT_CALORIES_PER_BASE,
         proteinsPerBase: PRODUCT_PROTEINS_PER_BASE,
@@ -363,7 +369,7 @@ function createNutritionProduct(): ReturnType<typeof createEmptyProductSnapshot>
 function createNutritionRecipe(): ReturnType<typeof createEmptyRecipeSnapshot> {
     return {
         ...createEmptyRecipeSnapshot(),
-        id: 'r1',
+        id: entityId<'recipe'>('r1'),
         servings: RECIPE_SERVINGS,
         totalCalories: RECIPE_TOTAL_CALORIES,
         totalProteins: RECIPE_TOTAL_PROTEINS,
@@ -432,7 +438,7 @@ function registerManageDialogTests(): void {
             expect.anything(),
             expect.objectContaining({
                 data: {
-                    initialSelection: imageUrl === null ? null : { url: imageUrl, assetId: 'asset' },
+                    initialSelection: imageUrl === null ? null : imageSelection(imageUrl, 'asset'),
                     initialSession: session,
                     mode: 'edit',
                 },
@@ -597,21 +603,28 @@ function setupColdFacade(lookupResult: Observable<RecipeLookup>): { facade: Meal
     return { facade: TestBed.inject(MealManageFacade), getById };
 }
 
-describe('MealManageFacade cold recipe amount loading', () => {
-    const recipe = {
-        ...createEmptyRecipeSnapshot(),
-        id: 'cold-recipe',
-        name: 'Porridge',
-        servings: 1,
-        totalCalories: COLD_RECIPE_TOTAL_CALORIES / COLD_RECIPE_SERVINGS,
-    };
-    const recipeItem: MealItem = { id: 'item', mealId: 'meal', sourceType: MealSourceType.Recipe, recipe, amount: COLD_MEAL_SERVINGS };
-    const lookup: RecipeLookup = {
-        id: recipe.id,
-        servings: COLD_RECIPE_SERVINGS,
-        steps: [{ ingredients: [{ amount: 100, productBaseUnit: 'G' }] }],
-    };
+const recipe = {
+    ...createEmptyRecipeSnapshot(),
+    id: entityId<'recipe'>('cold-recipe'),
+    name: 'Porridge',
+    servings: 1,
+    totalCalories: COLD_RECIPE_TOTAL_CALORIES / COLD_RECIPE_SERVINGS,
+};
+const recipeItem: MealItem = {
+    id: entityId<'meal-item'>('item'),
+    mealId: entityId<'meal'>('meal'),
+    sourceType: MealSourceType.Recipe,
+    recipe,
+    amount: recipeServingsFromStored(COLD_MEAL_SERVINGS),
+    product: null,
+};
+const lookup: RecipeLookup = {
+    id: recipe.id,
+    servings: COLD_RECIPE_SERVINGS,
+    steps: [{ ingredients: [{ amount: 100, productBaseUnit: 'G' }] }],
+};
 
+describe('MealManageFacade cold recipe amount loading', () => {
     it('loads the full recipe before converting the meal snapshot and preserves its nutrition', async () => {
         const { facade: coldFacade, getById } = setupColdFacade(of(lookup));
         const items = await firstValueFrom(coldFacade.prepareMealItems([recipeItem]));
@@ -655,7 +668,14 @@ describe('MealManageFacade cold recipe amount loading', () => {
     it('preserves product quantities and item order when mixed with recipes', async () => {
         const { facade: coldFacade } = setupColdFacade(of(lookup));
         const product = createNutritionProduct();
-        const productItem: MealItem = { id: 'product-item', mealId: 'meal', sourceType: MealSourceType.Product, product, amount: 125 };
+        const productItem: MealItem = {
+            id: entityId<'meal-item'>('product-item'),
+            mealId: entityId<'meal'>('meal'),
+            sourceType: MealSourceType.Product,
+            product,
+            amount: productQuantityFromStored(CONSUMED_AMOUNT),
+            recipe: null,
+        };
         const items = await firstValueFrom(coldFacade.prepareMealItems([productItem, recipeItem]));
         expect(items).toEqual([
             expect.objectContaining({ product, amount: 125, recipe: null }),
@@ -667,7 +687,14 @@ describe('MealManageFacade cold recipe amount loading', () => {
         const { facade: coldFacade, getById } = setupColdFacade(of(lookup));
         expect(await firstValueFrom(coldFacade.prepareMealItems([]))).toHaveLength(1);
         const product = createNutritionProduct();
-        const productItem: MealItem = { id: 'p', mealId: 'meal', sourceType: MealSourceType.Product, product, amount: 125 };
+        const productItem: MealItem = {
+            id: entityId<'meal-item'>('p'),
+            mealId: entityId<'meal'>('meal'),
+            sourceType: MealSourceType.Product,
+            product,
+            amount: productQuantityFromStored(CONSUMED_AMOUNT),
+            recipe: null,
+        };
         const items: MealItemFormValues[] = await firstValueFrom(coldFacade.prepareMealItems([productItem]));
         expect(items[0]).toMatchObject({ product, amount: 125 });
         expect(getById).not.toHaveBeenCalled();

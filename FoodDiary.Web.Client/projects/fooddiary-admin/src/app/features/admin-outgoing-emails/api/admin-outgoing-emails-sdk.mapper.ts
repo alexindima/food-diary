@@ -1,6 +1,7 @@
 import type { AdminOutgoingEmailHttpResponse } from '../../../shared/api/sdk/generated/model/admin-outgoing-email-http-response';
 import type { AdminOutgoingEmailPageHttpResponse } from '../../../shared/api/sdk/generated/model/admin-outgoing-email-page-http-response';
 import { requireSdkFields } from '../../../shared/api/sdk/sdk-response';
+import { adminId, adminUtcInstant, optionalAdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import type { OutgoingEmail, OutgoingEmailPage } from '../models/outgoing-email';
 
 export function adminOutgoingEmailPageFromSdk(response: AdminOutgoingEmailPageHttpResponse): OutgoingEmailPage {
@@ -23,10 +24,13 @@ export function adminOutgoingEmailFromSdk(response: AdminOutgoingEmailHttpRespon
     ]);
     return {
         ...value,
-        sentAtUtc: value.sentAtUtc ?? null,
+        sentAtUtc: optionalAdminUtcInstant(value.sentAtUtc ?? null),
         correlationId: value.correlationId ?? null,
         textBody: value.textBody ?? null,
         replyTo: value.replyTo ?? null,
         inReplyTo: value.inReplyTo ?? null,
+
+        id: adminId<'outgoing-email'>(value.id),
+        createdAtUtc: adminUtcInstant(value.createdAtUtc),
     };
 }

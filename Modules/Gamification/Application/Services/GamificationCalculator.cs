@@ -1,6 +1,7 @@
 using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
 using FoodDiary.Modules.Gamification.Application.Models;
 using FoodDiary.Modules.Gamification.Domain.Entities.Achievements;
+using FoodDiary.Modules.Gamification.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.Gamification.Application.Services;
 
@@ -52,7 +53,7 @@ public static class GamificationCalculator {
             definition.Key,
             definition.Category,
             definition.Threshold,
-            GetMetricValue(definition.Metric, metrics) >= definition.Threshold,
+            IsTargetReached(definition.GetTarget(), metrics),
             definition.TitleRu,
             definition.TitleEn,
             definition.DescriptionRu,
@@ -66,6 +67,16 @@ public static class GamificationCalculator {
         AchievementMetric.TotalAcademyArticlesRead => metrics.TotalAcademyArticlesRead,
         _ => throw new ArgumentOutOfRangeException(nameof(metric)),
     };
+
+    public static bool IsTargetReached(AchievementTarget target, AchievementMetricSnapshot metrics) {
+        ArgumentNullException.ThrowIfNull(target);
+        return GetTargetMetricValue(target, metrics) >= target.Threshold;
+    }
+
+    public static int GetTargetMetricValue(AchievementTarget target, AchievementMetricSnapshot metrics) {
+        ArgumentNullException.ThrowIfNull(target);
+        return GetMetricValue(target.Metric, metrics);
+    }
 
     public static int CalculateHealthScore(
         int currentStreak,

@@ -4,6 +4,7 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { adminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminDailyAdvicesService } from '../api/admin-daily-advices.service';
 import { DAILY_ADVICE_IMPORT_EXAMPLE } from '../lib/daily-advice-import';
 import type { AdminDailyAdvice, AdminDailyAdvicesImportResponse } from '../models/admin-daily-advice.models';
@@ -93,7 +94,7 @@ describe('daily advices pagination', () => {
 
     it('keeps URL paging on reload and recovers a stale page after the list shrinks', async () => {
         const items: AdminDailyAdvice[] = Array.from({ length: 26 }, (_, index) => ({
-            id: `advice-${index}`,
+            id: adminId<'daily-advice'>(`advice-${index}`),
             ru: `Совет ${index}`,
             en: `Advice ${index}`,
             weight: 1,

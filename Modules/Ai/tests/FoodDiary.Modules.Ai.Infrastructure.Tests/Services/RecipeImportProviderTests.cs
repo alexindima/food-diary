@@ -63,7 +63,7 @@ public sealed class RecipeImportProviderTests {
             () => Assert.False(request.RootElement.GetProperty("store").GetBoolean()),
             () => Assert.Equal("щепотка", response.Value.Ingredients[1].Amount),
             () => Assert.Null(response.Value.Servings),
-            () => Assert.Equal(30, response.Usage!.Value.TotalTokens));
+            () => Assert.Equal(30, response.Usage!.TotalTokens));
     }
 
     [Fact]

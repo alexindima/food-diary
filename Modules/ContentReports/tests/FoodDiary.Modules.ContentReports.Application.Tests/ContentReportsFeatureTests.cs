@@ -1,3 +1,4 @@
+using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.ContentReports.Domain.Entities;
 using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
 using FoodDiary.Modules.ContentReports.Application.Models;
@@ -85,7 +86,7 @@ public class ContentReportsFeatureTests {
     private static CreateContentReportCommandHandler CreateHandler(IContentReportWriteRepository repository) {
         IContentReportTargetReadService targetReadService = Substitute.For<IContentReportTargetReadService>();
         targetReadService
-            .IsReportableAsync(Arg.Any<UserId>(), Arg.Any<ReportTargetType>(), Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .IsReportableAsync(Arg.Any<UserId>(), Arg.Any<ReportTarget>(), Arg.Any<CancellationToken>())
             .Returns(_ => true);
         return new CreateContentReportCommandHandler(repository, targetReadService, Substitute.For<ICurrentUserAccessService>());
     }
@@ -97,11 +98,11 @@ public class ContentReportsFeatureTests {
         repository
             .AddAsync(Arg.Any<ContentReport>(), Arg.Any<CancellationToken>())
             .Returns(call => Task.FromResult(call.ArgAt<ContentReport>(0)));
-        repository.HasUserReportedAsync(Arg.Any<UserId>(), Arg.Any<ReportTargetType>(), Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+        repository.HasUserReportedAsync(Arg.Any<UserId>(), Arg.Any<ReportTarget>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId userId = call.ArgAt<UserId>(0);
-                ReportTargetType targetType = call.ArgAt<ReportTargetType>(1);
-                Guid targetId = call.ArgAt<Guid>(2);
+                ReportTargetType targetType = call.ArgAt<ReportTarget>(1).Kind;
+                Guid targetId = call.ArgAt<ReportTarget>(1).Id;
                 return Task.FromResult(reportedSet.Contains((userId, targetType, targetId)));
             });
 

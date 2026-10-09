@@ -1,4 +1,4 @@
-# Backend primitive types and migration priorities
+# Primitive types and migration priorities
 
 FoodDiary benefits from domain types where values carry identity, units, temporal
 meaning or a combined invariant. Its existing typed IDs, enums, nutrition value
@@ -71,11 +71,11 @@ wrappers merely because they use a primitive CLR type.
 | Third pilot | [Body metrics dates](../../Modules/BodyMetrics/Domain/Entities/Tracking/WeightEntry.cs) | Calendar measurement dates use UTC-midnight `DateTime`; instants elsewhere use the same CLR type. | Owner-local `MeasurementDay` with `DateOnly`, consumed by typed creation/update paths and the existing date normalizer. | Preserve selected day, existing UTC-midnight API encoding, PostgreSQL date columns, duplicate rules and query boundaries. No blanket timezone conversion. |
 | Second pilot | [Weekly reminders](../../Modules/WeeklyGoals/Domain/Entities/WeeklyGoal.cs) | Enabled state plus nullable local-time minutes and offset minutes form a combined invariant. | `WeeklyGoalReminderSettings` with disabled/enabled states and distinct local time/UTC offset meanings, consumed by typed mutation paths. | Keep 0..1439 minute range, UTC-14..UTC+14 offsets, Monday/week rules and last-sent reset semantics. Do not replace offsets with timezone IDs implicitly. |
 | Fifth verified implementation | [User profile](../../Modules/Users/Domain/Entities/UserNutritionProfile.cs) and [profile mutations](../../Modules/Users/Domain/Entities/User.Profile.cs) | Profile weight and height have different units; birth-date and goal semantics remain separate follow-ups. | UserPersonalInfoUpdate now consumes ProfileWeightKg/ProfileHeightCm immutable references. Their former zero struct defaults are closed; scalar compatibility uses the same validation/audit core. | Preserve omission and explicit birth-date clearing, profile/goal distinctions, nutrition/account partition versions and BMR/TDEE formulas. |
-| Medium | [Fasting plan](../../Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs) | Alternative plan settings combine hour/day numbers and nullable fields. | Validated intermittent/extended/cyclic settings and scoped duration values. | Preserve protocol choices, supported bounds, state transitions, calendar anchors and reminder behavior. |
-| Medium | [Shopping quantities](../../Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs) | Optional amount and measurement unit travel separately. | An optional quantity/basis value consistent with source snapshots. | Preserve unmeasured/free-text items, rounding, sorting and source provenance. |
+| Second wave | [Fasting plan](../../Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs) | Alternative plan settings combine hour/day numbers and nullable fields. | Validated intermittent/extended/cyclic settings and scoped duration values. | Preserve protocol choices, supported bounds, state transitions, calendar anchors and reminder behavior. |
+| Second wave | [Shopping quantities](../../Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs) | Optional amount and measurement unit travel separately. | An optional quantity/basis value consistent with source snapshots. | Preserve unmeasured/free-text items, rounding, sorting and source provenance. |
 | Sixth verified implementation | [Webhook processing state](../../Modules/Billing/Domain/Entities/BillingWebhookEvent.cs) | Storage/read strings retain their codes; domain and processing decisions now use a closed owner enum. | BillingWebhookProcessingState classifies known states and unrecognized stored rows; typed known-state writes use one codec. | Keep persisted strings, retry saturation, timestamps and processed-event fencing. Provider payment/subscription status is a separate open contract. |
-| Medium | [Billing payment](../../Modules/Billing/Domain/Entities/BillingPayment.cs) | Amount and currency are nullable scalar values with existing guards. | Scoped currency/amount values where arithmetic or comparisons need them. | Preserve nulls, provider identifiers, refunds/negative values where allowed and three fractional digits. No global two-decimal money rule. |
-| Medium | [Report targets](../../Modules/ContentReports/Domain/Entities/ContentReport.cs) and [recent items](../../Modules/RecentItems/Domain/Entities/Recents/RecentItem.cs) | Kind plus raw `Guid` identifies several possible owners. | An owner-local target reference value carrying kind and ID together. | Preserve polymorphic target ownership and scalar persistence; do not introduce foreign aggregate navigation. |
+| Second wave | [Billing payment](../../Modules/Billing/Domain/Entities/BillingPayment.cs) | Amount and currency are nullable scalar values with existing guards. | Scoped currency/amount values where arithmetic or comparisons need them. | Preserve nulls, provider identifiers, refunds/negative values where allowed and three fractional digits. No global two-decimal money rule. |
+| Second wave | [Report targets](../../Modules/ContentReports/Domain/Entities/ContentReport.cs) and [recent items](../../Modules/RecentItems/Domain/Entities/Recents/RecentItem.cs) | Kind plus raw `Guid` identifies several possible owners. | An owner-local target reference value carrying kind and ID together. | Preserve polymorphic target ownership and scalar persistence; do not introduce foreign aggregate navigation. |
 | Later | [Notification](../../Modules/Notifications/Domain/Entities/Notification.cs) | Type string, JSON payload and optional reference describe an extensible delivery contract. | Typed application notification variants with a serialization boundary. | Preserve existing payloads and delivery compatibility; review extensibility before choosing a closed enum. |
 | Later | [Image asset](../../Modules/Images/Domain/Entities/Assets/ImageAsset.cs) | Object key and URL are distinct string concepts. | Owner values at input/use boundaries if they simplify validation and prevent cross-use. | Preserve signed upload handling, current URL contracts and existing stored values. Do not tighten validation incidentally. |
 
@@ -91,16 +91,16 @@ objects.
 | Admin | Access/session reasons and technical IDs are bounded; retain filter/projection primitives. Reuse owner types when invoking business use cases. |
 | Ai | Treat provider model names and token counts as provider/usage data. Keep typed recognition contracts; review prompt keys or quantity mappings when changing those flows. |
 | Billing | Medium: internal webhook state and currency/amount pairs. Preserve open provider status and numeric(19,3) guards. |
-| BodyMetrics | Third pilot: measurement day at mutation boundaries; weight and circumference values remain a selective follow-up. Existing numeric validation and calendar contracts are retained. |
+| BodyMetrics | Third pilot: measurement day at mutation boundaries; weight and circumference mutations now consume distinct measured values. Existing numeric validation and calendar contracts are retained. |
 | ContentReports | Medium: target kind/ID value. Existing typed report/user IDs and status enum are appropriate. |
 | Cycles | DateOnly and owner enums already express major semantics. Follow-up types for lengths/ranges need benefit beyond existing guards. |
 | DailyAdvices | Later: group ID and weighted selection inputs. Keep content text and bounded scalar weights. |
 | Dashboard | Boundary/composition area: scalar read projections are appropriate; consume owner meanings rather than creating dashboard aggregates. |
 | Dietologist | Existing invitation status, permissions and EmailAddress normalization are useful. Keep tokens/hashes opaque; scoped date/permission values are optional follow-ups. |
-| Exercises | Medium: duration minutes, burned calories and recorded day have distinct units. Preserve current bounds and rounding. |
+| Exercises | Second wave: typed duration minutes, burned kilocalories and recorded day protect mutations. Preserve current bounds and rounding. |
 | Export | Boundary area: distinguish calendar-date and instant ranges at query policies; file bytes/text remain primitives. |
 | Fasting | Medium: plan-specific settings and duration/range meanings; existing plan/protocol/status enums are already typed. |
-| Favorites | Later: preferred product quantity/basis, following Products rules. Existing owner IDs remain typed. |
+| Favorites | Second wave: positive finite preferred product quantity retains its owner-specific unbounded contract. Existing owner IDs remain typed. |
 | Gamification | Achievement keys are bounded catalog identifiers; thresholds depend on the metric. Use metric-specific values only where they prevent mixing. |
 | Hydration | First pilot: validated entry amount; UTC timestamps and replay IDs remain unchanged. Daily goals/totals have separate limits. |
 | Identity | Security-sensitive provider IDs and token hashes stay opaque. Existing session guards and owner IDs are retained. |
@@ -353,3 +353,120 @@ described above.
    record their remaining callers before removing them.
 7. Avoid incidental changes to double/decimal representation, nutrition rounding,
    UTC/calendar handling, provider vocabularies or historical snapshots.
+
+## Second implementation wave
+
+The follow-up after `429cf221c` implements the eight requested boundaries:
+
+| Boundary | Implemented contract | Compatibility seam |
+| --- | --- | --- |
+| Frontend identities and time | Owner-branded entity IDs and distinct CalendarDate/UtcInstant in application models, SDK mappers and mutation services/capabilities. | Explicit raw route/SDK/placeholder tagging preserves strings, timestamp precision and existing calendar encodings. |
+| Frontend meal sources | Product/recipe MealItem branches require ProductQuantity/RecipeServings; historical dual sources are an explicit legacy variant. | Deleted sources, permissive stored observations and product precedence retain their read behavior; transient forms and wire DTOs remain scalar. |
+| Goal and measured values | Desired weight/waist references cannot default to zero; separate MeasuredWeightKg/MeasuredWaistCm feed goal history and BodyMetrics. | Null/omission, no-active-goal cancellation, fractional precision, numeric bounds and partition audits remain compatible. |
+| Fasting modes | Closed immutable intermittent/extended/cyclic settings, paired DailyFastingWindow and FastingCycleDay. | Nullable stored fields, existing protocols, anchors, schedules and historical fallbacks remain supported. |
+| Shopping and favorites | ShoppingQuantity, ShoppingSourceQuantity and PreferredProductQuantity express their separate invariants. | Optional amount/unit combinations, unbounded source/preference amounts, legacy source units, source provenance and free-text items remain valid. |
+| Polymorphic targets | ReportTarget and RecentItemReference pair kind with source-specific owner ID factories. | Guid storage, empty/unsupported read probes, aggregate mutation validation and user-scoped access remain unchanged. |
+| Exercises | ExerciseDay, ExerciseDuration and BurnedEnergy protect owning mutation inputs. | Whole-minute bounds, finite energy bounds, ToEven rounding and legacy date encoding are preserved. |
+| Billing | Distinct internal subscription/payment/webhook IDs and nullable financial observation values protect ports and payment flows. | Guid persistence, external provider IDs/statuses, partial/negative money and three fractional digits remain unchanged. |
+
+RecipeCommunity Domain.Contracts now owns only RecipeCommentId/RecipeLikeId.
+ReportTarget can consume these scalar IDs without acquiring a foreign aggregate
+dependency. The dependency matrix records the direct owner references. This is
+an internal assembly move requiring a coordinated repository rebuild; Guid
+converters, database relations and external HTTP contracts retain their shape.
+
+Validated value records have private construction and immutable properties.
+Scalar compatibility entry points remain available for established callers;
+owning production mutation paths use their typed counterparts. EF explicitly
+ignores computed Billing semantic references. RecentItems' tracked fallback
+creates through its typed reference; SQL batching, pruning and transaction
+capabilities retain their reviewed implementation.
+
+Owner regression tests cover distinct target/observation values, default safety,
+partial quantities and money, mode settings, bounds, chronology and no-op state.
+SemanticMutationBoundaryTests protects validated construction, typed mutation
+signatures and closed modes. Frontend compiler tests deliberately pass wrong
+owner IDs, day/instant values, source quantities and branch combinations and
+require rejection; runtime tests preserve encodings, absence and historical
+values. Verification logs for this wave live in `.artifacts/primitive-types-wave2/`.
+
+## Second-wave verification
+
+On 2026-10-08 the complete solution and all frontend verification stages passed.
+The selected backend runs passed 6,692 tests without failures or skips:
+4,040 owner/consumer unit tests, 130 owner provider tests,
+all 324 central PostgreSQL integration tests, 2,194
+architecture guards and four real-host OpenAPI exports. The full central run
+verifies unchanged model/schema and relational behavior, including unsupported
+report probes returning false without opening the database.
+
+Frontend app/admin/UI-kit/tour suites passed 5,529 tests. Compiler
+fixtures reject wrong IDs, calendar/instant meanings, cross-family rebranding and
+source quantities; nine-zone calendar checks passed 675 cases.
+Ten controlled Playwright scenarios passed at mobile/desktop widths, including
+meal failure/retry/discard, favorites, goals, water and keyboard history paths.
+These browser fixtures do not exercise the notification backend; their SignalR
+negotiation errors are expected and do not represent live account validation.
+
+NuGet vulnerability checks passed. Npm production dependencies have zero audit
+findings. The full npm audit reports 14 pre-existing high dev-tool transitive
+findings rooted in braces/micromatch, with no available braces fix. Dependency
+versions and the npm lockfile are unchanged; this remains separate maintenance.
+Detailed command logs, TRX files and selections are in
+`.artifacts/primitive-types-wave2/`; browser screenshots are stored outside the repo.
+
+## Third implementation wave
+
+The repository-wide follow-up implements the fourteen audited boundaries. Raw HTTP,
+SDK, provider observations and persisted fields keep their scalar representations;
+owning workflows decode and consume semantic inputs.
+
+| Boundary | Owning production contract |
+| --- | --- |
+| Optional updates | FieldChange<T> and Product/Recipe/User changes distinguish omission, set and clear; supplied blank text retains owner normalization. |
+| Notification intent | Closed intent factories couple payload/type/target; composite recommendation targets share a codec, with explicit unknown legacy requests. |
+| Product basis | ProductMeasurementBasis and per-unit ProductDefaultPortion protect create/update/duplicate and preserve atomic nutrition normalization. |
+| Remaining frontend meanings | Profile, goal-history, dietologist/recommendation/cycle owner IDs and day/instant models; separate admin meanings and decoded catalog sources. |
+| AI usage | Validated AiTokenUsage permits provider overhead; inconsistent/overflowing counts use established absent-usage/estimated reconciliation. |
+| Wearable readings | Metric-specific readings and sync days retain fractional doubles, source bounds and provider validation timing. |
+| BugTriage identity | Report/source-message/lease-token types protect store fences; explicit HTTP mapping preserves scalar Guid leases. |
+| Achievement targets | Metric-specific targets feed definition mutations and actual eligibility/grant calculations without extra caps. |
+| Calculation inputs | BMR measurement groups and distinct TDEE energies/measured/desired weights preserve historical fallback and formulas. |
+| Planned quantities | Duration/day values retain 1..31 rules; positive integer servings remain unbounded and distinct from fractional recipe quantities. |
+| Prediction output | Owner classifications/reasons and optional windows feed revision recording while retaining unknown/versioned/partial rows. |
+| Mail lifecycle | Internal queue enum/codec and coupled Retry/Failed decisions preserve storage codes and external event vocabulary. |
+| Image locations | Keys/public/signed URLs protect ports; frontend selection variants retain empty, remote, uploaded and legacy asset-only states. |
+| Period contracts | Statistics instant/body periods and Export diary/calendar periods retain timezone, offset, limit and inclusivity policies. |
+
+Scalar compatibility entrypoints remain available for established external callers.
+SemanticMutationBoundaryTests guards owning consumer adoption and immutable
+construction. Frontend compiler-negative fixtures reject wrong owners, day/instant
+swaps, public/upload URL swaps, selection contradictions and catalog quantity swaps.
+Verification artifacts for this wave live in `.artifacts/primitive-types-wave3/`.
+
+## Third-wave verification
+
+The complete solution builds with zero warnings or errors. Changed C# sources
+pass whitespace verification; project formatting and all 2,214 architecture guards
+pass. The executed backend selections pass 9,485 tests without skips or failures:
+6,107 unit tests across 80 owner/consumer projects, 213 provider/service tests,
+324 central PostgreSQL tests, 276 complete real-host API tests and 351 shared
+presentation tests, plus the architecture suite. The separately selected four
+OpenAPI checks are included in the full host count. API compatibility reports zero
+structural or behavioral changes; generated SDKs remain unchanged.
+
+Every `npm run verify` stage passes. Main/admin/UI-kit/tour tests total 5,534;
+675 maintained calendar cases pass in nine timezones, including DST and unusual
+offsets. Thirteen controlled Playwright cases verify profile/cycle navigation,
+recipe/gallery/text editing, admin account navigation and actual catalog
+preview/import ordering at 390/1280 widths. Catalog screenshots retain readable
+Russian fixture names without clipping. These owned browser fixtures do not
+exercise the notification backend; their client SignalR negotiation errors are
+expected. Notification/provider regressions run in their backend owners.
+
+NuGet vulnerability checks are clean. Npm production audit reports zero findings;
+the full audit retains 14 existing high dev-tool advisories rooted in braces /
+micromatch with no available braces fix. External dependency versions and the npm
+lockfile are unchanged. Detailed execution logs, TRX files, the per-requirement
+audit and summary are stored under `.artifacts/primitive-types-wave3/`; browser
+screenshots and temporary scripts stay outside the repository.

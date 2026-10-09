@@ -1,4 +1,6 @@
 import type { PageOf } from './page-of.data';
+import type { UtcInstant } from './semantics/date-value';
+import type { FastingSessionId } from './semantics/entity-id';
 
 export type FastingProtocol = 'Fast16Eat8' | 'Fast18Eat6' | 'Fast20Eat4' | 'Fast24' | 'Fast36' | 'Fast72' | 'Custom' | 'CustomIntermittent';
 export type FastingSessionStatus = 'Active' | 'Completed' | 'Interrupted' | 'Skipped' | 'Postponed';
@@ -15,9 +17,9 @@ export type FastingProtocolOption = {
 };
 
 export type FastingSession = {
-    id: string;
-    startedAtUtc: string;
-    endedAtUtc: string | null;
+    id: FastingSessionId;
+    startedAtUtc: UtcInstant;
+    endedAtUtc: UtcInstant | null;
     initialPlannedDurationHours: number;
     addedDurationHours: number;
     plannedDurationHours: number;
@@ -33,7 +35,7 @@ export type FastingSession = {
     isCompleted: boolean;
     status: FastingSessionStatus;
     notes: string | null;
-    checkInAtUtc: string | null;
+    checkInAtUtc: UtcInstant | null;
     hungerLevel: number | null;
     energyLevel: number | null;
     moodLevel: number | null;

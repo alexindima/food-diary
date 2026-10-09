@@ -10,6 +10,7 @@ import { createSdkConnection, sdkRequestOptions } from '../../../shared/api/sdk/
 import { sdkOptional } from '../../../shared/api/sdk/sdk-response';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import { MEASUREMENT_HISTORY_FETCH_LIMIT } from '../../../shared/measurements/measurement-history.constants';
+import type { WaistEntryId } from '../../../shared/models/semantics/entity-id';
 import type {
     CreateWaistEntryPayload,
     UpdateWaistEntryPayload,
@@ -67,14 +68,14 @@ export class WaistEntriesService {
             );
     }
 
-    public update(id: string, payload: UpdateWaistEntryPayload): Observable<WaistEntry> {
+    public update(id: WaistEntryId, payload: UpdateWaistEntryPayload): Observable<WaistEntry> {
         return this.sdk.client.putWaistEntriesById({ version: this.sdk.version, id, updateWaistEntryHttpRequest: payload }).pipe(
             map(waistEntryFromSdk),
             catchError((error: unknown) => rethrowApiError('Update waist entry error', error)),
         );
     }
 
-    public remove(id: string): Observable<void> {
+    public remove(id: WaistEntryId): Observable<void> {
         return this.sdk.client.deleteWaistEntriesById({ version: this.sdk.version, id }).pipe(
             map(() => {}),
             catchError((error: unknown) => rethrowApiError('Delete waist entry error', error)),

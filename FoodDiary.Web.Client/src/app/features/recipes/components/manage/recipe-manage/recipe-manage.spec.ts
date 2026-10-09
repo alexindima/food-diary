@@ -7,8 +7,11 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { ItemSelection } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
+import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import { type Recipe, type RecipeDto, RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
 import type { IngredientFormValues, RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import { RecipeManageComponent } from './recipe-manage';
@@ -271,13 +274,13 @@ const manualRecipeEdits: Array<[string, (component: RecipeManageComponent) => vo
     [
         'step photos',
         (component): void => {
-            component['onStepPhotosChange']({ stepIndex: 0, value: [{ url: '/third.jpg', assetId: 'third' }] });
+            component['onStepPhotosChange']({ stepIndex: 0, value: [imageSelection('/third.jpg', 'third')] });
         },
     ],
     [
         'step cover',
         (component): void => {
-            component['onStepImageChange']({ stepIndex: 0, value: { url: '/second.jpg', assetId: 'second' } });
+            component['onStepImageChange']({ stepIndex: 0, value: imageSelection('/second.jpg', 'second') });
         },
     ],
     [
@@ -446,8 +449,8 @@ describe('RecipeManageComponent unchanged draft cancellation', () => {
 function prepareRecipeStepEdits(component: RecipeManageComponent): void {
     component['stepFormManager'].addStep({ title: 'Serve', imageUrl: null, description: 'Serve', ingredients: [] });
     component['stepFormManager'].addIngredientToStep(0);
-    const first = { url: '/first.jpg', assetId: 'first' };
-    const second = { url: '/second.jpg', assetId: 'second' };
+    const first = imageSelection('/first.jpg', 'first');
+    const second = imageSelection('/second.jpg', 'second');
     component['recipeFormModel'].update(value => ({
         ...value,
         steps: value.steps.map((step, index) =>
@@ -846,7 +849,7 @@ function patchFirstIngredient(component: RecipeManageComponent, value: Partial<I
 
 function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
     return {
-        id: RECIPE_ID,
+        id: entityId<'recipe'>(RECIPE_ID),
         name: 'Initial recipe',
         description: 'Description',
         comment: null,
@@ -858,7 +861,7 @@ function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
         servings: DEFAULT_SERVINGS,
         visibility: RecipeVisibility.Public,
         usageCount: 0,
-        createdAt: '2026-01-01T00:00:00Z',
+        createdAt: utcInstant('2026-01-01T00:00:00Z'),
         isOwnedByCurrentUser: true,
         totalCalories: SUMMARY_CALORIES,
         totalProteins: SUMMARY_PROTEINS,
@@ -890,7 +893,7 @@ function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
 
 function createProduct(overrides: Partial<Product> = {}): Product {
     return {
-        id: 'product-1',
+        id: entityId<'product'>('product-1'),
         name: 'Product',
         baseUnit: MeasurementUnit.G,
         baseAmount: PRODUCT_DEFAULT_AMOUNT,

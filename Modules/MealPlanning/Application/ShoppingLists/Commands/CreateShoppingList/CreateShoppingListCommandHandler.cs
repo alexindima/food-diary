@@ -1,3 +1,4 @@
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Mappings;
 using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
@@ -53,11 +54,10 @@ public sealed class CreateShoppingListCommandHandler(
 
         var list = ShoppingList.Create(userId, command.Name);
         foreach (ShoppingListItemData item in itemsResult.Value) {
-            list.AddItem(
+            list.AddItemWithQuantity(
                 item.Name,
                 item.ProductId,
-                item.Amount,
-                item.Unit,
+                ShoppingQuantity.FromFields(item.Amount, item.Unit),
                 item.Category,
                 item.IsChecked,
                 item.SortOrder,

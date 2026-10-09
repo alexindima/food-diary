@@ -4,6 +4,8 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { ShoppingList } from '../../../shared/models/shopping-list.data';
 import type { MealPlan, MealPlanSummary } from '../models/meal-plan.data';
 import { MealPlanService } from './meal-plan.service';
@@ -121,9 +123,9 @@ function createMealPlan(): MealPlan {
 
 function createShoppingList(): ShoppingList {
     return {
-        id: 'shopping-list-1',
+        id: entityId<'shopping-list'>('shopping-list-1'),
         name: 'Keto plan',
         items: [],
-        createdAt: '2026-05-15T00:00:00Z',
+        createdAt: utcInstant('2026-05-15T00:00:00Z'),
     };
 }

@@ -17,6 +17,7 @@ import { formatDateInputValue, getDateTimestamp, normalizeStartOfLocalDay } from
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import { normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import type { FavoriteMeal, Meal } from '../../../../shared/models/meal.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
@@ -144,7 +145,12 @@ export class MealListComponent {
                     restore: (favorite: FavoriteMeal) => this.mealListFacade.restoreFavoriteRequest(favorite),
                     repeat: (favorite: FavoriteMeal, mealType: string) => {
                         const date = new Date();
-                        return this.mealListFacade.repeatMeal(favorite.mealId, date.toISOString(), mealType, this.structuredFilters);
+                        return this.mealListFacade.repeatMeal(
+                            favorite.mealId,
+                            utcInstant(date.toISOString()),
+                            mealType,
+                            this.structuredFilters,
+                        );
                     },
                 },
             })
@@ -172,7 +178,7 @@ export class MealListComponent {
     protected repeatFavorite(favorite: FavoriteMeal): void {
         const targetDate = new Date();
         this.mealListFacade
-            .repeatMeal(favorite.mealId, targetDate.toISOString(), resolveMealTypeByTime(targetDate), this.structuredFilters)
+            .repeatMeal(favorite.mealId, utcInstant(targetDate.toISOString()), resolveMealTypeByTime(targetDate), this.structuredFilters)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(repeated => {
                 if (repeated) {

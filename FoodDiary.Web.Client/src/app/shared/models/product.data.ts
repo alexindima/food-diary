@@ -1,8 +1,10 @@
 import type { PageOf } from './page-of.data';
 import type { QualityGrade } from './quality-grade.data';
+import type { UtcInstant } from './semantics/date-value';
+import type { FavoriteProductId, ImageAssetId, ProductId } from './semantics/entity-id';
 
 export type Product = {
-    id: string; // Guid
+    id: ProductId; // Guid
     barcode?: string | null;
     name: string;
     brand?: string | null;
@@ -11,7 +13,7 @@ export type Product = {
     description?: string | null;
     comment?: string | null;
     imageUrl?: string | null;
-    imageAssetId?: string | null;
+    imageAssetId?: ImageAssetId | null;
     images?: Array<{ imageAssetId: string | null; imageUrl: string }>;
     baseUnit: MeasurementUnit;
     baseAmount: number;
@@ -30,7 +32,7 @@ export type Product = {
     qualityGrade: QualityGrade;
     usdaFdcId?: number | null;
     isFavorite?: boolean;
-    favoriteProductId?: string | null;
+    favoriteProductId?: FavoriteProductId | null;
 };
 
 export type ProductSearchSuggestionSource = 'openFoodFacts' | 'usda';
@@ -129,10 +131,10 @@ export type ProductOverview = {
 
 export type FavoriteProduct = {
     imageUrls?: string[];
-    id: string;
-    productId: string;
+    id: FavoriteProductId;
+    productId: ProductId;
     name?: string | null;
-    createdAtUtc: string;
+    createdAtUtc: UtcInstant;
     productName: string;
     brand?: string | null;
     barcode?: string | null;

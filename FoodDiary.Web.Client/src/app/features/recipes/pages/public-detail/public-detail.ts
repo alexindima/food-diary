@@ -8,6 +8,7 @@ import { firstValueFrom, map } from 'rxjs';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { AuthService } from '../../../../services/auth.service';
 import { recipeCategoryKey } from '../../../../shared/models/recipe-category';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
 import { PublicAuthDialogService } from '../../../public/contracts/auth-dialog';
 import { ShoppingListAddFacade } from '../../../shopping-lists/contracts/shopping-list-add';
@@ -104,7 +105,7 @@ export class PublicRecipeDetailComponent {
             this.actionMessage.set(null);
             if (recipe !== null && this.auth.isAuthenticated()) {
                 const subscription = this.facade
-                    .isFavorite(recipe.id)
+                    .isFavorite(entityId<'recipe'>(recipe.id))
                     .pipe(takeUntilDestroyed(this.destroyRef))
                     .subscribe(saved => {
                         this.saved.update(current => current || saved);
@@ -144,7 +145,7 @@ export class PublicRecipeDetailComponent {
                 await this.facade.saveAsync(recipe);
                 this.saved.set(true);
             } else {
-                await this.facade.addToDiaryAsync(recipe.id);
+                await this.facade.addToDiaryAsync(entityId<'recipe'>(recipe.id));
             }
             this.actionMessage.set(action === 'save' ? 'PUBLIC_RECIPES.SAVED' : 'PUBLIC_RECIPES.ADDED');
         } catch {

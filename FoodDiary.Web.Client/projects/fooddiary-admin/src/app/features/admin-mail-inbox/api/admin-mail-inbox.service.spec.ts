@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { adminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminMailInboxService } from './admin-mail-inbox.service';
 
 const MESSAGE_LIMIT = 25;
@@ -95,7 +96,7 @@ describe('AdminMailInboxService', () => {
     });
 
     it('should request one inbound message by id', () => {
-        service.getMessage('message-1').subscribe(result => {
+        service.getMessage(adminId<'mail-inbox-message'>('message-1')).subscribe(result => {
             expect(result.id).toBe('message-1');
             expect(result.rawMime).toBe('raw');
             expect(result.contentPurgedAtUtc).toBeNull();
@@ -111,7 +112,7 @@ describe('AdminMailInboxService', () => {
 
     it('should mark one inbound message as read', () => {
         let completed = false;
-        service.markMessageRead('message-1').subscribe(() => {
+        service.markMessageRead(adminId<'mail-inbox-message'>('message-1')).subscribe(() => {
             completed = true;
         });
 

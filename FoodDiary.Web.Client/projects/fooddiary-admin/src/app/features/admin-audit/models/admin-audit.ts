@@ -1,12 +1,13 @@
+import type { AdminId, AdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 export type AdminAuditEntry = {
-    id: string;
-    actorUserId: string;
-    subjectClientUserId: string | null;
+    id: AdminId<'audit-event'>;
+    actorUserId: AdminId<'user'>;
+    subjectClientUserId: AdminId<'user'> | null;
     action: string;
     targetType: string;
     targetId: string | null;
     metadata: string | null;
-    createdAtUtc: string;
+    createdAtUtc: AdminUtcInstant;
 };
 
 export type AdminAuditPageResult = {

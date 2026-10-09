@@ -53,15 +53,14 @@ public sealed class GetStatisticsQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        DateTime normalizedFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateFrom);
-        DateTime normalizedTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateTo);
+        var period = StatisticsInstantPeriod.FromRequest(request.DateFrom, request.DateTo, request.TimeZoneId);
 
         Result<IReadOnlyList<MealNutritionStatisticsBucket>> statisticsResult = await sender.Send(new ReadMealNutritionStatisticsQuery(
             userId,
-            normalizedFrom,
-            normalizedTo,
+            period.From,
+            period.To,
             request.QuantizationDays,
-            request.TimeZoneId),
+            period.TimeZoneId),
             cancellationToken).ConfigureAwait(false);
 
         if (statisticsResult.IsFailure) {

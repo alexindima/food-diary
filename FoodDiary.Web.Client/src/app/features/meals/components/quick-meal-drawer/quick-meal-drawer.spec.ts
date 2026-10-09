@@ -10,6 +10,8 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { MealSourceType } from '../../../../shared/models/meal.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../shared/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { type QuickMealDetails, type QuickMealItem, QuickMealService } from '../../lib/quick/quick-meal.service';
 import type { MealItemFormValues } from '../manage/meal-manage-lib/meal-manage.types';
@@ -23,7 +25,7 @@ const PRE_MEAL_SATIETY_LEVEL = 3;
 const DEFAULT_SATIETY_LEVEL = 5;
 
 const product: Product = {
-    id: 'product-1',
+    id: entityId<'product'>('product-1'),
     name: 'Yogurt',
     productType: ProductType.Dairy,
     baseUnit: MeasurementUnit.G,
@@ -44,12 +46,12 @@ const product: Product = {
 };
 
 const recipe: Recipe = {
-    id: 'recipe-1',
+    id: entityId<'recipe'>('recipe-1'),
     name: 'Soup',
     servings: 4,
     visibility: RecipeVisibility.Private,
     usageCount: 0,
-    createdAt: '2026-05-14T00:00:00Z',
+    createdAt: utcInstant('2026-05-14T00:00:00Z'),
     isOwnedByCurrentUser: true,
     isNutritionAutoCalculated: true,
     steps: [],

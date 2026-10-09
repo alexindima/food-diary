@@ -2,6 +2,7 @@ using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Favorites.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
 
@@ -15,6 +16,11 @@ public sealed class FavoriteProduct : Entity<FavoriteProductId> {
 
     private FavoriteProduct() {
     }
+
+    public static FavoriteProduct CreateWithPreferredQuantity(UserId userId, ProductId productId, string? name = null, PreferredProductQuantity? quantity = null) =>
+        Create(userId, productId, name, quantity?.Value);
+
+    public void UpdatePreferredQuantity(PreferredProductQuantity? quantity) => UpdatePreferredPortionAmount(quantity?.Value);
 
     public static FavoriteProduct Create(UserId userId, ProductId productId, string? name = null, double? preferredPortionAmount = null) {
         if (userId == UserId.Empty) {

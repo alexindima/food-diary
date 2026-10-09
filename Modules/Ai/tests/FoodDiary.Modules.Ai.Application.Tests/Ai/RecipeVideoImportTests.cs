@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Domain.ValueObjects;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Application.Services;
 using FoodDiary.Modules.Ai.Contracts.Models;
@@ -62,7 +63,7 @@ public sealed class RecipeVideoImportTests {
         _video.ExtractAudioAsync(Arg.Any<Stream?>(), Arg.Any<string?>(), Arg.Any<CancellationToken>())
             .Returns(Result.Success(new RecipeAudio([1, 2], durationSeconds, "https://example.org/video")));
         _client.TranscribeRecipeAudioAsync(Arg.Any<RecipeAudio>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Success(new OpenAiFoodClientResponse<string>("180g yoghurt", "recipe-transcription", "gpt-transcribe", new AiUsageTokens(1, 1, 2))));
+            .Returns(Result.Success(new OpenAiFoodClientResponse<string>("180g yoghurt", "recipe-transcription", "gpt-transcribe", AiTokenUsage.FromCounts(1, 1, 2))));
         _quota.ReserveAsync(Arg.Any<AiQuotaReservationRequest>(), Arg.Any<CancellationToken>()).Returns(call => {
             AiQuotaReservationRequest reservation = call.Arg<AiQuotaReservationRequest>();
             Assert.True(reservation.InputTokens > 0);
@@ -109,7 +110,7 @@ public sealed class RecipeVideoImportTests {
         _video.ExtractAudioAsync(Arg.Any<Stream?>(), Arg.Any<string?>(), Arg.Any<CancellationToken>()).Returns(Result.Success(new RecipeAudio([1, 2], 10, "https://example.org/video")));
         _client.TranscribeRecipeAudioAsync(Arg.Any<RecipeAudio>(), Arg.Any<CancellationToken>()).Returns(Result.Success(new OpenAiFoodClientResponse<string>("180g yoghurt", "recipe-transcription", "gpt-transcribe", Usage: null)));
         _client.GetRecipeImportTokenBudgetAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<CancellationToken>()).Returns(Result.Success(new AiProviderTokenBudget(100, 100)));
-        _client.ImportRecipeAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<CancellationToken>()).Returns(Result.Success(new OpenAiFoodClientResponse<RecipeImportDraftModel>(new("Salad", Description: null, [new("yoghurt", "180g")], ["Mix"], Servings: null, PrepMinutes: null, CookMinutes: null, AuthorNutrition: null, SourceUrl: null), "recipe-import", "text", new AiUsageTokens(20, 10, 30))));
+        _client.ImportRecipeAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<CancellationToken>()).Returns(Result.Success(new OpenAiFoodClientResponse<RecipeImportDraftModel>(new("Salad", Description: null, [new("yoghurt", "180g")], ["Mix"], Servings: null, PrepMinutes: null, CookMinutes: null, AuthorNutrition: null, SourceUrl: null), "recipe-import", "text", AiTokenUsage.FromCounts(20, 10, 30))));
         _quota.ReserveAsync(Arg.Any<AiQuotaReservationRequest>(), Arg.Any<CancellationToken>()).Returns(AiQuotaReservationStatus.Acquired);
         return new OpenAiFoodService(_client, _quota, _profiles, TimeProvider.System, Substitute.For<IAiPromptProvider>(), recipeVideoProcessor: _video);
     }

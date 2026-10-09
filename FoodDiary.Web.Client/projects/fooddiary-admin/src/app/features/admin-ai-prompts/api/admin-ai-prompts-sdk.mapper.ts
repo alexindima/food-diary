@@ -1,12 +1,18 @@
 import type { AdminAiPromptHttpResponse } from '../../../shared/api/sdk/generated/model/admin-ai-prompt-http-response';
 import type { AdminAiPromptScenarioHttpResponse } from '../../../shared/api/sdk/generated/model/admin-ai-prompt-scenario-http-response';
 import { requireSdkFields, sdkEnum, sdkOptional } from '../../../shared/api/sdk/sdk-response';
+import { adminId, adminUtcInstant, optionalAdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import type { AdminAiPrompt } from '../models/admin-ai-prompt';
 import type { AdminAiPromptScenario } from '../models/admin-ai-prompt-scenario';
 
 export function adminAiPromptFromSdk(response: AdminAiPromptHttpResponse): AdminAiPrompt {
     const value = requireSdkFields(response, ['id', 'key', 'locale', 'promptText', 'version', 'isActive', 'createdOnUtc']);
-    return { ...value, updatedOnUtc: value.updatedOnUtc ?? null };
+    return {
+        ...value,
+        updatedOnUtc: optionalAdminUtcInstant(value.updatedOnUtc ?? null),
+        id: adminId<'ai-prompt'>(value.id),
+        createdOnUtc: adminUtcInstant(value.createdOnUtc),
+    };
 }
 
 export function adminAiPromptScenarioFromSdk(response: AdminAiPromptScenarioHttpResponse): AdminAiPromptScenario {

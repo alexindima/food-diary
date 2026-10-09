@@ -3,6 +3,8 @@ import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { FastingHistorySessionViewModel } from '../../lib/fasting-page.types';
 import { FastingHistoryItemComponent } from './fasting-history-item';
 
@@ -86,9 +88,9 @@ function getButtonByText(element: HTMLElement, text: string): HTMLElement {
 function createHistoryItem(overrides: Partial<FastingHistorySessionViewModel> = {}): FastingHistorySessionViewModel {
     return {
         session: {
-            id: 'session-1',
-            startedAtUtc: '2026-05-16T08:00:00.000Z',
-            endedAtUtc: '2026-05-16T18:00:00.000Z',
+            id: entityId<'fasting-session'>('session-1'),
+            startedAtUtc: utcInstant('2026-05-16T08:00:00.000Z'),
+            endedAtUtc: utcInstant('2026-05-16T18:00:00.000Z'),
             initialPlannedDurationHours: 16,
             addedDurationHours: 0,
             plannedDurationHours: 16,

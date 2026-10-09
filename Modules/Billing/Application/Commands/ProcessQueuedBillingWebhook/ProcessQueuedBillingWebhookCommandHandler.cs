@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids;
 using System.Text.Json;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
@@ -16,7 +17,8 @@ public sealed class ProcessQueuedBillingWebhookCommandHandler(
     TimeProvider timeProvider,
     BillingWebhookContextResolver contextResolver) : IRequestHandler<ProcessQueuedBillingWebhookCommand, Result> {
     public async Task<Result> Handle(ProcessQueuedBillingWebhookCommand request, CancellationToken cancellationToken) {
-        BillingWebhookEvent? inboxEvent = await events.GetByIdAsync(request.WebhookEventId, cancellationToken).ConfigureAwait(false);
+        var eventId = (BillingWebhookEventId)request.WebhookEventId;
+        BillingWebhookEvent? inboxEvent = await events.GetByIdAsync(eventId, cancellationToken).ConfigureAwait(false);
         if (inboxEvent is null || inboxEvent.ProcessingState == BillingWebhookProcessingState.Processed) {
             return Result.Success();
         }
@@ -43,7 +45,7 @@ public sealed class ProcessQueuedBillingWebhookCommandHandler(
         }
 
         await transactions.ExecuteSerializedAsync(serializationKey, async ct => {
-            inboxEvent = await events.GetByIdAsync(request.WebhookEventId, ct).ConfigureAwait(false)
+            inboxEvent = await events.GetByIdAsync(eventId, ct).ConfigureAwait(false)
                 ?? throw new InvalidOperationException("The webhook inbox event no longer exists.");
             if (inboxEvent.ProcessingState == BillingWebhookProcessingState.Processed) {
                 result = Result.Success();

@@ -3,7 +3,9 @@ import { provideRouter } from '@angular/router';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import type { StepFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import { createRecipeIngredientValue, createRecipeStepValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeStepCardComponent, type RecipeStepCardState } from './recipe-step-card';
@@ -44,7 +46,7 @@ describe('RecipeStepCardComponent', () => {
                 ingredients: [
                     {
                         food: {
-                            id: 'product-1',
+                            id: entityId<'product'>('product-1'),
                             name: 'Rice',
                             baseUnit: MeasurementUnit.G,
                             baseAmount: 100,
@@ -234,10 +236,7 @@ const MISSING_INGREDIENT_INDEX = 10;
 
 describe('RecipeStepCardComponent gallery', () => {
     it('emits all photos in the selected cover order and preserves upload state', () => {
-        const photos = [
-            { assetId: 'first', url: '/first.jpg' },
-            { assetId: 'second', url: '/second.jpg' },
-        ];
+        const photos = [imageSelection('/first.jpg', 'first'), imageSelection('/second.jpg', 'second')];
         const { component } = setupComponent({ ...createRecipeStepValue(), images: photos });
         const changed = vi.fn();
         const uploading = vi.fn();

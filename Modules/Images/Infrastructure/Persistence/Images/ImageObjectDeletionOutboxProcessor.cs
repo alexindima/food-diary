@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Modules.Images.PersistenceModel.Images;
 using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Outbox.Infrastructure.Persistence;
@@ -24,7 +25,7 @@ internal sealed class ImageObjectDeletionOutboxProcessor(
             batchSize,
             options.Value,
             timeProvider,
-            (message, token) => imageStorageService.DeleteAsync(message.ObjectKey, message.IsConfirmed, token),
+            (message, token) => imageStorageService.DeleteAsync(ObjectStorageKey.FromStoredValue(message.ObjectKey), message.IsConfirmed, token),
             static message => message.ObjectKey,
             logger,
             cancellationToken: cancellationToken, ensureCleanEntry: ensureCleanEntry);

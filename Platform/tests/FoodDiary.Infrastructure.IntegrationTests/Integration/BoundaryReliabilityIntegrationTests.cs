@@ -74,7 +74,7 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
                     WeeklyGoalType.DiaryLogging, targetDays: 5, reminderEnabled: false, reminderTimeMinutes: null, timeZoneOffsetMinutes: null));
             }
             context.Products.Add(CreateProduct(user.Id, "one product"));
-            await new ImageObjectDeletionOutbox(context.ImageObjectDeletionOutbox, TimeProvider.System).EnqueueAsync("one-object", isConfirmed: true, cancellationToken);
+            await new ImageObjectDeletionOutbox(context.ImageObjectDeletionOutbox, TimeProvider.System).EnqueueAsync(FoodDiary.Modules.Images.Domain.ValueObjects.ObjectStorageKey.FromStoredValue("one-object"), isConfirmed: true, cancellationToken);
             if (!owner.Equals("BatchItem", StringComparison.Ordinal)) {
                 queue.Enqueue("notify", _ => { delivered++; return Task.CompletedTask; });
             }
@@ -146,7 +146,7 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
         var repository = new ImageAssetRepository(deleting.ImageAssets, new ImageAssetUsageQuery(deleting));
         Assert.False(await repository.IsAssetInUseAsync(image.Id));
         await repository.DeleteAsync(image);
-        await new ImageObjectDeletionOutbox(deleting.ImageObjectDeletionOutbox, TimeProvider.System).EnqueueAsync(image.ObjectKey, isConfirmed: true);
+        await new ImageObjectDeletionOutbox(deleting.ImageObjectDeletionOutbox, TimeProvider.System).EnqueueAsync(FoodDiary.Modules.Images.Domain.ValueObjects.ObjectStorageKey.FromStoredValue(image.ObjectKey), isConfirmed: true);
         await using FoodDiaryDbContext linking = databaseFixture.CreateDbContext(deleting.Database.GetConnectionString()!);
         linking.Products.Add(CreateProduct(user.Id, "linked", image.Id));
         await linking.SaveChangesAsync();

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { MeasurementUnit } from '../../../shared/models/product.data';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { ShoppingListItem } from '../../../shared/models/shopping-list.data';
 import {
     buildShoppingListItemViewModels,
@@ -13,9 +14,9 @@ import {
 } from './shopping-list-item.mapper';
 
 const ITEM: ShoppingListItem = {
-    id: 'item-1',
-    shoppingListId: 'list-1',
-    productId: 'product-1',
+    id: entityId<'shopping-list-item'>('item-1'),
+    shoppingListId: entityId<'shopping-list'>('list-1'),
+    productId: entityId<'product'>('product-1'),
     name: 'Milk',
     amount: 2,
     unit: MeasurementUnit.ML,
@@ -91,8 +92,8 @@ describe('shopping-list-item.mapper', () => {
     it('should rebuild sort order from item positions', () => {
         expect(
             rebuildShoppingListSortOrder([
-                { ...ITEM, id: 'a' },
-                { ...ITEM, id: 'b' },
+                { ...ITEM, id: entityId<'shopping-list-item'>('a') },
+                { ...ITEM, id: entityId<'shopping-list-item'>('b') },
             ]).map(item => item.sortOrder),
         ).toEqual([1, 2]);
     });

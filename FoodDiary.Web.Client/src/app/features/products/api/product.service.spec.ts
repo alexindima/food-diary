@@ -14,6 +14,7 @@ import {
     ProductVisibility,
     type UpdateProductRequest,
 } from '../../../shared/models/product.data';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { ProductService } from './product.service';
 import { PRODUCT_API_LIMITS } from './product-api.tokens';
 
@@ -36,7 +37,7 @@ const NEW_PRODUCT_PROTEINS = 10;
 const NEW_PRODUCT_FATS = 2;
 const NEW_PRODUCT_CARBS = 12;
 const MOCK_PRODUCT: Product = {
-    id: 'p1',
+    id: entityId<'product'>('p1'),
     name: 'Chicken Breast',
     barcode: null,
     brand: null,
@@ -145,7 +146,7 @@ describe('ProductService query', () => {
 
 describe('ProductService reads', () => {
     it('should get product by id', () => {
-        service.getById('p1').subscribe(result => {
+        service.getById(entityId<'product'>('p1')).subscribe(result => {
             expect(result).toEqual(MOCK_PRODUCT);
         });
 
@@ -155,7 +156,7 @@ describe('ProductService reads', () => {
     });
 
     it('should return null on getById failure', () => {
-        service.getById('p1').subscribe(result => {
+        service.getById(entityId<'product'>('p1')).subscribe(result => {
             expect(result).toBeNull();
         });
 
@@ -181,7 +182,7 @@ describe('ProductService mutations', () => {
     it('should update product via PATCH', () => {
         const updateData: UpdateProductRequest = { name: 'Updated Product' };
 
-        service.update('p1', updateData).subscribe(result => {
+        service.update(entityId<'product'>('p1'), updateData).subscribe(result => {
             expect(result).toEqual(MOCK_PRODUCT);
         });
 
@@ -192,7 +193,7 @@ describe('ProductService mutations', () => {
     });
 
     it('should delete product by id', () => {
-        service.deleteById('p1').subscribe();
+        service.deleteById(entityId<'product'>('p1')).subscribe();
 
         const req = httpMock.expectOne(`${BASE_URL}/p1`);
         expect(req.request.method).toBe('DELETE');
@@ -200,7 +201,7 @@ describe('ProductService mutations', () => {
     });
 
     it('should duplicate product', () => {
-        service.duplicate('p1').subscribe(result => {
+        service.duplicate(entityId<'product'>('p1')).subscribe(result => {
             expect(result).toEqual(MOCK_PRODUCT);
         });
 
@@ -350,10 +351,10 @@ describe('Product mutation failures', () => {
             action === 'create'
                 ? service.create(payload)
                 : action === 'update'
-                  ? service.update('p1', payload)
+                  ? service.update(entityId<'product'>('p1'), payload)
                   : action === 'delete'
-                    ? service.deleteById('p1')
-                    : service.duplicate('p1');
+                    ? service.deleteById(entityId<'product'>('p1'))
+                    : service.duplicate(entityId<'product'>('p1'));
         let received: unknown;
         let emitted = false;
         result.subscribe({
@@ -398,7 +399,7 @@ describe('ProductService API measurement units', () => {
         ['Pcs', MeasurementUnit.PCS],
     ])('normalizes %s when reopening a saved product', (wireUnit, expected) => {
         let received: Product | null = null;
-        service.getById('p1').subscribe(value => {
+        service.getById(entityId<'product'>('p1')).subscribe(value => {
             received = value;
         });
         httpMock.expectOne(`${BASE_URL}/p1`).flush({ ...MOCK_PRODUCT, baseUnit: wireUnit });

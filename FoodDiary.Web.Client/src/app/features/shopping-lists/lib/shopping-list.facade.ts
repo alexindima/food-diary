@@ -7,6 +7,9 @@ import { createAutosaveQueue } from '../../../shared/lib/autosave-queue';
 import { createClientId } from '../../../shared/lib/client-id.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import type { MeasurementUnit } from '../../../shared/models/product.data';
+import { optionalUtcInstant } from '../../../shared/models/semantics/date-value';
+import type { ShoppingListId } from '../../../shared/models/semantics/entity-id';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { ShoppingList, ShoppingListItem, ShoppingListPage, ShoppingListSummary } from '../../../shared/models/shopping-list.data';
 import { ShoppingListService } from '../api/shopping-list.service';
 import { mapShoppingListItemToDto, normalizeShoppingListAmount, rebuildShoppingListSortOrder } from './shopping-list-item.mapper';
@@ -165,7 +168,7 @@ export class ShoppingListFacade {
             }
             return;
         }
-        this.loadListById(id);
+        this.loadListById(entityId<'shopping-list'>(id));
     }
 
     public setListName(name: string): void {
@@ -173,7 +176,7 @@ export class ShoppingListFacade {
         this.scheduleSave();
     }
 
-    public renameListById(listId: string, name: string): void {
+    public renameListById(listId: ShoppingListId, name: string): void {
         const trimmedName = name.trim();
         if (listId.length === 0 || trimmedName.length === 0) {
             return;
@@ -268,7 +271,7 @@ export class ShoppingListFacade {
         const nextItems = [
             ...this.items(),
             {
-                id: this.createTempId(),
+                id: entityId<'shopping-list-item'>(this.createTempId()),
                 shoppingListId: current.id,
                 name,
                 amount: normalizeShoppingListAmount(draft.amount),
@@ -342,7 +345,7 @@ export class ShoppingListFacade {
                 ? {
                       ...entry,
                       isChecked: checked,
-                      checkedOnUtc: checked ? new Date().toISOString() : null,
+                      checkedOnUtc: optionalUtcInstant(checked ? new Date().toISOString() : null),
                   }
                 : entry,
         );
@@ -359,7 +362,7 @@ export class ShoppingListFacade {
         this.clearListById(current.id);
     }
 
-    public clearListById(listId: string): void {
+    public clearListById(listId: ShoppingListId): void {
         const current = this.list();
         const summary = this.lists().find(entry => entry.id === listId);
         const listName = current?.id === listId ? current.name : summary?.name;
@@ -395,7 +398,7 @@ export class ShoppingListFacade {
         this.deleteSelectedList(current);
     }
 
-    public deleteListById(listId: string): void {
+    public deleteListById(listId: ShoppingListId): void {
         const current = this.list();
         if (current?.id === listId) {
             this.deleteSelectedList(current);
@@ -491,7 +494,7 @@ export class ShoppingListFacade {
                             : lists[0].id;
                     this.selectedListId.set(selectedId);
 
-                    this.loadListById(selectedId);
+                    this.loadListById(entityId<'shopping-list'>(selectedId));
                 },
                 error: () => {
                     this.isLoading.set(false);
@@ -500,7 +503,7 @@ export class ShoppingListFacade {
             });
     }
 
-    private loadListById(id: string): void {
+    private loadListById(id: ShoppingListId): void {
         this.loadingListId = id;
         this.isLoading.set(true);
         this.shoppingListService
@@ -639,7 +642,7 @@ export class ShoppingListFacade {
                         const selection = this.pendingSelection;
                         this.pendingSelection = null;
                         if (selection !== null) {
-                            this.loadListById(selection);
+                            this.loadListById(entityId<'shopping-list'>(selection));
                         }
                     }
                     finishSave(true);

@@ -2,6 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import { type Meal, MealSourceType } from '../../../../../shared/models/meal.data';
 import { MeasurementUnit, type Product, ProductVisibility } from '../../../../../shared/models/product.data';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
+import { productQuantityFromStored } from '../../../../../shared/models/semantics/meal-quantity';
 import { buildMealDetailViewModel } from './meal-detail.mapper';
 
 const BASE_AMOUNT = 100;
@@ -21,7 +24,7 @@ const translate = (key: string): string => `translated:${key}`;
 
 function createProduct(name: string, baseUnit: MeasurementUnit = MeasurementUnit.G): Product {
     return {
-        id: `product-${name}`,
+        id: entityId<'product'>(`product-${name}`),
         name,
         baseUnit,
         baseAmount: BASE_AMOUNT,
@@ -43,8 +46,8 @@ function createProduct(name: string, baseUnit: MeasurementUnit = MeasurementUnit
 
 function createMeal(overrides: Partial<Meal> = {}): Meal {
     return {
-        id: 'meal-1',
-        date: '2026-05-14T08:00:00Z',
+        id: entityId<'meal'>('meal-1'),
+        date: utcInstant('2026-05-14T08:00:00Z'),
         mealType: 'breakfast',
         comment: null,
         imageUrl: null,
@@ -70,18 +73,20 @@ function createMealWithItemPreview(): Meal {
     return createMeal({
         items: [
             {
-                id: 'item-product',
-                mealId: 'meal-1',
-                amount: BASE_AMOUNT,
+                id: entityId<'meal-item'>('item-product'),
+                mealId: entityId<'meal'>('meal-1'),
+                amount: productQuantityFromStored(BASE_AMOUNT),
                 sourceType: MealSourceType.Product,
                 product: createProduct('Oatmeal'),
+                recipe: null,
             },
             {
-                id: 'item-unknown',
-                mealId: 'meal-1',
-                amount: BASE_AMOUNT,
+                id: entityId<'meal-item'>('item-unknown'),
+                mealId: entityId<'meal'>('meal-1'),
+                amount: productQuantityFromStored(BASE_AMOUNT),
                 sourceType: MealSourceType.Product,
                 product: null,
+                recipe: null,
             },
         ],
         aiSessions: [

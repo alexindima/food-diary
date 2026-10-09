@@ -19,7 +19,6 @@ public sealed class ExportDiaryQueryHandler(
     ICurrentUserAccessService currentUserAccessService,
     IDiaryPdfGenerator pdfGenerator)
     : IQueryHandler<ExportDiaryQuery, Result<FileExportResult>> {
-    private const int MaxExportRangeDays = 366;
     internal const int MaxCsvMealCount = 10_000;
     internal const int MaxPdfMealCount = 2_000;
 
@@ -51,16 +50,16 @@ public sealed class ExportDiaryQueryHandler(
                 Errors.Validation.Invalid(nameof(query.DateFrom), "DateFrom must be less than or equal to DateTo."));
         }
 
-        if ((normalizedTo - normalizedFrom).TotalDays > MaxExportRangeDays) {
+        if ((normalizedTo - normalizedFrom).TotalDays > DiaryExportPeriod.MaxRangeDays) {
             return Result.Failure<FileExportResult>(
                 Errors.Validation.Invalid(nameof(query.DateTo), "Export range must not exceed one year."));
         }
 
+        var period = DiaryExportPeriod.FromResolvedRange(normalizedFrom, normalizedTo, DiaryDisplayOffset.FromResolvedValue(displayOffset));
         int mealLimit = query.Format == ExportFormat.Pdf ? MaxPdfMealCount : MaxCsvMealCount;
         ExportDiaryMealsReadModel diary = await GetMealsAsync(
             userId,
-            normalizedFrom,
-            normalizedTo,
+            period,
             mealLimit,
             cancellationToken).ConfigureAwait(false);
         if (diary.HasMore) {
@@ -69,8 +68,8 @@ public sealed class ExportDiaryQueryHandler(
                 Errors.Validation.Invalid(nameof(query.DateTo), $"Export contains more than {mealLimitText} meals. Choose a shorter date range."));
         }
 
-        string fromStr = normalizedFrom.Add(displayOffset).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-        string toStr = normalizedTo.Add(displayOffset).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+        string fromStr = period.From.Add(period.DisplayOffset.Value).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+        string toStr = period.To.Add(period.DisplayOffset.Value).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
         return query.Format switch {
             ExportFormat.Pdf => Result.Success(new FileExportResult(
@@ -85,7 +84,7 @@ public sealed class ExportDiaryQueryHandler(
                 "application/pdf",
                 $"food-diary-{fromStr}-to-{toStr}.pdf")),
             _ => Result.Success(new FileExportResult(
-                DiaryCsvGenerator.Generate(diary.Meals, displayOffset),
+                DiaryCsvGenerator.Generate(diary.Meals, period.DisplayOffset.Value),
                 "text/csv",
                 $"food-diary-{fromStr}-to-{toStr}.csv")),
         };
@@ -105,19 +104,18 @@ public sealed class ExportDiaryQueryHandler(
 
     private async Task<ExportDiaryMealsReadModel> GetMealsAsync(
         UserId userId,
-        DateTime dateFrom,
-        DateTime dateTo,
+        DiaryExportPeriod period,
         int limit,
         CancellationToken cancellationToken) {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(limit);
         IReadOnlyList<MealProjectionReadModel> meals = await mealExportReadService.Send(new ReadMealsForExportQuery(
             userId,
-            dateFrom,
-            dateTo,
+            period.From,
+            period.To,
             checked(limit + 1)),
             cancellationToken).ConfigureAwait(false);
 
-        List<MealProjectionReadModel> matchingMeals = [.. meals.Where(meal => meal.Date >= dateFrom && meal.Date <= dateTo)];
+        List<MealProjectionReadModel> matchingMeals = [.. meals.Where(meal => meal.Date >= period.From && meal.Date <= period.To)];
 
         return new ExportDiaryMealsReadModel(
             [.. matchingMeals.Take(limit)],

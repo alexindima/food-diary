@@ -27,3 +27,7 @@ Generic DomainGuard belongs to FoodDiary.Domain.Primitives, referenced directly.
 RoleNames belongs to Users Domain.Contracts; role entities and membership invariants remain here.
 
 All module projects and tests use `FoodDiary.Modules.Users.<Project>` identities and namespaces matching physical folders. Projects are siblings, including Application.Abstractions and PersistenceModel. Namespace changes preserve database schema, historical migration metadata, HTTP payloads and runtime behavior.
+
+Goal starts use distinct DesiredWeightKg/MeasuredWeightKg or DesiredWaistCm/MeasuredWaistCm inputs. Typed and scalar starts share the attachment/replacement mutation core. Cancellation needs an ending measurement only when an active goal exists; a missing active goal still permits clearing the desired value without validating an unused timestamp or measurement. Preserve goal history, replacement chronology, profile-only audits and scalar compatibility error ordering.
+
+UserPersonalInfoChanges carries birth-date Unchanged/Set/Clear state. BmrCalculationInput groups profile kilograms/centimeters/date/gender: FromMeasurements uses existing validated owner values, while FromStoredProfile preserves the calculator legacy/missing-data policy and exact Mifflin-St Jeor rounding. Raw personal-info and calculation adapters remain compatibility APIs.

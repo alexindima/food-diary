@@ -1,13 +1,15 @@
 import { describe, expect, it } from 'vitest';
 
+import { calendarDate } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { WeightEntrySummaryPoint } from '../../../shared/models/weight-entry.data';
 import { buildWeightEntryViewModels, buildWeightHistoryChartPoints } from './weight-history-chart.mapper';
 
 const AVERAGE_WEIGHT = 72;
 const CURRENT_YEAR = 2026;
 const POINTS: WeightEntrySummaryPoint[] = [
-    { startDate: '2026-05-02T00:00:00Z', endDate: '2026-05-02T23:59:59Z', averageWeightKg: AVERAGE_WEIGHT },
-    { startDate: '2026-05-01T00:00:00Z', endDate: '2026-05-01T23:59:59Z', averageWeightKg: 0 },
+    { startDate: calendarDate('2026-05-02T00:00:00Z'), endDate: calendarDate('2026-05-02T23:59:59Z'), averageWeightKg: AVERAGE_WEIGHT },
+    { startDate: calendarDate('2026-05-01T00:00:00Z'), endDate: calendarDate('2026-05-01T23:59:59Z'), averageWeightKg: 0 },
 ];
 
 describe('weight history chart mapper', () => {
@@ -23,8 +25,16 @@ describe('weight history chart mapper', () => {
     it('adds the year when the range is not entirely within the current year', () => {
         const points = buildWeightHistoryChartPoints(
             [
-                { startDate: '2025-12-31T00:00:00Z', endDate: '2025-12-31T23:59:59Z', averageWeightKg: AVERAGE_WEIGHT },
-                { startDate: '2026-01-01T00:00:00Z', endDate: '2026-01-01T23:59:59Z', averageWeightKg: AVERAGE_WEIGHT },
+                {
+                    startDate: calendarDate('2025-12-31T00:00:00Z'),
+                    endDate: calendarDate('2025-12-31T23:59:59Z'),
+                    averageWeightKg: AVERAGE_WEIGHT,
+                },
+                {
+                    startDate: calendarDate('2026-01-01T00:00:00Z'),
+                    endDate: calendarDate('2026-01-01T23:59:59Z'),
+                    averageWeightKg: AVERAGE_WEIGHT,
+                },
             ],
             'en',
             CURRENT_YEAR,
@@ -35,7 +45,13 @@ describe('weight history chart mapper', () => {
 
     it('uses short localized month labels', () => {
         const points = buildWeightHistoryChartPoints(
-            [{ startDate: '2026-07-05T00:00:00Z', endDate: '2026-07-05T23:59:59Z', averageWeightKg: AVERAGE_WEIGHT }],
+            [
+                {
+                    startDate: calendarDate('2026-07-05T00:00:00Z'),
+                    endDate: calendarDate('2026-07-05T23:59:59Z'),
+                    averageWeightKg: AVERAGE_WEIGHT,
+                },
+            ],
             'ru',
             CURRENT_YEAR,
         );
@@ -44,11 +60,26 @@ describe('weight history chart mapper', () => {
     });
 
     it('builds entry view models with localized numeric dates', () => {
-        const items = buildWeightEntryViewModels([{ id: 'w-1', userId: 'u-1', date: '2026-05-15T00:00:00Z', weightKg: 71.5 }], 'en');
+        const items = buildWeightEntryViewModels(
+            [
+                {
+                    id: entityId<'weight-entry'>('w-1'),
+                    userId: entityId<'user'>('u-1'),
+                    date: calendarDate('2026-05-15T00:00:00Z'),
+                    weightKg: 71.5,
+                },
+            ],
+            'en',
+        );
 
         expect(items).toEqual([
             {
-                entry: { id: 'w-1', userId: 'u-1', date: '2026-05-15T00:00:00Z', weightKg: 71.5 },
+                entry: {
+                    id: entityId<'weight-entry'>('w-1'),
+                    userId: entityId<'user'>('u-1'),
+                    date: calendarDate('2026-05-15T00:00:00Z'),
+                    weightKg: 71.5,
+                },
                 dateLabel: '05/15/2026',
             },
         ]);
@@ -57,11 +88,19 @@ describe('weight history chart mapper', () => {
 
 describe('Chart date boundaries', () => {
     it('keeps malformed dates visible rather than crashing and preserves gaps', () => {
-        const entry = { id: 'invalid', userId: 'u', date: 'invalid', weightKg: 80 };
+        const entry = {
+            id: entityId<'weight-entry'>('invalid'),
+            userId: entityId<'user'>('u'),
+            date: calendarDate('invalid'),
+            weightKg: 80,
+        };
         expect(buildWeightEntryViewModels([entry], 'ru')[0].dateLabel).toBe('invalid');
-        expect(buildWeightHistoryChartPoints([{ startDate: 'invalid', endDate: 'invalid', averageWeightKg: 0 }], 'ru')).toEqual([
-            { label: 'invalid', value: null },
-        ]);
+        expect(
+            buildWeightHistoryChartPoints(
+                [{ startDate: calendarDate('invalid'), endDate: calendarDate('invalid'), averageWeightKg: 0 }],
+                'ru',
+            ),
+        ).toEqual([{ label: 'invalid', value: null }]);
         expect(buildWeightHistoryChartPoints([], 'ru')).toEqual([]);
     });
     it.each([
@@ -70,18 +109,27 @@ describe('Chart date boundaries', () => {
         { locale: 'en', date: '2025-05-01', expected: '01\nMay\n2025' },
     ])('labels $locale dates from earlier years', ({ locale, date, expected }) => {
         expect(
-            buildWeightHistoryChartPoints([{ startDate: date, endDate: date, averageWeightKg: 80 }], locale, CURRENT_YEAR)[0].label,
+            buildWeightHistoryChartPoints(
+                [{ startDate: calendarDate(date), endDate: calendarDate(date), averageWeightKg: 80 }],
+                locale,
+                CURRENT_YEAR,
+            )[0].label,
         ).toBe(expected);
     });
 });
 
 describe('weight calendar date regressions', () => {
     it.each(['2026-09-30', '2026-09-30T00:00:00', '2026-09-30T00:00:00Z'])('preserves calendar day %s independently of timezone', date => {
-        expect(buildWeightEntryViewModels([{ id: 'entry', userId: 'user', date, weightKg: 68.5 }], 'ru')[0].dateLabel).toBe('30.09.2026');
+        expect(
+            buildWeightEntryViewModels(
+                [{ id: entityId<'weight-entry'>('entry'), userId: entityId<'user'>('user'), date: calendarDate(date), weightKg: 68.5 }],
+                'ru',
+            )[0].dateLabel,
+        ).toBe('30.09.2026');
     });
     it('labels both ends of an aggregate bucket', () => {
         const points = buildWeightHistoryChartPoints(
-            [{ startDate: '2026-09-29T00:00:00', endDate: '2026-09-30T00:00:00', averageWeightKg: 68.5 }],
+            [{ startDate: calendarDate('2026-09-29T00:00:00'), endDate: calendarDate('2026-09-30T00:00:00'), averageWeightKg: 68.5 }],
             'ru',
             CURRENT_YEAR,
         );

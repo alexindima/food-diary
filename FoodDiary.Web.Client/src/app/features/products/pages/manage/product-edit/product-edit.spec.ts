@@ -2,6 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { ProductEditComponent } from './product-edit';
 
 const PRODUCT_CALORIES = 120;
@@ -45,7 +46,7 @@ function setupComponent(): { fixture: ComponentFixture<ProductEditComponent>; co
 
 function createProduct(): Product {
     return {
-        id: 'product-1',
+        id: entityId<'product'>('product-1'),
         name: 'Apple',
         barcode: null,
         brand: 'Garden',

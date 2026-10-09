@@ -19,8 +19,14 @@ public sealed class WaistGoal : Entity<WaistGoalId> {
     }
 
     public static WaistGoal Start(UserId userId, double targetWaist, double startWaist, DateTime startedAtUtc) {
-        _ = DesiredWaistCm.Create(targetWaist);
-        _ = DesiredWaistCm.Create(startWaist);
+        var target = DesiredWaistCm.Create(targetWaist);
+        var start = MeasuredWaistCm.FromGoalValue(startWaist);
+        return StartWithMeasurements(userId, target, start, startedAtUtc);
+    }
+
+    public static WaistGoal StartWithMeasurements(UserId userId, DesiredWaistCm targetWaist, MeasuredWaistCm startWaist, DateTime startedAtUtc) {
+        ArgumentNullException.ThrowIfNull(targetWaist);
+        ArgumentNullException.ThrowIfNull(startWaist);
         if (userId.Value == Guid.Empty) {
             throw new ArgumentException("User id is required.", nameof(userId));
         }
@@ -28,8 +34,8 @@ public sealed class WaistGoal : Entity<WaistGoalId> {
         var goal = new WaistGoal {
             Id = WaistGoalId.New(),
             UserId = userId,
-            TargetWaistCm = targetWaist,
-            StartWaistCm = startWaist,
+            TargetWaistCm = targetWaist.Value,
+            StartWaistCm = startWaist.Value,
             StartedAtUtc = NormalizeUtc(startedAtUtc),
             Status = WaistGoalStatus.Active,
         };
@@ -40,6 +46,16 @@ public sealed class WaistGoal : Entity<WaistGoalId> {
     public void Replace(DateTime endedAtUtc, double endWaist) => End(WaistGoalStatus.Replaced, endedAtUtc, endWaist);
 
     public void Cancel(DateTime endedAtUtc, double endWaist) => End(WaistGoalStatus.Cancelled, endedAtUtc, endWaist);
+
+    public void ReplaceWithMeasurement(DateTime endedAtUtc, MeasuredWaistCm endWaist) {
+        ArgumentNullException.ThrowIfNull(endWaist);
+        Replace(endedAtUtc, endWaist.Value);
+    }
+
+    public void CancelWithMeasurement(DateTime endedAtUtc, MeasuredWaistCm endWaist) {
+        ArgumentNullException.ThrowIfNull(endWaist);
+        Cancel(endedAtUtc, endWaist.Value);
+    }
 
     private void End(WaistGoalStatus status, DateTime endedAtUtc, double endWaist) {
         if (Status != WaistGoalStatus.Active) {

@@ -5,6 +5,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { RecipeCookModeComponent } from './recipe-cook-mode';
 
 describe('RecipeCookModeComponent', () => {
@@ -106,7 +108,7 @@ function setupComponent(recipe: Recipe): {
 
 function createRecipe(): Recipe {
     return {
-        id: 'recipe-1',
+        id: entityId<'recipe'>('recipe-1'),
         name: 'Cake',
         description: null,
         comment: null,
@@ -118,7 +120,7 @@ function createRecipe(): Recipe {
         servings: 4,
         visibility: RecipeVisibility.Public,
         usageCount: 0,
-        createdAt: '2026-01-01T00:00:00Z',
+        createdAt: utcInstant('2026-01-01T00:00:00Z'),
         isOwnedByCurrentUser: true,
         totalCalories: null,
         totalProteins: null,

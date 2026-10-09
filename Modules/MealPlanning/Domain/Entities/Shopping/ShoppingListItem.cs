@@ -4,6 +4,7 @@ using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 
@@ -30,6 +31,27 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
     public IReadOnlyCollection<ShoppingListItemSource> Sources => _sources.AsReadOnly();
 
     private ShoppingListItem() {
+    }
+
+    public static ShoppingListItem CreateWithQuantity(
+        ShoppingListId shoppingListId, string name, ProductId? productId, ShoppingQuantity quantity, string? category,
+        bool isChecked, int sortOrder, string? aisle = null, string? note = null, DateTime? checkedOnUtc = null, ShoppingListItemId? id = null) {
+        ArgumentNullException.ThrowIfNull(quantity);
+        return Create(shoppingListId, name, productId, quantity.Amount, quantity.Unit, category, isChecked, sortOrder, aisle, note, checkedOnUtc, id);
+    }
+
+    public void UpdateWithQuantity(
+        string name, ProductId? productId, ShoppingQuantity quantity, string? category, string? aisle, string? note,
+        bool isChecked, DateTime? checkedOnUtc, int sortOrder) {
+        ArgumentNullException.ThrowIfNull(quantity);
+        UpdateDetails(name, productId, quantity.Amount, quantity.Unit, category, aisle, note, isChecked, checkedOnUtc, sortOrder);
+    }
+
+    public ShoppingListItemSource AddMealPlanSourceWithQuantity(
+        MealPlanId mealPlanId, MealPlanMealId mealPlanMealId, RecipeId recipeId, string label, int dayNumber,
+        string mealType, ShoppingSourceQuantity quantity) {
+        ArgumentNullException.ThrowIfNull(quantity);
+        return AddMealPlanSource(mealPlanId, mealPlanMealId, recipeId, label, dayNumber, mealType, quantity.Amount, quantity.Unit);
     }
 
     public static ShoppingListItem Create(

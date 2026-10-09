@@ -1,5 +1,6 @@
 import { normalizeMealType } from '../../../../../shared/lib/meal-type.util';
 import { normalizeSatietyLevel } from '../../../../../shared/lib/satiety-level.utils';
+import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import {
     type Meal,
     type MealAiSessionManageDto,
@@ -94,10 +95,7 @@ export function buildMealManageFormPatchValue(meal: Meal): MealManageFormPatchVa
         time: getTimeInputValue(date),
         mealType: normalizeMealType(meal.mealType),
         comment: toNullable(meal.comment),
-        imageUrl: {
-            url: toNullable(meal.imageUrl),
-            assetId: toNullable(meal.imageAssetId),
-        },
+        imageUrl: imageSelection(toNullable(meal.imageUrl), toNullable(meal.imageAssetId)),
         isNutritionAutoCalculated: meal.isNutritionAutoCalculated,
         ...buildMealManualNutritionPatchValue(meal),
         preMealSatietyLevel: normalizeSatietyLevel(toNullable(meal.preMealSatietyLevel)),

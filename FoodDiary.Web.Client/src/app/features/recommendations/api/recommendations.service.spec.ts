@@ -6,6 +6,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { environment } from '../../../../environments/environment';
 import { COLLECTION_PAGE_SIZE } from '../../../shared/api/load-paged-collection';
 import type { DietologistRecommendation } from '../../../shared/models/dietologist.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { RecommendationsService } from './recommendations.service';
 
 const BASE_URL = environment.apiUrls.recommendations;
@@ -40,8 +42,11 @@ describe('RecommendationsService', () => {
     });
 
     it('loads later recommendation pages before publishing the full history', () => {
-        const firstPage = Array.from({ length: COLLECTION_PAGE_SIZE }, (_, index) => ({ ...createRecommendation(), id: `rec-${index}` }));
-        const last = { ...createRecommendation(), id: 'oldest-recommendation' };
+        const firstPage = Array.from({ length: COLLECTION_PAGE_SIZE }, (_, index) => ({
+            ...createRecommendation(),
+            id: entityId<'recommendation'>(`rec-${index}`),
+        }));
+        const last = { ...createRecommendation(), id: entityId<'recommendation'>('oldest-recommendation') };
         let result: DietologistRecommendation[] | undefined;
 
         service.getMyRecommendations().subscribe(items => {
@@ -72,7 +77,7 @@ describe('RecommendationsService', () => {
     });
 
     it('marks recommendation as read', () => {
-        service.markAsRead('recommendation-1').subscribe(result => {
+        service.markAsRead(entityId<'recommendation'>('recommendation-1')).subscribe(result => {
             expect(result).toBeNull();
         });
 
@@ -85,13 +90,13 @@ describe('RecommendationsService', () => {
 
 function createRecommendation(): DietologistRecommendation {
     return {
-        id: 'recommendation-1',
-        dietologistUserId: 'dietologist-1',
+        id: entityId<'recommendation'>('recommendation-1'),
+        dietologistUserId: entityId<'user'>('dietologist-1'),
         dietologistFirstName: 'Ada',
         dietologistLastName: 'Lovelace',
         text: 'Add a protein source to breakfast.',
         isRead: false,
-        createdAtUtc: '2026-05-01T10:00:00.000Z',
+        createdAtUtc: utcInstant('2026-05-01T10:00:00.000Z'),
         readAtUtc: null,
     };
 }

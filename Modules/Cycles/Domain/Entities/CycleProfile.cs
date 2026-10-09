@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Cycles.Domain.ValueObjects;
 using FoodDiary.Modules.Cycles.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FoodDiary.Domain.Primitives;
@@ -178,6 +179,16 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         }
 
         SetModified();
+    }
+
+    public void RecordPredictionAssessment(DateTime generatedAtUtc, CyclePredictionAssessment assessment,
+        int completedCycleCount, int calibrationSampleCount, double? historicalCoveragePercent,
+        double? meanAbsoluteErrorDays, string algorithmVersion) {
+        ArgumentNullException.ThrowIfNull(assessment);
+        RecordPredictionRevision(generatedAtUtc, assessment.Window.From, assessment.Window.To,
+            assessment.Confidence.Code, assessment.Sufficiency.Code, assessment.Consistency.Code,
+            completedCycleCount, calibrationSampleCount, historicalCoveragePercent, meanAbsoluteErrorDays,
+            assessment.Reasons.Select(reason => reason.Code).ToArray(), algorithmVersion);
     }
 
     public void RecordPredictionRevision(

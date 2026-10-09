@@ -15,6 +15,7 @@ import {
     ProductType,
     ProductVisibility,
 } from '../../../../../shared/models/product.data';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import type { UsdaFoodDetail } from '../../../../../shared/models/usda.data';
 import { ProductService } from '../../../api/product.service';
 import { ProductExternalFoodFacade } from '../../../lib/manage/product-external-food.facade';
@@ -32,7 +33,7 @@ import type { ProductFormValues } from '../product-manage-lib/product-manage-for
 import { ProductManageFormComponent } from './product-manage-form';
 
 const PRODUCT: Product = {
-    id: 'product-1',
+    id: entityId<'product'>('product-1'),
     name: 'Test product',
     barcode: null,
     brand: null,
@@ -60,7 +61,7 @@ const PRODUCT: Product = {
 };
 const SECOND_PRODUCT: Product = {
     ...PRODUCT,
-    id: 'product-2',
+    id: entityId<'product'>('product-2'),
     name: 'Second product',
     caloriesPerBase: 240,
     proteinsPerBase: 20,

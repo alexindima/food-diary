@@ -7,6 +7,7 @@ import { environment } from '../../../../environments/environment';
 import { loadPagedCollection } from '../../../shared/api/load-paged-collection';
 import { AdminMealPlansSdk } from '../../../shared/api/sdk/generated/api/admin-meal-plans.service';
 import { createSdkConnection, sdkRequestOptions } from '../../../shared/api/sdk/sdk-connection';
+import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 import type { CatalogPlan, CatalogPlanRequest, CatalogPlanSummary, CatalogRecipe } from '../models/admin-meal-plan.data';
 import { catalogRecipeFromSdk, mealPlanFromSdk, mealPlanSummaryFromSdk } from './admin-meal-plans-sdk.mapper';
 
@@ -24,11 +25,11 @@ export class AdminMealPlansService {
         );
     }
 
-    public get(id: string): Observable<CatalogPlan> {
+    public get(id: AdminId<'meal-plan'>): Observable<CatalogPlan> {
         return this.sdk.client.getAdminMealPlansById({ version: this.sdk.version, id }).pipe(map(mealPlanFromSdk));
     }
 
-    public save(id: string | null, request: CatalogPlanRequest): Observable<CatalogPlan> {
+    public save(id: AdminId<'meal-plan'> | null, request: CatalogPlanRequest): Observable<CatalogPlan> {
         return id === null
             ? this.sdk.client
                   .postAdminMealPlans({ version: this.sdk.version, saveCatalogMealPlanHttpRequest: request })

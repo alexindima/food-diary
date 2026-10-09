@@ -1,4 +1,3 @@
-using System.Globalization;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -8,8 +7,6 @@ using FoodDiary.Modules.BodyMetrics.Domain.ValueObjects;
 namespace FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 
 public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
-    private const double MaxCircumference = DesiredWaistCm.MaxValue;
-
     public UserId UserId { get; private set; }
     public DateTime Date { get; private set; }
     public double CircumferenceCm { get; private set; }
@@ -27,12 +24,17 @@ public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
 
     public static WaistEntry CreateForDay(UserId userId, MeasurementDay day, double circumference) {
         EnsureUserId(userId);
-        double normalizedCircumference = NormalizeCircumference(circumference);
+        return CreateWithMeasurement(userId, day, MeasuredWaistCm.Create(circumference));
+    }
+
+    public static WaistEntry CreateWithMeasurement(UserId userId, MeasurementDay day, MeasuredWaistCm circumference) {
+        EnsureUserId(userId);
+        ArgumentNullException.ThrowIfNull(circumference);
 
         var entry = new WaistEntry(WaistEntryId.New()) {
             UserId = userId,
             Date = day.ToUtcDateTime(),
-            CircumferenceCm = normalizedCircumference,
+            CircumferenceCm = circumference.Value,
         };
 
         entry.SetCreated();
@@ -44,10 +46,14 @@ public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
     }
 
     public void UpdateDetails(double? circumference = null, MeasurementDay? day = null) {
+        UpdateMeasurement(circumference.HasValue ? MeasuredWaistCm.Create(circumference.Value) : null, day);
+    }
+
+    public void UpdateMeasurement(MeasuredWaistCm? circumference = null, MeasurementDay? day = null) {
         bool changed = false;
 
-        if (circumference.HasValue) {
-            double normalizedCircumference = NormalizeCircumference(circumference.Value);
+        if (circumference is not null) {
+            double normalizedCircumference = circumference.Value;
             if (!AreSame(CircumferenceCm, normalizedCircumference)) {
                 CircumferenceCm = normalizedCircumference;
                 changed = true;
@@ -65,16 +71,6 @@ public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
         if (changed) {
             SetModified();
         }
-    }
-
-    private static double NormalizeCircumference(double value) {
-        if (double.IsNaN(value) || double.IsInfinity(value)) {
-            throw new ArgumentOutOfRangeException(nameof(value), "CircumferenceCm must be a finite number.");
-        }
-
-        return value is <= 0 or > MaxCircumference
-            ? throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $"CircumferenceCm must be in range (0, {MaxCircumference}]."))
-            : value;
     }
 
     private static void EnsureUserId(UserId userId) {

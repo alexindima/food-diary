@@ -8,6 +8,8 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { EXPLORE_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import type { PageOf } from '../../../../shared/models/page-of.data';
 import { type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 import type { ExploreRecipe } from '../../models/explore.data';
 import { ExplorePageComponent } from './explore-page';
@@ -85,7 +87,7 @@ function createPage(): PageOf<ExploreRecipe> {
 
 function createRecipe(): Recipe {
     return {
-        id: 'recipe-1',
+        id: entityId<'recipe'>('recipe-1'),
         name: 'Soup',
         description: null,
         comment: null,
@@ -97,7 +99,7 @@ function createRecipe(): Recipe {
         servings: RECIPE_SERVINGS,
         visibility: RecipeVisibility.Public,
         usageCount: 0,
-        createdAt: '2026-05-16T10:00:00.000Z',
+        createdAt: utcInstant('2026-05-16T10:00:00.000Z'),
         isOwnedByCurrentUser: false,
         totalCalories: RECIPE_CALORIES,
         totalProteins: 0,

@@ -4,6 +4,7 @@ import { catchError, map, of } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
 import type { Product } from '../../../shared/models/product.data';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { ProductService } from '../api/product.service';
 
 export const productResolver: ResolveFn<Product | null> = route => {
@@ -16,7 +17,7 @@ export const productResolver: ResolveFn<Product | null> = route => {
         return of(null);
     }
 
-    return productService.getById(productId).pipe(
+    return productService.getById(entityId<'product'>(productId)).pipe(
         map(product => {
             if (product === null || !product.isOwnedByCurrentUser || product.usageCount > 0) {
                 void navigationService.navigateToProductListAsync();

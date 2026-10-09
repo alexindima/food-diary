@@ -7,3 +7,5 @@ User ownership: reference Users Domain.Contracts for UserId and shared user valu
 Generic DomainGuard belongs to FoodDiary.Domain.Primitives, referenced directly. Central Domain grants no friend access. This domain has no central Domain dependency.
 
 Use the canonical project name as the namespace root and match folders. Projects are siblings. Public owner use cases are Contracts requests dispatched through ISender; keep outbound source ports and reusable algorithms separate. Preserve authorization, cancellation, wire shapes and persistence semantics.
+
+Application mutations use CreateWithValues/UpdateValues with distinct ExerciseDay, ExerciseDuration and BurnedEnergy. Keep 1..1440 whole minutes, 0..10000 finite kilocalories and one-decimal ToEven normalization. ExerciseDay preserves the existing Unspecified calendar date and Local-to-UTC date extraction. Scalar storage and compatibility Create/Update retain the current behavior; do not equate minutes with calories or a recorded day with an instant.

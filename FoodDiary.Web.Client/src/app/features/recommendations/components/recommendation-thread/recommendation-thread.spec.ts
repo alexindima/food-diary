@@ -5,6 +5,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { RecommendationComment } from '../../../../shared/models/dietologist.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { RecommendationsFacade } from '../../lib/recommendations.facade';
 import { RecommendationThreadComponent } from './recommendation-thread';
 
@@ -17,7 +19,7 @@ describe('RecommendationThreadComponent', () => {
     beforeEach(() => {
         facade = {
             getComments: vi.fn(() => of([createComment()])),
-            createComment: vi.fn(() => of(createComment({ id: 'new-comment', text: 'Thanks' }))),
+            createComment: vi.fn(() => of(createComment({ id: entityId<'recommendation-comment'>('new-comment'), text: 'Thanks' }))),
         };
     });
 
@@ -80,14 +82,14 @@ describe('RecommendationThreadComponent', () => {
 
 function createComment(overrides: Partial<RecommendationComment> = {}): RecommendationComment {
     return {
-        id: 'comment-1',
-        recommendationId: 'recommendation-1',
-        authorUserId: 'user-1',
+        id: entityId<'recommendation-comment'>('comment-1'),
+        recommendationId: entityId<'recommendation'>('recommendation-1'),
+        authorUserId: entityId<'user'>('user-1'),
         authorFirstName: 'Ada',
         authorLastName: 'Lovelace',
         authorEmail: 'ada@example.com',
         text: 'Please clarify',
-        createdAtUtc: '2026-07-24T07:00:00Z',
+        createdAtUtc: utcInstant('2026-07-24T07:00:00Z'),
         ...overrides,
     };
 }

@@ -2,10 +2,13 @@ using FoodDiary.Modules.Billing.Domain.Contracts;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Billing.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.Billing.Domain.Entities;
 
 public sealed class BillingPayment : Entity<Guid> {
+    public BillingPaymentId TypedId => new(Id);
     private const int JsonMaxLength = 65536;
     private const int ProviderMaxLength = 32;
     private const int ExternalIdMaxLength = 255;
@@ -15,6 +18,8 @@ public sealed class BillingPayment : Entity<Guid> {
 
     public UserId UserId { get; private set; }
     public Guid? BillingSubscriptionId { get; private set; }
+    public FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingSubscriptionId? SubscriptionReference =>
+        BillingSubscriptionId is { } id ? new FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingSubscriptionId(id) : null;
     public string Provider { get; private set; } = string.Empty;
     public string ExternalPaymentId { get; private set; } = string.Empty;
     public string? ExternalCustomerId { get; private set; }
@@ -38,6 +43,35 @@ public sealed class BillingPayment : Entity<Guid> {
     public string? ProviderMetadataJson { get; private set; }
 
     private BillingPayment() {
+    }
+
+    public static BillingPayment CreateWithFinancials(
+        UserId userId, BillingSubscriptionId? billingSubscriptionId, string provider, string externalPaymentId,
+        string? externalCustomerId, string? externalSubscriptionId, string? externalPaymentMethodId, string? externalPriceId,
+        string? plan, string status, string kind, BillingPaymentFinancials financials,
+        DateTime? currentPeriodStartUtc, DateTime? currentPeriodEndUtc, string? webhookEventId, string? providerMetadataJson,
+        DateTime? occurredAtUtc = null) {
+        ArgumentNullException.ThrowIfNull(financials);
+        return Create(userId, billingSubscriptionId?.Value, provider, externalPaymentId, externalCustomerId,
+            externalSubscriptionId, externalPaymentMethodId, externalPriceId, plan, status, kind,
+            financials.Transaction.Amount?.Value, financials.Transaction.Currency?.Value,
+            currentPeriodStartUtc, currentPeriodEndUtc, webhookEventId, providerMetadataJson,
+            financials.Tax?.Value, financials.Fee?.Value, financials.Earnings?.Value,
+            financials.Payout.Currency?.Value, financials.Payout.Amount?.Value, occurredAtUtc);
+    }
+
+    public void ApplyProviderObservation(
+        BillingSubscriptionId? billingSubscriptionId, string? externalCustomerId, string? externalSubscriptionId,
+        string? externalPaymentMethodId, string? externalPriceId, string? plan, string status, string kind,
+        BillingPaymentFinancials financials, DateTime? currentPeriodStartUtc, DateTime? currentPeriodEndUtc,
+        string? webhookEventId, string? providerMetadataJson, DateTime? occurredAtUtc = null) {
+        ArgumentNullException.ThrowIfNull(financials);
+        ApplyProviderResult(billingSubscriptionId?.Value, externalCustomerId, externalSubscriptionId,
+            externalPaymentMethodId, externalPriceId, plan, status, kind,
+            financials.Transaction.Amount?.Value, financials.Transaction.Currency?.Value,
+            currentPeriodStartUtc, currentPeriodEndUtc, webhookEventId, providerMetadataJson,
+            financials.Tax?.Value, financials.Fee?.Value, financials.Earnings?.Value,
+            financials.Payout.Currency?.Value, financials.Payout.Amount?.Value, occurredAtUtc);
     }
 
     public static BillingPayment Create(

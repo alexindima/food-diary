@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Fasting.Domain.ValueObjects.Settings;
 using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Results;
 using FoodDiary.Modules.Fasting.Application.Common;
@@ -61,7 +62,7 @@ internal static class FastingStartFactory {
             return Result.Failure<(FastingPlan, FastingOccurrence)>(FastingErrors.InvalidProtocol);
         }
 
-        var plan = FastingPlan.CreateIntermittent(userId, protocol, duration, 24 - duration, startedAtUtc);
+        var plan = FastingPlan.CreateWithSettings(userId, IntermittentFastingSettings.Create(protocol, duration, 24 - duration), startedAtUtc);
         var occurrence = FastingOccurrence.Create(
             plan.Id,
             userId,
@@ -85,7 +86,7 @@ internal static class FastingStartFactory {
 
         FastingProtocol protocol = protocolResult.Value;
         int duration = command.PlannedDurationHours ?? FastingSession.GetDefaultDuration(protocol);
-        var plan = FastingPlan.CreateExtended(userId, protocol, duration, startedAtUtc);
+        var plan = FastingPlan.CreateWithSettings(userId, ExtendedFastingSettings.Create(protocol, duration), startedAtUtc);
         var occurrence = FastingOccurrence.Create(
             plan.Id,
             userId,
@@ -107,13 +108,8 @@ internal static class FastingStartFactory {
         int eatDayFastHours = command.CyclicEatDayFastHours ?? 16;
         int eatDayEatingWindowHours = command.CyclicEatDayEatingWindowHours ?? 8;
 
-        var plan = FastingPlan.CreateCyclic(
-            userId,
-            fastDays,
-            eatDays,
-            eatDayFastHours,
-            eatDayEatingWindowHours,
-            startedAtUtc,
+        var plan = FastingPlan.CreateWithSettings(userId,
+            CyclicFastingSettings.FromDateTimeEncoding(fastDays, eatDays, eatDayFastHours, eatDayEatingWindowHours, startedAtUtc),
             startedAtUtc);
         var occurrence = FastingOccurrence.Create(
             plan.Id,

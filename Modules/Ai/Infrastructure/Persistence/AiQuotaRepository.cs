@@ -114,13 +114,11 @@ public sealed class AiQuotaRepository(
             }
 
             reservation.Complete(usage.InputTokens, usage.OutputTokens, nowUtc);
-            context.AiUsages.Add(AiUsage.Create(
+            context.AiUsages.Add(AiUsage.CreateWithTokens(
                 reservation.UserId,
                 usage.Operation,
                 usage.Model,
-                usage.InputTokens,
-                usage.OutputTokens,
-                usage.TotalTokens));
+                usage.Tokens));
             await context.SaveChangesAsync(token).ConfigureAwait(false);
         }, cancellationToken).ConfigureAwait(false);
     }

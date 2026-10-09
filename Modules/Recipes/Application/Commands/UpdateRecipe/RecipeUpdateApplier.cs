@@ -1,22 +1,20 @@
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Modules.Recipes.Domain.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Entities;
 
 namespace FoodDiary.Modules.Recipes.Application.Commands.UpdateRecipe;
 
 internal static class RecipeUpdateApplier {
     public static void Apply(Recipe recipe, UpdateRecipeCommand command, UpdateRecipeValues values) {
-        recipe.UpdateIdentity(
-            name: command.Name,
-            description: command.Description,
-            clearDescription: command.ClearDescription,
-            comment: command.Comment,
-            clearComment: command.ClearComment,
-            category: command.Category,
-            clearCategory: command.ClearCategory);
-        recipe.UpdateMedia(
-            imageUrl: values.ImageAsset?.Url ?? command.ImageUrl,
-            clearImageUrl: values.ImageAsset is null && command.ClearImageUrl,
-            imageAssetId: values.ImageAssetId,
-            clearImageAssetId: command.ClearImageAssetId);
+        recipe.UpdateIdentityChanges(new RecipeIdentityChanges(
+            command.Name,
+            FieldChanges.FromOptionalText(command.Description, command.ClearDescription),
+            FieldChanges.FromOptionalText(command.Comment, command.ClearComment),
+            FieldChanges.FromOptionalText(command.Category, command.ClearCategory)));
+        recipe.UpdateMediaChanges(new RecipeMediaChanges(
+            FieldChanges.FromOptionalText(values.ImageAsset?.Url ?? command.ImageUrl,
+                values.ImageAsset is null && command.ClearImageUrl),
+            FieldChanges.FromOptionalValue(values.ImageAssetId, command.ClearImageAssetId)));
         recipe.UpdateTimingAndServings(
             prepTime: command.PrepTime,
             cookTime: command.CookTime,

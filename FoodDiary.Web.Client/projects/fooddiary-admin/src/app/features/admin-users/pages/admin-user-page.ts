@@ -8,6 +8,7 @@ import { catchError, combineLatest, forkJoin, type Observable, of, startWith, Su
 
 import { environment } from '../../../../environments/environment';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import { adminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminUserDetailsBodyComponent } from '../components/admin-user-details-body';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog';
@@ -70,7 +71,7 @@ export class AdminUserPageComponent {
                     this.activityFailed.set(false);
                     this.loginEvents.set([]);
                     this.roleAuditEvents.set([]);
-                    return this.users.getUser(params.get('id') ?? '').pipe(
+                    return this.users.getUser(adminId<'user'>(params.get('id') ?? '')).pipe(
                         catchError(() => {
                             this.failed.set(true);
                             return of(null);
@@ -128,7 +129,7 @@ export class AdminUserPageComponent {
     ): Observable<{ loginEvents: PagedResponse<AdminUserLoginEvent>; roleAuditEvents: AdminUserRoleAuditEvent[] } | null> {
         return forkJoin({
             loginEvents: this.users.getLoginEvents(1, ACTIVITY_PREVIEW_LIMIT, null, { userId }),
-            roleAuditEvents: this.users.getUserRoleAudit(userId),
+            roleAuditEvents: this.users.getUserRoleAudit(adminId<'user'>(userId)),
         }).pipe(
             catchError(() => {
                 this.activityFailed.set(true);

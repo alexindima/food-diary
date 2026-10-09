@@ -1,4 +1,5 @@
 import type { DashboardSnapshot } from '../../models/dashboard.data';
+import { calendarDate } from '../../models/semantics/date-value';
 import type { TdeeInsight } from '../../models/tdee-insight.data';
 import { cycleFromSdk } from './cycle-sdk.mapper';
 import { fastingSessionFromSdk } from './fasting-sdk.mapper';
@@ -56,9 +57,10 @@ export function dashboardSnapshotFromSdk(response: DashboardSnapshotHttpResponse
         meals: { ...meals, items: meals.items.map(mealFromSdk) },
         weightTrend: value.weightTrend?.map(weightSummaryFromSdk),
         waistTrend: value.waistTrend?.map(waistSummaryFromSdk),
-        hydration: sdkMaybe(value.hydration, hydration =>
-            sdkNullableFields(requireSdkFields(hydration, ['dateUtc', 'totalMl']), ['goalMl']),
-        ),
+        hydration: sdkMaybe(value.hydration, hydration => {
+            const daily = sdkNullableFields(requireSdkFields(hydration, ['dateUtc', 'totalMl']), ['goalMl']);
+            return { ...daily, dateUtc: calendarDate(daily.dateUtc) };
+        }),
         advice: sdkMaybe(value.advice, advice => requireSdkFields(advice, ['id', 'locale', 'value', 'weight'])),
         currentFastingSession: sdkMaybe(value.currentFastingSession, fastingSessionFromSdk),
         currentCycle: sdkMaybe(value.currentCycle, cycleFromSdk),

@@ -6,6 +6,7 @@ import { environment } from '../../../../environments/environment';
 import { AdminModerationSdk } from '../../../shared/api/sdk/generated/api/admin-moderation.service';
 import { createSdkConnection, sdkRequestOptions } from '../../../shared/api/sdk/sdk-connection';
 import { sdkPage } from '../../../shared/api/sdk/sdk-response';
+import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 import type { AdminContentReport, AdminReportAction } from '../models/admin-moderation.data';
 import type { PagedResponse } from '../models/admin-moderation-page.models';
 import { adminContentReportFromSdk } from './admin-moderation-sdk.mapper';
@@ -44,7 +45,7 @@ export class AdminModerationService {
             );
     }
 
-    public reviewReport(reportId: string, action: AdminReportAction): Observable<void> {
+    public reviewReport(reportId: AdminId<'content-report'>, action: AdminReportAction): Observable<void> {
         return this.sdk.client.postAdminModerationByIdReview({
             version: this.sdk.version,
             id: reportId,
@@ -52,7 +53,7 @@ export class AdminModerationService {
         });
     }
 
-    public dismissReport(reportId: string, action: AdminReportAction): Observable<void> {
+    public dismissReport(reportId: AdminId<'content-report'>, action: AdminReportAction): Observable<void> {
         return this.sdk.client.postAdminModerationByIdDismiss({
             version: this.sdk.version,
             id: reportId,

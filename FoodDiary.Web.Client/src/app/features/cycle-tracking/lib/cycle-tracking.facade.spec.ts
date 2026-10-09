@@ -15,6 +15,8 @@ import {
     type CycleResponse,
     OVULATION_TEST_RESULT_POSITIVE,
 } from '../../../shared/models/cycle.data';
+import { calendarDate } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { CyclesService } from '../api/cycles.service';
 import { CycleDayFacade } from './cycle-day.facade';
 import { CycleEpisodeFacade } from './cycle-episode.facade';
@@ -62,8 +64,8 @@ beforeEach(() => {
         create: vi.fn<CyclesService['create']>().mockReturnValue(
             of({
                 ...createCycleResponse(),
-                id: 'cycle-2',
-                trackingStartDate: '2026-04-03T00:00:00Z',
+                id: entityId<'cycle-profile'>('cycle-2'),
+                trackingStartDate: calendarDate('2026-04-03T00:00:00Z'),
                 averageCycleLength: 30,
                 averagePeriodLength: 6,
                 lutealLength: 15,
@@ -82,10 +84,10 @@ beforeEach(() => {
                 ...createCycleResponse(),
                 factors: [
                     {
-                        id: 'factor-1',
-                        cycleProfileId: 'cycle-1',
+                        id: entityId<'cycle-factor'>('factor-1'),
+                        cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
                         type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
-                        startDate: '2026-04-01T00:00:00.000Z',
+                        startDate: calendarDate('2026-04-01T00:00:00.000Z'),
                         endDate: null,
                         notes: 'pill',
                     },
@@ -97,10 +99,10 @@ beforeEach(() => {
                 ...createCycleResponse(),
                 menstrualEpisodes: [
                     {
-                        id: 'episode-1',
-                        cycleProfileId: 'cycle-1',
-                        startDate: '2026-04-01T00:00:00.000Z',
-                        endDate: '2026-04-05T00:00:00.000Z',
+                        id: entityId<'menstrual-episode'>('episode-1'),
+                        cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                        startDate: calendarDate('2026-04-01T00:00:00.000Z'),
+                        endDate: calendarDate('2026-04-05T00:00:00.000Z'),
                         status: 1,
                         excludedFromPredictions: true,
                     },
@@ -247,7 +249,7 @@ describe('CycleTrackingFacade nutrition range', () => {
         vi.useFakeTimers();
         try {
             vi.setSystemTime(new Date('2026-10-02T12:00:00'));
-            cyclesService.getCurrent.mockReturnValue(of({ ...createCycleResponse(), trackingStartDate: '2025-09-30' }));
+            cyclesService.getCurrent.mockReturnValue(of({ ...createCycleResponse(), trackingStartDate: calendarDate('2025-09-30') }));
             facade.initialize();
             expect(cyclesService.getNutritionSummary).toHaveBeenCalledWith('2025-10-02', '2026-10-02');
             expect(facade.nutritionSummary()).not.toBeNull();
@@ -292,7 +294,7 @@ describe('CycleTrackingFacade current cycle', () => {
 
     it('creates a new cycle from form values', async () => {
         facade.startCycleModel.set({
-            trackingStartDate: '2026-04-03',
+            trackingStartDate: calendarDate('2026-04-03'),
             mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
             averageCycleLength: null,
             averagePeriodLength: null,
@@ -311,7 +313,7 @@ describe('CycleTrackingFacade current cycle', () => {
         facade.startCycle();
 
         expect(cyclesService.create).toHaveBeenCalledWith({
-            trackingStartDate: '2026-04-03',
+            trackingStartDate: calendarDate('2026-04-03'),
             mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
             isRegular: true,
             isOnboardingComplete: true,
@@ -332,7 +334,7 @@ describe('CycleTrackingFacade current cycle', () => {
     it('submits the start cycle form through Signal Forms submission', async () => {
         facade.startCycleModel.update(value => ({
             ...value,
-            trackingStartDate: '2026-04-03',
+            trackingStartDate: calendarDate('2026-04-03'),
             cycleTrackingConsentGranted: true,
         }));
 
@@ -755,7 +757,9 @@ describe('CycleTrackingFacade day clear recovery', () => {
     });
 
     it('retains all records on failed clear and removes them only after a successful retry', () => {
-        cyclesService.getCurrent.mockReturnValue(of({ ...createCycleResponse(), dayNotes: [{ date: '2026-04-02', notes: 'saved note' }] }));
+        cyclesService.getCurrent.mockReturnValue(
+            of({ ...createCycleResponse(), dayNotes: [{ date: calendarDate('2026-04-02'), notes: 'saved note' }] }),
+        );
         facade.initialize();
         const original = facade.cycle();
         cyclesService.clearDay.mockReturnValueOnce(throwError(() => new Error('unavailable')));
@@ -806,9 +810,9 @@ describe('CycleTrackingFacade day editing', () => {
                 bleedingEntries: [createBleedingEntry('bleeding-1', '2026-04-02T00:00:00.000Z')],
                 symptoms: [
                     {
-                        id: 'symptom-1',
-                        cycleProfileId: 'cycle-1',
-                        date: '2026-04-02T00:00:00.000Z',
+                        id: entityId<'cycle-symptom-entry'>('symptom-1'),
+                        cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                        date: calendarDate('2026-04-02T00:00:00.000Z'),
                         category: 0,
                         intensity: 5,
                         tags: [],
@@ -817,9 +821,9 @@ describe('CycleTrackingFacade day editing', () => {
                 ],
                 fertilitySignals: [
                     {
-                        id: 'signal-1',
-                        cycleProfileId: 'cycle-1',
-                        date: '2026-04-02T00:00:00.000Z',
+                        id: entityId<'fertility-signal'>('signal-1'),
+                        cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                        date: calendarDate('2026-04-02T00:00:00.000Z'),
                         basalBodyTemperatureCelsius: 36.62,
                         ovulationTestResult: OVULATION_TEST_RESULT_POSITIVE,
                         cervicalFluid: 'egg white',
@@ -849,9 +853,9 @@ describe('CycleTrackingFacade day form editing', () => {
                 bleedingEntries: [createBleedingEntry('bleeding-1', '2026-04-02T00:00:00.000Z')],
                 symptoms: [
                     {
-                        id: 'symptom-1',
-                        cycleProfileId: 'cycle-1',
-                        date: '2026-04-02T00:00:00.000Z',
+                        id: entityId<'cycle-symptom-entry'>('symptom-1'),
+                        cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                        date: calendarDate('2026-04-02T00:00:00.000Z'),
                         category: 1,
                         intensity: 4,
                         tags: [],
@@ -860,9 +864,9 @@ describe('CycleTrackingFacade day form editing', () => {
                 ],
                 fertilitySignals: [
                     {
-                        id: 'signal-1',
-                        cycleProfileId: 'cycle-1',
-                        date: '2026-04-02T00:00:00.000Z',
+                        id: entityId<'fertility-signal'>('signal-1'),
+                        cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                        date: calendarDate('2026-04-02T00:00:00.000Z'),
                         basalBodyTemperatureCelsius: 36.62,
                         ovulationTestResult: OVULATION_TEST_RESULT_POSITIVE,
                         cervicalFluid: 'egg white',
@@ -878,7 +882,7 @@ describe('CycleTrackingFacade day form editing', () => {
 
         expect(facade.editingDayDate()).toBe('2026-04-02T00:00:00.000Z');
         expect(facade.dayModel()).toMatchObject({
-            date: '2026-04-02',
+            date: calendarDate('2026-04-02'),
             isBleeding: true,
             pain: 5,
             mood: 4,
@@ -902,8 +906,8 @@ describe('CycleTrackingFacade bleeding editing', () => {
         );
         cyclesService.upsertDay.mockReturnValue(
             of({
-                cycleProfileId: 'cycle-1',
-                date,
+                cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                date: calendarDate(date),
                 bleedingEntries: [],
                 symptoms: [],
                 fertilitySignal: null,
@@ -930,9 +934,9 @@ describe('CycleTrackingFacade fertility editing', () => {
         const date = '2026-04-02T00:00:00.000Z';
         const bleeding = createBleedingEntry('bleeding-1', date);
         const symptom = {
-            id: 'symptom-1',
-            cycleProfileId: 'cycle-1',
-            date,
+            id: entityId<'cycle-symptom-entry'>('symptom-1'),
+            cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+            date: calendarDate(date),
             category: 1 as const,
             intensity: 4,
             tags: [],
@@ -945,9 +949,9 @@ describe('CycleTrackingFacade fertility editing', () => {
                 symptoms: [symptom],
                 fertilitySignals: [
                     {
-                        id: 'signal-1',
-                        cycleProfileId: 'cycle-1',
-                        date,
+                        id: entityId<'fertility-signal'>('signal-1'),
+                        cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                        date: calendarDate(date),
                         basalBodyTemperatureCelsius: 36.62,
                         ovulationTestResult: OVULATION_TEST_RESULT_POSITIVE,
                         cervicalFluid: 'egg white',
@@ -959,8 +963,8 @@ describe('CycleTrackingFacade fertility editing', () => {
         );
         cyclesService.upsertDay.mockReturnValue(
             of({
-                cycleProfileId: 'cycle-1',
-                date,
+                cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                date: calendarDate(date),
                 bleedingEntries: [bleeding],
                 symptoms: [symptom],
                 fertilitySignal: null,
@@ -998,17 +1002,17 @@ describe('CycleTrackingFacade symptom values', () => {
                 ...createCycleResponse(),
                 symptoms: [
                     {
-                        id: 'symptom-1',
-                        cycleProfileId: 'cycle-1',
-                        date,
+                        id: entityId<'cycle-symptom-entry'>('symptom-1'),
+                        cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                        date: calendarDate(date),
                         category: 1,
                         intensity: 5,
                         tags: [],
                     },
                     {
-                        id: 'symptom-2',
-                        cycleProfileId: 'cycle-1',
-                        date,
+                        id: entityId<'cycle-symptom-entry'>('symptom-2'),
+                        cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                        date: calendarDate(date),
                         category: 2,
                         intensity: 4,
                         tags: [],
@@ -1030,7 +1034,7 @@ describe('CycleTrackingFacade symptom values', () => {
     it('clamps symptom values before saving a day', () => {
         facade.initialize();
         facade.dayModel.set({
-            date: '2026-04-02',
+            date: calendarDate('2026-04-02'),
             isBleeding: true,
             bleedingType: BLEEDING_TYPE_BLEEDING,
             flow: CYCLE_FLOW_MEDIUM,
@@ -1080,7 +1084,7 @@ describe('CycleTrackingFacade factors', () => {
         facade.initialize();
         facade.factorModel.set({
             type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
-            startDate: '2026-04-01',
+            startDate: calendarDate('2026-04-01'),
             endDate: null,
             notes: 'pill',
         });
@@ -1089,7 +1093,7 @@ describe('CycleTrackingFacade factors', () => {
 
         expect(cyclesService.upsertFactor).toHaveBeenCalledWith('cycle-1', {
             type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
-            startDate: '2026-04-01',
+            startDate: calendarDate('2026-04-01'),
             endDate: null,
             notes: 'pill',
             clearNotes: false,
@@ -1102,7 +1106,7 @@ describe('CycleTrackingFacade factors', () => {
         facade.initialize();
         facade.factorModel.update(value => ({
             ...value,
-            startDate: '2026-04-01',
+            startDate: calendarDate('2026-04-01'),
         }));
 
         const success = await submit(facade.factorForm);
@@ -1125,7 +1129,7 @@ describe('CycleTrackingFacade factors', () => {
         expect(facade.editingFactorId()).toBe('factor-1');
         expect(facade.factorModel()).toEqual({
             type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
-            startDate: '2026-04-01',
+            startDate: calendarDate('2026-04-01'),
             endDate: null,
             notes: 'pill',
         });
@@ -1193,7 +1197,7 @@ describe('CycleTrackingFacade factor drafts', () => {
     it('sends the selected id when changing the start date', async () => {
         facade.initialize();
         facade.editFactor('factor-1');
-        facade.factorModel.update(value => ({ ...value, startDate: '2026-04-02' }));
+        facade.factorModel.update(value => ({ ...value, startDate: calendarDate('2026-04-02') }));
         await submit(facade.factorForm);
         expect(cyclesService.upsertFactor).toHaveBeenCalledWith(
             'cycle-1',
@@ -1204,7 +1208,7 @@ describe('CycleTrackingFacade factor drafts', () => {
     it('retains the draft and explains an identity conflict', async () => {
         facade.initialize();
         facade.editFactor('factor-1');
-        facade.factorModel.update(value => ({ ...value, startDate: '2026-04-02', notes: 'draft' }));
+        facade.factorModel.update(value => ({ ...value, startDate: calendarDate('2026-04-02'), notes: 'draft' }));
         cyclesService.upsertFactor.mockReturnValue(throwError(() => ({ error: { error: 'Cycle.FactorIdentityConflict' } })));
         await submit(facade.factorForm);
         expect(facade.factorError()).toBe('CYCLE_TRACKING.FACTOR_IDENTITY_CONFLICT');
@@ -1249,7 +1253,7 @@ describe('CycleTrackingFacade factor drafts', () => {
 
     it('rejects an end date before the start date without sending a request', async () => {
         facade.initialize();
-        facade.factorModel.update(value => ({ ...value, startDate: '2026-04-02', endDate: '2026-04-01' }));
+        facade.factorModel.update(value => ({ ...value, startDate: calendarDate('2026-04-02'), endDate: calendarDate('2026-04-01') }));
 
         expect(facade.factorForm().invalid()).toBe(true);
         expect(await submit(facade.factorForm)).toBe(false);
@@ -1300,7 +1304,7 @@ describe('CycleTrackingFacade ending factors', () => {
         const now = new Date();
         const tomorrow = formatDateInputValue(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1));
         const cycle = createCycleResponse();
-        cyclesService.getCurrent.mockReturnValue(of({ ...cycle, factors: [{ ...cycle.factors[0], startDate: tomorrow }] }));
+        cyclesService.getCurrent.mockReturnValue(of({ ...cycle, factors: [{ ...cycle.factors[0], startDate: calendarDate(tomorrow) }] }));
         facade.initialize();
         await facade.endFactorTodayAsync('factor-1');
         expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
@@ -1310,7 +1314,7 @@ describe('CycleTrackingFacade ending factors', () => {
     it('does not repeat ending a factor that already ends today', async () => {
         const cycle = createCycleResponse();
         cyclesService.getCurrent.mockReturnValue(
-            of({ ...cycle, factors: [{ ...cycle.factors[0], endDate: formatDateInputValue(new Date()) }] }),
+            of({ ...cycle, factors: [{ ...cycle.factors[0], endDate: calendarDate(formatDateInputValue(new Date())) }] }),
         );
         facade.initialize();
         await facade.endFactorTodayAsync('factor-1');
@@ -1353,7 +1357,7 @@ describe('CycleTrackingFacade ending factors', () => {
 
     it('accepts the same start and end day', async () => {
         facade.initialize();
-        facade.factorModel.update(value => ({ ...value, startDate: '2026-04-01', endDate: '2026-04-01' }));
+        facade.factorModel.update(value => ({ ...value, startDate: calendarDate('2026-04-01'), endDate: calendarDate('2026-04-01') }));
 
         expect(facade.factorForm().invalid()).toBe(false);
         await submit(facade.factorForm);
@@ -1373,7 +1377,7 @@ describe('CycleTrackingFacade menstrual episodes', () => {
     it('handles a failed date save without discarding the draft or persisted episode', async () => {
         facade.initialize();
         facade.editMenstrualEpisode('episode-1');
-        facade.episodeModel.update(value => ({ ...value, startDate: '2026-03-31' }));
+        facade.episodeModel.update(value => ({ ...value, startDate: calendarDate('2026-03-31') }));
         const draft = facade.episodeModel();
         const original = facade.cycle();
         cyclesService.updateMenstrualEpisode.mockReturnValueOnce(throwError(() => new Error('unavailable')));
@@ -1449,7 +1453,7 @@ describe('CycleTrackingFacade menstrual episode success', () => {
     it('rejects an episode end before its start without sending a request', async () => {
         facade.initialize();
         facade.editMenstrualEpisode('episode-1');
-        facade.episodeModel.update(value => ({ ...value, endDate: '2026-03-31' }));
+        facade.episodeModel.update(value => ({ ...value, endDate: calendarDate('2026-03-31') }));
 
         await submit(facade.episodeForm);
 
@@ -1471,8 +1475,8 @@ describe('CycleTrackingFacade menstrual episode success', () => {
         await facade.toggleMenstrualEpisodePredictionAsync('episode-1');
 
         expect(cyclesService.updateMenstrualEpisode).toHaveBeenCalledWith('cycle-1', 'episode-1', {
-            startDate: '2026-04-01',
-            endDate: '2026-04-05',
+            startDate: calendarDate('2026-04-01'),
+            endDate: calendarDate('2026-04-05'),
             excludedFromPredictions: true,
         });
         expect(facade.menstrualEpisodes()[0]?.excludedFromPredictions).toBe(true);
@@ -1563,7 +1567,7 @@ describe('CycleTrackingFacade day ordering', () => {
             }),
         );
         facade.initialize();
-        facade.dayModel.update(value => ({ ...value, date: '2026-04-02', isBleeding: true }));
+        facade.dayModel.update(value => ({ ...value, date: calendarDate('2026-04-02'), isBleeding: true }));
 
         facade.saveDay();
 
@@ -1575,14 +1579,14 @@ describe('CycleTrackingFacade day ordering', () => {
 
 function createCycleResponse(): CycleResponse {
     return {
-        id: 'cycle-1',
-        userId: 'user-1',
+        id: entityId<'cycle-profile'>('cycle-1'),
+        userId: entityId<'user'>('user-1'),
         mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
         goal: 0,
         reproductiveState: 0,
         hideFromDashboard: false,
         confidence: 1,
-        trackingStartDate: '2026-04-01T00:00:00Z',
+        trackingStartDate: calendarDate('2026-04-01T00:00:00Z'),
         averageCycleLength: 28,
         averagePeriodLength: 5,
         lutealLength: 14,
@@ -1594,10 +1598,10 @@ function createCycleResponse(): CycleResponse {
         symptoms: [],
         factors: [
             {
-                id: 'factor-1',
-                cycleProfileId: 'cycle-1',
+                id: entityId<'cycle-factor'>('factor-1'),
+                cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
                 type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
-                startDate: '2026-04-01T00:00:00.000Z',
+                startDate: calendarDate('2026-04-01T00:00:00.000Z'),
                 endDate: null,
                 notes: 'pill',
             },
@@ -1605,17 +1609,17 @@ function createCycleResponse(): CycleResponse {
         fertilitySignals: [],
         menstrualEpisodes: [
             {
-                id: 'episode-1',
-                cycleProfileId: 'cycle-1',
-                startDate: '2026-04-01T00:00:00.000Z',
-                endDate: '2026-04-05T00:00:00.000Z',
+                id: entityId<'menstrual-episode'>('episode-1'),
+                cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                startDate: calendarDate('2026-04-01T00:00:00.000Z'),
+                endDate: calendarDate('2026-04-05T00:00:00.000Z'),
                 status: 1,
                 excludedFromPredictions: false,
             },
         ],
         predictions: {
-            nextPeriodStartFrom: '2026-04-29T00:00:00Z',
-            nextPeriodStartTo: '2026-05-01T00:00:00Z',
+            nextPeriodStartFrom: calendarDate('2026-04-29T00:00:00Z'),
+            nextPeriodStartTo: calendarDate('2026-05-01T00:00:00Z'),
             ovulationFrom: null,
             ovulationTo: null,
             pmsWindowStart: null,
@@ -1628,14 +1632,14 @@ function createCycleResponse(): CycleResponse {
 
 function createCycleLogDay(): CycleLogDay {
     return {
-        cycleProfileId: 'cycle-1',
-        date: '2026-04-02T00:00:00.000Z',
+        cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+        date: calendarDate('2026-04-02T00:00:00.000Z'),
         bleedingEntries: [createBleedingEntry('bleeding-1', '2026-04-02T00:00:00.000Z')],
         symptoms: [
             {
-                id: 'symptom-1',
-                cycleProfileId: 'cycle-1',
-                date: '2026-04-02T00:00:00.000Z',
+                id: entityId<'cycle-symptom-entry'>('symptom-1'),
+                cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                date: calendarDate('2026-04-02T00:00:00.000Z'),
                 category: 0,
                 intensity: 5,
                 tags: [],
@@ -1648,8 +1652,8 @@ function createCycleLogDay(): CycleLogDay {
 
 function createNutritionSummary(): CycleNutritionSummary {
     return {
-        dateFrom: '2026-04-01T00:00:00.000Z',
-        dateTo: '2026-04-30T23:59:59.999Z',
+        dateFrom: calendarDate('2026-04-01T00:00:00.000Z'),
+        dateTo: calendarDate('2026-04-30T23:59:59.999Z'),
         loggedCycleDays: LOGGED_CYCLE_DAYS,
         daysWithMeals: 3,
         bleedingDays: 2,
@@ -1664,9 +1668,9 @@ function createNutritionSummary(): CycleNutritionSummary {
 
 function createBleedingEntry(id: string, date: string): CycleLogDay['bleedingEntries'][number] {
     return {
-        id,
-        cycleProfileId: 'cycle-1',
-        date,
+        id: entityId<'bleeding-entry'>(id),
+        cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+        date: calendarDate(date),
         type: BLEEDING_TYPE_BLEEDING,
         flow: CYCLE_FLOW_MEDIUM,
         painImpact: 5,
@@ -1676,7 +1680,7 @@ function createBleedingEntry(id: string, date: string): CycleLogDay['bleedingEnt
 
 function setValidDayForm(): void {
     facade.dayModel.set({
-        date: '2026-04-02',
+        date: calendarDate('2026-04-02'),
         isBleeding: true,
         bleedingType: BLEEDING_TYPE_BLEEDING,
         flow: CYCLE_FLOW_MEDIUM,
@@ -1719,8 +1723,8 @@ describe('Cycle day notes without clinical entries', () => {
     it('sends a notes-only day, restores it for editing and explicitly clears it', async () => {
         cyclesService.upsertDay.mockReturnValue(
             of({
-                cycleProfileId: 'cycle-1',
-                date: '2026-04-02',
+                cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                date: calendarDate('2026-04-02'),
                 bleedingEntries: [],
                 symptoms: [],
                 fertilitySignal: null,
@@ -1728,7 +1732,7 @@ describe('Cycle day notes without clinical entries', () => {
             }),
         );
         facade.initialize();
-        facade.dayModel.update(value => ({ ...value, date: '2026-04-02', notes: '  Quiet day  ' }));
+        facade.dayModel.update(value => ({ ...value, date: calendarDate('2026-04-02'), notes: '  Quiet day  ' }));
         facade.saveDay();
         await vi.waitFor(() => {
             expect(facade.daySaveRevision()).toBe(1);
@@ -1747,8 +1751,8 @@ describe('Cycle day notes without clinical entries', () => {
         expect(facade.dayModel().notes).toBe('Quiet day');
         cyclesService.upsertDay.mockReturnValue(
             of({
-                cycleProfileId: 'cycle-1',
-                date: '2026-04-02',
+                cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+                date: calendarDate('2026-04-02'),
                 bleedingEntries: [],
                 symptoms: [],
                 fertilitySignal: null,
@@ -1767,7 +1771,9 @@ describe('Cycle day notes without clinical entries', () => {
         expect(facade.cycle()?.dayNotes).toEqual([]);
     });
     it('loads a persisted note and removes it when clearing the day', () => {
-        cyclesService.getCurrent.mockReturnValue(of({ ...createCycleResponse(), dayNotes: [{ date: '2026-04-02', notes: 'Persisted' }] }));
+        cyclesService.getCurrent.mockReturnValue(
+            of({ ...createCycleResponse(), dayNotes: [{ date: calendarDate('2026-04-02'), notes: 'Persisted' }] }),
+        );
         facade.initialize();
         facade.editDay('2026-04-02');
         expect(facade.dayModel().notes).toBe('Persisted');

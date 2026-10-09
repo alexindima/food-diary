@@ -25,6 +25,7 @@ import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { FoodRecognitionJob } from '../../../../shared/models/food-recognition.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
+import { imageSelection } from '../../../../shared/models/image-upload.data';
 import type { MealAiSessionManageDto } from '../../../../shared/models/meal.data';
 import { MealPhotoEditListComponent } from './meal-photo-edit-list/meal-photo-edit-list';
 import { MealPhotoNutritionSummaryComponent } from './meal-photo-nutrition-summary/meal-photo-nutrition-summary';
@@ -358,7 +359,7 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     protected onResumeRecognition(job: FoodRecognitionJob): void {
-        const selection = { assetId: job.imageAssetId, url: job.imageUrl };
+        const selection = imageSelection(job.imageUrl, job.imageAssetId);
         this.selection.set(selection);
         this.runAnalysis(job.imageAssetId, job.id);
     }
@@ -532,10 +533,7 @@ export class MealPhotoRecognitionDialogComponent {
     private applyInitialSession(session: MealAiSessionManageDto): void {
         this.selection.set(
             session.imageUrl !== null || session.imageAssetId !== null
-                ? {
-                      url: session.imageUrl ?? null,
-                      assetId: session.imageAssetId ?? null,
-                  }
+                ? imageSelection(session.imageUrl ?? null, session.imageAssetId ?? null)
                 : null,
         );
         this.results.set(

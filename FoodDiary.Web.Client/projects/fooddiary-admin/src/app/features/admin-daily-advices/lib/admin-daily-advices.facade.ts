@@ -2,6 +2,7 @@ import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { Observable } from 'rxjs';
 
+import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminDailyAdvicesService } from '../api/admin-daily-advices.service';
 import type { AdminDailyAdvice, AdminDailyAdvicesImportResponse, AdminDailyAdviceUpdate } from '../models/admin-daily-advice.models';
 import { isDailyAdviceImport, MAX_ADVICE_IMPORT_BYTES } from './daily-advice-import';
@@ -17,11 +18,11 @@ export class AdminDailyAdvicesFacade {
     public readonly importError = signal<string | null>(null);
     public readonly importResult = signal<AdminDailyAdvicesImportResponse | null>(null);
 
-    public update(id: string, value: AdminDailyAdviceUpdate): Observable<AdminDailyAdvice> {
+    public update(id: AdminId<'daily-advice'>, value: AdminDailyAdviceUpdate): Observable<AdminDailyAdvice> {
         return this.api.update(id, value);
     }
 
-    public delete(id: string): Observable<void> {
+    public delete(id: AdminId<'daily-advice'>): Observable<void> {
         return this.api.delete(id);
     }
 

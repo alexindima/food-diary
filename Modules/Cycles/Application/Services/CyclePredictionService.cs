@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Cycles.Domain.ValueObjects;
 using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
@@ -21,7 +22,7 @@ public static class CyclePredictionService {
         DateOnly today = currentDate ?? DateOnly.FromDateTime((timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime);
 
         if (HasLimitedPredictionState(profile.ReproductiveState) || HasActivePredictionLimitingFactor(profile.Factors, today)) {
-            return Limited(CalculateConfidence(profile, today), "prediction_paused_by_state", "Predictions are paused by the active tracking state.");
+            return Limited(CalculateConfidence(profile, today), PredictionReasonCode.PredictionPausedByState, "Predictions are paused by the active tracking state.");
         }
 
         return CalculatePredictions(
@@ -36,7 +37,7 @@ public static class CyclePredictionService {
         DateOnly today = currentDate ?? DateOnly.FromDateTime((timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime);
 
         if (HasLimitedPredictionState(profile.ReproductiveState) || HasActivePredictionLimitingFactor(profile.Factors, today)) {
-            return Limited(profile.CalculateConfidence(today), "prediction_paused_by_state", "Predictions are paused by the active tracking state.");
+            return Limited(profile.CalculateConfidence(today), PredictionReasonCode.PredictionPausedByState, "Predictions are paused by the active tracking state.");
         }
 
         return CalculatePredictions(
@@ -62,9 +63,9 @@ public static class CyclePredictionService {
         if (cycleLengths.Any(static length => length < MinimumReliableCycleIntervalDays)) {
             return Limited(
                 legacyConfidence,
-                "ambiguous_episode_history",
+                PredictionReasonCode.AmbiguousEpisodeHistory,
                 "Bleeding episodes are too close together to infer reliable cycle starts.",
-                dataSufficiency: "Insufficient",
+                dataSufficiency: PredictionDataSufficiency.Insufficient,
                 usedEpisodeCount: history.UsedEpisodeStarts.Length,
                 excludedEpisodeCount: history.ExcludedEpisodeCount);
         }
@@ -72,10 +73,10 @@ public static class CyclePredictionService {
         if (cycleLengths.Length < MinimumCompletedCycles) {
             return Limited(
                 legacyConfidence,
-                "insufficient_completed_cycles",
+                PredictionReasonCode.InsufficientCompletedCycles,
                 "At least three completed cycle intervals are needed.",
                 cycleLengths.Length,
-                "Insufficient",
+                PredictionDataSufficiency.Insufficient,
                 history.UsedEpisodeStarts.Length,
                 history.ExcludedEpisodeCount);
         }
@@ -100,11 +101,11 @@ public static class CyclePredictionService {
         }
 
         int spread = variabilityHistory[^1] - variabilityHistory[0];
-        string consistency = spread > LimitedConsistencySpreadDays ? "Limited" : "Consistent";
-        string sufficiency = cycleLengths.Length <= SparseHistoryMaximum ? "Limited" : "Established";
-        IReadOnlyCollection<string> reasonCodes = showFertilityEstimates
-            ? ["estimated_from_completed_cycles", "fertility_estimate_not_available_in_v2"]
-            : ["estimated_from_completed_cycles"];
+        PredictionPatternConsistency consistency = spread > LimitedConsistencySpreadDays ? PredictionPatternConsistency.Limited : PredictionPatternConsistency.Consistent;
+        PredictionDataSufficiency sufficiency = cycleLengths.Length <= SparseHistoryMaximum ? PredictionDataSufficiency.Limited : PredictionDataSufficiency.Established;
+        IReadOnlyCollection<PredictionReasonCode> reasonCodes = showFertilityEstimates
+            ? [PredictionReasonCode.EstimatedFromCompletedCycles, PredictionReasonCode.FertilityEstimateNotAvailableInV2]
+            : [PredictionReasonCode.EstimatedFromCompletedCycles];
         CalibrationMetrics calibration = CalculateCalibration(cycleLengths);
 
         return new CyclePredictionsModel(
@@ -116,12 +117,12 @@ public static class CyclePredictionService {
             nextTo,
             legacyConfidence.ToString(),
             "Estimated range based on recent completed cycle intervals.",
-            sufficiency,
-            consistency,
+            sufficiency.Code,
+            consistency.Code,
             cycleLengths.Length,
             history.UsedEpisodeStarts.Length,
             history.ExcludedEpisodeCount,
-            reasonCodes,
+            reasonCodes.Select(reason => reason.Code).ToArray(),
             AlgorithmVersion,
             calibration.SampleCount,
             calibration.CoveragePercent,
@@ -234,10 +235,10 @@ public static class CyclePredictionService {
 
     private static CyclePredictionsModel Limited(
         CycleConfidence confidence,
-        string reasonCode,
+        PredictionReasonCode reasonCode,
         string rationale,
         int completedCycleCount = 0,
-        string dataSufficiency = "Unavailable",
+        PredictionDataSufficiency? dataSufficiency = null,
         int usedEpisodeCount = 0,
         int excludedEpisodeCount = 0) =>
         new(
@@ -249,12 +250,12 @@ public static class CyclePredictionService {
             PmsWindowEnd: null,
             confidence.ToString(),
             rationale,
-            dataSufficiency,
-            "Unavailable",
+            (dataSufficiency ?? PredictionDataSufficiency.Unavailable).Code,
+            PredictionPatternConsistency.Unavailable.Code,
             completedCycleCount,
             usedEpisodeCount,
             excludedEpisodeCount,
-            [reasonCode],
+            [reasonCode.Code],
             AlgorithmVersion);
 
     private sealed record PredictionHistory(DateOnly[] UsedEpisodeStarts, int ExcludedEpisodeCount);

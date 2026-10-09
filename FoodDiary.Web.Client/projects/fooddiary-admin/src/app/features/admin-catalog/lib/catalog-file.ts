@@ -1,3 +1,4 @@
+import { catalogRecipeReference, decodeCatalogIngredientSource } from '../models/catalog-ingredient-source';
 import type { CatalogFile, CatalogIngredient, CatalogProduct, CatalogRecipe, CatalogStep } from '../models/catalog-transfer';
 
 export const MAX_CATALOG_FILE_BYTES = 5_242_880;
@@ -140,9 +141,10 @@ export function orderCatalogRecipes(recipes: CatalogRecipe[], existingIds: Set<s
     while (pending.size > 0) {
         const ready = [...pending.values()].filter(item =>
             item.steps.every(itemStep =>
-                itemStep.ingredients.every(
-                    itemIngredient => itemIngredient.nestedRecipeId === null || resolved.has(itemIngredient.nestedRecipeId),
-                ),
+                itemStep.ingredients.every(itemIngredient => {
+                    const recipeId = catalogRecipeReference(decodeCatalogIngredientSource(itemIngredient));
+                    return recipeId === null || resolved.has(recipeId);
+                }),
             ),
         );
         if (ready.length === 0) {

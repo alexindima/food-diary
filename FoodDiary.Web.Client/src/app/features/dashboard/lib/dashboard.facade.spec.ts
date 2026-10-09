@@ -8,6 +8,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { NavigationService } from '../../../services/navigation.service';
 import type { DashboardSnapshot } from '../../../shared/models/dashboard.data';
 import type { FavoriteMeal, Meal } from '../../../shared/models/meal.data';
+import { calendarDate, utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import { GoalsService } from '../../goals/api/goals.service';
 import { CALORIE_GOAL_ACTIONS } from '../../goals/contracts/calorie-goal-actions';
@@ -113,8 +115,8 @@ describe('Dashboard meal details', () => {
     it('opens the detail dialog and navigates only when Edit is selected', async () => {
         const { facade, snapshot } = setupFacade();
         const meal = {
-            id: 'meal-details',
-            date: '2026-03-15',
+            id: entityId<'meal'>('meal-details'),
+            date: utcInstant('2026-03-15'),
             totalCalories: 100,
             totalProteins: 0,
             totalFats: 0,
@@ -144,8 +146,8 @@ describe('DashboardFacade favorites', () => {
     it('toggles a dashboard meal favorite and ignores duplicate clicks while saving', () => {
         const { facade, snapshot } = setupFacade();
         snapshot.meals.items.push({
-            id: 'meal-1',
-            date: '2026-03-15',
+            id: entityId<'meal'>('meal-1'),
+            date: utcInstant('2026-03-15'),
             totalCalories: 100,
             totalProteins: 0,
             totalFats: 0,
@@ -160,16 +162,16 @@ describe('DashboardFacade favorites', () => {
         const pending = new Subject<FavoriteMeal>();
         const add = vi.spyOn(service, 'add').mockReturnValue(pending);
         const remove = vi.spyOn(service, 'remove').mockReturnValue(of(undefined));
-        facade.toggleMealFavorite('meal-1');
-        facade.toggleMealFavorite('meal-1');
+        facade.toggleMealFavorite(entityId<'meal'>('meal-1'));
+        facade.toggleMealFavorite(entityId<'meal'>('meal-1'));
         expect(add).toHaveBeenCalledTimes(1);
         expect(facade.favoriteLoadingIds().has('meal-1')).toBe(true);
         pending.next({
-            id: 'favorite-1',
-            mealId: 'meal-1',
+            id: entityId<'favorite-meal'>('favorite-1'),
+            mealId: entityId<'meal'>('meal-1'),
             name: null,
-            createdAtUtc: '2026-03-15',
-            mealDate: '2026-03-15',
+            createdAtUtc: utcInstant('2026-03-15'),
+            mealDate: utcInstant('2026-03-15'),
             mealType: null,
             totalCalories: 100,
             totalProteins: 0,
@@ -180,7 +182,7 @@ describe('DashboardFacade favorites', () => {
         pending.complete();
         expect(facade.meals()[0].isFavorite).toBe(true);
         expect(facade.favoriteLoadingIds().size).toBe(0);
-        facade.toggleMealFavorite('meal-1');
+        facade.toggleMealFavorite(entityId<'meal'>('meal-1'));
         expect(remove).toHaveBeenCalledWith('favorite-1');
         expect(facade.meals()[0].isFavorite).toBe(false);
     });
@@ -311,7 +313,7 @@ describe('DashboardFacade actions', () => {
         expect(facade.isHydrationLoading()).toBe(true);
         facade.addHydration(HYDRATION_AMOUNT_ML);
         expect(hydrationService.addEntry).toHaveBeenCalledTimes(1);
-        refresh.next({ ...snapshot, hydration: { dateUtc: '2026-03-15T00:00:00.000Z', goalMl: 2000, totalMl: 750 } });
+        refresh.next({ ...snapshot, hydration: { dateUtc: calendarDate('2026-03-15T00:00:00.000Z'), goalMl: 2000, totalMl: 750 } });
         refresh.complete();
         expect(facade.hydration()?.totalMl).toBe(UPDATED_HYDRATION_ML);
         expect(facade.isHydrationLoading()).toBe(false);
@@ -454,7 +456,7 @@ describe('DashboardFacade meal mutations (1)', () => {
     it('ignores actions for a missing meal', async () => {
         const { facade } = setupFacade();
         await facade.openMealDetailsAsync('missing');
-        facade.toggleMealFavorite('missing');
+        facade.toggleMealFavorite(entityId<'meal'>('missing'));
         expect(vi.spyOn(TestBed.inject(FdUiDialogService), 'open')).not.toHaveBeenCalled();
         expect(vi.spyOn(TestBed.inject(FavoriteMealService), 'add')).not.toHaveBeenCalled();
         expect(facade.favoriteLoadingIds().size).toBe(0);
@@ -499,7 +501,7 @@ describe('DashboardFacade meal mutations (2)', () => {
         snapshot.meals.items.push(createMeal());
         facade.initialize();
         vi.spyOn(TestBed.inject(FavoriteMealService), 'add').mockReturnValue(of(createFavorite()));
-        facade.toggleMealFavorite('meal-1');
+        facade.toggleMealFavorite(entityId<'meal'>('meal-1'));
         expect(facade.meals()[0].isFavorite).toBe(true);
         mockMealDialog({ action: 'FavoriteChanged', id: 'meal-1' });
         await facade.openMealDetailsAsync('meal-1');
@@ -517,7 +519,7 @@ describe('DashboardFacade meal mutations (3)', () => {
         const favorites = TestBed.inject(FavoriteMealService);
         vi.mocked(vi.spyOn(favorites, 'getLookupPage')).mockReturnValue(of(found ? [createFavorite()] : []));
         vi.mocked(vi.spyOn(favorites, 'remove')).mockReturnValue(of(undefined));
-        facade.toggleMealFavorite('meal-1');
+        facade.toggleMealFavorite(entityId<'meal'>('meal-1'));
         expect(vi.spyOn(favorites, 'getLookupPage')).toHaveBeenCalledTimes(1);
         if (found) {
             expect(vi.spyOn(favorites, 'remove')).toHaveBeenCalledWith('favorite-1');
@@ -529,18 +531,18 @@ describe('DashboardFacade meal mutations (3)', () => {
     });
     it.each([false, true])('preserves favorite state and allows retry after an error (wasFavorite=%s)', wasFavorite => {
         const { facade, snapshot } = setupFacade();
-        snapshot.meals.items.push({ ...createMeal(), isFavorite: wasFavorite, favoriteMealId: 'favorite-1' });
+        snapshot.meals.items.push({ ...createMeal(), isFavorite: wasFavorite, favoriteMealId: entityId<'favorite-meal'>('favorite-1') });
         facade.initialize();
         const favorites = TestBed.inject(FavoriteMealService);
         vi.mocked(vi.spyOn(favorites, 'add')).mockReturnValue(throwError(() => new Error('offline')));
         vi.mocked(vi.spyOn(favorites, 'remove')).mockReturnValue(throwError(() => new Error('offline')));
-        facade.toggleMealFavorite('meal-1');
+        facade.toggleMealFavorite(entityId<'meal'>('meal-1'));
         expect(facade.meals()[0].isFavorite).toBe(wasFavorite);
         expect(facade.favoriteLoadingIds().size).toBe(0);
         expect(vi.spyOn(TestBed.inject(FdUiToastService), 'error')).toHaveBeenCalledWith('MEAL_LIST.OPERATION_ERROR_MESSAGE');
         vi.mocked(vi.spyOn(favorites, 'add')).mockReturnValue(of(createFavorite()));
         vi.mocked(vi.spyOn(favorites, 'remove')).mockReturnValue(of(undefined));
-        facade.toggleMealFavorite('meal-1');
+        facade.toggleMealFavorite(entityId<'meal'>('meal-1'));
         expect(facade.meals()[0].isFavorite).toBe(!wasFavorite);
     });
 });
@@ -552,7 +554,7 @@ describe('DashboardFacade meal mutations (4)', () => {
         facade.initialize();
         const pending = new Subject<FavoriteMeal>();
         vi.spyOn(TestBed.inject(FavoriteMealService), 'add').mockReturnValue(pending);
-        facade.toggleMealFavorite('meal-1');
+        facade.toggleMealFavorite(entityId<'meal'>('meal-1'));
         TestBed.resetTestingModule();
         expect(pending.observed).toBe(false);
         expect(facade.favoriteLoadingIds().size).toBe(0);
@@ -613,13 +615,13 @@ describe('DashboardFacade snapshot mapping', () => {
     it('maps real snapshot measurements and weekly totals without mixing weight and waist', () => {
         const { facade, snapshot } = setupFacade();
         snapshot.weight = {
-            latest: { date: '2026-03-15', weightKg: 78 },
-            previous: { date: '2026-03-14', weightKg: 79 },
+            latest: { date: calendarDate('2026-03-15'), weightKg: 78 },
+            previous: { date: calendarDate('2026-03-14'), weightKg: 79 },
             desiredWeightKg: 75,
         };
         snapshot.waist = {
-            latest: { date: '2026-03-15', circumferenceCm: 85 },
-            previous: { date: '2026-03-14', circumferenceCm: 86 },
+            latest: { date: calendarDate('2026-03-15'), circumferenceCm: 85 },
+            previous: { date: calendarDate('2026-03-14'), circumferenceCm: 86 },
             desiredWaistCm: 80,
         };
         snapshot.caloriesBurned = 300;
@@ -677,8 +679,8 @@ describe('DashboardFacade view data (2)', () => {
 
 function createMeal(): Meal {
     return {
-        id: 'meal-1',
-        date: '2026-03-15',
+        id: entityId<'meal'>('meal-1'),
+        date: utcInstant('2026-03-15'),
         totalCalories: 100,
         totalProteins: 0,
         totalFats: 0,
@@ -692,11 +694,11 @@ function createMeal(): Meal {
 
 function createFavorite(): FavoriteMeal {
     return {
-        id: 'favorite-1',
-        mealId: 'meal-1',
+        id: entityId<'favorite-meal'>('favorite-1'),
+        mealId: entityId<'meal'>('meal-1'),
         name: null,
-        createdAtUtc: '2026-03-15',
-        mealDate: '2026-03-15',
+        createdAtUtc: utcInstant('2026-03-15'),
+        mealDate: utcInstant('2026-03-15'),
         mealType: null,
         totalCalories: 100,
         totalProteins: 0,
@@ -846,7 +848,7 @@ function createSnapshot(totalCalories = DEFAULT_SNAPSHOT_CALORIES): DashboardSna
             averageFiber: 20,
         },
         meals: { items: [], total: 0 },
-        hydration: { dateUtc: '2026-03-15T00:00:00.000Z', totalMl: 500, goalMl: 2000 },
+        hydration: { dateUtc: calendarDate('2026-03-15T00:00:00.000Z'), totalMl: 500, goalMl: 2000 },
         weeklyCalories: [],
         weight: { latest: null, previous: null, desiredWeightKg: null },
         waist: { latest: null, previous: null, desiredWaistCm: null },

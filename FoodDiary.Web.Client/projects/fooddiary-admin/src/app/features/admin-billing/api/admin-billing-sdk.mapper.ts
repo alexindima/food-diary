@@ -4,6 +4,7 @@ import type { AdminBillingRevenueSummaryHttpResponse } from '../../../shared/api
 import type { AdminBillingSubscriptionHttpResponse } from '../../../shared/api/sdk/generated/model/admin-billing-subscription-http-response';
 import type { AdminBillingWebhookEventHttpResponse } from '../../../shared/api/sdk/generated/model/admin-billing-webhook-event-http-response';
 import { requireSdkFields } from '../../../shared/api/sdk/sdk-response';
+import { adminId, adminUtcInstant, optionalAdminId, optionalAdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import type {
     AdminBillingPayment,
     AdminBillingRevenueCurrency,
@@ -22,17 +23,48 @@ export function adminBillingSubscriptionFromSdk(response: AdminBillingSubscripti
         'cancelAtPeriodEnd',
         'createdOnUtc',
     ]);
-    return { ...value, userEmail: value.userEmail ?? null };
+    return {
+        ...value,
+        userEmail: value.userEmail ?? null,
+        id: adminId<'billing-subscription'>(value.id),
+        userId: adminId<'user'>(value.userId),
+        currentPeriodStartUtc: optionalAdminUtcInstant(value.currentPeriodStartUtc),
+        currentPeriodEndUtc: optionalAdminUtcInstant(value.currentPeriodEndUtc),
+        nextBillingAttemptUtc: optionalAdminUtcInstant(value.nextBillingAttemptUtc),
+        lastWebhookEventId: optionalAdminId<'billing-webhook-event'>(value.lastWebhookEventId),
+        lastSyncedAtUtc: optionalAdminUtcInstant(value.lastSyncedAtUtc),
+        createdOnUtc: adminUtcInstant(value.createdOnUtc),
+        modifiedOnUtc: optionalAdminUtcInstant(value.modifiedOnUtc),
+    };
 }
 
 export function adminBillingPaymentFromSdk(response: AdminBillingPaymentHttpResponse): AdminBillingPayment {
     const value = requireSdkFields(response, ['id', 'userId', 'provider', 'externalPaymentId', 'status', 'kind', 'createdOnUtc']);
-    return { ...value, userEmail: value.userEmail ?? null };
+    return {
+        ...value,
+        userEmail: value.userEmail ?? null,
+        id: adminId<'billing-payment'>(value.id),
+        userId: adminId<'user'>(value.userId),
+        billingSubscriptionId: optionalAdminId<'billing-subscription'>(value.billingSubscriptionId),
+        currentPeriodStartUtc: optionalAdminUtcInstant(value.currentPeriodStartUtc),
+        currentPeriodEndUtc: optionalAdminUtcInstant(value.currentPeriodEndUtc),
+        webhookEventId: optionalAdminId<'billing-webhook-event'>(value.webhookEventId),
+        createdOnUtc: adminUtcInstant(value.createdOnUtc),
+        modifiedOnUtc: optionalAdminUtcInstant(value.modifiedOnUtc),
+    };
 }
 
 export function adminBillingWebhookEventFromSdk(response: AdminBillingWebhookEventHttpResponse): AdminBillingWebhookEvent {
     const value = requireSdkFields(response, ['id', 'provider', 'eventId', 'eventType', 'status', 'createdOnUtc']);
-    return { ...value };
+    return {
+        ...value,
+        id: adminId<'billing-webhook-event'>(value.id),
+        processedAtUtc: optionalAdminUtcInstant(value.processedAtUtc),
+        receivedAtUtc: optionalAdminUtcInstant(value.receivedAtUtc),
+        nextAttemptAtUtc: optionalAdminUtcInstant(value.nextAttemptAtUtc),
+        createdOnUtc: adminUtcInstant(value.createdOnUtc),
+        modifiedOnUtc: optionalAdminUtcInstant(value.modifiedOnUtc),
+    };
 }
 
 export function adminBillingRevenueSummaryFromSdk(response: AdminBillingRevenueSummaryHttpResponse): AdminBillingRevenueSummary {

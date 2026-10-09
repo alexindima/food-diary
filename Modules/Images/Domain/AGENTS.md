@@ -6,3 +6,5 @@ namespace. Its scalar UserId references Users Domain.Contracts; central Domain m
 User ownership: reference Users Domain.Contracts for UserId and shared user values. Keep foreign keys scalar; foreign aggregate CLR navigations are prohibited. PersistenceModel preserves the relational constraints with typed HasOne<T>() mappings.
 
 Use canonical FoodDiary.Modules.Images project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.
+
+ObjectStorageKey, PublicImageUrl and SignedImageUploadUrl are distinct owner meanings. Input factories retain aggregate text normalization; provider/stored adapters preserve exact encoding, signed query strings, relative URLs and old empty keys without a new URI policy. Storage and deletion-enqueue ports carry keys; scalar aggregate/HTTP fields remain compatibility boundaries.

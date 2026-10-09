@@ -10,7 +10,7 @@ public sealed class ContractSnapshotTests {
     public void PublicPayloads_MatchReviewedSnapshot() {
         using var snapshot = JsonDocument.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "bugtriage-mail-export-contract.json")));
         var samples = new Dictionary<string, object>(StringComparer.Ordinal) {
-            ["claim"] = new ReportLease(Guid.Empty, Guid.Empty, "Subject", "Body", Guid.Empty, DateTimeOffset.UnixEpoch, 1, DateTimeOffset.UnixEpoch),
+            ["claim"] = new ReportLeaseHttpResponse(Guid.Empty, Guid.Empty, "Subject", "Body", Guid.Empty, DateTimeOffset.UnixEpoch, 1, DateTimeOffset.UnixEpoch),
             ["completion"] = new CompleteReportHttpRequest(Guid.Empty, "not_confirmed", "Summary", MergeRequestUrl: null),
             ["summary"] = new ReportSummary(Guid.Empty, "pending", 0, Summary: null, MergeRequestUrl: null),
             ["mailExportEntry"] = new MailInboxExportEntryResponse(Guid.Empty, DateTimeOffset.UnixEpoch, ContentAvailable: true),

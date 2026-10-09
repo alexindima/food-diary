@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -33,7 +34,7 @@ public sealed partial class BillingGatewayTests {
             Content = JsonContent("{\"id\":\"" + returnedId + "\",\"status\":\"succeeded\",\"paid\":true}"),
         }));
         var gateway = new YooKassaBillingGateway(http, MsOptions.Create(configured ? ValidYooKassaOptions() : new YooKassaOptions()));
-        var request = new BillingRecurringPaymentRequestModel(Guid.NewGuid(), Guid.NewGuid(), "customer", "method", "monthly", DateTime.UtcNow, "key");
+        var request = new BillingRecurringPaymentRequestModel(Guid.NewGuid(), new BillingSubscriptionId(Guid.NewGuid()), "customer", "method", "monthly", DateTime.UtcNow, "key");
         Result<BillingRecurringPaymentModel> result = await gateway.GetRecurringPaymentAsync(id, request);
         Assert.True(result.IsFailure);
         Assert.Equal(errorCode, result.Error.Code);

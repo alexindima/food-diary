@@ -18,7 +18,6 @@ public sealed class ExportCycleQueryHandler(
     ICurrentUserAccessService currentUserAccessService,
     IUserCredentialVerificationService? credentialVerificationService = null)
     : IQueryHandler<ExportCycleQuery, Result<FileExportResult>> {
-    private const int MaxExportRangeDays = 366;
 
     public async Task<Result<FileExportResult>> Handle(
         ExportCycleQuery query,
@@ -37,11 +36,12 @@ public sealed class ExportCycleQueryHandler(
                 Errors.Validation.Invalid(nameof(query.DateFrom), "DateFrom must be less than or equal to DateTo."));
         }
 
-        if (query.DateTo.DayNumber - query.DateFrom.DayNumber > MaxExportRangeDays) {
+        if (query.DateTo.DayNumber - query.DateFrom.DayNumber > CycleExportPeriod.MaxRangeDays) {
             return Result.Failure<FileExportResult>(
                 Errors.Validation.Invalid(nameof(query.DateTo), "Export range must not exceed one year."));
         }
 
+        var period = CycleExportPeriod.FromDates(query.DateFrom, query.DateTo);
         Result<CycleModel?> cycleResult = await sender.Send(new GetCurrentCycleQuery(userId.Value), cancellationToken).ConfigureAwait(false);
         if (cycleResult.IsFailure) {
             return Result.Failure<FileExportResult>(cycleResult.Error);
@@ -65,12 +65,12 @@ public sealed class ExportCycleQueryHandler(
             }
         }
 
-        string fromStr = query.DateFrom.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-        string toStr = query.DateTo.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+        string fromStr = period.From.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+        string toStr = period.To.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
         string scopeSuffix = query.Scope == CycleExportScope.Sensitive ? "-sensitive" : string.Empty;
 
         return Result.Success(new FileExportResult(
-            CycleCsvGenerator.Generate(cycle, query.DateFrom, query.DateTo, query.Scope),
+            CycleCsvGenerator.Generate(cycle, period.From, period.To, query.Scope),
             "text/csv",
             $"cycle-tracking-{fromStr}-to-{toStr}{scopeSuffix}.csv"));
     }

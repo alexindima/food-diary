@@ -6,6 +6,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import type { PageOf } from '../../../../shared/models/page-of.data';
 import { type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { RecipeSelectFacade } from '../../lib/recipe-select.facade';
 import { RecipeSelectDialogComponent } from './recipe-select-dialog';
 import type { RecipeSelectItemViewModel } from './recipe-select-dialog-lib/recipe-select-dialog.types';
@@ -26,8 +28,8 @@ describe('RecipeSelectDialogComponent', () => {
     });
 
     it('excludes the current recipe from selectable items', () => {
-        const currentRecipe = createRecipe({ id: 'recipe-1' });
-        const nestedRecipe = createRecipe({ id: 'recipe-2' });
+        const currentRecipe = createRecipe({ id: entityId<'recipe'>('recipe-1') });
+        const nestedRecipe = createRecipe({ id: entityId<'recipe'>('recipe-2') });
         const { component, fixture } = setupComponent([currentRecipe, nestedRecipe]);
 
         fixture.componentRef.setInput('excludedRecipeId', currentRecipe.id);
@@ -193,13 +195,13 @@ function createPage(data: Recipe[]): PageOf<Recipe> {
 
 function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
     return {
-        id: 'recipe-1',
+        id: entityId<'recipe'>('recipe-1'),
         name: 'Recipe',
         imageUrl: null,
         servings: 2,
         visibility: RecipeVisibility.Private,
         usageCount: 0,
-        createdAt: '2026-01-01T00:00:00Z',
+        createdAt: utcInstant('2026-01-01T00:00:00Z'),
         isOwnedByCurrentUser: true,
         isNutritionAutoCalculated: true,
         steps: [],

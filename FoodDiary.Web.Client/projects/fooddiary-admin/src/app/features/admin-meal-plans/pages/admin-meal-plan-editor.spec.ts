@@ -5,20 +5,21 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { adminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminMealPlansFacade } from '../lib/admin-meal-plans.facade';
 import type { CatalogPlan, CatalogRecipe } from '../models/admin-meal-plan.data';
 import { AdminMealPlanEditorComponent } from './admin-meal-plan-editor';
 
 describe('AdminMealPlanEditorComponent', () => {
     const plan: CatalogPlan = {
-        id: 'plan-id',
+        id: adminId<'meal-plan'>('plan-id'),
         name: 'Weekly plan',
         description: null,
         dietType: 'Balanced',
         durationDays: 1,
         targetCaloriesPerDay: null,
         isCurated: true,
-        days: [{ dayNumber: 1, meals: [{ mealType: 'Lunch', recipeId: 'recipe-id', recipeName: 'Rice', servings: 2 }] }],
+        days: [{ dayNumber: 1, meals: [{ mealType: 'Lunch', recipeId: adminId<'recipe'>('recipe-id'), recipeName: 'Rice', servings: 2 }] }],
     };
     const api = { recipes: vi.fn(), save: vi.fn() };
     beforeEach(async () => {
@@ -78,8 +79,8 @@ describe('AdminMealPlanEditorComponent', () => {
         component['searchRecipes']();
         component['recipeSearch'].set('new search');
         component['searchRecipes']();
-        latest.next([{ id: 'latest-id', name: 'Latest recipe', servings: 1 }]);
-        earlier.next([{ id: 'stale-id', name: 'Stale recipe', servings: 1 }]);
+        latest.next([{ id: adminId<'recipe'>('latest-id'), name: 'Latest recipe', servings: 1 }]);
+        earlier.next([{ id: adminId<'recipe'>('stale-id'), name: 'Stale recipe', servings: 1 }]);
         earlier.error(new Error('stale failure'));
 
         expect(component['recipeOptions']()).toEqual([

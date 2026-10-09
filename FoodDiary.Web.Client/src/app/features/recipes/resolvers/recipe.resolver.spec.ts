@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
 import type { Recipe } from '../../../shared/models/recipe.data';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { RecipeService } from '../api/recipe.service';
 import { recipeResolver } from './recipe.resolver';
 
@@ -12,7 +13,7 @@ describe('recipeResolver', () => {
     let recipeServiceSpy: { getById: ReturnType<typeof vi.fn> };
     let navSpy: { navigateToRecipeListAsync: ReturnType<typeof vi.fn> };
 
-    const mockRecipe: Partial<Recipe> = { id: 'recipe-1', isOwnedByCurrentUser: true, usageCount: 0 };
+    const mockRecipe: Partial<Recipe> = { id: entityId<'recipe'>('recipe-1'), isOwnedByCurrentUser: true, usageCount: 0 };
 
     const mockState = {} as unknown as RouterStateSnapshot;
 

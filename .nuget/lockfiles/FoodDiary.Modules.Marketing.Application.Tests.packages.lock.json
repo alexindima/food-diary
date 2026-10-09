@@ -168,7 +168,10 @@
         }
       },
       "fooddiary.modules.billing.domain.contracts": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )"
+        }
       },
       "fooddiary.modules.marketing.application": {
         "type": "Project",

@@ -5,6 +5,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiCheckboxComponent, FdUiInputComponent, FdUiSelectComponent, FdUiTextareaComponent } from 'fd-ui-kit';
 import { finalize, type Subscription } from 'rxjs';
 
+import { adminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminMealPlansFacade } from '../lib/admin-meal-plans.facade';
 import {
     CATALOG_DIETS,
@@ -137,7 +138,10 @@ export class AdminMealPlanEditorComponent {
     protected addMeal(dayIndex: number): void {
         this.updateMeals(dayIndex, day => ({
             ...day,
-            meals: day.meals.length < MAX_MEALS ? [...day.meals, { mealType: 'Breakfast', recipeId: '', servings: 1 }] : day.meals,
+            meals:
+                day.meals.length < MAX_MEALS
+                    ? [...day.meals, { mealType: 'Breakfast', recipeId: adminId<'recipe'>(''), servings: 1 }]
+                    : day.meals,
         }));
     }
     protected removeMeal(dayIndex: number, mealIndex: number): void {

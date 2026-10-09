@@ -5,6 +5,8 @@ import type { Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { FavoriteRecipe } from '../../../shared/models/recipe.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { FavoriteRecipeService } from './favorite-recipe.service';
 
 const BASE_URL = 'http://localhost:5300/api/v1/favorite-recipes';
@@ -32,10 +34,14 @@ describe('FavoriteRecipeService lookup pagination', () => {
     it('collects favorites beyond the first lookup page and emits only the complete list', () => {
         const firstPage = Array.from({ length: 100 }, (_, index) => ({
             ...createFavoriteRecipe(),
-            id: `favorite-${index.toString()}`,
-            recipeId: `recipe-${index.toString()}`,
+            id: entityId<'favorite-recipe'>(`favorite-${index.toString()}`),
+            recipeId: entityId<'recipe'>(`recipe-${index.toString()}`),
         }));
-        const lastFavorite = { ...createFavoriteRecipe(), id: 'last-favorite', recipeId: 'last-recipe' };
+        const lastFavorite = {
+            ...createFavoriteRecipe(),
+            id: entityId<'favorite-recipe'>('last-favorite'),
+            recipeId: entityId<'recipe'>('last-recipe'),
+        };
         const next = vi.fn();
         service.getLookupPage().subscribe(next);
 
@@ -116,7 +122,7 @@ describe('FavoriteRecipeService', () => {
     });
 
     it('checks favorite state', () => {
-        service.isFavorite('recipe-1').subscribe(result => {
+        service.isFavorite(entityId<'recipe'>('recipe-1')).subscribe(result => {
             expect(result).toBe(true);
         });
 
@@ -126,7 +132,7 @@ describe('FavoriteRecipeService', () => {
     });
 
     it('returns false when favorite check fails', () => {
-        service.isFavorite('recipe-1').subscribe(result => {
+        service.isFavorite(entityId<'recipe'>('recipe-1')).subscribe(result => {
             expect(result).toBe(false);
         });
 
@@ -137,7 +143,7 @@ describe('FavoriteRecipeService', () => {
     it('adds favorite recipe with optional name', () => {
         const favorite = createFavoriteRecipe();
 
-        service.add('recipe-1', 'Soup').subscribe(result => {
+        service.add(entityId<'recipe'>('recipe-1'), 'Soup').subscribe(result => {
             expect(result).toEqual(favorite);
         });
 
@@ -148,7 +154,7 @@ describe('FavoriteRecipeService', () => {
     });
 
     it('removes favorite recipe', () => {
-        service.remove('favorite-1').subscribe();
+        service.remove(entityId<'favorite-recipe'>('favorite-1')).subscribe();
 
         const req = httpMock.expectOne(`${BASE_URL}/favorite-1`);
         expect(req.request.method).toBe('DELETE');
@@ -158,10 +164,10 @@ describe('FavoriteRecipeService', () => {
 
 function createFavoriteRecipe(): FavoriteRecipe {
     return {
-        id: 'favorite-1',
-        recipeId: 'recipe-1',
+        id: entityId<'favorite-recipe'>('favorite-1'),
+        recipeId: entityId<'recipe'>('recipe-1'),
         name: 'Soup',
-        createdAtUtc: '2026-01-01T00:00:00Z',
+        createdAtUtc: utcInstant('2026-01-01T00:00:00Z'),
         recipeName: 'Soup',
         imageUrl: null,
         totalCalories: TOTAL_CALORIES,
@@ -174,7 +180,8 @@ function createFavoriteRecipe(): FavoriteRecipe {
 describe('FavoriteRecipeService mutation failures', () => {
     it.each(['add', 'remove'] as const)('propagates %s failure', operation => {
         let status = 0;
-        const request: Observable<unknown> = operation === 'add' ? service.add('recipe-1') : service.remove('favorite-1');
+        const request: Observable<unknown> =
+            operation === 'add' ? service.add(entityId<'recipe'>('recipe-1')) : service.remove(entityId<'favorite-recipe'>('favorite-1'));
         request.subscribe({
             next: () => {
                 throw new Error('Must not succeed');

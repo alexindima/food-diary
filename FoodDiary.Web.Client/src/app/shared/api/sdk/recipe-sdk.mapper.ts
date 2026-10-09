@@ -1,6 +1,8 @@
 import { type Recipe, RecipeVisibility } from '../../models/recipe.data';
 import { RECIPE_CATEGORIES } from '../../models/recipe-category';
 import type { RecipeLookup } from '../../models/recipe-lookup.data';
+import { utcInstant } from '../../models/semantics/date-value';
+import { entityId, optionalEntityId } from '../../models/semantics/entity-id';
 import type { RecipeHttpResponse } from './generated/model/recipe-http-response';
 import { requireSdkFields, sdkEnum, sdkOptional } from './sdk-response';
 
@@ -34,6 +36,11 @@ export function recipeFromSdk(response: RecipeHttpResponse): Recipe {
                 ingredients: step.ingredients.map(ingredient => requireSdkFields(ingredient, ['id', 'amount'])),
             };
         }),
+
+        id: entityId<'recipe'>(value.id),
+        imageAssetId: optionalEntityId<'image-asset'>(value.imageAssetId),
+        createdAt: utcInstant(value.createdAt),
+        favoriteRecipeId: optionalEntityId<'favorite-recipe'>(value.favoriteRecipeId),
     };
 }
 

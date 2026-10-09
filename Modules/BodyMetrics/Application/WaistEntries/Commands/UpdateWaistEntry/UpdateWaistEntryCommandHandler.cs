@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Mappings;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
@@ -61,7 +62,7 @@ public sealed class UpdateWaistEntryCommandHandler(
                 WaistEntryErrors.AlreadyExists(normalizedDate));
         }
 
-        entry.UpdateDetails(command.CircumferenceCm, day);
+        entry.UpdateMeasurement(MeasuredWaistCm.Create(command.CircumferenceCm), day);
         await waistEntryRepository.UpdateAsync(entry, cancellationToken).ConfigureAwait(false);
         return Result.Success(entry.ToModel());
     }

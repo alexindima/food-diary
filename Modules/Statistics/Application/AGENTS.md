@@ -18,3 +18,5 @@ Rules for `Modules/Statistics/Application/`.
 - Tests: `dotnet test Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/FoodDiary.Modules.Statistics.Application.Tests.csproj`
 
 Current module convention: all projects use `FoodDiary.Modules.Statistics.<Project>` assembly identities and namespaces matching their folders, including tests. Preserve historical migration metadata and database/HTTP contracts during namespace moves.
+
+StatisticsInstantPeriod and StatisticsBodyPeriod retain separate instant versus calendar-read semantics. Preserve existing normalization of Unspecified timestamps, timezone-aware period limits, body-date fallback and endpoint inclusion. Query DTOs and outbound owner contracts remain scalar boundaries.

@@ -16,11 +16,12 @@ import {
     ProductType,
     ProductVisibility,
 } from '../../../shared/models/product.data';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { ProductService } from '../api/product.service';
 import { ProductManageFacade } from './product-manage.facade';
 
 const product: Product = {
-    id: 'p1',
+    id: entityId<'product'>('p1'),
     name: 'Test product',
     barcode: null,
     brand: null,

@@ -15,6 +15,7 @@ import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
 import { UserFacade } from '../../../shared/lib/user.facade';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
 import type { FoodRecognitionJob } from '../../../shared/models/food-recognition.data';
+import { imageSelection } from '../../../shared/models/image-upload.data';
 import { type SpeechRecognitionFailure, SpeechRecognitionService } from '../../../shared/platform/speech-recognition.service';
 import { FoodRecognitionHistoryDialogComponent } from '../food-recognition-history/food-recognition-history-dialog';
 import { AiInputBarComponent } from './ai-input-bar';
@@ -511,7 +512,7 @@ describe('AiInputBarComponent recognition history', () => {
         expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
         expect(userFacade.getInfoSilently).not.toHaveBeenCalled();
         expect(userFacade.acceptAiConsent).not.toHaveBeenCalled();
-        expect(component['photoSelection']()).toEqual({ url: RECENT_JOB.imageUrl, assetId: RECENT_JOB.imageAssetId });
+        expect(component['photoSelection']()).toEqual(imageSelection(RECENT_JOB.imageUrl, RECENT_JOB.imageAssetId));
         expect(component['photoNutrition']()).toEqual(NUTRITION);
         expect(createSpy).not.toHaveBeenCalled();
 
@@ -574,7 +575,7 @@ describe('AiInputBarComponent recognition history', () => {
 describe('AiInputBarComponent saved photo reanalysis', () => {
     it('requires premium for a new analysis of a stored photo', async () => {
         const { aiFoodService, component, fixture } = await setupAiInputBarAsync('create', { isPremium: false });
-        component['photoSelection'].set({ url: RECENT_JOB.imageUrl, assetId: RECENT_JOB.imageAssetId });
+        component['photoSelection'].set(imageSelection(RECENT_JOB.imageUrl, RECENT_JOB.imageAssetId));
         fixture.detectChanges();
 
         await component['onPhotoReanalyzeAsync']();
@@ -587,7 +588,7 @@ describe('AiInputBarComponent saved photo reanalysis', () => {
             aiConsentAcceptedAt: null,
         });
         dialogService.open.mockReturnValueOnce({ afterClosed: () => of(false) });
-        component['photoSelection'].set({ url: RECENT_JOB.imageUrl, assetId: RECENT_JOB.imageAssetId });
+        component['photoSelection'].set(imageSelection(RECENT_JOB.imageUrl, RECENT_JOB.imageAssetId));
         component['photoNutrition'].set(NUTRITION);
         fixture.detectChanges();
 
@@ -604,7 +605,7 @@ describe('AiInputBarComponent saved photo reanalysis', () => {
         });
         const user = new Subject<{ aiConsentAcceptedAt: string }>();
         userFacade.getInfoSilently.mockReturnValueOnce(user);
-        component['photoSelection'].set({ url: RECENT_JOB.imageUrl, assetId: RECENT_JOB.imageAssetId });
+        component['photoSelection'].set(imageSelection(RECENT_JOB.imageUrl, RECENT_JOB.imageAssetId));
         fixture.detectChanges();
         const reanalysis = component['onPhotoReanalyzeAsync']();
         component['dismissPhotoResult']();
@@ -630,7 +631,7 @@ describe('AiInputBarComponent repeated photo recognition', () => {
             AiPhotoResultComponent,
             expect.objectContaining({ panelClass: 'fd-ai-photo-result-dialog-panel' }),
         );
-        expect(component['photoSelection']()).toEqual({ url: 'blob:second-photo', assetId: null });
+        expect(component['photoSelection']()).toEqual(imageSelection('blob:second-photo', null));
         expect(component['photoDialogRef']()).not.toBeNull();
     });
 });
@@ -647,7 +648,7 @@ describe('AiInputBarComponent photo recognition', () => {
             AiPhotoResultComponent,
             expect.objectContaining({ size: 'xl', panelClass: 'fd-ai-photo-result-dialog-panel' }),
         );
-        expect(component['photoSelection']()).toEqual({ url: 'blob:local-preview', assetId: null });
+        expect(component['photoSelection']()).toEqual(imageSelection('blob:local-preview', null));
         expect(component['photoIsPreparing']()).toBe(true);
         expect(component['isDisabled']()).toBe(true);
         expect(aiFoodService.analyzeFoodImage).not.toHaveBeenCalled();
@@ -657,7 +658,7 @@ describe('AiInputBarComponent photo recognition', () => {
         const { aiFoodService, component, fixture } = await setupAiInputBarAsync();
         fixture.detectChanges();
 
-        component['onPhotoSelected']({ url: 'https://example.com/photo.jpg', assetId: null });
+        component['onPhotoSelected'](imageSelection('https://example.com/photo.jpg', null));
 
         expect(aiFoodService.analyzeFoodImage).not.toHaveBeenCalled();
         expect(component['hasPhotoResult']()).toBe(false);
@@ -667,7 +668,7 @@ describe('AiInputBarComponent photo recognition', () => {
         const { aiFoodService, component, dialogService, fixture } = await setupAiInputBarAsync();
         fixture.detectChanges();
 
-        component['onPhotoSelected']({ url: 'https://example.com/photo.jpg', assetId: 'asset-1' });
+        component['onPhotoSelected'](imageSelection('https://example.com/photo.jpg', 'asset-1'));
 
         expect(dialogService.open).toHaveBeenCalledWith(
             AiPhotoResultComponent,
@@ -691,10 +692,10 @@ describe('AiInputBarComponent photo recognition', () => {
         expect(dialogConfig.data.imageUrl()).toBe('blob:local-preview');
         expect(dialogConfig.data.isPreparing()).toBe(true);
 
-        component['onPhotoSelected']({ url: 'https://cdn.example.com/photo.jpg', assetId: 'asset-1' });
+        component['onPhotoSelected'](imageSelection('https://cdn.example.com/photo.jpg', 'asset-1'));
 
         expect(dialogService.open).toHaveBeenCalledOnce();
-        expect(component['photoSelection']()).toEqual({ url: 'https://cdn.example.com/photo.jpg', assetId: 'asset-1' });
+        expect(component['photoSelection']()).toEqual(imageSelection('https://cdn.example.com/photo.jpg', 'asset-1'));
         expect(dialogConfig.data.imageUrl()).toBe('https://cdn.example.com/photo.jpg');
         expect(dialogConfig.data.isPreparing()).toBe(false);
     });
@@ -705,7 +706,7 @@ describe('AiInputBarComponent photo recognition', () => {
         component['mealRecognized'].subscribe(result => {
             recognizedSpy(result);
         });
-        component['photoSelection'].set({ url: 'https://example.com/photo.jpg', assetId: 'asset-1' });
+        component['photoSelection'].set(imageSelection('https://example.com/photo.jpg', 'asset-1'));
         component['photoResults'].set(VISION_ITEMS);
         component['photoNutrition'].set(NUTRITION);
         fixture.detectChanges();
@@ -725,7 +726,7 @@ describe('AiInputBarComponent photo recognition', () => {
         aiFoodService.calculateNutrition.mockReturnValueOnce(throwError(() => ({ status: HttpStatusCode.TooManyRequests })));
         fixture.detectChanges();
 
-        component['onPhotoSelected']({ url: 'https://example.com/photo.jpg', assetId: 'asset-1' });
+        component['onPhotoSelected'](imageSelection('https://example.com/photo.jpg', 'asset-1'));
 
         expect(component['photoNutritionErrorKey']()).toBe('MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
         expect(component['photoIsNutritionLoading']()).toBe(false);

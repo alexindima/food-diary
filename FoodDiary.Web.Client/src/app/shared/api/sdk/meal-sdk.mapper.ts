@@ -7,6 +7,7 @@ import {
     type MealAiSession,
     type MealAiSessionResponseDto,
     type MealItem,
+    mealItemFromStored,
     type MealItemResponseDto,
     type MealManageDto,
     type MealResponseDto,
@@ -14,6 +15,8 @@ import {
 } from '../../models/meal.data';
 import { MeasurementUnit, type Product } from '../../models/product.data';
 import type { Recipe } from '../../models/recipe.data';
+import { utcInstant } from '../../models/semantics/date-value';
+import { entityId, optionalEntityId } from '../../models/semantics/entity-id';
 import type { CreateMealHttpRequest } from './generated/model/create-meal-http-request';
 import type { MealHttpResponse } from './generated/model/meal-http-response';
 import { requireSdkFields, sdkEnum, sdkOptional } from './sdk-response';
@@ -81,12 +84,12 @@ class MealResponseNormalizer {
         const isNutritionAutoCalculated = this.resolveIsNutritionAutoCalculated(response);
 
         return {
-            id: response.id,
-            date: response.date,
+            id: entityId<'meal'>(response.id),
+            date: utcInstant(response.date),
             mealType: normalizeMealType(response.mealType),
             comment: response.comment,
             imageUrl: this.toNullable(response.imageUrl),
-            imageAssetId: this.toNullable(response.imageAssetId),
+            imageAssetId: optionalEntityId<'image-asset'>(this.toNullable(response.imageAssetId)),
             totalCalories: response.totalCalories,
             totalProteins: response.totalProteins,
             totalFats: response.totalFats,
@@ -105,7 +108,7 @@ class MealResponseNormalizer {
             qualityScore: this.toNullable(response.qualityScore),
             qualityGrade: this.toNullable(response.qualityGrade),
             isFavorite: this.withDefault(response.isFavorite, false),
-            favoriteMealId: this.toNullable(response.favoriteMealId),
+            favoriteMealId: optionalEntityId<'favorite-meal'>(this.toNullable(response.favoriteMealId)),
             items: response.items.map(item => this.mapMealItem(item)),
             aiSessions: this.mapOptionalArray(response.aiSessions, session => this.mapAiSession(session)),
         };
@@ -177,23 +180,23 @@ class MealResponseNormalizer {
                 : null;
         const sourceType = product !== null ? MealSourceType.Product : MealSourceType.Recipe;
 
-        return {
-            id: response.id,
-            mealId: response.mealId,
-            amount: response.amount,
-            sourceType,
-            sourceAiItemId: response.sourceAiItemId ?? null,
-            origin: response.origin ?? null,
-            product,
-            recipe,
-        };
+        return mealItemFromStored(
+            {
+                id: entityId<'meal-item'>(response.id),
+                mealId: entityId<'meal'>(response.mealId),
+                sourceAiItemId: response.sourceAiItemId ?? null,
+                origin: response.origin ?? null,
+            },
+            response.amount,
+            { product, recipe, sourceType },
+        );
     }
 
     private createProductFromSnapshot(response: MealItemResponseDto): Product {
         const base = createEmptyProductSnapshot();
         return {
             ...base,
-            id: this.withDefault(response.productId, ''),
+            id: entityId<'product'>(this.withDefault(response.productId, '')),
             name: this.withDefault(response.productName, ''),
             imageUrl: this.toNullable(response.productImageUrl),
             baseUnit: this.normalizeMeasurementUnit(response.productBaseUnit),
@@ -212,7 +215,7 @@ class MealResponseNormalizer {
         const base = createEmptyRecipeSnapshot();
         return {
             ...base,
-            id: this.withDefault(response.recipeId, ''),
+            id: entityId<'recipe'>(this.withDefault(response.recipeId, '')),
             name: this.withDefault(response.recipeName, ''),
             imageUrl: this.toNullable(response.recipeImageUrl),
             servings: this.withDefault(response.recipeServings, MEAL_API_DEFAULT_ITEM_AMOUNT),

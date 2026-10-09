@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Domain.ValueObjects;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -145,7 +146,7 @@ public sealed class OpenAiFoodServiceTests {
             () => Assert.Equal(11, reservation.InputTokens),
             () => Assert.Equal(4_096, reservation.OutputTokens));
         AiQuotaUsage reconciliation = Assert.Single(quotaRepository.Reconciliations);
-        Assert.Equal(new AiQuotaUsage("nutrition", "test-model", 11, 7, 18), reconciliation);
+        Assert.Equal(new AiQuotaUsage("nutrition", "test-model", AiTokenUsage.FromCounts(11, 7, 18)), reconciliation);
         Assert.Empty(quotaRepository.Releases);
     }
 
@@ -205,7 +206,7 @@ public sealed class OpenAiFoodServiceTests {
 
         ResultAssert.Success(result);
         AiQuotaUsage usage = Assert.Single(quotaRepository.Reconciliations);
-        Assert.Equal(new AiQuotaUsage("vision", "test-model", 11, 4_096, 4_107), usage);
+        Assert.Equal(new AiQuotaUsage("vision", "test-model", AiTokenUsage.FromCounts(11, 4_096, 4_107)), usage);
     }
 
     [Fact]
@@ -404,7 +405,7 @@ public sealed class OpenAiFoodServiceTests {
                 CreateVisionModel(),
                 "vision",
                 "test-model",
-                new AiUsageTokens(11, 7, 18))));
+                AiTokenUsage.FromCounts(11, 7, 18))));
         }
 
         public async Task<Result<AiProviderTokenBudget>> GetParseFoodTextTokenBudgetAsync(
@@ -430,7 +431,7 @@ public sealed class OpenAiFoodServiceTests {
                 CreateVisionModel(),
                 "text-parse",
                 "test-model",
-                new AiUsageTokens(11, 7, 18))));
+                AiTokenUsage.FromCounts(11, 7, 18))));
         }
 
         public async Task<Result<AiProviderTokenBudget>> GetCalculateNutritionTokenBudgetAsync(
@@ -457,7 +458,7 @@ public sealed class OpenAiFoodServiceTests {
                 new FoodNutritionModel(52m, 0.3m, 0.2m, 14m, 2.4m, 0m, []),
                 "nutrition",
                 "test-model",
-                new AiUsageTokens(11, 7, 18))));
+                AiTokenUsage.FromCounts(11, 7, 18))));
         }
     }
 
@@ -550,7 +551,7 @@ public sealed class OpenAiFoodServiceTests {
             .Returns(Result.Success(new AiProviderTokenBudget(InputTokens: 10, MaximumOutputTokens: 20)));
         client.ParseFoodTextAsync("apple", "ru", "Draft {{userText}}", Arg.Any<CancellationToken>())
             .Returns(Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(new FoodVisionModel([]), "text-parse", "test-model",
-                new AiUsageTokens(InputTokens: 10, OutputTokens: 5, TotalTokens: 15))));
+                AiTokenUsage.FromCounts(inputTokens: 10, outputTokens: 5, totalTokens: 15))));
         var quota = new RecordingAiQuotaRepository();
         IAiPromptProvider prompts = Substitute.For<IAiPromptProvider>();
         var service = new OpenAiFoodService(client, quota, CreateUserAiProfileReadService(), new StubDateTimeProvider(), prompts);
@@ -569,7 +570,7 @@ public sealed class OpenAiFoodServiceTests {
             .Returns(Result.Success(new AiProviderTokenBudget(InputTokens: 10, MaximumOutputTokens: 20)));
         client.AnalyzeFoodImageAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<string?>(), "Saved label prompt", Arg.Any<CancellationToken>(), product)
             .Returns(Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(new FoodVisionModel([]), "vision", "test-model",
-                new AiUsageTokens(InputTokens: 10, OutputTokens: 5, TotalTokens: 15))));
+                AiTokenUsage.FromCounts(inputTokens: 10, outputTokens: 5, totalTokens: 15))));
         IAiPromptProvider prompts = Substitute.For<IAiPromptProvider>();
         prompts.GetPromptAsync("product-label", Arg.Any<string?>(), Arg.Any<CancellationToken>()).Returns("Saved label prompt");
         var quota = new RecordingAiQuotaRepository();

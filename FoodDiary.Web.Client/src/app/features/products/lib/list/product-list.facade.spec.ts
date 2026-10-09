@@ -18,6 +18,8 @@ import {
     ProductType,
     ProductVisibility,
 } from '../../../../shared/models/product.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { QuickMealService } from '../../../meals/contracts/quick-meal';
 import { FavoriteProductService } from '../../api/favorite-product.service';
@@ -105,16 +107,18 @@ beforeEach(() => {
 
     productService.queryOverview.mockReturnValue(
         of({
-            recentItems: [createProduct({ id: 'recent-product', name: 'Recent product' })],
+            recentItems: [createProduct({ id: entityId<'product'>('recent-product'), name: 'Recent product' })],
             allProducts: createPage([
-                createProduct({ id: 'recent-product', name: 'Recent product' }),
-                createProduct({ id: 'all-product', name: 'All product' }),
+                createProduct({ id: entityId<'product'>('recent-product'), name: 'Recent product' }),
+                createProduct({ id: entityId<'product'>('all-product'), name: 'All product' }),
             ]),
             favoriteItems: [createFavoriteProduct()],
             favoriteTotalCount: 1,
         }),
     );
-    productService.query.mockReturnValue(of(createPage([createProduct({ id: 'query-product', name: 'Query product' })])));
+    productService.query.mockReturnValue(
+        of(createPage([createProduct({ id: entityId<'product'>('query-product'), name: 'Query product' })])),
+    );
     productService.getById.mockReturnValue(of(createProduct()));
     productService.deleteById.mockReturnValue(of(void 0));
     favoriteProductService.getLookupPage.mockReturnValue(of([createFavoriteProduct()]));
@@ -291,7 +295,7 @@ describe('ProductListFacade search and filters', () => {
 
 describe('ProductListFacade favorites', () => {
     it('adds favorite product, syncs product state, and reloads favorites', () => {
-        const product = createProduct({ id: 'product-1', isFavorite: false, favoriteProductId: null });
+        const product = createProduct({ id: entityId<'product'>('product-1'), isFavorite: false, favoriteProductId: null });
         facade.productData.setData(createPage([product]));
 
         facade.onProductFavoriteToggle(product);
@@ -303,7 +307,7 @@ describe('ProductListFacade favorites', () => {
     });
 
     it('removes favorite product by looking up favorite id when product state has no favorite id', () => {
-        const product = createProduct({ id: 'product-1', isFavorite: true, favoriteProductId: null });
+        const product = createProduct({ id: entityId<'product'>('product-1'), isFavorite: true, favoriteProductId: null });
         facade.productData.setData(createPage([product]));
 
         facade.onProductFavoriteToggle(product);
@@ -373,7 +377,7 @@ function createPage(data: Product[]): PageOf<Product> {
 
 function createProduct(overrides: Partial<Product> = {}): Product {
     return {
-        id: 'product-1',
+        id: entityId<'product'>('product-1'),
         name: 'Test product',
         barcode: null,
         brand: null,
@@ -404,10 +408,10 @@ function createProduct(overrides: Partial<Product> = {}): Product {
 
 function createFavoriteProduct(overrides: Partial<FavoriteProduct> = {}): FavoriteProduct {
     return {
-        id: 'favorite-1',
-        productId: 'product-1',
+        id: entityId<'favorite-product'>('favorite-1'),
+        productId: entityId<'product'>('product-1'),
         name: 'Test product',
-        createdAtUtc: '2026-01-01T00:00:00Z',
+        createdAtUtc: utcInstant('2026-01-01T00:00:00Z'),
         productName: 'Test product',
         brand: null,
         barcode: null,
@@ -528,7 +532,7 @@ describe('Product favorites picker callbacks', () => {
         callbacks.remove(favorite).subscribe();
         expect(facade.favoriteTotalCount()).toBe(0);
         expect(facade.productData.items()[0].isFavorite).toBe(false);
-        favoriteProductService.add.mockReturnValue(of(createFavoriteProduct({ id: 'restored-id' })));
+        favoriteProductService.add.mockReturnValue(of(createFavoriteProduct({ id: entityId<'favorite-product'>('restored-id') })));
         callbacks.restore(favorite).subscribe();
         expect(facade.favoriteTotalCount()).toBe(1);
         expect(favorite.id).toBe('restored-id');

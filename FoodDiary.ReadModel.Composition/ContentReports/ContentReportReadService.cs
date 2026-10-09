@@ -1,7 +1,8 @@
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
-using FoodDiary.Modules.RecipeCommunity.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.RecipeCommunity.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.ContentReports.Domain.Entities;
 using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.ContentReports.Contracts.Models;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
@@ -17,16 +18,15 @@ public sealed class ContentReportReadService(ICompositionReadContext context)
 
     public Task<bool> IsReportableAsync(
         UserId reporterUserId,
-        ReportTargetType targetType,
-        Guid targetId,
+        ReportTarget target,
         CancellationToken cancellationToken = default) =>
-        targetType switch {
+        target.Kind switch {
             ReportTargetType.Recipe => context.Recipes.AsNoTracking().AnyAsync(
-                recipe => recipe.Id == new RecipeId(targetId)
+                recipe => recipe.Id == new RecipeId(target.Id)
                     && (recipe.Visibility == Visibility.Public || recipe.UserId == reporterUserId),
                 cancellationToken),
             ReportTargetType.Comment => context.RecipeComments.AsNoTracking().AnyAsync(
-                comment => comment.Id == new RecipeCommentId(targetId)
+                comment => comment.Id == new RecipeCommentId(target.Id)
                     && context.Recipes.AsNoTracking().Any(recipe => recipe.Id == comment.RecipeId && (recipe.Visibility == Visibility.Public || recipe.UserId == reporterUserId)),
                 cancellationToken),
             _ => Task.FromResult(false),

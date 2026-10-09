@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { KJ_TO_KCAL_FACTOR } from '../../../../shared/lib/nutrition.constants';
 import { USDA_NUTRIENT_IDS } from '../../../../shared/lib/usda-nutrient.constants';
+import { imageSelection } from '../../../../shared/models/image-upload.data';
 import { MeasurementUnit, type ProductSearchSuggestion, ProductType, ProductVisibility } from '../../../../shared/models/product.data';
 import type { UsdaFoodDetail } from '../../../../shared/models/usda.data';
 import type { ProductFormValues } from '../../components/manage/product-manage-lib/product-manage-form.types';
@@ -53,10 +54,7 @@ describe('Open Food Facts nutrition prefill mapper', () => {
         expect(buildOpenFoodFactsLookupPatch(EMPTY_FORM_VALUES, OFF_PRODUCT)).toEqual({
             name: OFF_PRODUCT.name,
             brand: OFF_PRODUCT.brand,
-            imageUrl: {
-                url: OFF_PRODUCT.imageUrl,
-                assetId: null,
-            },
+            imageUrl: imageSelection(OFF_PRODUCT.imageUrl, null),
             caloriesPerBase: 310,
             proteinsPerBase: 9.9,
             fatsPerBase: 7.2,
@@ -75,10 +73,7 @@ describe('Open Food Facts nutrition prefill mapper', () => {
             fatsPerBase: 5,
             carbsPerBase: 20,
             fiberPerBase: 2,
-            imageUrl: {
-                url: 'https://example.test/user-image.jpg',
-                assetId: null,
-            },
+            imageUrl: imageSelection('https://example.test/user-image.jpg', null),
         };
 
         expect(buildOpenFoodFactsLookupPatch(values, OFF_PRODUCT)).toEqual({});
@@ -103,10 +98,7 @@ describe('Open Food Facts nutrition prefill mapper', () => {
             barcode: OFF_PRODUCT.barcode,
             name: OFF_PRODUCT.name,
             brand: OFF_PRODUCT.brand,
-            imageUrl: {
-                url: OFF_PRODUCT.imageUrl,
-                assetId: null,
-            },
+            imageUrl: imageSelection(OFF_PRODUCT.imageUrl, null),
             caloriesPerBase: 310,
             proteinsPerBase: 9.9,
             fatsPerBase: 7.2,

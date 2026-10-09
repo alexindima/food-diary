@@ -7,6 +7,8 @@ import { provideTranslateTesting } from '../../../../../../../testing/translate-
 import { RecipeCardComponent } from '../../../../../../components/shared/recipe-card/recipe-card';
 import { AuthService } from '../../../../../../services/auth.service';
 import type { FavoriteRecipe } from '../../../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../../shared/models/semantics/entity-id';
 import { RecipeListFavoritesComponent } from './recipe-list-favorites';
 
 describe('RecipeListFavoritesComponent', () => {
@@ -83,10 +85,10 @@ function setupComponent(overrides: { favoriteTotalCount?: number; favorites?: Fa
 
 function createFavoriteRecipe(): FavoriteRecipe {
     return {
-        id: 'favorite-1',
-        recipeId: 'recipe-1',
+        id: entityId<'favorite-recipe'>('favorite-1'),
+        recipeId: entityId<'recipe'>('recipe-1'),
         name: 'Favorite recipe',
-        createdAtUtc: '2026-01-01T00:00:00Z',
+        createdAtUtc: utcInstant('2026-01-01T00:00:00Z'),
         recipeName: 'Recipe',
         imageUrl: null,
         totalCalories: 120,

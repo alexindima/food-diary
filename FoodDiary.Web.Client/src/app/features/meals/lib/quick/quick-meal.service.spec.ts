@@ -8,6 +8,8 @@ import { SessionEventsService } from '../../../../shared/auth/session-events.ser
 import type { Meal } from '../../../../shared/models/meal.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../shared/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MealService } from '../../api/meal.service';
 import { QuickMealService } from './quick-meal.service';
@@ -16,7 +18,7 @@ const DEFAULT_PORTION_AMOUNT = 180;
 const DOUBLE_DEFAULT_PORTION_AMOUNT = 360;
 
 const product: Product = {
-    id: 'product-1',
+    id: entityId<'product'>('product-1'),
     name: 'Crab salad',
     productType: ProductType.Other,
     baseUnit: MeasurementUnit.G,
@@ -37,8 +39,8 @@ const product: Product = {
 };
 
 const createdMeal: Meal = {
-    id: 'meal-1',
-    date: '2026-05-03T12:00:00Z',
+    id: entityId<'meal'>('meal-1'),
+    date: utcInstant('2026-05-03T12:00:00Z'),
     mealType: null,
     comment: null,
     imageUrl: null,
@@ -55,12 +57,12 @@ const createdMeal: Meal = {
 };
 
 const recipe: Recipe = {
-    id: 'recipe-1',
+    id: entityId<'recipe'>('recipe-1'),
     name: 'Rice bowl',
     servings: 4,
     visibility: RecipeVisibility.Private,
     usageCount: 0,
-    createdAt: '2026-05-03T12:00:00Z',
+    createdAt: utcInstant('2026-05-03T12:00:00Z'),
     isOwnedByCurrentUser: true,
     isNutritionAutoCalculated: true,
     steps: [],
@@ -172,7 +174,7 @@ describe('QuickMealService draft items', () => {
     it('merges draft items when an edit changes the source to an existing item', () => {
         const rice: Product = {
             ...product,
-            id: 'product-2',
+            id: entityId<'product'>('product-2'),
             name: 'Rice',
             defaultPortionAmount: 120,
         };
@@ -344,8 +346,8 @@ describe('QuickMealService draft boundaries', () => {
         expect(service.items()[0].amount).toBe(DEFAULT_PORTION_AMOUNT);
     });
     it('ignores sources with empty IDs', () => {
-        service.addProduct({ ...product, id: '' });
-        service.addRecipe({ ...recipe, id: '' });
+        service.addProduct({ ...product, id: entityId<'product'>('') });
+        service.addRecipe({ ...recipe, id: entityId<'recipe'>('') });
         expect(service.hasItems()).toBe(false);
     });
 });

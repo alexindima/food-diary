@@ -15,6 +15,8 @@ import { LocalizationService } from '../../../../shared/i18n/localization.servic
 import type { FavoriteMeal, Meal } from '../../../../shared/models/meal.data';
 import type { MealOverview } from '../../../../shared/models/meal.data';
 import type { PageOf } from '../../../../shared/models/page-of.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealService } from '../../api/meal.service';
 import { MealListComponent } from './meal-list';
@@ -53,8 +55,8 @@ type TestContext = {
 
 function createMockMeal(overrides: Partial<Meal> = {}): Meal {
     return {
-        id: '1',
-        date: '2024-03-15T10:00:00Z',
+        id: entityId<'meal'>('1'),
+        date: utcInstant('2024-03-15T10:00:00Z'),
         mealType: 'breakfast',
         comment: null,
         imageUrl: null,
@@ -276,16 +278,16 @@ function registerGroupingTests(context: TestContext): void {
     describe('grouping', () => {
         it('should group meals by date', () => {
             const meal1 = createMockMeal({
-                id: '1',
-                date: new Date(LOCAL_GROUP_YEAR, LOCAL_GROUP_MONTH, LOCAL_GROUP_DAY_15, MORNING_HOUR).toISOString(),
+                id: entityId<'meal'>('1'),
+                date: utcInstant(new Date(LOCAL_GROUP_YEAR, LOCAL_GROUP_MONTH, LOCAL_GROUP_DAY_15, MORNING_HOUR).toISOString()),
             });
             const meal2 = createMockMeal({
-                id: '2',
-                date: new Date(LOCAL_GROUP_YEAR, LOCAL_GROUP_MONTH, LOCAL_GROUP_DAY_15, AFTERNOON_HOUR).toISOString(),
+                id: entityId<'meal'>('2'),
+                date: utcInstant(new Date(LOCAL_GROUP_YEAR, LOCAL_GROUP_MONTH, LOCAL_GROUP_DAY_15, AFTERNOON_HOUR).toISOString()),
             });
             const meal3 = createMockMeal({
-                id: '3',
-                date: new Date(LOCAL_GROUP_YEAR, LOCAL_GROUP_MONTH, LOCAL_GROUP_DAY_16, MORNING_HOUR).toISOString(),
+                id: entityId<'meal'>('3'),
+                date: utcInstant(new Date(LOCAL_GROUP_YEAR, LOCAL_GROUP_MONTH, LOCAL_GROUP_DAY_16, MORNING_HOUR).toISOString()),
             });
 
             context.mockMealService.queryOverview.mockReturnValue(
@@ -321,12 +323,12 @@ function registerGroupingTests(context: TestContext): void {
 
         it('should group meals by local calendar date instead of UTC date', () => {
             const lateMeal = createMockMeal({
-                id: '1',
-                date: new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_4, LATE_MEAL_HOUR, LATE_MEAL_MINUTE).toISOString(),
+                id: entityId<'meal'>('1'),
+                date: utcInstant(new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_4, LATE_MEAL_HOUR, LATE_MEAL_MINUTE).toISOString()),
             });
             const afterMidnightMeal = createMockMeal({
-                id: '2',
-                date: new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_5, 0, HALF_PAST_MIDNIGHT_MINUTES).toISOString(),
+                id: entityId<'meal'>('2'),
+                date: utcInstant(new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_5, 0, HALF_PAST_MIDNIGHT_MINUTES).toISOString()),
             });
 
             context.mockMealService.queryOverview.mockReturnValue(of(createOverview([afterMidnightMeal, lateMeal])));
@@ -350,16 +352,16 @@ function registerPlannedGroupingTests(context: TestContext): void {
             vi.useFakeTimers();
             vi.setSystemTime(new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_5, MORNING_HOUR));
             const currentMeal = createMockMeal({
-                id: 'current-meal',
-                date: new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_5, AFTERNOON_HOUR).toISOString(),
+                id: entityId<'meal'>('current-meal'),
+                date: utcInstant(new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_5, AFTERNOON_HOUR).toISOString()),
             });
             const laterFutureMeal = createMockMeal({
-                id: 'later-future-meal',
-                date: new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_6, AFTERNOON_HOUR).toISOString(),
+                id: entityId<'meal'>('later-future-meal'),
+                date: utcInstant(new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_6, AFTERNOON_HOUR).toISOString()),
             });
             const nearerFutureMeal = createMockMeal({
-                id: 'nearer-future-meal',
-                date: new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_6, MORNING_HOUR).toISOString(),
+                id: entityId<'meal'>('nearer-future-meal'),
+                date: utcInstant(new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_6, MORNING_HOUR).toISOString()),
             });
 
             context.mockMealService.queryOverview.mockReturnValue(of(createOverview([laterFutureMeal, currentMeal, nearerFutureMeal])));
@@ -448,7 +450,7 @@ function registerFavoriteTests(context: TestContext): void {
         });
 
         it('should add meal favorite and refresh favorites', () => {
-            const meal = createMockMeal({ id: 'meal-1', isFavorite: false, favoriteMealId: null });
+            const meal = createMockMeal({ id: entityId<'meal'>('meal-1'), isFavorite: false, favoriteMealId: null });
             context.component()['mealData'].setData(createPageOf([meal]));
 
             context.component()['onMealFavoriteToggle'](meal);
@@ -462,8 +464,8 @@ function registerFavoriteTests(context: TestContext): void {
             context
                 .component()
                 ['favorites'].set([
-                    createFavorite({ id: 'favorite-dinner', mealType: 'Dinner' }),
-                    createFavorite({ id: 'favorite-unknown', mealType: null }),
+                    createFavorite({ id: entityId<'favorite-meal'>('favorite-dinner'), mealType: 'Dinner' }),
+                    createFavorite({ id: entityId<'favorite-meal'>('favorite-unknown'), mealType: null }),
                 ]);
 
             expect(
@@ -503,11 +505,11 @@ function setPageContainerScrollMock(fixture: ComponentFixture<MealListComponent>
 
 function createFavorite(overrides: Partial<FavoriteMeal> = {}): FavoriteMeal {
     return {
-        id: 'favorite-1',
-        mealId: 'meal-1',
+        id: entityId<'favorite-meal'>('favorite-1'),
+        mealId: entityId<'meal'>('meal-1'),
         name: null,
-        createdAtUtc: '2026-05-04T20:00:00Z',
-        mealDate: '2026-05-04T20:00:00Z',
+        createdAtUtc: utcInstant('2026-05-04T20:00:00Z'),
+        mealDate: utcInstant('2026-05-04T20:00:00Z'),
         mealType: null,
         totalCalories: 100,
         totalProteins: 1,
@@ -583,11 +585,11 @@ function registerFavoritesPickerWiringTests(context: TestContext): void {
         const component = context.component();
         context.fixture().detectChanges();
         const favorite: FavoriteMeal = {
-            id: 'favorite-1',
-            mealId: 'meal-1',
+            id: entityId<'favorite-meal'>('favorite-1'),
+            mealId: entityId<'meal'>('meal-1'),
             name: null,
-            createdAtUtc: '',
-            mealDate: '',
+            createdAtUtc: utcInstant(''),
+            mealDate: utcInstant(''),
             mealType: null,
             totalCalories: 0,
             totalProteins: 0,

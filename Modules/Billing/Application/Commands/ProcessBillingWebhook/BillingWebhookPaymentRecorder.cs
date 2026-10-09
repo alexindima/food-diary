@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Billing.Domain.ValueObjects;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Modules.Billing.Domain.Entities;
@@ -30,55 +31,57 @@ public sealed class BillingWebhookPaymentRecorder(IBillingPaymentWriteRepository
                 return;
             }
 
-            existingPayment.ApplyProviderResult(
-                subscription?.Id,
-                webhookEvent.ExternalCustomerId,
-                webhookEvent.ExternalSubscriptionId,
-                webhookEvent.ExternalPaymentMethodId,
-                webhookEvent.ExternalPriceId,
-                webhookEvent.Plan,
-                webhookEvent.Status,
-                ResolvePaymentKind(webhookEvent),
-                webhookEvent.Amount,
-                webhookEvent.Currency,
-                webhookEvent.CurrentPeriodStartUtc,
-                webhookEvent.CurrentPeriodEndUtc,
-                webhookEvent.EventId,
-                webhookEvent.ProviderMetadataJson,
-                webhookEvent.Tax,
-                webhookEvent.Fee,
-                webhookEvent.Earnings,
-                webhookEvent.PayoutCurrency,
-                webhookEvent.PayoutEarnings,
-                webhookEvent.OccurredAtUtc);
+            existingPayment.ApplyProviderObservation(
+            billingSubscriptionId: subscription?.TypedId,
+            externalCustomerId: webhookEvent.ExternalCustomerId,
+            externalSubscriptionId: webhookEvent.ExternalSubscriptionId,
+            externalPaymentMethodId: webhookEvent.ExternalPaymentMethodId,
+            externalPriceId: webhookEvent.ExternalPriceId,
+            plan: webhookEvent.Plan,
+            status: webhookEvent.Status,
+            kind: ResolvePaymentKind(webhookEvent),
+            financials: BillingPaymentFinancials.FromFields(
+            amount: webhookEvent.Amount,
+            currency: webhookEvent.Currency,
+            tax: webhookEvent.Tax,
+            fee: webhookEvent.Fee,
+            earnings: webhookEvent.Earnings,
+            payoutCurrency: webhookEvent.PayoutCurrency,
+            payoutEarnings: webhookEvent.PayoutEarnings),
+            currentPeriodStartUtc: webhookEvent.CurrentPeriodStartUtc,
+            currentPeriodEndUtc: webhookEvent.CurrentPeriodEndUtc,
+            webhookEventId: webhookEvent.EventId,
+            providerMetadataJson: webhookEvent.ProviderMetadataJson,
+            occurredAtUtc: webhookEvent.OccurredAtUtc);
             await billingPaymentRepository.UpdateAsync(existingPayment, cancellationToken).ConfigureAwait(false);
             return;
         }
 
-        var payment = BillingPayment.Create(
-            userId,
-            subscription?.Id,
-            provider,
-            externalPaymentId,
-            webhookEvent.ExternalCustomerId,
-            webhookEvent.ExternalSubscriptionId,
-            webhookEvent.ExternalPaymentMethodId,
-            webhookEvent.ExternalPriceId,
-            webhookEvent.Plan,
-            webhookEvent.Status,
-            ResolvePaymentKind(webhookEvent),
-            webhookEvent.Amount,
-            webhookEvent.Currency,
-            webhookEvent.CurrentPeriodStartUtc,
-            webhookEvent.CurrentPeriodEndUtc,
-            webhookEvent.EventId,
-            webhookEvent.ProviderMetadataJson,
-            webhookEvent.Tax,
-            webhookEvent.Fee,
-            webhookEvent.Earnings,
-            webhookEvent.PayoutCurrency,
-            webhookEvent.PayoutEarnings,
-            webhookEvent.OccurredAtUtc);
+        var payment = BillingPayment.CreateWithFinancials(
+            userId: userId,
+            billingSubscriptionId: subscription?.TypedId,
+            provider: provider,
+            externalPaymentId: externalPaymentId,
+            externalCustomerId: webhookEvent.ExternalCustomerId,
+            externalSubscriptionId: webhookEvent.ExternalSubscriptionId,
+            externalPaymentMethodId: webhookEvent.ExternalPaymentMethodId,
+            externalPriceId: webhookEvent.ExternalPriceId,
+            plan: webhookEvent.Plan,
+            status: webhookEvent.Status,
+            kind: ResolvePaymentKind(webhookEvent),
+            financials: BillingPaymentFinancials.FromFields(
+            amount: webhookEvent.Amount,
+            currency: webhookEvent.Currency,
+            tax: webhookEvent.Tax,
+            fee: webhookEvent.Fee,
+            earnings: webhookEvent.Earnings,
+            payoutCurrency: webhookEvent.PayoutCurrency,
+            payoutEarnings: webhookEvent.PayoutEarnings),
+            currentPeriodStartUtc: webhookEvent.CurrentPeriodStartUtc,
+            currentPeriodEndUtc: webhookEvent.CurrentPeriodEndUtc,
+            webhookEventId: webhookEvent.EventId,
+            providerMetadataJson: webhookEvent.ProviderMetadataJson,
+            occurredAtUtc: webhookEvent.OccurredAtUtc);
         await billingPaymentRepository.AddAsync(payment, cancellationToken).ConfigureAwait(false);
     }
 

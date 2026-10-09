@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
@@ -48,7 +49,7 @@ public sealed class ConfirmImageUploadCommandHandler(
             ImageObjectValidationResult validation;
             try {
                 validation = await imageStorageService
-                    .ConfirmUploadedObjectAsync(asset.ObjectKey, cancellationToken)
+                    .ConfirmUploadedObjectAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), cancellationToken)
                     .ConfigureAwait(false);
             } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
                 throw;
@@ -62,7 +63,7 @@ public sealed class ConfirmImageUploadCommandHandler(
             }
 
             asset.Confirm();
-            await deletionOutbox.EnqueueAsync(asset.ObjectKey, isConfirmed: false, cancellationToken).ConfigureAwait(false);
+            await deletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), isConfirmed: false, cancellationToken).ConfigureAwait(false);
             await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             // Never delete the published object on persistence failure: commit may have succeeded.
             // Pending assets are reclaimed by orphan cleanup, which handles both buckets.

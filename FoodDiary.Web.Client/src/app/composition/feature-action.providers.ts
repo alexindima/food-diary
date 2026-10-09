@@ -18,6 +18,7 @@ import type { RecipeService } from '../features/recipes/api/recipe.service';
 import { RECIPE_LOOKUP, type RecipeLookup } from '../features/recipes/contracts/recipe-lookup';
 import type { UsdaService } from '../features/usda/api/usda.service';
 import { USDA_PRODUCT_LINK, type UsdaProductLink } from '../features/usda/contracts/usda-product-link';
+import { entityId } from '../shared/models/semantics/entity-id';
 import { lazyFeatureAction } from './lazy-feature-action';
 
 // Bind capabilities to their owning implementation only at the composition root.
@@ -30,7 +31,7 @@ export const FEATURE_ACTION_PROVIDERS: Provider[] = [
                 const { RecipeService } = await import('../features/recipes/api/recipe.service');
                 return RecipeService;
             };
-            return { getById: id => lazyFeatureAction(injector, loadAsync, service => service.getById(id)) };
+            return { getById: id => lazyFeatureAction(injector, loadAsync, service => service.getById(entityId<'recipe'>(id))) };
         },
     },
     {

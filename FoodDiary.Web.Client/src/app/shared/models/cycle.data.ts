@@ -1,3 +1,15 @@
+import type { CalendarDate, UtcInstant } from './semantics/date-value';
+import type {
+    BleedingEntryId,
+    CycleConsentId,
+    CycleFactorId,
+    CyclePredictionRevisionId,
+    CycleProfileId,
+    CycleSymptomEntryId,
+    FertilitySignalId,
+    MenstrualEpisodeId,
+    UserId,
+} from './semantics/entity-id';
 export const CYCLE_TRACKING_MODE_PERIOD_TRACKING = 0;
 export const CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE = 1;
 export const CYCLE_TRACKING_MODE_PREGNANCY = 2;
@@ -101,9 +113,9 @@ export type CycleFactorType =
     | typeof CYCLE_FACTOR_TYPE_NO_PERIOD;
 
 export type BleedingEntry = {
-    id: string;
-    cycleProfileId: string;
-    date: string;
+    id: BleedingEntryId;
+    cycleProfileId: CycleProfileId;
+    date: CalendarDate;
     type: BleedingType;
     flow: CycleFlowLevel;
     painImpact?: number | null;
@@ -111,9 +123,9 @@ export type BleedingEntry = {
 };
 
 export type CycleSymptomEntry = {
-    id: string;
-    cycleProfileId: string;
-    date: string;
+    id: CycleSymptomEntryId;
+    cycleProfileId: CycleProfileId;
+    date: CalendarDate;
     category: CycleSymptomCategory;
     intensity: number;
     tags: string[];
@@ -121,18 +133,18 @@ export type CycleSymptomEntry = {
 };
 
 export type CycleFactor = {
-    id: string;
-    cycleProfileId: string;
+    id: CycleFactorId;
+    cycleProfileId: CycleProfileId;
     type: CycleFactorType;
-    startDate: string;
-    endDate?: string | null;
+    startDate: CalendarDate;
+    endDate?: CalendarDate | null;
     notes?: string | null;
 };
 
 export type FertilitySignal = {
-    id: string;
-    cycleProfileId: string;
-    date: string;
+    id: FertilitySignalId;
+    cycleProfileId: CycleProfileId;
+    date: CalendarDate;
     basalBodyTemperatureCelsius?: number | null;
     ovulationTestResult?: OvulationTestResult | null;
     cervicalFluid?: string | null;
@@ -141,21 +153,21 @@ export type FertilitySignal = {
 };
 
 export type MenstrualEpisode = {
-    id: string;
-    cycleProfileId: string;
-    startDate: string;
-    endDate?: string | null;
+    id: MenstrualEpisodeId;
+    cycleProfileId: CycleProfileId;
+    startDate: CalendarDate;
+    endDate?: CalendarDate | null;
     status: number;
     excludedFromPredictions: boolean;
 };
 
 export type CyclePredictions = {
-    nextPeriodStartFrom?: string | null;
-    nextPeriodStartTo?: string | null;
-    ovulationFrom?: string | null;
-    ovulationTo?: string | null;
-    pmsWindowStart?: string | null;
-    pmsWindowEnd?: string | null;
+    nextPeriodStartFrom?: CalendarDate | null;
+    nextPeriodStartTo?: CalendarDate | null;
+    ovulationFrom?: CalendarDate | null;
+    ovulationTo?: CalendarDate | null;
+    pmsWindowStart?: CalendarDate | null;
+    pmsWindowEnd?: CalendarDate | null;
     confidence: string;
     rationale: string;
     dataSufficiency?: string;
@@ -171,18 +183,18 @@ export type CyclePredictions = {
 };
 
 export type CycleConsent = {
-    id: string;
+    id: CycleConsentId;
     purpose: CycleConsentPurpose;
-    grantedAtUtc: string;
-    revokedAtUtc?: string | null;
+    grantedAtUtc: UtcInstant;
+    revokedAtUtc?: UtcInstant | null;
     isActive: boolean;
 };
 
 export type CyclePredictionRevision = {
-    id: string;
-    generatedAtUtc: string;
-    nextPeriodStartFrom?: string | null;
-    nextPeriodStartTo?: string | null;
+    id: CyclePredictionRevisionId;
+    generatedAtUtc: UtcInstant;
+    nextPeriodStartFrom?: CalendarDate | null;
+    nextPeriodStartTo?: CalendarDate | null;
     confidence: string;
     dataSufficiency: string;
     patternConsistency: string;
@@ -195,8 +207,8 @@ export type CyclePredictionRevision = {
 };
 
 export type CycleNutritionSummary = {
-    dateFrom: string;
-    dateTo: string;
+    dateFrom: CalendarDate;
+    dateTo: CalendarDate;
     loggedCycleDays: number;
     daysWithMeals: number;
     bleedingDays: number;
@@ -215,16 +227,16 @@ export type CycleNutritionSummary = {
 };
 
 export type CycleDayNote = {
-    date: string;
+    date: CalendarDate;
     notes: string;
 };
 
 export type CycleResponse = {
-    id: string;
-    userId: string;
+    id: CycleProfileId;
+    userId: UserId;
     mode: CycleTrackingMode;
     confidence: CycleConfidence;
-    trackingStartDate: string;
+    trackingStartDate: CalendarDate;
     averageCycleLength: number;
     averagePeriodLength: number;
     lutealLength: number;
@@ -307,8 +319,8 @@ export type FertilitySignalPayload = {
 };
 
 export type CycleLogDay = {
-    cycleProfileId: string;
-    date: string;
+    cycleProfileId: CycleProfileId;
+    date: CalendarDate;
     bleedingEntries: BleedingEntry[];
     symptoms: CycleSymptomEntry[];
     fertilitySignal?: FertilitySignal | null;

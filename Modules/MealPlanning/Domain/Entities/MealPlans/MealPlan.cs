@@ -1,3 +1,4 @@
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.MealPlanning.Domain.Enums;
 using System.Globalization;
@@ -23,6 +24,29 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
     public IReadOnlyCollection<MealPlanDay> Days => _days.AsReadOnly();
 
     private MealPlan() {
+    }
+
+    public static MealPlan CreateCuratedWithDuration(string name, string? description, DietType dietType,
+        PlanDurationDays duration, double? targetCaloriesPerDay) {
+        ArgumentNullException.ThrowIfNull(duration);
+        return CreateCurated(name, description, dietType, duration.Value, targetCaloriesPerDay);
+    }
+
+    public static MealPlan CreateForUserWithDuration(UserIdType userId, string name, string? description,
+        DietType dietType, PlanDurationDays duration, double? targetCaloriesPerDay) {
+        ArgumentNullException.ThrowIfNull(duration);
+        return CreateForUser(userId, name, description, dietType, duration.Value, targetCaloriesPerDay);
+    }
+
+    public MealPlanDay AddTypedDay(PlanDayNumber day) {
+        ArgumentNullException.ThrowIfNull(day);
+        return AddDay(day.Value);
+    }
+
+    public void UpdateCatalogWithDuration(string name, string? description, DietType dietType,
+        PlanDurationDays duration, double? targetCaloriesPerDay, bool isPublished) {
+        ArgumentNullException.ThrowIfNull(duration);
+        UpdateCatalogDetails(name, description, dietType, duration.Value, targetCaloriesPerDay, isPublished);
     }
 
     public static MealPlan CreateCurated(

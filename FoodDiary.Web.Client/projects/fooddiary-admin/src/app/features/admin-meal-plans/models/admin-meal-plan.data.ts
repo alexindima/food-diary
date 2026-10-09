@@ -1,6 +1,7 @@
+import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 export type CatalogMeal = {
     mealType: string;
-    recipeId: string;
+    recipeId: AdminId<'recipe'>;
     recipeName?: string | null;
     servings: number;
 };
@@ -21,7 +22,7 @@ export type CatalogPlanRequest = {
 };
 
 export type CatalogPlan = {
-    id: string;
+    id: AdminId<'meal-plan'>;
     name: string;
     description: string | null;
     dietType: string;
@@ -32,7 +33,7 @@ export type CatalogPlan = {
 };
 
 export type CatalogPlanSummary = {
-    id: string;
+    id: AdminId<'meal-plan'>;
     name: string;
     description: string | null;
     dietType: string;
@@ -42,7 +43,7 @@ export type CatalogPlanSummary = {
 };
 
 export type CatalogRecipe = {
-    id: string;
+    id: AdminId<'recipe'>;
     name: string;
     servings: number;
 };

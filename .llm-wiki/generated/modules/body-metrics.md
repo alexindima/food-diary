@@ -84,6 +84,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Domain.Tests/BodyMetricsIdConversionTests.cs`
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Domain.Tests/Domain/MeasurementDayTests.cs`
+- [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Domain.Tests/Domain/TypedMeasuredValueTests.cs`
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Domain.Tests/Domain/TypedMeasurementDayTests.cs`
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Domain.Tests/Domain/WaistEntryInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Domain.Tests/Domain/WeightEntryInvariantTests.cs`

@@ -5,6 +5,8 @@ import type { Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import type { FavoriteProduct } from '../../../shared/models/product.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { FavoriteProductService } from './favorite-product.service';
 
 const BASE_URL = 'http://localhost:5300/api/v1/favorite-products';
@@ -78,7 +80,7 @@ describe('FavoriteProductService', () => {
     });
 
     it('should check favorite state', () => {
-        service.isFavorite('product-1').subscribe(result => {
+        service.isFavorite(entityId<'product'>('product-1')).subscribe(result => {
             expect(result).toBe(true);
         });
 
@@ -88,7 +90,7 @@ describe('FavoriteProductService', () => {
     });
 
     it('should return false when favorite check fails', () => {
-        service.isFavorite('product-1').subscribe(result => {
+        service.isFavorite(entityId<'product'>('product-1')).subscribe(result => {
             expect(result).toBe(false);
         });
 
@@ -99,7 +101,7 @@ describe('FavoriteProductService', () => {
     it('should add favorite product', () => {
         const favorite = createFavoriteProduct();
 
-        service.add('product-1', 'Apple', CREATED_PORTION_AMOUNT).subscribe(result => {
+        service.add(entityId<'product'>('product-1'), 'Apple', CREATED_PORTION_AMOUNT).subscribe(result => {
             expect(result).toEqual(favorite);
         });
 
@@ -112,7 +114,7 @@ describe('FavoriteProductService', () => {
     it('should update favorite product', () => {
         const favorite = createFavoriteProduct();
 
-        service.update('favorite-1', 'Apple', UPDATED_PORTION_AMOUNT).subscribe(result => {
+        service.update(entityId<'favorite-product'>('favorite-1'), 'Apple', UPDATED_PORTION_AMOUNT).subscribe(result => {
             expect(result).toEqual(favorite);
         });
 
@@ -123,7 +125,7 @@ describe('FavoriteProductService', () => {
     });
 
     it('should remove favorite product', () => {
-        service.remove('favorite-1').subscribe();
+        service.remove(entityId<'favorite-product'>('favorite-1')).subscribe();
 
         const req = httpMock.expectOne(`${BASE_URL}/favorite-1`);
         expect(req.request.method).toBe('DELETE');
@@ -133,10 +135,10 @@ describe('FavoriteProductService', () => {
 
 function createFavoriteProduct(): FavoriteProduct {
     return {
-        id: 'favorite-1',
-        productId: 'product-1',
+        id: entityId<'favorite-product'>('favorite-1'),
+        productId: entityId<'product'>('product-1'),
         name: 'Apple',
-        createdAtUtc: '2026-01-01T00:00:00Z',
+        createdAtUtc: utcInstant('2026-01-01T00:00:00Z'),
         productName: 'Apple',
         brand: 'Garden',
         barcode: '1234567890123',
@@ -161,10 +163,10 @@ describe('Favorite product mutation errors', () => {
     it.each(['add', 'update', 'remove'] as const)('propagates %s failure without emitting success', action => {
         const result: Observable<unknown> =
             action === 'add'
-                ? service.add('p1')
+                ? service.add(entityId<'product'>('p1'))
                 : action === 'update'
-                  ? service.update('f1', null, DEFAULT_PORTION_AMOUNT)
-                  : service.remove('f1');
+                  ? service.update(entityId<'favorite-product'>('f1'), null, DEFAULT_PORTION_AMOUNT)
+                  : service.remove(entityId<'favorite-product'>('f1'));
         let received: unknown;
         let emitted = false;
         result.subscribe({

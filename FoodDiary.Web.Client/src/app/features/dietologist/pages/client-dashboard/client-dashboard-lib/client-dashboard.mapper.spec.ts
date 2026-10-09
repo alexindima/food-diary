@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { calendarDate, utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { createClient } from '../../clients/dietologist-clients-lib/dietologist-clients.test-data';
 import {
     buildBodyTiles,
@@ -75,7 +77,7 @@ describe('client dashboard mapper', () => {
         });
         expect(buildBodyTiles(snapshot as never).map(tile => tile.value)).toEqual(['73 kg', '84 cm', '1500 ml', '4']);
         expect(buildBodyTiles(snapshot as never, createClient().permissions).map(tile => tile.value)).toEqual(['4']);
-        expect(buildGoalTiles({ id: 'client-1', email: 'client@example.com', dailyCalorieTarget: 1800 })).toHaveLength(
+        expect(buildGoalTiles({ id: entityId<'user'>('client-1'), email: 'client@example.com', dailyCalorieTarget: 1800 })).toHaveLength(
             EXPECTED_METRIC_TILE_COUNT,
         );
     });
@@ -87,9 +89,9 @@ describe('client dashboard wire projection', () => {
             meals: {
                 items: [
                     {
-                        id: 'meal-1',
+                        id: entityId<'meal'>('meal-1'),
                         mealType: 'Lunch',
-                        date: '',
+                        date: utcInstant(''),
                         totalCalories: 500,
                         totalProteins: 30,
                         totalFats: 10,
@@ -149,21 +151,21 @@ describe('client dashboard detail mapper', () => {
         expect(
             buildRecommendationViews([
                 {
-                    id: 'rec-1',
-                    dietologistUserId: 'diet-1',
+                    id: entityId<'recommendation'>('rec-1'),
+                    dietologistUserId: entityId<'user'>('diet-1'),
                     dietologistFirstName: null,
                     dietologistLastName: null,
                     text: 'More protein',
                     isRead: true,
-                    createdAtUtc: '2026-05-23T00:00:00Z',
-                    readAtUtc: '2026-05-23T01:00:00Z',
+                    createdAtUtc: utcInstant('2026-05-23T00:00:00Z'),
+                    readAtUtc: utcInstant('2026-05-23T01:00:00Z'),
                 },
             ]),
         ).toEqual([
             {
                 id: 'rec-1',
                 text: 'More protein',
-                createdAtUtc: '2026-05-23T00:00:00Z',
+                createdAtUtc: utcInstant('2026-05-23T00:00:00Z'),
                 statusKey: 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.READ',
             },
         ]);
@@ -184,13 +186,16 @@ function createDashboardSnapshot(): unknown {
             averageFiber: 21,
         },
         weeklyCalories: [],
-        weight: { latest: { date: '2026-05-23T00:00:00Z', weightKg: 73.2 }, previous: { date: '2026-05-22T00:00:00Z', weightKg: 72 } },
-        waist: { latest: { date: '2026-05-23T00:00:00Z', circumferenceCm: 84 }, previous: null, desiredWaistCm: 80 },
+        weight: {
+            latest: { date: calendarDate('2026-05-23T00:00:00Z'), weightKg: 73.2 },
+            previous: { date: calendarDate('2026-05-22T00:00:00Z'), weightKg: 72 },
+        },
+        waist: { latest: { date: calendarDate('2026-05-23T00:00:00Z'), circumferenceCm: 84 }, previous: null, desiredWaistCm: 80 },
         meals: {
             items: [
                 {
-                    id: 'meal-1',
-                    date: '2026-05-23T12:30:00Z',
+                    id: entityId<'meal'>('meal-1'),
+                    date: utcInstant('2026-05-23T12:30:00Z'),
                     mealType: 'Lunch',
                     comment: null,
                     totalCalories: 640,
@@ -204,8 +209,8 @@ function createDashboardSnapshot(): unknown {
         },
         hydration: { dateUtc: '2026-05-23T00:00:00Z', totalMl: 1500, goalMl: 2000 },
         currentFastingSession: {
-            id: 'fast-1',
-            startedAtUtc: '2026-05-23T00:00:00Z',
+            id: entityId<'fasting-session'>('fast-1'),
+            startedAtUtc: utcInstant('2026-05-23T00:00:00Z'),
             endedAtUtc: null,
             initialPlannedDurationHours: 16,
             addedDurationHours: 0,

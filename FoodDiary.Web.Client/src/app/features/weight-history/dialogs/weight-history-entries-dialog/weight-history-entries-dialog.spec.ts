@@ -5,6 +5,8 @@ import { of } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { calendarDate } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { WeightEntry } from '../../../../shared/models/weight-entry.data';
 import { WeightHistoryFacade } from '../../lib/weight-history.facade';
 import { WeightHistoryEntriesDialogComponent } from './weight-history-entries-dialog';
@@ -15,7 +17,12 @@ const FIXTURE_NOON_HOUR = 12;
 const FIXTURE_REFERENCE_MEASUREMENT = 80;
 const FIXTURE_PREVIOUS_MEASUREMENT = 82;
 const FIXTURE_NEGATIVE_2 = -2;
-const entry = (id: string, date: string, value: number): WeightEntry => ({ id, userId: 'u', date, weightKg: value });
+const entry = (id: string, date: string, value: number): WeightEntry => ({
+    id: entityId<'weight-entry'>(id),
+    userId: entityId<'user'>('u'),
+    date: calendarDate(date),
+    weightKg: value,
+});
 function setup(entries: WeightEntry[]): {
     fixture: ComponentFixture<WeightHistoryEntriesDialogComponent>;
     component: WeightHistoryEntriesDialogComponent;

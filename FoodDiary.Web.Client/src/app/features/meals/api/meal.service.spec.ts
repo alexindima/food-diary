@@ -13,6 +13,8 @@ import {
     MealSourceType,
 } from '../../../shared/models/meal.data';
 import type { PageOf } from '../../../shared/models/page-of.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { MealService } from './meal.service';
 
 const BASE_URL = 'http://localhost:5300/api/v1/meals';
@@ -28,8 +30,8 @@ const AI_TOTAL_CARBS = 67.09;
 const AI_TOTAL_FIBER = 13.79;
 const MANUAL_TOTAL_CALORIES = 350;
 const MOCK_MEAL_DTO: MealResponseDto = {
-    id: 'm1',
-    date: '2026-03-28',
+    id: entityId<'meal'>('m1'),
+    date: utcInstant('2026-03-28'),
     mealType: 'Lunch',
     comment: null,
     imageUrl: null,
@@ -135,7 +137,7 @@ describe('MealService query', () => {
 
 describe('MealService reads', () => {
     it('should get meal by id', () => {
-        service.getById('m1').subscribe(result => {
+        service.getById(entityId<'meal'>('m1')).subscribe(result => {
             expect(result).not.toBeNull();
             expect(result?.id).toBe('m1');
             expect(result?.date).toBe('2026-03-28');
@@ -148,7 +150,7 @@ describe('MealService reads', () => {
     });
 
     it('should return null on getById error', () => {
-        service.getById('nonexistent').subscribe(result => {
+        service.getById(entityId<'meal'>('nonexistent')).subscribe(result => {
             expect(result).toBeNull();
         });
 
@@ -157,7 +159,7 @@ describe('MealService reads', () => {
     });
 
     it('should normalize API meal type casing', () => {
-        service.getById('m1').subscribe(result => {
+        service.getById(entityId<'meal'>('m1')).subscribe(result => {
             expect(result?.mealType).toBe('LUNCH');
         });
 
@@ -168,7 +170,7 @@ describe('MealService reads', () => {
 
 describe('MealService AI nutrition mapping', () => {
     it('should treat legacy AI-only nutrition matching AI totals as automatic', () => {
-        service.getById('m1').subscribe(result => {
+        service.getById(entityId<'meal'>('m1')).subscribe(result => {
             expect(result?.isNutritionAutoCalculated).toBe(true);
         });
 
@@ -177,7 +179,7 @@ describe('MealService AI nutrition mapping', () => {
     });
 
     it('should keep manual mode when AI meal nutrition differs from AI totals', () => {
-        service.getById('m1').subscribe(result => {
+        service.getById(entityId<'meal'>('m1')).subscribe(result => {
             expect(result?.isNutritionAutoCalculated).toBe(false);
         });
 
@@ -232,7 +234,7 @@ describe('MealService update', () => {
             isNutritionAutoCalculated: true,
         };
 
-        service.update('m1', updateData).subscribe(result => {
+        service.update(entityId<'meal'>('m1'), updateData).subscribe(result => {
             expect(result).not.toBeNull();
             expect(result.id).toBe('m1');
         });
@@ -256,7 +258,7 @@ describe('MealService update', () => {
             isNutritionAutoCalculated: true,
         };
 
-        service.update('m1', updateData).subscribe({
+        service.update(entityId<'meal'>('m1'), updateData).subscribe({
             next: () => {
                 expect.fail('Expected update to fail');
             },
@@ -272,7 +274,7 @@ describe('MealService update', () => {
 
 describe('MealService delete', () => {
     it('should delete meal by id', () => {
-        service.deleteById('m1').subscribe();
+        service.deleteById(entityId<'meal'>('m1')).subscribe();
 
         const req = httpMock.expectOne(`${BASE_URL}/m1`);
         expect(req.request.method).toBe('DELETE');
@@ -280,7 +282,7 @@ describe('MealService delete', () => {
     });
 
     it('should rethrow delete errors', () => {
-        service.deleteById('m1').subscribe({
+        service.deleteById(entityId<'meal'>('m1')).subscribe({
             next: () => {
                 expect.fail('Expected delete to fail');
             },
@@ -372,7 +374,7 @@ describe('MealService daily overview', () => {
 describe('MealService real item snapshots', () => {
     it.each(['g', 'G', 'ml', 'ML', 'pcs', 'PCS', '', 'unknown', null, undefined])('normalizes product unit %s', unit => {
         const item: MealItemResponseDto = { id: 'i', mealId: 'm1', amount: 2, productId: 'p', productBaseUnit: unit };
-        service.getById('m1').subscribe(meal => {
+        service.getById(entityId<'meal'>('m1')).subscribe(meal => {
             expect(meal?.items[0].sourceType).toBe(MealSourceType.Product);
             expect(meal?.items[0].product).toMatchObject({
                 id: 'p',
@@ -421,7 +423,7 @@ describe('MealService populated snapshots', () => {
             recipeTotalFiber: 8,
             recipeTotalAlcohol: 0,
         };
-        service.getById('m1').subscribe(meal => {
+        service.getById(entityId<'meal'>('m1')).subscribe(meal => {
             expect(meal?.items[0]).toMatchObject({
                 amount: 2,
                 sourceAiItemId: 'ai-item',
@@ -461,7 +463,7 @@ describe('MealService populated snapshots', () => {
 
 describe('MealService missing snapshot fields', () => {
     it('defaults optional recipe snapshot fields and keeps absent sources null', () => {
-        service.getById('m1').subscribe(meal => {
+        service.getById(entityId<'meal'>('m1')).subscribe(meal => {
             expect(meal?.items[0].recipe).toMatchObject({
                 id: 'r',
                 name: '',
@@ -489,7 +491,7 @@ describe('MealService missing snapshot fields', () => {
 describe('MealService repeat and overview transport', () => {
     it.each(['Dinner', undefined])('repeats at the supplied instant with type %s and maps the result', type => {
         const date = '2026-01-01T21:00:00.000Z';
-        service.repeat('original', date, type).subscribe(meal => {
+        service.repeat(entityId<'meal'>('original'), utcInstant(date), type).subscribe(meal => {
             expect(meal.id).toBe('m1');
         });
         const request = httpMock.expectOne(`${BASE_URL}/original/repeat`);
@@ -499,7 +501,9 @@ describe('MealService repeat and overview transport', () => {
     });
     it.each(['repeat', 'overview'] as const)('propagates %s failures', operation => {
         const request: Observable<unknown> =
-            operation === 'repeat' ? service.repeat('m1', '2026-01-01T00:00:00Z') : service.queryOverview(1, DEFAULT_LIMIT, {});
+            operation === 'repeat'
+                ? service.repeat(entityId<'meal'>('m1'), utcInstant('2026-01-01T00:00:00Z'))
+                : service.queryOverview(1, DEFAULT_LIMIT, {});
         let failed = false;
         request.subscribe({
             next: () => {

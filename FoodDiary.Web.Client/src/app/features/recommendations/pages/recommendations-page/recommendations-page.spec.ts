@@ -6,15 +6,17 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { ClientTask, DietologistRecommendation } from '../../../../shared/models/dietologist.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { RecommendationsFacade } from '../../lib/recommendations.facade';
 import { RecommendationsPageComponent } from './recommendations-page';
 
 describe('RecommendationsPageComponent loading', () => {
     it('loads recommendations and maps names, selected state and unread state', () => {
-        const selectedRecommendation = createRecommendation({ id: 'selected-1', isRead: true });
+        const selectedRecommendation = createRecommendation({ id: entityId<'recommendation'>('selected-1'), isRead: true });
         const genericRecommendation = createRecommendation({
-            id: 'generic-1',
+            id: entityId<'recommendation'>('generic-1'),
             dietologistFirstName: null,
             dietologistLastName: null,
         });
@@ -66,7 +68,7 @@ describe('RecommendationsPageComponent loading', () => {
 
 describe('RecommendationsPageComponent mark read', () => {
     it('marks the selected recommendation as read after recommendations load', () => {
-        const recommendation = createRecommendation({ id: 'recommendation-1', isRead: false });
+        const recommendation = createRecommendation({ id: entityId<'recommendation'>('recommendation-1'), isRead: false });
         const { component, facade } = createComponent({
             recommendations: [recommendation],
             recommendationId: recommendation.id,
@@ -81,7 +83,7 @@ describe('RecommendationsPageComponent mark read', () => {
     });
 
     it('marks a recommendation as read when it is clicked', () => {
-        const recommendation = createRecommendation({ id: 'recommendation-1', isRead: false });
+        const recommendation = createRecommendation({ id: entityId<'recommendation'>('recommendation-1'), isRead: false });
         const { component, facade } = createComponent({ recommendations: [recommendation] });
 
         component['markRecommendationAsRead'](recommendation);
@@ -138,7 +140,7 @@ describe('RecommendationsPageComponent mark read', () => {
 describe('RecommendationsPageComponent route and tour', () => {
     it('marks a recommendation when query params select it after initial load', () => {
         const queryParams$ = new BehaviorSubject(convertToParamMap({}));
-        const recommendation = createRecommendation({ id: 'recommendation-1', isRead: false });
+        const recommendation = createRecommendation({ id: entityId<'recommendation'>('recommendation-1'), isRead: false });
         const { facade } = createComponent({ recommendations: [recommendation], queryParams$ });
 
         queryParams$.next(convertToParamMap({ recommendationId: recommendation.id }));
@@ -185,15 +187,15 @@ describe('RecommendationsPageComponent task action recovery', () => {
     it('preserves a task after failure and updates it after retry', () => {
         const { component, facade } = createComponent();
         const task: ClientTask = {
-            id: 'task-1',
-            dietologistUserId: 'diet-1',
-            clientUserId: 'client-1',
+            id: entityId<'client-task'>('task-1'),
+            dietologistUserId: entityId<'user'>('diet-1'),
+            clientUserId: entityId<'user'>('client-1'),
             title: 'Review breakfast',
             details: null,
             dueAtUtc: null,
             status: 'Open',
             isOverdue: false,
-            createdAtUtc: '2026-05-01T10:00:00Z',
+            createdAtUtc: utcInstant('2026-05-01T10:00:00Z'),
             statusChangedAtUtc: null,
         };
         component['tasks'].set([task]);
@@ -268,7 +270,9 @@ function createQueryParams(options: CreateComponentOptions): BehaviorSubject<Ret
     }
 
     return new BehaviorSubject(
-        convertToParamMap(options.recommendationId === undefined ? {} : { recommendationId: options.recommendationId }),
+        convertToParamMap(
+            options.recommendationId === undefined ? {} : { recommendationId: entityId<'recommendation'>(options.recommendationId) },
+        ),
     );
 }
 
@@ -290,13 +294,13 @@ function createMarkReadStream(options: CreateComponentOptions): Observable<void>
 
 function createRecommendation(overrides: Partial<DietologistRecommendation> = {}): DietologistRecommendation {
     return {
-        id: 'recommendation-1',
-        dietologistUserId: 'dietologist-1',
+        id: entityId<'recommendation'>('recommendation-1'),
+        dietologistUserId: entityId<'user'>('dietologist-1'),
         dietologistFirstName: 'Ada',
         dietologistLastName: 'Lovelace',
         text: 'Add a protein source to breakfast.',
         isRead: false,
-        createdAtUtc: '2026-05-01T10:00:00.000Z',
+        createdAtUtc: utcInstant('2026-05-01T10:00:00.000Z'),
         readAtUtc: null,
         ...overrides,
     };

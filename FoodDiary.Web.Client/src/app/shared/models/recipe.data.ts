@@ -3,6 +3,8 @@ import type { PageOf } from './page-of.data';
 import type { MeasurementUnit } from './product.data';
 import type { QualityGrade } from './quality-grade.data';
 import type { RecipeCategory } from './recipe-category';
+import type { UtcInstant } from './semantics/date-value';
+import type { FavoriteRecipeId, ImageAssetId, RecipeId } from './semantics/entity-id';
 
 export enum RecipeVisibility {
     Private = 'Private',
@@ -12,20 +14,20 @@ export enum RecipeVisibility {
 export type Recipe = {
     language?: string;
     languageConfirmed?: boolean;
-    id: string;
+    id: RecipeId;
     name: string;
     description?: string | null;
     comment?: string | null;
     category?: RecipeCategory | null;
     imageUrl?: string | null;
     images?: Array<{ imageAssetId: string; imageUrl: string }>;
-    imageAssetId?: string | null;
+    imageAssetId?: ImageAssetId | null;
     prepTime?: number | null;
     cookTime?: number | null;
     servings: number;
     visibility: RecipeVisibility;
     usageCount: number;
-    createdAt: string;
+    createdAt: UtcInstant;
     isOwnedByCurrentUser: boolean;
     qualityScore?: number | null;
     qualityGrade?: QualityGrade | null;
@@ -46,7 +48,7 @@ export type Recipe = {
     steps: RecipeStep[];
     nutrientChartData?: NutrientData;
     isFavorite?: boolean;
-    favoriteRecipeId?: string | null;
+    favoriteRecipeId?: FavoriteRecipeId | null;
 };
 
 export type RecipeStep = {
@@ -104,10 +106,10 @@ export type RecipeOverview = {
 };
 
 export type FavoriteRecipe = {
-    id: string;
-    recipeId: string;
+    id: FavoriteRecipeId;
+    recipeId: RecipeId;
     name?: string | null;
-    createdAtUtc: string;
+    createdAtUtc: UtcInstant;
     recipeName: string;
     imageUrl?: string | null;
     totalCalories?: number | null;

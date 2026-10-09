@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Outbox.Infrastructure.Options;
 using System.Globalization;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
@@ -16,7 +17,7 @@ public sealed class ImageObjectDeletionOutboxTests {
         await using FoodDiaryDbContext context = CreateContext();
         var outbox = new ImageObjectDeletionOutbox(context.ImageObjectDeletionOutbox, TimeProvider.System);
 
-        await outbox.EnqueueAsync("users/test/image.webp", CancellationToken.None);
+        await outbox.EnqueueAsync(ObjectStorageKey.FromStoredValue("users/test/image.webp"), CancellationToken.None);
         await context.SaveChangesAsync();
 
         ImageObjectDeletionOutboxMessage message = Assert.Single(context.ImageObjectDeletionOutbox);
@@ -132,12 +133,12 @@ public sealed class ImageObjectDeletionOutboxTests {
             CancellationToken cancellationToken) =>
             throw new NotSupportedException();
 
-        public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) {
-            DeletedObjectKeys.Add(objectKey);
+        public Task DeleteAsync(ObjectStorageKey key, CancellationToken cancellationToken) {
+            DeletedObjectKeys.Add(key.Value);
             return Task.CompletedTask;
         }
 
-        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(string objectKey, CancellationToken cancellationToken) =>
+        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(ObjectStorageKey key, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
     }
 
@@ -151,10 +152,10 @@ public sealed class ImageObjectDeletionOutboxTests {
             CancellationToken cancellationToken) =>
             throw new NotSupportedException();
 
-        public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) =>
+        public Task DeleteAsync(ObjectStorageKey key, CancellationToken cancellationToken) =>
             Task.FromException(new InvalidOperationException("Simulated storage failure."));
 
-        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(string objectKey, CancellationToken cancellationToken) =>
+        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(ObjectStorageKey key, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
     }
 }

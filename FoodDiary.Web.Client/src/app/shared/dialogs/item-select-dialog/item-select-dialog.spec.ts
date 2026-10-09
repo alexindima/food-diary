@@ -8,6 +8,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../models/product.data';
 import { type Recipe, RecipeVisibility } from '../../models/recipe.data';
+import { utcInstant } from '../../models/semantics/date-value';
+import { entityId } from '../../models/semantics/entity-id';
 import { ItemSelectDialogComponent } from './item-select-dialog';
 
 const BASE_AMOUNT = 100;
@@ -22,7 +24,7 @@ const QUALITY_SCORE = 85;
 const SERVINGS = 2;
 
 const product: Product = {
-    id: 'product-id',
+    id: entityId<'product'>('product-id'),
     name: 'Apple',
     productType: ProductType.Fruit,
     baseUnit: MeasurementUnit.G,
@@ -42,12 +44,12 @@ const product: Product = {
     qualityGrade: 'green',
 };
 const recipe: Recipe = {
-    id: 'recipe-id',
+    id: entityId<'recipe'>('recipe-id'),
     name: 'Porridge',
     servings: SERVINGS,
     visibility: RecipeVisibility.Public,
     usageCount: ZERO_VALUE,
-    createdAt: '2026-01-01T00:00:00.000Z',
+    createdAt: utcInstant('2026-01-01T00:00:00.000Z'),
     isOwnedByCurrentUser: true,
     isNutritionAutoCalculated: true,
     steps: [],

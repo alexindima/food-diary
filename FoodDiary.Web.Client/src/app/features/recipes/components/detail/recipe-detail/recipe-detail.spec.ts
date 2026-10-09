@@ -9,6 +9,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { RecipeService } from '../../../api/recipe.service';
 import { RecipeDetailComponent } from './recipe-detail';
 
@@ -33,7 +35,7 @@ const SUGAR_AMOUNT = 50;
 const SUGAR_CALORIES_PER_BASE = 387;
 
 const mockRecipe: Recipe = {
-    id: '1',
+    id: entityId<'recipe'>('1'),
     name: 'Test Recipe',
     comment: null,
     isOwnedByCurrentUser: true,
@@ -48,7 +50,7 @@ const mockRecipe: Recipe = {
     totalAlcohol: 0,
     visibility: RecipeVisibility.Private,
     usageCount: 0,
-    createdAt: '2024-01-01',
+    createdAt: utcInstant('2024-01-01'),
     isNutritionAutoCalculated: true,
     steps: [
         {
@@ -103,7 +105,7 @@ const mockFdDialogService = {
 };
 
 const mockRecipeService = {
-    duplicate: vi.fn().mockReturnValue(of({ ...mockRecipe, id: '2', name: 'Test Recipe (Copy)' })),
+    duplicate: vi.fn().mockReturnValue(of({ ...mockRecipe, id: entityId<'recipe'>('2'), name: 'Test Recipe (Copy)' })),
 };
 
 beforeEach(async () => {

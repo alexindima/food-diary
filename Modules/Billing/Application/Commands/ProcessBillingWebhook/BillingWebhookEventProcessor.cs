@@ -26,7 +26,7 @@ public sealed class BillingWebhookEventProcessor(
             await billingTransactionRunner.ExecuteSerializedAsync(serializationKey, async ct => {
                 processingResult = Result.Success();
                 if (inboxEvent is not null) {
-                    inboxEvent = await billingWebhookEventRepository.GetByIdAsync(inboxEvent.Id, ct).ConfigureAwait(false)
+                    inboxEvent = await billingWebhookEventRepository.GetByIdAsync(inboxEvent.TypedId, ct).ConfigureAwait(false)
                         ?? throw new InvalidOperationException("The webhook inbox event no longer exists.");
                     if (inboxEvent.ProcessingState == BillingWebhookProcessingState.Processed) {
                         return;
@@ -65,7 +65,7 @@ public sealed class BillingWebhookEventProcessor(
             }
 
             await billingTransactionRunner.ExecuteAsync(async ct => {
-                inboxEvent = await billingWebhookEventRepository.GetByIdAsync(inboxEvent.Id, ct).ConfigureAwait(false)
+                inboxEvent = await billingWebhookEventRepository.GetByIdAsync(inboxEvent.TypedId, ct).ConfigureAwait(false)
                     ?? throw new InvalidOperationException("The webhook inbox event no longer exists.");
                 inboxEvent.MarkProcessed(timeProvider.GetUtcNow().UtcDateTime);
                 await billingWebhookEventRepository.UpdateAsync(inboxEvent, ct).ConfigureAwait(false);

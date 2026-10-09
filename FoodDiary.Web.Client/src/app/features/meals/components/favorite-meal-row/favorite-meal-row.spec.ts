@@ -6,17 +6,19 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { NutrientBadgesComponent } from '../../../../components/shared/nutrient-badges/nutrient-badges';
 import type { FavoriteMeal } from '../../../../shared/models/meal.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FavoriteMealRowComponent } from './favorite-meal-row';
 
 const meal: FavoriteMeal = {
-    id: 'f1',
-    mealId: 'm1',
+    id: entityId<'favorite-meal'>('f1'),
+    mealId: entityId<'meal'>('m1'),
     name: 'My lunch',
     mealType: 'Lunch',
     itemNames: ['Rice', 'Chicken'],
     imageUrl: 'https://example.com/meal.jpg',
-    createdAtUtc: '',
-    mealDate: '',
+    createdAtUtc: utcInstant(''),
+    mealDate: utcInstant(''),
     totalCalories: 500,
     totalProteins: 30,
     totalFats: 10,

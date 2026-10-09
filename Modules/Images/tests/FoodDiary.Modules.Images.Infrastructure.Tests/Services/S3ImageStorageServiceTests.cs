@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Modules.Images.Infrastructure.Providers.Services;
 using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 using System.Diagnostics.Metrics;
@@ -43,8 +44,8 @@ public sealed class S3ImageStorageServiceTests {
             1024,
             CancellationToken.None);
 
-        Assert.NotNull(result.UploadUrl);
-        Assert.Contains("fooddiary-assets-staging", result.UploadUrl, StringComparison.Ordinal);
+        Assert.NotNull(result.UploadUrl.Value);
+        Assert.Contains("fooddiary-assets-staging", result.UploadUrl.Value, StringComparison.Ordinal);
         Assert.Equal(1, count);
         Assert.Equal("presign", operation);
         Assert.Equal("success", outcome);
@@ -134,8 +135,8 @@ public sealed class S3ImageStorageServiceTests {
             1024,
             CancellationToken.None);
 
-        Assert.Contains("meal-%231%3F.webp", result.FileUrl, StringComparison.Ordinal);
-        Assert.DoesNotContain("meal-#1?.webp", result.FileUrl, StringComparison.Ordinal);
+        Assert.Contains("meal-%231%3F.webp", result.FileUrl.Value, StringComparison.Ordinal);
+        Assert.DoesNotContain("meal-#1?.webp", result.FileUrl.Value, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -149,7 +150,7 @@ public sealed class S3ImageStorageServiceTests {
             1024,
             CancellationToken.None);
 
-        Assert.EndsWith("-image", result.ObjectKey, StringComparison.Ordinal);
+        Assert.EndsWith("-image", result.ObjectKey.Value, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -164,7 +165,7 @@ public sealed class S3ImageStorageServiceTests {
             1024,
             CancellationToken.None);
 
-        string storedName = result.ObjectKey.Split('-').Last();
+        string storedName = result.ObjectKey.Value.Split('-').Last();
         Assert.Equal(128, storedName.Length);
     }
 
@@ -179,7 +180,7 @@ public sealed class S3ImageStorageServiceTests {
             1024,
             CancellationToken.None);
 
-        Assert.StartsWith("https://cdn.example.com/assets/users/", result.FileUrl, StringComparison.Ordinal);
+        Assert.StartsWith("https://cdn.example.com/assets/users/", result.FileUrl.Value, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -187,7 +188,7 @@ public sealed class S3ImageStorageServiceTests {
         var storageClient = new CountingObjectStorageClient();
         S3ImageStorageService service = CreateService(storageClient);
 
-        await service.DeleteAsync("   ", CancellationToken.None);
+        await service.DeleteAsync(ObjectStorageKey.FromStoredValue("   "), CancellationToken.None);
 
         Assert.Equal(0, storageClient.DeleteCount);
     }
@@ -200,7 +201,7 @@ public sealed class S3ImageStorageServiceTests {
         S3ImageStorageService service = CreateService(storageClient);
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            service.DeleteAsync("   ", cancellationTokenSource.Token));
+            service.DeleteAsync(ObjectStorageKey.FromStoredValue("   "), cancellationTokenSource.Token));
 
         Assert.Equal(0, storageClient.DeleteCount);
     }
@@ -218,7 +219,7 @@ public sealed class S3ImageStorageServiceTests {
 
         S3ImageStorageService service = CreateService(new StubObjectStorageClient());
 
-        await service.DeleteAsync("users/test/image.webp", CancellationToken.None);
+        await service.DeleteAsync(ObjectStorageKey.FromStoredValue("users/test/image.webp"), CancellationToken.None);
 
         Assert.Equal(1, count);
         Assert.Equal("delete", operation);
@@ -239,7 +240,7 @@ public sealed class S3ImageStorageServiceTests {
         S3ImageStorageService service = CreateService(new ThrowingObjectStorageClient(new InvalidOperationException("boom")));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            service.DeleteAsync("users/test/image.webp", CancellationToken.None));
+            service.DeleteAsync(ObjectStorageKey.FromStoredValue("users/test/image.webp"), CancellationToken.None));
 
         Assert.Equal(1, count);
         Assert.Equal("delete", operation);
@@ -250,7 +251,7 @@ public sealed class S3ImageStorageServiceTests {
     public async Task UnconfiguredStorage_DeleteAsync_WhenObjectKeyBlank_Completes() {
         var service = new UnconfiguredImageStorageService();
 
-        await service.DeleteAsync("   ", CancellationToken.None);
+        await service.DeleteAsync(ObjectStorageKey.FromStoredValue("   "), CancellationToken.None);
     }
 
     [Fact]
@@ -258,7 +259,7 @@ public sealed class S3ImageStorageServiceTests {
         var service = new UnconfiguredImageStorageService();
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            service.DeleteAsync("users/test/image.webp", CancellationToken.None));
+            service.DeleteAsync(ObjectStorageKey.FromStoredValue("users/test/image.webp"), CancellationToken.None));
 
         Assert.Equal("Image storage is not configured.", exception.Message);
     }
@@ -276,7 +277,7 @@ public sealed class S3ImageStorageServiceTests {
         var storageClient = new StubObjectStorageClient();
         S3ImageStorageService service = CreateService(storageClient);
 
-        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None);
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync(ObjectStorageKey.FromStoredValue("users/test/image.webp"), CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.True(result.IsValid),
@@ -294,7 +295,7 @@ public sealed class S3ImageStorageServiceTests {
         S3ImageStorageService service = CreateService(new StubObjectStorageClient());
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            service.ValidateUploadedObjectAsync("   ", cancellationTokenSource.Token));
+            service.ValidateUploadedObjectAsync(ObjectStorageKey.FromStoredValue("   "), cancellationTokenSource.Token));
     }
 
     [Theory]
@@ -309,7 +310,7 @@ public sealed class S3ImageStorageServiceTests {
             new StoredObjectInfo(content.LongLength, contentType),
             content));
 
-        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image", CancellationToken.None);
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync(ObjectStorageKey.FromStoredValue("users/test/image"), CancellationToken.None);
 
         Assert.True(result.IsValid);
     }
@@ -321,7 +322,7 @@ public sealed class S3ImageStorageServiceTests {
             new StoredObjectInfo(content.LongLength, "image/gif"),
             content));
 
-        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.gif", CancellationToken.None);
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync(ObjectStorageKey.FromStoredValue("users/test/image.gif"), CancellationToken.None);
 
         Assert.True(result.IsValid);
     }
@@ -333,7 +334,7 @@ public sealed class S3ImageStorageServiceTests {
             new StoredObjectInfo(content.LongLength, "image/png"),
             content));
 
-        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.png", CancellationToken.None);
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync(ObjectStorageKey.FromStoredValue("users/test/image.png"), CancellationToken.None);
 
         Assert.False(result.IsValid);
         Assert.Equal("invalid_content", result.ErrorCode);
@@ -346,7 +347,7 @@ public sealed class S3ImageStorageServiceTests {
             new StoredObjectInfo(content.LongLength, "image/jpeg"),
             content));
 
-        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.jpg", CancellationToken.None);
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync(ObjectStorageKey.FromStoredValue("users/test/image.jpg"), CancellationToken.None);
 
         Assert.False(result.IsValid);
         Assert.Equal("invalid_content", result.ErrorCode);
@@ -356,7 +357,7 @@ public sealed class S3ImageStorageServiceTests {
     public async Task ValidateUploadedObjectAsync_WhenObjectKeyBlank_ReturnsInvalidKey() {
         S3ImageStorageService service = CreateService(new StubObjectStorageClient());
 
-        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("   ", CancellationToken.None);
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync(ObjectStorageKey.FromStoredValue("   "), CancellationToken.None);
 
         Assert.False(result.IsValid);
         Assert.Equal("invalid_key", result.ErrorCode);
@@ -372,7 +373,7 @@ public sealed class S3ImageStorageServiceTests {
         });
         S3ImageStorageService service = CreateService(new NullObjectStorageClient());
 
-        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None);
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync(ObjectStorageKey.FromStoredValue("users/test/image.webp"), CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.False(result.IsValid),
@@ -386,7 +387,7 @@ public sealed class S3ImageStorageServiceTests {
         S3ImageStorageService service = CreateService(new MissingContentObjectStorageClient());
 
         ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync(
-            "users/test/image.webp",
+            ObjectStorageKey.FromStoredValue("users/test/image.webp"),
             CancellationToken.None);
 
         Assert.False(result.IsValid);
@@ -397,7 +398,7 @@ public sealed class S3ImageStorageServiceTests {
     public async Task ValidateUploadedObjectAsync_WhenObjectIsEmpty_ReturnsEmpty() {
         S3ImageStorageService service = CreateService(new StubObjectStorageClient(new StoredObjectInfo(0, "image/webp")));
 
-        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None);
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync(ObjectStorageKey.FromStoredValue("users/test/image.webp"), CancellationToken.None);
 
         Assert.False(result.IsValid);
         Assert.Equal("empty", result.ErrorCode);
@@ -407,7 +408,7 @@ public sealed class S3ImageStorageServiceTests {
     public async Task ValidateUploadedObjectAsync_WhenObjectIsTooLarge_ReturnsInvalid() {
         S3ImageStorageService service = CreateService(new StubObjectStorageClient(new StoredObjectInfo(6 * 1024 * 1024, "image/webp")));
 
-        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None);
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync(ObjectStorageKey.FromStoredValue("users/test/image.webp"), CancellationToken.None);
 
         Assert.False(result.IsValid);
         Assert.Equal("too_large", result.ErrorCode);
@@ -417,7 +418,7 @@ public sealed class S3ImageStorageServiceTests {
     public async Task ValidateUploadedObjectAsync_WhenContentTypeIsUnsupported_ReturnsInvalid() {
         S3ImageStorageService service = CreateService(new StubObjectStorageClient(new StoredObjectInfo(1024, "text/plain")));
 
-        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.txt", CancellationToken.None);
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync(ObjectStorageKey.FromStoredValue("users/test/image.txt"), CancellationToken.None);
 
         Assert.False(result.IsValid);
         Assert.Equal("unsupported_type", result.ErrorCode);
@@ -436,7 +437,7 @@ public sealed class S3ImageStorageServiceTests {
         S3ImageStorageService service = CreateService(new ThrowingObjectStorageClient(new InvalidOperationException("boom")));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None));
+            service.ValidateUploadedObjectAsync(ObjectStorageKey.FromStoredValue("users/test/image.webp"), CancellationToken.None));
 
         Assert.Multiple(
             () => Assert.Equal("validate", operation),
@@ -450,7 +451,7 @@ public sealed class S3ImageStorageServiceTests {
             new ThrowingObjectStorageClient(new InvalidDataException("too large")));
 
         ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync(
-            "users/test/image.webp",
+            ObjectStorageKey.FromStoredValue("users/test/image.webp"),
             CancellationToken.None);
 
         Assert.False(result.IsValid);
@@ -465,7 +466,7 @@ public sealed class S3ImageStorageServiceTests {
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
             service.ValidateUploadedObjectAsync(
-                "users/test/image.webp",
+                ObjectStorageKey.FromStoredValue("users/test/image.webp"),
                 cancellationTokenSource.Token));
     }
 

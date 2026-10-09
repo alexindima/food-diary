@@ -6,6 +6,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { environment } from '../../../../environments/environment';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import { type Recipe, RecipeVisibility } from '../../../shared/models/recipe.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { ExploreRecipe } from '../models/explore.data';
 import { ExploreService } from './explore.service';
 
@@ -88,7 +90,7 @@ function createPage(): PageOf<ExploreRecipe> {
 
 function createRecipe(): Recipe {
     return {
-        id: 'recipe-1',
+        id: entityId<'recipe'>('recipe-1'),
         name: 'Soup',
         description: null,
         comment: null,
@@ -100,7 +102,7 @@ function createRecipe(): Recipe {
         servings: RECIPE_SERVINGS,
         visibility: RecipeVisibility.Public,
         usageCount: 0,
-        createdAt: '2026-05-16T10:00:00.000Z',
+        createdAt: utcInstant('2026-05-16T10:00:00.000Z'),
         isOwnedByCurrentUser: false,
         totalCalories: RECIPE_CALORIES,
         totalProteins: 0,

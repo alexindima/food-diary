@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Domain.ValueObjects;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.Application.Services;
@@ -547,20 +548,20 @@ public class AiValidatorsTests {
                 capturedCalls.LastImageUrl = call.ArgAt<string>(0);
                 capturedCalls.LastLanguage = call.ArgAt<string?>(1);
                 capturedCalls.LastDescription = call.ArgAt<string?>(2);
-                return Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(vision, "vision", "test", new AiUsageTokens(1, 1, 2)));
+                return Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(vision, "vision", "test", AiTokenUsage.FromCounts(1, 1, 2)));
             });
         client.ParseFoodTextAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 capturedCalls.WasParseFoodTextCalled = true;
                 capturedCalls.LastText = call.ArgAt<string>(0);
                 capturedCalls.LastLanguage = call.ArgAt<string?>(1);
-                return Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(vision, "text-parse", "test", new AiUsageTokens(1, 1, 2)));
+                return Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(vision, "text-parse", "test", AiTokenUsage.FromCounts(1, 1, 2)));
             });
         client.CalculateNutritionAsync(Arg.Any<IReadOnlyList<FoodVisionItemModel>>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(_ => {
                 capturedCalls.WasCalculateNutritionCalled = true;
                 var nutrition = new FoodNutritionModel(52, 0, 0, 14, 2, 0, [new FoodNutritionItemModel("apple", 120, "g", 52, 0, 0, 14, 2, 0)]);
-                return Result.Success(new OpenAiFoodClientResponse<FoodNutritionModel>(nutrition, "nutrition", "test", new AiUsageTokens(1, 1, 2)));
+                return Result.Success(new OpenAiFoodClientResponse<FoodNutritionModel>(nutrition, "nutrition", "test", AiTokenUsage.FromCounts(1, 1, 2)));
             });
         return client;
     }

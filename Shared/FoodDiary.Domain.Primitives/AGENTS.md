@@ -27,3 +27,5 @@ Public DomainGuard uses this owner's FoodDiary.Domain.Primitives namespace. Keep
 ## Generic value contracts
 
 EmailAddress and Visibility use this project's FoodDiary.Domain.Primitives namespace. Preserve EmailAddress normalization, MailAddress validation and exception behavior. Visibility remains Public=0 and Private=1. Feature calculations, language preference rules and aggregate length limits belong to their module owners.
+
+FieldChange<T> is a closed immutable Unchanged/Set/Clear value. Public factories live on non-generic FieldChanges. At optional-text boundaries, null means omission; supplied blank text remains Set(raw) so the owner retains its established clearing/category-validation behavior. Clear with blank text is permitted; clear with meaningful text conflicts.

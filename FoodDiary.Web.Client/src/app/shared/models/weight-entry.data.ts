@@ -1,7 +1,9 @@
+import type { CalendarDate } from './semantics/date-value';
+import type { UserId, WeightEntryId } from './semantics/entity-id';
 export type WeightEntry = {
-    id: string;
-    userId: string;
-    date: string;
+    id: WeightEntryId;
+    userId: UserId;
+    date: CalendarDate;
     weightKg: number;
 };
 
@@ -20,8 +22,8 @@ export type WeightEntryFilters = {
 };
 
 export type WeightEntrySummaryPoint = {
-    startDate: string;
-    endDate: string;
+    startDate: CalendarDate;
+    endDate: CalendarDate;
     averageWeightKg: number;
 };
 

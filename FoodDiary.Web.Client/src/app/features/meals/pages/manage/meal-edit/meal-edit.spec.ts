@@ -2,6 +2,8 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
 import type { Meal } from '../../../../../shared/models/meal.data';
+import { utcInstant } from '../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { MealEditComponent } from './meal-edit';
 
 describe('MealEditComponent', () => {
@@ -44,8 +46,8 @@ function setupComponent(): {
 
 function createMeal(overrides: Partial<Meal> = {}): Meal {
     return {
-        id: 'meal-1',
-        date: '2026-05-14T12:00:00Z',
+        id: entityId<'meal'>('meal-1'),
+        date: utcInstant('2026-05-14T12:00:00Z'),
         mealType: 'LUNCH',
         comment: null,
         imageUrl: null,

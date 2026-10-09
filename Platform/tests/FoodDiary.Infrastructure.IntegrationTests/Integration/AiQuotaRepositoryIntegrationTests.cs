@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Domain.ValueObjects;
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using System.Globalization;
 using System.Security.Cryptography;
@@ -113,7 +114,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
             inputLimit: 100,
             outputLimit: 50));
 
-        var usage = new AiQuotaUsage("nutrition", "gpt-test", 40, 10, 50);
+        var usage = new AiQuotaUsage("nutrition", "gpt-test", AiTokenUsage.FromCounts(40, 10, 50));
         await repository.ReconcileAsync(firstRequestId, usage);
         await repository.ReconcileAsync(firstRequestId, usage);
         AiQuotaReservationStatus secondReservation = await repository.ReserveAsync(CreateRequest(
@@ -213,7 +214,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
             outputTokens: 1,
             inputLimit: 1_000,
             outputLimit: 1_000));
-        await repository.ReconcileAsync(requestId, new AiQuotaUsage("nutrition", "gpt-test", 40, 10, 50));
+        await repository.ReconcileAsync(requestId, new AiQuotaUsage("nutrition", "gpt-test", AiTokenUsage.FromCounts(40, 10, 50)));
 
         await using var context = new AiDbContext(options);
         Assert.Single(await context.AiUsages.Where(item => item.UserId == userId).ToListAsync());
@@ -235,7 +236,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => repository.ReconcileAsync(
             requestId,
-            new AiQuotaUsage("nutrition", "gpt-test", 11, 10, 21)));
+            new AiQuotaUsage("nutrition", "gpt-test", AiTokenUsage.FromCounts(11, 10, 21))));
     }
 
     [RequiresDockerFact]
@@ -254,7 +255,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
         await repository.ReleaseAsync(requestId);
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            repository.ReconcileAsync(requestId, new AiQuotaUsage("nutrition", "gpt-test", 5, 5, 10)));
+            repository.ReconcileAsync(requestId, new AiQuotaUsage("nutrition", "gpt-test", AiTokenUsage.FromCounts(5, 5, 10))));
 
         Assert.Equal("Only pending or orphaned AI quota reservations can be reconciled.", exception.Message);
     }
@@ -272,7 +273,7 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
             outputTokens: 10,
             inputLimit: 100,
             outputLimit: 100));
-        await repository.ReconcileAsync(requestId, new AiQuotaUsage("nutrition", "gpt-test", 5, 5, 10));
+        await repository.ReconcileAsync(requestId, new AiQuotaUsage("nutrition", "gpt-test", AiTokenUsage.FromCounts(5, 5, 10)));
 
         await repository.ReleaseAsync(requestId);
 

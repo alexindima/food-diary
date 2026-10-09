@@ -25,6 +25,7 @@ import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { UserFacade } from '../../../shared/lib/user.facade';
 import type { FoodRecognitionJob } from '../../../shared/models/food-recognition.data';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
+import { imageSelection } from '../../../shared/models/image-upload.data';
 import { type SpeechRecognitionFailure, SpeechRecognitionService } from '../../../shared/platform/speech-recognition.service';
 import { AiConsentDialogComponent } from '../ai-consent-dialog/ai-consent-dialog';
 import { FoodRecognitionHistoryDialogComponent } from '../food-recognition-history/food-recognition-history-dialog';
@@ -276,7 +277,7 @@ export class AiInputBarComponent {
                 if (job !== undefined && job.isProductLabel !== true && !this.isDisabled()) {
                     this.dismissTextResult();
                     this.dismissPhotoResult();
-                    this.photoSelection.set({ assetId: job.imageAssetId, url: job.imageUrl });
+                    this.photoSelection.set(imageSelection(job.imageUrl, job.imageAssetId));
                     this.openPhotoResultDialog();
                     this.recognition.resumePhoto(job.id);
                 }
@@ -301,7 +302,7 @@ export class AiInputBarComponent {
     }
 
     protected onPhotoPreparationStarted(previewUrl: string): void {
-        this.photoSelection.set({ url: previewUrl, assetId: null });
+        this.photoSelection.set(imageSelection(previewUrl, null));
         this.photoIsPreparing.set(true);
         this.photoErrorKey.set(null);
         this.photoResults.set([]);

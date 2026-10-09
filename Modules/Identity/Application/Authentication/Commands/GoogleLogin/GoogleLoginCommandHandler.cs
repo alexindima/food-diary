@@ -70,9 +70,7 @@ public sealed class GoogleLoginCommandHandler(
 
         var notification = new NotificationRequest(
             principal.UserId,
-            NotificationTypes.PasswordSetupSuggested,
-            NotificationPayloads.Empty(),
-            referenceId);
+            NotificationIntent.PasswordSetupSuggested(referenceId));
         await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

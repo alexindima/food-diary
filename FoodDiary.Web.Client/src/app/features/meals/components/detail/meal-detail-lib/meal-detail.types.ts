@@ -1,6 +1,8 @@
+import type { MealId } from '../../../../../shared/models/semantics/entity-id';
+
 export class MealDetailActionResult {
     public constructor(
-        public id: string,
+        public id: MealId,
         public action: MealDetailAction,
         public favoriteChanged = false,
     ) {}

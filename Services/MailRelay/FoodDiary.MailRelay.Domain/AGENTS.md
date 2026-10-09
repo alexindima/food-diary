@@ -16,3 +16,5 @@ Rules for `Services/MailRelay/FoodDiary.MailRelay.Domain/`.
 
 ## Commands
 - Build: `dotnet build Services/MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj`
+
+QueuedEmailProcessingState owns the internal lifecycle with QueuedEmailStateCodec preserving exact storage codes. Unrecognized historical/provider vocabulary has no canonical write code. QueuedEmailFailureDecision derives terminal status from Retry/Failed and cannot pair an unrelated state with an independent terminal flag. External delivery-event labels and SQL claiming/retry behavior remain unchanged.

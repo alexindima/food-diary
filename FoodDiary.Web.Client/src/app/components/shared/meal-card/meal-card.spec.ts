@@ -10,13 +10,15 @@ import { provideTranslateTesting } from '../../../../testing/translate-testing.m
 // eslint-disable-next-line scope-imports/shared-ui -- shared card spec needs the concrete feature favorite service token
 import { FavoriteMealService } from '../../../features/meals/api/favorite-meal.service';
 import { AuthService } from '../../../services/auth.service';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { MealCardComponent, type MealCardItem } from './meal-card';
 
 const ITEM_COUNT = 3;
 const AI_ITEM_COUNT = 6;
 const MOCK_MEAL: MealCardItem = {
-    id: 'meal-1',
-    date: '2026-03-28T12:30:00',
+    id: entityId<'meal'>('meal-1'),
+    date: utcInstant('2026-03-28T12:30:00'),
     mealType: 'LUNCH',
     comment: 'Late lunch after training',
     totalCalories: 650,

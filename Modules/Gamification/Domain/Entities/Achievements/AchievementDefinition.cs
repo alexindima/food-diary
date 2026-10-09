@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Gamification.Domain.ValueObjects;
 using FoodDiary.Modules.Gamification.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
 using FoodDiary.Modules.Gamification.Domain.Contracts.Entities.Achievements;
@@ -26,6 +27,25 @@ public sealed class AchievementDefinition : Entity<AchievementDefinitionId> {
     public int Version { get; private set; }
 
     private AchievementDefinition() {
+    }
+
+    public AchievementTarget GetTarget() => AchievementTarget.FromStoredFields(Metric, Threshold);
+
+    public static AchievementDefinition CreateWithTarget(
+        string key, string category, AchievementTarget target,
+        string titleRu, string titleEn, string descriptionRu, string descriptionEn,
+        string icon, int sortOrder, bool isActive = true) {
+        ArgumentNullException.ThrowIfNull(target);
+        return Create(key, category, target.Metric, target.Threshold,
+            titleRu, titleEn, descriptionRu, descriptionEn, icon, sortOrder, isActive);
+    }
+
+    public void UpdateTarget(string category, AchievementTarget target,
+        string titleRu, string titleEn, string descriptionRu, string descriptionEn,
+        string icon, int sortOrder, bool isActive) {
+        ArgumentNullException.ThrowIfNull(target);
+        Update(category, target.Metric, target.Threshold,
+            titleRu, titleEn, descriptionRu, descriptionEn, icon, sortOrder, isActive);
     }
 
     public static AchievementDefinition Create(

@@ -1,10 +1,11 @@
+import type { AdminId, AdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 export type AdminAiPrompt = {
-    id: string;
+    id: AdminId<'ai-prompt'>;
     key: string;
     locale: string;
     promptText: string;
     version: number;
     isActive: boolean;
-    createdOnUtc: string;
-    updatedOnUtc: string | null;
+    createdOnUtc: AdminUtcInstant;
+    updatedOnUtc: AdminUtcInstant | null;
 };

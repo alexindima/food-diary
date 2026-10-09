@@ -11,6 +11,7 @@ import {
     type ConfirmDeleteDialogData,
 } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import type { Meal } from '../../../../shared/models/meal.data';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealDetailActionResult } from '../../components/detail/meal-detail-lib/meal-detail.types';
 
@@ -123,7 +124,7 @@ export class MealDetailFacade {
     private removeFavorite(meal: Meal): void {
         if (this.favoriteMealId !== null && this.favoriteMealId.length > 0) {
             this.favoriteMealService
-                .remove(this.favoriteMealId)
+                .remove(entityId<'favorite-meal'>(this.favoriteMealId))
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe({
                     next: () => {

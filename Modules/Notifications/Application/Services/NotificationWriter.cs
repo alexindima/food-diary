@@ -11,7 +11,8 @@ public sealed class NotificationWriter(
         NotificationRequest request,
         bool sendWebPush = false,
         CancellationToken cancellationToken = default) {
-        var notification = Notification.Create(request.UserId, request.Type, request.PayloadJson, request.ReferenceId);
+        NotificationIntent intent = request.Intent;
+        var notification = Notification.Create(request.UserId, intent.Type, intent.PayloadJson, intent.ReferenceId);
         await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
 
         if (sendWebPush) {

@@ -6,6 +6,8 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { type FavoriteRecipe, type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FavoriteRecipeService } from '../../api/favorite-recipe.service';
 import { RecipeService } from '../../api/recipe.service';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
@@ -28,7 +30,7 @@ let dialogService: { open: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
     recipeService = {
-        duplicate: vi.fn().mockReturnValue(of(createRecipe({ id: DUPLICATED_RECIPE_ID }))),
+        duplicate: vi.fn().mockReturnValue(of(createRecipe({ id: entityId<'recipe'>(DUPLICATED_RECIPE_ID) }))),
     };
     favoriteRecipeService = {
         add: vi.fn().mockReturnValue(of(createFavoriteRecipe())),
@@ -155,9 +157,9 @@ describe('RecipeDetailFacade favorites', () => {
 
     it('removes favorite by existing favorite id', () => {
         favoriteRecipeService.isFavorite.mockReturnValueOnce(of(true));
-        facade.initialize(createRecipe({ isFavorite: true, favoriteRecipeId: FAVORITE_ID }));
+        facade.initialize(createRecipe({ isFavorite: true, favoriteRecipeId: entityId<'favorite-recipe'>(FAVORITE_ID) }));
 
-        facade.toggleFavorite(createRecipe({ isFavorite: true, favoriteRecipeId: FAVORITE_ID }));
+        facade.toggleFavorite(createRecipe({ isFavorite: true, favoriteRecipeId: entityId<'favorite-recipe'>(FAVORITE_ID) }));
 
         expect(favoriteRecipeService.remove).toHaveBeenCalledWith(FAVORITE_ID);
         expect(facade.isFavorite()).toBe(false);
@@ -188,12 +190,12 @@ describe('RecipeDetailFacade favorites', () => {
 
 function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
     return {
-        id: RECIPE_ID,
+        id: entityId<'recipe'>(RECIPE_ID),
         name: 'Recipe',
         servings: 1,
         visibility: RecipeVisibility.Public,
         usageCount: 0,
-        createdAt: '2026-01-01T00:00:00Z',
+        createdAt: utcInstant('2026-01-01T00:00:00Z'),
         isOwnedByCurrentUser: true,
         isNutritionAutoCalculated: true,
         isFavorite: false,
@@ -205,10 +207,10 @@ function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
 
 function createFavoriteRecipe(): FavoriteRecipe {
     return {
-        id: FAVORITE_ID,
-        recipeId: RECIPE_ID,
+        id: entityId<'favorite-recipe'>(FAVORITE_ID),
+        recipeId: entityId<'recipe'>(RECIPE_ID),
         name: 'Recipe',
-        createdAtUtc: '2026-01-01T00:00:00Z',
+        createdAtUtc: utcInstant('2026-01-01T00:00:00Z'),
         recipeName: 'Recipe',
         servings: 1,
         totalTimeMinutes: null,
@@ -244,7 +246,7 @@ describe('RecipeDetailFacade request lifecycle', () => {
 describe('RecipeDetailFacade favorite failures', () => {
     it.each([false, true])('preserves state and permits retry after mutation failure: %s', isFavorite => {
         favoriteRecipeService.isFavorite.mockReturnValue(of(isFavorite));
-        facade.initialize(createRecipe({ isFavorite, favoriteRecipeId: FAVORITE_ID }));
+        facade.initialize(createRecipe({ isFavorite, favoriteRecipeId: entityId<'favorite-recipe'>(FAVORITE_ID) }));
         const mutation = isFavorite ? favoriteRecipeService.remove : favoriteRecipeService.add;
         mutation.mockReturnValueOnce(throwError(() => new Error('offline')));
         facade.toggleFavorite(createRecipe());

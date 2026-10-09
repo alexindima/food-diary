@@ -4,12 +4,13 @@ import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { adminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminAchievementsFacade } from '../lib/admin-achievements.facade';
 import type { AdminAchievementDefinition } from '../models/admin-achievement.data';
 import { AdminAchievementsComponent } from './admin-achievements';
 
 const DEFINITION: AdminAchievementDefinition = {
-    id: 'definition-id',
+    id: adminId<'achievement-definition'>('definition-id'),
     key: 'meals_20',
     category: 'meals',
     metric: 'TotalMeals',

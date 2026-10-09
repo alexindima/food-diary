@@ -7,6 +7,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
 import { SessionEventsService } from '../auth/session-events.service';
+import { imageSelection } from '../models/image-upload.data';
+import { calendarDate } from '../models/semantics/date-value';
+import { entityId } from '../models/semantics/entity-id';
 import { type ChangePasswordRequest, UpdateUserAppearanceDto, UpdateUserDto, type User } from '../models/user.data';
 import { UserService } from './user.service';
 
@@ -21,7 +24,7 @@ const UPDATED_DESIRED_WEIGHT = 70;
 const UPDATED_THEME = 'dark';
 const UPDATED_UI_STYLE = 'compact';
 const MOCK_USER: User = {
-    id: 'user-1',
+    id: entityId<'user'>('user-1'),
     email: 'test@example.com',
     hasPassword: true,
     username: 'test-user',
@@ -58,7 +61,7 @@ describe('UserService info', () => {
         service.getInfo().subscribe(user => {
             expect(user?.birthDate).toBe('2000-10-02');
         });
-        httpMock.expectOne(`${BASE_URL}/info`).flush({ ...MOCK_USER, birthDate: '2000-10-02' });
+        httpMock.expectOne(`${BASE_URL}/info`).flush({ ...MOCK_USER, birthDate: calendarDate('2000-10-02') });
     });
     it('should get user info and update signal', () => {
         service.getInfo().subscribe(result => {
@@ -206,7 +209,7 @@ describe('UserService optional birth date', () => {
 });
 
 describe('UserService optional avatar', () => {
-    it.each([null, '', { url: null, assetId: null }])('transmits a cleared selection as explicit null fields: %j', profileImage => {
+    it.each([null, '', imageSelection(null, null)])('transmits a cleared selection as explicit null fields: %j', profileImage => {
         service.update(new UpdateUserDto({ profileImage })).subscribe();
 
         const req = httpMock.expectOne(`${BASE_URL}/info`);
@@ -223,7 +226,7 @@ describe('UserService optional avatar', () => {
     });
 
     it('transmits the selected image URL and asset together', () => {
-        const image = { url: 'https://example.test/avatar.png', assetId: 'a596aacf-054e-4c1b-82f9-cd0e464a3e71' };
+        const image = imageSelection('https://example.test/avatar.png', 'a596aacf-054e-4c1b-82f9-cd0e464a3e71');
         service.update(new UpdateUserDto({ profileImage: image })).subscribe();
 
         const req = httpMock.expectOne(`${BASE_URL}/info`);

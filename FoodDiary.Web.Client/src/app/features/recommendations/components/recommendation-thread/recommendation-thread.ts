@@ -5,6 +5,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
 import { LocalizedDatePipe } from '../../../../shared/i18n/localized-date.pipe';
 import type { RecommendationComment } from '../../../../shared/models/dietologist.data';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { RecommendationsFacade } from '../../lib/recommendations.facade';
 
 const COMMENT_MAX_LENGTH = 2000;
@@ -51,7 +52,7 @@ export class RecommendationThreadComponent {
         this.saving.set(true);
         this.errorKey.set(null);
         this.recommendationsFacade
-            .createComment(this.recommendationId(), { text })
+            .createComment(entityId<'recommendation'>(this.recommendationId()), { text })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: comment => {
@@ -79,7 +80,7 @@ export class RecommendationThreadComponent {
         this.loading.set(true);
         this.errorKey.set(null);
         this.recommendationsFacade
-            .getComments(recommendationId)
+            .getComments(entityId<'recommendation'>(recommendationId))
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: comments => {

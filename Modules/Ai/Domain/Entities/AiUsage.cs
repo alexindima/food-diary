@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
 using System.Globalization;
@@ -29,19 +30,27 @@ public sealed class AiUsage : Entity<AiUsageId> {
         EnsureUserId(userId);
         string normalizedOperation = NormalizeRequiredText(operation, OperationMaxLength, nameof(operation));
         string normalizedModel = NormalizeRequiredText(model, ModelMaxLength, nameof(model));
-        int normalizedInputTokens = NormalizeNonNegative(inputTokens, nameof(inputTokens));
-        int normalizedOutputTokens = NormalizeNonNegative(outputTokens, nameof(outputTokens));
-        int normalizedTotalTokens = NormalizeNonNegative(totalTokens, nameof(totalTokens));
-        EnsureTotalTokensConsistency(normalizedInputTokens, normalizedOutputTokens, normalizedTotalTokens);
+        var tokens = AiTokenUsage.FromCounts(inputTokens, outputTokens, totalTokens);
+        return CreateCore(userId, normalizedOperation, normalizedModel, tokens);
+    }
 
+    public static AiUsage CreateWithTokens(UserId userId, string operation, string model, AiTokenUsage tokens) {
+        EnsureUserId(userId);
+        string normalizedOperation = NormalizeRequiredText(operation, OperationMaxLength, nameof(operation));
+        string normalizedModel = NormalizeRequiredText(model, ModelMaxLength, nameof(model));
+        ArgumentNullException.ThrowIfNull(tokens);
+        return CreateCore(userId, normalizedOperation, normalizedModel, tokens);
+    }
+
+    private static AiUsage CreateCore(UserId userId, string operation, string model, AiTokenUsage tokens) {
         var usage = new AiUsage {
             Id = AiUsageId.New(),
             UserId = userId,
-            Operation = normalizedOperation,
-            Model = normalizedModel,
-            InputTokens = normalizedInputTokens,
-            OutputTokens = normalizedOutputTokens,
-            TotalTokens = normalizedTotalTokens,
+            Operation = operation,
+            Model = model,
+            InputTokens = tokens.InputTokens,
+            OutputTokens = tokens.OutputTokens,
+            TotalTokens = tokens.TotalTokens,
         };
         usage.SetCreated();
         return usage;
@@ -64,18 +73,4 @@ public sealed class AiUsage : Entity<AiUsageId> {
             : normalized;
     }
 
-    private static int NormalizeNonNegative(int value, string paramName) {
-        return value < 0
-            ? throw new ArgumentOutOfRangeException(paramName, "Value cannot be negative.")
-            : value;
-    }
-
-    private static void EnsureTotalTokensConsistency(int inputTokens, int outputTokens, int totalTokens) {
-        long minimalTotal = (long)inputTokens + outputTokens;
-        if (totalTokens < minimalTotal) {
-            throw new ArgumentOutOfRangeException(
-                nameof(totalTokens),
-                "TotalTokens must be greater than or equal to InputTokens + OutputTokens.");
-        }
-    }
 }

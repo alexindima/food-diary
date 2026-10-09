@@ -10,6 +10,7 @@ import {
     type FertilitySignalPayload,
     type UpsertCycleDayPayload,
 } from '../../../shared/models/cycle.data';
+import { calendarDate } from '../../../shared/models/semantics/date-value';
 import { CyclesService } from '../api/cycles.service';
 import { buildDayEditModel, buildFertilitySignalPayload, buildSymptomClearCategories, buildSymptomPayload } from './cycle-day.mapper';
 import {
@@ -249,7 +250,7 @@ export class CycleDayFacade {
         this.state.clearingDayDate.set(date);
         let clearedOnServer = false;
         this.cyclesService
-            .clearDay(currentCycle.id, toCycleDateKey(date))
+            .clearDay(currentCycle.id, calendarDate(toCycleDateKey(date)))
             .pipe(takeUntilDestroyed(this.destroyRef))
             .pipe(
                 tap(() => {
@@ -316,7 +317,7 @@ export class CycleDayFacade {
         this.state.confirmingPeriodStartDate.set(date);
 
         this.cyclesService
-            .confirmPeriodStart(currentCycle.id, dateKey)
+            .confirmPeriodStart(currentCycle.id, calendarDate(dateKey))
             .pipe(takeUntilDestroyed(this.destroyRef))
             .pipe(
                 finalize(() => {

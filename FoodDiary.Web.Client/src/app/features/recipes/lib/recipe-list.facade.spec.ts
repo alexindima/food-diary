@@ -8,6 +8,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
 import { type FavoriteRecipe, RecipeVisibility } from '../../../shared/models/recipe.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { QuickMealService } from '../../meals/contracts/quick-meal';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import { RecipeService } from '../api/recipe.service';
@@ -17,12 +19,12 @@ import { RecipeListFacade } from './recipe-list.facade';
 const PAGE_LIMIT = 10;
 
 const recipe = {
-    id: 'recipe-1',
+    id: entityId<'recipe'>('recipe-1'),
     name: 'Recipe',
     servings: 1,
     visibility: RecipeVisibility.Public,
     usageCount: 0,
-    createdAt: '2026-04-02T00:00:00Z',
+    createdAt: utcInstant('2026-04-02T00:00:00Z'),
     isOwnedByCurrentUser: true,
     isNutritionAutoCalculated: true,
     steps: [],
@@ -170,7 +172,7 @@ describe('RecipeListFacade favorites', () => {
         facade.favoriteRecipes.set([favorite]);
         facade.favoriteTotalCount.set(1);
         facade.recipeData.setData({
-            data: [{ ...recipe, isFavorite: true, favoriteRecipeId: favorite.id }],
+            data: [{ ...recipe, isFavorite: true, favoriteRecipeId: favorite.id, id: recipe.id, createdAt: utcInstant(recipe.createdAt) }],
             page: 1,
             limit: PAGE_LIMIT,
             totalPages: 1,
@@ -235,10 +237,10 @@ describe('RecipeListFacade overview', () => {
 
 function createFavoriteRecipe(): FavoriteRecipe {
     return {
-        id: 'favorite-1',
-        recipeId: 'recipe-1',
+        id: entityId<'favorite-recipe'>('favorite-1'),
+        recipeId: entityId<'recipe'>('recipe-1'),
         name: 'Recipe',
-        createdAtUtc: '2026-04-02T00:00:00Z',
+        createdAtUtc: utcInstant('2026-04-02T00:00:00Z'),
         recipeName: 'Recipe',
         servings: 1,
         totalTimeMinutes: 10,
@@ -287,8 +289,8 @@ describe('RecipeListFacade actions', () => {
 describe('RecipeListFacade favorite picker', () => {
     it('restores the new server identity and uses it for the next removal', async () => {
         const favorite = createFavoriteRecipe();
-        favoriteRecipeService.add.mockReturnValueOnce(of({ ...favorite, id: 'restored-id' }));
-        facade.recentRecipes.set([{ ...recipe, isFavorite: false }]);
+        favoriteRecipeService.add.mockReturnValueOnce(of({ ...favorite, id: entityId<'favorite-recipe'>('restored-id') }));
+        facade.recentRecipes.set([{ ...recipe, isFavorite: false, id: recipe.id, createdAt: utcInstant(recipe.createdAt) }]);
         expect(await firstValueFrom(facade.restorePickerFavorite(favorite))).toBe(true);
         expect(favorite.id).toBe('restored-id');
         expect(facade.favoriteTotalCount()).toBe(1);
@@ -351,7 +353,7 @@ describe('RecipeListFacade competing requests', () => {
 
 describe('RecipeListFacade edge cases', () => {
     it.each([false, true])('reports favorite mutation errors without changing state and permits retry: %s', async isFavorite => {
-        const item = { ...recipe, isFavorite, favoriteRecipeId: 'favorite-1' };
+        const item = { ...recipe, isFavorite, favoriteRecipeId: entityId<'favorite-recipe'>('favorite-1') };
         facade.recipeData.items.set([item]);
         const mutation = isFavorite ? favoriteRecipeService.remove : favoriteRecipeService.add;
         mutation.mockReturnValueOnce(throwError(() => new Error('offline')));
@@ -375,7 +377,9 @@ describe('RecipeListFacade edge cases', () => {
     });
 
     it.each([{ isOwnedByCurrentUser: false }, { usageCount: 1 }])('does not delete a protected recipe: %s', async overrides => {
-        await firstValueFrom(facade.deleteRecipe({ ...recipe, ...overrides }, null, false));
+        await firstValueFrom(
+            facade.deleteRecipe({ ...recipe, ...overrides, id: recipe.id, createdAt: utcInstant(recipe.createdAt) }, null, false),
+        );
         expect(recipeService.deleteById).not.toHaveBeenCalled();
     });
 

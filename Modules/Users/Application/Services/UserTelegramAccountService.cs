@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Primitives;
 using System.Security.Cryptography;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Users.Application.Abstractions.Common;
@@ -44,7 +45,7 @@ internal sealed class UserTelegramAccountService(
         }
         user.SetLanguage(LanguageCode.FromPreferred(registration.Language).Value);
         user.SetTimeZone(registration.TimeZoneId);
-        user.UpdatePersonalInfo(firstName: registration.FirstName, lastName: registration.LastName);
+        user.UpdatePersonalInfoChanges(new UserPersonalInfoChanges(Username: null, registration.FirstName, registration.LastName, FieldChanges.Unchanged<DateTime>(), Gender: null, WeightKg: null, HeightCm: null));
         user.UpdateGoals(new UserGoalUpdate(
             DailyCalorieTarget: 2000,
             ProteinTarget: 150,

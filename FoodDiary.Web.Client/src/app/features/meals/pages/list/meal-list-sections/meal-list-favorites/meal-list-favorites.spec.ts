@@ -6,6 +6,8 @@ import { provideTranslateTesting } from '../../../../../../../testing/translate-
 import { FavoritesSectionComponent } from '../../../../../../components/shared/favorites-section/favorites-section';
 import { MealCardComponent } from '../../../../../../components/shared/meal-card/meal-card';
 import type { FavoriteMeal } from '../../../../../../shared/models/meal.data';
+import { utcInstant } from '../../../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../../../shared/models/semantics/entity-id';
 import type { FavoriteMealView } from '../../meal-list-lib/meal-list.types';
 import { MealListFavoritesComponent } from './meal-list-favorites';
 
@@ -50,7 +52,7 @@ describe('MealListFavoritesComponent', () => {
     it('should render favorite name and fallback translation key', async () => {
         const namedFavorite = createFavoriteView({ displayName: 'Lunch box' });
         const fallbackFavorite = createFavoriteView({
-            favorite: createFavorite({ id: 'favorite-2', mealId: 'meal-2' }),
+            favorite: createFavorite({ id: entityId<'favorite-meal'>('favorite-2'), mealId: entityId<'meal'>('meal-2') }),
             displayName: null,
             displayNameKey: 'MEAL_LIST.FAVORITE_UNNAMED',
         });
@@ -139,11 +141,11 @@ function createFavoriteView(overrides: Partial<FavoriteMealView> = {}): Favorite
 
 function createFavorite(overrides: Partial<FavoriteMeal> = {}): FavoriteMeal {
     return {
-        id: 'favorite-1',
-        mealId: 'meal-1',
+        id: entityId<'favorite-meal'>('favorite-1'),
+        mealId: entityId<'meal'>('meal-1'),
         name: null,
-        createdAtUtc: '2026-05-14T00:00:00Z',
-        mealDate: '2026-05-14T12:00:00Z',
+        createdAtUtc: utcInstant('2026-05-14T00:00:00Z'),
+        mealDate: utcInstant('2026-05-14T12:00:00Z'),
         mealType: 'LUNCH',
         totalCalories: 500,
         totalProteins: 30,

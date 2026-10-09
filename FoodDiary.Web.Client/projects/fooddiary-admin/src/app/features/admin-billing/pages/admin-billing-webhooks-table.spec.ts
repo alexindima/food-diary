@@ -3,22 +3,23 @@ import { provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import type { AdminBillingWebhookEventViewModel } from '../models/admin-billing-view.models';
 import { AdminBillingWebhooksTableComponent } from './admin-billing-webhooks-table';
 
 const PAYLOAD_JSON = '{"event":"invoice.paid"}';
 
 const webhookEvent: AdminBillingWebhookEventViewModel = {
-    id: 'webhook-1',
+    id: adminId<'billing-webhook-event'>('webhook-1'),
     provider: 'Stripe',
     eventId: 'evt_123',
     eventType: 'invoice.paid',
     externalObjectId: 'in_123',
     status: 'Processed',
-    processedAtUtc: '2026-01-05T00:00:00Z',
+    processedAtUtc: adminUtcInstant('2026-01-05T00:00:00Z'),
     payloadJson: PAYLOAD_JSON,
     errorMessage: null,
-    createdOnUtc: '2026-01-05T00:00:00Z',
+    createdOnUtc: adminUtcInstant('2026-01-05T00:00:00Z'),
     modifiedOnUtc: null,
     processedText: 'Jan 5, 2026',
     eventIdText: 'evt_123',

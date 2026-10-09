@@ -1,13 +1,19 @@
 import { describe, expect, it } from 'vitest';
 
+import { calendarDate } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { WaistEntrySummaryPoint } from '../../../shared/models/waist-entry.data';
 import { buildWaistEntryViewModels, buildWaistHistoryChartPoints } from './waist-history-chart.mapper';
 
 const CURRENT_YEAR = 2026;
 const AVERAGE_CIRCUMFERENCE = 82;
 const POINTS: WaistEntrySummaryPoint[] = [
-    { startDate: '2026-05-02T00:00:00Z', endDate: '2026-05-02T23:59:59Z', averageCircumferenceCm: AVERAGE_CIRCUMFERENCE },
-    { startDate: '2026-05-01T00:00:00Z', endDate: '2026-05-01T23:59:59Z', averageCircumferenceCm: 0 },
+    {
+        startDate: calendarDate('2026-05-02T00:00:00Z'),
+        endDate: calendarDate('2026-05-02T23:59:59Z'),
+        averageCircumferenceCm: AVERAGE_CIRCUMFERENCE,
+    },
+    { startDate: calendarDate('2026-05-01T00:00:00Z'), endDate: calendarDate('2026-05-01T23:59:59Z'), averageCircumferenceCm: 0 },
 ];
 
 describe('waist history chart mapper', () => {
@@ -21,11 +27,26 @@ describe('waist history chart mapper', () => {
     });
 
     it('builds entry view models with localized numeric dates', () => {
-        const items = buildWaistEntryViewModels([{ id: 'wa-1', userId: 'u-1', date: '2026-05-15T00:00:00Z', circumferenceCm: 81.5 }], 'en');
+        const items = buildWaistEntryViewModels(
+            [
+                {
+                    id: entityId<'waist-entry'>('wa-1'),
+                    userId: entityId<'user'>('u-1'),
+                    date: calendarDate('2026-05-15T00:00:00Z'),
+                    circumferenceCm: 81.5,
+                },
+            ],
+            'en',
+        );
 
         expect(items).toEqual([
             {
-                entry: { id: 'wa-1', userId: 'u-1', date: '2026-05-15T00:00:00Z', circumferenceCm: 81.5 },
+                entry: {
+                    id: entityId<'waist-entry'>('wa-1'),
+                    userId: entityId<'user'>('u-1'),
+                    date: calendarDate('2026-05-15T00:00:00Z'),
+                    circumferenceCm: 81.5,
+                },
                 dateLabel: '05/15/2026',
             },
         ]);
@@ -34,11 +55,19 @@ describe('waist history chart mapper', () => {
 
 describe('Chart date boundaries', () => {
     it('keeps malformed dates visible rather than crashing and preserves gaps', () => {
-        const entry = { id: 'invalid', userId: 'u', date: 'invalid', circumferenceCm: 80 };
+        const entry = {
+            id: entityId<'waist-entry'>('invalid'),
+            userId: entityId<'user'>('u'),
+            date: calendarDate('invalid'),
+            circumferenceCm: 80,
+        };
         expect(buildWaistEntryViewModels([entry], 'ru')[0].dateLabel).toBe('invalid');
-        expect(buildWaistHistoryChartPoints([{ startDate: 'invalid', endDate: 'invalid', averageCircumferenceCm: 0 }], 'ru')).toEqual([
-            { label: 'invalid', value: null },
-        ]);
+        expect(
+            buildWaistHistoryChartPoints(
+                [{ startDate: calendarDate('invalid'), endDate: calendarDate('invalid'), averageCircumferenceCm: 0 }],
+                'ru',
+            ),
+        ).toEqual([{ label: 'invalid', value: null }]);
         expect(buildWaistHistoryChartPoints([], 'ru')).toEqual([]);
     });
     it.each([
@@ -47,20 +76,40 @@ describe('Chart date boundaries', () => {
         { locale: 'en', date: '2025-05-01', expected: '01\nMay\n2025' },
     ])('labels $locale dates from earlier years', ({ locale, date, expected }) => {
         expect(
-            buildWaistHistoryChartPoints([{ startDate: date, endDate: date, averageCircumferenceCm: 80 }], locale, CURRENT_YEAR)[0].label,
+            buildWaistHistoryChartPoints(
+                [{ startDate: calendarDate(date), endDate: calendarDate(date), averageCircumferenceCm: 80 }],
+                locale,
+                CURRENT_YEAR,
+            )[0].label,
         ).toBe(expected);
     });
 });
 
 describe('waist calendar date regressions', () => {
     it.each(['2026-09-30', '2026-09-30T00:00:00', '2026-09-30T00:00:00Z'])('preserves calendar day %s independently of timezone', date => {
-        expect(buildWaistEntryViewModels([{ id: 'entry', userId: 'user', date, circumferenceCm: 68.5 }], 'ru')[0].dateLabel).toBe(
-            '30.09.2026',
-        );
+        expect(
+            buildWaistEntryViewModels(
+                [
+                    {
+                        id: entityId<'waist-entry'>('entry'),
+                        userId: entityId<'user'>('user'),
+                        date: calendarDate(date),
+                        circumferenceCm: 68.5,
+                    },
+                ],
+                'ru',
+            )[0].dateLabel,
+        ).toBe('30.09.2026');
     });
     it('labels both ends of an aggregate bucket', () => {
         const points = buildWaistHistoryChartPoints(
-            [{ startDate: '2026-09-29T00:00:00', endDate: '2026-09-30T00:00:00', averageCircumferenceCm: 68.5 }],
+            [
+                {
+                    startDate: calendarDate('2026-09-29T00:00:00'),
+                    endDate: calendarDate('2026-09-30T00:00:00'),
+                    averageCircumferenceCm: 68.5,
+                },
+            ],
             'ru',
             CURRENT_YEAR,
         );

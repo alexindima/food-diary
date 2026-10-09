@@ -392,7 +392,7 @@ public sealed partial class MailRelayQueueStore {
                     command.Parameters.AddWithValue("id", decision.Id.Value);
                     command.Parameters.AddWithValue("attemptCount", decision.AttemptCount);
                     command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
-                    command.Parameters.AddWithValue("status", decision.Status);
+                    command.Parameters.AddWithValue("status", QueuedEmailStateCodec.ToStorage(decision.State));
                     command.Parameters.AddWithValue("availableAtUtc", (object?)nextAvailableAt ?? DBNull.Value);
                     command.Parameters.AddWithValue("lastError", Truncate(decision.Error, 4000));
                     if (await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false) != 1) {

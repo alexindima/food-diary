@@ -5,6 +5,7 @@ using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.RecentItems.Application.Abstractions.Common;
 using FoodDiary.Modules.RecentItems.Contracts.Common;
 using FoodDiary.Modules.RecentItems.Domain.Entities.Recents;
+using FoodDiary.Modules.RecentItems.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
@@ -104,7 +105,7 @@ public sealed class RecentItemRepository(RecentItemsDbContext context, Func<DbTr
             if (existingByItemId.TryGetValue(itemId, out RecentItem? existing)) {
                 existing.Touch(usedAtUtc);
             } else {
-                context.RecentItems.Add(RecentItem.Create(userId, itemType, itemId, usedAtUtc));
+                context.RecentItems.Add(RecentItem.CreateWithReference(userId, RecentItemReference.FromFields(itemType, itemId), usedAtUtc));
             }
         }
     }

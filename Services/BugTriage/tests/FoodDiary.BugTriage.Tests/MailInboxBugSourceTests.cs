@@ -1,3 +1,4 @@
+using FoodDiary.BugTriage.Application.Reports.Identifiers;
 using System.Text;
 using FoodDiary.BugTriage.Application.Abstractions;
 using FoodDiary.BugTriage.Application.Reports;
@@ -20,7 +21,7 @@ public sealed class MailInboxBugSourceTests {
 
         InvalidOperationException error = await Assert.ThrowsAsync<InvalidOperationException>(async () => {
             await foreach (ImportedReport report in source.ReadNewAsync(CancellationToken.None).ConfigureAwait(false)) {
-                Assert.Equal(entry.Id, report.SourceMessageId);
+                Assert.Equal(entry.Id, report.SourceMessageId.Value);
                 seen++;
             }
         });
@@ -67,13 +68,13 @@ public sealed class MailInboxBugSourceTests {
         await foreach (ImportedReport report in source.ReadNewAsync(CancellationToken.None)) {
             reports.Add(report);
         }
-        Assert.Equal(first.Id, Assert.Single(reports).SourceMessageId);
-        store.ContainsAsync(first.Id, Arg.Any<CancellationToken>()).Returns(returnThis: true);
+        Assert.Equal(first.Id, Assert.Single(reports).SourceMessageId.Value);
+        store.ContainsAsync((SourceMessageId)first.Id, Arg.Any<CancellationToken>()).Returns(returnThis: true);
         reports.Clear();
         await foreach (ImportedReport report in source.ReadNewAsync(CancellationToken.None)) {
             reports.Add(report);
         }
-        Assert.Equal(second.Id, Assert.Single(reports).SourceMessageId);
+        Assert.Equal(second.Id, Assert.Single(reports).SourceMessageId.Value);
     }
 
     [Fact]
@@ -87,7 +88,7 @@ public sealed class MailInboxBugSourceTests {
         client.GetPageAsync("bugs@fooddiary.club", beforeReceivedAtUtc: null, beforeId: null, Arg.Any<CancellationToken>()).Returns([first, second]);
         client.GetPageAsync("bugs@fooddiary.club", second.ReceivedAtUtc, second.Id, Arg.Any<CancellationToken>()).Returns([third]);
         client.GetPageAsync("bugs@fooddiary.club", third.ReceivedAtUtc, third.Id, Arg.Any<CancellationToken>()).Returns([]);
-        store.ContainsAsync(first.Id, Arg.Any<CancellationToken>()).Returns(returnThis: true);
+        store.ContainsAsync((SourceMessageId)first.Id, Arg.Any<CancellationToken>()).Returns(returnThis: true);
         byte[] mime = Encoding.UTF8.GetBytes("Subject: Bug\r\nContent-Type: text/plain; charset=utf-8\r\n\r\nКнопка не работает");
         client.GetMimeAsync(third.Id, "bugs@fooddiary.club", Arg.Any<CancellationToken>()).Returns(mime);
         var source = new MailInboxBugSource(client, store, Microsoft.Extensions.Options.Options.Create(new BugTriageOptions()));

@@ -610,15 +610,7 @@ public class UserInvariantTests {
     public void GetCalorieTargets_WhenCyclingEnabled_UsesPerDayOverridesAndFallbacks() {
         var user = User.Create("test@example.com", "hash");
 
-        user.UpdateGoals(new UserGoalUpdate(
-            DailyCalorieTarget: 2000,
-            CalorieCyclingEnabled: true,
-            MondayCalories: 1800,
-            TuesdayCalories: 1900,
-            WednesdayCalories: 2000,
-            ThursdayCalories: 2100,
-            FridayCalories: 2200,
-            SaturdayCalories: 2300));
+        user.UpdateGoals(new UserGoalUpdate(DailyCalorieTarget: 2000, CalorieCyclingEnabled: true, MondayCalories: 1800, TuesdayCalories: 1900, WednesdayCalories: 2000, ThursdayCalories: 2100, FridayCalories: 2200, SaturdayCalories: 2300));
 
         Assert.Multiple(
             () => Assert.Equal(1800, user.GetCalorieTargetForDate(new DateTime(2026, 6, 1))),
@@ -671,10 +663,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdateGoals(new UserGoalUpdate(
-                CalorieCyclingEnabled: true,
-                MondayCalories: double.MaxValue,
-                TuesdayCalories: double.MaxValue)));
+            user.UpdateGoals(new UserGoalUpdate(CalorieCyclingEnabled: true, MondayCalories: double.MaxValue, TuesdayCalories: double.MaxValue)));
 
         Assert.Multiple(
             () => Assert.False(user.CalorieCyclingEnabled),

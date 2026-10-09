@@ -3,6 +3,8 @@ import { map, type Observable, switchMap } from 'rxjs';
 
 import { ImageUploadService } from '../api/image-upload.service';
 import type { ImageSelection } from '../models/image-upload.data';
+import { imageSelection } from '../models/image-upload.data';
+import type { ImageAssetId } from '../models/semantics/entity-id';
 
 @Service()
 export class ImageUploadFacade {
@@ -13,13 +15,13 @@ export class ImageUploadFacade {
             switchMap(presign =>
                 this.imageUploadService.uploadToPresignedUrl(presign.uploadUrl, file).pipe(
                     switchMap(() => this.imageUploadService.confirmUpload(presign.assetId)),
-                    map(confirmed => ({ url: confirmed.fileUrl, assetId: confirmed.assetId })),
+                    map(confirmed => imageSelection(confirmed.fileUrl, confirmed.assetId)),
                 ),
             ),
         );
     }
 
-    public deleteAsset(assetId: string): Observable<void> {
+    public deleteAsset(assetId: ImageAssetId): Observable<void> {
         return this.imageUploadService.deleteAsset(assetId);
     }
 }

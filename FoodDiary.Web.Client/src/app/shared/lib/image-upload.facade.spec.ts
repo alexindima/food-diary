@@ -3,6 +3,7 @@ import { firstValueFrom, of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ImageUploadService } from '../api/image-upload.service';
+import { imageSelection } from '../models/image-upload.data';
 import { ImageUploadFacade } from './image-upload.facade';
 
 describe('ImageUploadFacade', () => {
@@ -20,10 +21,7 @@ describe('ImageUploadFacade', () => {
         const facade = TestBed.inject(ImageUploadFacade);
         const file = new File(['image'], 'photo.png', { type: 'image/png' });
 
-        await expect(firstValueFrom(facade.upload(file))).resolves.toEqual({
-            url: 'https://cdn.example.com/image.jpg',
-            assetId: 'asset-1',
-        });
+        await expect(firstValueFrom(facade.upload(file))).resolves.toEqual(imageSelection('https://cdn.example.com/image.jpg', 'asset-1'));
         expect(imageUploadService.requestUploadUrl).toHaveBeenCalledWith(file);
         expect(imageUploadService.uploadToPresignedUrl).toHaveBeenCalledWith('https://upload.example.com', file);
         expect(imageUploadService.confirmUpload).toHaveBeenCalledWith('asset-1');

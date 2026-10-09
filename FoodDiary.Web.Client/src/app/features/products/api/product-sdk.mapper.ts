@@ -13,6 +13,8 @@ import {
     ProductType,
     ProductVisibility,
 } from '../../../shared/models/product.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId, optionalEntityId } from '../../../shared/models/semantics/entity-id';
 import type { PublicProduct } from '../models/public-product.data';
 import { normalizeProductUnit } from './product-unit.mapper';
 
@@ -49,6 +51,10 @@ export function productFromSdk(response: ProductHttpResponse): Product {
             imageAssetId: image.imageAssetId ?? null,
             imageUrl: requireSdkFields(image, ['imageUrl']).imageUrl,
         })),
+
+        id: entityId<'product'>(value.id),
+        imageAssetId: optionalEntityId<'image-asset'>(value.imageAssetId),
+        favoriteProductId: optionalEntityId<'favorite-product'>(value.favoriteProductId),
     };
 }
 
@@ -73,6 +79,9 @@ export function favoriteProductFromSdk(response: FavoriteProductHttpResponse): F
     ]);
     return {
         ...normalizeProductUnit(value),
+        id: entityId<'favorite-product'>(value.id),
+        productId: entityId<'product'>(value.productId),
+        createdAtUtc: utcInstant(value.createdAtUtc),
         imageUrls: value.imageUrls ?? undefined,
         qualityGrade: sdkEnum(value.qualityGrade, QUALITY_GRADES),
     };

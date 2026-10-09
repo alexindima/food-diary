@@ -75,6 +75,7 @@ COPY Modules/MealPlanning/PersistenceModel/*.csproj Modules/MealPlanning/Persist
 COPY Modules/RecipeCommunity/Application/*.csproj Modules/RecipeCommunity/Application/
 COPY Modules/RecipeCommunity/Application.Abstractions/*.csproj Modules/RecipeCommunity/Application.Abstractions/
 COPY Modules/RecipeCommunity/Domain/*.csproj Modules/RecipeCommunity/Domain/
+COPY Modules/RecipeCommunity/Domain.Contracts/*.csproj Modules/RecipeCommunity/Domain.Contracts/
 COPY Modules/RecipeCommunity/Infrastructure/*.csproj Modules/RecipeCommunity/Infrastructure/
 COPY Modules/RecipeCommunity/PersistenceModel/*.csproj Modules/RecipeCommunity/PersistenceModel/
 COPY Modules/Wearables/Application/*.csproj Modules/Wearables/Application/
@@ -364,6 +365,7 @@ COPY Modules/MealPlanning/PersistenceModel/ Modules/MealPlanning/PersistenceMode
 COPY Modules/RecipeCommunity/Application/ Modules/RecipeCommunity/Application/
 COPY Modules/RecipeCommunity/Application.Abstractions/ Modules/RecipeCommunity/Application.Abstractions/
 COPY Modules/RecipeCommunity/Domain/ Modules/RecipeCommunity/Domain/
+COPY Modules/RecipeCommunity/Domain.Contracts/ Modules/RecipeCommunity/Domain.Contracts/
 COPY Modules/RecipeCommunity/Infrastructure/ Modules/RecipeCommunity/Infrastructure/
 COPY Modules/RecipeCommunity/PersistenceModel/ Modules/RecipeCommunity/PersistenceModel/
 COPY Modules/Wearables/ Modules/Wearables/

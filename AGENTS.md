@@ -136,6 +136,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Recipe community Application: `Modules/RecipeCommunity/Application/AGENTS.md`
 - Recipe community Application/Abstractions: `Modules/RecipeCommunity/Application.Abstractions/AGENTS.md`
 - Recipe community Domain: `Modules/RecipeCommunity/Domain/AGENTS.md`
+- Recipe community scalar domain contracts: `Modules/RecipeCommunity/Domain.Contracts/AGENTS.md`
 - Recipe community Infrastructure: `Modules/RecipeCommunity/Infrastructure/AGENTS.md`
 - Recipe community Infrastructure/Model: `Modules/RecipeCommunity/PersistenceModel/AGENTS.md`
 - Recipes logical module: `Modules/Recipes/AGENTS.md`

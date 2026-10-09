@@ -41,6 +41,7 @@ public sealed class QueuedEmail : AggregateRoot<QueuedEmailId> {
     public int AttemptCount { get; }
     public int MaxAttempts { get; }
     public string Status { get; private set; }
+    public QueuedEmailProcessingState ProcessingState => QueuedEmailStateCodec.FromStorage(Status);
 
     public static QueuedEmail FromPersistence(QueuedEmailMessage message) {
         var email = new QueuedEmail(
@@ -54,7 +55,7 @@ public sealed class QueuedEmail : AggregateRoot<QueuedEmailId> {
             message.CorrelationId,
             message.AttemptCount,
             message.MaxAttempts,
-            QueuedEmailStatus.Processing);
+            QueuedEmailStateCodec.ToStorage(QueuedEmailProcessingState.Processing));
         email.Purpose = message.Purpose;
         email.ReplyTo = message.ReplyTo;
         email.InReplyTo = message.InReplyTo;
@@ -80,12 +81,12 @@ public sealed class QueuedEmail : AggregateRoot<QueuedEmailId> {
             Purpose: Purpose, ReplyTo: ReplyTo, InReplyTo: InReplyTo, AutoSubmitted: AutoSubmitted);
 
     public void MarkSent() {
-        Status = QueuedEmailStatus.Sent;
+        SetProcessingState(QueuedEmailProcessingState.Sent);
         SetModified();
     }
 
     public void MarkSuppressed() {
-        Status = QueuedEmailStatus.Suppressed;
+        SetProcessingState(QueuedEmailProcessingState.Suppressed);
         SetModified();
     }
 
@@ -93,16 +94,17 @@ public sealed class QueuedEmail : AggregateRoot<QueuedEmailId> {
         ArgumentException.ThrowIfNullOrWhiteSpace(error);
 
         bool isTerminalFailure = AttemptCount >= MaxAttempts;
-        Status = isTerminalFailure ? QueuedEmailStatus.Failed : QueuedEmailStatus.Retry;
+        SetProcessingState(isTerminalFailure ? QueuedEmailProcessingState.Failed : QueuedEmailProcessingState.Retry);
         SetModified();
 
         return new QueuedEmailFailureDecision(
             Id,
             AttemptCount,
-            Status,
-            isTerminalFailure,
+            ProcessingState,
             error);
     }
+
+    private void SetProcessingState(QueuedEmailProcessingState state) => Status = QueuedEmailStateCodec.ToStorage(state);
 
     private string CreateMessageId() => $"{Id.Value:N}@mailrelay.invalid";
 }

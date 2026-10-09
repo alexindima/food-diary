@@ -10,6 +10,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { AttentionSignal, BulkRecommendationResult } from '../../../../shared/models/dietologist.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId, optionalEntityId } from '../../../../shared/models/semantics/entity-id';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 import { createClient } from './dietologist-clients-lib/dietologist-clients.test-data';
 import { DietologistClientsPageComponent } from './dietologist-clients-page';
@@ -111,10 +113,10 @@ describe('Dietologist bulk retry request identity', () => {
         if (change === 'text') {
             component['bulkModel'].set({ text: 'QA revised recommendation' });
         } else if (change === 'recipients') {
-            component['toggleClientSelection']('client-2', false);
+            component['toggleClientSelection'](entityId<'user'>('client-2'), false);
         } else if (change === 'selection-order') {
-            component['toggleClientSelection']('client-1', false);
-            component['toggleClientSelection']('client-1', true);
+            component['toggleClientSelection'](entityId<'user'>('client-1'), false);
+            component['toggleClientSelection'](entityId<'user'>('client-1'), true);
         } else {
             component['bulkModel'].set({ text: '  QA recommendation  ' });
         }
@@ -133,20 +135,20 @@ describe('Dietologist bulk retry request identity', () => {
 
 function bulkRecipient(clientUserId: string, succeeded: boolean): BulkRecommendationResult['recipients'][number] {
     return {
-        clientUserId,
+        clientUserId: entityId<'user'>(clientUserId),
         succeeded,
-        recommendationId: succeeded ? 'recommendation-id' : null,
+        recommendationId: optionalEntityId<'recommendation'>(succeeded ? 'recommendation-id' : null),
         wasAlreadyProcessed: false,
         errorCode: succeeded ? null : 'QA.Error',
     };
 }
 
 function prepareBulkRecommendation(): void {
-    dietologistService.getMyClients.mockReturnValueOnce(of([createClient(), createClient({ userId: 'client-2' })]));
+    dietologistService.getMyClients.mockReturnValueOnce(of([createClient(), createClient({ userId: entityId<'user'>('client-2') })]));
     dialogService.open.mockReturnValue({ afterClosed: (): Observable<boolean> => of(true) });
     createComponent();
-    component['toggleClientSelection']('client-1', true);
-    component['toggleClientSelection']('client-2', true);
+    component['toggleClientSelection'](entityId<'user'>('client-1'), true);
+    component['toggleClientSelection'](entityId<'user'>('client-2'), true);
     component['bulkModel'].set({ text: 'QA recommendation' });
 }
 
@@ -156,13 +158,13 @@ describe('Dietologist attention action pending state', () => {
         dietologistService.setAttentionSignalState.mockReturnValueOnce(request);
         createComponent();
         const attentionSignal: AttentionSignal = {
-            id: 'signal-pending',
-            clientUserId: 'client-1',
+            id: entityId<'attention-signal'>('signal-pending'),
+            clientUserId: entityId<'user'>('client-1'),
             clientDisplayName: 'QA client',
             type: 'MaterialWeightChange',
             severity: 'High',
             reason: 'MaterialWeightChange',
-            detectedAtUtc: '2026-10-02T12:00:00Z',
+            detectedAtUtc: utcInstant('2026-10-02T12:00:00Z'),
             snoozedUntilUtc: null,
         };
         component['attentionSignals'].set([attentionSignal]);
@@ -198,13 +200,13 @@ describe('DietologistClientsPageComponent', () => {
         createComponent();
         component['attentionSignals'].set([
             {
-                id: 'signal-1',
-                clientUserId: 'client-1',
+                id: entityId<'attention-signal'>('signal-1'),
+                clientUserId: entityId<'user'>('client-1'),
                 clientDisplayName: 'QA client',
                 type: 'MaterialWeightChange',
                 severity: 'High',
                 reason: 'MaterialWeightChange',
-                detectedAtUtc: '2026-10-02T12:00:00Z',
+                detectedAtUtc: utcInstant('2026-10-02T12:00:00Z'),
                 snoozedUntilUtc: null,
             },
         ]);
@@ -241,7 +243,7 @@ describe('DietologistClientsPageComponent', () => {
     it('retries loading clients after an error', () => {
         dietologistService.getMyClients
             .mockReturnValueOnce(throwError(() => new Error('failed')))
-            .mockReturnValueOnce(of([createClient({ userId: 'client-retry' })]));
+            .mockReturnValueOnce(of([createClient({ userId: entityId<'user'>('client-retry') })]));
         createComponent();
 
         component['retryLoad']();
@@ -255,7 +257,7 @@ describe('DietologistClientsPageComponent', () => {
     it('navigates to selected client dashboard', () => {
         createComponent();
 
-        component['openClient'](createClient({ userId: 'client-2' }));
+        component['openClient'](createClient({ userId: entityId<'user'>('client-2') }));
 
         expect(router.navigate).toHaveBeenCalledWith(['/dietologist', 'clients', 'client-2']);
     });

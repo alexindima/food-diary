@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Modules.Images.Application.Abstractions.Models;
 using FoodDiary.Modules.Images.Application.Commands.CleanupOrphanImages;
 using FoodDiary.Modules.Images.Service.Contracts.Commands.CleanupOrphanImages;
@@ -49,9 +50,9 @@ public class ImagesFeatureTests {
         var outbox = new DefaultMethodImageDeletionOutbox();
 
         ImageObjectValidationResult validation = await ((IImageStorageService)storage)
-            .ConfirmUploadedObjectAsync("images/object.jpg", CancellationToken.None);
+            .ConfirmUploadedObjectAsync(ObjectStorageKey.FromStoredValue("images/object.jpg"), CancellationToken.None);
         await ((IImageObjectDeletionOutbox)outbox)
-            .EnqueueAsync("images/object.jpg", CancellationToken.None);
+            .EnqueueAsync(ObjectStorageKey.FromStoredValue("images/object.jpg"), CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.True(validation.IsValid),
@@ -148,7 +149,7 @@ public class ImagesFeatureTests {
             () => Assert.Contains("UserId", emptyUser.Error.Message, StringComparison.OrdinalIgnoreCase),
             () => Assert.Equal("Image.InvalidData", emptyAsset.Error.Code),
             () => Assert.Contains("AssetId", emptyAsset.Error.Message, StringComparison.OrdinalIgnoreCase));
-        await storage.DidNotReceive().ConfirmUploadedObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await storage.DidNotReceive().ConfirmUploadedObjectAsync(Arg.Any<ObjectStorageKey>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -175,7 +176,7 @@ public class ImagesFeatureTests {
         await repository.AddAsync(asset, CancellationToken.None);
         using var source = new CancellationTokenSource();
         IImageStorageService storage = Substitute.For<IImageStorageService>();
-        storage.ConfirmUploadedObjectAsync(asset.ObjectKey, source.Token)
+        storage.ConfirmUploadedObjectAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), source.Token)
             .Returns(async _ => {
                 await source.CancelAsync();
                 return await Task.FromCanceled<ImageObjectValidationResult>(source.Token);
@@ -185,7 +186,7 @@ public class ImagesFeatureTests {
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => handler.Handle(
             new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), source.Token));
-        await storage.Received(1).ConfirmUploadedObjectAsync(asset.ObjectKey, source.Token);
+        await storage.Received(1).ConfirmUploadedObjectAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), source.Token);
         Assert.False(asset.IsConfirmed);
     }
 
@@ -196,7 +197,7 @@ public class ImagesFeatureTests {
         var asset = ImageAsset.Create(owner, "images/storage-cancel.jpg", "https://cdn.example/storage-cancel.jpg");
         await repository.AddAsync(asset, CancellationToken.None);
         IImageStorageService storage = Substitute.For<IImageStorageService>();
-        storage.ConfirmUploadedObjectAsync(asset.ObjectKey, Arg.Any<CancellationToken>())
+        storage.ConfirmUploadedObjectAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), Arg.Any<CancellationToken>())
             .Returns(Task.FromException<ImageObjectValidationResult>(new OperationCanceledException("Storage timeout.")));
         var handler = new ConfirmImageUploadCommandHandler(
             repository, storage, new FakeImageObjectDeletionOutbox(), CreateUnitOfWork(), new InlineImageTransactionRunner());
@@ -246,7 +247,7 @@ public class ImagesFeatureTests {
             new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), CancellationToken.None));
 
         Assert.Same(persistenceFailure, thrown);
-        await storage.DidNotReceive().DeleteAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
+        await storage.DidNotReceive().DeleteAsync(Arg.Any<ObjectStorageKey>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -266,7 +267,7 @@ public class ImagesFeatureTests {
 
         ResultAssert.Success(result);
         Assert.Equal(asset.Url, result.Value.FileUrl);
-        await storage.DidNotReceive().ConfirmUploadedObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await storage.DidNotReceive().ConfirmUploadedObjectAsync(Arg.Any<ObjectStorageKey>(), Arg.Any<CancellationToken>());
         await unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
@@ -334,7 +335,7 @@ public class ImagesFeatureTests {
             new ConfirmImageUploadCommand(owner.Value, asset.Id.Value),
             CancellationToken.None));
 
-        await storage.DidNotReceive().DeleteAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
+        await storage.DidNotReceive().DeleteAsync(Arg.Any<ObjectStorageKey>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -622,10 +623,10 @@ public class ImagesFeatureTests {
         public Task<PresignedUpload> CreatePresignedUploadAsync(UserId userId, string fileName, string contentType, long fileSizeBytes, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
 
-        public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) => throw new NotSupportedException();
+        public Task DeleteAsync(ObjectStorageKey key, CancellationToken cancellationToken) => throw new NotSupportedException();
 
-        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(string objectKey, CancellationToken cancellationToken) {
-            ValidatedObjectKey = objectKey;
+        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(ObjectStorageKey key, CancellationToken cancellationToken) {
+            ValidatedObjectKey = key.Value;
             return Task.FromResult(new ImageObjectValidationResult(IsValid: true));
         }
     }
@@ -634,8 +635,8 @@ public class ImagesFeatureTests {
     private sealed class DefaultMethodImageDeletionOutbox : IImageObjectDeletionOutbox {
         public (string ObjectKey, bool IsConfirmed) Enqueued { get; private set; }
 
-        public Task EnqueueAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken = default) {
-            Enqueued = (objectKey, isConfirmed);
+        public Task EnqueueAsync(ObjectStorageKey key, bool isConfirmed, CancellationToken cancellationToken = default) {
+            Enqueued = (key.Value, isConfirmed);
             return Task.CompletedTask;
         }
     }
@@ -650,15 +651,15 @@ public class ImagesFeatureTests {
                 Arg.Any<long>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new PresignedUpload(
-                "https://upload.example",
-                "https://cdn.example/file.jpg",
-                "images/file.jpg",
+                SignedImageUploadUrl.FromProviderValue("https://upload.example"),
+                PublicImageUrl.FromProviderValue("https://cdn.example/file.jpg"),
+                ObjectStorageKey.FromStoredValue("images/file.jpg"),
                 DateTime.UtcNow.AddMinutes(10))));
         service
-            .DeleteAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .DeleteAsync(Arg.Any<ObjectStorageKey>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
         service
-            .ConfirmUploadedObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .ConfirmUploadedObjectAsync(Arg.Any<ObjectStorageKey>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(validationResult ?? new ImageObjectValidationResult(IsValid: true)));
         return service;
     }
@@ -667,10 +668,10 @@ public class ImagesFeatureTests {
         IImageStorageService service = Substitute.For<IImageStorageService>();
         var exception = new InvalidOperationException("Simulated storage failure.");
         service
-            .DeleteAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .DeleteAsync(Arg.Any<ObjectStorageKey>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromException(exception));
         service
-            .ConfirmUploadedObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .ConfirmUploadedObjectAsync(Arg.Any<ObjectStorageKey>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromException<ImageObjectValidationResult>(exception));
         return service;
     }
@@ -678,15 +679,15 @@ public class ImagesFeatureTests {
     private static IImageStorageService CreateSelectivelyThrowingImageStorageService(string failingObjectKey) {
         IImageStorageService service = Substitute.For<IImageStorageService>();
         service
-            .DeleteAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .DeleteAsync(Arg.Any<ObjectStorageKey>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .Returns(call => {
-                string objectKey = call.Arg<string>()!;
+                string objectKey = call.Arg<ObjectStorageKey>().Value;
                 return string.Equals(objectKey, failingObjectKey, StringComparison.Ordinal)
                     ? Task.FromException(new InvalidOperationException("Simulated storage failure."))
                     : Task.CompletedTask;
             });
         service
-            .ConfirmUploadedObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .ConfirmUploadedObjectAsync(Arg.Any<ObjectStorageKey>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new ImageObjectValidationResult(IsValid: true)));
         return service;
     }
@@ -702,17 +703,17 @@ public class ImagesFeatureTests {
         public List<string> ObjectKeys { get; } = [];
         public List<(string ObjectKey, bool IsConfirmed)> Deletions { get; } = [];
 
-        public Task EnqueueAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken = default) {
-            ObjectKeys.Add(objectKey);
-            Deletions.Add((objectKey, isConfirmed));
+        public Task EnqueueAsync(ObjectStorageKey key, bool isConfirmed, CancellationToken cancellationToken = default) {
+            ObjectKeys.Add(key.Value);
+            Deletions.Add((key.Value, isConfirmed));
             return Task.CompletedTask;
         }
     }
 
     [ExcludeFromCodeCoverage]
     private sealed class SelectivelyThrowingImageObjectDeletionOutbox(string failingObjectKey) : IImageObjectDeletionOutbox {
-        public Task EnqueueAsync(string objectKey, bool isConfirmed, CancellationToken cancellationToken = default) {
-            if (string.Equals(objectKey, failingObjectKey, StringComparison.Ordinal)) {
+        public Task EnqueueAsync(ObjectStorageKey key, bool isConfirmed, CancellationToken cancellationToken = default) {
+            if (string.Equals(key.Value, failingObjectKey, StringComparison.Ordinal)) {
                 throw new InvalidOperationException("Object deletion outbox enqueue failed.");
             }
 

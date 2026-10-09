@@ -9,6 +9,8 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 import { createClient } from '../clients/dietologist-clients-lib/dietologist-clients.test-data';
 import { ClientDashboardComponent } from './client-dashboard';
@@ -45,7 +47,7 @@ let dialogService: { open: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
     dietologistService = {
-        getMyClients: vi.fn(() => of([createClient({ userId: 'client-1' })])),
+        getMyClients: vi.fn(() => of([createClient({ userId: entityId<'user'>('client-1') })])),
         getClientDashboard: vi.fn(() => of(createDashboardSnapshot())),
         getClientGoals: vi.fn(() => of({ id: 'client-1', email: 'client@example.com', dailyCalorieTarget: 1800 })),
         getRecommendationsForClient: vi.fn(() => of([])),
@@ -57,13 +59,13 @@ beforeEach(() => {
         archiveRecommendationTemplate: vi.fn(),
         createRecommendation: vi.fn(() =>
             of({
-                id: 'rec-1',
-                dietologistUserId: 'diet-1',
+                id: entityId<'recommendation'>('rec-1'),
+                dietologistUserId: entityId<'user'>('diet-1'),
                 dietologistFirstName: null,
                 dietologistLastName: null,
                 text: 'Add protein',
                 isRead: false,
-                createdAtUtc: '2026-05-23T00:00:00Z',
+                createdAtUtc: utcInstant('2026-05-23T00:00:00Z'),
                 readAtUtc: null,
             }),
         ),
@@ -99,7 +101,9 @@ describe('ClientDashboardComponent task deadlines', () => {
         expect(dietologistService.createTask).toHaveBeenCalledWith('client-1', {
             title: 'Daily task',
             details: null,
-            dueAtUtc: new Date(year, month - 1, day, DEADLINE_HOUR, DEADLINE_MINUTE, DEADLINE_SECOND, DEADLINE_MILLISECOND).toISOString(),
+            dueAtUtc: utcInstant(
+                new Date(year, month - 1, day, DEADLINE_HOUR, DEADLINE_MINUTE, DEADLINE_SECOND, DEADLINE_MILLISECOND).toISOString(),
+            ),
         });
     });
 
@@ -157,7 +161,7 @@ function registerLoadingTests(): void {
         dietologistService.getMyClients.mockReturnValueOnce(
             of([
                 createClient({
-                    userId: 'client-1',
+                    userId: entityId<'user'>('client-1'),
                     permissions: { ...createClient().permissions, shareStatistics: true, shareGoals: true },
                 }),
             ]),
@@ -175,7 +179,7 @@ function registerLoadingTests(): void {
         dietologistService.getMyClients.mockReturnValueOnce(
             of([
                 createClient({
-                    userId: 'client-1',
+                    userId: entityId<'user'>('client-1'),
                     permissions: {
                         ...createClient().permissions,
                         shareMeals: false,
@@ -379,7 +383,7 @@ function createComponent(clientId: string, fullAccess = false): void {
         dietologistService.getMyClients.mockReturnValueOnce(
             of([
                 createClient({
-                    userId: clientId,
+                    userId: entityId<'user'>(clientId),
                     permissions: {
                         shareProfile: true,
                         shareMeals: true,
@@ -483,8 +487,8 @@ function createDashboardSnapshot(): Record<string, unknown> {
         meals: {
             items: [
                 {
-                    id: 'meal-1',
-                    date: '2026-05-23T12:30:00Z',
+                    id: entityId<'meal'>('meal-1'),
+                    date: utcInstant('2026-05-23T12:30:00Z'),
                     mealType: 'Lunch',
                     comment: null,
                     totalCalories: 640,
@@ -501,8 +505,8 @@ function createDashboardSnapshot(): Record<string, unknown> {
         },
         hydration: { dateUtc: '2026-05-23T00:00:00Z', totalMl: 1200, goalMl: 2000 },
         currentFastingSession: {
-            id: 'fast-1',
-            startedAtUtc: '2026-05-23T00:00:00Z',
+            id: entityId<'fasting-session'>('fast-1'),
+            startedAtUtc: utcInstant('2026-05-23T00:00:00Z'),
             endedAtUtc: null,
             initialPlannedDurationHours: 16,
             addedDurationHours: 0,

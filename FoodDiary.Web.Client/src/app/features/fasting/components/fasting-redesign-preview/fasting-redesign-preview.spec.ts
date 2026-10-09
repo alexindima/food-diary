@@ -5,6 +5,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { FastingSession } from '../../../../shared/models/fasting.data';
+import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FastingRedesignPreviewComponent } from './fasting-redesign-preview';
 
 const INTERMITTENT_HOURS = 16;
@@ -62,15 +64,19 @@ describe('FastingRedesignPreviewComponent', () => {
     });
 
     it('flags an overdue active session without presenting a further fasting stage', () => {
-        fixture.componentRef.setInput('session', createSession({ startedAtUtc: '2026-08-01T15:00:00Z' }));
+        fixture.componentRef.setInput('session', createSession({ startedAtUtc: utcInstant('2026-08-01T15:00:00Z') }));
         expect(component['isPastTarget']()).toBe(true);
         expect(component['stageView']()).toBeNull();
-        fixture.componentRef.setInput('session', createSession({ endedAtUtc: '2026-08-11T16:00:00Z' }));
+        fixture.componentRef.setInput('session', createSession({ endedAtUtc: utcInstant('2026-08-11T16:00:00Z') }));
         expect(component['isPastTarget']()).toBe(false);
     });
 
     it('labels an early ending and shows short sessions in minutes', () => {
-        const early = createSession({ status: 'Completed', startedAtUtc: '2026-10-05T08:00:00Z', endedAtUtc: '2026-10-05T08:01:00Z' });
+        const early = createSession({
+            status: 'Completed',
+            startedAtUtc: utcInstant('2026-10-05T08:00:00Z'),
+            endedAtUtc: utcInstant('2026-10-05T08:01:00Z'),
+        });
         expect(component['historyStatusKey'](early)).toBe('FASTING.BADGE_ENDED_EARLY');
         expect(component['sessionDurationView'](early)).toEqual({ value: 1, unitKey: 'FASTING.MINUTES' });
     });
@@ -87,11 +93,15 @@ describe('FastingRedesignPreviewComponent', () => {
     });
 
     it('keeps the active session first in recent sessions without duplicating it', () => {
-        const activeSession = createSession({ id: 'active-session' });
+        const activeSession = createSession({ id: entityId<'fasting-session'>('active-session') });
         fixture.componentRef.setInput('session', activeSession);
         fixture.componentRef.setInput('history', [
             activeSession,
-            createSession({ id: 'completed-session', status: 'Completed', endedAtUtc: '2026-08-11T14:00:00Z' }),
+            createSession({
+                id: entityId<'fasting-session'>('completed-session'),
+                status: 'Completed',
+                endedAtUtc: utcInstant('2026-08-11T14:00:00Z'),
+            }),
         ]);
 
         expect(component['recentSessions']().map(session => session.id)).toEqual(['active-session', 'completed-session']);
@@ -152,8 +162,8 @@ describe('FastingRedesignPreviewComponent', () => {
         const session = createSession({
             planType: 'Extended',
             plannedDurationHours: 2,
-            startedAtUtc: new Date(TUESDAY_MORNING_START).toISOString(),
-            endedAtUtc: new Date(TUESDAY_MORNING_END).toISOString(),
+            startedAtUtc: utcInstant(new Date(TUESDAY_MORNING_START).toISOString()),
+            endedAtUtc: utcInstant(new Date(TUESDAY_MORNING_END).toISOString()),
             status: 'Completed',
         });
         fixture.componentRef.setInput('session', session);
@@ -171,8 +181,8 @@ describe('FastingRedesignPreviewComponent', () => {
         const session = createSession({
             planType: 'Intermittent',
             plannedDurationHours: INTERMITTENT_HOURS,
-            startedAtUtc: new Date(TUESDAY_MORNING_START).toISOString(),
-            endedAtUtc: new Date(TUESDAY_MORNING_END).toISOString(),
+            startedAtUtc: utcInstant(new Date(TUESDAY_MORNING_START).toISOString()),
+            endedAtUtc: utcInstant(new Date(TUESDAY_MORNING_END).toISOString()),
             status: 'Completed',
         });
         fixture.componentRef.setInput('session', session);
@@ -202,12 +212,12 @@ describe('FastingRedesignPreviewComponent', () => {
     });
 
     it('builds detailed labels for recent intermittent and extended sessions', () => {
-        const intermittent = createSession({ status: 'Completed', endedAtUtc: '2026-08-11T16:00:00Z' });
+        const intermittent = createSession({ status: 'Completed', endedAtUtc: utcInstant('2026-08-11T16:00:00Z') });
         const extended = createSession({
             planType: 'Extended',
             plannedDurationHours: 36,
             status: 'Completed',
-            endedAtUtc: '2026-08-11T16:00:00Z',
+            endedAtUtc: utcInstant('2026-08-11T16:00:00Z'),
         });
 
         expect(component['historyTypeLabelKey'](intermittent)).toBe('FASTING.INTERMITTENT_TYPE');
@@ -221,21 +231,21 @@ describe('FastingRedesignPreviewComponent', () => {
         fixture.componentRef.setInput('now', new Date(TUESDAY_AFTERNOON));
         fixture.componentRef.setInput('history', [
             createSession({
-                id: 'completed-1',
-                startedAtUtc: new Date(TUESDAY_MORNING_START).toISOString(),
-                endedAtUtc: new Date(TUESDAY_MORNING_END).toISOString(),
+                id: entityId<'fasting-session'>('completed-1'),
+                startedAtUtc: utcInstant(new Date(TUESDAY_MORNING_START).toISOString()),
+                endedAtUtc: utcInstant(new Date(TUESDAY_MORNING_END).toISOString()),
                 status: 'Completed',
             }),
             createSession({
-                id: 'completed-2',
-                startedAtUtc: new Date(TUESDAY_MIDDAY_START).toISOString(),
-                endedAtUtc: new Date(TUESDAY_MIDDAY_END).toISOString(),
+                id: entityId<'fasting-session'>('completed-2'),
+                startedAtUtc: utcInstant(new Date(TUESDAY_MIDDAY_START).toISOString()),
+                endedAtUtc: utcInstant(new Date(TUESDAY_MIDDAY_END).toISOString()),
                 status: 'Completed',
             }),
             createSession({
-                id: 'interrupted-1',
-                startedAtUtc: new Date(TUESDAY_AFTERNOON_START).toISOString(),
-                endedAtUtc: new Date(TUESDAY_AFTERNOON_END).toISOString(),
+                id: entityId<'fasting-session'>('interrupted-1'),
+                startedAtUtc: utcInstant(new Date(TUESDAY_AFTERNOON_START).toISOString()),
+                endedAtUtc: utcInstant(new Date(TUESDAY_AFTERNOON_END).toISOString()),
                 status: 'Interrupted',
             }),
         ]);
@@ -291,8 +301,8 @@ describe('FastingRedesignPreviewComponent notes', () => {
         fixture.componentRef.setInput('stats', null);
         fixture.componentRef.setInput('history', [
             createSession({
-                id: 'history-with-notes',
-                endedAtUtc: '2026-08-11T16:00:00Z',
+                id: entityId<'fasting-session'>('history-with-notes'),
+                endedAtUtc: utcInstant('2026-08-11T16:00:00Z'),
                 status: 'Completed',
                 notes: 'Historical session note',
                 checkInNotes: 'Historical wellbeing note',
@@ -413,8 +423,8 @@ describe('FastingRedesignPreviewComponent active management action', () => {
 
 function createSession(overrides: Partial<FastingSession> = {}): FastingSession {
     return {
-        id: 'session-1',
-        startedAtUtc: '2026-08-11T15:00:00Z',
+        id: entityId<'fasting-session'>('session-1'),
+        startedAtUtc: utcInstant('2026-08-11T15:00:00Z'),
         endedAtUtc: null,
         initialPlannedDurationHours: 16,
         addedDurationHours: 0,
