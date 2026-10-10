@@ -1,6 +1,17 @@
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, input, model, output, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    type ElementRef,
+    input,
+    model,
+    output,
+    signal,
+    viewChild,
+} from '@angular/core';
 import type { FormValueControl } from '@angular/forms/signals';
 
 import type { FdUiFieldSize } from '../types/field-size.type';
@@ -17,6 +28,7 @@ const DEFAULT_ROWS = 4;
     host: { '[class.fd-ui-textarea-stretch]': 'stretch()', '[attr.id]': 'null' },
 })
 export class FdUiTextareaComponent implements FormValueControl<string | number | null> {
+    private readonly control = viewChild.required<ElementRef<HTMLTextAreaElement>>('control');
     public readonly id = input(`fd-ui-textarea-${uniqueId++}`);
     public readonly label = input<string>();
     public readonly placeholder = input<string>();
@@ -84,5 +96,13 @@ export class FdUiTextareaComponent implements FormValueControl<string | number |
         }
 
         control.focus();
+    }
+
+    /** Focuses the native control without exposing its markup to consumers. */
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public focus contract used by interaction directives.
+    public focus(): void {
+        if (!this.disabled()) {
+            this.control().nativeElement.focus();
+        }
     }
 }

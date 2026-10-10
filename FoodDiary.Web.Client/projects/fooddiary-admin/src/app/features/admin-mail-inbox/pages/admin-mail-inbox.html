@@ -75,11 +75,10 @@
                         @for (message of filteredMessages(); track message.id) {
                             <tr
                                 class="mail-table__row"
-                                tabindex="0"
+                                fdUiActivate
                                 [class.mail-table__row--unread]="message.readAtUtc === null || message.readAtUtc === undefined"
-                                (click)="selectMessage(message)"
-                                (keydown.enter)="selectMessage(message)"
-                                (keydown.space)="$event.preventDefault(); selectMessage(message)"
+                                [fdUiActivateRole]="null"
+                                (fdUiActivated)="selectMessage(message)"
                             >
                                 <td>{{ message.receivedAtUtc | date: 'short' }}</td>
                                 <td>
@@ -101,8 +100,8 @@
                                     <a
                                         routerLink="/mail-inbox"
                                         queryParamsHandling="merge"
+                                        fdUiStopActivation
                                         [queryParams]="{ id: message.id, page: 1 }"
-                                        (click)="$event.stopPropagation()"
                                         >{{ 'ADMIN_MAIL_INBOX.PERMALINK' | translate }}</a
                                     >
                                     <div class="fd-ui-body-xs">{{ message.toRecipients.join(', ') }}</div>

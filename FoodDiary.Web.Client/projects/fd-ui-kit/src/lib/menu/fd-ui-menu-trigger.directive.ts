@@ -12,8 +12,8 @@ const MENU_VIEWPORT_MARGIN = 8;
 @Directive({
     selector: '[fdUiMenuTrigger]',
     host: {
-        '[attr.aria-haspopup]': '"menu"',
-        '[attr.aria-expanded]': 'overlayRef?.hasAttached() ? "true" : "false"',
+        '[attr.aria-haspopup]': 'menu() === null ? null : "menu"',
+        '[attr.aria-expanded]': 'menu() === null ? null : overlayRef?.hasAttached() ? "true" : "false"',
         '(click)': 'toggleMenuFromClick($event)',
         '(keydown)': 'toggleMenuFromKeyboard($event)',
     },
@@ -53,10 +53,12 @@ export class FdUiMenuTriggerDirective {
             if (currentMenu === null && this.overlayRef?.hasAttached() === true) {
                 this.close();
             }
+            this.button?.setMenuState(currentMenu === null ? null : this.overlayRef?.hasAttached() === true);
         });
         this.destroyRef.onDestroy(() => {
             this.activeSubscriptions.unsubscribe();
             this.overlayRef?.dispose();
+            this.button?.setMenuState(null);
         });
     }
 
@@ -137,6 +139,7 @@ export class FdUiMenuTriggerDirective {
 
         overlayRef.updateSize({ minWidth: this.elementRef.nativeElement.getBoundingClientRect().width });
         overlayRef.attach(new TemplatePortal(menu.templateRef, this.viewContainerRef));
+        this.button?.setMenuState(true);
         if (focusTarget === 'last') {
             menu.focusLastItem();
             return;
@@ -151,6 +154,7 @@ export class FdUiMenuTriggerDirective {
         }
 
         this.overlayRef.detach();
+        this.button?.setMenuState(false);
         if (restoreFocus) {
             if (this.button !== null) {
                 this.button.focus();

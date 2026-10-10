@@ -238,13 +238,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "a75b2d697168433d6fe510709e0bfee4b73d22a6d041980d93e5b2aa077f0e27"
+          "sha256": "c1295215dded56144dac4b8df91b04e93b9cec11a928dcc9806cb5662079f894"
         }
       ],
-      "reason": "Reviewed current dependency and ownership indexes against unchanged project references and the 2260 passing architecture tests. New owner-local values add no foreign writes or dependency edges; the architecture-health review workflow remains accurate.",
+      "reason": "Reviewed the frontend directive extraction and follow-up refactor: dependency direction is unchanged, public UI-kit exports replace duplicated interaction behavior, and removal of the private page-layout directive is covered by consumer compilation and tests. The generated health schema and documented review workflow remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c7585ca923e86acea84aace4544e579991d890f5",
-      "reviewedAtUtc": "2026-10-09T15:33:12.8976567Z"
+      "gitHead": "5de6ddc7e3eaabce6b3e5e787064d7eebd261865",
+      "reviewedAtUtc": "2026-10-10T16:24:20.046Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -871,13 +871,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4e258a93ce4d74984ce19acf806c5a2b32b8374f31a35edaa0a6da94d9228e47"
+          "sha256": "1bbbaaa0cf48158ec304c945e5f69842aeeb9ea6813963024db9f088396ad028"
         }
       ],
-      "reason": "Reviewed recognition domain rules, reference-only grading, owned persisted browser/recovery/load checks and explicit evidence limits; 43 tooling tests and prior local behavioral checks passed; test references remain navigation rather than execution coverage.",
+      "reason": "Reviewed updated frontend structural metrics, nine net new production sources and their focused regressions. Static symbol references remain navigation evidence; executed unit tests, Storybook and browser checks provide the behavior evidence. Parallel Wiki-tool metric changes are excluded from this commit.",
       "baseRef": "HEAD",
-      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T15:10:35.1140417Z"
+      "gitHead": "5de6ddc7e3eaabce6b3e5e787064d7eebd261865",
+      "reviewedAtUtc": "2026-10-10T16:24:20.160Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -973,21 +973,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4e258a93ce4d74984ce19acf806c5a2b32b8374f31a35edaa0a6da94d9228e47"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "2d0d8ea13a1e03a423e9a1e13ab2f90124d878628a2b272c92211c2010679793"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "9a6a0891a935ec1aacdb7ef21966e9d7d2c4f1f38245050332a9ef3d69b838eb"
+          "sha256": "1bbbaaa0cf48158ec304c945e5f69842aeeb9ea6813963024db9f088396ad028"
         }
       ],
-      "reason": "Reviewed task-owned synthetic fixtures, redacted reports, disabled external providers, private dump removal and bounded build cleanup; privacy and topology navigation remains accurate for this snapshot.",
+      "reason": "Reviewed the frontend interaction and picker/loading refactor against security navigation guidance. The changes add no HTTP transport, credentials, authorization or persistence boundaries; quality signals remain navigation leads rather than vulnerability or executed-coverage claims.",
       "baseRef": "HEAD",
-      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T15:10:37.8072786Z"
+      "gitHead": "5de6ddc7e3eaabce6b3e5e787064d7eebd261865",
+      "reviewedAtUtc": "2026-10-10T16:24:20.215Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1123,14 +1115,18 @@
       "pageSha256": "4e059a263f76810db4c559e2b5599d8599571ccf48d060f6360c6d0e8ec60b48",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "7bdd93142c7d252562c8661a811e2797a767ad693212949cf55b326773f92a77"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "cebfa62f776f64a7e44ac19711a1e4ad6d7a455de0accad00a19349228f24b4e"
+          "sha256": "06eaf31b169de5f5127d21b03f2e39bbe8c01ebbbda4f32433c335b54f14fed2"
         }
       ],
-      "reason": "Reviewed the condensed root guide, AI_WORKFLOW detail, module patterns, runtime topology and source-authority links against this isolated task snapshot; the current navigation and conditional change-policy route remain accurate.",
+      "reason": "Reviewed regenerated frontend symbol and contract navigation for the new directives and shared focus, favorite-picker, loading and image helpers. Consumers and direct specs are recorded, feature boundaries are preserved, and the documented bounded trace workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T15:10:39.1184017Z"
+      "gitHead": "5de6ddc7e3eaabce6b3e5e787064d7eebd261865",
+      "reviewedAtUtc": "2026-10-10T16:24:20.281Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1214,13 +1210,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "828fb45c3c4696a85848403347409eeda552b3f721636e7442a579dbf6381f5f"
+          "sha256": "7bdd93142c7d252562c8661a811e2797a767ad693212949cf55b326773f92a77"
         }
       ],
-      "reason": "Reviewed typed USDA capability/keys and cycle episode page/actions/state through unchanged SDK routes, native form boundaries and stored observations. Existing UI controls, dates, confirmation/consent/busy behavior and locales remain; 642 focused cases and maintained negative role tests pass.",
+      "reason": "Reviewed directive inputs/outputs and consumers, native button menu ARIA, focus acknowledgements and recipe step focus transitions. Full frontend verification passed 5662 tests; Storybook and nine browser scenarios cover keyboard/focus behavior and representative viewports. Contract navigation and SDK ownership guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "ded6bae2e2029e59db9d479e34ecd841fa5c97bf",
-      "reviewedAtUtc": "2026-10-09T19:14:14.6962331Z"
+      "gitHead": "5de6ddc7e3eaabce6b3e5e787064d7eebd261865",
+      "reviewedAtUtc": "2026-10-10T16:24:20.102Z"
     },
     {
       "pageId": "workflow.query-context",

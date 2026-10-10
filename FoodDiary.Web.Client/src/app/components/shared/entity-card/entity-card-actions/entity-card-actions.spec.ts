@@ -19,13 +19,13 @@ describe('EntityCardActionsComponent', () => {
     it('stops propagation and emits action', async () => {
         const fixture = await setupEntityCardActionsAsync();
         const component = fixture.componentInstance;
-        const stopPropagationSpy = vi.fn();
-        const event = { stopPropagation: stopPropagationSpy } as unknown as Event;
+        const event = new MouseEvent('click', { bubbles: true });
+        const stopPropagationSpy = vi.spyOn(event, 'stopPropagation');
         const actionSpy = vi.fn();
         component['action'].subscribe(actionSpy);
         fixture.detectChanges();
 
-        component['emitCardAction'](event);
+        (fixture.nativeElement as HTMLElement).querySelector('button')?.dispatchEvent(event);
 
         expect(stopPropagationSpy).toHaveBeenCalledOnce();
         expect(actionSpy).toHaveBeenCalledOnce();
@@ -33,11 +33,11 @@ describe('EntityCardActionsComponent', () => {
 
     it('stops keyboard events from reaching the parent card', async () => {
         const fixture = await setupEntityCardActionsAsync();
-        const component = fixture.componentInstance;
-        const stopPropagationSpy = vi.fn();
+        const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
+        const stopPropagationSpy = vi.spyOn(event, 'stopPropagation');
         fixture.detectChanges();
 
-        component['stopCardKeyboardEvent']({ stopPropagation: stopPropagationSpy } as unknown as KeyboardEvent);
+        (fixture.nativeElement as HTMLElement).querySelector('button')?.dispatchEvent(event);
 
         expect(stopPropagationSpy).toHaveBeenCalledOnce();
     });

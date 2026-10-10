@@ -2,11 +2,11 @@
     <div fdDashboardBlockHost class="dashboard__block dashboard__block--tdee" [state]="state()" (blockActivated)="blockClick.emit($event)">
         @if (state().inert === null) {
             <button
+                fdUiStopActivation
+                fdUiStopActivationKeyboardOnly
                 class="dashboard__tdee-action"
                 type="button"
                 [attr.aria-label]="state().ariaLabel"
-                (keydown.enter)="$event.stopPropagation()"
-                (keydown.space)="$event.stopPropagation()"
             ></button>
         }
         @defer (on viewport) {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { booleanAttribute, ChangeDetectionStrategy, Component, computed, type ElementRef, input, viewChild } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, computed, type ElementRef, input, signal, viewChild } from '@angular/core';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
 
@@ -28,7 +28,11 @@ export class FdUiButtonComponent {
     public readonly ariaLabel = input<string | undefined>();
     public readonly ariaPressed = input<boolean | null>(null);
     public readonly ariaExpanded = input<boolean | null>(null);
+    public readonly ariaHasPopup = input<'menu' | 'listbox' | 'tree' | 'grid' | 'dialog' | null>(null);
     public readonly disabledReason = input<string | null>(null);
+    private readonly menuExpanded = signal<boolean | null>(null);
+    protected readonly effectiveAriaExpanded = computed(() => this.menuExpanded() ?? this.ariaExpanded());
+    protected readonly effectiveAriaHasPopup = computed(() => (this.menuExpanded() === null ? this.ariaHasPopup() : 'menu'));
 
     private readonly normalizedFill = computed<FdUiButtonFill>(() => {
         const variant = this.variant();
@@ -62,6 +66,12 @@ export class FdUiButtonComponent {
     // eslint-disable-next-line local/prefer-protected-template-members -- Public focus contract used by menu triggers, not a template internal.
     public focus(): void {
         this.controlRef().nativeElement.focus();
+    }
+
+    /** Menu directives publish their state on the native, focusable control. */
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public accessibility contract used by menu triggers.
+    public setMenuState(expanded: boolean | null): void {
+        this.menuExpanded.set(expanded);
     }
 }
 

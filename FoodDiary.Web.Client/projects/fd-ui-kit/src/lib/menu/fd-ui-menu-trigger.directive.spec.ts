@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
@@ -17,9 +17,14 @@ const MENU_ITEM_COUNT = 3;
     imports: [FdUiButtonComponent, FdUiMenuTriggerDirective, FdUiMenuComponent, FdUiMenuItemComponent],
     template: `
         @if (uiKitButton) {
-            <fd-ui-button [fdUiMenuTrigger]="menu">Actions</fd-ui-button>
+            <fd-ui-button
+                [ariaExpanded]="explicitExpanded()"
+                [ariaHasPopup]="explicitPopup()"
+                [fdUiMenuTrigger]="menuEnabled() ? menu : null"
+                >Actions</fd-ui-button
+            >
         } @else {
-            <button type="button" [fdUiMenuTrigger]="menu">Actions</button>
+            <button type="button" [fdUiMenuTrigger]="menuEnabled() ? menu : null">Actions</button>
         }
 
         <fd-ui-menu #menu="fdUiMenu">
@@ -31,6 +36,9 @@ const MENU_ITEM_COUNT = 3;
 })
 class TestHostComponent {
     public uiKitButton = false;
+    public readonly menuEnabled = signal(true);
+    public readonly explicitExpanded = signal<boolean | null>(null);
+    public readonly explicitPopup = signal<'dialog' | null>(null);
 }
 
 async function flushOverlayFocusAsync(fixture: ComponentFixture<TestHostComponent>): Promise<void> {
@@ -69,19 +77,19 @@ describe.each([false, true])('FdUiMenuTriggerDirective with UI kit trigger %s', 
         trigger = button;
     });
 
-    function dispatchTriggerKey(key: string): void {
-        trigger.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true }));
-    }
-
     function getMenuItems(): HTMLButtonElement[] {
         return Array.from(overlayRoot.querySelectorAll<HTMLButtonElement>('.fd-ui-menu__item'));
     }
+
+    it('publishes menu semantics and expanded state on the focusable native trigger', async () => {
+        await verifyMenuAriaAsync(fixture, trigger);
+    });
 
     it('opens with ArrowUp and focuses the last enabled item', async () => {
         const menu = fixture.debugElement.query(By.directive(FdUiMenuComponent)).componentInstance as FdUiMenuComponent;
         const focusLastItem = vi.spyOn(menu, 'focusLastItem');
 
-        dispatchTriggerKey('ArrowUp');
+        dispatchTriggerKey(trigger, 'ArrowUp');
         await flushOverlayFocusAsync(fixture);
 
         const items = getMenuItems();
@@ -91,7 +99,7 @@ describe.each([false, true])('FdUiMenuTriggerDirective with UI kit trigger %s', 
     });
 
     it('moves focus between enabled native menu item buttons', async () => {
-        dispatchTriggerKey('ArrowDown');
+        dispatchTriggerKey(trigger, 'ArrowDown');
         await flushOverlayFocusAsync(fixture);
         const items = getMenuItems();
         expect(document.activeElement).toBe(items[0]);
@@ -106,7 +114,7 @@ describe.each([false, true])('FdUiMenuTriggerDirective with UI kit trigger %s', 
     });
 
     it('restores trigger focus after selecting an item', async () => {
-        dispatchTriggerKey('ArrowDown');
+        dispatchTriggerKey(trigger, 'ArrowDown');
         await flushOverlayFocusAsync(fixture);
         getMenuItems()[0].click();
         await flushOverlayFocusAsync(fixture);
@@ -115,7 +123,7 @@ describe.each([false, true])('FdUiMenuTriggerDirective with UI kit trigger %s', 
     });
 
     it('closes on Escape and restores focus to the trigger', async () => {
-        dispatchTriggerKey('ArrowDown');
+        dispatchTriggerKey(trigger, 'ArrowDown');
         await flushOverlayFocusAsync(fixture);
 
         const firstItem = getMenuItems()[0];
@@ -127,7 +135,7 @@ describe.each([false, true])('FdUiMenuTriggerDirective with UI kit trigger %s', 
     });
 
     it('closes on Tab without restoring focus to the trigger', async () => {
-        dispatchTriggerKey('ArrowDown');
+        dispatchTriggerKey(trigger, 'ArrowDown');
         await flushOverlayFocusAsync(fixture);
 
         const firstItem = getMenuItems()[0];
@@ -139,3 +147,32 @@ describe.each([false, true])('FdUiMenuTriggerDirective with UI kit trigger %s', 
         expect(document.activeElement).not.toBe(trigger);
     });
 });
+
+async function verifyMenuAriaAsync(fixture: ComponentFixture<TestHostComponent>, trigger: HTMLButtonElement): Promise<void> {
+    await flushOverlayFocusAsync(fixture);
+    expect(trigger.getAttribute('aria-haspopup')).toBe('menu');
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    trigger.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await flushOverlayFocusAsync(fixture);
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    TestBed.inject(OverlayContainer)
+        .getContainerElement()
+        .querySelector<HTMLButtonElement>('.fd-ui-menu__item')
+        ?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await flushOverlayFocusAsync(fixture);
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    fixture.componentInstance.explicitExpanded.set(true);
+    fixture.componentInstance.explicitPopup.set('dialog');
+    dispatchTriggerKey(trigger, 'ArrowDown');
+    await flushOverlayFocusAsync(fixture);
+    fixture.componentInstance.menuEnabled.set(false);
+    await flushOverlayFocusAsync(fixture);
+    const isUiKit = fixture.componentInstance.uiKitButton;
+    expect(trigger.getAttribute('aria-haspopup')).toBe(isUiKit ? 'dialog' : null);
+    expect(trigger.getAttribute('aria-expanded')).toBe(isUiKit ? 'true' : null);
+    expect(TestBed.inject(OverlayContainer).getContainerElement().querySelector('.fd-ui-menu__item')).toBeNull();
+}
+
+function dispatchTriggerKey(trigger: HTMLButtonElement, key: string): void {
+    trigger.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true }));
+}

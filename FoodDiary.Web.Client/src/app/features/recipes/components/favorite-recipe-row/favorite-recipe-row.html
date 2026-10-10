@@ -5,14 +5,15 @@
             <span class="favorite-row__composition fd-ui-meta-text">{{ name() }} &middot; {{ composition() }}</span>
         </div>
         <fd-ui-button
-            #action
             variant="secondary"
             fill="text"
             icon="undo"
+            [fdUiFocusWhen]="focusRequested()"
             [loading]="restoring()"
             [disabled]="disabled()"
             [disabledReason]="'RECIPE_FAVORITES.BUSY' | translate"
             [ariaLabel]="`${('RECIPE_FAVORITES.UNDO' | translate)}: ${name()}`"
+            (fdUiFocused)="focusHandled.emit()"
             (click)="restore.emit(recipe())"
         >
             {{ 'RECIPE_FAVORITES.UNDO' | translate }}
@@ -68,17 +69,18 @@
             </div>
             <div class="favorite-row__actions">
                 <fd-ui-button
-                    #action
                     class="favorite-row__star fd-favorite-button--active"
                     variant="secondary"
                     fill="text"
                     icon="star"
+                    [fdUiFocusWhen]="focusRequested()"
                     [fdUiHint]="'RECIPE_DETAIL.REMOVE_FAVORITE' | translate"
                     [ariaPressed]="true"
                     [ariaLabel]="'RECIPE_DETAIL.REMOVE_FAVORITE' | translate"
                     [loading]="removing()"
                     [disabled]="disabled()"
                     [disabledReason]="'RECIPE_FAVORITES.BUSY' | translate"
+                    (fdUiFocused)="focusHandled.emit()"
                     (click)="remove.emit(recipe())"
                 />
                 <fd-ui-button

@@ -23,7 +23,12 @@ export class PublicRecipeGalleryComponent {
     protected preview(): void {
         this.dialogs.open(FdUiImagePreviewDialogComponent, {
             size: 'lg',
-            data: { collageImages: this.images().map(url => ({ url, alt: this.name() })), alt: this.name(), title: this.name() },
+            data: {
+                collageImages: this.images().map(url => ({ url, alt: this.name() })),
+                initialIndex: Math.max(0, this.images().indexOf(this.activeImage())),
+                alt: this.name(),
+                title: this.name(),
+            },
         });
     }
 }

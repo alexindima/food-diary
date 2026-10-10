@@ -14,6 +14,7 @@ import { buildProductTypeTranslationKey } from '../../../../../shared/lib/produc
 import type { FavoriteProduct, Product } from '../../../../../shared/models/product.data';
 import { LocalizedTourDefinitionService } from '../../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
+import { scrollElementIntoView } from '../../../../../shared/ui/scroll/scroll-element-into-view';
 import { ProductListFacade } from '../../../lib/list/product-list.facade';
 import type { OpenFoodFactsProduct } from '../../../models/open-food-facts.data';
 import { ProductListActiveFiltersComponent } from '../product-list-sections/product-list-active-filters/product-list-active-filters';
@@ -155,7 +156,7 @@ export class ProductListBaseComponent {
     }
 
     protected scrollToTop(): void {
-        this.header().nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollElementIntoView(this.header().nativeElement);
     }
 
     protected onProductClick(product: Product): void {

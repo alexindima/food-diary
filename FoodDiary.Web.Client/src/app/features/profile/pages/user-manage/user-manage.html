@@ -1,4 +1,4 @@
-<div class="user-manage fd-stack fd-gap-md" fdPageContainer>
+<div class="user-manage fd-stack fd-gap-md" fdPageContainer [fdUiPreventUnload]="hasUnsavedProfileChanges()">
     <fd-page-header
         class="user-manage__header"
         [title]="'USER_MANAGE.EDIT_TITLE' | translate"

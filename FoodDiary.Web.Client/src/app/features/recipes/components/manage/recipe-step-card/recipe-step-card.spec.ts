@@ -285,3 +285,19 @@ describe('Recipe step presentation', () => {
         ).toContain('RECIPE_MANAGE.STEP_NO_DESCRIPTION');
     });
 });
+
+describe('Recipe step title focus', () => {
+    it('focuses and selects the title when editing starts', async () => {
+        const { component, fixture } = setupComponent(
+            createRecipeStepValue({ title: 'Cook rice', imageUrl: null, description: '', ingredients: [] }),
+        );
+        component['toggleStepTitleEdit']();
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const title = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.recipe-step-card__title-input input');
+        expect(title).not.toBeNull();
+        expect(document.activeElement).toBe(title);
+        expect(title?.selectionStart).toBe(0);
+        expect(title?.selectionEnd).toBe('Cook rice'.length);
+    });
+});

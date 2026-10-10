@@ -1,15 +1,7 @@
 @let itemView = item();
 @let title = itemView.title ?? ('ATTENTION.UNNAMED_CLIENT' | translate);
 
-<fd-ui-card
-    class="dietologist-clients__card"
-    role="button"
-    tabindex="0"
-    [attr.aria-label]="title"
-    (click)="openClient()"
-    (keydown.enter)="openClient()"
-    (keydown.space)="$event.preventDefault(); openClient()"
->
+<fd-ui-card class="dietologist-clients__card" fdUiActivate [attr.aria-label]="title" (fdUiActivated)="openClient()">
     <div class="dietologist-clients__card-content fd-row fd-justify-between fd-gap-md">
         <div
             class="dietologist-clients__avatar fd-inline-center"

@@ -7,6 +7,7 @@ import {
     FdUiCheckboxComponent,
     FdUiConfirmDialogComponent,
     FdUiDialogService,
+    FdUiPreventUnloadDirective,
     FdUiSelectComponent,
     FdUiTextareaComponent,
 } from 'fd-ui-kit';
@@ -26,6 +27,7 @@ const PROMPT_MAX_LENGTH = 4096;
 @Component({
     selector: 'fd-admin-ai-prompts',
     imports: [
+        FdUiPreventUnloadDirective,
         FdUiSelectComponent,
         FdUiCheckboxComponent,
         FdUiTextareaComponent,
@@ -42,7 +44,6 @@ const PROMPT_MAX_LENGTH = 4096;
     templateUrl: './admin-ai-prompts.html',
     styleUrl: './admin-ai-prompts.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { '(window:beforeunload)': 'onBeforeUnload($event)' },
 })
 export class AdminAiPromptsPageComponent {
     private readonly api = inject(AdminAiPromptsFacade);
@@ -158,11 +159,6 @@ export class AdminAiPromptsPageComponent {
             })
             .afterClosed()
             .pipe(map(result => result === true));
-    }
-    protected onBeforeUnload(event: BeforeUnloadEvent): void {
-        if (this.dirty()) {
-            event.preventDefault();
-        }
     }
     protected restoreRevision(revision: AdminTemplateRevision): void {
         this.formModel.set({ promptText: revision.textBody, isActive: revision.isActive });

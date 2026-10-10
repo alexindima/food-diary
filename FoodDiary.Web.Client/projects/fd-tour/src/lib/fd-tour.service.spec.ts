@@ -25,6 +25,7 @@ describe('FdTourService', () => {
     let service: FdTourService;
     let storage: MemoryTourStorage;
     let host: HTMLElement;
+    let matchMediaDescriptor: PropertyDescriptor | undefined;
 
     beforeEach(() => {
         storage = new MemoryTourStorage();
@@ -34,6 +35,7 @@ describe('FdTourService', () => {
         });
 
         const domDocument = TestBed.inject(DOCUMENT);
+        matchMediaDescriptor = Object.getOwnPropertyDescriptor(domDocument.defaultView, 'matchMedia');
         host = domDocument.createElement('div');
         host.append(createTourButton('first', 'First'), createTourButton('second', 'Second'));
         domDocument.body.append(host);
@@ -43,6 +45,19 @@ describe('FdTourService', () => {
 
     afterEach(() => {
         host.remove();
+        vi.restoreAllMocks();
+        const viewport = TestBed.inject(DOCUMENT).defaultView;
+        if (viewport !== null) {
+            if (matchMediaDescriptor === undefined) {
+                Reflect.deleteProperty(viewport, 'matchMedia');
+            } else {
+                Object.defineProperty(viewport, 'matchMedia', matchMediaDescriptor);
+            }
+        }
+    });
+
+    it.each([false, true])('honors reduced motion %s when scrolling to tour steps', reducedMotion => {
+        verifyTourScroll(host, reducedMotion);
     });
 
     it('starts a tour on the first available step', () => {
@@ -58,6 +73,10 @@ describe('FdTourService', () => {
             }),
         );
         expect(service.activeStep()?.id).toBe('first');
+    });
+
+    it('keeps smooth scrolling when matchMedia is unavailable', () => {
+        verifyMissingMediaSupport(host);
     });
 
     it('skips steps without a rendered target', () => {
@@ -87,6 +106,35 @@ describe('FdTourService', () => {
         expect(service.start(tour, { force: true })).toBe(true);
     });
 });
+
+function verifyMissingMediaSupport(host: HTMLElement): void {
+    const viewport = TestBed.inject(DOCUMENT).defaultView;
+    if (viewport === null) {
+        throw new Error('Expected a browser viewport');
+    }
+    Reflect.deleteProperty(viewport, 'matchMedia');
+    const scroll = vi.fn();
+    Object.defineProperty(host.children[0], 'scrollIntoView', { configurable: true, value: scroll });
+    expect(TestBed.inject(FdTourService).start(createTour())).toBe(true);
+    expect(scroll).toHaveBeenCalledWith({ block: 'center', inline: 'center', behavior: 'smooth' });
+}
+
+function verifyTourScroll(host: HTMLElement, reducedMotion: boolean): void {
+    const scroll = vi.fn();
+    for (const target of host.children) {
+        Object.defineProperty(target, 'scrollIntoView', { configurable: true, value: scroll });
+    }
+    const viewport = TestBed.inject(DOCUMENT).defaultView;
+    if (viewport === null) {
+        throw new Error('Expected a browser viewport');
+    }
+    Object.defineProperty(viewport, 'matchMedia', { configurable: true, value: vi.fn(() => ({ matches: reducedMotion })) });
+    const service = TestBed.inject(FdTourService);
+    service.start(createTour());
+    service.next();
+    expect(scroll).toHaveBeenCalledTimes(2);
+    expect(scroll).toHaveBeenLastCalledWith({ block: 'center', inline: 'center', behavior: reducedMotion ? 'instant' : 'smooth' });
+}
 
 function createTour(): FdTourDefinition {
     return {

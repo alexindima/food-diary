@@ -1,4 +1,4 @@
-<div class="shopping-list" fdPageContainer>
+<div class="shopping-list" fdPageContainer [fdUiPreventUnload]="facade.hasUnsavedChanges()">
     <fd-page-header [title]="'SHOPPING_LIST.TITLE' | translate" [subtitle]="'SHOPPING_LIST.SUBTITLE' | translate" [compactActions]="true">
         <fd-ui-button
             appearance="brand-action"

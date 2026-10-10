@@ -3,7 +3,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
-import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
@@ -36,6 +36,7 @@ import { SHOPPING_LIST_TOUR } from './shopping-list-tour';
     styleUrls: ['./shopping-list-page.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        FdUiPreventUnloadDirective,
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
@@ -48,7 +49,6 @@ import { SHOPPING_LIST_TOUR } from './shopping-list-tour';
         ShoppingListManageControlsComponent,
     ],
     providers: [ShoppingListFacade],
-    host: { '(window:beforeunload)': 'onBeforeUnload($event)' },
 })
 export class ShoppingListPageComponent {
     private readonly translateService = inject(TranslateService);
@@ -95,12 +95,6 @@ export class ShoppingListPageComponent {
     // eslint-disable-next-line local/prefer-protected-template-members -- Router canDeactivate contract is called outside the component.
     public async saveBeforeLeaveAsync(): Promise<boolean> {
         return this.facade.saveBeforeLeaveAsync();
-    }
-
-    protected onBeforeUnload(event: BeforeUnloadEvent): void {
-        if (this.facade.hasUnsavedChanges()) {
-            event.preventDefault();
-        }
     }
 
     public constructor() {

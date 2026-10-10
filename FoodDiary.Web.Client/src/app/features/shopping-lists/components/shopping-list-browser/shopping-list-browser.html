@@ -2,6 +2,7 @@
     <fd-ui-input
         floatLabel="always"
         prefixIcon="search"
+        [fdUiFocusWhen]="focusSearch()"
         [value]="search()"
         [maxLength]="maxNameLength"
         [ariaLabel]="'SHOPPING_LIST.SEARCH_LISTS' | translate"

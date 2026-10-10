@@ -6,6 +6,7 @@ import { By } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
+import { FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { BehaviorSubject, firstValueFrom, of } from 'rxjs';
 import { describe, expect, it, type MockInstance, vi } from 'vitest';
@@ -226,15 +227,17 @@ describe('Dashboard layout draft protection', () => {
     });
 
     it('warns before unloading only while a dashboard draft has changes', async () => {
-        const { layout } = await setupAsync();
+        const { layout, fixture } = await setupAsync();
         const clean = new Event('beforeunload', { cancelable: true });
         window.dispatchEvent(clean);
         expect(clean.defaultPrevented).toBe(false);
         layout.hasLayoutChanges.set(true);
+        fixture.detectChanges();
         const dirty = new Event('beforeunload', { cancelable: true });
         window.dispatchEvent(dirty);
         expect(dirty.defaultPrevented).toBe(true);
         layout.hasLayoutChanges.set(false);
+        fixture.detectChanges();
         const saved = new Event('beforeunload', { cancelable: true });
         window.dispatchEvent(saved);
         expect(saved.defaultPrevented).toBe(false);
@@ -337,7 +340,7 @@ async function setupAsync(fasting = false, initiallyLoading = false): Promise<Da
     })
         .overrideComponent(DashboardComponent, {
             set: {
-                imports: [NgTemplateOutlet, TranslatePipe],
+                imports: [NgTemplateOutlet, TranslatePipe, FdUiPreventUnloadDirective],
                 schemas: [NO_ERRORS_SCHEMA],
                 providers: [
                     { provide: UserFacade, useValue: { user: signal(null), getInfoSilently: vi.fn().mockReturnValue(of(null)) } },

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiLevelIndicatorComponent } from 'fd-ui-kit';
+import { FdUiActivateDirective, FdUiLevelIndicatorComponent } from 'fd-ui-kit';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 
@@ -10,7 +10,14 @@ import type { LessonListItemViewModel } from '../../../../lib/lesson-view.mapper
 
 @Component({
     selector: 'fd-lessons-list-grid',
-    imports: [TranslatePipe, FdUiIconComponent, FdUiLoaderComponent, FdCardHoverDirective, FdUiLevelIndicatorComponent],
+    imports: [
+        FdUiActivateDirective,
+        TranslatePipe,
+        FdUiIconComponent,
+        FdUiLoaderComponent,
+        FdCardHoverDirective,
+        FdUiLevelIndicatorComponent,
+    ],
     templateUrl: './lessons-list-grid.html',
     styleUrl: '../../lessons-list-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

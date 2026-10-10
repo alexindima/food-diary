@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiHintDirective, FdUiStopActivationDirective } from 'fd-ui-kit';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { normalizeQualityScore } from '../../../shared/lib/quality-score.utils';
@@ -23,6 +23,7 @@ import { EntityCardThumbComponent } from './entity-card-thumb/entity-card-thumb'
 @Component({
     selector: 'fd-entity-card',
     imports: [
+        FdUiStopActivationDirective,
         FdUiHintDirective,
         FdUiIconComponent,
         MediaCardComponent,
@@ -150,13 +151,8 @@ export class EntityCardComponent {
         this.preview.emit();
     }
 
-    protected toggleFavorite(event?: Event): void {
-        event?.stopPropagation();
+    protected toggleFavorite(): void {
         this.favoriteToggle.emit();
-    }
-
-    protected stopCardKeyboardEvent(event: Event): void {
-        event.stopPropagation();
     }
 
     protected emitCardAction(): void {

@@ -73,7 +73,18 @@ export class HeaderActionsOverflowComponent {
             this.refreshActions();
             observer.observe(container, {
                 attributes: true,
-                attributeFilter: ['data-fd-overflow-primary', 'aria-disabled', 'aria-label', 'class', 'disabled', 'hidden'],
+                attributeFilter: [
+                    'data-fd-overflow-primary',
+                    'data-fd-overflow-label',
+                    'data-fd-overflow-icon',
+                    'aria-disabled',
+                    'aria-label',
+                    'class',
+                    'disabled',
+                    'hidden',
+                    'title',
+                ],
+                characterData: true,
                 childList: true,
                 subtree: true,
             });

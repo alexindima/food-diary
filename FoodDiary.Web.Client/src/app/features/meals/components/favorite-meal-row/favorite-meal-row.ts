@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, input, output, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
+import { createImageFailureState, FdUiButtonComponent, FdUiFocusWhenDirective, FdUiHintDirective } from 'fd-ui-kit';
 
 import { NutrientBadgesComponent } from '../../../../components/shared/nutrient-badges/nutrient-badges';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
@@ -12,7 +12,7 @@ const MAX_IMAGES = 4;
 
 @Component({
     selector: 'fd-favorite-meal-row',
-    imports: [TranslatePipe, FdUiButtonComponent, FdUiHintDirective, NutrientBadgesComponent, LocalizedNumberPipe],
+    imports: [FdUiFocusWhenDirective, TranslatePipe, FdUiButtonComponent, FdUiHintDirective, NutrientBadgesComponent, LocalizedNumberPipe],
     templateUrl: './favorite-meal-row.html',
     styleUrl: './favorite-meal-row.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,7 +25,8 @@ export class FavoriteMealRowComponent {
     public readonly restoreFailed = input(false);
     public readonly restore = output<FavoriteMeal>();
     protected readonly undoMessageKey = computed(() => (this.restoreFailed() ? 'MEAL_FAVORITES.RESTORE_ERROR' : 'MEAL_FAVORITES.REMOVED'));
-    public readonly action = viewChild<FdUiButtonComponent, ElementRef<HTMLElement>>('action', { read: ElementRef });
+    public readonly focusRequested = input(false);
+    public readonly focusHandled = output();
 
     public readonly removing = input(false);
     public readonly loading = input(false);
@@ -38,10 +39,10 @@ export class FavoriteMealRowComponent {
         const type = this.meal().mealType?.toUpperCase() ?? '';
         return ['BREAKFAST', 'LUNCH', 'DINNER', 'SNACK'].includes(type) ? `MEAL_TYPES.${type}` : 'MEAL_LIST.FAVORITE_UNNAMED';
     });
-    private readonly failedImages = signal<ReadonlySet<string>>(new Set());
+    private readonly imageFailures = createImageFailureState(() => [this.meal().imageUrl?.trim(), ...(this.meal().itemImageUrls ?? [])]);
     protected readonly images = computed(() => {
         const cover = this.meal().imageUrl?.trim();
-        const failed = this.failedImages();
+        const failed = this.imageFailures.unavailable();
         if (cover !== undefined && cover.length > 0 && !failed.has(cover)) {
             return [cover];
         }
@@ -49,6 +50,6 @@ export class FavoriteMealRowComponent {
     });
     protected readonly placeholder = computed(() => resolveMealImageUrl(null, this.meal().mealType));
     protected imageFailed(url: string): void {
-        this.failedImages.update(current => new Set([...current, url]));
+        this.imageFailures.markFailed(url);
     }
 }

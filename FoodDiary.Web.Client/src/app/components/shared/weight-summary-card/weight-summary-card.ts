@@ -1,6 +1,7 @@
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiActivateDirective } from 'fd-ui-kit';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
 import { MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
@@ -10,7 +11,7 @@ const TREND_DISPLAY_FRACTION_DIGITS = 1;
 
 @Component({
     selector: 'fd-weight-summary-card',
-    imports: [FdUiCardComponent, TranslatePipe, DecimalPipe],
+    imports: [FdUiActivateDirective, FdUiCardComponent, TranslatePipe, DecimalPipe],
     templateUrl: './weight-summary-card.html',
     styleUrls: ['./weight-summary-card.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, contentChild, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, contentChild, input } from '@angular/core';
 
 import { type FdUiCardAppearance, FdUiCardComponent } from '../card/fd-ui-card';
+import { createImageFailureState } from '../image/image-failure-state';
 import { FdUiEntityCardHeaderDirective } from './fd-ui-entity-card-header.directive';
 
 @Component({
@@ -20,11 +21,11 @@ export class FdUiEntityCardComponent {
 
     public readonly headerTemplate = contentChild(FdUiEntityCardHeaderDirective);
 
-    private readonly hasImageError = signal(false);
+    private readonly imageFailures = createImageFailureState(() => [this.imageUrl()]);
 
     protected readonly resolvedImage = computed(() => {
         const imageUrl = this.imageUrl();
-        if (imageUrl === null || imageUrl === undefined || imageUrl.trim().length === 0 || this.hasImageError()) {
+        if (imageUrl === null || imageUrl === undefined || imageUrl.trim().length === 0 || this.imageFailures.unavailable().has(imageUrl)) {
             return this.fallbackImage();
         }
 
@@ -32,8 +33,6 @@ export class FdUiEntityCardComponent {
     });
 
     protected markImageUnavailable(): void {
-        if (!this.hasImageError()) {
-            this.hasImageError.set(true);
-        }
+        this.imageFailures.markFailed(this.imageUrl());
     }
 }

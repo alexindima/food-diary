@@ -24,6 +24,7 @@ import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { resolveRecipeImageUrl } from '../../../../shared/lib/recipe-image.util';
 import type { Recipe, RecipeFilters } from '../../../../shared/models/recipe.data';
+import { scrollElementIntoView } from '../../../../shared/ui/scroll/scroll-element-into-view';
 import { RecipeSelectFacade, type RecipeSelectFilterValues } from '../../lib/recipe-select.facade';
 import { RecipeSelectDialogContentComponent } from './recipe-select-dialog-content/recipe-select-dialog-content';
 import {
@@ -210,7 +211,7 @@ export class RecipeSelectDialogComponent {
     }
 
     private scrollToTop(): void {
-        this.container().nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollElementIntoView(this.container().nativeElement);
     }
 
     private buildRecipeFilters(): RecipeFilters {

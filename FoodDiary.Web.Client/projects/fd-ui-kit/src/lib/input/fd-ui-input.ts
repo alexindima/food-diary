@@ -159,6 +159,13 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
         this.updateInputValue(value);
     }
 
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public focus contract used by interaction directives.
+    public focus(): void {
+        if (!this.disabled()) {
+            this.control()?.nativeElement.focus();
+        }
+    }
+
     protected onBlur(): void {
         this.isFocused.set(false);
         this.touched.set(true);

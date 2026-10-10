@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { FdUiStopActivationDirective } from 'fd-ui-kit';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 @Component({
     selector: 'fd-entity-card-actions',
-    imports: [FdUiIconComponent],
+    imports: [FdUiStopActivationDirective, FdUiIconComponent],
     templateUrl: './entity-card-actions.html',
     styleUrl: '../entity-card.scss',
     host: {
@@ -17,12 +18,7 @@ export class EntityCardActionsComponent {
 
     public readonly action = output();
 
-    protected emitCardAction(event: Event): void {
-        event.stopPropagation();
+    protected emitCardAction(): void {
         this.action.emit();
-    }
-
-    protected stopCardKeyboardEvent(event: Event): void {
-        event.stopPropagation();
     }
 }

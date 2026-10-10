@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, output } from '@angular/core';
+import { FdUiActivateDirective } from 'fd-ui-kit';
 
 @Component({
+    imports: [FdUiActivateDirective],
     selector: 'fd-card',
     templateUrl: './card.html',
     styleUrl: './card.scss',

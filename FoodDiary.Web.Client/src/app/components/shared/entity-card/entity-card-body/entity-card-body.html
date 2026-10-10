@@ -5,14 +5,12 @@
             <span class="entity-card__calories-unit">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
             @if (nutritionNote(); as note) {
                 <button
+                    fdUiStopActivation
                     type="button"
                     class="entity-card__nutrition-warning fd-inline-center"
                     [attr.aria-label]="note"
                     [fdUiHint]="note"
                     [fdUiHintToggleOnClick]="true"
-                    (click)="$event.stopPropagation()"
-                    (keydown.enter)="$event.stopPropagation()"
-                    (keydown.space)="$event.stopPropagation()"
                 >
                     <fd-ui-icon name="error_outline" size="sm" />
                 </button>

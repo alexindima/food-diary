@@ -57,13 +57,6 @@ describe('HeaderActionsOverflowComponent', () => {
         component = fixture.componentInstance;
     });
 
-    async function settleAsync(): Promise<void> {
-        fixture.detectChanges();
-        await fixture.whenStable();
-        await new Promise(resolve => setTimeout(resolve, 0));
-        fixture.detectChanges();
-    }
-
     function getOverflowTrigger(): HTMLButtonElement | null {
         const host = fixture.nativeElement as HTMLElement;
 
@@ -75,20 +68,20 @@ describe('HeaderActionsOverflowComponent', () => {
     }
 
     it('keeps a single header action unchanged', async () => {
-        await settleAsync();
+        await settleHeaderActionsAsync(fixture);
 
         expect(getOverflowTrigger()).toBeNull();
     });
 
     it('renders multiple header actions as menu items', async () => {
         component['showSecond'].set(true);
-        await settleAsync();
+        await settleHeaderActionsAsync(fixture);
 
         const trigger = getOverflowTrigger();
         expect(trigger).not.toBeNull();
 
         trigger?.click();
-        await settleAsync();
+        await settleHeaderActionsAsync(fixture);
 
         const items = getMenuItems();
         expect(items).toHaveLength(2);
@@ -98,27 +91,27 @@ describe('HeaderActionsOverflowComponent', () => {
     it('keeps the primary action directly available and excludes it from the menu', async () => {
         component.primary.set(true);
         component.showSecond.set(true);
-        await settleAsync();
+        await settleHeaderActionsAsync(fixture);
         const host = fixture.nativeElement as HTMLElement;
         const primary = host.querySelector<HTMLButtonElement>('.fd-header-actions-overflow__primary button');
         expect(primary).not.toBeNull();
         primary?.click();
-        await settleAsync();
+        await settleHeaderActionsAsync(fixture);
         expect(component.firstClicks()).toBe(1);
         getOverflowTrigger()?.click();
-        await settleAsync();
+        await settleHeaderActionsAsync(fixture);
         expect(getMenuItems().map(item => item.textContent.trim())).toEqual(['deleteSecond action']);
     });
 
     it('uses visible action text without decorative icon glyphs for compact buttons', async () => {
         component.primary.set(true);
         component.showSecond.set(true);
-        await settleAsync();
+        await settleHeaderActionsAsync(fixture);
         const host = fixture.nativeElement as HTMLElement;
         const original = host.querySelector<HTMLButtonElement>('[data-fd-overflow-primary]');
         original?.removeAttribute('aria-label');
         original?.insertAdjacentHTML('beforeend', '<span>New list</span><span aria-hidden="true">hidden hint</span>');
-        await settleAsync();
+        await settleHeaderActionsAsync(fixture);
 
         const primary = host.querySelector<HTMLButtonElement>('.fd-header-actions-overflow__primary button');
         expect(primary?.getAttribute('aria-label')).toBe('New list');
@@ -127,14 +120,14 @@ describe('HeaderActionsOverflowComponent', () => {
 
     it('proxies menu item clicks to the original action', async () => {
         component['showSecond'].set(true);
-        await settleAsync();
+        await settleHeaderActionsAsync(fixture);
 
         getOverflowTrigger()?.click();
-        await settleAsync();
+        await settleHeaderActionsAsync(fixture);
 
         const firstItem = getMenuItems()[0];
         firstItem.click();
-        await settleAsync();
+        await settleHeaderActionsAsync(fixture);
 
         expect(component['firstClicks']()).toBe(1);
         expect(component['secondClicks']()).toBe(0);
@@ -165,3 +158,49 @@ describe('Header action focus handoff', () => {
         expect(fixture.componentInstance.firstClicks()).toBe(1);
     });
 });
+
+describe('Header action reactive metadata', () => {
+    it('refreshes an existing text node and explicit action metadata', async () => {
+        await TestBed.configureTestingModule({
+            imports: [TestHostComponent],
+            providers: [provideTranslateTesting(), provideRouter([])],
+        }).compileComponents();
+        const fixture = TestBed.createComponent(TestHostComponent);
+        const component = fixture.componentInstance;
+        component.primary.set(true);
+        component.showSecond.set(true);
+        await settleHeaderActionsAsync(fixture);
+        const host = fixture.nativeElement as HTMLElement;
+        const original = host.querySelector<HTMLButtonElement>('[data-fd-overflow-primary]');
+        if (original === null) {
+            throw new Error('Expected the primary action');
+        }
+        original.removeAttribute('aria-label');
+        const text = document.createTextNode('Before');
+        original.append(text);
+        await settleHeaderActionsAsync(fixture);
+        text.data = 'After';
+        await settleHeaderActionsAsync(fixture);
+        const primary = (): HTMLButtonElement | null => host.querySelector('.fd-header-actions-overflow__primary button');
+        expect(primary()?.getAttribute('aria-label')).toBe('After');
+        original.setAttribute('data-fd-overflow-label', 'Translated label');
+        original.setAttribute('data-fd-overflow-icon', 'add');
+        await settleHeaderActionsAsync(fixture);
+        expect(primary()?.getAttribute('aria-label')).toBe('Translated label');
+        expect(primary()?.querySelector('.fd-ui-icon__glyph')?.textContent).toBe('add');
+        original.setAttribute('disabled', '');
+        original.setAttribute('title', 'Busy');
+        await settleHeaderActionsAsync(fixture);
+        original.setAttribute('title', 'Updated reason');
+        await settleHeaderActionsAsync(fixture);
+        expect(primary()?.disabled).toBe(true);
+        expect(primary()?.title).toBe('Updated reason');
+    });
+});
+
+async function settleHeaderActionsAsync(fixture: ComponentFixture<TestHostComponent>): Promise<void> {
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise(resolve => setTimeout(resolve, 0));
+    fixture.detectChanges();
+}

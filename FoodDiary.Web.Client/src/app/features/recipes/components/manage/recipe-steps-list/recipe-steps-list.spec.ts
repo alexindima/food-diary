@@ -102,6 +102,36 @@ function setupComponent(expandedSteps: ReadonlySet<number>): {
 }
 
 describe('Recipe step keyboard movement', () => {
+    it('focuses the moved step actions after rendering the new order', async () => {
+        const { component, fixture } = setupComponent(new Set([0, 1]));
+        component.stepDrop.subscribe(({ previousIndex, currentIndex }) => {
+            const reordered = [...component.steps()];
+            const [moved] = reordered.splice(previousIndex, 1);
+            reordered.splice(currentIndex, 0, moved);
+            fixture.componentRef.setInput('steps', reordered);
+        });
+        component['onMoveStep'](1, -1);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const first = (fixture.nativeElement as HTMLElement).querySelector('fd-recipe-step-card');
+        expect(document.activeElement).toBe(first?.querySelector('button[aria-haspopup="menu"]'));
+        expect(component['focusRequest']()).toBeNull();
+    });
+
+    it('focuses the description of a newly added step', async () => {
+        const { component, fixture } = setupComponent(new Set([0, 1]));
+        component.addStep.subscribe(() => {
+            fixture.componentRef.setInput('steps', [...component.steps(), createRecipeStepListItem()]);
+            fixture.componentRef.setInput('expandedSteps', new Set([0, 1, 2]));
+        });
+        component['onAddStep']();
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const steps = (fixture.nativeElement as HTMLElement).querySelectorAll('fd-recipe-step-card');
+        expect(document.activeElement).toBe(steps[2].querySelector('textarea'));
+        expect(component['focusRequest']()).toBeNull();
+    });
+
     it('routes the second-step menu movement through the existing reorder contract', () => {
         const { component, fixture } = setupComponent(new Set([0, 1]));
         const moved = vi.fn();

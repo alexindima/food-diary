@@ -1,3 +1,5 @@
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { DOCUMENT } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
 import { FdUiDialogService, FdUiImagePreviewDialogComponent } from 'fd-ui-kit';
 import { describe, expect, it, vi } from 'vitest';
@@ -28,6 +30,7 @@ describe('PublicRecipeGalleryComponent', () => {
                     { url: '/first.jpg', alt: 'Soup' },
                     { url: '/second.jpg', alt: 'Soup' },
                 ],
+                initialIndex: 1,
                 alt: 'Soup',
                 title: 'Soup',
             },
@@ -40,5 +43,37 @@ describe('PublicRecipeGalleryComponent', () => {
         fixture.detectChanges();
         expect(element.querySelector('.gallery-cover')).toBeNull();
         expect(element.querySelector('.gallery-placeholder')).not.toBeNull();
+    });
+});
+
+describe('Public recipe gallery preview integration', () => {
+    it('opens the selected thumbnail in the real preview dialog', async () => {
+        TestBed.configureTestingModule({ providers: [provideTranslateTesting()] });
+        const viewport = TestBed.inject(DOCUMENT).defaultView;
+        if (viewport === null) {
+            throw new Error('Gallery preview requires a browser window');
+        }
+        const matchMediaDescriptor = Object.getOwnPropertyDescriptor(viewport, 'matchMedia');
+        Object.defineProperty(viewport, 'matchMedia', { configurable: true, value: vi.fn(() => ({ matches: false })) });
+        try {
+            const fixture = TestBed.createComponent(PublicRecipeGalleryComponent);
+            fixture.componentRef.setInput('images', ['/first.jpg', '/second.jpg']);
+            fixture.componentRef.setInput('name', 'Soup');
+            fixture.detectChanges();
+            const host = fixture.nativeElement as HTMLElement;
+            host.querySelectorAll<HTMLButtonElement>('.gallery-thumbs button')[1].click();
+            fixture.detectChanges();
+            host.querySelector<HTMLButtonElement>('.gallery-cover')?.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            const overlay = TestBed.inject(OverlayContainer).getContainerElement();
+            expect(overlay.querySelector('fd-ui-image-preview-dialog img')?.getAttribute('src')).toBe('/second.jpg');
+        } finally {
+            if (matchMediaDescriptor === undefined) {
+                Reflect.deleteProperty(viewport, 'matchMedia');
+            } else {
+                Object.defineProperty(viewport, 'matchMedia', matchMediaDescriptor);
+            }
+        }
     });
 });

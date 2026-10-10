@@ -15,7 +15,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
-import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDatePickerButtonComponent } from 'fd-ui-kit/date-picker-button/fd-ui-date-picker-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -71,9 +71,9 @@ import { DashboardTrendBlockComponent } from './dashboard-sections/dashboard-tre
     selector: 'fd-dashboard',
     host: {
         class: 'dashboard-host',
-        '(window:beforeunload)': 'onBeforeUnload($event)',
     },
     imports: [
+        FdUiPreventUnloadDirective,
         NgTemplateOutlet,
         PageBodyComponent,
         PageHeaderComponent,
@@ -493,12 +493,6 @@ export class DashboardComponent {
 
     protected onMealFavoriteToggle(id: string): void {
         this.facade.toggleMealFavorite(entityId<'meal'>(id));
-    }
-
-    protected onBeforeUnload(event: BeforeUnloadEvent): void {
-        if (this.layout.hasLayoutChanges()) {
-            event.preventDefault();
-        }
     }
 
     private formatSelectedDate(): string {

@@ -18,7 +18,7 @@ import { form, FormRoot, validate } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
-import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
@@ -70,6 +70,7 @@ const MAX_PROFILE_HEIGHT_CM = 300;
 @Component({
     selector: 'fd-user-manage',
     imports: [
+        FdUiPreventUnloadDirective,
         TranslatePipe,
         FormRoot,
         FdUiHintDirective,
@@ -91,7 +92,6 @@ const MAX_PROFILE_HEIGHT_CM = 300;
     styleUrl: './user-manage.scss',
     providers: [ProfileManageFacade, UserManageNotificationsFacade, ProfileDietologistFacade, ProfileBillingFacade],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { '(window:beforeunload)': 'onBeforeUnload($event)' },
 })
 export class UserManageComponent {
     private readonly dietologist = inject(ProfileDietologistFacade);
@@ -226,12 +226,6 @@ export class UserManageComponent {
 
         this.facade.initialize();
         this.loadBillingOverview();
-    }
-
-    protected onBeforeUnload(event: BeforeUnloadEvent): void {
-        if (this.hasUnsavedProfileChanges()) {
-            event.preventDefault();
-        }
     }
 
     private watchLanguageChanges(): void {

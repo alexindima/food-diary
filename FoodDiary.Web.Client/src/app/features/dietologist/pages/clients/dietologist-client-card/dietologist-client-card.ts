@@ -1,6 +1,7 @@
 import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiActivateDirective } from 'fd-ui-kit';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
 import { MeasurementSystemService } from '../../../../../shared/measurements/measurement-system.service';
@@ -10,7 +11,7 @@ import type { ClientCardViewModel } from '../dietologist-clients-lib/dietologist
 
 @Component({
     selector: 'fd-dietologist-client-card',
-    imports: [NgOptimizedImage, TranslatePipe, FdUiCardComponent],
+    imports: [FdUiActivateDirective, NgOptimizedImage, TranslatePipe, FdUiCardComponent],
     templateUrl: './dietologist-client-card.html',
     styleUrl: '../dietologist-clients-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

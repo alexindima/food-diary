@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, input, linkedSignal, output } from '@angular/core';
-import { FdUiHintDirective } from 'fd-ui-kit';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { createImageFailureState, FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import type { EntityCardCollageState, EntityCardPreviewInteractionState } from '../entity-card-lib/entity-card.types';
@@ -20,18 +20,15 @@ export class EntityCardThumbComponent {
     public readonly previewInteraction = input.required<EntityCardPreviewInteractionState>();
 
     public readonly preview = output();
-    private readonly unavailableImages = linkedSignal({
-        source: () => ({ imageUrl: this.imageUrl(), collage: this.collage() }),
-        computation: (): ReadonlySet<string> => new Set(),
-    });
+    private readonly imageFailures = createImageFailureState(() => [this.imageUrl(), ...this.collage().images.map(image => image.url)]);
     protected readonly visibleImageUrl = computed(() => {
         const imageUrl = this.imageUrl();
-        return imageUrl !== null && imageUrl !== undefined && imageUrl.trim().length > 0 && !this.unavailableImages().has(imageUrl)
+        return imageUrl !== null && imageUrl !== undefined && imageUrl.trim().length > 0 && !this.imageFailures.unavailable().has(imageUrl)
             ? imageUrl
             : null;
     });
     protected readonly visibleCollageImages = computed(() =>
-        this.collage().images.filter(image => !this.unavailableImages().has(image.url)),
+        this.collage().images.filter(image => !this.imageFailures.unavailable().has(image.url)),
     );
     protected readonly hasVisibleImage = computed(() => this.visibleImageUrl() !== null || this.visibleCollageImages().length > 0);
     protected readonly isPlaceholder = computed(() =>
@@ -41,7 +38,7 @@ export class EntityCardThumbComponent {
     );
 
     protected markImageUnavailable(imageUrl: string): void {
-        this.unavailableImages.update(images => new Set([...images, imageUrl]));
+        this.imageFailures.markFailed(imageUrl);
     }
 
     protected previewCardImage(event: Event): void {

@@ -436,6 +436,7 @@ Primary solid fill pairs the theme's primary 700–900 gradient shades with its 
 **Methods**
 
 - `focus()` focuses the native button after rendering; disabled and loading buttons remain unfocusable.
+- `ariaHasPopup` publishes `menu`, `listbox`, `tree`, `grid` or `dialog` on the native button. `fdUiMenuTrigger` uses `setMenuState(expanded)` to publish its menu semantics and expanded state on this same focusable control; passing `null` restores the explicit button inputs.
 
 ### Cards
 
@@ -673,6 +674,21 @@ Compact boolean switch for settings and permission rows.
 
 ### Navigation / UX
 
+#### Shared interaction directives
+
+Import these directives from `fd-ui-kit` (or their public `fd-ui-kit/interaction/...` entry).
+
+- `fdUiActivate` adds click, Enter and Space activation to a non-native control and emits `fdUiActivated: Event`. It supplies `role="button"` and `tabindex="0"`; `fdUiActivateDisabled` disables activation and removes the control from the tab sequence. Set `[fdUiActivateRole]="null"` on table rows to preserve table semantics. Repeated/modified key presses and clicks on nested native controls are ignored. Prefer native buttons and links when their markup fits.
+- `fdUiStopActivation` stops click, Enter and Space propagation from a nested action without preventing the native action. `fdUiStopActivationKeyboardOnly` preserves click bubbling, for example for a native overlay button that activates its parent.
+- `fdUiFocusWhen` focuses once after rendering when its boolean request becomes true and emits `fdUiFocused`. It uses the public `focus()` contract on `fd-ui-button`, `fd-ui-input` and `fd-ui-textarea`, and waits while these controls are disabled/loading. Native elements can opt into select-all with `fdUiFocusSelect`. Reset the request to false before requesting focus again. Choosing which row or field receives focus remains the consumer's responsibility.
+- `fdUiPreventUnload` accepts a boolean dirty flag and requests the browser's standard close/reload confirmation only while true. It releases its listener after saving or destruction and skips SSR. Route guards, saving and discard decisions remain in the owning application.
+
+See **Behavior/Interactions** in Storybook for keyboard, nested-action, focus and unload examples.
+
+`createImageFailureState(source)` is a signal helper for current image URLs. Its readonly `unavailable` set and `markFailed(url)` preserve failures across unrelated updates, reset when sources change, and ignore errors from replaced URLs. Consumers retain their own image layout, placeholder and collage selection rules.
+
+`fd-ui-input.focus()` focuses its native input after rendering when enabled; its existing `selectOnFocus` option also applies.
+
 #### `fdUiHint`
 
 Keyboard focus on a nested native control (for example inside `fd-ui-button`) also shows the hint; mouse focus does not.
@@ -899,6 +915,8 @@ The image preview dialog accepts an optional zero-based `initialIndex` for openi
 Signal Forms controls expose a `touch` output when an interaction finishes, in addition to the existing `touched` model. This lets `formField` mark the bound field as touched and display validation errors after blur or selection. Updating the control's `touched` model alone does not notify Signal Forms.
 
 Textarea supports `[stretch]="true"` to fill an available flex/grid height (for example, beside an image gallery). Its default row-based sizing is unchanged.
+
+`fd-ui-textarea.focus()` focuses its native textarea after rendering when enabled. Consumers can use `fdUiFocusWhen` for a focus request after a conditional control renders.
 
 ## fd-ui-autocomplete
 

@@ -14,13 +14,7 @@
         </thead>
         <tbody>
             @for (user of users(); track user.id) {
-                <tr
-                    class="users-table__row"
-                    tabindex="0"
-                    (click)="details.emit(user)"
-                    (keydown.enter)="details.emit(user)"
-                    (keydown.space)="$event.preventDefault(); details.emit(user)"
-                >
+                <tr class="users-table__row" fdUiActivate [fdUiActivateRole]="null" (fdUiActivated)="details.emit(user)">
                     <td>{{ user.email }}</td>
                     <td>{{ user.username || '-' }}</td>
                     <td>{{ user.roles.join(', ') || '-' }}</td>

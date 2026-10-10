@@ -4747,6 +4747,11 @@
           "required": false
         },
         {
+          "name": "focusRequested",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "removing",
           "type": "",
           "required": false
@@ -4770,6 +4775,10 @@
         {
           "name": "restore",
           "type": "FavoriteProduct"
+        },
+        {
+          "name": "focusHandled",
+          "type": ""
         },
         {
           "name": "add",

@@ -1,7 +1,7 @@
-import { afterRenderEffect, ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { form, FormField, FormRoot, maxLength } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiDialogComponent, FdUiInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiDialogComponent, FdUiFocusWhenDirective, FdUiInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
@@ -26,6 +26,7 @@ const LIST_NAME_MAX_LENGTH = 128;
     templateUrl: './shopping-list-picker.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        FdUiFocusWhenDirective,
         LocalizedNumberPipe,
         TranslatePipe,
         FormField,
@@ -40,7 +41,6 @@ export class ShoppingListPickerComponent {
     private readonly data = inject<ShoppingListPickerData>(FD_UI_DIALOG_DATA);
     private readonly ref = inject(FdUiDialogRef<ShoppingListPickerComponent, ShoppingListTarget>);
     private readonly translate = inject(TranslateService);
-    private readonly nameField = viewChild<FdUiInputComponent, ElementRef<HTMLElement>>('listName', { read: ElementRef });
     protected readonly language = injectCurrentLanguage();
     protected readonly count = this.data.count;
     protected readonly item = this.data.item;
@@ -56,12 +56,6 @@ export class ShoppingListPickerComponent {
         }
         return this.draft().id === '' ? 'PUBLIC_RECIPES.SHOPPING_CREATE_ADD' : 'PUBLIC_RECIPES.SHOPPING_ADD_CONFIRM';
     });
-    public constructor() {
-        afterRenderEffect(() => {
-            const field = this.nameField();
-            field?.nativeElement.querySelector<HTMLInputElement>('input')?.focus();
-        });
-    }
     protected readonly draft = signal<{ id: string; name: string }>({
         id: this.data.selected?.id ?? '',
         name: (this.data.selected?.name ?? this.data.name).slice(0, LIST_NAME_MAX_LENGTH),

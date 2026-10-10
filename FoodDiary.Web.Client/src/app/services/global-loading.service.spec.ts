@@ -74,4 +74,24 @@ describe('GlobalLoadingService', () => {
         vi.advanceTimersByTime(MIN_VISIBLE_DURATION_MS);
         expect(service.isVisible()).toBe(false);
     });
+
+    it('keeps completion idempotent and cancels a pending hide for new work', () => {
+        const first = service.trackRequest();
+        vi.advanceTimersByTime(SHOW_DELAY_MS);
+        first();
+        first();
+        vi.advanceTimersByTime(1);
+        const second = service.trackRequest();
+        vi.advanceTimersByTime(MIN_VISIBLE_DURATION_MS);
+        expect(service.isVisible()).toBe(true);
+        second();
+        expect(service.isVisible()).toBe(false);
+    });
+
+    it('cleans up delayed work when the service scope is destroyed', () => {
+        service.trackRequest();
+        expect(vi.getTimerCount()).toBeGreaterThan(0);
+        TestBed.resetTestingModule();
+        expect(vi.getTimerCount()).toBe(0);
+    });
 });

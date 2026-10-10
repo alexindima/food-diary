@@ -6,7 +6,7 @@
             @for (item of items(); track item.product.id) {
                 <div class="product-select__item fd-grid fd-gap-sm fd-align-center" role="listitem">
                     <div class="product-select__thumb fd-place-center">
-                        @if (item.imageUrl && !failedImages().has(item.imageUrl)) {
+                        @if (item.imageUrl && !imageFailures.unavailable().has(item.imageUrl)) {
                             <img
                                 width="64"
                                 height="64"

@@ -1,11 +1,10 @@
 <fd-ui-card
     class="waist-summary-card"
-    role="button"
-    tabindex="0"
+    fdUiActivate
     [subtle]="false"
     [title]="'WAIST_CARD.TITLE' | translate"
     [meta]="metaText()"
-    (click)="cardClick.emit()"
+    (fdUiActivated)="cardClick.emit()"
 >
     <div class="waist-summary-card__content fd-stack fd-gap-xxs">
         <strong class="waist-summary-card__value fd-ui-metric-lg">

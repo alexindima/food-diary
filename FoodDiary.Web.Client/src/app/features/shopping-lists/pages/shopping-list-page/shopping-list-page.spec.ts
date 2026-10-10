@@ -1,6 +1,8 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
+import { FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
@@ -80,7 +82,7 @@ type ShoppingListPageTestContext = {
     isMobile: ReturnType<typeof signal<boolean>>;
 };
 
-async function setupShoppingListPageAsync(): Promise<ShoppingListPageTestContext> {
+async function setupShoppingListPageAsync(initialUnsaved = false): Promise<ShoppingListPageTestContext> {
     const facade: ShoppingListFacadeMock = {
         list: signal(SHOPPING_LIST),
         items: signal([SHOPPING_LIST_ITEM]),
@@ -95,7 +97,7 @@ async function setupShoppingListPageAsync(): Promise<ShoppingListPageTestContext
         listName: signal(SHOPPING_LIST.name),
         renameRequestedListId: signal(null),
         initialize: vi.fn(),
-        hasUnsavedChanges: vi.fn().mockReturnValue(false),
+        hasUnsavedChanges: vi.fn().mockReturnValue(initialUnsaved),
         selectList: vi.fn(),
         createNewList: vi.fn(),
         clearRenameRequest: vi.fn(),
@@ -259,10 +261,12 @@ describe('ShoppingListPageComponent native submit behavior', () => {
 
 describe('ShoppingListPageComponent browser navigation', () => {
     it.each([true, false])('requests unload confirmation only while unsaved=%s', async unsaved => {
-        const { component, facade } = await setupShoppingListPageAsync();
-        facade.hasUnsavedChanges.mockReturnValue(unsaved);
+        const { fixture } = await setupShoppingListPageAsync(unsaved);
+        await fixture.whenStable();
+        const unload = fixture.debugElement.query(By.directive(FdUiPreventUnloadDirective)).injector.get(FdUiPreventUnloadDirective);
+        expect(unload.fdUiPreventUnload()).toBe(unsaved);
         const event = new Event('beforeunload', { cancelable: true });
-        component['onBeforeUnload'](event);
+        window.dispatchEvent(event);
         expect(event.defaultPrevented).toBe(unsaved);
     });
 });

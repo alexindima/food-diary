@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, input, output, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
+import { createImageFailureState, FdUiButtonComponent, FdUiFocusWhenDirective, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 
 import { NutrientBadgesComponent } from '../../../../components/shared/nutrient-badges/nutrient-badges';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
@@ -9,7 +9,15 @@ import type { FavoriteProduct } from '../../../../shared/models/product.data';
 
 @Component({
     selector: 'fd-favorite-product-row',
-    imports: [TranslatePipe, FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent, NutrientBadgesComponent, LocalizedNumberPipe],
+    imports: [
+        FdUiFocusWhenDirective,
+        TranslatePipe,
+        FdUiButtonComponent,
+        FdUiHintDirective,
+        FdUiIconComponent,
+        NutrientBadgesComponent,
+        LocalizedNumberPipe,
+    ],
     templateUrl: './favorite-product-row.html',
     styleUrl: './favorite-product-row.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,7 +32,8 @@ export class FavoriteProductRowComponent {
     protected readonly undoMessageKey = computed(() =>
         this.restoreFailed() ? 'PRODUCT_FAVORITES.RESTORE_ERROR' : 'PRODUCT_FAVORITES.REMOVED',
     );
-    public readonly action = viewChild<FdUiButtonComponent, ElementRef<HTMLElement>>('action', { read: ElementRef });
+    public readonly focusRequested = input(false);
+    public readonly focusHandled = output();
 
     public readonly removing = input(false);
     public readonly loading = input(false);
@@ -36,16 +45,16 @@ export class FavoriteProductRowComponent {
         return name !== undefined && name.length > 0 ? name : this.product().productName;
     });
     protected readonly composition = computed(() => this.product().brand ?? this.product().barcode ?? '');
-    private readonly failedImages = signal<ReadonlySet<string>>(new Set());
+    private readonly imageFailures = createImageFailureState(() => [this.product().imageUrl?.trim()]);
     protected readonly images = computed(() => {
         const cover = this.product().imageUrl?.trim();
-        const failed = this.failedImages();
+        const failed = this.imageFailures.unavailable();
         if (cover !== undefined && cover.length > 0 && !failed.has(cover)) {
             return [cover];
         }
         return [];
     });
     protected imageFailed(url: string): void {
-        this.failedImages.update(current => new Set([...current, url]));
+        this.imageFailures.markFailed(url);
     }
 }

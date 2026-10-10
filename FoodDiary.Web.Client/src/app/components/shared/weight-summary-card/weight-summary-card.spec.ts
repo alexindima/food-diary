@@ -44,12 +44,22 @@ function registerBasicTests(): void {
             expect(component['latest']()).toBe(LATEST_WEIGHT);
         });
 
+        it.each(['Enter', ' '])('activates with %s from the keyboard', key => {
+            fixture.detectChanges();
+            const activated = vi.fn();
+            component.cardClick.subscribe(activated);
+            const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+            (fixture.nativeElement as HTMLElement).querySelector('[fdUiActivate]')?.dispatchEvent(event);
+            expect(activated).toHaveBeenCalledOnce();
+            expect(event.defaultPrevented).toBe(true);
+        });
+
         it('should emit cardClick', () => {
             fixture.detectChanges();
             const emitSpy = vi.fn();
             component['cardClick'].subscribe(emitSpy);
 
-            component['cardClick'].emit();
+            (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('[fdUiActivate]')?.click();
             expect(emitSpy).toHaveBeenCalled();
         });
     });

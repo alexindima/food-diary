@@ -21,6 +21,7 @@ import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
+import { scrollElementIntoView } from '../../../../shared/ui/scroll/scroll-element-into-view';
 import { AiMealCreateFacade } from '../../lib/ai/ai-meal-create.facade';
 import { MealListFacade, type MealListStructuredFilters } from '../../lib/list/meal-list.facade';
 import { emptyMealFilters, mealFilterChips, removeMealFilter } from '../../lib/list/meal-list-filter-chips';
@@ -312,7 +313,7 @@ export class MealListComponent {
     }
 
     protected scrollToTop(): void {
-        this.container().nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollElementIntoView(this.container().nativeElement);
     }
 
     protected reloadCurrentPage(): void {

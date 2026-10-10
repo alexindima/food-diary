@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent, FdUiStopActivationDirective } from 'fd-ui-kit';
 
 @Component({
     selector: 'fd-dashboard-widget-header',
-    imports: [FdUiIconComponent, FdUiButtonComponent, FdUiHintDirective],
+    imports: [FdUiStopActivationDirective, FdUiIconComponent, FdUiButtonComponent, FdUiHintDirective],
     templateUrl: './dashboard-widget-header.html',
     styleUrl: './dashboard-widget-header.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

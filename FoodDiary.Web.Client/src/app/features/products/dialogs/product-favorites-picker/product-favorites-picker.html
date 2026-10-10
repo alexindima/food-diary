@@ -23,6 +23,7 @@
         <div class="favorites-picker__list" [hidden]="facade.items().length === 0">
             @for (item of facade.items(); track item.productId) {
                 <fd-favorite-product-row
+                    [focusRequested]="focusTarget() === item.id && !busy()"
                     [product]="item"
                     [removed]="facade.removedIds().has(item.id)"
                     [restoring]="restoringId() === item.id"
@@ -30,6 +31,7 @@
                     [loading]="savingId() === item.id"
                     [disabled]="busy()"
                     [removing]="removingId() === item.id"
+                    (focusHandled)="focusTarget.set(null)"
                     (restore)="undoRemoval($event)"
                     (remove)="remove($event)"
                     (add)="add($event)"

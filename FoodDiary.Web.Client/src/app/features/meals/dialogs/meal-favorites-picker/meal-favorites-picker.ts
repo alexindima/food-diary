@@ -1,16 +1,16 @@
-import { afterRenderEffect, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiDialogShellComponent, FdUiInputComponent, FdUiPaginationComponent } from 'fd-ui-kit';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
-import { debounceTime, distinctUntilChanged, finalize, map, type Observable, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, type Observable, Subject } from 'rxjs';
 
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { type MealTypeOption, normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import type { FavoriteMeal } from '../../../../shared/models/meal.data';
-import type { FavoriteMealId } from '../../../../shared/models/semantics/entity-id';
+import { FavoritesPickerActions } from '../../../../shared/ui/favorites/favorites-picker-actions';
 import { FavoriteMealRowComponent } from '../../components/favorite-meal-row/favorite-meal-row';
 import { buildMealTypeSelectOptions } from '../../components/manage/meal-manage-lib/meal-manage-options.mapper';
 import { MealFavoritesPickerFacade } from '../../lib/favorites/meal-favorites-picker.facade';
@@ -48,24 +48,34 @@ export class MealFavoritesPickerComponent {
         return buildMealTypeSelectOptions(this.translateService);
     });
     protected readonly facade = inject(MealFavoritesPickerFacade);
-    protected readonly savingId = signal<FavoriteMealId | null>(null);
-    protected readonly removingId = signal<FavoriteMealId | null>(null);
-    protected readonly removeFailed = signal(false);
-    protected readonly restoringId = signal<FavoriteMealId | null>(null);
-    protected readonly restoreErrors = signal<ReadonlySet<FavoriteMealId>>(new Set());
-    protected readonly busy = computed(() => this.savingId() !== null || this.removingId() !== null || this.restoringId() !== null);
-    private readonly rows = viewChildren(FavoriteMealRowComponent);
-    private readonly focusTarget = signal<FavoriteMealId | null>(null);
-    protected readonly saveFailed = signal(false);
+    private readonly data = inject<MealFavoritesPickerData>(FD_UI_DIALOG_DATA);
+    private readonly ref = inject(FdUiDialogRef<MealFavoritesPickerComponent, boolean>);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly actions = new FavoritesPickerActions<FavoriteMeal>({
+        page: this.facade,
+        remove: (item): Observable<boolean> => this.data.remove(item),
+        restore: (item): Observable<boolean> => this.data.restore(item),
+        repeat: (item): Observable<boolean> => this.data.repeat(item, this.selectedMealType()),
+        added: (): void => {
+            this.ref.close(true);
+        },
+        destroyRef: this.destroyRef,
+    });
+    protected readonly savingId = this.actions.savingId;
+    protected readonly removingId = this.actions.removingId;
+    protected readonly removeFailed = this.actions.removeFailed;
+    protected readonly restoringId = this.actions.restoringId;
+    protected readonly restoreErrors = this.actions.restoreErrors;
+    protected readonly busy = this.actions.busy;
+    protected readonly focusTarget = this.actions.focusTarget;
+    protected readonly saveFailed = this.actions.saveFailed;
     protected readonly operationErrorKey = computed(() => {
         if (this.saveFailed()) {
             return 'MEAL_FAVORITES.ADD_ERROR';
         }
         return this.removeFailed() ? 'MEAL_FAVORITES.REMOVE_ERROR' : null;
     });
-    private readonly data = inject<MealFavoritesPickerData>(FD_UI_DIALOG_DATA);
-    private readonly ref = inject(FdUiDialogRef<MealFavoritesPickerComponent, boolean>);
-    private readonly destroyRef = inject(DestroyRef);
+
     private readonly searches = new Subject<string>();
 
     protected changeMealType(value: string | number | null): void {
@@ -77,18 +87,6 @@ export class MealFavoritesPickerComponent {
 
     public constructor() {
         this.facade.load();
-        afterRenderEffect(() => {
-            const target = this.focusTarget();
-            if (target === null || this.busy()) {
-                return;
-            }
-            this.rows()
-                .find(row => row.meal().id === target)
-                ?.action()
-                ?.nativeElement.querySelector<HTMLButtonElement>('button')
-                ?.focus();
-            this.focusTarget.set(null);
-        });
         this.searches
             .pipe(
                 map(value => value.trim()),
@@ -106,10 +104,7 @@ export class MealFavoritesPickerComponent {
     }
 
     protected load(page: number, search = this.facade.search()): void {
-        this.restoreErrors.set(new Set());
-        this.removeFailed.set(false);
-        this.saveFailed.set(false);
-        this.focusTarget.set(null);
+        this.actions.resetPresentation();
         this.facade.load(page, search);
     }
 
@@ -120,100 +115,14 @@ export class MealFavoritesPickerComponent {
     }
 
     protected remove(item: FavoriteMeal): void {
-        if (this.busy() || this.facade.removedIds().has(item.id)) {
-            return;
-        }
-        this.removingId.set(item.id);
-        this.removeFailed.set(false);
-        const revision = this.facade.revision();
-        this.data
-            .remove(item)
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => {
-                    this.removingId.set(null);
-                }),
-            )
-            .subscribe({
-                next: removed => {
-                    if (revision !== this.facade.revision()) {
-                        return;
-                    }
-                    if (removed) {
-                        this.focusTarget.set(item.id);
-                        this.facade.markRemoved(item.id);
-                    } else {
-                        this.removeFailed.set(true);
-                    }
-                },
-                error: () => {
-                    if (revision === this.facade.revision()) {
-                        this.removeFailed.set(true);
-                    }
-                },
-            });
+        this.actions.remove(item);
     }
 
     protected undoRemoval(item: FavoriteMeal): void {
-        if (!this.facade.removedIds().has(item.id) || this.busy()) {
-            return;
-        }
-        const revision = this.facade.revision();
-        this.restoringId.set(item.id);
-        this.restoreErrors.update(ids => new Set([...ids].filter(id => id !== item.id)));
-        this.data
-            .restore(item)
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => {
-                    this.restoringId.set(null);
-                }),
-            )
-            .subscribe({
-                next: restored => {
-                    if (revision !== this.facade.revision()) {
-                        return;
-                    }
-                    if (restored) {
-                        this.facade.markRestored(item.id);
-                        this.focusTarget.set(item.id);
-                    } else {
-                        this.restoreErrors.update(ids => new Set([...ids, item.id]));
-                    }
-                },
-                error: () => {
-                    if (revision === this.facade.revision()) {
-                        this.restoreErrors.update(ids => new Set([...ids, item.id]));
-                    }
-                },
-            });
+        this.actions.restore(item);
     }
 
     protected add(item: FavoriteMeal): void {
-        if (this.busy()) {
-            return;
-        }
-        this.savingId.set(item.id);
-        this.saveFailed.set(false);
-        this.data
-            .repeat(item, this.selectedMealType())
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => {
-                    this.savingId.set(null);
-                }),
-            )
-            .subscribe({
-                next: added => {
-                    if (added) {
-                        this.ref.close(true);
-                    } else {
-                        this.saveFailed.set(true);
-                    }
-                },
-                error: () => {
-                    this.saveFailed.set(true);
-                },
-            });
+        this.actions.add(item);
     }
 }

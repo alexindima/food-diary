@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiActivateDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
@@ -13,7 +14,15 @@ import type { MealPlanCardViewModel } from '../../../../lib/meal-plan-view.mappe
 
 @Component({
     selector: 'fd-meal-plan-list-content',
-    imports: [FdUiButtonComponent, LocalizedNumberPipe, TranslatePipe, FdUiIconComponent, FdUiLoaderComponent, FdCardHoverDirective],
+    imports: [
+        FdUiActivateDirective,
+        FdUiButtonComponent,
+        LocalizedNumberPipe,
+        TranslatePipe,
+        FdUiIconComponent,
+        FdUiLoaderComponent,
+        FdCardHoverDirective,
+    ],
     templateUrl: './meal-plan-list-content.html',
     styleUrl: '../../meal-plans-list-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

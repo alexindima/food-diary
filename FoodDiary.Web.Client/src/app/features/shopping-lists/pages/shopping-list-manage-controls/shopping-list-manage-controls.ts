@@ -1,19 +1,8 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    DestroyRef,
-    effect,
-    ElementRef,
-    inject,
-    input,
-    output,
-    signal,
-    untracked,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { FieldTree } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiFocusWhenDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
@@ -31,12 +20,12 @@ import {
     type ShoppingListBrowserResult,
 } from '../../dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog';
 
-const RENAME_FOCUS_DELAY_MS = 0;
 const QUICK_LIST_LIMIT = 3;
 
 @Component({
     selector: 'fd-shopping-list-manage-controls',
     imports: [
+        FdUiFocusWhenDirective,
         TranslatePipe,
         ShoppingListBrowserComponent,
         FdUiButtonComponent,
@@ -55,7 +44,6 @@ export class ShoppingListManageControlsComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly slots = signal<ShoppingListId[]>([]);
     private readonly recency = signal<ShoppingListId[]>([]);
-    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
     public readonly listSelectField = input.required<FieldTree<string | null>>();
     public readonly initialPage = input<ShoppingListPage | null>(null);
@@ -207,16 +195,5 @@ export class ShoppingListManageControlsComponent {
     private startRename(list: ShoppingListSummary): void {
         this.editingListId.set(list.id);
         this.renameDraft.set(list.name);
-        this.focusNameInput(RENAME_FOCUS_DELAY_MS);
-    }
-
-    private focusNameInput(delayMs: number): void {
-        setTimeout(() => {
-            setTimeout(() => {
-                const nameInput = this.host.nativeElement.querySelector<HTMLInputElement>('.shopping-list__list-card-rename-input');
-                nameInput?.focus();
-                nameInput?.select();
-            }, 0);
-        }, delayMs);
     }
 }

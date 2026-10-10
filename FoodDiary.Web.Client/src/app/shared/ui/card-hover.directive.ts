@@ -67,11 +67,8 @@ export class FdCardHoverDirective {
         }
 
         const element: HTMLElement = this.elementRef.nativeElement;
-        const styles = getComputedStyle(element);
-        const cssTransform = styles.getPropertyValue('--fd-card-hover-transform').trim();
-        const cssShadow = styles.getPropertyValue('--fd-card-hover-shadow').trim();
-        const transform = this.fdCardHoverTransform() ?? cssTransform;
-        const boxShadow = this.fdCardHoverShadow() ?? cssShadow;
+        const transform = this.fdCardHoverTransform() ?? 'var(--fd-card-hover-transform)';
+        const boxShadow = this.fdCardHoverShadow() ?? 'var(--fd-card-hover-shadow)';
         this.renderer.setStyle(element, 'transform', transform);
         this.renderer.setStyle(element, 'box-shadow', boxShadow);
     }

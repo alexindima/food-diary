@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signa
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiActivateDirective, FdUiStopActivationDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
@@ -29,6 +30,8 @@ const DEFAULT_MAIL_INBOX_LIMIT = 50;
 @Component({
     selector: 'fd-admin-mail-inbox',
     imports: [
+        FdUiStopActivationDirective,
+        FdUiActivateDirective,
         AdminPeriodControlComponent,
         RouterLink,
         CommonModule,

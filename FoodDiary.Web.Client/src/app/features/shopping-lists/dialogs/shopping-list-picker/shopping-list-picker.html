@@ -2,7 +2,12 @@
     <form class="fd-stack fd-gap-lg" [formRoot]="fields" (submit)="submit($event)">
         <fd-ui-select [label]="'PUBLIC_RECIPES.SHOPPING_LIST' | translate" [options]="options" [formField]="fields.id" />
         @if (draft().id === '') {
-            <fd-ui-input #listName [selectOnFocus]="true" [label]="'PUBLIC_RECIPES.SHOPPING_NAME' | translate" [formField]="fields.name" />
+            <fd-ui-input
+                [fdUiFocusWhen]="true"
+                [selectOnFocus]="true"
+                [label]="'PUBLIC_RECIPES.SHOPPING_NAME' | translate"
+                [formField]="fields.name"
+            />
         }
         <p class="fd-ui-action-text" [hidden]="count === undefined">{{ 'PUBLIC_RECIPES.SHOPPING_COUNT' | translate: { count: count } }}</p>
         @if (item; as ingredient) {

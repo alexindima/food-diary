@@ -1,17 +1,6 @@
-import {
-    afterNextRender,
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    effect,
-    ElementRef,
-    inject,
-    input,
-    output,
-    signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiIconComponent, FdUiInputComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiFocusWhenDirective, FdUiIconComponent, FdUiInputComponent } from 'fd-ui-kit';
 
 import type { ShoppingListId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingListPage, ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
@@ -22,13 +11,12 @@ import { ShoppingListBrowserFacade } from '../../lib/shopping-list-browser.facad
     providers: [ShoppingListBrowserFacade],
     templateUrl: './shopping-list-browser.html',
     styleUrl: './shopping-list-browser.scss',
-    imports: [TranslatePipe, FdUiButtonComponent, FdUiIconComponent, FdUiInputComponent],
+    imports: [FdUiFocusWhenDirective, TranslatePipe, FdUiButtonComponent, FdUiIconComponent, FdUiInputComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShoppingListBrowserComponent {
     protected readonly browser = inject(ShoppingListBrowserFacade);
     private readonly translate = inject(TranslateService);
-    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     public readonly initialPage = input<ShoppingListPage | null>(null);
     public readonly lists = input.required<readonly ShoppingListSummary[]>();
     public readonly selectedId = input<ShoppingListId | null>(null);
@@ -83,11 +71,6 @@ export class ShoppingListBrowserComponent {
             onCleanup(() => {
                 clearTimeout(timer);
             });
-        });
-        afterNextRender(() => {
-            if (this.focusSearch()) {
-                this.host.nativeElement.querySelector<HTMLInputElement>('input')?.focus();
-            }
         });
     }
 }

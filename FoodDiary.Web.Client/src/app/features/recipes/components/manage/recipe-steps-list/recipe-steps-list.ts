@@ -1,5 +1,5 @@
 import { type CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
-import { afterNextRender, ChangeDetectionStrategy, Component, ElementRef, inject, Injector, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
@@ -36,8 +36,7 @@ export type RecipeStepListItem = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeStepsListComponent {
-    private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly injector = inject(Injector);
+    protected readonly focusRequest = signal<{ index: number; target: 'actions' | 'description' } | null>(null);
     public readonly steps = input.required<readonly RecipeStepListItem[]>();
     public readonly expandedSteps = input.required<ReadonlySet<number>>();
     public readonly stepsError = input<string | null>(null);
@@ -99,32 +98,13 @@ export class RecipeStepsListComponent {
             return;
         }
         this.onStepDrop({ previousIndex, currentIndex });
-        afterNextRender(
-            () => {
-                const steps = this.element.nativeElement.querySelectorAll('fd-recipe-step-card');
-                if (currentIndex >= steps.length) {
-                    return;
-                }
-                steps.item(currentIndex).querySelector<HTMLButtonElement>('fd-ui-button[aria-haspopup="menu"] button')?.focus();
-            },
-            { injector: this.injector },
-        );
+        this.focusRequest.set({ index: currentIndex, target: 'actions' });
     }
 
     protected onAddStep(): void {
+        const index = this.steps().length;
         this.addStep.emit();
-        afterNextRender(
-            () => {
-                const descriptions = this.element.nativeElement.querySelectorAll<HTMLTextAreaElement>('fd-recipe-step-card textarea');
-                if (descriptions.length === 0) {
-                    return;
-                }
-                const description = descriptions.item(descriptions.length - 1);
-                description.focus({ preventScroll: true });
-                description.scrollIntoView({ block: 'nearest' });
-            },
-            { injector: this.injector },
-        );
+        this.focusRequest.set({ index, target: 'description' });
     }
 
     protected onAddIngredient(stepIndex: number): void {

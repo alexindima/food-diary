@@ -124,7 +124,12 @@ export class FdTourService {
         const step = this.activeStep();
         const target = step === null ? null : this.findTarget(step);
         if (target instanceof HTMLElement && typeof target.scrollIntoView === 'function') {
-            target.scrollIntoView({ block: 'center', inline: 'center', behavior: 'smooth' });
+            const viewport = this.document.defaultView;
+            const reducedMotion =
+                viewport !== null &&
+                typeof viewport.matchMedia === 'function' &&
+                viewport.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            target.scrollIntoView({ block: 'center', inline: 'center', behavior: reducedMotion ? 'instant' : 'smooth' });
         }
     }
 

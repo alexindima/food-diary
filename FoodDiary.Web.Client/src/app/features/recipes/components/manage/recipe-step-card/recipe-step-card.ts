@@ -2,7 +2,7 @@ import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiFocusWhenDirective, FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
@@ -41,6 +41,7 @@ export type RecipeStepIngredientState = {
     imports: [
         TranslatePipe,
         FdUiHintDirective,
+        FdUiFocusWhenDirective,
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiInputComponent,
@@ -66,6 +67,9 @@ export class RecipeStepCardComponent {
     public readonly busy = input(false);
     public readonly dragDisabled = input.required<boolean>();
     public readonly canMoveDown = input(false);
+    public readonly focusActions = input(false);
+    public readonly focusDescription = input(false);
+    public readonly focusHandled = output();
 
     public readonly fieldBlur = output<{ field: 'description' | 'amount' | 'foodName'; ingredientIndex?: number }>();
     public readonly removeStep = output();

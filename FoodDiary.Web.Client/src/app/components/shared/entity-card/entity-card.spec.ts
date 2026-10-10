@@ -202,11 +202,13 @@ describe('EntityCardComponent events', () => {
     });
 
     it('stops favorite keyboard events from reaching the card', async () => {
-        const { component, fixture } = await setupEntityCardAsync();
-        const stopPropagationSpy = vi.fn();
+        const { fixture } = await setupEntityCardAsync();
+        const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
+        const stopPropagationSpy = vi.spyOn(event, 'stopPropagation');
+        fixture.componentRef.setInput('showFavorite', true);
         fixture.detectChanges();
 
-        component['stopCardKeyboardEvent']({ stopPropagation: stopPropagationSpy } as unknown as KeyboardEvent);
+        (fixture.nativeElement as HTMLElement).querySelector('.entity-card__favorite-button')?.dispatchEvent(event);
 
         expect(stopPropagationSpy).toHaveBeenCalledOnce();
     });

@@ -3,8 +3,8 @@
   "summary": {
     "components": 488,
     "componentsWithoutDirectSpecs": 126,
-    "inputs": 1570,
-    "outputs": 543,
+    "inputs": 1576,
+    "outputs": 547,
     "apiCalls": 314,
     "templatesWithTranslations": 351,
     "translationKeys": 2130,
@@ -4383,6 +4383,11 @@
           "required": false
         },
         {
+          "name": "ariaHasPopup",
+          "type": "'menu' | 'listbox' | 'tree' | 'grid' | 'dialog' | null",
+          "required": false
+        },
+        {
           "name": "disabledReason",
           "type": "string | null",
           "required": false
@@ -7917,6 +7922,11 @@
           "required": false
         },
         {
+          "name": "focusRequested",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "removing",
           "type": "",
           "required": false
@@ -7940,6 +7950,10 @@
         {
           "name": "restore",
           "type": "FavoriteMeal"
+        },
+        {
+          "name": "focusHandled",
+          "type": ""
         },
         {
           "name": "add",
@@ -8976,6 +8990,11 @@
           "required": false
         },
         {
+          "name": "focusRequested",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "removing",
           "type": "",
           "required": false
@@ -8999,6 +9018,10 @@
         {
           "name": "restore",
           "type": "FavoriteProduct"
+        },
+        {
+          "name": "focusHandled",
+          "type": ""
         },
         {
           "name": "add",
@@ -10546,6 +10569,11 @@
           "required": false
         },
         {
+          "name": "focusRequested",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "removing",
           "type": "",
           "required": false
@@ -10569,6 +10597,10 @@
         {
           "name": "restore",
           "type": "FavoriteRecipe"
+        },
+        {
+          "name": "focusHandled",
+          "type": ""
         },
         {
           "name": "add",
@@ -11296,9 +11328,23 @@
           "name": "canMoveDown",
           "type": "",
           "required": false
+        },
+        {
+          "name": "focusActions",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "focusDescription",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
+        {
+          "name": "focusHandled",
+          "type": ""
+        },
         {
           "name": "fieldBlur",
           "type": "{ field: 'description' | 'amount' | 'foodName'; ingredientIndex?: number }"
@@ -26306,6 +26352,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "disabled",
+        "focusRequested",
         "loading",
         "meal",
         "removed",
@@ -26315,6 +26362,7 @@
       ],
       "outputsHandled": [
         "add",
+        "focusHandled",
         "remove",
         "restore"
       ]
@@ -26328,6 +26376,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "disabled",
+        "focusRequested",
         "loading",
         "product",
         "removed",
@@ -26337,6 +26386,7 @@
       ],
       "outputsHandled": [
         "add",
+        "focusHandled",
         "remove",
         "restore"
       ]
@@ -26350,6 +26400,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "disabled",
+        "focusRequested",
         "loading",
         "recipe",
         "removed",
@@ -26359,6 +26410,7 @@
       ],
       "outputsHandled": [
         "add",
+        "focusHandled",
         "remove",
         "restore"
       ]
@@ -35344,6 +35396,7 @@
         "placeholder",
         "prefixIcon",
         "readonly",
+        "selectOnFocus",
         "size",
         "step",
         "suffixText",

@@ -5,7 +5,8 @@
     [class]="classes()"
     [attr.aria-label]="ariaLabel() || null"
     [attr.aria-pressed]="ariaPressed()"
-    [attr.aria-expanded]="ariaExpanded()"
+    [attr.aria-expanded]="effectiveAriaExpanded()"
+    [attr.aria-haspopup]="effectiveAriaHasPopup()"
     [attr.aria-busy]="loading() ? 'true' : null"
     [attr.title]="effectiveDisabledReason()"
 >

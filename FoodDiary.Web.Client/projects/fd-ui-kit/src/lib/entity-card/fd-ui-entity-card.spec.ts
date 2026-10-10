@@ -70,4 +70,15 @@ describe('FdUiEntityCardComponent', () => {
         expect(projected).toBeTruthy();
         expect(projected?.textContent.trim()).toBe('Body content');
     });
+
+    it('recovers from a failed image when its source is replaced', () => {
+        fixture.componentInstance.imageUrl.set('/before.jpg');
+        fixture.detectChanges();
+        hostEl.querySelector('img')?.dispatchEvent(new Event('error'));
+        fixture.detectChanges();
+        expect(hostEl.querySelector('img')?.getAttribute('src')).toBe('assets/images/vegetables.svg');
+        fixture.componentInstance.imageUrl.set('/after.jpg');
+        fixture.detectChanges();
+        expect(hostEl.querySelector('img')?.getAttribute('src')).toBe('/after.jpg');
+    });
 });

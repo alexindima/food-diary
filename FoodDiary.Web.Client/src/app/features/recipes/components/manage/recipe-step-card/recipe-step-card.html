@@ -12,6 +12,8 @@
                     <fd-ui-input
                         class="recipe-step-card__title-input"
                         appearance="inline-edit"
+                        [fdUiFocusWhen]="true"
+                        [selectOnFocus]="true"
                         [value]="step().title.value"
                         [placeholder]="titleDisplay()"
                         [ariaLabel]="'RECIPE_MANAGE.EDIT_STEP_TITLE' | translate"
@@ -41,8 +43,10 @@
                     icon="more_horiz"
                     [ariaLabel]="'RECIPE_MANAGE.STEP_ACTIONS' | translate"
                     [fdUiMenuTrigger]="stepMenu"
+                    [fdUiFocusWhen]="focusActions()"
                     [disabled]="busy() || uploading()"
                     [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+                    (fdUiFocused)="focusHandled.emit()"
                 />
                 <fd-ui-menu #stepMenu>
                     <fd-ui-menu-item (itemClick)="toggleStepTitleEdit()">{{ 'RECIPE_MANAGE.EDIT_STEP_TITLE' | translate }}</fd-ui-menu-item>
@@ -97,6 +101,7 @@
                 </div>
                 <div class="recipe-step-card__description">
                     <fd-ui-textarea
+                        [fdUiFocusWhen]="focusDescription()"
                         [value]="step().description.value"
                         [rows]="3"
                         [stretch]="true"
@@ -104,6 +109,7 @@
                         [label]="'RECIPE_MANAGE.STEP_DESCRIPTION' | translate"
                         [placeholder]="'RECIPE_MANAGE.STEP_DESCRIPTION_PLACEHOLDER' | translate"
                         [error]="descriptionError()"
+                        (fdUiFocused)="focusHandled.emit()"
                         (valueChange)="onStepDescriptionInput($event)"
                         (focusout)="fieldBlur.emit({ field: 'description' })"
                     />

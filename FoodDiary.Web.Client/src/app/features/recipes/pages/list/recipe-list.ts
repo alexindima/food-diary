@@ -30,6 +30,7 @@ import type { FavoriteRecipe, Recipe, RecipeFilters } from '../../../../shared/m
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
+import { scrollElementIntoView } from '../../../../shared/ui/scroll/scroll-element-into-view';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
 import type { RecipeListFiltersDialogResult } from '../../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.types';
 import {
@@ -333,7 +334,7 @@ export class RecipeListComponent {
     }
 
     private scrollToTop(): void {
-        this.container().nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollElementIntoView(this.container().nativeElement);
     }
 
     private reloadCurrentPage(): void {

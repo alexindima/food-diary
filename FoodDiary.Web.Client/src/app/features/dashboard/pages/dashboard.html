@@ -1,4 +1,10 @@
-<div #dashboardRoot class="dashboard fd-stack" fdPageContainer [class.dashboard--editing]="layout.isEditingLayout()">
+<div
+    #dashboardRoot
+    class="dashboard fd-stack"
+    fdPageContainer
+    [fdUiPreventUnload]="layout.hasLayoutChanges()"
+    [class.dashboard--editing]="layout.isEditingLayout()"
+>
     <fd-page-header [title]="dashboardTitle()" [subtitle]="'DASHBOARD.SUBTITLE' | translate" [compactActions]="true">
         <div
             class="dashboard__date-group fd-inline-center"

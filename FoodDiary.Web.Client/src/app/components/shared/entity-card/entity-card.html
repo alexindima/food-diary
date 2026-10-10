@@ -28,15 +28,14 @@
         <button
             fdMediaCardContent
             type="button"
+            fdUiStopActivation
             class="entity-card__favorite-button fd-favorite-button fd-inline-center"
             [class.entity-card__favorite-button--active]="isFavorite()"
             [class.fd-favorite-button--active]="isFavorite()"
             [fdUiHint]="favoriteAriaLabel()"
             [attr.aria-label]="favoriteAriaLabel()"
             [disabled]="favoriteLoading()"
-            (click)="toggleFavorite($event)"
-            (keydown.enter)="stopCardKeyboardEvent($event)"
-            (keydown.space)="stopCardKeyboardEvent($event)"
+            (click)="toggleFavorite()"
         >
             <fd-ui-icon class="entity-card__favorite-button-icon" [name]="favoriteIcon()" />
         </button>
@@ -58,12 +57,11 @@
         <button
             fdMediaCardContent
             type="button"
+            fdUiStopActivation
             class="entity-card__compact-action fd-ui-body-sm"
             [attr.aria-label]="actionAriaLabel()"
             [fdUiHint]="actionAriaLabel()"
-            (click)="$event.stopPropagation(); emitCardAction()"
-            (keydown.enter)="stopCardKeyboardEvent($event)"
-            (keydown.space)="stopCardKeyboardEvent($event)"
+            (click)="emitCardAction()"
         >
             <fd-ui-icon [name]="actionIcon()" />
             @if (actionLabel()) {

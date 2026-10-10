@@ -37,6 +37,7 @@
     }
     @if (quality(); as cardQuality) {
         <button
+            fdUiStopActivation
             type="button"
             class="nutrient-badges__chip nutrient-badges__chip--quality entity-card__quality fd-inline-center fd-gap-pill"
             [attr.aria-expanded]="explanationVisible()"
@@ -44,9 +45,7 @@
             [class.nutrient-badges__chip--quality-yellow]="cardQuality.grade === 'yellow'"
             [class.nutrient-badges__chip--quality-red]="cardQuality.grade === 'red'"
             [attr.aria-label]="'PRODUCT_CARD.QUALITY_SCORE' | translate"
-            (click)="$event.stopPropagation(); explanationVisible.set(!explanationVisible())"
-            (keydown.enter)="$event.stopPropagation()"
-            (keydown.space)="$event.stopPropagation()"
+            (click)="explanationVisible.set(!explanationVisible())"
         >
             <span class="nutrient-badges__quality-label entity-card__quality-label fd-ui-stat-label fd-nowrap">
                 {{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}

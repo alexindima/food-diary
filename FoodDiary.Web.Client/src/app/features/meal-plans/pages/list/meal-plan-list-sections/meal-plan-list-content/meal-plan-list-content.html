@@ -15,15 +15,7 @@
 } @else {
     <div class="meal-plans-list__grid fd-grid fd-gap-lg">
         @for (plan of plans(); track plan.id) {
-            <div
-                class="meal-plan-card fd-stack fd-gap-xs"
-                fdCardHover
-                role="button"
-                tabindex="0"
-                (click)="planOpen.emit(plan.id)"
-                (keydown.enter)="planOpen.emit(plan.id)"
-                (keydown.space)="$event.preventDefault(); planOpen.emit(plan.id)"
-            >
+            <div class="meal-plan-card fd-stack fd-gap-xs" fdCardHover fdUiActivate (fdUiActivated)="planOpen.emit(plan.id)">
                 <div class="meal-plan-card__badge fd-ui-pill fd-ui-pill--compact fd-ui-overline">{{ plan.dietTypeKey | translate }}</div>
                 <h2 class="meal-plan-card__name fd-ui-title-sm">{{ plan.name }}</h2>
                 <p class="meal-plan-card__desc fd-ui-body" [hidden]="!plan.description">{{ plan.description }}</p>
