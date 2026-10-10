@@ -1,0 +1,7 @@
+interface:
+  display_name: "FoodDiary Dependency Security"
+  short_description: "Audit Dependabot alerts and review temporary pins"
+  default_prompt: "Use $fooddiary-dependency-security to inspect FoodDiary Dependabot alerts, compare local audits, and review temporary overrides."
+
+policy:
+  allow_implicit_invocation: true
