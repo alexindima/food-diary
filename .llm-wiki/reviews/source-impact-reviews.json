@@ -588,13 +588,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "d31c46e7a4be68c81308bbf638c9c2e405043efae4a2a7b9b595fe22b2e99f93"
+          "sha256": "0541843cfeb65e9ca4deb984924d190338fc320a92cb45fd5c0a8e72b7ce17d1"
         }
       ],
-      "reason": "Reviewed final formatted package.json with agent tools, real-dependency contract checker and revision comparison tests registered in verify. Existing rendered product UI and locales remain unchanged; owned diagnostics and error collection were exercised through the actual MCP transport.",
+      "reason": "Only the Handlebars npm override and lock entry change from 4.7.9 to 4.7.10 to resolve Dependabot alerts 276 277 278. The frontend visual evidence workflow remains accurate because rendered UI, routes, interactions, styles and browser contracts are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
-      "reviewedAtUtc": "2026-10-09T23:25:50.2546260Z"
+      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
+      "reviewedAtUtc": "2026-10-10T12:56:41.0604903Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",

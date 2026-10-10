@@ -3,6 +3,7 @@
     "version": "0.0.0",
     "type": "module",
     "overrides": {
+        "handlebars": "4.7.10",
         "concurrently": {
             "shell-quote": "1.11.0"
         },
