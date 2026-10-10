@@ -28,9 +28,19 @@ export class FdUiButtonComponent {
     public readonly ariaLabel = input<string | undefined>();
     public readonly ariaPressed = input<boolean | null>(null);
     public readonly ariaExpanded = input<boolean | null>(null);
+    public readonly ariaControls = input<string | null>(null);
+    public readonly ariaCurrent = input<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | null>(null);
+    public readonly ariaBusy = input<boolean | null>(null);
+    public readonly ariaDescribedBy = input<string | null>(null);
     public readonly ariaHasPopup = input<'menu' | 'listbox' | 'tree' | 'grid' | 'dialog' | null>(null);
     public readonly disabledReason = input<string | null>(null);
     private readonly menuExpanded = signal<boolean | null>(null);
+    private readonly hintDescription = signal<string | null>(null);
+    protected readonly effectiveAriaDescribedBy = computed(() => {
+        const tokens = [this.ariaDescribedBy(), this.hintDescription()].filter(Boolean).join(' ').split(/\s+/).filter(Boolean);
+        const descriptions = Array.from(new Set(tokens)).join(' ');
+        return descriptions.length > 0 ? descriptions : null;
+    });
     protected readonly effectiveAriaExpanded = computed(() => this.menuExpanded() ?? this.ariaExpanded());
     protected readonly effectiveAriaHasPopup = computed(() => (this.menuExpanded() === null ? this.ariaHasPopup() : 'menu'));
 
@@ -72,6 +82,12 @@ export class FdUiButtonComponent {
     // eslint-disable-next-line local/prefer-protected-template-members -- Public accessibility contract used by menu triggers.
     public setMenuState(expanded: boolean | null): void {
         this.menuExpanded.set(expanded);
+    }
+
+    /** Keeps tooltip descriptions on the native control alongside consumer descriptions. */
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public accessibility contract used by hint directives.
+    public setHintDescription(id: string | null): void {
+        this.hintDescription.set(id);
     }
 }
 

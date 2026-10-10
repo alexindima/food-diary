@@ -132,7 +132,8 @@ export class FdUiMenuTriggerDirective {
                 }
 
                 if (event.key === 'Tab') {
-                    this.close(false);
+                    // Anchor the browser's default Tab movement before removing the focused portal.
+                    this.close();
                 }
             }),
         );

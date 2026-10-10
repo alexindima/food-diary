@@ -156,6 +156,7 @@ export class DashboardLayoutService {
         return {
             web: this.normalizeLayoutList(layout?.web, DEFAULT_LAYOUT.web ?? []),
             mobile: this.normalizeLayoutList(layout?.mobile, DEFAULT_LAYOUT.mobile ?? []),
+            ...(layout?.setupHintDismissed === undefined ? {} : { setupHintDismissed: layout.setupHintDismissed }),
         };
     }
 
@@ -180,9 +181,12 @@ export class DashboardLayoutService {
 
     private async persistLayoutAsync(layout: DashboardLayoutSettings): Promise<boolean> {
         try {
-            const user = await firstValueFrom(this.userService.updateDashboardLayout(layout).pipe(takeUntilDestroyed(this.destroyRef)), {
-                defaultValue: null,
-            });
+            const user = await firstValueFrom(
+                this.userService
+                    .updateDashboardLayout({ web: layout.web, mobile: layout.mobile })
+                    .pipe(takeUntilDestroyed(this.destroyRef)),
+                { defaultValue: null },
+            );
             if (user === null) {
                 this.saveFailed.set(true);
                 return false;

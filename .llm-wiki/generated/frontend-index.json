@@ -8,16 +8,16 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2514,
-    "symbols": 814,
+    "typescriptFiles": 2518,
+    "symbols": 816,
     "routes": 106,
     "features": 46,
-    "specs": 724,
+    "specs": 726,
     "localeFiles": 5,
     "roles": {
-      "Component": 483,
+      "Component": 484,
       "Directive": 15,
-      "Facade": 86,
+      "Facade": 87,
       "Other": 34,
       "Pipe": 4,
       "Service": 192
@@ -547,6 +547,8 @@
         "DashboardNotificationSettingsFacade",
         "DashboardQuickAddComponent",
         "DashboardService",
+        "DashboardSetupCardComponent",
+        "DashboardSetupFacade",
         "DashboardSummaryBlockComponent",
         "DashboardTdeeBlockComponent",
         "DashboardTrendBlockComponent",
@@ -570,6 +572,7 @@
         "FoodDiary.Web.Client/src/app/features/dashboard/components/cycle-summary-card/cycle-summary-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/components/daily-advice-card/daily-advice-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-fasting-card/dashboard-fasting-card.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-setup-card/dashboard-setup-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-content/tdee-insight-card-content.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card.spec.ts",
@@ -582,6 +585,7 @@
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-layout.service.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-local-day.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-nutrition.utils.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-setup.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-trend.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/nutrition-insight.policy.spec.ts",
@@ -1803,7 +1807,7 @@
       "role": "Directive",
       "selector": "[fdUiHint]",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/hint/fd-ui-hint.directive.ts",
-      "line": 94
+      "line": 106
     },
     {
       "name": "FdUiIconComponent",
@@ -1852,7 +1856,7 @@
       "role": "Directive",
       "selector": "[fdUiFocusWhen]",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/interaction/fd-ui-focus-when.directive.ts",
-      "line": 10
+      "line": 11
     },
     {
       "name": "FdUiPreventUnloadDirective",
@@ -2020,7 +2024,7 @@
       "role": "Component",
       "selector": "fd-ui-select",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
-      "line": 43
+      "line": 44
     },
     {
       "name": "FdUiSidebarItemComponent",
@@ -3217,7 +3221,7 @@
       "role": "Component",
       "selector": "fd-image-upload-field",
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field.ts",
-      "line": 71
+      "line": 72
     },
     {
       "name": "MealCardComponent",
@@ -3745,6 +3749,13 @@
       "line": 35
     },
     {
+      "name": "DashboardSetupCardComponent",
+      "role": "Component",
+      "selector": "fd-dashboard-setup-card",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-setup-card/dashboard-setup-card.ts",
+      "line": 15
+    },
+    {
       "name": "HydrationCardComponent",
       "role": "Component",
       "selector": "fd-hydration-card",
@@ -3850,6 +3861,13 @@
       "line": 10
     },
     {
+      "name": "DashboardSetupFacade",
+      "role": "Facade",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-setup.facade.ts",
+      "line": 8
+    },
+    {
       "name": "DashboardFacade",
       "role": "Facade",
       "selector": null,
@@ -3945,7 +3963,7 @@
       "role": "Component",
       "selector": "fd-dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts",
-      "line": 103
+      "line": 105
     },
     {
       "name": "DietologistService",
@@ -7067,14 +7085,14 @@
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/models/user.data.ts",
-      "line": 78
+      "line": 79
     },
     {
       "name": "UpdateUserAppearanceDto",
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/models/user.data.ts",
-      "line": 129
+      "line": 130
     },
     {
       "name": "BrowserNotificationCapabilityService",
@@ -7817,8 +7835,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4090,
-      "russianProperties": 4090,
+      "englishProperties": 4092,
+      "russianProperties": 4092,
       "countsMatch": true
     },
     {

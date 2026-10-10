@@ -48,7 +48,7 @@
             <p role="alert">{{ 'WEIGHT_HISTORY.ERROR_LOAD_PAGE' | translate }}</p>
             <fd-ui-button (click)="retryPageLoad()">{{ 'ERRORS.RETRY' | translate }}</fd-ui-button>
         </div>
-        <div [hidden]="pageLoadError()">
+        <div class="weight-history-page__sections fd-stack" [hidden]="pageLoadError()">
             <p role="alert" [hidden]="deleteError() === null">{{ deleteError() }}</p>
             <section class="weight-history-page__summary" [attr.aria-label]="'WEIGHT_HISTORY.SUMMARY_TITLE' | translate">
                 <fd-ui-card class="weight-history-page__metric-card">

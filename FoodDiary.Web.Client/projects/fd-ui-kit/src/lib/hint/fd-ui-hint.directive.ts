@@ -1,8 +1,20 @@
-import { type ConnectedPosition, Overlay, type OverlayRef } from '@angular/cdk/overlay';
+import { type ConnectedPosition, type FlexibleConnectedPositionStrategy, Overlay, type OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
-import { booleanAttribute, DestroyRef, Directive, ElementRef, inject, input, TemplateRef } from '@angular/core';
+import {
+    afterEveryRender,
+    booleanAttribute,
+    type ComponentRef,
+    DestroyRef,
+    Directive,
+    effect,
+    ElementRef,
+    inject,
+    input,
+    TemplateRef,
+} from '@angular/core';
 
+import { FdUiButtonComponent } from '../button/fd-ui-button';
 import { FD_UI_HINT_SHOW_DELAY_MS } from './fd-ui-hint.tokens';
 import { FdUiHintOverlayComponent } from './fd-ui-hint-overlay';
 
@@ -109,12 +121,34 @@ export class FdUiHintDirective {
     private readonly destroyRef = inject(DestroyRef);
     private readonly document = inject(DOCUMENT);
     private readonly tooltipId = `fd-ui-hint-${nextHintId++}`;
-    private readonly initialAriaDescribedBy: string | null = this.elementRef.nativeElement.getAttribute('aria-describedby');
+    private readonly button = inject(FdUiButtonComponent, { self: true, optional: true });
     private overlayRef: OverlayRef | null = null;
+    private hintRef: ComponentRef<FdUiHintOverlayComponent> | null = null;
+    private positionStrategy: FlexibleConnectedPositionStrategy | null = null;
     private showTimeoutId: number | null = null;
     private hideTimeoutId: number | null = null;
 
     public constructor() {
+        effect(() => {
+            const content = this.fdUiHint();
+            const disabled = this.fdUiHintDisabled();
+            const context = this.fdUiHintContext();
+            const html = this.fdUiHintHtml();
+            const positions = this.getPositions();
+            if (disabled || !this.hasContent()) {
+                this.clearTimers();
+                this.hide();
+            } else if (content !== null && this.hintRef !== null) {
+                this.updateContent(content, context, html);
+                this.positionStrategy?.withPositions(positions);
+                this.overlayRef?.updatePosition();
+            }
+        });
+        afterEveryRender(() => {
+            if (this.overlayRef?.hasAttached() === true) {
+                this.syncAriaDescribedBy(true);
+            }
+        });
         this.destroyRef.onDestroy(() => {
             this.clearTimers();
             this.syncAriaDescribedBy(false);
@@ -211,22 +245,32 @@ export class FdUiHintDirective {
         }
 
         this.overlayRef ??= this.createOverlay();
+        this.positionStrategy?.withPositions(this.getPositions());
 
         if (this.overlayRef.hasAttached()) {
             return;
         }
 
         const portal = new ComponentPortal(FdUiHintOverlayComponent);
-        const ref = this.overlayRef.attach(portal);
+        this.hintRef = this.overlayRef.attach(portal);
         this.overlayRef.overlayElement.style.pointerEvents = 'none';
+        this.updateContent(content, this.fdUiHintContext(), this.fdUiHintHtml());
+        this.syncAriaDescribedBy(true);
+    }
+
+    private updateContent(content: Exclude<HintContent, null>, context: Record<string, unknown> | null, html: boolean): void {
+        const ref = this.hintRef;
+        if (ref === null) {
+            return;
+        }
         ref.setInput('tooltipId', this.tooltipId);
-        ref.setInput('contentContext', this.fdUiHintContext());
+        ref.setInput('contentContext', context);
 
         if (content instanceof TemplateRef) {
             ref.setInput('contentTemplate', content);
             ref.setInput('contentText', null);
             ref.setInput('contentHtml', null);
-        } else if (this.fdUiHintHtml()) {
+        } else if (html) {
             ref.setInput('contentTemplate', null);
             ref.setInput('contentText', null);
             ref.setInput('contentHtml', content);
@@ -235,8 +279,6 @@ export class FdUiHintDirective {
             ref.setInput('contentText', content);
             ref.setInput('contentHtml', null);
         }
-
-        this.syncAriaDescribedBy(true);
     }
 
     private hide(): void {
@@ -246,11 +288,12 @@ export class FdUiHintDirective {
         }
 
         overlayRef.detach();
+        this.hintRef = null;
         this.syncAriaDescribedBy(false);
     }
 
     private createOverlay(): OverlayRef {
-        const positionStrategy = this.overlay
+        this.positionStrategy = this.overlay
             .position()
             .flexibleConnectedTo(this.elementRef)
             .withFlexibleDimensions(false)
@@ -258,7 +301,7 @@ export class FdUiHintDirective {
             .withPositions(this.getPositions());
 
         return this.overlay.create({
-            positionStrategy,
+            positionStrategy: this.positionStrategy,
             scrollStrategy: this.overlay.scrollStrategies.reposition(),
             panelClass: 'fd-ui-hint-panel',
         });
@@ -283,8 +326,9 @@ export class FdUiHintDirective {
 
     private syncAriaDescribedBy(isVisible: boolean): void {
         const host: HTMLElement = this.elementRef.nativeElement;
+        this.button?.setHintDescription(isVisible ? this.tooltipId : null);
         const tokens = new Set(
-            (this.initialAriaDescribedBy ?? '')
+            (host.getAttribute('aria-describedby') ?? '')
                 .split(/\s+/)
                 .map((token: string) => token.trim())
                 .filter((token: string) => token.length > 0),
@@ -332,5 +376,7 @@ export class FdUiHintDirective {
     private destroyOverlay(): void {
         this.overlayRef?.dispose();
         this.overlayRef = null;
+        this.hintRef = null;
+        this.positionStrategy = null;
     }
 }

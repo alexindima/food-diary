@@ -27299,6 +27299,12 @@
           "ItemType": "string"
         },
         {
+          "Name": "setupHintDismissed",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": true
+        },
+        {
           "Name": "web",
           "Required": false,
           "Type": "array",

@@ -264,6 +264,8 @@ export interface FdUiSelectOption<T = unknown> {
 }
 ```
 
+Changing `options` while the select is open keeps the active index within the current list. Empty lists have no active option; Enter and Space leave the model unchanged, and Escape or Tab still dismiss the list.
+
 #### `fd-ui-calendar`
 
 Inline calendar primitive for custom date pickers and date popovers.
@@ -432,11 +434,18 @@ Primary solid fill pairs the theme's primary 700–900 gradient shades with its 
 - `ariaLabel?: string`
 - `ariaPressed?: boolean | null` (pressed state for toggle-style buttons)
 - `ariaExpanded?: boolean | null` (expanded state on the native button for disclosure controls; omitted by default)
+- `ariaControls?: string | null` (IDs of controlled regions)
+- `ariaCurrent?: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | null`
+- `ariaBusy?: boolean | null` (native busy state; `loading` also sets it to true)
+- `ariaDescribedBy?: string | null` (description IDs, combined with a visible `fdUiHint`)
+
+Use these inputs for native button semantics. Host `[attr.aria-*]` bindings describe the component wrapper.
 
 **Methods**
 
 - `focus()` focuses the native button after rendering; disabled and loading buttons remain unfocusable.
 - `ariaHasPopup` publishes `menu`, `listbox`, `tree`, `grid` or `dialog` on the native button. `fdUiMenuTrigger` uses `setMenuState(expanded)` to publish its menu semantics and expanded state on this same focusable control; passing `null` restores the explicit button inputs.
+- `setHintDescription(id)` lets the hint directive add or remove its tooltip ID without replacing consumer descriptions.
 
 ### Cards
 
@@ -680,7 +689,7 @@ Import these directives from `fd-ui-kit` (or their public `fd-ui-kit/interaction
 
 - `fdUiActivate` adds click, Enter and Space activation to a non-native control and emits `fdUiActivated: Event`. It supplies `role="button"` and `tabindex="0"`; `fdUiActivateDisabled` disables activation and removes the control from the tab sequence. Set `[fdUiActivateRole]="null"` on table rows to preserve table semantics. Repeated/modified key presses and clicks on nested native controls are ignored. Prefer native buttons and links when their markup fits.
 - `fdUiStopActivation` stops click, Enter and Space propagation from a nested action without preventing the native action. `fdUiStopActivationKeyboardOnly` preserves click bubbling, for example for a native overlay button that activates its parent.
-- `fdUiFocusWhen` focuses once after rendering when its boolean request becomes true and emits `fdUiFocused`. It uses the public `focus()` contract on `fd-ui-button`, `fd-ui-input` and `fd-ui-textarea`, and waits while these controls are disabled/loading. Native elements can opt into select-all with `fdUiFocusSelect`. Reset the request to false before requesting focus again. Choosing which row or field receives focus remains the consumer's responsibility.
+- `fdUiFocusWhen` focuses once after rendering when its boolean request becomes true and emits `fdUiFocused` only after focus succeeds. It uses the public `focus()` contract on `fd-ui-button`, `fd-ui-input` and `fd-ui-textarea`, and retries on subsequent renders while a control is disabled/loading, inside a disabled fieldset or detached from the document. Detaching a portal rearms the request for its next opening. Native elements can opt into select-all with `fdUiFocusSelect`. Reset the request to false before requesting focus again. Choosing which row or field receives focus remains the consumer's responsibility.
 - `fdUiPreventUnload` accepts a boolean dirty flag and requests the browser's standard close/reload confirmation only while true. It releases its listener after saving or destruction and skips SSR. Route guards, saving and discard decisions remain in the owning application.
 
 See **Behavior/Interactions** in Storybook for keyboard, nested-action, focus and unload examples.
@@ -694,6 +703,8 @@ See **Behavior/Interactions** in Storybook for keyboard, nested-action, focus an
 Keyboard focus on a nested native control (for example inside `fd-ui-button`) also shows the hint; mouse focus does not.
 
 Tooltip directive for short helper text attached to an existing element.
+
+Visible hints react to text, HTML, template context and position changes. Disabling the hint or clearing its content closes it and cancels pending display. On `fd-ui-button`, the tooltip description is published on the native button and combined with `ariaDescribedBy`.
 
 Use for:
 
@@ -814,6 +825,8 @@ Reusable section wrapper for `content`, `loading`, `empty`, and `error` states i
 The sidebar exposes one navigation landmark named by `brandTitle`. Its visual sections group links inside that landmark, so unnamed sections do not create duplicate navigation landmarks.
 
 #### `fd-ui-menu`, `fd-ui-menu-item`, `fd-ui-menu-trigger`, `fd-ui-menu-divider`
+
+Tab and Shift+Tab dismiss the portal and let the browser continue from the native trigger in document order. Escape and item selection return focus to that trigger. A projected search field can use `fdUiFocusWhen` to focus after attachment on each opening; see **Components/Menu/WithSearch**.
 
 Context menu components.
 

@@ -35,6 +35,7 @@ import { ThemeService } from '../../../shared/theme/theme.service';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { AiMealCreateFacade } from '../../meals/contracts/ai-meal-create';
+import { DashboardSetupCardComponent } from '../components/dashboard-setup-card/dashboard-setup-card';
 import { DashboardFacade } from '../lib/dashboard.facade';
 import { parseDashboardDate } from '../lib/dashboard-date.utils';
 import { shouldPrioritizeDashboardFasting } from '../lib/dashboard-fasting-priority';
@@ -84,6 +85,7 @@ import { DashboardTrendBlockComponent } from './dashboard-sections/dashboard-tre
         FdUiDatePickerButtonComponent,
         FdUiLoaderComponent,
         DashboardQuickAddComponent,
+        DashboardSetupCardComponent,
         DashboardEditHintComponent,
         DashboardFastingBlockComponent,
         DashboardSummaryBlockComponent,
@@ -128,6 +130,8 @@ export class DashboardComponent {
             this.userFacade.user() !== null &&
             this.facade.hasSnapshot() &&
             this.facade.isTodaySelected() &&
+            !this.layout.isEditingLayout() &&
+            this.userFacade.user()?.dashboardLayout?.setupHintDismissed !== true &&
             (!this.profileSetupComplete() || !this.weightSetupComplete())
         );
     });
@@ -141,6 +145,7 @@ export class DashboardComponent {
 
     protected readonly selectedDate = this.facade.selectedDate;
     protected readonly isTodaySelected = this.facade.isTodaySelected;
+    protected readonly showQuickAdd = computed(() => this.isTodaySelected() && !this.layout.isEditingLayout());
     protected readonly snapshot = this.facade.snapshot;
     protected readonly isLoading = this.facade.isLoading;
     protected readonly loadError = this.facade.loadError;
@@ -324,6 +329,14 @@ export class DashboardComponent {
 
     protected async openWeightHistoryAsync(): Promise<void> {
         await this.navigationService.navigateToWeightHistoryAsync();
+    }
+
+    protected async openInitialSetupAsync(): Promise<void> {
+        if (this.profileSetupComplete()) {
+            await this.openWeightHistoryAsync();
+        } else {
+            await this.openProfileAsync();
+        }
     }
 
     protected async openCycleTrackingAsync(): Promise<void> {

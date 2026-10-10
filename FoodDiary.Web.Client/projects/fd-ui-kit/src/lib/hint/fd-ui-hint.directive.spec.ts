@@ -1,10 +1,11 @@
 import '@angular/compiler';
 
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { FdUiButtonComponent } from '../button/fd-ui-button';
 import { FdUiHintDirective } from './fd-ui-hint.directive';
 
 const HINT_SHOW_DELAY_MS = 500;
@@ -67,6 +68,25 @@ class TemplateHintHostComponent {}
     template: '<span fdUiHint="Remove favorite"><button type="button">Star</button></span>',
 })
 class NestedFocusHostComponent {}
+
+@Component({
+    imports: [FdUiHintDirective, FdUiButtonComponent],
+    template: '<fd-ui-button fdUiHint="Details" [ariaDescribedBy]="description()">Action</fd-ui-button>',
+})
+class ButtonHintHostComponent {
+    public readonly description = signal('external-help');
+}
+
+@Component({
+    imports: [FdUiHintDirective],
+    template:
+        '<button type="button" [fdUiHint]="hint()" [fdUiHintDisabled]="disabled()" [attr.aria-describedby]="description()">Details</button>',
+})
+class DynamicHintHostComponent {
+    public readonly hint = signal('Notifications');
+    public readonly disabled = signal(false);
+    public readonly description = signal<string | null>(null);
+}
 
 type HintTestContext<TComponent> = {
     fixture: ComponentFixture<TComponent>;
@@ -136,10 +156,47 @@ describe('FdUiHintDirective', () => {
     });
 
     registerDisplayTests();
+    registerDescriptionTests();
     registerNestedFocusTests();
     registerContentTests();
     registerDismissTests();
 });
+
+function registerDescriptionTests(): void {
+    describe('descriptions', () => {
+        it('describes the native UI-kit button and preserves reactive consumer descriptions', async () => {
+            const context = await createContextAsync(ButtonHintHostComponent);
+            const host = context.trigger.closest('fd-ui-button');
+            host?.dispatchEvent(new MouseEvent('mouseenter'));
+            vi.advanceTimersByTime(HINT_SHOW_DELAY_MS);
+            context.fixture.detectChanges();
+            const tooltipId = queryTooltip(context.overlayRoot)?.id;
+            expect(tooltipId).toBeTruthy();
+            expect(context.trigger.getAttribute('aria-describedby')).toBe(`external-help ${tooltipId}`);
+            context.fixture.componentInstance.description.set('new-help');
+            context.fixture.detectChanges();
+            expect(context.trigger.getAttribute('aria-describedby')).toBe(`new-help ${tooltipId}`);
+            host?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+            context.fixture.detectChanges();
+            expect(context.trigger.getAttribute('aria-describedby')).toBe('new-help');
+        });
+
+        it('preserves bound native descriptions through show and hide', async () => {
+            const context = await createContextAsync(DynamicHintHostComponent, component => {
+                component.description.set('bound-help');
+            });
+            showWithMouse(context);
+            expect(context.trigger.getAttribute('aria-describedby')).toContain('bound-help');
+            context.fixture.componentInstance.description.set('updated-help');
+            context.fixture.detectChanges();
+            expect(context.trigger.getAttribute('aria-describedby')).toContain('updated-help');
+            expect(context.trigger.getAttribute('aria-describedby')).toContain('fd-ui-hint-');
+            dispatchTriggerEvent(context.trigger, new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+            context.fixture.detectChanges();
+            expect(context.trigger.getAttribute('aria-describedby')).toBe('updated-help');
+        });
+    });
+}
 
 function registerDisplayTests(): void {
     describe('display', () => {
@@ -213,6 +270,36 @@ function registerDisplayTests(): void {
 
 function registerContentTests(): void {
     describe('content', () => {
+        it('updates visible content and removes the hint when disabled or emptied', async () => {
+            const context = await createContextAsync(DynamicHintHostComponent);
+            showWithMouse(context);
+            context.fixture.componentInstance.hint.set('Updated details');
+            context.fixture.detectChanges();
+            TestBed.tick();
+            expect(tooltipText(context.overlayRoot)).toBe('Updated details');
+            context.fixture.componentInstance.disabled.set(true);
+            context.fixture.detectChanges();
+            expect(queryTooltip(context.overlayRoot)).toBeNull();
+            expect(context.trigger.getAttribute('aria-describedby')).toBeNull();
+            context.fixture.componentInstance.disabled.set(false);
+            context.fixture.detectChanges();
+            showWithMouse(context);
+            context.fixture.componentInstance.hint.set('');
+            context.fixture.detectChanges();
+            expect(queryTooltip(context.overlayRoot)).toBeNull();
+        });
+
+        it('cancels pending display when disabled before the delay elapses', async () => {
+            const context = await createContextAsync(DynamicHintHostComponent);
+            dispatchTriggerEvent(context.trigger, new MouseEvent('mouseenter'));
+            context.fixture.componentInstance.disabled.set(true);
+            context.fixture.detectChanges();
+            context.fixture.componentInstance.disabled.set(false);
+            context.fixture.detectChanges();
+            vi.advanceTimersByTime(HINT_SHOW_DELAY_MS);
+            context.fixture.detectChanges();
+            expect(queryTooltip(context.overlayRoot)).toBeNull();
+        });
         it('renders safe html content when html mode is enabled', async () => {
             const context = await createContextAsync(TestHostComponent, component => {
                 component.hint = '<strong>Important</strong>';

@@ -134,19 +134,29 @@ describe.each([false, true])('FdUiMenuTriggerDirective with UI kit trigger %s', 
         expect(document.activeElement).toBe(trigger);
     });
 
-    it('closes on Tab without restoring focus to the trigger', async () => {
-        dispatchTriggerKey(trigger, 'ArrowDown');
-        await flushOverlayFocusAsync(fixture);
-
-        const firstItem = getMenuItems()[0];
-        firstItem.focus();
-        firstItem.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
-        await flushOverlayFocusAsync(fixture);
-
-        expect(getMenuItems()).toHaveLength(0);
-        expect(document.activeElement).not.toBe(trigger);
+    it.each([false, true])('anchors default Tab movement on the trigger (shift=%s)', async shiftKey => {
+        await verifyTabDismissalAsync(fixture, trigger, overlayRoot, shiftKey);
     });
 });
+
+async function verifyTabDismissalAsync(
+    fixture: ComponentFixture<TestHostComponent>,
+    trigger: HTMLButtonElement,
+    overlayRoot: HTMLElement,
+    shiftKey: boolean,
+): Promise<void> {
+    dispatchTriggerKey(trigger, 'ArrowDown');
+    await flushOverlayFocusAsync(fixture);
+    const firstItem = overlayRoot.querySelector<HTMLButtonElement>('.fd-ui-menu__item');
+    expect(firstItem).not.toBeNull();
+    firstItem?.focus();
+    const event = new KeyboardEvent('keydown', { key: 'Tab', shiftKey, bubbles: true, cancelable: true });
+    firstItem?.dispatchEvent(event);
+    await flushOverlayFocusAsync(fixture);
+    expect(overlayRoot.querySelectorAll('.fd-ui-menu__item')).toHaveLength(0);
+    expect(event.defaultPrevented).toBe(false);
+    expect(document.activeElement).toBe(trigger);
+}
 
 async function verifyMenuAriaAsync(fixture: ComponentFixture<TestHostComponent>, trigger: HTMLButtonElement): Promise<void> {
     await flushOverlayFocusAsync(fixture);

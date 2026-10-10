@@ -34,6 +34,21 @@ function setupButton(): ButtonTestContext {
 }
 
 describe('FdUiButtonComponent', () => {
+    it('publishes consumer relationships and state on its native button', () => {
+        const { fixture } = setupButton();
+        fixture.componentRef.setInput('ariaControls', 'history');
+        fixture.componentRef.setInput('ariaCurrent', 'page');
+        fixture.componentRef.setInput('ariaBusy', true);
+        fixture.componentRef.setInput('ariaPressed', true);
+        fixture.componentRef.setInput('ariaDescribedBy', 'help');
+        fixture.detectChanges();
+        const button = (fixture.nativeElement as HTMLElement).querySelector('button');
+        expect(button?.getAttribute('aria-controls')).toBe('history');
+        expect(button?.getAttribute('aria-current')).toBe('page');
+        expect(button?.getAttribute('aria-busy')).toBe('true');
+        expect(button?.getAttribute('aria-pressed')).toBe('true');
+        expect(button?.getAttribute('aria-describedby')).toBe('help');
+    });
     it('exposes disclosure state on the native button only when provided', () => {
         const { button, fixture } = setupButton();
         expect(button().hasAttribute('aria-expanded')).toBe(false);

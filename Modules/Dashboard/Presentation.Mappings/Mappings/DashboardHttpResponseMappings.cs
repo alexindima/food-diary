@@ -34,7 +34,7 @@ public static class DashboardHttpResponseMappings {
                 model.WaistTrend?.Select(static item => item.ToHttpResponse()).ToList(),
                 model.DashboardLayout is null
                     ? null
-                    : new DashboardLayoutHttpModel(model.DashboardLayout.Web, model.DashboardLayout.Mobile),
+                    : new DashboardLayoutHttpModel(model.DashboardLayout.Web, model.DashboardLayout.Mobile, model.DashboardLayout.SetupHintDismissed),
                 model.CaloriesBurned,
                 model.TdeeInsight?.ToHttpResponse(),
                 model.CurrentCycle?.ToHttpResponse()

@@ -14,11 +14,12 @@ import {
     signal,
     viewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { FormValueControl } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
-import { finalize, firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom, Subject, takeUntil } from 'rxjs';
 
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
 import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
@@ -131,6 +132,9 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     private cropInteraction: CropInteraction | null = null;
     private pendingPreviewUrl: string | null = null;
     private handledClearRequest = 0;
+    private uploadRevision = 0;
+    private readonly uploadCancelled = new Subject<void>();
+    private batchActive = false;
 
     protected readonly appearanceClass = computed(() => `image-upload-field--appearance-${this.appearance()}`);
 
@@ -139,6 +143,8 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
             this.hasErrorChange.emit(this.error() !== null);
         });
         this.destroyRef.onDestroy(() => {
+            this.cancelUpload();
+            this.uploadCancelled.complete();
             this.cropDialogRef()?.nativeElement.close();
             this.clearPreparationPreview();
         });
@@ -213,37 +219,65 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     private async uploadBatchAsync(files: File[]): Promise<void> {
+        const revision = ++this.uploadRevision;
         this.error.set(null);
         this.isUploading.set(true);
+        this.batchActive = true;
         this.batchUploading.emit(true);
         const uploaded: ImageSelection[] = [];
         try {
             for (const file of files) {
-                if (this.destroyRef.destroyed) {
+                if (!this.isCurrentUpload(revision)) {
                     break;
                 }
-                if (!this.acceptedTypes().split(',').includes(file.type)) {
-                    this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.ONLY_IMAGES'));
-                    break;
-                }
-                if (file.size > getMaxImageUploadBytes(this.maxSizeMb())) {
-                    this.error.set(
-                        this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.FILE_TOO_LARGE', { maxSizeMb: this.maxSizeMb() }),
-                    );
+                if (!this.validateBatchFile(file)) {
                     break;
                 }
                 const resized = await this.resizeFileIfNeededAsync(file);
-                uploaded.push(await firstValueFrom(this.imageUploadFacade.upload(resized)));
+                if (!this.isCurrentUpload(revision)) {
+                    break;
+                }
+                const selection = await firstValueFrom(
+                    this.imageUploadFacade.upload(resized).pipe(takeUntil(this.uploadCancelled), takeUntilDestroyed(this.destroyRef)),
+                    { defaultValue: null },
+                );
+                if (selection === null || !this.isCurrentUpload(revision)) {
+                    break;
+                }
+                uploaded.push(selection);
             }
         } catch {
-            this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.UPLOAD_FAILED'));
-        } finally {
-            if (!this.destroyRef.destroyed) {
-                this.isUploading.set(false);
-                this.imagesAdded.emit(uploaded);
-                this.batchUploading.emit(false);
+            if (this.isCurrentUpload(revision)) {
+                this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.UPLOAD_FAILED'));
             }
+        } finally {
+            this.completeBatch(uploaded, revision);
         }
+    }
+
+    private completeBatch(uploaded: ImageSelection[], revision: number): void {
+        if (this.isCurrentUpload(revision)) {
+            this.batchActive = false;
+            this.isUploading.set(false);
+            this.imagesAdded.emit(uploaded);
+            this.batchUploading.emit(false);
+        }
+    }
+
+    private validateBatchFile(file: File): boolean {
+        if (!this.acceptedTypes().split(',').includes(file.type)) {
+            this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.ONLY_IMAGES'));
+            return false;
+        }
+        return this.validateUploadSize(file);
+    }
+
+    private validateUploadSize(file: File): boolean {
+        if (file.size > getMaxImageUploadBytes(this.maxSizeMb())) {
+            this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.FILE_TOO_LARGE', { maxSizeMb: this.maxSizeMb() }));
+            return false;
+        }
+        return true;
     }
 
     protected onDragOver(event: DragEvent): void {
@@ -260,6 +294,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     protected clearImage(): void {
+        this.cancelUpload();
         const assetId = this.selection().assetId;
         const selection: ImageSelection = imageSelection(null, null);
         this.selection.set(selection);
@@ -396,7 +431,9 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     public openFilePicker(): void {
-        this.fileInputRef()?.nativeElement.click();
+        if (!this.disabled() && !this.isUploading()) {
+            this.fileInputRef()?.nativeElement.click();
+        }
     }
 
     protected onZoneClick(fileInput: HTMLInputElement): void {
@@ -408,6 +445,9 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
 
     protected onDeleteClick(event: Event): void {
         event.stopPropagation();
+        if (this.disabled() || this.isUploading()) {
+            return;
+        }
         this.clearImage();
     }
 
@@ -426,13 +466,16 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
             return;
         }
 
+        const revision = ++this.uploadRevision;
         this.emitPreparationPreview(file);
 
         if (this.cropEnabled()) {
             this.startCropping(file);
         } else {
             const uploadFile = await this.resizeFileIfNeededAsync(file);
-            this.uploadFile(uploadFile);
+            if (this.isCurrentUpload(revision)) {
+                this.uploadFile(uploadFile, revision);
+            }
         }
     }
 
@@ -531,18 +574,13 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         reader.readAsDataURL(file);
     }
 
-    private uploadFile(file: File): void {
-        if (this.disabled() || this.isUploading()) {
+    private uploadFile(file: File, revision = this.uploadRevision): void {
+        if (!this.isCurrentUpload(revision) || this.disabled() || this.isUploading()) {
             return;
         }
 
         this.error.set(null);
-        if (file.size > getMaxImageUploadBytes(this.maxSizeMb())) {
-            this.error.set(
-                this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.FILE_TOO_LARGE', {
-                    maxSizeMb: this.maxSizeMb(),
-                }),
-            );
+        if (!this.validateUploadSize(file)) {
             this.imagePreparationFailed.emit();
             this.clearPreparationPreview();
             return;
@@ -553,8 +591,12 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         this.imageUploadFacade
             .upload(file)
             .pipe(
+                takeUntil(this.uploadCancelled),
+                takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
-                    this.isUploading.set(false);
+                    if (this.isCurrentUpload(revision)) {
+                        this.isUploading.set(false);
+                    }
                 }),
             )
             .subscribe({
@@ -570,6 +612,22 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
                     this.clearPreparationPreview();
                 },
             });
+    }
+
+    private isCurrentUpload(revision: number): boolean {
+        return !this.destroyRef.destroyed && revision === this.uploadRevision;
+    }
+
+    private cancelUpload(): void {
+        this.uploadRevision += 1;
+        this.uploadCancelled.next();
+        this.isUploading.set(false);
+        if (this.batchActive) {
+            this.batchActive = false;
+            if (!this.destroyRef.destroyed) {
+                this.batchUploading.emit(false);
+            }
+        }
     }
 
     private emitPreparationPreview(file: File): void {

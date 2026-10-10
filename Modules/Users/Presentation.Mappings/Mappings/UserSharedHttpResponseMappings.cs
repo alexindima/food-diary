@@ -75,6 +75,6 @@ public static class UserSharedHttpResponseMappings {
 
     extension(DashboardLayoutModel model) {
         private DashboardLayoutHttpModel ToHttpModel()
-                => new(model.Web, model.Mobile);
+                => new(model.Web, model.Mobile, model.SetupHintDismissed);
     }
 }

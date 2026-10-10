@@ -111,6 +111,23 @@ describe('Dashboard layout invariants', () => {
 });
 
 describe('Dashboard layout persistence', () => {
+    it.each([false, true])('does not overwrite a dismissed hint when saving a layout initialized with dismissal=%s', async dismissed => {
+        const { service, userService } = setupService();
+        service.initializeLayout({ web: ['summary', 'hydration'], mobile: ['summary'], setupHintDismissed: dismissed });
+        userService.updateDashboardLayout.mockReturnValueOnce(
+            of({ dashboardLayout: { web: ['summary'], mobile: ['summary'], setupHintDismissed: true } }),
+        );
+        service.openSettings();
+        service.toggleBlock('hydration');
+
+        expect(await service.saveAsync()).toBe(true);
+        expect(userService.updateDashboardLayout).toHaveBeenCalledWith({
+            web: ['summary'],
+            mobile: ['summary'],
+        });
+        expect(service.layoutSettings().setupHintDismissed).toBe(true);
+    });
+
     it('keeps the chosen layout when a successful response omits the layout', async () => {
         const { service, userService } = setupService();
         userService.updateDashboardLayout.mockReturnValueOnce(of({}));

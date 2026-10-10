@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 488,
+    "components": 489,
     "componentsWithoutDirectSpecs": 126,
-    "inputs": 1576,
-    "outputs": 547,
+    "inputs": 1581,
+    "outputs": 549,
     "apiCalls": 314,
-    "templatesWithTranslations": 351,
-    "translationKeys": 2130,
-    "consumerEdges": 1240,
-    "consumedComponents": 309,
+    "templatesWithTranslations": 352,
+    "translationKeys": 2125,
+    "consumerEdges": 1243,
+    "consumedComponents": 310,
     "unconsumedComponents": 178
   },
   "components": [
@@ -2050,6 +2050,31 @@
         }
       ],
       "specPath": null
+    },
+    {
+      "class": "DashboardSetupCardComponent",
+      "selector": "fd-dashboard-setup-card",
+      "feature": "dashboard",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-setup-card/dashboard-setup-card.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-setup-card/dashboard-setup-card.html",
+      "inputs": [
+        {
+          "name": "profileComplete",
+          "type": "boolean",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "primaryAction",
+          "type": ""
+        },
+        {
+          "name": "goalsAction",
+          "type": ""
+        }
+      ],
+      "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-setup-card/dashboard-setup-card.spec.ts"
     },
     {
       "class": "DashboardSummaryBlockComponent",
@@ -4380,6 +4405,26 @@
         {
           "name": "ariaExpanded",
           "type": "boolean | null",
+          "required": false
+        },
+        {
+          "name": "ariaControls",
+          "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "ariaCurrent",
+          "type": "'page' | 'step' | 'location' | 'date' | 'time' | 'true' | null",
+          "required": false
+        },
+        {
+          "name": "ariaBusy",
+          "type": "boolean | null",
+          "required": false
+        },
+        {
+          "name": "ariaDescribedBy",
+          "type": "string | null",
           "required": false
         },
         {
@@ -20350,6 +20395,17 @@
     },
     {
       "feature": "dashboard",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-setup-card/dashboard-setup-card.html",
+      "keys": [
+        "DASHBOARD.INITIAL_SETUP.DISMISS",
+        "DASHBOARD.INITIAL_SETUP.GOALS",
+        "DASHBOARD.INITIAL_SETUP.HINT",
+        "DASHBOARD.INITIAL_SETUP.SAVE_ERROR",
+        "DASHBOARD.INITIAL_SETUP.TITLE"
+      ]
+    },
+    {
+      "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.html",
       "keys": [
         "DISABLED_HINTS.OPERATION_BUSY",
@@ -20535,21 +20591,11 @@
         "DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS",
         "DASHBOARD.ACTIONS.OPEN_SETTINGS",
         "DASHBOARD.ACTIONS.START_TOUR",
-        "DASHBOARD.INITIAL_SETUP.DONE",
-        "DASHBOARD.INITIAL_SETUP.GOALS",
-        "DASHBOARD.INITIAL_SETUP.GOALS_HINT",
-        "DASHBOARD.INITIAL_SETUP.HINT",
-        "DASHBOARD.INITIAL_SETUP.PROFILE",
-        "DASHBOARD.INITIAL_SETUP.PROFILE_HINT",
-        "DASHBOARD.INITIAL_SETUP.TITLE",
-        "DASHBOARD.INITIAL_SETUP.WEIGHT",
-        "DASHBOARD.INITIAL_SETUP.WEIGHT_HINT",
         "DASHBOARD.LOADING",
         "DASHBOARD.SUBTITLE",
         "DISABLED_HINTS.EDIT_LAYOUT_ACTIVE",
         "DISABLED_HINTS.OPERATION_BUSY",
-        "ERRORS.RETRY",
-        "MEAL_LIST.ADD_MANUALLY_BUTTON"
+        "ERRORS.RETRY"
       ]
     },
     {
@@ -25496,6 +25542,21 @@
       ]
     },
     {
+      "component": "DashboardSetupCardComponent",
+      "selector": "fd-dashboard-setup-card",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-setup-card/dashboard-setup-card.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "profileComplete"
+      ],
+      "outputsHandled": [
+        "goalsAction",
+        "primaryAction"
+      ]
+    },
+    {
       "component": "DashboardSummaryBlockComponent",
       "selector": "fd-dashboard-summary-block",
       "componentPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-summary-block/dashboard-summary-block.ts",
@@ -28044,6 +28105,24 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-setup-card/dashboard-setup-card.html",
+      "occurrences": 3,
+      "inputsUsed": [
+        "appearance",
+        "ariaLabel",
+        "fill",
+        "icon",
+        "loading",
+        "size",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -28111,10 +28190,11 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
-      "occurrences": 9,
+      "occurrences": 5,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
+        "ariaPressed",
         "disabled",
         "disabledReason",
         "fill",
@@ -28419,6 +28499,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-item/fasting-history-item.html",
       "occurrences": 2,
       "inputsUsed": [
+        "ariaControls",
         "ariaExpanded",
         "fill",
         "type",
@@ -29813,6 +29894,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.html",
       "occurrences": 2,
       "inputsUsed": [
+        "ariaBusy",
         "ariaLabel",
         "disabled",
         "fill",
@@ -30130,6 +30212,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.html",
       "occurrences": 4,
       "inputsUsed": [
+        "ariaCurrent",
         "ariaLabel",
         "disabled",
         "disabledReason",
@@ -30851,6 +30934,19 @@
       "occurrences": 6,
       "inputsUsed": [
         "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiCardComponent",
+      "selector": "fd-ui-card",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-setup-card/dashboard-setup-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "appearance",
+        "density"
       ],
       "outputsHandled": []
     },

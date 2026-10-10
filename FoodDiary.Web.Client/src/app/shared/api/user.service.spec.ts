@@ -335,7 +335,7 @@ function setCurrentUser(user: User = MOCK_USER): void {
 describe('UserService dashboard persistence', () => {
     it('saves both layouts and publishes the server user', () => {
         const layout = { web: ['summary', 'weight'], mobile: ['summary', 'hydration'] };
-        const user = { ...MOCK_USER, dashboardLayout: layout };
+        const user = { ...MOCK_USER, dashboardLayout: { ...layout, setupHintDismissed: true } };
         const next = vi.fn();
         service.updateDashboardLayout(layout).subscribe(next);
         const req = httpMock.expectOne(`${BASE_URL}/info`);

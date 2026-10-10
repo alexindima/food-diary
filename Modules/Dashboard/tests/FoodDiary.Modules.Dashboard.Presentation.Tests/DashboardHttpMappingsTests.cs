@@ -140,7 +140,7 @@ public sealed class DashboardHttpMappingsTests {
             CurrentFastingSession: null,
             [new WeightEntrySummaryModel(date.AddDays(-7), date, 80.9)],
             [new WaistEntrySummaryModel(date.AddDays(-7), date, 88.8)],
-            new DashboardLayoutModel(["stats", "meals"], ["hydration"]),
+            new DashboardLayoutModel(["stats", "meals"], ["hydration"], SetupHintDismissed: true),
             CaloriesBurned: 420,
             new TdeeInsightModel(
                 EstimatedTdee: 2400,
@@ -222,6 +222,7 @@ public sealed class DashboardHttpMappingsTests {
         Assert.Single(response.WeightTrend!);
         Assert.Single(response.WaistTrend!);
         Assert.Equal(["stats", "meals"], response.DashboardLayout!.Web);
+        Assert.True(response.DashboardLayout.SetupHintDismissed);
         Assert.Equal(420, response.CaloriesBurned);
         Assert.Equal(2400, response.TdeeInsight!.EstimatedTdee);
         Assert.Equal(cycleId, response.CurrentCycle!.Id);

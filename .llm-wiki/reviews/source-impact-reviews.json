@@ -30,10 +30,10 @@
           "sha256": "44f9e49aad8e654634c69ad8a17c53db54d5835270bf40f75bbf037a262936c5"
         }
       ],
-      "reason": "Reviewed the condensed root guide, AI_WORKFLOW detail, module patterns and source-authority links against this isolated task snapshot; navigation remains accurate.",
+      "reason": "Reviewed knowledge authority and navigation pages against unchanged root priority rules and the new reliability guide. Reference corpus metadata distinguishes synthetic OCR/text references from unmeasured food-photo/provider quality. The guide records actual local restore, load, browser and cleanup evidence; production claims remain unverified.",
       "baseRef": "HEAD",
       "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T15:09:54.8225732Z"
+      "reviewedAtUtc": "2026-10-10T14:33:06.1087758Z"
     },
     {
       "pageId": "module.frontend",
@@ -147,10 +147,10 @@
           "sha256": "44f9e49aad8e654634c69ad8a17c53db54d5835270bf40f75bbf037a262936c5"
         }
       ],
-      "reason": "Reviewed the condensed root guide, AI_WORKFLOW detail, module patterns and source-authority links against this isolated task snapshot; navigation remains accurate.",
+      "reason": "Reviewed knowledge authority and navigation pages against unchanged root priority rules and the new reliability guide. Reference corpus metadata distinguishes synthetic OCR/text references from unmeasured food-photo/provider quality. The guide records actual local restore, load, browser and cleanup evidence; production claims remain unverified.",
       "baseRef": "HEAD",
       "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T15:09:55.6403601Z"
+      "reviewedAtUtc": "2026-10-10T14:33:06.6085400Z"
     },
     {
       "pageId": "system.quality-index",
@@ -177,10 +177,10 @@
           "sha256": "1f22c0fff4fe9f06e1ce76a8a5abac3eeec8d505a2d57c1fd8a0fda970ff40bf"
         }
       ],
-      "reason": "Reviewed the condensed root guide, AI_WORKFLOW detail, module patterns and source-authority links against this isolated task snapshot; navigation remains accurate.",
+      "reason": "Root Wiki commands moved verbatim into the linked AI_WORKFLOW guide; indexed documentation is current and regenerated for the development dependencies.",
       "baseRef": "HEAD",
-      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T15:09:56.3583584Z"
+      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
+      "reviewedAtUtc": "2026-10-10T08:41:16.3801073Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -215,10 +215,10 @@
           "sha256": "2cb00dfcbb7271ea9a5ef944d0b2864461630237a18bd4dc5783fdf7ed939b13"
         }
       ],
-      "reason": "Final Wiki verify passed 8 of 8 selected stages and all 9 affected groups on Windows in a deeply nested isolated checkout. Native Git/cache/publication and content-based cache invalidation regressions passed; exhaustive verify-full was not run.",
+      "reason": "Reviewed independent native fixture initialization and Git ownership checks, repository-relative source scope and cache invalidation; native/publication, fingerprint, routing, Git-path, dependency, baseline and receipt regressions passed.",
       "baseRef": "HEAD",
       "gitHead": "fcf6f2c391638ea63682ab09921df6a5ff7afa95",
-      "reviewedAtUtc": "2026-10-10T16:45:56.2115496Z"
+      "reviewedAtUtc": "2026-10-10T16:30:07.9289738Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -226,14 +226,14 @@
       "pageSha256": "6e6ace9a3ed3b5cc55eeeb62d895581342cb6f0c37181d14283e16f69fdcb6c7",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "60e7a5752c9cae946f8c696e71a6e4e44ff2355658e995f646a9321882a8d1fb"
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+          "sha256": "d3121f31b44d9378ef989c586af8e98946850ea8643fc65284b3aa7e15602bd5"
         }
       ],
-      "reason": "The isolated SDK view exposes internal telemetry while public Swagger snapshots remain unchanged. Bot consumes fourteen frozen methods.",
+      "reason": "The dashboard setup preference adds only an optional nullable boolean to DashboardLayoutHttpModel. OpenAPI export and snapshots passed; api-compat against HEAD reports two additive changes and zero breaks. Omitted dismissal retains the persisted value, so existing clients remain compatible. The current compatibility workflow still describes this check correctly.",
       "baseRef": "HEAD",
-      "gitHead": "f777062a632366651650bdd9fec53813be7a986e",
-      "reviewedAtUtc": "2026-10-07T11:12:07.4646578Z"
+      "gitHead": "f0505545b9dd4058704f573deda769dcb6ef2b43",
+      "reviewedAtUtc": "2026-10-10T17:33:23.5066470Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -245,10 +245,10 @@
           "sha256": "c1295215dded56144dac4b8df91b04e93b9cec11a928dcc9806cb5662079f894"
         }
       ],
-      "reason": "Reviewed the frontend directive extraction and follow-up refactor: dependency direction is unchanged, public UI-kit exports replace duplicated interaction behavior, and removal of the private page-layout directive is covered by consumer compilation and tests. The generated health schema and documented review workflow remain accurate.",
+      "reason": "The frontend interaction refactor updates static dependency and unused-source navigation. The documented architecture-health workflow still matches the generated schema and direct CLI commands; no new architecture policy or dependency direction is introduced.",
       "baseRef": "HEAD",
-      "gitHead": "5de6ddc7e3eaabce6b3e5e787064d7eebd261865",
-      "reviewedAtUtc": "2026-10-10T16:24:20.046Z"
+      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
+      "reviewedAtUtc": "2026-10-10T15:04:08.5711339Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -260,10 +260,10 @@
           "sha256": "9de5839c941aa926ff16dd799b7d6f256591034d8d4a3d06130b8316c7f0bbe0"
         }
       ],
-      "reason": "Reviewed new internal recognition result/lifecycle types and their consumers; FoodRecognitionCompletion keeps the existing public status strings and this change has no HTTP route, payload, status-code or API snapshot changes. The generated backend-contract review workflow remains accurate.",
+      "reason": "Reviewed the backend contract guide against current owner contracts and consumers. Public job DTOs, status strings, routes and error vocabulary are retained; four OpenAPI export/snapshot tests and thirteen meal-from-recognition scenarios passed. New validated result variants remain internal application capabilities.",
       "baseRef": "HEAD",
-      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T15:10:31.5007681Z"
+      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
+      "reviewedAtUtc": "2026-10-10T11:42:29.8027856Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -501,10 +501,10 @@
           "sha256": "5f81ba7d58bbe1c40dd1e867ff6e3fa035847eac805f80b4363112712e4ef466"
         }
       ],
-      "reason": "Verified independent Git fixture creation in owned short temporary scopes and preserved repository-relative source fixtures against the final code.",
+      "reason": "The workflow accurately describes temporary/native versus repository-relative source fixtures and per-test cache invalidation.",
       "baseRef": "HEAD",
       "gitHead": "fcf6f2c391638ea63682ab09921df6a5ff7afa95",
-      "reviewedAtUtc": "2026-10-10T16:45:56.4193072Z"
+      "reviewedAtUtc": "2026-10-10T16:30:08.0741067Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -535,10 +535,10 @@
           "sha256": "2e3bd41fbeceff43dd966f23f871726b902e53bc3dbb66fc232fd40c5748d403"
         }
       ],
-      "reason": "Reviewed recognition domain rules, reference-only grading, owned persisted browser/recovery/load checks and explicit evidence limits; 43 tooling tests and prior local behavioral checks passed; test references remain navigation rather than execution coverage.",
+      "reason": "Reviewed domain-data and quality guides against unchanged mappings and the new pure transition/value policies and privately validated Ready variant. Fifty-five domain, 149 application, 257 infrastructure, 12 real PostgreSQL, 2272 architecture and four API tests passed; three unrelated FFmpeg cases are skipped. Generated test references remain navigation, not execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T15:10:33.0170994Z"
+      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
+      "reviewedAtUtc": "2026-10-10T11:42:30.1536421Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -595,10 +595,10 @@
           "sha256": "6c4ca69f4fc3694a462cf13858c53a70e26a1cdc6669452c8a2e234ddb2aa744"
         }
       ],
-      "reason": "Reviewed recognition domain rules, reference-only grading, owned persisted browser/recovery/load checks and explicit evidence limits; 43 tooling tests and prior local behavioral checks passed; test references remain navigation rather than execution coverage.",
+      "reason": "Reviewed quality, visual-evidence and trace guides against current indexes and scripts. Browser checks exercised seven real API/DB journeys in desktop EN and ordinary-user mobile EN, with exact source-derived selectors and real PDF bytes. No visual redesign or RU visual coverage is claimed. Forty-three Node tests, TypeScript and focused ESLint checks pass. Wiki publication now sequences quality/contract writers before module readers; actual affected smoke and deterministic concurrent-update tests passed. Static test-reference signals remain navigation only.",
       "baseRef": "HEAD",
       "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T15:10:33.6638094Z"
+      "reviewedAtUtc": "2026-10-10T14:33:07.1625242Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -833,10 +833,10 @@
           "sha256": "9a6a0891a935ec1aacdb7ef21966e9d7d2c4f1f38245050332a9ef3d69b838eb"
         }
       ],
-      "reason": "Reviewed task-owned synthetic fixtures, redacted reports, disabled external providers, private dump removal and bounded build cleanup; privacy and topology navigation remains accurate for this snapshot.",
+      "reason": "Reviewed privacy and security navigation claims against refreshed sensitive-data, topology and quality sources and the provider/store diff. Owner and job identity checks, image access, consent, quota, retention and atomic terminal fences remain; decoding returns safe existing errors without logging provider payloads. Index signals remain leads rather than security verdicts.",
       "baseRef": "HEAD",
-      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T15:10:34.3447732Z"
+      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
+      "reviewedAtUtc": "2026-10-10T11:42:30.5056803Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -875,13 +875,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "82ceb28157df28fe942f72a71e40cc5b9a708d5cb37bd9673dca9c1b2db8313a"
+          "sha256": "24b9ae5259eb1466a5ca5aa0baf00d5c3540d2de1154b677528941330c21d2f9"
         }
       ],
-      "reason": "Final Wiki verify passed 8 of 8 selected stages and all 9 affected groups on Windows in a deeply nested isolated checkout. Native Git/cache/publication and content-based cache invalidation regressions passed; exhaustive verify-full was not run.",
+      "reason": "Reviewed final optional preference serialization, owned facade, compact component and list-only layout saves. No module dependency or numeric calculation changed. The full app suite passed 4914 tests; UI-kit, tour and admin suites passed 778 tests; final layout and dashboard regression suites passed 35 tests. Existing quality risk workflow still describes the required hotspot and test-gap checks.",
       "baseRef": "HEAD",
-      "gitHead": "fcf6f2c391638ea63682ab09921df6a5ff7afa95",
-      "reviewedAtUtc": "2026-10-10T16:45:56.7559005Z"
+      "gitHead": "f0505545b9dd4058704f573deda769dcb6ef2b43",
+      "reviewedAtUtc": "2026-10-10T17:43:03.2527439Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -962,13 +962,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "2d0d8ea13a1e03a423e9a1e13ab2f90124d878628a2b272c92211c2010679793"
+          "sha256": "02894b682365ab76de5ed33efc1be7a015ab9b80a5dfb4b309915b0d819ccf4e"
         }
       ],
-      "reason": "Reviewed the condensed root guide, AI_WORKFLOW detail, module patterns, runtime topology and source-authority links against this isolated task snapshot; the current navigation and conditional change-policy route remain accurate.",
+      "reason": "Reviewed the new component-scoped dashboard setup facade and its existing generated Users HTTP update. No host, worker, provider, queue or scheduled job is introduced. Owned local API at localhost:5300 and frontend at localhost:4200 were verified through six real browser dashboard responses, persistence after reload and a fresh browser context. The topology workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T15:10:37.0379830Z"
+      "gitHead": "f0505545b9dd4058704f573deda769dcb6ef2b43",
+      "reviewedAtUtc": "2026-10-10T17:43:00.7770871Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -977,13 +977,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "82ceb28157df28fe942f72a71e40cc5b9a708d5cb37bd9673dca9c1b2db8313a"
+          "sha256": "24b9ae5259eb1466a5ca5aa0baf00d5c3540d2de1154b677528941330c21d2f9"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "02894b682365ab76de5ed33efc1be7a015ab9b80a5dfb4b309915b0d819ccf4e"
         }
       ],
-      "reason": "Verified synthetic-only fixtures, local Git ownership before further operations and exact owned cleanup. Failed native initialization cannot proceed to ancestor checkout operations.",
+      "reason": "Final change persists an optional UI preference through existing authenticated, user-scoped Users updates. Authorization, session handling, identity and health fields are unchanged; server omission preservation prevents older layout clients from dropping dismissal. Local browser fixtures were created without sending email and then removed. Index metadata changes do not alter the security evidence compiler.",
       "baseRef": "HEAD",
-      "gitHead": "fcf6f2c391638ea63682ab09921df6a5ff7afa95",
-      "reviewedAtUtc": "2026-10-10T16:45:57.1178221Z"
+      "gitHead": "f0505545b9dd4058704f573deda769dcb6ef2b43",
+      "reviewedAtUtc": "2026-10-10T17:43:04.4256254Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1108,10 +1112,10 @@
           "sha256": "a4e92e3ef6156d50bdf3e3935a8c5f5713ed34d035915a0f866ecf1b7267ba77"
         }
       ],
-      "reason": "Reviewed recognition domain rules, reference-only grading, owned persisted browser/recovery/load checks and explicit evidence limits; 43 tooling tests and prior local behavioral checks passed; test references remain navigation rather than execution coverage.",
+      "reason": "The existing smoke suite remains unchanged; real persistence journeys, scoped mutation testing and coding eval limits are documented in authoritative guides.",
       "baseRef": "HEAD",
-      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T15:10:38.4895051Z"
+      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
+      "reviewedAtUtc": "2026-10-10T08:41:19.6123951Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1120,17 +1124,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "7bdd93142c7d252562c8661a811e2797a767ad693212949cf55b326773f92a77"
-        },
-        {
-          "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "06eaf31b169de5f5127d21b03f2e39bbe8c01ebbbda4f32433c335b54f14fed2"
+          "sha256": "2237476496775a2adb2624a1cbf708c798528d9762137b46483b87c4676d94e8"
         }
       ],
-      "reason": "Reviewed regenerated frontend symbol and contract navigation for the new directives and shared focus, favorite-picker, loading and image helpers. Consumers and direct specs are recorded, feature boundaries are preserved, and the documented bounded trace workflow remains accurate.",
+      "reason": "Only the existing dashboard setup component template, scoped stylesheet and UI-kit import list changed. Its page consumer, scoped persistence facade, generated Users operation and backend behavior remain unchanged. Refreshed frontend indexes retain the same runtime owner and trace commands.",
       "baseRef": "HEAD",
-      "gitHead": "5de6ddc7e3eaabce6b3e5e787064d7eebd261865",
-      "reviewedAtUtc": "2026-10-10T16:24:20.281Z"
+      "gitHead": "f0505545b9dd4058704f573deda769dcb6ef2b43",
+      "reviewedAtUtc": "2026-10-10T18:06:25.7032912Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1172,10 +1172,10 @@
           "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
         }
       ],
-      "reason": "Reviewed the condensed root guide, AI_WORKFLOW detail, module patterns, runtime topology and source-authority links against this isolated task snapshot; the current navigation and conditional change-policy route remain accurate.",
+      "reason": "Root Wiki commands moved verbatim into the linked AI_WORKFLOW guide; indexed documentation is current and regenerated for the development dependencies.",
       "baseRef": "HEAD",
-      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T15:10:32.2809294Z"
+      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
+      "reviewedAtUtc": "2026-10-10T08:41:16.7242376Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1214,13 +1214,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "7bdd93142c7d252562c8661a811e2797a767ad693212949cf55b326773f92a77"
+          "sha256": "2237476496775a2adb2624a1cbf708c798528d9762137b46483b87c4676d94e8"
         }
       ],
-      "reason": "Reviewed directive inputs/outputs and consumers, native button menu ARIA, focus acknowledgements and recipe step focus transitions. Full frontend verification passed 5662 tests; Storybook and nine browser scenarios cover keyboard/focus behavior and representative viewports. Contract navigation and SDK ownership guidance remain accurate.",
+      "reason": "The setup-card refinement replaces the shared card header slot with an owned heading and description group and an existing accessible close button anchored in the corner. Selector, profileComplete input, action outputs and region/close accessible names are unchanged. Three component tests and frontend build passed; desktop and mobile browser measurements confirm a four-pixel title-to-description gap and successful dismissal.",
       "baseRef": "HEAD",
-      "gitHead": "5de6ddc7e3eaabce6b3e5e787064d7eebd261865",
-      "reviewedAtUtc": "2026-10-10T16:24:20.102Z"
+      "gitHead": "f0505545b9dd4058704f573deda769dcb6ef2b43",
+      "reviewedAtUtc": "2026-10-10T18:06:24.0739570Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1236,10 +1236,10 @@
           "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
         }
       ],
-      "reason": "Reviewed the condensed root guide, AI_WORKFLOW detail, module patterns, runtime topology and source-authority links against this isolated task snapshot; the current navigation and conditional change-policy route remain accurate.",
+      "reason": "Reviewed knowledge authority and navigation pages against unchanged root priority rules and the new reliability guide. Reference corpus metadata distinguishes synthetic OCR/text references from unmeasured food-photo/provider quality. The guide records actual local restore, load, browser and cleanup evidence; production claims remain unverified.",
       "baseRef": "HEAD",
       "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T15:10:35.7903372Z"
+      "reviewedAtUtc": "2026-10-10T14:33:08.5634740Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1251,10 +1251,10 @@
           "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
         }
       ],
-      "reason": "Reviewed recognition domain rules, reference-only grading, owned persisted browser/recovery/load checks and explicit evidence limits; 43 tooling tests and prior local behavioral checks passed; test references remain navigation rather than execution coverage.",
+      "reason": "The existing smoke suite remains unchanged; real persistence journeys, scoped mutation testing and coding eval limits are documented in authoritative guides.",
       "baseRef": "HEAD",
-      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T15:10:36.4324961Z"
+      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
+      "reviewedAtUtc": "2026-10-10T08:41:18.6826251Z"
     },
     {
       "pageId": "workflow.self-maintenance",

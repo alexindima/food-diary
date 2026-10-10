@@ -124,6 +124,10 @@
                         "nullable": true,
                         "type": "array"
                     },
+                    "setupHintDismissed": {
+                        "nullable": true,
+                        "type": "boolean"
+                    },
                     "web": {
                         "items": {
                             "type": "string"

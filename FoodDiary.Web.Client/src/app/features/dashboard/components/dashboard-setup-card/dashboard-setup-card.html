@@ -1,0 +1,28 @@
+<fd-ui-card appearance="info" density="compact" role="region" [attr.aria-label]="'DASHBOARD.INITIAL_SETUP.TITLE' | translate">
+    <fd-ui-button
+        class="dashboard-setup-card__dismiss"
+        variant="secondary"
+        fill="text"
+        appearance="plain-icon"
+        size="sm"
+        icon="close"
+        [ariaLabel]="'DASHBOARD.INITIAL_SETUP.DISMISS' | translate"
+        [loading]="facade.isSaving()"
+        (click)="facade.dismissAsync()"
+    />
+    <div class="fd-stack fd-gap-xxs">
+        <h2 class="dashboard-setup-card__title fd-ui-card-title">{{ 'DASHBOARD.INITIAL_SETUP.TITLE' | translate }}</h2>
+        <p class="fd-ui-body-sm fd-ui-text-muted">{{ 'DASHBOARD.INITIAL_SETUP.HINT' | translate }}</p>
+    </div>
+    <div class="fd-row fd-wrap fd-gap-sm">
+        <fd-ui-button variant="secondary" fill="outline" size="sm" (click)="primaryAction.emit()">
+            {{ primaryActionKey() | translate }}
+        </fd-ui-button>
+        <fd-ui-button variant="secondary" fill="text" size="sm" (click)="goalsAction.emit()">
+            {{ 'DASHBOARD.INITIAL_SETUP.GOALS' | translate }}
+        </fd-ui-button>
+    </div>
+    @if (facade.saveFailed()) {
+        <p class="dashboard-setup-card__error fd-ui-body-sm" role="alert">{{ 'DASHBOARD.INITIAL_SETUP.SAVE_ERROR' | translate }}</p>
+    }
+</fd-ui-card>

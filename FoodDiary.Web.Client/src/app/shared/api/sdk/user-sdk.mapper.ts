@@ -72,7 +72,11 @@ export function userFromSdk(response: UserHttpResponse): User {
             activityLevel === undefined
                 ? undefined
                 : sdkEnum(activityLevel.toUpperCase(), ['MINIMAL', 'LIGHT', 'MODERATE', 'HIGH', 'EXTREME'] as const),
-        dashboardLayout: sdkMaybe(value.dashboardLayout, layout => ({ web: layout.web ?? undefined, mobile: layout.mobile ?? undefined })),
+        dashboardLayout: sdkMaybe(value.dashboardLayout, layout => ({
+            web: layout.web ?? undefined,
+            mobile: layout.mobile ?? undefined,
+            setupHintDismissed: layout.setupHintDismissed ?? undefined,
+        })),
     };
 }
 

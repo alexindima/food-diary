@@ -4,6 +4,8 @@ import { applicationConfig, moduleMetadata } from '@storybook/angular-vite';
 
 import { FdUiButtonComponent } from '../button/fd-ui-button';
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
+import { FdUiInputComponent } from '../input/fd-ui-input';
+import { FdUiFocusWhenDirective } from '../interaction/fd-ui-focus-when.directive';
 import { FdUiMenuComponent } from './fd-ui-menu';
 import { FdUiMenuDividerComponent } from './fd-ui-menu-divider';
 import { FdUiMenuItemComponent } from './fd-ui-menu-item';
@@ -16,7 +18,15 @@ const meta: Meta<FdUiMenuComponent> = {
     decorators: [
         applicationConfig({ providers: [provideRouter([], withDisabledInitialNavigation())] }),
         moduleMetadata({
-            imports: [FdUiMenuItemComponent, FdUiMenuDividerComponent, FdUiMenuTriggerDirective, FdUiButtonComponent, FdUiIconComponent],
+            imports: [
+                FdUiMenuItemComponent,
+                FdUiMenuDividerComponent,
+                FdUiMenuTriggerDirective,
+                FdUiButtonComponent,
+                FdUiIconComponent,
+                FdUiInputComponent,
+                FdUiFocusWhenDirective,
+            ],
         }),
     ],
 };
@@ -48,6 +58,17 @@ export const WithIcons: Story = {
                 <fd-ui-menu-item><fd-ui-icon name="share" /> Share</fd-ui-menu-item>
                 <fd-ui-menu-divider></fd-ui-menu-divider>
                 <fd-ui-menu-item><fd-ui-icon name="delete" /> Delete</fd-ui-menu-item>
+            </fd-ui-menu>
+        `,
+    }),
+};
+
+export const WithSearch: Story = {
+    render: () => ({
+        template: `
+            <fd-ui-button variant="secondary" [fdUiMenuTrigger]="menu">Search options</fd-ui-button>
+            <fd-ui-menu #menu="fdUiMenu">
+                <fd-ui-input ariaLabel="Search options" placeholder="Search" [fdUiFocusWhen]="true" />
             </fd-ui-menu>
         `,
     }),

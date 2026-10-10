@@ -7,6 +7,8 @@ namespace FoodDiary.Telegram.Bot.Api.Generated.Model;
 internal sealed class DashboardLayoutHttpModel {
     [JsonPropertyName("mobile")]
     public List<string>? Mobile { get; init; } = default!;
+    [JsonPropertyName("setupHintDismissed")]
+    public bool? SetupHintDismissed { get; init; } = default!;
     [JsonPropertyName("web")]
     public List<string>? Web { get; init; } = default!;
 }

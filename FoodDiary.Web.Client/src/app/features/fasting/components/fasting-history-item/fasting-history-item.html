@@ -48,7 +48,7 @@
                     variant="secondary"
                     fill="text"
                     [ariaExpanded]="item.isExpanded"
-                    [attr.aria-controls]="item.checkInRegionId"
+                    [ariaControls]="item.checkInRegionId"
                     (click)="historyToggle.emit(session.id)"
                 >
                     {{ item.toggleKey | translate: { count: item.checkInCount } }}

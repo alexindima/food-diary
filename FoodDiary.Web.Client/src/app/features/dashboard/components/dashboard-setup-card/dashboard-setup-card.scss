@@ -1,0 +1,30 @@
+:host {
+    display: block;
+}
+
+fd-ui-card {
+    position: relative;
+    --fd-card-height: auto;
+    --fd-card-content-height: auto;
+    --fd-card-content-justify: flex-start;
+}
+
+h2,
+p {
+    margin: 0;
+}
+
+.dashboard-setup-card__title {
+    color: var(--fd-color-text);
+    padding-inline-end: calc(var(--fd-size-control-compact) + var(--fd-space-sm));
+}
+
+.dashboard-setup-card__dismiss {
+    position: absolute;
+    inset-block-start: calc(var(--fd-space-card-padding-y) - var(--fd-space-xxs));
+    inset-inline-end: var(--fd-space-card-padding-x);
+}
+
+.dashboard-setup-card__error {
+    color: var(--fd-color-danger);
+}

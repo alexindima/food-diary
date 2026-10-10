@@ -1,4 +1,5 @@
-import { afterRenderEffect, booleanAttribute, Directive, ElementRef, inject, input, output } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { afterEveryRender, booleanAttribute, Directive, ElementRef, inject, input, output } from '@angular/core';
 
 import { FdUiButtonComponent } from '../button/fd-ui-button';
 import { FdUiInputComponent } from '../input/fd-ui-input';
@@ -13,14 +14,16 @@ export class FdUiFocusWhenDirective {
     public readonly fdUiFocused = output();
 
     private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly document = inject(DOCUMENT);
     private readonly button = inject(FdUiButtonComponent, { self: true, optional: true });
     private readonly control = inject(FdUiInputComponent, { self: true, optional: true });
     private readonly textarea = inject(FdUiTextareaComponent, { self: true, optional: true });
     private focused = false;
 
     public constructor() {
-        afterRenderEffect(() => {
-            if (!this.fdUiFocusWhen()) {
+        afterEveryRender(() => {
+            const host = this.element.nativeElement;
+            if (!this.fdUiFocusWhen() || !host.isConnected) {
                 this.focused = false;
                 return;
             }
@@ -28,8 +31,10 @@ export class FdUiFocusWhenDirective {
                 return;
             }
             this.focusTarget();
-            this.focused = true;
-            this.fdUiFocused.emit();
+            if (this.document.activeElement === host || host.contains(this.document.activeElement)) {
+                this.focused = true;
+                this.fdUiFocused.emit();
+            }
         });
     }
 
@@ -53,7 +58,11 @@ export class FdUiFocusWhenDirective {
         } else {
             const element = this.element.nativeElement;
             element.focus();
-            if (this.fdUiFocusSelect() && (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement)) {
+            if (
+                this.document.activeElement === element &&
+                this.fdUiFocusSelect() &&
+                (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement)
+            ) {
                 element.select();
             }
         }

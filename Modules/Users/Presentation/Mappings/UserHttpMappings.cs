@@ -108,6 +108,6 @@ public static class UserHttpMappings {
 
     extension(DashboardLayoutHttpModel model) {
         private DashboardLayoutModel ToModel() =>
-                new(model.Web, model.Mobile);
+                new(model.Web, model.Mobile, model.SetupHintDismissed);
     }
 }

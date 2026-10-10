@@ -43,7 +43,8 @@ public sealed class UserHttpMappingsTests {
             ProfileImageAssetId: profileImageAssetId,
             DashboardLayout: new DashboardLayoutHttpModel(
                 Web: ["calories", "weight"],
-                Mobile: ["hydration", "steps"]),
+                Mobile: ["hydration", "steps"],
+                SetupHintDismissed: true),
             IsActive: true);
 
         UpdateUserCommand command = request.ToCommand(userId);
@@ -70,6 +71,7 @@ public sealed class UserHttpMappingsTests {
         Assert.NotNull(command.DashboardLayout);
         Assert.Equal(request.DashboardLayout!.Web, command.DashboardLayout!.Web);
         Assert.Equal(request.DashboardLayout.Mobile, command.DashboardLayout.Mobile);
+        Assert.True(command.DashboardLayout.SetupHintDismissed);
         Assert.Equal(request.IsActive, command.IsActive);
     }
 
@@ -179,6 +181,7 @@ public sealed class UserHttpMappingsTests {
         Assert.Equal("https://cdn.example/profile.png", response.ProfileImage);
         Assert.Equal(profileImageAssetId, response.ProfileImageAssetId);
         Assert.Equal(["calories", "weight"], response.DashboardLayout!.Web);
+        Assert.True(response.DashboardLayout.SetupHintDismissed);
         Assert.True(response.IsActive);
         Assert.True(response.IsEmailConfirmed);
         Assert.Equal(lastLoginAtUtc, response.LastLoginAtUtc);
@@ -279,7 +282,7 @@ public sealed class UserHttpMappingsTests {
             FastingCheckInFollowUpReminderHours: 2,
             ProfileImage: "https://cdn.example/profile.png",
             ProfileImageAssetId: profileImageAssetId,
-            DashboardLayout: new DashboardLayoutModel(["calories", "weight"], ["hydration"]),
+            DashboardLayout: new DashboardLayoutModel(["calories", "weight"], ["hydration"], SetupHintDismissed: true),
             IsActive: true,
             IsEmailConfirmed: true,
             LastLoginAtUtc: lastLoginAtUtc,

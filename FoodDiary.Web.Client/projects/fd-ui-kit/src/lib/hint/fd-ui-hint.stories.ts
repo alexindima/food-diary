@@ -37,6 +37,17 @@ export const Top: Story = {
     }),
 };
 
+export const WithDescription: Story = {
+    render: () => ({
+        template: `
+            <div class="fd-stack fd-gap-md">
+                <p id="hint-extra-help">This action opens the details panel.</p>
+                <fd-ui-button variant="secondary" fdUiHint="View more details" ariaDescribedBy="hint-extra-help">Details</fd-ui-button>
+            </div>
+        `,
+    }),
+};
+
 export const Bottom: Story = {
     render: () => ({
         template: `

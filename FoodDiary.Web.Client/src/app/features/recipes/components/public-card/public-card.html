@@ -31,7 +31,7 @@
         size="sm"
         [icon]="saved() ? 'star' : 'star_border'"
         [disabled]="busy()"
-        [attr.aria-busy]="busy()"
+        [ariaBusy]="busy()"
         [ariaLabel]="(saved() ? 'PUBLIC_RECIPES.UNSAVE' : 'PUBLIC_RECIPES.SAVE') | translate"
         [fdUiHint]="(saved() ? 'PUBLIC_RECIPES.UNSAVE' : 'PUBLIC_RECIPES.SAVE') | translate"
         (click)="favoriteRequested.emit()"

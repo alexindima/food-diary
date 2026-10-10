@@ -16,8 +16,9 @@ import { NavigationService } from '../../../services/navigation.service';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
 import { UserFacade } from '../../../shared/lib/user.facade';
 import type { FastingSession } from '../../../shared/models/fasting.data';
-import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { calendarDate, utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
+import type { User } from '../../../shared/models/user.data';
 import { ViewportService } from '../../../shared/platform/viewport.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
@@ -244,11 +245,74 @@ describe('Dashboard layout draft protection', () => {
     });
 });
 
+describe('Dashboard initial setup card', () => {
+    it('offers profile setup and hides after an account-persisted dismissal', async () => {
+        const { fixture, host, child, navigation, user } = await setupAsync();
+        user.set(setupUser());
+        fixture.detectChanges();
+        expect(child('fd-dashboard-setup-card').properties['profileComplete']).toBe(false);
+        child('fd-dashboard-setup-card').triggerEventHandler('primaryAction');
+        expect(navigation.navigateToProfileAsync).toHaveBeenCalledOnce();
+        child('fd-dashboard-setup-card').triggerEventHandler('goalsAction');
+        expect(navigation.navigateToGoalsAsync).toHaveBeenCalledOnce();
+        user.set({ ...setupUser(), dashboardLayout: { setupHintDismissed: true } });
+        fixture.detectChanges();
+        expect(host.querySelector('fd-dashboard-setup-card')?.parentElement?.hasAttribute('hidden')).toBe(true);
+    });
+
+    it('links directly to weight when the profile is complete, then hides after a weight entry', async () => {
+        const { fixture, host, child, navigation, user, facade } = await setupAsync();
+        user.set({ ...setupUser(), birthDate: calendarDate('1990-01-01'), heightCm: 180, gender: 'M' });
+        fixture.detectChanges();
+        expect(child('fd-dashboard-setup-card').properties['profileComplete']).toBe(true);
+        child('fd-dashboard-setup-card').triggerEventHandler('primaryAction');
+        expect(navigation.navigateToWeightHistoryAsync).toHaveBeenCalledOnce();
+        facade.snapshot.set({ ...facade.snapshot(), weight: { latest: { weightKg: 80 } } });
+        fixture.detectChanges();
+        expect(host.querySelector('fd-dashboard-setup-card')?.parentElement?.hasAttribute('hidden')).toBe(true);
+    });
+
+    it('does not show setup while loading, viewing history, or editing layout', async () => {
+        const { fixture, host, user, facade, layout } = await setupAsync();
+        user.set(setupUser());
+        facade.hasSnapshot.set(false);
+        fixture.detectChanges();
+        expect(host.querySelector('fd-dashboard-setup-card')?.parentElement?.hasAttribute('hidden')).toBe(true);
+        facade.hasSnapshot.set(true);
+        facade.isTodaySelected.set(false);
+        fixture.detectChanges();
+        expect(host.querySelector('fd-dashboard-setup-card')?.parentElement?.hasAttribute('hidden')).toBe(true);
+        facade.isTodaySelected.set(true);
+        layout.isEditingLayout.set(true);
+        fixture.detectChanges();
+        expect(host.querySelector('fd-dashboard-setup-card')?.parentElement?.hasAttribute('hidden')).toBe(true);
+    });
+});
+
+function setupUser(): User {
+    return {
+        id: entityId<'user'>('setup-user'),
+        email: null,
+        hasPassword: true,
+        isActive: true,
+        isEmailConfirmed: true,
+        pushNotificationsEnabled: false,
+        fastingPushNotificationsEnabled: false,
+        socialPushNotificationsEnabled: false,
+        fastingCheckInReminderHours: 8,
+        fastingCheckInFollowUpReminderHours: 2,
+    };
+}
+
 class DashboardTestState {
+    public readonly user = signal<User | null>(null);
     public readonly facade = {
         selectedDate: signal(new Date()),
         isTodaySelected: signal(true),
-        snapshot: signal({ dailyGoal: 2000, meals: { total: 0 } }),
+        snapshot: signal<{ dailyGoal: number; meals: { total: number }; weight?: { latest: { weightKg: number } | null } }>({
+            dailyGoal: 2000,
+            meals: { total: 0 },
+        }),
         isLoading: signal(false),
         loadError: signal<string | null>(null),
         hasSnapshot: signal(true),
@@ -317,7 +381,7 @@ class DashboardTestState {
 }
 
 async function setupAsync(fasting = false, initiallyLoading = false): Promise<DashboardTestContext> {
-    const { facade, layout, viewport, params, navigation, unsaved } = new DashboardTestState();
+    const { facade, layout, viewport, params, navigation, unsaved, user } = new DashboardTestState();
     facade.isLoading.set(initiallyLoading);
     facade.hasSnapshot.set(!initiallyLoading);
     facade.fastingIsActive.set(fasting);
@@ -325,7 +389,7 @@ async function setupAsync(fasting = false, initiallyLoading = false): Promise<Da
     await TestBed.configureTestingModule({
         imports: [DashboardComponent],
         providers: [
-            { provide: UserFacade, useValue: { user: signal(null), getInfoSilently: vi.fn().mockReturnValue(of(null)) } },
+            { provide: UserFacade, useValue: { user, getInfoSilently: vi.fn().mockReturnValue(of(null)) } },
             provideRouter([]),
             provideTranslateTesting({ lang: 'en', fallbackLang: 'en' }),
             { provide: ActivatedRoute, useValue: { queryParamMap: params } },
@@ -343,7 +407,7 @@ async function setupAsync(fasting = false, initiallyLoading = false): Promise<Da
                 imports: [NgTemplateOutlet, TranslatePipe, FdUiPreventUnloadDirective],
                 schemas: [NO_ERRORS_SCHEMA],
                 providers: [
-                    { provide: UserFacade, useValue: { user: signal(null), getInfoSilently: vi.fn().mockReturnValue(of(null)) } },
+                    { provide: UserFacade, useValue: { user, getInfoSilently: vi.fn().mockReturnValue(of(null)) } },
                     { provide: DashboardFacade, useValue: facade },
                     { provide: DashboardLayoutService, useValue: layout },
                     {
@@ -363,7 +427,7 @@ async function setupAsync(fasting = false, initiallyLoading = false): Promise<Da
         expect(element, `Missing rendered child ${selector}`).not.toBeNull();
         return element;
     };
-    return { fixture, facade, layout, viewport, params, navigation, unsaved, host, child, router };
+    return { fixture, facade, layout, viewport, params, navigation, unsaved, host, child, router, user };
 }
 
 function activeFast(): FastingSession {
@@ -397,6 +461,7 @@ function activeFast(): FastingSession {
 }
 
 type DashboardTestContext = {
+    user: DashboardTestState['user'];
     fixture: ComponentFixture<DashboardComponent>;
     facade: DashboardTestState['facade'];
     layout: DashboardTestState['layout'];

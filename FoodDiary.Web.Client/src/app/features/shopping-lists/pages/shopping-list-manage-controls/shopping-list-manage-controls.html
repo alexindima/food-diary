@@ -6,7 +6,7 @@
                 fill="outline"
                 class="shopping-list__list-tab"
                 [class.shopping-list__list-tab--active]="list.id === selectedListId()"
-                [attr.aria-current]="list.id === selectedListId() ? 'true' : null"
+                [ariaCurrent]="list.id === selectedListId() ? 'true' : null"
                 [disabled]="isLoading()"
                 [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
                 [title]="list.name"

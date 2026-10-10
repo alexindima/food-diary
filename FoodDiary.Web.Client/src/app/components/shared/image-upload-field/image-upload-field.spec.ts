@@ -1,6 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
@@ -125,6 +125,62 @@ describe('ImageUploadFieldComponent upload', () => {
     });
 });
 
+describe('ImageUploadFieldComponent disabled actions', () => {
+    it('disables native replacement and deletion while preserving external clear requests', async () => {
+        const { component, fixture } = await setupImageUploadFieldAsync();
+        const saved = imageSelection('https://example.test/saved.png', 'saved');
+        component.value.set(saved);
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
+        const buttons = Array.from(
+            (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('.image-upload-field__control button'),
+        );
+        expect(buttons).toHaveLength(2);
+        expect(buttons.every(button => button.disabled)).toBe(true);
+        buttons[1].click();
+        component['onDeleteClick'](new Event('click'));
+        expect(component.value()).toEqual(saved);
+        fixture.componentRef.setInput('clearRequest', 1);
+        fixture.detectChanges();
+        expect(component.value()).toEqual(imageSelection(null, null));
+    });
+});
+
+describe('ImageUploadFieldComponent upload cancellation', () => {
+    it('cancels a cleared upload and accepts only a later upload', async () => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const pending = new Subject<ReturnType<typeof imageSelection>>();
+        imageUploadService.upload.mockReturnValueOnce(pending);
+        fixture.detectChanges();
+        component['handleIncomingFile'](new File(['a'], 'old.png', { type: 'image/png' }));
+        await fixture.whenStable();
+        expect(pending.observed).toBe(true);
+        fixture.componentRef.setInput('clearRequest', 1);
+        fixture.detectChanges();
+        expect(pending.observed).toBe(false);
+        pending.next(imageSelection('https://example.test/late.png', 'late'));
+        expect(component.value()).toEqual(imageSelection(null, null));
+        expect(component['isUploading']()).toBe(false);
+        component['handleIncomingFile'](new File(['b'], 'new.png', { type: 'image/png' }));
+        await fixture.whenStable();
+        expect(component.value()).toEqual(imageSelection('https://cdn.example.com/image.jpg', 'asset-1'));
+    });
+
+    it('cancels a pending upload when the owner is destroyed', async () => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const pending = new Subject<ReturnType<typeof imageSelection>>();
+        imageUploadService.upload.mockReturnValue(pending);
+        fixture.detectChanges();
+        component['handleIncomingFile'](new File(['a'], 'photo.png', { type: 'image/png' }));
+        await fixture.whenStable();
+        expect(pending.observed).toBe(true);
+        fixture.destroy();
+        expect(pending.observed).toBe(false);
+        pending.next(imageSelection('https://example.test/late.png', 'late'));
+        expect(component.value()).toBeNull();
+    });
+});
+
 describe('ImageUploadFieldComponent clearing', () => {
     it('clears selection when the external clear request changes', async () => {
         const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
@@ -164,6 +220,30 @@ describe('ImageUploadFieldComponent clearing', () => {
 
         expect(component['selection']()).toEqual(imageSelection(null, null));
         expect(logger.warn).toHaveBeenCalledWith('Failed to delete orphan image asset', expect.any(Error));
+    });
+});
+
+describe('ImageUploadFieldComponent pending preparation', () => {
+    it.each(['clear', 'destroy'])('does not upload an image resized after %s', async action => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const file = new File(['a'], 'photo.png', { type: 'image/png' });
+        let finishResize: (result: File) => void = () => {};
+        const preparation = new Promise<File>(resolve => {
+            finishResize = resolve;
+        });
+        const resizeOwner = component as unknown as { resizeFileIfNeededAsync: (file: File) => Promise<File> };
+        vi.spyOn(resizeOwner, 'resizeFileIfNeededAsync').mockReturnValue(preparation);
+        fixture.detectChanges();
+        const run = component['handleIncomingFileAsync'](file);
+        if (action === 'clear') {
+            fixture.componentRef.setInput('clearRequest', 1);
+            fixture.detectChanges();
+        } else {
+            fixture.destroy();
+        }
+        finishResize(file);
+        await run;
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
     });
 });
 
@@ -248,6 +328,34 @@ describe('ImageUploadFieldComponent interactions', () => {
 
 describe('ImageUploadFieldComponent multiple uploads', () => {
     const files = [new File(['a'], 'one.png', { type: 'image/png' }), new File(['b'], 'two.png', { type: 'image/png' })];
+    it.each(['clear', 'destroy'])('cancels the active batch on %s without starting the next file', async action => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const pending = new Subject<ReturnType<typeof imageSelection>>();
+        imageUploadService.upload.mockReturnValue(pending);
+        const added = vi.fn();
+        const busy = vi.fn();
+        component.imagesAdded.subscribe(added);
+        component.batchUploading.subscribe(busy);
+        fixture.detectChanges();
+        const run = component['uploadBatchAsync'](files);
+        await vi.waitFor(() => {
+            expect(pending.observed).toBe(true);
+        });
+        if (action === 'clear') {
+            fixture.componentRef.setInput('clearRequest', 1);
+            fixture.detectChanges();
+        } else {
+            fixture.destroy();
+        }
+        await run;
+        expect(pending.observed).toBe(false);
+        expect(imageUploadService.upload).toHaveBeenCalledOnce();
+        expect(added).not.toHaveBeenCalled();
+        if (action === 'clear') {
+            expect(busy.mock.calls).toEqual([[true], [false]]);
+            expect(component['isUploading']()).toBe(false);
+        }
+    });
     it('uploads a dropped batch in order and keeps busy until completion', async () => {
         const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
         fixture.componentRef.setInput('multiple', true);

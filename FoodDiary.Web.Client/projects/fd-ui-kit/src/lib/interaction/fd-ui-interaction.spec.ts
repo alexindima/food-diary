@@ -49,6 +49,14 @@ const EXPECTED_ACTIVATION_COUNT = 3;
             >Focus</fd-ui-button
         >
         <fd-ui-input id="focus-input" label="Name" [fdUiFocusWhen]="inputFocus()" />
+        <fieldset [disabled]="fieldsetLocked()">
+            <fd-ui-input
+                class="fieldset-input"
+                label="Locked name"
+                [fdUiFocusWhen]="fieldsetFocus()"
+                (fdUiFocused)="fieldsetCount.update(increment)"
+            />
+        </fieldset>
         <fd-ui-textarea id="focus-textarea" label="Description" [disabled]="busy()" [fdUiFocusWhen]="textareaFocus()" />
         <input id="select-input" aria-label="Rename" [fdUiFocusWhen]="selectFocus()" fdUiFocusSelect [value]="draft()" />
         <div [fdUiPreventUnload]="dirty()"></div>
@@ -62,6 +70,9 @@ class InteractionHostComponent {
     public readonly parentKeys = signal(0);
     public readonly focus = signal(false);
     public readonly inputFocus = signal(false);
+    public readonly fieldsetLocked = signal(true);
+    public readonly fieldsetFocus = signal(false);
+    public readonly fieldsetCount = signal(0);
     public readonly textareaFocus = signal(false);
     public readonly selectFocus = signal(false);
     public readonly busy = signal(false);
@@ -142,6 +153,21 @@ describe('activation and nested actions', () => {
 });
 
 describe('focus requests', () => {
+    it('does not acknowledge blocked focus and retries when an ancestor fieldset is enabled', async () => {
+        const fixture = await setupAsync();
+        const host = fixture.componentInstance;
+        const control = element(fixture, '.fieldset-input input');
+        host.fieldsetFocus.set(true);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(host.fieldsetCount()).toBe(0);
+        expect(TestBed.inject(DOCUMENT).activeElement).not.toBe(control);
+        host.fieldsetLocked.set(false);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(TestBed.inject(DOCUMENT).activeElement).toBe(control);
+        expect(host.fieldsetCount()).toBe(1);
+    });
     it('waits for an enabled UI-kit textarea and focuses its native control', async () => {
         const fixture = await setupAsync();
         fixture.componentInstance.busy.set(true);

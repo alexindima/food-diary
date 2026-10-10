@@ -10,5 +10,6 @@
 
 export interface DashboardLayoutHttpModel {
     mobile?: Array<string> | null;
+    setupHintDismissed?: boolean | null;
     web?: Array<string> | null;
 }

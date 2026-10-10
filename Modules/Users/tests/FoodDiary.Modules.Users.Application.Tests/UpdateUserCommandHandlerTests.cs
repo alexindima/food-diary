@@ -116,7 +116,7 @@ public sealed class UpdateUserCommandHandlerTests {
             CreateUserRepository(user),
             CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
 
-        var layout = new DashboardLayoutModel(["summary", "goals"], ["water", "weight"]);
+        var layout = new DashboardLayoutModel(["summary", "goals"], ["water", "weight"], SetupHintDismissed: true);
         var command = new UpdateUserCommand(
             UserId: user.Id.Value,
             Username: null,
@@ -148,6 +148,30 @@ public sealed class UpdateUserCommandHandlerTests {
         Assert.NotNull(deserialized);
         Assert.Equal(layout.Web, deserialized.Web);
         Assert.Equal(layout.Mobile, deserialized.Mobile);
+        Assert.True(deserialized.SetupHintDismissed);
+        Assert.True(result.Value.DashboardLayout?.SetupHintDismissed);
+    }
+
+    [Theory]
+    [InlineData(null, true)]
+    [InlineData(false, false)]
+    public async Task Handle_WithLayoutUpdate_PreservesDismissalUnlessExplicitlyChanged(bool? dismissed, bool expected) {
+        var user = User.Create("setup-hint@example.com", "hash");
+        var handler = new UpdateUserCommandHandler(
+            CreateUserRepository(user),
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+        Result<UserModel> dismissal = await handler.Handle(CreateCommand(user.Id.Value) with {
+            DashboardLayout = new DashboardLayoutModel(["summary"], ["summary", "meals"], SetupHintDismissed: true),
+        }, CancellationToken.None);
+        ResultAssert.Success(dismissal);
+
+        Result<UserModel> result = await handler.Handle(CreateCommand(user.Id.Value) with {
+            DashboardLayout = new DashboardLayoutModel(["summary", "hydration"], ["summary"], dismissed),
+        }, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(expected, result.Value.DashboardLayout?.SetupHintDismissed);
+        Assert.Equal(["summary", "hydration"], result.Value.DashboardLayout?.Web);
     }
 
     [Fact]

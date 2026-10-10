@@ -1,4 +1,6 @@
+import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { FdUiButtonComponent, FdUiMenuComponent, FdUiMenuTriggerDirective } from 'fd-ui-kit';
 import { of } from 'rxjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -9,6 +11,42 @@ import { ShoppingListService } from '../../api/shopping-list.service';
 import { ShoppingListBrowserComponent } from './shopping-list-browser';
 
 afterEach(() => vi.useRealTimers());
+
+@Component({
+    imports: [ShoppingListBrowserComponent, FdUiButtonComponent, FdUiMenuComponent, FdUiMenuTriggerDirective],
+    template: `
+        <fd-ui-button [fdUiMenuTrigger]="menu">Lists</fd-ui-button>
+        <fd-ui-menu #menu="fdUiMenu">
+            <fd-shopping-list-browser [lists]="[]" [initialPage]="{ items: [], hasMore: false, nextPage: null }" />
+        </fd-ui-menu>
+    `,
+})
+class MenuBrowserHostComponent {}
+
+describe('ShoppingListBrowserComponent menu focus', () => {
+    it('focuses search after portal attachment on every opening', async () => {
+        await TestBed.configureTestingModule({
+            imports: [MenuBrowserHostComponent],
+            providers: [provideTranslateTesting(), { provide: ShoppingListService, useValue: { getPage: vi.fn() } }],
+        }).compileComponents();
+        const fixture = TestBed.createComponent(MenuBrowserHostComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const trigger = (fixture.nativeElement as HTMLElement).querySelector('button');
+        for (let opening = 0; opening < 2; opening += 1) {
+            trigger?.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            const search = document.querySelector<HTMLInputElement>('.cdk-overlay-container .list-browser input');
+            expect(search).not.toBeNull();
+            expect(document.activeElement).toBe(search);
+            search?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+            fixture.detectChanges();
+            await fixture.whenStable();
+            expect(document.activeElement).toBe(trigger);
+        }
+    });
+});
 describe('ShoppingListBrowserComponent current list data', () => {
     it('updates renamed lists and counts without losing additional loaded pages', async () => {
         const first = {

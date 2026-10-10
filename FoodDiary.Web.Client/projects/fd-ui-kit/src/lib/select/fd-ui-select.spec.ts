@@ -48,6 +48,48 @@ describe('FdUiSelectComponent', () => {
 });
 
 describe('FdUiSelectComponent selection focus', () => {
+    it('selects a remaining option after the open list shrinks and recovers from an empty list', async () => {
+        const { fixture, component } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        fixture.detectChanges();
+        component['openMenu']();
+        component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'End' }));
+        fixture.componentRef.setInput('options', [TEST_OPTIONS[0]]);
+        fixture.detectChanges();
+        expect(component['activeOptionId']()).toBe(`${component.id()}-option-0`);
+        component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'Enter' }));
+        expect(component.value()).toBe('apple');
+        component['openMenu']();
+        fixture.componentRef.setInput('options', []);
+        fixture.detectChanges();
+        expect(component['activeOptionId']()).toBeNull();
+        component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'Enter' }));
+        expect(component.value()).toBe('apple');
+        fixture.componentRef.setInput('options', [TEST_OPTIONS[2]]);
+        fixture.detectChanges();
+        component['onListboxKeydown'](new KeyboardEvent('keydown', { key: ' ' }));
+        expect(component.value()).toBe('cherry');
+    });
+
+    it('can dismiss an empty list with Escape', async () => {
+        const { component } = await setupSelectAsync();
+        component['openMenu']();
+        component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'Escape' }));
+        expect(component['isOpen']()).toBe(false);
+    });
+
+    it('keeps the active marker and selection aligned after options are reordered', async () => {
+        const { fixture, component } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        fixture.detectChanges();
+        component['openMenu']();
+        component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'End' }));
+        fixture.componentRef.setInput('options', [...TEST_OPTIONS].reverse());
+        fixture.detectChanges();
+        expect(component['activeOptionId']()).toBe(`${component.id()}-option-2`);
+        component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'Enter' }));
+        expect(component.value()).toBe('apple');
+    });
     it.each(['Enter', ' '])('returns focus to the trigger after selection with %s', async key => {
         const { fixture, component, requireElement } = await setupSelectAsync();
         fixture.componentRef.setInput('options', TEST_OPTIONS);
@@ -386,7 +428,7 @@ describe('FdUiSelectComponent overlay', () => {
 
         component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'ArrowDown' }));
 
-        expect(component['activeIndex']()).toBe(0);
+        expect(component['activeIndex']()).toBe(-1);
     });
 });
 

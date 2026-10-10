@@ -69,6 +69,7 @@ export function dashboardSnapshotFromSdk(response: DashboardSnapshotHttpResponse
             ...layout,
             web: layout.web ?? undefined,
             mobile: layout.mobile ?? undefined,
+            setupHintDismissed: layout.setupHintDismissed ?? undefined,
         })),
     };
 }

@@ -89,7 +89,10 @@ public sealed class UpdateUserCommandHandler(
 
         string? dashboardLayoutJson = command.DashboardLayout is null
             ? null
-            : JsonSerializer.Serialize(command.DashboardLayout);
+            : JsonSerializer.Serialize(command.DashboardLayout with {
+                SetupHintDismissed = command.DashboardLayout.SetupHintDismissed
+                    ?? currentUser.ToModel().DashboardLayout?.SetupHintDismissed,
+            });
 
         ParsedUserPreferences preferences = preferencesResult.Value;
         return Result.Success(new UpdateUserValues(

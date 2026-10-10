@@ -9,6 +9,7 @@ export type UiStyleOption = 'classic' | 'modern';
 export type DashboardLayoutSettings = {
     web?: string[];
     mobile?: string[];
+    setupHintDismissed?: boolean;
 };
 
 export type User = {

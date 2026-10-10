@@ -13,6 +13,7 @@ import {
     model,
     output,
     signal,
+    untracked,
     viewChild,
 } from '@angular/core';
 import type { FormValueControl } from '@angular/forms/signals';
@@ -71,6 +72,15 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
     public constructor() {
         effect(() => {
             this.internalValue.set(this.value());
+        });
+        effect(() => {
+            const options = this.options();
+            if (this.isOpen()) {
+                const index = untracked(this.activeIndex);
+                this.activeIndex.set(
+                    options.length === 0 ? NO_ACTIVE_OPTION_INDEX : Math.min(Math.max(index, FIRST_OPTION_INDEX), options.length - 1),
+                );
+            }
         });
     }
 
@@ -147,7 +157,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
         this.overlayMinWidth.set(this.controlWrapRef()?.nativeElement.getBoundingClientRect().width ?? 0);
         this.isOpen.set(true);
         this.isFocused.set(true);
-        this.activeIndex.set(Math.max(this.selectedIndex(), 0));
+        this.activeIndex.set(this.options().length === 0 ? NO_ACTIVE_OPTION_INDEX : Math.max(this.selectedIndex(), FIRST_OPTION_INDEX));
     }
 
     protected closeMenu(): void {
@@ -206,7 +216,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
         }
 
         const options = this.options();
-        if (options.length === 0) {
+        if (options.length === 0 && event.key !== 'Escape') {
             return;
         }
 
@@ -254,8 +264,9 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
     }
 
     private selectActiveOption(options: Array<FdUiSelectOption<T>>): void {
-        if (this.activeIndex() >= FIRST_OPTION_INDEX) {
-            this.onOptionSelect(options[this.activeIndex()]);
+        const index = this.activeIndex();
+        if (index >= FIRST_OPTION_INDEX && index < options.length) {
+            this.onOptionSelect(options[index]);
         }
     }
 
