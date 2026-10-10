@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 $toolsRoot = $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
-$fixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'task-baseline'
+$fixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'task-baseline' -IndependentRepository
 
 function Assert-Baseline([bool]$Condition, [string]$Message) {
     if (-not $Condition) { throw $Message }

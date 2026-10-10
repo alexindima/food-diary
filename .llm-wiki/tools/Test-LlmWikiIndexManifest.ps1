@@ -33,7 +33,7 @@ if (-not $receiptText.Contains('.llm-wiki/policies/query-indexes.json') -or
 Write-Host "LLM Wiki index-manifest regression passed: $($paths.Count) query dependencies share one freshness contract."
 
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
-$fixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'index-publication-receipts'
+$fixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'index-publication-receipts' -IndependentRepository
 try {
     & git -C $fixture init --quiet
     $fixtureTools = Join-Path $fixture '.llm-wiki/tools'

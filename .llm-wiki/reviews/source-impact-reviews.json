@@ -203,18 +203,22 @@
       "pageSha256": "bf06c7515995b5983125ae2d8469bc357431d468feed457a4ae9ab443288c4a4",
       "sources": [
         {
-          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-          "sha256": "75ba917cefa45d83e45b871b41d27a8e20954bfc5c38ef4147338b624f628234"
+          "path": ".llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1",
+          "sha256": "a9830875527e074ac34d353c46ef910c9f3be0b1a99824138dfad0d00e984e04"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
-          "sha256": "a8bb234d92a449d1cddf43929f4a73c018a68e5cf142c70f926cc189bfbe8560"
+          "path": ".llm-wiki/tools/Test-LlmWikiTaskBaseline.ps1",
+          "sha256": "fc5b98f8427f749769c41ddb13ec0cd7944f794524d97539eca106548ea800e7"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiVerificationCache.ps1",
+          "sha256": "2cb00dfcbb7271ea9a5ef944d0b2864461630237a18bd4dc5783fdf7ed939b13"
         }
       ],
-      "reason": "Reviewed the affected tooling guides against request-local reuse of the freshly checked repository, HEAD and content fingerprint. Normal scoped cache callers preserve their identity; dependency hashing remains independent and module discovery is deferred only for cache hits. Cache regressions and the unchanged latency gate pass. Seven counterbalanced pairs measure median warm context from 1050ms to 595ms; static reference indexes were regenerated and do not represent execution coverage.",
+      "reason": "Final Wiki verify passed 8 of 8 selected stages and all 9 affected groups on Windows in a deeply nested isolated checkout. Native Git/cache/publication and content-based cache invalidation regressions passed; exhaustive verify-full was not run.",
       "baseRef": "HEAD",
-      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
-      "reviewedAtUtc": "2026-10-04T20:51:28.8073013Z"
+      "gitHead": "fcf6f2c391638ea63682ab09921df6a5ff7afa95",
+      "reviewedAtUtc": "2026-10-10T16:45:56.2115496Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -493,14 +497,14 @@
       "pageSha256": "7b325c5dd1cee36772c8e9d61fe14324f25f78f5f320e5521ca050f4080667a6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiRolloutPlan.ps1",
-          "sha256": "5641d2a2878830cd7eb4cfabed28d2d6af5e261776e5f9f0e819bf42e7410b26"
+          "path": ".llm-wiki/tools/Test-LlmWikiDependencyManifest.ps1",
+          "sha256": "5f81ba7d58bbe1c40dd1e867ff6e3fa035847eac805f80b4363112712e4ef466"
         }
       ],
-      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "reason": "Verified independent Git fixture creation in owned short temporary scopes and preserved repository-relative source fixtures against the final code.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:06.3257486Z"
+      "gitHead": "fcf6f2c391638ea63682ab09921df6a5ff7afa95",
+      "reviewedAtUtc": "2026-10-10T16:45:56.4193072Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -871,13 +875,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1bbbaaa0cf48158ec304c945e5f69842aeeb9ea6813963024db9f088396ad028"
+          "sha256": "82ceb28157df28fe942f72a71e40cc5b9a708d5cb37bd9673dca9c1b2db8313a"
         }
       ],
-      "reason": "Reviewed updated frontend structural metrics, nine net new production sources and their focused regressions. Static symbol references remain navigation evidence; executed unit tests, Storybook and browser checks provide the behavior evidence. Parallel Wiki-tool metric changes are excluded from this commit.",
+      "reason": "Final Wiki verify passed 8 of 8 selected stages and all 9 affected groups on Windows in a deeply nested isolated checkout. Native Git/cache/publication and content-based cache invalidation regressions passed; exhaustive verify-full was not run.",
       "baseRef": "HEAD",
-      "gitHead": "5de6ddc7e3eaabce6b3e5e787064d7eebd261865",
-      "reviewedAtUtc": "2026-10-10T16:24:20.160Z"
+      "gitHead": "fcf6f2c391638ea63682ab09921df6a5ff7afa95",
+      "reviewedAtUtc": "2026-10-10T16:45:56.7559005Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -973,13 +977,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1bbbaaa0cf48158ec304c945e5f69842aeeb9ea6813963024db9f088396ad028"
+          "sha256": "82ceb28157df28fe942f72a71e40cc5b9a708d5cb37bd9673dca9c1b2db8313a"
         }
       ],
-      "reason": "Reviewed the frontend interaction and picker/loading refactor against security navigation guidance. The changes add no HTTP transport, credentials, authorization or persistence boundaries; quality signals remain navigation leads rather than vulnerability or executed-coverage claims.",
+      "reason": "Verified synthetic-only fixtures, local Git ownership before further operations and exact owned cleanup. Failed native initialization cannot proceed to ancestor checkout operations.",
       "baseRef": "HEAD",
-      "gitHead": "5de6ddc7e3eaabce6b3e5e787064d7eebd261865",
-      "reviewedAtUtc": "2026-10-10T16:24:20.215Z"
+      "gitHead": "fcf6f2c391638ea63682ab09921df6a5ff7afa95",
+      "reviewedAtUtc": "2026-10-10T16:45:57.1178221Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

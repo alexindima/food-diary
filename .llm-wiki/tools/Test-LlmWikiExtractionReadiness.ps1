@@ -90,7 +90,7 @@ try {
 } finally {
     Remove-Item -LiteralPath $fixtureRoot -Recurse -Force -ErrorAction SilentlyContinue
 }
-$probeFixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'extraction-probe-donor'
+$probeFixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'extraction-probe-donor' -IndependentRepository
 $previousProbeSandbox = $env:LLM_WIKI_SMOKE_SANDBOX
 try {
     $fixtureTools = Join-Path $probeFixtureRoot '.llm-wiki/tools'
@@ -202,7 +202,7 @@ public sealed class UsesOwner { public owner::Sample.Owner.Marker Value { get; }
 } finally {
     $env:LLM_WIKI_SMOKE_SANDBOX = $previousProbeSandbox
     $resolvedFixture = [IO.Path]::GetFullPath($probeFixtureRoot)
-    $expectedSandbox = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot)).TrimEnd('\', '/')
+    $expectedSandbox = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot -IndependentRepository)).TrimEnd('\', '/')
     if (-not $resolvedFixture.StartsWith($expectedSandbox + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) {
         throw "Refusing to remove fixture outside its smoke sandbox: $resolvedFixture"
     }

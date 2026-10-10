@@ -222,6 +222,7 @@ function Start-SmokeGroup([string]$Group) {
         throw 'Smoke group temporary directory escaped its run scope.'
     }
     $null = New-Item -ItemType Directory -Path $temporaryGroupPath -Force
+    $process.StartInfo.Environment['LLM_WIKI_SMOKE_EXTERNAL_SANDBOX'] = $temporaryGroupPath
     $process.StartInfo.Environment['TEMP'] = $temporaryGroupPath
     $process.StartInfo.Environment['TMP'] = $temporaryGroupPath
     $process.StartInfo.Environment['TMPDIR'] = $temporaryGroupPath

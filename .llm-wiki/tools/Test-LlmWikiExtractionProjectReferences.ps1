@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiExtractionPlanning.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
-$fixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'extraction-project-references'
+$fixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'extraction-project-references' -IndependentRepository
 try {
     $files = @{
         'docs/architecture/backend-modules.json' = '{"modules":{"Sample":{"sourceMappings":{"applicationProjects":["Modules/Sample/Application"],"contractProjects":["Modules/Sample/Contracts/Physical.Contracts.csproj"]}}}}'
@@ -42,7 +42,7 @@ try {
     }
     Write-Output 'Extraction project reference regression passed: mapped directory/file, physical identity, legacy fallback and unrelated exclusions.'
 } finally {
-    $sandbox = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot)).TrimEnd('\', '/')
+    $sandbox = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot -IndependentRepository)).TrimEnd('\', '/')
     $resolvedFixture = [IO.Path]::GetFullPath($fixture)
     if (-not $resolvedFixture.StartsWith($sandbox + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) {
         throw 'Extraction reference fixture cleanup escaped its sandbox.'

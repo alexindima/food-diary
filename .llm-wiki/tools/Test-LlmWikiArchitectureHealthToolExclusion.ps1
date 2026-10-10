@@ -8,13 +8,24 @@ $indexPath = Join-Path $wikiRoot 'generated/architecture-health-index.json'
 . (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
-$cacheFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'architecture-cache-drift'
+# An independent repository must remain short even when the real checkout is deep.
+$deepCheckout = Join-Path $repositoryRoot (('nested-checkout/' * 20) + 'repository')
+$cacheFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $deepCheckout -Name 'architecture-cache-drift' -IndependentRepository
 $fixtureTools = Join-Path $cacheFixture '.llm-wiki/tools'
 try {
+    if ($cacheFixture.StartsWith($deepCheckout + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'Independent native fixture inherited the deep checkout path.'
+    }
+    $nativeReceiptPath = Join-Path $cacheFixture '.git/llm-wiki/index-cache/pipeline-0123456789abcdef.json'
+    $nestedReceiptPath = Join-Path $deepCheckout '.artifacts/llm-wiki/parallel-smoke/run/sandbox/index-selection/architecture-cache-drift/.git/llm-wiki/index-cache/pipeline-0123456789abcdef.json'
+    if ($nestedReceiptPath.Length -lt 260) { throw 'Deep-checkout regression does not exercise the legacy Windows path budget.' }
+    if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT -and $nativeReceiptPath.Length -ge 260) {
+        throw "Native fixture receipt exceeds the Windows path budget ($($nativeReceiptPath.Length)): $nativeReceiptPath"
+    }
     $null = New-Item -ItemType Directory -Path $fixtureTools -Force
     $generatorToolNames = @('Build-LlmWikiArchitectureHealthIndex.ps1','LlmWikiJson.ps1','LlmWikiGitPaths.ps1','LlmWikiIndexCache.ps1')
     $toolNames = $generatorToolNames + @('Invoke-LlmWikiIndexPipeline.ps1','LlmWikiChangeSemantics.ps1',
-        'LlmWikiProcess.ps1','LlmWikiGeneratedArtifacts.ps1','LlmWikiIndexTiming.ps1')
+        'LlmWikiProcess.ps1','LlmWikiGeneratedArtifacts.ps1','LlmWikiIndexTiming.ps1','Get-LlmWikiStaleDisposition.ps1')
     foreach ($name in $toolNames) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot $name) -Destination (Join-Path $fixtureTools $name) }
     & git -C $cacheFixture init --quiet
     if ($LASTEXITCODE -ne 0) { throw 'Unable to initialize architecture-cache fixture.' }
@@ -53,7 +64,7 @@ try {
     }
 } finally {
     $resolvedFixture = [IO.Path]::GetFullPath($cacheFixture)
-    $sandbox = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot $repositoryRoot)).TrimEnd('\','/')
+    $sandbox = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot -IndependentRepository)).TrimEnd('\','/')
     if ([IO.Path]::GetDirectoryName($resolvedFixture) -cne $sandbox -or
         [IO.Path]::GetFileName($resolvedFixture) -notmatch '^architecture-cache-drift-[a-f0-9]{32}$') { throw 'Unsafe architecture-cache fixture cleanup.' }
     if (Test-Path -LiteralPath $resolvedFixture) { Remove-Item -LiteralPath $resolvedFixture -Recurse -Force }

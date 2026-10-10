@@ -45,7 +45,7 @@ if ($standardOutputDrainCount -eq 0 -or $standardOutputDrainCount -ne $standardE
 if ($gitPathHelperText -notmatch 'function Invoke-LlmWikiGitCommand\b') {
     throw 'Git path helpers no longer expose a general-purpose safe git invocation for non-path-list output (diff --name-status, log, rev-parse, ...); native `&' + " git`` calls elsewhere silently regain the Set-StrictMode NativeCommandError risk on any stderr warning (e.g. core.autocrlf CRLF notices)."
 }
-$warningRepository = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'git-stderr-pressure'
+$warningRepository = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'git-stderr-pressure' -IndependentRepository
 try {
     & git -C $warningRepository init --quiet
     foreach ($index in 1..250) {
@@ -70,7 +70,7 @@ if ([string]$aliasPolicy.baseRef -cne $headSha -or
     throw 'Equivalent HEAD and SHA refs produced different canonical policy definitions.'
 }
 
-$overlayRepository = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'headref-overlay'
+$overlayRepository = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'headref-overlay' -IndependentRepository
 $overlayFixtureName = 'wiki-headref-overlay.md'
 $overlayFixturePath = Join-Path $overlayRepository $overlayFixtureName
 try {

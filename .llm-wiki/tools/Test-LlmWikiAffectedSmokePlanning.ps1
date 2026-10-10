@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $planner = Join-Path $PSScriptRoot 'Invoke-LlmWikiAffectedSmoke.ps1'
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
-$dispatchFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) -Name 'smoke-dispatch'
+$dispatchFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) -Name 'smoke-dispatch' -IndependentRepository
 try {
     $dispatchTools = Join-Path $dispatchFixture '.llm-wiki/tools'
     $dispatchPolicy = Join-Path $dispatchFixture '.llm-wiki/policies'
@@ -48,7 +48,7 @@ try {
     }
 } finally {
     $dispatchRoot = [IO.Path]::GetFullPath($dispatchFixture)
-    $dispatchParent = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot -RepositoryRoot (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)))).TrimEnd('\', '/')
+    $dispatchParent = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot -RepositoryRoot (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) -IndependentRepository)).TrimEnd('\', '/')
     if ([IO.Path]::GetDirectoryName($dispatchRoot) -cne $dispatchParent -or [IO.Path]::GetFileName($dispatchRoot) -notmatch '^smoke-dispatch-[a-f0-9]{32}$') { throw 'Unsafe smoke dispatch fixture cleanup.' }
     Remove-Item -LiteralPath $dispatchRoot -Recurse -Force
 }
@@ -89,6 +89,11 @@ if ($runtimeEvalGroups -notcontains 'context-search-evals' -or $runtimeEvalGroup
 }
 $frontendInventoryGroups = @(Get-Groups '.llm-wiki/tools/Test-LlmWikiFrontendSourceInventory.ps1')
 if ($frontendInventoryGroups -notcontains 'index-selection') { throw 'Frontend source inventory omitted its index regressions.' }
+foreach ($source in @('LlmWikiSmokeSandbox', 'Test-LlmWikiArchitectureHealthToolExclusion')) {
+    if (@(Get-Groups ".llm-wiki/tools/$source.ps1") -notcontains 'index-selection') {
+        throw "Native fixture source '$source' omitted its index regressions."
+    }
+}
 if (@(Get-Groups '.llm-wiki/tools/Test-LlmWikiTelemetryValidationReuse.ps1') -notcontains 'verification-cache') {
     throw 'Telemetry validation reuse omitted its owning regression group.'
 }

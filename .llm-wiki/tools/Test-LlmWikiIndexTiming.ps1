@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiIndexTiming.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
-$fixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'index-timing'
+$fixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'index-timing' -IndependentRepository
 try {
     & git -C $fixtureRoot init --quiet
     if ($LASTEXITCODE -ne 0) { throw 'Unable to initialize index timing fixture.' }

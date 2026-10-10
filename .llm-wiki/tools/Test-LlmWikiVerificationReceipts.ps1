@@ -17,7 +17,7 @@ $importReceiptPath = Join-Path $receiptRoot "$(Get-LlmWikiSha256 (Normalize-LlmW
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 $workspace = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name 'verification-receipts'
 $absoluteWorkspace = Join-Path $repositoryRoot $workspace
-$fingerprintFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'receipt-unicode'
+$fingerprintFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'receipt-unicode' -IndependentRepository
 $receiptBackups = @{}
 foreach ($path in @($receiptPath, $planReceiptPath, $importReceiptPath)) {
     $receiptBackups[$path] = if ([IO.File]::Exists($path)) { ,([IO.File]::ReadAllBytes($path)) } else { $null }
@@ -127,7 +127,7 @@ try {
         else { Remove-Item -LiteralPath $path -Force -ErrorAction SilentlyContinue }
     }
     $resolvedFixture = [IO.Path]::GetFullPath($fingerprintFixture)
-    $fixtureParent = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot $repositoryRoot)).TrimEnd('\', '/')
+    $fixtureParent = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot -IndependentRepository)).TrimEnd('\', '/')
     if ([IO.Path]::GetDirectoryName($resolvedFixture) -cne $fixtureParent -or
         [IO.Path]::GetFileName($resolvedFixture) -notmatch '^receipt-unicode-[a-f0-9]{32}$') { throw 'Unsafe receipt fixture cleanup path.' }
     if (Test-Path -LiteralPath $resolvedFixture) { Remove-Item -LiteralPath $resolvedFixture -Recurse -Force }

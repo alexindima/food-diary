@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 $toolsRoot = $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
-$fixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'verification-cache'
+$fixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'verification-cache' -IndependentRepository
 
 function Assert-Cache([bool]$Condition, [string]$Message) { if (-not $Condition) { throw $Message } }
 

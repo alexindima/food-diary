@@ -22,7 +22,7 @@ Write-Host 'LLM Wiki dependency manifest regression passed.'
 
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
-$fixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'dependency-diff'
+$fixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'dependency-diff' -IndependentRepository
 try {
     $fixtureTools = Join-Path $fixture '.llm-wiki/tools'
     $null = New-Item -ItemType Directory -Path $fixtureTools -Force
@@ -86,7 +86,7 @@ try {
     Write-Host 'Dependency diff regression passed: complete inventory, edits, deletion, staged/untracked Unicode paths and lockfiles.'
 } finally {
     $resolvedFixture = [IO.Path]::GetFullPath($fixture)
-    $sandbox = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot)).TrimEnd('\', '/')
+    $sandbox = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot -IndependentRepository)).TrimEnd('\', '/')
     if (-not $resolvedFixture.StartsWith($sandbox + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe dependency fixture cleanup path.' }
     Remove-Item -LiteralPath $resolvedFixture -Recurse -Force
 }

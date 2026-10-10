@@ -760,11 +760,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
-      "nonBlankLines": 348,
+      "nonBlankLines": 349,
       "decisionPoints": 58,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 95.96
+      "structuralRiskScore": 95.98
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard.facade.ts",
@@ -1578,11 +1578,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
-      "nonBlankLines": 348,
+      "nonBlankLines": 349,
       "decisionPoints": 58,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 95.96
+      "structuralRiskScore": 95.98
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
@@ -1826,11 +1826,11 @@
     },
     {
       "path": ".llm-wiki/tools/LlmWikiSmokeSandbox.ps1",
-      "nonBlankLines": 38,
-      "decisionPoints": 2,
+      "nonBlankLines": 66,
+      "decisionPoints": 9,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.76
+      "structuralRiskScore": 16.82
     },
     {
       "path": ".llm-wiki/tools/LlmWikiSourceInventory.ps1",
@@ -64318,8 +64318,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Get-LlmWikiStaleDisposition.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",

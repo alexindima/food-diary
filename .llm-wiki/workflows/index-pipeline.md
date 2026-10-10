@@ -62,6 +62,7 @@ sources:
   - .llm-wiki/tools/Find-LlmWikiRuntimeTopology.ps1
   - .llm-wiki/tools/Test-LlmWikiSourceInventory.ps1
   - .llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1
+  - .llm-wiki/tools/LlmWikiSmokeSandbox.ps1
   - .llm-wiki/tools/code-graph-candidates.mjs
   - .llm-wiki/tools/code-graph-candidates.test.mjs
   - .llm-wiki/tools/LlmWikiCorpusEvaluation.ps1
@@ -179,7 +180,18 @@ input validation before they can satisfy a command.
 
 Mutable tool-smoke registries are redirected to `.artifacts/llm-wiki` instead of editing canonical knowledge and relying on `finally` restoration. Index updates persist an in-progress transaction snapshot under the Git directory; the next update restores any interrupted transaction whose owner process no longer exists before making new changes.
 
-Smoke logs and explicit fixture sandboxes stay under the run's repository artifacts. Native temporary files use a separate short run/group directory in the system temporary parent, preventing Windows SQLite journal paths from exceeding native limits. `TEMP`, `TMP`, and `TMPDIR` share that group scope. Cleanup verifies the owned parent and exact run name before removing the temporary directory.
+Smoke logs and source-inventory fixture sandboxes stay under the run's repository artifacts. Independent native Git repositories use `New-LlmWikiSmokeFixtureDirectory -IndependentRepository` in the short, owned run/group temporary directory, selected by `LLM_WIKI_SMOKE_EXTERNAL_SANDBOX`. Their paths do not inherit the checkout's depth; the architecture-cache regression exercises this with a deliberately deep logical checkout and real Git cache checks. Standalone independent fixtures use a PID scope under the system temporary parent. Native temporary files, `TEMP`, `TMP`, and `TMPDIR` share the runner's group scope. Cleanup verifies the owned parent and exact fixture/run name before removing those directories.
+
+Changes to the native fixture helper or architecture-cache regression select the
+index-selection checks and invalidate their cached success receipt. The stage
+fingerprint regression verifies content changes even with unchanged Git status
+and restored modification timestamps.
+
+Independent fixture creation also initializes Git and verifies a local `.git`
+before returning the directory. A failed native initialization must stop the test
+before Git can discover and modify the parent checkout. Publication receipts,
+cache/timing, extraction, dependency, Git-path and task-baseline fixtures use this
+mode; source-inventory fixtures retain their separate repository-relative scope.
 
 Test plans expose `required`, `recommended`, `fullRegression`, and `satisfied`
 command groups. Direct owners remain required. A broad production consumer set
