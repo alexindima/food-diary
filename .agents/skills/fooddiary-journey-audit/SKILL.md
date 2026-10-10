@@ -19,6 +19,15 @@ For a broad request such as "try everything", establish a finite initial pass fr
 
 Use a scenario ledger with: stable ID, role, precondition, action, expected observable result, execution status, evidence, and fixture/cleanup state. Reuse an existing maintained ledger where practical. Keep the scenario result distinct from the result of the automation script. Statuses should distinguish untested, passed, failed, blocked, and fixed then rechecked.
 
+## Choose the browser
+
+Follow [fooddiary-browser-qa](../fooddiary-browser-qa/SKILL.md) for browser selection
+and session ownership. The default full pass uses visible Chrome through
+Playwright, with an explicit Chrome channel, a distinct task session and the
+verified frontend/admin URL. Reuse an existing session owned by this audit.
+Preserve an explicitly requested browser or existing tab; record the actual
+browser, control method, viewport and any fallback in the scenario evidence.
+
 ## Exercise outcomes
 
 Prioritize the actual journey and risks present in the feature:

@@ -1,0 +1,3 @@
+interface:
+  display_name: "FoodDiary Browser QA"
+  short_description: "Verify FoodDiary UI and journeys with Chrome"

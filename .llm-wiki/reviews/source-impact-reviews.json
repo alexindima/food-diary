@@ -41,22 +41,14 @@
       "pageSha256": "56878c764cc5ff357a30b22c59daa99a2396117da578f1d71b719cb2315a8ffb",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/projects/fooddiary-admin/AGENTS.md",
-          "sha256": "973d85ff39c3cf4f86a52463237a53ec84f313f3eedbfca6e9cb201a88d5da96"
-        },
-        {
-          "path": "FoodDiary.Web.Client/src/app/AGENTS.md",
-          "sha256": "8b6385621170cecb815d041c32d0d9581767972c153d8395fa328a707c21e865"
-        },
-        {
-          "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
-          "sha256": "70587d840ce71c1830b0574f8d03446224c7c646ad04e6aa22b94a841e3fbe7e"
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "dfeab99bda2f473631b4c791d9439ae486b5202de4a1cf840c5a61d6d9dac442"
         }
       ],
-      "reason": "Reviewed refreshed source instructions and PRIMITIVE_TYPES against all14 implementations, explicit legacy/raw boundaries and current project ownership; admin catalog decoded sources keep wire file data scalar.",
+      "reason": "Reviewed the current pages against the frontend guide: this task adds browser-selection instructions only. Module boundaries, source-discovery rules and public component/API contracts are unchanged by these edits. The visual-evidence workflow now links the Chrome-default browser QA skill.",
       "baseRef": "HEAD",
-      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
-      "reviewedAtUtc": "2026-10-08T19:37:48.1641735Z"
+      "gitHead": "402c1a3ce7c7f72bf075b7593c3e5349b07cd1b3",
+      "reviewedAtUtc": "2026-10-10T19:48:42.0479784Z"
     },
     {
       "pageId": "module.mail-services",
@@ -124,14 +116,14 @@
       "pageSha256": "ffe52aa56bac185d19cfbca9407b7807223ca7f5ad4dcf3e5eb4b37c742c7d5e",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "7ef0067b75fca63790ceef45f93fb7bda333806b688977429400607e1e0b772f"
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "dfeab99bda2f473631b4c791d9439ae486b5202de4a1cf840c5a61d6d9dac442"
         }
       ],
-      "reason": "All non-navigation root rules are preserved verbatim; the root points to a complete checked scoped-guide catalog. The new current guide documents actual commands, disabled integrations, source fingerprints, generated skeleton obligations and the limits of the five-case coding corpus.",
+      "reason": "Reviewed the current pages against the frontend guide: this task adds browser-selection instructions only. Module boundaries, source-discovery rules and public component/API contracts are unchanged by these edits. The visual-evidence workflow now links the Chrome-default browser QA skill.",
       "baseRef": "HEAD",
-      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
-      "reviewedAtUtc": "2026-10-09T21:07:09.2332201Z"
+      "gitHead": "402c1a3ce7c7f72bf075b7593c3e5349b07cd1b3",
+      "reviewedAtUtc": "2026-10-10T19:48:42.3032130Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -1213,14 +1205,14 @@
       "pageSha256": "31a43fb31fa630969babe869c21458771cfbe6ed2e9b0234c47cc7e1511d5725",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "2237476496775a2adb2624a1cbf708c798528d9762137b46483b87c4676d94e8"
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "dfeab99bda2f473631b4c791d9439ae486b5202de4a1cf840c5a61d6d9dac442"
         }
       ],
-      "reason": "The setup-card refinement replaces the shared card header slot with an owned heading and description group and an existing accessible close button anchored in the corner. Selector, profileComplete input, action outputs and region/close accessible names are unchanged. Three component tests and frontend build passed; desktop and mobile browser measurements confirm a four-pixel title-to-description gap and successful dismissal.",
+      "reason": "Reviewed the current pages against the frontend guide: this task adds browser-selection instructions only. Module boundaries, source-discovery rules and public component/API contracts are unchanged by these edits. The visual-evidence workflow now links the Chrome-default browser QA skill.",
       "baseRef": "HEAD",
-      "gitHead": "f0505545b9dd4058704f573deda769dcb6ef2b43",
-      "reviewedAtUtc": "2026-10-10T18:06:24.0739570Z"
+      "gitHead": "402c1a3ce7c7f72bf075b7593c3e5349b07cd1b3",
+      "reviewedAtUtc": "2026-10-10T19:48:42.7391317Z"
     },
     {
       "pageId": "workflow.query-context",

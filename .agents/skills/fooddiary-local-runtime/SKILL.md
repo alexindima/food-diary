@@ -27,6 +27,10 @@ Use the root guide's standard frontend build, frontend start, and backend run co
 
 Check the requested frontend and API endpoints, then verify a real request from the rendered application reaches the intended backend. Do not substitute a successful health check for frontend-to-API connectivity. Confirm the checkout or revision serving the browser when multiple copies exist.
 
+Use [fooddiary-browser-qa](../fooddiary-browser-qa/SKILL.md) when opening or checking
+the rendered application. Chrome is the default; preserve an explicitly requested
+browser and record the task's actual browser session in the runtime handoff.
+
 When authentication is required, obtain local credentials through the location and rules in the current root guide. Use synthetic accounts appropriate to the authorized task. Never place secrets in generated launch helpers, command output, screenshots, or handoff records.
 
 For the relevant flow, probe dependencies through useful application outcomes: an owned image round trip, a local inbox operation, or the applicable job behavior. Record each relevant integration as verified working locally, mocked, blocked, or untested, with its evidence or blocker. An internal billing overview does not prove that the payment provider works; opening a mail page does not prove delivery. Mark intercepted requests separately from real provider readiness.

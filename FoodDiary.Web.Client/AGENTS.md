@@ -107,6 +107,7 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 
 ## UI/UX
 
+- For rendered UI verification, follow [fooddiary-browser-qa](../.agents/skills/fooddiary-browser-qa/SKILL.md). Chrome through Playwright is the default for interactive checks and full audits; preserve an explicitly requested browser or existing tab. This repository default applies alongside generic frontend plugin guidance. Determine built-in Browser availability from its tools, and do not recommend a separate Browser plugin merely because no `browser` skill is listed.
 - Before creating or locally styling any control, search the public `fd-ui-kit` exports and `projects/fd-ui-kit/COMPONENTS.md` for an existing primitive or close composition. Extend the design-system component when the behavior is reusable; use a native/custom control only when the UI kit has no suitable contract, and document that exception in the change.
 - Keep mobile header/card patterns consistent across list pages.
 - Respect existing design system components from `fd-ui-kit`.
