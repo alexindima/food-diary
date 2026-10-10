@@ -28,6 +28,22 @@ if (-not $Isolated) {
 $artifactRoot = [IO.Path]::GetFullPath((Join-Path $repositoryRoot '.artifacts/llm-wiki'))
 $testRoot = Join-Path $artifactRoot "concurrent-index-test-$([guid]::NewGuid().ToString('N'))"
 $null = New-Item -ItemType Directory -Path $testRoot -Force
+# This branch runs only in the isolated clone. Hold its real writer until the
+# second process has visibly reached lock contention instead of relying on CPU timing.
+$builderPath = Join-Path $PSScriptRoot 'Build-LlmWikiRuntimeTopology.ps1'
+$originalBuilder = [IO.File]::ReadAllText($builderPath)
+$releasePath = Join-Path $testRoot 'release-writer'
+$escapedReleasePath = $releasePath.Replace("'", "''")
+$builderGate = @"
+`$gateDeadline = [DateTime]::UtcNow.AddSeconds(45)
+while (-not (Test-Path -LiteralPath '$escapedReleasePath')) {
+    if ([DateTime]::UtcNow -ge `$gateDeadline) { throw 'Concurrent fixture writer release timed out.' }
+    Start-Sleep -Milliseconds 50
+}
+"@
+$anchor = "`$ErrorActionPreference = 'Stop'"
+if (-not $originalBuilder.Contains($anchor)) { throw 'Fixture builder initialization anchor is missing.' }
+[IO.File]::WriteAllText($builderPath, $originalBuilder.Replace($anchor, $anchor + "`n" + $builderGate), [Text.UTF8Encoding]::new($false))
 $shellPath = [IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 $pipelinePath = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot 'Invoke-LlmWikiIndexPipeline.ps1'))
 $gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
@@ -56,6 +72,7 @@ try {
         $first = $null
         $second = $null
         try {
+            Remove-Item -LiteralPath $releasePath -Force -ErrorAction SilentlyContinue
             foreach ($logPath in @($firstOutputPath, $firstErrorPath, $secondOutputPath, $secondErrorPath)) {
                 Remove-Item -LiteralPath $logPath -Force -ErrorAction SilentlyContinue
             }
@@ -100,6 +117,14 @@ try {
                 -RedirectStandardError $secondErrorPath `
                 -PassThru
 
+            $contentionDeadline = [DateTime]::UtcNow.AddSeconds(30)
+            while ([DateTime]::UtcNow -lt $contentionDeadline) {
+                if ((Get-Content -LiteralPath $secondOutputPath -Raw -ErrorAction SilentlyContinue) -match 'Another LLM Wiki index update is running') { break }
+                if ($second.HasExited) { break }
+                Start-Sleep -Milliseconds 50
+            }
+            [IO.File]::WriteAllText($releasePath, 'release')
+
             $first.WaitForExit()
             $second.WaitForExit()
             $firstOutput = Get-Content -LiteralPath $firstOutputPath -Raw
@@ -136,6 +161,7 @@ try {
     if (-not $passed) { throw 'Concurrent refresh did not establish a verified overlap window.' }
     Write-Host 'LLM Wiki concurrent index update regression passed: the waiter reused the matching completed refresh.'
 } finally {
+    [IO.File]::WriteAllText($builderPath, $originalBuilder, [Text.UTF8Encoding]::new($false))
     $resolvedTestRoot = [IO.Path]::GetFullPath($testRoot)
     if ($resolvedTestRoot.StartsWith($artifactRoot + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -and
         (Test-Path -LiteralPath $resolvedTestRoot)) {

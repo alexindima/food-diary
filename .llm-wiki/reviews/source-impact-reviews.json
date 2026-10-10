@@ -23,17 +23,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "56218996830180cff40c3a5bb30b21e16ccbbb1991deef46d756bba562bf21d8"
+          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
         },
         {
           "path": "docs/README.md",
-          "sha256": "4051de92df7d46084ec096287adccc8d45d36cfd7d2eef7a02c0b1554c39d04a"
+          "sha256": "44f9e49aad8e654634c69ad8a17c53db54d5835270bf40f75bbf037a262936c5"
         }
       ],
-      "reason": "The checked guide catalog preserves all original non-navigation rules; final line endings and root EOF were normalized without rule or authority changes. All declared pointers remain current.",
+      "reason": "Reviewed the condensed root guide, AI_WORKFLOW detail, module patterns and source-authority links against this isolated task snapshot; navigation remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
-      "reviewedAtUtc": "2026-10-09T21:21:48.8433926Z"
+      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
+      "reviewedAtUtc": "2026-10-10T15:09:54.8225732Z"
     },
     {
       "pageId": "module.frontend",
@@ -140,17 +140,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "56218996830180cff40c3a5bb30b21e16ccbbb1991deef46d756bba562bf21d8"
+          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
         },
         {
           "path": "docs/README.md",
-          "sha256": "4051de92df7d46084ec096287adccc8d45d36cfd7d2eef7a02c0b1554c39d04a"
+          "sha256": "44f9e49aad8e654634c69ad8a17c53db54d5835270bf40f75bbf037a262936c5"
         }
       ],
-      "reason": "The checked guide catalog preserves all original non-navigation rules; final line endings and root EOF were normalized without rule or authority changes. All declared pointers remain current.",
+      "reason": "Reviewed the condensed root guide, AI_WORKFLOW detail, module patterns and source-authority links against this isolated task snapshot; navigation remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
-      "reviewedAtUtc": "2026-10-09T21:21:49.3691539Z"
+      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
+      "reviewedAtUtc": "2026-10-10T15:09:55.6403601Z"
     },
     {
       "pageId": "system.quality-index",
@@ -173,14 +173,14 @@
       "pageSha256": "7368eca730254aab949bddc9e5d05a260ac6f0b1a97793c1a08c7fcb1a68366f",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "7ef0067b75fca63790ceef45f93fb7bda333806b688977429400607e1e0b772f"
+          "path": "Directory.Packages.props",
+          "sha256": "1f22c0fff4fe9f06e1ce76a8a5abac3eeec8d505a2d57c1fd8a0fda970ff40bf"
         }
       ],
-      "reason": "All non-navigation root rules are preserved verbatim; the root points to a complete checked scoped-guide catalog. The new current guide documents actual commands, disabled integrations, source fingerprints, generated skeleton obligations and the limits of the five-case coding corpus.",
+      "reason": "Reviewed the condensed root guide, AI_WORKFLOW detail, module patterns and source-authority links against this isolated task snapshot; navigation remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
-      "reviewedAtUtc": "2026-10-09T21:07:10.4813703Z"
+      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
+      "reviewedAtUtc": "2026-10-10T15:09:56.3583584Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -253,13 +253,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "8844b4e3328512b709d96360fa46291e0a98b2fedc3442931ef606d7c6a899a2"
+          "sha256": "9de5839c941aa926ff16dd799b7d6f256591034d8d4a3d06130b8316c7f0bbe0"
         }
       ],
-      "reason": "Reviewed additive Development MCP task request/action contracts, accurate read/write envelopes and their real Node bridge tests. Product HTTP routes and wire schemas are unchanged; regenerated consumer projection remains navigation evidence.",
+      "reason": "Reviewed new internal recognition result/lifecycle types and their consumers; FoodRecognitionCompletion keeps the existing public status strings and this change has no HTTP route, payload, status-code or API snapshot changes. The generated backend-contract review workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
-      "reviewedAtUtc": "2026-10-09T23:23:01.2969649Z"
+      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
+      "reviewedAtUtc": "2026-10-10T15:10:31.5007681Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -528,13 +528,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "dbe4c00582c9f3c743e839488f79e7cd8185a3a9627f1ee6f3b2861fec1fdcb5"
+          "sha256": "2e3bd41fbeceff43dd966f23f871726b902e53bc3dbb66fc232fd40c5748d403"
         }
       ],
-      "reason": "Reviewed reuse of QueuedEmailId, distinct MailRelayOutboxId, and privately constructed immutable AI completion outcome. SQL/schema and existing status codecs are unchanged; vision-only and nutrition-failure coarse Succeeded semantics are retained. Actual source compiler tests and persistence tests verify the documented boundary checks.",
+      "reason": "Reviewed recognition domain rules, reference-only grading, owned persisted browser/recovery/load checks and explicit evidence limits; 43 tooling tests and prior local behavioral checks passed; test references remain navigation rather than execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "ded6bae2e2029e59db9d479e34ecd841fa5c97bf",
-      "reviewedAtUtc": "2026-10-09T19:14:14.2021784Z"
+      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
+      "reviewedAtUtc": "2026-10-10T15:10:33.0170994Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -588,13 +588,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "0541843cfeb65e9ca4deb984924d190338fc320a92cb45fd5c0a8e72b7ce17d1"
+          "sha256": "6c4ca69f4fc3694a462cf13858c53a70e26a1cdc6669452c8a2e234ddb2aa744"
         }
       ],
-      "reason": "Only the Handlebars npm override and lock entry change from 4.7.9 to 4.7.10 to resolve Dependabot alerts 276 277 278. The frontend visual evidence workflow remains accurate because rendered UI, routes, interactions, styles and browser contracts are unchanged.",
+      "reason": "Reviewed recognition domain rules, reference-only grading, owned persisted browser/recovery/load checks and explicit evidence limits; 43 tooling tests and prior local behavioral checks passed; test references remain navigation rather than execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
-      "reviewedAtUtc": "2026-10-10T12:56:41.0604903Z"
+      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
+      "reviewedAtUtc": "2026-10-10T15:10:33.6638094Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -826,13 +826,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "05097753b591971b97d872435133ea4ade96053a9e41eaf57b88817d110815b0"
+          "sha256": "9a6a0891a935ec1aacdb7ef21966e9d7d2c4f1f38245050332a9ef3d69b838eb"
         }
       ],
-      "reason": "Only generated synthetic task accounts and local loopback dependencies are used. The task configuration replaces inherited providers and credentials, HTTP redirects and external provider access are blocked, secrets and tokens are absent from runtime reports, and cleanup checks owned PID lifetimes and container labels.",
+      "reason": "Reviewed task-owned synthetic fixtures, redacted reports, disabled external providers, private dump removal and bounded build cleanup; privacy and topology navigation remains accurate for this snapshot.",
       "baseRef": "HEAD",
-      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
-      "reviewedAtUtc": "2026-10-09T21:07:12.3106994Z"
+      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
+      "reviewedAtUtc": "2026-10-10T15:10:34.3447732Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -871,13 +871,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1294fa707fcde30f67e2de5e8ca9f6e9abf842b7b2e9db291dc0ce04d2d35347"
+          "sha256": "4e258a93ce4d74984ce19acf806c5a2b32b8374f31a35edaa0a6da94d9228e47"
         }
       ],
-      "reason": "Reviewed new runner, container probes, task job ownership/cancellation and feedback promotion against direct tests and actual model outcomes. Static references in the regenerated quality index are not treated as execution coverage.",
+      "reason": "Reviewed recognition domain rules, reference-only grading, owned persisted browser/recovery/load checks and explicit evidence limits; 43 tooling tests and prior local behavioral checks passed; test references remain navigation rather than execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
-      "reviewedAtUtc": "2026-10-09T23:23:02.708301Z"
+      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
+      "reviewedAtUtc": "2026-10-10T15:10:35.1140417Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -958,13 +958,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d35b3dad9b21c9134e60704fc3769ed44b7dc71d88ec2fefea5288fcc4382bc3"
+          "sha256": "2d0d8ea13a1e03a423e9a1e13ab2f90124d878628a2b272c92211c2010679793"
         }
       ],
-      "reason": "Reviewed owned local runtime observations, explicit disabled providers, read-only diagnostic collection versus synthetic authentication writes, canonical check jobs, bounded time/output and process-tree cancellation/recovery. Temporary storage remains isolated and production runtime behavior is unchanged.",
+      "reason": "Reviewed the condensed root guide, AI_WORKFLOW detail, module patterns, runtime topology and source-authority links against this isolated task snapshot; the current navigation and conditional change-policy route remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
-      "reviewedAtUtc": "2026-10-09T23:23:03.4249748Z"
+      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
+      "reviewedAtUtc": "2026-10-10T15:10:37.0379830Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -973,21 +973,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1294fa707fcde30f67e2de5e8ca9f6e9abf842b7b2e9db291dc0ce04d2d35347"
+          "sha256": "4e258a93ce4d74984ce19acf806c5a2b32b8374f31a35edaa0a6da94d9228e47"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d35b3dad9b21c9134e60704fc3769ed44b7dc71d88ec2fefea5288fcc4382bc3"
+          "sha256": "2d0d8ea13a1e03a423e9a1e13ab2f90124d878628a2b272c92211c2010679793"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "05097753b591971b97d872435133ea4ade96053a9e41eaf57b88817d110815b0"
+          "sha256": "9a6a0891a935ec1aacdb7ef21966e9d7d2c4f1f38245050332a9ef3d69b838eb"
         }
       ],
-      "reason": "Reviewed actual read/write MCP annotations, canonical command allowlisting, artifact containment, credential/query redaction and generated-code execution in scoped read-only network-free containers. Passed boundary tests are limited to these concrete controls and are not a repository security verdict.",
+      "reason": "Reviewed task-owned synthetic fixtures, redacted reports, disabled external providers, private dump removal and bounded build cleanup; privacy and topology navigation remains accurate for this snapshot.",
       "baseRef": "HEAD",
-      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
-      "reviewedAtUtc": "2026-10-09T23:23:04.418953Z"
+      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
+      "reviewedAtUtc": "2026-10-10T15:10:37.8072786Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1108,18 +1108,14 @@
       "pageSha256": "36583b8f66739cd95c1f1cd5544883d0fc2924eef26a80410247f92a70d5967e",
       "sources": [
         {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb"
-        },
-        {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "e33cf5817fbfefa11f25b51f6355e479433bda8357bd83aaae6f6255b12cbae6"
+          "sha256": "a4e92e3ef6156d50bdf3e3935a8c5f5713ed34d035915a0f866ecf1b7267ba77"
         }
       ],
-      "reason": "Testing strategy now distinguishes generated SDK measurement exclusions from maintained adapters/helpers and retains SDK generation/live API gates and all coverage thresholds.",
+      "reason": "Reviewed recognition domain rules, reference-only grading, owned persisted browser/recovery/load checks and explicit evidence limits; 43 tooling tests and prior local behavioral checks passed; test references remain navigation rather than execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "63d3954ebf974ed5a2a8165ff4abd09d6bae58c6",
-      "reviewedAtUtc": "2026-10-07T15:28:40.1407075Z"
+      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
+      "reviewedAtUtc": "2026-10-10T15:10:38.4895051Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1128,13 +1124,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "9c797c0884ae18872c626d531ecae0138de9d693392d5e28d8e8b780a247dd33"
+          "sha256": "cebfa62f776f64a7e44ac19711a1e4ad6d7a455de0accad00a19349228f24b4e"
         }
       ],
-      "reason": "All non-navigation root rules are preserved verbatim; the root points to a complete checked scoped-guide catalog. The new current guide documents actual commands, disabled integrations, source fingerprints, generated skeleton obligations and the limits of the five-case coding corpus.",
+      "reason": "Reviewed the condensed root guide, AI_WORKFLOW detail, module patterns, runtime topology and source-authority links against this isolated task snapshot; the current navigation and conditional change-policy route remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
-      "reviewedAtUtc": "2026-10-09T21:07:16.2638452Z"
+      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
+      "reviewedAtUtc": "2026-10-10T15:10:39.1184017Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1173,13 +1169,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "56218996830180cff40c3a5bb30b21e16ccbbb1991deef46d756bba562bf21d8"
+          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
         }
       ],
-      "reason": "The checked guide catalog preserves all original non-navigation rules; final line endings and root EOF were normalized without rule or authority changes. All declared pointers remain current.",
+      "reason": "Reviewed the condensed root guide, AI_WORKFLOW detail, module patterns, runtime topology and source-authority links against this isolated task snapshot; the current navigation and conditional change-policy route remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
-      "reviewedAtUtc": "2026-10-09T21:21:49.9665494Z"
+      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
+      "reviewedAtUtc": "2026-10-10T15:10:32.2809294Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1233,17 +1229,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "82b6c35101d16b09ca173f420e9375fe20abebc0913c8c731e33dcfa6fd530ca"
+          "sha256": "d06da594ec59d3f1c9f92b0135093ee9a8c370addee2e634de8c84094554ce9d"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "56218996830180cff40c3a5bb30b21e16ccbbb1991deef46d756bba562bf21d8"
+          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
         }
       ],
-      "reason": "The checked guide catalog preserves all original non-navigation rules; final line endings and root EOF were normalized without rule or authority changes. All declared pointers remain current.",
+      "reason": "Reviewed the condensed root guide, AI_WORKFLOW detail, module patterns, runtime topology and source-authority links against this isolated task snapshot; the current navigation and conditional change-policy route remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
-      "reviewedAtUtc": "2026-10-09T21:21:50.8415668Z"
+      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
+      "reviewedAtUtc": "2026-10-10T15:10:35.7903372Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1252,13 +1248,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "56218996830180cff40c3a5bb30b21e16ccbbb1991deef46d756bba562bf21d8"
+          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
         }
       ],
-      "reason": "Default fixtures now use exact paths, schema-checked UUID wire data and explicit mutations. Smoke readiness waits for feature translations and the authenticated shell. Verification excludes only generated browser reports, retaining production and test source discovery.",
+      "reason": "Reviewed recognition domain rules, reference-only grading, owned persisted browser/recovery/load checks and explicit evidence limits; 43 tooling tests and prior local behavioral checks passed; test references remain navigation rather than execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
-      "reviewedAtUtc": "2026-10-09T21:21:51.443138Z"
+      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
+      "reviewedAtUtc": "2026-10-10T15:10:36.4324961Z"
     },
     {
       "pageId": "workflow.self-maintenance",

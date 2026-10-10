@@ -84,28 +84,10 @@ The full catalog and Wiki are navigation; current code, tests, ADRs and scoped g
 - Start with `docs/README.md`, `docs/ARCHITECTURE.md`, `docs/BACKEND_MODULE_MAP.md`, and `docs/TESTING_STRATEGY.md` for broad context.
 - For cross-cutting repository discovery, start at `.llm-wiki/index.md`, then verify relevant claims in its declared sources before changing code.
 - Treat `.llm-wiki/` as compiled navigation, never as authority over code, tests, accepted ADRs, current `docs/`, or scoped `AGENTS.md`.
-- Use `./.llm-wiki/wiki.ps1 diff` to discover change-set context and `./.llm-wiki/wiki.ps1 verify` before handing off wiki-affecting changes.
-- Use `./.llm-wiki/wiki.ps1 brief` to compile risk, scoped instructions, affected modules, focused tests, and review obligations for a non-trivial change.
-- Start a large or cross-layer feature with `./.llm-wiki/wiki.ps1 start -Intent <task>`; it captures the baseline, performs initial research, creates a scope-aware acceptance checklist, and initializes governed state when required. For ordinary bugs and bounded features use `develop`; add `-PlannedPath` whenever likely files are known. Follow the adaptive route rather than applying the full governed workflow to every change.
-- During implementation, prefer `./.llm-wiki/wiki.ps1 next` for the single recommended action, `phase-next` for governed implementation phases, and `qa` for journey-derived manual scenarios. These facade commands derive from existing Wiki artifacts and do not replace detailed commands when diagnosis is needed.
-- Use `research` before editing a non-trivial existing flow. It combines ranked code context, focused tests, known failures, and Git precedents; verify all inferred paths and historical patterns in current sources.
-- When research exposes open developer decisions, use `research-next-question` and ask only its highest-priority grounded question. Do not invent a file/line anchor or ask for confirmation when current repository evidence can answer the issue.
-- Use `design` only when the adaptive route requires it or when research exposes a blocking product, compatibility, privacy, provider, persistence, or architecture decision.
-- For governed work spanning sessions, use `pause` and `resume`; resume must report clean continuity or require a task refresh before edits continue.
-- Use `task-handoff -Compact` for a bounded cross-session summary; retain the full handoff for audit and automation.
-- Use `journeys` for behavioral changes to identify affected FoodDiary end-to-end scenarios. In governed work, map applicable journey scenario IDs to acceptance criteria.
-- For governed work, use `delivery-status` during implementation, `delivery-replan -Reason <evidence>` for intentional scope/plan divergence, and `delivery-validate -FailOnInvalid` before completion. Critical and architectural changes also require `delivery-critique -FailOnInvalid`.
-- Use `./.llm-wiki/wiki.ps1 test-plan` to derive focused tests and risk scenarios before implementing or reviewing behavioral changes.
-- Use `./.llm-wiki/wiki.ps1 decision` when project references, dependency injection, deployment, ownership, or module graph changes.
-- Use `dependencies` for manifest changes and `rollout` for migrations, configuration, jobs, providers, or deployment-sensitive changes.
-- Use `hotspots` and `test-gaps` to calibrate review depth; treat test references as navigation evidence, never as execution coverage.
-- Use `topology` before changing external clients, webhooks, background workers, recurring jobs, or message delivery behavior.
-- Use `privacy` before changing credentials, identity/health/financial data, private content, exports, logs, caches, queues, or provider sharing.
-- For explicitly bounded autonomous work, use `task-init` and `task-validate` to detect accidental changes outside the declared path scope.
-- Use `./.llm-wiki/wiki.ps1 trace -Query <command-or-query>` before changing an existing backend flow.
-- Use `./.llm-wiki/wiki.ps1 ownership` for cross-module changes and `api-compat` after API snapshot changes.
-- Search `./.llm-wiki/wiki.ps1 failures -Query <error>` before repeating diagnosis; record only verified, reusable resolutions.
-- Use `docs/ai/CODE_REVIEW.md` for consistent AI-assisted review and resolve triggered change-policy obligations through an evidence bundle when the task warrants formal handoff.
+- Follow `docs/ai/AI_WORKFLOW.md` for the adaptive change route and conditional verification obligations. It preserves the detailed Wiki workflow rules; consult the sections relevant to the task.
+- For a bounded change use `./.llm-wiki/wiki.ps1 develop -Intent <task> -PlannedPath <paths>`; start large or cross-layer work with `start` and an explicit task workspace.
+- Research non-trivial existing flows before editing. Follow `next`, use design when required by the route or an unresolved decision, and verify observable acceptance criteria on the final sources.
+- Run `./.llm-wiki/wiki.ps1 verify` before handing off Wiki-affecting changes. Governed work must complete its delivery validation and applicable critique.
 - Product and feature plans live under `docs/plans/`; treat them as planning context unless referenced by current guides.
 - Historical or stale documents should be removed once durable decisions are captured in current guides or ADRs. Git history is the repository history.
 

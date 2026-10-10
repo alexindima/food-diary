@@ -1,0 +1,15 @@
+{
+  "stryker-config": {
+    "project": "FoodDiary.Modules.Recipes.Domain.csproj",
+    "target-framework": "net10.0",
+    "mutate": [
+      "**/Nutrition/RecipeNutritionPolicy.cs",
+      "**/Nutrition/RecipeNutritionIngredient.cs"
+    ],
+    "test-case-filter": "FullyQualifiedName~RecipeNutrition",
+    "reporters": ["json", "cleartext"],
+    "concurrency": 2,
+    "break-on-initial-test-failure": true,
+    "thresholds": { "high": 90, "low": 80, "break": 80 }
+  }
+}

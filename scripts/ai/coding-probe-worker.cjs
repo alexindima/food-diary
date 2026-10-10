@@ -45,7 +45,28 @@ try {
     const id = process.argv[2];
     const model = (name) =>
         path.join(root, `app/shared/models/semantics/${name}.ts`);
-    if (id === "calendar-meaning") {
+    if (id === "nutrition-basis") {
+        const nutrition = load(
+            path.join(root, "app/shared/lib/nutrition-form.utils.ts"),
+        );
+        same(nutrition.scaleNutrientInput(0.1, 3), 0.3);
+        same(nutrition.calculateCaloriesFromMacros(10, 5, 20, null), 165);
+        for (const original of [333.33, 12.125, 0.0001]) {
+            for (const servings of [2, 3, 7]) {
+                let value = original;
+                for (let count = 0; count < 100; count++) {
+                    value = nutrition.scaleNutrientInput(
+                        nutrition.scaleNutrientInput(value, 1 / servings),
+                        servings,
+                    );
+                }
+                if (Math.abs(value - original) > 1e-9)
+                    throw new Error(
+                        "Nutrition basis conversion lost input precision",
+                    );
+            }
+        }
+    } else if (id === "calendar-meaning") {
         const dates = load(model("date-value"));
         same(
             dates.utcInstant("2026-10-08T23:59:59.1234567Z"),

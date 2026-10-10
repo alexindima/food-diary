@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 286,
+    "domainTypes": 288,
     "entities": 91,
     "valueObjects": 142,
-    "invariants": 641,
+    "invariants": 642,
     "persistenceMappings": 96,
     "indexes": 177,
     "relationships": 39
@@ -841,6 +841,20 @@
       "name": "FastingSessionStatus",
       "role": "enum",
       "path": "Modules/Fasting/Domain/Enums/FastingSessionStatus.cs",
+      "line": 2
+    },
+    {
+      "area": "FoodDiary",
+      "name": "FoodRecognitionAction",
+      "role": "enum",
+      "path": "Modules/Ai/Domain/Recognition/FoodRecognitionAction.cs",
+      "line": 2
+    },
+    {
+      "area": "FoodDiary",
+      "name": "FoodRecognitionStatus",
+      "role": "enum",
+      "path": "Modules/Ai/Domain/Recognition/FoodRecognitionStatus.cs",
       "line": 2
     },
     {
@@ -2097,6 +2111,13 @@
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
       "path": "Modules/Ai/Domain/Entities/AiUsage.cs",
       "line": 72
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(status)),",
+      "path": "Modules/Ai/Domain/Recognition/FoodRecognitionLifecycle.cs",
+      "line": 23
     },
     {
       "area": "FoodDiary",

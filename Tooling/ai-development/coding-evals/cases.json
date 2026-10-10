@@ -3,6 +3,17 @@
   "kind": "coding-outcomes",
   "cases": [
     {
+      "id": "nutrition-basis",
+      "category": "business-calculation",
+      "baseline": "045946de4758250ccd976639500bf50c2ea91fb8",
+      "task": "Publish scaleNutrientInput(value: number, factor: number) in shared/lib/nutrition-form.utils.ts. Preserve numeric input precision during recipe/portion basis scaling: 333.33 total divided into two portions then multiplied back must retain 333.33, including repeated toggles. Remove only floating-point noise when a value is already within eight machine-epsilon units of the existing presentation rounding precision. Preserve calculateCaloriesFromMacros and the existing two-decimal presentation rounding policy.",
+      "grader": "nutrition-basis.ts",
+      "runtimeContract": "Repeated basis conversions preserve 333.33, 12.125 and 0.0001 within 1e-9 for serving counts 2, 3 and 7. 0.1 scaled by 3 removes floating-point noise to exactly 0.3. Do not round 333.33/2 to 166.67 before converting back. Mixed macros 10g protein, 5g fat, 20g carbs remain 165 kcal.",
+      "allowedPrefixes": [
+        "FoodDiary.Web.Client/src/app/shared/lib/nutrition-form.utils.ts"
+      ]
+    },
+    {
       "id": "meal-identity",
       "baseline": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
       "task": "Prevent product or raw identity from reaching meal deletion. Decode native wire IDs once and preserve owning identity through the published meal capability. Preserve HTTP values and behavior.",

@@ -20,13 +20,58 @@ function summary(rows, variant, skillHash = null) {
     const measured = finished.filter((row) => row.usage);
     const total = (field) =>
         measured.reduce((sum, row) => sum + (Number(row.usage[field]) || 0), 0);
+    const successes = finished.filter((row) => row.passed === true).length;
+    const count = finished.length;
+    // Wilson interval stays uncertain for small samples, including 0% and 100%.
+    const z = 1.96,
+        p = count ? successes / count : 0;
+    const denominator = 1 + (z * z) / (count || 1);
+    const center = (p + (z * z) / (2 * (count || 1))) / denominator;
+    const margin =
+        (z *
+            Math.sqrt(
+                (p * (1 - p)) / (count || 1) +
+                    (z * z) / (4 * (count || 1) ** 2),
+            )) /
+        denominator;
+    const sortedDurations = [...durations].sort((left, right) => left - right);
     return {
         variant,
         skillHash,
         samples: finished.length,
         pending: selected.length - finished.length,
         completed: finished.filter((row) => row.status === "completed").length,
-        successes: finished.filter((row) => row.passed === true).length,
+        successes,
+        commandTelemetrySamples: finished.filter(
+            (row) => typeof row.failedToolCalls === "number",
+        ).length,
+        observedPolicyRejections: finished.filter(
+            (row) => row.executionRejection,
+        ).length,
+        environmentFailures: finished.filter(
+            (row) =>
+                row.environmentWritable === false ||
+                [
+                    "execution-policy-rejected",
+                    "execution-start-rejected",
+                ].includes(row.failureCategory),
+        ).length,
+        successInterval95: count
+            ? [Math.max(0, center - margin), Math.min(1, center + margin)]
+            : null,
+        medianDurationMs: sortedDurations.length
+            ? (sortedDurations[Math.floor((sortedDurations.length - 1) / 2)] +
+                  sortedDurations[Math.floor(sortedDurations.length / 2)]) /
+              2
+            : null,
+        failedToolCalls: finished.reduce(
+            (sum, row) => sum + (row.failedToolCalls ?? 0),
+            0,
+        ),
+        interventions: finished.reduce(
+            (sum, row) => sum + (row.interventions ?? 0),
+            0,
+        ),
         firstAttemptSuccessRate: finished.length
             ? finished.filter((row) => row.passed === true).length /
               finished.length
@@ -78,19 +123,28 @@ export function compareTrialRecords(records) {
         return (revisions.length ? revisions : [null]).map((revision) => {
             const control = summary(rows, "control"),
                 skill = summary(rows, "api-skill", revision);
-            const modelIdentityVerified =
-                typeof rows[0].settings?.actualModel === "string";
+            const modelIdentityVerified = rows.every(
+                (row) =>
+                    typeof row.settings?.actualModel === "string" &&
+                    row.settings.actualModel.length > 0,
+            );
             return {
                 id: rows[0].id,
+                model: rows[0].settings?.actualModel ?? null,
+                requestedModel: rows[0].settings?.requestedModel ?? null,
+                reasoningEffort: rows[0].settings?.reasoningEffort ?? null,
                 control,
                 skill,
                 modelIdentityVerified,
                 verdict:
-                    control.samples < 5 || skill.samples < 5
-                        ? "insufficient-data"
-                        : !modelIdentityVerified
-                          ? "unverified-model"
-                          : "requires-statistical-review",
+                    control.environmentFailures > 0 ||
+                    skill.environmentFailures > 0
+                        ? "environment-unverified"
+                        : control.samples < 5 || skill.samples < 5
+                          ? "insufficient-data"
+                          : !modelIdentityVerified
+                            ? "unverified-model"
+                            : "requires-statistical-review",
             };
         });
     });

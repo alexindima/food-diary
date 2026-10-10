@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Ai.Contracts.Models;
+using FoodDiary.Modules.Ai.Domain.Recognition;
 
 namespace FoodDiary.Modules.Ai.Application.Abstractions.Common;
 
@@ -6,7 +7,9 @@ public sealed record FoodRecognitionCompletion {
     public FoodNutritionModel? Nutrition { get; }
     public string? ErrorCode { get; }
     public string? NutritionErrorCode { get; }
-    public string Status => ErrorCode is null ? "Succeeded" : "Failed";
+    public FoodRecognitionAction Action => ErrorCode is null ? FoodRecognitionAction.Complete : FoodRecognitionAction.Fail;
+    public string Status => FoodRecognitionLifecycle.Encode(
+        FoodRecognitionLifecycle.Next(FoodRecognitionStatus.Running, Action)!.Value);
 
     private FoodRecognitionCompletion(FoodNutritionModel? nutrition, string? errorCode, string? nutritionErrorCode) {
         Nutrition = nutrition;

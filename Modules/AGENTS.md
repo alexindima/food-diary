@@ -19,6 +19,8 @@ Rules for all logical modules under `Modules/`. A module-specific `AGENTS.md` ma
 
 ## Application service extraction
 
+- Follow `docs/architecture/APPLICATION_PATTERNS.md` for complex rules, state-dependent results, durable lifecycles and external semantic boundaries. Use pure policies, validated result variants, explicit transitions and executable examples where the feature warrants them; retain the existing vertical slices and owner ports.
+
 - Keep logic specific to one command/query in its existing handler by default, using private methods when helpful. Do not add a service, interface and DI registration solely to keep a handler thin.
 - Extract a service when it owns a cohesive operation reused by multiple production callers, a substantial independent algorithm, an integration boundary or a distinct lifecycle (for example, an application workflow invoked by a background worker).
 - Evaluate reuse per operation, not per class: several unrelated methods each called by one handler do not establish reuse. Tests and DI registrations are not production callers.

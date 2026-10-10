@@ -1,0 +1,448 @@
+{
+  "schemaVersion": 1,
+  "version": "recognition-reference-v1",
+  "provenance": "Authored synthetic OCR labels and explicit-quantity text; fictional label nutrition; no private user content",
+  "coverage": {
+    "text": 12,
+    "label": 8,
+    "realFoodPhoto": 0
+  },
+  "limitations": [
+    "Does not establish food-photo recognition or photo-derived mass accuracy",
+    "Grader self-tests are not provider quality measurements"
+  ],
+  "cases": [
+    {
+      "id": "apple-100",
+      "kind": "text",
+      "locale": "en",
+      "input": {
+        "text": "100 g apple"
+      },
+      "expected": {
+        "items": [
+          {
+            "nameEn": "Apple",
+            "aliases": [
+              "apple",
+              "яблоко"
+            ],
+            "amount": 100,
+            "unit": "g"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rice-fraction",
+      "kind": "text",
+      "locale": "en",
+      "input": {
+        "text": "12.5 g rice"
+      },
+      "expected": {
+        "items": [
+          {
+            "nameEn": "Rice",
+            "aliases": [
+              "rice",
+              "рис"
+            ],
+            "amount": 12.5,
+            "unit": "g"
+          }
+        ]
+      }
+    },
+    {
+      "id": "milk-ml",
+      "kind": "text",
+      "locale": "en",
+      "input": {
+        "text": "200 ml milk"
+      },
+      "expected": {
+        "items": [
+          {
+            "nameEn": "Milk",
+            "aliases": [
+              "milk",
+              "молоко"
+            ],
+            "amount": 200,
+            "unit": "ml"
+          }
+        ]
+      }
+    },
+    {
+      "id": "egg-pieces",
+      "kind": "text",
+      "locale": "en",
+      "input": {
+        "text": "2 pcs eggs"
+      },
+      "expected": {
+        "items": [
+          {
+            "nameEn": "Egg",
+            "aliases": [
+              "egg",
+              "eggs",
+              "яйцо",
+              "яйца"
+            ],
+            "amount": 2,
+            "unit": "pcs"
+          }
+        ]
+      }
+    },
+    {
+      "id": "apple-quarter",
+      "kind": "text",
+      "locale": "en",
+      "input": {
+        "text": "0.25 pcs apple"
+      },
+      "expected": {
+        "items": [
+          {
+            "nameEn": "Apple",
+            "aliases": [
+              "apple",
+              "яблоко"
+            ],
+            "amount": 0.25,
+            "unit": "pcs"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rice-small",
+      "kind": "text",
+      "locale": "en",
+      "input": {
+        "text": "0.125 g rice"
+      },
+      "expected": {
+        "items": [
+          {
+            "nameEn": "Rice",
+            "aliases": [
+              "rice",
+              "рис"
+            ],
+            "amount": 0.125,
+            "unit": "g"
+          }
+        ]
+      }
+    },
+    {
+      "id": "apple-ru",
+      "kind": "text",
+      "locale": "ru",
+      "input": {
+        "text": "Яблоко 100 г"
+      },
+      "expected": {
+        "items": [
+          {
+            "nameEn": "Apple",
+            "aliases": [
+              "apple",
+              "яблоко"
+            ],
+            "amount": 100,
+            "unit": "g"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rice-comma",
+      "kind": "text",
+      "locale": "ru",
+      "input": {
+        "text": "Рис 12,5 г"
+      },
+      "expected": {
+        "items": [
+          {
+            "nameEn": "Rice",
+            "aliases": [
+              "rice",
+              "рис"
+            ],
+            "amount": 12.5,
+            "unit": "g"
+          }
+        ]
+      }
+    },
+    {
+      "id": "milk-ru",
+      "kind": "text",
+      "locale": "ru",
+      "input": {
+        "text": "Молоко 200 мл"
+      },
+      "expected": {
+        "items": [
+          {
+            "nameEn": "Milk",
+            "aliases": [
+              "milk",
+              "молоко"
+            ],
+            "amount": 200,
+            "unit": "ml"
+          }
+        ]
+      }
+    },
+    {
+      "id": "egg-ru",
+      "kind": "text",
+      "locale": "ru",
+      "input": {
+        "text": "2 шт яйца"
+      },
+      "expected": {
+        "items": [
+          {
+            "nameEn": "Egg",
+            "aliases": [
+              "egg",
+              "eggs",
+              "яйцо",
+              "яйца"
+            ],
+            "amount": 2,
+            "unit": "pcs"
+          }
+        ]
+      }
+    },
+    {
+      "id": "two-foods-en",
+      "kind": "text",
+      "locale": "en",
+      "input": {
+        "text": "100 g apple and 50 g rice"
+      },
+      "expected": {
+        "items": [
+          {
+            "nameEn": "Apple",
+            "aliases": [
+              "apple"
+            ],
+            "amount": 100,
+            "unit": "g"
+          },
+          {
+            "nameEn": "Rice",
+            "aliases": [
+              "rice"
+            ],
+            "amount": 50,
+            "unit": "g"
+          }
+        ]
+      }
+    },
+    {
+      "id": "two-foods-ru",
+      "kind": "text",
+      "locale": "ru",
+      "input": {
+        "text": "Яблоко 100 г и рис 50 г"
+      },
+      "expected": {
+        "items": [
+          {
+            "nameEn": "Apple",
+            "aliases": [
+              "apple",
+              "яблоко"
+            ],
+            "amount": 100,
+            "unit": "g"
+          },
+          {
+            "nameEn": "Rice",
+            "aliases": [
+              "rice",
+              "рис"
+            ],
+            "amount": 50,
+            "unit": "g"
+          }
+        ]
+      }
+    },
+    {
+      "id": "label-100g",
+      "kind": "label",
+      "locale": "en",
+      "input": {
+        "image": "fixtures/label-100g.svg"
+      },
+      "expected": {
+        "name": "REFERENCE FOOD",
+        "brand": "SYNTHETIC",
+        "baseAmount": 100,
+        "baseUnit": "g",
+        "calories": 400,
+        "protein": 10,
+        "fat": 5,
+        "carbs": 60,
+        "fiber": 3,
+        "alcohol": 0
+      }
+    },
+    {
+      "id": "label-portion",
+      "kind": "label",
+      "locale": "en",
+      "input": {
+        "image": "fixtures/label-portion.svg"
+      },
+      "expected": {
+        "name": "REFERENCE FOOD",
+        "brand": "SYNTHETIC",
+        "baseAmount": 25,
+        "baseUnit": "g",
+        "calories": 100,
+        "protein": 2.5,
+        "fat": 1.25,
+        "carbs": 15,
+        "fiber": 0.75,
+        "alcohol": 0
+      }
+    },
+    {
+      "id": "label-zero",
+      "kind": "label",
+      "locale": "en",
+      "input": {
+        "image": "fixtures/label-zero.svg"
+      },
+      "expected": {
+        "name": "REFERENCE FOOD",
+        "brand": "SYNTHETIC",
+        "baseAmount": 100,
+        "baseUnit": "ml",
+        "calories": 0,
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0,
+        "fiber": 0,
+        "alcohol": 0
+      }
+    },
+    {
+      "id": "label-fraction",
+      "kind": "label",
+      "locale": "en",
+      "input": {
+        "image": "fixtures/label-fraction.svg"
+      },
+      "expected": {
+        "name": "REFERENCE FOOD",
+        "brand": "SYNTHETIC",
+        "baseAmount": 12.5,
+        "baseUnit": "g",
+        "calories": 52.125,
+        "protein": 0.125,
+        "fat": 1.25,
+        "carbs": 10.5,
+        "fiber": 0,
+        "alcohol": 0
+      }
+    },
+    {
+      "id": "label-ru",
+      "kind": "label",
+      "locale": "ru",
+      "input": {
+        "image": "fixtures/label-ru.svg"
+      },
+      "expected": {
+        "name": "REFERENCE FOOD",
+        "brand": "SYNTHETIC",
+        "baseAmount": 100,
+        "baseUnit": "g",
+        "calories": 400,
+        "protein": 10,
+        "fat": 5,
+        "carbs": 60,
+        "fiber": 3,
+        "alcohol": 0
+      }
+    },
+    {
+      "id": "label-ru-portion",
+      "kind": "label",
+      "locale": "ru",
+      "input": {
+        "image": "fixtures/label-ru-portion.svg"
+      },
+      "expected": {
+        "name": "REFERENCE FOOD",
+        "brand": "SYNTHETIC",
+        "baseAmount": 25,
+        "baseUnit": "g",
+        "calories": 100,
+        "protein": 2.5,
+        "fat": 1.25,
+        "carbs": 15,
+        "fiber": 0.75,
+        "alcohol": 0
+      }
+    },
+    {
+      "id": "label-unreadable",
+      "kind": "label",
+      "locale": "en",
+      "input": {
+        "image": "fixtures/label-unreadable.svg"
+      },
+      "expected": {
+        "name": "REFERENCE FOOD",
+        "brand": "SYNTHETIC",
+        "baseAmount": 100,
+        "baseUnit": "g",
+        "calories": null,
+        "protein": 10,
+        "fat": 5,
+        "carbs": 60,
+        "fiber": null,
+        "alcohol": null
+      }
+    },
+    {
+      "id": "label-pieces",
+      "kind": "label",
+      "locale": "en",
+      "input": {
+        "image": "fixtures/label-pieces.svg"
+      },
+      "expected": {
+        "name": "REFERENCE FOOD",
+        "brand": "SYNTHETIC",
+        "baseAmount": 1,
+        "baseUnit": "pcs",
+        "calories": 123,
+        "protein": 4,
+        "fat": 5,
+        "carbs": 6,
+        "fiber": null,
+        "alcohol": 0
+      }
+    }
+  ]
+}

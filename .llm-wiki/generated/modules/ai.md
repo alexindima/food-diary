@@ -41,13 +41,13 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: AiUsage, AiPromptTemplate, AiQuotaPeriod, AiQuotaReservation
-- Public contract files: 28
+- Public contract files: 30
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 28
+- Public contract types: 33
 - Interfaces: 12
 - DTO/read-model/projection types: 3
 - Enums: 1
@@ -56,6 +56,11 @@ No literal attribute-routed controller was associated with this module.
 - `class AiErrors`
 - `class AiPromptCatalog`
 - `class AiPromptDraftValidation`
+- `class FoodRecognitionPolicy`
+- `class FoodRecognitionResult`
+- `class Pending`
+- `class Ready`
+- `class Unusable`
 - `enum AiQuotaReservationStatus`
 - `interface IAiPromptPreviewRenderer`
 - `interface IAiPromptProvider`
@@ -78,9 +83,7 @@ No literal attribute-routed controller was associated with this module.
 - `record FoodRecognitionJobUpdate`
 - `record OpenAiFoodClientResponse`
 - `record ProductImageAnalysis`
-- `record RecipeAudio`
-- `record RecipeSource`
-- `record UserAiUsageModel`
+- ... 3 more type(s)
 
 ## Focused Tests
 
@@ -107,6 +110,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/AiTokenUsageTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/Domain/AiPromptTemplateInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/Domain/AiUsageInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/FoodRecognitionLifecycleTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Diagnostics/AiQuotaTelemetryTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Integrations/ProviderOptionsTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs`
@@ -115,7 +119,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/AiPromptPreviewRendererTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/AiPromptProviderTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/OpenAiFoodServiceTests.cs`
-- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/RecipeImportProviderTests.cs`
 
 ## Working Rule
 

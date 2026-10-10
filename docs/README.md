@@ -5,6 +5,8 @@ This directory contains long-form repository documentation. Keep root-level mark
 ## Agent Knowledge Layer
 
 - `ai/AI_DEVELOPMENT.md` - executable contract fixtures, generators, owned local task runtimes and coding outcome evaluations.
+- `ai/AI_WORKFLOW.md` - concise daily development route and conditional Wiki research, review and verification obligations.
+- `ai/RELIABILITY_VERIFICATION.md` - recognition references, owned recovery/load/browser checks, alert tests and resource ownership.
 - `ai/AGENT_GUIDE_CATALOG.md` - checked navigation to every scoped agent guide.
 
 - `.llm-wiki/index.md` - compiled, source-linked repository map for coding agents. It is a derived navigation layer; this documentation, scoped `AGENTS.md`, ADRs, tests, and code remain authoritative.
@@ -17,6 +19,7 @@ This directory contains long-form repository documentation. Keep root-level mark
 ## Architecture
 
 - `ARCHITECTURE.md` - system architecture, deployable units, and dependency boundaries.
+- `architecture/APPLICATION_PATTERNS.md` - pure rules, typed results, lifecycle transitions, external decoding and executable business examples.
 - `BACKEND_MODULE_MAP.md` - backend project/module map and placement guidance.
 - `backend/BACKEND_MODULE_OWNERSHIP.md` - business-module data ownership and allowed interaction types.
 - `architecture/module-dependencies.json` - executable, acyclic Application module dependency graph.

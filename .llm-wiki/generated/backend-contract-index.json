@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1341,
     "ambiguousContracts": 29,
-    "consumerEdges": 10488,
+    "consumerEdges": 10489,
     "productionConsumerEdges": 5999,
-    "testConsumerEdges": 4489,
+    "testConsumerEdges": 4490,
     "consumedContracts": 1341,
     "unconsumedContracts": 0
   },
@@ -46201,7 +46201,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/FoodRecognitionResultReaderTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 6
     },
     {
       "contract": "GetCompletedFoodRecognitionQuery",
@@ -82402,7 +82402,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/FoodRecognitionResultReaderTests.cs",
       "isTest": true,
-      "referenceCount": 10
+      "referenceCount": 12
     },
     {
       "contract": "IFoodRecognitionJobReader",
@@ -137652,6 +137652,19 @@
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/OpenAiFoodServiceTests.cs",
       "isTest": true,
       "referenceCount": 36
+    },
+    {
+      "contract": "OpenAiFoodClientResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/OpenAiFoodClientResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/ProviderRecognitionContractTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "OpenAiFoodClientResponse",

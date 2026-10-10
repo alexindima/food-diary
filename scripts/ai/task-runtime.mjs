@@ -14,6 +14,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { containedPath, repositoryRoot } from "./generate-feature.mjs";
 import { probeRenderedRuntime } from "./task-runtime-browser.mjs";
+import { recordBuildScope, requireDiskBudget } from "./resource-budget.mjs";
 
 const images = {
     postgres:
@@ -67,6 +68,7 @@ export function sourceFingerprint(root = repositoryRoot) {
         "Directory.Packages.props",
         "scripts/ai/task-runtime.mjs",
         "scripts/ai/task-runtime-browser.mjs",
+        "scripts/ai/resource-budget.mjs",
         "scripts/ai/runtime-diagnostics.mjs",
         "scripts/ai/diagnostic-redaction.mjs",
         "scripts/ai/local-provider-stub.mjs",
@@ -347,6 +349,7 @@ export function safeSettings(root, directory, ports, id) {
 
 export async function startRuntime(name, root = repositoryRoot) {
     root = resolve(root);
+    requireDiskBudget(root);
     const directory = runtimeDirectory(name, root);
     mkdirSync(directory, { recursive: true });
     const statePath = join(directory, "runtime.json");
@@ -386,6 +389,7 @@ export async function startRuntime(name, root = repositoryRoot) {
         },
     };
     save(statePath, state);
+    recordBuildScope(state, root);
     const persist = () => save(statePath, state);
     try {
         command("docker", ["info", "--format", "{{.ServerVersion}}"]);
@@ -524,6 +528,7 @@ export async function startRuntime(name, root = repositoryRoot) {
                 "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj",
                 "--artifacts-path",
                 build,
+                "-m:2",
             ],
             root,
             env,
@@ -536,6 +541,7 @@ export async function startRuntime(name, root = repositoryRoot) {
                 "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
                 "--artifacts-path",
                 build,
+                "-m:2",
             ],
             root,
             env,

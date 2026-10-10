@@ -384,6 +384,8 @@ if ($Area -eq 'Backend') {
     ) })
     Write-Host "LLM Wiki verification area: Frontend ($($selectedToolNames.Count) generator(s)); backend freshness is intentionally not evaluated."
 }
+$derivedIndexTools = @('Build-LlmWikiBackendContractIndex.ps1', 'Build-LlmWikiQualityIndex.ps1')
+if ($Check) { $derivedIndexTools += 'Build-LlmWikiModulePages.ps1' }
 $stages = @(
     [pscustomobject]@{
         name = 'source indexes'
@@ -396,10 +398,14 @@ $stages = @(
     }
     [pscustomobject]@{
         name = 'derived indexes'
-        tools = @('Build-LlmWikiBackendContractIndex.ps1', 'Build-LlmWikiQualityIndex.ps1', 'Build-LlmWikiModulePages.ps1')
+        tools = $derivedIndexTools
     }
-    [pscustomobject]@{ name = 'architecture health'; tools = @('Build-LlmWikiArchitectureHealthIndex.ps1') }
+    # Module pages read the quality and contract outputs. Finish their writers
+    # before starting page readers: Windows cannot truncate a memory-mapped file.
+    # Check mode only reads those files and retains its original parallelism.
 )
+if (-not $Check) { $stages += [pscustomobject]@{ name = 'module pages'; tools = @('Build-LlmWikiModulePages.ps1') } }
+$stages += [pscustomobject]@{ name = 'architecture health'; tools = @('Build-LlmWikiArchitectureHealthIndex.ps1') }
 $timingMode = if ($Check) { 'check' } else { 'update' }
 $timingStats = @(Get-LlmWikiIndexTimingStats -RepositoryRoot $repositoryRoot -Mode $timingMode)
 $timingByTool = @{}

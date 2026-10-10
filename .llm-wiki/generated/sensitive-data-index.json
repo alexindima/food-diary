@@ -6,10 +6,10 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1682,
+    "candidateFields": 1683,
     "credential": 158,
     "identity": 180,
-    "health": 786,
+    "health": 787,
     "financial": 138,
     "privateContent": 420,
     "boundaryFiles": 224,
@@ -2703,21 +2703,28 @@
       "name": "Nutrition",
       "type": "FoodNutritionModel?",
       "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionCompletion.cs",
-      "line": 6
+      "line": 7
     },
     {
       "category": "health",
       "name": "NutritionErrorCode",
       "type": "string?",
       "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionCompletion.cs",
-      "line": 8
+      "line": 9
     },
     {
       "category": "health",
       "name": "WithoutNutrition",
       "type": "FoodRecognitionCompletion",
       "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionCompletion.cs",
-      "line": 17
+      "line": 20
+    },
+    {
+      "category": "health",
+      "name": "Nutrition",
+      "type": "FoodNutritionModel",
+      "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionResult.cs",
+      "line": 16
     },
     {
       "category": "health",
@@ -13429,7 +13436,7 @@
   "externalTransfers": [
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 211,
+      "line": 213,
       "providerHost": "api.openai.com",
       "dataNames": [
         "description",
@@ -13444,7 +13451,7 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 357,
+      "line": 359,
       "providerHost": "api.openai.com",
       "dataNames": [
         "description",

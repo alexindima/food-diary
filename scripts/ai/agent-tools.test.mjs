@@ -11,6 +11,8 @@ import {
 import { join } from "node:path";
 import { redactDiagnostic } from "./diagnostic-redaction.mjs";
 import { summarizeEvent, compareTrials } from "./agent-trials.mjs";
+import { isAllowedCandidatePath } from "./coding-evals.mjs";
+import { sanitizeJourneyReport } from "./journey-evidence.mjs";
 import {
     evidenceFile,
     nextTaskAction,
@@ -44,6 +46,42 @@ test("dead worker recovery releases only its own lock and retains unverified sta
     writeFileSync(lock, id);
     assert.equal(cancelCheck(id).status, "interrupted");
     assert.equal(existsSync(lock), false);
+});
+
+test("a file-scoped coding task rejects similarly named siblings and preserves directory scopes", () => {
+    assert.equal(
+        isAllowedCandidatePath("src/owned.ts", ["src/owned.ts"]),
+        true,
+    );
+    assert.equal(
+        isAllowedCandidatePath("src/owned.ts.backup", ["src/owned.ts"]),
+        false,
+    );
+    assert.equal(
+        isAllowedCandidatePath("src/feature/file.ts", ["src/feature/"]),
+        true,
+    );
+    assert.equal(
+        isAllowedCandidatePath("src/feature-neighbor/file.ts", [
+            "src/feature/",
+        ]),
+        false,
+    );
+});
+
+test("live journey reports retain test counts and remove credential values from nested errors", () => {
+    const report = sanitizeJourneyReport({
+        stats: { expected: 3 },
+        errors: [
+            {
+                message:
+                    "Authorization: Bearer abc.def.ghi password=secret123 user@example.org",
+            },
+        ],
+    });
+    assert.equal(report.stats.expected, 3);
+    for (const value of ["abc.def.ghi", "secret123", "user@example.org"])
+        assert.equal(JSON.stringify(report).includes(value), false);
 });
 
 test("review promotion refuses an empty evidence proposal", () => {

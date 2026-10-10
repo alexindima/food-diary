@@ -8,13 +8,13 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4553,
-    "symbols": 4485,
+    "sourceFiles": 4559,
+    "symbols": 4494,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2317,
-      "enum": 69,
+      "class": 2324,
+      "enum": 71,
       "interface": 412,
       "record": 1547,
       "record struct": 140
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1837,
+      "Other": 1846,
       "Query": 300,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
@@ -5253,7 +5253,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionCompletion.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "FoodRecognitionJobUpdate",
@@ -5261,6 +5261,41 @@
       "role": "Other",
       "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionJobUpdate.cs",
       "line": 2
+    },
+    {
+      "name": "FoodRecognitionPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionPolicy.cs",
+      "line": 4
+    },
+    {
+      "name": "FoodRecognitionResult",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionResult.cs",
+      "line": 7
+    },
+    {
+      "name": "Pending",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionResult.cs",
+      "line": 9
+    },
+    {
+      "name": "Unusable",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionResult.cs",
+      "line": 11
+    },
+    {
+      "name": "Ready",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionResult.cs",
+      "line": 12
     },
     {
       "name": "IAiPromptPreviewRenderer",
@@ -5907,6 +5942,27 @@
       "line": 8
     },
     {
+      "name": "FoodRecognitionAction",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Ai/Domain/Recognition/FoodRecognitionAction.cs",
+      "line": 2
+    },
+    {
+      "name": "FoodRecognitionLifecycle",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Domain/Recognition/FoodRecognitionLifecycle.cs",
+      "line": 4
+    },
+    {
+      "name": "FoodRecognitionStatus",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Ai/Domain/Recognition/FoodRecognitionStatus.cs",
+      "line": 2
+    },
+    {
       "name": "AiTokenUsage",
       "kind": "record",
       "role": "ValueObject",
@@ -5995,7 +6051,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Persistence/FoodRecognitionJobStore.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "OpenAiOptions",
@@ -6045,6 +6101,13 @@
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.RecipeTranscription.cs",
       "line": 9
+    },
+    {
+      "name": "OpenAiFoodResponseDecoder",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodResponseDecoder.cs",
+      "line": 10
     },
     {
       "name": "OpenAiProductLabelRequest",

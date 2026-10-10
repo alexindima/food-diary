@@ -2,11 +2,13 @@
   "version": 1,
   "isRoot": true,
   "tools": {
+    "dotnet-stryker": {
+      "version": "5.0.0",
+      "commands": ["dotnet-stryker"]
+    },
     "dotnet-ef": {
       "version": "10.0.11",
-      "commands": [
-        "dotnet-ef"
-      ]
+      "commands": ["dotnet-ef"]
     }
   }
 }

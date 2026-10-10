@@ -131,6 +131,36 @@ public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixt
         Assert.Equal(1, await context.ImageAssets.ExecuteDeleteAsync());
     }
 
+    [RequiresDockerFact]
+    public async Task NutritionFailure_PreservesCheckpointAndRejectsLateSuccess() {
+        (DbContextOptions<AiDbContext> options, FoodRecognitionJobModel job) = await CreateDatabaseAsync();
+        var store = new FoodRecognitionJobStore(options, TimeProvider.System);
+        await store.CreateAsync(job, CancellationToken.None);
+        await store.ClaimAsync(CancellationToken.None);
+        var vision = new FoodVisionModel([new FoodVisionItemModel("Apple", NameLocal: null, 0.125m, "pcs", 1)]);
+        Assert.True(await store.SaveVisionAsync(new FoodRecognitionJobId(job.Id), vision, CancellationToken.None));
+        await store.CompleteAsync(new FoodRecognitionJobId(job.Id), FoodRecognitionCompletion.NutritionFailed("Ai.InvalidResponse"), CancellationToken.None);
+        FoodRecognitionJobModel partial = Assert.IsType<FoodRecognitionJobModel>(await store.GetAsync(new UserId(job.UserId), new FoodRecognitionJobId(job.Id), CancellationToken.None));
+        FoodVisionItemModel partialItem = Assert.Single(Assert.IsType<FoodVisionModel>(partial.Vision).Items);
+        Assert.Multiple(
+            () => Assert.Equal("Succeeded", partial.Status),
+            () => Assert.Null(partial.Nutrition),
+            () => Assert.Null(partial.ErrorCode),
+            () => Assert.Equal("Ai.InvalidResponse", partial.NutritionErrorCode),
+            () => Assert.Equal(0.125m, partialItem.Amount));
+        Assert.IsType<FoodRecognitionResult.Unusable>(FoodRecognitionResult.Decode(partial));
+        Assert.Null(await store.ClaimAsync(CancellationToken.None));
+        Assert.False(await store.SaveVisionAsync(new FoodRecognitionJobId(job.Id), new FoodVisionModel([]), CancellationToken.None));
+        var nutrition = new FoodNutritionModel(52.125m, 0, 0, 0, 0, 0, [new FoodNutritionItemModel("Apple", 0.125m, "pcs", 52.125m, 0, 0, 0, 0, 0)]);
+        await store.CompleteAsync(new FoodRecognitionJobId(job.Id), FoodRecognitionCompletion.WithNutrition(nutrition), CancellationToken.None);
+        FoodRecognitionJobModel unchanged = Assert.IsType<FoodRecognitionJobModel>(await store.GetAsync(new UserId(job.UserId), new FoodRecognitionJobId(job.Id), CancellationToken.None));
+        FoodVisionItemModel unchangedItem = Assert.Single(Assert.IsType<FoodVisionModel>(unchanged.Vision).Items);
+        Assert.Multiple(
+            () => Assert.Equal("Ai.InvalidResponse", unchanged.NutritionErrorCode),
+            () => Assert.Null(unchanged.Nutrition),
+            () => Assert.Equal(0.125m, unchangedItem.Amount));
+    }
+
     [RequiresDockerTheory]
     [InlineData("Succeeded")]
     [InlineData("Failed")]

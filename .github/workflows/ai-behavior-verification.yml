@@ -1,0 +1,83 @@
+name: AI behavior verification
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "Modules/Ai/**"
+      - "Modules/Recipes/**"
+      - "Modules/Meals/**"
+      - "Modules/Hydration/**"
+      - "Modules/Products/**"
+      - "Modules/Identity/**"
+      - "Modules/Users/**"
+      - "FoodDiary.Web.Api/**"
+      - "FoodDiary.ReadModel.Composition/**"
+      - "FoodDiary.Web.Client/e2e/client-live/**"
+      - "FoodDiary.Web.Client/playwright.client.live.config.ts"
+      - "FoodDiary.Web.Client/src/app/features/meals/**"
+      - "FoodDiary.Web.Client/src/app/features/hydration/**"
+      - "scripts/ai/**"
+      - "Tooling/ai-development/**"
+      - "infra/load-testing/**"
+      - "infra/observability/prometheus/**"
+      - "Directory.Packages.props"
+      - ".config/dotnet-tools.json"
+      - ".github/workflows/ai-behavior-verification.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  nutrition-mutation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          global-json-file: global.json
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+      - run: dotnet tool restore
+      - run: node scripts/ai/verify-nutrition-mutation.mjs
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: always()
+        with:
+          name: nutrition-mutation
+          path: .artifacts/ai-verification/mutation/reports/mutation-report.json
+          if-no-files-found: ignore
+
+  live-journeys:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          global-json-file: global.json
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: FoodDiary.Web.Client/package-lock.json
+      - run: npm ci --ignore-scripts
+        working-directory: FoodDiary.Web.Client
+      - run: npx playwright install --with-deps chromium
+        working-directory: FoodDiary.Web.Client
+      - run: npm run test:ai-development
+        working-directory: FoodDiary.Web.Client
+      - run: node scripts/ai/reliability-round.mjs
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: always()
+        with:
+          name: local-reliability-evidence
+          path: |
+            .artifacts/reliability/**/summary.json
+            .artifacts/reliability/**/recovery.json
+            .artifacts/reliability/**/load-baseline.json
+            .artifacts/reliability/**/results.json
+            .artifacts/reliability/alerts.json
+            .artifacts/reliability/recognition/grader-self-test.json
+          if-no-files-found: ignore

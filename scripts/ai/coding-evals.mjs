@@ -50,6 +50,12 @@ export function codingCase(id) {
     return entry;
 }
 
+export function isAllowedCandidatePath(path, prefixes) {
+    return prefixes.some((prefix) =>
+        prefix.endsWith("/") ? path.startsWith(prefix) : path === prefix,
+    );
+}
+
 function fingerprints(root) {
     const files = {};
     const walk = (directory) => {
@@ -198,10 +204,7 @@ export function gradeCase(id, candidate, reference = false) {
         ].filter((path) => baseline[path] !== current[path]);
         scopeViolations.push(
             ...changedPaths.filter(
-                (path) =>
-                    !entry.allowedPrefixes.some((prefix) =>
-                        path.startsWith(prefix),
-                    ),
+                (path) => !isAllowedCandidatePath(path, entry.allowedPrefixes),
             ),
         );
     }

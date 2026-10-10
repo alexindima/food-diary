@@ -19,6 +19,19 @@ const base = {
     settings: { model: "default" },
 };
 
+test("a read-only environment is not a skill quality comparison", () => {
+    const result = compareTrialRecords([
+        {
+            ...base,
+            variant: "control",
+            environmentWritable: false,
+            passed: false,
+        },
+    ]);
+    assert.equal(result.comparisons[0].verdict, "environment-unverified");
+    assert.equal(result.comparisons[0].control.environmentFailures, 1);
+});
+
 test("different skill fingerprints never share an outcome profile", () => {
     const result = compareTrialRecords([
         { ...base, variant: "control" },
@@ -56,4 +69,35 @@ test("unknown model identity stays unverified even after a nominal sample thresh
         compareTrialRecords(rows).comparisons[0].verdict,
         "unverified-model",
     );
+});
+
+test("different observed models and reasoning budgets remain separate cohorts", () => {
+    const observed = {
+        ...base,
+        settings: {
+            requestedModel: "pinned",
+            actualModel: "one",
+            reasoningEffort: "medium",
+        },
+    };
+    const result = compareTrialRecords([
+        { ...observed, variant: "control" },
+        { ...observed, variant: "api-skill", skillHash: "one" },
+        {
+            ...observed,
+            variant: "api-skill",
+            skillHash: "one",
+            settings: { ...observed.settings, actualModel: "two" },
+        },
+        {
+            ...observed,
+            variant: "api-skill",
+            skillHash: "one",
+            settings: { ...observed.settings, reasoningEffort: "high" },
+        },
+    ]);
+    assert.equal(result.comparisons.length, 3);
+    assert.equal(result.comparisons[0].model, "one");
+    assert.ok(result.comparisons[0].control.successInterval95[0] < 0.5);
+    assert.ok(result.comparisons[0].control.successInterval95[1] > 0.99);
 });

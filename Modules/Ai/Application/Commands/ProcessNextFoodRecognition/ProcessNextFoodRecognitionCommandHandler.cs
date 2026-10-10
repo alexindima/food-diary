@@ -33,7 +33,7 @@ public sealed class ProcessNextFoodRecognitionCommandHandler(IFoodRecognitionJob
         if (!await store.SaveVisionAsync(jobId, vision.Value, cancellationToken).ConfigureAwait(false)) {
             return true;
         }
-        if (job.IsProductLabel || vision.Value.Items.Count == 0) {
+        if (!FoodRecognitionPolicy.RequiresNutrition(job.IsProductLabel, vision.Value)) {
             await store.CompleteAsync(jobId, FoodRecognitionCompletion.WithoutNutrition, cancellationToken).ConfigureAwait(false);
             return true;
         }

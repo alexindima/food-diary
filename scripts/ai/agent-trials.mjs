@@ -15,28 +15,35 @@ import { codingCase, prepareCase, gradeCase } from "./coding-evals.mjs";
 import { repositoryRoot, containedPath } from "./generate-feature.mjs";
 import { redactDiagnostic, errorLines } from "./diagnostic-redaction.mjs";
 import { compareTrialRecords } from "./trial-comparison.mjs";
+import {
+    confirmedModelSettings,
+    executionStartFailed,
+    trialArguments,
+    trialEnvironment,
+    sessionModelReceipt,
+    sessionExecutionRejection,
+    trialOptions,
+} from "./trial-settings.mjs";
 
 const sha = (value) => createHash("sha256").update(value).digest("hex");
 const save = (path, value) =>
     writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`);
 
 export function codexCommand() {
-    if (process.platform !== "win32") return { file: "codex", prefix: [] };
-    // Execute the npm JavaScript entry point directly; never interpolate a shell command.
-    for (const directory of (process.env.PATH ?? "").split(";")) {
-        const entry = join(
-            directory,
-            "node_modules/@openai/codex/bin/codex.js",
-        );
-        if (existsSync(entry))
-            return { file: process.execPath, prefix: [entry] };
-    }
-    throw new Error("Codex CLI is unavailable on PATH");
+    const pinned = join(
+        repositoryRoot,
+        "FoodDiary.Web.Client/node_modules/@openai/codex/bin/codex.js",
+    );
+    if (existsSync(pinned)) return { file: process.execPath, prefix: [pinned] };
+    throw new Error(
+        "Install the locked frontend development dependencies, including the pinned Codex CLI",
+    );
 }
 
 export function summarizeEvent(event, sequence) {
     const item = event.item ?? {};
     const row = { sequence, event: event.type, itemType: item.type };
+    if (executionStartFailed(item)) row.executionStartFailed = true;
     if (item.type === "command_execution") {
         row.command = redactDiagnostic(item.command, 800);
         row.exitCode = item.exit_code;
@@ -61,8 +68,21 @@ export function summarizeEvent(event, sequence) {
 
 export async function runTrial(
     id,
-    { variant = "control", timeoutMinutes = 20 } = {},
+    {
+        variant = "control",
+        timeoutMinutes = 20,
+        model,
+        reasoningEffort = "medium",
+    } = {},
 ) {
+    trialOptions([
+        "--model",
+        model,
+        "--reasoning",
+        reasoningEffort,
+        "--timeout-minutes",
+        String(timeoutMinutes),
+    ]);
     if (!["control", "api-skill"].includes(variant))
         throw new Error("Unknown instruction variant");
     if (
@@ -123,7 +143,8 @@ export async function runTrial(
         skill += reference;
     }
     const probeValue = `${id}:${prepared.graderHash}`;
-    const prompt = `${entry.task}\n\nThis is an isolated coding evaluation. Before exploring sources, create agent-write-probe.txt at the snapshot root containing exactly ${probeValue} to prove the actual session can write. This probe is explicitly allowed. Edit production files only in: ${entry.allowedPrefixes.join(", ")}. Preserve native values. No production services, network providers, commits, or external messages are needed. Do not inspect the parent repository or historical answers. The snapshot intentionally omits unrelated build projects, Wiki and dependency installation. Its AGENTS.md includes applicable repository and frontend rules. Work directly against the included production sources; full application builds are not available in this extracted snapshot. Run node verify-contract.cjs to check the public acceptance contract with actual dependency types before concluding. Do not replace Angular/RxJS/SDK types with simplified stubs.\n\nPublic acceptance contract (implement these exported capabilities; it contains no reference implementation):\n${contract}\n\nNative-value contract: ${entry.runtimeContract ?? "Keep the existing wire values and behavior unchanged."}\n\n${skill ? "Use $fooddiary-api-change from .agents/skills/fooddiary-api-change/SKILL.md. Read its examples only if useful." : ""}`;
+    writeFileSync(join(prepared.candidate, "agent-write-probe.txt"), "");
+    const prompt = `${entry.task}\n\nThis is an isolated coding evaluation. The exact workspace is ${prepared.candidate}. Every command tool call must explicitly set workdir to that absolute directory. Patch only absolute native paths inside that directory; on Windows do not translate drive paths into /d/ paths. Before exploring sources, overwrite the existing empty agent-write-probe.txt at the snapshot root containing exactly ${probeValue} to prove the actual session can write. This probe is explicitly allowed. Edit production files only in: ${entry.allowedPrefixes.join(", ")}. Preserve native values. No production services, network providers, commits, or external messages are needed. Do not inspect the parent repository or historical answers. The snapshot intentionally omits unrelated build projects, Wiki and dependency installation. Its AGENTS.md includes applicable repository and frontend rules. Work directly against the included production sources; full application builds are not available in this extracted snapshot. Run node verify-contract.cjs to check the public acceptance contract with actual dependency types before concluding. Do not replace Angular/RxJS/SDK types with simplified stubs.\n\nPublic acceptance contract (implement these exported capabilities; it contains no reference implementation):\n${contract}\n\nNative-value contract: ${entry.runtimeContract ?? "Keep the existing wire values and behavior unchanged."}\n\n${skill ? "Use $fooddiary-api-change from .agents/skills/fooddiary-api-change/SKILL.md. Read its examples only if useful." : ""}`;
     const command = codexCommand();
     for (const args of [
         ["init", "--quiet"],
@@ -152,6 +173,7 @@ export async function runTrial(
     const version = spawnSync(command.file, [...command.prefix, "--version"], {
         encoding: "utf8",
         windowsHide: true,
+        env: trialEnvironment(),
     });
     if (version.status !== 0) throw new Error("Cannot identify Codex CLI");
     const record = {
@@ -183,9 +205,11 @@ export async function runTrial(
         settings: {
             permissionProfile: ":workspace",
             approvalPolicy: "never",
-            ephemeral: true,
+            ephemeral: false,
             ignoreUserConfig: true,
-            model: "CLI default; actual identity recorded when reported",
+            ignoreUserRules: true,
+            requestedModel: model,
+            reasoningEffort,
         },
     };
     save(trialPath, record);
@@ -200,24 +224,13 @@ export async function runTrial(
         command.file,
         [
             ...command.prefix,
-            "-a",
-            "never",
-            "-c",
-            'default_permissions=":workspace"',
-            "exec",
-            "--ignore-user-config",
-            "--ephemeral",
-            "--json",
-            "--color",
-            "never",
-            "-C",
-            prepared.candidate,
-            "-",
+            ...trialArguments(prepared.candidate, { model, reasoningEffort }),
         ],
         {
             cwd: prepared.candidate,
             windowsHide: true,
             stdio: ["pipe", "pipe", "pipe"],
+            env: trialEnvironment(),
         },
     );
     const terminate = () => {
@@ -232,13 +245,42 @@ export async function runTrial(
         timedOut = true;
         terminate();
     }, timeoutMinutes * 60_000);
+    let monitoring = true;
+    let readingSession = false;
+    const sessionMonitor = setInterval(async () => {
+        if (!monitoring || readingSession || !record.threadId) return;
+        readingSession = true;
+        try {
+            const rejection = await sessionExecutionRejection(
+                record.threadId,
+                prepared.candidate,
+                record.startedAtUtc,
+            );
+            if (monitoring && rejection) {
+                record.executionRejection = rejection;
+                failure =
+                    "Owned CLI tool execution was rejected by policy; stop without alternate-command retries";
+                terminate();
+            }
+        } catch {
+            /* A partial session record is retried at the next bounded observation. */
+        } finally {
+            readingSession = false;
+        }
+    }, 2000);
     const accept = (line) => {
         if (!line.trim()) return;
         try {
             const event = JSON.parse(line);
             const row = summarizeEvent(event, rows.length + 1);
             rows.push(row);
+            if (row.executionStartFailed) {
+                failure =
+                    "Trial command could not start; stop rather than retrying an unusable execution environment";
+                terminate();
+            }
             if (row.usage) record.usage = row.usage;
+            if (row.threadId) record.threadId = row.threadId;
             if (event.model) record.settings.actualModel = event.model;
             if (row.error) failure = row.error;
             writeFileSync(eventsPath, `${JSON.stringify(row)}\n`, {
@@ -289,6 +331,20 @@ export async function runTrial(
             child.once("close", (code) => resolveExit(code));
         });
         accept(pending);
+        monitoring = false;
+        clearInterval(sessionMonitor);
+        record.modelReceipt = await sessionModelReceipt(
+            record.threadId,
+            prepared.candidate,
+            record.startedAtUtc,
+        );
+        record.settings = confirmedModelSettings(
+            record.settings,
+            record.modelReceipt,
+            rows,
+        );
+        record.modelIdentityVerified =
+            typeof record.settings.actualModel === "string";
         const probePath = join(prepared.candidate, "agent-write-probe.txt");
         record.environmentWritable =
             existsSync(probePath) &&
@@ -311,25 +367,42 @@ export async function runTrial(
             record.status === "completed" &&
             grade.passed &&
             record.environmentWritable;
-        if (!record.environmentWritable && !grade.passed)
-            record.failureCategory = "execution-environment-unverified";
+        if (record.executionRejection)
+            record.failureCategory = "execution-policy-rejected";
+        else if (!record.environmentWritable && !grade.passed)
+            record.failureCategory = rows.some(
+                (row) => row.executionStartFailed,
+            )
+                ? "execution-start-rejected"
+                : "execution-environment-unverified";
         record.failure = failure;
         record.durationMs = Math.round(performance.now() - started);
-        record.toolCalls = rows.filter(
+        record.commandTelemetryAvailable = rows.some(
             (row) =>
                 row.event === "item.completed" &&
                 row.itemType === "command_execution",
-        ).length;
-        record.failedToolCalls = rows.filter(
-            (row) =>
-                row.event === "item.completed" &&
-                typeof row.exitCode === "number" &&
-                row.exitCode !== 0,
-        ).length;
+        );
+        record.toolCalls = record.commandTelemetryAvailable
+            ? rows.filter(
+                  (row) =>
+                      row.event === "item.completed" &&
+                      row.itemType === "command_execution",
+              ).length
+            : null;
+        record.failedToolCalls = record.commandTelemetryAvailable
+            ? rows.filter(
+                  (row) =>
+                      row.event === "item.completed" &&
+                      typeof row.exitCode === "number" &&
+                      row.exitCode !== 0,
+              ).length
+            : null;
         record.finishedAtUtc = new Date().toISOString();
         save(trialPath, record);
         return record;
     } finally {
+        monitoring = false;
+        clearInterval(sessionMonitor);
         clearTimeout(timer);
         process.removeListener("SIGINT", interrupted);
         process.removeListener("SIGTERM", interrupted);
@@ -361,10 +434,12 @@ if (
     process.argv[1] &&
     pathToFileURL(resolve(process.argv[1])).href === import.meta.url
 ) {
-    const [action, id, variant = "control"] = process.argv.slice(2);
+    const [action, ...arguments_] = process.argv.slice(2);
     try {
         let result;
         if (action === "suite") {
+            const options = trialOptions(arguments_);
+            if (options.caseId) codingCase(options.caseId);
             const cases = JSON.parse(
                 readFileSync(
                     join(
@@ -375,36 +450,66 @@ if (
                 ),
             ).cases;
             result = { schemaVersion: 1, trials: [] };
-            for (const entry of cases)
-                for (const instructionVariant of ["control", "api-skill"]) {
-                    const trial = await runTrial(entry.id, {
-                        variant: instructionVariant,
-                    });
-                    result.trials.push({
-                        id: trial.id,
-                        variant: trial.variant,
-                        passed: trial.passed,
-                        status: trial.status,
-                        candidate: trial.candidate,
-                    });
-                    console.log(JSON.stringify(result.trials.at(-1)));
-                    save(
-                        join(
-                            repositoryRoot,
-                            ".artifacts/coding-evals/suite.json",
-                        ),
-                        result,
-                    );
-                }
+            for (
+                let repetition = 0;
+                repetition < options.repetitions;
+                repetition++
+            )
+                for (const entry of cases.filter(
+                    (entry) => !options.caseId || entry.id === options.caseId,
+                ))
+                    for (const instructionVariant of repetition % 2 === 0
+                        ? ["control", "api-skill"]
+                        : ["api-skill", "control"]) {
+                        const trial = await runTrial(entry.id, {
+                            ...options,
+                            variant: instructionVariant,
+                        });
+                        result.trials.push({
+                            id: trial.id,
+                            variant: trial.variant,
+                            passed: trial.passed,
+                            status: trial.status,
+                            repetition: repetition + 1,
+                            candidate: trial.candidate,
+                        });
+                        console.log(JSON.stringify(result.trials.at(-1)));
+                        save(
+                            join(
+                                repositoryRoot,
+                                ".artifacts/coding-evals/suite.json",
+                            ),
+                            result,
+                        );
+                        if (
+                            !trial.environmentWritable ||
+                            trial.executionRejection ||
+                            trial.failureCategory === "execution-start-rejected"
+                        )
+                            throw new Error(
+                                "Trial environment cannot perform the required owned write; suite stopped before more model calls",
+                            );
+                    }
         } else
             result =
                 action === "run"
-                    ? await runTrial(id, { variant })
+                    ? await runTrial(arguments_[0], {
+                          ...trialOptions(
+                              arguments_.slice(
+                                  arguments_[1]?.startsWith("--") ? 1 : 2,
+                              ),
+                          ),
+                          variant: arguments_[1]?.startsWith("--")
+                              ? "control"
+                              : (arguments_[1] ?? "control"),
+                      })
                     : action === "compare"
                       ? compareTrials()
                       : null;
         if (!result)
-            throw new Error("Use run <case> [control|api-skill] or compare");
+            throw new Error(
+                "Use run <case> [control|api-skill] --model <model>, suite --model <model> [--repetitions 5] [--case <case>], or compare",
+            );
         console.log(JSON.stringify(result, null, 2));
         if (action === "run" && !result.passed) process.exitCode = 1;
     } catch (error) {

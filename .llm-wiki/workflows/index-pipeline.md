@@ -582,6 +582,12 @@ The pipeline prints per-generator and total duration to make remaining hotspots
 visible instead of treating index latency as an opaque fixed cost.
 
 Workers are isolated PowerShell processes with real exit-code propagation. A failed worker fails its stage and prevents dependent stages from running. Parallelism changes execution time only; every existing generator and freshness check still runs.
+In update mode, backend-contract and quality writers complete before the separate
+module-page stage reads their outputs. This prevents Windows memory-map readers
+from overlapping file truncation. Read-only check mode retains parallel derived
+validation. The concurrent-update regression holds its isolated writer until the
+waiter reports real lock contention, so the assertion does not depend on process
+startup speed.
 After a complete focused group set passes, the runner records one aggregate
 content-addressed receipt. An unchanged repeat validates that fingerprint once
 and skips child-process fan-out; a relevant product or Wiki edit restores the

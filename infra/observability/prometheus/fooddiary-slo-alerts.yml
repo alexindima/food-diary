@@ -1,0 +1,28 @@
+groups:
+  - name: fooddiary-api-availability-slo
+    interval: 30s
+    rules:
+      - record: fooddiary:api_error_ratio_5m
+        expr: sum(rate(fooddiary_api_requests_total{http_response_status_code=~"5.."}[5m])) / clamp_min(sum(rate(fooddiary_api_requests_total{http_response_status_code!~"4.."}[5m])), 0.001)
+      - record: fooddiary:api_error_ratio_30m
+        expr: sum(rate(fooddiary_api_requests_total{http_response_status_code=~"5.."}[30m])) / clamp_min(sum(rate(fooddiary_api_requests_total{http_response_status_code!~"4.."}[30m])), 0.001)
+      - record: fooddiary:api_error_ratio_1h
+        expr: sum(rate(fooddiary_api_requests_total{http_response_status_code=~"5.."}[1h])) / clamp_min(sum(rate(fooddiary_api_requests_total{http_response_status_code!~"4.."}[1h])), 0.001)
+      - record: fooddiary:api_error_ratio_6h
+        expr: sum(rate(fooddiary_api_requests_total{http_response_status_code=~"5.."}[6h])) / clamp_min(sum(rate(fooddiary_api_requests_total{http_response_status_code!~"4.."}[6h])), 0.001)
+      - alert: FoodDiaryApiAvailabilityBudgetFastBurn
+        expr: (fooddiary:api_error_ratio_1h > 14.4 * 0.001) and (fooddiary:api_error_ratio_5m > 14.4 * 0.001) and (sum(increase(fooddiary_api_requests_total{http_response_status_code!~"4.."}[5m])) > 10)
+        labels:
+          severity: critical
+          service: api
+        annotations:
+          summary: FoodDiary API is rapidly consuming its 99.9% availability budget.
+          runbook: docs/backend/BACKEND_RUNBOOKS.md
+      - alert: FoodDiaryApiAvailabilityBudgetSlowBurn
+        expr: (fooddiary:api_error_ratio_6h > 6 * 0.001) and (fooddiary:api_error_ratio_30m > 6 * 0.001) and (sum(increase(fooddiary_api_requests_total{http_response_status_code!~"4.."}[30m])) > 50)
+        labels:
+          severity: warning
+          service: api
+        annotations:
+          summary: FoodDiary API is steadily consuming its 99.9% availability budget.
+          runbook: docs/backend/BACKEND_RUNBOOKS.md

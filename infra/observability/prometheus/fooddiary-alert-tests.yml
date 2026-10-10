@@ -1,0 +1,104 @@
+rule_files:
+  - fooddiary-backend-alerts.yml
+  - fooddiary-slo-alerts.yml
+evaluation_interval: 30s
+tests:
+  - name: healthy traffic and absent data do not spend the error budget
+    interval: 1m
+    input_series:
+      - series: 'fooddiary_api_requests_total{http_response_status_code="200"}'
+        values: '0+100x420'
+      - series: 'fooddiary_api_requests_total{http_response_status_code="500"}'
+        values: '0+0x420'
+    alert_rule_test:
+      - eval_time: 7h
+        alertname: FoodDiaryApiAvailabilityBudgetFastBurn
+        exp_alerts: []
+      - eval_time: 7h
+        alertname: FoodDiaryApiAvailabilityBudgetSlowBurn
+        exp_alerts: []
+  - name: missing metrics stay absent rather than becoming healthy zero
+    interval: 1m
+    input_series: []
+    promql_expr_test:
+      - expr: fooddiary:api_error_ratio_5m
+        eval_time: 15m
+        exp_samples: []
+  - name: client errors cannot mask a sustained server outage
+    interval: 1m
+    input_series:
+      - series: 'fooddiary_api_requests_total{http_response_status_code="200"}'
+        values: '0+95x420'
+      - series: 'fooddiary_api_requests_total{http_response_status_code="503"}'
+        values: '0+5x420'
+      - series: 'fooddiary_api_requests_total{http_response_status_code="400"}'
+        values: '0+10000x420'
+    alert_rule_test:
+      - eval_time: 2h
+        alertname: FoodDiaryApiAvailabilityBudgetFastBurn
+        exp_alerts:
+          - exp_labels: { severity: critical, service: api }
+            exp_annotations:
+              summary: FoodDiary API is rapidly consuming its 99.9% availability budget.
+              runbook: docs/backend/BACKEND_RUNBOOKS.md
+  - name: a moderate sustained failure burns the long window budget
+    interval: 1m
+    input_series:
+      - series: 'fooddiary_api_requests_total{http_response_status_code="200"}'
+        values: '0+99x420'
+      - series: 'fooddiary_api_requests_total{http_response_status_code="500"}'
+        values: '0+1x420'
+    alert_rule_test:
+      - eval_time: 7h
+        alertname: FoodDiaryApiAvailabilityBudgetFastBurn
+        exp_alerts: []
+      - eval_time: 7h
+        alertname: FoodDiaryApiAvailabilityBudgetSlowBurn
+        exp_alerts:
+          - exp_labels: { severity: warning, service: api }
+            exp_annotations:
+              summary: FoodDiary API is steadily consuming its 99.9% availability budget.
+              runbook: docs/backend/BACKEND_RUNBOOKS.md
+  - name: very low traffic does not page on a noisy ratio
+    interval: 1m
+    input_series:
+      - series: 'fooddiary_api_requests_total{http_response_status_code="200"}'
+        values: '0+0.001x420'
+      - series: 'fooddiary_api_requests_total{http_response_status_code="500"}'
+        values: '0+0.001x420'
+    alert_rule_test:
+      - eval_time: 7h
+        alertname: FoodDiaryApiAvailabilityBudgetFastBurn
+        exp_alerts: []
+      - eval_time: 7h
+        alertname: FoodDiaryApiAvailabilityBudgetSlowBurn
+        exp_alerts: []
+  - name: outbox backlog fires and clears after recovery
+    interval: 1m
+    input_series:
+      - series: 'fooddiary_outbox_pending_oldest_age_seconds{fooddiary_outbox_name="email"}'
+        values: '700+0x10 0+0x20'
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: FoodDiaryOutboxBacklogOld
+        exp_alerts:
+          - exp_labels: { severity: critical, service: outbox, fooddiary_outbox_name: email }
+            exp_annotations:
+              summary: A FoodDiary outbox has pending messages older than 10 minutes.
+              runbook: docs/backend/BACKEND_RUNBOOKS.md
+      - eval_time: 16m
+        alertname: FoodDiaryOutboxBacklogOld
+        exp_alerts: []
+  - name: consecutive job failure is detected
+    interval: 1m
+    input_series:
+      - series: 'fooddiary_job_failure_streak{fooddiary_job_name="cleanup"}'
+        values: '3+0x10'
+    alert_rule_test:
+      - eval_time: 2m
+        alertname: FoodDiaryCleanupJobFailureStreak
+        exp_alerts:
+          - exp_labels: { severity: critical, service: job-manager, fooddiary_job_name: cleanup }
+            exp_annotations:
+              summary: A FoodDiary recurring job has failed at least twice consecutively.
+              runbook: docs/backend/BACKEND_RUNBOOKS.md

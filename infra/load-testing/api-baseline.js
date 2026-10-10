@@ -11,9 +11,9 @@ export const options = {
             stages: [
                 { duration: __ENV.RAMP_DURATION || '30s', target: Number(__ENV.VUS || 10) },
                 { duration: __ENV.HOLD_DURATION || '2m', target: Number(__ENV.VUS || 10) },
-                { duration: '15s', target: 0 },
+                { duration: __ENV.RAMP_DOWN_DURATION || '15s', target: 0 },
             ],
-            gracefulRampDown: '15s',
+            gracefulRampDown: __ENV.GRACE_DURATION || '15s',
         },
     },
     thresholds: {
@@ -55,7 +55,7 @@ export default function (data) {
         headers: { Authorization: `Bearer ${data.accessToken}` },
     };
 
-    request('/api/v1/dashboard', 'dashboard', params);
+    request(`/api/v1/dashboard?date=${encodeURIComponent(__ENV.DASHBOARD_DATE || '2026-09-15T00:00:00.000Z')}&timeZoneId=UTC&timeZoneOffsetMinutes=0&page=1&limit=25&locale=en&trendDays=7`, 'dashboard', params);
     request('/api/v1/products?page=1&limit=25&includePublic=false', 'products', params);
     request('/api/v1/recipes?page=1&limit=25&includePublic=false', 'recipes', params);
     request('/api/v1/meals?page=1&limit=25', 'meals', params);

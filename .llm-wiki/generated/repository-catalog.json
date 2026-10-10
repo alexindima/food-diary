@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 295,
-    "documentationPages": 227
+    "documentationPages": 230
   },
   "dotnet": {
     "projects": [
@@ -10393,6 +10393,10 @@
         ],
         "packageReferences": [
           {
+            "name": "FsCheck.Xunit",
+            "version": null
+          },
+          {
             "name": "Microsoft.NET.Test.Sdk",
             "version": null
           },
@@ -15810,8 +15814,10 @@
       "docs/adr/template.md",
       "docs/ai/AGENT_GUIDE_CATALOG.md",
       "docs/ai/AI_DEVELOPMENT.md",
+      "docs/ai/AI_WORKFLOW.md",
       "docs/ai/CODE_REVIEW.md",
       "docs/ai/RECIPE_IMPORT.md",
+      "docs/ai/RELIABILITY_VERIFICATION.md",
       "docs/ai/STATISTICS_MODULE_EXTRACTION_WIKI_REPORT.md",
       "docs/ai/WEARABLES_WIKI_EVIDENCE_REPORT.md",
       "docs/ai/WEEKLY_CHECKIN_EXTRACTION_WIKI_EVALUATION.md",
@@ -15904,6 +15910,7 @@
       "docs/ai/users-security-reader-ownership.md",
       "docs/ai/wiki-retrieval-followup.md",
       "docs/ai/wiki-retrieval-ownership.md",
+      "docs/architecture/APPLICATION_PATTERNS.md",
       "docs/architecture/COMPOSED_READ_BOUNDARIES.md",
       "docs/architecture/Exception-vs-Result.md",
       "docs/architecture/PRIMITIVE_TYPES.md",

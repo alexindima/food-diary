@@ -4,6 +4,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageVersion Include="FsCheck.Xunit" Version="3.4.0" />
     <!-- Analyzers -->
     <PackageVersion Include="Meziantou.Analyzer" Version="3.0.195" />
     <PackageVersion Include="Roslynator.Analyzers" Version="4.16.1" />

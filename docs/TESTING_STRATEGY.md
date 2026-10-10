@@ -278,6 +278,13 @@ See [ADR 0033](adr/0033-retry-safe-outbox-and-consumer-contracts.md) for retry-s
 
 ## Dashboard regression coverage
 
+`node scripts/ai/verify-user-journeys.mjs` adds separate live persistence journeys
+against an owned local API, PostgreSQL and frontend proxy. It type-checks generated
+SDK request fixtures, verifies hydration across dashboard reload, and verifies
+meal quantity/nutrition across save/read/reopen. The existing mocked browser smoke
+remains the fast rendered-state suite. See `docs/ai/AI_DEVELOPMENT.md` for lifecycle,
+provider limits, FsCheck nutrition properties and the scoped mutation pilot.
+
 The dashboard page spec keeps its real template and tests bindings/composition with
 isolated service and child boundaries. Card specs exercise rendered controls;
 facade specs cover loading races, refresh failures, favorites and writes. Weight

@@ -25,6 +25,8 @@ public sealed class FoodRecognitionResultReaderTests {
     [InlineData("Queued", null, "Ai.RecognitionNotReady")]
     [InlineData("Running", null, "Ai.RecognitionNotReady")]
     [InlineData("Failed", null, "Ai.RecognitionNotUsable")]
+    [InlineData("FutureStatus", null, "Ai.RecognitionNotUsable")]
+    [InlineData("succeeded", null, "Ai.RecognitionNotUsable")]
     [InlineData("Succeeded", "partial-nutrition", "Ai.RecognitionNotUsable")]
     public async Task GetCompletedAsync_RejectsIncompleteResults(string status, string? nutritionError, string expectedError) {
         IFoodRecognitionJobReader jobs = Substitute.For<IFoodRecognitionJobReader>();
@@ -61,6 +63,38 @@ public sealed class FoodRecognitionResultReaderTests {
         };
         jobs.GetAsync(new UserId(job.UserId), new FoodRecognitionJobId(job.Id), Arg.Any<CancellationToken>()).Returns(job);
         Assert.True((await RequestTestSender.Create(new GetCompletedFoodRecognitionQueryHandler(jobs)).Send(new GetCompletedFoodRecognitionQuery(UserId: job.UserId, JobId: job.Id), CancellationToken.None)).IsFailure);
+    }
+
+    [Theory]
+    [InlineData("vision")]
+    [InlineData("nutrition")]
+    [InlineData("vision-error")]
+    [InlineData("nutrition-error")]
+    [InlineData("empty-nutrition")]
+    public async Task GetCompletedAsync_InconsistentPersistedSuccessCannotBecomeReady(string missing) {
+        FoodRecognitionJobModel complete = CompleteJob();
+        FoodRecognitionJobModel job = missing switch {
+            "vision" => complete with { Vision = null },
+            "nutrition" => complete with { Nutrition = null },
+            "vision-error" => complete with { ErrorCode = "provider-error" },
+            "nutrition-error" => complete with { NutritionErrorCode = "provider-error" },
+            _ => complete with { Nutrition = complete.Nutrition! with { Items = [] } },
+        };
+        Assert.IsType<FoodRecognitionResult.Unusable>(FoodRecognitionResult.Decode(job));
+        IFoodRecognitionJobReader jobs = Substitute.For<IFoodRecognitionJobReader>();
+        jobs.GetAsync(new UserId(job.UserId), new FoodRecognitionJobId(job.Id), Arg.Any<CancellationToken>()).Returns(job);
+        Result<FoodRecognitionJobModel> result = await new GetCompletedFoodRecognitionQueryHandler(jobs).Handle(new GetCompletedFoodRecognitionQuery(job.UserId, job.Id), CancellationToken.None);
+        Assert.Equal("Ai.RecognitionNotUsable", result.Error.Code);
+    }
+
+    [Fact]
+    public void ReadyResult_ExposesRequiredVisionAndNutrition() {
+        FoodRecognitionJobModel job = CompleteJob();
+        FoodRecognitionResult.Ready ready = Assert.IsType<FoodRecognitionResult.Ready>(FoodRecognitionResult.Decode(job));
+        Assert.Multiple(
+            () => Assert.Same(job, ready.Job),
+            () => Assert.Same(job.Vision, ready.Vision),
+            () => Assert.Same(job.Nutrition, ready.Nutrition));
     }
 
     private static FoodRecognitionJobModel CompleteJob() => new(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "image", Description: null,

@@ -30,6 +30,56 @@ OpenAPI only guarantees the declared wire shape. Business state, sequences,
 partial failures and intentionally supported legacy payloads need explicit scenarios.
 Optional DTO fields remain optional; the validator does not invent required fields.
 
+## Application patterns
+
+For recognition-quality references, database recovery drills, repeated load
+measurements, live user journeys and alert checks, follow
+[Reliability verification](RELIABILITY_VERIFICATION.md). The report distinguishes
+local execution, replayed model output and production/provider evidence.
+
+Follow [Application patterns](../architecture/APPLICATION_PATTERNS.md) when a
+feature needs pure rules, validated result variants, lifecycle transitions or
+external semantic decoding. Durable food recognition applies all five approaches
+with a [rule and example matrix](../backend/AI_RECOGNITION_JOBS.md#owner-rules-and-executable-examples).
+Its implementation preserves existing HTTP/storage contracts and paid-call
+recovery rules. These are repeatable design examples, not evidence of a measured
+model productivity improvement.
+
+## Behavioral verification
+
+The Recipes Domain suite includes FsCheck properties (300 generated examples per
+property, with shrinking and replay information on failure) for ingredient
+splitting, equal product/nested-recipe bases, unavailable sources and manual
+zero overrides. Fixed witnesses protect midpoint-to-even rounding, partial
+nutrition and nonpositive/absent bases. Inputs preserve the owning legacy policy;
+generated tests do not impose new validation or historical recalculation rules.
+
+```powershell
+dotnet test Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/FoodDiary.Modules.Recipes.Domain.Tests.csproj --artifacts-path .artifacts/nutrition-tests --filter FullyQualifiedName~RecipeNutrition
+dotnet tool restore
+node scripts/ai/verify-nutrition-mutation.mjs
+node scripts/ai/verify-user-journeys.mjs
+# Reuse an already ready, current task runtime without stopping it:
+node scripts/ai/verify-user-journeys.mjs --runtime my-change
+```
+
+The pinned Stryker tool mutates only RecipeNutritionPolicy and
+RecipeNutritionIngredient, fails immediately when baseline tests fail, and uses
+two test sessions. The explicit net10.0 target prevents Windows Buildalyzer from
+selecting an older Visual Studio MSBuild for inherited project settings. Build
+outputs and reports remain under repository `.artifacts/ai-verification`.
+Review surviving mutants rather than suppressing them to increase a score.
+
+Live journeys type-check fixtures against generated SDK requests, then use the
+owned PostgreSQL/API/frontend proxy with no intercepted HTTP. They verify a
+dashboard hydration write across reload and a meal quantity edit with independently
+derived nutrition across save/read/reopen. A recipe case verifies gram-to-serving
+decoding, stored meal totals and the existing rejection of edits to used recipes.
+Credentials stay in the ignored runtime
+directory and browser memory; traces and login screenshots are disabled. A fresh
+runtime is stopped on completion; a supplied runtime remains available. These
+scenarios do not verify external AI, email, payments or background providers.
+
 ## Feature generators
 
 Generation defaults to a dry-run JSON plan. The owning project/feature and SDK
@@ -101,9 +151,9 @@ node scripts/ai/coding-evals.mjs grade usda-link <candidate-path-from-prepare>
 node scripts/ai/coding-evals.mjs self-test
 ```
 
-Five historical tasks have immutable Git baselines and separate maintained
+Six historical tasks have immutable Git baselines and separate maintained
 graders: meal identity, calendar meaning, recipe quantity, USDA linking and cycle
-episode actions. Preparation extracts an owned candidate snapshot and its task
+episode actions, plus precision-preserving nutrition basis conversion. Preparation extracts an owned candidate snapshot and its task
 scope. Grading compiles positive and negative witnesses against actual candidate
 production capabilities, runs native-value/conversion probes, and rejects changed
 files outside scope. The grader, corpus and dependency-lock fingerprints must
@@ -112,7 +162,7 @@ from an editable candidate record.
 
 `self-test` proves that each historical baseline fails and the current reference
 passes. It runs no models and is not a measurement of agent productivity. The
-initial corpus covers semantic contract refactoring; it is not general behavioral
+initial corpus covers semantic contract refactoring and one pure nutrition calculation; it is not general behavioral
 or security coverage. Add independently reviewed regression scenarios as actual
 coding tasks accumulate, and compare trials with the same baseline, dependencies,
 grader and model settings. Keep the existing Wiki retrieval/policy evals separate.
@@ -131,19 +181,52 @@ node --test scripts/ai/coding-probe-isolation.test.mjs
 ## Real agent trials and instruction comparisons
 
 ```powershell
-node scripts/ai/agent-trials.mjs run usda-link control
-node scripts/ai/agent-trials.mjs run usda-link api-skill
-node scripts/ai/agent-trials.mjs suite
+node scripts/ai/agent-trials.mjs run usda-link control --model <model> --reasoning medium
+node scripts/ai/agent-trials.mjs run usda-link api-skill --model <model> --reasoning medium
+node scripts/ai/agent-trials.mjs suite --model <model> --reasoning medium --repetitions 5
 node scripts/ai/agent-trials.mjs compare
 ```
 
-`suite` runs the five historical tasks sequentially with both instruction variants.
+`suite` runs the selected historical tasks sequentially with both instruction variants.
 Every trial starts from its own extracted Git baseline, initializes a separate Git
 root, supplies a public acceptance contract and uses Codex CLI's explicit
-`:workspace` permission profile. An actual file-write probe distinguishes a usable
+`:workspace` permission profile through the npm-pinned Codex CLI. An actual file-write probe distinguishes a usable
 coding environment from a session that only inspected source. User configuration
 is excluded from the evaluation; authentication stays in Codex's existing store.
 The runner does not read or copy that authentication material.
+
+The runner uses the CLI in the locked frontend development dependencies, not a
+global executable or the parent desktop app's version. Permission profiles require
+Codex 0.138.0 or newer. Legacy sandbox flags are not mixed with the selected profile.
+Parent chat identity, app-tool routing and ambient permission overrides are removed
+from the child environment; authentication retains its existing location. Personal
+and project execpolicy rules are excluded along with user configuration so trials
+do not inherit unrelated command policies. Managed requirements remain enforced.
+A failed
+write probe stops a suite before further model calls and is reported as an environment
+failure, not as evidence about instruction quality.
+
+An observed command-policy rejection terminates the owned agent process,
+preserves the failed attempt, and stops a suite. The runner does not retry rejected
+commands through alternate tools or change managed policy. A successful direct
+sandbox write proves OS readiness only; it does not prove the model tool router
+will accept commands. Real trials require both an exact agent-authored write probe
+and independent production-code grading before success is recorded.
+CLI versions that omit tool results in JSONL are checked through bounded observations
+of their own session's structured tool output. Reasoning and transcript text are
+not exported. Missing command telemetry stays null, with its sample coverage
+reported separately; it is never represented as zero tool failures.
+
+The model is explicit; the CLI default is never a reproducible trial setting.
+Trials persist their own CLI session so the runner can read a bounded model
+receipt from matching session/checkout metadata. It never reads authentication
+files, exports session transcripts, or infers actual identity from the requested
+model. Missing observations remain unverified. The normal CLI session-retention
+policy applies to these synthetic task sessions. Cohorts separate actual model,
+requested model and reasoning budget. Repetitions alternate variant order;
+`--case <id>` selects one case. Five samples per variant is only a reporting
+floor, not proof of a productivity effect. Reports include Wilson success-rate
+intervals, median duration, tool failures and human interventions.
 
 Each owned `trial.json` records the CLI version, baseline, instruction, skill,
 grader engine, harness and dependency hashes, actual terminal outcome, external

@@ -100,7 +100,9 @@ public sealed partial class OpenAiFoodClient(
         }
 
         using JsonDocument json = response.Json!;
-        Result<FoodVisionModel> parsed = product is null ? ParseVisionResponse(json) : ParseProductLabelResponse(json);
+        Result<FoodVisionModel> parsed = product is null
+            ? OpenAiFoodResponseDecoder.Vision(ExtractOutputText(json))
+            : OpenAiFoodResponseDecoder.ProductLabel(ExtractOutputText(json));
         if (parsed.IsFailure) {
             return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(parsed.Error);
         }
@@ -146,7 +148,7 @@ public sealed partial class OpenAiFoodClient(
         }
 
         using JsonDocument json = response.Json!;
-        Result<FoodVisionModel> parsed = ParseVisionResponse(json);
+        Result<FoodVisionModel> parsed = OpenAiFoodResponseDecoder.Vision(ExtractOutputText(json));
         if (parsed.IsFailure) {
             return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(parsed.Error);
         }
@@ -190,7 +192,7 @@ public sealed partial class OpenAiFoodClient(
         }
 
         using JsonDocument json = response.Json!;
-        Result<FoodNutritionModel> parsed = ParseNutritionResponse(json);
+        Result<FoodNutritionModel> parsed = OpenAiFoodResponseDecoder.Nutrition(ExtractOutputText(json), items.Count);
         if (parsed.IsFailure) {
             return Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(parsed.Error);
         }
@@ -483,66 +485,6 @@ public sealed partial class OpenAiFoodClient(
         string promptTemplate,
         int maxOutputTokens) =>
         OpenAiRequestFactory.BuildNutritionRequest(model, items, promptTemplate, maxOutputTokens);
-
-    private static Result<FoodVisionModel> ParseProductLabelResponse(JsonDocument json) {
-        string? text = ExtractOutputText(json);
-        if (string.IsNullOrWhiteSpace(text)) {
-            return Result.Failure<FoodVisionModel>(AiErrors.InvalidResponse("Missing product label output."));
-        }
-        try {
-            ProductLabelModel? label = JsonSerializer.Deserialize<ProductLabelModel>(text, JsonOptions());
-            if (label is null || label.BaseAmount is <= 0 ||
-                label.BaseUnit is not (null or "g" or "ml" or "pcs") ||
-                new[] { label.Calories, label.Protein, label.Fat, label.Carbs, label.Fiber, label.Alcohol }.Any(value => value is < 0)) {
-                return Result.Failure<FoodVisionModel>(AiErrors.InvalidResponse("Invalid product label values."));
-            }
-            return Result.Success(new FoodVisionModel([], ProductLabel: label));
-        } catch (JsonException) {
-            return Result.Failure<FoodVisionModel>(AiErrors.InvalidResponse("Invalid product label JSON."));
-        }
-    }
-
-    private static Result<FoodVisionModel> ParseVisionResponse(JsonDocument json) {
-        string? text = ExtractOutputText(json);
-        if (string.IsNullOrWhiteSpace(text)) {
-            return Result.Failure<FoodVisionModel>(AiErrors.InvalidResponse("Missing output text."));
-        }
-
-        try {
-            FoodVisionModel? parsed = JsonSerializer.Deserialize<FoodVisionModel>(text, JsonOptions());
-            if (parsed is null) {
-                return Result.Failure<FoodVisionModel>(AiErrors.InvalidResponse("Vision response is empty."));
-            }
-            if (parsed.Items?.Any(item => item is null ||
-                string.IsNullOrWhiteSpace(item.NameEn) || string.IsNullOrWhiteSpace(item.Unit)) is not false) {
-                return Result.Failure<FoodVisionModel>(AiErrors.InvalidResponse("Vision items are invalid."));
-            }
-            return Result.Success(parsed);
-        } catch (JsonException) {
-            return Result.Failure<FoodVisionModel>(AiErrors.InvalidResponse("Vision JSON invalid."));
-        }
-    }
-
-    private static Result<FoodNutritionModel> ParseNutritionResponse(JsonDocument json) {
-        string? text = ExtractOutputText(json);
-        if (string.IsNullOrWhiteSpace(text)) {
-            return Result.Failure<FoodNutritionModel>(AiErrors.InvalidResponse("Missing output text."));
-        }
-
-        try {
-            FoodNutritionModel? parsed = JsonSerializer.Deserialize<FoodNutritionModel>(text, JsonOptions());
-            if (parsed is null) {
-                return Result.Failure<FoodNutritionModel>(AiErrors.InvalidResponse("Nutrition response is empty."));
-            }
-            if (parsed.Items?.Any(item => item is null ||
-                string.IsNullOrWhiteSpace(item.Name) || string.IsNullOrWhiteSpace(item.Unit)) is not false) {
-                return Result.Failure<FoodNutritionModel>(AiErrors.InvalidResponse("Nutrition items are invalid."));
-            }
-            return Result.Success(parsed);
-        } catch (JsonException) {
-            return Result.Failure<FoodNutritionModel>(AiErrors.InvalidResponse("Nutrition JSON invalid."));
-        }
-    }
 
     private static string? ExtractOutputText(JsonDocument json) {
         if (json.RootElement.ValueKind != JsonValueKind.Object ||

@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Ai.Domain.Recognition;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.PersistenceModel;
@@ -39,7 +40,7 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
         }
         var userId = new UserId(job.UserId);
         int active = await context.Set<FoodRecognitionJob>()
-            .CountAsync(x => x.UserId == userId && (x.Status == "Queued" || x.Status == "Running"), cancellationToken).ConfigureAwait(false);
+            .CountAsync(x => x.UserId == userId && (x.Status == FoodRecognitionLifecycle.Queued || x.Status == FoodRecognitionLifecycle.Running), cancellationToken).ConfigureAwait(false);
         if (active >= 2) {
             return Result.Failure<FoodRecognitionJobModel>(AiErrors.RecognitionQueueFull());
         }
@@ -99,7 +100,9 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
             return null;
         }
         await context.Entry(job).Collection(x => x.AdditionalImages).LoadAsync(cancellationToken).ConfigureAwait(false);
-        job.Status = "Running";
+        job.Status = FoodRecognitionLifecycle.Encode(FoodRecognitionLifecycle.Next(
+            FoodRecognitionLifecycle.Decode(job.Status), FoodRecognitionAction.Claim)
+            ?? throw new InvalidOperationException("Only a queued recognition can be claimed."));
         job.UpdatedOnUtc = timeProvider.GetUtcNow().UtcDateTime;
         await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return ToModel(job);
@@ -110,8 +113,11 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
         await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
         string json = JsonSerializer.Serialize(vision, JsonOptions);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
-        return await context.Set<FoodRecognitionJob>().Where(x => x.Id == jobId.Value && x.Status == "Running")
-            .ExecuteUpdateAsync(set => set.SetProperty(x => x.VisionJson, json).SetProperty(x => x.UpdatedOnUtc, now),
+        const string source = FoodRecognitionLifecycle.Running;
+        string target = FoodRecognitionLifecycle.Encode(FoodRecognitionLifecycle.Next(
+            FoodRecognitionStatus.Running, FoodRecognitionAction.CheckpointVision)!.Value);
+        return await context.Set<FoodRecognitionJob>().Where(x => x.Id == jobId.Value && x.Status == source)
+            .ExecuteUpdateAsync(set => set.SetProperty(x => x.Status, target).SetProperty(x => x.VisionJson, json).SetProperty(x => x.UpdatedOnUtc, now),
                 cancellationToken).ConfigureAwait(false) == 1;
     }
 
@@ -122,7 +128,7 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         string status = completion.Status;
         // Terminal/expired tasks cannot be overwritten by late workers.
-        await context.Set<FoodRecognitionJob>().Where(x => x.Id == jobId.Value && x.Status == "Running")
+        await context.Set<FoodRecognitionJob>().Where(x => x.Id == jobId.Value && x.Status == FoodRecognitionLifecycle.Running)
             .ExecuteUpdateAsync(set => set.SetProperty(x => x.Status, status)
                 .SetProperty(x => x.NutritionJson, json).SetProperty(x => x.ErrorCode, completion.ErrorCode)
                 .SetProperty(x => x.NutritionErrorCode, completion.NutritionErrorCode).SetProperty(x => x.UpdatedOnUtc, now),
@@ -134,7 +140,7 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
         await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
         UserId owner = userId;
         int deleted = await context.Set<FoodRecognitionJob>()
-            .Where(x => x.Id == jobId.Value && x.UserId == owner && (x.Status == "Succeeded" || x.Status == "Failed"))
+            .Where(x => x.Id == jobId.Value && x.UserId == owner && (x.Status == FoodRecognitionLifecycle.Succeeded || x.Status == FoodRecognitionLifecycle.Failed))
             .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
         if (deleted > 0) {
             return Result.Success();
@@ -151,12 +157,14 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
         DateTime interrupted = now.AddMinutes(-5);
         DateTime queued = now.AddDays(-1);
         DateTime retention = now.AddDays(-7);
+        string interruptedStatus = FoodRecognitionLifecycle.Encode(FoodRecognitionLifecycle.Next(
+            FoodRecognitionStatus.Running, FoodRecognitionAction.Interrupt)!.Value);
         await context.Set<FoodRecognitionJob>()
-            .Where(x => (x.Status == "Running" && x.UpdatedOnUtc < interrupted) || (x.Status == "Queued" && x.CreatedOnUtc < queued))
-            .ExecuteUpdateAsync(set => set.SetProperty(x => x.Status, "Failed")
+            .Where(x => (x.Status == FoodRecognitionLifecycle.Running && x.UpdatedOnUtc < interrupted) || (x.Status == FoodRecognitionLifecycle.Queued && x.CreatedOnUtc < queued))
+            .ExecuteUpdateAsync(set => set.SetProperty(x => x.Status, interruptedStatus)
                 .SetProperty(x => x.ErrorCode, "Ai.RecognitionInterrupted").SetProperty(x => x.UpdatedOnUtc, now), cancellationToken).ConfigureAwait(false);
         await context.Set<FoodRecognitionJob>()
-            .Where(x => x.UpdatedOnUtc < retention && (x.Status == "Succeeded" || x.Status == "Failed"))
+            .Where(x => x.UpdatedOnUtc < retention && (x.Status == FoodRecognitionLifecycle.Succeeded || x.Status == FoodRecognitionLifecycle.Failed))
             .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
     }
 

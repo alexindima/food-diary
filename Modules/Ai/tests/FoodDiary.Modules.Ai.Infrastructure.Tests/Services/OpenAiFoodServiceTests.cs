@@ -872,7 +872,7 @@ public sealed class OpenAiFoodServiceTests {
               "carbs": 14,
               "fiber": 2.4,
               "alcohol": 0,
-              "items": []
+              "items": [{"name":"Apple","amount":100,"unit":"g","calories":52,"protein":0.3,"fat":0.2,"carbs":14,"fiber":2.4,"alcohol":0}]
             }
             """);
         using var httpClient = new HttpClient(new SequenceHttpMessageHandler(new Queue<HttpResponseMessage>([
