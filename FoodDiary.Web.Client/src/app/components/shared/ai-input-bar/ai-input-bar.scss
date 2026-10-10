@@ -6,6 +6,16 @@
     background: var(--fd-bg-surface-raised);
     min-width: 0;
 
+    &__actions {
+        margin-block-start: var(--fd-space-xs);
+    }
+
+    &__history {
+        --fd-button-secondary-text-text-default: var(--fd-color-text-muted);
+        --fd-button-text-hover: var(--fd-color-text);
+        --fd-button-text-active: var(--fd-color-text);
+    }
+
     &__hidden-upload {
         position: fixed;
         width: 0;

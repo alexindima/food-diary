@@ -10554,19 +10554,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.config.ts",
-      "nonBlankLines": 10,
+      "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.18
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.ts",
-      "nonBlankLines": 60,
+      "nonBlankLines": 59,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.2
+      "structuralRiskScore": 13.18
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-content/tdee-insight-card-content.ts",

@@ -10,7 +10,7 @@ import { NoticeBannerComponent } from '../../../../components/shared/notice-bann
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
-import { HYDRATION_CARD_ADD_AMOUNTS_ML, HYDRATION_CARD_MAX_PERCENT, HYDRATION_CARD_PRIMARY_ADD_AMOUNT_ML } from './hydration-card.config';
+import { HYDRATION_CARD_ADD_AMOUNTS_ML, HYDRATION_CARD_MAX_PERCENT } from './hydration-card.config';
 
 @Component({
     selector: 'fd-hydration-card',
@@ -32,7 +32,6 @@ export class HydrationCardComponent {
     public readonly goalAction = output();
 
     protected readonly addAmounts = HYDRATION_CARD_ADD_AMOUNTS_ML;
-    protected readonly primaryAddAmount = HYDRATION_CARD_PRIMARY_ADD_AMOUNT_ML;
     protected readonly hasGoal = computed(() => {
         const goal = this.goal();
         return goal !== null && goal > 0;

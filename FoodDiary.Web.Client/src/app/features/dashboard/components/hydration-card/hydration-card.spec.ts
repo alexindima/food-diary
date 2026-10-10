@@ -3,13 +3,14 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { HydrationCardComponent } from './hydration-card';
-import { HYDRATION_CARD_ADD_AMOUNTS_ML, HYDRATION_CARD_PRIMARY_ADD_AMOUNT_ML } from './hydration-card.config';
+import { HYDRATION_CARD_ADD_AMOUNTS_ML } from './hydration-card.config';
 
 const TOTAL_ML = 1500;
 const GOAL_ML = 2000;
 const EXPECTED_PERCENT = 75;
 const OVER_GOAL_TOTAL_ML = 3000;
 const FULL_LEVEL = '100%';
+const VALID_ADD_AMOUNT_ML = 250;
 
 describe('HydrationCardComponent', () => {
     it('disables all additions while saving', async () => {
@@ -90,7 +91,7 @@ describe('HydrationCardComponent', () => {
         const addSpy = vi.fn();
         component['addClick'].subscribe(addSpy);
 
-        component['onAdd'](HYDRATION_CARD_PRIMARY_ADD_AMOUNT_ML);
+        component['onAdd'](VALID_ADD_AMOUNT_ML);
         expect(addSpy).not.toHaveBeenCalled();
 
         fixture.componentRef.setInput('canAdd', true);

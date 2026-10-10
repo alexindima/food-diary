@@ -69,17 +69,21 @@
     <fd-ui-inline-alert severity="danger" role="alert" [message]="errorKey | translate" />
 }
 
-<fd-ui-button
-    type="button"
-    icon="history"
-    variant="secondary"
-    fill="text"
-    [disabled]="isDisabled()"
-    [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
-    (click)="openRecognitionHistory()"
->
-    {{ 'AI_RECOGNITION.SHOW_RECENT' | translate }}
-</fd-ui-button>
+<div class="ai-input-bar__actions fd-row fd-wrap fd-justify-between fd-gap-xs">
+    <ng-content select="[inputActions]" />
+    <fd-ui-button
+        class="ai-input-bar__history"
+        type="button"
+        icon="history"
+        variant="secondary"
+        fill="text"
+        [disabled]="isDisabled()"
+        [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+        (click)="openRecognitionHistory()"
+    >
+        {{ 'AI_RECOGNITION.SHOW_RECENT' | translate }}
+    </fd-ui-button>
+</div>
 
 @if (hasTextResult()) {
     <fd-ai-photo-result

@@ -67,9 +67,8 @@
                     <fd-ui-button
                         class="hydration-card__quick-action"
                         size="sm"
-                        [class.hydration-card__quick-action--primary]="amount === primaryAddAmount"
-                        [variant]="amount === primaryAddAmount ? 'primary' : 'secondary'"
-                        [fill]="amount === primaryAddAmount ? 'solid' : 'outline'"
+                        variant="secondary"
+                        fill="outline"
                         [fullWidth]="true"
                         [ariaLabel]="'HYDRATION_CARD.ADD_AMOUNT' | translate: { value: amount }"
                         [disabled]="isLoading()"

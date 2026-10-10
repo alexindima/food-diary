@@ -9,23 +9,22 @@
         [clearToken]="clearToken()"
         (mealRecognized)="mealRecognized.emit($event)"
         (mealCreateRequested)="mealCreateRequested.emit($event)"
-    />
-
-    <div class="ai-input-action-bar__manual fd-row fd-wrap fd-gap-xs">
-        @if (showManualPrefix()) {
-            <span class="ai-input-action-bar__manual-label fd-ui-action-text">{{ manualPrefixLabelKey() | translate }}</span>
-        }
-        <fd-ui-button
-            type="button"
-            size="lg"
-            variant="secondary"
-            fill="outline"
-            [icon]="manualActionIcon()"
-            [ariaLabel]="manualActionLabelKey() | translate"
-            (click)="manualAction.emit()"
-        >
-            {{ manualActionLabelKey() | translate }}
-        </fd-ui-button>
-        <ng-content select="[manualActions]" />
-    </div>
+    >
+        <div inputActions class="ai-input-action-bar__manual fd-row fd-wrap fd-gap-xs">
+            @if (showManualPrefix()) {
+                <span class="ai-input-action-bar__manual-label fd-ui-action-text">{{ manualPrefixLabelKey() | translate }}</span>
+            }
+            <fd-ui-button
+                type="button"
+                variant="primary"
+                fill="text"
+                [icon]="manualActionIcon()"
+                [ariaLabel]="manualActionLabelKey() | translate"
+                (click)="manualAction.emit()"
+            >
+                {{ manualActionLabelKey() | translate }}
+            </fd-ui-button>
+            <ng-content select="[manualActions]" />
+        </div>
+    </fd-ai-input-bar>
 </div>
