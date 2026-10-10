@@ -16,7 +16,7 @@
         "sdk:generate": "node scripts/generate-api-sdk.mjs",
         "sdk:check": "node scripts/generate-api-sdk.mjs --check",
         "sdk:check:api": "node scripts/generate-api-sdk.mjs --export --check",
-        "test:sdk": "node --test scripts/api-sdk-contract.test.mjs scripts/api-sdk-normalization.test.mjs scripts/bot-api-contract.test.mjs scripts/semantic-types.test.mjs",
+        "test:sdk": "node --test scripts/api-sdk-contract.test.mjs scripts/api-sdk-normalization.test.mjs scripts/bot-api-contract.test.mjs scripts/semantic-types.test.mjs scripts/openapi-fixtures.test.mjs scripts/smoke-fixture-contract.test.mjs",
         "test:performance-build": "node --test scripts/finalize-service-worker.test.mjs",
         "build": "node scripts/generate-legacy-i18n.mjs && ng build --stats-json && node scripts/generate-ru-prerender-html.mjs && node scripts/finalize-service-worker.mjs",
         "build:prod": "node scripts/generate-legacy-i18n.mjs && ng build --configuration=production --stats-json && node scripts/generate-ru-prerender-html.mjs && node scripts/finalize-service-worker.mjs",
@@ -42,7 +42,7 @@
         "check:api-client-usage": "node --test scripts/check-api-client-usage.test.mjs && node scripts/check-api-client-usage.mjs",
         "check:import-boundaries": "node --test scripts/check-import-boundaries.test.mjs",
         "check:format:ci": "prettier --check \"src/**/*.{ts,html}\" \"projects/**/*.{ts,html}\"",
-        "verify": "npm run test:sdk && npm run test:performance-build && npm run sdk:check && npm run sdk:admin:check && npm run sdk:bot:check && npm run check:import-boundaries && npm run lint && npm run lint:deps:strict && npm run check:depcruise-baseline && npm run check:component-logic && npm run check:state-ownership && npm run stylelint && npm run audit:design-tokens && npm run build && npm run build:admin && npm run build:tour && npm run check:seo-prerender && npm run test:mcp && npm run test:ci:app && npm run test:ci:ui-kit && npm run test:ci:tour && npm run test:ci:admin && npm run check:i18n",
+        "verify": "npm run test:sdk && npm run test:ai-development && npm run test:performance-build && npm run sdk:check && npm run sdk:admin:check && npm run sdk:bot:check && npm run check:import-boundaries && npm run lint && npm run lint:deps:strict && npm run check:depcruise-baseline && npm run check:component-logic && npm run check:state-ownership && npm run stylelint && npm run audit:design-tokens && npm run build && npm run build:admin && npm run build:tour && npm run check:seo-prerender && npm run test:mcp && npm run test:ci:app && npm run test:ci:ui-kit && npm run test:ci:tour && npm run test:ci:admin && npm run check:i18n",
         "stylelint": "stylelint '**/*.{css,scss}'",
         "stylelint:fix": "stylelint '**/*.{css,scss}' --fix",
         "prettier": "prettier --check '**/*.{js,ts,css,scss,html,json,md}'",
@@ -83,7 +83,9 @@
         "sdk:bot:update": "node scripts/generate-bot-api-sdk.mjs --export",
         "sdk:bot:generate": "node scripts/generate-bot-api-sdk.mjs",
         "sdk:bot:check": "node scripts/generate-bot-api-sdk.mjs --check",
-        "sdk:bot:check:api": "node scripts/generate-bot-api-sdk.mjs --export --check"
+        "sdk:bot:check:api": "node scripts/generate-bot-api-sdk.mjs --export --check",
+        "test:fixtures": "node --test scripts/openapi-fixtures.test.mjs scripts/smoke-fixture-contract.test.mjs",
+        "test:ai-development": "node --test ../scripts/ai/generate-feature.test.mjs ../scripts/ai/task-runtime.test.mjs ../scripts/ai/agent-tools.test.mjs ../scripts/ai/trial-comparison.test.mjs ../scripts/ai/candidate-contract-check.test.mjs"
     },
     "private": true,
     "dependencies": {
@@ -127,6 +129,8 @@
         "@typescript-eslint/eslint-plugin": "^8.71.0",
         "@typescript-eslint/parser": "^8.70.1",
         "@vitest/coverage-v8": "^5.0.3",
+        "ajv": "8.20.0",
+        "ajv-formats": "3.0.1",
         "angular-eslint": "^22.5.0",
         "baseline-browser-mapping": "^2.11.27",
         "chrome-launcher": "^1.2.1",

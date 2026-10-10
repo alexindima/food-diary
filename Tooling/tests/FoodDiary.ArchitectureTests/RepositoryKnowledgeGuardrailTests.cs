@@ -6,8 +6,10 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class RepositoryKnowledgeGuardrailTests {
     [Fact]
-    public void RootGuide_LinksEveryScopedAgentGuide() {
+    public void RootGuide_LinksCheckedScopedGuideCatalog() {
         string rootGuide = File.ReadAllText(ArchitectureTestPaths.FromRoot("AGENTS.md"));
+        Assert.Contains("`docs/ai/AGENT_GUIDE_CATALOG.md`", rootGuide, StringComparison.Ordinal);
+        string guideCatalog = File.ReadAllText(ArchitectureTestPaths.FromRoot("docs", "ai", "AGENT_GUIDE_CATALOG.md"));
         string[] scopedGuides = [.. Directory
             .EnumerateFiles(ArchitectureTestPaths.RepositoryRoot, "AGENTS.md", SearchOption.AllDirectories)
             .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))
@@ -17,9 +19,9 @@ public sealed class RepositoryKnowledgeGuardrailTests {
             .Where(static path => !string.Equals(path, "AGENTS.md", StringComparison.Ordinal))
             .Order(StringComparer.Ordinal)];
 
-        string[] missingLinks = [.. scopedGuides.Where(path => !rootGuide.Contains($"`{path}`", StringComparison.Ordinal))];
+        string[] missingLinks = [.. scopedGuides.Where(path => !guideCatalog.Contains($"`{path}`", StringComparison.Ordinal))];
 
-        Assert.True(missingLinks.Length == 0, $"Root AGENTS.md does not link scoped guide(s): {string.Join(", ", missingLinks)}");
+        Assert.True(missingLinks.Length == 0, $"Agent guide catalog does not link scoped guide(s): {string.Join(", ", missingLinks)}");
     }
 
     [Fact]

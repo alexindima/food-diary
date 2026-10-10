@@ -93,6 +93,15 @@ if (builder.Environment.IsDevelopment()) {
     builder.Configuration.AddUserSecrets<Program>();
 }
 
+string? taskConfiguration = Environment.GetEnvironmentVariable("FOODDIARY_TASK_CONFIG");
+if (!string.IsNullOrWhiteSpace(taskConfiguration)) {
+    if (!builder.Environment.IsDevelopment() || !Path.IsPathFullyQualified(taskConfiguration) || !File.Exists(taskConfiguration)) {
+        throw new InvalidOperationException("Task initialization requires Development and an existing absolute task configuration.");
+    }
+    builder.Configuration.Sources.Clear();
+    builder.Configuration.AddJsonFile(taskConfiguration, optional: false, reloadOnChange: false);
+}
+
 if (!string.IsNullOrWhiteSpace(command.ConnectionString)) {
     builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
         ["ConnectionStrings:DefaultConnection"] = command.ConnectionString,

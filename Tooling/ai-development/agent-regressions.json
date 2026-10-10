@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    {
+      "id": "production-change-required",
+      "reviewer": "Codex",
+      "rationale": "Both failed historical candidates retained identical production hashes; require an actual production change before an evaluation can pass. This adds outcome grading, not repository execution permissions.",
+      "proposalHash": "03f9d3e3cf32836648eae7b2080ffbce063fb4d74bd81a9b8d0adf222426e417",
+      "evidenceHashes": [
+        {
+          "trial": "53077ffb009c23104a397e2ca218ae94f8c04328f3134b05f0e74b889d9bde3b",
+          "trace": "026cb5c44e22566793485838c8e8821e710068222eb6d890151bc4bb9908f2f3"
+        },
+        {
+          "trial": "a421b5fa084a666b4a799dbf42dc54d62ecfa4639921ee6fb4a78c9f0a7de1ee",
+          "trace": "cf3da1647cc95bf604d61d6dea4b3f66fda2ec7449890d9849973510926d78b7"
+        }
+      ],
+      "reviewedAtUtc": "2026-10-09T22:01:54.805Z"
+    }
+  ]
+}

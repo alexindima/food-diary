@@ -6,13 +6,14 @@ Rules for `FoodDiary.Development.Mcp/`.
 
 ## Role
 
-- Expose bounded, read-only development context through MCP.
+- Expose bounded development context and task-owned canonical verification through MCP.
 - Treat Git-backed source, tests, ADRs, current documentation, and scoped `AGENTS.md` files as authority; Wiki output is derived navigation.
 - Keep the Node code-graph manager as the only writer of the SQLite projection.
 
 ## Rules
 
-- MCP tools must not expose Wiki generation, governed task mutation, delivery, repair, or repository write operations.
+- Wiki discovery and cached diagnostics remain read-only. Separate tools may execute one canonical allowlisted check, cancel their owned job, or refresh browser diagnostics through the owned synthetic account; annotate these operations as writes.
+- Do not expose arbitrary commands, source edits, Wiki generation, delivery, or repair mutations. Check execution writes only its normal test/build outputs and task evidence/logs, with a timeout, process lifetime ownership and explicit stale results.
 - Preserve explicit stale, unavailable, ambiguous, and partial-result states. Never replace missing evidence with an inferred successful answer.
 - Validate the exact repository/worktree fingerprint before accepting cached or indexed context.
 - Keep queries and private path payloads out of persisted telemetry; record only bounded aggregate routing and timing data.

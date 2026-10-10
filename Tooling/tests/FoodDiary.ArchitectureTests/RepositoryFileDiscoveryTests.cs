@@ -9,7 +9,9 @@ public sealed class RepositoryFileDiscoveryTests {
             string[] included = ["Modules/New/Application/New.csproj", "Modules/New/tests/New.Tests.csproj",
                 "Shared/Contracts/Contracts.csproj", ".llm-wiki/tools/Wiki.csproj", "Modules/Binary/Valid.csproj"];
             string[] excluded = [".artifacts/worktree/Copy.csproj", "node_modules/package/Copy.csproj",
-                ".git/Copy.csproj", ".angular/cache/Copy.csproj", "Modules/New/BIN/Copy.csproj", "Shared/obj/Copy.csproj"];
+                ".git/Copy.csproj", ".angular/cache/Copy.csproj", "Modules/New/BIN/Copy.csproj", "Shared/obj/Copy.csproj",
+                "FoodDiary.Web.Client/test-results/traces/Copy.csproj", "FoodDiary.Web.Client/playwright-report/Copy.csproj",
+                "FoodDiary.Web.Client/coverage/Copy.csproj"];
             foreach (string relative in included.Concat(excluded)) {
                 string path = Path.Combine(root.FullName, relative);
                 Directory.CreateDirectory(Path.GetDirectoryName(path)!);

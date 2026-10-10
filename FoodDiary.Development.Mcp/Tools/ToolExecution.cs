@@ -21,30 +21,33 @@ public static class ToolExecution {
 
     public static async Task<DevelopmentMcpResult<T>> RunAsync<T>(
         Func<Task<T>> operation,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken,
+        bool readOnly = true) {
         try {
             return new DevelopmentMcpResult<T>(
                 Success: true,
                 Data: await operation().ConfigureAwait(false),
                 ErrorCode: null,
-                ErrorMessage: null);
+                ErrorMessage: null,
+                ReadOnly: readOnly);
         } catch (DevelopmentMcpException exception) {
-            return Failure<T>(exception.ErrorCode, exception.Message);
+            return Failure<T>(exception.ErrorCode, exception.Message, readOnly);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             return Failure<T>(
                 DevelopmentMcpErrorCodes.Cancelled,
-                "The MCP tool call was cancelled.");
+                "The MCP tool call was cancelled.", readOnly);
         } catch (Exception exception) {
             return Failure<T>(
                 DevelopmentMcpErrorCodes.Unexpected,
-                exception.Message);
+                exception.Message, readOnly);
         }
     }
 
     public static async Task<CallToolResult> RunToolAsync<T>(
         Func<Task<T>> operation,
-        CancellationToken cancellationToken) {
-        DevelopmentMcpResult<T> result = await RunAsync(operation, cancellationToken).ConfigureAwait(false);
+        CancellationToken cancellationToken,
+        bool readOnly = true) {
+        DevelopmentMcpResult<T> result = await RunAsync(operation, cancellationToken, readOnly).ConfigureAwait(false);
         return new CallToolResult {
             StructuredContent = JsonSerializer.SerializeToElement(result, JsonOptions),
             IsError = !result.Success,
@@ -67,10 +70,11 @@ public static class ToolExecution {
         return "Structured FoodDiary development context is available.";
     }
 
-    private static DevelopmentMcpResult<T> Failure<T>(string errorCode, string errorMessage) =>
+    private static DevelopmentMcpResult<T> Failure<T>(string errorCode, string errorMessage, bool readOnly) =>
         new(
             Success: false,
             Data: default,
             ErrorCode: errorCode,
-            ErrorMessage: errorMessage);
+            ErrorMessage: errorMessage,
+            ReadOnly: readOnly);
 }

@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1339,
+    "contracts": 1341,
     "ambiguousContracts": 29,
-    "consumerEdges": 10480,
-    "productionConsumerEdges": 5993,
-    "testConsumerEdges": 4487,
-    "consumedContracts": 1339,
+    "consumerEdges": 10488,
+    "productionConsumerEdges": 5999,
+    "testConsumerEdges": 4489,
+    "consumedContracts": 1341,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -15284,6 +15284,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "ITaskToolExecutor",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/Tasks/ITaskToolExecutor.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "ITelegramAssertionReplayGuard",
       "roles": [
         "Other"
@@ -20748,6 +20765,23 @@
       ],
       "definitionPaths": [
         "Modules/Wearables/Application/Commands/SyncWearableData/SyncWearableDataCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "TaskToolRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/Tasks/TaskToolRequest.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -118770,6 +118804,58 @@
       "referenceCount": 1
     },
     {
+      "contract": "ITaskToolExecutor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/Tasks/ITaskToolExecutor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Development.Mcp/Program.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ITaskToolExecutor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/Tasks/ITaskToolExecutor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Development.Mcp/Tasks/NodeTaskToolExecutor.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ITaskToolExecutor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/Tasks/ITaskToolExecutor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Development.Mcp/Tools/TaskTools.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ITaskToolExecutor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/Tasks/ITaskToolExecutor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/TaskToolsTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
       "contract": "ITelegramAssertionReplayGuard",
       "roles": [
         "Other"
@@ -150700,6 +150786,58 @@
       "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Presentation.Tests/WearablesControllerTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "TaskToolRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/Tasks/TaskToolRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Development.Mcp/Tasks/ITaskToolExecutor.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TaskToolRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/Tasks/TaskToolRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Development.Mcp/Tasks/NodeTaskToolExecutor.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TaskToolRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/Tasks/TaskToolRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Development.Mcp/Tools/TaskTools.cs",
+      "isTest": false,
+      "referenceCount": 5
+    },
+    {
+      "contract": "TaskToolRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/Tasks/TaskToolRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/TaskToolsTests.cs",
+      "isTest": true,
+      "referenceCount": 6
     },
     {
       "contract": "TdeeInsightHttpResponse",

@@ -2,6 +2,12 @@ const PRODUCT_NUTRIENT_FIELD_COUNT = 6;
 import AxeBuilder from '@axe-core/playwright';
 import { expect, type Locator, type Page, type Request, type Route, test } from '@playwright/test';
 
+import type { UserHttpResponse } from '../../src/app/shared/api/sdk/generated/model/user-http-response';
+import { hydrationEntryFixture, userFixture } from '../../src/testing/api-fixtures';
+import { fixtureUuid, jsonFixture, OpenApiFixtures } from '../support/openapi-fixtures.mjs';
+
+const fixtureContract = new OpenApiFixtures();
+
 import type { ShoppingListOverview } from '../../src/app/shared/models/shopping-list.data';
 import type { WaistHistoryPageSummary } from '../../src/app/shared/models/waist-entry.data';
 import type { WeightHistoryPageSummary } from '../../src/app/shared/models/weight-entry.data';
@@ -13,12 +19,14 @@ const ACCESSIBILITY_TEST_TIMEOUT_MS = 120_000;
 const API_RETRY_EXHAUSTION_TIMEOUT_MS = 15_000;
 const NETWORK_AUDIT_TEST_TIMEOUT_MS = 180_000;
 const API_ERROR_STATUS_MIN = 400;
+const HTTP_CREATED_STATUS = 201;
+const HTTP_NO_CONTENT_STATUS = 204;
 const NETWORK_AUDIT_DEFAULT_MAX_REQUESTS = 8;
 const NETWORK_AUDIT_QUIET_MS = 500;
 // These views compose independent sections in addition to the four shared shell requests.
 const NETWORK_AUDIT_REQUEST_BUDGETS: Readonly<Record<string, number>> = {
     '/profile': 9,
-    '/dietologist/clients/client-1': 10,
+    '/dietologist/clients/df5c8427-d6a2-5bf0-94cf-de5001707c03': 10,
 };
 const ACCESSIBILITY_STABILITY_CSS = `
     *,
@@ -56,13 +64,13 @@ const ACCESSIBILITY_ROUTES = [
 ] as const;
 const NETWORK_AUDIT_ROUTES = [
     ...ACCESSIBILITY_ROUTES,
-    '/products/p1/edit',
-    '/meals/meal-1/edit',
-    '/recipes/recipe-1/edit',
-    '/meal-plans/plan-1',
-    '/lessons/lesson-1',
-    '/dietologist/clients/client-1',
-    '/dietologist-invitations/invitation-1',
+    '/products/bd8133e3-7167-5e38-9214-f975aac717db/edit',
+    '/meals/e09f5f5f-a5d9-5af4-8045-2946ea17eb0d/edit',
+    '/recipes/aedb763f-4093-57d4-a1d3-6e7683dfef48/edit',
+    '/meal-plans/6f104c24-8a57-5f35-b5d3-63d2c4dc1ba3',
+    '/lessons/555f41d3-cf0b-5793-8bf0-3aba16050966',
+    '/dietologist/clients/df5c8427-d6a2-5bf0-94cf-de5001707c03',
+    '/dietologist-invitations/822dbe9e-71d7-5da5-b6f0-40ac2dc168bf',
 ] as const;
 const TEST_IMAGE_URLS = [
     createSvgDataUrl('#f97316', '1'),
@@ -71,69 +79,96 @@ const TEST_IMAGE_URLS = [
     createSvgDataUrl('#a855f7', '4'),
 ] as const;
 const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
-    { matches: pathname => pathname.endsWith('/users/info'), createResponse: createUser },
-    { matches: pathname => pathname.endsWith('/users/overview'), createResponse: createUserOverview },
-    { matches: pathname => pathname.endsWith('/auth/sessions'), createResponse: () => [] },
-    { matches: pathname => pathname.endsWith('/billing/overview'), createResponse: createBillingOverview },
-    { matches: pathname => pathname.endsWith('/recipes/explore'), createResponse: createEmptyProductsPage },
-    { matches: pathname => pathname.endsWith('/recipes/public'), createResponse: createEmptyProductsPage },
-    { matches: pathname => pathname.endsWith('/recipes/public/categories'), createResponse: () => [] },
+    { path: '/open-food-facts/products', createResponse: () => [] },
+    { path: '/weight-entries/latest', createResponse: () => null },
+    { path: '/waist-entries/latest', createResponse: () => null },
+    { path: '/products/suggestions', createResponse: () => [] },
+    { path: '/favorite-meals/check/e09f5f5f-a5d9-5af4-8045-2946ea17eb0d', createResponse: () => false },
+    { path: '/users/info', createResponse: createUser },
+    { path: '/users/overview', createResponse: createUserOverview },
+    { path: '/auth/sessions', createResponse: () => [] },
+    { path: '/billing/overview', createResponse: createBillingOverview },
+    { path: '/recipes/explore', createResponse: createEmptyProductsPage },
+    { path: '/recipes/public', createResponse: createEmptyProductsPage },
+    { path: '/recipes/public/categories', createResponse: () => [] },
     {
-        matches: pathname => pathname.endsWith('/recipes/overview'),
+        path: '/recipes/overview',
         createResponse: () => ({ recentItems: [], allRecipes: createEmptyProductsPage(), favoriteItems: [], favoriteTotalCount: 0 }),
     },
-    { matches: pathname => pathname.endsWith('/favorite-recipes'), createResponse: createEmptyProductsPage },
-    { matches: pathname => pathname.endsWith('/favorite-recipes/page'), createResponse: createEmptyProductsPage },
-    { matches: pathname => pathname.endsWith('/meal-plans'), createResponse: createEmptyProductsPage },
-    { matches: pathname => pathname.endsWith('/shopping-lists/overview'), createResponse: createShoppingListsOverview },
-    { matches: pathname => pathname.endsWith('/lessons'), createResponse: () => [] },
-    { matches: pathname => pathname.endsWith('/statistics/summary'), createResponse: () => ({ nutrition: [], weight: [], waist: [] }) },
-    { matches: pathname => pathname.endsWith('/weight-entries/page-summary'), createResponse: createWeightHistoryPageSummary },
-    { matches: pathname => pathname.endsWith('/waist-entries/page-summary'), createResponse: createWaistHistoryPageSummary },
-    { matches: pathname => pathname.endsWith('/dashboard'), createResponse: createDashboardSnapshot },
-    { matches: pathname => pathname.endsWith('/meals/overview'), createResponse: createMealsOverview },
-    { matches: pathname => pathname.endsWith('/fasting/overview'), createResponse: createFastingOverview },
-    { matches: pathname => pathname.endsWith('/cycles/current'), createResponse: () => null },
-    { matches: pathname => pathname.endsWith('/tdee/insight'), createResponse: createTdeeInsight },
-    { matches: pathname => pathname.endsWith('/usda/daily-micronutrients'), createResponse: createDailyMicronutrients },
-    { matches: pathname => pathname.endsWith('/notifications/unread-count'), createResponse: () => ({ count: 2 }) },
-    { matches: pathname => pathname.endsWith('/notifications'), createResponse: () => [] },
+    { path: '/favorite-recipes/page', createResponse: createEmptyProductsPage },
+    { path: '/meal-plans', createResponse: createEmptyProductsPage },
+    { path: '/shopping-lists/overview', createResponse: createShoppingListsOverview },
     {
-        matches: pathname => pathname.endsWith('/goals'),
+        path: '/lessons',
+        createResponse: () => ({
+            items: [],
+            availableCategories: [],
+            page: 1,
+            pageSize: 20,
+            totalCount: 0,
+            totalPages: 0,
+            readLessonCount: 0,
+            totalLessonCount: 0,
+        }),
+    },
+    { path: '/statistics/summary', createResponse: () => ({ nutrition: [], weight: [], waist: [] }) },
+    { path: '/weight-entries/page-summary', createResponse: createWeightHistoryPageSummary },
+    { path: '/waist-entries/page-summary', createResponse: createWaistHistoryPageSummary },
+    { path: '/dashboard', createResponse: createDashboardSnapshot },
+    { path: '/meals/overview', createResponse: createMealsOverview },
+    { path: '/fasting/overview', createResponse: createFastingOverview },
+    { path: '/cycles/current', createResponse: () => null },
+    { path: '/tdee', createResponse: createTdeeInsight },
+    { path: '/usda/daily-micronutrients', createResponse: createDailyMicronutrients },
+    { path: '/notifications/unread-count', createResponse: () => ({ count: 2 }) },
+    { path: '/notifications', createResponse: () => [] },
+    {
+        path: '/goals',
         createResponse: () => ({ dailyCalorieTarget: 1900, calorieCyclingEnabled: false }),
     },
-    { matches: pathname => pathname.endsWith('/weekly-goals'), createResponse: () => null },
-    { matches: pathname => pathname.endsWith('/weekly-check-in'), createResponse: createEmptyWeeklyCheckIn },
+    { path: '/weekly-goals', createResponse: () => null },
+    { path: '/weekly-check-in', createResponse: createEmptyWeeklyCheckIn },
     {
-        matches: pathname => pathname.endsWith('/gamification'),
+        path: '/gamification',
         createResponse: () => ({ currentStreak: 0, longestStreak: 0, totalMealsLogged: 0, healthScore: 0, weeklyAdherence: 0, badges: [] }),
     },
     {
-        matches: pathname => pathname.endsWith('/dietologist/invitations/invitation-1/current-user'),
+        path: '/dietologist/invitations/822dbe9e-71d7-5da5-b6f0-40ac2dc168bf/current-user',
         createResponse: createDietologistInvitation,
     },
-    { matches: pathname => pathname.endsWith('/client-tasks'), createResponse: () => [] },
-    { matches: pathname => pathname.endsWith('/recommendations/rec-1/comments'), createResponse: () => [] },
-    { matches: pathname => pathname.endsWith('/recommendations'), createResponse: createRecommendations },
-    { matches: pathname => pathname.endsWith('/favorite-products'), createResponse: createEmptyProductsPage },
-    { matches: pathname => pathname.endsWith('/products/overview'), createResponse: createProductsOverview },
-    { matches: pathname => pathname.endsWith('/products/search'), createResponse: createProductsPage },
-    { matches: pathname => pathname.endsWith('/products'), createResponse: createProductsPage },
-    { matches: pathname => pathname.endsWith('/products/p1'), createResponse: createOwnedProduct },
-    { matches: pathname => pathname.endsWith('/meals/meal-1'), createResponse: () => createMeal('meal-1', '2026-04-19T18:00:00Z', []) },
-    { matches: pathname => pathname.endsWith('/meal-plans/plan-1'), createResponse: createMealPlanDetail },
-    { matches: pathname => pathname.endsWith('/lessons/lesson-1'), createResponse: createLessonDetail },
-    { matches: pathname => pathname.endsWith('/recipes/recipe-1'), createResponse: createOwnedRecipe },
-    { matches: pathname => pathname.endsWith('/dietologist/clients/attention'), createResponse: () => [] },
-    { matches: pathname => pathname.endsWith('/dietologist/clients'), createResponse: createDietologistClients },
-    { matches: pathname => pathname.endsWith('/dietologist/recommendation-templates'), createResponse: () => [] },
-    { matches: pathname => pathname.endsWith('/dietologist/clients/client-1/dashboard'), createResponse: createDashboardSnapshot },
+    { path: '/client-tasks', createResponse: () => [] },
     {
-        matches: pathname => pathname.endsWith('/dietologist/clients/client-1/goals'),
-        createResponse: () => ({ id: 'client-1', email: 'client@example.test' }),
+        path: '/recommendations/bbc948ab-4f01-5f7b-bc57-ad66195674ef/comments',
+        createResponse: createEmptyProductsPage,
     },
-    { matches: pathname => pathname.endsWith('/dietologist/clients/client-1/recommendations'), createResponse: () => [] },
-    { matches: pathname => pathname.endsWith('/dietologist/clients/client-1/tasks'), createResponse: () => [] },
+    { path: '/recommendations', createResponse: createRecommendations },
+    { path: '/favorite-products/page', createResponse: createEmptyProductsPage },
+    { path: '/products/overview', createResponse: createProductsOverview },
+    { path: '/products', createResponse: createProductsPage },
+    { path: '/products/bd8133e3-7167-5e38-9214-f975aac717db', createResponse: createOwnedProduct },
+    {
+        path: '/meals/e09f5f5f-a5d9-5af4-8045-2946ea17eb0d',
+        createResponse: () => createMeal('e09f5f5f-a5d9-5af4-8045-2946ea17eb0d', '2026-04-19T18:00:00Z', []),
+    },
+    { path: '/meal-plans/6f104c24-8a57-5f35-b5d3-63d2c4dc1ba3', createResponse: createMealPlanDetail },
+    { path: '/lessons/555f41d3-cf0b-5793-8bf0-3aba16050966', createResponse: createLessonDetail },
+    { path: '/recipes/aedb763f-4093-57d4-a1d3-6e7683dfef48', createResponse: createOwnedRecipe },
+    { path: '/dietologist/clients/attention', createResponse: () => [] },
+    { path: '/dietologist/clients', createResponse: createDietologistClients },
+    { path: '/dietologist/recommendation-templates', createResponse: () => [] },
+    {
+        path: '/dietologist/clients/df5c8427-d6a2-5bf0-94cf-de5001707c03/dashboard',
+        createResponse: createDashboardSnapshot,
+    },
+    {
+        path: '/dietologist/clients/df5c8427-d6a2-5bf0-94cf-de5001707c03/goals',
+        createResponse: () => ({ id: 'df5c8427-d6a2-5bf0-94cf-de5001707c03', email: 'client@example.test' }),
+    },
+    {
+        path: '/dietologist/clients/df5c8427-d6a2-5bf0-94cf-de5001707c03/recommendations',
+        createResponse: () => [],
+    },
+    { path: '/dietologist/clients/df5c8427-d6a2-5bf0-94cf-de5001707c03/tasks', createResponse: () => [] },
 ];
 
 test.describe('client smoke', () => {
@@ -183,7 +218,7 @@ test.describe('client auth smoke', () => {
             await route.fulfill({ status: 400, contentType: 'application/json', body: '{}' });
         });
 
-        await page.goto('/verify-email?userId=user-1&token=invalid-token');
+        await page.goto('/verify-email?userId=e6785a80-61a4-5114-a8db-66feada82a8f&token=invalid-token');
         await expect(page.getByText("We couldn't verify the email. Try again or request a new link.")).toBeVisible();
         await page.getByRole('button', { name: 'Try again' }).click();
         await expect(page.getByRole('button', { name: 'Try again' })).toBeVisible();
@@ -196,7 +231,7 @@ test.describe('client auth smoke', () => {
             await route.fulfill({ status: 400, contentType: 'application/json', body: '{}' });
         });
 
-        await page.goto('/reset-password?userId=user-1&token=invalid-token');
+        await page.goto('/reset-password?userId=e6785a80-61a4-5114-a8db-66feada82a8f&token=invalid-token');
         await page.getByLabel('New password', { exact: true }).fill('reviewPass123');
         await page.getByLabel('Confirm new password', { exact: true }).fill('reviewPass123');
         await page.getByRole('button', { name: 'Save new password' }).click();
@@ -211,7 +246,7 @@ test.describe('client auth smoke', () => {
         await page.addInitScript((token: string) => {
             window.localStorage.setItem('authToken', token);
             window.localStorage.setItem('refreshToken', 'refresh-token');
-            window.localStorage.setItem('userId', 'u1');
+            window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
             window.localStorage.setItem('emailConfirmed', 'false');
         }, createAuthenticatedUserJwt());
         await page.route('**/hubs/**', async route => {
@@ -240,7 +275,7 @@ test.describe('authenticated client smoke', () => {
         await page.addInitScript((token: string) => {
             window.localStorage.setItem('authToken', token);
             window.localStorage.setItem('refreshToken', 'refresh-token');
-            window.localStorage.setItem('userId', 'u1');
+            window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
             window.localStorage.setItem('emailConfirmed', 'true');
         }, createAuthenticatedUserJwt());
 
@@ -274,7 +309,7 @@ test.describe('authenticated accessibility', () => {
                     const token = window.location.pathname === '/dietologist' ? tokens.dietologist : tokens.user;
                     window.localStorage.setItem('authToken', token);
                     window.localStorage.setItem('refreshToken', 'refresh-token');
-                    window.localStorage.setItem('userId', 'u1');
+                    window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
                     window.localStorage.setItem('emailConfirmed', 'true');
                 },
                 { user: createAuthenticatedUserJwt(), dietologist: createAuthenticatedUserJwt('Dietologist') },
@@ -419,6 +454,13 @@ async function stabilizeAccessibilityPageAsync(page: Page, route: (typeof ACCESS
     if (route === '/dashboard') {
         await expect(page.getByRole('textbox', { name: 'Describe your meal, e.g. "two eggs and toast"...', exact: true })).toBeVisible();
     }
+    if (route === '/meals') {
+        const controls = page.locator('fd-meal-list .meal-list__icon-button > button:visible');
+        for (const control of await controls.all()) {
+            await expect(control).toHaveAccessibleName(/\S+/u);
+        }
+        await expect(page.locator('fd-meal-list fd-ai-input-action-bar input[type="text"]')).toHaveAttribute('placeholder', /\S+/u);
+    }
     if (route === '/fasting') {
         await expect(page.locator('.fd-ui-progress-ring')).toHaveAttribute('aria-label', /\S+/u);
         await expect(page.locator('.fasting-redesign__history-action > button')).toHaveAccessibleName(/\S+/u);
@@ -515,7 +557,7 @@ test.describe('session routing smoke', () => {
         await page.addInitScript((token: string) => {
             window.localStorage.setItem('authToken', token);
             window.localStorage.setItem('refreshToken', 'refresh-token');
-            window.localStorage.setItem('userId', 'u1');
+            window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
             window.localStorage.setItem('emailConfirmed', 'true');
         }, createAuthenticatedUserJwt());
         await mockAuthenticatedClientApiAsync(page);
@@ -538,7 +580,7 @@ test.describe('authenticated feature smoke', () => {
         await page.addInitScript((token: string) => {
             window.localStorage.setItem('authToken', token);
             window.localStorage.setItem('refreshToken', 'refresh-token');
-            window.localStorage.setItem('userId', 'u1');
+            window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
             window.localStorage.setItem('emailConfirmed', 'true');
         }, createAuthenticatedUserJwt());
 
@@ -566,7 +608,7 @@ test.describe('authenticated feature smoke', () => {
         await page.addInitScript((token: string) => {
             window.localStorage.setItem('authToken', token);
             window.localStorage.setItem('refreshToken', 'refresh-token');
-            window.localStorage.setItem('userId', 'u1');
+            window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
             window.localStorage.setItem('emailConfirmed', 'true');
         }, createAuthenticatedUserJwt());
 
@@ -586,15 +628,15 @@ test.describe('authenticated feature smoke', () => {
         await page.addInitScript((token: string) => {
             window.localStorage.setItem('authToken', token);
             window.localStorage.setItem('refreshToken', 'refresh-token');
-            window.localStorage.setItem('userId', 'u1');
+            window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
             window.localStorage.setItem('emailConfirmed', 'true');
         }, createAuthenticatedUserJwt());
 
         await mockAuthenticatedClientApiAsync(page);
 
-        await page.goto('/recommendations?recommendationId=rec-1');
+        await page.goto('/recommendations?recommendationId=bbc948ab-4f01-5f7b-bc57-ad66195674ef');
 
-        await expect(page).toHaveURL(/\/recommendations\?recommendationId=rec-1$/);
+        await expect(page).toHaveURL(/\/recommendations\?recommendationId=bbc948ab-4f01-5f7b-bc57-ad66195674ef$/);
         await expect(page.getByRole('heading', { name: 'Recommendations' })).toBeVisible();
         await expect(page.getByText('Add a protein source to breakfast.')).toBeVisible();
         await expect(page.getByText('From Ada Lovelace')).toBeVisible();
@@ -606,7 +648,7 @@ test.describe('authenticated feature smoke', () => {
         await page.addInitScript((token: string) => {
             window.localStorage.setItem('authToken', token);
             window.localStorage.setItem('refreshToken', 'refresh-token');
-            window.localStorage.setItem('userId', 'u1');
+            window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
             window.localStorage.setItem('emailConfirmed', 'true');
         }, createAuthenticatedUserJwt());
 
@@ -628,9 +670,9 @@ test.describe('deterministic authenticated feature fixtures', () => {
         await authenticateUserAsync(page);
         await mockAuthenticatedClientApiAsync(page);
 
-        await page.goto('/meal-plans/plan-1');
+        await page.goto('/meal-plans/6f104c24-8a57-5f35-b5d3-63d2c4dc1ba3');
 
-        await expect(page).toHaveURL(/\/meal-plans\/plan-1$/);
+        await expect(page).toHaveURL(/\/meal-plans\/6f104c24-8a57-5f35-b5d3-63d2c4dc1ba3$/);
         await expect(page.getByRole('heading', { name: 'Meal Plans', level: 1 })).toBeVisible();
         await expect(page.getByRole('heading', { name: 'Balanced week', level: 2 })).toBeVisible();
         await expect(page.getByText('Greek yogurt breakfast')).toBeVisible();
@@ -641,9 +683,9 @@ test.describe('deterministic authenticated feature fixtures', () => {
         await authenticateUserAsync(page);
         await mockAuthenticatedClientApiAsync(page);
 
-        await page.goto('/lessons/lesson-1');
+        await page.goto('/lessons/555f41d3-cf0b-5793-8bf0-3aba16050966');
 
-        await expect(page).toHaveURL(/\/lessons\/lesson-1$/);
+        await expect(page).toHaveURL(/\/lessons\/555f41d3-cf0b-5793-8bf0-3aba16050966$/);
         await expect(page.getByRole('heading', { name: 'Build a balanced plate', level: 2 })).toBeVisible();
         await expect(page.getByText('Use vegetables, protein, and whole grains as a practical starting point.')).toBeVisible();
         await page.getByRole('button', { name: /Mark as read/ }).click();
@@ -654,9 +696,9 @@ test.describe('deterministic authenticated feature fixtures', () => {
         await authenticateUserAsync(page);
         await mockAuthenticatedClientApiAsync(page);
 
-        await page.goto('/recipes/recipe-1/edit');
+        await page.goto('/recipes/aedb763f-4093-57d4-a1d3-6e7683dfef48/edit');
 
-        await expect(page).toHaveURL(/\/recipes\/recipe-1\/edit$/);
+        await expect(page).toHaveURL(/\/recipes\/aedb763f-4093-57d4-a1d3-6e7683dfef48\/edit$/);
         await expect(page.getByLabel('Name', { exact: true })).toHaveValue('Roasted vegetable bowl');
         await expect(page.getByLabel('Servings', { exact: true })).toHaveValue('2');
         await expect(page.getByText('Roast the vegetables')).toBeVisible();
@@ -666,6 +708,9 @@ test.describe('deterministic authenticated feature fixtures', () => {
         await authenticateUserAsync(page, 'Dietologist');
         await mockAuthenticatedClientApiAsync(page);
 
+        // This fixture checks the role-specific list after the authenticated shell is ready.
+        await page.goto('/dashboard');
+        await expect(page.locator('fd-dashboard')).toBeVisible();
         await page.goto('/dietologist');
 
         await expect(page).toHaveURL(/\/dietologist$/);
@@ -890,7 +935,7 @@ test.describe('dashboard regression writes', () => {
         await page.route(/\/api\/v1\/hydrations\/?$/u, async route => {
             requests.push(route.request().postDataJSON());
             snapshot['hydration'] = { dateUtc: '2026-04-19T00:00:00.000Z', goalMl: 2200, totalMl: 1050, entries: [] };
-            await route.fulfill(jsonResponse({ id: 'water-added', timestampUtc: '2026-04-19T12:00:00Z', amountMl: 250 }));
+            await route.fulfill(jsonFixture(fixtureContract, 'POST', route.request().url(), hydrationEntryFixture(), HTTP_CREATED_STATUS));
         });
         await page.goto('/dashboard');
         await page.locator('fd-dashboard-hydration-block').scrollIntoViewIfNeeded();
@@ -1006,7 +1051,7 @@ async function authenticateUserAsync(page: Page, role = 'User'): Promise<void> {
     await page.addInitScript((token: string) => {
         window.localStorage.setItem('authToken', token);
         window.localStorage.setItem('refreshToken', 'refresh-token');
-        window.localStorage.setItem('userId', 'u1');
+        window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
         window.localStorage.setItem('emailConfirmed', 'true');
     }, createAuthenticatedUserJwt(role));
 }
@@ -1074,22 +1119,40 @@ async function mockAuthenticatedClientApiAsync(page: Page): Promise<void> {
 
 async function fulfillClientApiRouteAsync(route: Route): Promise<void> {
     const { pathname } = new URL(route.request().url());
-    if (route.request().method() === 'PUT' && pathname.endsWith('/recommendations/rec-1/read')) {
+    if (route.request().method() === 'POST' && pathname.endsWith('/marketing/attribution-events')) {
+        fixtureContract.assertResponse('POST', pathname, HTTP_NO_CONTENT_STATUS, undefined);
+        await route.fulfill({ status: 204 });
+        return;
+    }
+    if (route.request().method() === 'PUT' && pathname.endsWith('/recommendations/bbc948ab-4f01-5f7b-bc57-ad66195674ef/read')) {
         await route.fulfill(jsonResponse(null));
         return;
     }
-    if (route.request().method() === 'POST' && pathname.endsWith('/lessons/lesson-1/read')) {
+    if (route.request().method() === 'POST' && pathname.endsWith('/lessons/555f41d3-cf0b-5793-8bf0-3aba16050966/read')) {
         await route.fulfill({ status: 204 });
         return;
     }
 
-    await route.fulfill(jsonResponse(resolveClientApiResponse(pathname)));
+    const method = route.request().method();
+    if (method !== 'GET') {
+        throw new Error(`Undeclared client mutation scenario: ${method} ${pathname}`);
+    }
+    const body = resolveClientApiResponse(pathname);
+    if (body === null) {
+        fixtureContract.assertResponse(method, pathname, HTTP_NO_CONTENT_STATUS, undefined);
+        await route.fulfill({ status: 204 });
+        return;
+    }
+    await route.fulfill(jsonFixture(fixtureContract, method, pathname, body));
 }
 
 function resolveClientApiResponse(pathname: string): unknown {
     const normalizedPathname = pathname.replace(/\/$/, '');
-    const mock = CLIENT_API_MOCKS.find(item => item.matches(normalizedPathname));
-    return mock === undefined ? {} : mock.createResponse();
+    const mock = CLIENT_API_MOCKS.find(item => normalizedPathname === `/api/v1${item.path}`);
+    if (mock === undefined) {
+        throw new Error(`Undeclared client scenario: GET ${normalizedPathname}`);
+    }
+    return mock.createResponse();
 }
 
 function createDashboardSnapshot(): Record<string, unknown> {
@@ -1128,18 +1191,12 @@ function createDashboardSnapshot(): Record<string, unknown> {
             dateUtc: '2026-04-19T00:00:00.000Z',
             goalMl: 2200,
             totalMl: 800,
-            entries: [],
         },
         advice: {
-            id: 'advice-1',
+            id: '66190b71-23ca-526a-80f4-b21129c72ceb',
             locale: 'en',
             value: 'Good start for the day.',
             weight: 1,
-            tone: 'supportive',
-            title: 'Keep going',
-            summary: 'Good start for the day.',
-            actionLabel: null,
-            actionUrl: null,
         },
         currentFastingSession: null,
         weightTrend: [],
@@ -1149,25 +1206,8 @@ function createDashboardSnapshot(): Record<string, unknown> {
     };
 }
 
-function createUser(): Record<string, unknown> {
-    return {
-        id: 'u1',
-        hasPassword: true,
-        email: 'user@example.com',
-        username: 'alexi',
-        language: 'en',
-        theme: 'dark',
-        uiStyle: 'classic',
-        pushNotificationsEnabled: true,
-        fastingPushNotificationsEnabled: true,
-        socialPushNotificationsEnabled: false,
-        fastingCheckInReminderHours: 4,
-        fastingCheckInFollowUpReminderHours: 2,
-        dashboardLayout: null,
-        isActive: true,
-        isEmailConfirmed: true,
-        aiConsentAcceptedAt: null,
-    };
+function createUser(): UserHttpResponse {
+    return userFixture({ username: 'alexi' });
 }
 
 function createUserOverview(): Record<string, unknown> {
@@ -1276,8 +1316,8 @@ function createDailyMicronutrients(): Record<string, unknown> {
 function createRecommendations(): Array<Record<string, unknown>> {
     return [
         {
-            id: 'rec-1',
-            dietologistUserId: 'dietologist-1',
+            id: 'bbc948ab-4f01-5f7b-bc57-ad66195674ef',
+            dietologistUserId: 'f08a06d9-18ee-54ab-b5a1-a8a56a50c061',
             dietologistFirstName: 'Ada',
             dietologistLastName: 'Lovelace',
             text: 'Add a protein source to breakfast.',
@@ -1292,15 +1332,45 @@ function createMealsOverview(): Record<string, unknown> {
     return {
         allMeals: {
             data: [
-                createMeal('meal-1', '2026-05-07T20:40:00.000Z', [
-                    createMealItem('meal-1-item-1', 'meal-1', 'Carrots', TEST_IMAGE_URLS[0]),
-                    createMealItem('meal-1-item-2', 'meal-1', 'Rice', TEST_IMAGE_URLS[1]),
-                    createMealItem('meal-1-item-3', 'meal-1', 'Salad', TEST_IMAGE_URLS[2]),
-                    createMealItem('meal-1-item-4', 'meal-1', 'Soup', TEST_IMAGE_URLS[3]),
+                createMeal('e09f5f5f-a5d9-5af4-8045-2946ea17eb0d', '2026-05-07T20:40:00.000Z', [
+                    createMealItem(
+                        '59eb5058-fad0-5149-9704-7e7189d59a77',
+                        'e09f5f5f-a5d9-5af4-8045-2946ea17eb0d',
+                        'Carrots',
+                        TEST_IMAGE_URLS[0],
+                    ),
+                    createMealItem(
+                        '1f288054-1243-58a3-8f3b-6c90f747c70f',
+                        'e09f5f5f-a5d9-5af4-8045-2946ea17eb0d',
+                        'Rice',
+                        TEST_IMAGE_URLS[1],
+                    ),
+                    createMealItem(
+                        'f580a7f6-fded-542a-b332-ecf7cf4be886',
+                        'e09f5f5f-a5d9-5af4-8045-2946ea17eb0d',
+                        'Salad',
+                        TEST_IMAGE_URLS[2],
+                    ),
+                    createMealItem(
+                        '388876ba-f6d0-5116-8590-b6c091dc648d',
+                        'e09f5f5f-a5d9-5af4-8045-2946ea17eb0d',
+                        'Soup',
+                        TEST_IMAGE_URLS[3],
+                    ),
                 ]),
-                createMeal('meal-2', '2026-05-07T15:38:00.000Z', [
-                    createMealItem('meal-2-item-1', 'meal-2', 'Rice', TEST_IMAGE_URLS[1]),
-                    createMealItem('meal-2-item-2', 'meal-2', 'Salad', TEST_IMAGE_URLS[2]),
+                createMeal('37cb02e4-3010-59a4-a1fd-0122bf12ada9', '2026-05-07T15:38:00.000Z', [
+                    createMealItem(
+                        '8bd2d9c8-8e63-5be9-96a7-7d27fd4799e0',
+                        '37cb02e4-3010-59a4-a1fd-0122bf12ada9',
+                        'Rice',
+                        TEST_IMAGE_URLS[1],
+                    ),
+                    createMealItem(
+                        'f9547e99-ff3d-5095-a4fb-eb83131d3d25',
+                        '37cb02e4-3010-59a4-a1fd-0122bf12ada9',
+                        'Salad',
+                        TEST_IMAGE_URLS[2],
+                    ),
                 ]),
             ],
             page: 1,
@@ -1334,8 +1404,8 @@ function createMeal(id: string, date: string, items: unknown[]): Record<string, 
         manualCarbs: null,
         manualFiber: null,
         manualAlcohol: null,
-        preMealSatietyLevel: null,
-        postMealSatietyLevel: null,
+        preMealSatietyLevel: 0,
+        postMealSatietyLevel: 0,
         qualityScore: 34,
         qualityGrade: 'yellow',
         isFavorite: false,
@@ -1350,7 +1420,7 @@ function createMealItem(id: string, mealId: string, productName: string, product
         id,
         mealId,
         amount: 100,
-        productId: `${id}-product`,
+        productId: fixtureUuid(`${id}-product`),
         productName,
         productImageUrl,
         productBaseUnit: 'G',
@@ -1401,7 +1471,7 @@ function createEmptyWeeklyCheckIn(): Record<string, unknown> {
 
 function createOwnedProduct(): Record<string, unknown> {
     return {
-        id: 'p1',
+        id: 'bd8133e3-7167-5e38-9214-f975aac717db',
         name: 'Greek yogurt',
         brand: 'Food Diary',
         baseUnit: 'G',
@@ -1449,7 +1519,7 @@ function createProductsOverview(): Record<string, unknown> {
 
 function createMealPlanDetail(): Record<string, unknown> {
     return {
-        id: 'plan-1',
+        id: '6f104c24-8a57-5f35-b5d3-63d2c4dc1ba3',
         name: 'Balanced week',
         description: 'A repeatable seven-day plan for deterministic visual checks.',
         dietType: 'Balanced',
@@ -1458,13 +1528,13 @@ function createMealPlanDetail(): Record<string, unknown> {
         isCurated: true,
         days: [
             {
-                id: 'plan-day-1',
+                id: 'c3b6f102-3c01-5a43-a7f9-d098065933bb',
                 dayNumber: 1,
                 meals: [
                     {
-                        id: 'plan-meal-1',
+                        id: '2c74670d-4422-5754-ae0e-98a9c811ac22',
                         mealType: 'Breakfast',
-                        recipeId: 'recipe-1',
+                        recipeId: 'aedb763f-4093-57d4-a1d3-6e7683dfef48',
                         recipeName: 'Greek yogurt breakfast',
                         servings: 1,
                         calories: 420,
@@ -1480,7 +1550,7 @@ function createMealPlanDetail(): Record<string, unknown> {
 
 function createLessonDetail(): Record<string, unknown> {
     return {
-        id: 'lesson-1',
+        id: '555f41d3-cf0b-5793-8bf0-3aba16050966',
         title: 'Build a balanced plate',
         content: 'Use vegetables, protein, and whole grains as a practical starting point.',
         summary: 'A simple composition guide.',
@@ -1493,7 +1563,7 @@ function createLessonDetail(): Record<string, unknown> {
 
 function createOwnedRecipe(): Record<string, unknown> {
     return {
-        id: 'recipe-1',
+        id: 'aedb763f-4093-57d4-a1d3-6e7683dfef48',
         name: 'Roasted vegetable bowl',
         description: 'A deterministic recipe used for edit-flow checks.',
         comment: null,
@@ -1526,7 +1596,7 @@ function createOwnedRecipe(): Record<string, unknown> {
         favoriteRecipeId: null,
         steps: [
             {
-                id: 'recipe-step-1',
+                id: '6ba2ae62-7503-5cd0-9886-14e3f6d37f88',
                 stepNumber: 1,
                 title: 'Roast the vegetables',
                 instruction: 'Roast until tender and lightly browned.',
@@ -1541,14 +1611,14 @@ function createOwnedRecipe(): Record<string, unknown> {
 function createDietologistClients(): Array<Record<string, unknown>> {
     return [
         {
-            userId: 'client-1',
+            userId: 'df5c8427-d6a2-5bf0-94cf-de5001707c03',
             email: 'client@example.test',
             firstName: 'Taylor',
             lastName: 'Example',
             profileImage: null,
-            birthDate: '1992-04-12',
+            birthDate: '1992-04-12T00:00:00Z',
             gender: 'Other',
-            height: 172,
+            heightCm: 172,
             activityLevel: 'Moderate',
             permissions: {
                 shareProfile: true,
@@ -1567,8 +1637,8 @@ function createDietologistClients(): Array<Record<string, unknown>> {
 
 function createDietologistInvitation(): Record<string, unknown> {
     return {
-        invitationId: 'invitation-1',
-        clientUserId: 'client-1',
+        invitationId: '822dbe9e-71d7-5da5-b6f0-40ac2dc168bf',
+        clientUserId: 'df5c8427-d6a2-5bf0-94cf-de5001707c03',
         clientEmail: 'client@example.test',
         clientFirstName: 'Taylor',
         clientLastName: 'Example',
@@ -1592,8 +1662,8 @@ function createJwt(payload: Record<string, unknown>): string {
 
 function createAuthenticatedUserJwt(role = 'User'): string {
     return createJwt({
-        sub: 'u1',
-        nameid: 'u1',
+        sub: '00000000-0000-4000-8000-000000000001',
+        nameid: '00000000-0000-4000-8000-000000000001',
         role,
         exp: Math.floor(Date.now() / MS_PER_SECOND) + AUTH_TOKEN_TTL_SECONDS,
     });
@@ -1604,7 +1674,7 @@ function encodeSegment(value: Record<string, unknown>): string {
 }
 
 type ClientApiMock = {
-    matches: (pathname: string) => boolean;
+    path: string;
     createResponse: () => unknown;
 };
 
@@ -1698,7 +1768,7 @@ test.describe('meal favorites regression', () => {
 
 async function mockFavoritePickerJourneyAsync(page: Page): Promise<void> {
     const favorites = Array.from({ length: 12 }, (_, index) => ({
-        id: `f${index + 1}`,
+        id: fixtureUuid(`favorite-${index + 1}`),
         mealId: `m${index + 1}`,
         name: `Favorite ${index + 1}`,
         itemNames: ['Rice', 'Chicken'],
@@ -1762,7 +1832,7 @@ test.describe('meal editing regression', () => {
         test(`failed save preserves edits and retry round-trips the meal at ${width}px`, async ({ page }) => {
             await page.setViewportSize({ width, height: 900 });
             const state = await mockEditableMealAsync(page);
-            await page.goto('/meals/meal-1/edit');
+            await page.goto('/meals/e09f5f5f-a5d9-5af4-8045-2946ea17eb0d/edit');
             await editMealAmountAsync(page, '175.5');
             await expect(page.getByRole('textbox', { name: 'Calories, kcal', exact: true })).toHaveValue('175.5');
             await page.getByText('Photo and comment (optional)', { exact: true }).click();
@@ -1770,7 +1840,7 @@ test.describe('meal editing regression', () => {
             const save = page.locator('fd-meal-nutrition-sidebar').getByRole('button', { name: 'Save', exact: true });
             await save.click();
             await expect(page.getByText('Temporary meal save failure', { exact: true })).toBeVisible();
-            await expect(page).toHaveURL(/\/meals\/meal-1\/edit$/);
+            await expect(page).toHaveURL(/\/meals\/e09f5f5f-a5d9-5af4-8045-2946ea17eb0d\/edit$/);
             await expect(page.getByRole('textbox', { name: 'Comment', exact: true })).toHaveValue('Lunch after training');
             await save.click();
             await expect.poll(() => state.writes.length).toBe(2);
@@ -1784,9 +1854,9 @@ test.describe('meal editing regression', () => {
                 comment: 'Lunch after training',
                 date: '2026-04-19T18:00:00.000Z',
                 isNutritionAutoCalculated: true,
-                items: [{ productId: 'editable-product', amount: 175.5, origin: 'Manual' }],
+                items: [{ productId: fixtureUuid('editable-product'), amount: 175.5, origin: 'Manual' }],
             });
-            await page.goto('/meals/meal-1/edit');
+            await page.goto('/meals/e09f5f5f-a5d9-5af4-8045-2946ea17eb0d/edit');
             await page.getByText('Photo and comment (optional)', { exact: true }).click();
             await expect(page.getByRole('textbox', { name: 'Comment', exact: true })).toHaveValue('Lunch after training');
             await page.getByRole('button', { name: /Edit manual item/ }).click();
@@ -1800,14 +1870,14 @@ test.describe('meal editing regression', () => {
         test(`cancel protects item-dialog edits and discard does not save at ${width}px`, async ({ page }) => {
             await page.setViewportSize({ width, height: 900 });
             const state = await mockEditableMealAsync(page);
-            await page.goto('/meals/meal-1/edit');
+            await page.goto('/meals/e09f5f5f-a5d9-5af4-8045-2946ea17eb0d/edit');
             await editMealAmountAsync(page, '250');
             const cancel = page.locator('fd-page-header').getByRole('button', { name: 'Cancel', exact: true });
             await cancel.click();
             const confirmation = page.getByRole('dialog', { name: 'Unsaved changes', exact: true });
             await expect(confirmation).toContainText('Unsaved changes');
             await confirmation.getByRole('button', { name: 'Stay on page', exact: true }).click();
-            await expect(page).toHaveURL(/\/meals\/meal-1\/edit$/);
+            await expect(page).toHaveURL(/\/meals\/e09f5f5f-a5d9-5af4-8045-2946ea17eb0d\/edit$/);
             await page.getByRole('button', { name: /Edit manual item/ }).click();
             await expect(page.getByRole('dialog').getByRole('spinbutton', { name: 'Amount' })).toHaveValue('250');
             await page.getByRole('dialog').getByRole('button', { name: 'Cancel', exact: true }).click();
@@ -1815,7 +1885,7 @@ test.describe('meal editing regression', () => {
             await confirmation.getByRole('button', { name: "Don't save", exact: true }).click();
             await expect(page).toHaveURL(/\/meals$/);
             expect(state.writes).toEqual([]);
-            await page.goto('/meals/meal-1/edit');
+            await page.goto('/meals/e09f5f5f-a5d9-5af4-8045-2946ea17eb0d/edit');
             await page.getByRole('button', { name: /Edit manual item/ }).click();
             await expect(page.getByRole('dialog').getByRole('spinbutton', { name: 'Amount' })).toHaveValue('100');
         });
@@ -1842,9 +1912,9 @@ async function mockEditableMealAsync(page: Page): Promise<{ writes: unknown[]; r
         releaseSave = resolve;
     });
     const state = { writes: [] as unknown[], releaseSave };
-    let item = createMealItem('editable', 'meal-1', 'Carrots', TEST_IMAGE_URLS[0]);
-    let meal = createMeal('meal-1', '2026-04-19T18:00:00Z', [item]);
-    await page.route('**/api/v1/meals/meal-1', async route => {
+    let item = createMealItem('editable', 'e09f5f5f-a5d9-5af4-8045-2946ea17eb0d', 'Carrots', TEST_IMAGE_URLS[0]);
+    let meal = createMeal('e09f5f5f-a5d9-5af4-8045-2946ea17eb0d', '2026-04-19T18:00:00Z', [item]);
+    await page.route('**/api/v1/meals/e09f5f5f-a5d9-5af4-8045-2946ea17eb0d', async route => {
         if (route.request().method() === 'PATCH') {
             const body = route.request().postDataJSON() as { comment: string; items: Array<{ amount: number }> };
             state.writes.push(body);
@@ -1873,13 +1943,18 @@ test.describe('meal detail and gallery regression', () => {
             await authenticateUserAsync(page);
             await mockAuthenticatedClientApiAsync(page);
             const meal = createMeal(
-                'meal-1',
+                'e09f5f5f-a5d9-5af4-8045-2946ea17eb0d',
                 '2026-05-07T20:40:00Z',
                 Array.from({ length: MEAL_DIALOG_ITEM_COUNT }, (_, i) =>
-                    createMealItem(`item-${i}`, 'meal-1', `Ingredient ${i + 1}`, TEST_IMAGE_URLS[i % TEST_IMAGE_URLS.length]),
+                    createMealItem(
+                        `item-${i}`,
+                        'e09f5f5f-a5d9-5af4-8045-2946ea17eb0d',
+                        `Ingredient ${i + 1}`,
+                        TEST_IMAGE_URLS[i % TEST_IMAGE_URLS.length],
+                    ),
                 ),
             );
-            await page.route('**/api/v1/meals/meal-1', async route => route.fulfill({ json: meal }));
+            await page.route('**/api/v1/meals/e09f5f5f-a5d9-5af4-8045-2946ea17eb0d', async route => route.fulfill({ json: meal }));
             await page.route('**/api/v1/meals/overview**', async route =>
                 route.fulfill({
                     json: {
@@ -1938,10 +2013,10 @@ function createRecipeRedesignFixtures(): { recipe: Record<string, unknown>; favo
         ...createOwnedRecipe(),
         imageUrl: TEST_IMAGE_URLS[0],
         isFavorite: true,
-        favoriteRecipeId: 'favorite-1',
+        favoriteRecipeId: '9149c4f9-2581-5576-9636-b6c8f30bb2fe',
         steps: [
             {
-                id: 'step-1',
+                id: '3c2a8ca2-4faa-5645-b122-9f35ebbfc15d',
                 stepNumber: 1,
                 instruction: 'Mix and roast.',
                 imageUrl: TEST_IMAGE_URLS[1],
@@ -1955,8 +2030,8 @@ function createRecipeRedesignFixtures(): { recipe: Record<string, unknown>; favo
         ],
     };
     const favorite = {
-        id: 'favorite-1',
-        recipeId: 'recipe-1',
+        id: '9149c4f9-2581-5576-9636-b6c8f30bb2fe',
+        recipeId: 'aedb763f-4093-57d4-a1d3-6e7683dfef48',
         recipeName: 'Roasted vegetable bowl',
         name: null,
         createdAtUtc: '2026-07-01T10:00:00.000Z',
@@ -1975,7 +2050,7 @@ function createRecipeRedesignFixtures(): { recipe: Record<string, unknown>; favo
 
 async function mockRecipeDetailAsync(page: Page, recipe: Record<string, unknown>): Promise<void> {
     await page.route(
-        url => url.pathname === '/api/v1/recipes/recipe-1',
+        url => url.pathname === '/api/v1/recipes/aedb763f-4093-57d4-a1d3-6e7683dfef48',
         async route => route.fulfill({ json: recipe }),
     );
 }
@@ -2071,7 +2146,7 @@ test.describe('product redesign regression', () => {
             let favorite = {
                 ...product,
                 id: 'pf1',
-                productId: 'p1',
+                productId: 'bd8133e3-7167-5e38-9214-f975aac717db',
                 productName: 'Greek yogurt',
                 createdAtUtc: '2026-04-19T00:00:00Z',
                 name: null,
@@ -2090,7 +2165,7 @@ test.describe('product redesign regression', () => {
                     },
                 });
             });
-            await page.route('**/api/v1/products/p1', async route => route.fulfill({ json: product }));
+            await page.route('**/api/v1/products/bd8133e3-7167-5e38-9214-f975aac717db', async route => route.fulfill({ json: product }));
             await page.route('**/api/v1/favorite-products**', async route => {
                 const url = new URL(route.request().url());
                 if (url.pathname.endsWith('/page')) {
@@ -2285,14 +2360,14 @@ const RECOGNITION_LABEL = {
     alcohol: null,
     notes: 'Read from label',
 };
-function recognitionJob(status = 'Succeeded', id = 'recognition-1'): Record<string, unknown> {
+function recognitionJob(status = 'Succeeded', id = '999f4b40-311c-5c03-8e5c-70a3fb22a900'): Record<string, unknown> {
     return {
         id,
         status,
-        imageAssetId: 'photo-1',
+        imageAssetId: 'f32e39fb-2bf7-553d-a5e0-a4abff11247d',
         imageUrl: TEST_IMAGE_URLS[0],
         isProductLabel: true,
-        additionalImages: [{ imageAssetId: 'photo-2', imageUrl: TEST_IMAGE_URLS[1] }],
+        additionalImages: [{ imageAssetId: '8ec9ef64-1b7a-59d6-bd1c-4c7340592c8e', imageUrl: TEST_IMAGE_URLS[1] }],
         description: null,
         createdOnUtc: '2026-09-25T10:00:00Z',
         updatedOnUtc: '2026-09-25T10:00:00Z',
@@ -2319,7 +2394,7 @@ async function verifyRecognitionHistoryAsync(page: Page): Promise<void> {
     await page.route('**/api/v1/users/info', async route =>
         route.fulfill({ json: { ...createUser(), aiConsentAcceptedAt: '2026-09-25T00:00:00Z' } }),
     );
-    let jobs = Array.from({ length: 21 }, (_, index) => recognitionJob('Succeeded', `job-${index}`));
+    let jobs = Array.from({ length: 21 }, (_, index) => recognitionJob('Succeeded', fixtureUuid(`job-${index}`)));
     await page.route('**/api/v1/ai/food/recognitions**', async route => {
         const url = new URL(route.request().url());
         if (route.request().method() === 'DELETE') {
@@ -2340,7 +2415,7 @@ async function verifyRecognitionHistoryAsync(page: Page): Promise<void> {
             },
         });
     });
-    await page.goto('/products/p1/edit');
+    await page.goto('/products/bd8133e3-7167-5e38-9214-f975aac717db/edit');
     await page.getByRole('button', { name: 'Recognize', exact: true }).click();
     const dialog = page.locator('fd-product-ai-recognition-dialog');
     await dialog.locator('textarea').fill('Keep this hint');
@@ -2374,7 +2449,7 @@ async function mockProductRecognitionAsync(
     let uploaded = 0;
     const state = { finish: false };
     const writes: Array<Record<string, unknown>> = [];
-    await page.route('**/api/v1/products/p1', async route => {
+    await page.route('**/api/v1/products/bd8133e3-7167-5e38-9214-f975aac717db', async route => {
         if (route.request().method() === 'PATCH') {
             const body = route.request().postDataJSON() as Record<string, unknown>;
             writes.push(body);
@@ -2383,7 +2458,7 @@ async function mockProductRecognitionAsync(
                 ...body,
                 images: (body.imageAssetIds as string[]).map(id => ({
                     imageAssetId: id,
-                    imageUrl: TEST_IMAGE_URLS[id === 'photo-1' ? 0 : 1],
+                    imageUrl: TEST_IMAGE_URLS[id === 'f32e39fb-2bf7-553d-a5e0-a4abff11247d' ? 0 : 1],
                 })),
             };
         }
@@ -2393,7 +2468,7 @@ async function mockProductRecognitionAsync(
         uploaded++;
         await route.fulfill({
             json: {
-                assetId: `photo-${uploaded}`,
+                assetId: fixtureUuid(`photo-${uploaded}`),
                 uploadUrl: `http://127.0.0.1:4201/test-upload/${uploaded}`,
                 fileUrl: TEST_IMAGE_URLS[uploaded - 1],
                 expiresAtUtc: '2099-01-01T00:00:00Z',
@@ -2403,15 +2478,15 @@ async function mockProductRecognitionAsync(
     await page.route('**/test-upload/*', async route => route.fulfill({ status: 200, body: '' }));
     await page.route('**/api/v1/images/*/confirm', async route => {
         const id = /images\/([^/]+)\/confirm/u.exec(route.request().url())?.[1] ?? '';
-        await route.fulfill({ json: { assetId: id, fileUrl: TEST_IMAGE_URLS[id === 'photo-1' ? 0 : 1] } });
+        await route.fulfill({ json: { assetId: id, fileUrl: TEST_IMAGE_URLS[id === 'f32e39fb-2bf7-553d-a5e0-a4abff11247d' ? 0 : 1] } });
     });
     await page.route('**/api/v1/ai/food/recognitions**', async route => {
         const url = new URL(route.request().url());
         if (route.request().method() === 'POST') {
             expect(route.request().postDataJSON()).toMatchObject({
                 isProductLabel: true,
-                imageAssetId: 'photo-1',
-                additionalImageAssetIds: ['photo-2'],
+                imageAssetId: 'f32e39fb-2bf7-553d-a5e0-a4abff11247d',
+                additionalImageAssetIds: ['8ec9ef64-1b7a-59d6-bd1c-4c7340592c8e'],
             });
             await route.fulfill({ json: recognitionJob('Running') });
         } else if (url.search.length > 0) {
@@ -2452,7 +2527,7 @@ async function verifyRecognitionScanAsync(page: Page, dialog: Locator): Promise<
 async function verifyRecognitionJourneyAsync(page: Page, terminalStatus: string): Promise<void> {
     test.setTimeout(RECOGNITION_TEST_TIMEOUT);
     const { state, writes } = await mockProductRecognitionAsync(page, terminalStatus);
-    await page.goto('/products/p1/edit');
+    await page.goto('/products/bd8133e3-7167-5e38-9214-f975aac717db/edit');
     await page.getByRole('button', { name: 'Recognize', exact: true }).click();
     const dialog = page.locator('fd-product-ai-recognition-dialog');
     await expect(dialog.getByRole('button', { name: 'Analyze photo', exact: true })).toBeDisabled();
@@ -2482,8 +2557,11 @@ async function verifyRecognitionJourneyAsync(page: Page, terminalStatus: string)
     await expect(dialog).toHaveCount(0);
     await page.getByRole('button', { name: 'Save', exact: true }).click();
     await expect.poll(() => writes.length).toBe(1);
-    expect(writes[0]).toMatchObject({ name: RECOGNITION_LABEL.name, imageAssetIds: ['photo-2', 'photo-1'] });
-    await page.goto('/products/p1/edit');
+    expect(writes[0]).toMatchObject({
+        name: RECOGNITION_LABEL.name,
+        imageAssetIds: ['8ec9ef64-1b7a-59d6-bd1c-4c7340592c8e', 'f32e39fb-2bf7-553d-a5e0-a4abff11247d'],
+    });
+    await page.goto('/products/bd8133e3-7167-5e38-9214-f975aac717db/edit');
     await expect(page.locator('.recognition-photos__item')).toHaveCount(2);
     await expect(page.locator('.recognition-photos__item img').first()).toHaveAttribute('src', TEST_IMAGE_URLS[1]);
 }
@@ -2596,7 +2674,7 @@ test.describe('compact recent products', () => {
             await mockAuthenticatedClientApiAsync(page);
             const products = Array.from({ length: 10 }, (_, index) => ({
                 ...createOwnedProduct(),
-                id: `recent-${index}`,
+                id: fixtureUuid(`recent-${index}`),
                 name: `Yogurt ${index}`,
                 imageUrl: TEST_IMAGE_URLS[index % TEST_IMAGE_URLS.length],
             }));
@@ -2650,13 +2728,13 @@ test.describe('recipe editor gallery', () => {
             await page.screenshot({ path: testInfo.outputPath(`recipe-create-${width}.png`) });
             const recipe = createRecipeRedesignFixtures().recipe;
             const images = Array.from({ length: RECENT_SHORTCUT_COUNT }, (_, index) => ({
-                imageAssetId: `photo-${index}`,
+                imageAssetId: fixtureUuid(`photo-${index}`),
                 imageUrl: TEST_IMAGE_URLS[index % TEST_IMAGE_URLS.length],
             }));
-            await page.route('**/api/v1/recipes/recipe-1**', async route =>
+            await page.route('**/api/v1/recipes/aedb763f-4093-57d4-a1d3-6e7683dfef48**', async route =>
                 route.fulfill({ json: { ...recipe, images, steps: [], isOwnedByCurrentUser: true, usageCount: 0 } }),
             );
-            await page.goto('/recipes/recipe-1/edit');
+            await page.goto('/recipes/aedb763f-4093-57d4-a1d3-6e7683dfef48/edit');
             await expect(gallery.locator('.recognition-photos__item')).toHaveCount(RECENT_SHORTCUT_COUNT);
             await expect(gallery.locator('.recognition-photos__empty')).toHaveCount(0);
             expect(await page.locator('body').evaluate(el => el.scrollWidth <= innerWidth)).toBe(true);
@@ -2692,13 +2770,13 @@ test.describe('recipe text ingredients', () => {
                 ],
             };
             let saved: Record<string, unknown> | null = null;
-            await page.route('**/api/v1/recipes/recipe-1**', async route => {
+            await page.route('**/api/v1/recipes/aedb763f-4093-57d4-a1d3-6e7683dfef48**', async route => {
                 if (route.request().method() === 'PATCH') {
                     saved = route.request().postDataJSON() as Record<string, unknown>;
                 }
                 await route.fulfill({ json: recipe });
             });
-            await page.goto('/recipes/recipe-1/edit');
+            await page.goto('/recipes/aedb763f-4093-57d4-a1d3-6e7683dfef48/edit');
             const card = page.locator('fd-recipe-step-card').first();
             await expect(card.locator('.recipe-ingredient__name input')).toHaveValue('Salt');
             await expect(card.locator('.recipe-ingredient__amount input')).toHaveValue('to taste');
@@ -2725,12 +2803,12 @@ test.describe('recipe step galleries', () => {
             await mockAuthenticatedClientApiAsync(page);
             const recipe = createRecipeRedesignFixtures().recipe;
             const images = Array.from({ length: RECENT_SHORTCUT_COUNT }, (_, index) => ({
-                imageAssetId: `step-photo-${index}`,
+                imageAssetId: fixtureUuid(`step-photo-${index}`),
                 imageUrl: TEST_IMAGE_URLS[index % TEST_IMAGE_URLS.length],
             }));
             const ingredient = {
-                id: 'ingredient-1',
-                productId: 'product-1',
+                id: 'ded293ba-bfd6-5f4d-9a52-67ebf5455ba4',
+                productId: '599d8621-9d94-5c93-b772-a1586e78f6fd',
                 productName: 'Rice',
                 productBaseUnit: 'G',
                 productBaseAmount: 100,
@@ -2757,10 +2835,10 @@ test.describe('recipe step galleries', () => {
                     ingredients: [],
                 },
             ];
-            await page.route('**/api/v1/recipes/recipe-1**', async route =>
+            await page.route('**/api/v1/recipes/aedb763f-4093-57d4-a1d3-6e7683dfef48**', async route =>
                 route.fulfill({ json: { ...recipe, steps, isOwnedByCurrentUser: true, usageCount: 0 } }),
             );
-            await page.goto('/recipes/recipe-1/edit');
+            await page.goto('/recipes/aedb763f-4093-57d4-a1d3-6e7683dfef48/edit');
             const cards = page.locator('fd-recipe-step-card');
             await expect(cards).toHaveCount(steps.length);
             await expect(cards.first().locator('.recognition-photos__item')).toHaveCount(RECENT_SHORTCUT_COUNT);

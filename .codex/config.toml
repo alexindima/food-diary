@@ -6,7 +6,7 @@ startup_timeout_sec = 120
 tool_timeout_sec = 210
 enabled = true
 required = false
-enabled_tools = ["get_change_context", "get_development_context", "trace_backend_flow", "get_test_plan", "get_server_status"]
+enabled_tools = ["get_change_context", "get_development_context", "trace_backend_flow", "get_test_plan", "get_server_status", "get_next_task_action", "get_task_diagnostics", "collect_task_runtime_diagnostics", "verify_task", "cancel_task_check"]
 default_tools_approval_mode = "auto"
 
 [mcp_servers.angular_cli]

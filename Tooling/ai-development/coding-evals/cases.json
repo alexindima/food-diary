@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "kind": "coding-outcomes",
+  "cases": [
+    {
+      "id": "meal-identity",
+      "baseline": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
+      "task": "Prevent product or raw identity from reaching meal deletion. Decode native wire IDs once and preserve owning identity through the published meal capability. Preserve HTTP values and behavior.",
+      "grader": "meal-identity.ts",
+      "runtimeContract": "Identity decoding preserves the exact native GUID string. Existing owner identities remain accepted; foreign branded identities cannot be retagged.",
+      "allowedPrefixes": [
+        "FoodDiary.Web.Client/src/app/features/meals/",
+        "FoodDiary.Web.Client/src/app/shared/models/",
+        "FoodDiary.Web.Client/src/app/shared/lib/"
+      ]
+    },
+    {
+      "id": "calendar-meaning",
+      "baseline": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
+      "task": "Separate local calendar dates from UTC instants at meal repeat capabilities. Preserve timestamp precision and existing encoding. Constructors must not restamp already typed dates or IDs.",
+      "grader": "calendar-meaning.ts",
+      "runtimeContract": "Preserve instant 2026-10-08T23:59:59.1234567Z and calendar date 2026-10-08 exactly. Optional calendar decoding preserves null and undefined.",
+      "allowedPrefixes": [
+        "FoodDiary.Web.Client/src/app/features/meals/",
+        "FoodDiary.Web.Client/src/app/shared/models/",
+        "FoodDiary.Web.Client/src/app/shared/lib/"
+      ]
+    },
+    {
+      "id": "recipe-quantity",
+      "baseline": "4661284988a35a76c243cfcbcd9e748dc17811e5",
+      "task": "Separate recipe servings, displayed grams and grams per serving. A grams-to-servings conversion must require known conversion mass. Preserve the existing numeric calculations and unknown-mass fallback.",
+      "grader": "recipe-quantity.ts",
+      "runtimeContract": "Preserve input grams 12.125 and serving mass 50. A display conversion maps 100 grams using a known 50-gram serving to 2 servings; unknown mass keeps the existing fallback.",
+      "allowedPrefixes": [
+        "FoodDiary.Web.Client/src/app/features/meals/lib/recipe-serving/",
+        "FoodDiary.Web.Client/src/app/shared/models/",
+        "FoodDiary.Web.Client/src/app/shared/lib/"
+      ]
+    },
+    {
+      "id": "usda-link",
+      "baseline": "ded6bae2e2029e59db9d479e34ecd841fa5c97bf",
+      "task": "Carry ProductId and UsdaFoodId through USDA lookup/link capabilities. Reject recipes and unrelated numeric quantities. Preserve native integer/GUID wire values and current validation bounds.",
+      "grader": "usda-link.ts",
+      "runtimeContract": "Semantic decoding must preserve native numeric values including 17000, 0 and 12.125; do not introduce constructor validation absent in this snapshot. Existing API input validation bounds remain at their owning boundary.",
+      "allowedPrefixes": [
+        "FoodDiary.Web.Client/src/app/features/usda/",
+        "FoodDiary.Web.Client/src/app/features/products/",
+        "FoodDiary.Web.Client/src/app/shared/models/"
+      ]
+    },
+    {
+      "id": "cycle-episode",
+      "baseline": "ded6bae2e2029e59db9d479e34ecd841fa5c97bf",
+      "task": "Preserve MenstrualEpisodeId through edit/delete actions and busy UI state. Reject foreign IDs and raw strings. Keep confirmation, calendar payloads, cancellation and existing HTTP behavior.",
+      "grader": "cycle-episode.ts",
+      "runtimeContract": "Identity decoding preserves exact native GUID strings and optional values. Confirmation, cancellation and calendar payload behavior remain unchanged.",
+      "allowedPrefixes": [
+        "FoodDiary.Web.Client/src/app/features/cycle-tracking/",
+        "FoodDiary.Web.Client/src/app/shared/models/"
+      ]
+    }
+  ]
+}

@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4546,
-    "symbols": 4478,
+    "sourceFiles": 4553,
+    "symbols": 4485,
     "interfaceImplementationLinks": 201,
-    "dependencyInjectionRegistrations": 73,
+    "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2313,
-      "enum": 68,
-      "interface": 411,
-      "record": 1546,
+      "class": 2317,
+      "enum": 69,
+      "interface": 412,
+      "record": 1547,
       "record struct": 140
     },
     "roles": {
@@ -27,18 +27,18 @@
       "Entity": 102,
       "Event": 19,
       "Factory": 15,
-      "Handler": 7,
+      "Handler": 8,
       "LookupRepository": 3,
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1832,
+      "Other": 1837,
       "Query": 300,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 99,
-      "Request": 175,
+      "Request": 176,
       "Response": 262,
       "Service": 168,
       "Validator": 236,
@@ -277,6 +277,41 @@
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Protocol/WikiContextSearchResult.cs",
       "line": 2
+    },
+    {
+      "name": "ITaskToolExecutor",
+      "kind": "interface",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Tasks/ITaskToolExecutor.cs",
+      "line": 4
+    },
+    {
+      "name": "NodeTaskToolExecutor",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Tasks/NodeTaskToolExecutor.cs",
+      "line": 9
+    },
+    {
+      "name": "TaskToolAction",
+      "kind": "enum",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Tasks/TaskToolAction.cs",
+      "line": 2
+    },
+    {
+      "name": "TaskToolRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "FoodDiary.Development.Mcp/Tasks/TaskToolRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "TaskTools",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Tools/TaskTools.cs",
+      "line": 11
     },
     {
       "name": "ToolExecution",
@@ -780,7 +815,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 372
+      "line": 381
     },
     {
       "name": "UsdaCsvReader",
@@ -2337,6 +2372,13 @@
       "line": 100
     },
     {
+      "name": "ApiTaskConfigurationExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Web.Api/Extensions/ApiTaskConfigurationExtensions.cs",
+      "line": 4
+    },
+    {
       "name": "ApiTelemetry",
       "kind": "class",
       "role": "Other",
@@ -2377,6 +2419,13 @@
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/SecurityHeadersMiddleware.cs",
       "line": 3
+    },
+    {
+      "name": "TaskOutboundHttpHandler",
+      "kind": "class",
+      "role": "Handler",
+      "path": "FoodDiary.Web.Api/Extensions/TaskOutboundHttpHandler.cs",
+      "line": 2
     },
     {
       "name": "TelemetryPrivacyProcessor",
@@ -2523,7 +2572,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Program.cs",
-      "line": 18
+      "line": 24
     },
     {
       "name": "NotificationTestScheduler",
@@ -32809,42 +32858,49 @@
       "implementation": "SqliteWikiContextSearch",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 112
+      "line": 113
     },
     {
       "service": "IServerStatusService",
       "implementation": "ServerStatusService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 113
+      "line": 114
     },
     {
       "service": "IChangeSetSnapshotService",
       "implementation": "ChangeSetSnapshotService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 114
+      "line": 115
     },
     {
       "service": "IWikiCommandExecutor",
       "implementation": "PowerShellWikiCommandExecutor",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 115
+      "line": 116
+    },
+    {
+      "service": "ITaskToolExecutor",
+      "implementation": "NodeTaskToolExecutor",
+      "lifetime": "Singleton",
+      "path": "FoodDiary.Development.Mcp/Program.cs",
+      "line": 118
     },
     {
       "service": "IEmailVerificationNotifier",
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 414
+      "line": 423
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 415
+      "line": 424
     },
     {
       "service": "IRecurringJobRegistrationVerifier",

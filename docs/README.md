@@ -4,6 +4,9 @@ This directory contains long-form repository documentation. Keep root-level mark
 
 ## Agent Knowledge Layer
 
+- `ai/AI_DEVELOPMENT.md` - executable contract fixtures, generators, owned local task runtimes and coding outcome evaluations.
+- `ai/AGENT_GUIDE_CATALOG.md` - checked navigation to every scoped agent guide.
+
 - `.llm-wiki/index.md` - compiled, source-linked repository map for coding agents. It is a derived navigation layer; this documentation, scoped `AGENTS.md`, ADRs, tests, and code remain authoritative.
 - `ai/CODE_REVIEW.md` - shared correctness, architecture, security, compatibility, frontend, and evidence rubric for AI-assisted review.
 - `.llm-wiki/generated/configuration-index.json` - generated key-name-only map of options, appsettings, and environment examples.

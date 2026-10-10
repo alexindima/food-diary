@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "afa5ef2052f773e3e635594aabcf19be285f6dc84ec84b844260c4f2811b4e75",
-    "sourceFileCount": 4547
+    "sourceFingerprint": "e1c7db5b15d59a9f7810022efd7b2a764fa799c8997310e511d536212af1f4a8",
+    "sourceFileCount": 4554
   },
   "summary": {
     "composeServices": 18,
@@ -10,7 +10,7 @@
     "httpClients": 21,
     "webhooks": 22,
     "recurringJobRegistrations": 17,
-    "networkPolicies": 38
+    "networkPolicies": 40
   },
   "semantics": {
     "declared": "Compose fields describe repository declarations, not effective production exposure or IAM.",
@@ -1218,6 +1218,21 @@
       ]
     },
     {
+      "name": "ApiTaskConfigurationExtensions",
+      "path": "FoodDiary.Web.Api/Extensions/ApiTaskConfigurationExtensions.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "redirects-disabled"
+      ],
+      "behaviorSignals": [],
+      "behaviorSignalScope": "policy-file",
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
       "name": "BotDiaryClient",
       "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
       "securitySignals": [
@@ -1708,6 +1723,23 @@
       "behaviorSignals": [
         "cancellation-propagation-candidate",
         "timeout-or-delay"
+      ],
+      "behaviorSignalScope": "policy-file",
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "TaskOutboundHttpHandler",
+      "path": "FoodDiary.Web.Api/Extensions/TaskOutboundHttpHandler.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "uri-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation-propagation-candidate"
       ],
       "behaviorSignalScope": "policy-file",
       "evidenceStatus": "inferred-from-code",

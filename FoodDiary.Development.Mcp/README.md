@@ -1,7 +1,8 @@
 # FoodDiary Development MCP
 
-Local, read-only stdio MCP server that exposes stable `.llm-wiki/wiki.ps1`
-analysis entrypoints without replacing repository source-of-truth checks.
+Local stdio MCP server for stable `.llm-wiki/wiki.ps1` analysis and bounded
+task verification. Discovery remains read-only; separate check/cancel tools
+operate on owned evidence and jobs without replacing source-of-truth checks.
 
 CLI context selection and MCP share `Wiki/SqliteContextSearchReader.cs`; the
 existing CLI reader project links that source and the two result contracts.
@@ -66,8 +67,17 @@ calls can succeed without `pwsh`. Codex and an IDE can also inherit different
   frontend, domain, contract, quality, and catalog dependencies cannot silently
   fall outside the freshness proof.
 
-The server does not expose governed task lifecycle, generation, delivery, or
-repair commands. Wiki output remains derived navigation: callers must verify
+The server also exposes `get_next_task_action`, `get_task_diagnostics`,
+`collect_task_runtime_diagnostics`, `verify_task` and `cancel_task_check`. Verification starts one existing canonical
+Wiki check and returns an owned job identity. Poll diagnostics rather than
+restarting after a client timeout. Check/cancel annotations and result envelopes
+explicitly report writes; discovery and diagnostics remain read-only. The worker
+enforces command policy, exclusive evidence ownership, bounded output/time,
+process lifetime identity and source freshness. Failed, cancelled, interrupted
+and stale jobs never count as passing proof. See `docs/ai/AI_DEVELOPMENT.md`.
+
+The server does not expose generation, delivery, repair, arbitrary shell commands
+or source edits. Wiki output remains derived navigation: callers must verify
 change-sensitive conclusions in the referenced code, tests, ADRs, current docs,
 and scoped `AGENTS.md` files.
 
@@ -140,7 +150,7 @@ select the build workflow architecture guardrail in both test-plan routes.
 For a quick exact-symbol lookup, start with `trace_backend_flow`. Use
 `get_development_context` when a change brief and verification scope are needed
 together. Inspect `get_server_status` before diagnosing missing or stale context.
-If the client does not list the five tools, distinguish client registration from
+If the client does not list the ten tools, distinguish client registration from
 server health by testing the stdio launcher; a healthy standalone process does
 not prove that an already-open client loaded the project configuration.
 

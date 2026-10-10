@@ -7,6 +7,12 @@ description: Prepare or recover the complete local FoodDiary application for dev
 
 Return a working local application whose checkout, API, dependencies, and browser connections are known.
 
+For an isolated task runtime, start with `scripts/Start-FoodDiaryTask.ps1` and
+`docs/ai/AI_DEVELOPMENT.md`. It prepares owned data, ports, configuration and
+frontend/API connectivity. Its disabled-provider statuses are explicit limitations,
+not evidence that those journeys have passed. Use the normal root launch commands
+when the user requests their usual local environment.
+
 ## Discover the current environment
 
 Resolve the active checkout using Git, including whether it is a worktree. Read its root and relevant host/client/service AGENTS.md. Use `.llm-wiki/index.md` to navigate to runtime topology, then verify the relevant claims in current composition, configuration, and service documentation. Resolve all repository references against this checkout.

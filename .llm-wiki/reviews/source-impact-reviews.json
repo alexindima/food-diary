@@ -23,13 +23,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f73d5260b3e18a69b419e8afc8b539c68bd5acd13caedb7d6a33137c6374d5a0"
+          "sha256": "56218996830180cff40c3a5bb30b21e16ccbbb1991deef46d756bba562bf21d8"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "4051de92df7d46084ec096287adccc8d45d36cfd7d2eef7a02c0b1554c39d04a"
         }
       ],
-      "reason": "Reviewed root instructions, frontend boundaries and knowledge provenance. The new scalar RecipeCommunity guide and shared frontend semantic model folder obey feature/layer ownership. Updated PRIMITIVE_TYPES.md and scoped guides document all eight implementations and compatibility; compiled navigation remains subordinate to current source and tests.",
+      "reason": "The checked guide catalog preserves all original non-navigation rules; final line endings and root EOF were normalized without rule or authority changes. All declared pointers remain current.",
       "baseRef": "HEAD",
-      "gitHead": "429cf221cccfbe0cf000a221467fad327fc13cf1",
-      "reviewedAtUtc": "2026-10-08T13:20:18.9188111Z"
+      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
+      "reviewedAtUtc": "2026-10-09T21:21:48.8433926Z"
     },
     {
       "pageId": "module.frontend",
@@ -121,13 +125,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "39d5bad4a97ae377f7201cba10b9268f6a88ad422c6409b09bfd706ae249013e"
+          "sha256": "7ef0067b75fca63790ceef45f93fb7bda333806b688977429400607e1e0b772f"
         }
       ],
-      "reason": "Reviewed refreshed source instructions and PRIMITIVE_TYPES against all14 implementations, explicit legacy/raw boundaries and current project ownership; admin catalog decoded sources keep wire file data scalar.",
+      "reason": "All non-navigation root rules are preserved verbatim; the root points to a complete checked scoped-guide catalog. The new current guide documents actual commands, disabled integrations, source fingerprints, generated skeleton obligations and the limits of the five-case coding corpus.",
       "baseRef": "HEAD",
-      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
-      "reviewedAtUtc": "2026-10-08T19:37:50.0194212Z"
+      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
+      "reviewedAtUtc": "2026-10-09T21:07:09.2332201Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -136,13 +140,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f73d5260b3e18a69b419e8afc8b539c68bd5acd13caedb7d6a33137c6374d5a0"
+          "sha256": "56218996830180cff40c3a5bb30b21e16ccbbb1991deef46d756bba562bf21d8"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "4051de92df7d46084ec096287adccc8d45d36cfd7d2eef7a02c0b1554c39d04a"
         }
       ],
-      "reason": "Reviewed root instructions, frontend boundaries and knowledge provenance. The new scalar RecipeCommunity guide and shared frontend semantic model folder obey feature/layer ownership. Updated PRIMITIVE_TYPES.md and scoped guides document all eight implementations and compatibility; compiled navigation remains subordinate to current source and tests.",
+      "reason": "The checked guide catalog preserves all original non-navigation rules; final line endings and root EOF were normalized without rule or authority changes. All declared pointers remain current.",
       "baseRef": "HEAD",
-      "gitHead": "429cf221cccfbe0cf000a221467fad327fc13cf1",
-      "reviewedAtUtc": "2026-10-08T13:20:21.803114Z"
+      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
+      "reviewedAtUtc": "2026-10-09T21:21:49.3691539Z"
     },
     {
       "pageId": "system.quality-index",
@@ -166,13 +174,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "39d5bad4a97ae377f7201cba10b9268f6a88ad422c6409b09bfd706ae249013e"
+          "sha256": "7ef0067b75fca63790ceef45f93fb7bda333806b688977429400607e1e0b772f"
         }
       ],
-      "reason": "Reviewed refreshed source instructions and PRIMITIVE_TYPES against all14 implementations, explicit legacy/raw boundaries and current project ownership; admin catalog decoded sources keep wire file data scalar.",
+      "reason": "All non-navigation root rules are preserved verbatim; the root points to a complete checked scoped-guide catalog. The new current guide documents actual commands, disabled integrations, source fingerprints, generated skeleton obligations and the limits of the five-case coding corpus.",
       "baseRef": "HEAD",
-      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
-      "reviewedAtUtc": "2026-10-08T19:37:50.5902704Z"
+      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
+      "reviewedAtUtc": "2026-10-09T21:07:10.4813703Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -245,13 +253,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "37793dfd5891f16671b9d791fc5ad920cd13e74001b051cfcf1c5d888d5a1808"
+          "sha256": "8844b4e3328512b709d96360fa46291e0a98b2fedc3442931ef606d7c6a899a2"
         }
       ],
-      "reason": "Reviewed actual MailRelay typed admission/claim/delivery/outbox/broker ports and AI completion consumers against unchanged HTTP/client DTOs and four current worker outcomes. Full backend build, 465 owner unit tests, 32 MailRelay PostgreSQL/RabbitMQ and 15 AI/context PostgreSQL cases pass. The contract review workflow remains accurate.",
+      "reason": "Reviewed additive Development MCP task request/action contracts, accurate read/write envelopes and their real Node bridge tests. Product HTTP routes and wire schemas are unchanged; regenerated consumer projection remains navigation evidence.",
       "baseRef": "HEAD",
-      "gitHead": "ded6bae2e2029e59db9d479e34ecd841fa5c97bf",
-      "reviewedAtUtc": "2026-10-09T19:14:13.8021528Z"
+      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
+      "reviewedAtUtc": "2026-10-09T23:23:01.2969649Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -580,13 +588,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "18495e3842aef6ea698e0ee1a54281f2e783c8fc0a3ace0f230664afa3e2799e"
+          "sha256": "d31c46e7a4be68c81308bbf638c9c2e405043efae4a2a7b9b595fe22b2e99f93"
         }
       ],
-      "reason": "Reviewed changed compiled catalog, domain, quality and frontend navigation against the current sibling project, direct dependency matrix, immutable values and passing owner/architecture/frontend tests. Existing trace/review/evidence workflows remain valid and do not infer test execution from references.",
+      "reason": "Reviewed final formatted package.json with agent tools, real-dependency contract checker and revision comparison tests registered in verify. Existing rendered product UI and locales remain unchanged; owned diagnostics and error collection were exercised through the actual MCP transport.",
       "baseRef": "HEAD",
-      "gitHead": "429cf221cccfbe0cf000a221467fad327fc13cf1",
-      "reviewedAtUtc": "2026-10-08T13:20:28.3694073Z"
+      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
+      "reviewedAtUtc": "2026-10-09T23:25:50.2546260Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -818,13 +826,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "46f1ce55ce37b5292c441700dc22754a74c1d6f2557a5d81d02a61f20d59c90a"
+          "sha256": "05097753b591971b97d872435133ea4ade96053a9e41eaf57b88817d110815b0"
         }
       ],
-      "reason": "Reviewed mail body/logging and cycle sensitive-data boundaries; no content, authorization, consent, sharing, retention, logs or credentials are added. GUID codecs and role wrappers remain internal and testing uses only owned fixtures. Existing privacy review guidance remains valid.",
+      "reason": "Only generated synthetic task accounts and local loopback dependencies are used. The task configuration replaces inherited providers and credentials, HTTP redirects and external provider access are blocked, secrets and tokens are absent from runtime reports, and cleanup checks owned PID lifetimes and container labels.",
       "baseRef": "HEAD",
-      "gitHead": "ded6bae2e2029e59db9d479e34ecd841fa5c97bf",
-      "reviewedAtUtc": "2026-10-09T19:14:15.2010623Z"
+      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
+      "reviewedAtUtc": "2026-10-09T21:07:12.3106994Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -863,13 +871,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "766011ab69b024e736e4c7938f34382efd00bed6cdf4e9a05ef3b74954caaa08"
+          "sha256": "1294fa707fcde30f67e2de5e8ca9f6e9abf842b7b2e9db291dc0ce04d2d35347"
         }
       ],
-      "reason": "Verified new compiler tests use actual active port signatures/ID sources and private AI completion construction; quantity/external-key markers reject mutual retagging. Persistence tests found and verified the required explicit UUID unwrap; 2272 architecture cases, owner suites and focused frontend cases pass. Index test-reference signals remain navigation evidence.",
+      "reason": "Reviewed new runner, container probes, task job ownership/cancellation and feedback promotion against direct tests and actual model outcomes. Static references in the regenerated quality index are not treated as execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "ded6bae2e2029e59db9d479e34ecd841fa5c97bf",
-      "reviewedAtUtc": "2026-10-09T19:14:15.9900756Z"
+      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
+      "reviewedAtUtc": "2026-10-09T23:23:02.708301Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -950,13 +958,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "ccfb757d02b0f930601ce4e1ca7ddc85f0b12b7679b8ef095831051444913a31"
+          "sha256": "d35b3dad9b21c9134e60704fc3769ed44b7dc71d88ec2fefea5288fcc4382bc3"
         }
       ],
-      "reason": "Reviewed unchanged MailRelay admission transactions, idempotency, SKIP LOCKED claims, renewal/delivery fences, outbox retries and broker-independent PostgreSQL authority. RabbitMQ body and MessageId retain D GUID encoding; SMTP message ID retains N format. AI request hashes, quotas, deadlines and no-paid-call replay remain. Passing 32 MailRelay and 15 AI PostgreSQL/broker cases verify these paths.",
+      "reason": "Reviewed owned local runtime observations, explicit disabled providers, read-only diagnostic collection versus synthetic authentication writes, canonical check jobs, bounded time/output and process-tree cancellation/recovery. Temporary storage remains isolated and production runtime behavior is unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ded6bae2e2029e59db9d479e34ecd841fa5c97bf",
-      "reviewedAtUtc": "2026-10-09T19:15:18.2199759Z"
+      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
+      "reviewedAtUtc": "2026-10-09T23:23:03.4249748Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -965,21 +973,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "766011ab69b024e736e4c7938f34382efd00bed6cdf4e9a05ef3b74954caaa08"
+          "sha256": "1294fa707fcde30f67e2de5e8ca9f6e9abf842b7b2e9db291dc0ce04d2d35347"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "ccfb757d02b0f930601ce4e1ca7ddc85f0b12b7679b8ef095831051444913a31"
+          "sha256": "d35b3dad9b21c9134e60704fc3769ed44b7dc71d88ec2fefea5288fcc4382bc3"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "46f1ce55ce37b5292c441700dc22754a74c1d6f2557a5d81d02a61f20d59c90a"
+          "sha256": "05097753b591971b97d872435133ea4ade96053a9e41eaf57b88817d110815b0"
         }
       ],
-      "reason": "Reviewed owning ID propagation, user/profile access checks, mail renewal/fencing and nullable historic result observations. No authority, provider requests, CSP, secrets, logs or new capabilities are introduced; local synthetic integration evidence confirms unchanged ownership and terminal safeguards.",
+      "reason": "Reviewed actual read/write MCP annotations, canonical command allowlisting, artifact containment, credential/query redaction and generated-code execution in scoped read-only network-free containers. Passed boundary tests are limited to these concrete controls and are not a repository security verdict.",
       "baseRef": "HEAD",
-      "gitHead": "ded6bae2e2029e59db9d479e34ecd841fa5c97bf",
-      "reviewedAtUtc": "2026-10-09T19:14:17.2330516Z"
+      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
+      "reviewedAtUtc": "2026-10-09T23:23:04.418953Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1119,18 +1127,14 @@
       "pageSha256": "4e059a263f76810db4c559e2b5599d8599571ccf48d060f6360c6d0e8ec60b48",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "828fb45c3c4696a85848403347409eeda552b3f721636e7442a579dbf6381f5f"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "b383c5911583cc06c6d21200a24b87b6d02cf5defeebc526707604fc288ef0cd"
+          "sha256": "9c797c0884ae18872c626d531ecae0138de9d693392d5e28d8e8b780a247dd33"
         }
       ],
-      "reason": "Verified active MailRelay producer/consumer, AI completion writer/reader, USDA link/lookup and cycle episode mutation paths against source. Typed values remain in their existing owning projects and unchanged transport adapters; trace and consumer navigation procedures remain valid.",
+      "reason": "All non-navigation root rules are preserved verbatim; the root points to a complete checked scoped-guide catalog. The new current guide documents actual commands, disabled integrations, source fingerprints, generated skeleton obligations and the limits of the five-case coding corpus.",
       "baseRef": "HEAD",
-      "gitHead": "ded6bae2e2029e59db9d479e34ecd841fa5c97bf",
-      "reviewedAtUtc": "2026-10-09T19:14:18.0262997Z"
+      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
+      "reviewedAtUtc": "2026-10-09T21:07:16.2638452Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1169,13 +1173,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f73d5260b3e18a69b419e8afc8b539c68bd5acd13caedb7d6a33137c6374d5a0"
+          "sha256": "56218996830180cff40c3a5bb30b21e16ccbbb1991deef46d756bba562bf21d8"
         }
       ],
-      "reason": "Reviewed root instructions, frontend boundaries and knowledge provenance. The new scalar RecipeCommunity guide and shared frontend semantic model folder obey feature/layer ownership. Updated PRIMITIVE_TYPES.md and scoped guides document all eight implementations and compatibility; compiled navigation remains subordinate to current source and tests.",
+      "reason": "The checked guide catalog preserves all original non-navigation rules; final line endings and root EOF were normalized without rule or authority changes. All declared pointers remain current.",
       "baseRef": "HEAD",
-      "gitHead": "429cf221cccfbe0cf000a221467fad327fc13cf1",
-      "reviewedAtUtc": "2026-10-08T13:20:25.2337198Z"
+      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
+      "reviewedAtUtc": "2026-10-09T21:21:49.9665494Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1229,17 +1233,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "f13d439eee8914d3d064a9a60f3ebde04549804ffd81a988314859b4542b5368"
+          "sha256": "82b6c35101d16b09ca173f420e9375fe20abebc0913c8c731e33dcfa6fd530ca"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "f73d5260b3e18a69b419e8afc8b539c68bd5acd13caedb7d6a33137c6374d5a0"
+          "sha256": "56218996830180cff40c3a5bb30b21e16ccbbb1991deef46d756bba562bf21d8"
         }
       ],
-      "reason": "Reviewed refreshed source instructions and PRIMITIVE_TYPES against all14 implementations, explicit legacy/raw boundaries and current project ownership; admin catalog decoded sources keep wire file data scalar.",
+      "reason": "The checked guide catalog preserves all original non-navigation rules; final line endings and root EOF were normalized without rule or authority changes. All declared pointers remain current.",
       "baseRef": "HEAD",
-      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
-      "reviewedAtUtc": "2026-10-08T19:37:55.3911353Z"
+      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
+      "reviewedAtUtc": "2026-10-09T21:21:50.8415668Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1248,13 +1252,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f73d5260b3e18a69b419e8afc8b539c68bd5acd13caedb7d6a33137c6374d5a0"
+          "sha256": "56218996830180cff40c3a5bb30b21e16ccbbb1991deef46d756bba562bf21d8"
         }
       ],
-      "reason": "Reviewed changed compiled catalog, domain, quality and frontend navigation against the current sibling project, direct dependency matrix, immutable values and passing owner/architecture/frontend tests. Existing trace/review/evidence workflows remain valid and do not infer test execution from references.",
+      "reason": "Default fixtures now use exact paths, schema-checked UUID wire data and explicit mutations. Smoke readiness waits for feature translations and the authenticated shell. Verification excludes only generated browser reports, retaining production and test source discovery.",
       "baseRef": "HEAD",
-      "gitHead": "429cf221cccfbe0cf000a221467fad327fc13cf1",
-      "reviewedAtUtc": "2026-10-08T13:20:32.7321252Z"
+      "gitHead": "29c3de9227a88a9d3af6f72901a8a9921a1fbb0a",
+      "reviewedAtUtc": "2026-10-09T21:21:51.443138Z"
     },
     {
       "pageId": "workflow.self-maintenance",

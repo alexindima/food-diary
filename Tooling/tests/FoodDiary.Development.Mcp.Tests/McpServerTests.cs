@@ -37,7 +37,7 @@ public sealed class McpServerTests {
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task ConfiguredServer_ListsAndCallsExpectedReadOnlyTools(bool usePortableLauncher) {
+    public async Task ConfiguredServer_ListsExpectedToolsAndAccurateWriteAnnotations(bool usePortableLauncher) {
         string repositoryRoot = FindRepositoryRoot();
         var configuration = CodexMcpTestConfiguration.Load(repositoryRoot, usePortableLauncher);
         if (usePortableLauncher) {
@@ -53,7 +53,7 @@ public sealed class McpServerTests {
         IList<McpClientTool> tools = await client.ListToolsAsync(
             cancellationToken: connectionTimeout.Token);
 
-        string[] expected = ["get_change_context", "get_development_context", "get_server_status", "get_test_plan", "trace_backend_flow"];
+        string[] expected = ["cancel_task_check", "collect_task_runtime_diagnostics", "get_change_context", "get_development_context", "get_next_task_action", "get_server_status", "get_task_diagnostics", "get_test_plan", "trace_backend_flow", "verify_task"];
         string[] actual = [.. tools
             .Select(tool => tool.Name)
             .Order(StringComparer.Ordinal)];
@@ -82,7 +82,7 @@ public sealed class McpServerTests {
             string assemblyArgument = Assert.Single(configuration.Arguments);
             Assert.EndsWith("FoodDiary.Development.Mcp.dll", assemblyArgument, StringComparison.Ordinal);
         }
-        Assert.All(tools, tool => Assert.True(tool.ProtocolTool.Annotations?.ReadOnlyHint));
+        Assert.All(tools, tool => Assert.Equal(tool.Name is not ("verify_task" or "cancel_task_check" or "collect_task_runtime_diagnostics"), tool.ProtocolTool.Annotations?.ReadOnlyHint));
         Assert.Contains(
             "includeDetailedContext",
             tools.Single(tool => string.Equals(tool.Name, "get_change_context", StringComparison.Ordinal)).ProtocolTool.InputSchema.ToString(),

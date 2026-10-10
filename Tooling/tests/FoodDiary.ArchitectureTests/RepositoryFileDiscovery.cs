@@ -23,7 +23,10 @@ internal static class RepositoryFileDiscovery {
                     name.Equals("bin", StringComparison.OrdinalIgnoreCase) ||
                     name.Equals("obj", StringComparison.OrdinalIgnoreCase) ||
                     name.Equals("node_modules", StringComparison.OrdinalIgnoreCase) ||
-                    name.Equals(".angular", StringComparison.OrdinalIgnoreCase)) {
+                    name.Equals(".angular", StringComparison.OrdinalIgnoreCase) ||
+                    name.Equals("test-results", StringComparison.OrdinalIgnoreCase) ||
+                    name.Equals("playwright-report", StringComparison.OrdinalIgnoreCase) ||
+                    name.Equals("coverage", StringComparison.OrdinalIgnoreCase)) {
                     continue;
                 }
 

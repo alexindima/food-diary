@@ -12,4 +12,5 @@ public static class DevelopmentMcpErrorCodes {
     public const string Timeout = "timeout";
     public const string Cancelled = "cancelled";
     public const string Unexpected = "unexpected_error";
+    public const string TaskUnavailable = "task_unavailable";
 }

@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 295,
-    "documentationPages": 225
+    "documentationPages": 227
   },
   "dotnet": {
     "projects": [
@@ -15808,6 +15808,8 @@
       "docs/adr/0053-live-usda-reference-identifiers.md",
       "docs/adr/README.md",
       "docs/adr/template.md",
+      "docs/ai/AGENT_GUIDE_CATALOG.md",
+      "docs/ai/AI_DEVELOPMENT.md",
       "docs/ai/CODE_REVIEW.md",
       "docs/ai/RECIPE_IMPORT.md",
       "docs/ai/STATISTICS_MODULE_EXTRACTION_WIKI_REPORT.md",
