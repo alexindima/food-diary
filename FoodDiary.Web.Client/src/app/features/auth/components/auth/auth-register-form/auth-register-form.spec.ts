@@ -52,7 +52,9 @@ describe('AuthRegisterFormComponent', () => {
 
         const root = fixture.nativeElement as HTMLElement;
 
-        expect(root.querySelector('.fd-ui-form-error__text')?.textContent).toContain('Accept the privacy policy');
+        const checkbox = root.querySelector('fd-ui-checkbox');
+        expect(checkbox?.querySelector('[role="alert"]')?.textContent).toContain('Accept the privacy policy');
+        expect(checkbox?.querySelector('input')?.getAttribute('aria-invalid')).toBe('true');
     });
 
     it('should render unavailable Google hint without reserving button space', () => {

@@ -3,12 +3,12 @@
   "summary": {
     "components": 489,
     "componentsWithoutDirectSpecs": 126,
-    "inputs": 1581,
+    "inputs": 1582,
     "outputs": 549,
     "apiCalls": 314,
     "templatesWithTranslations": 352,
     "translationKeys": 2125,
-    "consumerEdges": 1243,
+    "consumerEdges": 1242,
     "consumedComponents": 310,
     "unconsumedComponents": 178
   },
@@ -4582,6 +4582,11 @@
         {
           "name": "hint",
           "type": "string",
+          "required": false
+        },
+        {
+          "name": "error",
+          "type": "string | null",
           "required": false
         },
         {
@@ -31618,6 +31623,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-fields/auth-register-fields.html",
       "occurrences": 1,
       "inputsUsed": [
+        "error",
         "label"
       ],
       "outputsHandled": []
@@ -33062,18 +33068,6 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
       "consumerFeature": "auth",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-password-reset-form/auth-password-reset-form.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "error"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiFormErrorComponent",
-      "selector": "fd-ui-form-error",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
-      "consumerFeature": "auth",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-fields/auth-register-fields.html",
       "occurrences": 1,
       "inputsUsed": [
         "error"

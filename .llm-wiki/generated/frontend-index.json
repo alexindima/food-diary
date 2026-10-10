@@ -3473,7 +3473,7 @@
       "role": "Component",
       "selector": "fd-auth-register-fields",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-fields/auth-register-fields.ts",
-      "line": 17
+      "line": 16
     },
     {
       "name": "AuthRegisterFormComponent",

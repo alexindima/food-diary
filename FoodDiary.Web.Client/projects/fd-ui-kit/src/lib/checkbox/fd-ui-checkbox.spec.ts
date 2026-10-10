@@ -54,6 +54,7 @@ describe('FdUiCheckboxComponent', () => {
 
         const hintEl = requireElement('.fd-ui-checkbox__hint');
         expect(hintEl.textContent.trim()).toBe('Please read carefully');
+        expect(requireElement('input').getAttribute('aria-describedby')).toBe(hintEl.id);
     });
 
     it('should write checked state from model', () => {
@@ -94,5 +95,49 @@ describe('FdUiCheckboxComponent', () => {
         fixture.detectChanges();
 
         expect(component['disabled']()).toBe(false);
+    });
+});
+
+describe('FdUiCheckboxComponent validation messages', () => {
+    let fixture: ComponentFixture<FdUiCheckboxComponent>;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [FdUiCheckboxComponent],
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(FdUiCheckboxComponent);
+    });
+
+    it('should announce an error instead of the hint and restore the hint when cleared', () => {
+        fixture.componentRef.setInput('hint', 'Please read carefully');
+        fixture.componentRef.setInput('error', 'Accept the terms');
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const input = host.querySelector('input');
+        const error = host.querySelector('.fd-ui-checkbox__error');
+        expect(error?.textContent.trim()).toBe('Accept the terms');
+        expect(error?.getAttribute('role')).toBe('alert');
+        expect(input?.getAttribute('aria-describedby')).toBe(error?.id);
+        expect(input?.getAttribute('aria-invalid')).toBe('true');
+        expect(host.querySelector('.fd-ui-checkbox__hint')).toBeNull();
+
+        fixture.componentRef.setInput('error', null);
+        fixture.detectChanges();
+
+        expect(host.querySelector('.fd-ui-checkbox__error')).toBeNull();
+        expect(input?.getAttribute('aria-invalid')).toBeNull();
+        expect(input?.getAttribute('aria-describedby')).toBe(host.querySelector('.fd-ui-checkbox__hint')?.id);
+    });
+
+    it('should not reserve an error or description when the message is empty', () => {
+        fixture.componentRef.setInput('error', '');
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.fd-ui-checkbox__error')).toBeNull();
+        expect(host.querySelector('input')?.getAttribute('aria-invalid')).toBeNull();
+        expect(host.querySelector('input')?.getAttribute('aria-describedby')).toBeNull();
     });
 });

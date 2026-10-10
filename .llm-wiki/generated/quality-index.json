@@ -5674,19 +5674,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.stories.ts",
-      "nonBlankLines": 41,
+      "nonBlankLines": 55,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.82
+      "structuralRiskScore": 1.1
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.ts",
-      "nonBlankLines": 36,
-      "decisionPoints": 1,
+      "nonBlankLines": 43,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.22
+      "structuralRiskScore": 6.86
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chip-select/fd-ui-chip-select.stories.ts",
@@ -10058,11 +10058,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-fields/auth-register-fields.ts",
-      "nonBlankLines": 18,
+      "nonBlankLines": 17,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
+      "structuralRiskScore": 0.34
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-form/auth-register-form.ts",

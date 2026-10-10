@@ -571,12 +571,17 @@ Displays validation errors.
 
 #### `fd-ui-checkbox`
 
-Checkbox with label + hint.
+Checkbox with label, hint, and inline validation error. Pass the translated error
+through `error` so the component owns its spacing, as with `fd-ui-input`, instead
+of adding a separate `fd-ui-form-error` beside the checkbox. An error replaces the
+hint and is associated with the native checkbox through `aria-describedby` and
+`aria-invalid`.
 
 **Inputs**
 
 - `label?: string`
 - `hint?: string`
+- `error?: string | null`
 - `disabled?: boolean` (model)
 
 #### `fd-ui-radio-group`

@@ -5,6 +5,8 @@
         [id]="id()"
         [checked]="checkedValue"
         [disabled]="disabled()"
+        [attr.aria-invalid]="error() ? 'true' : null"
+        [attr.aria-describedby]="describedBy()"
         (change)="updateCheckedValue($event)"
         (blur)="touchControl()"
     />
@@ -19,7 +21,10 @@
             <ng-content />
         </span>
     </label>
-    @if (hint()) {
-        <div class="fd-ui-checkbox__hint fd-ui-helper-text">{{ hint() }}</div>
+    @if (hint() && !error()) {
+        <div class="fd-ui-checkbox__hint fd-ui-helper-text" [id]="`${id()}-hint`">{{ hint() }}</div>
+    }
+    @if (error()) {
+        <div class="fd-ui-checkbox__error fd-ui-error-text" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
     }
 </div>

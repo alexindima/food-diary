@@ -88,3 +88,10 @@
     margin-left: var(--fd-space-checkbox-hint-margin-left);
     color: var(--fd-color-text-muted);
 }
+
+.fd-ui-checkbox__error {
+    margin-top: calc(var(--fd-space-xxs) / 2);
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}

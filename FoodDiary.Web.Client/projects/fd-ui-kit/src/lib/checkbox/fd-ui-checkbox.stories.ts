@@ -9,6 +9,7 @@ const meta: Meta<FdUiCheckboxComponent> = {
     argTypes: {
         label: { control: 'text' },
         hint: { control: 'text' },
+        error: { control: 'text' },
     },
 };
 
@@ -25,6 +26,21 @@ export const WithHint: Story = {
     args: {
         label: 'Enable notifications',
         hint: 'You will receive daily nutrition reminders',
+    },
+};
+
+export const WithError: Story = {
+    args: {
+        label: 'Accept terms and conditions',
+        error: 'This field is required',
+    },
+};
+
+export const ErrorWithHint: Story = {
+    args: {
+        label: 'Accept terms and conditions',
+        hint: 'Please read the terms before continuing',
+        error: 'This field is required',
     },
 };
 

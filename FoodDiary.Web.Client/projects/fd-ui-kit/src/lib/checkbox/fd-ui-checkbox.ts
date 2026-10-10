@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, input, model, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, model, output } from '@angular/core';
 import type { FormCheckboxControl } from '@angular/forms/signals';
 
 let nextId = 0;
@@ -13,12 +13,20 @@ export class FdUiCheckboxComponent implements FormCheckboxControl {
     public readonly id = input(`fd-ui-checkbox-${nextId++}`);
     public readonly label = input('');
     public readonly hint = input<string>();
+    public readonly error = input<string | null>();
     public readonly disabled = input(false);
     public readonly checked = model(false);
     public readonly touched = model(false);
     public readonly touch = output();
 
     protected checkedValue = false;
+    protected readonly describedBy = computed(() => {
+        if ((this.error()?.length ?? 0) > 0) {
+            return `${this.id()}-error`;
+        }
+
+        return (this.hint()?.length ?? 0) > 0 ? `${this.id()}-hint` : null;
+    });
 
     public constructor() {
         effect(() => {
