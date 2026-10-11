@@ -45,6 +45,10 @@ launching Chrome. Missing pages and assets return errors rather than a homepage
 fallback. The local server delivers gzip for text assets. It models static hosting,
 not production TLS, CDN latency, cache policy or server load.
 
+Generated files under `reports/lighthouse/` are excluded from ESLint: report HTML
+is standalone output, not an Angular application template. Source templates and
+the deterministic runner checks retain their normal verification.
+
 Without `--api-origin`, API requests fail (404 for GET/HEAD, 405 for other methods). Supply the real local backend
 origin when checking application startup with its anonymous API responses. The
 proxy preserves the upstream response and strips authentication/cookies. It does

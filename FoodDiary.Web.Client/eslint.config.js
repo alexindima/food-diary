@@ -1525,6 +1525,7 @@ export default [
             '**/coverage/**',
             '**/test-results/**',
             '**/playwright-report/**',
+            'reports/lighthouse/**',
             '**/.angular/**',
             '**/*.min.js',
         ],
