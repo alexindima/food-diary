@@ -19222,7 +19222,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/weekly-goals",
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/api/weekly-goal.service.ts",
-      "line": 27,
+      "line": 29,
       "publicMethod": "upsertGoal",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.weeklyGoals",

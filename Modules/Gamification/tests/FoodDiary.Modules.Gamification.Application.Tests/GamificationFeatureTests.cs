@@ -166,6 +166,22 @@ public class GamificationFeatureTests {
         ResultAssert.Failure(result, "Authentication.InvalidToken");
     }
 
+    [Fact]
+    public async Task LocalCalendar_UsesBothLocalMealDaysForStreakAndNutritionTargets() {
+        var user = User.Create("local-streak@example.test", "hash");
+        IMealRepository repository = CreateMealRepository([Today, Today.AddDays(-1)], 2);
+        repository.GetDistinctMealDatesAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>(), Arg.Any<TimeZoneInfo?>()).Returns([Today, Today.AddDays(-1)]);
+        IMealNutritionStatisticsReadService statistics = CreateStatisticsReadService();
+        statistics.GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), 1, Arg.Any<CancellationToken>(), Arg.Any<TimeZoneInfo?>())
+            .Returns(Result.Success<IReadOnlyList<MealNutritionStatisticsBucket>>([CreateStatisticsBucket(Today.AddHours(-4), 2000)]));
+        GetGamificationQueryHandler handler = CreateGamificationHandler(repository, statistics, CreateGamificationProfileReadService(user));
+        GamificationModel model = ResultAssert.Success(await handler.Handle(new GetGamificationQuery(user.Id.Value, "Asia/Tbilisi"), CancellationToken.None));
+        Assert.Equal(2, model.CurrentStreak);
+        Assert.Equal(2, model.LongestStreak);
+        await repository.Received(1).GetDistinctMealDatesAsync(user.Id, DateTime.UnixEpoch, Today.AddDays(1).AddHours(-4).AddTicks(-1), Arg.Any<CancellationToken>(), Arg.Is<TimeZoneInfo>(zone => zone.Id == "Asia/Tbilisi"));
+        await statistics.Received(1).GetStatisticsAsync(user.Id, Today.AddDays(-6).AddHours(-4), Today.AddDays(1).AddHours(-4).AddTicks(-1), 1, Arg.Any<CancellationToken>(), Arg.Is<TimeZoneInfo>(zone => zone.Id == "Asia/Tbilisi"));
+    }
+
     private static IMealRepository CreateMealRepository(
         IReadOnlyList<DateTime>? distinctDates = null,
         int totalMealCount = 0) {

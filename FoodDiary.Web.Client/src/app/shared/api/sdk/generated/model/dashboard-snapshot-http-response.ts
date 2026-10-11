@@ -26,6 +26,7 @@ export interface DashboardSnapshotHttpResponse {
     caloriesBurned?: number;
     currentCycle?: CycleHttpResponse | null;
     currentFastingSession?: FastingSessionHttpResponse | null;
+    cycleHidden?: boolean;
     dailyGoal?: number;
     dashboardLayout?: DashboardLayoutHttpModel | null;
     date?: string;

@@ -12233,6 +12233,15 @@
               "Nullable": false
             }
           ],
+          "QueryParameters": [
+            {
+              "Name": "timeZoneId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 100
+            }
+          ],
           "PathParameters": [
             {
               "Name": "version",
@@ -19220,6 +19229,13 @@
           ],
           "QueryParameters": [
             {
+              "Name": "TimeZoneId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 100
+            },
+            {
               "Name": "WeekStart",
               "Location": "query",
               "Required": false,
@@ -19272,6 +19288,13 @@
             }
           ],
           "QueryParameters": [
+            {
+              "Name": "TimeZoneId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 100
+            },
             {
               "Name": "WeekStart",
               "Location": "query",
@@ -27358,6 +27381,12 @@
           "Name": "currentFastingSession",
           "Required": false,
           "Reference": "#/components/schemas/FastingSessionHttpResponse",
+          "Nullable": false
+        },
+        {
+          "Name": "cycleHidden",
+          "Required": false,
+          "Type": "boolean",
           "Nullable": false
         },
         {
@@ -36532,6 +36561,12 @@
           "Type": "integer",
           "Format": "int32",
           "Nullable": false
+        },
+        {
+          "Name": "timeZoneId",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
         },
         {
           "Name": "timeZoneOffsetMinutes",

@@ -48,7 +48,7 @@ export function createProductForm(): ProductFormValues {
         name: '',
         barcode: null,
         brand: null,
-        productType: ProductType.Unknown,
+        productType: ProductType.Other,
         description: null,
         comment: null,
         imageUrl: null,

@@ -22,13 +22,31 @@ const AI_PHOTO_UNIT_TRANSLATION_KEYS: Readonly<Record<string, string>> = {
     grams: 'GENERAL.UNITS.G',
     gr: 'GENERAL.UNITS.G',
     ml: 'GENERAL.UNITS.ML',
-    l: 'GENERAL.UNITS.ML',
     pcs: 'GENERAL.UNITS.PCS',
     pc: 'GENERAL.UNITS.PCS',
     piece: 'GENERAL.UNITS.PCS',
     pieces: 'GENERAL.UNITS.PCS',
+    item: 'GENERAL.UNITS.PCS',
+    items: 'GENERAL.UNITS.PCS',
+    шт: 'GENERAL.UNITS.PCS',
+    'шт.': 'GENERAL.UNITS.PCS',
     kcal: 'GENERAL.UNITS.KCAL',
 };
+
+export function normalizeAiPhotoUnit(unit: string): string {
+    const normalized = unit.trim().toLowerCase();
+    const key = AI_PHOTO_UNIT_TRANSLATION_KEYS[normalized];
+    if (key === 'GENERAL.UNITS.G') {
+        return 'g';
+    }
+    if (key === 'GENERAL.UNITS.ML') {
+        return 'ml';
+    }
+    if (key === 'GENERAL.UNITS.PCS') {
+        return 'pcs';
+    }
+    return normalized;
+}
 
 export function resolveAiPhotoUnitKey(unit?: string | null): string | null {
     if (unit === null || unit === undefined) {
@@ -50,7 +68,7 @@ export function buildAiEditableItems(
                   nameEn: item.name,
                   nameLocal: null,
                   amount: item.amount,
-                  unit: item.unit,
+                  unit: normalizeAiPhotoUnit(item.unit),
                   confidence: 1,
               })) ?? []);
 
@@ -64,7 +82,7 @@ export function buildAiEditableItems(
             nameEn,
             nameLocal: localName.length > 0 ? localName : null,
             amount: item.amount,
-            unit: item.unit,
+            unit: normalizeAiPhotoUnit(item.unit),
             confidence: item.confidence,
             resolution: 'Accepted',
         };
@@ -78,7 +96,7 @@ export function normalizeAiEditableItems(edited: readonly AiEditableFoodItem[]):
             nameEn: item.nameEn.trim().length > 0 ? item.nameEn.trim() : item.name.trim(),
             nameLocal: localName.length > 0 ? localName : null,
             amount: item.amount,
-            unit: item.unit,
+            unit: normalizeAiPhotoUnit(item.unit),
             confidence: item.confidence,
         };
     });
@@ -98,7 +116,7 @@ export function requiresAiNutritionRecalculation(source: readonly AiEditableFood
         }
 
         const nameChanged = normalizeAiNutritionItemName(previous.name) !== normalizeAiNutritionItemName(item.name);
-        const unitChanged = previous.unit.trim().toLowerCase() !== item.unit.trim().toLowerCase();
+        const unitChanged = normalizeAiPhotoUnit(previous.unit) !== normalizeAiPhotoUnit(item.unit);
         return nameChanged || unitChanged;
     });
 }

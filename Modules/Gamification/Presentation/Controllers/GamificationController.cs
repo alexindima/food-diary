@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using FoodDiary.Modules.Gamification.Presentation.Mappings;
 using FoodDiary.Presentation.Api.Controllers;
 
@@ -13,6 +14,6 @@ namespace FoodDiary.Modules.Gamification.Presentation.Controllers;
 public sealed class GamificationController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<GamificationHttpResponse>(StatusCodes.Status200OK)]
-    public Task<IActionResult> Get([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToQuery(), static value => value.ToHttpResponse());
+    public Task<IActionResult> Get([FromCurrentUser] Guid userId, [FromQuery, MaxLength(100)] string? timeZoneId = null) =>
+        HandleOk(userId.ToQuery(timeZoneId), static value => value.ToHttpResponse());
 }

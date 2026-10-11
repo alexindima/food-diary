@@ -9,6 +9,7 @@ using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Enums;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 
 namespace FoodDiary.Modules.Users.Application.Commands.UpdateGoals;
@@ -62,18 +63,26 @@ public sealed class UpdateGoalsCommandHandler(
                 double? trackedWeight = await currentWeightProvider
                     .GetCurrentWeightAsync(userId, cancellationToken)
                     .ConfigureAwait(false);
-                double startWeight = trackedWeight ?? currentUser.WeightKg ?? command.DesiredWeightKg.Value;
+                double? startWeight = trackedWeight ?? currentUser.WeightKg ?? currentUser.WeightGoals.SingleOrDefault(goal => goal.Status == WeightGoalStatus.Active)?.StartWeightKg;
                 DateTime startedAtUtc = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
-                currentUser.StartWeightGoalWithMeasurements(DesiredWeightKg.Create(command.DesiredWeightKg.Value), MeasuredWeightKg.FromGoalValue(startWeight), startedAtUtc);
+                if (startWeight.HasValue) {
+                    currentUser.StartWeightGoalWithMeasurements(DesiredWeightKg.Create(command.DesiredWeightKg.Value), MeasuredWeightKg.FromGoalValue(startWeight.Value), startedAtUtc);
+                } else {
+                    currentUser.UpdateDesiredWeight(command.DesiredWeightKg.Value);
+                }
             }
 
             if (command.DesiredWaistCm.HasValue && command.DesiredWaistCm != currentUser.DesiredWaistCm) {
-                double? trackedWaist = await currentWaistProvider
+                double? startWaist = await currentWaistProvider
                     .GetCurrentWaistAsync(userId, cancellationToken)
                     .ConfigureAwait(false);
-                double startWaist = trackedWaist ?? command.DesiredWaistCm.Value;
+                startWaist ??= currentUser.WaistGoals.SingleOrDefault(goal => goal.Status == WaistGoalStatus.Active)?.StartWaistCm;
                 DateTime startedAtUtc = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
-                currentUser.StartWaistGoalWithMeasurements(DesiredWaistCm.Create(command.DesiredWaistCm.Value), MeasuredWaistCm.FromGoalValue(startWaist), startedAtUtc);
+                if (startWaist.HasValue) {
+                    currentUser.StartWaistGoalWithMeasurements(DesiredWaistCm.Create(command.DesiredWaistCm.Value), MeasuredWaistCm.FromGoalValue(startWaist.Value), startedAtUtc);
+                } else {
+                    currentUser.UpdateDesiredWaist(command.DesiredWaistCm.Value);
+                }
             }
         } catch (ArgumentOutOfRangeException ex) {
             return Result.Failure<GoalsModel>(

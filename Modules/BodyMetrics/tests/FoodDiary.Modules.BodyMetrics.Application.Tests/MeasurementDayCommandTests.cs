@@ -1,3 +1,4 @@
+using FoodDiary.Mediator;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.CreateWeightEntry;
@@ -34,9 +35,9 @@ public sealed class MeasurementDayCommandTests {
         DateTime encoded = kind == DateTimeKind.Local ? utc.ToLocalTime() : DateTime.SpecifyKind(utc, kind);
         using var cancellation = new CancellationTokenSource();
 
-        WeightEntryModel weight = ResultAssert.Success(await new CreateWeightEntryCommandHandler(weights, access).Handle(
+        WeightEntryModel weight = ResultAssert.Success(await new CreateWeightEntryCommandHandler(weights, access, Substitute.For<ISender>()).Handle(
             new CreateWeightEntryCommand(userId.Value, encoded, 72.125), cancellation.Token));
-        WaistEntryModel waist = ResultAssert.Success(await new CreateWaistEntryCommandHandler(waists, access).Handle(
+        WaistEntryModel waist = ResultAssert.Success(await new CreateWaistEntryCommandHandler(waists, access, Substitute.For<ISender>()).Handle(
             new CreateWaistEntryCommand(userId.Value, encoded, 85.125), cancellation.Token));
 
         Assert.Multiple(() => {
@@ -96,10 +97,10 @@ public sealed class MeasurementDayCommandTests {
         waists.GetByDateAsync(userId, LeapDay, Arg.Any<CancellationToken>()).Returns(waist);
         ICurrentUserAccessService access = Substitute.For<ICurrentUserAccessService>();
 
-        ResultAssert.Failure(await new CreateWeightEntryCommandHandler(weights, access).Handle(
+        ResultAssert.Failure(await new CreateWeightEntryCommandHandler(weights, access, Substitute.For<ISender>()).Handle(
             new CreateWeightEntryCommand(userId.Value, LeapDay.AddHours(23), 72), CancellationToken.None),
             WeightEntryErrors.AlreadyExists(LeapDay).Code);
-        WaistEntryModel replay = ResultAssert.Success(await new CreateWaistEntryCommandHandler(waists, access).Handle(
+        WaistEntryModel replay = ResultAssert.Success(await new CreateWaistEntryCommandHandler(waists, access, Substitute.For<ISender>()).Handle(
             new CreateWaistEntryCommand(userId.Value, LeapDay.AddHours(23), 85), CancellationToken.None));
 
         Assert.Equal(waist.Id.Value, replay.Id);

@@ -27,4 +27,5 @@ public sealed record DashboardSnapshotModel(
     DashboardLayoutModel? DashboardLayout = null,
     double CaloriesBurned = 0,
     TdeeInsightModel? TdeeInsight = null,
-    CycleModel? CurrentCycle = null);
+    CycleModel? CurrentCycle = null,
+    bool CycleHidden = false);

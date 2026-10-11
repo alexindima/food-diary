@@ -75,7 +75,12 @@ describe('WeeklyCheckInService', () => {
             expect(data).toEqual(MOCK_DATA);
         });
 
-        const req = httpMock.expectOne(`${BASE_URL}?weekStart=2026-08-10`);
+        const req = httpMock.expectOne(
+            request =>
+                request.url === BASE_URL &&
+                request.params.get('weekStart') === '2026-08-10' &&
+                request.params.get('timeZoneId') === new Intl.DateTimeFormat().resolvedOptions().timeZone,
+        );
         expect(req.request.method).toBe('GET');
         req.flush(MOCK_DATA);
     });
@@ -85,13 +90,25 @@ describe('WeeklyCheckInService', () => {
         const error = vi.fn();
         service.getData(calendarDate('2026-08-10')).subscribe({ next, error });
 
-        const req = httpMock.expectOne(`${BASE_URL}?weekStart=2026-08-10`);
+        const req = httpMock.expectOne(
+            request =>
+                request.url === BASE_URL &&
+                request.params.get('weekStart') === '2026-08-10' &&
+                request.params.get('timeZoneId') === new Intl.DateTimeFormat().resolvedOptions().timeZone,
+        );
         req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
         expect(next).not.toHaveBeenCalled();
         expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: HttpStatusCode.InternalServerError }));
 
         service.getData(calendarDate('2026-08-10')).subscribe(next);
-        httpMock.expectOne(`${BASE_URL}?weekStart=2026-08-10`).flush(MOCK_DATA);
+        httpMock
+            .expectOne(
+                request =>
+                    request.url === BASE_URL &&
+                    request.params.get('weekStart') === '2026-08-10' &&
+                    request.params.get('timeZoneId') === new Intl.DateTimeFormat().resolvedOptions().timeZone,
+            )
+            .flush(MOCK_DATA);
         expect(next).toHaveBeenCalledExactlyOnceWith(MOCK_DATA);
     });
 });

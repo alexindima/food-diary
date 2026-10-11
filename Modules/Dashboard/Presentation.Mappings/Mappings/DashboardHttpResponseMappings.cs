@@ -37,7 +37,8 @@ public static class DashboardHttpResponseMappings {
                     : new DashboardLayoutHttpModel(model.DashboardLayout.Web, model.DashboardLayout.Mobile, model.DashboardLayout.SetupHintDismissed),
                 model.CaloriesBurned,
                 model.TdeeInsight?.ToHttpResponse(),
-                model.CurrentCycle?.ToHttpResponse()
+                model.CurrentCycle?.ToHttpResponse(),
+                model.CycleHidden
             );
         }
     }

@@ -12,6 +12,7 @@
 import { HttpClient, HttpContext, HttpEvent, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
 import { Observable } from 'rxjs';
+import { OpenApiHttpParams, QueryParamStyle } from '../query.params';
 
 import { GamificationHttpResponse } from '../model/gamification-http-response';
 
@@ -21,6 +22,7 @@ import { BASE_PATH } from '../variables';
 
 export interface GetGamificationRequestParams {
     version: string;
+    timeZoneId?: string;
 }
 
 @Injectable()
@@ -68,6 +70,11 @@ export class GamificationSdk extends BaseService {
         if (version === null || version === undefined) {
             throw new Error('Required parameter version was null or undefined when calling getGamification.');
         }
+        const timeZoneId = requestParameters?.timeZoneId;
+
+        let localVarQueryParameters = new OpenApiHttpParams(this.encoder);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'timeZoneId', <any>timeZoneId, QueryParamStyle.Form, true);
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -99,6 +106,7 @@ export class GamificationSdk extends BaseService {
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<GamificationHttpResponse>('get', `${basePath}${localVarPath}`, {
             context: localVarHttpContext,
+            params: localVarQueryParameters.toHttpParams(),
             responseType: <any>responseType_,
             ...(withCredentials ? { withCredentials } : {}),
             headers: localVarHeaders,

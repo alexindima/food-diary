@@ -12,6 +12,7 @@ export interface UpsertWeeklyGoalHttpRequest {
     reminderEnabled?: boolean;
     reminderTime?: string | null;
     targetDays?: number;
+    timeZoneId?: string | null;
     timeZoneOffsetMinutes?: number | null;
     weekStart?: string;
 }

@@ -5,4 +5,4 @@ using FoodDiary.Modules.Gamification.Application.Models;
 namespace FoodDiary.Modules.Gamification.Application.Queries.GetGamification;
 
 public record GetGamificationQuery(
-    Guid? UserId) : IQuery<Result<GamificationModel>>, IUserRequest;
+    Guid? UserId, string? TimeZoneId = null) : IQuery<Result<GamificationModel>>, IUserRequest;

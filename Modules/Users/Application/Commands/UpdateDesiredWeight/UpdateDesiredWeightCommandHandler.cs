@@ -47,11 +47,15 @@ public sealed class UpdateDesiredWeightCommandHandler(
             .GetCurrentWeightAsync(userId, cancellationToken)
             .ConfigureAwait(false);
         double? activeGoalStartWeight = activeGoal?.StartWeightKg;
-        double currentWeight = trackedWeight ?? currentUser.WeightKg ?? activeGoalStartWeight ?? command.DesiredWeightKg ?? 1;
+        double? currentWeight = trackedWeight ?? currentUser.WeightKg ?? activeGoalStartWeight;
         if (command.DesiredWeightKg.HasValue) {
-            currentUser.StartWeightGoalWithMeasurements(DesiredWeightKg.Create(command.DesiredWeightKg.Value), MeasuredWeightKg.FromGoalValue(currentWeight), nowUtc);
+            if (currentWeight.HasValue) {
+                currentUser.StartWeightGoalWithMeasurements(DesiredWeightKg.Create(command.DesiredWeightKg.Value), MeasuredWeightKg.FromGoalValue(currentWeight.Value), nowUtc);
+            } else {
+                currentUser.UpdateDesiredWeight(command.DesiredWeightKg.Value);
+            }
         } else {
-            currentUser.CancelWeightGoalWithMeasurement(nowUtc, activeGoal is null ? null : MeasuredWeightKg.FromGoalValue(currentWeight));
+            currentUser.CancelWeightGoalWithMeasurement(nowUtc, activeGoal is null ? null : MeasuredWeightKg.FromGoalValue(currentWeight!.Value));
         }
         await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
 

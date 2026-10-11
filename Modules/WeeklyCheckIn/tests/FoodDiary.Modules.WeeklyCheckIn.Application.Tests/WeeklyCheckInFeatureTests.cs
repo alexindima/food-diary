@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealCount;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals;
@@ -24,6 +25,15 @@ namespace FoodDiary.Modules.WeeklyCheckIn.Application.Tests;
 [ExcludeFromCodeCoverage]
 public sealed partial class WeeklyCheckInFeatureTests {
     private static readonly DateTime Today = new(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
+
+    [Theory]
+    [InlineData("Asia/Tbilisi")]
+    [InlineData("Asia/Kathmandu")]
+    public async Task PreviousWeekBeforeUtcMinimum_ReturnsValidationFailure(string zone) {
+        var user = User.Create("earliest-local-week@example.test", "hash");
+        GetWeeklyCheckInQueryHandler handler = CreateHandler(profileService: CreateProfileService(user));
+        ResultAssert.Failure(await handler.Handle(new GetWeeklyCheckInQuery(user.Id.Value, new DateOnly(1, 1, 8), zone), CancellationToken.None), "Validation.Invalid");
+    }
 
     [Fact]
     public async Task GetWeeklyCheckIn_WithNullUserId_ReturnsFailure() {
@@ -157,7 +167,7 @@ public sealed partial class WeeklyCheckInFeatureTests {
         ];
         ISender mealActivityReadService = CreateMealActivityReadService();
         mealActivityReadService
-            .Send(Arg.Is<ReadMealCountQuery>(q => q.UserId == userId && (q.Filters!.DateFrom == thisWeekStart && q.Filters.DateTo == Today)), Arg.Any<CancellationToken>())
+            .Send(Arg.Is<ReadMealCountQuery>(q => q.UserId == userId && (q.Filters!.DateFrom == thisWeekStart && q.Filters.DateTo == Today.AddDays(1).AddTicks(-10))), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(3));
         ISender statisticsReadService = Substitute.For<ISender>();
         statisticsReadService
@@ -274,6 +284,28 @@ public sealed partial class WeeklyCheckInFeatureTests {
 
         Assert.Equal(UserAuthenticationErrors.AccountDeleted, result.Error);
         await profile.DidNotReceiveWithAnyArgs().GetWeeklyCheckInProfileAsync(default, default);
+    }
+
+    [Theory]
+    [InlineData("Asia/Tbilisi", "2026-10-10T21:17:00Z", "2026-10-05", "2026-10-04T20:00:00Z", "2026-10-11T20:00:00Z", 7)]
+    [InlineData("Asia/Kathmandu", "2026-10-10T19:00:00Z", "2026-10-05", "2026-10-04T18:15:00Z", "2026-10-11T18:15:00Z", 7)]
+    [InlineData("America/Los_Angeles", "2026-10-11T02:00:00Z", "2026-10-05", "2026-10-05T07:00:00Z", "2026-10-11T07:00:00Z", 6)]
+    [InlineData("America/New_York", "2026-11-01T12:00:00Z", "2026-10-26", "2026-10-26T04:00:00Z", "2026-11-02T05:00:00Z", 7)]
+    public async Task LocalWeek_UsesIndependentCalendarBoundariesAndElapsedDays(string zone, string nowText, string weekText, string fromText, string endText, int days) {
+        var now = DateTime.Parse(nowText, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
+        var from = DateTime.Parse(fromText, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
+        DateTime end = DateTime.Parse(endText, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal).AddTicks(-10);
+        var week = DateOnly.Parse(weekText, CultureInfo.InvariantCulture);
+        var user = User.Create("local-week@example.test", "hash");
+        ISender statistics = Substitute.For<ISender>();
+        statistics.Send(Arg.Any<ReadMealNutritionStatisticsQuery>(), Arg.Any<CancellationToken>())
+            .Returns(call => Result.Success<IReadOnlyList<MealNutritionStatisticsBucket>>(call.Arg<ReadMealNutritionStatisticsQuery>().DateFrom == from
+                ? [new(from, from.AddHours(12), 300, 0, 0, 0, 0), new(end.AddHours(-12), end, 720, 0, 0, 0, 0)] : []));
+        GetWeeklyCheckInQueryHandler handler = CreateHandler(statisticsReadService: statistics, profileService: CreateProfileService(user), today: now);
+        WeeklyCheckInModel model = ResultAssert.Success(await handler.Handle(new GetWeeklyCheckInQuery(user.Id.Value, week, zone), CancellationToken.None));
+        Assert.Equal(2, model.ThisWeek.DaysLogged);
+        Assert.Equal(Math.Round(1020d / days, 1, MidpointRounding.ToEven), model.ThisWeek.AvgDailyCalories);
+        await statistics.Received(1).Send(Arg.Is<ReadMealNutritionStatisticsQuery>(query => query.DateFrom == from && query.DateTo == end && query.TimeZoneId == zone), Arg.Any<CancellationToken>());
     }
 
     private static GetWeeklyCheckInQueryHandler CreateHandler(

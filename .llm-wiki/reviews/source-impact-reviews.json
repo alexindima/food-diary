@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "d3121f31b44d9378ef989c586af8e98946850ea8643fc65284b3aa7e15602bd5"
+          "sha256": "f8c3e043ac5425047b7ed1f8028b281622cd51a5e12e87f3a4e3d09e335aa35f"
         }
       ],
-      "reason": "The dashboard setup preference adds only an optional nullable boolean to DashboardLayoutHttpModel. OpenAPI export and snapshots passed; api-compat against HEAD reports two additive changes and zero breaks. Omitted dismissal retains the persisted value, so existing clients remain compatible. The current compatibility workflow still describes this check correctly.",
+      "reason": "Additive timeZoneId and cycleHidden fields plus nullable pending-goal payloads are reflected in regenerated SDKs and snapshots. All 277 real API integration tests and 351 presentation tests passed; api-compat reports no structural breaking changes.",
       "baseRef": "HEAD",
-      "gitHead": "f0505545b9dd4058704f573deda769dcb6ef2b43",
-      "reviewedAtUtc": "2026-10-10T17:33:23.5066470Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:44:02.6361313Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -249,13 +249,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "9de5839c941aa926ff16dd799b7d6f256591034d8d4a3d06130b8316c7f0bbe0"
+          "sha256": "e7708c14d2ddb9c1b110a858d768a7c7c9fd43e4f01b01268c8de9bb6b2ebb66"
         }
       ],
-      "reason": "Reviewed the backend contract guide against current owner contracts and consumers. Public job DTOs, status strings, routes and error vocabulary are retained; four OpenAPI export/snapshot tests and thirteen meal-from-recognition scenarios passed. New validated result variants remain internal application capabilities.",
+      "reason": "Optional timezone and hidden-cycle fields and pending-goal nullable payloads are compatible and covered by 277 passing API tests; 351 presentation tests validate bounded transport strings.",
       "baseRef": "HEAD",
-      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
-      "reviewedAtUtc": "2026-10-10T11:42:29.8027856Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:52:19.3187787Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -867,13 +867,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "24b9ae5259eb1466a5ca5aa0baf00d5c3540d2de1154b677528941330c21d2f9"
+          "sha256": "792a1070748e342e1fb44ecf25205d98f320ffd65c7e0628d8fabc4927e8835d"
         }
       ],
-      "reason": "Reviewed final optional preference serialization, owned facade, compact component and list-only layout saves. No module dependency or numeric calculation changed. The full app suite passed 4914 tests; UI-kit, tour and admin suites passed 778 tests; final layout and dashboard regression suites passed 35 tests. Existing quality risk workflow still describes the required hotspot and test-gap checks.",
+      "reason": "Final owner tests cover a real baseline, first-measurement initialization, calendar offsets/DST and supported date bounds. Full frontend4932 tests and architecture2272 tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "f0505545b9dd4058704f573deda769dcb6ef2b43",
-      "reviewedAtUtc": "2026-10-10T17:43:03.2527439Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:52:20.2866324Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -954,13 +954,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "02894b682365ab76de5ed33efc1be7a015ab9b80a5dfb4b309915b0d819ccf4e"
+          "sha256": "0439d7e9d4beb2792d159cc594102db9c4ce4c6bf55471840cdcdebde0f8ecd0"
         }
       ],
-      "reason": "Reviewed the new component-scoped dashboard setup facade and its existing generated Users HTTP update. No host, worker, provider, queue or scheduled job is introduced. Owned local API at localhost:5300 and frontend at localhost:4200 were verified through six real browser dashboard responses, persistence after reload and a fresh browser context. The topology workflow remains accurate.",
+      "reason": "Owning handlers and dependencies remain accurately documented. The UTC-minimum guard and new request are indexed; no runtime worker or provider topology changes.",
       "baseRef": "HEAD",
-      "gitHead": "f0505545b9dd4058704f573deda769dcb6ef2b43",
-      "reviewedAtUtc": "2026-10-10T17:43:00.7770871Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:52:21.1697341Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -969,17 +969,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "24b9ae5259eb1466a5ca5aa0baf00d5c3540d2de1154b677528941330c21d2f9"
+          "sha256": "792a1070748e342e1fb44ecf25205d98f320ffd65c7e0628d8fabc4927e8835d"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "02894b682365ab76de5ed33efc1be7a015ab9b80a5dfb4b309915b0d819ccf4e"
+          "sha256": "0439d7e9d4beb2792d159cc594102db9c4ce4c6bf55471840cdcdebde0f8ecd0"
         }
       ],
-      "reason": "Final change persists an optional UI preference through existing authenticated, user-scoped Users updates. Authorization, session handling, identity and health fields are unchanged; server omission preservation prevents older layout clients from dropping dismissal. Local browser fixtures were created without sending email and then removed. Index metadata changes do not alter the security evidence compiler.",
+      "reason": "Final review preserves current-user scoping and tenant filtering; dashboard returns no hidden cycle details. Controlled AI fixture ran in a separate Chrome context and saved no record.",
       "baseRef": "HEAD",
-      "gitHead": "f0505545b9dd4058704f573deda769dcb6ef2b43",
-      "reviewedAtUtc": "2026-10-10T17:43:04.4256254Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:52:22.1100681Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1116,13 +1116,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "2237476496775a2adb2624a1cbf708c798528d9762137b46483b87c4676d94e8"
+          "sha256": "e2ee01a78a4017a1fe95888e097dafe3c9e9f9e31abeba2ca9d0b8b51823f87e"
+        },
+        {
+          "path": ".llm-wiki/generated/frontend-index.json",
+          "sha256": "2a8ac0a30eba753b50a505ada6a2ad1a15c69b7a84d495945d4e915bba904acf"
         }
       ],
-      "reason": "Only the existing dashboard setup component template, scoped stylesheet and UI-kit import list changed. Its page consumer, scoped persistence facade, generated Users operation and backend behavior remain unchanged. Refreshed frontend indexes retain the same runtime owner and trace commands.",
+      "reason": "Existing feature ownership, route discovery and handler traces remain accurate; new Users initialization request and local-day request forwarding are indexed.",
       "baseRef": "HEAD",
-      "gitHead": "f0505545b9dd4058704f573deda769dcb6ef2b43",
-      "reviewedAtUtc": "2026-10-10T18:06:25.7032912Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:12:51.5674911Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1205,14 +1209,14 @@
       "pageSha256": "31a43fb31fa630969babe869c21458771cfbe6ed2e9b0234c47cc7e1511d5725",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "dfeab99bda2f473631b4c791d9439ae486b5202de4a1cf840c5a61d6d9dac442"
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "e2ee01a78a4017a1fe95888e097dafe3c9e9f9e31abeba2ca9d0b8b51823f87e"
         }
       ],
-      "reason": "Reviewed the current pages against the frontend guide: this task adds browser-selection instructions only. Module boundaries, source-discovery rules and public component/API contracts are unchanged by these edits. The visual-evidence workflow now links the Chrome-default browser QA skill.",
+      "reason": "Reviewed native select initial option selection, unknown-unit preservation, locale portion keys and product Unknown versus Other labels. Feature adapters retain generated SDK boundaries and calendar-date constructors.",
       "baseRef": "HEAD",
-      "gitHead": "402c1a3ce7c7f72bf075b7593c3e5349b07cd1b3",
-      "reviewedAtUtc": "2026-10-10T19:48:42.7391317Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:12:46.5609886Z"
     },
     {
       "pageId": "workflow.query-context",

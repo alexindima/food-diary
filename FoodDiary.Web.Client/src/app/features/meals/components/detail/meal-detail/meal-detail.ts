@@ -8,6 +8,7 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
 
+import { resolveTranslateLanguage } from '../../../../../shared/i18n/translate-language.utils';
 import type { Meal } from '../../../../../shared/models/meal.data';
 import { ChartColorsService } from '../../../../../shared/theme/chart-colors.service';
 import { MealDetailFacade } from '../../../lib/detail/meal-detail.facade';
@@ -61,13 +62,18 @@ export class MealDetailComponent {
 
     public constructor() {
         const meal = inject<Meal>(FD_UI_DIALOG_DATA);
-        const viewModel = buildMealDetailViewModel(meal, key => this.translate.instant(key), {
-            ...inject(ChartColorsService).palette,
-            proteins: 'var(--fd-color-primary-600)',
-            fats: 'var(--fd-color-orange-500)',
-            carbs: 'var(--fd-color-sky-500)',
-            fiber: 'var(--fd-color-rose-500)',
-        });
+        const viewModel = buildMealDetailViewModel(
+            meal,
+            key => this.translate.instant(key),
+            {
+                ...inject(ChartColorsService).palette,
+                proteins: 'var(--fd-color-primary-600)',
+                fats: 'var(--fd-color-orange-500)',
+                carbs: 'var(--fd-color-sky-500)',
+                fiber: 'var(--fd-color-rose-500)',
+            },
+            resolveTranslateLanguage(this.translate),
+        );
 
         this.meal = meal;
         this.calories = viewModel.calories;

@@ -2071,6 +2071,9 @@
                         ],
                         "nullable": true
                     },
+                    "cycleHidden": {
+                        "type": "boolean"
+                    },
                     "dailyGoal": {
                         "format": "double",
                         "type": "number"
@@ -8176,6 +8179,10 @@
                     "targetDays": {
                         "format": "int32",
                         "type": "integer"
+                    },
+                    "timeZoneId": {
+                        "nullable": true,
+                        "type": "string"
                     },
                     "timeZoneOffsetMinutes": {
                         "format": "int32",
@@ -26793,6 +26800,14 @@
                 "operationId": "getGamification",
                 "parameters": [
                     {
+                        "in": "query",
+                        "name": "timeZoneId",
+                        "schema": {
+                            "maxLength": 100,
+                            "type": "string"
+                        }
+                    },
+                    {
                         "in": "path",
                         "name": "version",
                         "required": true,
@@ -41694,6 +41709,14 @@
                         }
                     },
                     {
+                        "in": "query",
+                        "name": "TimeZoneId",
+                        "schema": {
+                            "maxLength": 100,
+                            "type": "string"
+                        }
+                    },
+                    {
                         "in": "path",
                         "name": "version",
                         "required": true,
@@ -41771,6 +41794,14 @@
                         "name": "WeekStart",
                         "schema": {
                             "format": "date",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "TimeZoneId",
+                        "schema": {
+                            "maxLength": 100,
                             "type": "string"
                         }
                     },

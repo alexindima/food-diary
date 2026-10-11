@@ -24,6 +24,7 @@ const MOCK_SNAPSHOT: DashboardSnapshot = {
         averageFiber: 25,
     },
     weeklyCalories: [],
+    cycleHidden: false,
     weight: {
         latest: null,
         previous: null,

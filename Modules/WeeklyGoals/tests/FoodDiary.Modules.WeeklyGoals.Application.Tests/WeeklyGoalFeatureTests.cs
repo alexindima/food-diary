@@ -24,6 +24,18 @@ public sealed class WeeklyGoalFeatureTests {
     private static readonly DateTime WeekStartUtc = new(2026, 8, 10, 0, 0, 0, DateTimeKind.Utc);
 
     [Fact]
+    public async Task ProgressReader_UsesLocalWeekWithoutChangingStoredWeekLabel() {
+        var userId = UserId.New();
+        var goal = WeeklyGoal.Create(userId, WeekStartUtc, WeeklyGoalType.DiaryLogging, 3, false, null, null);
+        var zone = TimeZoneInfo.FindSystemTimeZoneById("Asia/Tbilisi");
+        ISender meals = Substitute.For<ISender>();
+        meals.Send(Arg.Any<ReadDistinctMealDatesQuery>(), Arg.Any<CancellationToken>()).Returns([WeekStartUtc, WeekStartUtc.AddDays(1)]);
+        Assert.Equal(2, await new WeeklyGoalProgressReader(meals).GetProgressDaysAsync(goal, CancellationToken.None, zone));
+        Assert.Equal(WeekStartUtc, goal.WeekStartUtc);
+        await meals.Received(1).Send(Arg.Is<ReadDistinctMealDatesQuery>(query => query.DateFrom == WeekStartUtc.AddHours(-4) && query.DateTo == WeekStartUtc.AddDays(7).AddHours(-4).AddTicks(-1) && zone.Equals(query.TimeZone)), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public void RequestModels_ExposeConstructorValues() {
         var userId = Guid.NewGuid();
         var query = new GetWeeklyGoalQuery(userId, WeekStart);

@@ -327,6 +327,7 @@ class DashboardTestState {
         isWaistTrendLoading: signal(false),
         isAdviceLoading: signal(false),
         cycle: signal(null),
+        cycleHidden: signal(false),
         isCycleLoading: signal(false),
         tdeeInsight: signal(null),
         isApplyingTdeeGoal: signal(false),

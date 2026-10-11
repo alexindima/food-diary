@@ -23,6 +23,7 @@ import { BASE_PATH } from '../variables';
 export interface GetWeeklyCheckInRequestParams {
     version: string;
     weekStart?: string;
+    timeZoneId?: string;
 }
 
 @Injectable()
@@ -71,10 +72,13 @@ export class WeeklyCheckInSdk extends BaseService {
             throw new Error('Required parameter version was null or undefined when calling getWeeklyCheckIn.');
         }
         const weekStart = requestParameters?.weekStart;
+        const timeZoneId = requestParameters?.timeZoneId;
 
         let localVarQueryParameters = new OpenApiHttpParams(this.encoder);
 
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'WeekStart', <any>weekStart, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'TimeZoneId', <any>timeZoneId, QueryParamStyle.Form, true);
 
         let localVarHeaders = this.defaultHeaders;
 

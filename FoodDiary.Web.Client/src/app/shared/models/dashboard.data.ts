@@ -27,6 +27,7 @@ export type DashboardSnapshot<TMeal = Meal> = {
     caloriesBurned?: number;
     tdeeInsight?: TdeeInsight | null;
     currentCycle?: CycleResponse | null;
+    cycleHidden?: boolean;
 };
 
 export type DashboardStatistics = {

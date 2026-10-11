@@ -383,7 +383,8 @@ public partial class MealsFeatureTests {
 
         public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
             UserId userId, DateTime dateFrom, DateTime dateTo,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+            CancellationToken cancellationToken = default,
+            TimeZoneInfo? timeZone = null) => throw new NotSupportedException();
 
         public Task<int> GetTotalMealCountAsync(
             UserId userId,
@@ -473,7 +474,8 @@ public partial class MealsFeatureTests {
 
         public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
             UserId userId, DateTime dateFrom, DateTime dateTo,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+            CancellationToken cancellationToken = default,
+            TimeZoneInfo? timeZone = null) => throw new NotSupportedException();
 
         public Task<int> GetTotalMealCountAsync(
             UserId userId,
@@ -563,7 +565,8 @@ public partial class MealsFeatureTests {
 
         public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
             UserId userId, DateTime dateFrom, DateTime dateTo,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+            CancellationToken cancellationToken = default,
+            TimeZoneInfo? timeZone = null) => throw new NotSupportedException();
 
         public Task<int> GetTotalMealCountAsync(
             UserId userId,
@@ -662,7 +665,8 @@ public partial class MealsFeatureTests {
 
         public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
             UserId userId, DateTime dateFrom, DateTime dateTo,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+            CancellationToken cancellationToken = default,
+            TimeZoneInfo? timeZone = null) => throw new NotSupportedException();
 
         public Task<int> GetTotalMealCountAsync(
             UserId userId,

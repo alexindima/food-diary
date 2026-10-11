@@ -207,7 +207,7 @@
                         <ng-container [ngTemplateOutlet]="mobileHydrationFirst() ? null : hydrationBlock" />
 
                         <fd-dashboard-cycle-block
-                            [shouldRender]="layout.shouldRenderBlock('cycle')"
+                            [shouldRender]="layout.shouldRenderBlock('cycle') && !cycleHidden()"
                             [state]="blockStates.cycle"
                             [cardState]="cycleCardState()"
                             [referenceDate]="selectedDate()"

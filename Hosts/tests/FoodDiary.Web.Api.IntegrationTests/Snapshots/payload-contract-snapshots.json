@@ -258,6 +258,7 @@
       "caloriesBurned",
       "currentCycle",
       "currentFastingSession",
+      "cycleHidden",
       "dailyGoal",
       "dashboardLayout",
       "date",
@@ -331,8 +332,8 @@
       "startedAtUtc"
     ],
     "desiredWaistCm": 81.5,
-    "startWaistCm": 81.5,
-    "hasStartedAtUtc": true
+    "startWaistCm": null,
+    "hasStartedAtUtc": false
   },
   "desired-weight": {
     "keys": [
@@ -341,8 +342,8 @@
       "startedAtUtc"
     ],
     "desiredWeightKg": 72.5,
-    "startWeightKg": 72.5,
-    "hasStartedAtUtc": true
+    "startWeightKg": null,
+    "hasStartedAtUtc": false
   },
   "weight-goal-history": {
     "count": 1,

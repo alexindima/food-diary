@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers -- Independent regression examples for portions and calorie basis. */
 import { Component, input, output } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
@@ -38,6 +40,17 @@ type DialogSetup = {
 };
 
 describe('MealManualItemDialogComponent selection', () => {
+    it.each([
+        [400, 2],
+        [200, 1],
+    ])('shows the same per-serving metadata for recipe total %s and %s servings', async (totalCalories, servings) => {
+        const recipe = { ...createRecipe(), totalCalories, servings };
+        const { component } = await setupComponentAsync({ recipe });
+        const instant = vi.spyOn(TestBed.inject(TranslateService), 'instant');
+        component['recipe'].set({ ...recipe });
+        component['selectedItemMeta']();
+        expect(instant).toHaveBeenCalledWith('MEAL_MANAGE.MANUAL_ITEM_RECIPE_META', { calories: 200 });
+    });
     it('should apply selected product default portion amount', async () => {
         const product = createProduct();
         const { component, fdDialogService } = await setupComponentAsync();

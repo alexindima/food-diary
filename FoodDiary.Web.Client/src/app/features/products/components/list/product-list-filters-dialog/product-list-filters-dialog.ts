@@ -55,9 +55,7 @@ export class ProductListFiltersDialogComponent {
     protected imageValue: 'any' | 'with' | 'without' =
         this.data.hasImage === true ? 'with' : this.data.hasImage === false ? 'without' : 'any';
 
-    protected readonly productTypes: ProductType[] = (Object.values(ProductType) as ProductType[]).filter(
-        type => type !== ProductType.Unknown,
-    );
+    protected readonly productTypes: ProductType[] = Object.values(ProductType);
     private readonly selectableProductTypes = new Set<string>(this.productTypes);
     protected readonly productTypeOptions = computed(() =>
         this.productTypes.map<FdUiChipSelectOption>(type => {

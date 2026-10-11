@@ -1,3 +1,5 @@
+using FoodDiary.Application.Contracts.Common.Validation;
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Meals.Contracts.Queries.ReadDistinctMealDates;
 using FoodDiary.Modules.Meals.Contracts.Queries.ReadTotalMealCount;
@@ -42,10 +44,14 @@ public sealed class GetGamificationQueryHandler(
             return Result.Failure<GamificationModel>(userProfileResult.Error);
         }
 
-        DateTime today = dateTimeProvider.GetUtcNow().UtcDateTime.Date;
+        if (!LocalCalendar.TryResolve(query.TimeZoneId, offsetMinutes: null, out TimeZoneInfo timeZone)) {
+            return Result.Failure<GamificationModel>(Errors.Validation.Invalid(nameof(query.TimeZoneId), "Provide a valid calendar time zone."));
+        }
+        var today = LocalCalendar.DateAt(dateTimeProvider.GetUtcNow().UtcDateTime, timeZone).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+        DateTime dayEnd = LocalCalendar.StartOfDayUtc(DateOnly.FromDateTime(today).AddDays(1), timeZone).AddTicks(-1);
         DateTime streakFrom = DateTime.UnixEpoch;
 
-        IReadOnlyList<DateTime> mealDates = await mealActivityReadService.Send(new ReadDistinctMealDatesQuery(userId, streakFrom, today), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<DateTime> mealDates = await mealActivityReadService.Send(new ReadDistinctMealDatesQuery(userId, streakFrom, query.TimeZoneId is null ? today : dayEnd, query.TimeZoneId is null ? null : timeZone), cancellationToken).ConfigureAwait(false);
         (int currentStreak, int longestStreak) = GamificationCalculator.CalculateStreaks(mealDates, today);
 
         int totalMeals = await mealActivityReadService.Send(new ReadTotalMealCountQuery(userId), cancellationToken).ConfigureAwait(false);
@@ -56,17 +62,17 @@ public sealed class GetGamificationQueryHandler(
         DateTime weekStart = today.AddDays(-6);
         Result<IReadOnlyList<MealNutritionStatisticsBucket>> weeklyCaloriesResult = await statisticsReadService.GetStatisticsAsync(
             userId,
-            weekStart,
-            today,
+            LocalCalendar.StartOfDayUtc(DateOnly.FromDateTime(weekStart), timeZone),
+            query.TimeZoneId is null ? today : dayEnd,
             quantizationDays: 1,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken, query.TimeZoneId is null ? null : timeZone).ConfigureAwait(false);
         if (weeklyCaloriesResult.IsFailure) {
             return Result.Failure<GamificationModel>(weeklyCaloriesResult.Error);
         }
 
         UserGamificationProfileModel userProfile = userProfileResult.Value;
         double weeklyAdherence = GamificationCalculator.CalculateWeeklyAdherence(
-            ToDailyCalories(weeklyCaloriesResult.Value), userProfile.CalorieSchedule.GetTargetForDate, today);
+            ToDailyCalories(weeklyCaloriesResult.Value, timeZone), userProfile.CalorieSchedule.GetTargetForDate, today);
 
         IReadOnlyList<BadgeModel> badges = await achievementAwardService
             .EvaluateAndGrantAsync(
@@ -85,8 +91,8 @@ public sealed class GetGamificationQueryHandler(
             badges));
     }
 
-    private static IReadOnlyDictionary<DateTime, double> ToDailyCalories(IReadOnlyList<MealNutritionStatisticsBucket> buckets) =>
+    private static IReadOnlyDictionary<DateTime, double> ToDailyCalories(IReadOnlyList<MealNutritionStatisticsBucket> buckets, TimeZoneInfo timeZone) =>
         buckets
             .Where(static bucket => bucket.TotalCalories > 0)
-            .ToDictionary(static bucket => bucket.DateFrom.Date, static bucket => bucket.TotalCalories);
+            .ToDictionary(bucket => LocalCalendar.DateAt(bucket.DateFrom, timeZone).ToDateTime(TimeOnly.MinValue), static bucket => bucket.TotalCalories);
 }

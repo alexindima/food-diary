@@ -7,8 +7,8 @@ namespace FoodDiary.Modules.Gamification.Presentation.Mappings;
 
 public static class GamificationHttpMappings {
     extension(Guid userId) {
-        public GetGamificationQuery ToQuery() =>
-                new(userId);
+        public GetGamificationQuery ToQuery(string? timeZoneId = null) =>
+                new(userId, timeZoneId);
     }
 
     extension(GamificationModel model) {

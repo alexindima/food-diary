@@ -47,11 +47,15 @@ public sealed class UpdateDesiredWaistCommandHandler(
             .GetCurrentWaistAsync(userId, cancellationToken)
             .ConfigureAwait(false);
         double? activeGoalStartWaist = activeGoal?.StartWaistCm;
-        double currentWaist = trackedWaist ?? activeGoalStartWaist ?? command.DesiredWaistCm ?? 1;
+        double? currentWaist = trackedWaist ?? activeGoalStartWaist;
         if (command.DesiredWaistCm.HasValue) {
-            currentUser.StartWaistGoalWithMeasurements(DesiredWaistCm.Create(command.DesiredWaistCm.Value), MeasuredWaistCm.FromGoalValue(currentWaist), nowUtc);
+            if (currentWaist.HasValue) {
+                currentUser.StartWaistGoalWithMeasurements(DesiredWaistCm.Create(command.DesiredWaistCm.Value), MeasuredWaistCm.FromGoalValue(currentWaist.Value), nowUtc);
+            } else {
+                currentUser.UpdateDesiredWaist(command.DesiredWaistCm.Value);
+            }
         } else {
-            currentUser.CancelWaistGoalWithMeasurement(nowUtc, activeGoal is null ? null : MeasuredWaistCm.FromGoalValue(currentWaist));
+            currentUser.CancelWaistGoalWithMeasurement(nowUtc, activeGoal is null ? null : MeasuredWaistCm.FromGoalValue(currentWaist!.Value));
         }
         await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
 

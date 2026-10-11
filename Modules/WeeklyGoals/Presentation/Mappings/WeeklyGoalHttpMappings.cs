@@ -8,7 +8,7 @@ namespace FoodDiary.Modules.WeeklyGoals.Presentation.Mappings;
 
 public static class WeeklyGoalHttpMappings {
     extension(GetWeeklyGoalHttpQuery query) {
-        public GetWeeklyGoalQuery ToQuery(Guid userId) => new(userId, query.WeekStart);
+        public GetWeeklyGoalQuery ToQuery(Guid userId) => new(userId, query.WeekStart, query.TimeZoneId);
     }
 
     extension(UpsertWeeklyGoalHttpRequest request) {
@@ -19,7 +19,7 @@ public static class WeeklyGoalHttpMappings {
                 request.TargetDays,
                 request.ReminderEnabled,
                 request.ReminderTime,
-                request.TimeZoneOffsetMinutes);
+                request.TimeZoneOffsetMinutes, request.TimeZoneId);
     }
 
     extension(WeeklyGoalModel model) {
