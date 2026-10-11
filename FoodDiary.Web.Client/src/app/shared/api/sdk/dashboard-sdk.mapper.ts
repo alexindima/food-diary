@@ -64,6 +64,7 @@ export function dashboardSnapshotFromSdk(response: DashboardSnapshotHttpResponse
         advice: sdkMaybe(value.advice, advice => requireSdkFields(advice, ['id', 'locale', 'value', 'weight'])),
         currentFastingSession: sdkMaybe(value.currentFastingSession, fastingSessionFromSdk),
         currentCycle: sdkMaybe(value.currentCycle, cycleFromSdk),
+        cycleHidden: value.cycleHidden ?? false,
         tdeeInsight: sdkMaybe(value.tdeeInsight, tdeeInsightFromSdk),
         dashboardLayout: sdkMaybe(value.dashboardLayout, layout => ({
             ...layout,

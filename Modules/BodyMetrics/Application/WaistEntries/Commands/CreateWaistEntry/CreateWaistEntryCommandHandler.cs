@@ -1,3 +1,5 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Users.Contracts.Commands.InitializePendingBodyGoals;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Mappings;
@@ -14,7 +16,8 @@ namespace FoodDiary.Modules.BodyMetrics.Application.WaistEntries.Commands.Create
 
 public sealed class CreateWaistEntryCommandHandler(
     IWaistEntryWriteRepository waistEntryRepository,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    ISender sender)
     : ICommandHandler<CreateWaistEntryCommand, Result<WaistEntryModel>> {
     public async Task<Result<WaistEntryModel>> Handle(
         CreateWaistEntryCommand command,
@@ -45,6 +48,7 @@ public sealed class CreateWaistEntryCommandHandler(
 
         var entry = WaistEntry.CreateWithMeasurement(userId, day, MeasuredWaistCm.Create(command.CircumferenceCm));
         entry = await waistEntryRepository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
+        await sender.Send(new InitializePendingBodyGoalsCommand(userId, Waist: MeasuredWaistCm.Create(command.CircumferenceCm)), cancellationToken).ConfigureAwait(false);
         return Result.Success(entry.ToModel());
     }
 }

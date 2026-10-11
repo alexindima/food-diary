@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { type HttpRequest, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -37,10 +37,17 @@ afterEach(() => {
     httpMock.verify();
 });
 
+function goalRequest(weekStart: string): (request: HttpRequest<unknown>) => boolean {
+    return request =>
+        request.url === BASE_URL &&
+        request.params.get('weekStart') === weekStart &&
+        request.params.get('timeZoneId') === new Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
+
 describe('WeeklyGoalService', () => {
     it.each(['2024-02-29', '2025-12-29', '2026-03-09'])('sends calendar date %s without timezone conversion', weekStart => {
         service.getGoal(calendarDate(weekStart)).subscribe();
-        const request = httpMock.expectOne(`${BASE_URL}?weekStart=${weekStart}`);
+        const request = httpMock.expectOne(goalRequest(weekStart));
         expect(request.request.method).toBe('GET');
         request.flush(null);
     });
@@ -50,7 +57,7 @@ describe('WeeklyGoalService', () => {
         service.getGoal(calendarDate('2026-08-17')).subscribe(goal => {
             expect(goal?.weekStart).toBe(encodedWeek);
         });
-        httpMock.expectOne(`${BASE_URL}?weekStart=2026-08-17`).flush({ ...GOAL, weekStart: encodedWeek });
+        httpMock.expectOne(goalRequest('2026-08-17')).flush({ ...GOAL, weekStart: encodedWeek });
     });
 
     it('preserves the distinction between an absent goal and a failed request', () => {
@@ -64,7 +71,7 @@ describe('WeeklyGoalService', () => {
                 receivedError = error;
             },
         });
-        httpMock.expectOne(`${BASE_URL}?weekStart=2026-08-17`).flush('Unavailable', {
+        httpMock.expectOne(goalRequest('2026-08-17')).flush('Unavailable', {
             status: 503,
             statusText: 'Service Unavailable',
         });
@@ -77,7 +84,7 @@ describe('WeeklyGoalService', () => {
         service.getGoal(calendarDate('2026-08-17')).subscribe(goal => {
             result = goal;
         });
-        httpMock.expectOne(`${BASE_URL}?weekStart=2026-08-17`).flush(null);
+        httpMock.expectOne(goalRequest('2026-08-17')).flush(null);
         expect(result).toBeNull();
     });
 
@@ -86,7 +93,7 @@ describe('WeeklyGoalService', () => {
             expect(goal).toEqual(GOAL);
         });
 
-        const request = httpMock.expectOne(`${BASE_URL}?weekStart=2026-08-17`);
+        const request = httpMock.expectOne(goalRequest('2026-08-17'));
         expect(request.request.method).toBe('GET');
         request.flush(GOAL);
     });
@@ -106,7 +113,7 @@ describe('WeeklyGoalService', () => {
 
         const request = httpMock.expectOne(BASE_URL);
         expect(request.request.method).toBe('PUT');
-        expect(request.request.body).toEqual(payload);
+        expect(request.request.body).toEqual({ ...payload, timeZoneId: new Intl.DateTimeFormat().resolvedOptions().timeZone });
         request.flush(GOAL);
     });
 });

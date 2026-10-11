@@ -1,3 +1,4 @@
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealCount;
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals;
 using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealNutritionStatistics;
@@ -45,7 +46,10 @@ public sealed class GetWeeklyCheckInQueryHandler(
         }
 
         UserWeeklyCheckInProfileModel profile = profileResult.Value;
-        DateTime today = dateTimeProvider.GetUtcNow().UtcDateTime.Date;
+        if (!LocalCalendar.TryResolve(query.TimeZoneId, offsetMinutes: null, out TimeZoneInfo timeZone)) {
+            return Result.Failure<WeeklyCheckInModel>(Errors.Validation.Invalid(nameof(query.TimeZoneId), "Provide a valid calendar time zone."));
+        }
+        var today = LocalCalendar.DateAt(dateTimeProvider.GetUtcNow().UtcDateTime, timeZone).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
         DateTime currentWeekStart = StartOfWeek(today);
         if (query.WeekStart is { } requestedWeek && requestedWeek < EarliestSupportedWeekStart) {
             return Result.Failure<WeeklyCheckInModel>(Errors.Validation.Invalid(
@@ -71,13 +75,20 @@ public sealed class GetWeeklyCheckInQueryHandler(
         DateTime thisWeekEnd = thisWeekStart == currentWeekStart ? today : thisWeekStart.AddDays(6);
         DateTime lastWeekStart = thisWeekStart.AddDays(-7);
         DateTime lastWeekEnd = thisWeekStart.AddDays(-1);
+        try {
+            _ = LocalCalendar.StartOfDayUtc(DateOnly.FromDateTime(lastWeekStart), timeZone);
+        } catch (ArgumentOutOfRangeException) {
+            return Result.Failure<WeeklyCheckInModel>(Errors.Validation.Invalid(
+                nameof(query.WeekStart),
+                "The previous week is outside the supported date range."));
+        }
 
-        Result<WeekSummaryModel> thisWeekSummaryResult = await LoadWeekSummaryAsync(userId, thisWeekStart, thisWeekEnd, cancellationToken).ConfigureAwait(false);
+        Result<WeekSummaryModel> thisWeekSummaryResult = await LoadWeekSummaryAsync(userId, thisWeekStart, thisWeekEnd, timeZone, query.TimeZoneId, cancellationToken).ConfigureAwait(false);
         if (thisWeekSummaryResult.IsFailure) {
             return Result.Failure<WeeklyCheckInModel>(thisWeekSummaryResult.Error);
         }
 
-        Result<WeekSummaryModel> lastWeekSummaryResult = await LoadWeekSummaryAsync(userId, lastWeekStart, lastWeekEnd, cancellationToken).ConfigureAwait(false);
+        Result<WeekSummaryModel> lastWeekSummaryResult = await LoadWeekSummaryAsync(userId, lastWeekStart, lastWeekEnd, timeZone, query.TimeZoneId, cancellationToken).ConfigureAwait(false);
         if (lastWeekSummaryResult.IsFailure) {
             return Result.Failure<WeeklyCheckInModel>(lastWeekSummaryResult.Error);
         }
@@ -98,12 +109,16 @@ public sealed class GetWeeklyCheckInQueryHandler(
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,
+        TimeZoneInfo timeZone,
+        string? timeZoneId,
         CancellationToken cancellationToken) {
+        DateTime mealFrom = LocalCalendar.StartOfDayUtc(DateOnly.FromDateTime(dateFrom), timeZone);
+        DateTime mealTo = LocalCalendar.StartOfDayUtc(DateOnly.FromDateTime(dateTo).AddDays(1), timeZone).AddTicks(-10);
         Result<IReadOnlyList<MealNutritionStatisticsBucket>> nutritionResult = await sender.Send(new ReadMealNutritionStatisticsQuery(
             userId,
-            dateFrom,
-            dateTo.Date.AddDays(1).AddTicks(-10),
-            QuantizationDays: 1),
+            mealFrom,
+            mealTo,
+            QuantizationDays: 1, TimeZoneId: timeZoneId),
             cancellationToken).ConfigureAwait(false);
         if (nutritionResult.IsFailure) {
             return Result.Failure<WeekSummaryModel>(nutritionResult.Error);
@@ -111,7 +126,7 @@ public sealed class GetWeeklyCheckInQueryHandler(
 
         int mealCount = await sender.Send(new ReadMealCountQuery(
             userId,
-            new MealQueryFilters(DateFrom: dateFrom, DateTo: dateTo)),
+            new MealQueryFilters(DateFrom: mealFrom, DateTo: mealTo)),
             cancellationToken).ConfigureAwait(false);
 
         IReadOnlyList<WeightEntryModel> weights = await sender.Send(new ReadWeightEntriesQuery(UserId: userId, DateFrom: dateFrom, DateTo: dateTo, Limit: null, Descending: false), cancellationToken)

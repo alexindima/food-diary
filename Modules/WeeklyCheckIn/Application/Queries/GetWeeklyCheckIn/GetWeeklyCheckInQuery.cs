@@ -6,4 +6,4 @@ namespace FoodDiary.Modules.WeeklyCheckIn.Application.Queries.GetWeeklyCheckIn;
 
 public record GetWeeklyCheckInQuery(
     Guid? UserId,
-    DateOnly? WeekStart = null) : IQuery<Result<WeeklyCheckInModel>>, IUserRequest;
+    DateOnly? WeekStart = null, string? TimeZoneId = null) : IQuery<Result<WeeklyCheckInModel>>, IUserRequest;

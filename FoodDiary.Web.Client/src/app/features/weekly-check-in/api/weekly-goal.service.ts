@@ -17,16 +17,23 @@ export class WeeklyGoalService {
     private readonly sdk = createSdkConnection(WeeklyGoalsSdk, this.baseUrl, inject(HttpClient));
 
     public getGoal(weekStart: CalendarDate): Observable<WeeklyGoal | null> {
-        return this.sdk.client.getWeeklyGoals({ version: this.sdk.version, weekStart }).pipe(
-            map(value => sdkOptional(value, weeklyGoalFromSdk)),
-            catchError((error: unknown) => rethrowApiError('Get weekly goal error', error)),
-        );
+        return this.sdk.client
+            .getWeeklyGoals({ version: this.sdk.version, weekStart, timeZoneId: new Intl.DateTimeFormat().resolvedOptions().timeZone })
+            .pipe(
+                map(value => sdkOptional(value, weeklyGoalFromSdk)),
+                catchError((error: unknown) => rethrowApiError('Get weekly goal error', error)),
+            );
     }
 
     public upsertGoal(payload: UpsertWeeklyGoalPayload): Observable<WeeklyGoal> {
-        return this.sdk.client.putWeeklyGoals({ version: this.sdk.version, upsertWeeklyGoalHttpRequest: payload }).pipe(
-            map(weeklyGoalFromSdk),
-            catchError((error: unknown) => rethrowApiError('Upsert weekly goal error', error)),
-        );
+        return this.sdk.client
+            .putWeeklyGoals({
+                version: this.sdk.version,
+                upsertWeeklyGoalHttpRequest: { ...payload, timeZoneId: new Intl.DateTimeFormat().resolvedOptions().timeZone },
+            })
+            .pipe(
+                map(weeklyGoalFromSdk),
+                catchError((error: unknown) => rethrowApiError('Upsert weekly goal error', error)),
+            );
     }
 }

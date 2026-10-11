@@ -87,8 +87,9 @@ export class MealManualItemDialogComponent {
     protected readonly selectedItemMeta = computed(() => {
         const recipe = this.recipe();
         if (recipe !== null) {
-            const calories = recipe.manualCalories ?? recipe.totalCalories;
-            return calories === null || calories === undefined
+            const totalCalories = recipe.manualCalories ?? recipe.totalCalories;
+            const calories = totalCalories === null || totalCalories === undefined ? null : totalCalories / Math.max(recipe.servings, 1);
+            return calories === null
                 ? this.translateService.instant('MEAL_MANAGE.ITEM_TYPE_OPTIONS.Recipe')
                 : this.translateService.instant('MEAL_MANAGE.MANUAL_ITEM_RECIPE_META', { calories: Math.round(calories) });
         }

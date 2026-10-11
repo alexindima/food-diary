@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4559,
-    "symbols": 4494,
+    "sourceFiles": 4561,
+    "symbols": 4496,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2324,
+      "class": 2325,
       "enum": 71,
       "interface": 412,
-      "record": 1547,
+      "record": 1548,
       "record struct": 140
     },
     "roles": {
-      "Command": 230,
-      "CommandHandler": 224,
+      "Command": 231,
+      "CommandHandler": 225,
       "Configuration": 100,
       "Controller": 111,
       "Entity": 102,
@@ -7318,7 +7318,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "CreateWaistEntryCommandValidator",
@@ -7493,7 +7493,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "CreateWeightEntryCommandValidator",
@@ -14458,7 +14458,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQueryHandler.cs",
-      "line": 17
+      "line": 19
     },
     {
       "name": "AchievementAwardService",
@@ -14668,7 +14668,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Gamification/Presentation/Controllers/GamificationController.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "GamificationPresentationServiceCollectionExtensions",
@@ -25241,6 +25241,13 @@
       "line": 8
     },
     {
+      "name": "InitializePendingBodyGoalsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/InitializePendingBodyGoals/InitializePendingBodyGoalsCommandHandler.cs",
+      "line": 10
+    },
+    {
       "name": "RemoveUserPremiumRoleCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
@@ -25350,7 +25357,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/UpdateGoals/UpdateGoalsCommandHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "UpdateGoalsCommandValidator",
@@ -25750,6 +25757,13 @@
       "role": "Command",
       "path": "Modules/Users/Contracts/Commands/EnsureUserPremiumRole/EnsureUserPremiumRoleCommand.cs",
       "line": 7
+    },
+    {
+      "name": "InitializePendingBodyGoalsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Contracts/Commands/InitializePendingBodyGoals/InitializePendingBodyGoalsCommand.cs",
+      "line": 8
     },
     {
       "name": "RemoveUserPremiumRoleCommand",
@@ -27660,7 +27674,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
-      "line": 21
+      "line": 22
     },
     {
       "name": "WeeklyCheckInCalculator",
@@ -27695,7 +27709,7 @@
       "kind": "record",
       "role": "Query",
       "path": "Modules/WeeklyCheckIn/Presentation/Requests/GetWeeklyCheckInHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "WeeklyCheckInHttpResponse",
@@ -27758,7 +27772,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "UpsertWeeklyGoalCommandValidator",
@@ -27779,7 +27793,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/WeeklyGoals/Application/Common/WeeklyGoalProgressReader.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "WeeklyGoalWeekPolicy",
@@ -27807,7 +27821,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/WeeklyGoals/Application/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "GetWeeklyGoalQueryValidator",
@@ -27926,14 +27940,14 @@
       "kind": "record",
       "role": "Query",
       "path": "Modules/WeeklyGoals/Presentation/Requests/GetWeeklyGoalHttpQuery.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "UpsertWeeklyGoalHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "Modules/WeeklyGoals/Presentation/Requests/UpsertWeeklyGoalHttpRequest.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "WeeklyGoalHttpResponse",

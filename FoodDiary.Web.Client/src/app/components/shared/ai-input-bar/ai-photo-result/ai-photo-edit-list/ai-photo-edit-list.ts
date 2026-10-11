@@ -30,6 +30,10 @@ export class AiPhotoEditListComponent {
     public readonly itemRemoved = output<number>();
     public readonly itemAdded = output();
 
+    protected hasUnitOption(unit: string): boolean {
+        return this.unitOptions().some(option => option.value === unit);
+    }
+
     protected onDrop(event: CdkDragDrop<EditableAiItem[]>): void {
         this.itemDropped.emit({
             previousIndex: event.previousIndex,

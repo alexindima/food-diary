@@ -22,6 +22,10 @@
       "pageSha256": "2d76f3b5a011cedacee04e17c3814e1adb42c22493cd93cbb52f0c7607e67ded",
       "sources": [
         {
+          "path": "AGENTS.md",
+          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
+        },
+        {
           "path": "docs/README.md",
           "sha256": "76c19ff565165f5f4d46669e91393da0fb72876f18badaa2263b61d294aa3956"
         }
@@ -127,6 +131,10 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
+          "path": "AGENTS.md",
+          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
+        },
+        {
           "path": "docs/README.md",
           "sha256": "76c19ff565165f5f4d46669e91393da0fb72876f18badaa2263b61d294aa3956"
         }
@@ -211,13 +219,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "d3121f31b44d9378ef989c586af8e98946850ea8643fc65284b3aa7e15602bd5"
+          "sha256": "f8c3e043ac5425047b7ed1f8028b281622cd51a5e12e87f3a4e3d09e335aa35f"
         }
       ],
-      "reason": "The dashboard setup preference adds only an optional nullable boolean to DashboardLayoutHttpModel. OpenAPI export and snapshots passed; api-compat against HEAD reports two additive changes and zero breaks. Omitted dismissal retains the persisted value, so existing clients remain compatible. The current compatibility workflow still describes this check correctly.",
+      "reason": "Additive timeZoneId and cycleHidden fields plus nullable pending-goal payloads are reflected in regenerated SDKs and snapshots. All 277 real API integration tests and 351 presentation tests passed; api-compat reports no structural breaking changes.",
       "baseRef": "HEAD",
-      "gitHead": "f0505545b9dd4058704f573deda769dcb6ef2b43",
-      "reviewedAtUtc": "2026-10-10T17:33:23.5066470Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:44:02.6361313Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -241,13 +249,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "9de5839c941aa926ff16dd799b7d6f256591034d8d4a3d06130b8316c7f0bbe0"
+          "sha256": "e7708c14d2ddb9c1b110a858d768a7c7c9fd43e4f01b01268c8de9bb6b2ebb66"
         }
       ],
-      "reason": "Reviewed the backend contract guide against current owner contracts and consumers. Public job DTOs, status strings, routes and error vocabulary are retained; four OpenAPI export/snapshot tests and thirteen meal-from-recognition scenarios passed. New validated result variants remain internal application capabilities.",
+      "reason": "Optional timezone and hidden-cycle fields and pending-goal nullable payloads are compatible and covered by 277 passing API tests; 351 presentation tests validate bounded transport strings.",
       "baseRef": "HEAD",
-      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
-      "reviewedAtUtc": "2026-10-10T11:42:29.8027856Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:52:19.3187787Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -863,13 +871,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1989bf60c4bac6a915dd5bf8672d0dc39746c4b942d87e55ac10d4c5590b8536"
+          "sha256": "5ac5f7ea5e0a1f756cfdbade49f297f483eeff3a2e64e962f79cbb7d9de7f7cd"
         }
       ],
-      "reason": "Reviewed updated public component/helper and locale-guard records with focused tests and 96 browser render checks. Quality index signals remain static navigation evidence; the documented risk and test-gap interpretation remains accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
-      "reviewedAtUtc": "2026-10-10T20:26:07.6222820Z"
+      "reason": "Reviewed regenerated navigation against the combined public-site and UX source commits. Application code merged without conflicts; locale aggregates are regenerated from both fragment sets. Generated SDK verification and all 21 performance tooling checks pass. API compatibility reports eight additive changes and zero structural breaks. Existing owner, provider, API, architecture and browser evidence from the UX audit is retained; delivery hooks will rerun combined app tests, formatting and backend tests. Quality and trace records remain navigation rather than execution coverage; tenant predicates, hidden-cycle privacy and owned anonymous Chrome profiles remain intact. Only compiled indexes and review ledgers needed merge reconciliation.",
+      "baseRef": "origin/master",
+      "gitHead": "b5c8a2a6ef32ea7c67a69223ae5dfb5b761142db",
+      "reviewedAtUtc": "2026-10-11T09:31:30.8426074Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -950,13 +958,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "02894b682365ab76de5ed33efc1be7a015ab9b80a5dfb4b309915b0d819ccf4e"
+          "sha256": "0439d7e9d4beb2792d159cc594102db9c4ce4c6bf55471840cdcdebde0f8ecd0"
         }
       ],
-      "reason": "Reviewed the new component-scoped dashboard setup facade and its existing generated Users HTTP update. No host, worker, provider, queue or scheduled job is introduced. Owned local API at localhost:5300 and frontend at localhost:4200 were verified through six real browser dashboard responses, persistence after reload and a fresh browser context. The topology workflow remains accurate.",
+      "reason": "Owning handlers and dependencies remain accurately documented. The UTC-minimum guard and new request are indexed; no runtime worker or provider topology changes.",
       "baseRef": "HEAD",
-      "gitHead": "f0505545b9dd4058704f573deda769dcb6ef2b43",
-      "reviewedAtUtc": "2026-10-10T17:43:00.7770871Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:52:21.1697341Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -965,13 +973,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1989bf60c4bac6a915dd5bf8672d0dc39746c4b942d87e55ac10d4c5590b8536"
+          "sha256": "5ac5f7ea5e0a1f756cfdbade49f297f483eeff3a2e64e962f79cbb7d9de7f7cd"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "0439d7e9d4beb2792d159cc594102db9c4ce4c6bf55471840cdcdebde0f8ecd0"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "9a6a0891a935ec1aacdb7ef21966e9d7d2c4f1f38245050332a9ef3d69b838eb"
         }
       ],
-      "reason": "Reviewed public static content and routing changes plus the refreshed quality index. No billing endpoint or SDK change remains; personal data and provider secrets are not exposed by the public pages. The workflow correctly treats index leads as navigation rather than a security verdict.",
-      "baseRef": "HEAD",
-      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
-      "reviewedAtUtc": "2026-10-10T20:26:10.3706914Z"
+      "reason": "Reviewed regenerated navigation against the combined public-site and UX source commits. Application code merged without conflicts; locale aggregates are regenerated from both fragment sets. Generated SDK verification and all 21 performance tooling checks pass. API compatibility reports eight additive changes and zero structural breaks. Existing owner, provider, API, architecture and browser evidence from the UX audit is retained; delivery hooks will rerun combined app tests, formatting and backend tests. Quality and trace records remain navigation rather than execution coverage; tenant predicates, hidden-cycle privacy and owned anonymous Chrome profiles remain intact. Only compiled indexes and review ledgers needed merge reconciliation.",
+      "baseRef": "origin/master",
+      "gitHead": "b5c8a2a6ef32ea7c67a69223ae5dfb5b761142db",
+      "reviewedAtUtc": "2026-10-11T09:31:31.7792967Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1108,17 +1124,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "d39391dba3832b23f3719ce2e9942e6e08ea51fbc67f89a065e73ec278b0fc09"
+          "sha256": "33501f52eb0087dc977f889209d82fe62ac5f5119697ac219b86ddf6a0aef6b6"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "51e38eb26d5da445508f9cf8159b7151de9ea5ddef39dd49201e113844780fbb"
+          "sha256": "3deeb8ef5e13ba99e7e906ba23121701ca1a2e1792fcf743e9e5849e41f05215"
         }
       ],
-      "reason": "Reviewed the updated frontend and contract indexes for public navigation, locale ownership and root consumers. Trace command behavior, layer selection and source-authority guidance still match the maintained tools.",
-      "baseRef": "HEAD",
-      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
-      "reviewedAtUtc": "2026-10-10T20:26:11.5917551Z"
+      "reason": "Reviewed regenerated navigation against the combined public-site and UX source commits. Application code merged without conflicts; locale aggregates are regenerated from both fragment sets. Generated SDK verification and all 21 performance tooling checks pass. API compatibility reports eight additive changes and zero structural breaks. Existing owner, provider, API, architecture and browser evidence from the UX audit is retained; delivery hooks will rerun combined app tests, formatting and backend tests. Quality and trace records remain navigation rather than execution coverage; tenant predicates, hidden-cycle privacy and owned anonymous Chrome profiles remain intact. Only compiled indexes and review ledgers needed merge reconciliation.",
+      "baseRef": "origin/master",
+      "gitHead": "b5c8a2a6ef32ea7c67a69223ae5dfb5b761142db",
+      "reviewedAtUtc": "2026-10-11T09:31:32.6778500Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1201,14 +1217,18 @@
       "pageSha256": "31a43fb31fa630969babe869c21458771cfbe6ed2e9b0234c47cc7e1511d5725",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "33501f52eb0087dc977f889209d82fe62ac5f5119697ac219b86ddf6a0aef6b6"
+        },
+        {
           "path": "FoodDiary.Web.Client/AGENTS.md",
           "sha256": "43b350254aa3573e5e233dc41ec651775d9034d0d9c84631390b1d3549acb193"
         }
       ],
-      "reason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities.",
-      "baseRef": "HEAD",
-      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
-      "reviewedAtUtc": "2026-10-11T02:03:03.9581312Z"
+      "reason": "Reviewed regenerated navigation against the combined public-site and UX source commits. Application code merged without conflicts; locale aggregates are regenerated from both fragment sets. Generated SDK verification and all 21 performance tooling checks pass. API compatibility reports eight additive changes and zero structural breaks. Existing owner, provider, API, architecture and browser evidence from the UX audit is retained; delivery hooks will rerun combined app tests, formatting and backend tests. Quality and trace records remain navigation rather than execution coverage; tenant predicates, hidden-cycle privacy and owned anonymous Chrome profiles remain intact. Only compiled indexes and review ledgers needed merge reconciliation.",
+      "baseRef": "origin/master",
+      "gitHead": "b5c8a2a6ef32ea7c67a69223ae5dfb5b761142db",
+      "reviewedAtUtc": "2026-10-11T09:31:33.3621934Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1217,13 +1237,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "68d0b90785a433f8bf4cca31255a15387ea72aaee7d8ae28fff728ec222bb680"
+          "sha256": "d523b8cf0394b9bf80144935e113fe9c115bf662f47cc875ce445aeb9737447f"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
         }
       ],
-      "reason": "Reviewed the refreshed repository catalog and frontend paths after adding localized static public routes and pricing documentation. Context command interfaces, SQLite ownership and freshness semantics are unchanged and the documentation remains accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
-      "reviewedAtUtc": "2026-10-10T20:26:09.1218753Z"
+      "reason": "Reviewed regenerated navigation against the combined public-site and UX source commits. Application code merged without conflicts; locale aggregates are regenerated from both fragment sets. Generated SDK verification and all 21 performance tooling checks pass. API compatibility reports eight additive changes and zero structural breaks. Existing owner, provider, API, architecture and browser evidence from the UX audit is retained; delivery hooks will rerun combined app tests, formatting and backend tests. Quality and trace records remain navigation rather than execution coverage; tenant predicates, hidden-cycle privacy and owned anonymous Chrome profiles remain intact. Only compiled indexes and review ledgers needed merge reconciliation.",
+      "baseRef": "origin/master",
+      "gitHead": "b5c8a2a6ef32ea7c67a69223ae5dfb5b761142db",
+      "reviewedAtUtc": "2026-10-11T09:31:34.0251869Z"
     },
     {
       "pageId": "workflow.review-diff",

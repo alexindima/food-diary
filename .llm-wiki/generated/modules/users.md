@@ -39,13 +39,13 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent, WeightGoal, WaistGoal
-- Public contract files: 95
+- Public contract files: 96
 - Observed external consumer groups: 33
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 95
+- Public contract types: 96
 - Interfaces: 35
 - DTO/read-model/projection types: 37
 - Enums: 2
@@ -81,14 +81,14 @@ No literal attribute-routed controller was associated with this module.
 - `interface IUserGoogleIdentityRepository`
 - `interface IUserHydrationProfileReadService`
 - `interface IUserLookupRepository`
-- ... 65 more type(s)
+- ... 66 more type(s)
 
 ## Extraction Readiness
 
 - Abstraction-owned profile-read consumers: 11 across 3 group(s)
-- Implementation-owned IUserContextService consumers: 12 across 1 group(s)
+- Implementation-owned IUserContextService consumers: 13 across 1 group(s)
 - Consumers receiving the User aggregate: 0
-- Consumers with aggregate mutation access: 10
+- Consumers with aggregate mutation access: 11
 - Composition registrations: 1
 - Remaining blocker classes: 2
 - Extraction readiness: partial; migrate legacy aggregate/mutation consumers

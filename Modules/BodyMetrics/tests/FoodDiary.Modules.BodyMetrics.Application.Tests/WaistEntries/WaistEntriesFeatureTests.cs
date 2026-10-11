@@ -74,7 +74,7 @@ public class WaistEntriesFeatureTests {
     [Fact]
     public async Task CreateWaistEntryCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var repository = new InMemoryWaistEntryRepository();
-        var handler = new CreateWaistEntryCommandHandler(repository, CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
+        var handler = new CreateWaistEntryCommandHandler(repository, CreateCurrentUserAccessService(User.Create("user@example.com", "hash")), Substitute.For<ISender>());
 
         Result<WaistEntryModel> result = await handler.Handle(
             new CreateWaistEntryCommand(Guid.Empty, DateTime.UtcNow, 82),
@@ -88,7 +88,7 @@ public class WaistEntriesFeatureTests {
     public async Task CreateWaistEntryCommandHandler_NormalizesDateToUtcForDuplicateLookup() {
         var repository = new InMemoryWaistEntryRepository();
         var user = User.Create("waist@example.com", "hash");
-        var handler = new CreateWaistEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
+        var handler = new CreateWaistEntryCommandHandler(repository, CreateCurrentUserAccessService(user), Substitute.For<ISender>());
         UserId userId = user.Id;
         var localDate = new DateTime(2026, 2, 23, 23, 30, 0, DateTimeKind.Local);
         DateTime expectedDate = NormalizeUtcDate(localDate);
@@ -106,7 +106,7 @@ public class WaistEntriesFeatureTests {
     public async Task CreateWaistEntryCommandHandler_WithDateOnlyValue_PreservesRequestedCalendarDate() {
         var repository = new InMemoryWaistEntryRepository();
         var user = User.Create("waist-dateonly@example.com", "hash");
-        var handler = new CreateWaistEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
+        var handler = new CreateWaistEntryCommandHandler(repository, CreateCurrentUserAccessService(user), Substitute.For<ISender>());
         var dateOnly = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Unspecified);
         var expectedDate = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc);
 
@@ -123,7 +123,7 @@ public class WaistEntriesFeatureTests {
     public async Task CreateWaistEntryCommandHandler_WhenSamePayloadIsRetried_ReturnsOriginalEntry() {
         var repository = new InMemoryWaistEntryRepository();
         var user = User.Create("waist-retry@example.com", "hash");
-        var handler = new CreateWaistEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
+        var handler = new CreateWaistEntryCommandHandler(repository, CreateCurrentUserAccessService(user), Substitute.For<ISender>());
         var command = new CreateWaistEntryCommand(user.Id.Value, new DateTime(2026, 5, 27), 82);
 
         Result<WaistEntryModel> first = await handler.Handle(command, CancellationToken.None);
@@ -138,7 +138,7 @@ public class WaistEntriesFeatureTests {
     public async Task CreateWaistEntryCommandHandler_WhenDateIsReusedWithDifferentValue_ReturnsConflict() {
         var repository = new InMemoryWaistEntryRepository();
         var user = User.Create("waist-conflict@example.com", "hash");
-        var handler = new CreateWaistEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
+        var handler = new CreateWaistEntryCommandHandler(repository, CreateCurrentUserAccessService(user), Substitute.For<ISender>());
         DateTime date = new(2026, 5, 27);
         await handler.Handle(new CreateWaistEntryCommand(user.Id.Value, date, 82), CancellationToken.None);
 
@@ -543,7 +543,7 @@ public class WaistEntriesFeatureTests {
         var user = User.Create("deleted-create-waist@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
         var repository = new InMemoryWaistEntryRepository();
-        var handler = new CreateWaistEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
+        var handler = new CreateWaistEntryCommandHandler(repository, CreateCurrentUserAccessService(user), Substitute.For<ISender>());
 
         Result<WaistEntryModel> result = await handler.Handle(
             new CreateWaistEntryCommand(user.Id.Value, DateTime.UtcNow, 82),

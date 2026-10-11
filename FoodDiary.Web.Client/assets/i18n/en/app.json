@@ -691,7 +691,7 @@
         "PRODUCT_TYPE": "Product type",
         "PRODUCT_TYPE_PLACEHOLDER": "Select product type",
         "PRODUCT_TYPE_OPTIONS": {
-            "UNKNOWN": "Other",
+            "UNKNOWN": "Not specified",
             "MEAT": "Meat",
             "FRUIT": "Fruits",
             "VEGETABLE": "Vegetables",
@@ -1019,7 +1019,11 @@
             "UNKNOWN_ITEM": "Item",
             "ITEMS_MORE": "Show {{count}} more",
             "ITEMS_HIDE": "Hide"
-        }
+        },
+        "SERVINGS_ONE": "serving",
+        "SERVINGS_FEW": "servings",
+        "SERVINGS_MANY": "servings",
+        "SERVINGS_OTHER": "servings"
     },
     "MEAL_TYPES": {
         "BREAKFAST": "Breakfast",
@@ -1144,7 +1148,7 @@
         "MANUAL_ITEM_CHOOSE_PRODUCT": "Choose product",
         "MANUAL_ITEM_CHOOSE_RECIPE": "Choose recipe",
         "MANUAL_ITEM_PRODUCT_META": "{{calories}} kcal / {{amount}} {{unit}}",
-        "MANUAL_ITEM_RECIPE_META": "{{calories}} kcal per recipe",
+        "MANUAL_ITEM_RECIPE_META": "{{calories}} kcal per serving",
         "MANUAL_ITEM_SAVE_DISABLED": "Choose an item and enter an amount",
         "MANUAL_NUTRITION_TITLE": "Adjust nutritional values",
         "MANUAL_NUTRITION_AUTO": "Calculate automatically",

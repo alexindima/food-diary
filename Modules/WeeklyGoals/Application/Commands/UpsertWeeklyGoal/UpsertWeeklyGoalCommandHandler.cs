@@ -1,3 +1,4 @@
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Common;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Application.Contracts.Common.Abstractions.Results;
@@ -28,10 +29,13 @@ public sealed class UpsertWeeklyGoalCommandHandler(
             return CurrentUserAccessResolver.ToFailure<WeeklyGoalModel>(userIdResult);
         }
 
+        if (!LocalCalendar.TryResolve(command.TimeZoneId, offsetMinutes: null, out TimeZoneInfo timeZone)) {
+            return Result.Failure<WeeklyGoalModel>(Errors.Validation.Invalid(nameof(command.TimeZoneId), "Provide a valid calendar time zone."));
+        }
         UserId userId = userIdResult.Value;
         var weekStartUtc = DateTime.SpecifyKind(command.WeekStart.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
         DateTime utcNow = timeProvider.GetUtcNow().UtcDateTime;
-        if (!WeeklyGoalWeekPolicy.CanWrite(command.WeekStart, utcNow)) {
+        if (!WeeklyGoalWeekPolicy.CanWrite(command.WeekStart, command.TimeZoneId is null ? utcNow : LocalCalendar.DateAt(utcNow, timeZone).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc))) {
             return Result.Failure<WeeklyGoalModel>(Errors.Validation.Invalid(
                 nameof(command.WeekStart),
                 "A weekly goal can be changed only for an adjacent current week."));
@@ -62,7 +66,7 @@ public sealed class UpsertWeeklyGoalCommandHandler(
                         utcNow);
                 }
 
-                int progressDays = await progressReader.GetProgressDaysAsync(goal, token).ConfigureAwait(false);
+                int progressDays = await progressReader.GetProgressDaysAsync(goal, token, command.TimeZoneId is null ? null : timeZone).ConfigureAwait(false);
                 return Result.Success(goal.ToModel(progressDays));
             },
             cancellationToken).ConfigureAwait(false);

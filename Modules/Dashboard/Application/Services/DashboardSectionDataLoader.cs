@@ -183,12 +183,9 @@ internal sealed class DashboardSectionDataLoader(
             return null;
         }
 
-        Result<CycleModel?> result = await sender
+        return await sender
             .Send(new GetCurrentCycleQuery(request.UserId, DateOnly.FromDateTime(context.Calendar.Date)), cancellationToken)
             .ConfigureAwait(false);
-        return result.IsSuccess && result.Value?.HideFromDashboard == true
-            ? Result.Success<CycleModel?>(value: null)
-            : result;
     }
 
 }

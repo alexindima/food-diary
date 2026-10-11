@@ -16,9 +16,11 @@ export class WeeklyCheckInService {
     private readonly sdk = createSdkConnection(WeeklyCheckInSdk, this.baseUrl, inject(HttpClient));
 
     public getData(weekStart: CalendarDate): Observable<WeeklyCheckInData> {
-        return this.sdk.client.getWeeklyCheckIn({ version: this.sdk.version, weekStart }).pipe(
-            map(weeklyCheckInFromSdk),
-            catchError((error: unknown) => rethrowApiError('Get weekly check-in error', error)),
-        );
+        return this.sdk.client
+            .getWeeklyCheckIn({ version: this.sdk.version, weekStart, timeZoneId: new Intl.DateTimeFormat().resolvedOptions().timeZone })
+            .pipe(
+                map(weeklyCheckInFromSdk),
+                catchError((error: unknown) => rethrowApiError('Get weekly check-in error', error)),
+            );
     }
 }

@@ -60,6 +60,23 @@ function createEditableItem(overrides: Partial<AiEditableFoodItem> = {}): AiEdit
 }
 
 describe('ai photo edit utils', () => {
+    it.each(['pcs', 'item', 'items', 'piece', 'шт', 'шт.'])('opens %s as pieces without invalidating unchanged nutrition', unit => {
+        const items = buildAiEditableItems([{ ...resultItem, unit, amount: 2 }], null, () => 'eggs');
+        expect(items[0]?.unit).toBe('pcs');
+        expect(resolveAiPhotoUnitKey(unit)).toBe('GENERAL.UNITS.PCS');
+        expect(requiresAiNutritionRecalculation(items, items)).toBe(false);
+    });
+    it('preserves unsupported units and does not equate litres with millilitres', () => {
+        const items = buildAiEditableItems([{ ...resultItem, unit: 'bowl' }], null, () => 'soup');
+        expect(items[0]?.unit).toBe('bowl');
+        expect(resolveAiPhotoUnitKey('l')).toBeNull();
+        expect(
+            requiresAiNutritionRecalculation(
+                items,
+                items.map(item => ({ ...item, unit: 'g' })),
+            ),
+        ).toBe(true);
+    });
     it('builds trimmed editable items from vision results', () => {
         const items = buildAiEditableItems([resultItem], null, () => 'item-1');
 

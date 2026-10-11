@@ -36,8 +36,11 @@
                 [value]="item.unit"
                 (change)="updateItem(i, 'unit', unitSelect.value)"
             >
+                @if (!hasUnitOption(item.unit)) {
+                    <option [value]="item.unit" [selected]="true">{{ item.unit }}</option>
+                }
                 @for (unit of unitOptions(); track unit.value) {
-                    <option [value]="unit.value">{{ unit.label }}</option>
+                    <option [value]="unit.value" [selected]="unit.value === item.unit">{{ unit.label }}</option>
                 }
             </select>
             <fd-ui-button

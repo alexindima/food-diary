@@ -4652,7 +4652,7 @@
       "role": "Component",
       "selector": "fd-meal-detail",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.ts",
-      "line": 34
+      "line": 35
     },
     {
       "name": "FavoriteMealRowComponent",
@@ -6682,7 +6682,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/gamification.service.ts",
-      "line": 27
+      "line": 29
     },
     {
       "name": "GoalsSdk",
@@ -6850,14 +6850,14 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/weekly-check-in.service.ts",
-      "line": 29
+      "line": 30
     },
     {
       "name": "WeeklyGoalsSdk",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/weekly-goals.service.ts",
-      "line": 36
+      "line": 37
     },
     {
       "name": "WeightEntriesSdk",
@@ -7869,8 +7869,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4092,
-      "russianProperties": 4092,
+      "englishProperties": 4096,
+      "russianProperties": 4096,
       "countsMatch": true
     },
     {

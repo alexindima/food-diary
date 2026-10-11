@@ -74,7 +74,7 @@ public class WeightEntriesFeatureTests {
     [Fact]
     public async Task CreateWeightEntryCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var repository = new InMemoryWeightEntryRepository();
-        var handler = new CreateWeightEntryCommandHandler(repository, CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
+        var handler = new CreateWeightEntryCommandHandler(repository, CreateCurrentUserAccessService(User.Create("user@example.com", "hash")), Substitute.For<ISender>());
 
         Result<WeightEntryModel> result = await handler.Handle(
             new CreateWeightEntryCommand(Guid.Empty, DateTime.UtcNow, 82),
@@ -88,7 +88,7 @@ public class WeightEntriesFeatureTests {
     public async Task CreateWeightEntryCommandHandler_NormalizesDateToUtcForDuplicateLookup() {
         var repository = new InMemoryWeightEntryRepository();
         var user = User.Create("weight@example.com", "hash");
-        var handler = new CreateWeightEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
+        var handler = new CreateWeightEntryCommandHandler(repository, CreateCurrentUserAccessService(user), Substitute.For<ISender>());
         UserId userId = user.Id;
         var localDate = new DateTime(2026, 2, 23, 23, 30, 0, DateTimeKind.Local);
         DateTime expectedDate = NormalizeUtcDate(localDate);
@@ -106,7 +106,7 @@ public class WeightEntriesFeatureTests {
     public async Task CreateWeightEntryCommandHandler_WithDateOnlyValue_PreservesRequestedCalendarDate() {
         var repository = new InMemoryWeightEntryRepository();
         var user = User.Create("weight-dateonly@example.com", "hash");
-        var handler = new CreateWeightEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
+        var handler = new CreateWeightEntryCommandHandler(repository, CreateCurrentUserAccessService(user), Substitute.For<ISender>());
         var dateOnly = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Unspecified);
         var expectedDate = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc);
 
@@ -512,7 +512,7 @@ public class WeightEntriesFeatureTests {
         var user = User.Create("deleted-create-weight@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
         var repository = new InMemoryWeightEntryRepository();
-        var handler = new CreateWeightEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
+        var handler = new CreateWeightEntryCommandHandler(repository, CreateCurrentUserAccessService(user), Substitute.For<ISender>());
 
         Result<WeightEntryModel> result = await handler.Handle(
             new CreateWeightEntryCommand(user.Id.Value, DateTime.UtcNow, 82),

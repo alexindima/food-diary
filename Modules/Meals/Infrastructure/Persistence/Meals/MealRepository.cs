@@ -327,19 +327,19 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,
-        CancellationToken cancellationToken = default) {
+        CancellationToken cancellationToken = default,
+        TimeZoneInfo? timeZone = null) {
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
-        DateTime from = StartOfUtcDay(dateFrom);
-        DateTime toInclusive = EndOfUtcDay(dateTo);
-
-        return await records
-            .AsNoTracking()
-            .Where(m => m.UserId == userId && m.Date >= from && m.Date <= toInclusive)
-            .Select(m => m.Date.Date)
-            .Distinct()
-            .OrderByDescending(d => d)
+        DateTime from = timeZone is null ? StartOfUtcDay(dateFrom) : dateFrom;
+        DateTime toInclusive = timeZone is null ? EndOfUtcDay(dateTo) : dateTo;
+        IQueryable<Meal> meals = records.AsNoTracking()
+            .Where(m => m.UserId == userId && m.Date >= from && m.Date <= toInclusive);
+        IQueryable<DateTime> dates = timeZone is null
+            ? meals.Select(m => m.Date.Date)
+            : meals.Select(m => TimeZoneInfo.ConvertTimeBySystemTimeZoneId(m.Date, timeZone.Id).Date);
+        return await dates.Distinct().OrderByDescending(d => d)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 

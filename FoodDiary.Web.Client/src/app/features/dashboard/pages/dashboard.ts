@@ -232,6 +232,7 @@ export class DashboardComponent {
             goal: hydration?.goalMl ?? null,
         };
     });
+    protected readonly cycleHidden = this.facade.cycleHidden;
     protected readonly cycleCardState = computed(() => {
         const cycle = this.cycle();
 

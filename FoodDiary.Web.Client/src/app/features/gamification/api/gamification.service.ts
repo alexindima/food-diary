@@ -19,30 +19,37 @@ export class GamificationService {
 
     public getData(): Observable<GamificationData> {
         const headers = new HttpHeaders({ 'Accept-Language': resolveTranslateLanguage(this.translateService) });
-        return this.sdk.client.getGamification({ version: this.sdk.version }, 'body', false, sdkRequestOptions(headers)).pipe(
-            map(response => {
-                const value = requireSdkFields(response, [
-                    'currentStreak',
-                    'longestStreak',
-                    'totalMealsLogged',
-                    'healthScore',
-                    'weeklyAdherence',
-                    'badges',
-                ]);
-                return {
-                    ...value,
-                    badges: value.badges.map(badgeResponse => {
-                        const badge = requireSdkFields(badgeResponse, ['key', 'category', 'threshold', 'isEarned']);
-                        return {
-                            ...badge,
-                            title: badge.title ?? undefined,
-                            description: badge.description ?? undefined,
-                            icon: badge.icon ?? undefined,
-                        };
-                    }),
-                };
-            }),
-            catchError((error: unknown) => rethrowApiError('Get gamification error', error)),
-        );
+        return this.sdk.client
+            .getGamification(
+                { version: this.sdk.version, timeZoneId: new Intl.DateTimeFormat().resolvedOptions().timeZone },
+                'body',
+                false,
+                sdkRequestOptions(headers),
+            )
+            .pipe(
+                map(response => {
+                    const value = requireSdkFields(response, [
+                        'currentStreak',
+                        'longestStreak',
+                        'totalMealsLogged',
+                        'healthScore',
+                        'weeklyAdherence',
+                        'badges',
+                    ]);
+                    return {
+                        ...value,
+                        badges: value.badges.map(badgeResponse => {
+                            const badge = requireSdkFields(badgeResponse, ['key', 'category', 'threshold', 'isEarned']);
+                            return {
+                                ...badge,
+                                title: badge.title ?? undefined,
+                                description: badge.description ?? undefined,
+                                icon: badge.icon ?? undefined,
+                            };
+                        }),
+                    };
+                }),
+                catchError((error: unknown) => rethrowApiError('Get gamification error', error)),
+            );
     }
 }

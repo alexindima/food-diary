@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers -- Independent regression examples for portions and calorie basis. */
 import { describe, expect, it } from 'vitest';
 
 import { type Meal, MealSourceType } from '../../../../../shared/models/meal.data';
 import { MeasurementUnit, type Product, ProductVisibility } from '../../../../../shared/models/product.data';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
-import { productQuantityFromStored } from '../../../../../shared/models/semantics/meal-quantity';
+import { productQuantityFromStored, recipeServingsFromStored } from '../../../../../shared/models/semantics/meal-quantity';
 import { buildMealDetailViewModel } from './meal-detail.mapper';
 
 const BASE_AMOUNT = 100;
@@ -180,6 +181,28 @@ describe('buildMealDetailViewModel nutrition state', () => {
 });
 
 describe('buildMealDetailViewModel item preview state', () => {
+    it.each([
+        [1, 'ONE'],
+        [2, 'FEW'],
+        [5, 'MANY'],
+        [1.5, 'OTHER'],
+        [21, 'ONE'],
+    ])('uses the Russian portion form for %s servings', (amount, category) => {
+        const meal = createMeal({
+            items: [
+                {
+                    id: entityId<'meal-item'>('recipe-item'),
+                    mealId: entityId<'meal'>('meal-1'),
+                    sourceType: MealSourceType.Recipe,
+                    product: null,
+                    recipe: null,
+                    amount: recipeServingsFromStored(Number(amount)),
+                },
+            ],
+        });
+        const view = buildMealDetailViewModel(meal, translate, undefined, 'ru');
+        expect(view.itemPreview[0]?.unitKey).toBe(`MEAL_DETAIL.SERVINGS_${category}`);
+    });
     it('combines manual and AI item previews with translated fallback names and known units', () => {
         const viewModel = buildMealDetailViewModel(createMealWithItemPreview(), translate);
 
@@ -189,7 +212,7 @@ describe('buildMealDetailViewModel item preview state', () => {
             {
                 name: 'translated:MEAL_DETAIL.SUMMARY.UNKNOWN_ITEM',
                 amount: BASE_AMOUNT,
-                unitKey: 'MEAL_DETAIL.SERVINGS',
+                unitKey: 'MEAL_DETAIL.SERVINGS_OTHER',
                 unitText: null,
             },
             { name: 'Local coffee', amount: AI_ITEM_AMOUNT, unitKey: 'GENERAL.UNITS.ML', unitText: null },

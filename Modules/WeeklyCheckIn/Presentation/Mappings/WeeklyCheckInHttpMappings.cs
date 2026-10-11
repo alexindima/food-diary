@@ -7,7 +7,7 @@ namespace FoodDiary.Modules.WeeklyCheckIn.Presentation.Mappings;
 
 public static class WeeklyCheckInHttpMappings {
     extension(GetWeeklyCheckInHttpQuery query) {
-        public GetWeeklyCheckInQuery ToQuery(Guid userId) => new(userId, query.WeekStart);
+        public GetWeeklyCheckInQuery ToQuery(Guid userId) => new(userId, query.WeekStart, query.TimeZoneId);
     }
 
     extension(WeeklyCheckInModel model) {

@@ -54,7 +54,7 @@ describe('product manage form creation', () => {
         expect(form.baseAmount).toBe(DEFAULT_BASE_AMOUNT);
         expect(form.defaultPortionAmount).toBe(DEFAULT_BASE_AMOUNT);
         expect(form.baseUnit).toBe(MeasurementUnit.G);
-        expect(form.productType).toBe(ProductType.Unknown);
+        expect(form.productType).toBe(ProductType.Other);
         expect(form.visibility).toBe(ProductVisibility.Private);
     });
 

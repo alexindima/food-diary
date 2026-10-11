@@ -10,4 +10,4 @@ public sealed record UpsertWeeklyGoalCommand(
     int TargetDays,
     bool ReminderEnabled,
     TimeOnly? ReminderTime,
-    int? TimeZoneOffsetMinutes) : ICommand<Result<WeeklyGoalModel>>, IUserRequest;
+    int? TimeZoneOffsetMinutes, string? TimeZoneId = null) : ICommand<Result<WeeklyGoalModel>>, IUserRequest;

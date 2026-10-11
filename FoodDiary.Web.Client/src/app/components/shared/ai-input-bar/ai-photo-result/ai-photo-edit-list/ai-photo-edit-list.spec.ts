@@ -34,6 +34,20 @@ async function setupAiPhotoEditListAsync(): Promise<ComponentFixture<AiPhotoEdit
     return fixture;
 }
 
+describe('AI unit selection', () => {
+    it.each(['pcs', 'bowl', 'l'])('keeps %s selected instead of silently showing grams', async unit => {
+        const fixture = await setupAiPhotoEditListAsync();
+        fixture.componentRef.setInput('items', [{ ...editableItem, amount: 2, unit }]);
+        fixture.componentRef.setInput('unitOptions', [
+            { value: 'g', label: 'г' },
+            { value: 'pcs', label: 'шт' },
+        ]);
+        fixture.detectChanges();
+        const select = (fixture.nativeElement as HTMLElement).querySelector('select');
+        expect(select?.value).toBe(unit);
+    });
+});
+
 describe('AiPhotoEditListComponent', () => {
     it('emits item updates from inputs', async () => {
         const fixture = await setupAiPhotoEditListAsync();

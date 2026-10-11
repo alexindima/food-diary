@@ -379,10 +379,33 @@ public sealed class PresentationPayloadContractIntegrationTests(
     }
 
     [RequiresDockerFact]
+    public async Task DesiredWaist_BeforeMeasurements_FirstMeasurementStartsPersistedGoal() {
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        client.DefaultRequestHeaders.Add("Idempotency-Key", Guid.NewGuid().ToString("N"));
+        (await client.PutAsJsonAsync("/api/v1/users/desired-waist", new UpdateDesiredWaistHttpRequest(75)))
+            .EnsureSuccessStatusCode();
+        using (var pending = JsonDocument.Parse(await client.GetStringAsync("/api/v1/users/desired-waist"))) {
+            Assert.Equal(JsonValueKind.Null, pending.RootElement.GetProperty("startWaistCm").ValueKind);
+            Assert.Equal(JsonValueKind.Null, pending.RootElement.GetProperty("startedAtUtc").ValueKind);
+        }
+        HttpResponseMessage measurement = await client.PostAsJsonAsync("/api/v1/waist-entries", new { date = DateTime.UtcNow.Date, circumferenceCm = 80.5 });
+        Assert.True(measurement.IsSuccessStatusCode, await measurement.Content.ReadAsStringAsync());
+        using var started = JsonDocument.Parse(await client.GetStringAsync("/api/v1/users/desired-waist"));
+        Assert.Equal(75, started.RootElement.GetProperty("desiredWaistCm").GetDouble());
+        Assert.Equal(80.5, started.RootElement.GetProperty("startWaistCm").GetDouble());
+        Assert.Equal(JsonValueKind.String, started.RootElement.GetProperty("startedAtUtc").ValueKind);
+    }
+
+    [RequiresDockerFact]
     public async Task WeightGoalHistory_AfterGoalReplacement_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+        (await client.PostAsJsonAsync("/api/v1/weight-entries", new { date = DateTime.UtcNow.Date, weightKg = 80 }))
+            .EnsureSuccessStatusCode();
 
         (await client.PutAsJsonAsync("/api/v1/users/desired-weight", new UpdateDesiredWeightHttpRequest(72.5)))
             .EnsureSuccessStatusCode();
@@ -415,6 +438,10 @@ public sealed class PresentationPayloadContractIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        client.DefaultRequestHeaders.Add("Idempotency-Key", Guid.NewGuid().ToString("N"));
+
+        (await client.PostAsJsonAsync("/api/v1/waist-entries", new { date = DateTime.UtcNow.Date, circumferenceCm = 90 }))
+            .EnsureSuccessStatusCode();
 
         (await client.PutAsJsonAsync("/api/v1/users/desired-waist", new UpdateDesiredWaistHttpRequest(81.5)))
             .EnsureSuccessStatusCode();
@@ -616,7 +643,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         return new JsonObject {
             ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
             ["desiredWeightKg"] = root.GetProperty("desiredWeightKg").GetDouble(),
-            ["startWeightKg"] = root.GetProperty("startWeightKg").GetDouble(),
+            ["startWeightKg"] = root.GetProperty("startWeightKg").ValueKind == JsonValueKind.Null ? null : JsonValue.Create(root.GetProperty("startWeightKg").GetDouble()),
             ["hasStartedAtUtc"] = root.TryGetProperty("startedAtUtc", out JsonElement startedAtUtc)
                 && startedAtUtc.ValueKind == JsonValueKind.String,
         };
@@ -626,7 +653,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         return new JsonObject {
             ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
             ["desiredWaistCm"] = root.GetProperty("desiredWaistCm").GetDouble(),
-            ["startWaistCm"] = root.GetProperty("startWaistCm").GetDouble(),
+            ["startWaistCm"] = root.GetProperty("startWaistCm").ValueKind == JsonValueKind.Null ? null : JsonValue.Create(root.GetProperty("startWaistCm").GetDouble()),
             ["hasStartedAtUtc"] = root.GetProperty("startedAtUtc").ValueKind == JsonValueKind.String,
         };
     }

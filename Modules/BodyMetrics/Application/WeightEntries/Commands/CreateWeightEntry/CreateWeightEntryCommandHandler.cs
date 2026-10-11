@@ -1,3 +1,5 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Users.Contracts.Commands.InitializePendingBodyGoals;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Mappings;
@@ -14,7 +16,8 @@ namespace FoodDiary.Modules.BodyMetrics.Application.WeightEntries.Commands.Creat
 
 public sealed class CreateWeightEntryCommandHandler(
     IWeightEntryWriteRepository weightEntryRepository,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    ISender sender)
     : ICommandHandler<CreateWeightEntryCommand, Result<WeightEntryModel>> {
     public async Task<Result<WeightEntryModel>> Handle(
         CreateWeightEntryCommand command,
@@ -42,6 +45,7 @@ public sealed class CreateWeightEntryCommandHandler(
         var entry = WeightEntry.CreateWithMeasurement(userId, day, MeasuredWeightKg.Create(command.WeightKg));
         entry = await weightEntryRepository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
 
+        await sender.Send(new InitializePendingBodyGoalsCommand(userId, Weight: MeasuredWeightKg.Create(command.WeightKg)), cancellationToken).ConfigureAwait(false);
         return Result.Success(entry.ToModel());
     }
 }

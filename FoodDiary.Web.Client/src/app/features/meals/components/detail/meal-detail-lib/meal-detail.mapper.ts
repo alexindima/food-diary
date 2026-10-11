@@ -2,6 +2,7 @@ import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety
 
 import type { NutritionFormModel, NutritionMacroState } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { CHART_COLORS, type ChartColorPalette } from '../../../../../constants/chart-colors';
+import { resolveAiPhotoUnitKey } from '../../../../../shared/lib/ai-photo-edit.utils';
 import { normalizeMealType } from '../../../../../shared/lib/meal-type.util';
 import { PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
 import { normalizeSatietyLevel } from '../../../../../shared/lib/satiety-level.utils';
@@ -29,6 +30,7 @@ export function buildMealDetailViewModel(
     meal: Meal,
     translate: (key: string) => string,
     colors: ChartColorPalette = CHART_COLORS,
+    language = 'en',
 ): MealDetailViewModel {
     const calories = meal.totalCalories;
     const proteins = meal.totalProteins;
@@ -48,7 +50,7 @@ export function buildMealDetailViewModel(
         mealTypeLabel: buildMealTypeLabel(meal.mealType, translate),
         preMealSatietyMeta: buildSatietyMeta('before', meal.preMealSatietyLevel, translate),
         postMealSatietyMeta: buildSatietyMeta('after', meal.postMealSatietyLevel, translate),
-        itemPreview: buildItemPreview(meal, translate),
+        itemPreview: buildItemPreview(meal, translate, language),
         macroBlocks: buildMacroBlocks({ proteins, fats, carbs, fiber, alcohol }, datasetValues, colors),
         nutritionModel: buildNutritionModel({ calories, proteins, fats, carbs, fiber, alcohol }),
         macroBarState: buildMacroBarState(datasetValues),
@@ -140,19 +142,22 @@ function resolveMacroPercent(value: number, values: number[]): number {
     return Math.max(MEAL_DETAIL_MIN_MACRO_BAR_PERCENT, Math.round((value / max) * PERCENT_MULTIPLIER));
 }
 
-function buildItemPreview(meal: Meal, translate: (key: string) => string): MealDetailItemPreview[] {
+function buildItemPreview(meal: Meal, translate: (key: string) => string, language: string): MealDetailItemPreview[] {
     const manualItems = meal.items.map(item => {
         const unit = item.product?.baseUnit;
         return {
             name: item.product?.name ?? item.recipe?.name ?? translate('MEAL_DETAIL.SUMMARY.UNKNOWN_ITEM'),
             amount: item.amount,
-            unitKey: unit !== undefined ? `GENERAL.UNITS.${unit}` : 'MEAL_DETAIL.SERVINGS',
+            unitKey:
+                unit !== undefined
+                    ? `GENERAL.UNITS.${unit}`
+                    : `MEAL_DETAIL.SERVINGS_${new Intl.PluralRules(language).select(item.amount).toUpperCase()}`,
             unitText: null,
         };
     });
     const aiItems = (meal.aiSessions ?? []).flatMap(session =>
         session.items.map(item => {
-            const unitKey = getAiItemUnitKey(item.unit);
+            const unitKey = resolveAiPhotoUnitKey(item.unit);
             return {
                 name: getAiItemName(item, translate),
                 amount: item.amount,
@@ -168,24 +173,6 @@ function buildItemPreview(meal: Meal, translate: (key: string) => string): MealD
 function getAiItemName(item: MealAiItem, translate: (key: string) => string): string {
     const itemName = item.nameLocal?.trim() ?? item.nameEn.trim();
     return itemName.length > 0 ? itemName : translate('MEAL_DETAIL.SUMMARY.UNKNOWN_ITEM');
-}
-
-function getAiItemUnitKey(unit: string): string | null {
-    const normalized = unit.trim().toLowerCase();
-    const unitMap: Record<string, string> = {
-        g: 'GENERAL.UNITS.G',
-        gram: 'GENERAL.UNITS.G',
-        grams: 'GENERAL.UNITS.G',
-        gr: 'GENERAL.UNITS.G',
-        ml: 'GENERAL.UNITS.ML',
-        l: 'GENERAL.UNITS.ML',
-        pcs: 'GENERAL.UNITS.PCS',
-        pc: 'GENERAL.UNITS.PCS',
-        piece: 'GENERAL.UNITS.PCS',
-        pieces: 'GENERAL.UNITS.PCS',
-    };
-
-    return unitMap[normalized] ?? null;
 }
 
 function buildSatietyMeta(kind: 'before' | 'after', value: number | null | undefined, translate: (key: string) => string): MealSatietyMeta {

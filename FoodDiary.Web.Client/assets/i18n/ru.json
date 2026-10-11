@@ -1045,7 +1045,7 @@
         "MANUAL_ITEM_CHOOSE_PRODUCT": "Выбрать продукт",
         "MANUAL_ITEM_CHOOSE_RECIPE": "Выбрать рецепт",
         "MANUAL_ITEM_PRODUCT_META": "{{calories}} ккал / {{amount}} {{unit}}",
-        "MANUAL_ITEM_RECIPE_META": "{{calories}} ккал в рецепте",
+        "MANUAL_ITEM_RECIPE_META": "{{calories}} ккал на порцию",
         "MANUAL_ITEM_SAVE_DISABLED": "Выберите позицию и введите количество",
         "MANUAL_NUTRITION_TITLE": "Корректировка калорийности",
         "MANUAL_NUTRITION_AUTO": "Рассчитывать автоматически",
@@ -4882,7 +4882,7 @@
         "PRODUCT_TYPE": "Тип продукта",
         "PRODUCT_TYPE_PLACEHOLDER": "Выберите тип продукта",
         "PRODUCT_TYPE_OPTIONS": {
-            "UNKNOWN": "Другое",
+            "UNKNOWN": "Не задан",
             "MEAT": "Мясо",
             "FRUIT": "Фрукты",
             "VEGETABLE": "Овощи",
@@ -5203,7 +5203,11 @@
             "UNKNOWN_ITEM": "Позиция",
             "ITEMS_MORE": "Показать ещё {{count}}",
             "ITEMS_HIDE": "Скрыть"
-        }
+        },
+        "SERVINGS_ONE": "порция",
+        "SERVINGS_FEW": "порции",
+        "SERVINGS_MANY": "порций",
+        "SERVINGS_OTHER": "порции"
     },
     "HUNGER_SCALE": {
         "LEVEL_0": {

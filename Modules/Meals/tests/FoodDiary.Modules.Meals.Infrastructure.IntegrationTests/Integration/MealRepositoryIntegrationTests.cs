@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
@@ -347,6 +348,28 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
             dates,
             date => Assert.Equal(new DateTime(2026, 5, 2, 0, 0, 0, DateTimeKind.Utc), date),
             date => Assert.Equal(new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc), date));
+    }
+
+    [RequiresDockerTheory]
+    [InlineData("Asia/Tbilisi", "2026-10-10T19:23:00Z", "2026-10-10T20:17:00Z")]
+    [InlineData("Asia/Kathmandu", "2026-10-10T18:00:00Z", "2026-10-10T18:30:00Z")]
+    [InlineData("America/Los_Angeles", "2026-10-10T06:50:00Z", "2026-10-10T07:10:00Z")]
+    public async Task GetDistinctMealDatesAsync_GroupsLocalDaysAndKeepsUserScope(string zoneId, string firstText, string secondText) {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"local-dates-{Guid.NewGuid():N}@example.test", "hash");
+        var other = User.Create($"other-dates-{Guid.NewGuid():N}@example.test", "hash");
+        context.Users.AddRange(user, other);
+        var first = DateTime.Parse(firstText, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
+        var second = DateTime.Parse(secondText, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
+        context.Meals.AddRange(Meal.Create(user.Id, first), Meal.Create(user.Id, second), Meal.Create(other.Id, second.AddDays(1)));
+        await context.SaveChangesAsync();
+        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context.Products), new MealSourceSnapshotQuery(context));
+        var zone = TimeZoneInfo.FindSystemTimeZoneById(zoneId);
+        IReadOnlyList<DateTime> dates = await repository.GetDistinctMealDatesAsync(user.Id, first.AddDays(-1), second.AddDays(1), timeZone: zone);
+        Assert.Equal(2, dates.Count);
+        Assert.Equal(1, (dates[0] - dates[1]).Days);
+        Assert.Single(await repository.GetDistinctMealDatesAsync(user.Id, first, first, timeZone: zone));
+        Assert.Single(await repository.GetDistinctMealDatesAsync(user.Id, first, second));
     }
 
     [RequiresDockerFact]
