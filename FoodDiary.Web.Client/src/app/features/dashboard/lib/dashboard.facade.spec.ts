@@ -566,6 +566,7 @@ describe('DashboardFacade view data (1)', () => {
     it('provides safe empty values before the first snapshot and while loading', () => {
         const { facade, dashboardService } = setupFacade();
         expect(facade.isTodaySelected()).toBe(true);
+        expect(facade.cycleHidden()).toBe(false);
         expect(facade.dailyGoal()).toBe(0);
         expect(facade.todayCalories()).toBe(0);
         expect(facade.caloriesBurned()).toBe(0);
@@ -612,6 +613,19 @@ describe('DashboardFacade view data (1)', () => {
 });
 
 describe('DashboardFacade snapshot mapping', () => {
+    it('preserves cycle privacy without cycle details and updates it after a refresh', () => {
+        const { facade, snapshot, dashboardService } = setupFacade();
+        snapshot.cycleHidden = true;
+        facade.initialize();
+        expect(facade.cycleHidden()).toBe(true);
+        expect(facade.cycle()).toBeNull();
+
+        dashboardService.getSnapshotSilentlyStrict.mockReturnValueOnce(of({ ...snapshot, cycleHidden: false }));
+        facade.reload(false);
+        expect(facade.cycleHidden()).toBe(false);
+        expect(facade.cycle()).toBeNull();
+    });
+
     it('maps real snapshot measurements and weekly totals without mixing weight and waist', () => {
         const { facade, snapshot } = setupFacade();
         snapshot.weight = {
