@@ -7526,132 +7526,132 @@
     {
       "path": "",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 60
+      "line": 56
     },
     {
       "path": "ru",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 67
+      "line": 63
     },
     {
       "path": "dashboard",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 79
+      "line": 75
     },
     {
       "path": "products",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 85
+      "line": 81
     },
     {
       "path": "meals",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 91
+      "line": 87
     },
     {
       "path": "recipes",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 97
+      "line": 93
     },
     {
       "path": "explore",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 103
+      "line": 99
     },
     {
       "path": "shopping-lists",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 108
+      "line": 104
     },
     {
       "path": "goals",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 114
+      "line": 110
     },
     {
       "path": "statistics",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 120
+      "line": 116
     },
     {
       "path": "weight-history",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 126
+      "line": 122
     },
     {
       "path": "waist-history",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 132
+      "line": 128
     },
     {
       "path": "cycle-tracking",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 138
+      "line": 134
     },
     {
       "path": "meal-plans",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 144
+      "line": 140
     },
     {
       "path": "weekly-check-in",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 150
+      "line": 146
     },
     {
       "path": "lessons",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 156
+      "line": 152
     },
     {
       "path": "gamification",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 162
+      "line": 158
     },
     {
       "path": "fasting",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 168
+      "line": 164
     },
     {
       "path": "premium",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 174
+      "line": 170
     },
     {
       "path": "profile",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 180
+      "line": 176
     },
     {
       "path": "dietologist",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 186
+      "line": 182
     },
     {
       "path": "dietologist-invitations/:invitationId",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 192
+      "line": 188
     },
     {
       "path": "recommendations",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 199
+      "line": 195
     },
     {
       "path": "privacy-policy",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 205
+      "line": 201
     },
     {
       "path": "ru/privacy-policy",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 211
+      "line": 207
     },
     {
       "path": "**",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 217
+      "line": 213
     },
     {
       "path": "auth/telegram",

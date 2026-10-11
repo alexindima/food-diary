@@ -9226,19 +9226,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/app.routes.server.ts",
-      "nonBlankLines": 112,
+      "nonBlankLines": 114,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.24
+      "structuralRiskScore": 2.28
     },
     {
       "path": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "nonBlankLines": 217,
+      "nonBlankLines": 213,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.34
+      "structuralRiskScore": 4.26
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-consent-dialog/ai-consent-dialog.ts",
@@ -15746,11 +15746,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/seo.service.ts",
-      "nonBlankLines": 265,
+      "nonBlankLines": 267,
       "decisionPoints": 37,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 60.8
+      "structuralRiskScore": 60.84
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/token-storage.service.ts",

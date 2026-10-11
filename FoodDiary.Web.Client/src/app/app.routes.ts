@@ -11,16 +11,10 @@ import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 import { publicSiteLocaleGuard } from './shared/i18n/public-site-locale.guard';
 import { mobileShellStartGuard } from './shared/platform/mobile-shell-start.guard';
 
-const publicSeoLanding = ({
-    path,
-    titleKey,
-    descriptionKey,
-    baseKey,
-    featureKeys,
-    stepKeys,
-    faqKeys,
-    relatedPaths,
-}: PublicSeoLandingRouteConfig, locale: PublicSiteLocale): Route => ({
+const publicSeoLanding = (
+    { path, titleKey, descriptionKey, baseKey, featureKeys, stepKeys, faqKeys, relatedPaths }: PublicSeoLandingRouteConfig,
+    locale: PublicSiteLocale,
+): Route => ({
     path: localizedPublicPath(`/${path}`, locale).slice(1),
     canActivate: [publicSiteLocaleGuard],
     loadComponent: async (): Promise<Type<unknown>> =>
@@ -44,16 +38,18 @@ const publicSeoLanding = ({
     },
 });
 
-const publicInformationRoutes = (locale: PublicSiteLocale): Routes => PUBLIC_INFORMATION_PAGES.map(page => ({
-    path: localizedPublicPath(`/${page.path}`, locale).slice(1),
-    canActivate: [publicSiteLocaleGuard],
-    loadComponent: async () => import('./features/public/pages/public-article/public-article-page').then(m => m.PublicArticlePageComponent),
-    data: {
-        shell: 'public',
-        publicPageKey: page.baseKey,
-        seo: { titleKey: `${page.baseKey}.TITLE`, descriptionKey: `${page.baseKey}.DESCRIPTION` },
-    },
-}));
+const publicInformationRoutes = (locale: PublicSiteLocale): Routes =>
+    PUBLIC_INFORMATION_PAGES.map(page => ({
+        path: localizedPublicPath(`/${page.path}`, locale).slice(1),
+        canActivate: [publicSiteLocaleGuard],
+        loadComponent: async () =>
+            import('./features/public/pages/public-article/public-article-page').then(m => m.PublicArticlePageComponent),
+        data: {
+            shell: 'public',
+            publicPageKey: page.baseKey,
+            seo: { titleKey: `${page.baseKey}.TITLE`, descriptionKey: `${page.baseKey}.DESCRIPTION` },
+        },
+    }));
 
 export const routes: Routes = [
     {

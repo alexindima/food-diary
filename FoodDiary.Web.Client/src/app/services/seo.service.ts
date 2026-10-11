@@ -145,7 +145,9 @@ export class SeoService {
     }
 
     private updateAlternateLinks(path?: string): void {
-        this.document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(link => { link.remove(); });
+        this.document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(link => {
+            link.remove();
+        });
         if (!isPublicMarketingPath(path ?? '/')) {
             return;
         }

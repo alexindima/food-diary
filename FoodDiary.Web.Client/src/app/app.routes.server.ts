@@ -3,10 +3,12 @@ import { RenderMode, type ServerRoute } from '@angular/ssr';
 import { localizedPublicPath, PUBLIC_MARKETING_PATHS } from './config/public-site-paths';
 
 export const serverRoutes: ServerRoute[] = [
-    ...Array.from(PUBLIC_MARKETING_PATHS).flatMap(path => (['en', 'ru'] as const).map((locale): ServerRoute => ({
-        path: localizedPublicPath(path, locale).slice(1),
-        renderMode: RenderMode.Prerender,
-    }))),
+    ...Array.from(PUBLIC_MARKETING_PATHS).flatMap(path =>
+        (['en', 'ru'] as const).map((locale): ServerRoute => ({
+            path: localizedPublicPath(path, locale).slice(1),
+            renderMode: RenderMode.Prerender,
+        })),
+    ),
     {
         path: 'verify-pending',
         renderMode: RenderMode.Client,
