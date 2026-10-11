@@ -144,6 +144,9 @@ Run from `FoodDiary.Web.Client`.
 | `npm run test:ci:admin` | Admin app unit tests. |
 | `npm run check:i18n` | Locale consistency. |
 | `npm run check:seo-prerender` | SEO prerender HTML checks. |
+| `npm run test:performance-build` | Startup/service-worker graph and deterministic public Lighthouse runner checks. |
+| `npm run audit:lighthouse` | Opt-in production build and repeated public-page mobile/desktop audits. See [public Lighthouse workflow](frontend/PUBLIC_LIGHTHOUSE.md). |
+| `npm run audit:lighthouse:check` | Enforce saved Lighthouse budgets and baseline regression tolerances without launching Chrome. |
 | `npm run verify` | Full frontend verification chain. |
 
 User and Admin coverage excludes only their generated SDK directories. Feature

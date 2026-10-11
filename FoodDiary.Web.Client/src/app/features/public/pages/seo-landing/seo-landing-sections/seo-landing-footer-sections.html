@@ -17,7 +17,7 @@
         </div>
         <div class="seo-landing__related-grid">
             @for (page of relatedPages(); track page.path) {
-                <a class="seo-landing__related-card" [routerLink]="page.path">
+                <a class="seo-landing__related-card" [routerLink]="localizedPath(page.path)">
                     <span class="seo-landing__related-label">{{ page.labelKey | translate }}</span>
                     <span class="seo-landing__related-arrow">{{ 'SEO_PAGE.RELATED_CTA' | translate }}</span>
                 </a>
@@ -33,10 +33,12 @@
             <p class="seo-landing__section-subtitle">{{ cta().subtitleKey | translate }}</p>
         </div>
         <div class="seo-landing__actions">
-            <fd-ui-button routerLink="/" variant="primary" size="lg" [queryParams]="{ auth: 'register' }">
+            <fd-ui-button variant="primary" size="lg" [routerLink]="home()" [queryParams]="{ auth: 'register' }">
                 {{ cta().primaryKey | translate }}
             </fd-ui-button>
-            <fd-ui-button routerLink="/" variant="secondary" fill="outline" size="lg"> {{ cta().secondaryKey | translate }} </fd-ui-button>
+            <fd-ui-button variant="secondary" fill="outline" size="lg" [routerLink]="home()">
+                {{ cta().secondaryKey | translate }}
+            </fd-ui-button>
         </div>
     </div>
 </section>

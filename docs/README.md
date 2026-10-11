@@ -59,6 +59,7 @@ This directory contains long-form repository documentation. Keep root-level mark
 - `frontend/FRONTEND_ARCHITECTURE.md`
 - `frontend/API_SDK.md` - generated user API SDK, migrated feature adapters, regeneration commands, CI drift checks and AI development guidance.
 - `frontend/PUBLIC_RECIPES.md` - anonymous recipe catalog, privacy boundaries, SSR deployment and verification.
+- `frontend/PUBLIC_LIGHTHOUSE.md` - public-page performance collection, median reports, budgets and baseline regression checks.
 - `frontend/TEMPLATE_LINTING.md` - active template-rule verification and existing complexity limits.
 - `frontend/FRONTEND_OBSERVABILITY_BASELINE.md`
 - `frontend/DESIGN_SYSTEM_REVIEW.md` - living page inventory, token contract, visual QA matrix, and findings ledger.

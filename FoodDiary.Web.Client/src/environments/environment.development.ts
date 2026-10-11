@@ -50,9 +50,9 @@ export const environment: AppConfig = {
     supportEmail: 'admin@fooddiary.club',
     siteUrls: {
         en: 'https://fooddiary.club',
-        ru: 'https://xn--b1adbcbrouc8l.xn--p1ai',
+        ru: 'https://fooddiary.club/ru',
     },
-    russianDefaultHosts: ['xn--b1adbcbrouc8l.xn--p1ai', 'www.xn--b1adbcbrouc8l.xn--p1ai'],
+    russianDefaultHosts: [],
     enableGlobalErrorHandler: false,
     enableClientObservability: false,
 };

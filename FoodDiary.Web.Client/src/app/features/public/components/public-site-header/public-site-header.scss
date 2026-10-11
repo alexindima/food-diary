@@ -1,0 +1,48 @@
+@use 'variables' as variables;
+
+:host {
+    display: block;
+    background: var(--fd-bg-surface);
+}
+
+.public-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--fd-space-md);
+    max-width: var(--fd-landing-container-max-width);
+    margin: 0 auto;
+    padding: var(--fd-space-sm) var(--fd-space-md);
+    color: var(--fd-color-text);
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    &__brand {
+        font-weight: var(--fd-font-weight-bold);
+        margin-right: auto;
+    }
+    &__links,
+    &__languages {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--fd-space-md);
+    }
+    &__active,
+    a[aria-current='page'] {
+        color: var(--fd-color-primary-700);
+        font-weight: var(--fd-font-weight-bold);
+    }
+
+    @media #{variables.$media-tablet} {
+        &__links {
+            order: 1;
+            width: 100%;
+            font-size: var(--fd-text-body-sm-size);
+        }
+    }
+}

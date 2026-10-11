@@ -2,11 +2,13 @@ import type { Type } from '@angular/core';
 import type { Route, Routes } from '@angular/router';
 
 import { PUBLIC_SEO_LANDING_ROUTES, type PublicSeoLandingRouteConfig } from './config/public-seo-landing-routes.config';
+import { localizedPublicPath, PUBLIC_INFORMATION_PAGES, type PublicSiteLocale } from './config/public-site-paths';
 import { authRoutes } from './features/auth/auth.routes';
 import { authGuard } from './guards/auth.guard';
 import { dietologistGuard } from './guards/dietologist.guard';
 import { loggedInGuard } from './guards/logged-in.guard';
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
+import { publicSiteLocaleGuard } from './shared/i18n/public-site-locale.guard';
 import { mobileShellStartGuard } from './shared/platform/mobile-shell-start.guard';
 
 const publicSeoLanding = ({
@@ -18,8 +20,9 @@ const publicSeoLanding = ({
     stepKeys,
     faqKeys,
     relatedPaths,
-}: PublicSeoLandingRouteConfig): Route => ({
-    path,
+}: PublicSeoLandingRouteConfig, locale: PublicSiteLocale): Route => ({
+    path: localizedPublicPath(`/${path}`, locale).slice(1),
+    canActivate: [publicSiteLocaleGuard],
     loadComponent: async (): Promise<Type<unknown>> =>
         import('./features/public/pages/seo-landing/seo-landing-page/seo-landing-page').then(m => m.SeoLandingPageComponent),
     data: {
@@ -41,15 +44,36 @@ const publicSeoLanding = ({
     },
 });
 
+const publicInformationRoutes = (locale: PublicSiteLocale): Routes => PUBLIC_INFORMATION_PAGES.map(page => ({
+    path: localizedPublicPath(`/${page.path}`, locale).slice(1),
+    canActivate: [publicSiteLocaleGuard],
+    loadComponent: async () => import('./features/public/pages/public-article/public-article-page').then(m => m.PublicArticlePageComponent),
+    data: {
+        shell: 'public',
+        publicPageKey: page.baseKey,
+        seo: { titleKey: `${page.baseKey}.TITLE`, descriptionKey: `${page.baseKey}.DESCRIPTION` },
+    },
+}));
+
 export const routes: Routes = [
     {
         path: '',
         loadComponent: async () => import('./features/public/pages/landing/main').then(m => m.MainComponent),
-        canActivate: [mobileShellStartGuard, loggedInGuard],
+        canActivate: [mobileShellStartGuard, loggedInGuard, publicSiteLocaleGuard],
         canDeactivate: [unsavedChangesGuard],
         data: { shell: 'public', seo: { titleKey: 'SEO.LANDING_TITLE', descriptionKey: 'SEO.LANDING_DESCRIPTION' } },
     },
-    ...PUBLIC_SEO_LANDING_ROUTES.map(publicSeoLanding),
+    {
+        path: 'ru',
+        loadComponent: async () => import('./features/public/pages/landing/main').then(m => m.MainComponent),
+        canActivate: [loggedInGuard, publicSiteLocaleGuard],
+        canDeactivate: [unsavedChangesGuard],
+        data: { shell: 'public', seo: { titleKey: 'SEO.LANDING_TITLE', descriptionKey: 'SEO.LANDING_DESCRIPTION' } },
+    },
+    ...(['en', 'ru'] as const).flatMap(locale => [
+        ...PUBLIC_SEO_LANDING_ROUTES.map(page => publicSeoLanding(page, locale)),
+        ...publicInformationRoutes(locale),
+    ]),
     ...authRoutes,
     {
         path: 'dashboard',
@@ -179,6 +203,13 @@ export const routes: Routes = [
     },
     {
         path: 'privacy-policy',
+        canActivate: [publicSiteLocaleGuard],
+        loadComponent: async () => import('./features/public/pages/privacy-policy/privacy-policy').then(m => m.PrivacyPolicyComponent),
+        data: { shell: 'public', seo: { titleKey: 'SEO.PRIVACY_POLICY', descriptionKey: 'SEO.PRIVACY_POLICY_DESCRIPTION' } },
+    },
+    {
+        path: 'ru/privacy-policy',
+        canActivate: [publicSiteLocaleGuard],
         loadComponent: async () => import('./features/public/pages/privacy-policy/privacy-policy').then(m => m.PrivacyPolicyComponent),
         data: { shell: 'public', seo: { titleKey: 'SEO.PRIVACY_POLICY', descriptionKey: 'SEO.PRIVACY_POLICY_DESCRIPTION' } },
     },

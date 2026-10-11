@@ -35,6 +35,7 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 - `npm run check:api-client-usage` rejects manual HTTP/native fetch entrypoints in both apps; it also runs through `lint`, `verify`, CI and pre-push. Keep exceptions restricted to the reviewed transport method, verb and target shape. Do not exempt a whole API service or a feature folder.
 - i18n check: `npm run check:i18n`
 - SEO prerender check: `npm run check:seo-prerender`
+- Public page Lighthouse: `npm run audit:lighthouse` (production build and repeated mobile/desktop audits of the prerender inventory). Quick collection: `npm run audit:lighthouse:smoke` after building. Budget/baseline commands and measurement limits: `../docs/frontend/PUBLIC_LIGHTHOUSE.md`. Browser audits are opt-in; deterministic runner checks are included in `test:performance-build` and `verify`.
 - Client smoke E2E: `npm run test:e2e:client:smoke`
 - Admin smoke E2E: `npm run test:e2e:admin:smoke`
 - Storybook: `npm run storybook`

@@ -1,0 +1,28 @@
+:host {
+    display: block;
+    background: var(--fd-bg-surface);
+}
+
+.public-footer {
+    display: grid;
+    gap: var(--fd-space-lg);
+    max-width: var(--fd-landing-container-max-width);
+    margin: 0 auto;
+    padding: var(--fd-space-xl) var(--fd-space-md);
+    border-top: var(--fd-border-muted);
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-body-sm-size);
+
+    p {
+        margin: var(--fd-space-xs) 0 0;
+    }
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--fd-space-md);
+    }
+    a {
+        color: var(--fd-color-primary-700);
+        width: fit-content;
+    }
+}

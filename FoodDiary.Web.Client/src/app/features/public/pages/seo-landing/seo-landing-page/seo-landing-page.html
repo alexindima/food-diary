@@ -6,10 +6,10 @@
                 <h1 class="seo-landing__title">{{ hero.titleKey | translate }}</h1>
                 <p class="seo-landing__subtitle">{{ hero.subtitleKey | translate }}</p>
                 <div class="seo-landing__actions">
-                    <fd-ui-button routerLink="/" variant="primary" size="lg" [queryParams]="{ auth: 'register' }">
+                    <fd-ui-button variant="primary" size="lg" [routerLink]="home" [queryParams]="{ auth: 'register' }">
                         {{ hero.primaryActionKey | translate }}
                     </fd-ui-button>
-                    <fd-ui-button routerLink="/" variant="secondary" fill="outline" size="lg">
+                    <fd-ui-button variant="secondary" fill="outline" size="lg" [routerLink]="home">
                         {{ hero.secondaryActionKey | translate }}
                     </fd-ui-button>
                 </div>
@@ -33,5 +33,5 @@
     </section>
 
     <fd-seo-landing-content-sections [audience]="audience" [features]="features" [steps]="steps" [faq]="faq" />
-    <fd-seo-landing-footer-sections [relatedPages]="relatedPages" [cta]="cta" />
+    <fd-seo-landing-footer-sections [relatedPages]="relatedPages" [cta]="cta" [home]="home" />
 </div>

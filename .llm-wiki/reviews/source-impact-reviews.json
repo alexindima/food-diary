@@ -22,18 +22,14 @@
       "pageSha256": "2d76f3b5a011cedacee04e17c3814e1adb42c22493cd93cbb52f0c7607e67ded",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
-        },
-        {
           "path": "docs/README.md",
-          "sha256": "44f9e49aad8e654634c69ad8a17c53db54d5835270bf40f75bbf037a262936c5"
+          "sha256": "76c19ff565165f5f4d46669e91393da0fb72876f18badaa2263b61d294aa3956"
         }
       ],
-      "reason": "Reviewed knowledge authority and navigation pages against unchanged root priority rules and the new reliability guide. Reference corpus metadata distinguishes synthetic OCR/text references from unmeasured food-photo/provider quality. The guide records actual local restore, load, browser and cleanup evidence; production claims remain unverified.",
+      "reason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities.",
       "baseRef": "HEAD",
-      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T14:33:06.1087758Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:02:59.7361957Z"
     },
     {
       "pageId": "module.frontend",
@@ -42,13 +38,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "dfeab99bda2f473631b4c791d9439ae486b5202de4a1cf840c5a61d6d9dac442"
+          "sha256": "43b350254aa3573e5e233dc41ec651775d9034d0d9c84631390b1d3549acb193"
         }
       ],
-      "reason": "Reviewed the current pages against the frontend guide: this task adds browser-selection instructions only. Module boundaries, source-discovery rules and public component/API contracts are unchanged by these edits. The visual-evidence workflow now links the Chrome-default browser QA skill.",
+      "reason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities.",
       "baseRef": "HEAD",
-      "gitHead": "402c1a3ce7c7f72bf075b7593c3e5349b07cd1b3",
-      "reviewedAtUtc": "2026-10-10T19:48:42.0479784Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:03:00.2073178Z"
     },
     {
       "pageId": "module.mail-services",
@@ -117,13 +113,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "dfeab99bda2f473631b4c791d9439ae486b5202de4a1cf840c5a61d6d9dac442"
+          "sha256": "43b350254aa3573e5e233dc41ec651775d9034d0d9c84631390b1d3549acb193"
         }
       ],
-      "reason": "Reviewed the current pages against the frontend guide: this task adds browser-selection instructions only. Module boundaries, source-discovery rules and public component/API contracts are unchanged by these edits. The visual-evidence workflow now links the Chrome-default browser QA skill.",
+      "reason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities.",
       "baseRef": "HEAD",
-      "gitHead": "402c1a3ce7c7f72bf075b7593c3e5349b07cd1b3",
-      "reviewedAtUtc": "2026-10-10T19:48:42.3032130Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:03:00.7056207Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -131,18 +127,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
-        },
-        {
           "path": "docs/README.md",
-          "sha256": "44f9e49aad8e654634c69ad8a17c53db54d5835270bf40f75bbf037a262936c5"
+          "sha256": "76c19ff565165f5f4d46669e91393da0fb72876f18badaa2263b61d294aa3956"
         }
       ],
-      "reason": "Reviewed knowledge authority and navigation pages against unchanged root priority rules and the new reliability guide. Reference corpus metadata distinguishes synthetic OCR/text references from unmeasured food-photo/provider quality. The guide records actual local restore, load, browser and cleanup evidence; production claims remain unverified.",
+      "reason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities.",
       "baseRef": "HEAD",
-      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T14:33:06.6085400Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:03:01.1830676Z"
     },
     {
       "pageId": "system.quality-index",
@@ -234,13 +226,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "c1295215dded56144dac4b8df91b04e93b9cec11a928dcc9806cb5662079f894"
+          "sha256": "7d0e963a5f73c705d9cd0978b487c9420974455ad0747eba3aebe3b91f576fde"
         }
       ],
-      "reason": "The frontend interaction refactor updates static dependency and unused-source navigation. The documented architecture-health workflow still matches the generated schema and direct CLI commands; no new architecture policy or dependency direction is introduced.",
+      "reason": "Reviewed the refreshed architecture-health projection and current public chrome contracts. Shared route helpers stay in config, UI imports use the explicit public contract, and no .NET project edges changed. Existing drift and removal guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T15:04:08.5711339Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-10T20:26:04.4588854Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -580,17 +572,21 @@
     {
       "pageId": "workflow-frontend-visual-evidence",
       "pagePath": ".llm-wiki/workflows/frontend-visual-evidence.md",
-      "pageSha256": "2b42317f0646f66ef48a014336e0cd5c11895a45ad80f867af0b849c6192652e",
+      "pageSha256": "9b95c7c4d66fa577cf2524f59e5b95847547e4c215550a4e711c5696f38938b1",
       "sources": [
         {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "43b350254aa3573e5e233dc41ec651775d9034d0d9c84631390b1d3549acb193"
+        },
+        {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "6c4ca69f4fc3694a462cf13858c53a70e26a1cdc6669452c8a2e234ddb2aa744"
+          "sha256": "33fda6645d98ba0232c3e4fb7e4619a459cbe9e05444f864a38069ddfe882de3"
         }
       ],
-      "reason": "Reviewed quality, visual-evidence and trace guides against current indexes and scripts. Browser checks exercised seven real API/DB journeys in desktop EN and ordinary-user mobile EN, with exact source-derived selectors and real PDF bytes. No visual redesign or RU visual coverage is claimed. Forty-three Node tests, TypeScript and focused ESLint checks pass. Wiki publication now sequences quality/contract writers before module readers; actual affected smoke and deterministic concurrent-update tests passed. Static test-reference signals remain navigation only.",
+      "reason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities.",
       "baseRef": "HEAD",
-      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T14:33:07.1625242Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:03:02.0215588Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -867,13 +863,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "24b9ae5259eb1466a5ca5aa0baf00d5c3540d2de1154b677528941330c21d2f9"
+          "sha256": "1989bf60c4bac6a915dd5bf8672d0dc39746c4b942d87e55ac10d4c5590b8536"
         }
       ],
-      "reason": "Reviewed final optional preference serialization, owned facade, compact component and list-only layout saves. No module dependency or numeric calculation changed. The full app suite passed 4914 tests; UI-kit, tour and admin suites passed 778 tests; final layout and dashboard regression suites passed 35 tests. Existing quality risk workflow still describes the required hotspot and test-gap checks.",
+      "reason": "Reviewed updated public component/helper and locale-guard records with focused tests and 96 browser render checks. Quality index signals remain static navigation evidence; the documented risk and test-gap interpretation remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f0505545b9dd4058704f573deda769dcb6ef2b43",
-      "reviewedAtUtc": "2026-10-10T17:43:03.2527439Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-10T20:26:07.6222820Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -969,17 +965,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "24b9ae5259eb1466a5ca5aa0baf00d5c3540d2de1154b677528941330c21d2f9"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "02894b682365ab76de5ed33efc1be7a015ab9b80a5dfb4b309915b0d819ccf4e"
+          "sha256": "1989bf60c4bac6a915dd5bf8672d0dc39746c4b942d87e55ac10d4c5590b8536"
         }
       ],
-      "reason": "Final change persists an optional UI preference through existing authenticated, user-scoped Users updates. Authorization, session handling, identity and health fields are unchanged; server omission preservation prevents older layout clients from dropping dismissal. Local browser fixtures were created without sending email and then removed. Index metadata changes do not alter the security evidence compiler.",
+      "reason": "Reviewed public static content and routing changes plus the refreshed quality index. No billing endpoint or SDK change remains; personal data and provider secrets are not exposed by the public pages. The workflow correctly treats index leads as navigation rather than a security verdict.",
       "baseRef": "HEAD",
-      "gitHead": "f0505545b9dd4058704f573deda769dcb6ef2b43",
-      "reviewedAtUtc": "2026-10-10T17:43:04.4256254Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-10T20:26:10.3706914Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1101,13 +1093,13 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "a4e92e3ef6156d50bdf3e3935a8c5f5713ed34d035915a0f866ecf1b7267ba77"
+          "sha256": "8a54a9e42ba860e25cd7f6020b2dadee1bb6aedf2ec429e91a83845c7a4d4e27"
         }
       ],
-      "reason": "The existing smoke suite remains unchanged; real persistence journeys, scoped mutation testing and coding eval limits are documented in authoritative guides.",
+      "reason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities.",
       "baseRef": "HEAD",
-      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
-      "reviewedAtUtc": "2026-10-10T08:41:19.6123951Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:03:03.2691003Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1116,13 +1108,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "2237476496775a2adb2624a1cbf708c798528d9762137b46483b87c4676d94e8"
+          "sha256": "d39391dba3832b23f3719ce2e9942e6e08ea51fbc67f89a065e73ec278b0fc09"
+        },
+        {
+          "path": ".llm-wiki/generated/frontend-index.json",
+          "sha256": "51e38eb26d5da445508f9cf8159b7151de9ea5ddef39dd49201e113844780fbb"
         }
       ],
-      "reason": "Only the existing dashboard setup component template, scoped stylesheet and UI-kit import list changed. Its page consumer, scoped persistence facade, generated Users operation and backend behavior remain unchanged. Refreshed frontend indexes retain the same runtime owner and trace commands.",
+      "reason": "Reviewed the updated frontend and contract indexes for public navigation, locale ownership and root consumers. Trace command behavior, layer selection and source-authority guidance still match the maintained tools.",
       "baseRef": "HEAD",
-      "gitHead": "f0505545b9dd4058704f573deda769dcb6ef2b43",
-      "reviewedAtUtc": "2026-10-10T18:06:25.7032912Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-10T20:26:11.5917551Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1206,13 +1202,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "dfeab99bda2f473631b4c791d9439ae486b5202de4a1cf840c5a61d6d9dac442"
+          "sha256": "43b350254aa3573e5e233dc41ec651775d9034d0d9c84631390b1d3549acb193"
         }
       ],
-      "reason": "Reviewed the current pages against the frontend guide: this task adds browser-selection instructions only. Module boundaries, source-discovery rules and public component/API contracts are unchanged by these edits. The visual-evidence workflow now links the Chrome-default browser QA skill.",
+      "reason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities.",
       "baseRef": "HEAD",
-      "gitHead": "402c1a3ce7c7f72bf075b7593c3e5349b07cd1b3",
-      "reviewedAtUtc": "2026-10-10T19:48:42.7391317Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:03:03.9581312Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1221,17 +1217,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "d06da594ec59d3f1c9f92b0135093ee9a8c370addee2e634de8c84094554ce9d"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
+          "sha256": "68d0b90785a433f8bf4cca31255a15387ea72aaee7d8ae28fff728ec222bb680"
         }
       ],
-      "reason": "Reviewed knowledge authority and navigation pages against unchanged root priority rules and the new reliability guide. Reference corpus metadata distinguishes synthetic OCR/text references from unmeasured food-photo/provider quality. The guide records actual local restore, load, browser and cleanup evidence; production claims remain unverified.",
+      "reason": "Reviewed the refreshed repository catalog and frontend paths after adding localized static public routes and pricing documentation. Context command interfaces, SQLite ownership and freshness semantics are unchanged and the documentation remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "846dd01b10eee5d2140ab6b2d5f2819375dc8567",
-      "reviewedAtUtc": "2026-10-10T14:33:08.5634740Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-10T20:26:09.1218753Z"
     },
     {
       "pageId": "workflow.review-diff",

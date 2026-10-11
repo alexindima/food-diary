@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+
+import { localizedPublicPath, publicSiteLocale } from '../../../../config/public-site-paths';
 
 export type LandingFaqItem = {
     questionKey: string;
@@ -22,4 +24,8 @@ export type LandingFaqGuide = {
 export class LandingFaqComponent {
     public readonly questions = input.required<readonly LandingFaqItem[]>();
     public readonly guides = input.required<readonly LandingFaqGuide[]>();
+    private readonly router = inject(Router);
+    protected localizedPath(path: string): string {
+        return localizedPublicPath(path, publicSiteLocale(this.router.url));
+    }
 }

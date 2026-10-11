@@ -1,0 +1,12 @@
+<footer class="public-footer">
+    <div>
+        <strong>Food Diary</strong>
+        <p>{{ 'PUBLIC_SITE.FOOTER.DESCRIPTION' | translate }}</p>
+    </div>
+    <nav [attr.aria-label]="'PUBLIC_SITE.FOOTER.LABEL' | translate">
+        @for (link of links(); track link.path) {
+            <a [routerLink]="link.path">{{ link.label | translate }}</a>
+        }
+    </nav>
+    <a [href]="`mailto:${supportEmail}`">{{ supportEmail }}</a>
+</footer>

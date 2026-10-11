@@ -1,0 +1,62 @@
+<article class="public-article">
+    <header class="public-article__intro">
+        <span class="public-article__eyebrow">{{ `${baseKey}.EYEBROW` | translate }}</span>
+        <h1>{{ `${baseKey}.TITLE` | translate }}</h1>
+        <p class="public-article__lead">{{ `${baseKey}.DESCRIPTION` | translate }}</p>
+        @if (isContact) {
+            <a class="public-article__contact" [href]="`mailto:${supportEmail}`">{{ supportEmail }}</a>
+        } @else {
+            <fd-ui-button variant="primary" size="lg" [routerLink]="home" [queryParams]="{ auth: 'register' }">
+                {{ `${baseKey}.ACTION` | translate }}
+            </fd-ui-button>
+        }
+    </header>
+
+    @if (isPricing) {
+        <!-- TODO(public-pricing): connect real localized prices only after the payment integration is ready.
+             Acceptance and rollout notes: docs/plans/PUBLIC_SITE_PRICING.md. -->
+        <aside class="public-article__next" role="status">
+            <h2>{{ 'PUBLIC_PAGES.PRICING.AVAILABILITY_TITLE' | translate }}</h2>
+            <p>{{ 'PUBLIC_PAGES.PRICING.AVAILABILITY_TEXT' | translate }}</p>
+        </aside>
+        <div class="public-article__table-wrap">
+            <table>
+                <caption>
+                    {{
+                        'PUBLIC_PAGES.PRICING.COMPARISON.TITLE' | translate
+                    }}
+                </caption>
+                <thead>
+                    <tr>
+                        <th scope="col">{{ 'PUBLIC_PAGES.PRICING.COMPARISON.FEATURE' | translate }}</th>
+                        <th scope="col">{{ 'PUBLIC_PAGES.PRICING.COMPARISON.FREE' | translate }}</th>
+                        <th scope="col">Premium</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (row of comparisonRows; track row) {
+                        <tr>
+                            <th scope="row">{{ `PUBLIC_PAGES.PRICING.COMPARISON.${row}.TITLE` | translate }}</th>
+                            <td>{{ `PUBLIC_PAGES.PRICING.COMPARISON.${row}.FREE` | translate }}</td>
+                            <td>{{ `PUBLIC_PAGES.PRICING.COMPARISON.${row}.PREMIUM` | translate }}</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <div class="public-article__sections">
+        @for (section of sections; track section) {
+            <fd-ui-card>
+                <h2>{{ `${section}.TITLE` | translate }}</h2>
+                <p>{{ `${section}.TEXT` | translate }}</p>
+            </fd-ui-card>
+        }
+    </div>
+
+    <aside class="public-article__next">
+        <p>{{ `${baseKey}.NEXT` | translate }}</p>
+        <a [routerLink]="pricingPath">{{ 'PUBLIC_SITE.NAV.PRICING' | translate }}</a>
+    </aside>
+</article>

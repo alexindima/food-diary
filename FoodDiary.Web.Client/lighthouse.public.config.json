@@ -1,0 +1,18 @@
+{
+    "routesFile": "src/prerender-routes.txt",
+    "devices": ["mobile", "desktop"],
+    "runs": 3,
+    "smokeRoutes": ["/", "/calorie-counter", "/ru", "/ru/calorie-counter"],
+    "budgets": {
+        "mobile": { "performance": 85, "lcp": 3500, "tbt": 300, "cls": 0.1 },
+        "desktop": { "performance": 90, "lcp": 2000, "tbt": 200, "cls": 0.1 }
+    },
+    "regressions": {
+        "performance": { "absolute": 5, "relative": 0 },
+        "fcp": { "absolute": 200, "relative": 0.15 },
+        "lcp": { "absolute": 300, "relative": 0.15 },
+        "tbt": { "absolute": 75, "relative": 0.25 },
+        "cls": { "absolute": 0.03, "relative": 0 },
+        "bytes": { "absolute": 51200, "relative": 0.1 }
+    }
+}

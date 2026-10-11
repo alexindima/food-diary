@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { inject, Service, signal } from '@angular/core';
 
+import { isPublicMarketingPath } from '../../config/public-site-paths';
 import {
     APP_THEMES,
     type AppSurfaceStyleName,
@@ -16,25 +17,6 @@ import {
 } from '../../theme/app-theme.config';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
-
-const PUBLIC_SEO_PATHS = new Set([
-    '/food-diary',
-    '/calorie-counter',
-    '/meal-planner',
-    '/macro-tracker',
-    '/intermittent-fasting',
-    '/meal-tracker',
-    '/weight-loss-app',
-    '/dietologist-collaboration',
-    '/nutrition-planner',
-    '/weight-tracker',
-    '/body-progress-tracker',
-    '/shopping-list-for-meal-planning',
-    '/nutrition-tracker',
-    '/food-log',
-    '/protein-tracker',
-    '/meal-prep-planner',
-]);
 
 @Service()
 export class ThemeService {
@@ -195,8 +177,7 @@ export class ThemeService {
     }
 
     private isPublicRoute(pathname: string): boolean {
-        const normalizedPath = pathname.split(/[?#]/u, 1)[0].toLowerCase();
-        return normalizedPath === '/' || normalizedPath === '/privacy-policy' || PUBLIC_SEO_PATHS.has(normalizedPath);
+        return isPublicMarketingPath(pathname);
     }
 
     private updateBrowserThemeColor(color: string): void {

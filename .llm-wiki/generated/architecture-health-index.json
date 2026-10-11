@@ -11,8 +11,8 @@
     "ambiguousBackendContracts": 29,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 111,
-    "routedStandaloneComponents": 67,
-    "componentsWithoutDirectSpecs": 126,
+    "routedStandaloneComponents": 68,
+    "componentsWithoutDirectSpecs": 129,
     "criticalSymbolsWithoutTestReferences": 46,
     "explicitDebtMarkers": 12
   },
@@ -4988,6 +4988,48 @@
       "specPath": null
     },
     {
+      "class": "PublicArticlePageComponent",
+      "selector": "fd-public-article-page",
+      "feature": "public",
+      "path": "FoodDiary.Web.Client/src/app/features/public/pages/public-article/public-article-page.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/public-article/public-article-page.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "PublicSiteFooterComponent",
+      "selector": "fd-public-site-footer",
+      "feature": "public",
+      "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.html",
+      "inputs": [
+        {
+          "name": "path",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "PublicSiteHeaderComponent",
+      "selector": "fd-public-site-header",
+      "feature": "public",
+      "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.html",
+      "inputs": [
+        {
+          "name": "path",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "SeoLandingContentSectionsComponent",
       "selector": "fd-seo-landing-content-sections",
       "feature": "public",
@@ -5034,6 +5076,11 @@
           "name": "cta",
           "type": "SeoLandingCtaKeys",
           "required": true
+        },
+        {
+          "name": "home",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [],

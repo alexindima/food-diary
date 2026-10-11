@@ -30,9 +30,43 @@
             "installMode": "lazy",
             "updateMode": "prefetch",
             "resources": {
-                "files": ["/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"]
+                "files": [
+                    "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+                ]
             }
         }
     ],
-    "navigationUrls": ["/**", "!/**/*.*", "!/**/*__*", "!/**/*__*/**", "!/explore", "!/explore/**"]
+    "navigationUrls": [
+        "/**",
+        "!/**/*.*",
+        "!/**/*__*",
+        "!/**/*__*/**",
+        "!/explore",
+        "!/explore/**",
+        "!/ru",
+        "!/ru/**",
+        "!/food-diary",
+        "!/calorie-counter",
+        "!/meal-planner",
+        "!/macro-tracker",
+        "!/intermittent-fasting",
+        "!/meal-tracker",
+        "!/weight-loss-app",
+        "!/dietologist-collaboration",
+        "!/nutrition-planner",
+        "!/weight-tracker",
+        "!/body-progress-tracker",
+        "!/shopping-list-for-meal-planning",
+        "!/nutrition-tracker",
+        "!/food-log",
+        "!/protein-tracker",
+        "!/meal-prep-planner",
+        "!/pricing",
+        "!/ai-calorie-tracker",
+        "!/about",
+        "!/contact",
+        "!/guides/how-to-keep-a-food-diary",
+        "!/guides/calories-in-homemade-meals",
+        "!/privacy-policy"
+    ]
 }

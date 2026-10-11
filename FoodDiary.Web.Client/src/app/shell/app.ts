@@ -7,7 +7,9 @@ import { FdTourHostComponent } from 'fd-tour';
 import { FdUiToastHostComponent, FdUiTopLoaderComponent } from 'fd-ui-kit';
 import { filter, from, mergeMap } from 'rxjs';
 
+import { isPublicMarketingPath } from '../config/public-site-paths';
 import { QuickMealDrawerComponent } from '../features/meals/contracts/quick-meal-drawer';
+import { PublicSiteFooterComponent, PublicSiteHeaderComponent } from '../features/public/contracts/public-site-chrome';
 import { AuthService } from '../services/auth.service';
 import { GlobalLoadingService } from '../services/global-loading.service';
 import { RouteLoadingService } from '../services/route-loading.service';
@@ -33,6 +35,8 @@ type AppShellMode = 'authenticated' | 'public';
         FdUiTopLoaderComponent,
         FdTourHostComponent,
         TranslatePipe,
+        PublicSiteHeaderComponent,
+        PublicSiteFooterComponent,
     ],
     templateUrl: './app.html',
     styleUrl: './app.scss',
@@ -59,6 +63,7 @@ export class AppComponent {
     protected readonly usesAuthenticatedShell = computed(() => this.isAuthenticated() && this.shellMode() === 'authenticated');
     protected readonly isTopLoaderVisible = computed(() => this.globalLoadingService.isVisible() || this.routeLoadingService.isVisible());
     protected readonly currentPath = signal(this.getCurrentPath());
+    protected readonly usesPublicSiteChrome = computed(() => isPublicMarketingPath(this.currentPath()));
     protected readonly isSidebarCollapsed = signal(false);
     protected readonly usesCompactMobileNavigation = computed(() => {
         const path = this.currentPath();

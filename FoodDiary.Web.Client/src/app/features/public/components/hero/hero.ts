@@ -1,60 +1,25 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
-import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 
-import { LocalizationService } from '../../../../shared/i18n/localization.service';
-import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
+import { DayNutritionSummaryComponent } from '../../../../components/shared/day-nutrition-summary/day-nutrition-summary';
 import type { PublicAuthMode } from '../../lib/public-auth-dialog.service';
 import { PublicAuthNavigationService } from '../../lib/public-auth-navigation.service';
+import { buildLandingPreviewContent } from '../landing-preview-tour/landing-preview-tour-data.mapper';
 
 @Component({
     selector: 'fd-hero',
-    imports: [RouterLink, FdUiButtonComponent, FdUiSegmentedToggleComponent, TranslatePipe],
+    imports: [RouterLink, FdUiButtonComponent, DayNutritionSummaryComponent, TranslatePipe],
     templateUrl: './hero.html',
     styleUrl: './hero.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroComponent {
-    private readonly translateService = inject(TranslateService);
-    private readonly localizationService = inject(LocalizationService);
     private readonly authNavigationService = inject(PublicAuthNavigationService);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
-
-    protected readonly languageOptions: FdUiSegmentedToggleOption[] = [
-        { label: 'EN', value: 'en' },
-        { label: 'RU', value: 'ru' },
-    ];
-
-    protected language = this.getCurrentLanguage();
-    protected currentLanguage = this.language;
-
-    public constructor() {
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
-            this.currentLanguage = event.lang;
-            this.language = event.lang;
-            this.changeDetectorRef.markForCheck();
-        });
-    }
-
-    protected updateLanguage(): void {
-        const target = this.language;
-        if (target.length === 0 || target === this.currentLanguage) {
-            return;
-        }
-
-        this.currentLanguage = target;
-        void this.localizationService.applyLanguagePreferenceAsync(target);
-    }
+    protected readonly sampleSummary = buildLandingPreviewContent(key => key).heroSummaryCard;
 
     protected async navigateToAuthAsync(mode: PublicAuthMode): Promise<void> {
         await this.authNavigationService.navigateAsync(mode);
-    }
-
-    private getCurrentLanguage(): string {
-        return resolveTranslateLanguage(this.translateService);
     }
 }

@@ -1,0 +1,24 @@
+<header class="public-header">
+    <a class="public-header__brand" aria-label="Food Diary" [routerLink]="home()">Food Diary</a>
+    <nav class="public-header__links" [attr.aria-label]="'PUBLIC_SITE.NAV.LABEL' | translate">
+        @for (link of links(); track link.path) {
+            <a routerLinkActive="public-header__active" ariaCurrentWhenActive="page" [routerLink]="link.path">
+                {{ link.label | translate }}
+            </a>
+        }
+    </nav>
+    <nav class="public-header__languages" [attr.aria-label]="'PUBLIC_SITE.LANGUAGE' | translate">
+        @for (language of languages(); track language.lang) {
+            <a
+                [routerLink]="language.path"
+                [attr.hreflang]="language.lang"
+                [attr.lang]="language.lang"
+                [attr.aria-current]="language.lang === locale() ? 'page' : null"
+                >{{ language.label }}</a
+            >
+        }
+    </nav>
+    <fd-ui-button variant="secondary" fill="outline" [routerLink]="home()" [queryParams]="{ auth: 'login' }">
+        {{ 'PUBLIC_SITE.LOGIN' | translate }}
+    </fd-ui-button>
+</header>

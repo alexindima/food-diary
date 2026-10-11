@@ -18,7 +18,7 @@
                 <p class="landing-faq__guides-title">{{ 'LANDING_FAQ.GUIDES_TITLE' | translate }}</p>
                 <div class="landing-faq__guides-grid">
                     @for (guide of guides(); track guide.path) {
-                        <a class="landing-faq__guide-link" [routerLink]="guide.path">{{ guide.labelKey | translate }}</a>
+                        <a class="landing-faq__guide-link" [routerLink]="localizedPath(guide.path)">{{ guide.labelKey | translate }}</a>
                     }
                 </div>
             </div>

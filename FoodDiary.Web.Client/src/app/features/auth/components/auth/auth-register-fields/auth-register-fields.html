@@ -37,7 +37,7 @@
     <fd-ui-checkbox class="auth__terms" label="" [formField]="form().agreeTerms" [error]="errors().agreeTerms">
         <span
             class="auth__checkbox-text fd-ui-body-sm"
-            [innerHTML]="'AUTH.REGISTER.AGREE_TO_TERMS' | translate: { privacyUrl: '/privacy-policy' }"
+            [innerHTML]="'AUTH.REGISTER.AGREE_TO_TERMS' | translate: { privacyUrl: privacyUrl }"
         ></span>
     </fd-ui-checkbox>
 </div>

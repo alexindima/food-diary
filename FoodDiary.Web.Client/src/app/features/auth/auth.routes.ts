@@ -44,6 +44,6 @@ export const authRoutes: Routes = [
     {
         path: 'reset-password',
         loadComponent: async () => import('./pages/password-reset/password-reset').then(m => m.PasswordResetComponent),
-        data: { shell: 'public', seo: { titleKey: 'SEO.RESET_PASSWORD', descriptionKey: 'SEO.RESET_PASSWORD_DESCRIPTION' } },
+        data: { shell: 'public', seo: { titleKey: 'SEO.RESET_PASSWORD', descriptionKey: 'SEO.RESET_PASSWORD_DESCRIPTION', noIndex: true } },
     },
 ];

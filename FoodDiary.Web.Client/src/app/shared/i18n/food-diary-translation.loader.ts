@@ -6,6 +6,7 @@ import { catchError, forkJoin, map, type Observable, of, shareReplay, tap } from
 
 import { environment } from '../../../environments/environment';
 import { PUBLIC_SEO_PATHS } from '../../config/public-seo-landing-routes.config';
+import { PUBLIC_INFORMATION_PAGES, stripPublicLocale } from '../../config/public-site-paths';
 import { BrowserWindowService } from '../platform/browser-window.service';
 import { SERVER_TRANSLATIONS } from './server-translations.token';
 
@@ -97,12 +98,21 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
             return ['core', 'seo'];
         }
 
+        if (PUBLIC_INFORMATION_PAGES.some(page => normalizedPath === `/${page.path}`)) {
+            return ['core', 'seo'];
+        }
+
         return ['core', 'app'];
     }
 
     private isPublicPath(pathname: string): boolean {
         const normalizedPath = normalizePath(pathname);
-        return this.isLandingPath(normalizedPath) || normalizedPath === '/privacy-policy' || this.isSeoPath(normalizedPath);
+        return (
+            this.isLandingPath(normalizedPath) ||
+            normalizedPath === '/privacy-policy' ||
+            this.isSeoPath(normalizedPath) ||
+            PUBLIC_INFORMATION_PAGES.some(page => normalizedPath === `/${page.path}`)
+        );
     }
 
     private isLandingPath(normalizedPath: string): boolean {
@@ -115,7 +125,7 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
 }
 
 function normalizePath(pathname: string): string {
-    return pathname.split(/[?#]/u, 1)[0].toLowerCase();
+    return stripPublicLocale(pathname).toLowerCase();
 }
 
 function mergeTranslations(parts: readonly TranslationDictionary[]): TranslationDictionary {

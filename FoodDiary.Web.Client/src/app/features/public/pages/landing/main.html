@@ -1,6 +1,5 @@
 <fd-hero />
 <div class="landing-main">
-    <fd-features />
     @defer (on viewport; prefetch on idle; on timer(5s)) {
         <fd-landing-preview-tour />
     } @placeholder {
@@ -8,6 +7,7 @@
     } @error {
         <div class="landing-main__preview-placeholder" data-testid="landing-preview-error" aria-hidden="true"></div>
     }
+    <fd-features />
     <fd-dietologist-promo />
     <fd-landing-steps />
     <fd-landing-faq [questions]="faqItems" [guides]="seoGuides" />

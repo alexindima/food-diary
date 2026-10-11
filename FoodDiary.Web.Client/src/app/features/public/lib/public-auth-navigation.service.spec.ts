@@ -7,6 +7,7 @@ import { PublicAuthNavigationService } from './public-auth-navigation.service';
 describe('PublicAuthNavigationService', () => {
     it('navigates to landing with requested auth mode in query params', async () => {
         const router = {
+            url: '/',
             navigate: vi.fn().mockResolvedValue(true),
         };
 
@@ -19,5 +20,13 @@ describe('PublicAuthNavigationService', () => {
         await expect(service.navigateAsync('register')).resolves.toBe(true);
 
         expect(router.navigate).toHaveBeenCalledWith(['/'], { queryParams: { auth: 'register' } });
+    });
+
+    it('preserves the Russian public URL when opening registration', async () => {
+        const router = { url: '/ru/calorie-counter', navigate: vi.fn().mockResolvedValue(true) };
+        TestBed.configureTestingModule({ providers: [{ provide: Router, useValue: router }] });
+        const service = TestBed.inject(PublicAuthNavigationService);
+        await service.navigateAsync('register');
+        expect(router.navigate).toHaveBeenCalledWith(['/ru'], { queryParams: { auth: 'register' } });
     });
 });

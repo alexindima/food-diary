@@ -123,12 +123,12 @@ describe('LocalizationService initialization', () => {
         expect(translateSpy.use).toHaveBeenCalledWith('ru');
     });
 
-    it('should default to russian for the russian domain when no stored preference exists', async () => {
+    it('does not infer a Russian default from the retired domain', async () => {
         browserWindowSpy.getHostname.mockReturnValue('xn--b1adbcbrouc8l.xn--p1ai');
 
         await service.initializeLocalizationAsync();
 
-        expect(translateSpy.use).toHaveBeenCalledWith('ru');
+        expect(translateSpy.use).toHaveBeenCalledWith('en');
     });
 
     it('should prefer stored language over domain default', async () => {

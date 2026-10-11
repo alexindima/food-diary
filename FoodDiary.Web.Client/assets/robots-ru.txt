@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://xn--b1adbcbrouc8l.xn--p1ai/sitemap.xml
+Sitemap: https://fooddiary.club/sitemap.xml

@@ -4,12 +4,13 @@ import { Meta, Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 
 import { environment } from '../../environments/environment';
+import { isPublicMarketingPath, localizedPublicPath, stripPublicLocale } from '../config/public-site-paths';
 import { resolveTranslateLanguage } from '../shared/i18n/translate-language.utils';
 
 const DEFAULT_TITLE = 'Food Diary';
 const DEFAULT_SITE_URLS = {
     en: 'https://fooddiary.club',
-    ru: 'https://xn--b1adbcbrouc8l.xn--p1ai',
+    ru: 'https://fooddiary.club/ru',
 } as const;
 const STRUCTURED_DATA_SELECTOR = 'script[data-seo-structured-data="app"]';
 const ROOT_PATHS = new Set(['', '/']);
@@ -52,7 +53,6 @@ export class SeoService {
     private readonly document = inject(DOCUMENT);
     private readonly translate = inject(TranslateService);
     private readonly siteUrls = environment.siteUrls ?? DEFAULT_SITE_URLS;
-    private readonly russianHosts = new Set(environment.russianDefaultHosts);
 
     public update(data: SeoData): void {
         const currentSiteUrl = this.getCurrentSiteUrl();
@@ -102,8 +102,7 @@ export class SeoService {
     }
 
     private getCurrentSiteUrl(): string {
-        const hostname = this.document.location.hostname.toLowerCase();
-        return hostname.length > 0 && this.russianHosts.has(hostname) ? this.siteUrls.ru : this.siteUrls.en;
+        return this.siteUrls.en;
     }
 
     private buildSiteUrl(baseUrl: string, path?: string): string {
@@ -146,10 +145,14 @@ export class SeoService {
     }
 
     private updateAlternateLinks(path?: string): void {
+        this.document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(link => { link.remove(); });
+        if (!isPublicMarketingPath(path ?? '/')) {
+            return;
+        }
         const alternates = [
-            { hreflang: 'en', href: this.buildSiteUrl(this.siteUrls.en, path) },
-            { hreflang: 'ru', href: this.buildSiteUrl(this.siteUrls.ru, path) },
-            { hreflang: 'x-default', href: this.buildSiteUrl(this.siteUrls.en, path) },
+            { hreflang: 'en', href: this.buildSiteUrl(this.siteUrls.en, localizedPublicPath(path ?? '/', 'en')) },
+            { hreflang: 'ru', href: this.buildSiteUrl(this.siteUrls.en, localizedPublicPath(path ?? '/', 'ru')) },
+            { hreflang: 'x-default', href: this.buildSiteUrl(this.siteUrls.en, localizedPublicPath(path ?? '/', 'en')) },
         ];
 
         for (const alternate of alternates) {
@@ -176,7 +179,7 @@ export class SeoService {
 
         const currentSiteUrl = this.getCurrentSiteUrl();
         const inLanguage = resolveTranslateLanguage(this.translate) === 'ru' ? 'ru' : 'en';
-        const normalizedPath = this.normalizePath(this.document.location.pathname);
+        const normalizedPath = stripPublicLocale(data.path ?? this.document.location.pathname);
         const isLandingPage = ROOT_PATHS.has(normalizedPath);
         const featureList = isLandingPage
             ? this.getLandingFeatureList()

@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 295,
-    "documentationPages": 230
+    "documentationPages": 232
   },
   "dotnet": {
     "projects": [
@@ -15952,11 +15952,13 @@
       "docs/frontend/DESIGN_SYSTEM_REVIEW.md",
       "docs/frontend/FRONTEND_ARCHITECTURE.md",
       "docs/frontend/FRONTEND_OBSERVABILITY_BASELINE.md",
+      "docs/frontend/PUBLIC_LIGHTHOUSE.md",
       "docs/frontend/PUBLIC_RECIPES.md",
       "docs/frontend/TEMPLATE_LINTING.md",
       "docs/frontend/angular-22-tech-debt.md",
       "docs/plans/ADAPTIVE_COACH_MVP_PLAN.md",
       "docs/plans/ADMIN_EXPANSION.md",
+      "docs/plans/PUBLIC_SITE_PRICING.md",
       "docs/plans/README.md",
       "docs/plans/TELEGRAM_ACCOUNT_ACCESS_COMPLETION.md",
       "docs/plans/TELEGRAM_CLIENT_IMPLEMENTATION_PLAN.md",

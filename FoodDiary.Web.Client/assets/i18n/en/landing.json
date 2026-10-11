@@ -11,12 +11,12 @@
     },
     "LANDING_HERO": {
         "OVERLINE": "Food diary and calorie counter",
-        "HEADLINE": "Nutrition and progress — without spreadsheets or chaos",
-        "SUBTITLE": "Log meals, count calories, and track weight without Excel or complicated apps.",
+        "HEADLINE": "Food diary and calorie tracker for everyday meals",
+        "SUBTITLE": "Log meals, see your daily totals and track weight over time. Save foods and recipes to make repeat entries easier.",
         "SEARCH": {
             "ARIA_LABEL": "Food diary use cases",
             "TITLE": "For people who need more than a basic calorie counter",
-            "TEXT": "Food Diary connects meal logging, nutrition planning, weight tracking, intermittent fasting, and dietologist collaboration so daily entries become a clearer routine instead of scattered numbers.",
+            "TEXT": "Food Diary connects meal logging, nutrition planning, weight tracking, intermittent fasting, and nutrition professional collaboration so daily entries become a clearer routine instead of scattered numbers.",
             "ITEMS": {
                 "FOOD_LOG": "Online food diary",
                 "CALORIES": "Calorie and macro tracker",
@@ -24,23 +24,23 @@
                 "PROGRESS": "Weight, waist, and progress"
             }
         },
-        "REASSURANCE": "Meal plans, macros, recipes, shopping lists, and body trends stay in one clear workspace.",
-        "LOGIN": "Already have an account? Sign in",
+        "REASSURANCE": "Manual entries are free. Photo, text and voice recognition are available with Premium.",
+        "LOGIN": "Sign in",
         "REGISTER": "Start free",
         "LANGUAGE_LABEL": "Language",
         "PANEL": {
-            "EYEBROW": "Core workflow",
+            "EYEBROW": "Example day",
             "TITLE": "Nutrition, goals, and progress in one workspace",
             "BADGE": "Connected features",
-            "DESCRIPTION": "Logs, plans, calories, macros, weight, waist, and dietologist access stay connected so you can review habits instead of isolated numbers.",
+            "DESCRIPTION": "Logs, plans, calories, macros, weight, waist, and nutrition professional access stay connected so you can review habits instead of isolated numbers.",
             "SECTION_TITLE": "What is already inside",
             "FEATURE_1": "Food diary and meal history",
             "FEATURE_2": "Calories, macros, hydration, and goals",
             "FEATURE_3": "Meal plans, recipes, and shopping lists",
             "FEATURE_4": "Weight, waist, fasting, and weekly reviews",
-            "FEATURE_5": "Controlled dietologist access",
+            "FEATURE_5": "Controlled nutrition professional access",
             "NOTE_TITLE": "No scattered spreadsheets",
-            "NOTE_TEXT": "Daily logs, plans, and progress stay in one system."
+            "NOTE_TEXT": "Demo values show how the summary works. Set your own goals in your account."
         },
         "MOCK_TITLE": "Food Diary Dashboard",
         "MOCK_CALORIES": "Consumed today",
@@ -60,13 +60,13 @@
     },
     "FEATURES": {
         "EYEBROW": "Why Food Diary",
-        "TITLE": "One product for tracking, planning, and nutrition review",
-        "SUBTITLE": "Start with a simple meal diary, then add goals, recipes, meal plans, shopping lists, progress charts, and specialist collaboration when your routine needs more structure.",
+        "TITLE": "Log meals today. Plan ahead when you need to.",
+        "SUBTITLE": "Choose a section to see its tools: meal history, saved recipes, plans, goals and measurements.",
         "CATEGORY_ARIA": "Feature categories",
         "SUMMARY": {
             "BADGE": "What is already inside",
-            "TITLE": "Food Diary covers the nutrition routine, not just one task",
-            "TEXT": "Switch between categories to see how daily logs connect with planning, goals, body metrics, focused routines, and dietologist support."
+            "TITLE": "Start with the food diary",
+            "TEXT": "You can use the diary on its own and add planning or measurements later."
         },
         "CATEGORIES": {
             "TRACK": {
@@ -90,7 +90,7 @@
             "SPECIAL": {
                 "LABEL": "Programs",
                 "EYEBROW": "Focused routines",
-                "TITLE": "Support more specific health workflows",
+                "TITLE": "Support more specific health routines",
                 "DESCRIPTION": "Use dedicated tools for fasting, cycle tracking, and premium AI-assisted flows when your routine needs more structure."
             },
             "MOTIVATION": {
@@ -114,7 +114,7 @@
             "RECIPE_FLOW": {
                 "KICKER": "Recipes",
                 "TITLE": "Recipes that fit the diary flow",
-                "DESCRIPTION": "Store recipes as structured items and drop them into meals with nutrition already connected."
+                "DESCRIPTION": "Save recipes with nutrition data and add the servings you ate to a meal."
             },
             "MEAL_PLANS": {
                 "KICKER": "Meal plans",
@@ -143,12 +143,12 @@
             },
             "WEEKLY_CHECKINS": {
                 "KICKER": "Review",
-                "TITLE": "Weekly check-ins and reflection",
-                "DESCRIPTION": "Step back from daily logging and review consistency, changes, and next adjustments."
+                "TITLE": "Review your week",
+                "DESCRIPTION": "Review your records and add a note about what you want to change next week."
             },
             "FASTING": {
                 "KICKER": "Fasting",
-                "TITLE": "Dedicated fasting workflow",
+                "TITLE": "Dedicated fasting routine",
                 "DESCRIPTION": "Run fasting timers and supporting screens without forcing the feature into the standard meal log."
             },
             "CYCLE_TRACKING": {
@@ -179,15 +179,15 @@
         }
     },
     "LANDING_DIETOLOGIST": {
-        "EYEBROW": "With a dietologist",
+        "EYEBROW": "With a nutrition professional",
         "TITLE": "Work with a specialist in the same space as your diary",
-        "SUBTITLE": "Invite a dietologist by email, share only the categories you choose, and keep meals, progress, and body metrics in one workflow instead of sending manual reports.",
+        "SUBTITLE": "Invite a nutrition professional by email, share only the categories you choose, and keep meals, progress, and body metrics in one routine instead of sending manual reports.",
         "REGISTER": "Create account",
         "LOGIN": "Sign in",
         "STEPS": {
             "INVITE": {
                 "TITLE": "Invite by email",
-                "TEXT": "Connect a dietologist from your profile without moving the conversation into separate spreadsheets or chat threads."
+                "TEXT": "Connect a nutrition professional from your profile without moving the conversation into separate spreadsheets or chat threads."
             },
             "SHARE": {
                 "TITLE": "Share selected diary data",
@@ -195,14 +195,14 @@
             },
             "ADJUST": {
                 "TITLE": "Keep control over access",
-                "TEXT": "Update permissions later, cancel a pending invite, or disconnect the relationship if your workflow changes."
+                "TEXT": "Update permissions later, cancel a pending invite, or disconnect the relationship if your routine changes."
             }
         },
         "CARD": {
             "BADGE": "Shared workspace preview",
-            "TITLE": "Dietologist collaboration, with scoped access",
+            "TITLE": "Nutrition professional collaboration, with scoped access",
             "STATUS": "Access managed by you",
-            "TEXT": "The dietologist flow is built around explicit permissions, so shared care can happen inside the app without exposing everything by default.",
+            "TEXT": "The nutrition professional flow is built around explicit permissions, so shared care can happen inside the app without exposing everything by default.",
             "PERMISSIONS": "Examples of shareable categories"
         },
         "PERMISSIONS": {
@@ -212,13 +212,13 @@
             "GOALS": "Nutrition goals",
             "FASTING": "Fasting data"
         },
-        "NOTE": "You decide which data categories are visible to the dietologist, and can revise access later."
+        "NOTE": "You decide which data categories are visible to the nutrition professional, and can revise access later."
     },
     "LANDING_PREVIEW_TOUR": {
         "PREVIEW": {
             "EYEBROW": "Product tour",
             "TITLE": "See your day at a glance",
-            "SUBTITLE": "Charts, meals, and trends live together so you always know where you stand.",
+            "SUBTITLE": "Explore a sample day with meals, nutrition totals and a weekly chart. The demo does not change your personal diary.",
             "BLOCKS": {
                 "MEALS": {
                     "EYEBROW": "Meals",
@@ -339,33 +339,33 @@
     "LANDING_FAQ": {
         "EYEBROW": "FAQ",
         "TITLE": "Questions before you start",
-        "SUBTITLE": "Short answers about food diary tracking, calorie counting, meal planning, progress review, and dietologist collaboration.",
+        "SUBTITLE": "Free features, devices, editing and data sharing.",
         "DETAIL_LINK": "Read the detailed Food Diary page",
         "GUIDES_TITLE": "Explore dedicated pages for key nutrition use cases",
         "ITEMS": {
             "APP_SCOPE": {
-                "QUESTION": "Can Food Diary work as an online food diary?",
-                "ANSWER": "Yes. Food Diary can be used as an online food diary to log meals, foods, recipes, and notes while keeping calories, macros, and meal history visible."
+                "QUESTION": "What can I use for free?",
+                "ANSWER": "You can add foods, recipes and meals manually, review calories and macros, and keep your records. Photo, text and voice recognition require Premium."
             },
             "PLANNING": {
-                "QUESTION": "Can I plan meals for the week?",
-                "ANSWER": "Yes. You can build meal plans, reuse recipes, and connect plans with shopping lists so your nutrition routine is easier to prepare ahead."
+                "QUESTION": "Can I use Food Diary on a phone and a computer?",
+                "ANSWER": "Yes. Open the web app in your browser and sign in to the same account to access saved records."
             },
             "PROGRESS": {
-                "QUESTION": "Can I track long-term progress, not just daily entries?",
-                "ANSWER": "Yes. Food Diary connects meal logs with calorie and macro charts, weight and waist history, fasting, and weekly reviews."
+                "QUESTION": "Can I change a portion or an earlier meal?",
+                "ANSWER": "Yes. Reopen the saved entry, correct the food, amount or date and review its updated totals."
             },
             "DIETOLOGIST": {
-                "QUESTION": "Can I share my food diary with a dietologist?",
-                "ANSWER": "Yes. You can invite a dietologist by email and share only selected data categories such as meals, statistics, goals, weight, waist, hydration, or fasting."
+                "QUESTION": "Does the app include a nutrition professional?",
+                "ANSWER": "No. You can invite your own professional by email and choose which data they can access. Consultation arrangements are separate."
             },
             "TRACKING": {
-                "QUESTION": "How is a food diary different from a calorie counter?",
-                "ANSWER": "A calorie counter focuses on numbers, while a food diary keeps context: what you ate, when you ate it, which foods and recipes were involved, and how that connects with goals and progress."
+                "QUESTION": "How reliable is photo recognition?",
+                "ANSWER": "AI provides an estimate. Review the identified foods, quantities and nutrient values before saving; you can correct the result or use manual entry."
             },
             "SAFETY": {
                 "QUESTION": "Does Food Diary provide medical advice?",
-                "ANSWER": "No. Food Diary helps you log, organize, and review nutrition data for your own routine or specialist collaboration, but it does not replace medical advice."
+                "ANSWER": "No. It records nutrition and progress data. It does not diagnose conditions, prescribe a diet or guarantee weight loss."
             }
         }
     }

@@ -6,10 +6,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SeoService } from './seo.service';
 
-type SeoServiceInternals = {
-    getCurrentSiteUrl: () => string;
-};
-
 let service: SeoService;
 let titleService: Title;
 let metaService: Meta;
@@ -92,13 +88,11 @@ describe('SeoService social tags', () => {
 });
 
 describe('SeoService canonical urls', () => {
-    it('should use current russian domain for canonical and og:url', () => {
-        vi.spyOn(service as unknown as SeoServiceInternals, 'getCurrentSiteUrl').mockReturnValue('https://xn--b1adbcbrouc8l.xn--p1ai');
-
-        service.update({ path: '/meals' });
-
-        expect(metaService.getTag('property="og:url"')?.content).toBe('https://xn--b1adbcbrouc8l.xn--p1ai/meals');
-        expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe('https://xn--b1adbcbrouc8l.xn--p1ai/meals');
+    it('uses the active origin for a Russian public canonical', () => {
+        translateService.getCurrentLang.mockReturnValue('ru');
+        service.update({ path: '/ru/calorie-counter' });
+        expect(metaService.getTag('property="og:url"')?.content).toBe('https://fooddiary.club/ru/calorie-counter');
+        expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe('https://fooddiary.club/ru/calorie-counter');
     });
 
     it('should create or update canonical link', () => {
@@ -132,18 +126,17 @@ describe('SeoService canonical urls', () => {
 });
 
 describe('SeoService alternate links', () => {
-    it('should create alternate hreflang links', () => {
-        service.update({ path: '/products' });
+    it('pairs the English and Russian versions of the same public page', () => {
+        service.update({ path: '/ru/calorie-counter?utm_source=test#top' });
+        expect(document.querySelector('link[hreflang="en"]')?.getAttribute('href')).toBe('https://fooddiary.club/calorie-counter');
+        expect(document.querySelector('link[hreflang="ru"]')?.getAttribute('href')).toBe('https://fooddiary.club/ru/calorie-counter');
+        expect(document.querySelector('link[hreflang="x-default"]')?.getAttribute('href')).toBe('https://fooddiary.club/calorie-counter');
+    });
 
-        expect(document.querySelector('link[rel="alternate"][hreflang="en"]')?.getAttribute('href')).toBe(
-            'https://fooddiary.club/products',
-        );
-        expect(document.querySelector('link[rel="alternate"][hreflang="ru"]')?.getAttribute('href')).toBe(
-            'https://xn--b1adbcbrouc8l.xn--p1ai/products',
-        );
-        expect(document.querySelector('link[rel="alternate"][hreflang="x-default"]')?.getAttribute('href')).toBe(
-            'https://fooddiary.club/products',
-        );
+    it('removes public alternates when navigating to an account route', () => {
+        service.update({ path: '/calorie-counter' });
+        service.update({ path: '/products', noIndex: true });
+        expect(document.querySelectorAll('link[hreflang]').length).toBe(0);
     });
 });
 

@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 489,
-    "componentsWithoutDirectSpecs": 126,
-    "inputs": 1582,
+    "components": 492,
+    "componentsWithoutDirectSpecs": 129,
+    "inputs": 1585,
     "outputs": 549,
     "apiCalls": 314,
-    "templatesWithTranslations": 352,
-    "translationKeys": 2125,
-    "consumerEdges": 1242,
-    "consumedComponents": 310,
-    "unconsumedComponents": 178
+    "templatesWithTranslations": 355,
+    "translationKeys": 2123,
+    "consumerEdges": 1247,
+    "consumedComponents": 312,
+    "unconsumedComponents": 179
   },
   "components": [
     {
@@ -10530,6 +10530,48 @@
       "specPath": null
     },
     {
+      "class": "PublicArticlePageComponent",
+      "selector": "fd-public-article-page",
+      "feature": "public",
+      "path": "FoodDiary.Web.Client/src/app/features/public/pages/public-article/public-article-page.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/public-article/public-article-page.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "PublicSiteFooterComponent",
+      "selector": "fd-public-site-footer",
+      "feature": "public",
+      "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.html",
+      "inputs": [
+        {
+          "name": "path",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "PublicSiteHeaderComponent",
+      "selector": "fd-public-site-header",
+      "feature": "public",
+      "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.html",
+      "inputs": [
+        {
+          "name": "path",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "SeoLandingContentSectionsComponent",
       "selector": "fd-seo-landing-content-sections",
       "feature": "public",
@@ -10576,6 +10618,11 @@
           "name": "cta",
           "type": "SeoLandingCtaKeys",
           "required": true
+        },
+        {
+          "name": "home",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [],
@@ -18694,7 +18741,7 @@
       "responseType": "TranslationDictionary",
       "urlExpression": "url",
       "path": "FoodDiary.Web.Client/src/app/shared/i18n/food-diary-translation.loader.ts",
-      "line": 73,
+      "line": 74,
       "publicMethod": "loadBundle",
       "transport": "HttpClient",
       "baseUrlExpression": null,
@@ -22287,26 +22334,13 @@
       "path": "FoodDiary.Web.Client/src/app/features/public/components/hero/hero.html",
       "keys": [
         "LANDING_HERO.HEADLINE",
-        "LANDING_HERO.LANGUAGE_LABEL",
         "LANDING_HERO.LOGIN",
         "LANDING_HERO.OVERLINE",
-        "LANDING_HERO.PANEL.DESCRIPTION",
         "LANDING_HERO.PANEL.EYEBROW",
-        "LANDING_HERO.PANEL.FEATURE_1",
-        "LANDING_HERO.PANEL.FEATURE_2",
-        "LANDING_HERO.PANEL.FEATURE_3",
-        "LANDING_HERO.PANEL.FEATURE_4",
-        "LANDING_HERO.PANEL.FEATURE_5",
         "LANDING_HERO.PANEL.NOTE_TEXT",
-        "LANDING_HERO.PANEL.NOTE_TITLE",
-        "LANDING_HERO.PANEL.SECTION_TITLE",
-        "LANDING_HERO.PANEL.TITLE",
         "LANDING_HERO.REASSURANCE",
         "LANDING_HERO.RECIPES",
         "LANDING_HERO.REGISTER",
-        "LANDING_HERO.SEARCH.ARIA_LABEL",
-        "LANDING_HERO.SEARCH.TEXT",
-        "LANDING_HERO.SEARCH.TITLE",
         "LANDING_HERO.SUBTITLE"
       ]
     },
@@ -22369,6 +22403,23 @@
     },
     {
       "feature": "public",
+      "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.html",
+      "keys": [
+        "PUBLIC_SITE.FOOTER.DESCRIPTION",
+        "PUBLIC_SITE.FOOTER.LABEL"
+      ]
+    },
+    {
+      "feature": "public",
+      "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.html",
+      "keys": [
+        "PUBLIC_SITE.LANGUAGE",
+        "PUBLIC_SITE.LOGIN",
+        "PUBLIC_SITE.NAV.LABEL"
+      ]
+    },
+    {
+      "feature": "public",
       "path": "FoodDiary.Web.Client/src/app/features/public/pages/not-found/not-found.html",
       "keys": [
         "NOT_FOUND.DESCRIPTION",
@@ -22383,6 +22434,18 @@
       "keys": [
         "PRIVACY_POLICY.CONTENT",
         "PRIVACY_POLICY.TITLE"
+      ]
+    },
+    {
+      "feature": "public",
+      "path": "FoodDiary.Web.Client/src/app/features/public/pages/public-article/public-article-page.html",
+      "keys": [
+        "PUBLIC_PAGES.PRICING.AVAILABILITY_TEXT",
+        "PUBLIC_PAGES.PRICING.AVAILABILITY_TITLE",
+        "PUBLIC_PAGES.PRICING.COMPARISON.FEATURE",
+        "PUBLIC_PAGES.PRICING.COMPARISON.FREE",
+        "PUBLIC_PAGES.PRICING.COMPARISON.TITLE",
+        "PUBLIC_SITE.NAV.PRICING"
       ]
     },
     {
@@ -25774,6 +25837,18 @@
       "componentPath": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.ts",
       "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-summary-block/dashboard-summary-block.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "data"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "DayNutritionSummaryComponent",
+      "selector": "fd-day-nutrition-summary",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.ts",
+      "consumerFeature": "public",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/public/components/hero/hero.html",
       "occurrences": 1,
       "inputsUsed": [
         "data"
@@ -29678,10 +29753,36 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "public",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "fill",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "public",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/public/pages/not-found/not-found.html",
       "occurrences": 2,
       "inputsUsed": [
         "fill",
+        "size",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "public",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/public/pages/public-article/public-article-page.html",
+      "occurrences": 1,
+      "inputsUsed": [
         "size",
         "variant"
       ],
@@ -31236,6 +31337,16 @@
       "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
       "occurrences": 3,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiCardComponent",
+      "selector": "fd-ui-card",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
+      "consumerFeature": "public",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/public/pages/public-article/public-article-page.html",
+      "occurrences": 1,
       "inputsUsed": [],
       "outputsHandled": []
     },
@@ -37167,25 +37278,6 @@
       "component": "FdUiSegmentedToggleComponent",
       "selector": "fd-ui-segmented-toggle",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
-      "consumerFeature": "public",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/public/components/hero/hero.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "ariaLabel",
-        "options",
-        "selectedValue",
-        "shrinkItems",
-        "size",
-        "stackOnNarrow"
-      ],
-      "outputsHandled": [
-        "selectedValueChange"
-      ]
-    },
-    {
-      "component": "FdUiSegmentedToggleComponent",
-      "selector": "fd-ui-segmented-toggle",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.html",
       "occurrences": 2,
@@ -41144,6 +41236,30 @@
       "outputsHandled": []
     },
     {
+      "component": "PublicSiteFooterComponent",
+      "selector": "fd-public-site-footer",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.ts",
+      "consumerFeature": "shell",
+      "consumerPath": "FoodDiary.Web.Client/src/app/shell/app.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "path"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "PublicSiteHeaderComponent",
+      "selector": "fd-public-site-header",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.ts",
+      "consumerFeature": "shell",
+      "consumerPath": "FoodDiary.Web.Client/src/app/shell/app.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "path"
+      ],
+      "outputsHandled": []
+    },
+    {
       "component": "PublicStepsComponent",
       "selector": "fd-public-steps",
       "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-steps/public-steps.ts",
@@ -41568,6 +41684,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "cta",
+        "home",
         "relatedPages"
       ],
       "outputsHandled": []

@@ -1,74 +1,12 @@
 import { RenderMode, type ServerRoute } from '@angular/ssr';
 
+import { localizedPublicPath, PUBLIC_MARKETING_PATHS } from './config/public-site-paths';
+
 export const serverRoutes: ServerRoute[] = [
-    {
-        path: '',
+    ...Array.from(PUBLIC_MARKETING_PATHS).flatMap(path => (['en', 'ru'] as const).map((locale): ServerRoute => ({
+        path: localizedPublicPath(path, locale).slice(1),
         renderMode: RenderMode.Prerender,
-    },
-    {
-        path: 'food-diary',
-        renderMode: RenderMode.Prerender,
-    },
-    {
-        path: 'calorie-counter',
-        renderMode: RenderMode.Prerender,
-    },
-    {
-        path: 'meal-planner',
-        renderMode: RenderMode.Prerender,
-    },
-    {
-        path: 'macro-tracker',
-        renderMode: RenderMode.Prerender,
-    },
-    {
-        path: 'intermittent-fasting',
-        renderMode: RenderMode.Prerender,
-    },
-    {
-        path: 'meal-tracker',
-        renderMode: RenderMode.Prerender,
-    },
-    {
-        path: 'weight-loss-app',
-        renderMode: RenderMode.Prerender,
-    },
-    {
-        path: 'dietologist-collaboration',
-        renderMode: RenderMode.Prerender,
-    },
-    {
-        path: 'nutrition-planner',
-        renderMode: RenderMode.Prerender,
-    },
-    {
-        path: 'weight-tracker',
-        renderMode: RenderMode.Prerender,
-    },
-    {
-        path: 'body-progress-tracker',
-        renderMode: RenderMode.Prerender,
-    },
-    {
-        path: 'shopping-list-for-meal-planning',
-        renderMode: RenderMode.Prerender,
-    },
-    {
-        path: 'nutrition-tracker',
-        renderMode: RenderMode.Prerender,
-    },
-    {
-        path: 'food-log',
-        renderMode: RenderMode.Prerender,
-    },
-    {
-        path: 'protein-tracker',
-        renderMode: RenderMode.Prerender,
-    },
-    {
-        path: 'meal-prep-planner',
-        renderMode: RenderMode.Prerender,
-    },
+    }))),
     {
         path: 'verify-pending',
         renderMode: RenderMode.Client,

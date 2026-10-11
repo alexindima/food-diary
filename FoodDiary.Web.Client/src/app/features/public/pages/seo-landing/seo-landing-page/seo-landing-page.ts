@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
+import { localizedPublicPath, publicSiteLocale } from '../../../../../config/public-site-paths';
 import { buildSeoLandingViewModel, resolveSeoLandingPageData } from '../lib/seo-landing.mapper';
 import { SeoLandingContentSectionsComponent } from '../seo-landing-sections/seo-landing-content-sections';
 import { SeoLandingFooterSectionsComponent } from '../seo-landing-sections/seo-landing-footer-sections';
@@ -16,10 +17,12 @@ import { SeoLandingFooterSectionsComponent } from '../seo-landing-sections/seo-l
 })
 export class SeoLandingPageComponent {
     private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router);
     private readonly page = resolveSeoLandingPageData(this.route.snapshot.data['seoPage']);
     private readonly viewModel = buildSeoLandingViewModel(this.page);
 
     protected readonly baseKey = this.viewModel.baseKey;
+    protected readonly home = localizedPublicPath('/', publicSiteLocale(this.router.url));
     protected readonly hero = this.viewModel.hero;
     protected readonly audience = this.viewModel.audience;
     protected readonly features = this.viewModel.features;

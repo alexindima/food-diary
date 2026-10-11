@@ -16,6 +16,9 @@
         }
     }
     <main class="fd-root__main" id="main-content" tabindex="-1">
+        @if (usesPublicSiteChrome()) {
+            <fd-public-site-header [path]="currentPath()" />
+        }
         @if (usesAuthenticatedShell() && isImpersonating()) {
             <div class="fd-impersonation-banner" role="status" aria-live="polite">
                 <span>{{ 'IMPERSONATION.MODE' | translate }}</span>
@@ -29,6 +32,9 @@
         }
         <div class="fd-root__viewport" role="region" tabindex="0" [attr.aria-label]="'COMMON.SKIP_TO_MAIN_CONTENT' | translate">
             <router-outlet class="fd-root__content" />
+            @if (usesPublicSiteChrome()) {
+                <fd-public-site-footer [path]="currentPath()" />
+            }
         </div>
     </main>
 </div>
