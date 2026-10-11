@@ -111,7 +111,7 @@
       "id": "page-layout-directive-probe-4",
       "query": "Angular directive applies the shared page layout",
       "changeType": "Frontend",
-      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/ui/layout/page-layout.directive.ts"]
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/ui/layout/page-container.directive.ts"]
     },
     {
       "id": "card-hover-directive-probe-4",

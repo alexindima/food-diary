@@ -16,6 +16,10 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiTaskBriefQueries.ps1
   - .llm-wiki/tools/Build-LlmWikiCatalog.ps1
   - .llm-wiki/evals/context-search-holdout-100.json
+  - .llm-wiki/evals/context-search-holdout.json
+  - .llm-wiki/evals/context-search-probe-4.json
+  - .llm-wiki/policies/context-search-ranking.json
+  - .llm-wiki/tools/Test-LlmWikiContextRanking.ps1
   - .llm-wiki/evals/context-search-unseen-20260826.json
   - .llm-wiki/generated/repository-catalog.json
   - FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs
@@ -189,6 +193,23 @@ a deleted type name or contradictory architectural premise. Such migrated cases
 are regression evidence, not a new blind evaluation. Structural ranking
 aliases preserve layer preferences for module providers and shared libraries;
 search results still name their current physical owners.
+
+The `russian-prerender-html-tool` case now asks for Angular SSR route configuration
+and targets `app.routes.server.ts`: the Russian-only HTML rewriting script was
+retired in favor of genuine English/Russian prerendering. The generic shared-page
+layout case now targets the active `FdPageContainerDirective` after removal of
+the unused `FdLayoutPageDirective`; its question is unchanged. Case counts and
+all quality thresholds remain unchanged. These migrated cases are regression
+evidence for the current owners.
+
+Explicit SSR/prerender route questions prefer the server-route composition
+convention `*.routes.server.ts`. The structural role requires an explicit SSR/prerender
+query term, server/route candidate identity and a matching query identity. Ordinary
+client routing, SEO-only questions and tests do not acquire this role. Node and
+the read-only .NET reader consume the same declarative policy.
+This replaces the overly broad generated-utility affinity, which could promote
+an unrelated language helper for an HTML-generation question. The explicit
+generator role and ordinary utility role remain; the rule-count budget is unchanged.
 
 Context discovery is advisory. Run `wiki.ps1 policy` for deterministic
 repository obligations and use an evidence bundle when those obligations need

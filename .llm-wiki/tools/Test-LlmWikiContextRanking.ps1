@@ -89,4 +89,35 @@ foreach ($case in $serviceCases) {
     }
 }
 
-Write-Host 'LLM Wiki SQLite context ranking passed: exact identity, scope, focused tests, contextual normalization and generated SDK roles with reader parity.'
+$ssrCases = @(
+    @{ query = 'Angular SSR server routes and render modes'; expectsServerRoutes = $true },
+    @{ query = 'configure prerender routes for a public Angular app'; expectsServerRoutes = $true },
+    @{ query = 'Angular client routes and navigation'; expectsServerRoutes = $false },
+    @{ query = 'SSR public page title metadata'; expectsServerRoutes = $false },
+    @{ query = 'Russian serving pluralization helpers'; expectsServerRoutes = $false }
+)
+foreach ($case in $ssrCases) {
+    $nodeResult = & $manager search -Query $case.query -ChangeType Frontend -Limit 10 -SkipRefresh -Format Json | ConvertFrom-Json
+    $readerResult = [LlmWiki.SqliteReader.ContextSearchReader]::Search(
+        $repositoryRoot, $case.query, 10, 'Frontend', '', [string[]]@(), [string]$graphStatus.currentChangeSetFingerprint
+    ) | ConvertFrom-Json
+    if (-not $nodeResult.ready -or -not $readerResult.ready -or
+        (@($readerResult.records.path) -join "`0") -cne (@($nodeResult.records.path) -join "`0")) {
+        throw "SSR route ranking lost Node/reader parity: $($case.query)"
+    }
+    $boosted = @($nodeResult.records | Where-Object { @($_.reasons | Where-Object { $_ -like 'structural role frontend-ssr-route-role*' }).Count -gt 0 })
+    if ($case.expectsServerRoutes) {
+        if (@($nodeResult.records)[0].path -cne 'FoodDiary.Web.Client/src/app/app.routes.server.ts' -or $boosted.Count -eq 0) {
+            throw "SSR route configuration lost its composition owner: $($case.query)"
+        }
+    } elseif ($boosted.Count -ne 0) {
+        throw "An unrelated frontend query received an SSR route boost: $($case.query)"
+    }
+    foreach ($candidate in $boosted) {
+        if ($candidate.path -notlike '*.routes.server.ts' -or $candidate.path -like '*.spec.*') {
+            throw "A client route, test or unrelated file received an SSR composition boost: $($candidate.path)"
+        }
+    }
+}
+
+Write-Host 'LLM Wiki SQLite context ranking passed: exact identity, scope, focused tests, contextual normalization, SSR composition and generated SDK roles with reader parity.'

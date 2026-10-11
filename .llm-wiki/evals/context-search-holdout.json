@@ -235,9 +235,9 @@
     },
     {
       "id": "russian-prerender-html-tool",
-      "query": "generate static Russian prerender HTML pages",
+      "query": "configure Angular SSR prerender routes for English and Russian public pages",
       "changeType": "Frontend",
-      "expectedPaths": ["FoodDiary.Web.Client/scripts/generate-ru-prerender-html.mjs"]
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/app.routes.server.ts"]
     },
     {
       "id": "lighthouse-budget-runner",

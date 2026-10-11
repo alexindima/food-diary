@@ -2508,21 +2508,6 @@
       "excludeTests": true
     },
     {
-      "id": "frontend-generated-utility-role",
-      "queryTerms": ["generate", "generates", "create"],
-      "minimumMatches": 1,
-      "candidateTerms": ["utils", "util"],
-      "minimumCandidateMatches": 1,
-      "minimumQueryIdentityMatches": 1,
-      "score": 320,
-      "identityScope": "file",
-      "changeTypes": ["Frontend"],
-      "recordTypes": ["code"],
-      "pathPrefixes": ["FoodDiary.Web.Client/"],
-      "pathSuffixes": [".ts"],
-      "excludeTests": true
-    },
-    {
       "id": "frontend-generator-role",
       "queryTerms": ["generate", "generates", "create"],
       "minimumMatches": 1,
@@ -2536,6 +2521,21 @@
       "recordTypes": ["code"],
       "pathPrefixes": ["FoodDiary.Web.Client/"],
       "pathSuffixes": [".ts"],
+      "excludeTests": true
+    },
+    {
+      "id": "frontend-ssr-route-role",
+      "queryTerms": ["ssr", "prerender"],
+      "minimumMatches": 1,
+      "candidateTerms": ["routes", "server"],
+      "minimumCandidateMatches": 2,
+      "minimumQueryIdentityMatches": 1,
+      "score": 400,
+      "identityScope": "file",
+      "changeTypes": ["Frontend", "Any"],
+      "recordTypes": ["code"],
+      "pathPrefixes": ["FoodDiary.Web.Client/"],
+      "pathSuffixes": [".routes.server.ts"],
       "excludeTests": true
     },
     {

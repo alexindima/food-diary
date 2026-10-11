@@ -302,17 +302,29 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "0ac679ef2682cda58904cad9b5fd081e1541eb5c061f16522ae55dc1bd030f6f",
+      "pageSha256": "59e4d3519b22c1f11de331406c84660a02fa5a9a5d9be957517489b439ce4afd",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
-          "sha256": "eff28ecb416b3624cd5f0de9a8f2bb203a52efd7021d4b439a4ade4ae61b5287"
+          "path": ".llm-wiki/evals/context-search-holdout.json",
+          "sha256": "a03db7957600cbb9895ae3e8fa4f92bce37f4beaa542d8d9cab5b9dbc4dce9e9"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-probe-4.json",
+          "sha256": "444935be1dec29ef9cc19941dc347af3752abf749668294225ae28cf90e52cb5"
+        },
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "9c2779e2f57eda1ebe21015a68e6ea27833f1c046f6131e852989cbcfd7d3a6f"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiContextRanking.ps1",
+          "sha256": "ea24e663498a055bfa86a674fb51604bbbde67b5c4460349edd17ac66c488a48"
         }
       ],
-      "reason": "Reviewed current corpus pool, ordered case coverage and failure/timeout/cancellation cleanup against LlmWikiCorpusEvaluation.ps1 and Test-LlmWikiCorpusEvaluation.ps1. Retrieval identity, thresholds and corpus scheduling are unchanged. Controlled Linux subreaper diagnostics reproduce a terminated zombie reported alive by HasExited; updated process termination checks pass all three failure paths and retain rejection of a live descendant.",
+      "reason": "Reviewed documented owner migrations and the generic SSR composition role. Two retired fixture paths are replaced by current Angular SSR and page-container owners; the Russian-only rewriting question is explicitly migrated to Angular SSR configuration, preserving all case counts and thresholds. The new suffix/identity-gated SSR role replaces an overly broad generated-utility affinity at the unchanged 700-rule budget. Positive SSR and negative client-route/SEO/pluralization checks pass in Node and .NET. Complete retrieval evaluation passes: promoted top10 494/494, holdout challenge MRR 0.9875, independent 100-case and unseen parity gates intact. This changes navigation ranking only, with no app runtime, credentials, provider or tenant behavior change.",
       "baseRef": "HEAD",
-      "gitHead": "d618f4b90cfc9b8b86854ead921110cee2935023",
-      "reviewedAtUtc": "2026-10-05T21:58:54.0190701Z"
+      "gitHead": "d9640139ebecb9eab4d51444355de554e2e19b92",
+      "reviewedAtUtc": "2026-10-11T10:11:33.5743015Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -972,22 +984,14 @@
       "pageSha256": "f935366d43c011c5187443833e00da2994b5092dff5b60dc6cbd0759390944bf",
       "sources": [
         {
-          "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5ac5f7ea5e0a1f756cfdbade49f297f483eeff3a2e64e962f79cbb7d9de7f7cd"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0439d7e9d4beb2792d159cc594102db9c4ce4c6bf55471840cdcdebde0f8ecd0"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "9a6a0891a935ec1aacdb7ef21966e9d7d2c4f1f38245050332a9ef3d69b838eb"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "9c2779e2f57eda1ebe21015a68e6ea27833f1c046f6131e852989cbcfd7d3a6f"
         }
       ],
-      "reason": "Reviewed regenerated navigation against the combined public-site and UX source commits. Application code merged without conflicts; locale aggregates are regenerated from both fragment sets. Generated SDK verification and all 21 performance tooling checks pass. API compatibility reports eight additive changes and zero structural breaks. Existing owner, provider, API, architecture and browser evidence from the UX audit is retained; delivery hooks will rerun combined app tests, formatting and backend tests. Quality and trace records remain navigation rather than execution coverage; tenant predicates, hidden-cycle privacy and owned anonymous Chrome profiles remain intact. Only compiled indexes and review ledgers needed merge reconciliation.",
-      "baseRef": "origin/master",
-      "gitHead": "b5c8a2a6ef32ea7c67a69223ae5dfb5b761142db",
-      "reviewedAtUtc": "2026-10-11T09:31:31.7792967Z"
+      "reason": "Reviewed documented owner migrations and the generic SSR composition role. Two retired fixture paths are replaced by current Angular SSR and page-container owners; the Russian-only rewriting question is explicitly migrated to Angular SSR configuration, preserving all case counts and thresholds. The new suffix/identity-gated SSR role replaces an overly broad generated-utility affinity at the unchanged 700-rule budget. Positive SSR and negative client-route/SEO/pluralization checks pass in Node and .NET. Complete retrieval evaluation passes: promoted top10 494/494, holdout challenge MRR 0.9875, independent 100-case and unseen parity gates intact. This changes navigation ranking only, with no app runtime, credentials, provider or tenant behavior change.",
+      "baseRef": "HEAD",
+      "gitHead": "d9640139ebecb9eab4d51444355de554e2e19b92",
+      "reviewedAtUtc": "2026-10-11T10:11:33.8708152Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1233,21 +1237,29 @@
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "f9ddf22db2cc07f9109f6b518b296525846afc0f92e94ac0b443f5bf8ea4b89a",
+      "pageSha256": "8b7ddf0a82ae6f60f4f1b215e468a49f9e0f366ac703995c5f283035fd2e6426",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "d523b8cf0394b9bf80144935e113fe9c115bf662f47cc875ce445aeb9737447f"
+          "path": ".llm-wiki/evals/context-search-holdout.json",
+          "sha256": "a03db7957600cbb9895ae3e8fa4f92bce37f4beaa542d8d9cab5b9dbc4dce9e9"
         },
         {
-          "path": "AGENTS.md",
-          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
+          "path": ".llm-wiki/evals/context-search-probe-4.json",
+          "sha256": "444935be1dec29ef9cc19941dc347af3752abf749668294225ae28cf90e52cb5"
+        },
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "9c2779e2f57eda1ebe21015a68e6ea27833f1c046f6131e852989cbcfd7d3a6f"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiContextRanking.ps1",
+          "sha256": "ea24e663498a055bfa86a674fb51604bbbde67b5c4460349edd17ac66c488a48"
         }
       ],
-      "reason": "Reviewed regenerated navigation against the combined public-site and UX source commits. Application code merged without conflicts; locale aggregates are regenerated from both fragment sets. Generated SDK verification and all 21 performance tooling checks pass. API compatibility reports eight additive changes and zero structural breaks. Existing owner, provider, API, architecture and browser evidence from the UX audit is retained; delivery hooks will rerun combined app tests, formatting and backend tests. Quality and trace records remain navigation rather than execution coverage; tenant predicates, hidden-cycle privacy and owned anonymous Chrome profiles remain intact. Only compiled indexes and review ledgers needed merge reconciliation.",
-      "baseRef": "origin/master",
-      "gitHead": "b5c8a2a6ef32ea7c67a69223ae5dfb5b761142db",
-      "reviewedAtUtc": "2026-10-11T09:31:34.0251869Z"
+      "reason": "Reviewed documented owner migrations and the generic SSR composition role. Two retired fixture paths are replaced by current Angular SSR and page-container owners; the Russian-only rewriting question is explicitly migrated to Angular SSR configuration, preserving all case counts and thresholds. The new suffix/identity-gated SSR role replaces an overly broad generated-utility affinity at the unchanged 700-rule budget. Positive SSR and negative client-route/SEO/pluralization checks pass in Node and .NET. Complete retrieval evaluation passes: promoted top10 494/494, holdout challenge MRR 0.9875, independent 100-case and unseen parity gates intact. This changes navigation ranking only, with no app runtime, credentials, provider or tenant behavior change.",
+      "baseRef": "HEAD",
+      "gitHead": "d9640139ebecb9eab4d51444355de554e2e19b92",
+      "reviewedAtUtc": "2026-10-11T10:11:34.1711922Z"
     },
     {
       "pageId": "workflow.review-diff",
