@@ -20,6 +20,11 @@ import { FdUiInputComponent, FdUiSelectComponent, FdUiButtonComponent } from 'fd
 All components are **standalone** and can be listed in a component `imports` array.
 Most form controls implement **ControlValueAccessor** and work with `formControlName`/`ngModel`.
 
+For a region with its own palette, put `fd-theme-scope` on the same element that
+defines its semantic color tokens. It resolves UI-kit aliases (including button
+colors) against that region rather than inheriting aliases already resolved on
+the document. The class does not choose a palette or modify account preferences.
+
 ## Field sizes
 
 Most inputs accept `size` (`'sm' | 'md' | 'lg'`). The default is `md`.

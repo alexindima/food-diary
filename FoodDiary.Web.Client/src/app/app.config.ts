@@ -85,7 +85,8 @@ export const appConfig: ApplicationConfig = {
             routes,
             withComponentInputBinding(),
             withInMemoryScrolling({
-                scrollPositionRestoration: 'top',
+                // AppComponent handles both the desktop shell and mobile window.
+                scrollPositionRestoration: 'disabled',
             }),
             withPreloading(IdleSelectivePreloadingStrategy),
         ),

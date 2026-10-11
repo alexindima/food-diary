@@ -137,6 +137,11 @@ html.cdk-global-scrollblock .fd-root__sidebar {
     }
 }
 
+.fd-root--public-site {
+    color-scheme: light;
+    color: var(--fd-color-text);
+}
+
 .fd-root--compact-mobile-nav {
     --fd-layout-shell-current-mobile-viewport-bottom-padding: var(--fd-layout-shell-mobile-viewport-bottom-padding);
 }

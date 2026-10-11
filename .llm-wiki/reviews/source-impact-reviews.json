@@ -883,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5ac5f7ea5e0a1f756cfdbade49f297f483eeff3a2e64e962f79cbb7d9de7f7cd"
+          "sha256": "598621025c3877637b92b25e51ba630119f31c31df0732ca4cc02c633e67f447"
         }
       ],
-      "reason": "Reviewed regenerated navigation against the combined public-site and UX source commits. Application code merged without conflicts; locale aggregates are regenerated from both fragment sets. Generated SDK verification and all 21 performance tooling checks pass. API compatibility reports eight additive changes and zero structural breaks. Existing owner, provider, API, architecture and browser evidence from the UX audit is retained; delivery hooks will rerun combined app tests, formatting and backend tests. Quality and trace records remain navigation rather than execution coverage; tenant predicates, hidden-cycle privacy and owned anonymous Chrome profiles remain intact. Only compiled indexes and review ledgers needed merge reconciliation.",
-      "baseRef": "origin/master",
-      "gitHead": "b5c8a2a6ef32ea7c67a69223ae5dfb5b761142db",
-      "reviewedAtUtc": "2026-10-11T09:31:30.8426074Z"
+      "reason": "Reviewed the refreshed quality projection against the public scroll handler, regression tests and theme-scope documentation: only source line and decision counts changed; critical-symbol counts and the static-navigation limitations described by this page remain unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "2d79462e56dfe65f71480ab04ed3a27d89264163",
+      "reviewedAtUtc": "2026-10-11T16:19:22.1773540Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -984,14 +984,14 @@
       "pageSha256": "f935366d43c011c5187443833e00da2994b5092dff5b60dc6cbd0759390944bf",
       "sources": [
         {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "9c2779e2f57eda1ebe21015a68e6ea27833f1c046f6131e852989cbcfd7d3a6f"
+          "path": ".llm-wiki/generated/quality-index.json",
+          "sha256": "598621025c3877637b92b25e51ba630119f31c31df0732ca4cc02c633e67f447"
         }
       ],
-      "reason": "Reviewed documented owner migrations and the generic SSR composition role. Two retired fixture paths are replaced by current Angular SSR and page-container owners; the Russian-only rewriting question is explicitly migrated to Angular SSR configuration, preserving all case counts and thresholds. The new suffix/identity-gated SSR role replaces an overly broad generated-utility affinity at the unchanged 700-rule budget. Positive SSR and negative client-route/SEO/pluralization checks pass in Node and .NET. Complete retrieval evaluation passes: promoted top10 494/494, holdout challenge MRR 0.9875, independent 100-case and unseen parity gates intact. This changes navigation ranking only, with no app runtime, credentials, provider or tenant behavior change.",
+      "reason": "Reviewed current quality-index changes for public viewport scrolling and CSS palette isolation. They introduce no critical symbols, API transport, authentication persistence or security-control change; the evidence-compiler guidance remains accurate and does not assert execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "d9640139ebecb9eab4d51444355de554e2e19b92",
-      "reviewedAtUtc": "2026-10-11T10:11:33.8708152Z"
+      "gitHead": "2d79462e56dfe65f71480ab04ed3a27d89264163",
+      "reviewedAtUtc": "2026-10-11T16:19:24.9886360Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1127,18 +1127,14 @@
       "pageSha256": "4e059a263f76810db4c559e2b5599d8599571ccf48d060f6360c6d0e8ec60b48",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "33501f52eb0087dc977f889209d82fe62ac5f5119697ac219b86ddf6a0aef6b6"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "3deeb8ef5e13ba99e7e906ba23121701ca1a2e1792fcf743e9e5849e41f05215"
+          "sha256": "0f88bc8109a0da671a0b3ddfd54b41f80b6c895b05e3e08ba1998f7ba5e8452d"
         }
       ],
-      "reason": "Reviewed regenerated navigation against the combined public-site and UX source commits. Application code merged without conflicts; locale aggregates are regenerated from both fragment sets. Generated SDK verification and all 21 performance tooling checks pass. API compatibility reports eight additive changes and zero structural breaks. Existing owner, provider, API, architecture and browser evidence from the UX audit is retained; delivery hooks will rerun combined app tests, formatting and backend tests. Quality and trace records remain navigation rather than execution coverage; tenant predicates, hidden-cycle privacy and owned anonymous Chrome profiles remain intact. Only compiled indexes and review ledgers needed merge reconciliation.",
-      "baseRef": "origin/master",
-      "gitHead": "b5c8a2a6ef32ea7c67a69223ae5dfb5b761142db",
-      "reviewedAtUtc": "2026-10-11T09:31:32.6778500Z"
+      "reason": "Compared the refreshed frontend index with AppComponent: only its source line moves from 45 to 55 after imports expand. Selector, component identity, contracts, and consumer graph remain unchanged; current trace guidance is still accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "2d79462e56dfe65f71480ab04ed3a27d89264163",
+      "reviewedAtUtc": "2026-10-11T16:21:30.8158380Z"
     },
     {
       "pageId": "workflow-verification-planner",

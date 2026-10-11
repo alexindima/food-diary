@@ -1,7 +1,7 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, ViewportScroller } from '@angular/common';
 import { type Signal, signal } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, NavigationEnd, type Route, RouteConfigLoadEnd, RouteConfigLoadStart, Router } from '@angular/router';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute, NavigationEnd, type Route, RouteConfigLoadEnd, RouteConfigLoadStart, Router, Scroll } from '@angular/router';
 import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -13,6 +13,7 @@ import { SeoService } from '../services/seo.service';
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { NotificationRealtimeService } from '../shared/notifications/notification-realtime.service';
 import { PushNotificationService } from '../shared/notifications/push-notification.service';
+import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { ThemeService } from '../shared/theme/theme.service';
 import { AppComponent } from './app';
 
@@ -139,7 +140,63 @@ describe('AppComponent sidebar behavior', () => {
     );
 });
 
-async function createComponentAsync(options: { isAuthenticated?: boolean; shell?: 'authenticated' | 'public' } = {}): Promise<{
+describe('AppComponent public navigation', () => {
+    it.each([false, true])('scrolls both viewports to the top, respecting reduced motion=%s', async reducedMotion => {
+        const { fixture, rootElement, routerEvents, viewportScroll, viewportScroller } = await createComponentAsync({ reducedMotion });
+        const navigation = new NavigationEnd(NAVIGATION_ID, '/ru/food-diary', '/ru/food-diary');
+        routerEvents.next(navigation);
+        fixture.detectChanges();
+        routerEvents.next(new Scroll(navigation, null, null));
+
+        const behavior = reducedMotion ? 'instant' : 'smooth';
+        expect(viewportScroll).toHaveBeenCalledExactlyOnceWith({ top: 0, left: 0, behavior });
+        expect(viewportScroller.scrollToPosition).toHaveBeenCalledExactlyOnceWith([0, 0], { behavior });
+        expect(rootElement.querySelector('.fd-root')?.classList.contains('fd-root--public-site')).toBe(true);
+    });
+
+    it('keeps the scroll position when only the public query or fragment changes', async () => {
+        const { fixture, routerEvents, viewportScroll, viewportScroller } = await createComponentAsync();
+        routerEvents.next(new NavigationEnd(NAVIGATION_ID, '/pricing', '/pricing'));
+        fixture.detectChanges();
+        const navigation = new NavigationEnd(NAVIGATION_ID + 1, '/pricing?auth=login#details', '/pricing?auth=login#details');
+        routerEvents.next(navigation);
+        routerEvents.next(new Scroll(navigation, null, 'details'));
+
+        expect(viewportScroll).not.toHaveBeenCalled();
+        expect(viewportScroller.scrollToPosition).not.toHaveBeenCalled();
+    });
+
+    it('preserves immediate document scrolling for workspace routes', async () => {
+        const { fixture, rootElement, routerEvents, viewportScroll, viewportScroller } = await createComponentAsync();
+        const navigation = new NavigationEnd(NAVIGATION_ID, '/products', '/products');
+        routerEvents.next(navigation);
+        fixture.detectChanges();
+        routerEvents.next(new Scroll(navigation, null, null));
+
+        expect(viewportScroll).not.toHaveBeenCalled();
+        expect(viewportScroller.scrollToPosition).toHaveBeenCalledExactlyOnceWith([0, 0], { behavior: 'instant' });
+        expect(rootElement.querySelector('.fd-root')?.classList.contains('fd-root--public-site')).toBe(false);
+    });
+
+    it('honors navigation that explicitly owns its scroll position', async () => {
+        const { fixture, routerEvents, viewportScroll, viewportScroller } = await createComponentAsync();
+        const navigation = new NavigationEnd(NAVIGATION_ID, '/pricing', '/pricing');
+        routerEvents.next(navigation);
+        fixture.detectChanges();
+        routerEvents.next(new Scroll(navigation, null, null, 'manual'));
+
+        expect(viewportScroll).not.toHaveBeenCalled();
+        expect(viewportScroller.scrollToPosition).not.toHaveBeenCalled();
+    });
+});
+
+async function createComponentAsync(
+    options: { isAuthenticated?: boolean; shell?: 'authenticated' | 'public'; reducedMotion?: boolean } = {},
+): Promise<{
+    fixture: ComponentFixture<AppComponent>;
+    rootElement: HTMLElement;
+    viewportScroll: ReturnType<typeof vi.fn>;
+    viewportScroller: { scrollToPosition: ReturnType<typeof vi.fn>; setHistoryScrollRestoration: ReturnType<typeof vi.fn> };
     component: AppComponent;
     localizationService: { loadTranslationsForRouteAsync: ReturnType<typeof vi.fn> };
     routeLoadingService: { beginLoad: ReturnType<typeof vi.fn>; endLoad: ReturnType<typeof vi.fn> };
@@ -154,6 +211,7 @@ async function createComponentAsync(options: { isAuthenticated?: boolean; shell?
     const localizationService = { loadTranslationsForRouteAsync: vi.fn().mockResolvedValue(void 0) };
     const seoService = { update: vi.fn() };
     const themeService = { applyThemeForRoute: vi.fn() };
+    const viewportScroller = { scrollToPosition: vi.fn(), setHistoryScrollRestoration: vi.fn() };
 
     TestBed.configureTestingModule({
         imports: [AppComponent],
@@ -177,6 +235,8 @@ async function createComponentAsync(options: { isAuthenticated?: boolean; shell?
             { provide: GlobalLoadingService, useValue: { isVisible: signal(false) } },
             { provide: RouteLoadingService, useValue: routeLoadingService },
             { provide: ThemeService, useValue: themeService },
+            { provide: ViewportScroller, useValue: viewportScroller },
+            { provide: BrowserWindowService, useValue: createBrowserWindowStub(options.reducedMotion ?? false) },
             { provide: NotificationRealtimeService, useValue: {} },
             { provide: PushNotificationService, useValue: {} },
         ],
@@ -184,15 +244,22 @@ async function createComponentAsync(options: { isAuthenticated?: boolean; shell?
     TestBed.overrideComponent(AppComponent, {
         set: {
             imports: [],
-            template: '',
+            template:
+                '<div class="fd-root" [class.fd-root--public-site]="usesPublicSiteChrome()"><div #pageViewport class="fd-root__viewport"></div></div>',
         },
     });
 
     await TestBed.compileComponents();
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
+    const rootElement = fixture.nativeElement as HTMLElement;
+    const viewportScroll = attachViewportScrollSpy(rootElement);
 
     return {
+        fixture,
+        rootElement,
+        viewportScroll,
+        viewportScroller,
         component: fixture.componentInstance,
         localizationService,
         routeLoadingService,
@@ -200,6 +267,26 @@ async function createComponentAsync(options: { isAuthenticated?: boolean; shell?
         routerEvents,
         seoService,
         themeService,
+    };
+}
+
+function attachViewportScrollSpy(rootElement: HTMLElement): ReturnType<typeof vi.fn> {
+    const viewportScroll = vi.fn();
+    const viewportElement = rootElement.querySelector<HTMLElement>('.fd-root__viewport');
+    if (viewportElement === null) {
+        throw new Error('Shell viewport is missing');
+    }
+    viewportElement.scrollTo = viewportScroll;
+    return viewportScroll;
+}
+
+function createBrowserWindowStub(reducedMotion: boolean): {
+    isAvailable: () => boolean;
+    matchMedia: () => Pick<MediaQueryList, 'matches'>;
+} {
+    return {
+        isAvailable: (): boolean => true,
+        matchMedia: (): Pick<MediaQueryList, 'matches'> => ({ matches: reducedMotion }),
     };
 }
 

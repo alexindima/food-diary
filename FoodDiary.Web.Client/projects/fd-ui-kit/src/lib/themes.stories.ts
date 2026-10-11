@@ -346,6 +346,12 @@ const meta: Meta<ThemeDocsComponent> = {
     tags: ['autodocs'],
     parameters: {
         layout: 'fullscreen',
+        docs: {
+            description: {
+                component:
+                    'A region can keep its own palette without changing the document theme. Define its semantic color tokens and add fd-theme-scope on the same element so UI-kit aliases, including button colors, resolve within that region.',
+            },
+        },
         controls: {
             disable: true,
         },

@@ -1,7 +1,17 @@
-import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, Injector, signal } from '@angular/core';
+import { DOCUMENT, ViewportScroller } from '@angular/common';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    type ElementRef,
+    inject,
+    Injector,
+    signal,
+    viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, NavigationEnd, RouteConfigLoadEnd, RouteConfigLoadStart, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, RouteConfigLoadEnd, RouteConfigLoadStart, Router, RouterOutlet, Scroll } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdTourHostComponent } from 'fd-tour';
 import { FdUiToastHostComponent, FdUiTopLoaderComponent } from 'fd-ui-kit';
@@ -55,6 +65,9 @@ export class AppComponent {
     private readonly themeService = inject(ThemeService);
     private readonly document = inject(DOCUMENT);
     private readonly browserWindow = inject(BrowserWindowService);
+    private readonly viewportScroller = inject(ViewportScroller);
+    private readonly pageViewport = viewChild<ElementRef<HTMLElement>>('pageViewport');
+    private publicScrollNavigationId: number | null = null;
 
     protected isAuthenticated = this.authService.isAuthenticated;
     protected isImpersonating = this.authService.isImpersonating;
@@ -71,6 +84,7 @@ export class AppComponent {
     });
 
     public constructor() {
+        this.viewportScroller.setHistoryScrollRestoration('manual');
         if (this.browserWindow.isAvailable()) {
             this.injector.get(NotificationRealtimeService);
             this.injector.get(PushNotificationService);
@@ -82,9 +96,34 @@ export class AppComponent {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(event => {
+                const nextPath = this.getCurrentPath(event.urlAfterRedirects);
+                this.publicScrollNavigationId = nextPath !== this.currentPath() && isPublicMarketingPath(nextPath) ? event.id : null;
                 this.document.documentElement.classList.remove(SESSION_ROUTE_PENDING_CLASS);
-                this.currentPath.set(this.getCurrentPath(event.urlAfterRedirects));
+                this.currentPath.set(nextPath);
                 this.shellMode.set(this.getShellMode());
+            });
+
+        // Router Scroll arrives after the new view renders. Desktop scrolls inside
+        // the shell viewport; mobile uses the document viewport.
+        this.router.events
+            .pipe(
+                filter((event): event is Scroll => event instanceof Scroll),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(event => {
+                if (event.scrollBehavior === 'manual') {
+                    return;
+                }
+                if (!this.usesPublicSiteChrome()) {
+                    this.viewportScroller.scrollToPosition([0, 0], { behavior: 'instant' });
+                    return;
+                }
+                if (event.routerEvent.id !== this.publicScrollNavigationId) {
+                    return;
+                }
+                const behavior = this.browserWindow.matchMedia('(prefers-reduced-motion: reduce)')?.matches === true ? 'instant' : 'smooth';
+                this.pageViewport()?.nativeElement.scrollTo({ top: 0, left: 0, behavior });
+                this.viewportScroller.scrollToPosition([0, 0], { behavior });
             });
 
         this.router.events

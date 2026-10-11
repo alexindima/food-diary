@@ -7270,7 +7270,7 @@
       "role": "Component",
       "selector": "fd-root",
       "path": "FoodDiary.Web.Client/src/app/shell/app.ts",
-      "line": 45
+      "line": 55
     },
     {
       "name": "AdminPanelLauncherService",

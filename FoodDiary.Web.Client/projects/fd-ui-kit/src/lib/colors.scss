@@ -247,7 +247,8 @@ $fd-button-tokens: (
 :root,
 html[data-theme='ocean'],
 html[data-theme='leaf'],
-html[data-theme='dark'] {
+html[data-theme='dark'],
+.fd-theme-scope {
     --fd-color-gray-50: var(--fd-color-slate-50);
     --fd-color-gray-100: var(--fd-color-slate-100);
     --fd-color-gray-200: var(--fd-color-slate-200);
