@@ -87,7 +87,9 @@ const unicornCandidateRules = {
     'unicorn/prefer-class-fields': 'error',
     'unicorn/prefer-code-point': 'error',
     'unicorn/prefer-date-now': 'error',
-    'unicorn/prefer-default-parameters': 'error',
+    // Nullable inputs intentionally normalize null and undefined together;
+    // default parameters only handle undefined and would change that contract.
+    'unicorn/prefer-default-parameters': 'off',
     'unicorn/prefer-includes': 'error',
     'unicorn/prefer-logical-operator-over-ternary': 'error',
     'unicorn/prefer-math-min-max': 'error',
