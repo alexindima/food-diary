@@ -50,13 +50,17 @@ different baseline, either changed snapshot, changed identity, missing payload
 or stale change list cannot inherit the acceptance; malformed records fail closed.
 Synthetic comparisons never load a repository release decision.
 
-The 2026-10-04 release records the user's explicit confirmation that every client
-can be updated with the API. Its 20 accepted breaks cover bounded pagination,
-retired collection routes and refresh-token transport through HttpOnly cookies.
-Deploy the current web/admin clients with the API and update every supported
-mobile or external client before it uses this contract. Older client compatibility
-is not promised by this release decision. The normal successful ancestral CI
-baseline takes over after release; later incompatible changes require a new review.
+The 2026-10-12 audit fix narrows the client-goals response from `UserHttpResponse`
+to `ClientGoalsHttpResponse`, retaining goal data while removing unrelated private
+profile data. The user authorized the audit fixes and publication of all current
+changes. The acceptance record covers only the three response media types of
+`GET /api/v{version}/dietologist/clients/{clientuserid}/goals`, compared with the
+last successful ancestral CI commit. Publish the regenerated web SDK and assets
+with the API through the existing CI-gated deployment. Consumers that need profile
+data must use separately authorized profile operations; unrelated profile fields
+from the goals response are no longer supported. The normal successful ancestral
+CI baseline takes over after release; later incompatible changes require a new
+review.
 
 The guard understands both a raw OpenAPI document and this repository's compact
 `Endpoints` contract snapshot. Property presence determines the format, so a
