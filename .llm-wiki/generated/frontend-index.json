@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2543,
-    "symbols": 824,
+    "typescriptFiles": 2544,
+    "symbols": 825,
     "routes": 108,
     "features": 46,
     "specs": 734,
     "localeFiles": 5,
     "roles": {
-      "Component": 488,
+      "Component": 489,
       "Directive": 15,
       "Facade": 88,
       "Other": 34,
@@ -545,6 +545,7 @@
         "DashboardMealsBlockComponent",
         "DashboardNotificationSettingsDialogComponent",
         "DashboardNotificationSettingsFacade",
+        "DashboardNutritionBlockComponent",
         "DashboardQuickAddComponent",
         "DashboardService",
         "DashboardSetupCardComponent",
@@ -3858,7 +3859,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-layout.service.ts",
-      "line": 15
+      "line": 19
     },
     {
       "name": "DashboardLocalDayFacade",
@@ -3893,7 +3894,7 @@
       "role": "Directive",
       "selector": "[fdDashboardBlockHost]",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-lib/dashboard-block-host.directive.ts",
-      "line": 41
+      "line": 44
     },
     {
       "name": "DashboardAdviceBlockComponent",
@@ -3936,6 +3937,13 @@
       "selector": "fd-dashboard-meals-block",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-meals-block/dashboard-meals-block.ts",
       "line": 15
+    },
+    {
+      "name": "DashboardNutritionBlockComponent",
+      "role": "Component",
+      "selector": "fd-dashboard-nutrition-block",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-nutrition-block/dashboard-nutrition-block.ts",
+      "line": 18
     },
     {
       "name": "DashboardQuickAddComponent",

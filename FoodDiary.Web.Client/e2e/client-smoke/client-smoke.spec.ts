@@ -271,6 +271,54 @@ test.describe('client auth smoke', () => {
 });
 
 test.describe('authenticated client smoke', () => {
+    for (const viewport of [
+        { width: 1440, height: 900 },
+        { width: 390, height: 844 },
+    ]) {
+        test(`persists Dynamics visibility during dashboard customization at ${viewport.width}px`, async ({ page }) => {
+            await page.setViewportSize(viewport);
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+            let user = createUser();
+            await page.route('**/api/v1/users/info', async route => {
+                if (route.request().method() === 'PATCH') {
+                    const request = route.request().postDataJSON() as { dashboardLayout: UserHttpResponse['dashboardLayout'] };
+                    user = { ...user, dashboardLayout: request.dashboardLayout };
+                }
+                await route.fulfill(jsonFixture(fixtureContract, route.request().method(), '/api/v1/users/info', user));
+            });
+            await page.route('**/api/v1/dashboard?**', async route => {
+                await route.fulfill(
+                    jsonFixture(fixtureContract, 'GET', '/api/v1/dashboard', {
+                        ...createDashboardSnapshot(),
+                        dashboardLayout: user.dashboardLayout,
+                    }),
+                );
+            });
+            await page.goto('/dashboard');
+            const card = page.locator('fd-nutrition-weekly-trend-card');
+            await expect(card).toBeVisible();
+            await toggleDashboardSettingsAsync(page);
+            const toggle = page.getByRole('button', { name: 'Dynamics', exact: true });
+            await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+            await toggle.click();
+            await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+            await toggle.press('Enter');
+            await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+            await toggle.press('Space');
+            await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+            await toggleDashboardSettingsAsync(page);
+            await expect(card).toHaveCount(0);
+            await page.reload();
+            await expect(page.locator('fd-dashboard')).toBeVisible();
+            await expect(card).toHaveCount(0);
+            await toggleDashboardSettingsAsync(page);
+            await page.getByRole('button', { name: 'Dynamics', exact: true }).click();
+            await toggleDashboardSettingsAsync(page);
+            await expect(card).toBeVisible();
+        });
+    }
+
     test('redirects authenticated user from landing to dashboard', async ({ page }) => {
         await page.addInitScript((token: string) => {
             window.localStorage.setItem('authToken', token);
@@ -1115,6 +1163,16 @@ async function mockAuthenticatedClientApiAsync(page: Page): Promise<void> {
     });
 
     await page.route('**/api/v1/**', fulfillClientApiRouteAsync);
+}
+
+async function toggleDashboardSettingsAsync(page: Page): Promise<void> {
+    const action = page.getByRole('button', { name: 'Customize dashboard', exact: true });
+    if (await action.isVisible()) {
+        await action.click();
+        return;
+    }
+    await page.getByRole('button', { name: 'More actions', exact: true }).click();
+    await page.getByRole('menuitem', { name: 'Customize dashboard', exact: true }).click();
 }
 
 async function fulfillClientApiRouteAsync(route: Route): Promise<void> {

@@ -1,0 +1,15 @@
+@if (shouldRender()) {
+    <div fdDashboardBlockHost class="dashboard__block" [state]="state()" (blockActivated)="blockToggle.emit()">
+        <fd-nutrition-weekly-trend-card
+            fdDashboardBlockContent
+            [state]="state()"
+            [interactive]="true"
+            [currentDate]="currentDate()"
+            [points]="points()"
+            [dailyGoal]="dailyGoal()"
+            [insight]="insight()"
+            [isToday]="isToday()"
+            (details)="details.emit()"
+        />
+    </div>
+}

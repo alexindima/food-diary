@@ -13,7 +13,8 @@ export type DashboardHeaderState = {
     selectedDateLabel: string;
 };
 
-export type DashboardBlockId = 'fasting' | 'summary' | 'meals' | 'hydration' | 'cycle' | 'weight' | 'waist' | 'tdee' | 'advice';
+export type DashboardBlockId =
+    'fasting' | 'summary' | 'meals' | 'nutrition' | 'hydration' | 'cycle' | 'weight' | 'waist' | 'tdee' | 'advice';
 
 export type DashboardBlockState = {
     hidden: boolean;

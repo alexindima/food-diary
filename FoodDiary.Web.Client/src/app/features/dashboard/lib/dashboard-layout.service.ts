@@ -11,6 +11,10 @@ const DEFAULT_LAYOUT: DashboardLayoutSettings = {
     mobile: ['summary', 'meals', 'fasting', 'hydration', 'cycle', 'weight', 'waist', 'tdee', 'advice'],
 };
 
+// Dynamics predates layout customization and was always visible, including in saved layouts.
+// Persist only its opt-out so existing users retain the widget without an API migration.
+const HIDDEN_NUTRITION_BLOCK = 'nutrition-hidden';
+
 @Service()
 export class DashboardLayoutService {
     private readonly userService = inject(UserService);
@@ -35,7 +39,9 @@ export class DashboardLayoutService {
         this.viewportWidth() < this.config.mobileBreakpointPx ? 'mobile' : 'web',
     );
 
-    public readonly visibleBlocks = computed(() => this.getLayoutForKey(this.layoutKey()));
+    public readonly visibleBlocks = computed(() =>
+        this.getLayoutForKey(this.layoutKey()).filter(block => block !== HIDDEN_NUTRITION_BLOCK),
+    );
 
     public readonly hasAsideBlocks = computed(() => {
         const blocks = this.visibleBlocks();
@@ -117,6 +123,9 @@ export class DashboardLayoutService {
     }
 
     public isBlockVisible(blockId: string): boolean {
+        if (blockId === 'nutrition') {
+            return !this.getLayoutForKey(this.layoutKey()).includes(HIDDEN_NUTRITION_BLOCK);
+        }
         return this.visibleBlocks().includes(blockId);
     }
 
@@ -130,13 +139,14 @@ export class DashboardLayoutService {
         }
 
         const key = this.layoutKey();
-        const baseOrder = DEFAULT_LAYOUT[key] ?? [];
+        const baseOrder = [...(DEFAULT_LAYOUT[key] ?? []), HIDDEN_NUTRITION_BLOCK];
+        const storedBlockId = blockId === 'nutrition' ? HIDDEN_NUTRITION_BLOCK : blockId;
         const current = this.getLayoutForKey(key);
-        const isVisible = current.includes(blockId);
+        const isVisible = current.includes(storedBlockId);
 
         const next = isVisible
-            ? current.filter(item => item !== blockId)
-            : baseOrder.filter(item => item === blockId || current.includes(item));
+            ? current.filter(item => item !== storedBlockId)
+            : baseOrder.filter(item => item === storedBlockId || current.includes(item));
 
         this.layoutSettings.update(layout => ({
             ...layout,
@@ -161,7 +171,7 @@ export class DashboardLayoutService {
     }
 
     private normalizeLayoutList(values: string[] | null | undefined, fallback: string[]): string[] {
-        const allowed = new Set(fallback);
+        const allowed = new Set([...fallback, HIDDEN_NUTRITION_BLOCK]);
         const source = values !== null && values !== undefined && values.length > 0 ? values : fallback;
         const filtered: string[] = [];
         for (const item of source) {
@@ -176,7 +186,7 @@ export class DashboardLayoutService {
         if (values.includes('summary')) {
             return values;
         }
-        return ['summary', ...values.filter(item => item !== 'summary' && fallback.includes(item))];
+        return ['summary', ...values.filter(item => item !== 'summary' && (fallback.includes(item) || item === HIDDEN_NUTRITION_BLOCK))];
     }
 
     private async persistLayoutAsync(layout: DashboardLayoutSettings): Promise<boolean> {

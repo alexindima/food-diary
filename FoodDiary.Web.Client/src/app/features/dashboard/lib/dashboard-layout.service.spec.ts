@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { of, Subject, throwError } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { type Observable, of, Subject, throwError } from 'rxjs';
+import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { DASHBOARD_LAYOUT_CONFIG } from '../../../config/runtime-ui.tokens';
 import { UserService } from '../../../shared/api/user.service';
@@ -9,6 +9,46 @@ import { DashboardLayoutService } from './dashboard-layout.service';
 
 const MOBILE_WIDTH = 500;
 const DESKTOP_WIDTH = 1200;
+
+describe('Dashboard Dynamics layout', () => {
+    it('keeps Dynamics visible for existing customized layouts and preserves its opt-out when enabling another card', () => {
+        const { service } = setupService();
+        service.initializeLayout({ web: ['summary'], mobile: ['nutrition-hidden'] });
+        expect(service.isBlockVisible('nutrition')).toBe(true);
+        service.updateViewportWidth(MOBILE_WIDTH);
+        expect(service.isBlockVisible('nutrition')).toBe(false);
+        expect(service.visibleBlocks()).toEqual(['summary']);
+        service.openSettings();
+        service.toggleBlock('hydration');
+        expect(service.isBlockVisible('nutrition')).toBe(false);
+        expect(service.isBlockVisible('hydration')).toBe(true);
+        service.discard();
+        expect(service.isBlockVisible('nutrition')).toBe(false);
+    });
+
+    it.each([DESKTOP_WIDTH, MOBILE_WIDTH])('saves and restores Dynamics visibility at width %s', async width => {
+        const { service, userService } = setupService();
+        service.initializeLayout(null);
+        service.updateViewportWidth(width);
+        expect(service.isBlockVisible('nutrition')).toBe(true);
+        service.openSettings();
+        service.toggleBlock('nutrition');
+        expect(service.isBlockVisible('nutrition')).toBe(false);
+        expect(service.shouldRenderBlock('nutrition')).toBe(true);
+        expect(await service.saveAsync()).toBe(true);
+        expect(service.shouldRenderBlock('nutrition')).toBe(false);
+        const saved = userService.updateDashboardLayout.mock.calls[0][0];
+        const key = width === DESKTOP_WIDTH ? 'web' : 'mobile';
+        const otherKey = key === 'web' ? 'mobile' : 'web';
+        expect(saved[key]).toContain('nutrition-hidden');
+        expect(saved[otherKey]).not.toContain('nutrition-hidden');
+        service.openSettings();
+        service.toggleBlock('nutrition');
+        expect(service.isBlockVisible('nutrition')).toBe(true);
+        service.discard();
+        expect(service.shouldRenderBlock('nutrition')).toBe(false);
+    });
+});
 
 describe('DashboardLayoutService', () => {
     it('normalizes incoming layout and keeps summary visible first', () => {
@@ -218,7 +258,9 @@ describe('Dashboard layout save recovery', () => {
 
 function setupService(): {
     service: DashboardLayoutService;
-    userService: { updateDashboardLayout: ReturnType<typeof vi.fn> };
+    userService: {
+        updateDashboardLayout: Mock<(layout: DashboardLayoutSettings) => Observable<{ dashboardLayout?: DashboardLayoutSettings } | null>>;
+    };
 } {
     const userService = {
         updateDashboardLayout: vi.fn((layout: DashboardLayoutSettings) => of({ dashboardLayout: layout })),

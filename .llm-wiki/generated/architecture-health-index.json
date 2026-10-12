@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 112,
     "routedStandaloneComponents": 68,
-    "componentsWithoutDirectSpecs": 129,
+    "componentsWithoutDirectSpecs": 130,
     "criticalSymbolsWithoutTestReferences": 46,
     "explicitDebtMarkers": 12
   },
@@ -2603,6 +2603,61 @@
         {
           "name": "open",
           "type": "{ id: string }"
+        }
+      ],
+      "specPath": null
+    },
+    {
+      "class": "DashboardNutritionBlockComponent",
+      "selector": "fd-dashboard-nutrition-block",
+      "feature": "dashboard",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-nutrition-block/dashboard-nutrition-block.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-nutrition-block/dashboard-nutrition-block.html",
+      "inputs": [
+        {
+          "name": "shouldRender",
+          "type": "boolean",
+          "required": true
+        },
+        {
+          "name": "state",
+          "type": "DashboardBlockState",
+          "required": true
+        },
+        {
+          "name": "currentDate",
+          "type": "Date",
+          "required": true
+        },
+        {
+          "name": "points",
+          "type": "NutritionTrendPoint[]",
+          "required": true
+        },
+        {
+          "name": "dailyGoal",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "insight",
+          "type": "NutritionTrendInsight",
+          "required": true
+        },
+        {
+          "name": "isToday",
+          "type": "boolean",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "blockToggle",
+          "type": ""
+        },
+        {
+          "name": "details",
+          "type": ""
         }
       ],
       "specPath": null

@@ -194,13 +194,15 @@
                         </ng-template>
                         <ng-container [ngTemplateOutlet]="fastingFirst() ? null : fastingBlock" />
 
-                        <fd-nutrition-weekly-trend-card
-                            [interactive]="true"
+                        <fd-dashboard-nutrition-block
+                            [shouldRender]="layout.shouldRenderBlock('nutrition')"
+                            [state]="dashboardBlockStates().nutrition"
                             [currentDate]="selectedDate()"
                             [points]="weeklyCalories()"
                             [dailyGoal]="snapshot()?.dailyGoal ?? 0"
                             [insight]="nutritionInsight()"
                             [isToday]="isTodaySelected()"
+                            (blockToggle)="layout.toggleBlock('nutrition')"
                             (details)="openGoalsAsync()"
                         />
                     </div>
