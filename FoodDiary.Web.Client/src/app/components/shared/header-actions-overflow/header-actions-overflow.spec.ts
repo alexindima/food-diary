@@ -148,7 +148,15 @@ describe('Header action focus handoff', () => {
         const trigger = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>(
             '.fd-header-actions-overflow__trigger button',
         );
-        trigger?.click();
+        const triggerHost = trigger?.closest<HTMLElement>('.fd-header-actions-overflow__trigger');
+        if (trigger === null || triggerHost === null || triggerHost === undefined) {
+            throw new Error('Expected the overflow trigger');
+        }
+        // jsdom does not evaluate the media query that reveals the compact trigger.
+        triggerHost.style.display = 'inline-flex';
+        trigger.focus();
+        expect(document.activeElement).toBe(trigger);
+        trigger.click();
         fixture.detectChanges();
         await fixture.whenStable();
         const item = TestBed.inject(OverlayContainer).getContainerElement().querySelector<HTMLButtonElement>('.fd-ui-menu__item');
