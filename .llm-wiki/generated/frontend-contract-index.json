@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 493,
-    "componentsWithoutDirectSpecs": 129,
-    "inputs": 1590,
-    "outputs": 551,
+    "components": 494,
+    "componentsWithoutDirectSpecs": 130,
+    "inputs": 1597,
+    "outputs": 553,
     "apiCalls": 315,
     "templatesWithTranslations": 356,
     "translationKeys": 2132,
-    "consumerEdges": 1249,
-    "consumedComponents": 312,
+    "consumerEdges": 1250,
+    "consumedComponents": 313,
     "unconsumedComponents": 180
   },
   "components": [
@@ -2029,6 +2029,61 @@
       "inputs": [],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog.spec.ts"
+    },
+    {
+      "class": "DashboardNutritionBlockComponent",
+      "selector": "fd-dashboard-nutrition-block",
+      "feature": "dashboard",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-nutrition-block/dashboard-nutrition-block.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-nutrition-block/dashboard-nutrition-block.html",
+      "inputs": [
+        {
+          "name": "shouldRender",
+          "type": "boolean",
+          "required": true
+        },
+        {
+          "name": "state",
+          "type": "DashboardBlockState",
+          "required": true
+        },
+        {
+          "name": "currentDate",
+          "type": "Date",
+          "required": true
+        },
+        {
+          "name": "points",
+          "type": "NutritionTrendPoint[]",
+          "required": true
+        },
+        {
+          "name": "dailyGoal",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "insight",
+          "type": "NutritionTrendInsight",
+          "required": true
+        },
+        {
+          "name": "isToday",
+          "type": "boolean",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "blockToggle",
+          "type": ""
+        },
+        {
+          "name": "details",
+          "type": ""
+        }
+      ],
+      "specPath": null
     },
     {
       "class": "DashboardQuickAddComponent",
@@ -25671,6 +25726,27 @@
       ]
     },
     {
+      "component": "DashboardNutritionBlockComponent",
+      "selector": "fd-dashboard-nutrition-block",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-nutrition-block/dashboard-nutrition-block.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "currentDate",
+        "dailyGoal",
+        "insight",
+        "isToday",
+        "points",
+        "shouldRender",
+        "state"
+      ],
+      "outputsHandled": [
+        "blockToggle",
+        "details"
+      ]
+    },
+    {
       "component": "DashboardQuickAddComponent",
       "selector": "fd-dashboard-quick-add",
       "componentPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-quick-add/dashboard-quick-add.ts",
@@ -40109,7 +40185,7 @@
       "selector": "fd-nutrition-weekly-trend-card",
       "componentPath": "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
       "consumerFeature": "dashboard",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-nutrition-block/dashboard-nutrition-block.html",
       "occurrences": 1,
       "inputsUsed": [
         "currentDate",

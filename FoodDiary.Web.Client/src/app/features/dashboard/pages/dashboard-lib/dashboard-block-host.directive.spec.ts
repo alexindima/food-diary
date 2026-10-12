@@ -6,6 +6,17 @@ import { DashboardBlockContentDirective, DashboardBlockHostDirective } from './d
 import type { DashboardBlockState } from './dashboard-view.types';
 
 describe('DashboardBlockHostDirective', () => {
+    it('preserves native Space behavior for controls inside a noninteractive block', () => {
+        const fixture = setupFixture();
+        fixture.componentInstance['state'].update(state => ({ ...state, role: null, inert: null }));
+        fixture.detectChanges();
+        const host = (fixture.nativeElement as HTMLElement).querySelector('[fdDashboardBlockHost]') as HTMLElement;
+        const event = new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true });
+        host.dispatchEvent(event);
+        expect(event.defaultPrevented).toBe(false);
+        expect(fixture.componentInstance['activated']).not.toHaveBeenCalled();
+    });
+
     it('applies block state attributes and emits activation for keyboard controls', () => {
         const fixture = setupFixture();
         const hostElement = fixture.nativeElement as HTMLElement;

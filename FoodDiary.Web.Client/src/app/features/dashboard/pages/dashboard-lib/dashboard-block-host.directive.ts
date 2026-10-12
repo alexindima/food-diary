@@ -26,6 +26,9 @@ export class DashboardBlockHostDirective {
     }
 
     protected activateWithSpace(event: Event): void {
+        if (this.state().role !== 'button') {
+            return;
+        }
         event.preventDefault();
         this.activate(event);
     }

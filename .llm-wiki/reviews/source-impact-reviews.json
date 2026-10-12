@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "75c611cea55a1e348618dbd035856980c0c501a003d3d4d67777f311b604139c"
+          "sha256": "ff7b8c088976e90fa275aa5d0e53eba03934e4475ec7fcd0f16dddc86bcbc56b"
         }
       ],
-      "reason": "Reviewed final architecture index: no project references or foreign aggregate writes were added. Architecture2272/2272 and the final solution build passed; existing owning-module capabilities remain enforced. The workflow still accurately distinguishes drift from investigation candidates.",
+      "reason": "Reviewed the final new Dashboard presentation component and generated dependency-edge counts. It consumes only same-page block directives and existing shared UI types; no project or cross-feature ownership boundary changed, so the structural architecture-review workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
-      "reviewedAtUtc": "2026-10-12T06:52:20.8320228Z"
+      "gitHead": "52502533e53e734c29c1b9d17a53b87b717eb991",
+      "reviewedAtUtc": "2026-10-12T17:49:58.8732159Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -883,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c173c0f6e9af8407c86fea73be4a479e2470d39855790fe9778ebae31776cec1"
+          "sha256": "1a5688f196846daa1a8bd733e4b4bb4ee8fa0633c9fd5901f349816ccc758ecb"
         }
       ],
-      "reason": "Reviewed final numeric/calendar examples, form state and retry behavior against focused tests and real browser persistence. Final frontend gates and backend build/regressions passed; the full browser replay and cleanup remain explicitly pending. The workflow remains applicable without weakened thresholds.",
+      "reason": "Reviewed final Dynamics section extraction, layout opt-out and native Space regression: updated metrics stay navigation evidence and existing test-risk guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
-      "reviewedAtUtc": "2026-10-12T06:52:21.8281979Z"
+      "gitHead": "52502533e53e734c29c1b9d17a53b87b717eb991",
+      "reviewedAtUtc": "2026-10-12T17:49:13.7946098Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -985,21 +985,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c173c0f6e9af8407c86fea73be4a479e2470d39855790fe9778ebae31776cec1"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "40e719045b58c3c3bd5203409210693689710a48f5f2d4b1794f8d9277e7dd8e"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "64a72aaaff7866f12051219ab83837971c27cfcd4f9d3bb61c3ba1af6437009d"
+          "sha256": "1a5688f196846daa1a8bd733e4b4bb4ee8fa0633c9fd5901f349816ccc758ecb"
         }
       ],
-      "reason": "Reviewed the bounded goals authorization/privacy fix and its two independent read-only reviews plus exact HTTP regressions. Additional Premium UI recovery preserves server authorization and cookie rotation and creates no local role override. No repository-wide security scan is claimed; this workflow still separates source leads from verified findings.",
+      "reason": "The new Dashboard presentation section and opt-out state introduce no identity, network or private-content access; refreshed structural metrics do not change this evidence workflow.",
       "baseRef": "HEAD",
-      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
-      "reviewedAtUtc": "2026-10-12T06:52:22.3173228Z"
+      "gitHead": "52502533e53e734c29c1b9d17a53b87b717eb991",
+      "reviewedAtUtc": "2026-10-12T17:49:15.2154830Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1136,17 +1128,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "b1d092a741122ee790d036157c2ad8ec5450930b40d260e74ef0c77eef4c5c85"
+          "sha256": "bbd20d1c79440f0e878e724e474d7877d764ce87468680e83b90076dbcb4dd40"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "e0f0a24ea2cd3403324997b534a4706afc9dc6c573fa3ce97c681a175a56bc26"
+          "sha256": "2809f65bb79e5b06327f728d74ed95bd4e3f7243b0395f9f4cb3436488e93f06"
         }
       ],
-      "reason": "Reviewed final frontend indexes against generated SDK adapters, routed forms and the bounded Premium recovery helper. Current source tracing and consumer verification instructions remain valid; no transport or provider contract was changed.",
+      "reason": "The new fd-dashboard-nutrition-block selector is owned by Dashboard and delegates to existing block directives and shared trend UI; refreshed consumer and symbol indexes keep the trace guidance accurate.",
       "baseRef": "HEAD",
-      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
-      "reviewedAtUtc": "2026-10-12T06:52:22.8018467Z"
+      "gitHead": "52502533e53e734c29c1b9d17a53b87b717eb991",
+      "reviewedAtUtc": "2026-10-12T17:49:16.6533561Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1230,13 +1222,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "b1d092a741122ee790d036157c2ad8ec5450930b40d260e74ef0c77eef4c5c85"
+          "sha256": "bbd20d1c79440f0e878e724e474d7877d764ce87468680e83b90076dbcb4dd40"
         }
       ],
-      "reason": "Reviewed current consumers and tests for shopping quantity errors and Premium page entitlement recovery. All 5024 app, 561 UI-kit, 7 tour and 223 admin tests plus repository frontend guards passed. Real browser grant and failed-refresh retry use the existing SDK/session transport. The contract-review workflow remains accurate.",
+      "reason": "Reviewed fd-dashboard-nutrition-block inputs and outputs against its Dashboard consumer and Chrome regressions. Shared nutrition card inputs are unchanged; the new component owns presentation and delegates block toggles, preserving the frontend-contract review workflow.",
       "baseRef": "HEAD",
-      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
-      "reviewedAtUtc": "2026-10-12T06:52:20.0117128Z"
+      "gitHead": "52502533e53e734c29c1b9d17a53b87b717eb991",
+      "reviewedAtUtc": "2026-10-12T17:50:00.3535709Z"
     },
     {
       "pageId": "workflow.query-context",

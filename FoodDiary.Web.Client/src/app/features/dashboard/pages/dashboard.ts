@@ -22,7 +22,6 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 
 import type { AiInputBarResult } from '../../../components/shared/ai-input-bar/ai-input-bar.types';
-import { NutritionWeeklyTrendCardComponent } from '../../../components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header';
 import { NavigationService } from '../../../services/navigation.service';
@@ -63,6 +62,7 @@ import { DashboardEditHintComponent } from './dashboard-sections/dashboard-edit-
 import { DashboardFastingBlockComponent } from './dashboard-sections/dashboard-fasting-block/dashboard-fasting-block';
 import { DashboardHydrationBlockComponent } from './dashboard-sections/dashboard-hydration-block/dashboard-hydration-block';
 import { DashboardMealsBlockComponent } from './dashboard-sections/dashboard-meals-block/dashboard-meals-block';
+import { DashboardNutritionBlockComponent } from './dashboard-sections/dashboard-nutrition-block/dashboard-nutrition-block';
 import { DashboardQuickAddComponent } from './dashboard-sections/dashboard-quick-add/dashboard-quick-add';
 import { DashboardSummaryBlockComponent } from './dashboard-sections/dashboard-summary-block/dashboard-summary-block';
 import { DashboardTdeeBlockComponent } from './dashboard-sections/dashboard-tdee-block/dashboard-tdee-block';
@@ -89,7 +89,7 @@ import { DashboardTrendBlockComponent } from './dashboard-sections/dashboard-tre
         DashboardEditHintComponent,
         DashboardFastingBlockComponent,
         DashboardSummaryBlockComponent,
-        NutritionWeeklyTrendCardComponent,
+        DashboardNutritionBlockComponent,
         DashboardMealsBlockComponent,
         DashboardHydrationBlockComponent,
         DashboardCycleBlockComponent,
@@ -270,6 +270,7 @@ export class DashboardComponent {
             }),
             summary: stateFor('summary', { locked: true, editingLabelKey: 'DASHBOARD.DAY_SUMMARY.TITLE' }),
             meals: stateFor('meals', { editingLabelKey: 'DASHBOARD.MEALS_TITLE' }),
+            nutrition: stateFor('nutrition', { editingLabelKey: 'NUTRITION_TREND.TITLE' }),
             hydration: stateFor('hydration', { editingLabelKey: 'HYDRATION_CARD.TITLE' }),
             cycle: stateFor('cycle', { editingLabelKey: 'CYCLE_CARD.TITLE' }),
             weight: stateFor('weight', {
