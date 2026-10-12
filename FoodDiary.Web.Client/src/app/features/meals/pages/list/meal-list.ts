@@ -6,7 +6,7 @@ import type { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import type { Observable } from 'rxjs';
+import { filter, type Observable, switchMap, tap } from 'rxjs';
 
 import { AiInputActionBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-action-bar';
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
@@ -25,6 +25,8 @@ import { scrollElementIntoView } from '../../../../shared/ui/scroll/scroll-eleme
 import { AiMealCreateFacade } from '../../lib/ai/ai-meal-create.facade';
 import { MealListFacade, type MealListStructuredFilters } from '../../lib/list/meal-list.facade';
 import { emptyMealFilters, mealFilterChips, removeMealFilter } from '../../lib/list/meal-list-filter-chips';
+import { mealListQueryKey } from '../../lib/list/meal-list-query';
+import { MealListRouteStateFacade } from '../../lib/list/meal-list-route-state.facade';
 import { MealListFiltersDialogComponent, type MealListFiltersDialogResult } from './meal-list-filters-dialog/meal-list-filters-dialog';
 import type { FavoriteMealView, MealDateGroupView } from './meal-list-lib/meal-list.types';
 import { MealListContentComponent, type MealListEmptyState } from './meal-list-sections/meal-list-content/meal-list-content';
@@ -45,10 +47,12 @@ import { MEAL_LIST_TOUR } from './meal-list-tour';
         AiInputActionBarComponent,
         MealListContentComponent,
     ],
-    providers: [AiMealCreateFacade, MealListFacade],
+    providers: [AiMealCreateFacade, MealListFacade, MealListRouteStateFacade],
 })
 export class MealListComponent {
     private readonly mealListFacade = inject(MealListFacade);
+    private readonly routeState = inject(MealListRouteStateFacade);
+    private activeQueryKey = mealListQueryKey(this.routeState.initial);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
@@ -59,14 +63,7 @@ export class MealListComponent {
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly languageVersion = signal(0);
 
-    protected readonly searchModel = signal<SearchFormValues>({
-        dateRange: null,
-        mealTypes: [],
-        caloriesFrom: null,
-        caloriesTo: null,
-        hasImage: null,
-        hasAiSession: null,
-    });
+    protected readonly searchModel = signal<SearchFormValues>(this.routeState.initial);
     protected readonly mealData = this.mealListFacade.mealData;
     protected readonly errorKey = this.mealListFacade.errorKey;
     protected readonly favorites = this.mealListFacade.favorites;
@@ -129,7 +126,19 @@ export class MealListComponent {
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
     public constructor() {
+        this.mealListFacade.currentPageIndex.set(this.routeState.initial.page - 1);
         this.loadInitialOverview().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+        this.routeState.changes
+            .pipe(
+                filter(query => mealListQueryKey(query) !== this.activeQueryKey),
+                tap(query => {
+                    this.activeQueryKey = mealListQueryKey(query);
+                    this.searchModel.set(query);
+                }),
+                switchMap(query => this.loadMeals(query.page)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });
@@ -213,11 +222,22 @@ export class MealListComponent {
     }
 
     protected loadMeals(page: number): Observable<void> {
-        return this.mealListFacade.loadMeals(page, this.structuredFilters);
+        this.syncRoute(page);
+        return this.mealListFacade.loadMeals(page, this.structuredFilters).pipe(
+            tap(() => {
+                this.syncResolvedPage(page);
+            }),
+        );
     }
 
     protected loadInitialOverview(): Observable<void> {
-        return this.mealListFacade.loadInitialOverview(this.structuredFilters);
+        const page = this.currentPageIndex() + 1;
+        this.syncRoute(page, true);
+        return this.mealListFacade.loadInitialOverview(this.structuredFilters, page).pipe(
+            tap(() => {
+                this.syncResolvedPage(page);
+            }),
+        );
     }
 
     protected onPageChange(pageIndex: number): void {
@@ -228,7 +248,7 @@ export class MealListComponent {
     }
 
     protected retryLoad(): void {
-        const request = this.hasActiveFilters() ? this.loadMeals(1) : this.loadInitialOverview();
+        const request = this.hasActiveFilters() ? this.loadMeals(this.currentPageIndex() + 1) : this.loadInitialOverview();
         request.pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
@@ -332,6 +352,21 @@ export class MealListComponent {
             hasImage: model.hasImage,
             hasAiSession: model.hasAiSession,
         };
+    }
+
+    private syncRoute(page: number, replaceUrl = false): void {
+        const query = { ...this.structuredFilters, page };
+        this.activeQueryKey = mealListQueryKey(query);
+        void this.routeState.writeAsync(query, replaceUrl).catch(() => {
+            this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
+        });
+    }
+
+    private syncResolvedPage(requestedPage: number): void {
+        const resolvedPage = this.currentPageIndex() + 1;
+        if (resolvedPage !== requestedPage && this.errorKey() === null) {
+            this.syncRoute(resolvedPage, true);
+        }
     }
 
     private hasSameStructuredFilters(left: MealListStructuredFilters, right: MealListFiltersDialogResult): boolean {

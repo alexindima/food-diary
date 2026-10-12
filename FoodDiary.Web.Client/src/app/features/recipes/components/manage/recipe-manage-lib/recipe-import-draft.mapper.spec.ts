@@ -41,7 +41,7 @@ describe('parseRecipeImportDraft', () => {
         expect(draft.steps[0]?.description).toBe('Смешать');
     });
 
-    it('clones existing ingredients into every imported step', () => {
+    it('keeps the existing ingredient quantity once across imported steps', () => {
         const ingredient = { ...createRecipeIngredientValue(), foodName: 'Flour' };
         const draft = getDraft({
             ...labels,
@@ -51,9 +51,21 @@ describe('parseRecipeImportDraft', () => {
         });
 
         expect(draft.steps[0]?.ingredients).toEqual([ingredient]);
-        expect(draft.steps[1]?.ingredients).toEqual([ingredient]);
+        expect(draft.steps[1]?.ingredients).toEqual([]);
         expect(draft.steps[0]?.ingredients[0]).not.toBe(ingredient);
-        expect(draft.steps[0]?.ingredients[0]).not.toBe(draft.steps[1]?.ingredients[0]);
+        expect(draft.steps.flatMap(step => step.ingredients)).toEqual([ingredient]);
+    });
+
+    it.each(['Directions', 'DIRECTIONS:', 'Directions :'])('recognizes %s as instructions', heading => {
+        const draft = getDraft({
+            ...labels,
+            text: `Pancakes\nIngredients:\nFlour\n${heading}\n1. Mix batter\n2. Cook`,
+            sourceUrl: '',
+            existingIngredients: [],
+        });
+
+        expect(draft.description).toBe('Ingredients\nFlour');
+        expect(draft.steps.map(step => step.description)).toEqual(['Mix batter', 'Cook']);
     });
 
     it('uses the URL as title and creates a fallback step when text is empty', () => {

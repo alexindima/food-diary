@@ -20,6 +20,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
+import { AiMealInputDraftService } from '../../../shared/forms/ai-meal-input-draft.service';
 import { LocalizationService } from '../../../shared/i18n/localization.service';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { UserFacade } from '../../../shared/lib/user.facade';
@@ -27,6 +28,7 @@ import type { FoodRecognitionJob } from '../../../shared/models/food-recognition
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
 import { imageSelection } from '../../../shared/models/image-upload.data';
 import type { ImageAssetId } from '../../../shared/models/semantics/entity-id';
+import { BrowserWindowService } from '../../../shared/platform/browser-window.service';
 import { type SpeechRecognitionFailure, SpeechRecognitionService } from '../../../shared/platform/speech-recognition.service';
 import { AiConsentDialogComponent } from '../ai-consent-dialog/ai-consent-dialog';
 import { FoodRecognitionHistoryDialogComponent } from '../food-recognition-history/food-recognition-history-dialog';
@@ -67,6 +69,8 @@ export class AiInputBarComponent {
     private readonly userFacade = inject(UserFacade);
     private readonly localizationService = inject(LocalizationService);
     private readonly authService = inject(AuthService);
+    private readonly drafts = inject(AiMealInputDraftService);
+    private readonly browserWindow = inject(BrowserWindowService);
     private readonly navigationService = inject(NavigationService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
@@ -135,6 +139,7 @@ export class AiInputBarComponent {
     );
 
     public constructor() {
+        this.voiceText.set(this.drafts.take(this.authService.getUserId(), this.browserWindow.getPathname()));
         this.destroyRef.onDestroy(() => {
             this.speechRecognition.stop(this.speechOwner);
             this.historyDialogRef()?.close();
@@ -474,6 +479,7 @@ export class AiInputBarComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(confirmed => {
                 if (confirmed === true) {
+                    this.drafts.save(this.authService.getUserId(), this.browserWindow.getPathname(), this.voiceText());
                     void this.navigationService.navigateToPremiumAccessAsync();
                 }
             });

@@ -7,7 +7,6 @@ import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
-import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -17,6 +16,7 @@ import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-lang
 import type { AttentionSignal, AttentionSignalSettings, ClientSummary } from '../../../../shared/models/dietologist.data';
 import type { AttentionSignalId, UserId } from '../../../../shared/models/semantics/entity-id';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
+import { BulkRecommendationReviewComponent } from '../../dialogs/bulk-recommendation-review/bulk-recommendation-review';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 import { buildClientCardViewModels, formatClientConnectedDate } from './dietologist-clients-lib/dietologist-clients.mapper';
 import type { ClientCardViewModel } from './dietologist-clients-lib/dietologist-clients.types';
@@ -90,6 +90,7 @@ export class DietologistClientsPageComponent {
     });
     protected readonly selectedClientIds = signal<ReadonlySet<UserId>>(new Set<UserId>());
     protected readonly bulkSending = signal(false);
+    private bulkReviewOpen = false;
     private readonly bulkRequest = signal<{ key: string; fingerprint: string } | null>(null);
     protected readonly bulkModel = signal({ text: '' });
     protected readonly bulkForm = form(this.bulkModel, path => {
@@ -169,25 +170,33 @@ export class DietologistClientsPageComponent {
     }
 
     protected sendBulkRecommendation(): void {
-        const clientIds = [...this.selectedClientIds()];
+        const clientIds = [...this.selectedClientIds()].filter(id => this.clients().some(client => client.userId === id));
         const text = this.bulkModel().text.trim();
-        if (clientIds.length === 0 || text.length === 0 || this.bulkSending()) {
+        if (clientIds.length === 0 || text.length === 0 || this.bulkSending() || this.bulkReviewOpen || this.bulkForm().invalid()) {
             this.bulkForm().markAsTouched();
             return;
         }
 
+        const recipients = this.clientItems()
+            .filter(item => clientIds.includes(item.client.userId))
+            .map(item => ({
+                id: item.client.userId,
+                label: item.title ?? this.translateService.instant('ATTENTION.UNNAMED_CLIENT'),
+                email: item.client.email,
+            }));
+        this.bulkReviewOpen = true;
         this.dialogService
-            .open(FdUiConfirmDialogComponent, {
-                preset: 'confirm',
-                data: {
-                    title: this.translateService.instant('BULK_RECOMMENDATIONS.CONFIRM_TITLE'),
-                    message: this.translateService.instant('BULK_RECOMMENDATIONS.CONFIRM_MESSAGE', { count: clientIds.length }),
-                    confirmLabel: this.translateService.instant('BULK_RECOMMENDATIONS.CONFIRM'),
-                    cancelLabel: this.translateService.instant('COMMON.CANCEL'),
-                },
+            .open(BulkRecommendationReviewComponent, {
+                preset: 'form',
+                data: { recipients, text },
             })
             .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    this.bulkReviewOpen = false;
+                }),
+            )
             .subscribe(confirmed => {
                 if (confirmed === true) {
                     this.executeBulkRecommendation(clientIds, text);

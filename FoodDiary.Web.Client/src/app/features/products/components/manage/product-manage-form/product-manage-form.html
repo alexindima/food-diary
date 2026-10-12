@@ -1,4 +1,4 @@
-<div class="product-manage fd-stack" fdPageContainer>
+<div class="product-manage fd-stack" fdPageContainer [fdUiPreventUnload]="hasUnsavedChanges()">
     <fd-page-header
         class="product-manage__header"
         [title]="manageHeaderState().titleKey | translate"

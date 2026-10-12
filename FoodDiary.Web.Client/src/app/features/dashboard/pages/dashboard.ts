@@ -157,6 +157,7 @@ export class DashboardComponent {
     protected readonly weeklyCalories = this.facade.weeklyCalories;
     protected readonly nutritionInsight = this.facade.nutritionInsight;
     protected readonly hydration = this.facade.hydration;
+    protected readonly lastHydrationUndo = this.facade.lastHydrationUndo;
     protected readonly dailyAdvice = this.facade.dailyAdvice;
     protected readonly isHydrationLoading = this.facade.isHydrationLoading;
     protected readonly isWeightTrendLoading = this.facade.isWeightTrendLoading;
@@ -418,6 +419,10 @@ export class DashboardComponent {
 
     protected addHydration(amount: number): void {
         this.facade.addHydration(amount);
+    }
+
+    protected undoHydration(): void {
+        this.facade.undoHydration();
     }
 
     protected applyTdeeGoal(target: number): void {

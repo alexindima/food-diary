@@ -105,6 +105,7 @@ const MILK_LARGE_PORTION_AMOUNT = 500;
 const MILK_ORIGINAL_PORTION_CALORIES = 150;
 
 type ProductManageFacadeMock = {
+    committed$: Subject<void>;
     ensurePremiumAccess: ReturnType<typeof vi.fn>;
     confirmDiscardChangesAsync: ReturnType<typeof vi.fn>;
     deleteProductAsync: ReturnType<typeof vi.fn>;
@@ -127,7 +128,7 @@ type ProductManageFormSetup = {
     };
     productManageFacade: ProductManageFacadeMock;
     navigationService: {
-        navigateToProductListAsync: ReturnType<typeof vi.fn>;
+        navigateToProductListAsync: ReturnType<typeof vi.fn<NavigationService['navigateToProductListAsync']>>;
     };
     tourService: {
         start: ReturnType<typeof vi.fn>;
@@ -756,11 +757,57 @@ describe('Product creation numeric validation', () => {
     });
 });
 
+describe('Product editor route departure', () => {
+    it('keeps edits after stay and reuses one pending decision for repeated navigation', async () => {
+        const { component, productManageFacade } = await setupComponentAsync();
+        component['productForm']().markAsDirty();
+        let resolveDecision: (value: boolean) => void = () => {};
+        productManageFacade.confirmDiscardChangesAsync.mockReturnValue(
+            new Promise<boolean>(resolve => {
+                resolveDecision = resolve;
+            }),
+        );
+        const first = component.canLeaveAsync();
+        const repeated = component.canLeaveAsync();
+        expect(productManageFacade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
+        resolveDecision(false);
+        expect(await first).toBe(false);
+        expect(await repeated).toBe(false);
+        expect(component['productForm']().dirty()).toBe(true);
+    });
+
+    it('blocks departure during save and permits the committed redirect without another confirmation', async () => {
+        const { component, productManageFacade } = await setupComponentAsync();
+        component['productForm']().markAsDirty();
+        component['isSubmitting'].set(true);
+        expect(await component.canLeaveAsync()).toBe(false);
+        productManageFacade.committed$.next();
+        expect(await component.canLeaveAsync()).toBe(true);
+        expect(productManageFacade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+    });
+
+    it('asks only once for Cancel and restores protection if navigation fails', async () => {
+        const { component, productManageFacade, navigationService } = await setupComponentAsync();
+        component['productForm']().markAsDirty();
+        navigationService.navigateToProductListAsync.mockImplementation(async () =>
+            component.canLeaveAsync().then(allowed => {
+                expect(allowed).toBe(true);
+                throw new Error('Navigation failed');
+            }),
+        );
+        await expect(component['onCancelAsync']()).rejects.toThrow('Navigation failed');
+        expect(productManageFacade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
+        productManageFacade.confirmDiscardChangesAsync.mockResolvedValue(false);
+        expect(await component.canLeaveAsync()).toBe(false);
+        expect(productManageFacade.confirmDiscardChangesAsync).toHaveBeenCalledTimes(2);
+    });
+});
+
 async function setupComponentAsync(): Promise<ProductManageFormSetup> {
     const productManageFacade = createProductManageFacadeMock();
     const externalFoodFacade = createProductExternalFoodFacadeMock();
     const navigationService = {
-        navigateToProductListAsync: vi.fn().mockResolvedValue(void 0),
+        navigateToProductListAsync: vi.fn<NavigationService['navigateToProductListAsync']>().mockResolvedValue(void 0),
     };
     const dialogService = {
         open: vi.fn().mockReturnValue({ afterClosed: () => of(null) }),
@@ -817,6 +864,7 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
 
 function createProductManageFacadeMock(): ProductManageFacadeMock {
     return {
+        committed$: new Subject<void>(),
         ensurePremiumAccess: vi.fn().mockReturnValue(true),
         confirmDiscardChangesAsync: vi.fn().mockResolvedValue(true),
         deleteProductAsync: vi.fn().mockResolvedValue('deleted'),

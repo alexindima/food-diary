@@ -12,12 +12,12 @@ import { optionalCalendarDate, optionalUtcInstant, utcInstant } from '../../mode
 import { entityId, optionalEntityId } from '../../models/semantics/entity-id';
 import type { AttentionSignalHttpResponse } from './generated/model/attention-signal-http-response';
 import type { BulkRecommendationResultHttpResponse } from './generated/model/bulk-recommendation-result-http-response';
+import type { ClientGoalsHttpResponse } from './generated/model/client-goals-http-response';
 import type { ClientSummaryHttpResponse } from './generated/model/client-summary-http-response';
 import type { DietologistInvitationForCurrentUserHttpResponse } from './generated/model/dietologist-invitation-for-current-user-http-response';
 import type { DietologistPermissionsHttpResponse } from './generated/model/dietologist-permissions-http-response';
 import type { DietologistRelationshipHttpResponse } from './generated/model/dietologist-relationship-http-response';
 import type { RecommendationTemplateHttpResponse } from './generated/model/recommendation-template-http-response';
-import type { UserHttpResponse } from './generated/model/user-http-response';
 import { requireSdkFields, sdkEnum, sdkNullableFields } from './sdk-response';
 
 function permissionsFromSdk(value: DietologistPermissionsHttpResponse): DietologistPermissions {
@@ -73,9 +73,36 @@ export function clientSummaryFromSdk(response: ClientSummaryHttpResponse): Clien
     };
 }
 
-export function clientGoalsFromSdk(value: UserHttpResponse): DietologistClientGoals {
-    const mapped = sdkNullableFields(requireSdkFields(value, ['id']), ['email']);
-    return { ...mapped, id: entityId<'user'>(mapped.id) };
+export function clientGoalsFromSdk(value: ClientGoalsHttpResponse): DietologistClientGoals {
+    const source = requireSdkFields(value, ['id']);
+    const goals = sdkNullableFields(
+        {
+            id: source.id,
+            dailyCalorieTarget: source.dailyCalorieTarget,
+            proteinTarget: source.proteinTarget,
+            fatTarget: source.fatTarget,
+            carbTarget: source.carbTarget,
+            fiberTarget: source.fiberTarget,
+            waterGoal: source.waterGoal,
+            hydrationGoal: source.hydrationGoal,
+            desiredWeightKg: source.desiredWeightKg,
+            desiredWaistCm: source.desiredWaistCm,
+            stepGoal: source.stepGoal,
+        },
+        [
+            'dailyCalorieTarget',
+            'proteinTarget',
+            'fatTarget',
+            'carbTarget',
+            'fiberTarget',
+            'waterGoal',
+            'hydrationGoal',
+            'desiredWeightKg',
+            'desiredWaistCm',
+            'stepGoal',
+        ],
+    );
+    return { ...goals, id: entityId<'user'>(goals.id) };
 }
 
 export function attentionSignalFromSdk(response: AttentionSignalHttpResponse): AttentionSignal {

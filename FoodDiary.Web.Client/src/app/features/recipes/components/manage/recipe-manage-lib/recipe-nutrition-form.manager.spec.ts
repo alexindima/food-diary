@@ -90,22 +90,22 @@ describe('RecipeNutritionFormManager manual mode', () => {
         expect(operations.roundNutritionValue).toHaveBeenCalled();
     });
 
-    it('detects empty manual macro values as a macro error', () => {
+    it('distinguishes missing manual macros from explicit zero values', () => {
         const form = createRecipeFormState();
         form.patchValue({
             calculateNutritionAutomatically: false,
             manualCalories: MANUAL_CALORIES,
-            manualProteins: 0,
-            manualFats: 0,
-            manualCarbs: 0,
-            manualAlcohol: 0,
+            manualProteins: null,
+            manualFats: null,
+            manualCarbs: null,
+            manualAlcohol: null,
         });
         form.controls.manualProteins.markAsDirty();
         const manager = new RecipeNutritionFormManager(form, createOperations());
 
         expect(manager.hasMacrosError()).toBe(true);
 
-        form.controls.manualProteins.setValue(1);
+        form.patchValue({ manualProteins: 0, manualFats: 0, manualCarbs: 0, manualAlcohol: 0 });
 
         expect(manager.hasMacrosError()).toBe(false);
     });

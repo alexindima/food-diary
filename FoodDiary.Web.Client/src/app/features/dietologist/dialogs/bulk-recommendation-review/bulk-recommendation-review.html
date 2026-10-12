@@ -1,0 +1,28 @@
+<fd-ui-dialog size="md" [title]="'BULK_RECOMMENDATIONS.CONFIRM_TITLE' | translate">
+    <div class="fd-stack fd-gap-md">
+        <p class="fd-ui-body-sm">{{ 'BULK_RECOMMENDATIONS.CONFIRM_MESSAGE' | translate: { count: data.recipients.length } }}</p>
+        <section aria-labelledby="bulk-review-recipients">
+            <h3 id="bulk-review-recipients" class="fd-ui-section-title">{{ 'BULK_RECOMMENDATIONS.RECIPIENTS' | translate }}</h3>
+            <ul class="bulk-review__recipients fd-stack fd-gap-sm">
+                @for (recipient of data.recipients; track recipient.id) {
+                    <li class="fd-stack fd-gap-xs">
+                        <strong>{{ recipient.label }}</strong>
+                        @if (recipient.email !== null && recipient.email !== recipient.label) {
+                            <span class="fd-ui-body-sm">{{ recipient.email }}</span>
+                        }
+                    </li>
+                }
+            </ul>
+        </section>
+        <section aria-labelledby="bulk-review-text">
+            <h3 id="bulk-review-text" class="fd-ui-section-title">{{ 'BULK_RECOMMENDATIONS.TEXT' | translate }}</h3>
+            <p class="bulk-review__text fd-ui-body-sm">{{ data.text }}</p>
+        </section>
+    </div>
+    <div fdUiDialogFooter class="fd-row fd-justify-end fd-gap-sm">
+        <fd-ui-button type="button" variant="secondary" fill="outline" (click)="close(false)">{{
+            'COMMON.CANCEL' | translate
+        }}</fd-ui-button>
+        <fd-ui-button type="button" variant="primary" (click)="close(true)">{{ 'BULK_RECOMMENDATIONS.CONFIRM' | translate }}</fd-ui-button>
+    </div>
+</fd-ui-dialog>

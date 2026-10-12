@@ -149,8 +149,10 @@
                             [cardState]="hydrationCardState()"
                             [isLoading]="isHydrationLoading()"
                             [canAdd]="isTodaySelected()"
+                            [undoAmount]="lastHydrationUndo()?.amountMl ?? null"
                             (blockToggle)="layout.toggleBlock('hydration')"
                             (addClick)="addHydration($event)"
+                            (undoClick)="undoHydration()"
                             (goalAction)="openGoalsAsync()"
                         />
                     </ng-template>

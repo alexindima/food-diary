@@ -168,10 +168,14 @@ function getLimitedReasonKey(prediction: CyclePredictions, hasPredictionRanges: 
         return null;
     }
 
-    const isLearning = prediction.reasonCodes?.some(
-        code => code === 'insufficient_completed_cycles' || code === 'ambiguous_episode_history',
-    );
-    return isLearning === true ? 'CYCLE_TRACKING.PREDICTIONS_LEARNING' : 'CYCLE_TRACKING.PREDICTIONS_LIMITED';
+    const reasons = prediction.reasonCodes ?? [];
+    if (reasons.includes('prediction_paused_by_state')) {
+        return 'CYCLE_TRACKING.PREDICTIONS_PAUSED';
+    }
+    if (reasons.includes('ambiguous_episode_history')) {
+        return 'CYCLE_TRACKING.PREDICTIONS_AMBIGUOUS';
+    }
+    return reasons.includes('insufficient_completed_cycles') ? 'CYCLE_TRACKING.PREDICTIONS_LEARNING' : 'CYCLE_TRACKING.PREDICTIONS_LIMITED';
 }
 
 function getConfidenceKey(value: string): string {

@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "f8c3e043ac5425047b7ed1f8028b281622cd51a5e12e87f3a4e3d09e335aa35f"
+          "sha256": "57c8ef71b72d2e77f814402568b9828b49c1affe7070d7d43c26c08662394561"
         }
       ],
-      "reason": "Additive timeZoneId and cycleHidden fields plus nullable pending-goal payloads are reflected in regenerated SDKs and snapshots. All 277 real API integration tests and 351 presentation tests passed; api-compat reports no structural breaking changes.",
+      "reason": "Reviewed the narrowed ClientGoalsHttpResponse and regenerated OpenAPI snapshots. The API compatibility workflow remains accurate: response removals require explicit review and real HTTP authorization/payload regression evidence. BUG-05 intentionally removes unrelated private fields; the current SDK and focused real HTTP tests cover its consumer.",
       "baseRef": "HEAD",
-      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
-      "reviewedAtUtc": "2026-10-11T02:44:02.6361313Z"
+      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
+      "reviewedAtUtc": "2026-10-12T05:15:48.3799318Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "7d0e963a5f73c705d9cd0978b487c9420974455ad0747eba3aebe3b91f576fde"
+          "sha256": "75c611cea55a1e348618dbd035856980c0c501a003d3d4d67777f311b604139c"
         }
       ],
-      "reason": "Reviewed the refreshed architecture-health projection and current public chrome contracts. Shared route helpers stay in config, UI imports use the explicit public contract, and no .NET project edges changed. Existing drift and removal guidance remains accurate.",
+      "reason": "Reviewed final architecture index: no project references or foreign aggregate writes were added. Architecture2272/2272 and the final solution build passed; existing owning-module capabilities remain enforced. The workflow still accurately distinguishes drift from investigation candidates.",
       "baseRef": "HEAD",
-      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
-      "reviewedAtUtc": "2026-10-10T20:26:04.4588854Z"
+      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
+      "reviewedAtUtc": "2026-10-12T06:52:20.8320228Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -249,13 +249,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "e7708c14d2ddb9c1b110a858d768a7c7c9fd43e4f01b01268c8de9bb6b2ebb66"
+          "sha256": "18f114760b41057deee9777ef3185d119d6dc1c842eadf3e294bedd8f2018977"
         }
       ],
-      "reason": "Optional timezone and hidden-cycle fields and pending-goal nullable payloads are compatible and covered by 277 passing API tests; 351 presentation tests validate bounded transport strings.",
+      "reason": "Reviewed the narrowed goals transport, current generated SDK consumer and exact payload/permission regressions. Final PostgreSQL HTTP tests6/6 passed after formatting repairs. No backend contract changed in the additional Premium UI recovery. This workflow remains current.",
       "baseRef": "HEAD",
-      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
-      "reviewedAtUtc": "2026-10-11T02:52:19.3187787Z"
+      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
+      "reviewedAtUtc": "2026-10-12T06:52:20.5891366Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -838,13 +838,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "9a6a0891a935ec1aacdb7ef21966e9d7d2c4f1f38245050332a9ef3d69b838eb"
+          "sha256": "64a72aaaff7866f12051219ab83837971c27cfcd4f9d3bb61c3ba1af6437009d"
         }
       ],
-      "reason": "Reviewed privacy and security navigation claims against refreshed sensitive-data, topology and quality sources and the provider/store diff. Owner and job identity checks, image access, consent, quota, retention and atomic terminal fences remain; decoding returns safe existing errors without logging provider payloads. Index signals remain leads rather than security verdicts.",
+      "reason": "Reviewed goals minimization and account ownership, independent BUG-05 reviews, account-scoped AI drafts, explicit consent and redacted owned-fixture evidence. Premium recovery trusts the current-user billing overview and normal cookie refresh; it never grants roles locally or changes provider sharing. The privacy workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
-      "reviewedAtUtc": "2026-10-10T11:42:30.5056803Z"
+      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
+      "reviewedAtUtc": "2026-10-12T06:52:23.0785738Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -883,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "598621025c3877637b92b25e51ba630119f31c31df0732ca4cc02c633e67f447"
+          "sha256": "c173c0f6e9af8407c86fea73be4a479e2470d39855790fe9778ebae31776cec1"
         }
       ],
-      "reason": "Reviewed the refreshed quality projection against the public scroll handler, regression tests and theme-scope documentation: only source line and decision counts changed; critical-symbol counts and the static-navigation limitations described by this page remain unchanged.",
+      "reason": "Reviewed final numeric/calendar examples, form state and retry behavior against focused tests and real browser persistence. Final frontend gates and backend build/regressions passed; the full browser replay and cleanup remain explicitly pending. The workflow remains applicable without weakened thresholds.",
       "baseRef": "HEAD",
-      "gitHead": "2d79462e56dfe65f71480ab04ed3a27d89264163",
-      "reviewedAtUtc": "2026-10-11T16:19:22.1773540Z"
+      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
+      "reviewedAtUtc": "2026-10-12T06:52:21.8281979Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -970,13 +970,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0439d7e9d4beb2792d159cc594102db9c4ce4c6bf55471840cdcdebde0f8ecd0"
+          "sha256": "40e719045b58c3c3bd5203409210693689710a48f5f2d4b1794f8d9277e7dd8e"
         }
       ],
-      "reason": "Owning handlers and dependencies remain accurately documented. The UTC-minimum guard and new request are indexed; no runtime worker or provider topology changes.",
+      "reason": "Reviewed final runtime declarations: production jobs/provider settings were not edited. Premium entitlement convergence uses existing authenticated endpoints; provider-backed recipe persistence and hydration undo/retry retain their verified behavior. The runtime workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
-      "reviewedAtUtc": "2026-10-11T02:52:21.1697341Z"
+      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
+      "reviewedAtUtc": "2026-10-12T06:52:21.1857422Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -985,13 +985,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "598621025c3877637b92b25e51ba630119f31c31df0732ca4cc02c633e67f447"
+          "sha256": "c173c0f6e9af8407c86fea73be4a479e2470d39855790fe9778ebae31776cec1"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "40e719045b58c3c3bd5203409210693689710a48f5f2d4b1794f8d9277e7dd8e"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "64a72aaaff7866f12051219ab83837971c27cfcd4f9d3bb61c3ba1af6437009d"
         }
       ],
-      "reason": "Reviewed current quality-index changes for public viewport scrolling and CSS palette isolation. They introduce no critical symbols, API transport, authentication persistence or security-control change; the evidence-compiler guidance remains accurate and does not assert execution coverage.",
+      "reason": "Reviewed the bounded goals authorization/privacy fix and its two independent read-only reviews plus exact HTTP regressions. Additional Premium UI recovery preserves server authorization and cookie rotation and creates no local role override. No repository-wide security scan is claimed; this workflow still separates source leads from verified findings.",
       "baseRef": "HEAD",
-      "gitHead": "2d79462e56dfe65f71480ab04ed3a27d89264163",
-      "reviewedAtUtc": "2026-10-11T16:19:24.9886360Z"
+      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
+      "reviewedAtUtc": "2026-10-12T06:52:22.3173228Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1127,14 +1135,18 @@
       "pageSha256": "4e059a263f76810db4c559e2b5599d8599571ccf48d060f6360c6d0e8ec60b48",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "b1d092a741122ee790d036157c2ad8ec5450930b40d260e74ef0c77eef4c5c85"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "0f88bc8109a0da671a0b3ddfd54b41f80b6c895b05e3e08ba1998f7ba5e8452d"
+          "sha256": "e0f0a24ea2cd3403324997b534a4706afc9dc6c573fa3ce97c681a175a56bc26"
         }
       ],
-      "reason": "Compared the refreshed frontend index with AppComponent: only its source line moves from 45 to 55 after imports expand. Selector, component identity, contracts, and consumer graph remain unchanged; current trace guidance is still accurate.",
+      "reason": "Reviewed final frontend indexes against generated SDK adapters, routed forms and the bounded Premium recovery helper. Current source tracing and consumer verification instructions remain valid; no transport or provider contract was changed.",
       "baseRef": "HEAD",
-      "gitHead": "2d79462e56dfe65f71480ab04ed3a27d89264163",
-      "reviewedAtUtc": "2026-10-11T16:21:30.8158380Z"
+      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
+      "reviewedAtUtc": "2026-10-12T06:52:22.8018467Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1218,17 +1230,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "33501f52eb0087dc977f889209d82fe62ac5f5119697ac219b86ddf6a0aef6b6"
-        },
-        {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "43b350254aa3573e5e233dc41ec651775d9034d0d9c84631390b1d3549acb193"
+          "sha256": "b1d092a741122ee790d036157c2ad8ec5450930b40d260e74ef0c77eef4c5c85"
         }
       ],
-      "reason": "Reviewed regenerated navigation against the combined public-site and UX source commits. Application code merged without conflicts; locale aggregates are regenerated from both fragment sets. Generated SDK verification and all 21 performance tooling checks pass. API compatibility reports eight additive changes and zero structural breaks. Existing owner, provider, API, architecture and browser evidence from the UX audit is retained; delivery hooks will rerun combined app tests, formatting and backend tests. Quality and trace records remain navigation rather than execution coverage; tenant predicates, hidden-cycle privacy and owned anonymous Chrome profiles remain intact. Only compiled indexes and review ledgers needed merge reconciliation.",
-      "baseRef": "origin/master",
-      "gitHead": "b5c8a2a6ef32ea7c67a69223ae5dfb5b761142db",
-      "reviewedAtUtc": "2026-10-11T09:31:33.3621934Z"
+      "reason": "Reviewed current consumers and tests for shopping quantity errors and Premium page entitlement recovery. All 5024 app, 561 UI-kit, 7 tour and 223 admin tests plus repository frontend guards passed. Real browser grant and failed-refresh retry use the existing SDK/session transport. The contract-review workflow remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
+      "reviewedAtUtc": "2026-10-12T06:52:20.0117128Z"
     },
     {
       "pageId": "workflow.query-context",

@@ -103,8 +103,8 @@ export class MealListFacade {
         return firstValueFrom(this.deleteMeal(result.id, filters), { defaultValue: false });
     }
 
-    public loadInitialOverview(filtersModel: MealListStructuredFilters): Observable<void> {
-        return this.loadOverview(1, filtersModel, true);
+    public loadInitialOverview(filtersModel: MealListStructuredFilters, page = 1): Observable<void> {
+        return this.loadOverview(page, filtersModel, true);
     }
 
     private loadOverview(page: number, filtersModel: MealListStructuredFilters, includeFavorites: boolean): Observable<void> {

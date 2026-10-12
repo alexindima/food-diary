@@ -19,4 +19,6 @@ public sealed record GoalsModel(
     double? ThursdayCalories,
     double? FridayCalories,
     double? SaturdayCalories,
-    double? SundayCalories);
+    double? SundayCalories,
+    double? HydrationGoal = null,
+    int? StepGoal = null);

@@ -21,7 +21,7 @@ public sealed class DietologistReadFailureTests {
         users.GetAccessibleUserEmailAsync(userId, Arg.Any<CancellationToken>()).Returns(Result.Failure<string>(error));
         IDietologistInvitationReadModelRepository invitations = Substitute.For<IDietologistInvitationReadModelRepository>();
 
-        FoodDiary.Results.Result<FoodDiary.Modules.Users.Contracts.Models.UserModel> goals = await new GetClientGoalsQueryHandler(invitations, users, access)
+        FoodDiary.Results.Result<FoodDiary.Modules.Dietologist.Application.Models.ClientGoalsModel> goals = await new GetClientGoalsQueryHandler(invitations, users, access)
             .Handle(new GetClientGoalsQuery(userId.Value, Guid.NewGuid()), CancellationToken.None);
         FoodDiary.Results.Result<FoodDiary.Modules.Dietologist.Application.Models.DietologistInvitationForCurrentUserModel> invitation = await new GetInvitationForCurrentUserQueryHandler(invitations, users, TimeProvider.System, access)
             .Handle(new GetInvitationForCurrentUserQuery(userId.Value, Guid.NewGuid()), CancellationToken.None);

@@ -77,9 +77,7 @@ describe('client dashboard mapper', () => {
         });
         expect(buildBodyTiles(snapshot as never).map(tile => tile.value)).toEqual(['73 kg', '84 cm', '1500 ml', '4']);
         expect(buildBodyTiles(snapshot as never, createClient().permissions).map(tile => tile.value)).toEqual(['4']);
-        expect(buildGoalTiles({ id: entityId<'user'>('client-1'), email: 'client@example.com', dailyCalorieTarget: 1800 })).toHaveLength(
-            EXPECTED_METRIC_TILE_COUNT,
-        );
+        expect(buildGoalTiles({ id: entityId<'user'>('client-1'), dailyCalorieTarget: 1800 })).toHaveLength(EXPECTED_METRIC_TILE_COUNT);
     });
 });
 

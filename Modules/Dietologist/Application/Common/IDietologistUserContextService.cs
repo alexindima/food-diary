@@ -8,7 +8,7 @@ namespace FoodDiary.Modules.Dietologist.Application.Common;
 public interface IDietologistUserContextService : ICurrentUserAccessService {
     Task<Result<string>> GetAccessibleUserEmailAsync(UserId userId, CancellationToken cancellationToken);
     Task<string?> GetUserEmailByIdAsync(UserId userId, CancellationToken cancellationToken);
-    Task<Result<UserModel>> GetUserModelByIdAsync(UserId userId, CancellationToken cancellationToken);
+    Task<Result<GoalsModel>> GetGoalsByIdAsync(UserId userId, CancellationToken cancellationToken);
     Task<Result<UserDietologistProfileModel>> GetAccessibleProfileAsync(UserId userId, CancellationToken cancellationToken);
     Task<UserDietologistProfileModel?> FindByEmailAsync(string email, CancellationToken cancellationToken);
     Task<UserDietologistProfileModel?> FindByIdAsync(UserId userId, CancellationToken cancellationToken);

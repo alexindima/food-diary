@@ -1,7 +1,12 @@
 <fd-ui-dialog size="sm" [title]="'SHOPPING_LIST.EDIT_ITEM' | translate" (close)="close()">
     <form class="fd-stack fd-gap-md" [formRoot]="fields" (submit)="save($event)">
         <fd-ui-input [label]="'SHOPPING_LIST.ADD_ITEM_NAME' | translate" [formField]="fields.name" [controlReadonly]="isProductLinked" />
-        <fd-ui-input type="number" [label]="'SHOPPING_LIST.ADD_ITEM_AMOUNT' | translate" [formField]="fields.amount" />
+        <fd-ui-input
+            type="number"
+            [label]="'SHOPPING_LIST.ADD_ITEM_AMOUNT' | translate"
+            [formField]="fields.amount"
+            [error]="fields.amount().invalid() ? ('SHOPPING_LIST.AMOUNT_ERROR' | translate) : null"
+        />
         <fd-ui-select [label]="'SHOPPING_LIST.ADD_ITEM_UNIT' | translate" [formField]="fields.unit" [options]="units" />
         @if (isProductLinked) {
             <p class="fd-ui-text-muted fd-ui-body-sm">{{ 'SHOPPING_LIST.PRODUCT_IDENTITY_HINT' | translate }}</p>

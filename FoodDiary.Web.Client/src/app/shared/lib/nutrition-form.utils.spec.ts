@@ -1,8 +1,41 @@
 import { describe, expect, it } from 'vitest';
 
-import { calculateCalorieMismatchWarning, calculateCaloriesFromMacros, calculateMacroBarState } from './nutrition-form.utils';
+import {
+    calculateCalorieMismatchWarning,
+    calculateCaloriesFromMacros,
+    calculateMacroBarState,
+    checkCaloriesError,
+    checkMacrosError,
+    roundNutrient,
+} from './nutrition-form.utils';
 
 const PROTEIN_10 = 10;
+
+describe('manual nutrition presence and API rounding', () => {
+    it('accepts an explicit zero calorie value and distinguishes missing calories', () => {
+        expect(checkCaloriesError({ value: 0, touched: true, dirty: true })).toBe(false);
+        expect(checkCaloriesError({ value: null, touched: true, dirty: true })).toBe(true);
+    });
+
+    it('accepts explicitly entered zero macros and rejects an entirely missing group', () => {
+        expect(checkMacrosError([{ value: 0, touched: true, dirty: true }])).toBe(false);
+        expect(checkMacrosError([{ value: null, touched: true, dirty: true }])).toBe(true);
+    });
+
+    it.each([
+        { value: 5.625, expected: 5.62 },
+        { value: 1.125, expected: 1.12 },
+        { value: 5.635, expected: 5.64 },
+        { value: 1.135, expected: 1.14 },
+        { value: 2.675, expected: 2.68 },
+        { value: -1.125, expected: -1.12 },
+        { value: -1.135, expected: -1.14 },
+        { value: 5.624, expected: 5.62 },
+        { value: 5.626, expected: 5.63 },
+    ])('matches the owning midpoint-to-even boundary for $value', ({ value, expected }) => {
+        expect(roundNutrient(value)).toBe(expected);
+    });
+});
 const PROTEIN_20 = 20;
 const PROTEIN_25 = 25;
 const PROTEIN_31 = 31;

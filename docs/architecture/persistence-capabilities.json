@@ -1172,14 +1172,15 @@
       "module": "Recipes",
       "capabilities": [
         "call:RecipeIngredient.SetProductSnapshot",
+        "context:ChangeTracker",
         "context:Database",
         "context:Entry",
         "entity:Recipe",
         "tracked:Recipe",
         "write:Recipe"
       ],
-      "reason": "Recipes owns recipe writes, row locks and tracked-instance reconciliation. Usage counts delegate to IRecipeUsageQuery in host composition. Ingredient product snapshots are transient immutable projections from the owner batch port; no foreign aggregate tracking or writes.",
-      "technicalSourceSha256": "67ef280bf63757794740e3638ed30b8860cf0f4a455b216142456a4246d52374"
+      "reason": "Recipes owns recipe writes, row locks and tracked-instance reconciliation. DetectChanges registers replacement owned steps/ingredients before nested recipe hydration and nutrition calculation. Usage counts delegate to IRecipeUsageQuery in host composition. Product snapshots remain transient immutable projections; no foreign aggregate tracking or writes.",
+      "technicalSourceSha256": "01c97d7b6634378712d55e3133efbbc47ed590b21bcab8a028ba0a65e7d02070"
     },
     "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs": {
       "module": "Recipes",

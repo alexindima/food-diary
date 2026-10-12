@@ -9292,19 +9292,19 @@
             {
               "StatusCode": "200",
               "MediaType": "application/json",
-              "Reference": "#/components/schemas/UserHttpResponse",
+              "Reference": "#/components/schemas/ClientGoalsHttpResponse",
               "Nullable": false
             },
             {
               "StatusCode": "200",
               "MediaType": "text/json",
-              "Reference": "#/components/schemas/UserHttpResponse",
+              "Reference": "#/components/schemas/ClientGoalsHttpResponse",
               "Nullable": false
             },
             {
               "StatusCode": "200",
               "MediaType": "text/plain",
-              "Reference": "#/components/schemas/UserHttpResponse",
+              "Reference": "#/components/schemas/ClientGoalsHttpResponse",
               "Nullable": false
             }
           ],
@@ -25269,6 +25269,88 @@
           "Type": "string",
           "Format": "date-time",
           "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "ClientGoalsHttpResponse",
+      "Properties": [
+        {
+          "Name": "carbTarget",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "dailyCalorieTarget",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "desiredWaistCm",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "desiredWeightKg",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "fatTarget",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "fiberTarget",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "hydrationGoal",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "proteinTarget",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "stepGoal",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": true
+        },
+        {
+          "Name": "waterGoal",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
         }
       ]
     },

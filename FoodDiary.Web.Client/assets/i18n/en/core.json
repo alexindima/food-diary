@@ -326,10 +326,11 @@
             "PENDING": "Verifying your email address...",
             "SUCCESS": "Email confirmed. You can continue.",
             "ERROR_GENERIC": "We couldn't verify the email. Try again or request a new link.",
-            "ERROR_INVALID": "Verification link is invalid or expired.",
+            "ERROR_INVALID": "This verification link is invalid or expired. Request a new link; sign in first if needed.",
             "CONTINUE": "Continue",
             "RETRY": "Try again",
-            "BACK_TO_LOGIN": "Back to login"
+            "BACK_TO_LOGIN": "Back to login",
+            "REQUEST_NEW_LINK": "Request a new link"
         },
         "VERIFY_PENDING": {
             "TITLE": "Check your email",

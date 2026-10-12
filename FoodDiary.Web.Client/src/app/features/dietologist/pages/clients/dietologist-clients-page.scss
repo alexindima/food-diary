@@ -2,9 +2,14 @@
     padding: var(--fd-space-lg);
     max-width: 800px;
     margin: 0 auto;
+    gap: var(--fd-space-page-card-gap);
 
     &__title {
-        margin: 0 0 var(--fd-space-lg);
+        margin: 0;
+    }
+
+    &__list {
+        gap: var(--fd-space-page-card-gap);
     }
 
     &__empty {

@@ -18,13 +18,17 @@ public sealed class RecipeRepository(RecipesDbContext context, IProductSnapshotR
         }
         await context.Recipes.AddAsync(recipe, cancellationToken).ConfigureAwait(false);
         await LoadProductSnapshotsAsync(recipe, cancellationToken).ConfigureAwait(false);
+        await LoadNestedRecipesAsync(recipe, cancellationToken).ConfigureAwait(false);
+        return recipe;
+    }
+
+    private async Task LoadNestedRecipesAsync(Recipe recipe, CancellationToken cancellationToken) {
         RecipeId[] nestedIds = [.. recipe.Steps.SelectMany(step => step.Ingredients)
             .Where(ingredient => ingredient.NestedRecipeId.HasValue)
             .Select(ingredient => ingredient.NestedRecipeId!.Value).Distinct()];
         if (nestedIds.Length > 0) {
             await context.Recipes.Where(nested => Enumerable.Contains(nestedIds, nested.Id)).LoadAsync(cancellationToken).ConfigureAwait(false);
         }
-        return recipe;
     }
 
     private static IQueryable<Recipe> IncludeStepsAndIngredients(IQueryable<Recipe> query) =>
@@ -115,7 +119,9 @@ public sealed class RecipeRepository(RecipesDbContext context, IProductSnapshotR
 
     public async Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) {
         context.Recipes.Update(recipe);
-        await Task.CompletedTask.ConfigureAwait(false);
+        // Track replacement steps before loading nested recipes so fixup precedes nutrition calculation.
+        context.ChangeTracker.DetectChanges();
+        await LoadNestedRecipesAsync(recipe, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) {

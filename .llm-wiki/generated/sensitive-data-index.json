@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1683,
+    "candidateFields": 1689,
     "credential": 158,
     "identity": 180,
-    "health": 787,
+    "health": 793,
     "financial": 138,
     "privateContent": 420,
-    "boundaryFiles": 224,
+    "boundaryFiles": 225,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -3918,6 +3918,27 @@
     },
     {
       "category": "health",
+      "name": "HydrationGoal",
+      "type": "double?",
+      "path": "Modules/Dietologist/Application/Models/ClientGoalsModel.cs",
+      "line": 11
+    },
+    {
+      "category": "health",
+      "name": "DesiredWeightKg",
+      "type": "double?",
+      "path": "Modules/Dietologist/Application/Models/ClientGoalsModel.cs",
+      "line": 12
+    },
+    {
+      "category": "health",
+      "name": "DesiredWaistCm",
+      "type": "double?",
+      "path": "Modules/Dietologist/Application/Models/ClientGoalsModel.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
       "name": "BirthDate",
       "type": "DateTime?",
       "path": "Modules/Dietologist/Application/Models/ClientSummaryModel.cs",
@@ -4083,6 +4104,27 @@
       "type": "bool",
       "path": "Modules/Dietologist/Presentation.Contracts/Responses/DietologistPermissionsHttpResponse.cs",
       "line": 11
+    },
+    {
+      "category": "health",
+      "name": "HydrationGoal",
+      "type": "double?",
+      "path": "Modules/Dietologist/Presentation/Responses/ClientGoalsHttpResponse.cs",
+      "line": 11
+    },
+    {
+      "category": "health",
+      "name": "DesiredWeightKg",
+      "type": "double?",
+      "path": "Modules/Dietologist/Presentation/Responses/ClientGoalsHttpResponse.cs",
+      "line": 12
+    },
+    {
+      "category": "health",
+      "name": "DesiredWaistCm",
+      "type": "double?",
+      "path": "Modules/Dietologist/Presentation/Responses/ClientGoalsHttpResponse.cs",
+      "line": 13
     },
     {
       "category": "health",
@@ -12430,6 +12472,13 @@
         "identity"
       ],
       "fieldCount": 1
+    },
+    {
+      "path": "Modules/Dietologist/Presentation/Responses/ClientGoalsHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 3
     },
     {
       "path": "Modules/Dietologist/Presentation/Responses/ClientSummaryHttpResponse.cs",

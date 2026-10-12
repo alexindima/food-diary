@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { form, required } from '@angular/forms/signals';
+import { form, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
@@ -24,6 +24,7 @@ import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-cont
 import { ShoppingItemEditComponent, type ShoppingItemEditData } from '../../dialogs/shopping-item-edit/shopping-item-edit';
 import { ShoppingMergePreviewComponent } from '../../dialogs/shopping-merge-preview/shopping-merge-preview';
 import { type ShoppingListDraftItem, ShoppingListFacade } from '../../lib/shopping-list.facade';
+import { isShoppingListAmountValid } from '../../lib/shopping-list-amount.validation';
 import { planShoppingConsolidation, type ShoppingMergeGroup } from '../../lib/shopping-list-consolidation';
 import type { ShoppingListItemFormModel } from '../../lib/shopping-list-form.types';
 import { ShoppingListItemsPanelComponent } from '../shopping-list-items-panel/shopping-list-items-panel';
@@ -88,6 +89,11 @@ export class ShoppingListPageComponent {
     protected readonly listSelectForm = form(this.listSelectModel);
     protected readonly itemForm = form(this.itemFormModel, path => {
         required(path.name);
+        validate(path.amount, ({ value }) =>
+            isShoppingListAmountValid(value())
+                ? undefined
+                : { kind: 'amount', message: this.translateService.instant('SHOPPING_LIST.AMOUNT_ERROR') },
+        );
     });
 
     private readonly isMobileManageOpen = signal(false);

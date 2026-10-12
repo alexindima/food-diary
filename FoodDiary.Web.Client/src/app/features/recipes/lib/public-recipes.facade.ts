@@ -33,11 +33,11 @@ export class PublicRecipesFacade {
         await firstValueFrom(this.favorites.add(entityId<'recipe'>(recipe.id), recipe.name));
     }
 
-    public async addToDiaryAsync(id: RecipeId): Promise<void> {
+    public async addToDiaryAsync(id: RecipeId, servings = 1): Promise<void> {
         const recipe = await firstValueFrom(this.recipes.getById(id));
         if (recipe === null) {
             throw new Error('Recipe unavailable');
         }
-        this.quickMeal.addRecipe(recipe);
+        this.quickMeal.addRecipe(recipe, servings);
     }
 }

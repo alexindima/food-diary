@@ -162,7 +162,7 @@ const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     },
     {
         path: '/dietologist/clients/df5c8427-d6a2-5bf0-94cf-de5001707c03/goals',
-        createResponse: () => ({ id: 'df5c8427-d6a2-5bf0-94cf-de5001707c03', email: 'client@example.test' }),
+        createResponse: () => ({ id: 'df5c8427-d6a2-5bf0-94cf-de5001707c03' }),
     },
     {
         path: '/dietologist/clients/df5c8427-d6a2-5bf0-94cf-de5001707c03/recommendations',

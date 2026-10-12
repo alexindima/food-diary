@@ -10,7 +10,7 @@
     "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 29,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 111,
+    "selectorUnreferencedComponents": 112,
     "routedStandaloneComponents": 68,
     "componentsWithoutDirectSpecs": 129,
     "criticalSymbolsWithoutTestReferences": 46,
@@ -916,6 +916,14 @@
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.spec.ts"
+    },
+    {
+      "class": "BulkRecommendationReviewComponent",
+      "selector": "fd-bulk-recommendation-review",
+      "feature": "dietologist",
+      "path": "FoodDiary.Web.Client/src/app/features/dietologist/dialogs/bulk-recommendation-review/bulk-recommendation-review.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/dietologist/dialogs/bulk-recommendation-review/bulk-recommendation-review.html",
+      "specPath": "FoodDiary.Web.Client/src/app/features/dietologist/dialogs/bulk-recommendation-review/bulk-recommendation-review.spec.ts"
     },
     {
       "class": "LikeButtonComponent",
@@ -2501,6 +2509,11 @@
           "name": "canAdd",
           "type": "boolean",
           "required": true
+        },
+        {
+          "name": "undoAmount",
+          "type": "number | null",
+          "required": false
         }
       ],
       "outputs": [
@@ -2511,6 +2524,10 @@
         {
           "name": "addClick",
           "type": "number"
+        },
+        {
+          "name": "undoClick",
+          "type": ""
         },
         {
           "name": "goalAction",

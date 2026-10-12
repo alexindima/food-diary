@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 492,
+    "components": 493,
     "componentsWithoutDirectSpecs": 129,
-    "inputs": 1585,
-    "outputs": 549,
-    "apiCalls": 314,
-    "templatesWithTranslations": 355,
-    "translationKeys": 2123,
-    "consumerEdges": 1247,
+    "inputs": 1590,
+    "outputs": 551,
+    "apiCalls": 315,
+    "templatesWithTranslations": 356,
+    "translationKeys": 2132,
+    "consumerEdges": 1249,
     "consumedComponents": 312,
-    "unconsumedComponents": 179
+    "unconsumedComponents": 180
   },
   "components": [
     {
@@ -1922,6 +1922,11 @@
           "name": "canAdd",
           "type": "boolean",
           "required": true
+        },
+        {
+          "name": "undoAmount",
+          "type": "number | null",
+          "required": false
         }
       ],
       "outputs": [
@@ -1932,6 +1937,10 @@
         {
           "name": "addClick",
           "type": "number"
+        },
+        {
+          "name": "undoClick",
+          "type": ""
         },
         {
           "name": "goalAction",
@@ -2299,12 +2308,21 @@
           "name": "canAdd",
           "type": "boolean",
           "required": true
+        },
+        {
+          "name": "undoAmount",
+          "type": "number | null",
+          "required": false
         }
       ],
       "outputs": [
         {
           "name": "addClick",
           "type": "number"
+        },
+        {
+          "name": "undoClick",
+          "type": ""
         },
         {
           "name": "goalAction",
@@ -2635,6 +2653,16 @@
       ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.spec.ts"
+    },
+    {
+      "class": "BulkRecommendationReviewComponent",
+      "selector": "fd-bulk-recommendation-review",
+      "feature": "dietologist",
+      "path": "FoodDiary.Web.Client/src/app/features/dietologist/dialogs/bulk-recommendation-review/bulk-recommendation-review.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/dietologist/dialogs/bulk-recommendation-review/bulk-recommendation-review.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/src/app/features/dietologist/dialogs/bulk-recommendation-review/bulk-recommendation-review.spec.ts"
     },
     {
       "class": "ClientDashboardComponent",
@@ -4677,6 +4705,11 @@
         {
           "name": "allowManualInput",
           "type": "",
+          "required": false
+        },
+        {
+          "name": "manualInputFormat",
+          "type": "'native' | 'localized'",
           "required": false
         },
         {
@@ -8612,6 +8645,11 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-edit-list/meal-photo-edit-list.html",
       "inputs": [
         {
+          "name": "showErrors",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "items",
           "type": "EditableAiItem[]",
           "required": true
@@ -11865,6 +11903,11 @@
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-edit-list/ai-photo-edit-list.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-edit-list/ai-photo-edit-list.html",
       "inputs": [
+        {
+          "name": "showErrors",
+          "type": "",
+          "required": false
+        },
         {
           "name": "items",
           "type": "EditableAiItem[]",
@@ -17229,7 +17272,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/hydrations/daily",
       "path": "FoodDiary.Web.Client/src/app/features/hydration/api/hydration.service.ts",
-      "line": 22,
+      "line": 23,
       "publicMethod": "getDaily",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.hydration",
@@ -17241,7 +17284,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/hydrations",
       "path": "FoodDiary.Web.Client/src/app/features/hydration/api/hydration.service.ts",
-      "line": 38,
+      "line": 39,
       "publicMethod": "getEntries",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.hydration",
@@ -17253,11 +17296,23 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/hydrations",
       "path": "FoodDiary.Web.Client/src/app/features/hydration/api/hydration.service.ts",
-      "line": 50,
+      "line": 51,
       "publicMethod": "getEntries",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.hydration",
       "resolvedUrlExpression": "/api/v{version}/hydrations"
+    },
+    {
+      "feature": "hydration",
+      "method": "DELETE",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/hydrations/{id}",
+      "path": "FoodDiary.Web.Client/src/app/features/hydration/api/hydration.service.ts",
+      "line": 67,
+      "publicMethod": "deleteEntry",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": "environment.apiUrls.hydration",
+      "resolvedUrlExpression": "/api/v{version}/hydrations/{id}"
     },
     {
       "feature": "lessons",
@@ -18069,7 +18124,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/login",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 155,
+      "line": 157,
       "publicMethod": "login",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18081,7 +18136,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/register",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 165,
+      "line": 167,
       "publicMethod": "register",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18093,7 +18148,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/verify-email",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 185,
+      "line": 188,
       "publicMethod": "verifyEmail",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18105,7 +18160,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/verify-email/resend",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 194,
+      "line": 197,
       "publicMethod": "resendEmailVerification",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18117,7 +18172,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/restore",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 203,
+      "line": 211,
       "publicMethod": "restoreAccount",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18129,7 +18184,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/google",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 222,
+      "line": 230,
       "publicMethod": "loginWithGoogle",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18141,7 +18196,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/google/link",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 232,
+      "line": 240,
       "publicMethod": "linkGoogle",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18153,7 +18208,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/unlink",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 239,
+      "line": 247,
       "publicMethod": "unlinkTelegram",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18165,7 +18220,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/backup-email",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 243,
+      "line": 251,
       "publicMethod": "requestTelegramBackupEmail",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18177,7 +18232,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/backup-email/oidc/start",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 250,
+      "line": 258,
       "publicMethod": "startTelegramBackupEmail",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18189,7 +18244,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/backup-email/oidc/complete",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 256,
+      "line": 264,
       "publicMethod": "completeTelegramBackupEmail",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18201,7 +18256,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/password-reset/request",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 263,
+      "line": 271,
       "publicMethod": "requestPasswordReset",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18213,7 +18268,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/password-reset/confirm",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 275,
+      "line": 283,
       "publicMethod": "confirmPasswordReset",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18225,7 +18280,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/admin-sso/start",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 285,
+      "line": 293,
       "publicMethod": "startAdminSso",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18237,7 +18292,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/refresh",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 329,
+      "line": 337,
       "publicMethod": "refreshSessionAsync",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18249,7 +18304,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/logout",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 359,
+      "line": 367,
       "publicMethod": "onLogoutAsync",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18261,7 +18316,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/impersonation/exchange",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 513,
+      "line": 521,
       "publicMethod": "captureImpersonationCodeFromQueryAsync",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20347,6 +20402,7 @@
         "CYCLE_TRACKING.ALL_DATA_HINT",
         "CYCLE_TRACKING.BLEEDING_DAYS_COUNT",
         "CYCLE_TRACKING.CANCEL_EDIT",
+        "CYCLE_TRACKING.CHECK_EPISODE_HISTORY",
         "CYCLE_TRACKING.CLEAR_EPISODE_END_DATE",
         "CYCLE_TRACKING.CLEAR_FACTOR_END_DATE",
         "CYCLE_TRACKING.CONSENT_CYCLE_TRACKING",
@@ -20471,7 +20527,9 @@
         "HYDRATION_CARD.PROGRESS_LABEL",
         "HYDRATION_CARD.QUICK_ADD_LABEL",
         "HYDRATION_CARD.REMAINING",
-        "HYDRATION_CARD.TITLE"
+        "HYDRATION_CARD.SELECTED_DAY_HINT",
+        "HYDRATION_CARD.TITLE",
+        "HYDRATION_CARD.UNDO_AMOUNT"
       ]
     },
     {
@@ -20648,6 +20706,18 @@
         "DISABLED_HINTS.EDIT_LAYOUT_ACTIVE",
         "DISABLED_HINTS.OPERATION_BUSY",
         "ERRORS.RETRY"
+      ]
+    },
+    {
+      "feature": "dietologist",
+      "path": "FoodDiary.Web.Client/src/app/features/dietologist/dialogs/bulk-recommendation-review/bulk-recommendation-review.html",
+      "keys": [
+        "BULK_RECOMMENDATIONS.CONFIRM",
+        "BULK_RECOMMENDATIONS.CONFIRM_MESSAGE",
+        "BULK_RECOMMENDATIONS.CONFIRM_TITLE",
+        "BULK_RECOMMENDATIONS.RECIPIENTS",
+        "BULK_RECOMMENDATIONS.TEXT",
+        "COMMON.CANCEL"
       ]
     },
     {
@@ -21603,7 +21673,8 @@
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-edit-list/meal-photo-edit-list.html",
       "keys": [
         "COMMON.DELETE",
-        "MEAL_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM"
+        "MEAL_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM",
+        "MEAL_MANAGE.PHOTO_AI_DIALOG.ROW_INVALID"
       ]
     },
     {
@@ -22967,6 +23038,7 @@
         "MEAL_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM",
         "MEAL_MANAGE.PHOTO_AI_DIALOG.AMOUNT_LABEL",
         "MEAL_MANAGE.PHOTO_AI_DIALOG.NAME_LABEL",
+        "MEAL_MANAGE.PHOTO_AI_DIALOG.ROW_INVALID",
         "MEAL_MANAGE.PHOTO_AI_DIALOG.UNIT_LABEL"
       ]
     },
@@ -23380,6 +23452,7 @@
         "SHOPPING_LIST.ADD_ITEM_NAME",
         "SHOPPING_LIST.ADD_ITEM_NOTE",
         "SHOPPING_LIST.ADD_ITEM_UNIT",
+        "SHOPPING_LIST.AMOUNT_ERROR",
         "SHOPPING_LIST.EDIT_ITEM",
         "SHOPPING_LIST.PRODUCT_IDENTITY_HINT",
         "SHOPPING_LIST.SAVE_ITEM"
@@ -23433,6 +23506,7 @@
         "SHOPPING_LIST.ADD_ITEM_NOTE_PLACEHOLDER",
         "SHOPPING_LIST.ADD_ITEM_UNIT",
         "SHOPPING_LIST.ADD_ITEM_UNIT_PLACEHOLDER",
+        "SHOPPING_LIST.AMOUNT_ERROR",
         "SHOPPING_LIST.EDIT_ITEM",
         "SHOPPING_LIST.EMPTY_COPY",
         "SHOPPING_LIST.EMPTY_TITLE",
@@ -24802,6 +24876,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "items",
+        "showErrors",
         "unitOptions"
       ],
       "outputsHandled": [
@@ -25560,12 +25635,14 @@
         "cardState",
         "isLoading",
         "shouldRender",
-        "state"
+        "state",
+        "undoAmount"
       ],
       "outputsHandled": [
         "addClick",
         "blockToggle",
-        "goalAction"
+        "goalAction",
+        "undoClick"
       ]
     },
     {
@@ -27971,7 +28048,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "auth",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/email-verification.html",
-      "occurrences": 3,
+      "occurrences": 4,
       "inputsUsed": [
         "fill",
         "fullWidth",
@@ -28164,7 +28241,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
-      "occurrences": 12,
+      "occurrences": 13,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -28203,13 +28280,14 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "ariaLabel",
         "disabled",
         "disabledReason",
         "fill",
         "fullWidth",
+        "icon",
         "size",
         "variant"
       ],
@@ -28279,6 +28357,20 @@
         "fill",
         "icon",
         "loading",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "dietologist",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dietologist/dialogs/bulk-recommendation-review/bulk-recommendation-review.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "fill",
+        "type",
         "variant"
       ],
       "outputsHandled": []
@@ -32016,7 +32108,8 @@
         "allowManualInput",
         "invalidDateLabel",
         "label",
-        "latestDate"
+        "latestDate",
+        "manualInputFormat"
       ],
       "outputsHandled": [
         "manualInputInvalidChange",
@@ -32399,6 +32492,19 @@
       "inputsUsed": [
         "bodyScrollInset",
         "dismissible",
+        "size",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiDialogComponent",
+      "selector": "fd-ui-dialog",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+      "consumerFeature": "dietologist",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dietologist/dialogs/bulk-recommendation-review/bulk-recommendation-review.html",
+      "occurrences": 1,
+      "inputsUsed": [
         "size",
         "title"
       ],
@@ -34650,6 +34756,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.html",
       "occurrences": 1,
       "inputsUsed": [
+        "appearance",
         "message",
         "severity"
       ],
@@ -35700,6 +35807,7 @@
       "occurrences": 4,
       "inputsUsed": [
         "controlReadonly",
+        "error",
         "label",
         "type"
       ],
@@ -35727,6 +35835,7 @@
       "occurrences": 4,
       "inputsUsed": [
         "ariaLabel",
+        "error",
         "floatLabel",
         "label",
         "placeholder",
@@ -38836,11 +38945,13 @@
         "canAdd",
         "goal",
         "isLoading",
-        "total"
+        "total",
+        "undoAmount"
       ],
       "outputsHandled": [
         "addClick",
-        "goalAction"
+        "goalAction",
+        "undoClick"
       ]
     },
     {
@@ -39456,6 +39567,7 @@
       "inputsUsed": [
         "items",
         "resolutionOptions",
+        "showErrors",
         "unitOptions"
       ],
       "outputsHandled": [

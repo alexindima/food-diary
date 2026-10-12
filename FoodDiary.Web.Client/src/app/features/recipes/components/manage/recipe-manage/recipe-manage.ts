@@ -4,13 +4,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormRoot, max, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
-import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
 import { PageBodyComponent } from '../../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../../components/shared/page-header/page-header';
+import type { UnsavedEditor } from '../../../../../shared/forms/unsaved-editor';
 import { createCollectionTouchedState } from '../../../../../shared/lib/collection-touched-state.utils';
 import { MANUAL_NUTRITION_MAX_CALORIES, MANUAL_NUTRITION_MAX_NUTRIENT } from '../../../../../shared/lib/nutrition.constants';
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
@@ -53,6 +54,7 @@ import { RECIPE_MANAGE_TOUR } from './recipe-manage-tour';
     imports: [
         TranslatePipe,
         FdUiHintDirective,
+        FdUiPreventUnloadDirective,
         FdUiButtonComponent,
         FdUiInputComponent,
         FdUiTextareaComponent,
@@ -70,7 +72,9 @@ import { RECIPE_MANAGE_TOUR } from './recipe-manage-tour';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [RecipeManageFacade],
 })
-export class RecipeManageComponent {
+export class RecipeManageComponent implements UnsavedEditor {
+    private confirmedNavigation = false;
+    private leaveDecision: Promise<boolean> | null = null;
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly tourService = inject(FdTourService);
@@ -146,6 +150,9 @@ export class RecipeManageComponent {
     private summaryUpdatesSuspended = false;
 
     public constructor() {
+        this.recipeManageFacade.committed$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.recipeSignalForm().reset(this.recipeFormModel());
+        });
         this.stepFormManager = new RecipeStepFormManager(
             () => this.steps,
             steps => {
@@ -454,23 +461,37 @@ export class RecipeManageComponent {
     }
 
     protected async onCancelAsync(): Promise<void> {
-        if (this.isFormLocked()) {
+        if (!(await this.canLeaveAsync())) {
             return;
         }
-        if (this.recipeSignalForm().dirty()) {
-            const shouldLeave = await this.recipeManageFacade.confirmDiscardChangesAsync({
+        this.confirmedNavigation = true;
+        try {
+            await this.recipeManageFacade.cancelManageAsync();
+        } finally {
+            this.confirmedNavigation = false;
+        }
+    }
+
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public editor departure contract used by the router and parent view queries.
+    public async canLeaveAsync(): Promise<boolean> {
+        if (this.confirmedNavigation || !this.recipeSignalForm().dirty()) {
+            return true;
+        }
+        if (this.isFormLocked()) {
+            return false;
+        }
+        this.leaveDecision ??= this.recipeManageFacade
+            .confirmDiscardChangesAsync({
                 title: this.translateService.instant('UNSAVED_CHANGES.TITLE'),
                 message: this.translateService.instant('UNSAVED_CHANGES.MESSAGE'),
                 confirmLabel: this.translateService.instant('UNSAVED_CHANGES.DISCARD'),
                 cancelLabel: this.translateService.instant('UNSAVED_CHANGES.STAY'),
                 confirmIcon: 'logout',
+            })
+            .finally(() => {
+                this.leaveDecision = null;
             });
-            if (!shouldLeave) {
-                return;
-            }
-        }
-
-        await this.recipeManageFacade.cancelManageAsync();
+        return this.leaveDecision;
     }
 
     protected onImportUrlChange(value: string | number | null): void {
@@ -490,7 +511,7 @@ export class RecipeManageComponent {
             sourceUrl,
             sourceLabel: this.translateService.instant('RECIPE_MANAGE.IMPORT.SOURCE_LABEL'),
             ingredientsLabel: this.translateService.instant('RECIPE_MANAGE.IMPORT.INGREDIENTS_LABEL'),
-            existingIngredients: this.steps[0]?.ingredients ?? [],
+            existingIngredients: this.steps.flatMap(step => step.ingredients),
         });
 
         if (draft === null) {

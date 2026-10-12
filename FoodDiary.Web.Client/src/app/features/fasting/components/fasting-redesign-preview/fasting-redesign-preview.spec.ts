@@ -118,6 +118,16 @@ describe('FastingRedesignPreviewComponent', () => {
         expect(component['wellbeingKey']()).toBe('FASTING.REDESIGN.WELLBEING_SYMPTOMS');
     });
 
+    it('treats feeling good as positive feedback rather than a warning symptom', () => {
+        fixture.componentRef.setInput('session', createSession({ symptoms: ['good'] }));
+        expect(component['wellbeingKey']()).toBe('FASTING.REDESIGN.WELLBEING_GOOD');
+    });
+
+    it('keeps a real warning visible alongside a good check-in', () => {
+        fixture.componentRef.setInput('session', createSession({ symptoms: ['good', 'dizziness'] }));
+        expect(component['wellbeingKey']()).toBe('FASTING.REDESIGN.WELLBEING_SYMPTOMS');
+    });
+
     it('calculates wellbeing from all check-in dimensions', () => {
         fixture.componentRef.setInput(
             'session',

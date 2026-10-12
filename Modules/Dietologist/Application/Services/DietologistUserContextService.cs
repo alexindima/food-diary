@@ -28,11 +28,11 @@ internal sealed class DietologistUserContextService(
         return profile?.Email;
     }
 
-    public async Task<Result<UserModel>> GetUserModelByIdAsync(
+    public async Task<Result<GoalsModel>> GetGoalsByIdAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        Result<UserModel> userResult = await userProfileReadService.GetUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        return userResult.IsFailure ? Result.Failure<UserModel>(DietologistErrors.AccessDenied) : userResult;
+        Result<GoalsModel> goalsResult = await userProfileReadService.GetGoalsAsync(userId, cancellationToken).ConfigureAwait(false);
+        return goalsResult.IsFailure ? Result.Failure<GoalsModel>(DietologistErrors.AccessDenied) : goalsResult;
     }
 
     public Task<Result<UserDietologistProfileModel>> GetAccessibleProfileAsync(UserId userId, CancellationToken cancellationToken) =>

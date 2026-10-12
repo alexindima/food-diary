@@ -454,7 +454,11 @@ function profileBirthDateInput(): HTMLInputElement {
 
 function editProfileBirthDate(value: string): void {
     const input = profileBirthDateInput();
-    input.value = value;
+    input.value = new Intl.DateTimeFormat(TestBed.inject(TranslateService).getCurrentLang() ?? 'en', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    }).format(new Date(`${value}T00:00:00`));
     input.dispatchEvent(new Event('input', { bubbles: true }));
     fixture.detectChanges();
 }

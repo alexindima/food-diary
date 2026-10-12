@@ -2,7 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { firstValueFrom, of } from 'rxjs';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -14,6 +14,7 @@ import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
 import type { IngredientFormValues, RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
+import { createRecipeIngredientValue, createRecipeStepValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeManageComponent } from './recipe-manage';
 
 const RECIPE_ID = 'recipe-1';
@@ -22,6 +23,8 @@ const DEFAULT_SERVINGS = 2;
 const DEFAULT_COOK_TIME = 20;
 const UPDATED_COOK_TIME = 35;
 const PRODUCT_DEFAULT_AMOUNT = 100;
+const REIMPORT_SECOND_INGREDIENT_AMOUNT = 50;
+const REIMPORT_ATTEMPTS = 3;
 const SELECTED_PRODUCT_DEFAULT_AMOUNT = 150;
 const SUMMARY_CALORIES = 300;
 const SUMMARY_PROTEINS = 20;
@@ -37,6 +40,7 @@ const MANUAL_FIBER = 2;
 const PRODUCT_CALORIES = 200;
 
 type RecipeManageFacadeMock = {
+    committed$: Subject<void>;
     preparePublicationAsync: ReturnType<typeof vi.fn>;
     preferredLanguage: ReturnType<typeof signal<string>>;
     confirmRecipeLanguageAsync: ReturnType<typeof vi.fn>;
@@ -621,6 +625,28 @@ describe('RecipeManageComponent nutrition state', () => {
 });
 
 describe('RecipeManageComponent steps and ingredients', () => {
+    it('preserves ingredients from every step through repeated plain-text imports', async () => {
+        const { component } = await setupComponentAsync();
+        const product = createProduct();
+        const first = createRecipeIngredientValue({ food: product, amount: PRODUCT_DEFAULT_AMOUNT });
+        const second = createRecipeIngredientValue({ food: product, amount: REIMPORT_SECOND_INGREDIENT_AMOUNT });
+        patchRecipeSignalAndLegacyValues(component, {
+            steps: [
+                { ...createRecipeStepValue(), description: 'First step', ingredients: [first] },
+                { ...createRecipeStepValue(), description: 'Second step', ingredients: [second] },
+            ],
+        });
+        component['onImportTextChange']('Pancakes\nIngredients:\nFlour\nDirections:\n1. Mix\n2. Cook');
+
+        for (let attempt = 0; attempt < REIMPORT_ATTEMPTS; attempt++) {
+            component['applyImportDraft']();
+            const ingredients = component['steps'].flatMap(step => step.ingredients);
+            expect(component['steps'].map(step => step.description)).toEqual(['Mix', 'Cook']);
+            expect(ingredients.map(ingredient => ingredient.amount)).toEqual([PRODUCT_DEFAULT_AMOUNT, REIMPORT_SECOND_INGREDIENT_AMOUNT]);
+            expect(ingredients.map(ingredient => ingredient.productId)).toEqual([product.id, product.id]);
+        }
+    });
+
     it('should add and remove steps while keeping the first step expanded', async () => {
         const { component } = await setupComponentAsync();
 
@@ -671,6 +697,29 @@ describe('RecipeManageComponent steps and ingredients', () => {
     });
 });
 
+describe('Recipe editor route departure', () => {
+    it('preserves a changed ingredient after stay and prevents leaving during save', async () => {
+        const { component, facade } = await setupComponentAsync();
+        component['recipeSignalForm']().markAsDirty();
+        facade.confirmDiscardChangesAsync.mockResolvedValue(false);
+        expect(await component.canLeaveAsync()).toBe(false);
+        expect(component['recipeSignalForm']().dirty()).toBe(true);
+        facade.isSubmitting.set(true);
+        facade.confirmDiscardChangesAsync.mockClear();
+        expect(await component.canLeaveAsync()).toBe(false);
+        expect(facade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+    });
+
+    it('allows the successful redirect only after committing the current draft', async () => {
+        const { component, facade } = await setupComponentAsync();
+        component['recipeSignalForm']().markAsDirty();
+        facade.isSubmitting.set(true);
+        facade.committed$.next();
+        expect(await component.canLeaveAsync()).toBe(true);
+        expect(facade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+    });
+});
+
 async function setupComponentAsync(overrides: Partial<RecipeManageFacadeMock> = {}): Promise<RecipeManageSetup> {
     const facade = createRecipeManageFacadeMock(overrides);
 
@@ -703,6 +752,7 @@ async function setupComponentAsync(overrides: Partial<RecipeManageFacadeMock> = 
 
 function createRecipeManageFacadeMock(overrides: Partial<RecipeManageFacadeMock>): RecipeManageFacadeMock {
     const facade: RecipeManageFacadeMock = {
+        committed$: new Subject<void>(),
         preferredLanguage: signal('en'),
         confirmRecipeLanguageAsync: vi.fn().mockResolvedValue(undefined),
         globalError: signal(null),

@@ -108,6 +108,7 @@
                     (valueChange)="onTextFieldChange('lastName', $event)"
                 />
                 <fd-ui-date-input
+                    manualInputFormat="localized"
                     [formField]="userForm().birthDate"
                     [allowManualInput]="true"
                     [latestDate]="latestBirthDate"

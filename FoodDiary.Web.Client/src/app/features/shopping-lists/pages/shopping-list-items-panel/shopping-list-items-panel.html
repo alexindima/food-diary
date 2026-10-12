@@ -36,6 +36,7 @@
                 <fd-ui-input
                     type="number"
                     [formField]="itemForm().amount"
+                    [error]="itemForm().amount().invalid() ? ('SHOPPING_LIST.AMOUNT_ERROR' | translate) : null"
                     [label]="'SHOPPING_LIST.ADD_ITEM_AMOUNT' | translate"
                     [placeholder]="'SHOPPING_LIST.ADD_ITEM_AMOUNT_PLACEHOLDER' | translate"
                 />

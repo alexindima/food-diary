@@ -247,6 +247,29 @@ describe('MealPhotoRecognitionDialogComponent session payload', () => {
     });
 });
 
+describe('Meal AI edit invalid quantity', () => {
+    it.each(['0', '-1', '', 'invalid', 'Infinity'])('keeps results and nutrition when amount %s is invalid', async amount => {
+        aiFoodService = createAiFoodServiceMock();
+        dialogRef = { close: vi.fn() };
+        const { component } = await setupComponentAsync();
+        component['results'].set([visionItem]);
+        component['nutrition'].set(nutrition);
+        component['startEditing']();
+        aiFoodService.calculateNutrition.mockClear();
+        component['updateEditItem'](0, 'amount', amount);
+        component['applyEditing']();
+        expect(component['isEditing']()).toBe(true);
+        expect(component['editItems']()).toHaveLength(1);
+        expect(component['results']()).toEqual([visionItem]);
+        expect(component['nutrition']()).toEqual(nutrition);
+        expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
+        component['updateEditItem'](0, 'amount', String(EDITED_AMOUNT));
+        component['applyEditing']();
+        expect(component['isEditing']()).toBe(false);
+        expect(component['nutrition']()?.items[0].amount).toBe(EDITED_AMOUNT);
+    });
+});
+
 async function setupComponentAsync(
     data: Record<string, unknown> | null = null,
 ): Promise<{ component: MealPhotoRecognitionDialogComponent; fixture: ComponentFixture<MealPhotoRecognitionDialogComponent> }> {

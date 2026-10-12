@@ -20,6 +20,7 @@ export * from './change-client-task-status-http-request';
 export * from './change-password-http-request';
 export * from './checkout-session-http-response';
 export * from './checkpoint-telegram-operation-http-request';
+export * from './client-goals-http-response';
 export * from './client-summary-http-response';
 export * from './client-task-http-response';
 export * from './client-telemetry-log-http-request';

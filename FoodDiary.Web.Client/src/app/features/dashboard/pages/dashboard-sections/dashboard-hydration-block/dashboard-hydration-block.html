@@ -14,7 +14,9 @@
                     [goal]="cardState().goal"
                     [isLoading]="isLoading()"
                     [canAdd]="canAdd()"
+                    [undoAmount]="undoAmount()"
                     (addClick)="addClick.emit($event)"
+                    (undoClick)="undoClick.emit()"
                     (goalAction)="goalAction.emit()"
                 />
             </fd-dashboard-card-shell>

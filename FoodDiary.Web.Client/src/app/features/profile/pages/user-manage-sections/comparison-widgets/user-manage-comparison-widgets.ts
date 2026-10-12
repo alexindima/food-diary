@@ -16,13 +16,12 @@ import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
 import { injectCurrentLanguage } from '../../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../../shared/i18n/localized-number.pipe';
+import { formatDateInputValue } from '../../../../../shared/lib/local-date.utils';
 import { MeasurementSystemService } from '../../../../../shared/measurements/measurement-system.service';
 import type { ActivityLevelOption, Gender } from '../../../../../shared/models/user.data';
 import type { AppThemeName, AppUiStyleName } from '../../../../../theme/app-theme.config';
 import type { UserFormValues, UserManageAccountFormPatch, UserManageBodyFormPatch } from '../../../lib/user-manage.types';
 import { calculateProfileCompleteness } from '../../user-manage/user-manage-lib/user-profile-completeness.mapper';
-
-const ISO_DATE_LENGTH = 10;
 
 @Component({
     selector: 'fd-user-manage-comparison-widgets',
@@ -136,7 +135,7 @@ export class UserManageComparisonWidgetsComponent {
     }
 
     protected onBirthDateChange(value: string | Date | null): void {
-        const nextValue = value instanceof Date ? value.toISOString().slice(0, ISO_DATE_LENGTH) : value;
+        const nextValue = value instanceof Date ? formatDateInputValue(value) : value;
         this.userFormPatch.emit({ birthDate: nextValue });
     }
 

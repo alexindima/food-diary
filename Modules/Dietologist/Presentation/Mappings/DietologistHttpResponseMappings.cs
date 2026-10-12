@@ -6,6 +6,13 @@ using FoodDiary.Modules.Dietologist.Presentation.Responses;
 namespace FoodDiary.Modules.Dietologist.Presentation.Mappings;
 
 public static class DietologistHttpResponseMappings {
+    extension(ClientGoalsModel model) {
+        public ClientGoalsHttpResponse ToHttpResponse() =>
+            new(model.Id, model.DailyCalorieTarget, model.ProteinTarget, model.FatTarget, model.CarbTarget,
+                model.FiberTarget, model.WaterGoal, model.HydrationGoal, model.DesiredWeightKg,
+                model.DesiredWaistCm, model.StepGoal);
+    }
+
     extension(AttentionSignalModel model) {
         public AttentionSignalHttpResponse ToHttpResponse() =>
                 new(

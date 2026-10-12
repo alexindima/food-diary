@@ -8,6 +8,7 @@ import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-la
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { recalculateEditedAiNutrition } from '../../../../shared/lib/ai-nutrition-edit.utils';
 import {
+    aiEditableItemError,
     buildAiEditableItems,
     createEmptyAiEditableItem,
     normalizeAiEditableItems,
@@ -121,6 +122,7 @@ export class AiPhotoResultComponent {
     protected readonly preMealSatietyLevel = signal<number | null>(null);
     protected readonly postMealSatietyLevel = signal<number | null>(null);
     protected readonly editItems = signal<EditableAiItem[]>([]);
+    protected readonly editAttempted = signal(false);
     protected readonly resultRows = computed<AiResultRow[]>(() => {
         const nutritionItems = this.resolvedNutrition()?.items ?? [];
         return this.resolvedResults().map((item, index) => ({
@@ -231,6 +233,7 @@ export class AiPhotoResultComponent {
     }
 
     protected startEditing(): void {
+        this.editAttempted.set(false);
         const editable = buildAiEditableItems(this.resolvedResults(), this.resolvedNutrition(), () => this.createEditId());
         this.editItems.set(editable);
         this.sourceItems.set(editable.map(item => ({ ...item })));
@@ -238,7 +241,11 @@ export class AiPhotoResultComponent {
     }
 
     protected applyEditing(): void {
-        const edited = this.editItems().filter(item => item.name.trim().length > 0 && item.amount > 0);
+        this.editAttempted.set(true);
+        const edited = this.editItems();
+        if (edited.some(item => aiEditableItemError(item) !== null)) {
+            return;
+        }
         const normalized: FoodVisionItem[] = normalizeAiEditableItems(edited);
         const requiresAi = requiresAiNutritionRecalculation(this.sourceItems(), edited);
         this.isEditing.set(false);

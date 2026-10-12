@@ -5,10 +5,11 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
-import { AUTH_EMAIL_RESEND_COOLDOWN_SECONDS } from '../../../../config/runtime-ui.tokens';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
+import { EmailVerificationCooldownService } from '../../../../shared/auth/email-verification-cooldown.service';
 import { MS_PER_SECOND } from '../../../../shared/lib/time.constants';
+import { getRecordProperty, getStringProperty } from '../../../../shared/lib/unknown-value.utils';
 import { UserFacade } from '../../../../shared/lib/user.facade';
 import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
 import { EmailVerificationRealtimeService } from '../../lib/email-verification-realtime.service';
@@ -28,10 +29,12 @@ export class EmailVerificationPendingComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly realtimeService = inject(EmailVerificationRealtimeService);
     private readonly route = inject(ActivatedRoute);
-    private readonly resendCooldownSecondsDefault = inject(AUTH_EMAIL_RESEND_COOLDOWN_SECONDS);
+    private readonly cooldown = inject(EmailVerificationCooldownService);
     private readonly browserWindow = inject(BrowserWindowService);
     private readonly shouldAutoResend = this.route.snapshot.queryParamMap.get('autoResend') === 'true';
     private autoResendAttempted = false;
+    private userId: string | null = this.authService.getUserId();
+    private cooldownIntervalId: number | null = null;
 
     protected readonly email = signal<string | null>(null);
     protected readonly statusMessage = signal<string | null>(null);
@@ -40,10 +43,14 @@ export class EmailVerificationPendingComponent {
     protected readonly resendCooldownSeconds = signal(0);
 
     public constructor() {
+        this.destroyRef.onDestroy(() => {
+            this.browserWindow.clearInterval(this.cooldownIntervalId);
+        });
         if (!this.authService.isAuthenticated()) {
             void this.navigationService.navigateToAuthAsync('login');
             return;
         }
+        this.startResendCooldown();
         this.startRealtime();
         this.loadCurrentUser();
     }
@@ -79,6 +86,9 @@ export class EmailVerificationPendingComponent {
     }
 
     private sendVerificationEmail(isAutomatic: boolean): void {
+        if (this.isSending() || this.resendCooldownSeconds() > 0) {
+            return;
+        }
         this.isSending.set(true);
         if (!isAutomatic) {
             this.statusMessage.set(null);
@@ -92,8 +102,16 @@ export class EmailVerificationPendingComponent {
                     this.statusMessage.set(this.translateService.instant('AUTH.VERIFY_PENDING.RESENT'));
                     this.startResendCooldown();
                 },
-                error: () => {
+                error: (error: unknown) => {
                     this.isSending.set(false);
+                    const body = getRecordProperty(error, 'error');
+                    const fields = getRecordProperty(getRecordProperty(body, 'errors'), 'EmailVerification');
+                    if (getStringProperty(body, 'error') === 'Validation.Invalid' && Array.isArray(fields)) {
+                        this.cooldown.markSent(this.userId);
+                        this.startResendCooldown();
+                        this.statusMessage.set(null);
+                        return;
+                    }
                     if (isAutomatic) {
                         return;
                     }
@@ -111,21 +129,18 @@ export class EmailVerificationPendingComponent {
         this.sendVerificationEmail(true);
     }
 
-    private startResendCooldown(seconds = this.resendCooldownSecondsDefault): void {
-        this.resendCooldownSeconds.set(seconds);
-        const intervalId = this.browserWindow.setInterval(() => {
-            const remaining = this.resendCooldownSeconds();
-            if (remaining <= 1) {
-                this.resendCooldownSeconds.set(0);
-                this.browserWindow.clearInterval(intervalId);
-                return;
+    private startResendCooldown(): void {
+        this.browserWindow.clearInterval(this.cooldownIntervalId);
+        this.resendCooldownSeconds.set(this.cooldown.remainingSeconds(this.userId));
+        if (this.resendCooldownSeconds() === 0) {
+            return;
+        }
+        this.cooldownIntervalId = this.browserWindow.setInterval(() => {
+            this.resendCooldownSeconds.set(this.cooldown.remainingSeconds(this.userId));
+            if (this.resendCooldownSeconds() === 0) {
+                this.browserWindow.clearInterval(this.cooldownIntervalId);
             }
-            this.resendCooldownSeconds.set(remaining - 1);
         }, MS_PER_SECOND);
-
-        this.destroyRef.onDestroy(() => {
-            this.browserWindow.clearInterval(intervalId);
-        });
     }
 
     private loadCurrentUser(): void {
@@ -136,6 +151,8 @@ export class EmailVerificationPendingComponent {
                 if (user === null) {
                     return;
                 }
+                this.userId = user.id;
+                this.startResendCooldown();
                 this.email.set(user.email);
                 this.authService.setEmailConfirmed(user.isEmailConfirmed);
                 if (user.isEmailConfirmed) {

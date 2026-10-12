@@ -145,7 +145,7 @@ export class PublicRecipeDetailComponent {
                 await this.facade.saveAsync(recipe);
                 this.saved.set(true);
             } else {
-                await this.facade.addToDiaryAsync(entityId<'recipe'>(recipe.id));
+                await this.facade.addToDiaryAsync(entityId<'recipe'>(recipe.id), this.servings());
             }
             this.actionMessage.set(action === 'save' ? 'PUBLIC_RECIPES.SAVED' : 'PUBLIC_RECIPES.ADDED');
         } catch {

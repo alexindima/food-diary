@@ -10,6 +10,7 @@ import { requireSdkFields } from '../../../shared/api/sdk/sdk-response';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { CreateHydrationEntryPayload, HydrationDaily, HydrationEntry } from '../../../shared/models/hydration.data';
 import { calendarDate, utcInstant } from '../../../shared/models/semantics/date-value';
+import type { HydrationEntryId } from '../../../shared/models/semantics/entity-id';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 
 @Service()
@@ -60,6 +61,12 @@ export class HydrationService {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
+    }
+
+    public deleteEntry(id: HydrationEntryId): Observable<void> {
+        return this.sdk.client
+            .deleteHydrationById({ version: this.sdk.version, id })
+            .pipe(catchError((error: unknown) => rethrowApiError('Delete hydration entry error', error)));
     }
 }
 

@@ -424,6 +424,7 @@ describe('register', () => {
 
         expect(service.isAuthenticated()).toBe(true);
         expect(service.getUserId()).toBe('new-user-456');
+        expect(Number(sessionStorage.getItem('email-verification-cooldown:new-user-456'))).toBeGreaterThan(Date.now());
     });
 
     it('should store token in sessionStorage (rememberMe=false for register)', () => {

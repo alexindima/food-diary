@@ -25,8 +25,10 @@ export class DashboardHydrationBlockComponent {
     public readonly cardState = input.required<DashboardHydrationCardState>();
     public readonly isLoading = input.required<boolean>();
     public readonly canAdd = input.required<boolean>();
+    public readonly undoAmount = input<number | null>(null);
 
     public readonly blockToggle = output();
     public readonly addClick = output<number>();
+    public readonly undoClick = output();
     public readonly goalAction = output();
 }

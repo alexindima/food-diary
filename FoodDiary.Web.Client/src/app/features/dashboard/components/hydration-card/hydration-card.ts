@@ -29,6 +29,9 @@ export class HydrationCardComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly canAdd = input.required<boolean>();
     public readonly addClick = output<number>();
+    public readonly undoAmount = input<number | null>(null);
+    public readonly undoClick = output();
+    protected readonly undoDisabled = computed(() => this.isLoading() || this.undoAmount() === null);
     public readonly goalAction = output();
 
     protected readonly addAmounts = HYDRATION_CARD_ADD_AMOUNTS_ML;

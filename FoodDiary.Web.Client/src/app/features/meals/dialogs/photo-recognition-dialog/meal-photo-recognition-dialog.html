@@ -37,6 +37,7 @@
                     @if (isEditing()) {
                         <fd-meal-photo-edit-list
                             [items]="editItems()"
+                            [showErrors]="editAttempted()"
                             [unitOptions]="unitOptions"
                             [resolutionOptions]="resolutionOptions"
                             (itemDropped)="onEditItemDrop($event)"

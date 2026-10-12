@@ -17,6 +17,7 @@ import type {
     RegisterRequest,
     RestoreAccountRequest,
 } from '../shared/auth/auth.data';
+import { EmailVerificationCooldownService } from '../shared/auth/email-verification-cooldown.service';
 import type { GoogleLoginRequest } from '../shared/auth/google-auth.data';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 import type { TelegramOAuthCode, TelegramOAuthState } from '../shared/auth/telegram-oidc-values';
@@ -37,6 +38,7 @@ const AUTH_REFRESH_LOCK_NAME = 'fooddiary.auth.refresh';
 @Service()
 export class AuthService {
     private readonly navigationService = inject(NavigationService);
+    private readonly emailVerificationCooldown = inject(EmailVerificationCooldownService);
     private readonly sessionEvents = inject(SessionEventsService);
     private readonly browserWindow = inject(BrowserWindowService);
     private readonly localizationService = inject(LocalizationService);
@@ -176,6 +178,7 @@ export class AuthService {
                 map(authResponseFromSdk),
                 tap(response => {
                     this.onLogin(response, false);
+                    this.emailVerificationCooldown.markSent(response.user.id);
                 }),
                 catchError((error: unknown) => rethrowApiError('Register error', error)),
             );
@@ -196,7 +199,12 @@ export class AuthService {
                 version: this.sdk.version,
                 resendEmailVerificationHttpRequest: { clientOrigin: this.getClientOrigin() },
             })
-            .pipe(catchError((error: unknown) => rethrowApiError('Resend email verification error', error)));
+            .pipe(
+                tap(() => {
+                    this.emailVerificationCooldown.markSent(this.getUserId());
+                }),
+                catchError((error: unknown) => rethrowApiError('Resend email verification error', error)),
+            );
     }
 
     public restoreAccount(data: RestoreAccountRequest, rememberMe = false): Observable<AuthResponse> {

@@ -18,6 +18,7 @@ import { ShoppingListPageComponent } from './shopping-list-page';
 
 const FIRST_LIST_ID = 'list-1';
 const SECOND_LIST_ID = 'list-2';
+const INVALID_SHOPPING_AMOUNT_ABOVE_MAXIMUM = 1_000_001;
 
 const SHOPPING_LIST_ITEM: ShoppingListItem = {
     id: entityId<'shopping-list-item'>('item-1'),
@@ -231,6 +232,52 @@ describe('ShoppingListPageComponent form and item actions', () => {
 
         expect(facade.removeItem).toHaveBeenCalledWith(SHOPPING_LIST_ITEM.id);
         expect(facade.toggleItemChecked).toHaveBeenCalledWith(SHOPPING_LIST_ITEM.id, true);
+    });
+});
+
+describe('ShoppingListPageComponent invalid quantity', () => {
+    it.each([0, -1, INVALID_SHOPPING_AMOUNT_ABOVE_MAXIMUM])(
+        'explains native invalid quantity %s and clears the error after correction',
+        async amount => {
+            const { component, facade, fixture } = await setupShoppingListPageAsync();
+            component['itemFormModel'].update(value => ({ ...value, name: 'Oats' }));
+            fixture.detectChanges();
+            const element = fixture.nativeElement as HTMLElement;
+            const details = element.querySelector<HTMLButtonElement>('button[aria-label="SHOPPING_LIST.ADD_ITEM_DETAILS"]');
+            if (details === null) {
+                throw new Error('Missing shopping item details button');
+            }
+            details.click();
+            fixture.detectChanges();
+            const input = element.querySelector<HTMLInputElement>('input[type="number"]');
+            if (input === null) {
+                throw new Error('Missing shopping quantity input');
+            }
+            input.value = String(amount);
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            input.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+            await fixture.whenStable();
+            expect(element.querySelector('[role="alert"]')?.textContent).toContain('SHOPPING_LIST.AMOUNT_ERROR');
+            expect(input.getAttribute('aria-invalid')).toBe('true');
+            element.querySelector('form.shopping-list__add-form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+            expect(facade.addItem).not.toHaveBeenCalled();
+            input.value = '1.5';
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            fixture.detectChanges();
+            await fixture.whenStable();
+            expect(element.querySelector('[role="alert"]')).toBeNull();
+            expect(input.getAttribute('aria-invalid')).not.toBe('true');
+        },
+    );
+
+    it.each([0, -1, Number.NaN, Number.POSITIVE_INFINITY])('preserves invalid amount %s and does not submit it', async amount => {
+        const { component, facade } = await setupShoppingListPageAsync();
+        component['itemFormModel'].set({ name: 'Oats', amount, unit: null, category: null, note: null });
+        component['addItem']();
+        expect(facade.addItem).not.toHaveBeenCalled();
+        expect(component['itemForm'].amount().invalid()).toBe(true);
+        expect(component['itemFormModel']().amount).toBe(amount);
     });
 });
 

@@ -67,12 +67,7 @@
     <div class="cycle-tracking__prediction-limited fd-stack fd-gap-2xs">
         <strong class="fd-ui-title-sm">{{ prediction().limitedReasonKey | translate }}</strong>
         <span class="fd-ui-body-sm">
-            {{
-                (prediction().limitedReasonKey === 'CYCLE_TRACKING.PREDICTIONS_LEARNING'
-                    ? 'CYCLE_TRACKING.PREDICTIONS_LEARNING_BODY'
-                    : 'CYCLE_TRACKING.PREDICTIONS_LIMITED_BODY'
-                ) | translate: { confidence: (prediction().confidenceKey | translate) }
-            }}
+            {{ `${prediction().limitedReasonKey}_BODY` | translate: { confidence: (prediction().confidenceKey | translate) } }}
         </span>
         <span class="fd-ui-body-sm">
             {{

@@ -149,7 +149,9 @@ export class PremiumAccessPageComponent {
             const overview = await firstValueFrom(this.billingService.startPremiumTrial());
             this.overview.set(overview);
             void this.pricing.loadPricesAsync(overview, this.resolveCheckoutLocale());
-            await firstValueFrom(this.authService.refreshToken());
+            if (!(await this.refreshAccountAccessAsync())) {
+                return;
+            }
             this.toastService.success(this.translateService.instant('PREMIUM_PAGE.BANNERS.TRIAL_STARTED_MESSAGE'));
         } catch (error) {
             this.showErrorMessage(this.getErrorMessage(error, 'PREMIUM_PAGE.ERROR_TRIAL'));
@@ -232,6 +234,9 @@ export class PremiumAccessPageComponent {
         try {
             const overview = await firstValueFrom(this.billingService.getOverview());
             this.overview.set(overview);
+            if (this.isBrowser && overview.isPremium !== this.authService.isPremium()) {
+                await this.refreshAccountAccessAsync();
+            }
         } catch (error) {
             this.errorMessage.set(this.getErrorMessage(error));
         } finally {
@@ -242,6 +247,15 @@ export class PremiumAccessPageComponent {
         if (overview !== null && this.showPlans() && this.errorMessage() === null) {
             void this.pricing.loadPricesAsync(overview, this.resolveCheckoutLocale());
         }
+    }
+
+    private async refreshAccountAccessAsync(): Promise<boolean> {
+        const refreshedSession = await firstValueFrom(this.authService.refreshToken());
+        if (refreshedSession !== null) {
+            return true;
+        }
+        this.errorMessage.set(this.translateService.instant('PREMIUM_PAGE.ERROR_ACCESS_REFRESH'));
+        return false;
     }
 
     private async refreshTokenWhenPremiumEntitlementVisibleAsync(): Promise<void> {

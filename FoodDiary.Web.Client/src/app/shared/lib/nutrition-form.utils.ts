@@ -37,6 +37,8 @@ export type CalorieMismatchWarningInput = {
 export type NutritionMode = 'auto' | 'manual';
 
 const NUTRIENT_CONVERSION_EPSILON_MULTIPLIER = 8;
+const ROUNDING_MIDPOINT = 0.5;
+const EVEN_INTEGER_MODULUS = 2;
 
 /** Preserve input precision across display-basis changes; round totals only for presentation or submission. */
 export function scaleNutrientInput(value: number, factor: number): number {
@@ -141,10 +143,13 @@ export function getControlNumericValue(control: { value: number | string | null 
 }
 
 /**
- * Round a nutrient value to 2 decimal places.
+ * Round nutrient totals to 2 decimals using the owning API's midpoint-to-even rule.
  */
 export function roundNutrient(value: number): number {
-    return Math.round(value * NUTRIENT_ROUNDING_FACTOR) / NUTRIENT_ROUNDING_FACTOR;
+    const scaled = value * NUTRIENT_ROUNDING_FACTOR;
+    const lower = Math.floor(scaled);
+    const rounded = scaled - lower === ROUNDING_MIDPOINT && lower % EVEN_INTEGER_MODULUS === 0 ? lower : Math.round(scaled);
+    return rounded / NUTRIENT_ROUNDING_FACTOR;
 }
 
 /**
@@ -157,11 +162,11 @@ export function checkCaloriesError(control: { value: number | null; touched: boo
     }
 
     const value = Number(control.value);
-    return !Number.isFinite(value) || value <= 0;
+    return control.value === null || !Number.isFinite(value) || value < 0;
 }
 
 /**
- * Check whether a manual macros error should be shown (all macros are zero).
+ * Check whether a manual macros error should be shown (every value is missing or invalid).
  */
 export function checkMacrosError(controls: Array<{ value: number | null; touched: boolean; dirty: boolean }>): boolean {
     const shouldShow = controls.some(c => c.touched || c.dirty);
@@ -171,6 +176,6 @@ export function checkMacrosError(controls: Array<{ value: number | null; touched
 
     return controls.every(c => {
         const value = Number(c.value);
-        return !Number.isFinite(value) || value <= 0;
+        return c.value === null || !Number.isFinite(value) || value < 0;
     });
 }

@@ -9,13 +9,11 @@ using FoodDiary.Modules.Dashboard.Contracts.Queries.GetDietologistClientDashboar
 using FoodDiary.Modules.Dietologist.Application.Queries.GetClientGoals;
 using FoodDiary.Modules.Dietologist.Application.Queries.GetMyClients;
 using FoodDiary.Modules.Dietologist.Application.Queries.GetRecommendationsForClient;
-using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Dashboard.Presentation.Contracts.Responses;
 using FoodDiary.Modules.Dietologist.Presentation.Controllers;
 using FoodDiary.Modules.Dietologist.Presentation.Requests;
 using FoodDiary.Modules.Dietologist.Presentation.Responses;
-using FoodDiary.Modules.Users.Presentation.Contracts.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -81,9 +79,9 @@ public sealed class DietologistClientsControllerTests {
     }
 
     [Fact]
-    public async Task GetClientGoals_SendsQueryAndReturnsUser() {
-        UserModel model = CreateUser();
-        IRequest<Result<UserModel>>? sentRequest = null;
+    public async Task GetClientGoals_SendsQueryAndReturnsOnlyGoals() {
+        ClientGoalsModel model = CreateGoals();
+        IRequest<Result<ClientGoalsModel>>? sentRequest = null;
         ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         DietologistClientsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
@@ -92,8 +90,10 @@ public sealed class DietologistClientsControllerTests {
         IActionResult result = await controller.GetClientGoals(clientUserId, userId);
 
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
-        UserHttpResponse response = Assert.IsType<UserHttpResponse>(ok.Value);
+        ClientGoalsHttpResponse response = Assert.IsType<ClientGoalsHttpResponse>(ok.Value);
         Assert.Equal(model.Id, response.Id);
+        Assert.Equal(model.HydrationGoal, response.HydrationGoal);
+        Assert.Equal(model.StepGoal, response.StepGoal);
         GetClientGoalsQuery query = Assert.IsType<GetClientGoalsQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
         Assert.Equal(clientUserId, query.ClientUserId);
@@ -207,44 +207,19 @@ public sealed class DietologistClientsControllerTests {
             new DashboardMealsModel([], Total: 0),
             Advice: new DailyAdviceModel(Guid.NewGuid(), "ru", "Advice", "tag", 1));
 
-    private static UserModel CreateUser() =>
+    private static ClientGoalsModel CreateGoals() =>
         new(
             Guid.NewGuid(),
-            "client@example.com",
-            HasPassword: true,
-            Username: "client",
-            FirstName: "Client",
-            LastName: "User",
-            BirthDate: null,
-            Gender: null,
-            WeightKg: 70,
-            DesiredWeightKg: 65,
-            DesiredWaistCm: 80,
-            HeightCm: 170,
-            ActivityLevel: "Moderate",
             DailyCalorieTarget: 2100,
             ProteinTarget: 120,
             FatTarget: 60,
             CarbTarget: 220,
             FiberTarget: 30,
-            StepGoal: 8000,
             WaterGoal: 2,
             HydrationGoal: 2,
-            Language: "ru",
-            Theme: "dark",
-            UiStyle: "system",
-            PushNotificationsEnabled: true,
-            FastingPushNotificationsEnabled: true,
-            SocialPushNotificationsEnabled: false,
-            FastingCheckInReminderHours: 12,
-            FastingCheckInFollowUpReminderHours: 20,
-            ProfileImage: null,
-            ProfileImageAssetId: null,
-            DashboardLayout: null,
-            IsActive: true,
-            IsEmailConfirmed: true,
-            LastLoginAtUtc: null,
-            AiConsentAcceptedAt: null);
+            DesiredWeightKg: 65,
+            DesiredWaistCm: 80,
+            StepGoal: 8000);
 
     private static DietologistPermissionsModel CreatePermissions() =>
         new(

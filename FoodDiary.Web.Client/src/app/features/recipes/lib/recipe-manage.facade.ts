@@ -2,7 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { finalize, firstValueFrom, map, type Observable } from 'rxjs';
+import { finalize, firstValueFrom, map, type Observable, Subject } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -46,6 +46,8 @@ export type RecipeStepsNutritionState = readonly StepFormValues[];
 
 @Injectable()
 export class RecipeManageFacade {
+    private readonly committed = new Subject<void>();
+    public readonly committed$ = this.committed.asObservable();
     private readonly publication = inject(RecipePublicationService);
 
     private readonly recipeService = inject(RecipeService);
@@ -349,6 +351,7 @@ export class RecipeManageFacade {
 
     private async handleSubmitResponseAsync(response: Recipe): Promise<void> {
         this.clearGlobalError();
+        this.committed.next();
         if (this.dialogRef !== null) {
             this.dialogRef.close(response);
             return;

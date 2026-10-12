@@ -1,4 +1,4 @@
-<div class="meal-manage fd-stack" fdPageContainer>
+<div class="meal-manage fd-stack" fdPageContainer [fdUiPreventUnload]="mealSignalForm().dirty()">
     <fd-page-header
         class="meal-manage__header"
         [title]="manageHeaderState().titleKey | translate"

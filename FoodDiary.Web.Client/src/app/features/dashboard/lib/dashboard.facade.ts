@@ -8,12 +8,14 @@ import { finalize, firstValueFrom, map, of, switchMap } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
+import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { resolveMealTypeByTime } from '../../../shared/lib/meal-type.util';
 import { RequestStateController } from '../../../shared/lib/request-state';
 import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
 import type { CycleResponse } from '../../../shared/models/cycle.data';
 import type { DashboardSnapshot } from '../../../shared/models/dashboard.data';
 import type { FastingSession } from '../../../shared/models/fasting.data';
+import type { HydrationEntry } from '../../../shared/models/hydration.data';
 import type { Meal } from '../../../shared/models/meal.data';
 import { utcInstant } from '../../../shared/models/semantics/date-value';
 import type { FavoriteMealId, MealId } from '../../../shared/models/semantics/entity-id';
@@ -142,6 +144,17 @@ export class DashboardFacade {
     private readonly initialized = signal(false);
     private readonly isHydrationUpdating = signal(false);
     private readonly isHydrationRefreshing = signal(false);
+    private readonly hydrationUndoEntries = signal<Array<{ day: string; entry: HydrationEntry }>>([]);
+    public readonly lastHydrationUndo = computed<HydrationEntry | null>(() => {
+        const entries = this.hydrationUndoEntries();
+        const day = formatDateInputValue(this.selectedDate());
+        for (let index = entries.length - 1; index >= 0; index--) {
+            if (entries[index].day === day) {
+                return entries[index].entry;
+            }
+        }
+        return null;
+    });
     private readonly trendDays = DASHBOARD_TREND_DAYS;
     private readonly snapshotRequest = new RequestStateController<DashboardSnapshot, 'DASHBOARD.LOAD_ERROR'>();
 
@@ -251,11 +264,27 @@ export class DashboardFacade {
         }
         this.localDay.refresh();
         const targetDate = getHydrationDateUtc(this.selectedDate());
+        const day = formatDateInputValue(this.selectedDate());
         runTrackedRequest(this.destroyRef, this.isHydrationUpdating, this.hydrationService.addEntry(amount, targetDate), {
-            next: () => {
+            next: entry => {
+                this.hydrationUndoEntries.update(entries => [...entries, { day, entry }]);
                 this.loadDashboardSnapshot(false, true);
             },
             error: () => this.toastService.error(this.translateService.instant('HYDRATION_CARD.ADD_ERROR')),
+        });
+    }
+
+    public undoHydration(): void {
+        const entry = this.lastHydrationUndo();
+        if (entry === null || this.isHydrationLoading()) {
+            return;
+        }
+        runTrackedRequest(this.destroyRef, this.isHydrationUpdating, this.hydrationService.deleteEntry(entry.id), {
+            next: () => {
+                this.hydrationUndoEntries.update(entries => entries.filter(item => item.entry.id !== entry.id));
+                this.loadDashboardSnapshot(false, true);
+            },
+            error: () => this.toastService.error(this.translateService.instant('HYDRATION_CARD.UNDO_ERROR')),
         });
     }
 

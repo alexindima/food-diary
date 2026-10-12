@@ -13,6 +13,8 @@ import { PublicAuthDialogService } from '../../../public/contracts/auth-dialog';
 import { ShoppingListAddFacade } from '../../../shopping-lists/contracts/shopping-list-add';
 import { publicRecipeFixture } from '../../lib/public-recipe.test-helper';
 import { PublicRecipesFacade } from '../../lib/public-recipes.facade';
+
+const SELECTED_DIARY_SERVINGS = 3;
 import { PublicRecipeDetailComponent } from './public-detail';
 
 const authenticated = signal(false);
@@ -119,9 +121,11 @@ describe('public recipe account actions', () => {
     it('adds authenticated users directly to the diary', async () => {
         authenticated.set(true);
         const harness = await RouterTestingHarness.create('/explore/recipe');
+        harness.routeNativeElement?.querySelector<HTMLButtonElement>('[aria-label="PUBLIC_RECIPES.MORE"]')?.click();
+        harness.detectChanges();
         harness.routeNativeElement?.querySelector<HTMLButtonElement>('.recipe-actions button')?.click();
         await waitForAsyncTasksAsync();
-        expect(facade.addToDiaryAsync).toHaveBeenCalledWith('recipe');
+        expect(facade.addToDiaryAsync).toHaveBeenCalledWith('recipe', SELECTED_DIARY_SERVINGS);
         expect(dialog.openAsync).not.toHaveBeenCalled();
     });
     it('keeps the hero servings in sync with the ingredient control', async () => {

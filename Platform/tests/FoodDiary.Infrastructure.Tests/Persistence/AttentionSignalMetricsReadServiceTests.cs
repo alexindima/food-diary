@@ -54,6 +54,29 @@ public sealed class AttentionSignalMetricsReadServiceTests {
         Assert.Empty(result);
     }
 
+    [Fact]
+    public async Task GetAsync_PreservesMissingAndAllTimeLastMealsAsync() {
+        DateTime nowUtc = new(2026, 7, 26, 12, 0, 0, DateTimeKind.Utc);
+        await using FoodDiaryDbContext context = CreateContext();
+        var noMeals = User.Create("new-client@example.test", "hash");
+        var oldMeals = User.Create("old-meal-client@example.test", "hash");
+        var unrelated = User.Create("other-client@example.test", "hash");
+        var oldMeal = Meal.Create(oldMeals.Id, nowUtc.AddDays(-30));
+        context.AddRange(noMeals, oldMeals, unrelated, oldMeal, Meal.Create(unrelated.Id, nowUtc.AddDays(-1)));
+        await context.SaveChangesAsync();
+
+        var service = new AttentionSignalMetricsReadService(context);
+        IReadOnlyList<AttentionSignalMetricsReadModel> result = await service.GetAsync(
+            [noMeals.Id, oldMeals.Id], nowUtc.AddDays(-7), nowUtc);
+
+        Assert.Equal(2, result.Count);
+        AttentionSignalMetricsReadModel empty = Assert.Single(result, item => item.ClientUserId == noMeals.Id.Value);
+        AttentionSignalMetricsReadModel old = Assert.Single(result, item => item.ClientUserId == oldMeals.Id.Value);
+        Assert.Null(empty.LastMealAtUtc);
+        Assert.Equal(oldMeal.Date, old.LastMealAtUtc);
+        Assert.All(result, item => Assert.Empty(item.DailyCalories));
+    }
+
     private static FoodDiaryDbContext CreateContext() {
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))

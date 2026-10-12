@@ -182,13 +182,14 @@ export class FastingRedesignPreviewComponent {
             return 'FASTING.REDESIGN.WELLBEING_EMPTY';
         }
 
-        if (session.symptoms.length > 0 || session.checkIns.some(checkIn => checkIn.symptoms.length > 0)) {
+        const symptoms = [...session.symptoms, ...session.checkIns.flatMap(checkIn => checkIn.symptoms)];
+        if (symptoms.some(symptom => symptom !== 'good')) {
             return 'FASTING.REDESIGN.WELLBEING_SYMPTOMS';
         }
 
         const checkInScores = getWellbeingScores(session);
         if (checkInScores.length === 0) {
-            return 'FASTING.REDESIGN.WELLBEING_EMPTY';
+            return symptoms.includes('good') ? 'FASTING.REDESIGN.WELLBEING_GOOD' : 'FASTING.REDESIGN.WELLBEING_EMPTY';
         }
 
         const averageScore = checkInScores.reduce((sum, score) => sum + score, 0) / checkInScores.length;

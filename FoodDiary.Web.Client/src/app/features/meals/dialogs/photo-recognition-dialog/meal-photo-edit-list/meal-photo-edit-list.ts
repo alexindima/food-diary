@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 
+import { aiEditableItemError } from '../../../../../shared/lib/ai-photo-edit.utils';
 import type {
     EditableAiItem,
     PhotoAiEditItemDrop,
@@ -22,6 +23,8 @@ import type {
     },
 })
 export class MealPhotoEditListComponent {
+    public readonly showErrors = input(false);
+    protected readonly itemError = aiEditableItemError;
     public readonly items = input.required<EditableAiItem[]>();
     public readonly unitOptions = input.required<readonly UnitOptionView[]>();
     public readonly resolutionOptions = input.required<readonly ResolutionOptionView[]>();

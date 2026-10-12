@@ -1,5 +1,6 @@
 import type { Routes } from '@angular/router';
 
+import { editorUnsavedChangesGuard } from '../../shared/forms/editor-unsaved-changes.guard';
 import { RecipeContainerComponent } from './pages/container/recipe-container';
 import { recipeResolver } from './resolvers/recipe.resolver';
 
@@ -14,10 +15,12 @@ const routes: Routes = [
             },
             {
                 path: 'add',
+                canDeactivate: [editorUnsavedChangesGuard],
                 loadComponent: async () => import('./pages/manage/recipe-add/recipe-add').then(m => m.RecipeAddComponent),
             },
             {
                 path: ':id/edit',
+                canDeactivate: [editorUnsavedChangesGuard],
                 loadComponent: async () => import('./pages/manage/recipe-edit/recipe-edit').then(m => m.RecipeEditComponent),
                 resolve: { recipe: recipeResolver },
             },

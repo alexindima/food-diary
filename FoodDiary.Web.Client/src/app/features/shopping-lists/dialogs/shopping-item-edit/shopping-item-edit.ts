@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { disabled, form, FormField, FormRoot, maxLength, required } from '@angular/forms/signals';
+import { disabled, form, FormField, FormRoot, maxLength, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiDialogComponent, FdUiInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import type { ShoppingListDraftItem } from '../../lib/shopping-list.facade';
+import { isShoppingListAmountValid } from '../../lib/shopping-list-amount.validation';
 import { buildShoppingListUnitOptions, normalizeShoppingListUnit } from '../../lib/shopping-list-item.mapper';
 
 const ITEM_NAME_LIMIT = 256;
 const CATEGORY_LIMIT = 128;
 const NOTE_LIMIT = 512;
-const AMOUNT_LIMIT = 1_000_000;
 
 export type ShoppingItemEditData = ShoppingListDraftItem & { productId?: string | null };
 
@@ -38,15 +38,15 @@ export class ShoppingItemEditComponent {
         maxLength(path.category, CATEGORY_LIMIT);
         maxLength(path.note, NOTE_LIMIT);
         disabled(path.unit, { when: () => this.isProductLinked });
+        validate(path.amount, ({ value }) =>
+            isShoppingListAmountValid(value())
+                ? undefined
+                : { kind: 'amount', message: this.translate.instant('SHOPPING_LIST.AMOUNT_ERROR') },
+        );
     });
     protected readonly units = buildShoppingListUnitOptions(key => this.translate.instant(key));
     protected readonly valid = computed(() => {
-        const { name, amount } = this.draft();
-        return (
-            name.trim().length > 0 &&
-            !this.fields().invalid() &&
-            (amount === null || (Number.isFinite(Number(amount)) && Number(amount) > 0 && Number(amount) <= AMOUNT_LIMIT))
-        );
+        return this.draft().name.trim().length > 0 && !this.fields().invalid();
     });
     protected close(): void {
         this.ref.close();

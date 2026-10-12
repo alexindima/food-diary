@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1342,
+    "contracts": 1343,
     "ambiguousContracts": 29,
-    "consumerEdges": 10500,
-    "productionConsumerEdges": 6007,
-    "testConsumerEdges": 4493,
-    "consumedContracts": 1342,
+    "consumerEdges": 10505,
+    "productionConsumerEdges": 6008,
+    "testConsumerEdges": 4497,
+    "consumedContracts": 1343,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -2443,6 +2443,23 @@
       ],
       "definitionPaths": [
         "Modules/Cycles/Application/Commands/ClearCycleDay/ClearCycleDayCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "ClientGoalsHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Presentation/Responses/ClientGoalsHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -30947,6 +30964,45 @@
       "referenceCount": 2
     },
     {
+      "contract": "ClientGoalsHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Presentation/Responses/ClientGoalsHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/Presentation/Controllers/DietologistClientsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ClientGoalsHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Presentation/Responses/ClientGoalsHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/Presentation/Mappings/DietologistHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ClientGoalsHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Presentation/Responses/ClientGoalsHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistClientsControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "ClientSummaryHttpResponse",
       "roles": [
         "Response"
@@ -38848,7 +38904,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DietologistInvitationCurrentUserFlowTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 6
     },
     {
       "contract": "DietologistPermissionsHttpRequest",
@@ -85901,6 +85957,19 @@
         "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/WeeklyGoalCalendarValidationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IJwtTokenGenerator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/ActiveSessionManagementTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -96289,7 +96358,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DietologistInvitationCurrentUserFlowTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "InviteDietologistHttpRequest",
@@ -145463,6 +145532,19 @@
         "Modules/Identity/Presentation/Features/Auth/Requests/RegisterHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/RecipeNestedNutritionPersistenceTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RegisterHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/RegisterHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/RecipePostgresApiFlowTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -145479,6 +145561,19 @@
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/UserProfilePatchIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "RegisterHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/RegisterHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/WeeklyGoalCalendarValidationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "RegisterHttpRequest",
@@ -153574,7 +153669,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DietologistInvitationCurrentUserFlowTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 5
     },
     {
       "contract": "UpdateDietologistPermissionsHttpRequest",
@@ -157212,6 +157307,19 @@
         "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoalValidationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UpsertWeeklyGoalCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Presentation.Tests/WeeklyGoalsControllerTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -157630,20 +157738,6 @@
         "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dietologist/Presentation/Controllers/DietologistClientsController.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "UserHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
-        "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthSessionController.cs",
       "isTest": false,
       "referenceCount": 1
@@ -157703,20 +157797,6 @@
       "consumerPath": "Modules/Users/Presentation/Responses/ProfileOverviewHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
-    },
-    {
-      "contract": "UserHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
-        "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistClientsControllerTests.cs",
-      "isTest": true,
-      "referenceCount": 2
     },
     {
       "contract": "UserHttpResponse",

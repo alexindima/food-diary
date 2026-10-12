@@ -72,6 +72,41 @@ async function setupAiPhotoResultAsync(): Promise<AiPhotoResultTestContext> {
     return { component, fixture, translateService };
 }
 
+describe('AI edit invalid rows', () => {
+    it.each(['0', '-1', '', 'invalid', 'Infinity'])('keeps the last row for correction after amount %s', async amount => {
+        const { component, fixture } = await setupAiPhotoResultAsync();
+        const applied = vi.fn();
+        component.editApplied.subscribe(applied);
+        component['startEditing']();
+        component['updateEditItem'](0, 'amount', amount);
+        component['applyEditing']();
+        fixture.detectChanges();
+        expect(component['isEditing']()).toBe(true);
+        expect(component['editItems']()).toHaveLength(1);
+        expect(applied).not.toHaveBeenCalled();
+        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent).toContain(
+            'PHOTO_AI_DIALOG.ROW_INVALID',
+        );
+        component['updateEditItem'](0, 'amount', String(ORIGINAL_AMOUNT));
+        component['applyEditing']();
+        expect(applied).toHaveBeenCalledOnce();
+        expect(component['isEditing']()).toBe(false);
+    });
+
+    it('keeps an unnamed row and allows cancel to restore the original result', async () => {
+        const { component } = await setupAiPhotoResultAsync();
+        const applied = vi.fn();
+        component.editApplied.subscribe(applied);
+        component['startEditing']();
+        component['updateEditItem'](0, 'name', ' ');
+        component['applyEditing']();
+        expect(component['isEditing']()).toBe(true);
+        component['cancelEditing']();
+        expect(applied).not.toHaveBeenCalled();
+        expect(component['resolvedResults']()).toEqual(VISION_ITEMS);
+    });
+});
+
 describe('AiPhotoResultComponent localization', () => {
     it('formats total and item calories with the active language and updates them when it changes', async () => {
         const { fixture, translateService } = await setupAiPhotoResultAsync();

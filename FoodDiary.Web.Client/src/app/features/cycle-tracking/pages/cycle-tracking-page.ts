@@ -1,4 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal, untracked } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    type ElementRef,
+    inject,
+    signal,
+    untracked,
+    viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -53,8 +64,10 @@ import {
     type OvulationTestResult,
 } from '../../../shared/models/cycle.data';
 import type { CycleFactorId, MenstrualEpisodeId } from '../../../shared/models/semantics/entity-id';
+import { CurrentLocalDayService } from '../../../shared/platform/current-local-day.service';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
+import { scrollElementIntoView } from '../../../shared/ui/scroll/scroll-element-into-view';
 import { CycleExportDialogComponent, type CycleExportSelection } from '../dialogs/cycle-export-dialog/cycle-export-dialog';
 import { CycleDayFacade } from '../lib/cycle-day.facade';
 import { CycleEpisodeFacade } from '../lib/cycle-episode.facade';
@@ -125,6 +138,8 @@ const RECENT_DAY_LIMIT = 5;
 })
 export class CycleTrackingPageComponent {
     private readonly facade = inject(CycleTrackingFacade);
+    private readonly localDay = inject(CurrentLocalDayService);
+    private readonly episodeHistory = viewChild<ElementRef<HTMLDetailsElement>>('episodeHistory');
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly tourService = inject(FdTourService);
@@ -203,7 +218,7 @@ export class CycleTrackingPageComponent {
     protected readonly fertilitySignals = this.facade.fertilitySignals;
     protected readonly menstrualEpisodes = this.facade.menstrualEpisodes;
     protected readonly fertilityConsentGranted = this.facade.fertilityConsentGranted;
-    protected readonly overviewView = computed(() => buildCycleOverviewView(this.cycle(), this.appLocale()));
+    protected readonly overviewView = computed(() => buildCycleOverviewView(this.cycle(), this.appLocale(), this.localDay.today()));
     protected readonly predictionView = computed(() => buildCyclePredictionView(this.predictions(), this.appLocale()));
     protected readonly nutritionSummaryView = computed(() => buildCycleNutritionSummaryView(this.nutritionSummary(), this.appLocale()));
     protected readonly dayItems = computed(() =>
@@ -213,7 +228,9 @@ export class CycleTrackingPageComponent {
             dayNotes: this.cycle()?.dayNotes ?? [],
         }),
     );
-    protected readonly factorItems = computed(() => buildCycleFactorItems(this.factors(), this.appLocale()));
+    protected readonly factorItems = computed(() =>
+        buildCycleFactorItems(this.factors(), this.appLocale(), formatDateInputValue(this.localDay.today())),
+    );
     protected readonly observationsView = computed(() => buildCycleObservationsView(this.dayItems()));
     protected readonly hasMoreHistory = computed(() => this.dayItems().length > RECENT_DAY_LIMIT);
     protected readonly recentDayItems = computed(() =>
@@ -404,6 +421,15 @@ export class CycleTrackingPageComponent {
 
     protected toggleHistory(): void {
         this.isHistoryExpanded.update(isExpanded => !isExpanded);
+    }
+
+    protected openEpisodeHistory(): void {
+        const history = this.episodeHistory()?.nativeElement;
+        if (history !== undefined) {
+            history.open = true;
+            scrollElementIntoView(history);
+            history.querySelector('summary')?.focus();
+        }
     }
 
     protected editMenstrualEpisode(episodeId: MenstrualEpisodeId): void {

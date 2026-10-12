@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormRoot, maxLength, min, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
-import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
@@ -15,6 +15,7 @@ import type { ConfirmDeleteDialogData } from '../../../../../components/shared/c
 import { PageBodyComponent } from '../../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../../components/shared/page-header/page-header';
 import { NavigationService } from '../../../../../services/navigation.service';
+import type { UnsavedEditor } from '../../../../../shared/forms/unsaved-editor';
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
 import { getRecordProperty } from '../../../../../shared/lib/unknown-value.utils';
 import type { Product } from '../../../../../shared/models/product.data';
@@ -79,6 +80,7 @@ import { ProductNutritionEditorComponent } from '../product-nutrition-editor/pro
     imports: [
         TranslatePipe,
         FdUiHintDirective,
+        FdUiPreventUnloadDirective,
         FdUiButtonComponent,
         FdUiFormErrorComponent,
         FormRoot,
@@ -89,7 +91,7 @@ import { ProductNutritionEditorComponent } from '../product-nutrition-editor/pro
         ProductNutritionEditorComponent,
     ],
 })
-export class ProductManageFormComponent {
+export class ProductManageFormComponent implements UnsavedEditor {
     protected readonly translateService = inject(TranslateService);
     protected readonly navigationService = inject(NavigationService);
     protected readonly fdDialogService = inject(FdUiDialogService);
@@ -157,8 +159,13 @@ export class ProductManageFormComponent {
     protected nutritionMode: NutritionMode = 'base';
     private previousBaseUnit = this.productFormModel().baseUnit;
     private nutritionPortionBasis: number | null = null;
+    private confirmedNavigation = false;
+    private leaveDecision: Promise<boolean> | null = null;
 
     public constructor() {
+        this.productManageFacade.committed$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.productForm().reset(this.productFormModel());
+        });
         this.bindFormEffects();
     }
 
@@ -356,14 +363,15 @@ export class ProductManageFormComponent {
             return;
         }
 
-        if (this.hasUnsavedChanges()) {
-            const shouldLeave = await this.confirmDiscardChangesAsync();
-            if (!shouldLeave) {
-                return;
-            }
+        if (!(await this.canLeaveAsync())) {
+            return;
         }
-
-        await this.navigationService.navigateToProductListAsync();
+        this.confirmedNavigation = true;
+        try {
+            await this.navigationService.navigateToProductListAsync();
+        } finally {
+            this.confirmedNavigation = false;
+        }
     }
 
     protected async onDeleteProductAsync(): Promise<void> {
@@ -570,7 +578,21 @@ export class ProductManageFormComponent {
         }
     }
 
-    private hasUnsavedChanges(): boolean {
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public editor departure contract used by the router and parent view queries.
+    public async canLeaveAsync(): Promise<boolean> {
+        if (this.confirmedNavigation || !this.hasUnsavedChanges()) {
+            return true;
+        }
+        if (this.isSubmitting() || this.isDeleting() || this.photosUploading()) {
+            return false;
+        }
+        this.leaveDecision ??= this.confirmDiscardChangesAsync().finally(() => {
+            this.leaveDecision = null;
+        });
+        return this.leaveDecision;
+    }
+
+    protected hasUnsavedChanges(): boolean {
         return this.productForm().dirty();
     }
 

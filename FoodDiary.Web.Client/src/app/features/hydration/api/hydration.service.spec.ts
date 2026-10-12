@@ -25,21 +25,33 @@ const MOCK_ENTRY: HydrationEntry = {
     amountMl: ENTRY_AMOUNT_ML,
 };
 
+let service: HydrationService;
+let httpMock: HttpTestingController;
+beforeEach(() => {
+    TestBed.configureTestingModule({ providers: [HydrationService, provideHttpClient(), provideHttpClientTesting()] });
+    service = TestBed.inject(HydrationService);
+    httpMock = TestBed.inject(HttpTestingController);
+});
+afterEach(() => {
+    httpMock.verify();
+});
+
 describe('HydrationService', () => {
-    let service: HydrationService;
-    let httpMock: HttpTestingController;
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [HydrationService, provideHttpClient(), provideHttpClientTesting()],
+    it('deletes the exact owner entry and propagates a failure for retry', () => {
+        let failed = false;
+        service.deleteEntry(MOCK_ENTRY.id).subscribe({
+            error: () => {
+                failed = true;
+            },
         });
-        service = TestBed.inject(HydrationService);
-        httpMock = TestBed.inject(HttpTestingController);
+        const request = httpMock.expectOne(`${BASE_URL}/${MOCK_ENTRY.id}`);
+        expect(request.request.method).toBe('DELETE');
+        request.flush(null, { status: HttpStatusCode.InternalServerError, statusText: 'Failure' });
+        expect(failed).toBe(true);
     });
+});
 
-    afterEach(() => {
-        httpMock.verify();
-    });
-
+describe('HydrationService reading and additions', () => {
     it('should get daily hydration', () => {
         service.getDaily(TEST_DATE).subscribe(daily => {
             expect(daily).toEqual(MOCK_DAILY);

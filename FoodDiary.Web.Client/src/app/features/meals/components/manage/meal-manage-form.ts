@@ -17,7 +17,7 @@ import { form, FormRoot, max, min, required, validate } from '@angular/forms/sig
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
-import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
@@ -76,6 +76,8 @@ import { MealSatietyCardComponent } from './meal-satiety-card/meal-satiety-card'
 
 const MANUAL_NUTRITION_FIELDS = ['manualCalories', 'manualProteins', 'manualFats', 'manualCarbs', 'manualFiber', 'manualAlcohol'] as const;
 const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType'] as const;
+import type { UnsavedEditor } from '../../../../shared/forms/unsaved-editor';
+
 @Component({
     selector: 'fd-meal-manage-form',
     templateUrl: './meal-manage-form.html',
@@ -84,6 +86,7 @@ const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType'] as const;
     imports: [
         TranslatePipe,
         FdUiHintDirective,
+        FdUiPreventUnloadDirective,
         FdUiButtonComponent,
         FdUiLoaderComponent,
         PageBodyComponent,
@@ -96,7 +99,9 @@ const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType'] as const;
         MealNutritionSidebarComponent,
     ],
 })
-export class MealManageFormComponent {
+export class MealManageFormComponent implements UnsavedEditor {
+    private confirmedNavigation = false;
+    private leaveDecision: Promise<boolean> | null = null;
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
@@ -281,20 +286,37 @@ export class MealManageFormComponent {
     }
 
     protected async onCancelAsync(): Promise<void> {
-        if (this.mealSignalForm().dirty()) {
-            const shouldLeave = await this.mealManageFacade.confirmDiscardChangesAsync({
+        if (!(await this.canLeaveAsync())) {
+            return;
+        }
+        this.confirmedNavigation = true;
+        try {
+            await this.navigationService.navigateToMealListAsync();
+        } finally {
+            this.confirmedNavigation = false;
+        }
+    }
+
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public editor departure contract used by the router and parent view queries.
+    public async canLeaveAsync(): Promise<boolean> {
+        if (this.confirmedNavigation || !this.mealSignalForm().dirty()) {
+            return true;
+        }
+        if (this.isBusy()) {
+            return false;
+        }
+        this.leaveDecision ??= this.mealManageFacade
+            .confirmDiscardChangesAsync({
                 title: this.translateService.instant('UNSAVED_CHANGES.TITLE'),
                 message: this.translateService.instant('UNSAVED_CHANGES.MESSAGE'),
                 confirmLabel: this.translateService.instant('UNSAVED_CHANGES.DISCARD'),
                 cancelLabel: this.translateService.instant('UNSAVED_CHANGES.STAY'),
                 confirmIcon: 'logout',
+            })
+            .finally(() => {
+                this.leaveDecision = null;
             });
-            if (!shouldLeave) {
-                return;
-            }
-        }
-
-        await this.navigationService.navigateToMealListAsync();
+        return this.leaveDecision;
     }
 
     protected startMealManageTour(force = true): void {
@@ -675,6 +697,7 @@ export class MealManageFormComponent {
                 this.itemsTouchedState.reset();
                 this.updateSummary();
             }
+            this.mealSignalForm().reset(this.mealFormModel());
             await this.mealManageFacade.showSuccessToastAndRedirectAsync(Boolean(this.meal()));
         } else {
             this.handleSubmitError();

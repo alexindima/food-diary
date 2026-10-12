@@ -9,13 +9,16 @@
                 class="photo-ai-dialog__edit-input photo-ai-dialog__edit-input--name"
                 type="text"
                 [value]="item.name"
+                [attr.aria-invalid]="showErrors() && itemError(item) === 'name' ? true : null"
                 (input)="updateItem(i, 'name', nameInput.value)"
             />
             <input
                 #amountInput
                 class="photo-ai-dialog__edit-input photo-ai-dialog__edit-input--amount"
                 type="number"
+                step="any"
                 [value]="item.amount"
+                [attr.aria-invalid]="showErrors() && itemError(item) === 'amount' ? true : null"
                 (input)="updateItem(i, 'amount', amountInput.value)"
             />
             <select #unitSelect class="photo-ai-dialog__edit-select" [value]="item.unit" (change)="updateItem(i, 'unit', unitSelect.value)">
@@ -43,6 +46,11 @@
                 (click)="itemRemoved.emit(i)"
             />
         </div>
+        @if (showErrors() && itemError(item) !== null) {
+            <p role="alert" class="fd-ui-error-text fd-ui-body-sm">
+                {{ 'MEAL_MANAGE.PHOTO_AI_DIALOG.ROW_INVALID' | translate: { row: i + 1 } }}
+            </p>
+        }
     }
 </div>
 <fd-ui-button

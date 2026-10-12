@@ -1,4 +1,4 @@
-<div class="recipe-manage fd-stack" fdPageContainer>
+<div class="recipe-manage fd-stack" fdPageContainer [fdUiPreventUnload]="recipeSignalForm().dirty()">
     <fd-page-header
         class="recipe-manage__header"
         [attr.inert]="isFormLocked() ? '' : null"

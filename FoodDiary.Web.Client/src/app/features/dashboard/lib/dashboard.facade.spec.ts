@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
 import type { DashboardSnapshot } from '../../../shared/models/dashboard.data';
+import type { HydrationEntry } from '../../../shared/models/hydration.data';
 import type { FavoriteMeal, Meal } from '../../../shared/models/meal.data';
 import { calendarDate, utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
@@ -41,6 +42,11 @@ const BURNED_CALORIES = 300;
 const WEEKLY_CALORIES = 2800;
 
 const HYDRATION_AMOUNT_ML = 250;
+const CREATED_WATER_ENTRY: HydrationEntry = {
+    id: entityId<'hydration-entry'>('water-created'),
+    timestampUtc: utcInstant('2026-03-15T12:00:00Z'),
+    amountMl: HYDRATION_AMOUNT_ML,
+};
 const SECOND_HYDRATION_AMOUNT_ML = 150;
 const TDEE_TARGET = 2300;
 const DEFAULT_SNAPSHOT_CALORIES = 1200;
@@ -299,7 +305,7 @@ describe('DashboardFacade loading (4)', () => {
 describe('DashboardFacade actions', () => {
     it('keeps water controls busy until the refreshed total arrives', () => {
         const { facade, hydrationService, dashboardService, snapshot } = setupFacade();
-        const write = new Subject<void>();
+        const write = new Subject<HydrationEntry>();
         const refresh = new Subject<DashboardSnapshot>();
         hydrationService.addEntry.mockReturnValueOnce(write);
         dashboardService.getSnapshotSilentlyStrict.mockReturnValueOnce(refresh);
@@ -308,7 +314,7 @@ describe('DashboardFacade actions', () => {
         expect(facade.isHydrationLoading()).toBe(true);
         facade.addHydration(HYDRATION_AMOUNT_ML);
         expect(hydrationService.addEntry).toHaveBeenCalledTimes(1);
-        write.next();
+        write.next(CREATED_WATER_ENTRY);
         write.complete();
         expect(facade.isHydrationLoading()).toBe(true);
         facade.addHydration(HYDRATION_AMOUNT_ML);
@@ -679,7 +685,7 @@ describe('DashboardFacade view data (2)', () => {
     });
     it('cancels a pending water write when the page is destroyed', () => {
         const { facade, hydrationService, dashboardService } = setupFacade();
-        const pending = new Subject<void>();
+        const pending = new Subject<HydrationEntry>();
         hydrationService.addEntry.mockReturnValueOnce(pending);
         facade.initialize();
         facade.addHydration(HYDRATION_AMOUNT_ML);
@@ -782,6 +788,54 @@ describe('Dashboard asynchronous TDEE persistence', () => {
     });
 });
 
+describe('Dashboard water undo', () => {
+    it('removes only the last created entry and offers the previous one next', () => {
+        const { facade, hydrationService } = setupFacade();
+        const second = { ...CREATED_WATER_ENTRY, id: entityId<'hydration-entry'>('water-second'), amountMl: SECOND_HYDRATION_AMOUNT_ML };
+        hydrationService.addEntry.mockReturnValueOnce(of(CREATED_WATER_ENTRY)).mockReturnValueOnce(of(second));
+        facade.initialize();
+        facade.addHydration(HYDRATION_AMOUNT_ML);
+        facade.addHydration(SECOND_HYDRATION_AMOUNT_ML);
+        expect(facade.lastHydrationUndo()).toEqual(second);
+        facade.undoHydration();
+        expect(hydrationService.deleteEntry).toHaveBeenLastCalledWith(second.id);
+        expect(facade.lastHydrationUndo()).toEqual(CREATED_WATER_ENTRY);
+        facade.undoHydration();
+        expect(hydrationService.deleteEntry).toHaveBeenLastCalledWith(CREATED_WATER_ENTRY.id);
+        expect(facade.lastHydrationUndo()).toBeNull();
+    });
+
+    it('prevents double undo and retains the entry for retry after a failed request', () => {
+        const { facade, hydrationService } = setupFacade();
+        facade.initialize();
+        facade.addHydration(HYDRATION_AMOUNT_ML);
+        const pending = new Subject<void>();
+        hydrationService.deleteEntry.mockReturnValueOnce(pending);
+        facade.undoHydration();
+        facade.undoHydration();
+        expect(hydrationService.deleteEntry).toHaveBeenCalledOnce();
+        pending.error(new Error('Connection lost'));
+        expect(facade.lastHydrationUndo()).toEqual(CREATED_WATER_ENTRY);
+        expect(facade.isHydrationLoading()).toBe(false);
+        facade.undoHydration();
+        expect(hydrationService.deleteEntry).toHaveBeenCalledTimes(2);
+        expect(facade.lastHydrationUndo()).toBeNull();
+    });
+
+    it('keeps undo scoped to the selected day when navigating the dashboard', () => {
+        const { facade } = setupFacade();
+        facade.initialize();
+        const addedDay = new Date(facade.selectedDate());
+        facade.addHydration(HYDRATION_AMOUNT_ML);
+        const anotherDay = new Date(addedDay);
+        anotherDay.setDate(anotherDay.getDate() - 1);
+        facade.setSelectedDate(anotherDay);
+        expect(facade.lastHydrationUndo()).toBeNull();
+        facade.setSelectedDate(addedDay);
+        expect(facade.lastHydrationUndo()).toEqual(CREATED_WATER_ENTRY);
+    });
+});
+
 function setupFacade(): {
     facade: DashboardFacade;
     dashboardService: {
@@ -789,7 +843,7 @@ function setupFacade(): {
         getSnapshotSilentlyStrict: ReturnType<typeof vi.fn>;
     };
     goalsService: { updateGoals: ReturnType<typeof vi.fn> };
-    hydrationService: { addEntry: ReturnType<typeof vi.fn> };
+    hydrationService: { addEntry: ReturnType<typeof vi.fn>; deleteEntry: ReturnType<typeof vi.fn> };
     layout: { initializeLayout: ReturnType<typeof vi.fn>; updateViewportWidth: ReturnType<typeof vi.fn> };
     snapshot: DashboardSnapshot;
     translateService: {
@@ -804,7 +858,7 @@ function setupFacade(): {
         getSnapshotSilentlyStrict: vi.fn(() => of(snapshot)),
     };
     const goalsService = { updateGoals: vi.fn(() => of(void 0)) };
-    const hydrationService = { addEntry: vi.fn(() => of(void 0)) };
+    const hydrationService = { addEntry: vi.fn(() => of(CREATED_WATER_ENTRY)), deleteEntry: vi.fn(() => of(void 0)) };
     const layout = { initializeLayout: vi.fn(), updateViewportWidth: vi.fn() };
     const translateService = {
         getCurrentLang: vi.fn(() => 'en'),

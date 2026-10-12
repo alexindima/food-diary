@@ -322,6 +322,14 @@ describe('cycle tracking prediction mapper', () => {
 });
 
 describe('cycle tracking prediction v2 mapper', () => {
+    it.each([
+        ['ambiguous_episode_history', 'CYCLE_TRACKING.PREDICTIONS_AMBIGUOUS'],
+        ['prediction_paused_by_state', 'CYCLE_TRACKING.PREDICTIONS_PAUSED'],
+        ['unknown_future_reason', 'CYCLE_TRACKING.PREDICTIONS_LIMITED'],
+    ])('explains %s separately from insufficient history', (reason, key) => {
+        const view = buildCyclePredictionView({ confidence: 'Low', rationale: '', reasonCodes: [reason] }, 'ru');
+        expect(view?.limitedReasonKey).toBe(key);
+    });
     it('shows a learning state when completed cycle history is insufficient', () => {
         const view = buildCyclePredictionView(
             {

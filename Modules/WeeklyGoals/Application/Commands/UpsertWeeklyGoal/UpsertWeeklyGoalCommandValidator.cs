@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.WeeklyGoals.Application.Common;
 
 namespace FoodDiary.Modules.WeeklyGoals.Application.Commands.UpsertWeeklyGoal;
@@ -11,7 +12,12 @@ public sealed class UpsertWeeklyGoalCommandValidator : AbstractValidator<UpsertW
             .Must(static value => value.DayOfWeek == DayOfWeek.Monday)
             .WithMessage("Week start must be a Monday.");
         RuleFor(command => command.WeekStart)
-            .Must(value => WeeklyGoalWeekPolicy.CanWrite(value, timeProvider.GetUtcNow().UtcDateTime))
+            .Must((command, value) => {
+                TimeZoneInfo? timeZone = LocalCalendar.TryResolve(command.TimeZoneId, offsetMinutes: null, out TimeZoneInfo resolvedZone)
+                    ? resolvedZone
+                    : null;
+                return WeeklyGoalWeekPolicy.CanWrite(value, timeProvider.GetUtcNow().UtcDateTime, timeZone);
+            })
             .WithMessage("A weekly goal can be changed only for an adjacent current week.");
         RuleFor(command => command.TargetDays)
             .Must(static value => SupportedTargets.Contains(value))

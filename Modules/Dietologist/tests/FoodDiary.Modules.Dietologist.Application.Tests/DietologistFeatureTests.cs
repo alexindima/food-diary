@@ -17,7 +17,6 @@ using FoodDiary.Modules.Dietologist.Application.Commands.InviteDietologist;
 using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Modules.Dashboard.Application.Services;
 using FoodDiary.Modules.Dietologist.Application.Common;
-using FoodDiary.Modules.Dietologist.Application.Mappings;
 using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Modules.Dashboard.Application.Queries.GetDietologistClientDashboard;
 using FoodDiary.Modules.Dietologist.Application.Queries.GetClientGoals;
@@ -135,22 +134,22 @@ public partial class DietologistFeatureTests {
         IUserDietologistProfileReadService userLookupService = Substitute.For<IUserDietologistProfileReadService>();
         userLookupService.FindByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(profile);
         IUserProfileReadService profileReadService = Substitute.For<IUserProfileReadService>();
-        profileReadService.GetUserAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Result.Success(user.ToModel()));
-        profileReadService.GetUserAsync(Arg.Is<UserId>(id => id != user.Id), Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<UserModel>(AuthenticationErrors.InvalidToken));
+        profileReadService.GetGoalsAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Result.Success(user.ToGoalsModel()));
+        profileReadService.GetGoalsAsync(Arg.Is<UserId>(id => id != user.Id), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<GoalsModel>(AuthenticationErrors.InvalidToken));
         var service = new DietologistUserContextService(
             Substitute.For<ICurrentUserAccessService>(),
             userLookupService,
             profileReadService);
 
         string? email = await service.GetUserEmailByIdAsync(user.Id, CancellationToken.None);
-        Result<UserModel> model = await service.GetUserModelByIdAsync(user.Id, CancellationToken.None);
-        Result<UserModel> missing = await service.GetUserModelByIdAsync(UserId.New(), CancellationToken.None);
+        Result<GoalsModel> model = await service.GetGoalsByIdAsync(user.Id, CancellationToken.None);
+        Result<GoalsModel> missing = await service.GetGoalsByIdAsync(UserId.New(), CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.Equal(user.Email, email),
             () => ResultAssert.Success(model),
-            () => Assert.Equal(user.Email, model.Value.Email),
+            () => Assert.Equal(user.DailyCalorieTarget, model.Value.DailyCalorieTarget),
             () => ResultAssert.Failure(missing, "Dietologist.AccessDenied"));
     }
 
@@ -583,13 +582,13 @@ public partial class DietologistFeatureTests {
             return user?.Email;
         }
 
-        public async Task<Result<UserModel>> GetUserModelByIdAsync(
+        public async Task<Result<GoalsModel>> GetGoalsByIdAsync(
             UserId userId,
             CancellationToken cancellationToken) {
             User? user = await GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
             return user is null
-                ? Result.Failure<UserModel>(DietologistErrors.AccessDenied)
-                : Result.Success(user.ToModel());
+                ? Result.Failure<GoalsModel>(DietologistErrors.AccessDenied)
+                : Result.Success(user.ToGoalsModel());
         }
 
         public async Task<UserDietologistProfileModel?> FindByEmailAsync(string email, CancellationToken cancellationToken) {
@@ -683,13 +682,13 @@ public partial class DietologistFeatureTests {
             return user?.Email;
         }
 
-        public async Task<Result<UserModel>> GetUserModelByIdAsync(
+        public async Task<Result<GoalsModel>> GetGoalsByIdAsync(
             UserId userId,
             CancellationToken cancellationToken) {
             User? user = await GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
             return user is null
-                ? Result.Failure<UserModel>(DietologistErrors.AccessDenied)
-                : Result.Success(user.ToModel());
+                ? Result.Failure<GoalsModel>(DietologistErrors.AccessDenied)
+                : Result.Success(user.ToGoalsModel());
         }
 
         public async Task<UserDietologistProfileModel?> FindByEmailAsync(string email, CancellationToken cancellationToken) {

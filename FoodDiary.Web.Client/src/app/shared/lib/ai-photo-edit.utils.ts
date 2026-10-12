@@ -102,6 +102,16 @@ export function normalizeAiEditableItems(edited: readonly AiEditableFoodItem[]):
     });
 }
 
+export function aiEditableItemError(item: AiEditableFoodItem): 'name' | 'amount' | 'unit' | null {
+    if (item.name.trim().length === 0) {
+        return 'name';
+    }
+    if (!Number.isFinite(item.amount) || item.amount <= 0) {
+        return 'amount';
+    }
+    return item.unit.trim().length === 0 ? 'unit' : null;
+}
+
 export function requiresAiNutritionRecalculation(source: readonly AiEditableFoodItem[], edited: readonly AiEditableFoodItem[]): boolean {
     const sourceById = new Map(source.map(item => [item.id, item]));
 

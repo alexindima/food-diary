@@ -77,13 +77,14 @@ it('loads the complete recipe before opening the quick meal flow', async () => {
     };
     const response = new Subject<Recipe>();
     recipes.getById.mockReturnValue(response);
-    const adding = facade.addToDiaryAsync(entityId<'recipe'>('recipe'));
+    const chosenServings = 0.5;
+    const adding = facade.addToDiaryAsync(entityId<'recipe'>('recipe'), chosenServings);
     expect(recipes.getById).toHaveBeenCalledWith('recipe');
     expect(quickMeal.addRecipe).not.toHaveBeenCalled();
     response.next(recipe);
     response.complete();
     await adding;
-    expect(quickMeal.addRecipe).toHaveBeenCalledWith(recipe);
+    expect(quickMeal.addRecipe).toHaveBeenCalledWith(recipe, chosenServings);
 });
 
 it('does not open the quick meal flow for an unavailable recipe', async () => {

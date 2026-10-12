@@ -144,7 +144,7 @@ async function setupAiInputBarAsync(
                 provide: UserFacade,
                 useValue: userFacade,
             },
-            { provide: AuthService, useValue: { isPremium: signal(options.isPremium ?? true) } },
+            { provide: AuthService, useValue: { isPremium: signal(options.isPremium ?? true), getUserId: (): string => 'ai-draft-user' } },
             { provide: LocalizationService, useValue: { getCurrentLanguage: (): string => 'en' } },
             { provide: NavigationService, useValue: navigationService },
             { provide: FdUiDialogService, useValue: dialogService },
@@ -303,6 +303,16 @@ describe('AiInputBarComponent speech recovery', () => {
 });
 
 describe('AiInputBarComponent speech ownership', () => {
+    it('restores typed text after the Premium action destroys and remounts the input', async () => {
+        const { component, fixture, navigationService, aiFoodService } = await setupAiInputBarAsync('create', { isPremium: false });
+        component['voiceText'].set('  Два яйца и чай  ');
+        await component['submitTextAsync']();
+        expect(navigationService.navigateToPremiumAccessAsync).toHaveBeenCalledOnce();
+        expect(aiFoodService.parseFoodText).not.toHaveBeenCalled();
+        fixture.destroy();
+        const returned = TestBed.createComponent(AiInputBarComponent);
+        expect(returned.componentInstance['voiceText']()).toBe('  Два яйца и чай  ');
+    });
     it('disables only another microphone and preserves the owner recording through unrelated cleanup', async () => {
         const { component, fixture, speechRecognition } = await setupAiInputBarAsync('emit', { speechSupported: true });
         const otherInput = TestBed.createComponent(AiInputBarComponent);

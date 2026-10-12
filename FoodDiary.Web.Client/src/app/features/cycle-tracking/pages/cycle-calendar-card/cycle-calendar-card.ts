@@ -4,6 +4,7 @@ import { FdUiCalendarComponent, type FdUiCalendarMarker } from 'fd-ui-kit';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
 import type { CycleResponse } from '../../../../shared/models/cycle.data';
+import { CurrentLocalDayService } from '../../../../shared/platform/current-local-day.service';
 import { toCycleDateKey } from '../../lib/cycle-tracking.mapper';
 
 const DAY_MILLISECONDS = 86_400_000;
@@ -29,7 +30,7 @@ export class CycleCalendarCardComponent {
     public readonly locale = input.required<string>();
     public readonly dateSelected = output<string>();
 
-    protected readonly today = new Date();
+    protected readonly today = inject(CurrentLocalDayService).today;
     protected readonly trackingStartDate = computed(() => new Date(this.cycle().trackingStartDate));
     protected readonly markers = computed<readonly FdUiCalendarMarker[]>(() => {
         this.locale();

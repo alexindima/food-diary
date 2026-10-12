@@ -79,6 +79,7 @@
                         @if (isEditing()) {
                             <fd-ai-photo-edit-list
                                 [items]="editItems()"
+                                [showErrors]="editAttempted()"
                                 [unitOptions]="editUnitOptions()"
                                 (itemDropped)="reorderEditItems($event)"
                                 (itemUpdated)="updateEditItemFromView($event)"

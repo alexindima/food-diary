@@ -51,6 +51,39 @@ afterEach(() => {
 });
 
 describe('DietologistService relationship reads', () => {
+    it('keeps only goal fields from legacy responses and preserves explicit zero targets', () => {
+        service.getClientGoals(entityId<'user'>('client-1')).subscribe(goals => {
+            expect(goals).toEqual({
+                id: 'client-1',
+                dailyCalorieTarget: 2100,
+                proteinTarget: 0,
+                fatTarget: null,
+                carbTarget: null,
+                fiberTarget: null,
+                waterGoal: 1800,
+                hydrationGoal: 2600,
+                desiredWeightKg: null,
+                desiredWaistCm: null,
+                stepGoal: 6000,
+            });
+        });
+        const request = httpMock.expectOne(`${BASE_URL}/clients/client-1/goals`);
+        request.flush({
+            id: 'client-1',
+            dailyCalorieTarget: 2100,
+            proteinTarget: 0,
+            waterGoal: 1800,
+            hydrationGoal: 2600,
+            stepGoal: 6000,
+            email: 'private@example.test',
+            birthDate: '2001-01-01',
+            firstName: 'Private',
+            heightCm: 182,
+            aiConsentAcceptedAt: '2026-10-01T00:00:00Z',
+            hasPassword: true,
+        });
+    });
+
     it('gets relationship and current-user invitation', () => {
         service.getRelationship().subscribe();
         const relationshipReq = httpMock.expectOne(`${BASE_URL}/relationship`);

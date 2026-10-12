@@ -13,6 +13,24 @@ const FULL_LEVEL = '100%';
 const VALID_ADD_AMOUNT_ML = 250;
 
 describe('HydrationCardComponent', () => {
+    it('offers undo for the recorded entry even after switching to a past day and locks it while updating', async () => {
+        const { component, fixture } = await setupComponentAsync({ canAdd: false });
+        fixture.componentRef.setInput('undoAmount', VALID_ADD_AMOUNT_ML);
+        fixture.detectChanges();
+        const undo = vi.fn();
+        component.undoClick.subscribe(undo);
+        const button = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.hydration-card__undo button');
+        button?.click();
+        expect(undo).toHaveBeenCalledOnce();
+        fixture.componentRef.setInput('isLoading', true);
+        fixture.detectChanges();
+        expect(button?.disabled).toBe(true);
+        button?.click();
+        expect(undo).toHaveBeenCalledOnce();
+    });
+});
+
+describe('HydrationCardComponent amount and progress', () => {
     it('disables all additions while saving', async () => {
         const { component, fixture } = await setupComponentAsync({ isLoading: true });
         const add = vi.fn();

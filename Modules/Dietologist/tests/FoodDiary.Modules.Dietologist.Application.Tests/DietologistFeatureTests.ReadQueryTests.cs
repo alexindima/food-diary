@@ -662,7 +662,7 @@ public partial class DietologistFeatureTests {
     public async Task GetClientGoals_WithNullUserId_ReturnsFailure() {
         GetClientGoalsQueryHandler handler = CreateGetClientGoalsHandler();
 
-        Result<UserModel> result = await handler.Handle(
+        Result<ClientGoalsModel> result = await handler.Handle(
             new GetClientGoalsQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -672,7 +672,7 @@ public partial class DietologistFeatureTests {
     public async Task GetClientGoals_WhenNoAccess_ReturnsFailure() {
         GetClientGoalsQueryHandler handler = CreateGetClientGoalsHandler();
 
-        Result<UserModel> result = await handler.Handle(
+        Result<ClientGoalsModel> result = await handler.Handle(
             new GetClientGoalsQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -682,7 +682,7 @@ public partial class DietologistFeatureTests {
     public async Task GetClientGoals_WhenDietologistEmailLookupFails_ReturnsFailure() {
         var service = new GetClientGoalsQueryHandler(new InMemoryInvitationRepository(), new InMemoryUserRepository(), new InMemoryUserRepository());
 
-        Result<UserModel> result = await service.Handle(new GetClientGoalsQuery(UserId.New().Value, Guid.NewGuid()), CancellationToken.None);
+        Result<ClientGoalsModel> result = await service.Handle(new GetClientGoalsQuery(UserId.New().Value, Guid.NewGuid()), CancellationToken.None);
 
         ResultAssert.Failure(result);
     }
@@ -694,7 +694,7 @@ public partial class DietologistFeatureTests {
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
         var service = new GetClientGoalsQueryHandler(new InMemoryInvitationRepository(), userRepo, userRepo);
 
-        Result<UserModel> result = await service.Handle(new GetClientGoalsQuery(dietologistId.Value, Guid.Empty), CancellationToken.None);
+        Result<ClientGoalsModel> result = await service.Handle(new GetClientGoalsQuery(dietologistId.Value, Guid.Empty), CancellationToken.None);
 
         ResultAssert.Failure(result);
     }
@@ -708,7 +708,7 @@ public partial class DietologistFeatureTests {
         userRepo.Seed(CreateUser(clientId, "client-no-relationship@example.com"));
         GetClientGoalsQueryHandler handler = CreateGetClientGoalsHandler(userRepository: userRepo);
 
-        Result<UserModel> result = await handler.Handle(
+        Result<ClientGoalsModel> result = await handler.Handle(
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -728,7 +728,7 @@ public partial class DietologistFeatureTests {
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
         GetClientGoalsQueryHandler handler = CreateGetClientGoalsHandler(invRepo, userRepo);
 
-        Result<UserModel> result = await handler.Handle(
+        Result<ClientGoalsModel> result = await handler.Handle(
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -749,7 +749,7 @@ public partial class DietologistFeatureTests {
 
         GetClientGoalsQueryHandler handler = CreateGetClientGoalsHandler(invRepo, userRepo);
 
-        Result<UserModel> result = await handler.Handle(
+        Result<ClientGoalsModel> result = await handler.Handle(
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
 
         ResultAssert.Success(result);
@@ -768,7 +768,7 @@ public partial class DietologistFeatureTests {
 
         GetClientGoalsQueryHandler handler = CreateGetClientGoalsHandler(invRepo, userRepo);
 
-        Result<UserModel> result = await handler.Handle(
+        Result<ClientGoalsModel> result = await handler.Handle(
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -787,7 +787,7 @@ public partial class DietologistFeatureTests {
 
         GetClientGoalsQueryHandler handler = CreateGetClientGoalsHandler(invRepo, userRepo);
 
-        Result<UserModel> result = await handler.Handle(
+        Result<ClientGoalsModel> result = await handler.Handle(
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
 
         ResultAssert.Failure(result);

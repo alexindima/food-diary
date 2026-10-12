@@ -12,6 +12,7 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import type { AttentionSignal, BulkRecommendationResult } from '../../../../shared/models/dietologist.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId, optionalEntityId } from '../../../../shared/models/semantics/entity-id';
+import { BulkRecommendationReviewComponent } from '../../dialogs/bulk-recommendation-review/bulk-recommendation-review';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 import { createClient } from './dietologist-clients-lib/dietologist-clients.test-data';
 import { DietologistClientsPageComponent } from './dietologist-clients-page';
@@ -151,6 +152,52 @@ function prepareBulkRecommendation(): void {
     component['toggleClientSelection'](entityId<'user'>('client-2'), true);
     component['bulkModel'].set({ text: 'QA recommendation' });
 }
+
+describe('Dietologist bulk recommendation preview', () => {
+    it('reviews recipient identities and sends the exact snapshot despite changes behind the dialog', () => {
+        prepareBulkRecommendation();
+        const confirmation = new Subject<boolean>();
+        dialogService.open.mockReturnValue({ afterClosed: () => confirmation });
+        dietologistService.bulkCreateRecommendations.mockReturnValue(
+            of({
+                idempotencyKey: 'key',
+                recipients: [bulkRecipient('client-1', true), bulkRecipient('client-2', true)],
+            }),
+        );
+        component['sendBulkRecommendation']();
+        component['sendBulkRecommendation']();
+        expect(dialogService.open).toHaveBeenCalledOnce();
+        expect(dialogService.open).toHaveBeenCalledWith(BulkRecommendationReviewComponent, {
+            preset: 'form',
+            data: {
+                text: 'QA recommendation',
+                recipients: [
+                    { id: 'client-1', label: 'Alex Ivanov', email: 'client@example.com' },
+                    { id: 'client-2', label: 'Alex Ivanov', email: 'client@example.com' },
+                ],
+            },
+        });
+        expect(dietologistService.bulkCreateRecommendations).not.toHaveBeenCalled();
+        component['bulkModel'].set({ text: 'Changed draft' });
+        component['selectedClientIds'].set(new Set());
+        confirmation.next(true);
+        confirmation.complete();
+        expect(dietologistService.bulkCreateRecommendations).toHaveBeenCalledWith(
+            ['client-1', 'client-2'],
+            'QA recommendation',
+            expect.any(String),
+        );
+    });
+
+    it('keeps the draft and sends nothing after cancellation', () => {
+        prepareBulkRecommendation();
+        dialogService.open.mockReturnValue({ afterClosed: () => of(false) });
+        component['sendBulkRecommendation']();
+        expect(dietologistService.bulkCreateRecommendations).not.toHaveBeenCalled();
+        expect(component['bulkModel']().text).toBe('QA recommendation');
+        expect(component['selectedClientIds']().size).toBe(2);
+    });
+});
 
 describe('Dietologist attention action pending state', () => {
     it.each(['success', 'error'] as const)('blocks conflicting attention actions while pending and recovers after %s', outcome => {

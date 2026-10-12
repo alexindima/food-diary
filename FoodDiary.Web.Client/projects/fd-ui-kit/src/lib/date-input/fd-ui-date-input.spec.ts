@@ -1,4 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
@@ -111,12 +112,59 @@ describe('FdUiDateInputComponent', () => {
     });
 
     registerLabelTests();
+    registerLocalizedInputTests();
     registerManualInputValidationTests();
     registerValueAccessorTests();
     registerStateTests();
     registerCalendarFocusTests();
     registerInteractionTests();
 });
+
+function registerLocalizedInputTests(): void {
+    describe('localized manual entry', () => {
+        it('uses one calendar button, validates Russian input and preserves the previous date on an invalid draft', () => {
+            fixture.componentRef.setInput('allowManualInput', true);
+            fixture.componentRef.setInput('manualInputFormat', 'localized');
+            fixture.componentRef.setInput('max', '2026-09-30');
+            TestBed.inject(TranslateService).use('ru').subscribe();
+            fixture.detectChanges();
+            const input = requireInputElement('input');
+            expect(input.type).toBe('text');
+            expect(input.placeholder).toBe('DD.MM.YYYY');
+            expect(host().querySelectorAll('button[aria-haspopup="dialog"]')).toHaveLength(1);
+            input.value = '15.06.1995';
+            input.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+            expect(component.value()).toBe('1995-06-15');
+            input.value = '31.02.1995';
+            input.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+            expect(component.value()).toBe('1995-06-15');
+            expect(input.value).toBe('31.02.1995');
+            expect(input.getAttribute('aria-invalid')).toBe('true');
+            input.value = '16.06.1995';
+            input.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+            expect(component.value()).toBe('1995-06-16');
+            input.value = '';
+            input.dispatchEvent(new Event('input'));
+            expect(component.value()).toBeNull();
+        });
+
+        it('reformats the same calendar day when the application language changes', () => {
+            fixture.componentRef.setInput('allowManualInput', true);
+            fixture.componentRef.setInput('manualInputFormat', 'localized');
+            fixture.componentRef.setInput('value', '1995-06-15');
+            TestBed.inject(TranslateService).use('ru').subscribe();
+            fixture.detectChanges();
+            expect(requireInputElement('input').value).toBe('15.06.1995');
+            TestBed.inject(TranslateService).use('en').subscribe();
+            fixture.detectChanges();
+            expect(requireInputElement('input').value).toBe('06/15/1995');
+            expect(component.value()).toBe('1995-06-15');
+        });
+    });
+}
 
 function registerManualInputValidationTests(): void {
     describe('manual input validation state', () => {

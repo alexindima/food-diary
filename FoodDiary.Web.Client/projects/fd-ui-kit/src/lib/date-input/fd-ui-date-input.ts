@@ -20,6 +20,7 @@ import { map, of } from 'rxjs';
 
 import { FdUiCalendarComponent } from '../calendar/fd-ui-calendar';
 import { fdUiFormatDateInputValue, fdUiParseLocalDate, fdUiStartOfLocalDay } from '../date/fd-ui-date.utils';
+import { fdUiLocalizedDateHint, fdUiParseLocalizedDate } from '../date/fd-ui-localized-date.utils';
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
 import type { FdUiFieldSize } from '../types/field-size.type';
 
@@ -43,6 +44,8 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         initialValue: this.translateService?.getCurrentLang() ?? this.locale,
     });
     public readonly allowManualInput = input(false);
+    public readonly manualInputFormat = input<'native' | 'localized'>('native');
+    protected readonly isLocalizedInput = computed(() => this.allowManualInput() && this.manualInputFormat() === 'localized');
     public readonly id = input(`fd-ui-date-input-${uniqueId++}`);
     public readonly label = input<string>();
     public readonly clearAriaLabel = input<string>();
@@ -73,6 +76,9 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
 
     protected readonly sizeClass = computed(() => `fd-ui-date-input--size-${this.size()}`);
     protected readonly hasError = computed(() => {
+        if (this.invalidManualDate()) {
+            return true;
+        }
         const error = this.fieldError();
 
         return error !== null && error !== undefined && error.trim().length > 0;
@@ -85,7 +91,13 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
             `fd-ui-date-input ${this.sizeClass()}${this.hasError() ? ' fd-ui-date-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-date-input--floating' : ''}`,
     );
     protected readonly shouldShowPlaceholder = computed(() => (this.isFocused() || this.isOpen()) && this.internalValue() === null);
-    protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? null) : null));
+    protected readonly placeholderAttribute = computed(() =>
+        this.isLocalizedInput()
+            ? (this.placeholder() ?? fdUiLocalizedDateHint(this.language()))
+            : this.shouldShowPlaceholder()
+              ? (this.placeholder() ?? null)
+              : null,
+    );
     protected readonly displayValue = computed(() => {
         const value = this.internalValue();
         if (value === null) {
@@ -130,14 +142,19 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
 
     protected readonly manualValue = computed(() => {
         const value = this.internalValue();
-        return value === null ? '' : fdUiFormatDateInputValue(value);
+        if (value === null) {
+            return '';
+        }
+        return this.isLocalizedInput()
+            ? new Intl.DateTimeFormat(this.language(), { day: '2-digit', month: '2-digit', year: 'numeric' }).format(value)
+            : fdUiFormatDateInputValue(value);
     });
     protected onManualInput(event: Event): void {
         const target = event.target;
         if (!(target instanceof HTMLInputElement)) {
             return;
         }
-        const parsed = fdUiParseLocalDate(target.value);
+        const parsed = this.parseManualDate(target.value);
         const min = this.minDate();
         const max = this.maxDate();
         if (parsed !== null && target.validity.valid && (min === null || parsed >= min) && (max === null || parsed <= max)) {
@@ -264,6 +281,10 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
 
     private stripTime(date: Date): Date {
         return fdUiStartOfLocalDay(date);
+    }
+
+    private parseManualDate(value: string): Date | null {
+        return this.isLocalizedInput() ? fdUiParseLocalizedDate(value, this.language()) : fdUiParseLocalDate(value);
     }
 
     private isToday(date: Date): boolean {

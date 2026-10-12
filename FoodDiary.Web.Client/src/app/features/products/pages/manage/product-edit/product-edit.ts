@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, viewChild } from '@angular/core';
 
+import type { UnsavedEditor } from '../../../../../shared/forms/unsaved-editor';
 import type { Product } from '../../../../../shared/models/product.data';
 import { ProductManageFormComponent } from '../../../components/manage/product-manage-form/product-manage-form';
 
@@ -10,6 +11,12 @@ import { ProductManageFormComponent } from '../../../components/manage/product-m
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [ProductManageFormComponent],
 })
-export class ProductEditComponent {
+export class ProductEditComponent implements UnsavedEditor {
+    private readonly editor = viewChild(ProductManageFormComponent);
     public readonly product = input<Product | null>(null);
+
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public editor departure contract used by the router and parent view queries.
+    public async canLeaveAsync(): Promise<boolean> {
+        return this.editor()?.canLeaveAsync() ?? true;
+    }
 }

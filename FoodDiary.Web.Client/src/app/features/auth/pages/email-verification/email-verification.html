@@ -26,10 +26,16 @@
                 <fd-ui-button type="button" variant="secondary" fill="outline" [fullWidth]="true" [loading]="isBusy()" (click)="onRetry()">
                     {{ 'AUTH.VERIFY.RETRY' | translate }}
                 </fd-ui-button>
-            } @else if (state() === 'invalid') {
-                <fd-ui-button type="button" variant="secondary" fill="outline" [fullWidth]="true" (click)="onBackToLogin()">
-                    {{ 'AUTH.VERIFY.BACK_TO_LOGIN' | translate }}
+            }
+            @if (state() === 'error' || state() === 'invalid') {
+                <fd-ui-button type="button" variant="primary" [fullWidth]="true" (click)="onRequestNewLink()">
+                    {{ (isBackupEmail() ? 'AUTH.VERIFY.BACK_TO_LOGIN' : 'AUTH.VERIFY.REQUEST_NEW_LINK') | translate }}
                 </fd-ui-button>
+                @if (!isBackupEmail()) {
+                    <fd-ui-button type="button" variant="secondary" fill="outline" [fullWidth]="true" (click)="onBackToLogin()">
+                        {{ 'AUTH.VERIFY.BACK_TO_LOGIN' | translate }}
+                    </fd-ui-button>
+                }
             }
         </div>
     </fd-ui-card>

@@ -3,7 +3,7 @@ import { DestroyRef, inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -19,6 +19,8 @@ import type { ProductDeleteResult } from './product-manage.types';
 
 @Injectable()
 export class ProductManageFacade {
+    private readonly committed = new Subject<void>();
+    public readonly committed$ = this.committed.asObservable();
     private readonly destroyRef = inject(DestroyRef);
     private createdProductForRetry: Product | null = null;
     private readonly productService = inject(ProductService);
@@ -74,6 +76,7 @@ export class ProductManageFacade {
 
         try {
             await firstValueFrom(this.productService.deleteById(product.id));
+            this.committed.next();
             await this.navigationService.navigateToProductListAsync();
             return 'deleted';
         } catch {
@@ -96,6 +99,9 @@ export class ProductManageFacade {
 
             this.rememberCreatedProduct(product, savedProduct);
             const afterSaveError = await this.runAfterSaveAsync(savedProduct, afterSave);
+            if (afterSaveError === null) {
+                this.committed.next();
+            }
 
             if (!skipPostSaveRedirect && afterSaveError === null) {
                 this.toastService.success(

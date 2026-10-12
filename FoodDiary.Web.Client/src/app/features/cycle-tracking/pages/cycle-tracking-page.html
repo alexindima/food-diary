@@ -167,8 +167,8 @@
                                                 | translate
                                                     : {
                                                           samples: prediction.calibrationSampleCount,
-                                                          coverage: prediction.historicalCoveragePercent ?? 'â€”',
-                                                          error: prediction.meanAbsoluteErrorDays ?? 'â€”',
+                                                          coverage: prediction.historicalCoveragePercent ?? '—',
+                                                          error: prediction.meanAbsoluteErrorDays ?? '—',
                                                       }
                                         }}
                                     </p>
@@ -184,12 +184,15 @@
                                     <strong class="fd-ui-title-sm">{{ prediction.limitedReasonKey ?? '' | translate }}</strong>
                                     <p class="fd-ui-body-sm">
                                         {{
-                                            (prediction.limitedReasonKey === 'CYCLE_TRACKING.PREDICTIONS_LEARNING'
-                                                ? 'CYCLE_TRACKING.PREDICTIONS_LEARNING_BODY'
-                                                : 'CYCLE_TRACKING.PREDICTIONS_LIMITED_BODY'
-                                            ) | translate: { confidence: (prediction.confidenceKey | translate) }
+                                            `${prediction.limitedReasonKey}_BODY`
+                                                | translate: { confidence: (prediction.confidenceKey | translate) }
                                         }}
                                     </p>
+                                    <div [hidden]="prediction.limitedReasonKey !== 'CYCLE_TRACKING.PREDICTIONS_AMBIGUOUS'">
+                                        <fd-ui-button variant="secondary" fill="outline" (click)="openEpisodeHistory()">
+                                            {{ 'CYCLE_TRACKING.CHECK_EPISODE_HISTORY' | translate }}
+                                        </fd-ui-button>
+                                    </div>
                                 </div>
                             }
                         } @else {
@@ -275,7 +278,7 @@
                 </aside>
             </div>
 
-            <details class="cycle-tracking__details">
+            <details #episodeHistory class="cycle-tracking__details">
                 <summary class="cycle-tracking__details-summary fd-ui-action-text">
                     <span>{{ 'CYCLE_TRACKING.ALL_DATA_AND_TOOLS' | translate }}</span>
                     <span class="cycle-tracking__details-hint fd-ui-body-sm">{{ 'CYCLE_TRACKING.ALL_DATA_HINT' | translate }}</span>

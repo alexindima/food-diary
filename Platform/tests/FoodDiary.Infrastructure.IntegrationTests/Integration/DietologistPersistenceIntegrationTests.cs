@@ -215,6 +215,28 @@ public sealed class DietologistPersistenceIntegrationTests(PostgresDatabaseFixtu
     }
 
     [RequiresDockerFact]
+    public async Task AttentionMetrics_PreserveMissingAndAllTimeLastMealsAgainstPostgresAsync() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var noMeals = User.Create("new-client-metrics@example.test", "hash");
+        var oldMeals = User.Create("old-meal-metrics@example.test", "hash");
+        var unrelated = User.Create("unrelated-metrics@example.test", "hash");
+        var oldMeal = Meal.Create(oldMeals.Id, UtcNow.AddDays(-30));
+        context.AddRange(noMeals, oldMeals, unrelated, oldMeal, Meal.Create(unrelated.Id, UtcNow.AddDays(-1)));
+        await context.SaveChangesAsync();
+
+        var service = new AttentionSignalMetricsReadService(context);
+        IReadOnlyList<AttentionSignalMetricsReadModel> result = await service.GetAsync(
+            [noMeals.Id, oldMeals.Id], UtcNow.AddDays(-7), UtcNow);
+
+        Assert.Equal(2, result.Count);
+        AttentionSignalMetricsReadModel empty = Assert.Single(result, item => item.ClientUserId == noMeals.Id.Value);
+        AttentionSignalMetricsReadModel old = Assert.Single(result, item => item.ClientUserId == oldMeals.Id.Value);
+        Assert.Null(empty.LastMealAtUtc);
+        Assert.Equal(oldMeal.Date, old.LastMealAtUtc);
+        Assert.All(result, item => Assert.Empty(item.DailyCalories));
+    }
+
+    [RequiresDockerFact]
     public async Task AuditEntryService_AddsFiltersAndProjectsEntries() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var service = new AuditEntryService(context, FixedTime);

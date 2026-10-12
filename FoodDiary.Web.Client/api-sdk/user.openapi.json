@@ -569,6 +569,66 @@
                 },
                 "type": "object"
             },
+            "ClientGoalsHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "carbTarget": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "dailyCalorieTarget": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "desiredWaistCm": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "desiredWeightKg": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "fatTarget": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "fiberTarget": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "hydrationGoal": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "id": {
+                        "format": "uuid",
+                        "type": "string"
+                    },
+                    "proteinTarget": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "stepGoal": {
+                        "format": "int32",
+                        "nullable": true,
+                        "type": "integer"
+                    },
+                    "waterGoal": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    }
+                },
+                "type": "object"
+            },
             "ClientSummaryHttpResponse": {
                 "additionalProperties": false,
                 "properties": {
@@ -20580,17 +20640,17 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserHttpResponse"
+                                    "$ref": "#/components/schemas/ClientGoalsHttpResponse"
                                 }
                             },
                             "text/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserHttpResponse"
+                                    "$ref": "#/components/schemas/ClientGoalsHttpResponse"
                                 }
                             },
                             "text/plain": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserHttpResponse"
+                                    "$ref": "#/components/schemas/ClientGoalsHttpResponse"
                                 }
                             }
                         },

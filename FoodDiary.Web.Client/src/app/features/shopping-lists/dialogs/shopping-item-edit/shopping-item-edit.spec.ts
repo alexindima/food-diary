@@ -1,10 +1,18 @@
-import { TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { ShoppingItemEditComponent } from './shopping-item-edit';
+
+async function expectQuantityErrorAsync(fixture: ComponentFixture<ShoppingItemEditComponent>): Promise<void> {
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('[role="alert"]')?.textContent).toContain('SHOPPING_LIST.AMOUNT_ERROR');
+    expect(element.querySelector('input[type="number"]')?.getAttribute('aria-invalid')).toBe('true');
+}
 
 describe('shopping item editing', () => {
     it.each([
@@ -78,7 +86,11 @@ describe('shopping item editing', () => {
         expect(ref.close).not.toHaveBeenCalled();
         component['draft'].update(value => ({ ...value, name: 'Salt', amount: -1 }));
         expect(component['valid']()).toBe(false);
+        await expectQuantityErrorAsync(fixture);
         component['draft'].update(value => ({ ...value, amount: null, note: 'optional' }));
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')).toBeNull();
         component['save'](new Event('submit'));
         expect(ref.close).toHaveBeenCalledWith(expect.objectContaining({ name: 'Salt', amount: null, note: 'optional' }));
     });

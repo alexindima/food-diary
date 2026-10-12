@@ -161,6 +161,106 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
         Assert.Equal(HttpStatusCode.Forbidden, disconnectedResponse.StatusCode);
     }
 
+    [RequiresDockerFact]
+    public async Task GoalsAccess_ExposesOnlyGoalsAndRechecksPermissionsAsync() {
+        await EnsureDietologistRoleAsync();
+        AuthenticatedUser clientUser = await CreateAuthenticatedClientAsync();
+        AuthenticatedUser dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
+        AuthenticatedUser unrelatedUser = await CreateAuthenticatedClientAsync("unrelated-dietologist");
+        SetDietologistToken(unrelatedUser);
+
+        HttpResponseMessage goalsUpdate = await clientUser.Client.PatchAsJsonAsync("/api/v1/goals", new {
+            dailyCalorieTarget = 2100,
+            proteinTarget = 125,
+            fatTarget = 60,
+            carbTarget = 240,
+            fiberTarget = 0,
+            waterGoal = 1800,
+            desiredWeightKg = 65.5,
+            desiredWaistCm = 78,
+        });
+        await AssertStatusCodeAsync(HttpStatusCode.OK, goalsUpdate);
+        HttpResponseMessage profileUpdate = await clientUser.Client.PatchAsJsonAsync("/api/v1/users/info", new {
+            firstName = "Private",
+            lastName = "Profile",
+            birthDate = "1991-02-03",
+            heightCm = 181,
+            stepGoal = 6000,
+            hydrationGoal = 2600,
+        });
+        await AssertStatusCodeAsync(HttpStatusCode.OK, profileUpdate);
+
+        var permissions = new DietologistPermissionsHttpRequest(
+            ShareMeals: false, ShareStatistics: false, ShareWeight: false, ShareWaist: false,
+            ShareGoals: true, ShareHydration: false, ShareProfile: true, ShareFasting: false);
+        HttpResponseMessage invite = await clientUser.Client.PostAsJsonAsync("/api/v1/dietologist/invite",
+            new InviteDietologistHttpRequest(dietologistUser.Email, permissions));
+        await AssertStatusCodeAsync(HttpStatusCode.NoContent, invite);
+        DietologistRelationshipPayload relationship = await GetRelationshipAsync(clientUser.Client);
+        SetDietologistToken(dietologistUser);
+        HttpResponseMessage pendingRead = await dietologistUser.Client.GetAsync($"/api/v1/dietologist/clients/{clientUser.UserId}/goals");
+        Assert.Equal(HttpStatusCode.Forbidden, pendingRead.StatusCode);
+        HttpResponseMessage accept = await dietologistUser.Client.PostAsJsonAsync(
+            $"/api/v1/dietologist/invitations/{relationship.InvitationId}/accept-current-user", new { });
+        await AssertStatusCodeAsync(HttpStatusCode.NoContent, accept);
+        SetDietologistToken(dietologistUser);
+
+        await AssertGoalsOnlyPayloadAsync(dietologistUser.Client, clientUser.UserId);
+        HttpResponseMessage unrelatedRead = await unrelatedUser.Client.GetAsync($"/api/v1/dietologist/clients/{clientUser.UserId}/goals");
+        Assert.Equal(HttpStatusCode.Forbidden, unrelatedRead.StatusCode);
+
+        HttpResponseMessage revokeProfile = await clientUser.Client.PutAsJsonAsync("/api/v1/dietologist/permissions",
+            new UpdateDietologistPermissionsHttpRequest(permissions with { ShareProfile = false }));
+        await AssertStatusCodeAsync(HttpStatusCode.NoContent, revokeProfile);
+        HttpResponseMessage newPrivateProfile = await clientUser.Client.PatchAsJsonAsync("/api/v1/users/info", new {
+            firstName = "New private name",
+            birthDate = "2001-01-01",
+            heightCm = 182,
+        });
+        await AssertStatusCodeAsync(HttpStatusCode.OK, newPrivateProfile);
+        await AssertGoalsOnlyPayloadAsync(dietologistUser.Client, clientUser.UserId);
+
+        foreach (bool shareProfile in new[] { false, true }) {
+            HttpResponseMessage revokeGoals = await clientUser.Client.PutAsJsonAsync("/api/v1/dietologist/permissions",
+                new UpdateDietologistPermissionsHttpRequest(permissions with { ShareGoals = false, ShareProfile = shareProfile }));
+            await AssertStatusCodeAsync(HttpStatusCode.NoContent, revokeGoals);
+            HttpResponseMessage denied = await dietologistUser.Client.GetAsync($"/api/v1/dietologist/clients/{clientUser.UserId}/goals");
+            Assert.Equal(HttpStatusCode.Forbidden, denied.StatusCode);
+        }
+        HttpResponseMessage restoreGoals = await clientUser.Client.PutAsJsonAsync("/api/v1/dietologist/permissions",
+            new UpdateDietologistPermissionsHttpRequest(permissions with { ShareProfile = false }));
+        await AssertStatusCodeAsync(HttpStatusCode.NoContent, restoreGoals);
+        await AssertGoalsOnlyPayloadAsync(dietologistUser.Client, clientUser.UserId);
+        HttpResponseMessage disconnect = await clientUser.Client.DeleteAsync("/api/v1/dietologist/relationship");
+        await AssertStatusCodeAsync(HttpStatusCode.NoContent, disconnect);
+        HttpResponseMessage disconnectedRead = await dietologistUser.Client.GetAsync($"/api/v1/dietologist/clients/{clientUser.UserId}/goals");
+        Assert.Equal(HttpStatusCode.Forbidden, disconnectedRead.StatusCode);
+    }
+
+    private static async Task AssertGoalsOnlyPayloadAsync(HttpClient client, Guid clientUserId) {
+        HttpResponseMessage response = await client.GetAsync($"/api/v1/dietologist/clients/{clientUserId}/goals");
+        await AssertStatusCodeAsync(HttpStatusCode.OK, response);
+        using var body = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        JsonElement goals = body.RootElement;
+        string[] allowedProperties = [
+            "id", "dailyCalorieTarget", "proteinTarget", "fatTarget", "carbTarget", "fiberTarget",
+            "waterGoal", "hydrationGoal", "desiredWeightKg", "desiredWaistCm", "stepGoal",
+        ];
+        Assert.Equal(allowedProperties.Order(StringComparer.Ordinal),
+            goals.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal));
+        Assert.Equal(clientUserId, goals.GetProperty("id").GetGuid());
+        Assert.Equal(2100, goals.GetProperty("dailyCalorieTarget").GetDouble());
+        Assert.Equal(125, goals.GetProperty("proteinTarget").GetDouble());
+        Assert.Equal(60, goals.GetProperty("fatTarget").GetDouble());
+        Assert.Equal(240, goals.GetProperty("carbTarget").GetDouble());
+        Assert.Equal(0, goals.GetProperty("fiberTarget").GetDouble());
+        Assert.Equal(1800, goals.GetProperty("waterGoal").GetDouble());
+        Assert.Equal(2600, goals.GetProperty("hydrationGoal").GetDouble());
+        Assert.Equal(65.5, goals.GetProperty("desiredWeightKg").GetDouble());
+        Assert.Equal(78, goals.GetProperty("desiredWaistCm").GetDouble());
+        Assert.Equal(6000, goals.GetProperty("stepGoal").GetInt32());
+    }
+
     private async Task<AuthenticatedUser> CreateAuthenticatedClientAsync(string emailPrefix = "api-tests") {
         HttpClient client = factory.CreateClient();
         string email = $"{emailPrefix}-{Guid.NewGuid():N}@example.com";

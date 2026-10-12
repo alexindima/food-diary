@@ -74,6 +74,7 @@ export const FEATURE_ACTION_PROVIDERS: Provider[] = [
             return {
                 addEntry: (amountMl, timestampUtc) =>
                     lazyFeatureAction(injector, loadAsync, service => service.addEntry(amountMl, timestampUtc)),
+                deleteEntry: id => lazyFeatureAction(injector, loadAsync, service => service.deleteEntry(id)),
             };
         },
     },

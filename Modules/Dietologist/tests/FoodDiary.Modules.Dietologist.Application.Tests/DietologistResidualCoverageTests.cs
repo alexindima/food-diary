@@ -185,13 +185,13 @@ public sealed class DietologistResidualCoverageTests {
         profiles.GetAccessibleProfileAsync(userId, Arg.Any<CancellationToken>())
             .Returns(Result.Failure<UserDietologistProfileModel>(AuthenticationErrors.InvalidToken));
         IUserProfileReadService userProfiles = Substitute.For<IUserProfileReadService>();
-        userProfiles.GetUserAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<UserModel>(AuthenticationErrors.InvalidToken));
+        userProfiles.GetGoalsAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<GoalsModel>(AuthenticationErrors.InvalidToken));
         var service = new DietologistUserContextService(access, profiles, userProfiles);
 
         Result<string> email = await service.GetAccessibleUserEmailAsync(userId, CancellationToken.None);
-        Result<FoodDiary.Modules.Users.Contracts.Models.UserModel> model =
-            await service.GetUserModelByIdAsync(userId, CancellationToken.None);
+        Result<GoalsModel> model =
+            await service.GetGoalsByIdAsync(userId, CancellationToken.None);
         Result<UserDietologistProfileModel> accessible =
             await service.GetAccessibleProfileAsync(userId, CancellationToken.None);
         Error? accessError = await service.EnsureCanAccessAsync(userId, CancellationToken.None);

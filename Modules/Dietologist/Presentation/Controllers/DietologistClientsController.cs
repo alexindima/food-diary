@@ -1,4 +1,3 @@
-using FoodDiary.Modules.Users.Presentation.Mappings.Mappings;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
@@ -7,7 +6,6 @@ using FoodDiary.Modules.Dashboard.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.Dietologist.Presentation.Mappings;
 using FoodDiary.Modules.Dietologist.Presentation.Requests;
 using FoodDiary.Modules.Dietologist.Presentation.Responses;
-using FoodDiary.Modules.Users.Presentation.Contracts.Responses;
 
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Requests;
@@ -48,7 +46,7 @@ public sealed class DietologistClientsController(ISender mediator, TimeProvider 
             static value => value.ToHttpResponse());
 
     [HttpGet("{clientUserId:guid}/goals")]
-    [ProducesResponseType<UserHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ClientGoalsHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> GetClientGoals(Guid clientUserId, [FromCurrentUser] Guid userId) =>
         HandleOk(clientUserId.ToClientGoalsQuery(userId), static value => value.ToHttpResponse());

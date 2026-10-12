@@ -73,7 +73,7 @@ internal sealed class AttentionSignalMetricsReadService(ICompositionReadContext 
             .. goals.Select(goal => new AttentionSignalMetricsReadModel(
                 goal.UserId.Value,
                 goal.DailyCalorieTarget,
-                lastMealByUser.GetValueOrDefault(goal.UserId),
+                lastMealByUser.TryGetValue(goal.UserId, out DateTime lastMeal) ? lastMeal : null,
                 [
                     .. mealsByUser[goal.UserId]
                         .GroupBy(meal => meal.Date.Date)

@@ -35,7 +35,7 @@ public sealed class UpsertWeeklyGoalCommandHandler(
         UserId userId = userIdResult.Value;
         var weekStartUtc = DateTime.SpecifyKind(command.WeekStart.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
         DateTime utcNow = timeProvider.GetUtcNow().UtcDateTime;
-        if (!WeeklyGoalWeekPolicy.CanWrite(command.WeekStart, command.TimeZoneId is null ? utcNow : LocalCalendar.DateAt(utcNow, timeZone).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc))) {
+        if (!WeeklyGoalWeekPolicy.CanWrite(command.WeekStart, utcNow, command.TimeZoneId is null ? null : timeZone)) {
             return Result.Failure<WeeklyGoalModel>(Errors.Validation.Invalid(
                 nameof(command.WeekStart),
                 "A weekly goal can be changed only for an adjacent current week."));

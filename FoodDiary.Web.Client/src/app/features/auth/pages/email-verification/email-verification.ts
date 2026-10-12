@@ -7,6 +7,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
+import { getRecordProperty, getStringProperty } from '../../../../shared/lib/unknown-value.utils';
 
 type VerificationState = 'pending' | 'success' | 'invalid' | 'error';
 
@@ -47,6 +48,9 @@ export class EmailVerificationComponent {
     }
 
     protected onRetry(): void {
+        if (this.isBusy()) {
+            return;
+        }
         const { userId, token } = this.emailToken();
         if (userId === null || token === null || userId.length === 0 || token.length === 0) {
             this.errorMessage.set(this.translateService.instant('AUTH.VERIFY.ERROR_INVALID'));
@@ -57,6 +61,14 @@ export class EmailVerificationComponent {
 
     protected onBackToLogin(): void {
         void this.navigationService.navigateToAuthAsync('login');
+    }
+
+    protected onRequestNewLink(): void {
+        if (this.authService.isAuthenticated() && this.authService.getUserId() === this.emailToken().userId && !this.isBackupEmail()) {
+            void this.navigationService.navigateToEmailVerificationPendingAsync();
+        } else {
+            this.onBackToLogin();
+        }
     }
 
     private resolveAndVerify(): void {
@@ -87,12 +99,17 @@ export class EmailVerificationComponent {
                     this.isBusy.set(false);
                     this.state.set('success');
                 },
-                error: () => {
+                error: (error: unknown) => {
                     this.isBusy.set(false);
-                    this.state.set('error');
+                    const invalidToken = getStringProperty(getRecordProperty(error, 'error'), 'error') === 'Authentication.InvalidToken';
+                    this.state.set(invalidToken ? 'invalid' : 'error');
                     this.errorMessage.set(
                         this.translateService.instant(
-                            this.isBackupEmail() ? 'USER_MANAGE.BACKUP_EMAIL_VERIFY_ERROR' : 'AUTH.VERIFY.ERROR_GENERIC',
+                            this.isBackupEmail()
+                                ? 'USER_MANAGE.BACKUP_EMAIL_VERIFY_ERROR'
+                                : invalidToken
+                                  ? 'AUTH.VERIFY.ERROR_INVALID'
+                                  : 'AUTH.VERIFY.ERROR_GENERIC',
                         ),
                     );
                 },

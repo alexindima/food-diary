@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4561,
-    "symbols": 4496,
+    "sourceFiles": 4563,
+    "symbols": 4498,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
       "class": 2325,
       "enum": 71,
       "interface": 412,
-      "record": 1548,
+      "record": 1550,
       "record struct": 140
     },
     "roles": {
@@ -32,14 +32,14 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1846,
+      "Other": 1847,
       "Query": 300,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 99,
       "Request": 176,
-      "Response": 262,
+      "Response": 263,
       "Service": 168,
       "Validator": 236,
       "ValueObject": 177,
@@ -10737,6 +10737,13 @@
       "line": 2
     },
     {
+      "name": "ClientGoalsModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dietologist/Application/Models/ClientGoalsModel.cs",
+      "line": 2
+    },
+    {
       "name": "ClientSummaryModel",
       "kind": "record",
       "role": "Other",
@@ -11343,7 +11350,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Dietologist/Presentation/Controllers/DietologistClientsController.cs",
-      "line": 24
+      "line": 22
     },
     {
       "name": "DietologistClientTasksController",
@@ -11539,6 +11546,13 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Dietologist/Presentation/Responses/BulkRecommendationResultHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "ClientGoalsHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Dietologist/Presentation/Responses/ClientGoalsHttpResponse.cs",
       "line": 2
     },
     {
@@ -27779,7 +27793,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandValidator.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "WeeklyGoalMapping",
@@ -27800,7 +27814,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/WeeklyGoals/Application/Common/WeeklyGoalWeekPolicy.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "DependencyInjection",

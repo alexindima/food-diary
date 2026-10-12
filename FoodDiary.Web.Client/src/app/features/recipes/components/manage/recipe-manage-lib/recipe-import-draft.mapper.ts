@@ -27,6 +27,7 @@ const sectionHeadings: Readonly<Partial<Record<string, keyof RecipeImportSection
     ингредиенты: 'ingredients',
     steps: 'steps',
     instructions: 'steps',
+    directions: 'steps',
     method: 'steps',
     шаги: 'steps',
     приготовление: 'steps',
@@ -66,7 +67,7 @@ function splitImportSections(lines: readonly string[]): RecipeImportSections {
     let activeSection: keyof RecipeImportSections = 'notes';
 
     for (const line of lines) {
-        const heading = sectionHeadings[line.toLowerCase().replace(/:$/, '')];
+        const heading = sectionHeadings[line.toLowerCase().replace(/:$/, '').trim()];
         if (heading !== undefined) {
             activeSection = heading;
             continue;
@@ -95,13 +96,16 @@ function buildImportSteps(
 ): StepFormValues[] {
     const lines = stepLines.length > 0 ? stepLines : [fallback];
 
-    return lines.map(line => {
+    return lines.map((line, index) => {
         const step = createRecipeStepValue();
 
         return {
             ...step,
             description: stripStepPrefix(line),
-            ingredients: existingIngredients.length > 0 ? existingIngredients.map(ingredient => ({ ...ingredient })) : step.ingredients,
+            ingredients:
+                index === 0 && existingIngredients.length > 0
+                    ? existingIngredients.map(ingredient => ({ ...ingredient }))
+                    : step.ingredients,
         };
     });
 }

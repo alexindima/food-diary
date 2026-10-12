@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, input, output } from '@angu
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 
+import { aiEditableItemError } from '../../../../../shared/lib/ai-photo-edit.utils';
 import type { AiEditItemDrop, AiEditItemUpdate, AiEditUnitOption, EditableAiItem } from '../ai-photo-result-lib/ai-photo-result.types';
 
 let uniqueId = 0;
@@ -18,6 +19,8 @@ let uniqueId = 0;
     },
 })
 export class AiPhotoEditListComponent {
+    public readonly showErrors = input(false);
+    protected readonly itemError = aiEditableItemError;
     private readonly translateService = inject(TranslateService);
 
     protected readonly controlIdPrefix = `ai-photo-edit-${uniqueId++}`;

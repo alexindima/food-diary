@@ -34,7 +34,7 @@ type BillingServiceMock = {
 
 type AuthServiceMock = {
     isPremium: WritableSignal<boolean>;
-    refreshToken: ReturnType<typeof vi.fn<() => Observable<boolean>>>;
+    refreshToken: ReturnType<typeof vi.fn<() => Observable<string | null>>>;
 };
 
 type ToastServiceMock = {
@@ -101,6 +101,76 @@ describe('PremiumAccessPageComponent checkout', () => {
         expect(billingService.createCheckoutSession).toHaveBeenCalledTimes(1);
         expect(billingService.createCheckoutSession).toHaveBeenCalledWith('monthly', 'paddle');
         expect(component['checkoutLoadingPlan']()).toBe('monthly');
+    });
+});
+
+describe('PremiumAccessPageComponent entitlement recovery', () => {
+    beforeEach(resetMocks);
+
+    it('refreshes stale free claims for active access and avoids another refresh once they match', async () => {
+        billingService.getOverview.mockReturnValue(of({ ...createOverview(), isPremium: true, premiumTrialActive: true }));
+        authService.refreshToken.mockImplementation(() => {
+            authService.isPremium.set(true);
+            return of('refreshed-session');
+        });
+        const { component } = setupComponent();
+        await settleAsync();
+        expect(authService.refreshToken).toHaveBeenCalledTimes(1);
+        expect(authService.isPremium()).toBe(true);
+        await component['reloadOverviewAsync']();
+        expect(authService.refreshToken).toHaveBeenCalledTimes(1);
+        expect(component['errorMessage']()).toBeNull();
+    });
+
+    it('refreshes stale Premium claims when the trusted overview no longer grants access', async () => {
+        authService.isPremium.set(true);
+        authService.refreshToken.mockImplementation(() => {
+            authService.isPremium.set(false);
+            return of('refreshed-session');
+        });
+        setupComponent();
+        await settleAsync();
+        expect(authService.refreshToken).toHaveBeenCalledTimes(1);
+        expect(authService.isPremium()).toBe(false);
+    });
+
+    it('keeps matching free access and SSR overview reads free of session refresh side effects', async () => {
+        setupComponent();
+        await settleAsync();
+        expect(authService.refreshToken).not.toHaveBeenCalled();
+        TestBed.resetTestingModule();
+        billingService.getOverview.mockReturnValue(of({ ...createOverview(), isPremium: true }));
+        setupComponent('server');
+        await settleAsync();
+        expect(authService.refreshToken).not.toHaveBeenCalled();
+    });
+
+    it('explains failed access refresh and recovers through the existing overview retry', async () => {
+        billingService.getOverview.mockReturnValue(of({ ...createOverview(), isPremium: true }));
+        authService.refreshToken.mockReturnValue(of(null));
+        const { component } = setupComponent();
+        await settleAsync();
+        expect(component['errorMessage']()).toBe('PREMIUM_PAGE.ERROR_ACCESS_REFRESH');
+        expect(authService.isPremium()).toBe(false);
+        authService.refreshToken.mockImplementation(() => {
+            authService.isPremium.set(true);
+            return of('refreshed-session');
+        });
+        await component['reloadOverviewAsync']();
+        expect(component['errorMessage']()).toBeNull();
+        expect(authService.isPremium()).toBe(true);
+    });
+
+    it('keeps the started trial but does not announce successful access when refresh fails', async () => {
+        const { component } = setupComponent();
+        await settleAsync();
+        billingService.startPremiumTrial.mockReturnValue(of({ ...createOverview(), isPremium: true, premiumTrialActive: true }));
+        authService.refreshToken.mockReturnValue(of(null));
+        await component['startTrialAsync']();
+        expect(component['overview']()?.premiumTrialActive).toBe(true);
+        expect(component['errorMessage']()).toBe('PREMIUM_PAGE.ERROR_ACCESS_REFRESH');
+        expect(toastService.success).not.toHaveBeenCalled();
+        expect(component['trialLoading']()).toBe(false);
     });
 });
 
@@ -270,7 +340,7 @@ function resetMocks(): void {
     };
     authService = {
         isPremium: signal(false),
-        refreshToken: vi.fn(() => of(true)),
+        refreshToken: vi.fn<() => Observable<string | null>>(() => of('refreshed-session')),
     };
     toastService = {
         success: vi.fn(),
@@ -291,7 +361,7 @@ function resetMocks(): void {
     queryParams = {};
 }
 
-function setupComponent(): {
+function setupComponent(platformId: 'browser' | 'server' = 'browser'): {
     component: PremiumAccessPageComponent;
 } {
     routeStub = {
@@ -301,7 +371,7 @@ function setupComponent(): {
     };
 
     TestBed.configureTestingModule({
-        providers: getPremiumAccessPageProviders(),
+        providers: getPremiumAccessPageProviders(platformId),
     });
     const component = TestBed.runInInjectionContext(() => new PremiumAccessPageComponent());
 
@@ -310,7 +380,7 @@ function setupComponent(): {
     };
 }
 
-function getPremiumAccessPageProviders(): unknown[] {
+function getPremiumAccessPageProviders(platformId: 'browser' | 'server'): unknown[] {
     return [
         PremiumPlanPricingFacade,
         { provide: PremiumBillingFacade, useValue: billingService },
@@ -327,7 +397,7 @@ function getPremiumAccessPageProviders(): unknown[] {
         { provide: ActivatedRoute, useValue: routeStub },
         { provide: Router, useValue: router },
         { provide: DOCUMENT, useValue: fakeDocument },
-        { provide: PLATFORM_ID, useValue: 'browser' },
+        { provide: PLATFORM_ID, useValue: platformId },
     ];
 }
 

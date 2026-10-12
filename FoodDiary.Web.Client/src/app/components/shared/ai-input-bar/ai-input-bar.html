@@ -66,7 +66,13 @@
 </div>
 
 @if (speechErrorKey(); as errorKey) {
-    <fd-ui-inline-alert severity="danger" role="alert" [message]="errorKey | translate" />
+    <fd-ui-inline-alert
+        class="ai-input-bar__speech-error"
+        appearance="notice"
+        severity="danger"
+        role="alert"
+        [message]="errorKey | translate"
+    />
 }
 
 <div class="ai-input-bar__actions fd-row fd-wrap fd-justify-between fd-gap-xs">

@@ -35,7 +35,6 @@ export type ClientSummary = {
 
 export type DietologistClientGoals = {
     id: UserId;
-    email: string | null;
     dailyCalorieTarget?: number | null;
     proteinTarget?: number | null;
     fatTarget?: number | null;

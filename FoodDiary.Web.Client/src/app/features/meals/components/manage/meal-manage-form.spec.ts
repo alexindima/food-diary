@@ -392,6 +392,23 @@ describe('MealManageFormComponent navigation', () => {
     });
 });
 
+describe('Meal editor route departure', () => {
+    it('keeps the draft after failed save, blocks pending save, and permits the committed edit redirect', async () => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        fixture.componentRef.setInput('meal', createMeal());
+        fixture.detectChanges();
+        component['mealSignalForm']().markAsDirty();
+        component['isSubmitting'].set(true);
+        expect(await component.canLeaveAsync()).toBe(false);
+        await component['handleSubmitResponseAsync'](null);
+        expect(component['mealSignalForm']().dirty()).toBe(true);
+        await component['handleSubmitResponseAsync'](createMeal());
+        expect(await component.canLeaveAsync()).toBe(true);
+        expect(mealManageFacade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+        expect(mealManageFacade.showSuccessToastAndRedirectAsync).toHaveBeenCalledWith(true);
+    });
+});
+
 async function setupComponentAsync(): Promise<MealManageFormSetup> {
     const mealManageFacade = createMealManageFacadeMock();
     const navigationService = {
@@ -677,7 +694,7 @@ describe('MealManageForm manual item dialog', () => {
 });
 
 describe('Meal form manual nutrition validation', () => {
-    it.each([null, 0, -1, Number.NaN, Number.POSITIVE_INFINITY])('does not submit invalid manual calories %s', async manualCalories => {
+    it.each([null, -1, Number.NaN, Number.POSITIVE_INFINITY])('does not submit invalid manual calories %s', async manualCalories => {
         const { component, fixture, mealManageFacade } = await setupComponentAsync();
         setValidManualMeal(component);
         component['patchMealFormModel']({ manualCalories });
@@ -701,14 +718,45 @@ describe('Meal form manual nutrition validation', () => {
             expect(component['globalError']()).not.toBeNull();
         },
     );
-    it('shows macro validation and preserves the draft when all macros are zero', async () => {
+    it('shows macro validation and preserves the draft when all macros are missing', async () => {
         const { component, mealManageFacade } = await setupComponentAsync();
         setValidManualMeal(component);
-        component['patchMealFormModel']({ manualProteins: 0 });
+        component['patchMealFormModel']({
+            manualProteins: null,
+            manualFats: null,
+            manualCarbs: null,
+            manualFiber: null,
+            manualAlcohol: null,
+        });
         await component['onSubmitAsync']();
         expect(component['macrosError']()).toBe('PRODUCT_MANAGE.NUTRITION_ERRORS.MACROS_REQUIRED');
         expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
         expect(component['mealFormModel']().items).toHaveLength(1);
+    });
+
+    it('submits explicit zero calories and macros as a valid manual meal', async () => {
+        const { component, mealManageFacade } = await setupComponentAsync();
+        setValidManualMeal(component);
+        component['patchMealFormModel']({
+            manualCalories: 0,
+            manualProteins: 0,
+            manualFats: 0,
+            manualCarbs: 0,
+            manualFiber: 0,
+            manualAlcohol: 0,
+        });
+        await component['onSubmitAsync']();
+        expect(component['caloriesError']()).toBeNull();
+        expect(component['macrosError']()).toBeNull();
+        expect(mealManageFacade.submitMealAsync).toHaveBeenCalledOnce();
+        expect(mealManageFacade.submitMealAsync.mock.calls[0][1]).toMatchObject({
+            manualCalories: 0,
+            manualProteins: 0,
+            manualFats: 0,
+            manualCarbs: 0,
+            manualFiber: 0,
+            manualAlcohol: 0,
+        });
     });
 });
 

@@ -12,26 +12,30 @@ import { EmailVerificationComponent } from './email-verification';
 let authServiceMock: {
     onLogoutAsync: ReturnType<typeof vi.fn>;
     isAuthenticated: ReturnType<typeof vi.fn>;
+    getUserId: ReturnType<typeof vi.fn>;
     verifyEmail: ReturnType<typeof vi.fn>;
 };
 let navigationServiceMock: {
     navigateToAuthAsync: ReturnType<typeof vi.fn>;
     navigateToHomeAsync: ReturnType<typeof vi.fn>;
+    navigateToEmailVerificationPendingAsync: ReturnType<typeof vi.fn>;
 };
 
 beforeEach(() => {
     authServiceMock = {
         onLogoutAsync: vi.fn().mockResolvedValue(void 0),
         isAuthenticated: vi.fn().mockReturnValue(true),
+        getUserId: vi.fn().mockReturnValue('user-1'),
         verifyEmail: vi.fn().mockReturnValue(of(true)),
     };
     navigationServiceMock = {
         navigateToAuthAsync: vi.fn().mockResolvedValue(void 0),
         navigateToHomeAsync: vi.fn().mockResolvedValue(void 0),
+        navigateToEmailVerificationPendingAsync: vi.fn().mockResolvedValue(void 0),
     };
 });
 
-describe('EmailVerificationComponent', () => {
+describe('EmailVerificationComponent backup email', () => {
     it('requires a fresh sign-in after backup email confirmation revokes sessions', () => {
         const component = createComponent({ userId: 'user-1', token: 'telegram-backup.ticket' });
         expect(component['state']()).toBe('success');
@@ -45,12 +49,32 @@ describe('EmailVerificationComponent', () => {
         const component = createComponent({ userId: 'user-1', token: 'telegram-backup.ticket' });
         expect(component['errorMessage']()).toBe('USER_MANAGE.BACKUP_EMAIL_VERIFY_ERROR');
     });
+});
+
+describe('EmailVerificationComponent', () => {
     it('should verify email when token is present', () => {
         const component = createComponent({ userId: 'user-1', token: 'token-1' });
 
         expect(authServiceMock.verifyEmail).toHaveBeenCalledWith('user-1', 'token-1');
         expect(component['state']()).toBe('success');
         expect(component['isBusy']()).toBe(false);
+    });
+
+    it('provides a fresh-link action for an invalid token and recovers through the signed-in account', () => {
+        authServiceMock.verifyEmail.mockReturnValue(throwError(() => ({ error: { error: 'Authentication.InvalidToken' } })));
+        const component = createComponent({ userId: 'user-1', token: 'expired' });
+        expect(component['state']()).toBe('invalid');
+        expect(component['errorMessage']()).toBe('AUTH.VERIFY.ERROR_INVALID');
+        component['onRequestNewLink']();
+        expect(navigationServiceMock.navigateToEmailVerificationPendingAsync).toHaveBeenCalledOnce();
+    });
+
+    it('requires sign-in when the invalid link belongs to another account', () => {
+        authServiceMock.verifyEmail.mockReturnValue(throwError(() => ({ error: { error: 'Authentication.InvalidToken' } })));
+        const component = createComponent({ userId: 'another-user', token: 'expired' });
+        component['onRequestNewLink']();
+        expect(navigationServiceMock.navigateToAuthAsync).toHaveBeenCalledWith('login');
+        expect(navigationServiceMock.navigateToEmailVerificationPendingAsync).not.toHaveBeenCalled();
     });
 
     it('should set invalid error when token is missing', () => {
@@ -93,7 +117,7 @@ describe('EmailVerificationComponent', () => {
         const root = fixture.nativeElement as HTMLElement;
 
         expect(root.querySelector('h1')?.textContent).toContain('AUTH.VERIFY.TITLE');
-        expect(root.querySelector('button')?.textContent).toContain('AUTH.VERIFY.BACK_TO_LOGIN');
+        expect(root.querySelector('button')?.textContent).toContain('AUTH.VERIFY.REQUEST_NEW_LINK');
         expect(root.textContent).not.toContain('AUTH.VERIFY.RETRY');
     });
 

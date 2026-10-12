@@ -79,6 +79,21 @@
                     </fd-ui-button>
                 }
             </div>
+        } @else {
+            <p class="fd-ui-caption">{{ 'HYDRATION_CARD.SELECTED_DAY_HINT' | translate }}</p>
         }
+        <div [hidden]="undoAmount() === null">
+            <fd-ui-button
+                class="hydration-card__undo"
+                variant="secondary"
+                fill="text"
+                icon="undo"
+                [disabled]="undoDisabled()"
+                [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+                (click)="undoClick.emit()"
+            >
+                {{ 'HYDRATION_CARD.UNDO_AMOUNT' | translate: { value: undoAmount() } }}
+            </fd-ui-button>
+        </div>
     </fd-dashboard-widget-frame>
 </div>

@@ -22,6 +22,8 @@ import { BulkCreateRecommendationsHttpRequest } from '../model/bulk-create-recom
 
 import { BulkRecommendationResultHttpResponse } from '../model/bulk-recommendation-result-http-response';
 
+import { ClientGoalsHttpResponse } from '../model/client-goals-http-response';
+
 import { ClientSummaryHttpResponse } from '../model/client-summary-http-response';
 
 import { ClientTaskHttpResponse } from '../model/client-task-http-response';
@@ -53,8 +55,6 @@ import { RecommendationTemplateHttpResponse } from '../model/recommendation-temp
 import { SetAttentionSignalStateHttpRequest } from '../model/set-attention-signal-state-http-request';
 
 import { UpdateDietologistPermissionsHttpRequest } from '../model/update-dietologist-permissions-http-request';
-
-import { UserHttpResponse } from '../model/user-http-response';
 
 import { BaseService } from '../api.base.service';
 import { Configuration } from '../configuration';
@@ -796,19 +796,19 @@ export class DietologistSdk extends BaseService {
         observe?: 'body',
         reportProgress?: boolean,
         options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
-    ): Observable<UserHttpResponse>;
+    ): Observable<ClientGoalsHttpResponse>;
     public getDietologistClientsByClientUserIdGoals(
         requestParameters: GetDietologistClientsByClientUserIdGoalsRequestParams,
         observe?: 'response',
         reportProgress?: boolean,
         options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
-    ): Observable<HttpResponse<UserHttpResponse>>;
+    ): Observable<HttpResponse<ClientGoalsHttpResponse>>;
     public getDietologistClientsByClientUserIdGoals(
         requestParameters: GetDietologistClientsByClientUserIdGoalsRequestParams,
         observe?: 'events',
         reportProgress?: boolean,
         options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
-    ): Observable<HttpEvent<UserHttpResponse>>;
+    ): Observable<HttpEvent<ClientGoalsHttpResponse>>;
     public getDietologistClientsByClientUserIdGoals(
         requestParameters: GetDietologistClientsByClientUserIdGoalsRequestParams,
         observe: any = 'body',
@@ -852,7 +852,7 @@ export class DietologistSdk extends BaseService {
 
         let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/dietologist/clients/${this.configuration.encodeParam({ name: 'clientUserId', value: clientUserId, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: 'uuid' })}/goals`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<UserHttpResponse>('get', `${basePath}${localVarPath}`, {
+        return this.httpClient.request<ClientGoalsHttpResponse>('get', `${basePath}${localVarPath}`, {
             context: localVarHttpContext,
             responseType: <any>responseType_,
             ...(withCredentials ? { withCredentials } : {}),

@@ -135,7 +135,9 @@ public static class UserMappings {
             user.ThursdayCalories,
             user.FridayCalories,
             user.SaturdayCalories,
-            user.SundayCalories
+            user.SundayCalories,
+            user.HydrationGoal,
+            user.StepGoal
         );
     }
 }

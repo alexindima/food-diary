@@ -13,6 +13,7 @@ import { FoodRecognitionHistoryComponent } from '../../../../components/shared/f
 import { AiFoodFacade } from '../../../../shared/lib/ai-food.facade';
 import { recalculateEditedAiNutrition } from '../../../../shared/lib/ai-nutrition-edit.utils';
 import {
+    aiEditableItemError,
     buildAiEditableItems,
     createEmptyAiEditableItem,
     normalizeAiEditableItems,
@@ -115,6 +116,7 @@ export class MealPhotoRecognitionDialogComponent {
     protected readonly isEditMode = signal(this.dialogData.mode === 'edit');
     protected readonly isEditing = signal(false);
     protected readonly editItems = signal<EditableAiItem[]>([]);
+    protected readonly editAttempted = signal(false);
     private readonly reviewItems = signal<EditableAiItem[]>([]);
     private readonly sourceItems = signal<EditableAiItem[]>([]);
     protected readonly unitOptions = UNIT_OPTIONS;
@@ -460,6 +462,7 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     protected startEditing(): void {
+        this.editAttempted.set(false);
         const editable =
             this.reviewItems().length > 0
                 ? this.reviewItems()
@@ -470,7 +473,11 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     protected applyEditing(): void {
-        const edited = this.editItems().filter(item => item.name.trim().length > 0 && item.amount > 0);
+        this.editAttempted.set(true);
+        const edited = this.editItems();
+        if (edited.some(item => aiEditableItemError(item) !== null)) {
+            return;
+        }
         const activeItems = edited.filter(item => item.resolution !== 'Rejected');
         const normalized = normalizeAiEditableItems(activeItems);
         const requiresAi = requiresAiNutritionRecalculation(this.sourceItems(), edited);
