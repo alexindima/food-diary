@@ -8,6 +8,8 @@ public sealed class GetAdminBugReportsQueryValidator : AbstractValidator<GetAdmi
         RuleFor(query => query.Filter.Limit).InclusiveBetween(1, 100);
         RuleFor(query => query.Filter.Search).MaximumLength(320);
         RuleFor(query => query.Filter.Status).MaximumLength(32);
+        RuleFor(query => query.Filter.Source).Must(source => source is null or "" or "email" or "logs")
+            .WithMessage("Select email or logs.");
         RuleFor(query => query.Filter).Must(filter => !filter.FromUtc.HasValue || !filter.ToUtc.HasValue || filter.FromUtc < filter.ToUtc)
             .WithMessage("The start must precede the exclusive end.");
     }

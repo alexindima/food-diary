@@ -62,5 +62,11 @@ MIME routes. It owns report leases and outcomes; local Codex tasks own code
 investigation and draft publication. MailInbox remains generic and has no
 BugTriage dependency. See [the runbook](../../docs/backend/BUG_TRIAGE.md).
 
+Authorized local production-log audits also publish sanitized outcomes and
+significant findings to BugTriage. Runs and their retention remain independent
+of mail claims; legacy mail readers preserve their payloads while additive
+journal endpoints serve the combined Admin view. The service does not collect
+production logs or execute investigations. See [Admin reporting](../../docs/backend/ADMIN_REPORTING.md).
+
 See the canonical [architecture](../../docs/ARCHITECTURE.md) and
 [module map](../../docs/BACKEND_MODULE_MAP.md) before changing these boundaries.

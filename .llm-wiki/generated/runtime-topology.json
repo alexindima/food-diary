@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "6ae2ec1c2771608dd1cd11b0439ab54fc769d6cc96ac5f07ad382bf7bcd52a9a",
-    "sourceFileCount": 4564
+    "sourceFingerprint": "37cc533e7ef600a362811afc752e461b413c9489df62fa4d5c79b2c2268a2048",
+    "sourceFileCount": 4580
   },
   "summary": {
     "composeServices": 18,
-    "hostedServices": 15,
+    "hostedServices": 16,
     "httpClients": 21,
     "webhooks": 22,
     "recurringJobRegistrations": 17,
-    "networkPolicies": 40
+    "networkPolicies": 41
   },
   "semantics": {
     "declared": "Compose fields describe repository declarations, not effective production exposure or IAM.",
@@ -490,6 +490,17 @@
     }
   ],
   "hostedServices": [
+    {
+      "name": "AuditRetentionWorker",
+      "baseType": "BackgroundService",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Workers/AuditRetentionWorker.cs",
+      "behaviorSignals": [
+        "cancellation-propagation-candidate",
+        "retry-or-resilience",
+        "timeout-or-delay"
+      ],
+      "behaviorSignalScope": "class-window"
+    },
     {
       "name": "BugAcknowledgementWorker",
       "baseType": "BackgroundService",
@@ -1197,6 +1208,23 @@
     }
   ],
   "networkPolicies": [
+    {
+      "name": "AdminBugReportReader",
+      "path": "Modules/Admin/Infrastructure/Integrations/BugTriage/AdminBugReportReader.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "uri-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation-propagation-candidate"
+      ],
+      "behaviorSignalScope": "policy-file",
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
     {
       "name": "AiProviderRegistration",
       "path": "Modules/Ai/Infrastructure/AiProviderRegistration.cs",

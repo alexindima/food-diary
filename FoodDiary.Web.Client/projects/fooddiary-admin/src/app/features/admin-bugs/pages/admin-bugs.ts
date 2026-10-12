@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot, maxLength } from '@angular/forms/signals';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiInputComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiInputComponent, FdUiPaginationComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { catchError, combineLatest, map, of, startWith, Subject, switchMap } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
@@ -11,6 +11,7 @@ import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage } from '../../../shared/period/admin-query';
+import { AdminAuditStatusComponent } from '../components/admin-audit-status';
 import { AdminBugReportCardComponent } from '../components/admin-bug-report-card';
 import { AdminBugsFacade } from '../lib/admin-bugs.facade';
 import type { AdminBugReportPage } from '../models/admin-bug-report';
@@ -23,12 +24,15 @@ const PAGE_SIZE = 25;
     selector: 'fd-admin-bugs',
     imports: [
         AdminBugReportCardComponent,
+        AdminAuditStatusComponent,
         TranslatePipe,
         RouterLink,
         FormField,
         FormRoot,
         FdUiButtonComponent,
         FdUiInputComponent,
+        FdUiSelectComponent,
+        FdUiPaginationComponent,
         AdminLoadErrorComponent,
         AdminPeriodControlComponent,
     ],
@@ -47,7 +51,7 @@ export class AdminBugsPageComponent {
     protected readonly failed = signal(false);
     protected readonly page = signal(1);
     protected readonly detailId = signal<string | null>(null);
-    protected readonly formModel = signal({ search: '', status: '' });
+    protected readonly formModel = signal({ search: '', status: '', source: '' });
     private readonly submitFormAsync = async (): Promise<void> => {
         await this.applyAsync();
     };
@@ -68,7 +72,11 @@ export class AdminBugsPageComponent {
                     this.failed.set(false);
                     this.detailId.set(path.get('id'));
                     this.page.set(adminPage(query.get('page')));
-                    this.formModel.set({ search: query.get('search') ?? '', status: query.get('status') ?? '' });
+                    this.formModel.set({
+                        search: query.get('search') ?? '',
+                        status: query.get('status') ?? '',
+                        source: query.get('source') ?? '',
+                    });
                     const id = this.detailId();
                     const period = id === null ? adminPeriod(query) : {};
                     if (period === null) {
@@ -104,7 +112,14 @@ export class AdminBugsPageComponent {
     }
 
     protected async applyAsync(): Promise<boolean> {
-        return this.router.navigate(['/bugs'], { queryParams: { ...this.formModel(), page: 1 }, queryParamsHandling: 'merge' });
+        const navigated = await this.router.navigate(['/bugs'], {
+            queryParams: { ...this.formModel(), page: 1 },
+            queryParamsHandling: 'merge',
+        });
+        if (!navigated) {
+            this.refresh.next();
+        }
+        return navigated;
     }
 
     protected goToPage(page: number): void {

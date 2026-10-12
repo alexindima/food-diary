@@ -5,12 +5,12 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6588,
+    "productionFiles": 6608,
     "wikiToolFiles": 210,
     "wikiToolsWithoutTestReferences": 5,
-    "criticalSymbols": 996,
+    "criticalSymbols": 997,
     "criticalSymbolsWithTestReferences": 950,
-    "criticalSymbolsWithoutTestReferences": 46,
+    "criticalSymbolsWithoutTestReferences": 47,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -7058,11 +7058,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/api/admin-bugs-sdk.mapper.ts",
-      "nonBlankLines": 20,
-      "decisionPoints": 2,
+      "nonBlankLines": 76,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.4
+      "structuralRiskScore": 15.02
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/api/admin-bugs.service.ts",
@@ -7071,6 +7071,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.4
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-audit-status.ts",
+      "nonBlankLines": 34,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.68
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-card.ts",
@@ -7090,19 +7098,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/models/admin-bug-report.ts",
-      "nonBlankLines": 17,
+      "nonBlankLines": 35,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 0.7
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.ts",
-      "nonBlankLines": 121,
-      "decisionPoints": 11,
+      "nonBlankLines": 136,
+      "decisionPoints": 13,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.92
+      "structuralRiskScore": 22.22
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/admin-catalog.routes.ts",
@@ -8026,11 +8034,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-bugs.service.ts",
-      "nonBlankLines": 121,
-      "decisionPoints": 9,
+      "nonBlankLines": 218,
+      "decisionPoints": 18,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.92
+      "structuralRiskScore": 31.36
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-catalog.service.ts",
@@ -8265,6 +8273,14 @@
       "structuralRiskScore": 0.28
     },
     {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/admin-audit-run-summary-http-response.ts",
+      "nonBlankLines": 22,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.44
+    },
+    {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/admin-billing-payment-http-response-paged-http-response.ts",
       "nonBlankLines": 17,
       "decisionPoints": 0,
@@ -8327,6 +8343,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.5
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/admin-bug-journal-entry-http-response.ts",
+      "nonBlankLines": 24,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.48
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/admin-bug-journal-page-http-response.ts",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.34
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/admin-bug-report-http-response.ts",
@@ -9018,11 +9050,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/models.ts",
-      "nonBlankLines": 109,
+      "nonBlankLines": 112,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.18
+      "structuralRiskScore": 2.24
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/save-catalog-meal-plan-http-request.ts",
@@ -20089,6 +20121,14 @@
       "structuralRiskScore": 0.08
     },
     {
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminAuditRunSummary.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
       "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingListFilter.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
@@ -20138,11 +20178,11 @@
     },
     {
       "path": "Modules/Admin/Application.Abstractions/Models/AdminBugReportEntry.cs",
-      "nonBlankLines": 3,
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Admin/Application.Abstractions/Models/AdminBugReportFilter.cs",
@@ -20154,11 +20194,11 @@
     },
     {
       "path": "Modules/Admin/Application.Abstractions/Models/AdminBugReportPage.cs",
-      "nonBlankLines": 4,
+      "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Admin/Application.Abstractions/Models/AdminDashboardMetrics.cs",
@@ -21242,11 +21282,11 @@
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminBugReports/GetAdminBugReportsQueryValidator.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 14,
       "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.24
+      "structuralRiskScore": 5.28
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQuery.cs",
@@ -21738,11 +21778,11 @@
     },
     {
       "path": "Modules/Admin/Infrastructure/Integrations/BugTriage/AdminBugReportReader.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 6,
+      "nonBlankLines": 34,
+      "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.42
+      "structuralRiskScore": 12.68
     },
     {
       "path": "Modules/Admin/Infrastructure/Integrations/BugTriage/AdminBugTriageOptions.cs",
@@ -21898,11 +21938,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Controllers/AdminBugReportsController.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 27,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.44
+      "structuralRiskScore": 2.54
     },
     {
       "path": "Modules/Admin/Presentation/Controllers/AdminCollaborationAuditController.cs",
@@ -22058,11 +22098,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Mappings/AdminBugReportHttpMappings.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
+      "nonBlankLines": 27,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 2.04
     },
     {
       "path": "Modules/Admin/Presentation/Mappings/AdminContentHttpResponseMappings.cs",
@@ -22353,6 +22393,14 @@
       "structuralRiskScore": 0.24
     },
     {
+      "path": "Modules/Admin/Presentation/Requests/GetAdminBugJournalHttpQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
       "path": "Modules/Admin/Presentation/Requests/GetAdminBugReportsHttpQuery.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -22577,6 +22625,14 @@
       "structuralRiskScore": 0.04
     },
     {
+      "path": "Modules/Admin/Presentation/Responses/AdminAuditRunSummaryHttpResponse.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
       "path": "Modules/Admin/Presentation/Responses/AdminBillingPaymentHttpResponse.cs",
       "nonBlankLines": 28,
       "decisionPoints": 0,
@@ -22615,6 +22671,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/Admin/Presentation/Responses/AdminBugJournalEntryHttpResponse.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Admin/Presentation/Responses/AdminBugJournalPageHttpResponse.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
     },
     {
       "path": "Modules/Admin/Presentation/Responses/AdminBugReportHttpResponse.cs",
@@ -49385,6 +49457,14 @@
       "structuralRiskScore": 0.22
     },
     {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IAuditRunStore.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
       "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugMailSource.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
@@ -49409,12 +49489,52 @@
       "structuralRiskScore": 0.26
     },
     {
-      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/BugReportJournalEntry.cs",
-      "nonBlankLines": 3,
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/AuditRuns/AuditCompletion.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.68
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/AuditRuns/AuditFinding.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.62
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/AuditRuns/AuditRunId.cs",
+      "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/AuditRuns/AuditRunSummary.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/AuditRuns/AuditWindow.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.6
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/BugReportJournalEntry.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/BugReportJournalFilter.cs",
@@ -49426,11 +49546,11 @@
     },
     {
       "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/BugReportJournalPage.cs",
-      "nonBlankLines": 2,
+      "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/Identifiers/BugReportId.cs",
@@ -49506,11 +49626,11 @@
     },
     {
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Extensions/BugTriageInfrastructureExtensions.cs",
-      "nonBlankLines": 51,
+      "nonBlankLines": 53,
       "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.02
+      "structuralRiskScore": 19.06
     },
     {
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Mail/MailInboxBugSource.cs",
@@ -49530,19 +49650,27 @@
     },
     {
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/BugTriageSchema.cs",
-      "nonBlankLines": 35,
-      "decisionPoints": 2,
+      "nonBlankLines": 65,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.7
+      "structuralRiskScore": 10.3
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlAuditRunStore.cs",
+      "nonBlankLines": 138,
+      "decisionPoints": 14,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 23.76
     },
     {
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlBugReportJournal.cs",
-      "nonBlankLines": 47,
-      "decisionPoints": 11,
+      "nonBlankLines": 69,
+      "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.44
+      "structuralRiskScore": 19.38
     },
     {
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlBugReportStore.cs",
@@ -49551,6 +49679,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 11.98
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Workers/AuditRetentionWorker.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.96
     },
     {
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Workers/BugMailImportWorker.cs",
@@ -49569,20 +49705,44 @@
       "structuralRiskScore": 9.66
     },
     {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/AuditRunsController.cs",
+      "nonBlankLines": 33,
+      "decisionPoints": 4,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 13.66
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/CompleteAuditRunHttpRequest.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/StartAuditRunHttpRequest.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportJournalController.cs",
-      "nonBlankLines": 17,
+      "nonBlankLines": 21,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.34
+      "structuralRiskScore": 7.42
     },
     {
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportJournalHttpQuery.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 3,
+      "nonBlankLines": 14,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.72
+      "structuralRiskScore": 6.28
     },
     {
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
@@ -56738,6 +56898,16 @@
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "AuditRunsController",
+      "role": "Controller",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/AuditRunsController.cs",
+      "line": 15,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
       "coveredThrough": []
     },
     {

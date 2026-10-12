@@ -29,3 +29,30 @@ it('preserves the complete list query when opening a bug report', async () => {
     expect(url.pathname).toBe('/bugs/qa-bug');
     expect(Object.fromEntries(url.searchParams)).toEqual({ search: 'QA', status: 'failed', period: '7d', page: '2', extra: 'kept' });
 });
+
+it('renders a log finding with its draft link and period without a link to a fictitious email', () => {
+    TestBed.configureTestingModule({ imports: [AdminBugReportCardComponent], providers: [provideRouter([]), provideTranslateTesting()] });
+    const fixture = TestBed.createComponent(AdminBugReportCardComponent);
+    fixture.componentRef.setInput('report', {
+        id: 'audit-finding',
+        source: 'logs',
+        sourceMessageId: null,
+        auditRunId: 'audit-id',
+        auditFromUtc: '2026-10-11T05:00:00Z',
+        auditToUtc: '2026-10-12T05:00:00Z',
+        receivedAtUtc: '2026-10-12T05:00:00Z',
+        subject: 'Navigation failure',
+        status: 'draft_ready',
+        attempt: 1,
+        summary: 'Regression verified',
+        mergeRequestUrl: 'https://github.com/example/repo/pull/1',
+        contentExpired: false,
+    });
+    fixture.componentRef.setInput('pullRequestUrl', 'https://github.com/example/repo/pull/1');
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.textContent).toContain('ADMIN_BUGS.SOURCE_LOGS');
+    expect(element.textContent).toContain('ADMIN_BUGS.AUDIT_WINDOW');
+    expect(element.querySelector('a[href*="mail-inbox"]')).toBeNull();
+    expect(element.querySelector('a[target="_blank"]')?.getAttribute('href')).toBe('https://github.com/example/repo/pull/1');
+});

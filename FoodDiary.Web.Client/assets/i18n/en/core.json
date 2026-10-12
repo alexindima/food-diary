@@ -1115,7 +1115,7 @@
         "APPLY": "Apply"
     },
     "ADMIN_BUGS": {
-        "SEARCH": "Email subject",
+        "SEARCH": "Title",
         "STATUS": "Status",
         "BACK": "All bugs",
         "NOT_CONFIGURED": "The BugTriage journal connection has not been configured yet.",
@@ -1125,7 +1125,25 @@
         "EXPIRED": "Content retention has expired. Only the receipt metadata remains.",
         "PR": "Open PR",
         "SOURCE": "Source message ID",
-        "SUBTITLE": "Bug report processing and investigation results."
+        "SUBTITLE": "Bug reports, production log audits and investigation results.",
+        "SOURCE_FILTER": "Source",
+        "SOURCE_EMAIL": "Email",
+        "SOURCE_LOGS": "Log audit",
+        "LATEST_AUDIT": "Latest production log audit",
+        "AUDIT_NONE": "No saved audits yet.",
+        "AUDIT_WINDOW": "Checked period (end excluded)",
+        "AUDIT_STARTED": "Started",
+        "AUDIT_COMPLETED": "Completed",
+        "AUDIT_LAST_SUCCESS": "Last complete audit",
+        "AUDIT_COUNT": "Significant findings",
+        "AUDIT_RUNNING": "Audit in progress.",
+        "AUDIT_CLEAN": "Audit completed. No significant findings.",
+        "AUDIT_FINDINGS": "Audit completed. Significant findings need review.",
+        "AUDIT_INCOMPLETE": "Audit incomplete. Some sources could not be checked.",
+        "AUDIT_FAILED": "Audit failed. The checked period could not be verified.",
+        "AUDIT_EXPIRED": "Audit content retention has expired.",
+        "AUDIT_STALE": "The audit is overdue or has not finished. A fresh result is needed.",
+        "AUDIT_UNKNOWN": "Audit status is unavailable."
     },
     "ADMIN_AUDIT": {
         "COVERAGE": "This journal shows persisted dietologist collaboration events. Role changes are available in user profiles and impersonation has a separate journal. Actions recorded only in technical logs are not included.",

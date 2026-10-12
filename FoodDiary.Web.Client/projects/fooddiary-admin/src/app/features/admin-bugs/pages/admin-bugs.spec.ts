@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
 import { BehaviorSubject, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -52,7 +52,7 @@ describe('AdminBugsPageComponent', () => {
         expect(getPage).toHaveBeenLastCalledWith(
             expect.objectContaining({ page: 2, status: 'draft_ready', fromUtc: '2026-01-01T00:00:00Z', toUtc: '2026-01-03T00:00:00.000Z' }),
         );
-        stale.next({ items: [], totalItems: 999, isConfigured: true });
+        stale.next({ items: [], totalItems: 999, isConfigured: true, latestAudit: null });
         expect(fixture.componentInstance['result']()?.totalItems).toBe(0);
     });
 
@@ -62,6 +62,24 @@ describe('AdminBugsPageComponent', () => {
         expect(getPage).not.toHaveBeenCalled();
         expect(fixture.componentInstance['safePullRequestUrl']('javascript:alert(1)')).toBeNull();
         expect(fixture.componentInstance['safePullRequestUrl']('https://example.test/pull/1')).toBe('https://example.test/pull/1');
+    });
+
+    it('keeps source filters in URL requests and shows the latest audit even when no findings match', () => {
+        query.next(convertToParamMap({ source: 'logs', search: 'missing' }));
+        getPage.mockReturnValueOnce(of({ items: [], totalItems: 0, isConfigured: true, latestAudit: null }));
+        const fixture = TestBed.createComponent(AdminBugsPageComponent);
+        fixture.detectChanges();
+        expect(getPage).toHaveBeenCalledWith(expect.objectContaining({ source: 'logs', search: 'missing' }));
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('ADMIN_BUGS.AUDIT_NONE');
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('ADMIN_BUGS.EMPTY');
+    });
+
+    it('refreshes the audit result when applying an unchanged URL filter', async () => {
+        const fixture = TestBed.createComponent(AdminBugsPageComponent);
+        vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(false);
+        const count = getPage.mock.calls.length;
+        await fixture.componentInstance['applyAsync']();
+        expect(getPage.mock.calls.length).toBe(count + 1);
     });
 });
 

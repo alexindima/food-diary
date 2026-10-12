@@ -2,7 +2,7 @@
 
 ## BugTriage journal
 
-The primary API exposes `GET /api/v1/admin/bugs` to the Admin role. It reads the independent BugTriage `GET /api/report-journal` endpoint through the Admin Infrastructure HTTP adapter. No BugTriage server assembly or database is referenced by the primary application.
+The primary API exposes `GET /api/v1/admin/bugs/journal` to the Admin role for the combined email/audit journal. It reads BugTriage `GET /api/report-journal/all` through the Admin Infrastructure HTTP adapter. The existing `GET /api/v1/admin/bugs` retains its email-only payload and non-null message IDs. BugTriage's existing `/api/report-journal` also remains email-only for older primary API instances. No service server assembly or database is referenced by the primary application.
 
 Configure `AdminBugTriage:BaseUrl` and `AdminBugTriage:ReadApiKey` in the primary API's external configuration. Set the matching `BugTriageHttp:ReadApiKey` in the BugTriage service. The read key must be 32–256 characters and different from `BugTriageHttp:ApiKey`. Keep both keys outside source control and browser configuration. The worker key is deliberately rejected by the journal; the journal key does not authorize claim, renewal, completion or MIME retrieval.
 
@@ -11,6 +11,12 @@ HTTPS is required. For a local or forwarded loopback development endpoint, expli
 The journal filters receipt time using an inclusive `fromUtc` and exclusive `toUtc`. Status, literal subject search and ID filters apply before count and pagination. It returns receipt metadata, attempt count and retained investigation results; it never returns MIME or lease credentials. Subject, summary and PR URL become unavailable at content expiry even before the cleanup worker purges them. This remains a retention-limited processing journal, not a permanent archive.
 
 These configuration options do not deploy or activate a connection. Provision the separate key through the deployment's secret mechanism when enabling the integration.
+
+The journal also reads production-audit findings. Entries have `source=email|logs`; log findings have no `sourceMessageId`, and expose `auditRunId`, `auditFromUtc` and exclusive `auditToUtc`. The optional `source` filter applies before count and pagination. For log findings the receipt-time filter uses audit registration, not its checked log interval. Email claims, leases and deduplication are unchanged.
+
+The response's nullable `latestAudit` is independent of list filters. It reports the most recently registered audit, its interval, completion, significant-finding count, safe summary, staleness and last complete audit time. Only `clean` and `findings` count as complete coverage; `incomplete` and `failed` do not update that time. Coverage older than 36 hours or a running audit older than two hours is stale. No history is explicit; clean runs update status without adding bug cards.
+
+Publication uses the trusted worker capability through a separate API, not the Admin reader or an email claim. See [audit publication](../../Services/BugTriage/worker/CODEX_AUDIT_TASK.md). Deploy BugTriage, the primary API and Admin frontend before relying on scheduled writes. If `/api/report-journal/all` returns 404 during rollout or rollback, the new reader falls back to the existing email endpoint; a log-only filter then returns no findings or audit history. Other provider failures remain errors. Old clients keep their email-only response even after audit findings are published. Refresh an open Admin tab to load the new combined UI.
 
 ## Persisted audit journal
 

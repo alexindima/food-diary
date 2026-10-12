@@ -14,6 +14,11 @@ namespace FoodDiary.BugTriage.Presentation.Features.Reports;
 public sealed class BugReportJournalController(IBugReportJournal journal, TimeProvider timeProvider) : ControllerBase {
     [HttpGet]
     public async Task<ActionResult<BugReportJournalPage>> GetPageAsync([FromQuery] BugReportJournalHttpQuery query, CancellationToken cancellationToken) =>
-        Ok(await journal.GetPageAsync(new BugReportJournalFilter(query.Page, query.Limit, query.FromUtc, query.ToUtc, query.Status, query.Search, query.Id),
+        Ok(await journal.GetPageAsync(new BugReportJournalFilter(query.Page, query.Limit, query.FromUtc, query.ToUtc, query.Status, query.Search, query.Id, Source: "email"),
+            timeProvider.GetUtcNow(), cancellationToken));
+
+    [HttpGet("all")]
+    public async Task<ActionResult<BugReportJournalPage>> GetAllAsync([FromQuery] BugReportJournalHttpQuery query, CancellationToken cancellationToken) =>
+        Ok(await journal.GetPageAsync(new BugReportJournalFilter(query.Page, query.Limit, query.FromUtc, query.ToUtc, query.Status, query.Search, query.Id, query.Source),
             timeProvider.GetUtcNow(), cancellationToken));
 }

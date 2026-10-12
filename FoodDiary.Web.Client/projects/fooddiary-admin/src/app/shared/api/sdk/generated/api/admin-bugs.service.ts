@@ -14,11 +14,25 @@ import { Inject, Injectable, Optional } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OpenApiHttpParams, QueryParamStyle } from '../query.params';
 
+import { AdminBugJournalPageHttpResponse } from '../model/admin-bug-journal-page-http-response';
+
 import { AdminBugReportPageHttpResponse } from '../model/admin-bug-report-page-http-response';
 
 import { BaseService } from '../api.base.service';
 import { Configuration } from '../configuration';
 import { BASE_PATH } from '../variables';
+
+export interface GetAdminBugJournalRequestParams {
+    version: string;
+    page?: number;
+    limit?: number;
+    fromUtc?: string;
+    toUtc?: string;
+    status?: string;
+    search?: string;
+    id?: string;
+    source?: string;
+}
 
 export interface GetAdminBugsRequestParams {
     version: string;
@@ -39,6 +53,108 @@ export class AdminBugsSdk extends BaseService {
         @Optional() configuration?: Configuration,
     ) {
         super(basePath, configuration);
+    }
+
+    /**
+     * @endpoint get /api/v{version}/admin/bugs/journal
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public getAdminBugJournal(
+        requestParameters: GetAdminBugJournalRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<AdminBugJournalPageHttpResponse>;
+    public getAdminBugJournal(
+        requestParameters: GetAdminBugJournalRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<AdminBugJournalPageHttpResponse>>;
+    public getAdminBugJournal(
+        requestParameters: GetAdminBugJournalRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<AdminBugJournalPageHttpResponse>>;
+    public getAdminBugJournal(
+        requestParameters: GetAdminBugJournalRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling getAdminBugJournal.');
+        }
+        const page = requestParameters?.page;
+        const limit = requestParameters?.limit;
+        const fromUtc = requestParameters?.fromUtc;
+        const toUtc = requestParameters?.toUtc;
+        const status = requestParameters?.status;
+        const search = requestParameters?.search;
+        const id = requestParameters?.id;
+        const source = requestParameters?.source;
+
+        let localVarQueryParameters = new OpenApiHttpParams(this.encoder);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Page', <any>page, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Limit', <any>limit, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'FromUtc', <any>fromUtc, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'ToUtc', <any>toUtc, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Status', <any>status, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Search', <any>search, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Id', <any>id, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Source', <any>source, QueryParamStyle.Form, true);
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/admin/bugs/journal`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<AdminBugJournalPageHttpResponse>('get', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            params: localVarQueryParameters.toHttpParams(),
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
     }
 
     /**

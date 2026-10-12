@@ -113,6 +113,20 @@ After activation, send a synthetic bug with an image and verify import, claim, M
 
 Rollback: stop BugTriage and the local task, revoke its token and retain the BugTriage database for diagnosis under the retention policy. MailInbox and the main application continue operating; no primary database schema or SSO change is involved.
 
+## Production audit journal
+
+BugTriage also stores sanitized results of authorized local production-log audits in `bugtriage_audit_runs` and `bugtriage_audit_findings`, separately from mail claims. The server never executes Codex, Git or investigations. Its additive initializer creates the tables; deployment grants DML to the runtime role.
+
+- `PUT /api/audit-runs/{id}/start`: register a fixed `[fromUtc,toUtc)` interval, maximum seven days, ending no more than five minutes in the future or starting more than 90 days ago. Requires a valid UUID and worker key. An identical retry returns 204 without changing start/expiry; a conflicting interval or expired receipt returns 409.
+- `PUT /api/audit-runs/{id}/complete`: save `clean`, `findings`, `incomplete` or `failed`, a nonempty summary and up to 20 findings. Returns 204 on first or identical completion, 400 for invalid input and 409 for missing, expired or conflicting run/finding identities. One transaction saves findings and immutable completion together. Requests are bounded to 64 KiB; caching is disabled. The journal read key is rejected.
+- `GET /api/report-journal/all`: includes email reports and audit findings plus `latestAudit`. Clean audits add no cards. Source, period, status, title and ID filters apply before pagination; latest-audit metadata is unfiltered. The existing `/api/report-journal` forces the email source so older primary API instances retain non-null mail IDs.
+
+Content expires after `BugTriage:ContentRetention` from registration, default 30 days. Readers redact summaries, titles and PR links before physical purge. A separate worker clears audit content independently of mail polling and preserves UUID/time receipts against replay. Expired or conflicting results cannot be revived.
+
+Use `worker/audit.py` and [its task recipe](../../Services/BugTriage/worker/CODEX_AUDIT_TASK.md) for registration, publication, retry, local retention and rollout. They reuse the existing private forwarding connection and worker credential. No new service, database, public listener or secret is required. Publication is the only additional production write authorized by the audit prompt. If unavailable, collection continues and the prepared result remains local for an identical retry.
+
+Cross-day incident grouping, historical Markdown import and PR-state synchronization are not implemented.
+
 ## Receipt acknowledgements and outgoing mail
 
 The primary application can send editable receipt acknowledgements for persisted bug mail, independently of the triage worker. See [Outgoing mail](OUTGOING_MAIL.md) for ownership, duplicate/auto-response handling, journal access and opt-in rollout.

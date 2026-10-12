@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1343,
+    "contracts": 1350,
     "ambiguousContracts": 29,
-    "consumerEdges": 10505,
-    "productionConsumerEdges": 6008,
-    "testConsumerEdges": 4497,
-    "consumedContracts": 1343,
+    "consumerEdges": 10527,
+    "productionConsumerEdges": 6023,
+    "testConsumerEdges": 4504,
+    "consumedContracts": 1350,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -419,6 +419,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "AdminAuditRunSummaryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminAuditRunSummaryHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "AdminBillingPaymentHttpResponse",
       "roles": [
         "Response"
@@ -499,6 +516,40 @@
       ],
       "definitionPaths": [
         "Modules/Admin/Presentation/Responses/AdminBillingWebhookEventHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "AdminBugJournalEntryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminBugJournalEntryHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "AdminBugJournalPageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminBugJournalPageHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -2511,6 +2562,23 @@
       ],
       "definitionPaths": [
         "Modules/Fasting/Presentation/Features/Logs/Requests/ClientTelemetryLogHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "CompleteAuditRunHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/CompleteAuditRunHttpRequest.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -5645,6 +5713,23 @@
       ],
       "definitionPaths": [
         "Modules/Admin/Application/Queries/GetAdminBillingWebhookEvents/GetAdminBillingWebhookEventsQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "GetAdminBugJournalHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/GetAdminBugJournalHttpQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9869,6 +9954,23 @@
       ],
       "definitionPaths": [
         "Shared/FoodDiary.Audit.Contracts/Common/Abstractions/Audit/IAuditLogger.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IAuditRunStore",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IAuditRunStore.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -20615,6 +20717,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "StartAuditRunHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/StartAuditRunHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "StartFastingCommand",
       "roles": [
         "Command"
@@ -24231,6 +24350,32 @@
       "referenceCount": 2
     },
     {
+      "contract": "AdminAuditRunSummaryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminAuditRunSummaryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminBugReportHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminAuditRunSummaryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminAuditRunSummaryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Responses/AdminBugJournalPageHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "AdminBillingPaymentHttpResponse",
       "roles": [
         "Response"
@@ -24517,6 +24662,84 @@
       "referenceCount": 1
     },
     {
+      "contract": "AdminBugJournalEntryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminBugJournalEntryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminBugReportHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminBugJournalEntryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminBugJournalEntryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Responses/AdminBugJournalPageHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminBugJournalEntryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminBugJournalEntryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminBugJournalPageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminBugJournalPageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminBugReportsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminBugJournalPageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminBugJournalPageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminBugReportHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminBugJournalPageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminBugJournalPageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "AdminBugReportHttpResponse",
       "roles": [
         "Response"
@@ -24541,6 +24764,19 @@
       "consumerPath": "Modules/Admin/Presentation/Responses/AdminBugReportPageHttpResponse.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "AdminBugReportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminBugReportHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "AdminBugReportPageHttpResponse",
@@ -29046,7 +29282,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportJournalController.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "BugReportJournalHttpQuery",
@@ -31222,6 +31458,32 @@
       "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Presentation.Tests/LogsControllerTests.cs",
       "isTest": true,
       "referenceCount": 9
+    },
+    {
+      "contract": "CompleteAuditRunHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/CompleteAuditRunHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/AuditRunsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CompleteAuditRunHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/CompleteAuditRunHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Services/BugTriage/tests/FoodDiary.BugTriage.Tests/ContractSnapshotTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "CompleteReportHttpRequest",
@@ -43586,6 +43848,45 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetAdminBugJournalHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/GetAdminBugJournalHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminBugReportsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetAdminBugJournalHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/GetAdminBugJournalHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminBugReportHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetAdminBugJournalHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/GetAdminBugJournalHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetAdminBugReportsHttpQuery",
       "roles": [
         "Query"
@@ -43661,7 +43962,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Presentation/Mappings/AdminBugReportHttpMappings.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "GetAdminBugReportsQuery",
@@ -43700,7 +44001,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "GetAdminContentReportsHttpQuery",
@@ -60441,6 +60742,84 @@
       "consumerPath": "Shared/tests/FoodDiary.Persistence.Runtime.Tests/RuntimeRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IAuditRunStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IAuditRunStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Extensions/BugTriageInfrastructureExtensions.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAuditRunStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IAuditRunStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlAuditRunStore.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAuditRunStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IAuditRunStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlBugReportJournal.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAuditRunStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IAuditRunStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Workers/AuditRetentionWorker.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAuditRunStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IAuditRunStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/AuditRunsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAuditRunStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IAuditRunStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Services/BugTriage/tests/FoodDiary.BugTriage.Tests/BugReportsHttpTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IAuthenticationTokenService",
@@ -150293,6 +150672,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "StartAuditRunHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/StartAuditRunHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/AuditRunsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "StartAuditRunHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/StartAuditRunHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Services/BugTriage/tests/FoodDiary.BugTriage.Tests/ContractSnapshotTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

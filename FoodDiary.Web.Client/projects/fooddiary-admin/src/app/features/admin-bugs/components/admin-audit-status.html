@@ -1,0 +1,19 @@
+<fd-ui-card density="compact" [title]="'ADMIN_BUGS.LATEST_AUDIT' | translate" [accent]="accent()">
+    <div class="audit-details">
+        <p role="status">{{ statusKey() | translate }}</p>
+        @if (audit(); as run) {
+            <p>{{ 'ADMIN_BUGS.AUDIT_WINDOW' | translate }}: {{ run.fromUtc | date: 'medium' }} – {{ run.toUtc | date: 'medium' }}</p>
+            <p>{{ 'ADMIN_BUGS.AUDIT_STARTED' | translate }}: {{ run.startedAtUtc | date: 'medium' }}</p>
+            @if (run.completedAtUtc) {
+                <p>{{ 'ADMIN_BUGS.AUDIT_COMPLETED' | translate }}: {{ run.completedAtUtc | date: 'medium' }}</p>
+            }
+            @if (run.lastSuccessfulAtUtc) {
+                <p>{{ 'ADMIN_BUGS.AUDIT_LAST_SUCCESS' | translate }}: {{ run.lastSuccessfulAtUtc | date: 'medium' }}</p>
+            }
+            @if (!run.contentExpired) {
+                <p>{{ run.summary }}</p>
+                <p>{{ 'ADMIN_BUGS.AUDIT_COUNT' | translate }}: {{ run.findingCount }}</p>
+            }
+        }
+    </div>
+</fd-ui-card>

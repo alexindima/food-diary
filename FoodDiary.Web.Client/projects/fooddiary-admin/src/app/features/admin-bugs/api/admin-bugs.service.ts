@@ -17,7 +17,7 @@ export class AdminBugsService {
 
     public getPage(params: Record<string, string | number>): Observable<AdminBugReportPage> {
         return this.sdk.client
-            .getAdminBugs({ version: this.sdk.version }, 'body', false, sdkRequestOptions(undefined, params))
+            .getAdminBugJournal({ version: this.sdk.version }, 'body', false, sdkRequestOptions(undefined, params))
             .pipe(map(adminBugReportPageFromSdk));
     }
 }

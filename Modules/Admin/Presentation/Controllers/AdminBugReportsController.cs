@@ -21,4 +21,10 @@ public sealed class AdminBugReportsController(ISender mediator) : BaseApiControl
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetPage([FromQuery] GetAdminBugReportsHttpQuery query) =>
         HandleOk(query.ToQuery(), static page => page.ToHttpResponse());
+
+    [HttpGet("journal")]
+    [ProducesResponseType<AdminBugJournalPageHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetJournal([FromQuery] GetAdminBugJournalHttpQuery query) =>
+        HandleOk(query.ToQuery(), static page => page.ToJournalHttpResponse());
 }

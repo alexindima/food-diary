@@ -1,0 +1,14 @@
+:host {
+    display: block;
+    margin-block: var(--fd-space-md);
+    overflow-wrap: anywhere;
+}
+
+.audit-details {
+    display: grid;
+    gap: var(--fd-space-sm);
+}
+
+p {
+    margin: 0;
+}

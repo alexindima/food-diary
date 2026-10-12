@@ -53,17 +53,25 @@
     {
       "pageId": "module.mail-services",
       "pagePath": ".llm-wiki/modules/mail-services.md",
-      "pageSha256": "7fecb99ca5086b27f1ca730504147cf60fc560b3b8c7a7716845cd996b83d607",
+      "pageSha256": "c97741bf3292821b9902858ef77a9b79daef938d25e689c0a17409bb8aabb28f",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "e86448d0be0d4b5af379b2bf739fc3fc4d0e86af0cfed79b29d3f15eb2375c85"
+          "path": "docs/adr/0036-independent-bug-triage-service.md",
+          "sha256": "f8468a587a5adb35e0ef31d63cf473b1c0ea2db1bdf63b87575513dcb131bf17"
+        },
+        {
+          "path": "docs/backend/BUG_TRIAGE.md",
+          "sha256": "0491def148f57b0c782d74658c30c5260f1499db39fc37fa75b7a17484b32963"
+        },
+        {
+          "path": "Services/BugTriage/AGENTS.md",
+          "sha256": "59815410863f6d28df1a0d29779352be396aead1b705c9fd066d25426b6b20b0"
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
+      "reason": "Reviewed independent ownership in ADR 0036 and service guide: audit runs use separate tables, immutable completion and independent retention; no MailInbox dependency or primary database write was added. Navigation now links the combined journal. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
       "baseRef": "HEAD",
-      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:45.0497095Z"
+      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
+      "reviewedAtUtc": "2026-10-12T19:09:38.5941300Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -215,17 +223,17 @@
     {
       "pageId": "workflow-api-compatibility",
       "pagePath": ".llm-wiki/workflows/api-compatibility.md",
-      "pageSha256": "6e6ace9a3ed3b5cc55eeeb62d895581342cb6f0c37181d14283e16f69fdcb6c7",
+      "pageSha256": "6a4fbe9e389de624f52a78cd689384c475d8a770e74e9fd1109f861f2ceda68b",
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "57c8ef71b72d2e77f814402568b9828b49c1affe7070d7d43c26c08662394561"
+          "sha256": "4d98bb1bdab5dcf73d4897d62183ae1de4e720d1846abd997350814769c0752e"
         }
       ],
-      "reason": "Reviewed the narrowed ClientGoalsHttpResponse and regenerated OpenAPI snapshots. The API compatibility workflow remains accurate: response removals require explicit review and real HTTP authorization/payload regression evidence. BUG-05 intentionally removes unrelated private fields; the current SDK and focused real HTTP tests cover its consumer.",
+      "reason": "Swagger and SDK regenerated with zero public breaking changes. Legacy email routes retain non-null IDs; journal and 404 fallback support mixed versions. All 280 host integration tests passed. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
       "baseRef": "HEAD",
-      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
-      "reviewedAtUtc": "2026-10-12T05:15:48.3799318Z"
+      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
+      "reviewedAtUtc": "2026-10-12T19:09:40.8195753Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -234,13 +242,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "ff7b8c088976e90fa275aa5d0e53eba03934e4475ec7fcd0f16dddc86bcbc56b"
+          "sha256": "bfe2bd43602e697b86742c9e2b2ca441bcdb40cb7bb552f042b48b66dd96fa36"
         }
       ],
-      "reason": "Reviewed the final new Dashboard presentation component and generated dependency-edge counts. It consumes only same-page block directives and existing shared UI types; no project or cross-feature ownership boundary changed, so the structural architecture-review workflow remains accurate.",
+      "reason": "No project/reference changes. All 2272 architecture tests passed. Real store and HTTP regressions cover concurrency, expiry and old contracts; index signals verified against actual sources and tests. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
       "baseRef": "HEAD",
-      "gitHead": "52502533e53e734c29c1b9d17a53b87b717eb991",
-      "reviewedAtUtc": "2026-10-12T17:49:58.8732159Z"
+      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
+      "reviewedAtUtc": "2026-10-12T19:09:42.9505314Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -249,13 +257,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "18f114760b41057deee9777ef3185d119d6dc1c842eadf3e294bedd8f2018977"
+          "sha256": "7bb2253438f6d1f10a76a02e7043ffb24a81a628ccbe72fa5ce09c58c2e4cf89"
         }
       ],
-      "reason": "Reviewed the narrowed goals transport, current generated SDK consumer and exact payload/permission regressions. Final PostgreSQL HTTP tests6/6 passed after formatting repairs. No backend contract changed in the additional Premium UI recovery. This workflow remains current.",
+      "reason": "Swagger and SDK regenerated with zero public breaking changes. Legacy email routes retain non-null IDs; journal and 404 fallback support mixed versions. All 280 host integration tests passed. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
       "baseRef": "HEAD",
-      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
-      "reviewedAtUtc": "2026-10-12T06:52:20.5891366Z"
+      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
+      "reviewedAtUtc": "2026-10-12T19:09:45.2982595Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -883,13 +891,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1a5688f196846daa1a8bd733e4b4bb4ee8fa0633c9fd5901f349816ccc758ecb"
+          "sha256": "cf67c4e58d6d325165d940f09b2c3f2d624f81ead74ea77827b2455c987c70bc"
         }
       ],
-      "reason": "Reviewed final Dynamics section extraction, layout opt-out and native Space regression: updated metrics stay navigation evidence and existing test-risk guidance remains accurate.",
+      "reason": "No project/reference changes. All 2272 architecture tests passed. Real store and HTTP regressions cover concurrency, expiry and old contracts; index signals verified against actual sources and tests. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
       "baseRef": "HEAD",
-      "gitHead": "52502533e53e734c29c1b9d17a53b87b717eb991",
-      "reviewedAtUtc": "2026-10-12T17:49:13.7946098Z"
+      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
+      "reviewedAtUtc": "2026-10-12T19:09:47.6042093Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -970,13 +978,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "40e719045b58c3c3bd5203409210693689710a48f5f2d4b1794f8d9277e7dd8e"
+          "sha256": "90ccc5fe4e52fd97111c630a684512838cb80f3b89d4b300d62c16db599b94ab"
         }
       ],
-      "reason": "Reviewed final runtime declarations: production jobs/provider settings were not edited. Premium entitlement convergence uses existing authenticated endpoints; provider-backed recipe persistence and hydration undo/retry retain their verified behavior. The runtime workflow remains accurate.",
+      "reason": "Reviewed worker-key writes versus Admin reading, bounds, cancellation, UTC intervals, atomic completion and private retries. Independent retention preserves mail polling; no raw logs or deployment. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
       "baseRef": "HEAD",
-      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
-      "reviewedAtUtc": "2026-10-12T06:52:21.1857422Z"
+      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
+      "reviewedAtUtc": "2026-10-12T19:09:49.6478113Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -985,13 +993,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1a5688f196846daa1a8bd733e4b4bb4ee8fa0633c9fd5901f349816ccc758ecb"
+          "sha256": "cf67c4e58d6d325165d940f09b2c3f2d624f81ead74ea77827b2455c987c70bc"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "90ccc5fe4e52fd97111c630a684512838cb80f3b89d4b300d62c16db599b94ab"
         }
       ],
-      "reason": "The new Dashboard presentation section and opt-out state introduce no identity, network or private-content access; refreshed structural metrics do not change this evidence workflow.",
+      "reason": "Reviewed worker-key writes versus Admin reading, bounds, cancellation, UTC intervals, atomic completion and private retries. Independent retention preserves mail polling; no raw logs or deployment. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
       "baseRef": "HEAD",
-      "gitHead": "52502533e53e734c29c1b9d17a53b87b717eb991",
-      "reviewedAtUtc": "2026-10-12T17:49:15.2154830Z"
+      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
+      "reviewedAtUtc": "2026-10-12T19:09:51.8692554Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1128,17 +1140,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "bbd20d1c79440f0e878e724e474d7877d764ce87468680e83b90076dbcb4dd40"
+          "sha256": "61bd135a34b13630f2f76d7de8c0b6f608411507a3059f17e41b53d63e3a9182"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "2809f65bb79e5b06327f728d74ed95bd4e3f7243b0395f9f4cb3436488e93f06"
+          "sha256": "8ed71b540852c1fe1c4ee13f106415f41e3572b1823434d08b66f458488761d5"
         }
       ],
-      "reason": "The new fd-dashboard-nutrition-block selector is owned by Dashboard and delegates to existing block directives and shared trend UI; refreshed consumer and symbol indexes keep the trace guidance accurate.",
+      "reason": "Indexes reflect route-owned audit status, SDK adapter and source filter. Component tests and Chrome keyboard, desktop/mobile and Russian rendering verify behavior. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
       "baseRef": "HEAD",
-      "gitHead": "52502533e53e734c29c1b9d17a53b87b717eb991",
-      "reviewedAtUtc": "2026-10-12T17:49:16.6533561Z"
+      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
+      "reviewedAtUtc": "2026-10-12T19:09:54.1693909Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1222,13 +1234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "bbd20d1c79440f0e878e724e474d7877d764ce87468680e83b90076dbcb4dd40"
+          "sha256": "61bd135a34b13630f2f76d7de8c0b6f608411507a3059f17e41b53d63e3a9182"
         }
       ],
-      "reason": "Reviewed fd-dashboard-nutrition-block inputs and outputs against its Dashboard consumer and Chrome regressions. Shared nutrition card inputs are unchanged; the new component owns presentation and delegates block toggles, preserving the frontend-contract review workflow.",
+      "reason": "Indexes reflect route-owned audit status, SDK adapter and source filter. Component tests and Chrome keyboard, desktop/mobile and Russian rendering verify behavior. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
       "baseRef": "HEAD",
-      "gitHead": "52502533e53e734c29c1b9d17a53b87b717eb991",
-      "reviewedAtUtc": "2026-10-12T17:50:00.3535709Z"
+      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
+      "reviewedAtUtc": "2026-10-12T19:09:56.2851562Z"
     },
     {
       "pageId": "workflow.query-context",

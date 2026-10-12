@@ -27,6 +27,7 @@ public static class BugTriageInfrastructureExtensions {
         });
         services.AddSingleton<IBugReportStore, NpgsqlBugReportStore>();
         services.AddSingleton<IBugReportJournal, NpgsqlBugReportJournal>();
+        services.AddSingleton<IAuditRunStore, NpgsqlAuditRunStore>();
         services.AddSingleton<IBugMailSource, MailInboxBugSource>();
         services.AddSingleton<ImportBugReports>();
         services.AddOptions<BugTriageOptions>().Bind(configuration.GetSection("BugTriage"))
@@ -48,6 +49,7 @@ public static class BugTriageInfrastructureExtensions {
             client.MaxResponseContentBufferSize = 10 * 1024 * 1024;
         }).ConfigurePrimaryHttpMessageHandler(static () => new HttpClientHandler { AllowAutoRedirect = false });
         services.AddHostedService<BugMailImportWorker>();
+        services.AddHostedService<AuditRetentionWorker>();
         return services;
     }
 }

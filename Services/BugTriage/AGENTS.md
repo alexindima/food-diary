@@ -4,6 +4,7 @@
 - Application owns report lifecycle, consumer/store ports and orchestration. Infrastructure owns PostgreSQL, MailInbox.Client and the polling worker. Presentation owns HTTP and token authorization. WebApi only composes them.
 - MailInbox remains a reusable mail service. Only BugTriage Infrastructure may consume its client.
 - Store one report per MailInbox stored ID, independently of the mail read flag. Claims require a random lease token, expire, and fence stale workers on every write.
+- Store production-audit runs and significant findings separately from mail claims. Fixed UTC intervals and run IDs survive retries; completed payloads are immutable and audit retention must not block email polling.
 - Never execute Codex, Git, repository tests, or attachment programs inside the service. Local workers return reviewed outcomes and draft PR/MR links.
 - Keep bodies, addresses, MIME, tokens and report summaries out of logs. Original content expires after the configured retention; the import receipt must survive content purge.
 - Use separate PostgreSQL database `fooddiary_bugtriage`; initialization is an explicit `--initialize` operation.

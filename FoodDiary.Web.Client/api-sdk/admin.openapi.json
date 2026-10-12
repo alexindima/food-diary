@@ -355,6 +355,55 @@
                 },
                 "type": "object"
             },
+            "AdminAuditRunSummaryHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "completedAtUtc": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "contentExpired": {
+                        "type": "boolean"
+                    },
+                    "findingCount": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "fromUtc": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "id": {
+                        "format": "uuid",
+                        "type": "string"
+                    },
+                    "isStale": {
+                        "type": "boolean"
+                    },
+                    "lastSuccessfulAtUtc": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "startedAtUtc": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "summary": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "toUtc": {
+                        "format": "date-time",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "AdminBillingPaymentHttpResponse": {
                 "additionalProperties": false,
                 "properties": {
@@ -767,6 +816,91 @@
                     },
                     "totalPages": {
                         "format": "int32",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "AdminBugJournalEntryHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "attempt": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "auditFromUtc": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "auditRunId": {
+                        "format": "uuid",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "auditToUtc": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "contentExpired": {
+                        "type": "boolean"
+                    },
+                    "id": {
+                        "format": "uuid",
+                        "type": "string"
+                    },
+                    "mergeRequestUrl": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "receivedAtUtc": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "source": {
+                        "type": "string"
+                    },
+                    "sourceMessageId": {
+                        "format": "uuid",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "subject": {
+                        "type": "string"
+                    },
+                    "summary": {
+                        "nullable": true,
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "AdminBugJournalPageHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "isConfigured": {
+                        "type": "boolean"
+                    },
+                    "items": {
+                        "items": {
+                            "$ref": "#/components/schemas/AdminBugJournalEntryHttpResponse"
+                        },
+                        "type": "array"
+                    },
+                    "latestAudit": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/AdminAuditRunSummaryHttpResponse"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "totalItems": {
+                        "format": "int64",
                         "type": "integer"
                     }
                 },
@@ -6734,6 +6868,169 @@
                             "text/plain": {
                                 "schema": {
                                     "$ref": "#/components/schemas/AdminBugReportPageHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": ["AdminBugs"]
+            }
+        },
+        "/api/v{version}/admin/bugs/journal": {
+            "get": {
+                "operationId": "getAdminBugJournal",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "Page",
+                        "schema": {
+                            "default": 1,
+                            "format": "int32",
+                            "maximum": 10000,
+                            "minimum": 1,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "Limit",
+                        "schema": {
+                            "default": 50,
+                            "format": "int32",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "FromUtc",
+                        "schema": {
+                            "format": "date-time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "ToUtc",
+                        "schema": {
+                            "format": "date-time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "Status",
+                        "schema": {
+                            "maxLength": 32,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "Search",
+                        "schema": {
+                            "maxLength": 320,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "Id",
+                        "schema": {
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "Source",
+                        "schema": {
+                            "maxLength": 16,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AdminBugJournalPageHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AdminBugJournalPageHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AdminBugJournalPageHttpResponse"
                                 }
                             }
                         },

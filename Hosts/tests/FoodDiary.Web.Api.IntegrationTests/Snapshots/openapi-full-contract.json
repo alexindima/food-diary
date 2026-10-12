@@ -1539,6 +1539,114 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/bugs/journal",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminBugJournalPageHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminBugJournalPageHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminBugJournalPageHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "FromUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "Id",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 320
+            },
+            {
+              "Name": "Source",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 16
+            },
+            {
+              "Name": "Status",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 32
+            },
+            {
+              "Name": "ToUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/catalog/products/export",
       "Operations": [
         {
@@ -20498,6 +20606,84 @@
       ]
     },
     {
+      "Name": "AdminAuditRunSummaryHttpResponse",
+      "Properties": [
+        {
+          "Name": "completedAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
+          "Name": "contentExpired",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "findingCount",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "fromUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "isStale",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "lastSuccessfulAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
+          "Name": "startedAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "status",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "summary",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "toUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        }
+      ]
+    },
+    {
       "Name": "AdminBillingPaymentHttpResponse",
       "Properties": [
         {
@@ -21124,6 +21310,127 @@
           "Required": false,
           "Type": "integer",
           "Format": "int32",
+          "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "AdminBugJournalEntryHttpResponse",
+      "Properties": [
+        {
+          "Name": "attempt",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "auditFromUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
+          "Name": "auditRunId",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": true
+        },
+        {
+          "Name": "auditToUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
+          "Name": "contentExpired",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "mergeRequestUrl",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "receivedAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "source",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "sourceMessageId",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": true
+        },
+        {
+          "Name": "status",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "subject",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "summary",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        }
+      ]
+    },
+    {
+      "Name": "AdminBugJournalPageHttpResponse",
+      "Properties": [
+        {
+          "Name": "isConfigured",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "items",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/AdminBugJournalEntryHttpResponse"
+        },
+        {
+          "Name": "latestAudit",
+          "Required": false,
+          "Reference": "#/components/schemas/AdminAuditRunSummaryHttpResponse",
+          "Nullable": false
+        },
+        {
+          "Name": "totalItems",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int64",
           "Nullable": false
         }
       ]

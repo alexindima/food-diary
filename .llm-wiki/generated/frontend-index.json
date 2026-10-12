@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2544,
-    "symbols": 825,
+    "typescriptFiles": 2550,
+    "symbols": 826,
     "routes": 108,
     "features": 46,
-    "specs": 734,
+    "specs": 736,
     "localeFiles": 5,
     "roles": {
-      "Component": 489,
+      "Component": 490,
       "Directive": 15,
       "Facade": 88,
       "Other": 34,
@@ -155,6 +155,7 @@
       "name": "admin-bugs",
       "root": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs",
       "symbols": [
+        "AdminAuditStatusComponent",
         "AdminBugReportCardComponent",
         "AdminBugsFacade",
         "AdminBugsPageComponent",
@@ -162,6 +163,8 @@
       ],
       "routes": [],
       "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/api/admin-bugs-sdk.mapper.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-audit-status.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-card.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.spec.ts"
       ]
@@ -2336,6 +2339,13 @@
       "line": 13
     },
     {
+      "name": "AdminAuditStatusComponent",
+      "role": "Component",
+      "selector": "fd-admin-audit-status",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-audit-status.ts",
+      "line": 24
+    },
+    {
       "name": "AdminBugReportCardComponent",
       "role": "Component",
       "selector": "fd-admin-bug-report-card",
@@ -2354,7 +2364,7 @@
       "role": "Component",
       "selector": "fd-admin-bugs",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.ts",
-      "line": 39
+      "line": 43
     },
     {
       "name": "AdminCatalogService",
@@ -2837,7 +2847,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-bugs.service.ts",
-      "line": 35
+      "line": 49
     },
     {
       "name": "AdminCatalogSdk",
@@ -7924,8 +7934,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1185,
-      "russianProperties": 1185,
+      "englishProperties": 1203,
+      "russianProperties": 1203,
       "countsMatch": true
     },
     {

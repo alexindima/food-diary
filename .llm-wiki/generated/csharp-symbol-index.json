@@ -8,22 +8,22 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4563,
-    "symbols": 4498,
+    "sourceFiles": 4579,
+    "symbols": 4514,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2325,
+      "class": 2328,
       "enum": 71,
-      "interface": 412,
-      "record": 1550,
-      "record struct": 140
+      "interface": 413,
+      "record": 1561,
+      "record struct": 141
     },
     "roles": {
       "Command": 231,
       "CommandHandler": 225,
       "Configuration": 100,
-      "Controller": 111,
+      "Controller": 112,
       "Entity": 102,
       "Event": 19,
       "Factory": 15,
@@ -32,14 +32,14 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1847,
-      "Query": 300,
+      "Other": 1856,
+      "Query": 301,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 99,
-      "Request": 176,
-      "Response": 263,
+      "Request": 178,
+      "Response": 266,
       "Service": 168,
       "Validator": 236,
       "ValueObject": 177,
@@ -2722,6 +2722,13 @@
       "line": 2
     },
     {
+      "name": "AdminAuditRunSummary",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminAuditRunSummary.cs",
+      "line": 2
+    },
+    {
       "name": "AdminBillingListFilter",
       "kind": "record",
       "role": "Other",
@@ -4161,7 +4168,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Infrastructure/Integrations/BugTriage/AdminBugReportReader.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "AdminBugTriageOptions",
@@ -4689,6 +4696,13 @@
       "line": 5
     },
     {
+      "name": "GetAdminBugJournalHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminBugJournalHttpQuery.cs",
+      "line": 5
+    },
+    {
       "name": "GetAdminBugReportsHttpQuery",
       "kind": "record",
       "role": "Query",
@@ -4885,6 +4899,13 @@
       "line": 2
     },
     {
+      "name": "AdminAuditRunSummaryHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Responses/AdminAuditRunSummaryHttpResponse.cs",
+      "line": 2
+    },
+    {
       "name": "AdminBillingPaymentHttpResponse",
       "kind": "record",
       "role": "Response",
@@ -4917,6 +4938,20 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Admin/Presentation/Responses/AdminBillingWebhookEventHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminBugJournalEntryHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Responses/AdminBugJournalEntryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminBugJournalPageHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Responses/AdminBugJournalPageHttpResponse.cs",
       "line": 2
     },
     {
@@ -27971,6 +28006,13 @@
       "line": 2
     },
     {
+      "name": "IAuditRunStore",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IAuditRunStore.cs",
+      "line": 4
+    },
+    {
       "name": "IBugMailSource",
       "kind": "interface",
       "role": "Other",
@@ -27992,6 +28034,41 @@
       "line": 5
     },
     {
+      "name": "AuditCompletion",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/AuditRuns/AuditCompletion.cs",
+      "line": 2
+    },
+    {
+      "name": "AuditFinding",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/AuditRuns/AuditFinding.cs",
+      "line": 4
+    },
+    {
+      "name": "AuditRunId",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/AuditRuns/AuditRunId.cs",
+      "line": 2
+    },
+    {
+      "name": "AuditRunSummary",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/AuditRuns/AuditRunSummary.cs",
+      "line": 2
+    },
+    {
+      "name": "AuditWindow",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/AuditRuns/AuditWindow.cs",
+      "line": 2
+    },
+    {
       "name": "BugReportJournalEntry",
       "kind": "record",
       "role": "Other",
@@ -28010,7 +28087,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/BugReportJournalPage.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "BugReportId",
@@ -28104,6 +28181,13 @@
       "line": 4
     },
     {
+      "name": "NpgsqlAuditRunStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlAuditRunStore.cs",
+      "line": 10
+    },
+    {
       "name": "NpgsqlBugReportJournal",
       "kind": "class",
       "role": "Other",
@@ -28118,6 +28202,13 @@
       "line": 10
     },
     {
+      "name": "AuditRetentionWorker",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Workers/AuditRetentionWorker.cs",
+      "line": 8
+    },
+    {
       "name": "BugMailImportWorker",
       "kind": "class",
       "role": "Other",
@@ -28130,6 +28221,27 @@
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Extensions/BugTriagePresentationExtensions.cs",
       "line": 10
+    },
+    {
+      "name": "AuditRunsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/AuditRunsController.cs",
+      "line": 15
+    },
+    {
+      "name": "CompleteAuditRunHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/CompleteAuditRunHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "StartAuditRunHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/StartAuditRunHttpRequest.cs",
+      "line": 2
     },
     {
       "name": "BugReportJournalController",

@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 112,
     "routedStandaloneComponents": 68,
     "componentsWithoutDirectSpecs": 130,
-    "criticalSymbolsWithoutTestReferences": 46,
+    "criticalSymbolsWithoutTestReferences": 47,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -5596,6 +5596,16 @@
       "role": "Controller",
       "path": "Modules/MealPlanning/Presentation/MealPlans/Controllers/AdminMealPlansController.cs",
       "line": 20,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "AuditRunsController",
+      "role": "Controller",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/AuditRunsController.cs",
+      "line": 15,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

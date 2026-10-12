@@ -55,7 +55,8 @@
     {
         "name": "AdminBugs",
         "operations": {
-            "GET /api/v{version}/admin/bugs": "getAdminBugs"
+            "GET /api/v{version}/admin/bugs": "getAdminBugs",
+            "GET /api/v{version}/admin/bugs/journal": "getAdminBugJournal"
         },
         "prefix": "/api/v{version}/admin/bugs"
     },

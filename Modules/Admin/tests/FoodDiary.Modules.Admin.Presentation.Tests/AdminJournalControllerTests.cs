@@ -44,9 +44,41 @@ public sealed class AdminJournalControllerTests {
         OkObjectResult result = Assert.IsType<OkObjectResult>(await controller.GetPage(request));
         AdminBugReportPageHttpResponse response = Assert.IsType<AdminBugReportPageHttpResponse>(result.Value);
         GetAdminBugReportsQuery query = Assert.IsType<GetAdminBugReportsQuery>(sender.Request);
+        AdminBugReportHttpResponse actualEntry = Assert.Single(response.Items);
         Assert.Multiple(
-            () => Assert.Equivalent(page, response, strict: true),
-            () => Assert.Equivalent(request, query.Filter, strict: true));
+            () => Assert.Equal(new AdminBugReportHttpResponse(entry.Id, entry.SourceMessageId!.Value, entry.ReceivedAtUtc,
+                entry.Subject, entry.Status, entry.Attempt, entry.Summary, entry.MergeRequestUrl, entry.ContentExpired), actualEntry),
+            () => Assert.Equal(page.TotalItems, response.TotalItems),
+            () => Assert.Equal(page.IsConfigured, response.IsConfigured),
+            () => Assert.Equal(new AdminBugReportFilter(request.Page, request.Limit, request.FromUtc, request.ToUtc,
+                request.Status, request.Search, request.Id, Source: "email"), query.Filter));
+    }
+
+    [Fact]
+    public async Task BugJournal_MapsLogFindingAndLatestAuditWithoutAMailIdentity() {
+        var run = new AdminAuditRunSummary(Guid.NewGuid(), DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1),
+            DateTimeOffset.UnixEpoch.AddDays(1), CompletedAtUtc: null, "running", Summary: null, 0,
+            ContentExpired: false, IsStale: false, LastSuccessfulAtUtc: null);
+        var entry = new AdminBugReportEntry(Guid.NewGuid(), SourceMessageId: null, run.StartedAtUtc, "Finding", "needs_information", 1,
+            "Evidence", MergeRequestUrl: null, ContentExpired: false) {
+            Source = "logs",
+            AuditRunId = run.Id,
+            AuditFromUtc = run.FromUtc,
+            AuditToUtc = run.ToUtc,
+        };
+        var page = new AdminBugReportPage([entry], 1) { LatestAudit = run };
+        CapturedSender sender = SubstituteSender.Capture(Result.Success(page));
+        AdminBugReportsController controller = WithContext(new AdminBugReportsController(sender));
+        OkObjectResult result = Assert.IsType<OkObjectResult>(await controller.GetJournal(new GetAdminBugJournalHttpQuery(Source: "logs")));
+        AdminBugJournalPageHttpResponse response = Assert.IsType<AdminBugJournalPageHttpResponse>(result.Value);
+        AdminBugJournalEntryHttpResponse finding = Assert.Single(response.Items);
+        Assert.Null(finding.SourceMessageId);
+        Assert.Equal("logs", finding.Source);
+        Assert.Equal(run.Id, finding.AuditRunId);
+        Assert.Equal(run.FromUtc, finding.AuditFromUtc);
+        Assert.Equal(run.ToUtc, finding.AuditToUtc);
+        Assert.Equal(run.Id, response.LatestAudit!.Id);
+        Assert.Equal("logs", Assert.IsType<GetAdminBugReportsQuery>(sender.Request).Filter.Source);
     }
 
     [Fact]

@@ -48,9 +48,28 @@ public sealed class AdminBugReportReaderTests {
         Assert.Equivalent(expected, actual, strict: true);
         Assert.Equal(new string('k', 32), handler.ReadKey);
         Assert.NotNull(handler.Uri);
-        Assert.Equal("/api/report-journal", handler.Uri.AbsolutePath);
+        Assert.Equal("/api/report-journal/all", handler.Uri.AbsolutePath);
         Assert.Contains(populated ? "search=subject%20%26%20details" : "search=", handler.Uri.Query, StringComparison.Ordinal);
         Assert.Contains(populated ? "page=2&limit=10" : "page=1&limit=50", handler.Uri.Query, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("logs")]
+    public async Task OlderProvider_FallsBackToEmailWithoutInventingLogHistory(string? source) {
+        var expected = new AdminBugReportPage([new AdminBugReportEntry(Guid.NewGuid(), Guid.NewGuid(), DateTimeOffset.UnixEpoch,
+            "Email", "pending", 0, Summary: null, MergeRequestUrl: null, ContentExpired: false)], 1);
+        int requests = 0;
+        using var handler = new ResponseHandler(() => ++requests == 1 ? new HttpResponseMessage(HttpStatusCode.NotFound) :
+            new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent.Create(expected) });
+        using var client = new HttpClient(handler) { BaseAddress = new Uri("https://bugs.example.com/") };
+        var reader = new AdminBugReportReader(client, Options.Create(new AdminBugTriageOptions { BaseUrl = client.BaseAddress.ToString(), ReadApiKey = new string('k', 32) }));
+        AdminBugReportPage page = await reader.GetPageAsync(Filter() with { Source = source }, CancellationToken.None);
+        Assert.Equal(2, requests);
+        Assert.Equal("/api/report-journal", handler.Uri!.AbsolutePath);
+        Assert.Null(page.LatestAudit);
+        Assert.Equal(source is "logs" ? 0 : 1, page.TotalItems);
+        Assert.Equal(source is "logs" ? 0 : 1, page.Items.Count);
     }
 
     [Theory]

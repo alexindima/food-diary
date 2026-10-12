@@ -16,7 +16,8 @@ public sealed class ReportStoreTests : IAsyncLifetime {
         await _store.CompleteAsync(lease.Id, lease.LeaseToken, new ReportCompletion(ReportOutcome.DraftReady, "private summary", "https://example.test/pull/1"), Now, CancellationToken.None);
         await _store.ImportAsync(new ImportedReport(SourceMessageId.New(), Now.AddMinutes(-1), "literal_%", "private", [1]), Now.AddDays(1), CancellationToken.None);
         await _store.ImportAsync(new ImportedReport(SourceMessageId.New(), Now, "other", "private", [1]), Now.AddDays(1), CancellationToken.None);
-        var journal = new NpgsqlBugReportJournal(_dataSource);
+        var journal = new NpgsqlBugReportJournal(_dataSource, new NpgsqlAuditRunStore(_dataSource,
+            Microsoft.Extensions.Options.Options.Create(new FoodDiary.BugTriage.Infrastructure.Options.BugTriageOptions())));
         var filter = new BugReportJournalFilter(Page: 2, Limit: 1, FromUtc: Now.AddMinutes(-3), ToUtc: Now,
             Status: null, Search: "_%", Id: null);
 

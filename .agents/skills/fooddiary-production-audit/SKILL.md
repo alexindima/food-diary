@@ -15,6 +15,7 @@ Produce a repeatable account of what happened in production, what changed since 
 - Production Grafana is `https://grafana.fooddiary.club`. Use read-only requests. Discover datasource UIDs/types before Loki or Prometheus queries; prefer the Grafana datasource proxy where supported. Use browser access if the authentication flow requires it.
 - Load authentication inside the requesting process from the secret location in current `AGENTS.md`. Never print credentials, authorization headers, cookies or credential-bearing URLs. Do not capture authentication forms containing secrets. Reject unexpected authentication redirects rather than forwarding credentials to another origin.
 - For host correlation use `ssh fooddiary-prod`, read-only, within the task's scope. `fooddiary-bugtriage` belongs to email processing and is not a general production identity.
+- When the task authorizes saving audit results in the admin journal, follow [the audit publication recipe](../../../Services/BugTriage/worker/CODEX_AUDIT_TASK.md). Use its forwarding-only BugTriage connection solely for journal publication. Begin the saved run before collection and use its fixed UTC interval; preserve prepared results for identical retries. This exception does not permit other production writes.
 
 ## Complete collection in a fixed window
 

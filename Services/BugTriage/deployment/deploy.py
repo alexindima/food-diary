@@ -59,6 +59,7 @@ GRANT CONNECT ON DATABASE fooddiary_bugtriage TO bugtriage_runtime;
 REVOKE CREATE ON SCHEMA public FROM PUBLIC;
 GRANT USAGE ON SCHEMA public TO bugtriage_runtime;
 GRANT SELECT, INSERT, UPDATE, DELETE ON bugtriage_reports TO bugtriage_runtime;
+GRANT SELECT, INSERT, UPDATE, DELETE ON bugtriage_audit_runs, bugtriage_audit_findings TO bugtriage_runtime;
 """
     run(compose + ["exec", "-T", "bugtriage-postgres", "psql", "-U", "bugtriage_owner", "-d", "fooddiary_bugtriage", "-v", "ON_ERROR_STOP=1"],
         input=sql, text=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

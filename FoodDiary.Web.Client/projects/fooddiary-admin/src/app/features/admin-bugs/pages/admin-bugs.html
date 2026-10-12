@@ -2,6 +2,15 @@
     <fd-admin-period [inline]="true" />
     <fd-ui-input [label]="'ADMIN_BUGS.SEARCH' | translate" [formField]="form.search" />
     <fd-ui-input [label]="'ADMIN_BUGS.STATUS' | translate" [formField]="form.status" />
+    <fd-ui-select
+        [label]="'ADMIN_BUGS.SOURCE_FILTER' | translate"
+        [formField]="form.source"
+        [options]="[
+            { value: '', label: 'ADMIN_COMMON.ALL' | translate },
+            { value: 'email', label: 'ADMIN_BUGS.SOURCE_EMAIL' | translate },
+            { value: 'logs', label: 'ADMIN_BUGS.SOURCE_LOGS' | translate },
+        ]"
+    />
     <fd-ui-button type="submit">{{ 'ADMIN_CATALOG.APPLY' | translate }}</fd-ui-button>
 </form>
 @if (detailId()) {
@@ -14,27 +23,21 @@
 } @else if (result(); as data) {
     @if (!data.isConfigured) {
         <p role="status">{{ 'ADMIN_BUGS.NOT_CONFIGURED' | translate }}</p>
-    } @else if (data.items.length === 0) {
-        <p>{{ 'ADMIN_BUGS.EMPTY' | translate }}</p>
     } @else {
-        <p>{{ 'ADMIN_BUGS.TOTAL' | translate }}: {{ data.totalItems }}</p>
-        @for (report of data.items; track report.id) {
-            <fd-admin-bug-report-card [report]="report" [pullRequestUrl]="safePullRequestUrl(report.mergeRequestUrl)" />
-        }
-        @if (!detailId()) {
-            <fd-ui-button
-                [disabled]="page() <= 1"
-                [disabledReason]="'ADMIN_COMMON.FIRST_PAGE' | translate"
-                (click)="goToPage(page() - 1)"
-                >{{ 'ADMIN_COMMON.PREVIOUS' | translate }}</fd-ui-button
-            >
-            <span>{{ page() }}</span>
-            <fd-ui-button
-                [disabled]="page() * 25 >= data.totalItems"
-                [disabledReason]="'ADMIN_COMMON.LAST_PAGE' | translate"
-                (click)="goToPage(page() + 1)"
-                >{{ 'ADMIN_COMMON.NEXT' | translate }}</fd-ui-button
-            >
+        <fd-admin-audit-status [audit]="data.latestAudit ?? null" />
+        @if (data.items.length === 0) {
+            <p>{{ 'ADMIN_BUGS.EMPTY' | translate }}</p>
+        } @else {
+            <p>{{ 'ADMIN_BUGS.TOTAL' | translate }}: {{ data.totalItems }}</p>
+            @for (report of data.items; track report.id) {
+                <fd-admin-bug-report-card [report]="report" [pullRequestUrl]="safePullRequestUrl(report.mergeRequestUrl)" />
+            }
+            <fd-ui-pagination
+                [length]="detailId() === null ? data.totalItems : 0"
+                [pageSize]="25"
+                [pageIndex]="page() - 1"
+                (pageIndexChange)="goToPage($event + 1)"
+            />
         }
     }
 }
