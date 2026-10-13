@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { CapitalizeFirstLetterPipe } from '../../../../../shared/ui/capitalize-first-letter.pipe';
 import type { IngredientPreviewItem } from '../recipe-detail-lib/recipe-detail.types';
 
 @Component({
     selector: 'fd-recipe-detail-ingredient-preview',
-    imports: [TranslatePipe],
+    imports: [TranslatePipe, CapitalizeFirstLetterPipe],
     templateUrl: './recipe-detail-ingredient-preview.html',
     styleUrl: '../recipe-detail/recipe-detail.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

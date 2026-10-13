@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "70bbaee5e02d963427cd5ee14aa54679c5ccba8f6c177a8fc71aa951607e6e3d"
+          "sha256": "ef57d2f1090efc66c153fd23f3ec79633fbead6d01fa2744b6939da262476342"
         }
       ],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
+      "reason": "Recipe import adds nullable stepIndex and nutrition response fields. Routes, requests, legacy fields and existing response shapes stay compatible; old responses are covered by adapter/provider tests and regenerated SDK export snapshots pass.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:41.6925586Z"
+      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
+      "reviewedAtUtc": "2026-10-13T18:12:52.9097281Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -249,13 +249,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "39f32c12bbb4d9ff55dbbfcf1d7f8e4afc1b566cb2494df597e3423b67621cde"
+          "sha256": "356d6ffe294f107436777fcf948516cd8a235df03439da28f501ed65d017d75f"
         }
       ],
-      "reason": "Guidance remains current. Saved clientIANA zone is an internal optional Dashboard context field; query defaults preserve self-dashboard behavior. All consumers rebuilt in full solution build; Dashboard146,Dietologist278,host17 and architecture2272 passed. No HTTP payload/route/snapshot or published client-package changes.",
-      "baseRef": "HEAD",
-      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
-      "reviewedAtUtc": "2026-10-13T20:45:49.0243744Z"
+      "reason": "Reviewed combined delivery sources from UX commit fde9a7e5c and master recipe fix 8a9d9c1e0. Dashboard client IANA context remains internal and self-dashboard defaults are preserved. Existing additive recipe-import nutrition DTOs, HTTP mappings and OpenAPI snapshot changes from master are retained; all generated consumers match their owning contracts.",
+      "baseRef": "origin/master",
+      "gitHead": "fde9a7e5c3b67725b46eb2d74a51ea0b376298d2",
+      "reviewedAtUtc": "2026-10-13T21:18:22.3618168Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -838,13 +838,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "c43942b58926b94d28649cdf76d999290a96147efda0174a1c53535ec4d0884a"
+          "sha256": "2ea8debda0a98c61b41e1ae7049945e622c4a06e3f69c43650c36ee64422cd38"
         }
       ],
-      "reason": "Guidance remains current. Goal values and derived calorie attention require goal permission; complete copies in stats/body/water redacted while allowed actual measurements and intake remain. RealAPI goalGET403 and UI revocation/restoration tested on owned accounts. No new provider transfer; retry fingerprint is transient in the editor and clears on successful completion.",
-      "baseRef": "HEAD",
-      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
-      "reviewedAtUtc": "2026-10-13T20:45:46.4696716Z"
+      "reason": "Reviewed final target redaction and derived attention gates; allowed measurements and actual intake remain separate from goals. Integration preserves these security fixes unchanged. Recipe-import nutrient metadata stays in the existing user-requested provider flow; no new transfer, logging sink, persistence schema or private evidence is published.",
+      "baseRef": "origin/master",
+      "gitHead": "fde9a7e5c3b67725b46eb2d74a51ea0b376298d2",
+      "reviewedAtUtc": "2026-10-13T21:18:20.944638Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -883,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b040e131de3af4e8d00a15c74fe80166170938785f8708c32aeeb43aa522f144"
+          "sha256": "dbdff4c71ae2885dec9fe7f747ab32429e77bcfa64ce48264435280a88bbcc2b"
         }
       ],
-      "reason": "Guidance remains current. Added direct regressions for scopes,zero-day counts,single-point PDF,quantity precision,stable quick/manual retries andnew intents. Static references treated as navigation. Realheaded browser,rendered PDF,full frontend and focused backend execution corroborate behavior; no claim of exhaustive code coverage.",
-      "baseRef": "HEAD",
-      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
-      "reviewedAtUtc": "2026-10-13T20:45:45.4719785Z"
+      "reason": "Reviewed overlap resolution against both parent revisions, existing independent nutrition examples, focused recipe component/provider tests and all 29 audit criteria. No test or quality threshold was relaxed. Current full frontend verification and normal pre-push verification cover the integrated sources; retained browser and PDF evidence applies to unchanged audit behaviors.",
+      "baseRef": "origin/master",
+      "gitHead": "fde9a7e5c3b67725b46eb2d74a51ea0b376298d2",
+      "reviewedAtUtc": "2026-10-13T21:18:24.8024157Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -970,13 +970,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "dc75813117b01285574204fd5bc241b52356830275f59bf8f37b1d33580131f9"
+          "sha256": "bd9d0b3d8702d0e84e9fcecb3827262032e0734638b7550d37b9223f824a2628"
         }
       ],
-      "reason": "Guidance remains current. No host,worker,DI lifetime,provider orschema additions. LocalAPI/Postgres/Redis/MinIO ownership tracked; AI/mail/payments disabled. Actual committed201 lost-response retries replay the same entity in quick andmanual forms. Cancellation preserved in Dashboard context resolution; scoped processes and volumes are removed after verification.",
-      "baseRef": "HEAD",
-      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
-      "reviewedAtUtc": "2026-10-13T20:45:41.0331551Z"
+      "reason": "Combined delivery changes no deployment configuration, host composition, worker schedule, database schema or provider endpoint. Master recipe-import metadata remains in the established OpenAI implementation; UX changes preserve cancellation, permission lifecycle and retry ownership. Build and temporary outputs for delivery are scoped on D.",
+      "baseRef": "origin/master",
+      "gitHead": "fde9a7e5c3b67725b46eb2d74a51ea0b376298d2",
+      "reviewedAtUtc": "2026-10-13T21:18:26.7057445Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -985,21 +985,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b040e131de3af4e8d00a15c74fe80166170938785f8708c32aeeb43aa522f144"
+          "sha256": "dbdff4c71ae2885dec9fe7f747ab32429e77bcfa64ce48264435280a88bbcc2b"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "dc75813117b01285574204fd5bc241b52356830275f59bf8f37b1d33580131f9"
+          "sha256": "bd9d0b3d8702d0e84e9fcecb3827262032e0734638b7550d37b9223f824a2628"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "c43942b58926b94d28649cdf76d999290a96147efda0174a1c53535ec4d0884a"
+          "sha256": "2ea8debda0a98c61b41e1ae7049945e622c4a06e3f69c43650c36ee64422cd38"
         }
       ],
-      "reason": "Guidance remains current. Wiki inventory is not treated as vulnerability proof. Goal leakage validated in source and realAPI; two fresh read-only security reviews,278owner tests,17host integration andnative permission controls verify the fix. Credentials stay in private taskD scopes; code changes add no logging or external transfers.",
-      "baseRef": "HEAD",
-      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
-      "reviewedAtUtc": "2026-10-13T20:45:47.6757705Z"
+      "reason": "Reviewed merged source diff: goal redaction and goal-derived attention remain gated, retry intent stays component/session scoped, and SSR auth opening remains browser-only. The recipe-import merge adds nutrition response data through existing boundaries without authentication, credential, authorization or logging changes. Two prior fresh privacy reviewers and native permission evidence remain applicable.",
+      "baseRef": "origin/master",
+      "gitHead": "fde9a7e5c3b67725b46eb2d74a51ea0b376298d2",
+      "reviewedAtUtc": "2026-10-13T21:18:19.7798296Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1136,17 +1136,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "734f876c46a2d809f2ff6f88faf7a4d24588805dd62e38c36365d470b08331b4"
+          "sha256": "28d92b8e17af6a519fea63d0deebd5455c66765ac49c968d36c06dd00b8099f1"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "5114cc003d359a91421ba26bfc225ccc12d85366e65614d8ab0138ea350abb03"
+          "sha256": "6d9139300b7e9fe2e2cb368ec7e052f32646c877c60ec2af337032e79aa93c7c"
         }
       ],
-      "reason": "Guidance remains current. Feature navigation followed to current owner source for29 findings across UI andbackend; heuristic andstatic edges verified against rendered routes,generated SDK calls andexecuted tests. New indexes represent optional auth input,editor key forwarding andIANA context; no tracing algorithm change.",
-      "baseRef": "HEAD",
-      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
-      "reviewedAtUtc": "2026-10-13T20:45:42.6610488Z"
+      "reason": "Reviewed generated merged indexes against the current owning sources: optional auth reset input, meal facade retry forwarding, Dashboard IANA context and master recipe-import nutrition contracts are present. Code and existing tests remain authoritative; no tracing algorithm or architectural ownership change is introduced by delivery.",
+      "baseRef": "origin/master",
+      "gitHead": "fde9a7e5c3b67725b46eb2d74a51ea0b376298d2",
+      "reviewedAtUtc": "2026-10-13T21:18:23.4458056Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1230,13 +1230,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "734f876c46a2d809f2ff6f88faf7a4d24588805dd62e38c36365d470b08331b4"
+          "sha256": "28d92b8e17af6a519fea63d0deebd5455c66765ac49c968d36c06dd00b8099f1"
         }
       ],
-      "reason": "Guidance remains current. New auth reset-mode input defaults false and optional facade idempotency key preserve callers; direct consumers/stubs verified. SDK header contract unchanged. Final npmverify passed5046app,561UIkit,240admin,7tour; rendered validation,disabled,permission,error,keyboard andresponsive cases confirm contracts.",
-      "baseRef": "HEAD",
-      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
-      "reviewedAtUtc": "2026-10-13T20:45:44.0795573Z"
+      "reason": "Reviewed the merged recipe summary: CALORIES_PER_SERVING label and parent per-serving calculations are preserved while locale-reactive number formatting remains. Optional reset-mode input and editor-scoped retry key preserve existing callers. Generated recipe-import SDK and owning semantic mapper changes from master are retained without handwritten generated-source edits.",
+      "baseRef": "origin/master",
+      "gitHead": "fde9a7e5c3b67725b46eb2d74a51ea0b376298d2",
+      "reviewedAtUtc": "2026-10-13T21:18:26.0028417Z"
     },
     {
       "pageId": "workflow.query-context",

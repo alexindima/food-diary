@@ -64,12 +64,13 @@
     <p class="shopping-message" role="status">{{ shoppingMessage() ?? '' | translate }}</p>
     <ul class="ingredient-list">
         @for (ingredient of ingredients(); track $index) {
+            @let displayName = ingredient.name ?? ('PUBLIC_RECIPES.PRIVATE_INGREDIENT' | translate) | capitalizeFirstLetter;
             <li>
                 <span>
                     @if (ingredient.recipeId) {
-                        <a [routerLink]="['/explore', ingredient.recipeId]">{{ ingredient.name }}</a>
+                        <a [routerLink]="['/explore', ingredient.recipeId]">{{ displayName }}</a>
                     } @else {
-                        {{ ingredient.name ?? ('PUBLIC_RECIPES.PRIVATE_INGREDIENT' | translate) }}
+                        {{ displayName }}
                     }
                 </span>
                 <span class="ingredient-actions"
@@ -87,8 +88,8 @@
                         size="md"
                         icon="visibility"
                         [style.display]="ingredient.productId ? null : 'none'"
-                        [ariaLabel]="'PUBLIC_RECIPES.PRODUCT_VIEW' | translate: { name: ingredient.name }"
-                        [fdUiHint]="'PUBLIC_RECIPES.PRODUCT_VIEW' | translate: { name: ingredient.name }"
+                        [ariaLabel]="'PUBLIC_RECIPES.PRODUCT_VIEW' | translate: { name: displayName }"
+                        [fdUiHint]="'PUBLIC_RECIPES.PRODUCT_VIEW' | translate: { name: displayName }"
                         (click)="viewProduct(ingredient)"
                     />
                     @if (ingredient.isAvailable && ingredient.name) {
@@ -100,11 +101,11 @@
                             [disabled]="shoppingBusy() || addedIngredients().has($index)"
                             [ariaLabel]="
                                 (addedIngredients().has($index) ? 'PUBLIC_RECIPES.SHOPPING_ADDED' : 'PUBLIC_RECIPES.SHOPPING_ADD')
-                                    | translate: { name: ingredient.name }
+                                    | translate: { name: displayName }
                             "
                             [fdUiHint]="
                                 (addedIngredients().has($index) ? 'PUBLIC_RECIPES.SHOPPING_ADDED' : 'PUBLIC_RECIPES.SHOPPING_ADD')
-                                    | translate: { name: ingredient.name }
+                                    | translate: { name: displayName }
                             "
                             (click)="add($index, ingredient)"
                         />

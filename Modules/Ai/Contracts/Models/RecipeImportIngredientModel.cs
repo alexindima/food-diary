@@ -1,3 +1,3 @@
 namespace FoodDiary.Modules.Ai.Contracts.Models;
 
-public sealed record RecipeImportIngredientModel(string Name, string? Amount);
+public sealed record RecipeImportIngredientModel(string Name, string? Amount, int? StepIndex = null);

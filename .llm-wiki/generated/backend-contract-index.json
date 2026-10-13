@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1350,
+    "contracts": 1351,
     "ambiguousContracts": 29,
-    "consumerEdges": 10527,
-    "productionConsumerEdges": 6023,
-    "testConsumerEdges": 4504,
-    "consumedContracts": 1350,
+    "consumerEdges": 10531,
+    "productionConsumerEdges": 6025,
+    "testConsumerEdges": 4506,
+    "consumedContracts": 1351,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -19124,6 +19124,23 @@
       ],
       "definitionPaths": [
         "Modules/Ai/Presentation/Responses/RecipeImportIngredientHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "RecipeImportNutritionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Responses/RecipeImportNutritionHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -143902,6 +143919,19 @@
         "Modules/Ai/Presentation/Responses/RecipeImportHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/RecipeImportHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "RecipeImportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Responses/RecipeImportHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/RecipeVideoImportTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -143930,6 +143960,45 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Presentation/Responses/RecipeImportHttpResponse.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecipeImportNutritionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Responses/RecipeImportNutritionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Recipes/Mappings/RecipeImportHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecipeImportNutritionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Responses/RecipeImportNutritionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Presentation/Responses/RecipeImportHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecipeImportNutritionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Responses/RecipeImportNutritionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/RecipeImportHttpMappingsTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {

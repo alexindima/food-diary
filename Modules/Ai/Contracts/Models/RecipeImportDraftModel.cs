@@ -9,4 +9,5 @@ public sealed record RecipeImportDraftModel(
     int? PrepMinutes,
     int? CookMinutes,
     string? AuthorNutrition,
-    string? SourceUrl);
+    string? SourceUrl,
+    RecipeImportNutritionModel? Nutrition = null);

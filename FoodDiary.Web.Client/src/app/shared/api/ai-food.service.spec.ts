@@ -65,6 +65,24 @@ describe('AiFoodService', () => {
         request.flush({ name: 'Salad', ingredients: [], steps: [] });
     });
 
+    it('decodes stated nutrition and step assignments through the generated import operation', () => {
+        let response: unknown;
+        service.importRecipe({ sourceUrl: 'https://example.org/recipe', text: null }).subscribe(value => {
+            response = value;
+        });
+        const request = httpMock.expectOne(`${BASE_URL}/food/recipe-import`);
+        request.flush({
+            name: 'Chicken',
+            ingredients: [{ name: 'Pepper', amount: '1/2 tsp', stepIndex: 1 }],
+            steps: ['Preheat', 'Mix'],
+            nutrition: { basis: 'serving', calories: 505, proteins: 36, fats: 37, carbs: 5, fiber: 1 },
+        });
+        expect(response).toMatchObject({
+            ingredients: [{ name: 'Pepper', amount: '1/2 tsp', stepIndex: 1 }],
+            nutrition: { basis: 'serving', calories: 505, proteins: 36, fats: 37, carbs: 5, fiber: 1, alcohol: null },
+        });
+    });
+
     it('should be created', () => {
         expect(service).toBeTruthy();
     });

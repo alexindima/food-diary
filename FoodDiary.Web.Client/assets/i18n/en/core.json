@@ -142,6 +142,7 @@
     "GENERAL": {
         "UNITS": {
             "KCAL": "kcal",
+            "KCAL_PER_SERVING": "kcal / serving",
             "G": "g",
             "ML": "ml",
             "PCS": "pcs",
@@ -608,6 +609,7 @@
         "SUMMARY": {
             "CALORIES": "Calories",
             "SERVINGS": "Servings",
+            "CALORIES_PER_SERVING": "Calories per serving",
             "TOTAL_TIME": "Total time",
             "INGREDIENTS": "Ingredients",
             "VISIBILITY": "Visibility",

@@ -79,7 +79,8 @@ describe('RecipeCookModeComponent', () => {
     });
 
     it('builds current-step ingredient views', () => {
-        const { component } = setupComponent(createRecipe());
+        const recipe = createRecipe();
+        const { component, fixture } = setupComponent(recipe);
 
         expect(component['ingredients']()).toEqual([
             {
@@ -88,6 +89,8 @@ describe('RecipeCookModeComponent', () => {
                 unitKey: 'GENERAL.UNITS.G',
             },
         ]);
+        expect((fixture.nativeElement as HTMLElement).querySelector('.recipe-cook-mode__ingredient-row')?.textContent).toContain('Flour');
+        expect(recipe.steps[0].ingredients[0].productName).toBe('flour');
     });
 });
 
@@ -145,7 +148,7 @@ function createRecipe(): Recipe {
                         id: 'ingredient-1',
                         amount: 100,
                         productId: 'product-1',
-                        productName: 'Flour',
+                        productName: 'flour',
                         productBaseUnit: 'G',
                     }),
                 ],

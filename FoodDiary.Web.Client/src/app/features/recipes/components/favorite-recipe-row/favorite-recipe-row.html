@@ -31,7 +31,8 @@
         <div class="favorite-row__heading">
             <strong>{{ name() }}</strong>
             <span class="favorite-row__calories"
-                >{{ recipe().totalCalories ?? 0 | localizedNumber: locale() : 0 : 0 }} {{ 'RECIPE_FAVORITES.KCAL' | translate }}</span
+                >{{ calories() === null ? '—' : (calories() | localizedNumber: locale() : 0 : 0) }}
+                {{ 'GENERAL.UNITS.KCAL_PER_SERVING' | translate }}</span
             >
         </div>
         @if (composition()) {
@@ -51,19 +52,19 @@
                     'RECIPE_FAVORITES.NUTRITION_LABEL'
                         | translate
                             : {
-                                  proteins: recipe().totalProteins,
-                                  fats: recipe().totalFats,
-                                  carbs: recipe().totalCarbs,
-                                  fiber: recipe().totalFiber ?? 0,
+                                  proteins: nutrition().proteins,
+                                  fats: nutrition().fats,
+                                  carbs: nutrition().carbs,
+                                  fiber: nutrition().fiber,
                               }
                 "
             >
                 <fd-nutrient-badges
                     aria-hidden="true"
-                    [proteins]="recipe().totalProteins ?? 0"
-                    [fats]="recipe().totalFats ?? 0"
-                    [carbs]="recipe().totalCarbs ?? 0"
-                    [fiber]="recipe().totalFiber ?? 0"
+                    [proteins]="nutrition().proteins"
+                    [fats]="nutrition().fats"
+                    [carbs]="nutrition().carbs"
+                    [fiber]="nutrition().fiber"
                     [alcohol]="0"
                 />
             </div>

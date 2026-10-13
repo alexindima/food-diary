@@ -15,6 +15,7 @@ const TOTAL_FATS = 20;
 const TOTAL_CARBS = 60;
 const TOTAL_FIBER = 8;
 const TOTAL_ALCOHOL = 0;
+const SERVINGS = 2;
 const QUALITY_SCORE = 80;
 const DEFAULT_QUALITY_SCORE = 50;
 const MANUAL_CALORIES = 200;
@@ -31,22 +32,22 @@ describe('buildRecipeDetailViewModel nutrition', () => {
 
         const viewModel = buildRecipeDetailViewModel(recipe, 'Unknown ingredient');
 
-        expect(viewModel.calories).toBe(TOTAL_CALORIES);
-        expect(viewModel.proteins).toBe(TOTAL_PROTEINS);
-        expect(viewModel.fats).toBe(TOTAL_FATS);
-        expect(viewModel.carbs).toBe(TOTAL_CARBS);
-        expect(viewModel.fiber).toBe(TOTAL_FIBER);
+        expect(viewModel.calories).toBe(TOTAL_CALORIES / SERVINGS);
+        expect(viewModel.proteins).toBe(TOTAL_PROTEINS / SERVINGS);
+        expect(viewModel.fats).toBe(TOTAL_FATS / SERVINGS);
+        expect(viewModel.carbs).toBe(TOTAL_CARBS / SERVINGS);
+        expect(viewModel.fiber).toBe(TOTAL_FIBER / SERVINGS);
         expect(viewModel.alcohol).toBe(TOTAL_ALCOHOL);
         expect(viewModel.qualityScore).toBe(QUALITY_SCORE);
         expect(viewModel.qualityGrade).toBe('green');
         expect(viewModel.macroBlocks).toHaveLength(MACRO_BLOCK_COUNT);
         expect(viewModel.macroSummaryBlocks).toHaveLength(RECIPE_DETAIL_MACRO_SUMMARY_LIMIT);
         expect(viewModel.nutritionModel).toEqual({
-            calories: TOTAL_CALORIES,
-            proteins: TOTAL_PROTEINS,
-            fats: TOTAL_FATS,
-            carbs: TOTAL_CARBS,
-            fiber: TOTAL_FIBER,
+            calories: TOTAL_CALORIES / SERVINGS,
+            proteins: TOTAL_PROTEINS / SERVINGS,
+            fats: TOTAL_FATS / SERVINGS,
+            carbs: TOTAL_CARBS / SERVINGS,
+            fiber: TOTAL_FIBER / SERVINGS,
             alcohol: TOTAL_ALCOHOL,
         });
         expect(viewModel.macroBarState.isEmpty).toBe(false);
@@ -72,14 +73,30 @@ describe('buildRecipeDetailViewModel nutrition', () => {
 
         const viewModel = buildRecipeDetailViewModel(recipe, 'Unknown ingredient');
 
-        expect(viewModel.calories).toBe(MANUAL_CALORIES);
-        expect(viewModel.proteins).toBe(MANUAL_PROTEINS);
-        expect(viewModel.fats).toBe(MANUAL_FATS);
-        expect(viewModel.carbs).toBe(MANUAL_CARBS);
-        expect(viewModel.fiber).toBe(COMPUTED_FIBER);
-        expect(viewModel.alcohol).toBe(COMPUTED_ALCOHOL);
+        expect(viewModel.calories).toBe(MANUAL_CALORIES / SERVINGS);
+        expect(viewModel.proteins).toBe(MANUAL_PROTEINS / SERVINGS);
+        expect(viewModel.fats).toBe(MANUAL_FATS / SERVINGS);
+        expect(viewModel.carbs).toBe(MANUAL_CARBS / SERVINGS);
+        expect(viewModel.fiber).toBe(COMPUTED_FIBER / SERVINGS);
+        expect(viewModel.alcohol).toBe(COMPUTED_ALCOHOL / SERVINGS);
         expect(viewModel.qualityScore).toBe(DEFAULT_QUALITY_SCORE);
         expect(viewModel.qualityGrade).toBe('yellow');
+    });
+
+    it('scales all displayed nutrients for five servings without changing stored totals or ingredient quantities', () => {
+        const recipe = createRecipe({
+            servings: 5,
+            totalCalories: 2525,
+            totalProteins: 180,
+            totalFats: 235,
+            totalCarbs: 25,
+            totalFiber: 5,
+        });
+        const snapshot = structuredClone(recipe);
+        const viewModel = buildRecipeDetailViewModel(recipe, 'Unknown');
+        expect(viewModel.nutritionModel).toEqual({ calories: 505, proteins: 36, fats: 47, carbs: 5, fiber: 1, alcohol: 0 });
+        expect(recipe).toEqual(snapshot);
+        expect(viewModel.ingredientPreview[0]?.amount).toBe(snapshot.steps[0]?.ingredients[0]?.amount);
     });
 });
 

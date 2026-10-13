@@ -33767,6 +33767,12 @@
           "Nullable": true
         },
         {
+          "Name": "nutrition",
+          "Required": false,
+          "Reference": "#/components/schemas/RecipeImportNutritionHttpResponse",
+          "Nullable": false
+        },
+        {
           "Name": "prepMinutes",
           "Required": false,
           "Type": "integer",
@@ -33808,6 +33814,66 @@
           "Name": "name",
           "Required": false,
           "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "stepIndex",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": true
+        }
+      ]
+    },
+    {
+      "Name": "RecipeImportNutritionHttpResponse",
+      "Properties": [
+        {
+          "Name": "alcohol",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "basis",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "calories",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "carbs",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "fats",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "fiber",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "proteins",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
           "Nullable": true
         }
       ]

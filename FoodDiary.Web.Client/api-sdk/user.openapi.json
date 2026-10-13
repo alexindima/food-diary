@@ -6004,6 +6004,14 @@
                     "name": {
                         "type": "string"
                     },
+                    "nutrition": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/RecipeImportNutritionHttpResponse"
+                            }
+                        ],
+                        "nullable": true
+                    },
                     "prepMinutes": {
                         "format": "int32",
                         "nullable": true,
@@ -6036,6 +6044,50 @@
                     },
                     "name": {
                         "type": "string"
+                    },
+                    "stepIndex": {
+                        "format": "int32",
+                        "nullable": true,
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "RecipeImportNutritionHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "alcohol": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "basis": {
+                        "type": "string"
+                    },
+                    "calories": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "carbs": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "fats": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "fiber": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
+                    },
+                    "proteins": {
+                        "format": "double",
+                        "nullable": true,
+                        "type": "number"
                     }
                 },
                 "type": "object"

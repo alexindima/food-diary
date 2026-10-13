@@ -3,10 +3,10 @@
   "summary": {
     "components": 497,
     "componentsWithoutDirectSpecs": 132,
-    "inputs": 1602,
+    "inputs": 1604,
     "outputs": 553,
     "apiCalls": 315,
-    "templatesWithTranslations": 359,
+    "templatesWithTranslations": 358,
     "translationKeys": 2151,
     "consumerEdges": 1261,
     "consumedComponents": 316,
@@ -12615,6 +12615,11 @@
           "required": true
         },
         {
+          "name": "caloriesUnitKey",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "nutritionNote",
           "type": "string | null",
           "required": false
@@ -12729,6 +12734,11 @@
           "name": "calories",
           "type": "number | null",
           "required": true
+        },
+        {
+          "name": "caloriesUnitKey",
+          "type": "",
+          "required": false
         },
         {
           "name": "nutritionNote",
@@ -22708,7 +22718,7 @@
         "NUTRITION_COMPLETENESS.PARTIAL",
         "PRODUCT_CARD.QUALITY_SCORE",
         "RECIPE_DETAIL.MIN",
-        "RECIPE_DETAIL.SUMMARY.CALORIES",
+        "RECIPE_DETAIL.SUMMARY.CALORIES_PER_SERVING",
         "RECIPE_DETAIL.SUMMARY.COMMENT"
       ]
     },
@@ -22729,11 +22739,11 @@
       "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.html",
       "keys": [
+        "GENERAL.UNITS.KCAL_PER_SERVING",
         "RECIPE_DETAIL.REMOVE_FAVORITE",
         "RECIPE_FAVORITES.ADD",
         "RECIPE_FAVORITES.ADDING",
         "RECIPE_FAVORITES.BUSY",
-        "RECIPE_FAVORITES.KCAL",
         "RECIPE_FAVORITES.NUTRITION_LABEL",
         "RECIPE_FAVORITES.UNDO",
         "RECIPE_LIST.FAVORITE_MINUTES",
@@ -23301,13 +23311,6 @@
         "DASHBOARD.DAY_SUMMARY.PULSE_TITLE",
         "DASHBOARD.DAY_SUMMARY.TITLE",
         "MEAL_RING.UNIT"
-      ]
-    },
-    {
-      "feature": "shared",
-      "path": "FoodDiary.Web.Client/src/app/components/shared/entity-card/entity-card-body/entity-card-body.html",
-      "keys": [
-        "GENERAL.UNITS.KCAL"
       ]
     },
     {
@@ -26226,6 +26229,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "calories",
+        "caloriesUnitKey",
         "comment",
         "description",
         "nutrition",
@@ -26320,6 +26324,7 @@
       "inputsUsed": [
         "backgroundKey",
         "calories",
+        "caloriesUnitKey",
         "comment",
         "description",
         "favoriteAriaLabel",

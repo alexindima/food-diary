@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input, signal } from '@an
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit';
 
+import { capitalizeFirstLetter } from '../../../../shared/lib/text-display.utils';
 import type { PublicRecipe, PublicRecipeStep } from '../../models/public-recipe.data';
 import { PublicRecipeGalleryComponent } from '../public-gallery/public-gallery';
 
@@ -30,6 +31,10 @@ export class PublicStepsComponent {
         return String(step.stepNumber).padStart(2, '0');
     }
     protected ingredientNames(step: PublicRecipeStep): string {
-        return [...new Set(step.ingredients.filter(item => item.isAvailable && item.name !== null).map(item => item.name))].join(' · ');
+        return [
+            ...new Set(
+                step.ingredients.filter(item => item.isAvailable && item.name !== null).map(item => capitalizeFirstLetter(item.name)),
+            ),
+        ].join(' · ');
     }
 }

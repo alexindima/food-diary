@@ -6,6 +6,8 @@ import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/
 import { AuthService } from '../../../services/auth.service';
 import { injectCurrentLanguage } from '../../../shared/i18n/inject-current-language';
 import { normalizeQualityScore } from '../../../shared/lib/quality-score.utils';
+import { recipeNutrientPerServing } from '../../../shared/lib/recipe-nutrition-display.utils';
+import { capitalizeFirstLetter } from '../../../shared/lib/text-display.utils';
 import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 import { EntityCardComponent } from '../entity-card/entity-card';
 
@@ -24,6 +26,7 @@ export type RecipeCardItem = {
     isOwnedByCurrentUser: boolean;
     prepTime?: number | null;
     cookTime?: number | null;
+    servings: number;
     totalProteins?: number | null;
     totalFats?: number | null;
     totalCarbs?: number | null;
@@ -70,13 +73,17 @@ export class RecipeCardComponent {
 
         return this.recipe().isOwnedByCurrentUser ? 'person' : 'groups';
     });
-    protected readonly nutrition = computed(() => ({
-        proteins: this.recipe().totalProteins ?? 0,
-        fats: this.recipe().totalFats ?? 0,
-        carbs: this.recipe().totalCarbs ?? 0,
-        fiber: this.recipe().totalFiber ?? 0,
-        alcohol: this.recipe().totalAlcohol ?? 0,
-    }));
+    protected readonly calories = computed(() => recipeNutrientPerServing(this.recipe().totalCalories, this.recipe().servings));
+    protected readonly nutrition = computed(() => {
+        const recipe = this.recipe();
+        return {
+            proteins: recipeNutrientPerServing(recipe.totalProteins, recipe.servings) ?? 0,
+            fats: recipeNutrientPerServing(recipe.totalFats, recipe.servings) ?? 0,
+            carbs: recipeNutrientPerServing(recipe.totalCarbs, recipe.servings) ?? 0,
+            fiber: recipeNutrientPerServing(recipe.totalFiber, recipe.servings) ?? 0,
+            alcohol: recipeNutrientPerServing(recipe.totalAlcohol, recipe.servings) ?? 0,
+        };
+    });
     protected readonly quality = computed(() => {
         const score = this.qualityScore();
         const grade = this.recipe().qualityGrade;
@@ -120,7 +127,7 @@ export class RecipeCardComponent {
     protected readonly description = computed(() => {
         const names = (this.recipe().steps ?? [])
             .flatMap(step => step.ingredients ?? [])
-            .map(item => item.textName ?? item.productName ?? item.nestedRecipeName)
+            .map(item => capitalizeFirstLetter(item.textName ?? item.productName ?? item.nestedRecipeName))
             .filter(Boolean);
         const count = this.ingredientCount();
         const category = new Intl.PluralRules(this.language()).select(count).toUpperCase();

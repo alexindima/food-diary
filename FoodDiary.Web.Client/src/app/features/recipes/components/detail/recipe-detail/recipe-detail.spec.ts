@@ -136,11 +136,11 @@ describe('RecipeDetailComponent summary state', () => {
     });
 
     it('should extract nutrition from recipe', () => {
-        expect(component['calories']).toBe(TOTAL_CALORIES);
-        expect(component['proteins']).toBe(TOTAL_PROTEINS);
-        expect(component['fats']).toBe(TOTAL_FATS);
-        expect(component['carbs']).toBe(TOTAL_CARBS);
-        expect(component['fiber']).toBe(TOTAL_FIBER);
+        expect(component['calories']).toBe(TOTAL_CALORIES / SERVINGS_COUNT);
+        expect(component['proteins']).toBe(TOTAL_PROTEINS / SERVINGS_COUNT);
+        expect(component['fats']).toBe(TOTAL_FATS / SERVINGS_COUNT);
+        expect(component['carbs']).toBe(TOTAL_CARBS / SERVINGS_COUNT);
+        expect(component['fiber']).toBe(TOTAL_FIBER / SERVINGS_COUNT);
         expect(component['alcohol']).toBe(0);
     });
 

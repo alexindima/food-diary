@@ -10,6 +10,7 @@ import type { ItemSelection } from '../../../../../shared/dialogs/item-select-di
 import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import { type Recipe, type RecipeDto, RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import type { RecipeImportResult } from '../../../../../shared/models/recipe-import.data';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
@@ -38,6 +39,8 @@ const MANUAL_FATS = 5;
 const MANUAL_CARBS = 15;
 const MANUAL_FIBER = 2;
 const PRODUCT_CALORIES = 200;
+const IMPORTED_RECIPE_CALORIES = 2525;
+const IMPORTED_SERVING_CALORIES = 505;
 
 type RecipeManageFacadeMock = {
     committed$: Subject<void>;
@@ -517,6 +520,48 @@ describe('RecipeManageComponent pending save', () => {
 });
 
 describe('RecipeManageComponent import draft shell', () => {
+    it('resets a previous serving display and saves imported nutrition once through a basis round trip', async () => {
+        const { component, fixture, facade } = await setupComponentAsync();
+        component['onNutritionScaleModeChange']('portion');
+        component['applyRecognizedDraft'](recognizedChicken);
+        fixture.detectChanges();
+
+        expect(component['nutritionMode']()).toBe('manual');
+        expect(component['nutritionScaleMode']).toBe('recipe');
+        expect(component['recipeFormModel']().manualCalories).toBe(IMPORTED_RECIPE_CALORIES);
+        expect(component['totalCalories']()).toBe(IMPORTED_RECIPE_CALORIES);
+        expect(component['steps'][0]?.ingredients).toHaveLength(0);
+        expect(component['steps'][1]?.ingredients).toHaveLength(1);
+        component['onNutritionScaleModeChange']('portion');
+        fixture.detectChanges();
+        expect(component['recipeFormModel']().manualCalories).toBe(IMPORTED_SERVING_CALORIES);
+        expect(component['prepareRecipeDto']()).toMatchObject({
+            calculateNutritionAutomatically: false,
+            manualCalories: 2525,
+            manualProteins: 180,
+            manualFats: 185,
+            manualCarbs: 25,
+        });
+        component['onNutritionScaleModeChange']('recipe');
+        expect(component['recipeFormModel']().manualCalories).toBe(IMPORTED_RECIPE_CALORIES);
+
+        component['onSubmit']();
+        await vi.waitFor(() => {
+            expect(facade.addRecipe).toHaveBeenCalledWith(expect.objectContaining({ manualCalories: 2525, manualProteins: 180 }));
+        });
+    });
+
+    it('switches a previous manual draft back to automatic when the next import has no usable nutrition', async () => {
+        const { component, fixture } = await setupComponentAsync();
+        component['applyRecognizedDraft'](recognizedChicken);
+        fixture.detectChanges();
+        component['applyRecognizedDraft']({ ...recognizedChicken, nutrition: null });
+        fixture.detectChanges();
+        expect(component['nutritionMode']()).toBe('auto');
+        expect(component['recipeFormModel']().manualCalories).toBeNull();
+        expect(component['recipeFormModel']().comment).toContain('505 kcal');
+    });
+
     it('applies pasted recipe text to draft fields', async () => {
         const { component } = await setupComponentAsync();
 
@@ -546,6 +591,19 @@ describe('RecipeManageComponent import draft shell', () => {
         expect(facade.cancelManageAsync).toHaveBeenCalledOnce();
     });
 });
+
+const recognizedChicken: RecipeImportResult = {
+    name: 'Imported chicken',
+    description: null,
+    sourceUrl: 'https://example.test/chicken',
+    ingredients: [{ name: 'Pepper', amount: '1/2 tsp', stepIndex: 1 }],
+    steps: ['Preheat oven.', 'Mix seasoning.'],
+    servings: 5,
+    prepMinutes: 5,
+    cookMinutes: 50,
+    authorNutrition: '505 kcal; protein 36 g; fat 37 g; carbs 5 g per serving',
+    nutrition: { basis: 'serving', calories: 505, proteins: 36, fats: 37, carbs: 5, fiber: 1, alcohol: null },
+};
 
 describe('RecipeManageComponent imported draft navigation', () => {
     it.each(['text', 'ai'] as const)('keeps the %s draft when discarding is declined', async source => {
