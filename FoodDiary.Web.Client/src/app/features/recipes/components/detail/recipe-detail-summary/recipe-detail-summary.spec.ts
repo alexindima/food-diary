@@ -29,6 +29,7 @@ describe('RecipeDetailSummaryComponent', () => {
         expect(text).toContain(RECIPE_CALORIES.toString());
         expect(text).toContain('2');
         expect(text).toContain('Rice');
+        expect(text).toContain('RECIPE_DETAIL.SUMMARY.CALORIES_PER_SERVING');
     });
 });
 

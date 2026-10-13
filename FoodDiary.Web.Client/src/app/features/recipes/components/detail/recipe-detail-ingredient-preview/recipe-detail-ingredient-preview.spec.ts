@@ -8,16 +8,17 @@ import { RecipeDetailIngredientPreviewComponent } from './recipe-detail-ingredie
 describe('RecipeDetailIngredientPreviewComponent', () => {
     it('renders ingredient preview rows with amounts and units', async () => {
         const fixture = await setupComponentAsync([
-            { name: 'Flour', amount: 200, unitKey: 'GENERAL.UNITS.G' },
-            { name: 'Starter', amount: 1, unitKey: null },
+            { name: 'flour (GF)', amount: 200, unitKey: 'GENERAL.UNITS.G' },
+            { name: 'закваска', amount: 1, unitKey: null },
         ]);
 
         const text = getTextContent(fixture);
 
-        expect(text).toContain('Flour');
+        expect(text).toContain('Flour (GF)');
         expect(text).toContain('200');
         expect(text).toContain('GENERAL.UNITS.G');
-        expect(text).toContain('Starter');
+        expect(text).toContain('Закваска');
+        expect(fixture.componentInstance.ingredients()[0].name).toBe('flour (GF)');
     });
 
     it('expands all ingredients and collapses back without losing the last item', async () => {

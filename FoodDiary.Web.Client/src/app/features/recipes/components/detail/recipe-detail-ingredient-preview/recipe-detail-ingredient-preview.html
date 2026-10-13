@@ -3,7 +3,7 @@
         <h3 class="recipe-detail__list-title fd-ui-card-title">{{ 'RECIPE_DETAIL.SUMMARY.INGREDIENTS' | translate }}</h3>
         @for (ingredient of visibleIngredients(); track $index) {
             <div class="recipe-detail__list-row">
-                <span class="fd-ui-body-sm">{{ ingredient.name }}</span>
+                <span class="fd-ui-body-sm">{{ ingredient.name | capitalizeFirstLetter }}</span>
                 <strong class="fd-ui-body-sm">
                     {{ ingredient.amount }}
                     @if (ingredient.unitKey) {

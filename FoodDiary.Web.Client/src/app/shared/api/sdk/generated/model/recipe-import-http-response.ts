@@ -8,6 +8,7 @@
  * Do not edit the class manually.
  */
 import { RecipeImportIngredientHttpResponse } from './recipe-import-ingredient-http-response';
+import { RecipeImportNutritionHttpResponse } from './recipe-import-nutrition-http-response';
 
 export interface RecipeImportHttpResponse {
     authorNutrition?: string | null;
@@ -15,6 +16,7 @@ export interface RecipeImportHttpResponse {
     description?: string | null;
     ingredients?: Array<RecipeImportIngredientHttpResponse>;
     name?: string;
+    nutrition?: RecipeImportNutritionHttpResponse | null;
     prepMinutes?: number | null;
     servings?: number | null;
     sourceUrl?: string | null;

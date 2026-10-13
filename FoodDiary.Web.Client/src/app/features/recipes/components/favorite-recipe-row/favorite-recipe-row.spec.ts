@@ -7,6 +7,8 @@ import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FavoriteRecipeRowComponent } from './favorite-recipe-row';
 
+const STORED_RECIPE_CALORIES = 2525;
+
 const recipe: FavoriteRecipe = {
     id: entityId<'favorite-recipe'>('f1'),
     recipeId: entityId<'recipe'>('r1'),
@@ -27,6 +29,28 @@ function setup(overrides: Partial<FavoriteRecipe> = {}): ComponentFixture<Favori
 }
 
 describe('FavoriteRecipeRowComponent', () => {
+    it('shows per-serving calories and macros without changing the favorite passed to meal actions', () => {
+        const fixture = setup({
+            servings: 5,
+            totalCalories: STORED_RECIPE_CALORIES,
+            totalProteins: 180,
+            totalFats: 235,
+            totalCarbs: 25,
+            totalFiber: 5,
+        });
+        const text = (fixture.nativeElement as HTMLElement).querySelector('.favorite-row__calories')?.textContent;
+        expect(text).toContain('505');
+        expect(text).toContain('GENERAL.UNITS.KCAL_PER_SERVING');
+        expect(fixture.componentInstance['nutrition']()).toEqual({ proteins: 36, fats: 47, carbs: 5, fiber: 1 });
+        const add = vi.fn();
+        fixture.componentInstance.add.subscribe(add);
+        [...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button')]
+            .find(button => button.textContent.includes('RECIPE_FAVORITES.ADD'))
+            ?.click();
+        expect(add).toHaveBeenCalledExactlyOnceWith(fixture.componentInstance.recipe());
+        expect(fixture.componentInstance.recipe().totalCalories).toBe(STORED_RECIPE_CALORIES);
+    });
+
     it.each([null, undefined, '', '   '])('uses recipe name when favorite name is empty: %s', name => {
         const fixture = setup({ name });
         expect((fixture.nativeElement as HTMLElement).querySelector('strong')?.textContent).toBe('Rice');

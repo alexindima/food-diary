@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "70bbaee5e02d963427cd5ee14aa54679c5ccba8f6c177a8fc71aa951607e6e3d"
+          "sha256": "ef57d2f1090efc66c153fd23f3ec79633fbead6d01fa2744b6939da262476342"
         }
       ],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
+      "reason": "Recipe import adds nullable stepIndex and nutrition response fields. Routes, requests, legacy fields and existing response shapes stay compatible; old responses are covered by adapter/provider tests and regenerated SDK export snapshots pass.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:41.6925586Z"
+      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
+      "reviewedAtUtc": "2026-10-13T18:12:52.9097281Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -249,13 +249,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "7bb2253438f6d1f10a76a02e7043ffb24a81a628ccbe72fa5ce09c58c2e4cf89"
+          "sha256": "e22eba4621c9f36cbe760ccf6c950eb40bdfce25f67c1dd8a88cb078f9013706"
         }
       ],
-      "reason": "Swagger and SDK regenerated with zero public breaking changes. Legacy email routes retain non-null IDs; journal and 404 fallback support mixed versions. All 280 host integration tests passed. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
+      "reason": "Additive Ai-owned recipe import contracts retain all legacy fields and optional defaults. Provider, presentation mapper, generated SDK adapter and editor consumers are covered by focused tests; the host OpenAPI export and structural compatibility checks pass.",
       "baseRef": "HEAD",
-      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
-      "reviewedAtUtc": "2026-10-12T19:09:45.2982595Z"
+      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
+      "reviewedAtUtc": "2026-10-13T18:25:53.9146936Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -838,13 +838,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "64a72aaaff7866f12051219ab83837971c27cfcd4f9d3bb61c3ba1af6437009d"
+          "sha256": "7bdc19e683bed6e88cb8e16acc1b961858b75f1387af6bbe81b721af64c30879"
         }
       ],
-      "reason": "Reviewed goals minimization and account ownership, independent BUG-05 reviews, account-scoped AI drafts, explicit consent and redacted owned-fixture evidence. Premium recovery trusts the current-user billing overview and normal cookie refresh; it never grants roles locally or changes provider sharing. The privacy workflow remains accurate.",
+      "reason": "Structured author nutrition and step assignments derive from the same previously supplied recipe source. No new provider sharing, credentials, stored user data, logging, consent, quotas or retention paths are introduced.",
       "baseRef": "HEAD",
-      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
-      "reviewedAtUtc": "2026-10-12T06:52:23.0785738Z"
+      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
+      "reviewedAtUtc": "2026-10-13T18:25:56.5440478Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -883,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "19a48a25b59bfcd0caa6515a4c77939e226c71ea4dddfa22624fdcf9407369c0"
+          "sha256": "1c9e9b5164ec7908cdeb363efe6599faeb91673c8e645af0ea2924227fcf7b02"
         }
       ],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
+      "reason": "Reviewed the refreshed quality projection against five recipe display consumers and their executed focused tests. First-letter formatting has ten Unicode/prefix/null cases; rendered components preserve raw names, links, quantities and shopping payloads. 53 focused tests, the eight-test public ingredient rerun, app build and targeted ESLint passed. Chrome verified the public list and step names at 1440x1000 and 390x900 using mocked API data; no runtime page exceptions or horizontal overflow.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:44.5898659Z"
+      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
+      "reviewedAtUtc": "2026-10-13T20:00:06.9506438Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -970,13 +970,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d055832dce5a98e633fd42875867022b8a38d91fe76997ac971c8efd70ed7523"
+          "sha256": "4c27baf415a222f5947b3e8b651f282681390dab9ef0ad32bade03c7e6c94555"
         }
       ],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
+      "reason": "The same recipe-import endpoint, provider operation and bounded source loader remain in use. Strict output schema expands, input-token accounting uses the same request schema, and no runtime binding or deployment configuration changes.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:45.3542425Z"
+      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
+      "reviewedAtUtc": "2026-10-13T18:25:58.2174762Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -985,17 +985,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "19a48a25b59bfcd0caa6515a4c77939e226c71ea4dddfa22624fdcf9407369c0"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d055832dce5a98e633fd42875867022b8a38d91fe76997ac971c8efd70ed7523"
+          "sha256": "1c9e9b5164ec7908cdeb363efe6599faeb91673c8e645af0ea2924227fcf7b02"
         }
       ],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
+      "reason": "This task delta only formats ingredient display text through a pure helper and pipe. Angular interpolation remains the rendering boundary; no HTML injection, authentication, authorization, network, logging, data storage or provider-sharing behavior changed. Reviewed refreshed static navigation signals without treating them as a security scan or production evidence.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:46.2357818Z"
+      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
+      "reviewedAtUtc": "2026-10-13T20:00:07.4917531Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1131,18 +1127,14 @@
       "pageSha256": "4e059a263f76810db4c559e2b5599d8599571ccf48d060f6360c6d0e8ec60b48",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "ab0e593d331bef21ea949ab4c93665736509f94dd498f53546db5554bd399acc"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "4ea7a969558eede76088f67219c1d69a0871da75e5c0789b875a1d1d45f20ab4"
+          "sha256": "57340fc1eef373a290e6eef3c23e039b2b68a04c9059812bc37b3e83d0b113ad"
         }
       ],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
+      "reason": "Confirmed the public detail page supplies PublicIngredients and PublicSteps, the private detail supplies its ingredient preview and cooking view, and shared RecipeCard composes ingredient summaries. Each consumer uses a feature-agnostic formatter at the display boundary; original API models and emitted shopping/recipe data are retained. Refreshed frontend navigation remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:46.9775933Z"
+      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
+      "reviewedAtUtc": "2026-10-13T20:00:07.8883988Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1226,13 +1218,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "ab0e593d331bef21ea949ab4c93665736509f94dd498f53546db5554bd399acc"
+          "sha256": "d9bb0bf69c3101b16a006ea33a0c1adbb917d0d9a45efdddf0a3f79afd8746fd"
         }
       ],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
+      "reason": "RecipeCardItem now requires the stored serving count; all current recipe, favorites, explore and landing consumers compile. Optional caloriesUnitKey defaults preserve other entity cards. Shared recipe display helper scales numeric views only; action payloads retain the original recipe. 172 focused tests and frontend build passed, with desktop/mobile Chrome evidence.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:43.5819565Z"
+      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
+      "reviewedAtUtc": "2026-10-13T19:43:56.7779686Z"
     },
     {
       "pageId": "workflow.query-context",

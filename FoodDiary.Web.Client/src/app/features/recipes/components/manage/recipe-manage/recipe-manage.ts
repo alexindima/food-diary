@@ -533,6 +533,7 @@ export class RecipeManageComponent implements UnsavedEditor {
     }
 
     protected applyRecognizedDraft(draft: RecipeImportResult): void {
+        this.nutritionFormManager.nutritionScaleMode = 'recipe';
         this.patchRecipeFormModel(
             mapRecognizedRecipe(
                 draft,
@@ -544,7 +545,7 @@ export class RecipeManageComponent implements UnsavedEditor {
         this.stepFormManager.expandedSteps.clear();
         this.steps.forEach((_, index) => this.stepFormManager.expandedSteps.add(index));
         this.importErrorKey.set(null);
-        this.updateSummaryFromCurrentForm();
+        this.nutritionFormManager.initialize();
     }
 
     private prepareRecipeDto(): RecipeDto {

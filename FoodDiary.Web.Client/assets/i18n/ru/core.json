@@ -142,6 +142,7 @@
     "GENERAL": {
         "UNITS": {
             "KCAL": "ккал",
+            "KCAL_PER_SERVING": "ккал / порция",
             "G": "г",
             "ML": "мл",
             "PCS": "шт",
@@ -607,6 +608,7 @@
         "SUMMARY": {
             "CALORIES": "Калории",
             "SERVINGS": "Порции",
+            "CALORIES_PER_SERVING": "Калории на порцию",
             "TOTAL_TIME": "Общее время",
             "INGREDIENTS": "Ингредиенты",
             "VISIBILITY": "Видимость",

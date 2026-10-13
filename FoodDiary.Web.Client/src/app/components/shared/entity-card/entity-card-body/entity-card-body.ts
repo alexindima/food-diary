@@ -23,6 +23,7 @@ export class EntityCardBodyComponent {
     public readonly comment = input<string | null>(null);
     public readonly nutrition = input.required<EntityCardNutrition>();
     public readonly calories = input.required<number | null>();
+    public readonly caloriesUnitKey = input('GENERAL.UNITS.KCAL');
     public readonly nutritionNote = input<string | null>(null);
     public readonly quality = input<EntityCardNormalizedQuality | null>(null);
 }

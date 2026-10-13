@@ -19,6 +19,7 @@ const MOCK_RECIPE: RecipeCardItem = {
     isOwnedByCurrentUser: true,
     prepTime: 15,
     cookTime: 30,
+    servings: 1,
     totalProteins: 25,
     totalFats: 12,
     totalCarbs: 40,
@@ -209,6 +210,20 @@ describe('RecipeCardComponent total time', () => {
 });
 
 describe('RecipeCardComponent ingredients', () => {
+    it('capitalizes ingredient summaries without changing the recipe used by actions', async () => {
+        const { component, el, fixture } = await setupRecipeCardAsync();
+        const recipe: RecipeCardItem = {
+            ...MOCK_RECIPE,
+            steps: [{ ingredients: [{ textName: 'olive oil' }, { productName: 'соль' }, { nestedRecipeName: 'sauce (GF)' }] }],
+        };
+        fixture.componentRef.setInput('recipe', recipe);
+        fixture.detectChanges();
+
+        expect(el.textContent).toContain('Olive oil, Соль, Sauce (GF)');
+        expect(component.recipe()).toBe(recipe);
+        expect(recipe.steps?.[0].ingredients?.[0].textName).toBe('olive oil');
+    });
+
     it('should count ingredients across all steps', async () => {
         const { component, fixture } = await setupRecipeCardAsync();
         fixture.detectChanges();
@@ -247,6 +262,26 @@ describe('RecipeCardComponent ingredients', () => {
 });
 
 describe('RecipeCardComponent nutrition completeness', () => {
+    it('renders the reported recipe per serving while retaining the source recipe used by actions', async () => {
+        const { component, el, fixture } = await setupRecipeCardAsync();
+        const recipe = {
+            ...MOCK_RECIPE,
+            servings: 5,
+            totalCalories: 2525,
+            totalProteins: 180,
+            totalFats: 235,
+            totalCarbs: 25,
+            totalFiber: 5,
+        };
+        fixture.componentRef.setInput('recipe', recipe);
+        fixture.detectChanges();
+        expect(el.querySelector('.entity-card__calories-value')?.textContent).toBe('505');
+        expect(el.querySelector('.entity-card__calories-unit')?.textContent).toBe('GENERAL.UNITS.KCAL_PER_SERVING');
+        expect(component['nutrition']()).toEqual({ proteins: 36, fats: 47, carbs: 5, fiber: 1, alcohol: 0 });
+        expect(component.recipe()).toBe(recipe);
+        expect(component.recipe().totalCalories).toBe(recipe.totalCalories);
+    });
+
     it.each([null, 0, MOCK_RECIPE.totalCalories])(
         'keeps unknown and known calories distinct when nutrition is incomplete: %s',
         async calories => {

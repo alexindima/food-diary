@@ -3,6 +3,7 @@ import { CHART_COLORS, type ChartColorPalette } from '../../../../../constants/c
 import { NUTRIENT_ROUNDING_FACTOR, PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
 import { calculateMacroBarState } from '../../../../../shared/lib/nutrition-form.utils';
 import { normalizeQualityScore } from '../../../../../shared/lib/quality-score.utils';
+import { recipeNutrientPerServing } from '../../../../../shared/lib/recipe-nutrition-display.utils';
 import type { Recipe } from '../../../../../shared/models/recipe.data';
 import { resolveIngredientUnitKey } from '../../../lib/recipe-servings.utils';
 import { RECIPE_DETAIL_MIN_MACRO_BAR_PERCENT } from './recipe-detail.config';
@@ -33,12 +34,12 @@ export function buildRecipeDetailViewModel(
     unknownIngredientName: string,
     colors: ChartColorPalette = CHART_COLORS,
 ): RecipeDetailViewModel {
-    const calories = resolveNutrientValue(recipe.totalCalories, recipe.manualCalories);
-    const proteins = resolveNutrientValue(recipe.totalProteins, recipe.manualProteins);
-    const fats = resolveNutrientValue(recipe.totalFats, recipe.manualFats);
-    const carbs = resolveNutrientValue(recipe.totalCarbs, recipe.manualCarbs);
-    const fiber = resolveFiberValue(recipe);
-    const alcohol = resolveAlcoholValue(recipe);
+    const calories = recipeNutrientPerServing(resolveNutrientValue(recipe.totalCalories, recipe.manualCalories), recipe.servings) ?? 0;
+    const proteins = recipeNutrientPerServing(resolveNutrientValue(recipe.totalProteins, recipe.manualProteins), recipe.servings) ?? 0;
+    const fats = recipeNutrientPerServing(resolveNutrientValue(recipe.totalFats, recipe.manualFats), recipe.servings) ?? 0;
+    const carbs = recipeNutrientPerServing(resolveNutrientValue(recipe.totalCarbs, recipe.manualCarbs), recipe.servings) ?? 0;
+    const fiber = recipeNutrientPerServing(resolveFiberValue(recipe), recipe.servings) ?? 0;
+    const alcohol = recipeNutrientPerServing(resolveAlcoholValue(recipe), recipe.servings) ?? 0;
     const macroReferenceValues = [proteins, fats, carbs];
     const macroBlocks = buildMacroBlocks({ proteins, fats, carbs, fiber, alcohol }, macroReferenceValues, colors);
 

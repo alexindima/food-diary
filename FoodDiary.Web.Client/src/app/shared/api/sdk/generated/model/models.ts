@@ -165,6 +165,7 @@ export * from './recipe-image-http-response';
 export * from './recipe-import-http-request';
 export * from './recipe-import-http-response';
 export * from './recipe-import-ingredient-http-response';
+export * from './recipe-import-nutrition-http-response';
 export * from './recipe-ingredient-http-request';
 export * from './recipe-ingredient-http-response';
 export * from './recipe-like-status-http-response';

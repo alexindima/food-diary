@@ -74,6 +74,63 @@ public sealed class RecipeImportProviderTests {
         ResultAssert.Failure(result, "Ai.InvalidResponse");
     }
 
+    [Fact]
+    public async Task Provider_PreservesSeparateIngredientRowsAndStatedServingNutrition() {
+        const string draft = """
+            {"name":"Chicken","description":null,"ingredients":[{"name":"Pepper","amount":"1/2 tsp","stepIndex":1},{"name":"Pepper","amount":"1/2 tsp","stepIndex":3}],"steps":["Preheat","Mix seasoning","Season chicken","Mix gravy"],"servings":5,"prepMinutes":5,"cookMinutes":50,"authorNutrition":"505 kcal; protein 36 g; fat 37 g; carbs 5 g per serving","nutrition":{"basis":"serving","calories":505,"proteins":36,"fats":37,"carbs":5,"fiber":1,"alcohol":null}}
+            """;
+        using var handler = new ProviderHandler(draft);
+        using var http = new HttpClient(handler);
+        RecipeImportDraftModel recipe = ResultAssert.Success(await CreateClient(http).ImportRecipeAsync(
+            "Recipe with separate seasoning and gravy; stated nutrition per serving", "en", CancellationToken.None)).Value;
+
+        Assert.Equal([1, 3], recipe.Ingredients.Select(x => x.StepIndex));
+        Assert.All(recipe.Ingredients, ingredient => Assert.Equal("1/2 tsp", ingredient.Amount));
+        Assert.Equal(new RecipeImportNutritionModel("serving", 505, 36, 37, 5, 1, Alcohol: null), recipe.Nutrition);
+        using var request = JsonDocument.Parse(handler.Body!);
+        JsonElement schema = request.RootElement.GetProperty("text").GetProperty("format").GetProperty("schema");
+        Assert.Contains("stepIndex", schema.GetProperty("properties").GetProperty("ingredients").GetProperty("items")
+            .GetProperty("required").EnumerateArray().Select(x => x.GetString()), StringComparer.Ordinal);
+        Assert.Contains("nutrition", schema.GetProperty("required").EnumerateArray().Select(x => x.GetString()), StringComparer.Ordinal);
+        string instructions = request.RootElement.GetProperty("input")[0].GetProperty("content")[0].GetProperty("text").GetString()!;
+        Assert.Contains("never merge", instructions, StringComparison.Ordinal);
+        Assert.Contains("Preheating an oven does not use ingredients", instructions, StringComparison.Ordinal);
+        Assert.Contains("recipeYield alone does not", instructions, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData(-1, "serving", 505)]
+    [InlineData(1, "serving", 505)]
+    public async Task Provider_InvalidStep_ReturnsControlledError(int stepIndex, string basis, double calories) {
+        string draft = JsonSerializer.Serialize(new {
+            name = "Chicken", description = (string?)null,
+            ingredients = new[] { new { name = "Pepper", amount = "1/2 tsp", stepIndex } }, steps = new[] { "Mix" },
+            servings = 5, prepMinutes = (int?)null, cookMinutes = (int?)null, authorNutrition = "Stated nutrition",
+            nutrition = new { basis, calories, proteins = 36, fats = 37, carbs = 5, fiber = (double?)null, alcohol = (double?)null },
+        });
+        using var handler = new ProviderHandler(draft);
+        using var http = new HttpClient(handler);
+        ResultAssert.Failure(await CreateClient(http).ImportRecipeAsync("caption", "en", CancellationToken.None), "Ai.InvalidResponse");
+    }
+
+    [Theory]
+    [InlineData("unknown-unit", 505)]
+    [InlineData("recipe", -1)]
+    public async Task Provider_UnusableNutrition_PreservesRecipeAndAuthorQuotation(string basis, double calories) {
+        string draft = JsonSerializer.Serialize(new {
+            name = "Chicken", description = (string?)null,
+            ingredients = new[] { new { name = "Pepper", amount = "1/2 tsp", stepIndex = 0 } }, steps = new[] { "Mix" },
+            servings = 5, prepMinutes = (int?)null, cookMinutes = (int?)null, authorNutrition = "Stated nutrition",
+            nutrition = new { basis, calories, proteins = 36, fats = 37, carbs = 5, fiber = (double?)null, alcohol = (double?)null },
+        });
+        using var handler = new ProviderHandler(draft);
+        using var http = new HttpClient(handler);
+        RecipeImportDraftModel recipe = ResultAssert.Success(await CreateClient(http).ImportRecipeAsync("caption", "en", CancellationToken.None)).Value;
+        Assert.Null(recipe.Nutrition);
+        Assert.Equal("Stated nutrition", recipe.AuthorNutrition);
+        Assert.Single(recipe.Ingredients);
+    }
+
     private static OpenAiFoodClient CreateClient(HttpClient http) => new(http,
         Options.Create(new OpenAiOptions { ApiKey = "unit-test-key", TextModel = "text-model" }), NullLogger<OpenAiFoodClient>.Instance);
 

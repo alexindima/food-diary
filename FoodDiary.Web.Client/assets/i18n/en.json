@@ -142,6 +142,7 @@
     "GENERAL": {
         "UNITS": {
             "KCAL": "kcal",
+            "KCAL_PER_SERVING": "kcal / serving",
             "G": "g",
             "ML": "ml",
             "PCS": "pcs",
@@ -589,9 +590,9 @@
         "FILTER_MAX_TOTAL_TIME": "Max total time, min",
         "FILTER_MAX_TOTAL_TIME_ACTIVE": "Total time",
         "FILTER_NUTRITION": "Nutrition",
-        "FILTER_CALORIES_FROM": "Calories from",
-        "FILTER_CALORIES_TO": "Calories to",
-        "FILTER_CALORIES_ACTIVE": "Calories range",
+        "FILTER_CALORIES_FROM": "Recipe kcal from",
+        "FILTER_CALORIES_TO": "Recipe kcal to",
+        "FILTER_CALORIES_ACTIVE": "Recipe calories range",
         "FILTER_MEDIA": "Media",
         "FILTER_IMAGE_ANY": "Any",
         "FILTER_IMAGE_WITH": "With photo",
@@ -644,6 +645,7 @@
         "SUMMARY": {
             "CALORIES": "Nutrition for the whole recipe",
             "SERVINGS": "Servings",
+            "CALORIES_PER_SERVING": "Calories per serving",
             "TOTAL_TIME": "Total time",
             "INGREDIENTS": "Ingredients",
             "VISIBILITY": "Visibility",
@@ -4871,7 +4873,7 @@
             "CLIPBOARD_UNAVAILABLE": "Clipboard reading is unavailable or blocked. Paste the link into the field using your browser.",
             "USE_LINK": "Use this link",
             "DISMISS": "Dismiss",
-            "REVIEW_HINT": "Draft ready. Check the ingredients and steps. Link text ingredients to products to calculate nutrition, or enter nutrition manually. Author nutrition is kept as an unverified note.",
+            "REVIEW_HINT": "Draft ready. Check the ingredients and their cooking steps. Complete nutrition stated per recipe or serving is filled in manual mode and kept as an unverified note. Otherwise, enter nutrition manually or link text ingredients to products.",
             "SERVINGS_HINT": "The source does not specify servings. The form starts at 1; set the actual number before saving.",
             "STEPS_HINT": "The source has no preparation steps. Add them before saving.",
             "AUTHOR_NUTRITION": "Nutrition stated by the author (unverified; basis as stated)",

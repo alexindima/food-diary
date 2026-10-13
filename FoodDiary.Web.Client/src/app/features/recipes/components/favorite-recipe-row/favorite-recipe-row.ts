@@ -5,6 +5,7 @@ import { createImageFailureState, FdUiButtonComponent, FdUiFocusWhenDirective, F
 import { NutrientBadgesComponent } from '../../../../components/shared/nutrient-badges/nutrient-badges';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
+import { recipeNutrientPerServing } from '../../../../shared/lib/recipe-nutrition-display.utils';
 import type { FavoriteRecipe } from '../../../../shared/models/recipe.data';
 
 @Component({
@@ -40,6 +41,16 @@ export class FavoriteRecipeRowComponent {
     public readonly disabled = input(false);
     public readonly add = output<FavoriteRecipe>();
     protected readonly locale = injectCurrentLanguage();
+    protected readonly calories = computed(() => recipeNutrientPerServing(this.recipe().totalCalories, this.recipe().servings));
+    protected readonly nutrition = computed(() => {
+        const recipe = this.recipe();
+        return {
+            proteins: recipeNutrientPerServing(recipe.totalProteins, recipe.servings) ?? 0,
+            fats: recipeNutrientPerServing(recipe.totalFats, recipe.servings) ?? 0,
+            carbs: recipeNutrientPerServing(recipe.totalCarbs, recipe.servings) ?? 0,
+            fiber: recipeNutrientPerServing(recipe.totalFiber, recipe.servings) ?? 0,
+        };
+    });
     protected readonly name = computed(() => {
         const name = this.recipe().name?.trim();
         return name !== undefined && name.length > 0 ? name : this.recipe().recipeName;

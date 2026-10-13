@@ -8,18 +8,18 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2553,
-    "symbols": 828,
+    "typescriptFiles": 2559,
+    "symbols": 829,
     "routes": 108,
     "features": 46,
-    "specs": 736,
+    "specs": 738,
     "localeFiles": 5,
     "roles": {
       "Component": 492,
       "Directive": 15,
       "Facade": 88,
       "Other": 34,
-      "Pipe": 4,
+      "Pipe": 5,
       "Service": 195
     }
   },
@@ -3409,7 +3409,7 @@
       "role": "Component",
       "selector": "fd-recipe-card",
       "path": "FoodDiary.Web.Client/src/app/components/shared/recipe-card/recipe-card.ts",
-      "line": 48
+      "line": 51
     },
     {
       "name": "SkeletonCardComponent",
@@ -5642,14 +5642,14 @@
       "role": "Component",
       "selector": "fd-recipe-cook-mode",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-cook-mode/recipe-cook-mode.ts",
-      "line": 25
+      "line": 26
     },
     {
       "name": "RecipeDetailIngredientPreviewComponent",
       "role": "Component",
       "selector": "fd-recipe-detail-ingredient-preview",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-ingredient-preview/recipe-detail-ingredient-preview.ts",
-      "line": 13
+      "line": 14
     },
     {
       "name": "RecipeDetailActionResult",
@@ -5677,7 +5677,7 @@
       "role": "Component",
       "selector": "fd-favorite-recipe-row",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.ts",
-      "line": 25
+      "line": 26
     },
     {
       "name": "RecipeListFiltersDialogComponent",
@@ -5796,7 +5796,7 @@
       "role": "Component",
       "selector": "fd-public-ingredients",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-ingredients/public-ingredients.ts",
-      "line": 22
+      "line": 23
     },
     {
       "name": "PublicRecipeNavigationComponent",
@@ -5817,7 +5817,7 @@
       "role": "Component",
       "selector": "fd-public-steps",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/public-steps/public-steps.ts",
-      "line": 15
+      "line": 16
     },
     {
       "name": "RecipeFavoritesPickerComponent",
@@ -7304,6 +7304,13 @@
       "line": 21
     },
     {
+      "name": "CapitalizeFirstLetterPipe",
+      "role": "Pipe",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/ui/capitalize-first-letter.pipe.ts",
+      "line": 8
+    },
+    {
       "name": "FdCardHoverDirective",
       "role": "Directive",
       "selector": "[fdCardHover]",
@@ -7950,8 +7957,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1229,
-      "russianProperties": 1229,
+      "englishProperties": 1231,
+      "russianProperties": 1231,
       "countsMatch": true
     },
     {

@@ -11,4 +11,5 @@
 export interface RecipeImportIngredientHttpResponse {
     amount?: string | null;
     name?: string;
+    stepIndex?: number | null;
 }

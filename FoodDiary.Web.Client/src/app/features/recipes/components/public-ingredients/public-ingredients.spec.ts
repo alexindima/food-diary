@@ -18,8 +18,8 @@ describe('public ingredient quantities', () => {
     it('scales numbers, preserves free text and does not link hidden ingredients', () => {
         const recipe = publicRecipeFixture();
         recipe.steps[0].ingredients = [
-            { name: 'Rice', amount: 100, unit: 'g', amountText: null, recipeId: null, isAvailable: true },
-            { name: 'Salt', amount: null, unit: null, amountText: 'to taste', recipeId: null, isAvailable: true },
+            { name: 'rice', amount: 100, unit: 'g', amountText: null, recipeId: null, isAvailable: true },
+            { name: 'соль', amount: null, unit: null, amountText: 'to taste', recipeId: null, isAvailable: true },
             { name: null, amount: null, unit: null, amountText: null, recipeId: null, isAvailable: false },
         ];
         const fixture = TestBed.createComponent(PublicIngredientsComponent);
@@ -35,6 +35,8 @@ describe('public ingredient quantities', () => {
         increase?.click();
         fixture.detectChanges();
         expect(element.textContent).toContain('150');
+        expect(element.textContent).toContain('Rice');
+        expect(element.textContent).toContain('Соль');
         expect(element.textContent).toContain('to taste');
         expect(element.textContent).toContain('PUBLIC_RECIPES.PRIVATE_INGREDIENT');
         expect(element.querySelectorAll('li a')).toHaveLength(0);
@@ -48,7 +50,7 @@ describe('public ingredient quantities', () => {
         const recipe = publicRecipeFixture();
         recipe.steps[0].ingredients = [
             {
-                name: 'Rice',
+                name: 'rice',
                 productId: entityId<'product'>('public-rice'),
                 amount: 100,
                 unit: 'Gram',
@@ -72,12 +74,38 @@ describe('public ingredient quantities', () => {
         buttons[1].click();
         expect(added).toHaveBeenNthCalledWith(1, {
             index: 0,
-            item: { name: 'Rice', productId: 'public-rice', amount: 200, unit: 'G', note: null, isChecked: false },
+            item: { name: 'rice', productId: 'public-rice', amount: 200, unit: 'G', note: null, isChecked: false },
         });
         expect(added).toHaveBeenNthCalledWith(2, {
             index: 1,
             item: { name: 'Salt', productId: null, amount: null, unit: null, note: 'to taste', isChecked: false },
         });
+        expect(element.querySelector('.ingredient-list')?.textContent).toContain('Rice');
+        expect(recipe.steps[0].ingredients[0].name).toBe('rice');
+    });
+});
+
+describe('public ingredient names', () => {
+    beforeEach(() =>
+        TestBed.configureTestingModule({
+            imports: [PublicIngredientsComponent],
+            providers: [provideRouter([]), provideTranslateTesting()],
+        }),
+    );
+
+    it('capitalizes linked recipe ingredients while preserving their links and internal case', () => {
+        const recipe = publicRecipeFixture();
+        recipe.steps[0].ingredients = [
+            { name: 'sauce (GF)', amount: 1, unit: 'serving', amountText: null, recipeId: entityId<'recipe'>('sauce'), isAvailable: true },
+        ];
+        const fixture = TestBed.createComponent(PublicIngredientsComponent);
+        fixture.componentRef.setInput('recipe', recipe);
+        fixture.componentRef.setInput('servings', recipe.servings);
+        fixture.detectChanges();
+        const link = (fixture.nativeElement as HTMLElement).querySelector('li a');
+        expect(link?.textContent).toBe('Sauce (GF)');
+        expect(link?.getAttribute('href')).toBe('/explore/sauce');
+        expect(recipe.steps[0].ingredients[0].name).toBe('sauce (GF)');
     });
 });
 

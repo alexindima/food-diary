@@ -4,6 +4,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
 
+import { capitalizeFirstLetter } from '../../../../../shared/lib/text-display.utils';
 import type { Recipe, RecipeIngredient, RecipeStep } from '../../../../../shared/models/recipe.data';
 import { resolveIngredientUnitKey } from '../../../lib/recipe-servings.utils';
 
@@ -72,7 +73,7 @@ export class RecipeCookModeComponent {
 
     private buildIngredientViews(ingredients: readonly RecipeIngredient[]): CookModeIngredientView[] {
         return ingredients.map(ingredient => ({
-            name: ingredient.textName ?? ingredient.productName ?? ingredient.nestedRecipeName ?? '',
+            name: capitalizeFirstLetter(ingredient.textName ?? ingredient.productName ?? ingredient.nestedRecipeName),
             amount: typeof ingredient.textName === 'string' ? (ingredient.amountText ?? '') : ingredient.amount,
             unitKey: resolveIngredientUnitKey(ingredient) ?? '',
         }));

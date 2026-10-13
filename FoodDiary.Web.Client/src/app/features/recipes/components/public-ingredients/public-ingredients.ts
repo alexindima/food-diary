@@ -6,6 +6,7 @@ import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
 import type { ShoppingListItemDto } from '../../../../shared/models/shopping-list.data';
+import { CapitalizeFirstLetterPipe } from '../../../../shared/ui/capitalize-first-letter.pipe';
 import { PublicProductPreviewService } from '../../../products/contracts/public-product-preview';
 import { scaleIngredient } from '../../lib/public-recipe.utils';
 import type { PublicRecipe, PublicRecipeIngredient } from '../../models/public-recipe.data';
@@ -17,7 +18,7 @@ const DEFAULT_MAX_SERVINGS = 50;
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './public-ingredients.html',
     styleUrl: './public-ingredients.scss',
-    imports: [DecimalPipe, RouterLink, TranslatePipe, FdUiButtonComponent, FdUiHintDirective],
+    imports: [DecimalPipe, RouterLink, TranslatePipe, CapitalizeFirstLetterPipe, FdUiButtonComponent, FdUiHintDirective],
 })
 export class PublicIngredientsComponent {
     protected readonly productPreview = inject(PublicProductPreviewService);

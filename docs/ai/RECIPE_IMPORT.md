@@ -74,13 +74,23 @@ selection control. It has an explicit label and is disabled during recognition.
 ## Draft semantics
 
 AI extracts the stated quantities, including fractions, pinches and to-taste
-qualifiers, into text ingredients. The ingredient list is attached to the first
-step once. It does not estimate weights or select catalogue products. Missing
+qualifiers, into text ingredients. Each source ingredient row is attached once
+to its first evidenced cooking step using a zero-based `stepIndex`. Separate
+rows for the same ingredient in different mixtures retain their quantities and
+step assignments. An unknown assignment (or a legacy response without it) falls
+back to the first step. It does not estimate weights or select catalogue products. Missing
 times remain empty; missing servings use the editor's default of one with an
 explicit notice. Missing instructions require the user to fill the empty step.
 Nutrition quoted by the author is kept as an unverified comment with its stated
-basis. It never becomes calculated recipe nutrition. Users can link ingredients
-to products or enter nutrition manually before saving. Recognition does not
+basis. The optional structured `nutrition` also copies the stated kcal and grams,
+without estimating or recalculating nutrients. Complete calories, proteins, fats
+and carbs with an explicit `recipe` or `serving` basis populate manual nutrition.
+Per-serving values require an explicit serving count and are multiplied once to
+whole-recipe totals within the existing manual limits. Import resets the editor's
+display basis to the whole recipe. Explicit zeroes are retained; absent optional
+fiber/alcohol stay empty. Unknown, incomplete and `per100g` nutrition remains a
+note: no recipe mass is inferred. Users can link ingredients to products or enter
+nutrition manually before saving. Recognition does not
 publish or persist a recipe.
 
 ## Clipboard

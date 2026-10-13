@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4579,
-    "symbols": 4514,
+    "sourceFiles": 4581,
+    "symbols": 4516,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
       "class": 2328,
       "enum": 71,
       "interface": 413,
-      "record": 1561,
+      "record": 1563,
       "record struct": 141
     },
     "roles": {
@@ -32,14 +32,14 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1856,
+      "Other": 1857,
       "Query": 301,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 99,
       "Request": 178,
-      "Response": 266,
+      "Response": 267,
       "Service": 168,
       "Validator": 236,
       "ValueObject": 177,
@@ -5907,6 +5907,13 @@
       "line": 2
     },
     {
+      "name": "RecipeImportNutritionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Contracts/Models/RecipeImportNutritionModel.cs",
+      "line": 2
+    },
+    {
       "name": "GetAiPromptRevisionsQuery",
       "kind": "record",
       "role": "Query",
@@ -6450,6 +6457,13 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Ai/Presentation/Responses/RecipeImportIngredientHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeImportNutritionHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Ai/Presentation/Responses/RecipeImportNutritionHttpResponse.cs",
       "line": 2
     },
     {

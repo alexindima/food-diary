@@ -60,6 +60,10 @@ export function recipeImportFromSdk(response: RecipeImportHttpResponse): RecipeI
     const value = requireSdkFields(response, ['name', 'ingredients', 'steps']);
     return {
         ...sdkNullableFields(value, ['description', 'servings', 'prepMinutes', 'cookMinutes', 'authorNutrition', 'sourceUrl']),
-        ingredients: value.ingredients.map(item => sdkNullableFields(requireSdkFields(item, ['name']), ['amount'])),
+        ingredients: value.ingredients.map(item => sdkNullableFields(requireSdkFields(item, ['name']), ['amount', 'stepIndex'])),
+        nutrition: sdkOptional(value.nutrition, nutrition => ({
+            ...sdkNullableFields(nutrition, ['calories', 'proteins', 'fats', 'carbs', 'fiber', 'alcohol']),
+            basis: sdkEnum(requireSdkFields(nutrition, ['basis']).basis, ['recipe', 'serving', 'per100g', 'unknown'] as const),
+        })),
     };
 }

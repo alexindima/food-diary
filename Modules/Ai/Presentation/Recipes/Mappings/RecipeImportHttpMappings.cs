@@ -15,6 +15,10 @@ public static class RecipeImportHttpMappings {
         new(userId, video, request.SourceUrl, request.Text, requestId);
 
     public static RecipeImportHttpResponse ToHttpResponse(this RecipeImportDraftModel draft) => new(
-        draft.Name, draft.Description, draft.Ingredients.Select(x => new RecipeImportIngredientHttpResponse(x.Name, x.Amount)).ToArray(),
-        draft.Steps, draft.Servings, draft.PrepMinutes, draft.CookMinutes, draft.AuthorNutrition, draft.SourceUrl);
+        draft.Name, draft.Description, draft.Ingredients.Select(x => new RecipeImportIngredientHttpResponse(x.Name, x.Amount, x.StepIndex)).ToArray(),
+        draft.Steps, draft.Servings, draft.PrepMinutes, draft.CookMinutes, draft.AuthorNutrition, draft.SourceUrl,
+        draft.Nutrition is { } nutrition
+            ? new RecipeImportNutritionHttpResponse(nutrition.Basis, nutrition.Calories, nutrition.Proteins,
+                nutrition.Fats, nutrition.Carbs, nutrition.Fiber, nutrition.Alcohol)
+            : null);
 }
