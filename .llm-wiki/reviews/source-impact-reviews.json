@@ -257,13 +257,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "7bb2253438f6d1f10a76a02e7043ffb24a81a628ccbe72fa5ce09c58c2e4cf89"
+          "sha256": "12ce8a22bcbc15081a6b9f828256f15e29ac7dc9fdcbe2c07ae03ca6875dd1d5"
         }
       ],
-      "reason": "Swagger and SDK regenerated with zero public breaking changes. Legacy email routes retain non-null IDs; journal and 404 fallback support mixed versions. All 280 host integration tests passed. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
+      "reason": "The generated consumer index adds regression-test references to existing journal query and page types. No production route, payload, status, Swagger surface or API contract changes; transport snapshots remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
-      "reviewedAtUtc": "2026-10-12T19:09:45.2982595Z"
+      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
+      "reviewedAtUtc": "2026-10-13T08:04:07.1309599Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -891,13 +891,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "cf67c4e58d6d325165d940f09b2c3f2d624f81ead74ea77827b2455c987c70bc"
+          "sha256": "2fad6c9d4a4d0020d638441ed3b4ed6678f9f319c9cabbaaba7f26031ad89dfc"
         }
       ],
-      "reason": "No project/reference changes. All 2272 architecture tests passed. Real store and HTTP regressions cover concurrency, expiry and old contracts; index signals verified against actual sources and tests. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
+      "reason": "The only production change is an eight-line cancellation catch. Regression tests reproduce the journal-validator error and preserve exception identity, active-request cancellation errors, foreign-token errors and ordinary failures.",
       "baseRef": "HEAD",
-      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
-      "reviewedAtUtc": "2026-10-12T19:09:47.6042093Z"
+      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
+      "reviewedAtUtc": "2026-10-13T08:04:09.2654871Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -978,13 +978,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "90ccc5fe4e52fd97111c630a684512838cb80f3b89d4b300d62c16db599b94ab"
+          "sha256": "56f830d862a250823a5934e0358aa51257b3810f12c6b7c71589a3439bb9e7fb"
         }
       ],
-      "reason": "Reviewed worker-key writes versus Admin reading, bounds, cancellation, UTC intervals, atomic completion and private retries. Independent retention preserves mail polling; no raw logs or deployment. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
+      "reason": "MailRelay pipeline propagation is unchanged: the matching cancelled request logs Debug and rethrows; the generic Error path remains. No host wiring, provider, queue, persistence, retry or deployment changes; topology declaration shifts only.",
       "baseRef": "HEAD",
-      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
-      "reviewedAtUtc": "2026-10-12T19:09:49.6478113Z"
+      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
+      "reviewedAtUtc": "2026-10-13T08:04:10.8609570Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -993,17 +993,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "cf67c4e58d6d325165d940f09b2c3f2d624f81ead74ea77827b2455c987c70bc"
+          "sha256": "2fad6c9d4a4d0020d638441ed3b4ed6678f9f319c9cabbaaba7f26031ad89dfc"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "90ccc5fe4e52fd97111c630a684512838cb80f3b89d4b300d62c16db599b94ab"
+          "sha256": "56f830d862a250823a5934e0358aa51257b3810f12c6b7c71589a3439bb9e7fb"
         }
       ],
-      "reason": "Reviewed worker-key writes versus Admin reading, bounds, cancellation, UTC intervals, atomic completion and private retries. Independent retention preserves mail polling; no raw logs or deployment. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
+      "reason": "Cancellation must be requested on the pipeline and the exception must carry that exact token. Foreign cancellation remains Error even when the request is concurrently cancelled. The new Debug template uses only static request type and elapsed time, without mail content, recipients or secrets.",
       "baseRef": "HEAD",
-      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
-      "reviewedAtUtc": "2026-10-12T19:09:51.8692554Z"
+      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
+      "reviewedAtUtc": "2026-10-13T08:04:12.5593522Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

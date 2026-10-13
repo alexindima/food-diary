@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1350,
     "ambiguousContracts": 29,
-    "consumerEdges": 10527,
+    "consumerEdges": 10528,
     "productionConsumerEdges": 6023,
-    "testConsumerEdges": 4504,
+    "testConsumerEdges": 4505,
     "consumedContracts": 1350,
     "unconsumedContracts": 0
   },
@@ -52219,6 +52219,19 @@
       "consumerPath": "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/OutgoingEmailJournalQueryTests.cs",
       "isTest": true,
       "referenceCount": 6
+    },
+    {
+      "contract": "GetOutgoingEmailJournalQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQuery.cs"
+      ],
+      "consumerArea": "MailRelay",
+      "consumerPath": "Services/MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/MailRelayLoggingBehaviorTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "GetOutgoingEmailJournalQuery",
