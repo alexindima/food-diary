@@ -257,13 +257,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "12ce8a22bcbc15081a6b9f828256f15e29ac7dc9fdcbe2c07ae03ca6875dd1d5"
+          "sha256": "f14e8924cc0a4cd1f7b94e7baacb1ba6141a083b9331feccadce2add94b2abf4"
         }
       ],
-      "reason": "The generated consumer index adds regression-test references to existing journal query and page types. No production route, payload, status, Swagger surface or API contract changes; transport snapshots remain valid.",
+      "reason": "Calendar fixture setup now obtains its JWT through the real registration API and removes the direct IJwtTokenGenerator test consumer. Only the test-consumer edge is removed; all production contracts/routes/payloads remain unchanged. Regenerated backend-contract index and verified the complete twelve-generator index set matching CI, after affected-only selection omitted this test consumer change.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T08:04:07.1309599Z"
+      "gitHead": "4e4e83d55e7a23c41d9aa1ab05c75fa6c98597b1",
+      "reviewedAtUtc": "2026-10-13T10:09:57.6462405Z"
     },
     {
       "pageId": "workflow-change-manifest",

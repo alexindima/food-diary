@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1350,
     "ambiguousContracts": 29,
-    "consumerEdges": 10528,
+    "consumerEdges": 10527,
     "productionConsumerEdges": 6023,
-    "testConsumerEdges": 4505,
+    "testConsumerEdges": 4504,
     "consumedContracts": 1350,
     "unconsumedContracts": 0
   },
@@ -86337,19 +86337,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DietologistInvitationNotificationIntegrationTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IJwtTokenGenerator",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/WeeklyGoalCalendarValidationIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
