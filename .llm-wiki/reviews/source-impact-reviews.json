@@ -240,7 +240,7 @@
       "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
       "baseRef": "HEAD",
       "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:42.5695030Z"
+      "reviewedAtUtc": "2026-10-13T13:03:42.569503Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -249,13 +249,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "7bb2253438f6d1f10a76a02e7043ffb24a81a628ccbe72fa5ce09c58c2e4cf89"
+          "sha256": "f14e8924cc0a4cd1f7b94e7baacb1ba6141a083b9331feccadce2add94b2abf4"
         }
       ],
-      "reason": "Swagger and SDK regenerated with zero public breaking changes. Legacy email routes retain non-null IDs; journal and 404 fallback support mixed versions. All 280 host integration tests passed. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
-      "baseRef": "HEAD",
-      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
-      "reviewedAtUtc": "2026-10-12T19:09:45.2982595Z"
+      "reason": "Reviewed merged contract index: genuine issued JWT removes fixture manual-token references. No MailRelay HTTP or provider contract changes; master admin contracts preserved.",
+      "baseRef": "origin/master",
+      "gitHead": "5a96428b68014a61ea136bc4b3a3c17cfa095cd5",
+      "reviewedAtUtc": "2026-10-13T20:22:00.8445669Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -883,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "19a48a25b59bfcd0caa6515a4c77939e226c71ea4dddfa22624fdcf9407369c0"
+          "sha256": "f352bde44ca76301d2ae1de2ed91aa0a1ce0e75d5e7b9d413d9d9aed6e69ab98"
         }
       ],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
-      "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:44.5898659Z"
+      "reason": "Real PostgreSQL calendar integration passes 1/1 without skips after merge resolution. All 9 cancellation logger regressions retained. Full hooks and current-head CI follow publication.",
+      "baseRef": "origin/master",
+      "gitHead": "5a96428b68014a61ea136bc4b3a3c17cfa095cd5",
+      "reviewedAtUtc": "2026-10-13T20:22:02.2987426Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -970,13 +970,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d055832dce5a98e633fd42875867022b8a38d91fe76997ac971c8efd70ed7523"
+          "sha256": "3743afeaafadde1d2ca034886c78fd6f42ce0a1aff10c1a15580ab54b27c15ae"
         }
       ],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
+      "reason": "Merged current master admin journal changes without changing deployment topology. Runtime index differs from master only by the verified MailRelay cancellation logging source fingerprint; no routes, dependencies, storage or jobs changed.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:45.3542425Z"
+      "gitHead": "5a96428b68014a61ea136bc4b3a3c17cfa095cd5",
+      "reviewedAtUtc": "2026-10-13T20:21:31.6673063Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -984,18 +984,14 @@
       "pageSha256": "f935366d43c011c5187443833e00da2994b5092dff5b60dc6cbd0759390944bf",
       "sources": [
         {
-          "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "19a48a25b59bfcd0caa6515a4c77939e226c71ea4dddfa22624fdcf9407369c0"
-        },
-        {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d055832dce5a98e633fd42875867022b8a38d91fe76997ac971c8efd70ed7523"
+          "sha256": "3743afeaafadde1d2ca034886c78fd6f42ce0a1aff10c1a15580ab54b27c15ae"
         }
       ],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
+      "reason": "Cancellation log retains only operation and elapsed duration. Matching requested token is required and the original exception is propagated. Merge preserves master security and admin behavior; calendar fixture reuses genuine registration JWT and contains no production authentication changes.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:46.2357818Z"
+      "gitHead": "5a96428b68014a61ea136bc4b3a3c17cfa095cd5",
+      "reviewedAtUtc": "2026-10-13T20:21:34.0142431Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

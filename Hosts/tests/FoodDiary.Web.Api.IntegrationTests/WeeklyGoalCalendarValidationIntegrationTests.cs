@@ -1,14 +1,9 @@
 using System.Globalization;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
-using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
-using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -22,31 +17,24 @@ public sealed class WeeklyGoalCalendarValidationIntegrationTests(ApiWebApplicati
     : IClassFixture<ApiWebApplicationFactory> {
     [RequiresDockerFact]
     public async Task LocalMondayNextWeek_PassesRealValidationAndPersistsCalendarLabelAsync() {
+        // Authentication setup uses the normal clock; only the calendar scenario runs in the past.
+        using HttpClient registrationClient = factory.CreateClient();
+        string email = $"weekly-calendar-{Guid.NewGuid():N}@example.test";
+        using HttpResponseMessage registration = await registrationClient.PostAsJsonAsync("/api/v1/auth/register",
+            new RegisterHttpRequest(email, "Password123!", "en"));
+        Assert.Equal(HttpStatusCode.OK, registration.StatusCode);
+        using var auth = JsonDocument.Parse(await registration.Content.ReadAsStringAsync());
+
         var localMonday = DateOnly.FromDateTime(DateTime.UtcNow);
         while (localMonday.DayOfWeek != DayOfWeek.Monday) {
             localMonday = localMonday.AddDays(-1);
         }
         var mondayUtc = localMonday.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
         var clock = new FixedTimeProvider(mondayUtc.AddHours(-3.5));
-        // Authentication setup uses the normal clock so token expiry remains valid on every weekday.
-        using HttpClient registrationClient = factory.CreateClient();
-        string email = $"weekly-calendar-{Guid.NewGuid():N}@example.test";
-        HttpResponseMessage registration = await registrationClient.PostAsJsonAsync("/api/v1/auth/register",
-            new RegisterHttpRequest(email, "Password123!", "en"));
-        Assert.Equal(HttpStatusCode.OK, registration.StatusCode);
-        using var auth = JsonDocument.Parse(await registration.Content.ReadAsStringAsync());
-        var userId = new UserId(auth.RootElement.GetProperty("user").GetProperty("id").GetGuid());
-        JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(auth.RootElement.GetProperty("accessToken").GetString());
-        var sessionId = new RefreshTokenSessionId(Guid.Parse(jwt.Claims.Single(claim => string.Equals(claim.Type, "refresh_session_id", StringComparison.Ordinal)).Value));
         await using WebApplicationFactory<Program> clocked = factory.WithWebHostBuilder(builder => builder.ConfigureTestServices(services =>
             services.Replace(ServiceDescriptor.Singleton<TimeProvider>(clock))));
         using HttpClient client = clocked.CreateClient();
-        await using AsyncServiceScope scope = factory.Services.CreateAsyncScope();
-        FoodDiaryDbContext database = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-        long securityVersion = database.Users.Where(user => user.Id == userId).Select(user => user.SecurityVersion).Single();
-        IJwtTokenGenerator tokens = scope.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();
-        // Mint through the normal host clock; the calendar host intentionally runs in the past.
-        string accessToken = tokens.GenerateAccessToken(userId, email, [], DateTime.UtcNow.AddHours(1), securityVersion, sessionId);
+        string? accessToken = auth.RootElement.GetProperty("accessToken").GetString();
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         DateOnly nextWeek = localMonday.AddDays(7);
         string weekLabel = nextWeek.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);

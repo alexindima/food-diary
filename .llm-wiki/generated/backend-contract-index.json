@@ -52229,6 +52229,19 @@
         "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQuery.cs"
       ],
       "consumerArea": "MailRelay",
+      "consumerPath": "Services/MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/MailRelayLoggingBehaviorTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "GetOutgoingEmailJournalQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQuery.cs"
+      ],
+      "consumerArea": "MailRelay",
       "consumerPath": "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -86324,19 +86337,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DietologistInvitationNotificationIntegrationTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IJwtTokenGenerator",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/WeeklyGoalCalendarValidationIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
