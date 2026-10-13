@@ -10,7 +10,7 @@
         </div>
     </form>
     @if (detailId()) {
-        <a routerLink="/bugs" queryParamsHandling="preserve" [queryParams]="{ source: source() }">{{ 'ADMIN_BUGS.BACK' | translate }}</a>
+        <a routerLink="/bugs" queryParamsHandling="merge" [queryParams]="{ source: source() }">{{ 'ADMIN_BUGS.BACK' | translate }}</a>
     }
     @if (loading()) {
         <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>

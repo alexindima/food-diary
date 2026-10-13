@@ -106,6 +106,40 @@ it('switches source in the URL, resets source-specific filters and preserves the
     expect((fixture.nativeElement as HTMLElement).querySelector('fd-admin-audit-status')).not.toBeNull();
 });
 
+it('returns an old log deep link to the log tab even without a source query parameter', () => {
+    params.next(convertToParamMap({ id: 'legacy-log' }));
+    getPage.mockReturnValueOnce(
+        of({
+            items: [
+                {
+                    id: 'legacy-log',
+                    source: 'logs',
+                    sourceMessageId: null,
+                    subject: 'Log finding',
+                    receivedAtUtc: '2026-10-12T00:00:00Z',
+                    title: null,
+                    shortSummary: null,
+                    status: 'needs_information',
+                    attempt: 1,
+                    summary: 'Investigation details',
+                    mergeRequestUrl: null,
+                    contentExpired: false,
+                    auditRunId: 'audit',
+                    auditFromUtc: '2026-10-11T00:00:00Z',
+                    auditToUtc: '2026-10-12T00:00:00Z',
+                },
+            ],
+            totalItems: 1,
+            isConfigured: true,
+            latestAudit: null,
+        }),
+    );
+    const fixture = TestBed.createComponent(AdminBugsPageComponent);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('a[href^="/bugs"]')?.getAttribute('href')).toBe('/bugs?source=logs');
+});
+
 it('loads a detail by ID independently of preserved list filters, even if its status or content changed', () => {
     const getDetailPage = vi.fn().mockReturnValue(
         of({

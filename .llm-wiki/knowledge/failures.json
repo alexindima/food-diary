@@ -2,6 +2,19 @@
   "schemaVersion": 1,
   "entries": [
     {
+      "id": "calendar-http-frozen-clock-registration-expiry",
+      "symptom": "WeeklyGoalCalendarValidationIntegrationTests registration returns HTTP 500 when its frozen Sunday clock yields an email-confirmation expiry earlier than the real domain clock; CI c6f318e5d job 115333479231 failed before calendar assertions.",
+      "cause": "RegisterCommandHandler computes confirmation expiry from the injected clock plus 24 hours; User.SetEmailConfirmationToken validates future expiry against DomainTime.UtcNow. The calendar fixture freezes the host at Sunday 20:30 UTC, so registration setup becomes expired after Monday 20:30 UTC.",
+      "fix": "Register and issue valid authentication through the normal PostgreSQL host; create the frozen-clock host for calendar PUT/GET afterward. Preserve genuine JWT authentication, weekly validation and persisted calendar-label assertions.",
+      "pathPatterns": [
+        "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/WeeklyGoalCalendarValidationIntegrationTests.cs"
+      ],
+      "verification": [
+        "Focused calendar integration: 1 passed; .artifacts/admin-problems/calendar-fixed-test.log",
+        "Full API integration: 280 passed; .artifacts/admin-problems/host-all-fixed.log"
+      ]
+    },
+    {
       "id": "git-commit-hook-wrapper-timeout",
       "symptom": "The git commit command wrapper times out while pre-commit validation is still running.",
       "cause": "The repository pre-commit hook runs formatting, linters, and tests and can outlive a short command timeout; the commit may already have completed.",

@@ -28,17 +28,19 @@ public sealed class WeeklyGoalCalendarValidationIntegrationTests(ApiWebApplicati
         }
         var mondayUtc = localMonday.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
         var clock = new FixedTimeProvider(mondayUtc.AddHours(-3.5));
-        await using WebApplicationFactory<Program> clocked = factory.WithWebHostBuilder(builder => builder.ConfigureTestServices(services =>
-            services.Replace(ServiceDescriptor.Singleton<TimeProvider>(clock))));
-        using HttpClient client = clocked.CreateClient();
+        // Authentication setup uses the normal clock so token expiry remains valid on every weekday.
+        using HttpClient registrationClient = factory.CreateClient();
         string email = $"weekly-calendar-{Guid.NewGuid():N}@example.test";
-        HttpResponseMessage registration = await client.PostAsJsonAsync("/api/v1/auth/register",
+        HttpResponseMessage registration = await registrationClient.PostAsJsonAsync("/api/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en"));
         Assert.Equal(HttpStatusCode.OK, registration.StatusCode);
         using var auth = JsonDocument.Parse(await registration.Content.ReadAsStringAsync());
         var userId = new UserId(auth.RootElement.GetProperty("user").GetProperty("id").GetGuid());
         JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(auth.RootElement.GetProperty("accessToken").GetString());
         var sessionId = new RefreshTokenSessionId(Guid.Parse(jwt.Claims.Single(claim => string.Equals(claim.Type, "refresh_session_id", StringComparison.Ordinal)).Value));
+        await using WebApplicationFactory<Program> clocked = factory.WithWebHostBuilder(builder => builder.ConfigureTestServices(services =>
+            services.Replace(ServiceDescriptor.Singleton<TimeProvider>(clock))));
+        using HttpClient client = clocked.CreateClient();
         await using AsyncServiceScope scope = factory.Services.CreateAsyncScope();
         FoodDiaryDbContext database = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
         long securityVersion = database.Users.Where(user => user.Id == userId).Select(user => user.SecurityVersion).Single();

@@ -566,13 +566,13 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/failures.json",
-          "sha256": "bb12bee960e6968870db38b303ff903e6136159efe5f2cc55d21fe18ee42f896"
+          "sha256": "51470bca20999266333108e8ce7747027d68f406017c1b075441bf4ac7e16d22"
         }
       ],
-      "reason": "Failure-knowledge workflow remains current; the new entry follows the existing verified symptom/cause/fix/verification schema.",
+      "reason": "Verified the new failure record against CI job 115333479231, RegisterCommandHandler expiry calculation, User.EnsureFutureUtc and the fixed real-auth/frozen-calendar fixture; focused and all 280 API integration tests pass without skipped assertions.",
       "baseRef": "HEAD",
-      "gitHead": "c05f99edfa00eb4e1b8396fa8e599481ddc6adae",
-      "reviewedAtUtc": "2026-08-28T05:26:31.1198271Z"
+      "gitHead": "c6f318e5d5c26757883ce86159bf527bf9763dcf",
+      "reviewedAtUtc": "2026-10-13T14:30:12.7299952Z"
     },
     {
       "pageId": "workflow-failure-prediction",
