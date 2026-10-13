@@ -249,13 +249,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "356d6ffe294f107436777fcf948516cd8a235df03439da28f501ed65d017d75f"
+          "sha256": "facf24d1884b1489dc1334bc02138e9a8140f96a58dad8b84b691d3fd18d7baf"
         }
       ],
-      "reason": "Reviewed combined delivery sources from UX commit fde9a7e5c and master recipe fix 8a9d9c1e0. Dashboard client IANA context remains internal and self-dashboard defaults are preserved. Existing additive recipe-import nutrition DTOs, HTTP mappings and OpenAPI snapshot changes from master are retained; all generated consumers match their owning contracts.",
+      "reason": "Reviewed combined delivery sources from UX commit fde9a7e5c and master recipe fix 8a9d9c1e0. Dashboard client IANA context remains internal and self-dashboard defaults are preserved. Existing additive recipe-import nutrition DTOs, HTTP mappings and OpenAPI snapshot changes from master are retained; all generated consumers match their owning contracts. Current master additionally retains cancellation-aware MailRelay logging and isolated calendar-test authentication clocks. Both are preserved through integration; there are no further frontend changes.",
       "baseRef": "origin/master",
-      "gitHead": "fde9a7e5c3b67725b46eb2d74a51ea0b376298d2",
-      "reviewedAtUtc": "2026-10-13T21:18:22.3618168Z"
+      "gitHead": "a6dc6510e35576c1f6bf2f3354b14ab0740987ec",
+      "reviewedAtUtc": "2026-10-13T21:38:56.0840455Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -841,10 +841,10 @@
           "sha256": "2ea8debda0a98c61b41e1ae7049945e622c4a06e3f69c43650c36ee64422cd38"
         }
       ],
-      "reason": "Reviewed final target redaction and derived attention gates; allowed measurements and actual intake remain separate from goals. Integration preserves these security fixes unchanged. Recipe-import nutrient metadata stays in the existing user-requested provider flow; no new transfer, logging sink, persistence schema or private evidence is published.",
+      "reason": "Reviewed final target redaction and derived attention gates; allowed measurements and actual intake remain separate from goals. Integration preserves these security fixes unchanged. Recipe-import nutrient metadata stays in the existing user-requested provider flow; no new transfer, logging sink, persistence schema or private evidence is published. Current master additionally retains cancellation-aware MailRelay logging and isolated calendar-test authentication clocks. Both are preserved through integration; there are no further frontend changes.",
       "baseRef": "origin/master",
-      "gitHead": "fde9a7e5c3b67725b46eb2d74a51ea0b376298d2",
-      "reviewedAtUtc": "2026-10-13T21:18:20.944638Z"
+      "gitHead": "a6dc6510e35576c1f6bf2f3354b14ab0740987ec",
+      "reviewedAtUtc": "2026-10-13T21:38:57.3047525Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -883,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "dbdff4c71ae2885dec9fe7f747ab32429e77bcfa64ce48264435280a88bbcc2b"
+          "sha256": "80b3cba755c00476d8a479db73182f5ed5c2703883a7b68a143069d9831729fe"
         }
       ],
-      "reason": "Reviewed overlap resolution against both parent revisions, existing independent nutrition examples, focused recipe component/provider tests and all 29 audit criteria. No test or quality threshold was relaxed. Current full frontend verification and normal pre-push verification cover the integrated sources; retained browser and PDF evidence applies to unchanged audit behaviors.",
+      "reason": "Reviewed overlap resolution against both parent revisions, existing independent nutrition examples, focused recipe component/provider tests and all 29 audit criteria. No test or quality threshold was relaxed. Current full frontend verification and normal pre-push verification cover the integrated sources; retained browser and PDF evidence applies to unchanged audit behaviors. Current master additionally retains cancellation-aware MailRelay logging and isolated calendar-test authentication clocks. Both are preserved through integration; there are no further frontend changes.",
       "baseRef": "origin/master",
-      "gitHead": "fde9a7e5c3b67725b46eb2d74a51ea0b376298d2",
-      "reviewedAtUtc": "2026-10-13T21:18:24.8024157Z"
+      "gitHead": "a6dc6510e35576c1f6bf2f3354b14ab0740987ec",
+      "reviewedAtUtc": "2026-10-13T21:38:58.2218089Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -970,13 +970,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "bd9d0b3d8702d0e84e9fcecb3827262032e0734638b7550d37b9223f824a2628"
+          "sha256": "3c71180bacec6675fb677cd82a699bfd941842e49bc1ab7419fd2c84a84f885e"
         }
       ],
-      "reason": "Combined delivery changes no deployment configuration, host composition, worker schedule, database schema or provider endpoint. Master recipe-import metadata remains in the established OpenAI implementation; UX changes preserve cancellation, permission lifecycle and retry ownership. Build and temporary outputs for delivery are scoped on D.",
+      "reason": "Combined delivery changes no deployment configuration, host composition, worker schedule, database schema or provider endpoint. Master recipe-import metadata remains in the established OpenAI implementation; UX changes preserve cancellation, permission lifecycle and retry ownership. Build and temporary outputs for delivery are scoped on D. Current master additionally retains cancellation-aware MailRelay logging and isolated calendar-test authentication clocks. Both are preserved through integration; there are no further frontend changes.",
       "baseRef": "origin/master",
-      "gitHead": "fde9a7e5c3b67725b46eb2d74a51ea0b376298d2",
-      "reviewedAtUtc": "2026-10-13T21:18:26.7057445Z"
+      "gitHead": "a6dc6510e35576c1f6bf2f3354b14ab0740987ec",
+      "reviewedAtUtc": "2026-10-13T21:38:58.8157265Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -985,21 +985,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "dbdff4c71ae2885dec9fe7f747ab32429e77bcfa64ce48264435280a88bbcc2b"
+          "sha256": "80b3cba755c00476d8a479db73182f5ed5c2703883a7b68a143069d9831729fe"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "bd9d0b3d8702d0e84e9fcecb3827262032e0734638b7550d37b9223f824a2628"
+          "sha256": "3c71180bacec6675fb677cd82a699bfd941842e49bc1ab7419fd2c84a84f885e"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
           "sha256": "2ea8debda0a98c61b41e1ae7049945e622c4a06e3f69c43650c36ee64422cd38"
         }
       ],
-      "reason": "Reviewed merged source diff: goal redaction and goal-derived attention remain gated, retry intent stays component/session scoped, and SSR auth opening remains browser-only. The recipe-import merge adds nutrition response data through existing boundaries without authentication, credential, authorization or logging changes. Two prior fresh privacy reviewers and native permission evidence remain applicable.",
+      "reason": "Reviewed merged source diff: goal redaction and goal-derived attention remain gated, retry intent stays component/session scoped, and SSR auth opening remains browser-only. The recipe-import merge adds nutrition response data through existing boundaries without authentication, credential, authorization or logging changes. Two prior fresh privacy reviewers and native permission evidence remain applicable. Current master additionally retains cancellation-aware MailRelay logging and isolated calendar-test authentication clocks. Both are preserved through integration; there are no further frontend changes.",
       "baseRef": "origin/master",
-      "gitHead": "fde9a7e5c3b67725b46eb2d74a51ea0b376298d2",
-      "reviewedAtUtc": "2026-10-13T21:18:19.7798296Z"
+      "gitHead": "a6dc6510e35576c1f6bf2f3354b14ab0740987ec",
+      "reviewedAtUtc": "2026-10-13T21:38:59.7100405Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1143,10 +1143,10 @@
           "sha256": "6d9139300b7e9fe2e2cb368ec7e052f32646c877c60ec2af337032e79aa93c7c"
         }
       ],
-      "reason": "Reviewed generated merged indexes against the current owning sources: optional auth reset input, meal facade retry forwarding, Dashboard IANA context and master recipe-import nutrition contracts are present. Code and existing tests remain authoritative; no tracing algorithm or architectural ownership change is introduced by delivery.",
+      "reason": "Reviewed generated merged indexes against the current owning sources: optional auth reset input, meal facade retry forwarding, Dashboard IANA context and master recipe-import nutrition contracts are present. Code and existing tests remain authoritative; no tracing algorithm or architectural ownership change is introduced by delivery. Current master additionally retains cancellation-aware MailRelay logging and isolated calendar-test authentication clocks. Both are preserved through integration; there are no further frontend changes.",
       "baseRef": "origin/master",
-      "gitHead": "fde9a7e5c3b67725b46eb2d74a51ea0b376298d2",
-      "reviewedAtUtc": "2026-10-13T21:18:23.4458056Z"
+      "gitHead": "a6dc6510e35576c1f6bf2f3354b14ab0740987ec",
+      "reviewedAtUtc": "2026-10-13T21:39:00.3845191Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1233,10 +1233,10 @@
           "sha256": "28d92b8e17af6a519fea63d0deebd5455c66765ac49c968d36c06dd00b8099f1"
         }
       ],
-      "reason": "Reviewed the merged recipe summary: CALORIES_PER_SERVING label and parent per-serving calculations are preserved while locale-reactive number formatting remains. Optional reset-mode input and editor-scoped retry key preserve existing callers. Generated recipe-import SDK and owning semantic mapper changes from master are retained without handwritten generated-source edits.",
+      "reason": "Reviewed the merged recipe summary: CALORIES_PER_SERVING label and parent per-serving calculations are preserved while locale-reactive number formatting remains. Optional reset-mode input and editor-scoped retry key preserve existing callers. Generated recipe-import SDK and owning semantic mapper changes from master are retained without handwritten generated-source edits. Current master additionally retains cancellation-aware MailRelay logging and isolated calendar-test authentication clocks. Both are preserved through integration; there are no further frontend changes.",
       "baseRef": "origin/master",
-      "gitHead": "fde9a7e5c3b67725b46eb2d74a51ea0b376298d2",
-      "reviewedAtUtc": "2026-10-13T21:18:26.0028417Z"
+      "gitHead": "a6dc6510e35576c1f6bf2f3354b14ab0740987ec",
+      "reviewedAtUtc": "2026-10-13T21:38:56.8326678Z"
     },
     {
       "pageId": "workflow.query-context",

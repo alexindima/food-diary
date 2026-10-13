@@ -50874,11 +50874,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Common/Behaviors/MailRelayLoggingBehavior.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 2,
+      "nonBlankLines": 46,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.76
+      "structuralRiskScore": 6.92
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Common/Behaviors/MailRelayValidationBehavior.cs",
@@ -62256,9 +62256,10 @@
       "role": "Validator",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQueryValidator.cs",
       "line": 4,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/OutgoingEmailJournalQueryTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/OutgoingEmailJournalQueryTests.cs",
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/MailRelayLoggingBehaviorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

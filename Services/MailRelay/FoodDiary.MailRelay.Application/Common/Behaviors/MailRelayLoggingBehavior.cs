@@ -34,6 +34,14 @@ public sealed class MailRelayLoggingBehavior<TRequest, TResponse>(
             }
 
             return response;
+        } catch (OperationCanceledException ex) when (
+            cancellationToken.IsCancellationRequested && ex.CancellationToken == cancellationToken) {
+            stopwatch.Stop();
+            logger.LogDebug(
+                "Handling {RequestName} was cancelled ({ElapsedMs}ms)",
+                requestName,
+                stopwatch.ElapsedMilliseconds);
+            throw;
         } catch (Exception ex) {
             stopwatch.Stop();
             logger.LogError(ex, "Unhandled exception in {RequestName} ({ElapsedMs}ms)", requestName, stopwatch.ElapsedMilliseconds);
