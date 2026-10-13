@@ -89,23 +89,35 @@ describe('client dashboard wire projection', () => {
     it.each(['ru', 'en'])('preserves consumed quantity precision and excludes rejected suggestions in %s', language => {
         const snapshot = {
             meals: {
-                items: [{
-                    id: entityId<'meal'>('meal-fractions'),
-                    mealType: 'Lunch',
-                    date: utcInstant('2026-10-12T12:30:00Z'),
-                    totalCalories: 213,
-                    totalProteins: 10,
-                    totalFats: 5,
-                    totalCarbs: 40,
-                    items: [
-                        { productName: 'Piece', productBaseUnit: 'Pcs', amount: PRODUCT_FRACTION },
-                        { recipeName: 'Recipe', recipeId: 'recipe-1', amount: RECIPE_FRACTION },
-                    ],
-                    aiSessions: [{ items: [
-                        { id: 'ai-accepted', nameEn: 'Oats', amount: AI_FRACTION, unit: 'g', resolution: 'Accepted' },
-                        { id: 'ai-rejected', nameEn: 'Rejected egg', amount: PRODUCT_FRACTION, unit: 'pcs', resolution: 'Rejected' },
-                    ] }],
-                }],
+                items: [
+                    {
+                        id: entityId<'meal'>('meal-fractions'),
+                        mealType: 'Lunch',
+                        date: utcInstant('2026-10-12T12:30:00Z'),
+                        totalCalories: 213,
+                        totalProteins: 10,
+                        totalFats: 5,
+                        totalCarbs: 40,
+                        items: [
+                            { productName: 'Piece', productBaseUnit: 'Pcs', amount: PRODUCT_FRACTION },
+                            { recipeName: 'Recipe', recipeId: 'recipe-1', amount: RECIPE_FRACTION },
+                        ],
+                        aiSessions: [
+                            {
+                                items: [
+                                    { id: 'ai-accepted', nameEn: 'Oats', amount: AI_FRACTION, unit: 'g', resolution: 'Accepted' },
+                                    {
+                                        id: 'ai-rejected',
+                                        nameEn: 'Rejected egg',
+                                        amount: PRODUCT_FRACTION,
+                                        unit: 'pcs',
+                                        resolution: 'Rejected',
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
             },
         };
         const formatting = createClientValueFormatting(language, key => key);

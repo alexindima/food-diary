@@ -40,7 +40,10 @@ describe('meal manage view formatting', () => {
         expect(formatMealAiName('   ')).toBe('');
     });
 
-    it.each([['ru', '37,51234'], ['en', '37.51234']])('retains AI quantity precision in %s', (language, amount) => {
+    it.each([
+        ['ru', '37,51234'],
+        ['en', '37.51234'],
+    ])('retains AI quantity precision in %s', (language, amount) => {
         currentLanguageMock.mockReturnValueOnce(language);
         expect(formatMealAiAmount(AI_FRACTION_AMOUNT, 'grams', translateService)).toBe(`${amount} GENERAL.UNITS.G`);
     });

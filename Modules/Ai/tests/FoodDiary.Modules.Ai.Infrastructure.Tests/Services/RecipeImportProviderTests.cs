@@ -103,9 +103,14 @@ public sealed class RecipeImportProviderTests {
     [InlineData(1, "serving", 505)]
     public async Task Provider_InvalidStep_ReturnsControlledError(int stepIndex, string basis, double calories) {
         string draft = JsonSerializer.Serialize(new {
-            name = "Chicken", description = (string?)null,
-            ingredients = new[] { new { name = "Pepper", amount = "1/2 tsp", stepIndex } }, steps = new[] { "Mix" },
-            servings = 5, prepMinutes = (int?)null, cookMinutes = (int?)null, authorNutrition = "Stated nutrition",
+            name = "Chicken",
+            description = (string?)null,
+            ingredients = new[] { new { name = "Pepper", amount = "1/2 tsp", stepIndex } },
+            steps = new[] { "Mix" },
+            servings = 5,
+            prepMinutes = (int?)null,
+            cookMinutes = (int?)null,
+            authorNutrition = "Stated nutrition",
             nutrition = new { basis, calories, proteins = 36, fats = 37, carbs = 5, fiber = (double?)null, alcohol = (double?)null },
         });
         using var handler = new ProviderHandler(draft);
@@ -118,9 +123,14 @@ public sealed class RecipeImportProviderTests {
     [InlineData("recipe", -1)]
     public async Task Provider_UnusableNutrition_PreservesRecipeAndAuthorQuotation(string basis, double calories) {
         string draft = JsonSerializer.Serialize(new {
-            name = "Chicken", description = (string?)null,
-            ingredients = new[] { new { name = "Pepper", amount = "1/2 tsp", stepIndex = 0 } }, steps = new[] { "Mix" },
-            servings = 5, prepMinutes = (int?)null, cookMinutes = (int?)null, authorNutrition = "Stated nutrition",
+            name = "Chicken",
+            description = (string?)null,
+            ingredients = new[] { new { name = "Pepper", amount = "1/2 tsp", stepIndex = 0 } },
+            steps = new[] { "Mix" },
+            servings = 5,
+            prepMinutes = (int?)null,
+            cookMinutes = (int?)null,
+            authorNutrition = "Stated nutrition",
             nutrition = new { basis, calories, proteins = 36, fats = 37, carbs = 5, fiber = (double?)null, alcohol = (double?)null },
         });
         using var handler = new ProviderHandler(draft);

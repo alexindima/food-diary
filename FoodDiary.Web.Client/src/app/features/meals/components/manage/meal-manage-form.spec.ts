@@ -284,12 +284,14 @@ describe('MealManageFormComponent duplicate submit guard', () => {
 describe('MealManageFormComponent create retry identity', () => {
     it('retains the key after failure and replaces it for changed or successfully completed drafts', async () => {
         const { component, mealManageFacade } = await setupComponentAsync();
-        const items = [createMealItemValue(
-            { ...createEmptyProductSnapshot(), id: entityId<'product'>('product-1'), name: 'Apple' },
-            null,
-            PRODUCT_AMOUNT,
-            MealSourceType.Product,
-        )];
+        const items = [
+            createMealItemValue(
+                { ...createEmptyProductSnapshot(), id: entityId<'product'>('product-1'), name: 'Apple' },
+                null,
+                PRODUCT_AMOUNT,
+                MealSourceType.Product,
+            ),
+        ];
         const draft = { date: '2026-04-05', time: '10:30', mealType: 'BREAKFAST', items };
         component['patchMealFormModel'](draft);
         mealManageFacade.submitMealAsync.mockRejectedValueOnce(new Error('Response lost'));

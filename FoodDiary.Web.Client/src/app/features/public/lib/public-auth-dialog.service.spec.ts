@@ -10,8 +10,13 @@ import { type PublicAuthDialogRef, PublicAuthDialogService } from './public-auth
 describe('Public account-access dialog', () => {
     it('does not render an interactive overlay during server rendering', async () => {
         const open = vi.fn();
-        TestBed.configureTestingModule({ providers: [provideTranslateTesting(),
-            { provide: PLATFORM_ID, useValue: 'server' }, { provide: FdUiDialogService, useValue: { open } }] });
+        TestBed.configureTestingModule({
+            providers: [
+                provideTranslateTesting(),
+                { provide: PLATFORM_ID, useValue: 'server' },
+                { provide: FdUiDialogService, useValue: { open } },
+            ],
+        });
         const result = await TestBed.inject(PublicAuthDialogService).openAsync({ mode: 'login' });
         expect(result).toBeNull();
         expect(open).not.toHaveBeenCalled();

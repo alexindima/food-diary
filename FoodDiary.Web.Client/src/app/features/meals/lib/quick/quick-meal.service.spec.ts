@@ -250,7 +250,6 @@ describe('QuickMealService saving', () => {
             expect.any(String),
         );
     });
-
 });
 
 describe('QuickMealService idempotent retries', () => {
@@ -284,7 +283,6 @@ describe('QuickMealService idempotent retries', () => {
         expect(mealService.create.mock.calls[1]?.[0]).toEqual(mealService.create.mock.calls[0]?.[0]);
         expect(mealService.create.mock.calls[1]?.[1]).not.toBe(mealService.create.mock.calls[0]?.[1]);
     });
-
 });
 
 describe('QuickMealService save failures', () => {

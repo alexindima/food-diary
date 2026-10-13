@@ -883,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "80b3cba755c00476d8a479db73182f5ed5c2703883a7b68a143069d9831729fe"
+          "sha256": "c8425d1f04c3284877ebf5a59901493646812bc1e93665b81da40c3107536a5f"
         }
       ],
-      "reason": "Reviewed overlap resolution against both parent revisions, existing independent nutrition examples, focused recipe component/provider tests and all 29 audit criteria. No test or quality threshold was relaxed. Current full frontend verification and normal pre-push verification cover the integrated sources; retained browser and PDF evidence applies to unchanged audit behaviors. Current master additionally retains cancellation-aware MailRelay logging and isolated calendar-test authentication clocks. Both are preserved through integration; there are no further frontend changes.",
-      "baseRef": "origin/master",
-      "gitHead": "a6dc6510e35576c1f6bf2f3354b14ab0740987ec",
-      "reviewedAtUtc": "2026-10-13T21:38:58.2218089Z"
+      "reason": "Reviewed the repair for CI run 38472791255 at published SHA 0e873e160. Eight TypeScript files and one mocked recipe-provider C# test receive formatter-only changes; assertions, literals, permissions, retries, provider behavior and transport contracts are unchanged. Prettier check and targeted C# whitespace verification now pass. Refreshed quality inventory contains only updated source line counts; no risk threshold or test is relaxed.",
+      "baseRef": "HEAD",
+      "gitHead": "0e873e16007bf8e4f089d073d4b8bf7db21c756c",
+      "reviewedAtUtc": "2026-10-13T22:06:18.3969202Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -985,21 +985,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "80b3cba755c00476d8a479db73182f5ed5c2703883a7b68a143069d9831729fe"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3c71180bacec6675fb677cd82a699bfd941842e49bc1ab7419fd2c84a84f885e"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "2ea8debda0a98c61b41e1ae7049945e622c4a06e3f69c43650c36ee64422cd38"
+          "sha256": "c8425d1f04c3284877ebf5a59901493646812bc1e93665b81da40c3107536a5f"
         }
       ],
-      "reason": "Reviewed merged source diff: goal redaction and goal-derived attention remain gated, retry intent stays component/session scoped, and SSR auth opening remains browser-only. The recipe-import merge adds nutrition response data through existing boundaries without authentication, credential, authorization or logging changes. Two prior fresh privacy reviewers and native permission evidence remain applicable. Current master additionally retains cancellation-aware MailRelay logging and isolated calendar-test authentication clocks. Both are preserved through integration; there are no further frontend changes.",
-      "baseRef": "origin/master",
-      "gitHead": "a6dc6510e35576c1f6bf2f3354b14ab0740987ec",
-      "reviewedAtUtc": "2026-10-13T21:38:59.7100405Z"
+      "reason": "Reviewed the repair for CI run 38472791255 at published SHA 0e873e160. Eight TypeScript files and one mocked recipe-provider C# test receive formatter-only changes; assertions, literals, permissions, retries, provider behavior and transport contracts are unchanged. Prettier check and targeted C# whitespace verification now pass. Refreshed quality inventory contains only updated source line counts; no risk threshold or test is relaxed.",
+      "baseRef": "HEAD",
+      "gitHead": "0e873e16007bf8e4f089d073d4b8bf7db21c756c",
+      "reviewedAtUtc": "2026-10-13T22:06:19.2376982Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

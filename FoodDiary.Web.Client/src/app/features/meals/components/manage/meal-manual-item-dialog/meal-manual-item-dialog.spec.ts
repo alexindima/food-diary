@@ -291,7 +291,9 @@ describe('MealManualItemDialogComponent validation and selection boundaries', ()
         component['save']();
         expect(component['canSave']()).toBe(valid);
         expect(dialogRef.close).toHaveBeenCalledTimes(valid ? 1 : 0);
-        if (!valid) {expect(component['amountError']()).toBe('MEAL_MANAGE.MAX_AMOUNT_ERROR');}
+        if (!valid) {
+            expect(component['amountError']()).toBe('MEAL_MANAGE.MAX_AMOUNT_ERROR');
+        }
     });
     it.each([null, 0, -1])('rejects invalid amount %s and exposes an error', async amount => {
         const { component, dialogRef } = await setupComponentAsync({ product: createProduct() });

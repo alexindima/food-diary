@@ -66,7 +66,9 @@ export class RecipeListFiltersDialogComponent {
         const from = this.toNumberOrNull(this.caloriesFromValue);
         const to = this.toNumberOrNull(this.caloriesToValue);
         this.caloriesRangeError.set(from !== null && to !== null && from > to);
-        if (this.caloriesRangeError()) {return;}
+        if (this.caloriesRangeError()) {
+            return;
+        }
         this.dialogRef.close({
             onlyMine: this.visibilityValue === 'mine',
             category: this.toTextOrNull(this.categoryValue),
