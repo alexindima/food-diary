@@ -249,13 +249,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "e22eba4621c9f36cbe760ccf6c950eb40bdfce25f67c1dd8a88cb078f9013706"
+          "sha256": "b6e753467b248ae88db5d47b99850a325267b247e800fdf5edca8843883ed790"
         }
       ],
-      "reason": "Additive Ai-owned recipe import contracts retain all legacy fields and optional defaults. Provider, presentation mapper, generated SDK adapter and editor consumers are covered by focused tests; the host OpenAPI export and structural compatibility checks pass.",
+      "reason": "Local merge retains recipe import and nutrition contracts from unpublished commit 8a9d9c1e0; source files and SDK/snapshots match that commit. Verified PR411 removes only manual-JWT test consumer references and changes MailRelay cancellation log severity, with no production HTTP contract changes.",
       "baseRef": "HEAD",
-      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
-      "reviewedAtUtc": "2026-10-13T18:25:53.9146936Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T21:31:46.1251004Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -883,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1c9e9b5164ec7908cdeb363efe6599faeb91673c8e645af0ea2924227fcf7b02"
+          "sha256": "400bb3cde5d248e37e680fc82e3a5c8288b803fc0462bb209844642c27e39a1f"
         }
       ],
-      "reason": "Reviewed the refreshed quality projection against five recipe display consumers and their executed focused tests. First-letter formatting has ten Unicode/prefix/null cases; rendered components preserve raw names, links, quantities and shopping payloads. 53 focused tests, the eight-test public ingredient rerun, app build and targeted ESLint passed. Chrome verified the public list and step names at 1440x1000 and 390x900 using mocked API data; no runtime page exceptions or horizontal overflow.",
+      "reason": "Local source merge is conflict-free; original recipe files match 8a9d9c1e0 exactly. PR411 head passed all Linux CI38467280169 and hooks: backend12413, frontend5028, focused PostgreSQL calendar1/1. Only generated runtime index and source review ledger had local conflicts; all indexes regenerated from combined sources.",
       "baseRef": "HEAD",
-      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
-      "reviewedAtUtc": "2026-10-13T20:00:06.9506438Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T21:31:47.3642798Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -970,13 +970,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "4c27baf415a222f5947b3e8b651f282681390dab9ef0ad32bade03c7e6c94555"
+          "sha256": "4087a5d6cc1264bd0c866a1bc88d2588801c5bbf09ed119b6520c6612fdf1b16"
         }
       ],
-      "reason": "The same recipe-import endpoint, provider operation and bounded source loader remain in use. Strict output schema expands, input-token accounting uses the same request schema, and no runtime binding or deployment configuration changes.",
+      "reason": "Local merged source combines existing recipe commit with verified PR411; no deployment files, service registrations or topology changes. Runtime fingerprint regenerated from combined source tree; automatic master CI38470873972 follows remote merge7ef252582.",
       "baseRef": "HEAD",
-      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
-      "reviewedAtUtc": "2026-10-13T18:25:58.2174762Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T21:31:48.1722306Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -985,13 +985,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1c9e9b5164ec7908cdeb363efe6599faeb91673c8e645af0ea2924227fcf7b02"
+          "sha256": "400bb3cde5d248e37e680fc82e3a5c8288b803fc0462bb209844642c27e39a1f"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "4087a5d6cc1264bd0c866a1bc88d2588801c5bbf09ed119b6520c6612fdf1b16"
         }
       ],
-      "reason": "This task delta only formats ingredient display text through a pure helper and pipe. Angular interpolation remains the rendering boundary; no HTML injection, authentication, authorization, network, logging, data storage or provider-sharing behavior changed. Reviewed refreshed static navigation signals without treating them as a security scan or production evidence.",
+      "reason": "Preserved existing recipe import contracts and data handling. MailRelay cancellation records only operation and duration, requires matching cancelled token and rethrows exception. Calendar fixture uses genuine registration JWT. No secrets or production configuration modified during local merge.",
       "baseRef": "HEAD",
-      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
-      "reviewedAtUtc": "2026-10-13T20:00:07.4917531Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T21:31:49.2492912Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
