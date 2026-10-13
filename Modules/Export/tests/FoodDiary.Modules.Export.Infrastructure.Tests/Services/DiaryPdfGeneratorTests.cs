@@ -554,6 +554,47 @@ public sealed class DiaryPdfGeneratorTests {
         Assert.Equal("Product", GetPrivateProperty<string>(fallbackAiComposition, "Name"));
     }
 
+    [Theory]
+    [InlineData("en", "37.5 ", "0.75 ")]
+    [InlineData("ru", "37,5 ", "0,75 ")]
+    public void MealComposition_PreservesFractionalQuantitiesAndMatchingNutrition(string culture, string grams, string servings) {
+        var userId = UserId.New();
+        object report = CreateReportData([], cultureName: culture);
+        var meal = Meal.Create(userId, DateTime.UtcNow, MealType.Lunch);
+        Product product = CreateProduct(userId, "oats", imageUrl: "");
+        MealItem productItem = meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(37.5));
+        productItem.ApplyProductSnapshot(product.Name, product.ImageUrl, product.BaseUnit, product.BaseAmount,
+            product.CaloriesPerBase, product.ProteinsPerBase, product.FatsPerBase, product.CarbsPerBase, product.FiberPerBase, product.AlcoholPerBase);
+        var recipe = Recipe.Create(userId, "porridge", servings: 2);
+        recipe.ApplyComputedNutrition(200, 10, 4, 30, 6, 0);
+        MealItem recipeItem = meal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(0.75));
+        recipeItem.ApplyRecipeSnapshot(recipe.Name, recipe.ImageUrl, recipe.Servings, recipe.TotalCalories,
+            recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs, recipe.TotalFiber, recipe.TotalAlcohol);
+        object productComposition = InvokePrivateStatic<object>("FormatMealItem", ToReadModel(productItem), report);
+        object recipeComposition = InvokePrivateStatic<object>("FormatMealItem", ToReadModel(recipeItem), report);
+
+        Assert.Multiple(
+            () => Assert.StartsWith(grams, GetPrivateProperty<string>(productComposition, "Amount"), StringComparison.Ordinal),
+            () => Assert.StartsWith(servings, GetPrivateProperty<string>(recipeComposition, "Amount"), StringComparison.Ordinal),
+            () => Assert.Equal(45, GetPrivateProperty<double>(productComposition, "Calories")),
+            () => Assert.Equal(75, GetPrivateProperty<double>(recipeComposition, "Calories")));
+    }
+
+    [Fact]
+    public void NutrientChart_SingleDayHasAVisibleDataMarkerBeyondTheLegend() {
+        Type renderer = typeof(DiaryPdfGenerator).GetNestedType("DiaryChartSvgRenderer", BindingFlags.NonPublic)!;
+        Type seriesType = typeof(DiaryPdfGenerator).GetNestedType("ChartSeries", BindingFlags.NonPublic)!;
+        var series = Array.CreateInstance(seriesType, 1);
+        series.SetValue(Activator.CreateInstance(seriesType, "Protein", new double[] { 25 }, "#123456"), 0);
+        string svg = InvokeStatic<string>(renderer, "RenderMultiLineChart", new[] { "12 Oct" }, series);
+        var xml = System.Xml.Linq.XDocument.Parse(svg);
+        System.Xml.Linq.XElement[] markers = [.. xml.Descendants().Where(node => string.Equals(node.Name.LocalName, "circle", StringComparison.Ordinal)
+            && string.Equals((string?)node.Attribute("fill"), "#123456", StringComparison.Ordinal))];
+
+        Assert.Equal(2, markers.Length);
+        Assert.Contains(markers, marker => !string.Equals((string?)marker.Attribute("cy"), "14", StringComparison.Ordinal));
+    }
+
     [Fact]
     public void DiaryReportData_CreateNormalizesDatesOffsetsCultureAndMealTypes() {
         var userId = UserId.New();

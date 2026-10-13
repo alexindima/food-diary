@@ -36,7 +36,7 @@
 <dl class="product-detail__metadata">
     <div>
         <dt>{{ 'PRODUCT_DETAIL.SUMMARY.DEFAULT_PORTION' | translate }}</dt>
-        <dd>{{ product().defaultPortionAmount }} {{ baseUnitKey() | translate }}</dd>
+        <dd>{{ product().defaultPortionAmount | localizedNumber: locale() : 0 : 3 }} {{ baseUnitKey() | translate }}</dd>
     </div>
     <div>
         <dt>{{ 'PRODUCT_DETAIL.SUMMARY.PRODUCT_TYPE' | translate }}</dt>

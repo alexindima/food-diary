@@ -50,7 +50,8 @@ export function formatMealAiAmount(amount: number, unit: string, translateServic
     const normalized = unit.trim().toLowerCase();
     const unitKey = normalized.length > 0 ? AI_UNIT_TRANSLATION_KEYS[normalized] : undefined;
     const unitLabel = unitKey !== undefined ? translateService.instant(unitKey) : unit;
-    return unitLabel.length > 0 ? `${amount} ${unitLabel}`.trim() : `${amount}`;
+    const formattedAmount = new Intl.NumberFormat(getMealManageLanguage(translateService), { maximumFractionDigits: 20 }).format(amount);
+    return unitLabel.length > 0 ? `${formattedAmount} ${unitLabel}`.trim() : formattedAmount;
 }
 
 export function formatMealAiName(name?: string | null): string {

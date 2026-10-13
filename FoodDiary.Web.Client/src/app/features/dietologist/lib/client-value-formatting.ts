@@ -58,5 +58,5 @@ export function formatClientHeight(
     }
 
     const height = centimetersToImperialHeight(heightCm);
-    return `${formatting.number(height.feet, 'ft')} ${formatting.number(height.inches, 'in')}`;
+    return `${formatting.number(height.feet, 'ft')} ${formatting.number(height.inches, 'in', 1)}`;
 }

@@ -10,8 +10,31 @@ import type {
     UnitOptionView,
 } from '../meal-photo-recognition-dialog-lib/meal-photo-recognition-dialog.types';
 import { MealPhotoEditListComponent } from './meal-photo-edit-list';
+const NATIVE_FIELD_COUNT = 4;
 
 describe('MealPhotoEditListComponent', () => {
+    it('renders saved piece/rejected selections and labels every native field', async () => {
+        const { fixture } = await setupComponentAsync({
+            items: [createEditableItem({ unit: 'pcs', resolution: 'Rejected' })],
+            unitOptions: [
+                { value: 'g', labelKey: 'PRODUCT_AMOUNT_UNITS.G' },
+                { value: 'pcs', labelKey: 'PRODUCT_AMOUNT_UNITS.PCS' },
+            ],
+            resolutionOptions: [
+                { value: 'Accepted', labelKey: 'MEAL_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_ACCEPTED' },
+                { value: 'Rejected', labelKey: 'MEAL_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_REJECTED' },
+            ],
+        });
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector<HTMLSelectElement>('select')?.value).toBe('pcs');
+        expect(host.querySelector<HTMLSelectElement>('.photo-ai-dialog__edit-select--resolution')?.value).toBe('Rejected');
+        const fields = [...host.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input, select')];
+        expect(fields).toHaveLength(NATIVE_FIELD_COUNT);
+        for (const field of fields) {
+            expect(host.querySelector(`label[for="${field.id}"]`)?.textContent.trim()).toBeTruthy();
+        }
+    });
     it('should emit item updates from name, amount, unit and resolution controls', async () => {
         const { component, fixture } = await setupComponentAsync();
         const updateSpy = vi.fn();

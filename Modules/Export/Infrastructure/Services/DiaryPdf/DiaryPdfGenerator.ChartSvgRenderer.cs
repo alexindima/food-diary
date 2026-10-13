@@ -101,6 +101,12 @@ internal sealed partial class DiaryPdfGenerator {
                 string linePath = BuildSmoothPath(points);
                 double legendX = left + (index * 155);
 
+                if (points.Count == 1) {
+                    Point point = points[0];
+                    sb.Append(CultureInfo.InvariantCulture,
+                        $"<circle cx=\"{point.X}\" cy=\"{point.Y}\" r=\"5\" fill=\"{item.Color}\"/>");
+                }
+
                 sb.Append(CultureInfo.InvariantCulture, $"""
                     <circle cx="{legendX}" cy="14" r="5" fill="{item.Color}"/>
                     <text x="{legendX + 12}" y="18" fill="{MutedTextColor}" font-size="12" font-family="Arial">{Escape(item.Label)}</text>

@@ -211,6 +211,7 @@ export const routes: Routes = [
     },
     {
         path: '**',
+        canActivate: [publicSiteLocaleGuard],
         loadComponent: async () => import('./features/public/pages/not-found/not-found').then(m => m.NotFoundComponent),
         data: { shell: 'public', seo: { titleKey: 'SEO.NOT_FOUND', noIndex: true } },
     },

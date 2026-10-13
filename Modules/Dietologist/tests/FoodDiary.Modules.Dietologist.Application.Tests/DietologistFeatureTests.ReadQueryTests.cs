@@ -21,6 +21,7 @@ using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Hydration.Contracts.Models;
 using FoodDiary.Audit.Contracts.Audit.Common;
 using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 
@@ -516,6 +517,53 @@ public partial class DietologistFeatureTests {
         Assert.False(request.Sections.IncludeStatistics);
         Assert.False(request.Sections.IncludeWeight);
         Assert.Equal(dateTo, request.DateTo?.Date);
+    }
+
+    [Theory]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    public async Task GetClientDashboard_GoalPermissionMasksEveryTargetWithoutHidingSharedMeasurements(bool statistics, bool goals) {
+        var dietologistId = UserId.New();
+        var clientId = UserId.New();
+        var permissions = new DietologistPermissions(ShareMeals: true, ShareStatistics: statistics, ShareWeight: true,
+            ShareWaist: true, ShareGoals: goals, ShareHydration: true, ShareProfile: false, ShareFasting: false);
+        var invitations = new InMemoryInvitationRepository();
+        invitations.Seed(CreateAcceptedInvitation(clientId, dietologistId, permissions));
+        DashboardSnapshotModel snapshot = CreateDashboardSnapshot();
+        snapshot = snapshot with {
+            Statistics = snapshot.Statistics with { ProteinGoal = 140, FatGoal = 70, CarbGoal = 240, FiberGoal = 30 },
+            Hydration = new HydrationDailyModel(snapshot.Date, TotalMl: 250, GoalMl: 2500),
+        };
+        var users = new InMemoryUserRepository();
+        users.Seed(CreateUser(dietologistId, "diet@example.com"));
+        GetDietologistClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(
+            invitations, new RecordingDashboardSnapshotBuilder(snapshot), users);
+
+        Result<DashboardSnapshotModel> result = await handler.Handle(
+            new GetDietologistClientDashboardQuery(dietologistId.Value, clientId.Value, snapshot.Date, DateTo: null,
+                Page: 1, PageSize: 10, Locale: "en", TrendDays: 7),
+            CancellationToken.None);
+
+        DashboardSnapshotModel dashboard = ResultAssert.Success(result);
+        Assert.NotNull(dashboard.Hydration);
+        Assert.Multiple(
+            () => Assert.Equal(statistics && goals ? 2000 : 0, dashboard.DailyGoal),
+            () => Assert.Equal(statistics && goals ? 14000 : 0, dashboard.WeeklyCalorieGoal),
+            () => Assert.Equal(statistics ? 1200 : 0, dashboard.Statistics.TotalCalories),
+            () => Assert.Equal(statistics && goals ? 140 : (double?)null, dashboard.Statistics.ProteinGoal),
+            () => Assert.Equal(statistics && goals ? 70 : (double?)null, dashboard.Statistics.FatGoal),
+            () => Assert.Equal(statistics && goals ? 240 : (double?)null, dashboard.Statistics.CarbGoal),
+            () => Assert.Equal(statistics && goals ? 30 : (double?)null, dashboard.Statistics.FiberGoal),
+            () => Assert.Equal(snapshot.Weight.Latest, dashboard.Weight.Latest),
+            () => Assert.Equal(snapshot.Waist.Latest, dashboard.Waist.Latest),
+            () => Assert.Equal(goals ? 70 : (double?)null, dashboard.Weight.DesiredWeightKg),
+            () => Assert.Equal(goals ? 80 : (double?)null, dashboard.Waist.DesiredWaistCm),
+            () => Assert.Equal(250, dashboard.Hydration.TotalMl),
+            () => Assert.Equal(goals ? 2500 : (double?)null, dashboard.Hydration.GoalMl),
+            () => Assert.Equal(statistics ? snapshot.WeeklyCalories.Count : 0, dashboard.WeeklyCalories.Count),
+            () => Assert.Equal(snapshot.Meals, dashboard.Meals));
     }
 
     [Fact]

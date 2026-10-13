@@ -1,12 +1,27 @@
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
+import { buildProductTypeTranslationKey, normalizeProductType } from '../../../shared/lib/product-type.utils';
 import { MeasurementUnit } from '../../../shared/models/product.data';
 import type { ShoppingListItem, ShoppingListItemDto } from '../../../shared/models/shopping-list.data';
 import type { ShoppingListItemViewModel } from './shopping-list-form.types';
 import { isTextQuantity } from './shopping-list-merge';
 
 export type ShoppingListTranslateFn = (key: string) => string;
+
+export function shoppingListCategoryLabel(
+    category: string | null | undefined,
+    productId: string | null | undefined,
+    translate: ShoppingListTranslateFn,
+): string {
+    const rawCategory = category?.trim() ?? '';
+    if (productId === null || productId === undefined || productId.length === 0 || normalizeProductType(category) === null) {
+        return rawCategory;
+    }
+    const key = buildProductTypeTranslationKey(category);
+    const label = translate(key);
+    return label === key ? rawCategory : label;
+}
 
 export function buildShoppingListUnitOptions(translate: ShoppingListTranslateFn): Array<FdUiSelectOption<MeasurementUnit>> {
     return (Object.values(MeasurementUnit) as MeasurementUnit[]).map(unit => ({
@@ -53,7 +68,7 @@ export function formatShoppingListItemMeta(
     }
 
     appendTextPart(parts, item.note);
-    appendTextPart(parts, item.category);
+    appendTextPart(parts, shoppingListCategoryLabel(item.category, item.productId, translate));
     appendTextPart(parts, item.sources?.[0]?.label);
 
     return parts.join(' - ');

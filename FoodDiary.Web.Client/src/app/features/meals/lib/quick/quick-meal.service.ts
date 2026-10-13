@@ -51,6 +51,7 @@ export class QuickMealService {
     private nextFlashId = 0;
     private submittedAmounts = new WeakMap<QuickMealItem, number>();
     private isPreviewMode = false;
+    private createOperation: { fingerprint: string; key: string } | null = null;
 
     public readonly items = computed(() => this.itemsSignal());
     public readonly details = computed(() => this.detailsSignal());
@@ -142,6 +143,7 @@ export class QuickMealService {
 
     public clear(): void {
         this.resetDraft.next();
+        this.createOperation = null;
         this.itemsSignal.set([]);
         this.detailsSignal.set(this.createDefaultDetails());
     }
@@ -169,10 +171,15 @@ export class QuickMealService {
             return;
         }
 
+        const fingerprint = JSON.stringify(payload);
+        if (this.createOperation?.fingerprint !== fingerprint) {
+            this.createOperation = { fingerprint, key: crypto.randomUUID() };
+        }
+        const operation = this.createOperation;
         this.submittedAmounts = new WeakMap(items.map(item => [item, item.amount]));
         this.isSavingSignal.set(true);
         this.mealService
-            .create(payload)
+            .create(payload, operation.key)
             .pipe(
                 takeUntil(this.resetDraft),
                 takeUntilDestroyed(this.destroyRef),
@@ -182,6 +189,9 @@ export class QuickMealService {
             )
             .subscribe({
                 next: () => {
+                    if (this.createOperation === operation) {
+                        this.createOperation = null;
+                    }
                     this.isSavingSignal.set(false);
                     this.toastService.success(this.translateService.instant('QUICK_MEAL.SAVE_SUCCESS'));
                     this.invalidation.reportMealMutation();

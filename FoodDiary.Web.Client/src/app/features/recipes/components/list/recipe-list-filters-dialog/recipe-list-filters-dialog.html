@@ -41,6 +41,7 @@
                 size="sm"
                 min="0"
                 [label]="'RECIPE_LIST.FILTER_CALORIES_TO' | translate"
+                [error]="caloriesRangeError() ? ('RECIPE_LIST.FILTER_CALORIES_ORDER_ERROR' | translate) : null"
                 [(value)]="caloriesToValue"
             />
         </div>

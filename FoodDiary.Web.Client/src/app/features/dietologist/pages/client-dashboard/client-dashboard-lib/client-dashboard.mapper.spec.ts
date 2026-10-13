@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { calendarDate, utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
+import { createClientValueFormatting } from '../../../lib/client-value-formatting';
 import { createClient } from '../../clients/dietologist-clients-lib/dietologist-clients.test-data';
 import {
     buildBodyTiles,
@@ -20,6 +21,9 @@ import {
 } from './client-dashboard.mapper';
 
 const EXPECTED_METRIC_TILE_COUNT = 4;
+const PRODUCT_FRACTION = 0.25;
+const RECIPE_FRACTION = 0.75;
+const AI_FRACTION = 37.51234;
 
 describe('client dashboard mapper', () => {
     it('handles a Telegram-only profile without name or email', () => {
@@ -82,6 +86,36 @@ describe('client dashboard mapper', () => {
 });
 
 describe('client dashboard wire projection', () => {
+    it.each(['ru', 'en'])('preserves consumed quantity precision and excludes rejected suggestions in %s', language => {
+        const snapshot = {
+            meals: {
+                items: [{
+                    id: entityId<'meal'>('meal-fractions'),
+                    mealType: 'Lunch',
+                    date: utcInstant('2026-10-12T12:30:00Z'),
+                    totalCalories: 213,
+                    totalProteins: 10,
+                    totalFats: 5,
+                    totalCarbs: 40,
+                    items: [
+                        { productName: 'Piece', productBaseUnit: 'Pcs', amount: PRODUCT_FRACTION },
+                        { recipeName: 'Recipe', recipeId: 'recipe-1', amount: RECIPE_FRACTION },
+                    ],
+                    aiSessions: [{ items: [
+                        { id: 'ai-accepted', nameEn: 'Oats', amount: AI_FRACTION, unit: 'g', resolution: 'Accepted' },
+                        { id: 'ai-rejected', nameEn: 'Rejected egg', amount: PRODUCT_FRACTION, unit: 'pcs', resolution: 'Rejected' },
+                    ] }],
+                }],
+            },
+        };
+        const formatting = createClientValueFormatting(language, key => key);
+        const view = buildMealViews(snapshot as never, formatting, key => key, language)[0];
+        const separator = language === 'ru' ? ',' : '.';
+        expect(view.itemSummary).toContain(`0${separator}25`);
+        expect(view.itemSummary).toContain(`0${separator}75`);
+        expect(view.itemSummary).toContain(`37${separator}51234`);
+        expect(view.itemSummary).not.toContain('Rejected egg');
+    });
     it('renders product and recipe names from the actual dashboard wire response', () => {
         const snapshot = {
             meals: {
@@ -134,7 +168,7 @@ describe('client dashboard detail mapper', () => {
     it('formats client measurements in the dietologist imperial system', () => {
         const snapshot = createDashboardSnapshot();
 
-        expect(buildClientProfileChips(createClient(), 'imperial')).toContain('5 ft 11 in');
+        expect(buildClientProfileChips(createClient(), 'imperial')).toContain('5 ft 10.9 in');
         expect(buildBodyTiles(snapshot as never, undefined, 'imperial').map(tile => tile.value)).toEqual([
             '161.4 lb',
             '33.1 in',

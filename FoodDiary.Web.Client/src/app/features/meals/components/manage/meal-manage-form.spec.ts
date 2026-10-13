@@ -149,6 +149,7 @@ describe('MealManageFormComponent submit behavior', () => {
                 isNutritionAutoCalculated: true,
                 items: [{ productId: 'product-1', recipeId: null, amount: PRODUCT_AMOUNT, origin: 'Manual' }],
             }),
+            expect.any(String),
         );
         expect(mealManageFacade.showSuccessToastAndRedirectAsync).toHaveBeenCalledWith(false);
         expect(component['aiSessions']()).toEqual([]);
@@ -277,6 +278,37 @@ describe('MealManageFormComponent duplicate submit guard', () => {
         await firstSubmit;
 
         expect(component['isSubmitting']()).toBe(false);
+    });
+});
+
+describe('MealManageFormComponent create retry identity', () => {
+    it('retains the key after failure and replaces it for changed or successfully completed drafts', async () => {
+        const { component, mealManageFacade } = await setupComponentAsync();
+        const items = [createMealItemValue(
+            { ...createEmptyProductSnapshot(), id: entityId<'product'>('product-1'), name: 'Apple' },
+            null,
+            PRODUCT_AMOUNT,
+            MealSourceType.Product,
+        )];
+        const draft = { date: '2026-04-05', time: '10:30', mealType: 'BREAKFAST', items };
+        component['patchMealFormModel'](draft);
+        mealManageFacade.submitMealAsync.mockRejectedValueOnce(new Error('Response lost'));
+        await component['onSubmitAsync']();
+        const firstKey: unknown = mealManageFacade.submitMealAsync.mock.calls[0][2];
+        expect(firstKey).toEqual(expect.any(String));
+        mealManageFacade.submitMealAsync.mockRejectedValueOnce(new Error('Still offline'));
+        await component['onSubmitAsync']();
+        expect(mealManageFacade.submitMealAsync.mock.calls[1][2]).toBe(firstKey);
+
+        component['patchMealFormModel']({ comment: 'Changed intent' });
+        mealManageFacade.submitMealAsync.mockResolvedValueOnce(createMeal({ totalCalories: TOTAL_CALORIES }));
+        await component['onSubmitAsync']();
+        const changedKey: unknown = mealManageFacade.submitMealAsync.mock.calls[2][2];
+        expect(changedKey).not.toBe(firstKey);
+
+        component['patchMealFormModel']({ ...draft, comment: 'Changed intent' });
+        await component['onSubmitAsync']();
+        expect(mealManageFacade.submitMealAsync.mock.calls[3][2]).not.toBe(changedKey);
     });
 });
 

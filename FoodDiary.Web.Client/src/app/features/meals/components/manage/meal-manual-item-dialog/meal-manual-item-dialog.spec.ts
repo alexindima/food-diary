@@ -15,7 +15,12 @@ import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '.
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
-import { servingMassFromObservation, type ServingMassResult } from '../../../lib/recipe-serving/recipe-display-amount';
+import { recipeServings } from '../../../../../shared/models/semantics/meal-quantity';
+import {
+    displayRecipeServings,
+    servingMassFromObservation,
+    type ServingMassResult,
+} from '../../../lib/recipe-serving/recipe-display-amount';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import type { MealItemFormValues } from '../meal-manage-lib/meal-manage.types';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from './meal-manual-item-dialog';
@@ -139,6 +144,9 @@ async function setupComponentAsync(
                 useValue: {
                     loadServingMass: vi.fn().mockReturnValue(of(servingMassFromObservation(RECIPE_SERVING_WEIGHT))),
                     hasServingWeight: vi.fn().mockReturnValue(values.servingWeightAvailable ?? true),
+                    displayServings: vi.fn((_recipe: Recipe | null, servings: number) =>
+                        displayRecipeServings(recipeServings(servings), servingMassFromObservation(RECIPE_SERVING_WEIGHT)),
+                    ),
                 },
             },
         ],
@@ -264,6 +272,27 @@ describe('MealManualItemDialogComponent asynchronous serving weight', () => {
 });
 
 describe('MealManualItemDialogComponent validation and selection boundaries', () => {
+    it.each([
+        [80_000_000, true],
+        [80_000_001, false],
+    ])('applies the serving limit in displayed recipe grams at %s', async (amount, valid) => {
+        const { component, dialogRef } = await setupComponentAsync({ recipe: createRecipe() });
+        component['amount']().value.set(amount);
+        component['save']();
+        expect(component['canSave']()).toBe(valid);
+        expect(dialogRef.close).toHaveBeenCalledTimes(valid ? 1 : 0);
+    });
+    it.each([
+        [1_000_000, true],
+        [1_000_001, false],
+    ])('validates product quantity %s before returning a draft', async (amount, valid) => {
+        const { component, dialogRef } = await setupComponentAsync({ product: createProduct() });
+        component['amount']().value.set(amount);
+        component['save']();
+        expect(component['canSave']()).toBe(valid);
+        expect(dialogRef.close).toHaveBeenCalledTimes(valid ? 1 : 0);
+        if (!valid) {expect(component['amountError']()).toBe('MEAL_MANAGE.MAX_AMOUNT_ERROR');}
+    });
     it.each([null, 0, -1])('rejects invalid amount %s and exposes an error', async amount => {
         const { component, dialogRef } = await setupComponentAsync({ product: createProduct() });
         component['amount']().value.set(amount);

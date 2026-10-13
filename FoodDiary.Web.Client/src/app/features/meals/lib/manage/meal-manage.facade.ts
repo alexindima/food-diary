@@ -84,10 +84,10 @@ export class MealManageFacade {
         return false;
     }
 
-    public async submitMealAsync(meal: Meal | null, mealData: MealManageDto): Promise<Meal> {
+    public async submitMealAsync(meal: Meal | null, mealData: MealManageDto, idempotencyKey?: string): Promise<Meal> {
         const savedMeal = await (meal !== null
             ? firstValueFrom(this.mealService.update(meal.id, mealData))
-            : firstValueFrom(this.mealService.create(mealData)));
+            : firstValueFrom(this.mealService.create(mealData, idempotencyKey)));
         this.invalidation.reportMealMutation();
         return savedMeal;
     }

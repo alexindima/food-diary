@@ -1,5 +1,6 @@
 <fd-ui-dialog size="lg" bodyScrollInset="edge" [title]="'NOTIFICATIONS.TITLE' | translate">
     <div class="notifications-dialog__body" [attr.aria-busy]="isLoading()">
+        <p role="alert" class="fd-ui-error-text" [hidden]="!markAllReadError()">{{ 'NOTIFICATIONS.MARK_ALL_READ_ERROR' | translate }}</p>
         @if (isLoading()) {
             <div class="notifications-dialog__state fd-place-center fd-gap-sm" role="status" aria-live="polite">
                 <fd-ui-icon name="hourglass_top" />

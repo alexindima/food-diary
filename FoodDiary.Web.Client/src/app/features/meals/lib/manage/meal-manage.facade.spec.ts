@@ -213,9 +213,9 @@ describe('MealManageFacade', () => {
 function registerSubmitAndNavigationTests(): void {
     describe('submit and navigation', () => {
         it('should create meal when original meal is null', async () => {
-            const result = await facade.submitMealAsync(null, mealData);
+            const result = await facade.submitMealAsync(null, mealData, 'editor-intent');
 
-            expect(mealService.create).toHaveBeenCalled();
+            expect(mealService.create).toHaveBeenCalledWith(mealData, 'editor-intent');
             expect(result).toEqual(meal);
             expect(TestBed.inject(NutritionDataInvalidationService).dashboardVersion()).toBe(1);
         });

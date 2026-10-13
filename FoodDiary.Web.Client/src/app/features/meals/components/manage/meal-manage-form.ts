@@ -102,6 +102,7 @@ import type { UnsavedEditor } from '../../../../shared/forms/unsaved-editor';
 export class MealManageFormComponent implements UnsavedEditor {
     private confirmedNavigation = false;
     private leaveDecision: Promise<boolean> | null = null;
+    private createIntent: { fingerprint: string; key: string } | null = null;
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
@@ -663,7 +664,11 @@ export class MealManageFormComponent implements UnsavedEditor {
     }
 
     private async addMealAsync(mealData: MealManageDto): Promise<void> {
-        const response = await this.mealManageFacade.submitMealAsync(null, mealData);
+        const fingerprint = JSON.stringify(mealData);
+        if (this.createIntent?.fingerprint !== fingerprint) {
+            this.createIntent = { fingerprint, key: crypto.randomUUID() };
+        }
+        const response = await this.mealManageFacade.submitMealAsync(null, mealData, this.createIntent.key);
         await this.handleSubmitResponseAsync(response);
     }
 
@@ -675,6 +680,7 @@ export class MealManageFormComponent implements UnsavedEditor {
     private async handleSubmitResponseAsync(response: Meal | null): Promise<void> {
         if (response !== null) {
             if (this.meal() === null) {
+                this.createIntent = null;
                 const resetValue = {
                     date: this.getDateInputValue(new Date()),
                     time: this.getTimeInputValue(new Date()),

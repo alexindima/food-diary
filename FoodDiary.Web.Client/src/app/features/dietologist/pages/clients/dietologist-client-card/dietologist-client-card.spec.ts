@@ -41,7 +41,7 @@ describe('DietologistClientCardComponent', () => {
         TestBed.inject(MeasurementSystemService).setSystem('imperial');
         fixture.detectChanges();
 
-        expect(getHost(fixture).textContent).toContain('5 ft 11 in');
+        expect(getHost(fixture).textContent).toContain('5 ft 10.9 in');
     });
 
     it('updates height units when the language changes', () => {
@@ -54,7 +54,7 @@ describe('DietologistClientCardComponent', () => {
         expect(getHost(fixture).textContent).toContain('180 см');
         TestBed.inject(MeasurementSystemService).setSystem('imperial');
         fixture.detectChanges();
-        expect(getHost(fixture).textContent).toContain('5 фут 11 дюйм');
+        expect(getHost(fixture).textContent).toContain('5 фут 10,9 дюйм');
     });
 });
 

@@ -30,6 +30,9 @@
     </header>
 
     <div class="product-detail fd-stack fd-gap-lg">
+        @if (images().length > 0) {
+            <fd-public-product-gallery [images]="images()" [name]="product.name" />
+        }
         <fd-product-detail-summary
             [product]="product"
             [calories]="calories"

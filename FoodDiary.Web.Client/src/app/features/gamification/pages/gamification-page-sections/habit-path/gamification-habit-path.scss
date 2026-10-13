@@ -298,7 +298,7 @@
 
     &__badge-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
         gap: var(--fd-space-sm);
     }
 
@@ -307,7 +307,7 @@
         justify-items: center;
         gap: var(--fd-space-xs);
         min-width: 0;
-        padding: var(--fd-space-sm);
+        padding: var(--fd-space-sm) var(--fd-space-xs);
         color: var(--fd-color-text-muted);
         text-align: center;
         border: var(--fd-border-muted);
@@ -318,7 +318,7 @@
     &__badge-title {
         min-width: 0;
         max-width: 100%;
-        overflow-wrap: anywhere;
+        overflow-wrap: normal;
         hyphens: auto;
     }
 

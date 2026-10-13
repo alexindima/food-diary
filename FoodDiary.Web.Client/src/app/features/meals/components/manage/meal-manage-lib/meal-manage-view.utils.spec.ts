@@ -15,13 +15,15 @@ import {
 const FRACTION_AMOUNT = 12.5;
 const KCAL_AMOUNT = 100;
 const AI_GRAMS_AMOUNT = 150;
+const AI_FRACTION_AMOUNT = 37.51234;
 
+const currentLanguageMock = vi.fn(() => 'en-US');
 const translateService = {
     instant: vi.fn((key: string, params?: Record<string, unknown>) => {
         const min = params?.['min'];
         return typeof min === 'number' ? `${key}:${min}` : key;
     }),
-    getCurrentLang: vi.fn(() => 'en-US'),
+    getCurrentLang: currentLanguageMock,
     getFallbackLang: vi.fn(() => 'en'),
 } as unknown as TranslateService;
 
@@ -36,6 +38,11 @@ describe('meal manage view formatting', () => {
         expect(formatMealAiAmount(2, 'slice', translateService)).toBe('2 slice');
         expect(formatMealAiName(' apple')).toBe('Apple');
         expect(formatMealAiName('   ')).toBe('');
+    });
+
+    it.each([['ru', '37,51234'], ['en', '37.51234']])('retains AI quantity precision in %s', (language, amount) => {
+        currentLanguageMock.mockReturnValueOnce(language);
+        expect(formatMealAiAmount(AI_FRACTION_AMOUNT, 'grams', translateService)).toBe(`${amount} GENERAL.UNITS.G`);
     });
 });
 

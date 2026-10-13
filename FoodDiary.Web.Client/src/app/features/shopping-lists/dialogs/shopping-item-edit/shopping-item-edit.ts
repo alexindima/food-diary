@@ -7,7 +7,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import type { ShoppingListDraftItem } from '../../lib/shopping-list.facade';
 import { isShoppingListAmountValid } from '../../lib/shopping-list-amount.validation';
-import { buildShoppingListUnitOptions, normalizeShoppingListUnit } from '../../lib/shopping-list-item.mapper';
+import { buildShoppingListUnitOptions, normalizeShoppingListUnit, shoppingListCategoryLabel } from '../../lib/shopping-list-item.mapper';
 
 const ITEM_NAME_LIMIT = 256;
 const CATEGORY_LIMIT = 128;
@@ -26,10 +26,13 @@ export class ShoppingItemEditComponent {
     private readonly ref = inject(FdUiDialogRef<ShoppingItemEditComponent, ShoppingListDraftItem>);
     private readonly translate = inject(TranslateService);
     protected readonly isProductLinked = Boolean(this.data.productId);
+    private readonly originalCategoryLabel = shoppingListCategoryLabel(this.data.category, this.data.productId, key =>
+        this.translate.instant(key),
+    );
     protected readonly draft = signal<ShoppingItemEditData & { category: string; note: string }>({
         ...this.data,
         unit: normalizeShoppingListUnit(this.data.unit),
-        category: this.data.category ?? '',
+        category: this.originalCategoryLabel,
         note: this.data.note ?? '',
     });
     protected readonly fields = form(this.draft, path => {
@@ -54,7 +57,8 @@ export class ShoppingItemEditComponent {
     protected save(event: Event): void {
         event.preventDefault();
         if (this.valid()) {
-            this.ref.close(this.draft());
+            const draft = this.draft();
+            this.ref.close({ ...draft, category: draft.category === this.originalCategoryLabel ? this.data.category : draft.category });
         }
     }
 }

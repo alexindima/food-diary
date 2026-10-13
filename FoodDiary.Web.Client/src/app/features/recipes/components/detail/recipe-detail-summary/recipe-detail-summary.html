@@ -14,7 +14,9 @@
 @if ((recipe().totalCalories !== null && recipe().totalCalories !== undefined) || (recipe().missingIngredientCount ?? 0) === 0) {
     <section class="recipe-detail__overview fd-stack fd-gap-sm">
         <span class="fd-ui-meta-text">{{ 'RECIPE_DETAIL.SUMMARY.CALORIES' | translate }}</span>
-        <strong class="recipe-detail__hero-value">{{ calories() | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</strong>
+        <strong class="recipe-detail__hero-value"
+            >{{ calories() | localizedNumber: locale() : 0 : 0 }} {{ 'GENERAL.UNITS.KCAL' | translate }}</strong
+        >
         <dl class="recipe-detail__macro-summary">
             @for (macro of macroSummaryBlocks(); track macro.labelKey) {
                 <div>
@@ -22,7 +24,7 @@
                         <span class="recipe-detail__nutrient-dot" aria-hidden="true" [style.background]="macro.color"></span
                         >{{ macro.labelKey | translate }}
                     </dt>
-                    <dd>{{ macro.value | number: '1.0-1' }} {{ macro.unitKey | translate }}</dd>
+                    <dd>{{ macro.value | localizedNumber: locale() : 0 : 1 }} {{ macro.unitKey | translate }}</dd>
                 </div>
             }
         </dl>

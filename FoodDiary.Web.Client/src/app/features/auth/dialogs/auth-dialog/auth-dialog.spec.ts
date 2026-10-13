@@ -17,6 +17,7 @@ import { AuthDialogComponent } from './auth-dialog';
 class AuthDialogAuthStubComponent {
     public readonly useRouting = input(true);
     public readonly initialMode = input<'login' | 'register'>('login');
+    public readonly initialPasswordReset = input(false);
     public readonly initialReturnUrl = input<string | null>(null);
     public readonly initialAdminReturnUrl = input<string | null>(null);
 }

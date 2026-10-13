@@ -240,7 +240,7 @@
       "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
       "baseRef": "HEAD",
       "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:42.5695030Z"
+      "reviewedAtUtc": "2026-10-13T13:03:42.569503Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -249,13 +249,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "7bb2253438f6d1f10a76a02e7043ffb24a81a628ccbe72fa5ce09c58c2e4cf89"
+          "sha256": "39f32c12bbb4d9ff55dbbfcf1d7f8e4afc1b566cb2494df597e3423b67621cde"
         }
       ],
-      "reason": "Swagger and SDK regenerated with zero public breaking changes. Legacy email routes retain non-null IDs; journal and 404 fallback support mixed versions. All 280 host integration tests passed. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
+      "reason": "Guidance remains current. Saved clientIANA zone is an internal optional Dashboard context field; query defaults preserve self-dashboard behavior. All consumers rebuilt in full solution build; Dashboard146,Dietologist278,host17 and architecture2272 passed. No HTTP payload/route/snapshot or published client-package changes.",
       "baseRef": "HEAD",
-      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
-      "reviewedAtUtc": "2026-10-12T19:09:45.2982595Z"
+      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
+      "reviewedAtUtc": "2026-10-13T20:45:49.0243744Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -838,13 +838,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "64a72aaaff7866f12051219ab83837971c27cfcd4f9d3bb61c3ba1af6437009d"
+          "sha256": "c43942b58926b94d28649cdf76d999290a96147efda0174a1c53535ec4d0884a"
         }
       ],
-      "reason": "Reviewed goals minimization and account ownership, independent BUG-05 reviews, account-scoped AI drafts, explicit consent and redacted owned-fixture evidence. Premium recovery trusts the current-user billing overview and normal cookie refresh; it never grants roles locally or changes provider sharing. The privacy workflow remains accurate.",
+      "reason": "Guidance remains current. Goal values and derived calorie attention require goal permission; complete copies in stats/body/water redacted while allowed actual measurements and intake remain. RealAPI goalGET403 and UI revocation/restoration tested on owned accounts. No new provider transfer; retry fingerprint is transient in the editor and clears on successful completion.",
       "baseRef": "HEAD",
-      "gitHead": "849cc69620e0e884822840179ea068aca79562a3",
-      "reviewedAtUtc": "2026-10-12T06:52:23.0785738Z"
+      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
+      "reviewedAtUtc": "2026-10-13T20:45:46.4696716Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -883,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "19a48a25b59bfcd0caa6515a4c77939e226c71ea4dddfa22624fdcf9407369c0"
+          "sha256": "b040e131de3af4e8d00a15c74fe80166170938785f8708c32aeeb43aa522f144"
         }
       ],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
+      "reason": "Guidance remains current. Added direct regressions for scopes,zero-day counts,single-point PDF,quantity precision,stable quick/manual retries andnew intents. Static references treated as navigation. Realheaded browser,rendered PDF,full frontend and focused backend execution corroborate behavior; no claim of exhaustive code coverage.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:44.5898659Z"
+      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
+      "reviewedAtUtc": "2026-10-13T20:45:45.4719785Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -970,13 +970,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d055832dce5a98e633fd42875867022b8a38d91fe76997ac971c8efd70ed7523"
+          "sha256": "dc75813117b01285574204fd5bc241b52356830275f59bf8f37b1d33580131f9"
         }
       ],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
+      "reason": "Guidance remains current. No host,worker,DI lifetime,provider orschema additions. LocalAPI/Postgres/Redis/MinIO ownership tracked; AI/mail/payments disabled. Actual committed201 lost-response retries replay the same entity in quick andmanual forms. Cancellation preserved in Dashboard context resolution; scoped processes and volumes are removed after verification.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:45.3542425Z"
+      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
+      "reviewedAtUtc": "2026-10-13T20:45:41.0331551Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -985,17 +985,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "19a48a25b59bfcd0caa6515a4c77939e226c71ea4dddfa22624fdcf9407369c0"
+          "sha256": "b040e131de3af4e8d00a15c74fe80166170938785f8708c32aeeb43aa522f144"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d055832dce5a98e633fd42875867022b8a38d91fe76997ac971c8efd70ed7523"
+          "sha256": "dc75813117b01285574204fd5bc241b52356830275f59bf8f37b1d33580131f9"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "c43942b58926b94d28649cdf76d999290a96147efda0174a1c53535ec4d0884a"
         }
       ],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
+      "reason": "Guidance remains current. Wiki inventory is not treated as vulnerability proof. Goal leakage validated in source and realAPI; two fresh read-only security reviews,278owner tests,17host integration andnative permission controls verify the fix. Credentials stay in private taskD scopes; code changes add no logging or external transfers.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:46.2357818Z"
+      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
+      "reviewedAtUtc": "2026-10-13T20:45:47.6757705Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1132,17 +1136,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "ab0e593d331bef21ea949ab4c93665736509f94dd498f53546db5554bd399acc"
+          "sha256": "734f876c46a2d809f2ff6f88faf7a4d24588805dd62e38c36365d470b08331b4"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "4ea7a969558eede76088f67219c1d69a0871da75e5c0789b875a1d1d45f20ab4"
+          "sha256": "5114cc003d359a91421ba26bfc225ccc12d85366e65614d8ab0138ea350abb03"
         }
       ],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
+      "reason": "Guidance remains current. Feature navigation followed to current owner source for29 findings across UI andbackend; heuristic andstatic edges verified against rendered routes,generated SDK calls andexecuted tests. New indexes represent optional auth input,editor key forwarding andIANA context; no tracing algorithm change.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:46.9775933Z"
+      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
+      "reviewedAtUtc": "2026-10-13T20:45:42.6610488Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1226,13 +1230,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "ab0e593d331bef21ea949ab4c93665736509f94dd498f53546db5554bd399acc"
+          "sha256": "734f876c46a2d809f2ff6f88faf7a4d24588805dd62e38c36365d470b08331b4"
         }
       ],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
+      "reason": "Guidance remains current. New auth reset-mode input defaults false and optional facade idempotency key preserve callers; direct consumers/stubs verified. SDK header contract unchanged. Final npmverify passed5046app,561UIkit,240admin,7tour; rendered validation,disabled,permission,error,keyboard andresponsive cases confirm contracts.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:43.5819565Z"
+      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
+      "reviewedAtUtc": "2026-10-13T20:45:44.0795573Z"
     },
     {
       "pageId": "workflow.query-context",

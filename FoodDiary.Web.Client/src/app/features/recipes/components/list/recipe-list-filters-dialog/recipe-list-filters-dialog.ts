@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiSelectComponent } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -50,6 +50,7 @@ export class RecipeListFiltersDialogComponent {
     protected maxTotalTimeValue: string | number | null = this.data.maxTotalTime;
     protected caloriesFromValue: string | number | null = this.data.caloriesFrom;
     protected caloriesToValue: string | number | null = this.data.caloriesTo;
+    protected readonly caloriesRangeError = signal(false);
     protected imageValue: 'any' | 'with' | 'without' =
         this.data.hasImage === true ? 'with' : this.data.hasImage === false ? 'without' : 'any';
 
@@ -62,12 +63,16 @@ export class RecipeListFiltersDialogComponent {
     }
 
     protected onApply(): void {
+        const from = this.toNumberOrNull(this.caloriesFromValue);
+        const to = this.toNumberOrNull(this.caloriesToValue);
+        this.caloriesRangeError.set(from !== null && to !== null && from > to);
+        if (this.caloriesRangeError()) {return;}
         this.dialogRef.close({
             onlyMine: this.visibilityValue === 'mine',
             category: this.toTextOrNull(this.categoryValue),
             maxTotalTime: this.toNumberOrNull(this.maxTotalTimeValue),
-            caloriesFrom: this.toNumberOrNull(this.caloriesFromValue),
-            caloriesTo: this.toNumberOrNull(this.caloriesToValue),
+            caloriesFrom: from,
+            caloriesTo: to,
             hasImage: this.imageValue === 'any' ? null : this.imageValue === 'with',
         });
     }

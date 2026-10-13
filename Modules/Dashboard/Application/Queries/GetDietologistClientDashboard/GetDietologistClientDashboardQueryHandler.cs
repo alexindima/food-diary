@@ -64,7 +64,8 @@ public sealed class GetDietologistClientDashboardQueryHandler(
                     IncludeLayout: false,
                     IncludeExercise: false,
                     IncludeTdee: false,
-                    IncludeCycle: false)),
+                    IncludeCycle: false),
+                UseUserTimeZone: true),
             cancellationToken).ConfigureAwait(false);
         if (dashboardResult.IsFailure) {
             return dashboardResult;
@@ -96,10 +97,15 @@ public sealed class GetDietologistClientDashboardQueryHandler(
         DashboardSnapshotModel dashboard,
         DietologistPermissionsReadModel permissions) =>
         dashboard with {
-            DailyGoal = permissions.ShareStatistics ? dashboard.DailyGoal : 0,
-            WeeklyCalorieGoal = permissions.ShareStatistics ? dashboard.WeeklyCalorieGoal : 0,
+            DailyGoal = permissions.ShareStatistics && permissions.ShareGoals ? dashboard.DailyGoal : 0,
+            WeeklyCalorieGoal = permissions.ShareStatistics && permissions.ShareGoals ? dashboard.WeeklyCalorieGoal : 0,
             Statistics = permissions.ShareStatistics
-                ? dashboard.Statistics
+                ? dashboard.Statistics with {
+                    ProteinGoal = permissions.ShareGoals ? dashboard.Statistics.ProteinGoal : null,
+                    FatGoal = permissions.ShareGoals ? dashboard.Statistics.FatGoal : null,
+                    CarbGoal = permissions.ShareGoals ? dashboard.Statistics.CarbGoal : null,
+                    FiberGoal = permissions.ShareGoals ? dashboard.Statistics.FiberGoal : null,
+                }
                 : new DashboardStatisticsModel(
                     TotalCalories: 0,
                     AverageProteins: 0,
@@ -112,13 +118,15 @@ public sealed class GetDietologistClientDashboardQueryHandler(
                     FiberGoal: null),
             WeeklyCalories = permissions.ShareStatistics ? dashboard.WeeklyCalories : [],
             Weight = permissions.ShareWeight
-                ? dashboard.Weight
+                ? dashboard.Weight with { DesiredWeightKg = permissions.ShareGoals ? dashboard.Weight.DesiredWeightKg : null }
                 : new DashboardWeightModel(Latest: null, Previous: null, DesiredWeightKg: null),
             Waist = permissions.ShareWaist
-                ? dashboard.Waist
+                ? dashboard.Waist with { DesiredWaistCm = permissions.ShareGoals ? dashboard.Waist.DesiredWaistCm : null }
                 : new DashboardWaistModel(Latest: null, Previous: null, DesiredWaistCm: null),
             Meals = permissions.ShareMeals ? dashboard.Meals : new DashboardMealsModel([], 0),
-            Hydration = permissions.ShareHydration ? dashboard.Hydration : null,
+            Hydration = permissions.ShareHydration && dashboard.Hydration is not null
+                ? dashboard.Hydration with { GoalMl = permissions.ShareGoals ? dashboard.Hydration.GoalMl : null }
+                : null,
             Advice = null,
             CurrentFastingSession = permissions.ShareFasting ? dashboard.CurrentFastingSession : null,
             WeightTrend = permissions.ShareWeight ? dashboard.WeightTrend : [],

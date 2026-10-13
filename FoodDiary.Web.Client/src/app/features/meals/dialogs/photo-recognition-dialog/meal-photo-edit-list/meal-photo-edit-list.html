@@ -4,38 +4,69 @@
             <div class="photo-ai-dialog__edit-handle fd-inline-center" cdkDragHandle>
                 <fd-ui-icon name="drag_indicator" />
             </div>
-            <input
-                #nameInput
-                class="photo-ai-dialog__edit-input photo-ai-dialog__edit-input--name"
-                type="text"
-                [value]="item.name"
-                [attr.aria-invalid]="showErrors() && itemError(item) === 'name' ? true : null"
-                (input)="updateItem(i, 'name', nameInput.value)"
-            />
-            <input
-                #amountInput
-                class="photo-ai-dialog__edit-input photo-ai-dialog__edit-input--amount"
-                type="number"
-                step="any"
-                [value]="item.amount"
-                [attr.aria-invalid]="showErrors() && itemError(item) === 'amount' ? true : null"
-                (input)="updateItem(i, 'amount', amountInput.value)"
-            />
-            <select #unitSelect class="photo-ai-dialog__edit-select" [value]="item.unit" (change)="updateItem(i, 'unit', unitSelect.value)">
-                @for (unit of unitOptions(); track unit.value) {
-                    <option [value]="unit.value">{{ unit.labelKey | translate }}</option>
-                }
-            </select>
-            <select
-                #resolutionSelect
-                class="photo-ai-dialog__edit-select photo-ai-dialog__edit-select--resolution"
-                [value]="item.resolution"
-                (change)="updateItem(i, 'resolution', resolutionSelect.value)"
-            >
-                @for (resolution of resolutionOptions(); track resolution.value) {
-                    <option [value]="resolution.value">{{ resolution.labelKey | translate }}</option>
-                }
-            </select>
+            <div class="fd-stack fd-gap-xxs fd-min-w-0">
+                <label class="fd-ui-caption" [attr.for]="`saved-ai-${item.id}-name`">{{
+                    'MEAL_MANAGE.PHOTO_AI_DIALOG.FIELD_NAME' | translate: { row: i + 1 }
+                }}</label>
+                <input
+                    #nameInput
+                    class="photo-ai-dialog__edit-input photo-ai-dialog__edit-input--name"
+                    type="text"
+                    [id]="`saved-ai-${item.id}-name`"
+                    [value]="item.name"
+                    [attr.aria-invalid]="showErrors() && itemError(item) === 'name' ? true : null"
+                    (input)="updateItem(i, 'name', nameInput.value)"
+                />
+            </div>
+            <div class="fd-stack fd-gap-xxs fd-min-w-0">
+                <label class="fd-ui-caption" [attr.for]="`saved-ai-${item.id}-amount`">{{
+                    'MEAL_MANAGE.PHOTO_AI_DIALOG.FIELD_AMOUNT' | translate: { row: i + 1 }
+                }}</label>
+                <input
+                    #amountInput
+                    class="photo-ai-dialog__edit-input photo-ai-dialog__edit-input--amount"
+                    type="number"
+                    step="any"
+                    [id]="`saved-ai-${item.id}-amount`"
+                    [value]="item.amount"
+                    [attr.aria-invalid]="showErrors() && itemError(item) === 'amount' ? true : null"
+                    (input)="updateItem(i, 'amount', amountInput.value)"
+                />
+            </div>
+            <div class="fd-stack fd-gap-xxs fd-min-w-0">
+                <label class="fd-ui-caption" [attr.for]="`saved-ai-${item.id}-unit`">{{
+                    'MEAL_MANAGE.PHOTO_AI_DIALOG.FIELD_UNIT' | translate: { row: i + 1 }
+                }}</label>
+                <select
+                    #unitSelect
+                    class="photo-ai-dialog__edit-select"
+                    [id]="`saved-ai-${item.id}-unit`"
+                    [value]="item.unit"
+                    (change)="updateItem(i, 'unit', unitSelect.value)"
+                >
+                    @for (unit of unitOptions(); track unit.value) {
+                        <option [value]="unit.value" [selected]="unit.value === item.unit">{{ unit.labelKey | translate }}</option>
+                    }
+                </select>
+            </div>
+            <div class="photo-ai-dialog__edit-field--resolution fd-stack fd-gap-xxs fd-min-w-0">
+                <label class="fd-ui-caption" [attr.for]="`saved-ai-${item.id}-resolution`">{{
+                    'MEAL_MANAGE.PHOTO_AI_DIALOG.FIELD_RESOLUTION' | translate: { row: i + 1 }
+                }}</label>
+                <select
+                    #resolutionSelect
+                    class="photo-ai-dialog__edit-select photo-ai-dialog__edit-select--resolution"
+                    [id]="`saved-ai-${item.id}-resolution`"
+                    [value]="item.resolution"
+                    (change)="updateItem(i, 'resolution', resolutionSelect.value)"
+                >
+                    @for (resolution of resolutionOptions(); track resolution.value) {
+                        <option [value]="resolution.value" [selected]="resolution.value === item.resolution">
+                            {{ resolution.labelKey | translate }}
+                        </option>
+                    }
+                </select>
+            </div>
             <fd-ui-button
                 class="photo-ai-dialog__edit-remove"
                 variant="danger"

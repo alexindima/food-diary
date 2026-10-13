@@ -1,4 +1,5 @@
-import { type DestroyRef, inject, Service } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { type DestroyRef, inject, PLATFORM_ID, Service } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { Observable } from 'rxjs';
@@ -21,6 +22,7 @@ export type PublicAuthDialogRef = {
 export class PublicAuthDialogService {
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly translate = inject(TranslateService);
+    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
     public async openAsync({
         mode,
@@ -29,6 +31,9 @@ export class PublicAuthDialogService {
         destroyRef,
         messageKey,
     }: PublicAuthDialogOptions): Promise<PublicAuthDialogRef | null> {
+        if (!this.isBrowser) {
+            return null;
+        }
         const { AuthDialogComponent } = await import('../../auth/contracts/auth-dialog');
         if (destroyRef?.destroyed === true) {
             return null;

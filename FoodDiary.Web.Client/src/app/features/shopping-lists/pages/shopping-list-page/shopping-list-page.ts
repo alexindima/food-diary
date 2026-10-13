@@ -89,6 +89,7 @@ export class ShoppingListPageComponent {
     protected readonly listSelectForm = form(this.listSelectModel);
     protected readonly itemForm = form(this.itemFormModel, path => {
         required(path.name);
+        validate(path.name, ({ value }) => (value().trim().length > 0 ? undefined : { kind: 'required' }));
         validate(path.amount, ({ value }) =>
             isShoppingListAmountValid(value())
                 ? undefined

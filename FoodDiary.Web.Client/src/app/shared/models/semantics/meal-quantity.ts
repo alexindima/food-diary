@@ -4,7 +4,7 @@ import type { SemanticQuantity, UnbrandedQuantity } from './quantity-meaning';
 export type ProductQuantity = SemanticQuantity<'product-quantity'>;
 export type RecipeServings = SemanticQuantity<'recipe-servings'>;
 
-const MAXIMUM_CONSUMED_QUANTITY = 1_000_000;
+export const MAXIMUM_CONSUMED_QUANTITY = 1_000_000;
 
 function validateConsumption(value: number): void {
     if (!Number.isFinite(value) || value <= 0 || value > MAXIMUM_CONSUMED_QUANTITY) {

@@ -225,6 +225,7 @@ describe('QuickMealService saving', () => {
                 preMealSatietyLevel: 2,
                 postMealSatietyLevel: 4,
             }),
+            expect.any(String),
         );
         expect(toastService.success).toHaveBeenCalledWith('QUICK_MEAL.SAVE_SUCCESS');
         expect(toastService.error).not.toHaveBeenCalled();
@@ -246,9 +247,47 @@ describe('QuickMealService saving', () => {
                     }),
                 ],
             }),
+            expect.any(String),
         );
     });
 
+});
+
+describe('QuickMealService idempotent retries', () => {
+    it('reuses one operation for an unchanged draft retry after a lost response', () => {
+        mealService.create.mockReturnValueOnce(throwError(() => new Error('lost response'))).mockReturnValueOnce(of(createdMeal));
+        service.addProduct(product);
+        service.saveDraft();
+        service.saveDraft();
+        expect(mealService.create).toHaveBeenCalledTimes(2);
+        expect(mealService.create.mock.calls[1]?.[1]).toBe(mealService.create.mock.calls[0]?.[1]);
+        expect(mealService.create.mock.calls[0]?.[1]).toEqual(expect.any(String));
+        expect(service.items()).toEqual([]);
+    });
+
+    it('starts a new operation when a failed draft changes', () => {
+        mealService.create.mockReturnValue(throwError(() => new Error('lost response')));
+        service.addProduct(product);
+        service.saveDraft();
+        service.updateDetails({ comment: 'changed draft' });
+        service.saveDraft();
+        expect(mealService.create.mock.calls[1]?.[1]).not.toBe(mealService.create.mock.calls[0]?.[1]);
+    });
+
+    it('allows a second intentional save of identical food after success', () => {
+        service.addProduct(product);
+        service.updateDetails({ date: '2026-05-03', time: '12:00' });
+        service.saveDraft();
+        service.addProduct(product);
+        service.updateDetails({ date: '2026-05-03', time: '12:00' });
+        service.saveDraft();
+        expect(mealService.create.mock.calls[1]?.[0]).toEqual(mealService.create.mock.calls[0]?.[0]);
+        expect(mealService.create.mock.calls[1]?.[1]).not.toBe(mealService.create.mock.calls[0]?.[1]);
+    });
+
+});
+
+describe('QuickMealService save failures', () => {
     it('keeps draft and shows error when save fails', () => {
         mealService.create.mockReturnValue(throwError(() => new Error('save failed')));
         service.addProduct(product);

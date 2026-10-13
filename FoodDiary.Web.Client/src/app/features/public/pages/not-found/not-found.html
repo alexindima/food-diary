@@ -6,10 +6,10 @@
             <h1 id="not-found-title" class="not-found__title">{{ 'NOT_FOUND.TITLE' | translate }}</h1>
             <p class="not-found__description">{{ 'NOT_FOUND.DESCRIPTION' | translate }}</p>
             <div class="not-found__actions">
-                <fd-ui-button routerLink="/" variant="primary" size="lg">
+                <fd-ui-button variant="primary" size="lg" [routerLink]="homePath()">
                     {{ 'NOT_FOUND.GO_HOME' | translate }}
                 </fd-ui-button>
-                <fd-ui-button routerLink="/food-diary" variant="secondary" fill="outline" size="lg">
+                <fd-ui-button variant="secondary" fill="outline" size="lg" [routerLink]="diaryPath()">
                     {{ 'NOT_FOUND.VIEW_FOOD_DIARY' | translate }}
                 </fd-ui-button>
             </div>

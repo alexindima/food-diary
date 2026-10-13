@@ -50,6 +50,15 @@ internal sealed class DashboardSectionDataLoader(
                     "Time-zone offset must be between -840 and 840 minutes."));
         }
 
+        if (request.UseUserTimeZone) {
+            Result<DashboardUserContextModel> userResult = await dashboardUserContextService
+                .GetAccessibleDashboardUserAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
+            if (userResult.IsFailure) {
+                return Result.Failure<DashboardBuildContext>(userResult.Error);
+            }
+            request = request with { UserContext = userResult.Value, TimeZoneId = userResult.Value.TimeZoneId, TimeZoneOffsetMinutes = null };
+        }
+
         if (!LocalCalendar.TryResolve(request.TimeZoneId, request.TimeZoneOffsetMinutes, out TimeZoneInfo timeZone)) {
             return Result.Failure<DashboardBuildContext>(Errors.Validation.Invalid(nameof(request.TimeZoneId), "Unknown time zone."));
         }

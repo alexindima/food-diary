@@ -563,8 +563,30 @@ public sealed class AttentionSignalTests {
             permissions ?? CreatePermissions(true, true, true),
             acceptedAtUtc);
 
-    private static DietologistPermissionsModel CreatePermissions(bool meals, bool statistics, bool weight) =>
-        new(meals, statistics, weight, false, false, false, false, false);
+    [Theory]
+    [InlineData(true, false, false)]
+    [InlineData(true, true, true)]
+    [InlineData(false, true, false)]
+    public async Task GetAttentionSignals_CalorieDeviationRequiresStatisticsAndGoalSharing(bool statistics, bool goals, bool expected) {
+        var user = User.Create("dietologist@example.com", "hash");
+        ClientSummaryModel client = CreateClient(UtcNow.AddDays(-20),
+            permissions: CreatePermissions(false, statistics, false, goals));
+        DashboardSnapshotModel dashboard = CreateDashboard(weeklyCalories: [
+            new DailyCaloriesModel(UtcNow.AddDays(-1), 1000),
+            new DailyCaloriesModel(UtcNow.AddDays(-2), 1000),
+        ]);
+        GetAttentionSignalsQueryHandler handler = CreateQueryHandler(
+            CreateInvitationService(user.Id, client), CreateDashboardService(Result.Success(dashboard)),
+            userContext: CreateUserContext(user));
+
+        Result<IReadOnlyList<AttentionSignalModel>> result = await handler.Handle(CreateQuery(user.Id.Value), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(expected, result.Value.Any(signal => string.Equals(signal.Type, "CalorieTargetDeviation", StringComparison.Ordinal)));
+    }
+
+    private static DietologistPermissionsModel CreatePermissions(bool meals, bool statistics, bool weight, bool goals = true) =>
+        new(meals, statistics, weight, false, goals, false, false, false);
 
     private static DashboardSnapshotModel CreateDashboard(
         IReadOnlyList<MealModel>? meals = null,

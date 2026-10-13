@@ -12,6 +12,19 @@ public class WeeklyCheckInCalculatorTests {
     private static readonly DateTime WeekStart = new(2026, 3, 30, 0, 0, 0, DateTimeKind.Utc);
 
     [Fact]
+    public void BuildSummary_CountsRecordedZeroCalorieDaysAndExcludesEmptyBuckets() {
+        MealNutritionStatisticsBucket loggedZero = CreateNutritionBucket(WeekStart, 0, 0, 0, 0, 0) with { MealCount = 1, TrackedDayCount = 1 };
+        MealNutritionStatisticsBucket empty = CreateNutritionBucket(WeekStart.AddDays(1), 0, 0, 0, 0, 0);
+        WeekSummaryModel summary = WeeklyCheckInCalculator.BuildSummary([loggedZero, empty], mealsLogged: 1, [], [], [], daysInPeriod: 7);
+
+        Assert.Multiple(
+            () => Assert.Equal(1, summary.DaysLogged),
+            () => Assert.Equal(1, summary.MealsLogged),
+            () => Assert.Equal(0, summary.TotalCalories),
+            () => Assert.Equal(0, summary.AvgDailyCalories));
+    }
+
+    [Fact]
     public void BuildSummary_WithEmptyData_ReturnsZeros() {
         WeekSummaryModel summary = WeeklyCheckInCalculator.BuildSummary(
             [], mealsLogged: 0, [], [], [], daysInPeriod: 7);

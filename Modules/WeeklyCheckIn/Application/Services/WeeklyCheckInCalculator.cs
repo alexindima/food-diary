@@ -33,7 +33,12 @@ public static class WeeklyCheckInCalculator {
         double avgProteins = daysInPeriod > 0 ? nutritionBuckets.Sum(bucket => bucket.TotalProteins) / daysInPeriod : 0;
         double avgFats = daysInPeriod > 0 ? nutritionBuckets.Sum(bucket => bucket.TotalFats) / daysInPeriod : 0;
         double avgCarbs = daysInPeriod > 0 ? nutritionBuckets.Sum(bucket => bucket.TotalCarbs) / daysInPeriod : 0;
-        int daysLogged = nutritionBuckets.Count(static bucket => bucket.TotalCalories > 0);
+        int daysLogged = nutritionBuckets.Sum(static bucket => {
+            if (bucket.TrackedDayCount > 0) {
+                return bucket.TrackedDayCount;
+            }
+            return bucket.MealCount > 0 || bucket.TotalCalories > 0 ? 1 : 0;
+        });
 
         var sortedWeights = weights.OrderBy(w => w.Date).ToList();
         double? weightStart = sortedWeights.FirstOrDefault()?.WeightKg;

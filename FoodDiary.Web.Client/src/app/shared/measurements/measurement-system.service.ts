@@ -81,8 +81,8 @@ export function inchesToCentimeters(lengthInches: number): number {
 }
 
 export function centimetersToImperialHeight(heightCm: number): ImperialHeight {
-    const totalInches = Math.round(heightCm / CENTIMETERS_PER_INCH);
-    return { feet: Math.floor(totalInches / INCHES_PER_FOOT), inches: totalInches % INCHES_PER_FOOT };
+    const totalInches = round(heightCm / CENTIMETERS_PER_INCH, 1);
+    return { feet: Math.floor(totalInches / INCHES_PER_FOOT), inches: round(totalInches % INCHES_PER_FOOT, 1) };
 }
 
 export function imperialHeightToCentimeters(feet: number, inches: number): number {

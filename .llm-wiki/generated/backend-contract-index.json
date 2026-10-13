@@ -37157,7 +37157,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardCalendarTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "DashboardSnapshotRequest",
@@ -47771,7 +47771,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.ReadQueryTests.cs",
       "isTest": true,
-      "referenceCount": 10
+      "referenceCount": 11
     },
     {
       "contract": "GetDietologistClientDashboardQuery",
@@ -73221,7 +73221,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardCalendarTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "IDashboardReadService",
@@ -73585,7 +73585,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardCalendarTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 7
     },
     {
       "contract": "IDashboardUserContextService",
@@ -117030,7 +117030,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardCalendarTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "ISender",

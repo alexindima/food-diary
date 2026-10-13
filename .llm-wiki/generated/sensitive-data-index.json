@@ -7561,7 +7561,7 @@
       "name": "WeightKg",
       "type": "double",
       "path": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInCalculator.cs",
-      "line": 65
+      "line": 70
     },
     {
       "category": "health",

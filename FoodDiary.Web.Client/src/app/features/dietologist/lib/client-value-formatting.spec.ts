@@ -44,7 +44,7 @@ describe('client value formatting', () => {
         const formatting = createClientValueFormatting('ru', key => russianLabels[key]);
 
         expect(formatClientHeight(values.height, 'metric', formatting)).toBe('170 см');
-        expect(formatClientHeight(values.height, 'imperial', formatting)).toBe('5 фут 7 дюйм');
+        expect(formatClientHeight(values.height, 'imperial', formatting)).toBe('5 фут 6,9 дюйм');
         expect(formatClientHeight(null, 'metric', formatting)).toBeNull();
     });
 

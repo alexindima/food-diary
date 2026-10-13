@@ -1,4 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -6,6 +7,17 @@ import type { RecognizedItemView } from '../meal-photo-recognition-dialog-lib/me
 import { MealPhotoResultTableComponent } from './meal-photo-result-table';
 
 describe('MealPhotoResultTableComponent', () => {
+    it('updates fractional amounts when the active language changes', async () => {
+        const amount = 37.51234;
+        const { fixture } = await setupComponentAsync({ resultViews: [createItemView({ amount })] });
+        const translate = TestBed.inject(TranslateService);
+        translate.use('ru');
+        fixture.detectChanges();
+        expect(getFixtureText(fixture)).toContain('37,51234');
+        translate.use('en');
+        fixture.detectChanges();
+        expect(getFixtureText(fixture)).toContain('37.51234');
+    });
     it('should render recognized items with translated and raw units', async () => {
         const { fixture } = await setupComponentAsync({
             resultViews: [

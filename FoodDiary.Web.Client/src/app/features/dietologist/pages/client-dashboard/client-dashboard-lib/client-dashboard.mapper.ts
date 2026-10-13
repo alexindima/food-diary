@@ -17,6 +17,7 @@ const PERCENT_MAX = 100;
 const DATE_ONLY_LENGTH = 10;
 const STABLE_DELTA_THRESHOLD = 0.05;
 const ONE_DECIMAL_PRECISION = 10;
+const QUANTITY_FRACTION_DIGITS = 20;
 
 export type ClientDashboardSection = {
     isVisible: boolean;
@@ -434,10 +435,10 @@ function formatMealItems(
     const resolvedAiIds = new Set(meal.items.map(item => item.sourceAiItemId));
     const aiNames = (meal.aiSessions ?? [])
         .flatMap(session => session.items)
-        .filter(item => !resolvedAiIds.has(item.id))
+        .filter(item => item.resolution !== 'Rejected' && !resolvedAiIds.has(item.id))
         .map(
             item =>
-                `${item.nameLocal ?? item.nameEn} — ${formatting.number(item.amount, undefined, 1)} ${translate(`GENERAL.UNITS.${item.unit.toUpperCase()}`)}`,
+                `${item.nameLocal ?? item.nameEn} — ${formatting.number(item.amount, undefined, QUANTITY_FRACTION_DIGITS)} ${translate(`GENERAL.UNITS.${item.unit.toUpperCase()}`)}`,
         );
     const summary = [...names, ...aiNames].join(', ');
     return summary.length > 0 ? summary : '-';
@@ -454,7 +455,7 @@ function formatMealItem(
         return '';
     }
     const unit = getMealItemUnit(item, language);
-    return `${name} — ${formatting.number(item.amount, undefined, 1)} ${translate(unit)}`;
+    return `${name} — ${formatting.number(item.amount, undefined, QUANTITY_FRACTION_DIGITS)} ${translate(unit)}`;
 }
 
 function getMealItemName(item: MealItem | MealItemResponseDto): string | null | undefined {

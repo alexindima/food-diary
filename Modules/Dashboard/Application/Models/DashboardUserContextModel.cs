@@ -15,7 +15,8 @@ public sealed record DashboardUserContextModel(
     double? FatTarget,
     double? CarbTarget,
     double? FiberTarget,
-    UserCalorieSchedule CalorieSchedule) {
+    UserCalorieSchedule CalorieSchedule,
+    string? TimeZoneId = null) {
     public double? GetCalorieTargetForDate(DateTime date) => CalorieSchedule.GetTargetForDate(date);
 
     public double GetWeeklyCalorieTarget() => CalorieSchedule.GetWeeklyTarget();

@@ -24,8 +24,9 @@ const WAIST_IN = 32.1;
 const ROUND_TRIP_WAIST_CM = 81.53;
 const HEIGHT_CM = 180;
 const HEIGHT_FT = 5;
-const HEIGHT_IN = 11;
-const ROUND_TRIP_HEIGHT_CM = 180.3;
+const HEIGHT_IN = 10.9;
+const ROUND_TRIP_HEIGHT_CM = 180.1;
+const FRACTIONAL_HEIGHT_IN = 9.5;
 
 describe('measurement conversions', () => {
     it('preserves canonical body-goal limits at two decimal display precision', () => {
@@ -46,6 +47,11 @@ describe('measurement conversions', () => {
     it('converts height between centimeters and feet with inches', () => {
         expect(centimetersToImperialHeight(HEIGHT_CM)).toEqual({ feet: HEIGHT_FT, inches: HEIGHT_IN });
         expect(imperialHeightToCentimeters(HEIGHT_FT, HEIGHT_IN)).toBe(ROUND_TRIP_HEIGHT_CM);
+    });
+
+    it('preserves fractional inches through the canonical centimeter round trip', () => {
+        const centimeters = imperialHeightToCentimeters(HEIGHT_FT, FRACTIONAL_HEIGHT_IN);
+        expect(centimetersToImperialHeight(centimeters)).toEqual({ feet: HEIGHT_FT, inches: FRACTIONAL_HEIGHT_IN });
     });
 });
 

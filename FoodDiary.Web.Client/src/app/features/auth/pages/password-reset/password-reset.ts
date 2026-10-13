@@ -1,4 +1,5 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
+import { HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot, minLength, required, validate } from '@angular/forms/signals';
@@ -6,6 +7,7 @@ import { ActivatedRoute, type ParamMap } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
     FD_VALIDATION_ERRORS,
     FdUiFormErrorComponent,
@@ -18,6 +20,8 @@ import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { AUTH_PASSWORD_MIN_LENGTH } from '../../../../shared/auth/auth.constants';
+import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
+import { AuthDialogComponent } from '../../dialogs/auth-dialog/auth-dialog';
 import { ConfirmPasswordResetRequest } from '../../models/auth.data';
 
 type ResetState = 'ready' | 'invalid';
@@ -46,6 +50,7 @@ export class PasswordResetComponent {
     private readonly document = inject(DOCUMENT);
     private readonly authService = inject(AuthService);
     private readonly navigationService = inject(NavigationService);
+    private readonly dialogs = inject(FdUiDialogService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
@@ -123,14 +128,28 @@ export class PasswordResetComponent {
             await firstValueFrom(this.authService.confirmPasswordReset(request).pipe(takeUntilDestroyed(this.destroyRef)));
             this.isSubmitting.set(false);
             await this.navigationService.navigateToHomeAsync();
-        } catch {
+        } catch (error: unknown) {
             this.isSubmitting.set(false);
-            this.errorMessage.set(this.translateService.instant('AUTH.RESET.ERROR_GENERIC'));
+            if (getNumberProperty(error, 'status') === HttpStatusCode.Unauthorized) {
+                this.state.set('invalid');
+                this.formModel.set({ password: '', confirmPassword: '' });
+                this.errorMessage.set(this.translateService.instant('AUTH.RESET.INVALID'));
+            } else {
+                this.errorMessage.set(this.translateService.instant('AUTH.RESET.ERROR_GENERIC'));
+            }
         }
     }
 
     protected onBackToLogin(): void {
         void this.navigationService.navigateToAuthAsync('login');
+    }
+
+    protected requestNewLink(): void {
+        this.dialogs.open(AuthDialogComponent, {
+            preset: 'form',
+            ariaLabel: this.translateService.instant('AUTH.DIALOG_TITLE'),
+            data: { mode: 'login', requestPasswordReset: true },
+        });
     }
 
     private createEmptyFieldErrors(): FieldErrors {

@@ -31,7 +31,6 @@ export class CycleCalendarCardComponent {
     public readonly dateSelected = output<string>();
 
     protected readonly today = inject(CurrentLocalDayService).today;
-    protected readonly trackingStartDate = computed(() => new Date(this.cycle().trackingStartDate));
     protected readonly markers = computed<readonly FdUiCalendarMarker[]>(() => {
         this.locale();
         return this.buildMarkers();

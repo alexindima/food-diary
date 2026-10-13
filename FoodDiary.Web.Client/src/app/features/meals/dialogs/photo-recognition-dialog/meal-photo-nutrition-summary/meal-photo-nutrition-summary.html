@@ -9,7 +9,7 @@
                     <div class="photo-ai-dialog__nutrition-item fd-stack fd-gap-xxs">
                         <span class="photo-ai-dialog__nutrition-label fd-ui-stat-label"> {{ macro.labelKey | translate }} </span>
                         <span class="photo-ai-dialog__nutrition-value fd-ui-stat-value">
-                            {{ macro.value | number: macro.numberFormat }} {{ macro.unitKey | translate }}
+                            {{ macro.value | number: macro.numberFormat : locale() }} {{ macro.unitKey | translate }}
                         </span>
                     </div>
                 }

@@ -38,5 +38,6 @@ internal sealed class DashboardUserContextService(
             profile.FatTarget,
             profile.CarbTarget,
             profile.FiberTarget,
-            profile.CalorieSchedule);
+            profile.CalorieSchedule,
+            profile.TimeZoneId);
 }

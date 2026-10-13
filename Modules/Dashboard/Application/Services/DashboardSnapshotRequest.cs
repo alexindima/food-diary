@@ -13,4 +13,5 @@ public sealed record DashboardSnapshotRequest(
     DashboardSnapshotSections? Sections = null,
     int? TimeZoneOffsetMinutes = null,
     DashboardUserContextModel? UserContext = null,
-    string? TimeZoneId = null);
+    string? TimeZoneId = null,
+    bool UseUserTimeZone = false);

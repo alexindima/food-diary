@@ -221,10 +221,10 @@ export class AiPhotoResultComponent {
     }
 
     private resolveAmountLabel(item: FoodVisionItem): string {
-        const amount = item.amount;
+        const amount = new Intl.NumberFormat(this.activeLang(), { maximumFractionDigits: 20 }).format(item.amount);
         const unitKey = resolveAiPhotoUnitKey(item.unit);
         const unitLabel = unitKey !== null ? this.translateService.instant(unitKey) : item.unit;
-        return unitLabel.length > 0 ? `${amount} ${unitLabel}`.trim() : `${amount}`.trim();
+        return unitLabel.length > 0 ? `${amount} ${unitLabel}`.trim() : amount.trim();
     }
 
     private resolveUnitLabel(unit: string): string {

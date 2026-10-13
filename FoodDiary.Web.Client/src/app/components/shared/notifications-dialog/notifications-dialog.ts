@@ -38,6 +38,7 @@ export class NotificationsDialogComponent {
     protected readonly notifications = this.notificationService.notifications;
     protected readonly isLoading = this.notificationService.notificationsLoading;
     protected readonly isMarkingAllRead = signal(false);
+    protected readonly markAllReadError = signal(false);
     protected readonly hasUnreadNotifications = computed(() => this.notifications().some(item => !item.isRead));
     protected readonly notificationItems = computed<NotificationViewModel[]>(() =>
         this.notifications().map(notification => this.buildNotificationViewModel(notification)),
@@ -84,6 +85,7 @@ export class NotificationsDialogComponent {
         }
 
         this.isMarkingAllRead.set(true);
+        this.markAllReadError.set(false);
         this.notificationService
             .markAllRead()
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -93,6 +95,7 @@ export class NotificationsDialogComponent {
                 },
                 error: () => {
                     this.isMarkingAllRead.set(false);
+                    this.markAllReadError.set(true);
                 },
             });
     }

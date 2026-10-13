@@ -218,6 +218,8 @@
 
 .photo-ai-dialog__edit-input,
 .photo-ai-dialog__edit-select {
+    min-width: 0;
+    width: 100%;
     height: var(--fd-size-control-toolbar);
     border-radius: var(--fd-radius-input);
     border: var(--fd-border-width) solid var(--photo-ai-border);
@@ -451,7 +453,7 @@
         grid-template-columns: 28px minmax(0, 1fr) minmax(72px, 0.7fr) minmax(72px, 0.7fr) 28px;
     }
 
-    .photo-ai-dialog__edit-select--resolution {
+    .photo-ai-dialog__edit-field--resolution {
         grid-column: 2 / 5;
     }
 }

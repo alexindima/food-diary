@@ -374,7 +374,8 @@
             "INVALID": "Ссылка для сброса недействительна или истекла.",
             "ERROR_GENERIC": "Не удалось сбросить пароль. Пожалуйста, попробуйте ещё раз.",
             "BACK_TO_LOGIN": "Вернуться ко входу",
-            "RESEND_COOLDOWN": "Повторная отправка будет доступна через {{ seconds }} сек."
+            "RESEND_COOLDOWN": "Повторная отправка будет доступна через {{ seconds }} сек.",
+            "REQUEST_NEW_LINK": "Запросить новую ссылку"
         }
     },
     "SHARED": {
@@ -613,7 +614,8 @@
             "HELP_TITLE": "Тур можно повторить",
             "HELP_TEXT": "Эта кнопка запускает тур по рецептам заново, когда нужно быстро вспомнить страницу."
         },
-        "FAVORITE_ERROR": "Не удалось обновить избранное. Попробуйте ещё раз."
+        "FAVORITE_ERROR": "Не удалось обновить избранное. Попробуйте ещё раз.",
+        "FILTER_CALORIES_ORDER_ERROR": "Минимум калорий не должен превышать максимум."
     },
     "RECIPE_DETAIL": {
         "CATEGORY": "Категория",
@@ -1028,7 +1030,11 @@
             "RESOLUTION_REJECTED": "Отклонено",
             "RESOLUTION_REPLACED": "Заменено",
             "RESOLUTION_SPLIT": "Разделено",
-            "RESOLUTION_MERGED": "Объединено"
+            "RESOLUTION_MERGED": "Объединено",
+            "FIELD_NAME": "Название, позиция {{row}}",
+            "FIELD_AMOUNT": "Количество, позиция {{row}}",
+            "FIELD_UNIT": "Единица, позиция {{row}}",
+            "FIELD_RESOLUTION": "Статус, позиция {{row}}"
         },
         "ITEM_CARD_PLACEHOLDER": "Позиция №{{index}}",
         "ITEM_CARD_META": {
@@ -1105,7 +1111,8 @@
             "HELP_TITLE": "Подсказки всегда доступны",
             "HELP_DESCRIPTION": "Нажмите эту кнопку, когда захотите ещё раз посмотреть подсказки по форме."
         },
-        "OPTIONAL_MEDIA": "Фото и комментарий (необязательно)"
+        "OPTIONAL_MEDIA": "Фото и комментарий (необязательно)",
+        "MAX_AMOUNT_ERROR": "Количество должно быть не больше {{max}}."
     },
     "QUICK_MEAL": {
         "TITLE": "Черновик приёма пищи",
@@ -4611,20 +4618,21 @@
                 "DAYS_WITHIN_GOAL": "{{current}} из {{total}} дней в пределах цели",
                 "AVERAGE_CALORIES": "Среднее выполнение цели по калориям",
                 "AVERAGE_PER_DAY": "В среднем за день",
-                "VS_GOAL": "относительно вашей цели",
+                "VS_GOAL": "К базовой дневной цели",
                 "NUTRIENTS": "Средний прогресс нутриентов",
                 "DIARY_COMPLETENESS": "Дневник заполнен",
                 "DAYS": "дней",
                 "COMPLETENESS_HINT": "Дни без записей не входят в средние. Дни с записями могут быть неполными: эти суммы описывают дневник, а не качество вашего питания.",
                 "RECORDED_DAYS": "Дни с записями: {{current}} из {{total}}",
-                "AVERAGE_RECORDED_DAYS": "Среднее по дням с записями ({{count}})"
+                "AVERAGE_RECORDED_DAYS": "Среднее по дням с записями ({{count}})",
+                "BASE_GOAL_HINT": "Сравнения используют базовую дневную цель. Отдельные цели по дням недели здесь не учитываются."
             },
             "TREND": {
                 "TITLE": "Динамика питания",
                 "CHART_TYPE_LABEL": "Тип графика",
                 "CHART_BARS": "Столбцы",
                 "CHART_LINE": "Линия",
-                "GOAL": "Цель {{value}}",
+                "GOAL": "Базовая дневная цель: {{value}} ккал",
                 "NO_ENTRY": "Нет записи в дневнике",
                 "INSIGHTS_TITLE": "Что изменилось",
                 "PERCENT_UNIT": "%",
@@ -4699,7 +4707,11 @@
                 "OPEN_WEIGHT_HISTORY": "Открыть историю веса",
                 "OPEN_WAIST_HISTORY": "Открыть историю талии",
                 "EMPTY_WEIGHT": "Добавьте измерения веса, чтобы увидеть динамику.",
-                "EMPTY_WAIST": "Добавьте измерения талии, чтобы увидеть динамику."
+                "EMPTY_WAIST": "Добавьте измерения талии, чтобы увидеть динамику.",
+                "CHANGE_ONE": "Изменение за {{days}} день",
+                "CHANGE_FEW": "Изменение за {{days}} дня",
+                "CHANGE_MANY": "Изменение за {{days}} дней",
+                "CHANGE_OTHER": "Изменение за {{days}} дней"
             }
         },
         "RANGES": {
@@ -4883,7 +4895,8 @@
         "TEXT_AMOUNT": "Количество",
         "TEXT_NOT_CALCULATED": "Не учитывается в расчёте пищевой ценности",
         "USE_AS_TEXT": "Использовать «{{name}}» как текст",
-        "INGREDIENT_PICKER_TITLE": "Выберите ингредиент"
+        "INGREDIENT_PICKER_TITLE": "Выберите ингредиент",
+        "SERVINGS_INTEGER_ERROR": "Укажите целое число порций."
     },
     "PRODUCT_MANAGE": {
         "SAVE_ERROR": "Не удалось сохранить продукт. Изменения остались в форме — попробуйте ещё раз.",
@@ -6844,7 +6857,7 @@
         "DIETOLOGIST_PERMISSION_STATISTICS": "Калории и статистика питания",
         "DIETOLOGIST_PERMISSION_WEIGHT": "История веса",
         "DIETOLOGIST_PERMISSION_WAIST": "История талии",
-        "DIETOLOGIST_PERMISSION_GOALS": "Цели по питанию",
+        "DIETOLOGIST_PERMISSION_GOALS": "Цели питания, воды и тела",
         "DIETOLOGIST_PERMISSION_HYDRATION": "Отслеживание воды",
         "DIETOLOGIST_PERMISSION_FASTING": "Голодание",
         "DIETOLOGIST_PROFILE_DISABLE_TITLE": "Отключить данные профиля?",
@@ -6960,7 +6973,8 @@
         "EMAIL_CONFIRMED": "Email подтверждён. Его можно использовать для входа с паролем.",
         "EMAIL_UNCONFIRMED": "Email пока не подтверждён.",
         "ACTIVITY_DEFAULT_HINT": "Выберите уровень активности для вашей обычной недели. Он используется для расчёта дневного расхода энергии.",
-        "BIRTH_DATE_INVALID": "Укажите корректную дату рождения, не позднее сегодняшнего дня."
+        "BIRTH_DATE_INVALID": "Укажите корректную дату рождения, не позднее сегодняшнего дня.",
+        "CHANGE_PASSWORD_SAME_ERROR": "Новый пароль должен отличаться от текущего."
     },
     "DAILY_PROGRESS_CARD": {
         "TITLE": "Прогресс за день",
@@ -7113,7 +7127,8 @@
         "RECOMMENDATION_BADGE": "Рекомендация",
         "TASK_BADGE": "Задача",
         "TASK_ACTION": "Открыть задачи",
-        "RECOMMENDATION_ACTION": "Открыть рекомендацию"
+        "RECOMMENDATION_ACTION": "Открыть рекомендацию",
+        "MARK_ALL_READ_ERROR": "Не удалось отметить уведомления прочитанными. Попробуйте ещё раз."
     },
     "RECOMMENDATIONS": {
         "EYEBROW": "Диетолог",

@@ -11,6 +11,7 @@ import {
     normalizeShoppingListAmount,
     normalizeShoppingListUnit,
     rebuildShoppingListSortOrder,
+    shoppingListCategoryLabel,
 } from './shopping-list-item.mapper';
 
 const ITEM: ShoppingListItem = {
@@ -119,5 +120,14 @@ describe('shopping-list-item.mapper', () => {
             checkedOnUtc: null,
             sortOrder: 1,
         });
+    });
+});
+
+describe('shopping category provenance', () => {
+    it('localizes linked category codes but retains freeform category names', () => {
+        const translateRu = (): string => 'Прочее';
+        expect(shoppingListCategoryLabel('Other', ITEM.productId, translateRu)).toBe('Прочее');
+        expect(shoppingListCategoryLabel('Other', null, translateRu)).toBe('Other');
+        expect(shoppingListCategoryLabel('На рынке', ITEM.productId, translateRu)).toBe('На рынке');
     });
 });

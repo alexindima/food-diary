@@ -1,11 +1,23 @@
+import { registerLocaleData } from '@angular/common';
+import ru from '@angular/common/locales/ru';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { MacroSummaryItem } from '../meal-photo-recognition-dialog-lib/meal-photo-recognition-dialog.types';
 import { MealPhotoNutritionSummaryComponent } from './meal-photo-nutrition-summary';
 
+registerLocaleData(ru);
+
 describe('MealPhotoNutritionSummaryComponent', () => {
+    it('renders fractional nutrients in the active Russian locale', async () => {
+        const value = 14.6;
+        const { fixture } = await setupComponentAsync({ items: [{ ...createMacroItems()[0], value, numberFormat: '1.1-1' }] });
+        TestBed.inject(TranslateService).use('ru');
+        fixture.detectChanges();
+        expect(getFixtureText(fixture)).toContain('14,6');
+    });
     it('should render macro summary when items exist', async () => {
         const { fixture } = await setupComponentAsync({ items: createMacroItems() });
 

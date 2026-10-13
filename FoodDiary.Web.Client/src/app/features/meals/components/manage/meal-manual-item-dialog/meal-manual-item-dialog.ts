@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { disabled, form, FormField, min, required } from '@angular/forms/signals';
+import { disabled, form, FormField, max, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -16,6 +16,7 @@ import type { ItemSelection } from '../../../../../shared/dialogs/item-select-di
 import { MealSourceType } from '../../../../../shared/models/meal.data';
 import type { Product } from '../../../../../shared/models/product.data';
 import type { Recipe } from '../../../../../shared/models/recipe.data';
+import { MAXIMUM_CONSUMED_QUANTITY, recipeServings } from '../../../../../shared/models/semantics/meal-quantity';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import type { MealItemFormValues } from '../meal-manage-lib/meal-manage.types';
 
@@ -67,10 +68,16 @@ export class MealManualItemDialogComponent {
     protected readonly recipe = signal<Recipe | null>(this.data.item.recipe);
     private readonly sourceTouched = signal(false);
     protected readonly amountModel = signal<number | null>(this.data.item.amount);
+    protected readonly maximumAmount = computed(() =>
+        this.recipe() !== null && this.usesRecipeGrams()
+            ? this.recipeWeight.displayServings(this.recipe(), recipeServings(MAXIMUM_CONSUMED_QUANTITY)).value
+            : MAXIMUM_CONSUMED_QUANTITY,
+    );
     protected readonly amount = form(this.amountModel, path => {
         disabled(path, { when: () => this.isLoadingRecipeAmount() });
         required(path);
         min(path, MIN_AMOUNT);
+        max(path, () => this.maximumAmount());
     });
 
     protected readonly selectedItemName = computed(() => this.recipe()?.name ?? this.product()?.name ?? null);
@@ -143,6 +150,10 @@ export class MealManualItemDialogComponent {
 
         if (state.getError('min') !== undefined) {
             return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min: MIN_AMOUNT });
+        }
+
+        if (state.getError('max') !== undefined) {
+            return this.translateService.instant('MEAL_MANAGE.MAX_AMOUNT_ERROR', { max: this.maximumAmount() });
         }
 
         return this.translateService.instant('FORM_ERRORS.UNKNOWN');

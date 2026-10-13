@@ -56,6 +56,11 @@ export class ChangePasswordDialogComponent {
 
             required(path.newPassword);
             minLength(path.newPassword, AUTH_PASSWORD_MIN_LENGTH);
+            validate(path.newPassword, ({ value }) =>
+                this.hasPassword && value().length > 0 && value() === this.formModel().currentPassword
+                    ? { kind: 'samePassword' }
+                    : undefined,
+            );
             required(path.confirmPassword);
             validate(path.confirmPassword, ({ value }) => (value() === this.formModel().newPassword ? undefined : { kind: 'matchField' }));
         },
@@ -74,6 +79,14 @@ export class ChangePasswordDialogComponent {
         this.formModel();
 
         return ERROR_FIELDS.reduce<FieldErrors>((errors, field) => {
+            if (
+                field === 'newPassword' &&
+                this.form.newPassword().getError('samePassword') !== undefined &&
+                (this.form.newPassword().dirty() || this.form.newPassword().touched())
+            ) {
+                errors[field] = this.translateService.instant('USER_MANAGE.CHANGE_PASSWORD_SAME_ERROR');
+                return errors;
+            }
             errors[field] = resolveSignalFormFieldError(this.form[field], this.validationErrors, this.translateService);
             return errors;
         }, this.createEmptyFieldErrors());

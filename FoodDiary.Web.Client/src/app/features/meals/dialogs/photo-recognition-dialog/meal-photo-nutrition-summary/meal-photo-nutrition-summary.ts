@@ -2,6 +2,7 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { injectCurrentLanguage } from '../../../../../shared/i18n/inject-current-language';
 import type { MacroSummaryItem } from '../meal-photo-recognition-dialog-lib/meal-photo-recognition-dialog.types';
 
 @Component({
@@ -15,6 +16,7 @@ import type { MacroSummaryItem } from '../meal-photo-recognition-dialog-lib/meal
     },
 })
 export class MealPhotoNutritionSummaryComponent {
+    protected readonly locale = injectCurrentLanguage();
     public readonly isNutritionLoading = input.required<boolean>();
     public readonly items = input.required<MacroSummaryItem[]>();
     public readonly errorKey = input.required<string | null>();

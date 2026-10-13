@@ -20,7 +20,7 @@
         (input)="onTextInput($event)"
         (keydown.enter)="submitTextAsync(); $event.preventDefault()"
     />
-    @if (!voiceText()) {
+    @if (!voiceText().trim()) {
         <fd-ui-button
             class="ai-input-bar__action-btn"
             variant="secondary"

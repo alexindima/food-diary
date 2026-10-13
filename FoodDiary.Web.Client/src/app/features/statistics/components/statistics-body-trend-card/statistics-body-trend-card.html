@@ -77,7 +77,7 @@
                 <div class="fd-stack fd-gap-xxs fd-min-w-0">
                     <strong class="fd-ui-action-text">{{ 'STATISTICS.DASHBOARD.BODY.PERIOD_CHANGE' | translate }}</strong>
                     <span class="fd-ui-caption fd-ui-text-muted">
-                        {{ 'STATISTICS.DASHBOARD.BODY.CHANGE' | translate: { days: metric().timeframeDays } }}
+                        {{ changeLabelKey() | translate: { days: metric().timeframeDays } }}
                     </span>
                 </div>
                 @if (displayMetric().change !== null) {

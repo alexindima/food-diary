@@ -57,6 +57,7 @@ export class AuthComponent {
     public readonly useRouting = input(true);
     public readonly hideTelegram = input(false);
     public readonly initialMode = input<'login' | 'register'>('login');
+    public readonly initialPasswordReset = input(false);
     public readonly initialReturnUrl = input<string | null>(null);
     public readonly initialAdminReturnUrl = input<string | null>(null);
     private readonly loginFormComponent = viewChild(AuthLoginFormComponent);
@@ -166,6 +167,7 @@ export class AuthComponent {
         effect(() => {
             const routeMode = this.route?.snapshot.queryParamMap.get('auth') === 'register' ? 'register' : 'login';
             this.authMode = this.useRouting() ? routeMode : this.initialMode();
+            this.showPasswordReset.set(this.initialPasswordReset());
             this.returnUrl = this.useRouting() ? (this.route?.snapshot.queryParamMap.get('returnUrl') ?? null) : this.initialReturnUrl();
             this.adminReturnUrl = this.useRouting()
                 ? (this.route?.snapshot.queryParamMap.get('adminReturnUrl') ?? null)

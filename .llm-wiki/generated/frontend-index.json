@@ -3577,7 +3577,7 @@
       "role": "Component",
       "selector": "fd-password-reset",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/password-reset/password-reset.ts",
-      "line": 44
+      "line": 48
     },
     {
       "name": "RequiredPasswordChangeComponent",
@@ -4746,7 +4746,7 @@
       "role": "Component",
       "selector": "fd-meal-manual-item-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manual-item-dialog/meal-manual-item-dialog.ts",
-      "line": 46
+      "line": 47
     },
     {
       "name": "MealNutritionSidebarComponent",
@@ -4788,7 +4788,7 @@
       "role": "Component",
       "selector": "fd-meal-photo-nutrition-summary",
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-nutrition-summary/meal-photo-nutrition-summary.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "MealPhotoRecognitionDialogComponent",
@@ -4809,7 +4809,7 @@
       "role": "Component",
       "selector": "fd-meal-photo-result-table",
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-result-table/meal-photo-result-table.ts",
-      "line": 16
+      "line": 18
     },
     {
       "name": "MealPhotoUploadPanelComponent",
@@ -5068,7 +5068,7 @@
       "role": "Component",
       "selector": "fd-product-detail",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail/product-detail.ts",
-      "line": 38
+      "line": 40
     },
     {
       "name": "FavoriteProductRowComponent",
@@ -5558,7 +5558,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/public/lib/public-auth-dialog.service.ts",
-      "line": 21
+      "line": 22
     },
     {
       "name": "PublicAuthNavigationService",
@@ -5579,7 +5579,7 @@
       "role": "Component",
       "selector": "fd-not-found",
       "path": "FoodDiary.Web.Client/src/app/features/public/pages/not-found/not-found.ts",
-      "line": 13
+      "line": 16
     },
     {
       "name": "PrivacyPolicyComponent",
@@ -5663,7 +5663,7 @@
       "role": "Component",
       "selector": "fd-recipe-detail-summary",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-summary/recipe-detail-summary.ts",
-      "line": 18
+      "line": 19
     },
     {
       "name": "RecipeDetailComponent",
@@ -7942,16 +7942,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4108,
-      "russianProperties": 4108,
+      "englishProperties": 4122,
+      "russianProperties": 4122,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1229,
-      "russianProperties": 1229,
+      "englishProperties": 1230,
+      "russianProperties": 1230,
       "countsMatch": true
     },
     {

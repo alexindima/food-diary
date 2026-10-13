@@ -13,6 +13,7 @@ import { normalizeQualityScore } from '../../../../../shared/lib/quality-score.u
 import type { Product } from '../../../../../shared/models/product.data';
 import { ChartColorsService } from '../../../../../shared/theme/chart-colors.service';
 import { QuickMealService } from '../../../../meals/contracts/quick-meal';
+import { PublicProductGalleryComponent } from '../../../components/public-product-gallery/public-product-gallery';
 import { ProductDetailFacade } from '../../../lib/detail/product-detail.facade';
 import { ProductDetailActionsComponent } from '../product-detail-actions/product-detail-actions';
 import { buildProductDetailNutritionViewModel, type ProductDetailMacroBlock } from '../product-detail-lib/product-detail-nutrition.mapper';
@@ -33,6 +34,7 @@ import { ProductDetailSummaryComponent } from '../product-detail-summary/product
 
         ProductDetailSummaryComponent,
         ProductDetailActionsComponent,
+        PublicProductGalleryComponent,
     ],
 })
 export class ProductDetailComponent {
@@ -48,6 +50,13 @@ export class ProductDetailComponent {
     protected readonly isDuplicateInProgress = this.productDetailFacade.isDuplicateInProgress;
 
     protected product: Product;
+    protected readonly images = computed(() => [
+        ...new Set(
+            [this.product.imageUrl, ...(this.product.images ?? []).map(image => image.imageUrl)].filter(
+                (url): url is string => typeof url === 'string' && url.trim().length > 0,
+            ),
+        ),
+    ]);
     protected readonly productTypeKey: string;
     protected readonly baseUnitKey: string;
 

@@ -65,8 +65,8 @@ export class MealService {
         );
     }
 
-    public create(data: MealManageDto): Observable<Meal> {
-        return this.sdk.client.postMeals({ version: this.sdk.version, createMealHttpRequest: mealRequestToSdk(data) }).pipe(
+    public create(data: MealManageDto, idempotencyKey: string = crypto.randomUUID()): Observable<Meal> {
+        return this.sdk.client.postMeals({ version: this.sdk.version, idempotencyKey, createMealHttpRequest: mealRequestToSdk(data) }).pipe(
             map(response => mealFromSdk(response)),
             catchError((error: unknown) => rethrowApiError('Create meal error', error)),
         );

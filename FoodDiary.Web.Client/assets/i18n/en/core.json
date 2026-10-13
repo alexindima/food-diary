@@ -374,7 +374,8 @@
             "INVALID": "The reset link is invalid or expired.",
             "ERROR_GENERIC": "We couldn't reset the password. Please try again.",
             "BACK_TO_LOGIN": "Back to login",
-            "RESEND_COOLDOWN": "You can resend in {{ seconds }}s."
+            "RESEND_COOLDOWN": "You can resend in {{ seconds }}s.",
+            "REQUEST_NEW_LINK": "Request a new link"
         }
     },
     "SHARED": {

@@ -3,12 +3,12 @@
   "summary": {
     "components": 497,
     "componentsWithoutDirectSpecs": 132,
-    "inputs": 1601,
+    "inputs": 1602,
     "outputs": 553,
     "apiCalls": 315,
     "templatesWithTranslations": 359,
-    "translationKeys": 2144,
-    "consumerEdges": 1260,
+    "translationKeys": 2151,
+    "consumerEdges": 1261,
     "consumedComponents": 316,
     "unconsumedComponents": 180
   },
@@ -965,6 +965,11 @@
         {
           "name": "initialMode",
           "type": "'login' | 'register'",
+          "required": false
+        },
+        {
+          "name": "initialPasswordReset",
+          "type": "",
           "required": false
         },
         {
@@ -17621,7 +17626,7 @@
       "urlExpression": "/api/v{version}/meals",
       "path": "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
       "line": 69,
-      "publicMethod": "create",
+      "publicMethod": "getById",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.meals",
       "resolvedUrlExpression": "/api/v{version}/meals"
@@ -20307,6 +20312,7 @@
         "AUTH.RESET.CONFIRM_PASSWORD_PLACEHOLDER",
         "AUTH.RESET.PASSWORD",
         "AUTH.RESET.PASSWORD_PLACEHOLDER",
+        "AUTH.RESET.REQUEST_NEW_LINK",
         "AUTH.RESET.SAVE",
         "AUTH.RESET.SUBTITLE",
         "AUTH.RESET.TITLE",
@@ -21808,6 +21814,10 @@
       "keys": [
         "COMMON.DELETE",
         "MEAL_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM",
+        "MEAL_MANAGE.PHOTO_AI_DIALOG.FIELD_AMOUNT",
+        "MEAL_MANAGE.PHOTO_AI_DIALOG.FIELD_NAME",
+        "MEAL_MANAGE.PHOTO_AI_DIALOG.FIELD_RESOLUTION",
+        "MEAL_MANAGE.PHOTO_AI_DIALOG.FIELD_UNIT",
         "MEAL_MANAGE.PHOTO_AI_DIALOG.ROW_INVALID"
       ]
     },
@@ -22738,6 +22748,7 @@
         "RECIPE_LIST.FILTERS_TITLE",
         "RECIPE_LIST.FILTER_APPLY_BUTTON",
         "RECIPE_LIST.FILTER_CALORIES_FROM",
+        "RECIPE_LIST.FILTER_CALORIES_ORDER_ERROR",
         "RECIPE_LIST.FILTER_CALORIES_TO",
         "RECIPE_LIST.FILTER_CATEGORY",
         "RECIPE_LIST.FILTER_DETAILS",
@@ -23396,6 +23407,7 @@
         "NOTIFICATIONS.EMPTY_TEXT",
         "NOTIFICATIONS.EMPTY_TITLE",
         "NOTIFICATIONS.MARK_ALL_READ",
+        "NOTIFICATIONS.MARK_ALL_READ_ERROR",
         "NOTIFICATIONS.TITLE"
       ]
     },
@@ -23684,7 +23696,6 @@
       "feature": "statistics",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-body-trend-card/statistics-body-trend-card.html",
       "keys": [
-        "STATISTICS.DASHBOARD.BODY.CHANGE",
         "STATISTICS.DASHBOARD.BODY.DATA_COMPLETENESS",
         "STATISTICS.DASHBOARD.BODY.DATA_COMPLETENESS_HINT",
         "STATISTICS.DASHBOARD.BODY.GOAL_EMPTY",
@@ -23764,6 +23775,7 @@
         "GENERAL.UNITS.KCAL",
         "STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_CALORIES",
         "STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_RECORDED_DAYS",
+        "STATISTICS.DASHBOARD.OVERVIEW.BASE_GOAL_HINT",
         "STATISTICS.DASHBOARD.OVERVIEW.COMPLETENESS_HINT",
         "STATISTICS.DASHBOARD.OVERVIEW.DAYS",
         "STATISTICS.DASHBOARD.OVERVIEW.DIARY_COMPLETENESS",
@@ -25173,6 +25185,7 @@
       "inputsUsed": [
         "initialAdminReturnUrl",
         "initialMode",
+        "initialPasswordReset",
         "initialReturnUrl",
         "useRouting"
       ],
@@ -28255,7 +28268,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "auth",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/password-reset/password-reset.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
         "disabled",
         "disabledReason",
@@ -31067,8 +31080,7 @@
         "appearance",
         "locale",
         "markers",
-        "max",
-        "min"
+        "max"
       ],
       "outputsHandled": [
         "valueChange"
@@ -35861,6 +35873,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.html",
       "occurrences": 3,
       "inputsUsed": [
+        "error",
         "label",
         "size",
         "type",
@@ -41553,6 +41566,19 @@
       "occurrences": 1,
       "inputsUsed": [
         "recipe"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "PublicProductGalleryComponent",
+      "selector": "fd-public-product-gallery",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/products/components/public-product-gallery/public-product-gallery.ts",
+      "consumerFeature": "products",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail/product-detail.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "images",
+        "name"
       ],
       "outputsHandled": []
     },

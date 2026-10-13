@@ -58,6 +58,9 @@ export class StatisticsBodyTrendCardComponent {
         { value: 'waist', labelKey: 'STATISTICS.DASHBOARD.BODY.WAIST' },
     ];
     protected readonly metric = computed<StatisticsBodyMetricData>(() => this.data()[this.selectedMetric()]);
+    protected readonly changeLabelKey = computed(
+        () => `STATISTICS.DASHBOARD.BODY.CHANGE_${new Intl.PluralRules(this.locale()).select(this.metric().timeframeDays).toUpperCase()}`,
+    );
     protected readonly displayMetric = computed<StatisticsBodyMetricData>(() => {
         const metric = this.metric();
         return {

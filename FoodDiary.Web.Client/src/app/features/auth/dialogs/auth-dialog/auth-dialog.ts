@@ -30,4 +30,5 @@ type AuthDialogData = {
     returnUrl?: string | null;
     adminReturnUrl?: string | null;
     messageKey?: string;
+    requestPasswordReset?: boolean;
 };

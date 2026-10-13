@@ -1,7 +1,7 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormRoot, max, min, required } from '@angular/forms/signals';
+import { form, FormRoot, max, min, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
@@ -114,6 +114,7 @@ export class RecipeManageComponent implements UnsavedEditor {
         min(path.cookTime, 1);
         required(path.servings);
         min(path.servings, 1);
+        validate(path.servings, ({ value }) => (Number.isInteger(value()) ? undefined : { kind: 'integer' }));
         required(path.visibility);
         min(path.manualCalories, 0);
         max(path.manualCalories, MANUAL_NUTRITION_MAX_CALORIES);

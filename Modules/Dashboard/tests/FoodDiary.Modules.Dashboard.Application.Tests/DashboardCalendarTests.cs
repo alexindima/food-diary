@@ -68,6 +68,32 @@ public sealed class DashboardCalendarTests {
     }
 
     [Theory]
+    [InlineData("Asia/Tbilisi", "2026-10-12", "2026-10-11T20:00:00Z", "2026-10-12T20:00:00Z")]
+    [InlineData("America/Los_Angeles", "2026-03-08", "2026-03-08T08:00:00Z", "2026-03-09T07:00:00Z")]
+    [InlineData("Asia/Kathmandu", "2026-10-12", "2026-10-11T18:15:00Z", "2026-10-12T18:15:00Z")]
+    public async Task ClientCalendar_UsesSavedClientZoneInsteadOfCallerZone(string zoneId, string dateText, string startUtc, string endUtc) {
+        var user = User.Create("client-calendar@example.com", "hash");
+        var profile = new DashboardUserContextModel(Id: user.Id.Value, Email: null, Language: "en", DashboardLayoutJson: null,
+            DesiredWeightKg: null, DesiredWaistCm: null, HydrationGoal: null, WaterGoal: null, ProteinTarget: null,
+            FatTarget: null, CarbTarget: null, FiberTarget: null, CalorieSchedule: default, TimeZoneId: zoneId);
+        IDashboardUserContextService users = Substitute.For<IDashboardUserContextService>();
+        users.GetAccessibleDashboardUserAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Result.Success(profile));
+        var loader = new DashboardSectionDataLoader(Substitute.For<ISender>(), users, Substitute.For<IDashboardReadService>());
+        var date = DateTime.ParseExact(dateText, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+        var request = new DashboardSnapshotRequest(user.Id.Value, date, DateTo: null, Locale: "en", TrendDays: 7,
+            Page: 1, PageSize: 10, TimeZoneId: "UTC", UseUserTimeZone: true);
+
+        DashboardBuildContext result = ResultAssert.Success(await loader.CreateBuildContextAsync(request, CancellationToken.None));
+
+        Assert.Multiple(
+            () => Assert.Equal(DateTime.Parse(startUtc, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal), result.DayStart),
+            () => Assert.Equal(DateTime.Parse(endUtc, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal).AddTicks(-1), result.DayEnd),
+            () => Assert.Equal(date, result.Calendar.Date),
+            () => Assert.Equal(zoneId, result.Calendar.TimeZone.Id));
+        await users.Received(1).GetAccessibleDashboardUserAsync(user.Id, Arg.Any<CancellationToken>());
+    }
+
+    [Theory]
     [MemberData(nameof(CalendarCases))]
     public async Task Context_SeparatesCalendarDateFromInstant_AndForwardsDateToSections(string zoneId, string dateText) {
         var day = DateOnly.ParseExact(dateText, "yyyy-MM-dd", CultureInfo.InvariantCulture);

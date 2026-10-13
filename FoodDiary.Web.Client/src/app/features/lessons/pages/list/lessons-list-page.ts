@@ -81,7 +81,7 @@ export class LessonsListPageComponent {
             { value: 'shortest', label: this.translateService.instant('LESSONS.SORT_SHORTEST') },
         ];
     });
-    protected readonly nextLesson = computed(() => this.lessons().find(lesson => !lesson.isRead) ?? this.lessons().at(0) ?? null);
+    protected readonly nextLesson = computed(() => this.lessons().find(lesson => !lesson.isRead) ?? null);
     protected readonly recommendedLesson = computed(() => {
         const nextLesson = this.nextLesson();
         return this.lessons().find(lesson => !lesson.isRead && lesson.id !== nextLesson?.id) ?? nextLesson;

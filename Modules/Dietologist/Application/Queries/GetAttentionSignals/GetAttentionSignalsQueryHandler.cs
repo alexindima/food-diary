@@ -77,7 +77,7 @@ public sealed class GetAttentionSignalsQueryHandler(
             AddInactivitySignal(signals, client, metrics, Math.Clamp(query.InactivityDays, 1, 30), nowUtc);
         }
 
-        if (client.Permissions.ShareStatistics) {
+        if (client.Permissions.ShareStatistics && client.Permissions.ShareGoals) {
             AddCalorieSignal(
                 signals,
                 client,

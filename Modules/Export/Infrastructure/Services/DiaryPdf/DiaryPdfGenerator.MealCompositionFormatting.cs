@@ -60,7 +60,7 @@ internal sealed partial class DiaryPdfGenerator {
         }
 
         string amountUnit = isRecipe ? report.Texts.ServingUnit : FormatProductUnit(item, report);
-        string amount = $"{FormatNumber(item.Amount, isRecipe ? 1 : 0, report.Culture)} {amountUnit}";
+        string amount = $"{item.Amount.ToString("G", report.Culture)} {amountUnit}";
         MealCompositionNutrition nutrition = CalculateMealItemNutrition(item);
 
         return new MealCompositionItem(
@@ -80,7 +80,7 @@ internal sealed partial class DiaryPdfGenerator {
     private static MealCompositionItem FormatMealAiItem(MealAiItemProjectionReadModel item, DiaryReportData report) {
         string name = ResolveAiItemName(item, report);
         string unit = FormatUnit(item.Unit, report);
-        string amount = $"{FormatNumber(item.Amount, 0, report.Culture)} {unit}";
+        string amount = $"{item.Amount.ToString("G", report.Culture)} {unit}";
 
         return new MealCompositionItem(
             Label: $"{amount} {name}",

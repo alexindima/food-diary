@@ -374,7 +374,8 @@
             "INVALID": "The reset link is invalid or expired.",
             "ERROR_GENERIC": "We couldn't reset the password. Please try again.",
             "BACK_TO_LOGIN": "Back to login",
-            "RESEND_COOLDOWN": "You can resend in {{ seconds }}s."
+            "RESEND_COOLDOWN": "You can resend in {{ seconds }}s.",
+            "REQUEST_NEW_LINK": "Request a new link"
         }
     },
     "SHARED": {
@@ -613,7 +614,8 @@
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_TEXT": "This help button restarts the recipes tour whenever you need a reminder."
         },
-        "FAVORITE_ERROR": "Could not update favorites. Please try again."
+        "FAVORITE_ERROR": "Could not update favorites. Please try again.",
+        "FILTER_CALORIES_ORDER_ERROR": "The minimum calories must not exceed the maximum."
     },
     "RECIPE_DETAIL": {
         "CATEGORY": "Category",
@@ -1028,7 +1030,11 @@
             "RESOLUTION_REJECTED": "Rejected",
             "RESOLUTION_REPLACED": "Replaced",
             "RESOLUTION_SPLIT": "Split",
-            "RESOLUTION_MERGED": "Merged"
+            "RESOLUTION_MERGED": "Merged",
+            "FIELD_NAME": "Name, item {{row}}",
+            "FIELD_AMOUNT": "Quantity, item {{row}}",
+            "FIELD_UNIT": "Unit, item {{row}}",
+            "FIELD_RESOLUTION": "Status, item {{row}}"
         },
         "ITEM_CARD_PLACEHOLDER": "Entry #{{index}}",
         "ITEM_CARD_META": {
@@ -1105,7 +1111,8 @@
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this form."
         },
-        "OPTIONAL_MEDIA": "Photo and comment (optional)"
+        "OPTIONAL_MEDIA": "Photo and comment (optional)",
+        "MAX_AMOUNT_ERROR": "Quantity must be no more than {{max}}."
     },
     "QUICK_MEAL": {
         "TITLE": "Meal draft",
@@ -4639,20 +4646,21 @@
                 "DAYS_WITHIN_GOAL": "{{current}} of {{total}} days within goal",
                 "AVERAGE_CALORIES": "Average calorie goal completion",
                 "AVERAGE_PER_DAY": "Average per day",
-                "VS_GOAL": "compared with your goal",
+                "VS_GOAL": "Against the base daily goal",
                 "NUTRIENTS": "Average nutrient progress",
                 "DIARY_COMPLETENESS": "Diary completed",
                 "DAYS": "days",
                 "COMPLETENESS_HINT": "Days without entries are excluded from averages. Recorded days may still be incomplete; these totals describe your diary, not your diet quality.",
                 "RECORDED_DAYS": "Days with entries: {{current}} of {{total}}",
-                "AVERAGE_RECORDED_DAYS": "Average over days with entries ({{count}})"
+                "AVERAGE_RECORDED_DAYS": "Average over days with entries ({{count}})",
+                "BASE_GOAL_HINT": "Comparisons use the base daily goal. Weekday-specific targets are not included here."
             },
             "TREND": {
                 "TITLE": "Nutrition trend",
                 "CHART_TYPE_LABEL": "Chart type",
                 "CHART_BARS": "Bars",
                 "CHART_LINE": "Line",
-                "GOAL": "Goal {{value}}",
+                "GOAL": "Base daily goal: {{value}} kcal",
                 "NO_ENTRY": "No diary entry",
                 "INSIGHTS_TITLE": "What changed",
                 "PERCENT_UNIT": "%",
@@ -4727,7 +4735,11 @@
                 "OPEN_WEIGHT_HISTORY": "Open weight history",
                 "OPEN_WAIST_HISTORY": "Open waist history",
                 "EMPTY_WEIGHT": "Add weight measurements to see the trend.",
-                "EMPTY_WAIST": "Add waist measurements to see the trend."
+                "EMPTY_WAIST": "Add waist measurements to see the trend.",
+                "CHANGE_ONE": "Change over {{days}} day",
+                "CHANGE_FEW": "Change over {{days}} days",
+                "CHANGE_MANY": "Change over {{days}} days",
+                "CHANGE_OTHER": "Change over {{days}} days"
             }
         },
         "RANGES": {
@@ -4911,7 +4923,8 @@
         "TEXT_AMOUNT": "Amount",
         "TEXT_NOT_CALCULATED": "Not included in nutrition calculations",
         "USE_AS_TEXT": "Use “{{name}}” as text",
-        "INGREDIENT_PICKER_TITLE": "Choose an ingredient"
+        "INGREDIENT_PICKER_TITLE": "Choose an ingredient",
+        "SERVINGS_INTEGER_ERROR": "Enter a whole number of servings."
     },
     "PRODUCT_MANAGE": {
         "SAVE_ERROR": "Could not save the product. Your changes are still here; please try again.",
@@ -5636,7 +5649,7 @@
         "DIETOLOGIST_PERMISSION_STATISTICS": "Calories and nutrition statistics",
         "DIETOLOGIST_PERMISSION_WEIGHT": "Weight history",
         "DIETOLOGIST_PERMISSION_WAIST": "Waist history",
-        "DIETOLOGIST_PERMISSION_GOALS": "Nutrition goals",
+        "DIETOLOGIST_PERMISSION_GOALS": "Nutrition, water and body goals",
         "DIETOLOGIST_PERMISSION_HYDRATION": "Hydration tracking",
         "DIETOLOGIST_PERMISSION_FASTING": "Fasting",
         "DIETOLOGIST_PROFILE_DISABLE_TITLE": "Disable profile data?",
@@ -5704,7 +5717,8 @@
         "EMAIL_CONFIRMED": "Email confirmed. You can use it with a password to sign in.",
         "EMAIL_UNCONFIRMED": "Email is not confirmed yet.",
         "ACTIVITY_DEFAULT_HINT": "Choose the activity level that matches your usual week. It is used to estimate your daily energy needs.",
-        "BIRTH_DATE_INVALID": "Enter a valid date of birth that is not in the future."
+        "BIRTH_DATE_INVALID": "Enter a valid date of birth that is not in the future.",
+        "CHANGE_PASSWORD_SAME_ERROR": "The new password must differ from your current password."
     },
     "SIDEBAR": {
         "COLLAPSE": "Collapse navigation",
@@ -5763,7 +5777,8 @@
         "RECOMMENDATION_BADGE": "Recommendation",
         "TASK_BADGE": "Task",
         "TASK_ACTION": "Open tasks",
-        "RECOMMENDATION_ACTION": "Open recommendation"
+        "RECOMMENDATION_ACTION": "Open recommendation",
+        "MARK_ALL_READ_ERROR": "Could not mark notifications as read. Please try again."
     },
     "RECOMMENDATIONS": {
         "EYEBROW": "Dietologist",
