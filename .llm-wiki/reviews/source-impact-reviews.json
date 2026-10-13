@@ -574,13 +574,13 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/failures.json",
-          "sha256": "bb12bee960e6968870db38b303ff903e6136159efe5f2cc55d21fe18ee42f896"
+          "sha256": "58377c7ae8a3b479c0f8be15208202ceb70e8f7d4d457a675709ce864766a594"
         }
       ],
-      "reason": "Failure-knowledge workflow remains current; the new entry follows the existing verified symptom/cause/fix/verification schema.",
+      "reason": "Scoped, verified calendar fixture guidance: CI on4021fe090 and Docker reproduction fail during registration with the past clock. Normal-clock registration passes focused1/1 and full API280/280, preserving the domain expiry invariant, real weekly validation and persisted calendar labels. No production changes; Linux verification follows in CI.",
       "baseRef": "HEAD",
-      "gitHead": "c05f99edfa00eb4e1b8396fa8e599481ddc6adae",
-      "reviewedAtUtc": "2026-08-28T05:26:31.1198271Z"
+      "gitHead": "4021fe090896a93cd0d099dc814e811e2c7aa57c",
+      "reviewedAtUtc": "2026-10-13T09:30:31.2911515Z"
     },
     {
       "pageId": "workflow-failure-prediction",

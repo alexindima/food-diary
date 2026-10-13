@@ -2,6 +2,21 @@
   "schemaVersion": 1,
   "entries": [
     {
+      "id": "calendar-fixture-registration-clock",
+      "symptom": "Weekly calendar integration test returns HTTP 500 during user registration before reaching calendar validation; it passes early in the week and fails later.",
+      "cause": "The fixture replaces the whole authentication host TimeProvider with past Sunday at 20:30 UTC. Registration computes email-verification expiry 24 hours later, while User.SetEmailConfirmationToken uses DomainTime.UtcNow, defaulting to TimeProvider.System, and rejects an already expired expiry. Once the execution day passes that expiry, authentication setup fails before the calendar scenario. The unchanged baseline was green on Monday and failed on Tuesday; MailRelay logging is outside this request path.",
+      "fix": "Register through the ordinary factory host with its current clock, then configure the separate clocked host only for weekly calendar requests. Use the normally issued access token; keep real expiry validation and all calendar date/persistence assertions.",
+      "pathPatterns": [
+        "^Hosts/tests/FoodDiary.Web.Api.IntegrationTests/WeeklyGoalCalendarValidationIntegrationTests\\.cs$"
+      ],
+      "verification": [
+        "CI run 38370299779 integration-3 failed at registration line 37 on 4021fe090; other jobs passed.",
+        "Focused real PostgreSQL/Docker reproduction failed 1/1 before setup isolation and passed 1/1 after isolation.",
+        "The complete API integration project passed 280/280 without skips after the fixture fix.",
+        "Root cause traced from RegisterCommandHandler now+24h through User.SetEmailConfirmationToken to EnsureFutureUtc using DomainTime.UtcNow, defaulting to TimeProvider.System."
+      ]
+    },
+    {
       "id": "git-commit-hook-wrapper-timeout",
       "symptom": "The git commit command wrapper times out while pre-commit validation is still running.",
       "cause": "The repository pre-commit hook runs formatting, linters, and tests and can outlive a short command timeout; the commit may already have completed.",
