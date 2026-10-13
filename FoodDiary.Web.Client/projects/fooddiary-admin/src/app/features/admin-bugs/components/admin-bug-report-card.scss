@@ -1,0 +1,53 @@
+:host {
+    display: block;
+}
+.report-card {
+    display: grid;
+    gap: var(--fd-space-sm);
+    overflow-wrap: anywhere;
+    h2 {
+        margin: 0;
+        font-size: var(--fd-text-title-sm-size);
+    }
+    p {
+        margin: 0;
+    }
+    &__heading {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: start;
+        justify-content: space-between;
+        gap: var(--fd-space-sm);
+    }
+    &__date,
+    &__id {
+        color: var(--fd-color-text-muted);
+        font-size: var(--fd-text-body-sm-size);
+    }
+    &__preview,
+    &__full-summary {
+        max-width: 90ch;
+        line-height: var(--fd-text-body-line-height);
+    }
+    &__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--fd-space-md);
+    }
+    &__details {
+        border-top: var(--fd-border-muted);
+        padding-top: var(--fd-space-sm);
+    }
+    summary {
+        cursor: pointer;
+        color: var(--fd-color-text-muted);
+    }
+    &__detail-body {
+        display: grid;
+        gap: var(--fd-space-sm);
+        margin-top: var(--fd-space-md);
+    }
+    &__full-summary {
+        white-space: pre-wrap;
+    }
+}

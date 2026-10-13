@@ -1,0 +1,28 @@
+:host {
+    display: grid;
+    gap: var(--fd-space-page-card-gap);
+}
+.problem-list,
+.audit-group {
+    display: grid;
+    gap: var(--fd-space-page-card-gap);
+}
+.problem-count {
+    margin: 0;
+    color: var(--fd-color-text-muted);
+}
+.audit-group__heading {
+    display: grid;
+    gap: var(--fd-space-xs);
+}
+.audit-group h2,
+.audit-group p {
+    margin: 0;
+}
+.audit-group h2 {
+    font-size: var(--fd-text-title-sm-size);
+}
+.audit-group__period {
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-body-sm-size);
+}

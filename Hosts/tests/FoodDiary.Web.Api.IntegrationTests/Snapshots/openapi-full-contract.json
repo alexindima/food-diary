@@ -21372,6 +21372,12 @@
           "Nullable": false
         },
         {
+          "Name": "shortSummary",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
           "Name": "source",
           "Required": false,
           "Type": "string",
@@ -21398,6 +21404,12 @@
         },
         {
           "Name": "summary",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "title",
           "Required": false,
           "Type": "string",
           "Nullable": true

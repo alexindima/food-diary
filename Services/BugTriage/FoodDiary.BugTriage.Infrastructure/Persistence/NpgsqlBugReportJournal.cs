@@ -11,11 +11,11 @@ public sealed class NpgsqlBugReportJournal(NpgsqlDataSource dataSource, IAuditRu
             with reports as (
                 select id, source_message_id, received_at_utc, subject, status, attempt, summary, merge_request_url,
                     expires_at_utc, 'email'::text as source, null::uuid as audit_run_id,
-                    null::timestamptz as audit_from_utc, null::timestamptz as audit_to_utc
+                    null::timestamptz as audit_from_utc, null::timestamptz as audit_to_utc, report_title, short_summary
                 from bugtriage_reports
                 union all
                 select f.id, null::uuid, a.started_at_utc, f.title, f.status, 1, f.summary, f.merge_request_url,
-                    a.expires_at_utc, 'logs'::text, a.id, a.from_utc, a.to_utc
+                    a.expires_at_utc, 'logs'::text, a.id, a.from_utc, a.to_utc, null::text, null::text
                 from bugtriage_audit_findings f join bugtriage_audit_runs a on a.id = f.audit_run_id
             )
             """;
@@ -25,7 +25,8 @@ public sealed class NpgsqlBugReportJournal(NpgsqlDataSource dataSource, IAuditRu
                 and (@id is null or id = @id)
                 and (@source = '' or source = @source)
                 and (@status = '' or (case when expires_at_utc <= @now then 'expired' else status end) = @status)
-                and (@search = '' or (expires_at_utc > @now and strpos(lower(subject), lower(@search)) > 0))
+                and (@search = '' or (expires_at_utc > @now and
+                    (strpos(lower(subject), lower(@search)) > 0 or strpos(lower(report_title), lower(@search)) > 0)))
             """;
         const string projection = """
             select id, source_message_id, received_at_utc,
@@ -33,7 +34,9 @@ public sealed class NpgsqlBugReportJournal(NpgsqlDataSource dataSource, IAuditRu
                 case when expires_at_utc > @now then status else 'expired' end, attempt,
                 case when expires_at_utc > @now then summary else null end,
                 case when expires_at_utc > @now then merge_request_url else null end,
-                expires_at_utc <= @now, source, audit_run_id, audit_from_utc, audit_to_utc
+                expires_at_utc <= @now, source, audit_run_id, audit_from_utc, audit_to_utc,
+                case when expires_at_utc > @now then report_title else null end,
+                case when expires_at_utc > @now then short_summary else null end
             """;
         NpgsqlCommand command = dataSource.CreateCommand(rows + " select count(*) " + predicate + "; " + rows + " " + projection + " " + predicate + " order by received_at_utc desc, id desc limit @limit offset @offset");
         await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
@@ -58,6 +61,8 @@ public sealed class NpgsqlBugReportJournal(NpgsqlDataSource dataSource, IAuditRu
                 await reader.IsDBNullAsync(6, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(6),
                 await reader.IsDBNullAsync(7, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(7), reader.GetBoolean(8)) {
                 Source = reader.GetString(9),
+                Title = await reader.IsDBNullAsync(13, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(13),
+                ShortSummary = await reader.IsDBNullAsync(14, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(14),
                 AuditRunId = await reader.IsDBNullAsync(10, cancellationToken).ConfigureAwait(false) ? null : reader.GetGuid(10),
                 AuditFromUtc = await reader.IsDBNullAsync(11, cancellationToken).ConfigureAwait(false) ? null :
                     await reader.GetFieldValueAsync<DateTimeOffset>(11, cancellationToken).ConfigureAwait(false),

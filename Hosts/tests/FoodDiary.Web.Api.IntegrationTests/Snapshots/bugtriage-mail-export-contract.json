@@ -1,12 +1,12 @@
 {
   "claim": ["id", "sourceMessageId", "subject", "textBody", "leaseToken", "leaseExpiresAtUtc", "attempt", "contentExpiresAtUtc"],
-  "completion": ["leaseToken", "outcome", "summary", "mergeRequestUrl"],
+  "completion": ["leaseToken", "outcome", "summary", "mergeRequestUrl", "title", "shortSummary"],
   "summary": ["id", "status", "attempt", "summary", "mergeRequestUrl"],
   "mailExportEntry": ["id", "receivedAtUtc", "contentAvailable"],
   "auditStart": ["fromUtc", "toUtc"],
   "auditCompletion": ["outcome", "summary", "findings"],
   "auditFinding": ["id", "title", "outcome", "summary", "mergeRequestUrl"],
   "journal": ["items", "totalItems", "latestAudit"],
-  "journalEntry": ["id", "sourceMessageId", "receivedAtUtc", "subject", "status", "attempt", "summary", "mergeRequestUrl", "contentExpired", "source", "auditRunId", "auditFromUtc", "auditToUtc"],
+  "journalEntry": ["id", "sourceMessageId", "receivedAtUtc", "subject", "status", "attempt", "summary", "mergeRequestUrl", "contentExpired", "source", "title", "shortSummary", "auditRunId", "auditFromUtc", "auditToUtc"],
   "latestAudit": ["id", "fromUtc", "toUtc", "startedAtUtc", "completedAtUtc", "status", "summary", "findingCount", "contentExpired", "isStale", "lastSuccessfulAtUtc"]
 }

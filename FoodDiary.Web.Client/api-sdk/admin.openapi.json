@@ -858,6 +858,10 @@
                         "format": "date-time",
                         "type": "string"
                     },
+                    "shortSummary": {
+                        "nullable": true,
+                        "type": "string"
+                    },
                     "source": {
                         "type": "string"
                     },
@@ -873,6 +877,10 @@
                         "type": "string"
                     },
                     "summary": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "title": {
                         "nullable": true,
                         "type": "string"
                     }

@@ -62,6 +62,8 @@ public sealed class AdminJournalControllerTests {
         var entry = new AdminBugReportEntry(Guid.NewGuid(), SourceMessageId: null, run.StartedAtUtc, "Finding", "needs_information", 1,
             "Evidence", MergeRequestUrl: null, ContentExpired: false) {
             Source = "logs",
+            Title = "Descriptive finding",
+            ShortSummary = "Short evidence for review",
             AuditRunId = run.Id,
             AuditFromUtc = run.FromUtc,
             AuditToUtc = run.ToUtc,

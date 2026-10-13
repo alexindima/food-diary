@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2550,
-    "symbols": 826,
+    "typescriptFiles": 2553,
+    "symbols": 828,
     "routes": 108,
     "features": 46,
     "specs": 736,
     "localeFiles": 5,
     "roles": {
-      "Component": 490,
+      "Component": 492,
       "Directive": 15,
       "Facade": 88,
       "Other": 34,
@@ -157,6 +157,8 @@
       "symbols": [
         "AdminAuditStatusComponent",
         "AdminBugReportCardComponent",
+        "AdminBugReportDetailsComponent",
+        "AdminBugReportListComponent",
         "AdminBugsFacade",
         "AdminBugsPageComponent",
         "AdminBugsService"
@@ -2350,7 +2352,21 @@
       "role": "Component",
       "selector": "fd-admin-bug-report-card",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-card.ts",
-      "line": 14
+      "line": 22
+    },
+    {
+      "name": "AdminBugReportDetailsComponent",
+      "role": "Component",
+      "selector": "fd-admin-bug-report-details",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-details.ts",
+      "line": 13
+    },
+    {
+      "name": "AdminBugReportListComponent",
+      "role": "Component",
+      "selector": "fd-admin-bug-report-list",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-list.ts",
+      "line": 17
     },
     {
       "name": "AdminBugsFacade",
@@ -7934,8 +7950,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1203,
-      "russianProperties": 1203,
+      "englishProperties": 1229,
+      "russianProperties": 1229,
       "countsMatch": true
     },
     {

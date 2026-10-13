@@ -19,6 +19,8 @@ export function adminBugReportFromSdk(response: AdminBugJournalEntryHttpResponse
     return {
         ...value,
         ...reportSourceFromSdk(value),
+        title: value.title ?? null,
+        shortSummary: value.shortSummary ?? null,
         summary: value.summary ?? null,
         mergeRequestUrl: value.mergeRequestUrl ?? null,
         id: adminId<'bug-report'>(value.id),

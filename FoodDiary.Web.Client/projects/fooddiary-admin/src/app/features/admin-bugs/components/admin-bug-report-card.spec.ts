@@ -1,20 +1,20 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import { expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminBugReportCardComponent } from './admin-bug-report-card';
 
-it('preserves the complete list query when opening a bug report', async () => {
+it('shows a descriptive heading as plain text with collapsed investigation details', () => {
     TestBed.configureTestingModule({ imports: [AdminBugReportCardComponent], providers: [provideRouter([]), provideTranslateTesting()] });
-    const router = TestBed.inject(Router);
-    await router.navigateByUrl('/?search=QA&status=failed&period=7d&page=2&extra=kept');
     const fixture = TestBed.createComponent(AdminBugReportCardComponent);
     fixture.componentRef.setInput('report', {
         id: 'qa-bug',
         sourceMessageId: 'qa-mail',
         receivedAtUtc: '2026-10-06T00:00:00Z',
         subject: 'QA report',
+        title: 'The Dynamics card cannot be hidden',
+        shortSummary: 'The fix has been prepared.',
         status: 'failed',
         attempt: 1,
         summary: 'QA',
@@ -23,11 +23,12 @@ it('preserves the complete list query when opening a bug report', async () => {
     });
     fixture.componentRef.setInput('pullRequestUrl', null);
     fixture.detectChanges();
-    const href = (fixture.nativeElement as HTMLElement).querySelector('h2 a')?.getAttribute('href');
-    expect(href).toBeTruthy();
-    const url = new URL(href ?? '', 'http://localhost');
-    expect(url.pathname).toBe('/bugs/qa-bug');
-    expect(Object.fromEntries(url.searchParams)).toEqual({ search: 'QA', status: 'failed', period: '7d', page: '2', extra: 'kept' });
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('h2')?.textContent).toBe('The Dynamics card cannot be hidden');
+    expect(element.querySelector('h2 a')).toBeNull();
+    expect(element.querySelector('.report-card__preview')?.textContent).toBe('The fix has been prepared.');
+    expect(element.querySelector('details')?.open).toBe(false);
+    expect(element.querySelector('a[href*="mail-inbox"]')?.textContent).toContain('ADMIN_BUGS.OPEN_EMAIL');
 });
 
 it('renders a log finding with its draft link and period without a link to a fictitious email', () => {
@@ -51,8 +52,29 @@ it('renders a log finding with its draft link and period without a link to a fic
     fixture.componentRef.setInput('pullRequestUrl', 'https://github.com/example/repo/pull/1');
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
-    expect(element.textContent).toContain('ADMIN_BUGS.SOURCE_LOGS');
-    expect(element.textContent).toContain('ADMIN_BUGS.AUDIT_WINDOW');
+    expect(element.textContent).toContain('ADMIN_BUGS.STATUS_DRAFT_READY');
     expect(element.querySelector('a[href*="mail-inbox"]')).toBeNull();
     expect(element.querySelector('a[target="_blank"]')?.getAttribute('href')).toBe('https://github.com/example/repo/pull/1');
+});
+
+it('does not promote an opaque ID to a title or expose expired display content', () => {
+    TestBed.configureTestingModule({ imports: [AdminBugReportCardComponent], providers: [provideRouter([]), provideTranslateTesting()] });
+    const fixture = TestBed.createComponent(AdminBugReportCardComponent);
+    fixture.componentRef.setInput('report', {
+        id: 'old-id',
+        source: 'email',
+        subject: '3b59c26a-9202-427a-84be-c0c867e16851',
+        title: '3b59c26a-9202-427a-84be-c0c867e16851',
+        shortSummary: null,
+        summary: 'Legacy investigation',
+        status: 'expired',
+        attempt: 1,
+        sourceMessageId: null,
+        receivedAtUtc: '2026-10-12T05:00:00Z',
+        contentExpired: true,
+    });
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('h2')?.textContent).toContain('ADMIN_BUGS.UNTITLED');
+    expect(element.textContent).not.toContain('Legacy investigation');
 });

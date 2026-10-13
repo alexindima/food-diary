@@ -17,9 +17,11 @@ export interface AdminBugJournalEntryHttpResponse {
     id?: string;
     mergeRequestUrl?: string | null;
     receivedAtUtc?: string;
+    shortSummary?: string | null;
     source?: string;
     sourceMessageId?: string | null;
     status?: string;
     subject?: string;
     summary?: string | null;
+    title?: string | null;
 }

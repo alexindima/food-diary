@@ -141,12 +141,27 @@ public sealed class ReportStoreTests : IAsyncLifetime {
         ReportLease first = Assert.Single(claims.OfType<ReportLease>());
         ReportLease? second = await _store.ClaimAsync(Now.AddMinutes(6), TimeSpan.FromMinutes(5), 3, CancellationToken.None);
         Assert.NotNull(second);
-        var completion = new ReportCompletion(ReportOutcome.DraftReady, "Regression tested", "https://github.com/example/repo/pull/1");
+        var completion = new ReportCompletion(ReportOutcome.DraftReady, "Regression tested", "https://github.com/example/repo/pull/1") {
+            Title = "Dynamics cannot be hidden",
+            ShortSummary = "A fix is prepared.",
+        };
         Assert.False(await _store.CompleteAsync(first.Id, first.LeaseToken, completion, Now.AddMinutes(6), CancellationToken.None));
         Assert.False(await _store.RenewAsync(first.Id, first.LeaseToken, Now.AddMinutes(6), TimeSpan.FromMinutes(5), CancellationToken.None));
         Assert.True(await _store.CompleteAsync(second.Id, second.LeaseToken, completion, Now.AddMinutes(6), CancellationToken.None));
         Assert.True(await _store.CompleteAsync(second.Id, second.LeaseToken, completion, Now.AddMinutes(7), CancellationToken.None));
         Assert.False(await _store.CompleteAsync(second.Id, second.LeaseToken, completion with { Summary = "Changed" }, Now.AddMinutes(7), CancellationToken.None));
+        Assert.False(await _store.CompleteAsync(second.Id, second.LeaseToken, completion with { Title = "Changed" }, Now.AddMinutes(7), CancellationToken.None));
+        var journal = new NpgsqlBugReportJournal(_dataSource, new NpgsqlAuditRunStore(_dataSource,
+            Microsoft.Extensions.Options.Options.Create(new FoodDiary.BugTriage.Infrastructure.Options.BugTriageOptions())));
+        BugReportJournalPage display = await journal.GetPageAsync(new BugReportJournalFilter(Page: 1, Limit: 25, FromUtc: null, ToUtc: null,
+            Status: null, Search: "Dynamics", Id: null), Now.AddMinutes(7), CancellationToken.None);
+        BugReportJournalEntry entry = Assert.Single(display.Items);
+        Assert.Equal(completion.Title, entry.Title);
+        Assert.Equal(completion.ShortSummary, entry.ShortSummary);
+        BugReportJournalEntry expired = Assert.Single((await journal.GetPageAsync(new BugReportJournalFilter(Page: 1, Limit: 25, FromUtc: null,
+            ToUtc: null, Status: null, Search: null, Id: null), Now.AddDays(2), CancellationToken.None)).Items);
+        Assert.Null(expired.Title);
+        Assert.Null(expired.ShortSummary);
         Assert.Null(await _store.ClaimAsync(Now.AddHours(1), TimeSpan.FromMinutes(5), 3, CancellationToken.None));
     }
 
@@ -159,18 +174,25 @@ public sealed class ReportStoreTests : IAsyncLifetime {
         Assert.Equal(Now.AddMinutes(3), lease.LeaseExpiresAtUtc);
         Assert.Equal(report.RawMime, await _store.GetMimeAsync(lease.Id, lease.LeaseToken, Now, CancellationToken.None));
         Assert.Null(await _store.GetMimeAsync(lease.Id, LeaseToken.New(), Now, CancellationToken.None));
+        Assert.True(await _store.CompleteAsync(lease.Id, lease.LeaseToken,
+            new ReportCompletion(ReportOutcome.NotConfirmed, "Private evidence", MergeRequestUrl: null) {
+                Title = "Private title",
+                ShortSummary = "Private preview",
+            }, Now, CancellationToken.None));
         await _store.PurgeAsync(Now.AddMinutes(4), CancellationToken.None);
         Assert.True(await _store.ContainsAsync(report.SourceMessageId, CancellationToken.None));
         await _store.ImportAsync(report, Now.AddDays(1), CancellationToken.None);
         Assert.Null(await _store.ClaimAsync(Now.AddMinutes(4), TimeSpan.FromMinutes(30), 3, CancellationToken.None));
         Assert.Null(await _store.GetMimeAsync(lease.Id, lease.LeaseToken, Now.AddMinutes(4), CancellationToken.None));
-        await using NpgsqlCommand command = _dataSource.CreateCommand("select subject, text_body, raw_mime, summary from bugtriage_reports");
+        await using NpgsqlCommand command = _dataSource.CreateCommand("select subject, text_body, raw_mime, summary, report_title, short_summary from bugtriage_reports");
         await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
         Assert.True(await reader.ReadAsync());
         Assert.Equal(string.Empty, reader.GetString(0));
         Assert.Equal(string.Empty, reader.GetString(1));
         Assert.True(await reader.IsDBNullAsync(2));
         Assert.True(await reader.IsDBNullAsync(3));
+        Assert.True(await reader.IsDBNullAsync(4));
+        Assert.True(await reader.IsDBNullAsync(5));
     }
 
     [Theory]

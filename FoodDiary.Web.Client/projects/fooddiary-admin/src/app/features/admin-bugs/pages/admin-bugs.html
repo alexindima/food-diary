@@ -1,37 +1,26 @@
-<form class="admin-filter-bar" [formRoot]="form">
-    <fd-admin-period [inline]="true" />
-    <fd-ui-input [label]="'ADMIN_BUGS.SEARCH' | translate" [formField]="form.search" />
-    <fd-ui-input [label]="'ADMIN_BUGS.STATUS' | translate" [formField]="form.status" />
-    <fd-ui-select
-        [label]="'ADMIN_BUGS.SOURCE_FILTER' | translate"
-        [formField]="form.source"
-        [options]="[
-            { value: '', label: 'ADMIN_COMMON.ALL' | translate },
-            { value: 'email', label: 'ADMIN_BUGS.SOURCE_EMAIL' | translate },
-            { value: 'logs', label: 'ADMIN_BUGS.SOURCE_LOGS' | translate },
-        ]"
-    />
-    <fd-ui-button type="submit">{{ 'ADMIN_CATALOG.APPLY' | translate }}</fd-ui-button>
-</form>
-@if (detailId()) {
-    <a routerLink="/bugs" queryParamsHandling="preserve">{{ 'ADMIN_BUGS.BACK' | translate }}</a>
-}
-@if (loading()) {
-    <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
-} @else if (failed()) {
-    <fd-admin-load-error (retry)="retry()" />
-} @else if (result(); as data) {
-    @if (!data.isConfigured) {
-        <p role="status">{{ 'ADMIN_BUGS.NOT_CONFIGURED' | translate }}</p>
-    } @else {
-        <fd-admin-audit-status [audit]="data.latestAudit ?? null" />
-        @if (data.items.length === 0) {
-            <p>{{ 'ADMIN_BUGS.EMPTY' | translate }}</p>
+<div class="problem-workspace">
+    <fd-ui-tabs appearance="wrap-compact" [tabs]="tabs" [selectedValue]="source()" (selectedValueChange)="selectSource($event)" />
+    <form class="admin-filter-bar" [formRoot]="form">
+        <fd-admin-period [inline]="true" />
+        <fd-ui-input [label]="'ADMIN_BUGS.SEARCH' | translate" [formField]="form.search" />
+        <fd-ui-select [label]="'ADMIN_BUGS.STATUS' | translate" [formField]="form.status" [options]="statusOptions()" />
+        <div class="problem-filter-actions">
+            <fd-ui-button type="submit">{{ 'ADMIN_CATALOG.APPLY' | translate }}</fd-ui-button>
+            <fd-ui-button fill="text" (click)="resetFilters()">{{ 'ADMIN_BUGS.RESET_FILTERS' | translate }}</fd-ui-button>
+        </div>
+    </form>
+    @if (detailId()) {
+        <a routerLink="/bugs" queryParamsHandling="preserve" [queryParams]="{ source: source() }">{{ 'ADMIN_BUGS.BACK' | translate }}</a>
+    }
+    @if (loading()) {
+        <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
+    } @else if (failed()) {
+        <fd-admin-load-error (retry)="retry()" />
+    } @else if (result(); as data) {
+        @if (!data.isConfigured) {
+            <p role="status">{{ 'ADMIN_BUGS.NOT_CONFIGURED' | translate }}</p>
         } @else {
-            <p>{{ 'ADMIN_BUGS.TOTAL' | translate }}: {{ data.totalItems }}</p>
-            @for (report of data.items; track report.id) {
-                <fd-admin-bug-report-card [report]="report" [pullRequestUrl]="safePullRequestUrl(report.mergeRequestUrl)" />
-            }
+            <fd-admin-bug-report-list [data]="data" [source]="source()" />
             <fd-ui-pagination
                 [length]="detailId() === null ? data.totalItems : 0"
                 [pageSize]="25"
@@ -40,4 +29,4 @@
             />
         }
     }
-}
+</div>

@@ -8,6 +8,8 @@ export type AdminBugReport = {
     auditToUtc: AdminUtcInstant | null;
     receivedAtUtc: AdminUtcInstant;
     subject: string;
+    title: string | null;
+    shortSummary: string | null;
     status: string;
     attempt: number;
     summary: string | null;

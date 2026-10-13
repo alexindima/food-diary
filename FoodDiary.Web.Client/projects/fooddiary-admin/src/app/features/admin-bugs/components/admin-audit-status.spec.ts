@@ -30,7 +30,8 @@ describe('Production audit status', () => {
         fixture.componentRef.setInput('audit', audit);
         fixture.detectChanges();
         expect((fixture.nativeElement as HTMLElement).textContent).toContain('ADMIN_BUGS.AUDIT_CLEAN');
-        expect((fixture.nativeElement as HTMLElement).textContent).toContain('ADMIN_BUGS.AUDIT_LAST_SUCCESS');
+        expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('ADMIN_BUGS.AUDIT_LAST_SUCCESS');
+        expect((fixture.nativeElement as HTMLElement).querySelector('details')?.open).toBe(false);
         expect(fixture.componentInstance['accent']()).toBe('success');
     });
 
