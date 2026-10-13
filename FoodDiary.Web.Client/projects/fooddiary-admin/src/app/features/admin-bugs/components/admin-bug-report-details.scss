@@ -1,0 +1,29 @@
+:host {
+    display: block;
+}
+.report-card__details {
+    border-top: var(--fd-border-muted);
+    padding-top: var(--fd-space-sm);
+    overflow-wrap: anywhere;
+}
+summary {
+    cursor: pointer;
+    color: var(--fd-color-text-muted);
+}
+.report-card__detail-body {
+    display: grid;
+    gap: var(--fd-space-sm);
+    margin-top: var(--fd-space-md);
+}
+p {
+    margin: 0;
+}
+.report-card__full-summary {
+    max-width: 90ch;
+    white-space: pre-wrap;
+    line-height: var(--fd-text-body-line-height);
+}
+.report-card__id {
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-body-sm-size);
+}

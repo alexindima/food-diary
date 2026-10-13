@@ -1,0 +1,28 @@
+@if (source() === 'logs') {
+    <fd-admin-audit-status [audit]="data().latestAudit" />
+}
+@if (data().items.length === 0) {
+    <p>{{ (source() === 'logs' ? 'ADMIN_BUGS.EMPTY_LOGS' : 'ADMIN_BUGS.EMPTY_EMAIL') | translate }}</p>
+} @else {
+    <p class="problem-count">
+        {{ (source() === 'logs' ? 'ADMIN_BUGS.TOTAL_LOGS' : 'ADMIN_BUGS.TOTAL_EMAIL') | translate }}: {{ data().totalItems }}
+    </p>
+    <div class="problem-list">
+        @for (group of groups(); track group.id) {
+            <section class="audit-group">
+                @if (source() === 'logs') {
+                    <div class="audit-group__heading">
+                        <h2>{{ 'ADMIN_BUGS.AUDIT_GROUP' | translate }} · {{ group.toUtc | date: 'mediumDate' }}</h2>
+                        <p class="audit-group__period">
+                            {{ 'ADMIN_BUGS.AUDIT_PERIOD' | translate }}: {{ group.fromUtc | date: 'short' }} –
+                            {{ group.toUtc | date: 'short' }}
+                        </p>
+                    </div>
+                }
+                @for (report of group.items; track report.id) {
+                    <fd-admin-bug-report-card [report]="report" [pullRequestUrl]="safePullRequestUrl(report.mergeRequestUrl)" />
+                }
+            </section>
+        }
+    </div>
+}

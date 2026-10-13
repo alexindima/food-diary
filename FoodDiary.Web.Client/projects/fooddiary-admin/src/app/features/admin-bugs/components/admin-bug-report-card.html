@@ -1,32 +1,30 @@
-<article>
-    <h2>
-        <a queryParamsHandling="preserve" [routerLink]="['/bugs', report().id]">{{ report().subject || report().id }}</a>
-    </h2>
-    <p>
-        {{ (report().source === 'logs' ? 'ADMIN_BUGS.SOURCE_LOGS' : 'ADMIN_BUGS.SOURCE_EMAIL') | translate }} ·
-        {{ report().receivedAtUtc | date: 'medium' }} · {{ report().status }}
-    </p>
-    @if (report().source !== 'logs') {
-        <p>{{ 'ADMIN_BUGS.ATTEMPTS' | translate }}: {{ report().attempt }}</p>
-    }
-    @if (report().auditFromUtc && report().auditToUtc) {
-        <p>
-            {{ 'ADMIN_BUGS.AUDIT_WINDOW' | translate }}: {{ report().auditFromUtc | date: 'medium' }} –
-            {{ report().auditToUtc | date: 'medium' }}
+<fd-ui-card density="compact">
+    <article class="report-card">
+        <div class="report-card__heading">
+            <h2>{{ title() ?? ('ADMIN_BUGS.UNTITLED' | translate) }}</h2>
+            <fd-ui-status-badge [tone]="status().tone">{{ status().key | translate }}</fd-ui-status-badge>
+        </div>
+        <p class="report-card__date">
+            {{ report().receivedAtUtc | date: 'mediumDate' }} · {{ report().receivedAtUtc | date: 'shortTime' }}
         </p>
-    }
-    @if (report().contentExpired) {
-        <p>{{ 'ADMIN_BUGS.EXPIRED' | translate }}</p>
-    } @else {
-        <p>{{ report().summary }}</p>
-        @if (pullRequestUrl(); as url) {
-            <a target="_blank" rel="noopener noreferrer" [href]="url">{{ 'ADMIN_BUGS.PR' | translate }}</a>
+        @if (report().contentExpired) {
+            <p>{{ 'ADMIN_BUGS.EXPIRED' | translate }}</p>
+        } @else if (preview()) {
+            <p class="report-card__preview">{{ preview() }}</p>
         }
-    }
-    @if (report().sourceMessageId; as sourceMessageId) {
-        <p>
-            {{ 'ADMIN_BUGS.SOURCE' | translate }}:
-            <a routerLink="/mail-inbox" [queryParams]="{ id: sourceMessageId }">{{ sourceMessageId }}</a>
-        </p>
-    }
-</article>
+        <div class="report-card__actions">
+            @if (!report().contentExpired && pullRequestUrl(); as url) {
+                <a target="_blank" rel="noopener noreferrer" [href]="url">
+                    {{ 'ADMIN_BUGS.OPEN_PR' | translate }}
+                    @if (pullRequestNumber(); as number) {
+                        <span> #{{ number }}</span>
+                    }
+                </a>
+            }
+            @if (report().sourceMessageId; as sourceMessageId) {
+                <a routerLink="/mail-inbox" [queryParams]="{ id: sourceMessageId }">{{ 'ADMIN_BUGS.OPEN_EMAIL' | translate }}</a>
+            }
+        </div>
+        <fd-admin-bug-report-details [report]="report()" />
+    </article>
+</fd-ui-card>

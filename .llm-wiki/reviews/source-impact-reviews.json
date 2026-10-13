@@ -56,22 +56,14 @@
       "pageSha256": "c97741bf3292821b9902858ef77a9b79daef938d25e689c0a17409bb8aabb28f",
       "sources": [
         {
-          "path": "docs/adr/0036-independent-bug-triage-service.md",
-          "sha256": "f8468a587a5adb35e0ef31d63cf473b1c0ea2db1bdf63b87575513dcb131bf17"
-        },
-        {
           "path": "docs/backend/BUG_TRIAGE.md",
-          "sha256": "0491def148f57b0c782d74658c30c5260f1499db39fc37fa75b7a17484b32963"
-        },
-        {
-          "path": "Services/BugTriage/AGENTS.md",
-          "sha256": "59815410863f6d28df1a0d29779352be396aead1b705c9fd066d25426b6b20b0"
+          "sha256": "759b540d3cfd7ebb7e218037db0707c2dbf66fc3cefa36b0da2b4a1fed8b99a8"
         }
       ],
-      "reason": "Reviewed independent ownership in ADR 0036 and service guide: audit runs use separate tables, immutable completion and independent retention; no MailInbox dependency or primary database write was added. Navigation now links the combined journal. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
+      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
       "baseRef": "HEAD",
-      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
-      "reviewedAtUtc": "2026-10-12T19:09:38.5941300Z"
+      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
+      "reviewedAtUtc": "2026-10-13T13:03:40.7976729Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -227,13 +219,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "4d98bb1bdab5dcf73d4897d62183ae1de4e720d1846abd997350814769c0752e"
+          "sha256": "70bbaee5e02d963427cd5ee14aa54679c5ccba8f6c177a8fc71aa951607e6e3d"
         }
       ],
-      "reason": "Swagger and SDK regenerated with zero public breaking changes. Legacy email routes retain non-null IDs; journal and 404 fallback support mixed versions. All 280 host integration tests passed. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
+      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
       "baseRef": "HEAD",
-      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
-      "reviewedAtUtc": "2026-10-12T19:09:40.8195753Z"
+      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
+      "reviewedAtUtc": "2026-10-13T13:03:41.6925586Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -242,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "bfe2bd43602e697b86742c9e2b2ca441bcdb40cb7bb552f042b48b66dd96fa36"
+          "sha256": "933acfec7d5de23f87eb77237729c4c653117e6beba4a8d5f224150bc2ae7b1f"
         }
       ],
-      "reason": "No project/reference changes. All 2272 architecture tests passed. Real store and HTTP regressions cover concurrency, expiry and old contracts; index signals verified against actual sources and tests. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
+      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
       "baseRef": "HEAD",
-      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
-      "reviewedAtUtc": "2026-10-12T19:09:42.9505314Z"
+      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
+      "reviewedAtUtc": "2026-10-13T13:03:42.569503Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -260,10 +252,10 @@
           "sha256": "f14e8924cc0a4cd1f7b94e7baacb1ba6141a083b9331feccadce2add94b2abf4"
         }
       ],
-      "reason": "Calendar fixture setup now obtains its JWT through the real registration API and removes the direct IJwtTokenGenerator test consumer. Only the test-consumer edge is removed; all production contracts/routes/payloads remain unchanged. Regenerated backend-contract index and verified the complete twelve-generator index set matching CI, after affected-only selection omitted this test consumer change.",
-      "baseRef": "HEAD",
-      "gitHead": "4e4e83d55e7a23c41d9aa1ab05c75fa6c98597b1",
-      "reviewedAtUtc": "2026-10-13T10:09:57.6462405Z"
+      "reason": "Reviewed merged contract index: genuine issued JWT removes fixture manual-token references. No MailRelay HTTP or provider contract changes; master admin contracts preserved.",
+      "baseRef": "origin/master",
+      "gitHead": "5a96428b68014a61ea136bc4b3a3c17cfa095cd5",
+      "reviewedAtUtc": "2026-10-13T20:22:00.8445669Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -574,13 +566,13 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/failures.json",
-          "sha256": "58377c7ae8a3b479c0f8be15208202ceb70e8f7d4d457a675709ce864766a594"
+          "sha256": "51470bca20999266333108e8ce7747027d68f406017c1b075441bf4ac7e16d22"
         }
       ],
-      "reason": "Scoped, verified calendar fixture guidance: CI on4021fe090 and Docker reproduction fail during registration with the past clock. Normal-clock registration passes focused1/1 and full API280/280, preserving the domain expiry invariant, real weekly validation and persisted calendar labels. No production changes; Linux verification follows in CI.",
+      "reason": "Verified the new failure record against CI job 115333479231, RegisterCommandHandler expiry calculation, User.EnsureFutureUtc and the fixed real-auth/frozen-calendar fixture; focused and all 280 API integration tests pass without skipped assertions.",
       "baseRef": "HEAD",
-      "gitHead": "4021fe090896a93cd0d099dc814e811e2c7aa57c",
-      "reviewedAtUtc": "2026-10-13T09:30:31.2911515Z"
+      "gitHead": "c6f318e5d5c26757883ce86159bf527bf9763dcf",
+      "reviewedAtUtc": "2026-10-13T14:30:12.7299952Z"
     },
     {
       "pageId": "workflow-failure-prediction",
@@ -891,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2fad6c9d4a4d0020d638441ed3b4ed6678f9f319c9cabbaaba7f26031ad89dfc"
+          "sha256": "f352bde44ca76301d2ae1de2ed91aa0a1ce0e75d5e7b9d413d9d9aed6e69ab98"
         }
       ],
-      "reason": "The only production change is an eight-line cancellation catch. Regression tests reproduce the journal-validator error and preserve exception identity, active-request cancellation errors, foreign-token errors and ordinary failures.",
-      "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T08:04:09.2654871Z"
+      "reason": "Real PostgreSQL calendar integration passes 1/1 without skips after merge resolution. All 9 cancellation logger regressions retained. Full hooks and current-head CI follow publication.",
+      "baseRef": "origin/master",
+      "gitHead": "5a96428b68014a61ea136bc4b3a3c17cfa095cd5",
+      "reviewedAtUtc": "2026-10-13T20:22:02.2987426Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -978,13 +970,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "56f830d862a250823a5934e0358aa51257b3810f12c6b7c71589a3439bb9e7fb"
+          "sha256": "3743afeaafadde1d2ca034886c78fd6f42ce0a1aff10c1a15580ab54b27c15ae"
         }
       ],
-      "reason": "MailRelay pipeline propagation is unchanged: the matching cancelled request logs Debug and rethrows; the generic Error path remains. No host wiring, provider, queue, persistence, retry or deployment changes; topology declaration shifts only.",
+      "reason": "Merged current master admin journal changes without changing deployment topology. Runtime index differs from master only by the verified MailRelay cancellation logging source fingerprint; no routes, dependencies, storage or jobs changed.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T08:04:10.8609570Z"
+      "gitHead": "5a96428b68014a61ea136bc4b3a3c17cfa095cd5",
+      "reviewedAtUtc": "2026-10-13T20:21:31.6673063Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -992,18 +984,14 @@
       "pageSha256": "f935366d43c011c5187443833e00da2994b5092dff5b60dc6cbd0759390944bf",
       "sources": [
         {
-          "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2fad6c9d4a4d0020d638441ed3b4ed6678f9f319c9cabbaaba7f26031ad89dfc"
-        },
-        {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "56f830d862a250823a5934e0358aa51257b3810f12c6b7c71589a3439bb9e7fb"
+          "sha256": "3743afeaafadde1d2ca034886c78fd6f42ce0a1aff10c1a15580ab54b27c15ae"
         }
       ],
-      "reason": "Cancellation must be requested on the pipeline and the exception must carry that exact token. Foreign cancellation remains Error even when the request is concurrently cancelled. The new Debug template uses only static request type and elapsed time, without mail content, recipients or secrets.",
+      "reason": "Cancellation log retains only operation and elapsed duration. Matching requested token is required and the original exception is propagated. Merge preserves master security and admin behavior; calendar fixture reuses genuine registration JWT and contains no production authentication changes.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T08:04:12.5593522Z"
+      "gitHead": "5a96428b68014a61ea136bc4b3a3c17cfa095cd5",
+      "reviewedAtUtc": "2026-10-13T20:21:34.0142431Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1140,17 +1128,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "61bd135a34b13630f2f76d7de8c0b6f608411507a3059f17e41b53d63e3a9182"
+          "sha256": "ab0e593d331bef21ea949ab4c93665736509f94dd498f53546db5554bd399acc"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "8ed71b540852c1fe1c4ee13f106415f41e3572b1823434d08b66f458488761d5"
+          "sha256": "4ea7a969558eede76088f67219c1d69a0871da75e5c0789b875a1d1d45f20ab4"
         }
       ],
-      "reason": "Indexes reflect route-owned audit status, SDK adapter and source filter. Component tests and Chrome keyboard, desktop/mobile and Russian rendering verify behavior. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
+      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
       "baseRef": "HEAD",
-      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
-      "reviewedAtUtc": "2026-10-12T19:09:54.1693909Z"
+      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
+      "reviewedAtUtc": "2026-10-13T13:03:46.9775933Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1234,13 +1222,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "61bd135a34b13630f2f76d7de8c0b6f608411507a3059f17e41b53d63e3a9182"
+          "sha256": "ab0e593d331bef21ea949ab4c93665736509f94dd498f53546db5554bd399acc"
         }
       ],
-      "reason": "Indexes reflect route-owned audit status, SDK adapter and source filter. Component tests and Chrome keyboard, desktop/mobile and Russian rendering verify behavior. Rechecked after PR 410 merge: feature sources restored without conflicts, and shared indexes regenerated from the combined source tree.",
+      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
       "baseRef": "HEAD",
-      "gitHead": "b704d501abbfe5d8d3c6c9cc44528805c1c5af71",
-      "reviewedAtUtc": "2026-10-12T19:09:56.2851562Z"
+      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
+      "reviewedAtUtc": "2026-10-13T13:03:43.5819565Z"
     },
     {
       "pageId": "workflow.query-context",

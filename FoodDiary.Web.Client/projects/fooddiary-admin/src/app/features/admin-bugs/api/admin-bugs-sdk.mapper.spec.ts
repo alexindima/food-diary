@@ -14,9 +14,24 @@ const entry: AdminBugJournalEntryHttpResponse = {
 
 describe('Admin bug journal decoder', () => {
     it('keeps older email responses compatible and requires their real message ID', () => {
-        expect(adminBugReportFromSdk({ ...entry, sourceMessageId: 'mail-id' }).source).toBe('email');
+        const legacy = adminBugReportFromSdk({ ...entry, sourceMessageId: 'mail-id' });
+        expect(legacy.source).toBe('email');
+        expect(legacy.title).toBeNull();
+        expect(legacy.shortSummary).toBeNull();
         expect(() => adminBugReportFromSdk(entry)).toThrow();
         expect(adminBugReportPageFromSdk({ items: [], totalItems: 0, isConfigured: true }).latestAudit).toBeNull();
+    });
+
+    it('keeps normalized presentation fields without replacing original evidence', () => {
+        const report = adminBugReportFromSdk({
+            ...entry,
+            sourceMessageId: 'mail-id',
+            title: 'Clear title',
+            shortSummary: 'Concise result',
+        });
+        expect(report.title).toBe('Clear title');
+        expect(report.subject).toBe(entry.subject);
+        expect(report.shortSummary).toBe('Concise result');
     });
 
     it('decodes log findings with an audit ID and interval without inventing a mail ID', () => {

@@ -117,16 +117,20 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource, IOptions<B
         // Identical retries succeed; an old worker can never overwrite a newer lease or completion.
         NpgsqlCommand command = dataSource.CreateCommand("""
             update bugtriage_reports set status = @outcome, summary = @summary, merge_request_url = @url,
+                report_title = @title, short_summary = @short_summary,
                 completed_token = @token, lease_token = null, lease_expires_at_utc = null
             where id = @id and expires_at_utc > @now and (
                 (status = 'in_progress' and lease_token = @token and lease_expires_at_utc > @now)
-                or (completed_token = @token and status = @outcome and summary = @summary and merge_request_url is not distinct from @url))
+                or (completed_token = @token and status = @outcome and summary = @summary and merge_request_url is not distinct from @url
+                    and report_title is not distinct from @title and short_summary is not distinct from @short_summary))
             """);
         await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
         AddLeaseParameters(command, id, token, now);
         command.Parameters.AddWithValue("outcome", completion.Outcome);
         command.Parameters.AddWithValue("summary", completion.Summary);
         command.Parameters.AddWithValue("url", NpgsqlDbType.Text, (object?)completion.MergeRequestUrl ?? DBNull.Value);
+        command.Parameters.AddWithValue("title", NpgsqlDbType.Text, (object?)completion.Title ?? DBNull.Value);
+        command.Parameters.AddWithValue("short_summary", NpgsqlDbType.Text, (object?)completion.ShortSummary ?? DBNull.Value);
         return await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false) == 1;
     }
 
@@ -143,6 +147,7 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource, IOptions<B
     public async Task PurgeAsync(DateTimeOffset now, CancellationToken cancellationToken) {
         NpgsqlCommand command = dataSource.CreateCommand("""
             update bugtriage_reports set subject = '', text_body = '', raw_mime = null, summary = null,
+                report_title = null, short_summary = null,
                 merge_request_url = null, lease_token = null, lease_expires_at_utc = null, completed_token = null, status = 'expired'
             where expires_at_utc <= @now and status <> 'expired'
             """);

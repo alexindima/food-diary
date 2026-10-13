@@ -2,18 +2,16 @@
   "schemaVersion": 1,
   "entries": [
     {
-      "id": "calendar-fixture-registration-clock",
-      "symptom": "Weekly calendar integration test returns HTTP 500 during user registration before reaching calendar validation; it passes early in the week and fails later.",
-      "cause": "The fixture replaces the whole authentication host TimeProvider with past Sunday at 20:30 UTC. Registration computes email-verification expiry 24 hours later, while User.SetEmailConfirmationToken uses DomainTime.UtcNow, defaulting to TimeProvider.System, and rejects an already expired expiry. Once the execution day passes that expiry, authentication setup fails before the calendar scenario. The unchanged baseline was green on Monday and failed on Tuesday; MailRelay logging is outside this request path.",
-      "fix": "Register through the ordinary factory host with its current clock, then configure the separate clocked host only for weekly calendar requests. Use the normally issued access token; keep real expiry validation and all calendar date/persistence assertions.",
+      "id": "calendar-http-frozen-clock-registration-expiry",
+      "symptom": "WeeklyGoalCalendarValidationIntegrationTests registration returns HTTP 500 when its frozen Sunday clock yields an email-confirmation expiry earlier than the real domain clock; CI c6f318e5d job 115333479231 failed before calendar assertions.",
+      "cause": "RegisterCommandHandler computes confirmation expiry from the injected clock plus 24 hours; User.SetEmailConfirmationToken validates future expiry against DomainTime.UtcNow. The calendar fixture freezes the host at Sunday 20:30 UTC, so registration setup becomes expired after Monday 20:30 UTC.",
+      "fix": "Register and issue valid authentication through the normal PostgreSQL host; create the frozen-clock host for calendar PUT/GET afterward. Preserve genuine JWT authentication, weekly validation and persisted calendar-label assertions.",
       "pathPatterns": [
-        "^Hosts/tests/FoodDiary.Web.Api.IntegrationTests/WeeklyGoalCalendarValidationIntegrationTests\\.cs$"
+        "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/WeeklyGoalCalendarValidationIntegrationTests.cs"
       ],
       "verification": [
-        "CI run 38370299779 integration-3 failed at registration line 37 on 4021fe090; other jobs passed.",
-        "Focused real PostgreSQL/Docker reproduction failed 1/1 before setup isolation and passed 1/1 after isolation.",
-        "The complete API integration project passed 280/280 without skips after the fixture fix.",
-        "Root cause traced from RegisterCommandHandler now+24h through User.SetEmailConfirmationToken to EnsureFutureUtc using DomainTime.UtcNow, defaulting to TimeProvider.System."
+        "Focused calendar integration: 1 passed; .artifacts/admin-problems/calendar-fixed-test.log",
+        "Full API integration: 280 passed; .artifacts/admin-problems/host-all-fixed.log"
       ]
     },
     {

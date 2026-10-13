@@ -18,6 +18,10 @@ The response's nullable `latestAudit` is independent of list filters. It reports
 
 Publication uses the trusted worker capability through a separate API, not the Admin reader or an email claim. See [audit publication](../../Services/BugTriage/worker/CODEX_AUDIT_TASK.md). Deploy BugTriage, the primary API and Admin frontend before relying on scheduled writes. If `/api/report-journal/all` returns 404 during rollout or rollback, the new reader falls back to the existing email endpoint; a log-only filter then returns no findings or audit history. Other provider failures remain errors. Old clients keep their email-only response even after audit findings are published. Refresh an open Admin tab to load the new combined UI.
 
+The Admin navigation calls the review page **Issues**. Its URL-backed tabs separate user messages (the default) from log audits. Changing source resets search, status and page while preserving the reporting period; older `/bugs/:id` links still open the matching report. Status filters use localized known values, and counters describe the selected source. Audit findings are grouped by run; the latest-audit coverage card appears only on the log tab and remains independent of list filters.
+
+Cards use plain descriptive headings and short summaries. Optional email `title` and `shortSummary` are supplied by the investigation completion; older UUID subjects use a generic heading and retain their ID and original subject in details. Native keyboard-accessible disclosures keep full investigation and audit evidence available without expanding the initial page. Links lead to the source message and published PR. The `draft_ready` label says **PR created**: it records the investigation outcome and does not claim to synchronize the current GitHub PR state.
+
 ## Persisted audit journal
 
 `GET /api/v1/admin/audit` reads the existing structured audit table, with period, actor, client, action and target filters applied before pagination. Both the API and UI remain Admin-only. Responses prohibit caching.

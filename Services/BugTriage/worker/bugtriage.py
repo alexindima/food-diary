@@ -117,7 +117,7 @@ def main():
             if args.result is None:
                 parser.error("--result is required")
             result = json.loads(args.result.read_text(encoding="utf-8-sig"))
-            data.update({key: result.get(key) for key in ("outcome", "summary", "mergeRequestUrl")})
+            data.update({key: result.get(key) for key in ("outcome", "summary", "mergeRequestUrl", "title", "shortSummary")})
         call_api(config, "POST", f"/api/bug-reports/{report_id}/{args.action}", data)
         print("Result saved." if args.action == "complete" else "Lease renewed.")
 

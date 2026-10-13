@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot, maxLength } from '@angular/forms/signals';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiInputComponent, FdUiPaginationComponent, FdUiSelectComponent } from 'fd-ui-kit';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiButtonComponent, FdUiInputComponent, FdUiPaginationComponent, FdUiSelectComponent, FdUiTabsComponent } from 'fd-ui-kit';
 import { catchError, combineLatest, map, of, startWith, Subject, switchMap } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
@@ -11,8 +11,8 @@ import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { adminPage } from '../../../shared/period/admin-query';
-import { AdminAuditStatusComponent } from '../components/admin-audit-status';
-import { AdminBugReportCardComponent } from '../components/admin-bug-report-card';
+import { AdminBugReportListComponent } from '../components/admin-bug-report-list';
+import { REPORT_STATUSES, reportStatusPresentation } from '../lib/admin-bug-presentation';
 import { AdminBugsFacade } from '../lib/admin-bugs.facade';
 import type { AdminBugReportPage } from '../models/admin-bug-report';
 
@@ -23,8 +23,7 @@ const PAGE_SIZE = 25;
 @Component({
     selector: 'fd-admin-bugs',
     imports: [
-        AdminBugReportCardComponent,
-        AdminAuditStatusComponent,
+        AdminBugReportListComponent,
         TranslatePipe,
         RouterLink,
         FormField,
@@ -35,8 +34,9 @@ const PAGE_SIZE = 25;
         FdUiPaginationComponent,
         AdminLoadErrorComponent,
         AdminPeriodControlComponent,
+        FdUiTabsComponent,
     ],
-    styleUrl: '../../../shared/admin-records.scss',
+    styleUrls: ['../../../shared/admin-records.scss', './admin-bugs.scss'],
     templateUrl: './admin-bugs.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -46,12 +46,26 @@ export class AdminBugsPageComponent {
     private readonly api = inject(AdminBugsFacade);
     private readonly destroyRef = inject(DestroyRef);
     private readonly refresh = new Subject<void>();
+    private readonly translate = inject(TranslateService);
+    private readonly languageChange = toSignal(this.translate.onLangChange, { initialValue: null });
     protected readonly result = signal<AdminBugReportPage | null>(null);
     protected readonly loading = signal(true);
     protected readonly failed = signal(false);
     protected readonly page = signal(1);
     protected readonly detailId = signal<string | null>(null);
-    protected readonly formModel = signal({ search: '', status: '', source: '' });
+    protected readonly source = signal('email');
+    protected readonly tabs = [
+        { value: 'email', labelKey: 'ADMIN_BUGS.TAB_EMAIL' },
+        { value: 'logs', labelKey: 'ADMIN_BUGS.TAB_LOGS' },
+    ];
+    protected readonly statusOptions = computed(() => {
+        this.languageChange();
+        return [
+            { value: '', label: this.translatedLabel('ADMIN_COMMON.ALL') },
+            ...REPORT_STATUSES.map(value => ({ value, label: this.translatedLabel(reportStatusPresentation(value).key) })),
+        ];
+    });
+    protected readonly formModel = signal({ search: '', status: '' });
     private readonly submitFormAsync = async (): Promise<void> => {
         await this.applyAsync();
     };
@@ -72,10 +86,10 @@ export class AdminBugsPageComponent {
                     this.failed.set(false);
                     this.detailId.set(path.get('id'));
                     this.page.set(adminPage(query.get('page')));
+                    this.source.set(query.get('source') === 'logs' ? 'logs' : 'email');
                     this.formModel.set({
                         search: query.get('search') ?? '',
                         status: query.get('status') ?? '',
-                        source: query.get('source') ?? '',
                     });
                     const id = this.detailId();
                     const period = id === null ? adminPeriod(query) : {};
@@ -86,7 +100,7 @@ export class AdminBugsPageComponent {
                     this.loading.set(true);
                     const params: Record<string, string | number> =
                         id === null
-                            ? { page: this.page(), limit: PAGE_SIZE, ...this.formModel(), ...adminUtcPeriod(period) }
+                            ? { page: this.page(), limit: PAGE_SIZE, source: this.source(), ...this.formModel(), ...adminUtcPeriod(period) }
                             : { page: 1, limit: PAGE_SIZE, id };
                     return this.api.getPage(params).pipe(
                         map(result => result),
@@ -107,13 +121,21 @@ export class AdminBugsPageComponent {
                     return;
                 }
                 this.result.set(result);
+                if (this.detailId() !== null && result?.items[0] !== undefined) {
+                    this.source.set(result.items[0].source);
+                }
                 this.loading.set(false);
             });
     }
 
+    private translatedLabel(key: string): string {
+        const value: unknown = this.translate.instant(key);
+        return typeof value === 'string' ? value : key;
+    }
+
     protected async applyAsync(): Promise<boolean> {
         const navigated = await this.router.navigate(['/bugs'], {
-            queryParams: { ...this.formModel(), page: 1 },
+            queryParams: { ...this.formModel(), source: this.source(), page: 1 },
             queryParamsHandling: 'merge',
         });
         if (!navigated) {
@@ -124,6 +146,20 @@ export class AdminBugsPageComponent {
 
     protected goToPage(page: number): void {
         void this.router.navigate([], { relativeTo: this.route, queryParams: { page }, queryParamsHandling: 'merge' });
+    }
+
+    protected selectSource(source: string): void {
+        void this.router.navigate(['/bugs'], {
+            queryParams: { source, page: 1, search: null, status: null },
+            queryParamsHandling: 'merge',
+        });
+    }
+
+    protected resetFilters(): void {
+        void this.router.navigate(['/bugs'], {
+            queryParams: { source: this.source(), page: 1, search: null, status: null, period: null, from: null, to: null },
+            queryParamsHandling: 'merge',
+        });
     }
 
     protected retry(): void {

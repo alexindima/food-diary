@@ -35,7 +35,10 @@ public sealed class BugReportsController(IBugReportStore store, TimeProvider tim
 
     [HttpPost("{id:guid}/complete")]
     public async Task<IActionResult> CompleteAsync(Guid id, CompleteReportHttpRequest request, CancellationToken cancellationToken) {
-        var completion = new ReportCompletion(request.Outcome, request.Summary, request.MergeRequestUrl);
+        var completion = new ReportCompletion(request.Outcome, request.Summary, request.MergeRequestUrl) {
+            Title = request.Title?.Trim(),
+            ShortSummary = request.ShortSummary?.Trim(),
+        };
         if (request.LeaseToken == Guid.Empty || !completion.IsValid()) {
             return BadRequest("A valid lease, outcome and summary are required; draft_ready requires an HTTPS MR URL.");
         }

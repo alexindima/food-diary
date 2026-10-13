@@ -1,19 +1,31 @@
 <fd-ui-card density="compact" [title]="'ADMIN_BUGS.LATEST_AUDIT' | translate" [accent]="accent()">
     <div class="audit-details">
-        <p role="status">{{ statusKey() | translate }}</p>
+        <fd-ui-status-badge [tone]="tone()"
+            ><span role="status">{{ statusKey() | translate }}</span></fd-ui-status-badge
+        >
         @if (audit(); as run) {
-            <p>{{ 'ADMIN_BUGS.AUDIT_WINDOW' | translate }}: {{ run.fromUtc | date: 'medium' }} – {{ run.toUtc | date: 'medium' }}</p>
-            <p>{{ 'ADMIN_BUGS.AUDIT_STARTED' | translate }}: {{ run.startedAtUtc | date: 'medium' }}</p>
             @if (run.completedAtUtc) {
-                <p>{{ 'ADMIN_BUGS.AUDIT_COMPLETED' | translate }}: {{ run.completedAtUtc | date: 'medium' }}</p>
-            }
-            @if (run.lastSuccessfulAtUtc) {
-                <p>{{ 'ADMIN_BUGS.AUDIT_LAST_SUCCESS' | translate }}: {{ run.lastSuccessfulAtUtc | date: 'medium' }}</p>
+                <p>
+                    {{ 'ADMIN_BUGS.AUDIT_COMPLETED' | translate }}: {{ run.completedAtUtc | date: 'mediumDate' }} ·
+                    {{ run.completedAtUtc | date: 'shortTime' }}
+                </p>
             }
             @if (!run.contentExpired) {
-                <p>{{ run.summary }}</p>
                 <p>{{ 'ADMIN_BUGS.AUDIT_COUNT' | translate }}: {{ run.findingCount }}</p>
             }
+            <details>
+                <summary>{{ 'ADMIN_BUGS.AUDIT_DETAILS' | translate }}</summary>
+                <div class="audit-details__expanded">
+                    <p>{{ 'ADMIN_BUGS.AUDIT_PERIOD' | translate }}: {{ run.fromUtc | date: 'short' }} – {{ run.toUtc | date: 'short' }}</p>
+                    <p>{{ 'ADMIN_BUGS.AUDIT_STARTED' | translate }}: {{ run.startedAtUtc | date: 'short' }}</p>
+                    @if (run.lastSuccessfulAtUtc && run.lastSuccessfulAtUtc !== run.completedAtUtc) {
+                        <p>{{ 'ADMIN_BUGS.AUDIT_LAST_SUCCESS' | translate }}: {{ run.lastSuccessfulAtUtc | date: 'short' }}</p>
+                    }
+                    @if (!run.contentExpired && run.summary) {
+                        <p class="audit-details__summary">{{ run.summary }}</p>
+                    }
+                </div>
+            </details>
         }
     </div>
 </fd-ui-card>

@@ -115,6 +115,30 @@ public sealed class BugReportsHttpTests {
     }
 
     [Fact]
+    public async Task Completion_ValidatesOptionalDisplayMetadataAndPreservesDetailedEvidence() {
+        await using var factory = new Factory();
+        var id = Guid.NewGuid();
+        var token = Guid.NewGuid();
+        factory.Store.CompleteAsync((BugReportId)id, (LeaseToken)token, Arg.Any<ReportCompletion>(), Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>()).Returns(returnThis: true);
+        using HttpClient client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add("X-BugTriage-Key", Factory.Key);
+
+        using HttpResponseMessage completed = await client.PostAsJsonAsync($"/api/bug-reports/{id}/complete",
+            new { leaseToken = token, outcome = "not_confirmed", summary = "Full reproduction evidence", title = " Broken button ", shortSummary = " Cannot reproduce yet " });
+        Assert.Equal(HttpStatusCode.NoContent, completed.StatusCode);
+        await factory.Store.Received(1).CompleteAsync((BugReportId)id, (LeaseToken)token,
+            Arg.Is<ReportCompletion>(completion => completion.Title == "Broken button" && completion.ShortSummary == "Cannot reproduce yet" && completion.Summary == "Full reproduction evidence"),
+            Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>());
+
+        foreach ((string title, string shortSummary) in new[] { (" ", "Valid"), (new string('t', 241), "Valid"), ("Valid", " "), ("Valid", new string('s', 601)) }) {
+            using HttpResponseMessage invalid = await client.PostAsJsonAsync($"/api/bug-reports/{id}/complete",
+                new { leaseToken = token, outcome = "not_confirmed", summary = "Full evidence", title, shortSummary });
+            Assert.Equal(HttpStatusCode.BadRequest, invalid.StatusCode);
+        }
+        await factory.Store.Received(1).CompleteAsync(Arg.Any<BugReportId>(), Arg.Any<LeaseToken>(), Arg.Any<ReportCompletion>(), Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task EndpointsEnforceAuthorizationValidationAndLeaseConflicts() {
         await using var factory = new Factory();
         using HttpClient client = factory.CreateClient();

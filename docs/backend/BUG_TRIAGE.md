@@ -115,6 +115,8 @@ Rollback: stop BugTriage and the local task, revoke its token and retain the Bug
 
 ## Production audit journal
 
+Report completion accepts optional `title` (240 characters) and `shortSummary` (600 characters) for the Admin review list. The original subject and detailed summary remain separate evidence. Older completions without these fields remain valid; identical retries include their values, and conflicting terminal display metadata is rejected. The additive initializer adds nullable columns to the existing report table. Both fields are redacted on expiry and physically cleared by the report retention worker. The combined journal searches original subjects and normalized titles; the legacy primary email response keeps its existing shape.
+
 BugTriage also stores sanitized results of authorized local production-log audits in `bugtriage_audit_runs` and `bugtriage_audit_findings`, separately from mail claims. The server never executes Codex, Git or investigations. Its additive initializer creates the tables; deployment grants DML to the runtime role.
 
 - `PUT /api/audit-runs/{id}/start`: register a fixed `[fromUtc,toUtc)` interval, maximum seven days, ending no more than five minutes in the future or starting more than 90 days ago. Requires a valid UUID and worker key. An identical retry returns 204 without changing start/expiry; a conflicting interval or expired receipt returns 409.

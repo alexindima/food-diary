@@ -27,6 +27,15 @@ public static class BugTriageSchema {
                 constraint ck_bugtriage_bounds check (char_length(subject) <= 1000 and char_length(text_body) <= 100000
                     and octet_length(raw_mime) <= 10485760 and char_length(summary) <= 8000 and char_length(merge_request_url) <= 2048)
             );
+            alter table bugtriage_reports add column if not exists report_title text null;
+            alter table bugtriage_reports add column if not exists short_summary text null;
+            do $$ begin
+                if not exists (select 1 from pg_constraint where conname = 'ck_bugtriage_display_bounds'
+                    and conrelid = 'bugtriage_reports'::regclass) then
+                    alter table bugtriage_reports add constraint ck_bugtriage_display_bounds
+                        check (char_length(report_title) <= 240 and char_length(short_summary) <= 600);
+                end if;
+            end $$;
             create index if not exists ix_bugtriage_pending on bugtriage_reports (received_at_utc, id)
                 where status in ('pending', 'in_progress');
             create table if not exists bugtriage_audit_runs (

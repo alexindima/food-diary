@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 495,
-    "componentsWithoutDirectSpecs": 130,
-    "inputs": 1598,
+    "components": 497,
+    "componentsWithoutDirectSpecs": 132,
+    "inputs": 1601,
     "outputs": 553,
     "apiCalls": 315,
-    "templatesWithTranslations": 357,
-    "translationKeys": 2141,
-    "consumerEdges": 1254,
-    "consumedComponents": 314,
+    "templatesWithTranslations": 359,
+    "translationKeys": 2144,
+    "consumerEdges": 1260,
+    "consumedComponents": 316,
     "unconsumedComponents": 180
   },
   "components": [
@@ -333,6 +333,43 @@
       ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-card.spec.ts"
+    },
+    {
+      "class": "AdminBugReportDetailsComponent",
+      "selector": "fd-admin-bug-report-details",
+      "feature": "admin-bugs",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-details.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-details.html",
+      "inputs": [
+        {
+          "name": "report",
+          "type": "AdminBugReport",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminBugReportListComponent",
+      "selector": "fd-admin-bug-report-list",
+      "feature": "admin-bugs",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-list.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-list.html",
+      "inputs": [
+        {
+          "name": "data",
+          "type": "AdminBugReportPage",
+          "required": true
+        },
+        {
+          "name": "source",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
     },
     {
       "class": "AdminBugsPageComponent",
@@ -19713,9 +19750,10 @@
       "keys": [
         "ADMIN_BUGS.AUDIT_COMPLETED",
         "ADMIN_BUGS.AUDIT_COUNT",
+        "ADMIN_BUGS.AUDIT_DETAILS",
         "ADMIN_BUGS.AUDIT_LAST_SUCCESS",
+        "ADMIN_BUGS.AUDIT_PERIOD",
         "ADMIN_BUGS.AUDIT_STARTED",
-        "ADMIN_BUGS.AUDIT_WINDOW",
         "ADMIN_BUGS.LATEST_AUDIT"
       ]
     },
@@ -19723,11 +19761,28 @@
       "feature": "admin-bugs",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-card.html",
       "keys": [
-        "ADMIN_BUGS.ATTEMPTS",
-        "ADMIN_BUGS.AUDIT_WINDOW",
         "ADMIN_BUGS.EXPIRED",
-        "ADMIN_BUGS.PR",
-        "ADMIN_BUGS.SOURCE"
+        "ADMIN_BUGS.OPEN_EMAIL",
+        "ADMIN_BUGS.OPEN_PR",
+        "ADMIN_BUGS.UNTITLED"
+      ]
+    },
+    {
+      "feature": "admin-bugs",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-details.html",
+      "keys": [
+        "ADMIN_BUGS.ATTEMPTS",
+        "ADMIN_BUGS.ORIGINAL_SUBJECT",
+        "ADMIN_BUGS.REPORT_ID",
+        "ADMIN_BUGS.REVIEW_DETAILS"
+      ]
+    },
+    {
+      "feature": "admin-bugs",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-list.html",
+      "keys": [
+        "ADMIN_BUGS.AUDIT_GROUP",
+        "ADMIN_BUGS.AUDIT_PERIOD"
       ]
     },
     {
@@ -19735,16 +19790,11 @@
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.html",
       "keys": [
         "ADMIN_BUGS.BACK",
-        "ADMIN_BUGS.EMPTY",
         "ADMIN_BUGS.NOT_CONFIGURED",
+        "ADMIN_BUGS.RESET_FILTERS",
         "ADMIN_BUGS.SEARCH",
-        "ADMIN_BUGS.SOURCE_EMAIL",
-        "ADMIN_BUGS.SOURCE_FILTER",
-        "ADMIN_BUGS.SOURCE_LOGS",
         "ADMIN_BUGS.STATUS",
-        "ADMIN_BUGS.TOTAL",
         "ADMIN_CATALOG.APPLY",
-        "ADMIN_COMMON.ALL",
         "ADMIN_COMMON.LOADING"
       ]
     },
@@ -24207,7 +24257,7 @@
       "selector": "fd-admin-audit-status",
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-audit-status.ts",
       "consumerFeature": "admin-bugs",
-      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.html",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-list.html",
       "occurrences": 1,
       "inputsUsed": [
         "audit"
@@ -24296,11 +24346,36 @@
       "selector": "fd-admin-bug-report-card",
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-card.ts",
       "consumerFeature": "admin-bugs",
-      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.html",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-list.html",
       "occurrences": 1,
       "inputsUsed": [
         "pullRequestUrl",
         "report"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "AdminBugReportDetailsComponent",
+      "selector": "fd-admin-bug-report-details",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-details.ts",
+      "consumerFeature": "admin-bugs",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "report"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "AdminBugReportListComponent",
+      "selector": "fd-admin-bug-report-list",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-list.ts",
+      "consumerFeature": "admin-bugs",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "data",
+        "source"
       ],
       "outputsHandled": []
     },
@@ -27234,8 +27309,9 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "admin-bugs",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
+        "fill",
         "type"
       ],
       "outputsHandled": []
@@ -31051,6 +31127,18 @@
         "accent",
         "density",
         "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiCardComponent",
+      "selector": "fd-ui-card",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
+      "consumerFeature": "admin-bugs",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "density"
       ],
       "outputsHandled": []
     },
@@ -35048,7 +35136,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "admin-bugs",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.html",
-      "occurrences": 2,
+      "occurrences": 1,
       "inputsUsed": [
         "label"
       ],
@@ -38317,6 +38405,30 @@
       "component": "FdUiStatusBadgeComponent",
       "selector": "fd-ui-status-badge",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/status-badge/fd-ui-status-badge.ts",
+      "consumerFeature": "admin-bugs",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-audit-status.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "tone"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiStatusBadgeComponent",
+      "selector": "fd-ui-status-badge",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/status-badge/fd-ui-status-badge.ts",
+      "consumerFeature": "admin-bugs",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "tone"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiStatusBadgeComponent",
+      "selector": "fd-ui-status-badge",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/status-badge/fd-ui-status-badge.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history.html",
       "occurrences": 1,
@@ -38426,6 +38538,22 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.html",
       "occurrences": 1,
       "inputsUsed": [
+        "selectedValue",
+        "tabs"
+      ],
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
+    },
+    {
+      "component": "FdUiTabsComponent",
+      "selector": "fd-ui-tabs",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/tabs/fd-ui-tabs.ts",
+      "consumerFeature": "admin-bugs",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "appearance",
         "selectedValue",
         "tabs"
       ],

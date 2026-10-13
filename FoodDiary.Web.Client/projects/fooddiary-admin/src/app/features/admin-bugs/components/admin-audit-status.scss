@@ -1,12 +1,28 @@
 :host {
     display: block;
-    margin-block: var(--fd-space-md);
     overflow-wrap: anywhere;
 }
 
 .audit-details {
     display: grid;
     gap: var(--fd-space-sm);
+    fd-ui-status-badge {
+        justify-self: start;
+    }
+    &__expanded {
+        display: grid;
+        gap: var(--fd-space-sm);
+        margin-top: var(--fd-space-md);
+    }
+    &__summary {
+        max-width: 90ch;
+        white-space: pre-wrap;
+        line-height: var(--fd-text-body-line-height);
+    }
+    summary {
+        cursor: pointer;
+        color: var(--fd-color-text-muted);
+    }
 }
 
 p {

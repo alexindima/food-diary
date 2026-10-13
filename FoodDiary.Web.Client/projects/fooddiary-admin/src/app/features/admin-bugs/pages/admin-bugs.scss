@@ -1,0 +1,12 @@
+:host {
+    max-width: 1200px;
+}
+.problem-workspace {
+    display: grid;
+    gap: var(--fd-space-page-section-gap);
+}
+.problem-filter-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--fd-space-sm);
+}

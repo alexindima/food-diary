@@ -39,7 +39,10 @@ public sealed class AdminBugReportReaderTests {
     [InlineData(false)]
     [InlineData(true)]
     public async Task Configured_EncodesFiltersAddsReadKeyAndDeserializes(bool populated) {
-        var expected = new AdminBugReportPage([new AdminBugReportEntry(Guid.NewGuid(), Guid.NewGuid(), DateTimeOffset.UnixEpoch, "subject", "processed", 2, Summary: null, MergeRequestUrl: null, ContentExpired: true)], 31);
+        var expected = new AdminBugReportPage([new AdminBugReportEntry(Guid.NewGuid(), Guid.NewGuid(), DateTimeOffset.UnixEpoch, "subject", "processed", 2, Summary: null, MergeRequestUrl: null, ContentExpired: !populated) {
+            Title = populated ? "Descriptive title" : null,
+            ShortSummary = populated ? "Short investigation result" : null,
+        }], 31);
         using var handler = new ResponseHandler(() => new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent.Create(expected) });
         using var client = new HttpClient(handler) { BaseAddress = new Uri("https://bugs.example.com/") };
         var reader = new AdminBugReportReader(client, Options.Create(new AdminBugTriageOptions { BaseUrl = client.BaseAddress.ToString(), ReadApiKey = new string('k', 32) }));

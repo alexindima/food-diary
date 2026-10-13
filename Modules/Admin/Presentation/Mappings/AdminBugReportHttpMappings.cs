@@ -18,6 +18,8 @@ public static class AdminBugReportHttpMappings {
         new(page.Items.Select(item => new AdminBugJournalEntryHttpResponse(item.Id, item.SourceMessageId, item.ReceivedAtUtc, item.Subject,
             item.Status, item.Attempt, item.Summary, item.MergeRequestUrl, item.ContentExpired) {
             Source = item.Source,
+            Title = item.Title,
+            ShortSummary = item.ShortSummary,
             AuditRunId = item.AuditRunId,
             AuditFromUtc = item.AuditFromUtc,
             AuditToUtc = item.AuditToUtc,

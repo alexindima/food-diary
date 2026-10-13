@@ -1,0 +1,15 @@
+<details class="report-card__details">
+    <summary>{{ 'ADMIN_BUGS.REVIEW_DETAILS' | translate }}</summary>
+    <div class="report-card__detail-body">
+        @if (!report().contentExpired && report().summary) {
+            <p class="report-card__full-summary">{{ report().summary }}</p>
+        }
+        @if (!report().contentExpired && report().title && report().subject !== report().title) {
+            <p>{{ 'ADMIN_BUGS.ORIGINAL_SUBJECT' | translate }}: {{ report().subject }}</p>
+        }
+        @if (report().source !== 'logs') {
+            <p>{{ 'ADMIN_BUGS.ATTEMPTS' | translate }}: {{ report().attempt }}</p>
+        }
+        <p class="report-card__id">{{ 'ADMIN_BUGS.REPORT_ID' | translate }}: {{ report().id }}</p>
+    </div>
+</details>
