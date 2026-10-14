@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { mkdirSync, mkdtempSync, writeFileSync, rmSync } from 'node:fs';
 import { resolve, sep } from 'node:path';
-import { refreshStandaloneIndexes, queryStandaloneIndex, queryStandaloneIndexSnapshot, querySecurityEvidence } from './code-graph-index-query.mjs';
+import { refreshStandaloneIndexes, queryStandaloneIndex, queryStandaloneIndexSnapshot, querySecurityEvidence, readStandaloneIndexSource } from './code-graph-index-query.mjs';
 
 test('standalone SQLite indexes preserve counts, order, nested sections and literal Unicode queries', () => {
   const parent = resolve(import.meta.dirname, '../../.artifacts/llm-wiki/index-query-fixtures');
@@ -128,13 +128,18 @@ test('standalone refresh retains unchanged records and handles edits, reorder, e
     assert.equal(refreshStandaloneIndexes(db,root),1);
     assert.throws(()=>queryStandaloneIndexSnapshot(db,root,{index:'quality',limit:0}),/between 1 and 50/);
     db.exec('BEGIN; ROLLBACK');
+    const capturedSource=readStandaloneIndexSource(root,'quality');
     let changedDuringQuery = false;
     db.function('instr', (text, term) => {
       if (!changedDuringQuery) { changedDuringQuery = true; write({entries:[{name:'Concurrent edit'}]}); }
       return String(text).indexOf(term) + 1;
     });
-    assert.equal(queryStandaloneIndexSnapshot(db,root,{index:'quality',query:'Stale'}).unavailableReason,'standalone-index-source-changed');
+    assert.equal(queryStandaloneIndexSnapshot(db,root,{index:'quality',query:'Stale'},capturedSource).unavailableReason,'standalone-index-source-changed');
     db.exec('BEGIN; ROLLBACK');
+    // Reusing a previously captured source must still reject a change that
+    // happened before projection, even if its old SQL rows are consistent.
+    refreshStandaloneIndexes(db,root,['quality'],new Map([['quality',capturedSource]]));
+    assert.equal(queryStandaloneIndexSnapshot(db,root,{index:'quality'},capturedSource).unavailableReason,'standalone-index-source-changed');
     refreshStandaloneIndexes(db,root);
     db.prepare('INSERT INTO standalone_index_records VALUES (?,?,?,?,?)').run('quality','entries',-1,'invalid','{}');
     db.prepare('INSERT INTO standalone_index_records VALUES (?,?,?,?,?)').run('quality','entries',0.5,'invalid','{}');

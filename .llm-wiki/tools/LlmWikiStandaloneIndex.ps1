@@ -25,11 +25,16 @@ function Invoke-LlmWikiStandaloneIndexRead {
             [AppDomain]::CurrentDomain.SetData($cacheStateKey, $cacheState)
         }
         $requestKey = $RepositoryRoot + [char]0 + $Index
+        $cachedPath = if ($cacheState.ContainsKey($requestKey)) { [string]$cacheState[$requestKey] } else { $null }
+        $databasePath = if ($null -ne $cachedPath) { $cachedPath } else { Join-Path $RepositoryRoot '.artifacts/llm-wiki/code-graph/code-graph.sqlite' }
+        $databaseExists = [IO.File]::Exists($databasePath)
+        if (-not $databaseExists -and $null -ne $cachedPath) { $cacheState.Remove($requestKey) }
         # Node owns Unicode query folding and exact module-inventory hashing.
-        if ($PSVersionTable.PSVersion.Major -ge 7 -and $Index -ne 'modules' -and $Query -cnotmatch '[^\x00-\x7f]') {
+        # Without a database, load only its Node projection owner. Loading the
+        # existing .NET assembly cannot help the first cache-missing request.
+        if ($databaseExists -and $PSVersionTable.PSVersion.Major -ge 7 -and $Index -ne 'modules' -and $Query -cnotmatch '[^\x00-\x7f]') {
             try {
                 $null = Initialize-LlmWikiInProcessSqlite -RequireExistingBuild
-                $cachedPath = if ($cacheState.ContainsKey($requestKey)) { [string]$cacheState[$requestKey] } else { $null }
                 $result = [LlmWiki.SqliteReader.StandaloneIndexReader]::Query($RepositoryRoot, $Index, $Query, $Limit, $cachedPath)
                 $status = Get-LlmWikiStandaloneReadState $result
                 if ($status.ready -or $status.unavailableReason -eq 'compiled-source-missing') { return $result }

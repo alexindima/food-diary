@@ -22,22 +22,32 @@ $sourcePaths = if ($Fast) {
 } else {
     @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', '*.cs') -FailureMessage "Unable to search consumers of $Contract.")
 }
+$matchingSourceText = [Collections.Generic.Dictionary[string, string]]::new([StringComparer]::Ordinal)
+$contractPattern = "\b$escapedContract\b"
 $searchMatches = @(
     foreach ($path in $sourcePaths | Sort-Object -Unique) {
-        $absolutePath = Join-Path $repositoryRoot $path
-        if (-not (Test-Path -LiteralPath $absolutePath -PathType Leaf)) { continue }
+        $absolutePath = [IO.Path]::Combine($repositoryRoot, $path)
+        if (-not [IO.File]::Exists($absolutePath)) { continue }
+        $text = [IO.File]::ReadAllText($absolutePath)
+        if ($text -notmatch $contractPattern) { continue }
+        $matchingSourceText[$path.Replace('\', '/')] = $text
         $lineNumber = 0
-        foreach ($line in [IO.File]::ReadLines($absolutePath)) {
-            $lineNumber++
-            if ($line -match "\b$escapedContract\b") { "$path`:$lineNumber`:$line" }
-        }
+        # Most sources do not contain this contract. Preserve ReadLines newline
+        # behavior only for matching files, then reuse their captured text below.
+        $reader = [IO.StringReader]::new($text)
+        try {
+            while ($null -ne ($line = $reader.ReadLine())) {
+                $lineNumber++
+                if ($line -match $contractPattern) { "$path`:$lineNumber`:$line" }
+            }
+        } finally { $reader.Dispose() }
     }
 )
 
 $declaration = @($searchMatches | Where-Object { $_ -match "\b(interface|class|record)\s+$escapedContract\b" } | Select-Object -First 1)
 $declarationPath = if ($declaration) { ($declaration -split ':', 3)[0].Replace('\', '/') } else { $null }
 $owningAssembly = if ($declarationPath) { ($declarationPath -split '/')[0] } else { 'not-found' }
-$declarationText = if ($declarationPath) { [IO.File]::ReadAllText((Join-Path $repositoryRoot $declarationPath)) } else { '' }
+$declarationText = if ($declarationPath) { $matchingSourceText[$declarationPath] } else { '' }
 $methodDefinitions = @([regex]::Matches($declarationText, '(?m)^\s*(?<return>[^\r\n;()]+?)\s+(?<method>[A-Za-z_]\w*)\s*\(') | ForEach-Object {
     [pscustomobject]@{ name = $_.Groups['method'].Value; returns = $_.Groups['return'].Value.Trim() }
 })
@@ -59,7 +69,7 @@ $consumerPaths = @($searchMatches | ForEach-Object { ($_ -split ':', 3)[0].Repla
     $_ -ne $declarationPath -and ($IncludeTests -or $_ -notmatch '(^|/)tests?/|\.Tests?/')
 } | Sort-Object -Unique)
 $consumers = foreach ($path in $consumerPaths) {
-    $text = [IO.File]::ReadAllText((Join-Path $repositoryRoot $path))
+    $text = $matchingSourceText[$path]
     $variableNames = @([regex]::Matches($text, "\b$escapedContract\s+(?<name>[A-Za-z_]\w*)") | ForEach-Object { $_.Groups['name'].Value } | Sort-Object -Unique)
     $methods = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
     foreach ($variable in $variableNames) {

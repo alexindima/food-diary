@@ -36,3 +36,45 @@ foreach ($consumer in @($result.consumers | Where-Object access -eq 'mutation'))
     }
 }
 Write-Host "LLM Wiki contract consumer tests passed: $($result.readiness.productionConsumers) production consumer(s)."
+
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$repositoryRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
+$fixtureParent = Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot -IndependentRepository
+$fixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'contract-consumer-scan' -IndependentRepository
+function Write-ScanFixture([string]$Path, [string]$Text) {
+    $absolute = [IO.Path]::Combine($fixture, $Path)
+    [void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($absolute))
+    [IO.File]::WriteAllText($absolute, $Text, [Text.UTF8Encoding]::new($false))
+}
+try {
+    foreach ($tool in @('Get-LlmWikiContractConsumers.ps1', 'LlmWikiGitPaths.ps1')) {
+        Write-ScanFixture ".llm-wiki/tools/$tool" ([IO.File]::ReadAllText((Join-Path $PSScriptRoot $tool)))
+    }
+    Write-ScanFixture '.gitignore' ".artifacts/`n"
+    Write-ScanFixture 'Modules/Probe/Application.Abstractions/IScanProbe.cs' "public interface IScanProbe {`n string Read();`n}"
+    Write-ScanFixture 'Modules/Probe/Application/Consumer.cs' "public class Consumer(IScanProbe source) {`r`n public string Execute() => source.Read();`r`n}"
+    Write-ScanFixture 'Shared/Папка с пробелом/Reference.cs' "// case-insensitive reference`r// iscanprobe`rpublic class Reference {}"
+    Write-ScanFixture 'Modules/Probe/Application.Tests/ConsumerTests.cs' "public class ConsumerTests(IScanProbe source) {`n public string Execute() => source.Read();`n}"
+    Write-ScanFixture 'Shared/WholeWord.cs' 'public class WholeWord(IScanProbeSuffix source, BeforeIScanProbe other) {}'
+    Write-ScanFixture 'Shared/Deleted.cs' '// IScanProbe'
+    & git -C $fixture init --quiet
+    if ($LASTEXITCODE -ne 0) { throw 'Contract scan fixture Git initialization failed.' }
+    & git -c core.autocrlf=false -C $fixture add -- .
+    if ($LASTEXITCODE -ne 0) { throw 'Contract scan fixture Git staging failed.' }
+    Remove-Item -LiteralPath ([IO.Path]::Combine($fixture, 'Shared/Deleted.cs'))
+    $tool = Join-Path $fixture '.llm-wiki/tools/Get-LlmWikiContractConsumers.ps1'
+    foreach ($includeTests in @($false, $true)) {
+        $scan = & $tool -Contract IScanProbe -IncludeTests:$includeTests -Format Json | ConvertFrom-Json
+        if ($scan.declarationPath -cne 'Modules/Probe/Application.Abstractions/IScanProbe.cs') { throw 'Contract declaration selection changed.' }
+        $expectedPaths = @('Modules/Probe/Application/Consumer.cs', 'Shared/Папка с пробелом/Reference.cs')
+        if ($includeTests) { $expectedPaths += 'Modules/Probe/Application.Tests/ConsumerTests.cs' }
+        if (@(Compare-Object @($scan.consumers.path) $expectedPaths).Count -ne 0) { throw 'Contract scan lost newline/case/word/test/deleted-file semantics.' }
+        $consumer = @($scan.consumers | Where-Object path -eq 'Modules/Probe/Application/Consumer.cs')[0]
+        if ($consumer.methods.Count -ne 1 -or $consumer.methods[0] -cne 'Read' -or $consumer.returnedData[0] -cne 'string') { throw 'Captured contract method/return analysis changed.' }
+    }
+    Write-Host 'Contract consumer mixed-newline, case, whole-word, Unicode path, tests and deleted-file regressions passed.'
+} finally {
+    $cleanup = [IO.Path]::GetFullPath($fixture)
+    if ([IO.Path]::GetDirectoryName($cleanup) -cne [IO.Path]::GetFullPath($fixtureParent).TrimEnd('\', '/')) { throw 'Contract scan fixture cleanup escaped its owned parent.' }
+    Remove-Item -LiteralPath $cleanup -Recurse -Force
+}

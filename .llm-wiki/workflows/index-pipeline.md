@@ -18,6 +18,8 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiLinux.ps1
   - .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
+  - .llm-wiki/tools/Get-LlmWikiContractConsumers.ps1
+  - .llm-wiki/tools/Test-LlmWikiContractConsumers.ps1
   - .llm-wiki/tools/Test-LlmWikiModulePageCache.ps1
   - .llm-wiki/tools/Test-LlmWikiBackendModuleModel.ps1
   - .llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1
@@ -281,6 +283,10 @@ The module-page generator takes one in-memory snapshot of the relevant C# source
 files, caches area-prefix lookups, and derives host namespace references from
 that snapshot. Do not reintroduce recursive source-tree reads inside the
 per-module loop; the backend-module regression explicitly guards this contract.
+Contract-consumer discovery reads each candidate C# file once, skips per-line
+PowerShell iteration when its text lacks the contract word, and reuses matching
+text for declaration and consumer analysis. This reduces uncached generation
+work while preserving the candidate inventory, line and word matching semantics.
 
 The default concurrency is four processes and can be changed for constrained environments:
 

@@ -1,9 +1,59 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { spawn } from 'node:child_process';
+import fs from 'node:fs';
+import { syncBuiltinESMExports } from 'node:module';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, utimesSync, writeFileSync } from 'node:fs';
 import { resolve, sep } from 'node:path';
 import { queryStandaloneIndexCache } from './code-graph-standalone-cache.mjs';
+
+test('cold projection and cache reuse each read the source twice and reject an edit before final validation', () => {
+  const parent = resolve(import.meta.dirname,'../../.artifacts/llm-wiki/standalone-cache-fixtures');
+  mkdirSync(parent,{recursive:true});
+  const root=mkdtempSync(resolve(parent,'captured-'));
+  const generated=resolve(root,'.llm-wiki/generated');
+  mkdirSync(generated,{recursive:true});
+  const source=resolve(generated,'csharp-symbol-index.json');
+  const originalRead=fs.readFileSync;
+  let sourceReads=0,changeBeforeFinalRead=false;
+  fs.readFileSync=(path,...argumentsList)=>{
+    if (path===source) {
+      sourceReads++;
+      if (changeBeforeFinalRead && sourceReads===2) {
+        const timestamp=statSync(source);
+        writeFileSync(source,JSON.stringify({entries:[{name:'Gamma'}]}));
+        utimesSync(source,timestamp.atime,timestamp.mtime);
+      }
+    }
+    return originalRead(path,...argumentsList);
+  };
+  syncBuiltinESMExports();
+  try {
+    writeFileSync(source,JSON.stringify({entries:[{name:'Alpha'}]}));
+    const options={index:'symbols',query:'Alpha',limit:2};
+    const cold=queryStandaloneIndexCache(root,options);
+    assert.equal(cold.ready,true);
+    assert.equal(sourceReads,2);
+    const coldCacheBytes=originalRead(cold.cacheDatabasePath);
+    sourceReads=0;
+    assert.deepEqual(queryStandaloneIndexCache(root,options),cold);
+    assert.equal(sourceReads,2);
+    writeFileSync(source,JSON.stringify({entries:[{name:'Delta'}]}));
+    sourceReads=0;changeBeforeFinalRead=true;
+    const raced=queryStandaloneIndexCache(root,{...options,query:'Delta'});
+    assert.equal(raced.ready,false);
+    assert.equal(raced.unavailableReason,'standalone-index-source-changed');
+    assert.equal(sourceReads,2);
+    const files=readdirSync(resolve(root,'.artifacts/llm-wiki/standalone-index-cache'));
+    assert.equal(files.filter(name=>name.endsWith('.sqlite')).length,1);
+    assert.equal(files.some(name=>name.endsWith('.tmp')),false);
+    assert.deepEqual(originalRead(cold.cacheDatabasePath),coldCacheBytes);
+  } finally {
+    fs.readFileSync=originalRead;syncBuiltinESMExports();
+    assert.ok(resolve(root).startsWith(parent+sep));
+    rmSync(root,{recursive:true,force:true});
+  }
+});
 
 test('isolated standalone cache selects only its source, reuses content and recovers corruption without creating a code graph', async () => {
   const parent = resolve(import.meta.dirname,'../../.artifacts/llm-wiki/standalone-cache-fixtures');

@@ -1170,11 +1170,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiContractConsumers.ps1",
-      "nonBlankLines": 120,
-      "decisionPoints": 25,
+      "nonBlankLines": 130,
+      "decisionPoints": 27,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 41.9
+      "structuralRiskScore": 45.1
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiCoveragePlan.ps1",
@@ -1866,11 +1866,11 @@
     },
     {
       "path": ".llm-wiki/tools/LlmWikiStandaloneIndex.ps1",
-      "nonBlankLines": 50,
-      "decisionPoints": 12,
+      "nonBlankLines": 55,
+      "decisionPoints": 14,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21
+      "structuralRiskScore": 24.1
     },
     {
       "path": ".llm-wiki/tools/LlmWikiTaskAuditHelpers.ps1",
@@ -65629,7 +65629,7 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiSmokeSandbox.ps1",
       "line": 1,
-      "testReferenceCount": 43,
+      "testReferenceCount": 44,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAcceptancePacketReuse.ps1",
         ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
@@ -65637,6 +65637,7 @@
         ".llm-wiki/tools/Test-LlmWikiApplicationModulePaths.ps1",
         ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
         ".llm-wiki/tools/Test-LlmWikiContextFeedbackMetrics.ps1",
+        ".llm-wiki/tools/Test-LlmWikiContractConsumers.ps1",
         ".llm-wiki/tools/Test-LlmWikiContractReferenceExtractor.ps1",
         ".llm-wiki/tools/Test-LlmWikiCriticalToolContracts.ps1",
         ".llm-wiki/tools/Test-LlmWikiDependencyManifest.ps1",

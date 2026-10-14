@@ -41,7 +41,7 @@ function collectSections(document, prefix = '', depth = 0, sections = []) {
   return sections;
 }
 
-export function refreshStandaloneIndexes(database, root, indexes = [...sources.keys(), 'modules']) {
+export function refreshStandaloneIndexes(database, root, indexes = [...sources.keys(), 'modules'], capturedSources = new Map()) {
   database.exec(`
     CREATE TABLE IF NOT EXISTS standalone_indexes(
       index_name TEXT PRIMARY KEY, source_path TEXT NOT NULL,
@@ -69,7 +69,7 @@ export function refreshStandaloneIndexes(database, root, indexes = [...sources.k
     ON CONFLICT(index_name,section_name,ordinal) DO UPDATE SET search_text=excluded.search_text,payload_json=excluded.payload_json`);
   let refreshed = 0;
   for (const index of indexes) {
-    const source = readSource(root, index);
+    const source = capturedSources.has(index) ? capturedSources.get(index) : readSource(root, index);
     if (!source) {
       for (const table of ['standalone_index_records', 'standalone_index_sections', 'standalone_indexes']) {
         database.prepare(`DELETE FROM ${table} WHERE index_name=?`).run(index);
@@ -122,8 +122,7 @@ export function refreshStandaloneIndexes(database, root, indexes = [...sources.k
 
 export { readSource as readStandaloneIndexSource };
 
-export function standaloneIndexStatus(database, root, index) {
-  const source = readSource(root, index);
+export function standaloneIndexStatus(database, root, index, source = readSource(root, index)) {
   if (!source) return { ready: false, unavailableReason: 'compiled-source-missing', index };
   const hasTable = database.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name='standalone_indexes'").get();
   if (!hasTable) return { ready: false, unavailableReason: 'standalone-index-projection-missing', index };
@@ -134,9 +133,9 @@ export function standaloneIndexStatus(database, root, index) {
   return { ready: true, index, sourcePath: row.source_path, sourceHash: row.content_hash, header: JSON.parse(row.header_json) };
 }
 
-export function queryStandaloneIndex(database, root, { index, query = '', limit = 12 }) {
+export function queryStandaloneIndex(database, root, { index, query = '', limit = 12 }, source) {
   if (!Number.isInteger(limit) || limit < 1 || limit > 50) throw new Error('Compiled-index limit must be between 1 and 50.');
-  const status = standaloneIndexStatus(database, root, index);
+  const status = standaloneIndexStatus(database, root, index, source);
   if (!status.ready) return status;
   const terms = [...new Set((String(query).toLowerCase().match(/[\p{L}\p{N}_-]+/gu) ?? []).filter(term => term.length > 1))];
   const predicates = terms.map(() => "instr(search_text, ?) > 0");
@@ -167,10 +166,12 @@ export function queryStandaloneIndex(database, root, { index, query = '', limit 
   return { ready: true, index: result };
 }
 
-export function queryStandaloneIndexSnapshot(database, root, options) {
+// A private cache builder can pass its captured source through projection and
+// initial validation. The final status always rereads the live published source.
+export function queryStandaloneIndexSnapshot(database, root, options, source) {
   database.exec('BEGIN');
   try {
-    const result = queryStandaloneIndex(database, root, options);
+    const result = queryStandaloneIndex(database, root, options, source);
     if (result.ready) {
       const after = standaloneIndexStatus(database, root, options.index);
       if (!after.ready || after.sourceHash !== result.index.compiledIndex.sourceHash) {

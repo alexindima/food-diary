@@ -96,6 +96,7 @@ compare the published JSON source hash before and after the query. They use an
 existing in-process reader build for ASCII queries; Node retains ECMAScript
 Unicode folding and exact module-inventory serialization. A standalone read
 does not compile a missing .NET reader or prepare a complete repository clone.
+If no database exists, it also skips loading the existing .NET reader.
 
 When the shared projection is missing, stale or unreadable, the same Node writer
 builds an isolated SQLite cache of only the requested published source. Its key
@@ -103,7 +104,10 @@ includes source content, projector code and Node runtime. Publication is atomic,
 concurrent equivalent writers reuse the same generation, and corrupt derived
 caches are quarantined separately from the shared graph. Each index retains its
 current generation and one predecessor when old files are not busy. Source
-changes during preparation reject publication. The existing isolated recovery
+changes during preparation reject publication. Cache preparation uses one
+captured source for the content address, projection and initial query validation,
+then rereads and hashes the source after the SQL query before publication. Cache
+reuse preserves the same two full source reads. The existing isolated recovery
 path remains available if the lightweight reader cannot prepare its projection.
 This validates the projection against its published source; `-CheckFreshness`
 and `verify` still establish generation and repository-source freshness.

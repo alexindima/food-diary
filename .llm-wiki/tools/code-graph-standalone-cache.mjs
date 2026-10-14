@@ -35,7 +35,7 @@ export function queryStandaloneIndexCache(root, options) {
     try {
       db = new DatabaseSync(sqliteDatabasePath(target), { readOnly: true });
       if (db.prepare("SELECT value FROM metadata WHERE key='standalone_cache_key'").get()?.value !== cacheKey) return null;
-      const result = queryStandaloneIndexSnapshot(db, root, options);
+      const result = queryStandaloneIndexSnapshot(db, root, options, source);
       return result.ready ? { ...result, cacheDatabasePath: target } : null;
     } catch { return null; }
     finally { db?.close(); }
@@ -52,10 +52,10 @@ export function queryStandaloneIndexCache(root, options) {
   try {
     db = new DatabaseSync(sqliteDatabasePath(temporary));
     db.exec('CREATE TABLE metadata(key TEXT PRIMARY KEY,value TEXT NOT NULL); BEGIN IMMEDIATE');
-    refreshStandaloneIndexes(db, root, [options.index]);
+    refreshStandaloneIndexes(db, root, [options.index], new Map([[options.index, source]]));
     db.prepare('INSERT INTO metadata VALUES (?,?)').run('standalone_cache_key', cacheKey);
     db.exec('COMMIT');
-    const result = queryStandaloneIndexSnapshot(db, root, options);
+    const result = queryStandaloneIndexSnapshot(db, root, options, source);
     if (!result.ready || result.index.compiledIndex.sourceHash !== source.contentHash) {
       return { ready: false, index: options.index, unavailableReason: 'standalone-index-source-changed' };
     }

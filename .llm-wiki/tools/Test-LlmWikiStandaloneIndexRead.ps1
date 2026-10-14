@@ -51,10 +51,31 @@ try {
     Move-Item -LiteralPath $database -Destination "$database.saved"
     $missingDatabase = [LlmWiki.SqliteReader.StandaloneIndexReader]::Query($fixture, 'symbols', '', 2) | ConvertFrom-Json
     if ($missingDatabase.unavailableReason -ne 'standalone-index-projection-missing' -or (Test-Path -LiteralPath $database)) { throw 'Read-only query created a missing database.' }
-    $cold = Invoke-LlmWikiStandaloneIndexRead -RepositoryRoot $fixture -Index symbols -Query Alpha_ -Limit 2 | ConvertFrom-Json
+    $originalInitializer = (Get-Item Function:\Initialize-LlmWikiInProcessSqlite).ScriptBlock
+    $script:coldReaderInitializationAttempts = 0
+    Set-Item Function:\Initialize-LlmWikiInProcessSqlite -Value {
+        $script:coldReaderInitializationAttempts++
+        throw 'A cache-missing read must not initialize the existing .NET reader.'
+    }
+    try {
+        $cold = Invoke-LlmWikiStandaloneIndexRead -RepositoryRoot $fixture -Index symbols -Query Alpha_ -Limit 2 | ConvertFrom-Json
+        if ($script:coldReaderInitializationAttempts -ne 0) { throw 'Cold read unnecessarily initialized the .NET reader.' }
+    } finally { Set-Item Function:\Initialize-LlmWikiInProcessSqlite -Value $originalInitializer }
     if (-not $cold.ready -or (Test-Path -LiteralPath $database) -or -not (Test-Path -LiteralPath $cold.cacheDatabasePath)) { throw 'Cold read did not prepare an isolated index-only cache.' }
     $warm = Invoke-LlmWikiStandaloneIndexRead -RepositoryRoot $fixture -Index symbols -Query Alpha_ -Limit 2 | ConvertFrom-Json
     if (-not $warm.ready -or $warm.index.compiledIndex.sourceHash -cne $cold.index.compiledIndex.sourceHash) { throw 'Prepared standalone cache was not reusable in process.' }
+    $results.Clear()
+    foreach ($case in $expected.cases) {
+        $json = Invoke-LlmWikiStandaloneIndexRead -RepositoryRoot $fixture -Index $case.index -Query $case.query -Limit $case.limit
+        $result = $json | ConvertFrom-Json
+        if (-not $result.ready) { throw "Private cache query failed: $($case.index) / $($case.query)" }
+        # This internal cache hint is outside the published index response.
+        $result.PSObject.Properties.Remove('cacheDatabasePath')
+        $results.Add(($result | ConvertTo-Json -Depth 100 -Compress))
+    }
+    ConvertTo-Json -InputObject @($results) -Depth 5 | Set-Content -LiteralPath (Join-Path $fixture 'actual.json') -Encoding utf8
+    & node $fixtureTool compare $fixture
+    if ($LASTEXITCODE -ne 0) { throw 'Cache-missing/private cache cross-runtime result parity failed.' }
     Move-Item -LiteralPath "$database.saved" -Destination $database
     $longRoot = Join-Path $fixture ('long-source-root-' * 10)
     $longGenerated = Join-Path $longRoot '.llm-wiki/generated'

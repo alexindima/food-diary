@@ -290,21 +290,37 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "59e4d3519b22c1f11de331406c84660a02fa5a9a5d9be957517489b439ce4afd",
+      "pageSha256": "80ab35f01b2e06ceb9eaf25d594714294deb388f73c536ade1a9e1d6e39654c9",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "30289f32a19ec4149c7f2137ca9b10aceb38b155814c0a75d47ccfec4a6e6a78"
+          "path": ".llm-wiki/tools/code-graph-index-query.mjs",
+          "sha256": "b070514f3a3df650dac01cda35003fe15fc6249f65a33e100533ebf8eb8a1d47"
         },
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "93a94eedf90ab972372d28427f7c0a15ca44d96c194d2add5eb56f70b3cabab2"
+          "path": ".llm-wiki/tools/code-graph-index-query.test.mjs",
+          "sha256": "2aee623137241ccd418584ea4fee9e2082cdc69ff3aac6e06738c7b248f6cce7"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-standalone-cache.mjs",
+          "sha256": "ada0fd97ff11a7ff77d3a2be7946622fef2deb9554702fe43045c037ef721ec8"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-standalone-cache.test.mjs",
+          "sha256": "e32ccdf52ca20eff5109335ade7ddce13c960464e0bbd3cfdffc53c172772c4c"
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiStandaloneIndex.ps1",
+          "sha256": "73c9df115a8aa920cec6506b8a921f009643c43437c13539e490677db1280d2b"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiStandaloneIndexRead.ps1",
+          "sha256": "3d5d7d44d720987838b418a2cebb6c8fc39d4666c9ce2e087724505b37bfe27b"
         }
       ],
-      "reason": "Compared the JSON dispatcher with the page facade inputs. It preserves original bound parameters, lifecycle payloads and receipts while emitting one JSON document. Facade-contract and tool-contract regressions passed; no graph writer, parser or search ranking contract changed.",
+      "reason": "Verified cold-read invariants in the final sources and tests: no reader initialization without a database; captured source reused for projection and initial SQL validation; fresh full source read after SQL; same-size/timestamp races reject publication; exact 145-case parity for shared and private projections. Contract-consumer whole-file rejection uses the same word pattern and candidate inventory, StringReader preserves newline behavior, captured matching text preserves method analysis, and real contract results and all module-page output bytes remain identical. Updated workflow content and declared sources accordingly.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:26:35.3812291Z"
+      "gitHead": "13aa3dc57b46fe35a2efdabe5d26242a0c8bea6a",
+      "reviewedAtUtc": "2026-10-14T10:14:13.8335222Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -683,25 +699,37 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "8c8aff64bfc1811147a58a435a34a10950c1448a9d57bfc50802f9d45ffdbbf7",
+      "pageSha256": "c771506aa565fdacd6c8ec19f64cd3e673b3ee7e2a9b87ffb856205e80f4b2d4",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "60e7a5752c9cae946f8c696e71a6e4e44ff2355658e995f646a9321882a8d1fb"
+          "path": ".llm-wiki/tools/code-graph-index-query.mjs",
+          "sha256": "b070514f3a3df650dac01cda35003fe15fc6249f65a33e100533ebf8eb8a1d47"
         },
         {
-          "path": ".llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1",
-          "sha256": "6c99ef1b5fc2031f71247880d34eceddce86af53fde20ff39d0c95f5439d6c15"
+          "path": ".llm-wiki/tools/code-graph-standalone-cache.mjs",
+          "sha256": "ada0fd97ff11a7ff77d3a2be7946622fef2deb9554702fe43045c037ef721ec8"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
-          "sha256": "72e8cbb8ab5c25efde3664ac547aa20924991ebc5060a8e9997ae8568b072b84"
+          "path": ".llm-wiki/tools/Get-LlmWikiContractConsumers.ps1",
+          "sha256": "7dc1a81912699685c80f5dbd9fe2d769ad4dcb0157db8915c8727f71a3cb2992"
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiStandaloneIndex.ps1",
+          "sha256": "73c9df115a8aa920cec6506b8a921f009643c43437c13539e490677db1280d2b"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiContractConsumers.ps1",
+          "sha256": "3c076e6270780110960682e8f208dbd474baa8cf84184292cd87be14d49ecef8"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiStandaloneIndexRead.ps1",
+          "sha256": "3d5d7d44d720987838b418a2cebb6c8fc39d4666c9ce2e087724505b37bfe27b"
         }
       ],
-      "reason": "Core smoke now validates the current generated linkGoogle transport and retains its POST method and endpoint assertions; focused frontend-contract tests enforce the same contract.",
+      "reason": "Verified cold-read invariants in the final sources and tests: no reader initialization without a database; captured source reused for projection and initial SQL validation; fresh full source read after SQL; same-size/timestamp races reject publication; exact 145-case parity for shared and private projections. Contract-consumer whole-file rejection uses the same word pattern and candidate inventory, StringReader preserves newline behavior, captured matching text preserves method analysis, and real contract results and all module-page output bytes remain identical. Updated workflow content and declared sources accordingly.",
       "baseRef": "HEAD",
-      "gitHead": "63d3954ebf974ed5a2a8165ff4abd09d6bae58c6",
-      "reviewedAtUtc": "2026-10-07T15:28:39.6767599Z"
+      "gitHead": "13aa3dc57b46fe35a2efdabe5d26242a0c8bea6a",
+      "reviewedAtUtc": "2026-10-14T10:14:14.2917753Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -891,13 +919,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "3c05a60d6bbf89331c09e87413c47c6725e970bb73a7e661fdac8df2eea64fe5"
+          "sha256": "87ac21f7fca4aab14a7e412da2be2646ab71ba2a1e9479b1b7efd4fecfe40604"
         }
       ],
-      "reason": "Reviewed the final quality-index diff: the additional critical signal is the Wiki-only LlmWikiStandaloneIndex helper; existing product symbols and runtime/security inventories retain their meaning. Hotspot changes reflect tooling structure. Security evidence still excludes Wiki tool symbols, and references remain navigation rather than executed security proof. The helper caches only published navigation JSON with exact source hashes and bounded normal-generation retention.",
+      "reason": "Reviewed the regenerated quality index diff: only the two edited Wiki tool complexity metrics and the added direct test reference to LlmWikiSmokeSandbox changed. Product/security critical-symbol records and runtime/sensitive sources are unchanged. These pages still correctly describe static navigation/test-reference evidence, bounded SQLite queries, exact source validation and the limits of security discovery; no prose change is needed.",
       "baseRef": "HEAD",
-      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
-      "reviewedAtUtc": "2026-10-14T09:23:33.4464888Z"
+      "gitHead": "13aa3dc57b46fe35a2efdabe5d26242a0c8bea6a",
+      "reviewedAtUtc": "2026-10-14T10:14:39.7095389Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -985,13 +1013,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "3c05a60d6bbf89331c09e87413c47c6725e970bb73a7e661fdac8df2eea64fe5"
+          "sha256": "87ac21f7fca4aab14a7e412da2be2646ab71ba2a1e9479b1b7efd4fecfe40604"
         }
       ],
-      "reason": "Reviewed the final quality-index diff: the additional critical signal is the Wiki-only LlmWikiStandaloneIndex helper; existing product symbols and runtime/security inventories retain their meaning. Hotspot changes reflect tooling structure. Security evidence still excludes Wiki tool symbols, and references remain navigation rather than executed security proof. The helper caches only published navigation JSON with exact source hashes and bounded normal-generation retention.",
+      "reason": "Reviewed the regenerated quality index diff: only the two edited Wiki tool complexity metrics and the added direct test reference to LlmWikiSmokeSandbox changed. Product/security critical-symbol records and runtime/sensitive sources are unchanged. These pages still correctly describe static navigation/test-reference evidence, bounded SQLite queries, exact source validation and the limits of security discovery; no prose change is needed.",
       "baseRef": "HEAD",
-      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
-      "reviewedAtUtc": "2026-10-14T09:23:34.1542309Z"
+      "gitHead": "13aa3dc57b46fe35a2efdabe5d26242a0c8bea6a",
+      "reviewedAtUtc": "2026-10-14T10:14:40.1655310Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
