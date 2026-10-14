@@ -6,6 +6,7 @@ $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 $sandboxRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'sqlite-cold-checkout'
 $checkoutRoot = Join-Path $sandboxRoot 'repository'
+$shellPath = (Get-Process -Id $PID).Path
 function Assert-ColdCheckout([bool]$Condition, [string]$Message) { if (-not $Condition) { throw $Message } }
 try {
     & git clone --shared --quiet --no-checkout $repositoryRoot $checkoutRoot
@@ -19,24 +20,24 @@ try {
     Assert-ColdCheckout (-not (Test-Path $databasePath)) 'Cold fixture unexpectedly has a SQLite projection.'
     $facade = Join-Path $checkoutWiki 'wiki.ps1'
     $backendPath = 'Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs'
-    $diff = & $facade diff -ChangedPath $backendPath -BackendOnlyRefresh -ChangeType Backend -Format Json -Limit 3 | ConvertFrom-Json
+    $diff = & $shellPath -NoLogo -NoProfile -File $facade diff -ChangedPath $backendPath -BackendOnlyRefresh -ChangeType Backend -Format Json -Limit 3 | ConvertFrom-Json
     Assert-ColdCheckout (@($diff.modules.name) -contains 'Billing') 'Cold SQLite diff lost module ownership.'
     Assert-ColdCheckout (-not (Test-Path $databasePath)) 'Read-only facade wrote a SQLite database in the source checkout.'
-    $brief = & $facade brief -Intent 'Review billing webhook idempotency' -ProposedPath $backendPath -BackendOnlyRefresh -ChangeType Backend -Compact -Format Json -Limit 3 | ConvertFrom-Json
+    $brief = & $shellPath -NoLogo -NoProfile -File $facade brief -Intent 'Review billing webhook idempotency' -ProposedPath $backendPath -BackendOnlyRefresh -ChangeType Backend -Compact -Format Json -Limit 3 | ConvertFrom-Json
     Assert-ColdCheckout ($brief.analysis.mode -eq 'planned-paths' -and $brief.analysis.impactIndex.source -eq 'sqlite-task-brief-impact') 'Cold backend brief lost SQLite evidence.'
-    $journeys = & $facade journeys -Intent 'Review billing webhook idempotency' -ProposedPath $backendPath -BackendOnlyRefresh -ChangeType Backend -Format Json -Limit 3 | ConvertFrom-Json
+    $journeys = & $shellPath -NoLogo -NoProfile -File $facade journeys -Intent 'Review billing webhook idempotency' -ProposedPath $backendPath -BackendOnlyRefresh -ChangeType Backend -Format Json -Limit 3 | ConvertFrom-Json
     Assert-ColdCheckout (@($journeys.journeys.id) -contains 'FD-BILLING') 'Cold journeys lost billing scenarios.'
-    $plan = & $facade test-plan -Intent 'Review billing webhook idempotency' -ProposedPath $backendPath -BackendOnlyRefresh -ChangeType Backend -Format Json -Limit 3 | ConvertFrom-Json
+    $plan = & $shellPath -NoLogo -NoProfile -File $facade test-plan -Intent 'Review billing webhook idempotency' -ProposedPath $backendPath -BackendOnlyRefresh -ChangeType Backend -Format Json -Limit 3 | ConvertFrom-Json
     Assert-ColdCheckout (@($plan.scenarios).Count -gt 0) 'Cold SQLite test-plan omitted scenarios.'
     foreach ($index in @('catalog','symbols','frontend','frontend-contract','backend-contract','architecture-health','domain-data','configuration','quality','runtime','sensitive-data','modules')) {
-        $result = & $facade $index -BackendOnlyRefresh -Format Json -Limit 2 | ConvertFrom-Json
+        $result = & $shellPath -NoLogo -NoProfile -File $facade $index -BackendOnlyRefresh -Format Json -Limit 2 | ConvertFrom-Json
         Assert-ColdCheckout ($result.compiledIndex.source -eq 'sqlite-standalone-index' -and $result.compiledIndex.fresh) "Cold index '$index' lost SQLite or freshness."
     }
     Assert-ColdCheckout (-not (Test-Path $databasePath)) 'Standalone read-only indexes modified the source checkout.'
     $frontendDiagnostics = [Collections.Generic.List[string]]::new()
     $frontendFailed = $false
     try {
-        & $facade context -Query DashboardComponent -ChangeType Frontend -Format Json -Limit 2 2>&1 | ForEach-Object { $frontendDiagnostics.Add($_.ToString()) }
+        & $shellPath -NoLogo -NoProfile -File $facade context -Query DashboardComponent -ChangeType Frontend -Format Json -Limit 2 2>&1 | ForEach-Object { $frontendDiagnostics.Add($_.ToString()) }
         $frontendFailed = $LASTEXITCODE -ne 0
     } catch { $frontendFailed = $true; $frontendDiagnostics.Add($_.Exception.Message) }
     Assert-ColdCheckout ($frontendFailed -and ($frontendDiagnostics -join "`n") -match 'TypeScript|typescript|npm ci') `

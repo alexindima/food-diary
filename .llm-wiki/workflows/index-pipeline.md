@@ -76,6 +76,14 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiStandaloneIndexRoutes.ps1
   - .llm-wiki/tools/Build-LlmWikiInProcessSqliteReader.ps1
   - .llm-wiki/tools/LlmWikiInProcessSqlite.ps1
+  - .llm-wiki/tools/LlmWikiStandaloneIndex.ps1
+  - .llm-wiki/tools/Read-LlmWikiCompiledIndex.ps1
+  - .llm-wiki/tools/LlmWiki.SqliteReader/StandaloneIndexReader.cs
+  - .llm-wiki/tools/code-graph-index-query.mjs
+  - .llm-wiki/tools/code-graph-standalone-cache.mjs
+  - .llm-wiki/tools/code-graph-database-path.mjs
+  - .llm-wiki/tools/read-standalone-index.mjs
+  - .llm-wiki/tools/Test-LlmWikiStandaloneIndexRead.ps1
   - .llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs
   - .llm-wiki/tools/Test-LlmWikiDomainDataQueries.ps1
   - .llm-wiki/tools/Test-LlmWikiChangedTools.ps1
@@ -102,6 +110,21 @@ sources:
 ---
 
 # Run the Staged Index Pipeline
+
+Standalone index queries bypass full snapshot preparation when their published
+source matches a read-only SQLite transaction. Missing or stale projections use
+a separate content-addressed cache of the selected JSON index, preserving the
+shared graph and the existing Node writer. Source hashes are checked before and
+after reads and cache publication; timestamps cannot establish freshness.
+The existing .NET reader is reused when available without building it during a
+standalone read. Unicode queries and module lists retain Node semantics.
+Query results report published-source consistency, while generation checks and
+full verification retain their separate authority.
+
+Refresh of a changed standalone index updates only changed record slots and
+section metadata. Header-only changes do not rewrite record payloads. Index
+updates preserve order, remove obsolete sections and tail records, and remain
+inside the graph writer's transaction.
 
 Module-page generation supports `-ReuseUnchangedCheck` in both check and update
 mode. Its schema 2 receipt hashes every output Markdown page, all Git-visible

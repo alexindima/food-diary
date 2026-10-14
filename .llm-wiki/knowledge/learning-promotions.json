@@ -1,5 +1,70 @@
 {
   "schemaVersion": 1,
-  "hashSchemaVersion": 2,
-  "events": []
+  "events": [
+    {
+      "schemaVersion": 1,
+      "sequence": 1,
+      "kind": "observed",
+      "id": "learning-08a457b53cbcc7519a45",
+      "createdAtUtc": "2026-10-14T09:44:06.8947139Z",
+      "previousHash": "",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/index-performance-20261014",
+        "retrospectiveHash": "09c08b3088ea08e84c478d80e01598c01d8e217a331d348715f774abae93c9db",
+        "completionFingerprint": "179f54d971aab436904d30f042aa217dfb4244d28a8e91707472da7d58c80997",
+        "packetFingerprint": "c4dd2f6fd9ecf2edb7a8718aae54bb6610e3f7fa1861e09bac81d787803e9572",
+        "sourceCandidateId": "cost-wiki-verify",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'wiki-verify'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1164s versus 515s, error 126.02%.",
+        "score": 70,
+        "evidence": [
+          "error=126.02%",
+          "wiki-verify"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "wiki-verify",
+          "recommendedSeconds": 515.0,
+          "expectedSeconds": 1164.0,
+          "errorPercent": 126.02
+        },
+        "changedPaths": [
+          ".llm-wiki/policies/affected-smoke-catalog.psd1",
+          ".llm-wiki/tools/Build-LlmWikiInProcessSqliteReader.ps1",
+          ".llm-wiki/tools/code-graph-database-path.mjs",
+          ".llm-wiki/tools/code-graph-index-query.mjs",
+          ".llm-wiki/tools/code-graph-index-query.test.mjs",
+          ".llm-wiki/tools/code-graph-standalone-cache.mjs",
+          ".llm-wiki/tools/code-graph-standalone-cache.test.mjs",
+          ".llm-wiki/tools/code-graph-standalone-fixture.mjs",
+          ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+          ".llm-wiki/tools/LlmWiki.SqliteReader/StandaloneIndexReader.cs",
+          ".llm-wiki/tools/LlmWikiInProcessSqlite.ps1",
+          ".llm-wiki/tools/LlmWikiStandaloneIndex.ps1",
+          ".llm-wiki/tools/Read-LlmWikiCompiledIndex.ps1",
+          ".llm-wiki/tools/read-standalone-index.mjs",
+          ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
+          ".llm-wiki/tools/Test-LlmWikiSqliteColdCheckout.ps1",
+          ".llm-wiki/tools/Test-LlmWikiStandaloneIndexRead.ps1",
+          ".llm-wiki/wiki.ps1",
+          ".llm-wiki/workflows/code-graph.md",
+          ".llm-wiki/workflows/index-pipeline.md"
+        ],
+        "subjectIds": [
+          "wiki-verify"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "b479141ddc76a2c15c713bcd69dfb08288facfa2673f2b15fff832b399ef99d5"
+    }
+  ],
+  "hashSchemaVersion": 2
 }

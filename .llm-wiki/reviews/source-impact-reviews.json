@@ -425,14 +425,14 @@
       "pageSha256": "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+          "path": ".llm-wiki/knowledge/learning-promotions.json",
+          "sha256": "5b4aea38f98d03621963cb2809b98c5b06a15fe4251310752d7fba237239a431"
         }
       ],
-      "reason": "Compared completion observation calls with the page lifecycle. The same sealed retrospective, guarded learning eligibility and outcome scoring remain in place; dry-run previews and the refreshed report add visibility before final delivery. Governed-delivery regressions passed.",
+      "reason": "Task completion added its own learning, eval and instruction-outcome observations through the existing managed workflow. Reviewed the observation-only diffs and verified all three registries with their native validators; no promotion approval, applied policy, instruction scope or eval execution contract changed. Existing guides continue to describe the same review and promotion boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:26:40.0317327Z"
+      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
+      "reviewedAtUtc": "2026-10-14T09:48:36.8151603Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -505,13 +505,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "93a94eedf90ab972372d28427f7c0a15ca44d96c194d2add5eb56f70b3cabab2"
+          "sha256": "1fafbee70c4f9a78ec3a356bfef15c51b62ac54b9e0c23805efd96fc31495625"
         }
       ],
-      "reason": "Compared the JSON dispatcher with the page facade inputs. It preserves original bound parameters, lifecycle payloads and receipts while emitting one JSON document. Facade-contract and tool-contract regressions passed; no graph writer, parser or search ranking contract changed.",
+      "reason": "Reviewed the facade diff: only Read-LlmWikiCompiledIndex dispatch now delegates direct read-only transactions and isolated recovery to its reader. Adaptive routing, diff, maintenance and dispatch commands retain their existing branches, parameters and evidence contracts; their workflow descriptions remain current.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:26:43.117031Z"
+      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
+      "reviewedAtUtc": "2026-10-14T09:10:58.1184088Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -519,14 +519,18 @@
       "pageSha256": "3e6c8653055b940700866104a57be1c900a5ae74cd666d7eb0eda5d0109942fd",
       "sources": [
         {
-          "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "2e3bd41fbeceff43dd966f23f871726b902e53bc3dbb66fc232fd40c5748d403"
+          "path": ".llm-wiki/tools/Build-LlmWikiInProcessSqliteReader.ps1",
+          "sha256": "49e9f6ac1e7d1bdb1d3b0c05edb006999336ebab16d1333fbcb15f99ae35c323"
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiInProcessSqlite.ps1",
+          "sha256": "edeb61d813ecb3f9219004f0384f3a207af5e0d0881f4a924c4e746b74c8950e"
         }
       ],
-      "reason": "Reviewed domain-data and quality guides against unchanged mappings and the new pure transition/value policies and privately validated Ready variant. Fifty-five domain, 149 application, 257 infrastructure, 12 real PostgreSQL, 2272 architecture and four API tests passed; three unrelated FFmpeg cases are skipped. Generated test references remain navigation, not execution coverage.",
+      "reason": "The reader build adds StandaloneIndexReader to its exact fingerprint and an opt-in CheckOnly probe; Initialize retains normal build and projection preparation by default. DomainDataReader, all six domain views, source-lineage checks and the existing query provider remain unchanged. Standalone commands opt into existing-build reuse separately.",
       "baseRef": "HEAD",
-      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
-      "reviewedAtUtc": "2026-10-10T11:42:30.1536421Z"
+      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
+      "reviewedAtUtc": "2026-10-14T09:11:01.2798284Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -705,14 +709,14 @@
       "pageSha256": "61d91d7cbe073b4d9d81be15b1391daea4fc698ef9abec557da5a9d9b45c26bb",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/knowledge/instruction-outcomes.json",
+          "sha256": "04d51ee4937210decec84f32681d7983f63fd1efa13df8e79f71aead0c1cd595"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:39.7487443Z"
+      "reason": "Task completion added its own learning, eval and instruction-outcome observations through the existing managed workflow. Reviewed the observation-only diffs and verified all three registries with their native validators; no promotion approval, applied policy, instruction scope or eval execution contract changed. Existing guides continue to describe the same review and promotion boundaries.",
+      "baseRef": "HEAD",
+      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
+      "reviewedAtUtc": "2026-10-14T09:48:37.4083628Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -739,14 +743,14 @@
       "pageSha256": "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+          "path": ".llm-wiki/knowledge/eval-promotions.json",
+          "sha256": "9769eac303b05e9a30e69ee32b8260e7656e8e9cbe8f99efa89ca7a325ff6405"
         }
       ],
-      "reason": "Compared completion observation calls with the page lifecycle. The same sealed retrospective, guarded learning eligibility and outcome scoring remain in place; dry-run previews and the refreshed report add visibility before final delivery. Governed-delivery regressions passed.",
+      "reason": "Task completion added its own learning, eval and instruction-outcome observations through the existing managed workflow. Reviewed the observation-only diffs and verified all three registries with their native validators; no promotion approval, applied policy, instruction scope or eval execution contract changed. Existing guides continue to describe the same review and promotion boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:26:48.0718757Z"
+      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
+      "reviewedAtUtc": "2026-10-14T09:48:37.9614612Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -887,13 +891,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "da58229eea8a75345d9d7ccf4475fdcae6114b208e1d721535c5efd017fa47bd"
+          "sha256": "3c05a60d6bbf89331c09e87413c47c6725e970bb73a7e661fdac8df2eea64fe5"
         }
       ],
-      "reason": "Reviewed the regenerated quality delta: structural line and branch counts increase only in the Markdown generator, cache helper and smoke registration. Product source metrics and reference semantics are unchanged. The new cache is covered by 24 behavioral fixture cases; static references remain navigation evidence rather than execution coverage.",
+      "reason": "Reviewed the final quality-index diff: the additional critical signal is the Wiki-only LlmWikiStandaloneIndex helper; existing product symbols and runtime/security inventories retain their meaning. Hotspot changes reflect tooling structure. Security evidence still excludes Wiki tool symbols, and references remain navigation rather than executed security proof. The helper caches only published navigation JSON with exact source hashes and bounded normal-generation retention.",
       "baseRef": "HEAD",
-      "gitHead": "280f161282832dcec44ff921b5ba717e87702d9d",
-      "reviewedAtUtc": "2026-10-14T07:33:58.0082039Z"
+      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
+      "reviewedAtUtc": "2026-10-14T09:23:33.4464888Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -981,13 +985,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "da58229eea8a75345d9d7ccf4475fdcae6114b208e1d721535c5efd017fa47bd"
+          "sha256": "3c05a60d6bbf89331c09e87413c47c6725e970bb73a7e661fdac8df2eea64fe5"
         }
       ],
-      "reason": "Reviewed cache scope and the quality projection: schema 2 receipts are opt-in local tooling artifacts, validate current source/inventory/output hashes, and cannot relax schema 1 index checks. Missing, corrupt and extra pages fail validation; the preserved product security inventory and curated controls are unchanged.",
+      "reason": "Reviewed the final quality-index diff: the additional critical signal is the Wiki-only LlmWikiStandaloneIndex helper; existing product symbols and runtime/security inventories retain their meaning. Hotspot changes reflect tooling structure. Security evidence still excludes Wiki tool symbols, and references remain navigation rather than executed security proof. The helper caches only published navigation JSON with exact source hashes and bounded normal-generation retention.",
       "baseRef": "HEAD",
-      "gitHead": "280f161282832dcec44ff921b5ba717e87702d9d",
-      "reviewedAtUtc": "2026-10-14T07:33:58.8046349Z"
+      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
+      "reviewedAtUtc": "2026-10-14T09:23:34.1542309Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1056,13 +1060,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "93a94eedf90ab972372d28427f7c0a15ca44d96c194d2add5eb56f70b3cabab2"
+          "sha256": "1fafbee70c4f9a78ec3a356bfef15c51b62ac54b9e0c23805efd96fc31495625"
         }
       ],
-      "reason": "Compared the JSON dispatcher with the page facade inputs. It preserves original bound parameters, lifecycle payloads and receipts while emitting one JSON document. Facade-contract and tool-contract regressions passed; no graph writer, parser or search ranking contract changed.",
+      "reason": "Reviewed the facade diff: only Read-LlmWikiCompiledIndex dispatch now delegates direct read-only transactions and isolated recovery to its reader. Adaptive routing, diff, maintenance and dispatch commands retain their existing branches, parameters and evidence contracts; their workflow descriptions remain current.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:27:02.4344421Z"
+      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
+      "reviewedAtUtc": "2026-10-14T09:10:58.5009803Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1256,17 +1260,17 @@
     {
       "pageId": "workflow.review-diff",
       "pagePath": ".llm-wiki/workflows/review-diff.md",
-      "pageSha256": "8b14b705356df0c8d113abdeadffa966c12a7457195b815ec996cddc6c344ffb",
+      "pageSha256": "7023047356e2bba7ad98e23c670c27159e08fbbf5d5ee242cf860fd1bbecc46e",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "1fafbee70c4f9a78ec3a356bfef15c51b62ac54b9e0c23805efd96fc31495625"
         }
       ],
-      "reason": "The existing smoke suite remains unchanged; real persistence journeys, scoped mutation testing and coding eval limits are documented in authoritative guides.",
+      "reason": "Reviewed the facade diff: only Read-LlmWikiCompiledIndex dispatch now delegates direct read-only transactions and isolated recovery to its reader. Adaptive routing, diff, maintenance and dispatch commands retain their existing branches, parameters and evidence contracts; their workflow descriptions remain current.",
       "baseRef": "HEAD",
-      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
-      "reviewedAtUtc": "2026-10-10T08:41:18.6826251Z"
+      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
+      "reviewedAtUtc": "2026-10-14T09:10:58.8208267Z"
     },
     {
       "pageId": "workflow.self-maintenance",
@@ -1275,13 +1279,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "93a94eedf90ab972372d28427f7c0a15ca44d96c194d2add5eb56f70b3cabab2"
+          "sha256": "1fafbee70c4f9a78ec3a356bfef15c51b62ac54b9e0c23805efd96fc31495625"
         }
       ],
-      "reason": "Compared the JSON dispatcher with the page facade inputs. It preserves original bound parameters, lifecycle payloads and receipts while emitting one JSON document. Facade-contract and tool-contract regressions passed; no graph writer, parser or search ranking contract changed.",
+      "reason": "Reviewed the facade diff: only Read-LlmWikiCompiledIndex dispatch now delegates direct read-only transactions and isolated recovery to its reader. Adaptive routing, diff, maintenance and dispatch commands retain their existing branches, parameters and evidence contracts; their workflow descriptions remain current.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:26:59.2450606Z"
+      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
+      "reviewedAtUtc": "2026-10-14T09:10:59.1586585Z"
     }
   ]
 }

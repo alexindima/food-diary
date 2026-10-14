@@ -41,7 +41,7 @@ function collectSections(document, prefix = '', depth = 0, sections = []) {
   return sections;
 }
 
-export function refreshStandaloneIndexes(database, root) {
+export function refreshStandaloneIndexes(database, root, indexes = [...sources.keys(), 'modules']) {
   database.exec(`
     CREATE TABLE IF NOT EXISTS standalone_indexes(
       index_name TEXT PRIMARY KEY, source_path TEXT NOT NULL,
@@ -59,11 +59,16 @@ export function refreshStandaloneIndexes(database, root) {
     ) WITHOUT ROWID;
   `);
   const storedVersion = database.prepare("SELECT value FROM metadata WHERE key='standalone_index_schema_version'").get()?.value;
+  if (storedVersion !== schemaVersion) {
+    for (const table of ['standalone_index_records', 'standalone_index_sections', 'standalone_indexes']) database.exec(`DELETE FROM ${table}`);
+  }
   const insertIndex = database.prepare('INSERT OR REPLACE INTO standalone_indexes VALUES (?, ?, ?, ?)');
-  const insertSection = database.prepare('INSERT INTO standalone_index_sections VALUES (?, ?, ?, ?)');
-  const insertRecord = database.prepare('INSERT INTO standalone_index_records VALUES (?, ?, ?, ?, ?)');
+  const insertSection = database.prepare(`INSERT INTO standalone_index_sections VALUES (?, ?, ?, ?)
+    ON CONFLICT(index_name,section_name) DO UPDATE SET ordinal=excluded.ordinal,query_only=excluded.query_only`);
+  const insertRecord = database.prepare(`INSERT INTO standalone_index_records VALUES (?, ?, ?, ?, ?)
+    ON CONFLICT(index_name,section_name,ordinal) DO UPDATE SET search_text=excluded.search_text,payload_json=excluded.payload_json`);
   let refreshed = 0;
-  for (const index of [...sources.keys(), 'modules']) {
+  for (const index of indexes) {
     const source = readSource(root, index);
     if (!source) {
       for (const table of ['standalone_index_records', 'standalone_index_sections', 'standalone_indexes']) {
@@ -74,8 +79,13 @@ export function refreshStandaloneIndexes(database, root) {
     const previous = database.prepare('SELECT content_hash FROM standalone_indexes WHERE index_name=?').get(index);
     if (storedVersion === schemaVersion && previous?.content_hash === source.contentHash) continue;
     const document = JSON.parse(source.text);
-    database.prepare('DELETE FROM standalone_index_records WHERE index_name=?').run(index);
-    database.prepare('DELETE FROM standalone_index_sections WHERE index_name=?').run(index);
+    const previousSections = new Map(database.prepare('SELECT section_name,ordinal,query_only FROM standalone_index_sections WHERE index_name=?').all(index)
+      .map(section => [section.section_name, section]));
+    const previousRecords = new Map();
+    for (const record of database.prepare('SELECT section_name,ordinal,search_text,payload_json FROM standalone_index_records WHERE index_name=?').all(index)) {
+      if (!previousRecords.has(record.section_name)) previousRecords.set(record.section_name, new Map());
+      previousRecords.get(record.section_name).set(record.ordinal, record);
+    }
     insertIndex.run(index, source.sourcePath, source.contentHash, JSON.stringify({
       generatedAtUtc: document.generatedAtUtc ?? null, summary: document.summary ?? null,
     }));
@@ -84,12 +94,24 @@ export function refreshStandaloneIndexes(database, root) {
       sections.push({ name: 'configurationKeys', queryOnly: true, values: (document.configurationFiles ?? []).flatMap(file => (file.keys ?? []).map(key => ({ path: file.path, key }))) });
       sections.push({ name: 'environmentVariables', queryOnly: true, values: (document.environmentFiles ?? []).flatMap(file => (file.variables ?? []).map(variable => ({ path: file.path, variable }))) });
     }
+    const retainedSections = new Set(sections.map(section => section.name));
+    if (retainedSections.size !== sections.length) throw new Error(`Duplicate standalone index section in ${index}.`);
+    for (const name of new Set([...previousSections.keys(), ...previousRecords.keys()])) {
+      if (retainedSections.has(name)) continue;
+      database.prepare('DELETE FROM standalone_index_records WHERE index_name=? AND section_name=?').run(index, name);
+      database.prepare('DELETE FROM standalone_index_sections WHERE index_name=? AND section_name=?').run(index, name);
+    }
     for (const [ordinal, section] of sections.entries()) {
-      insertSection.run(index, section.name, ordinal, section.queryOnly ? 1 : 0);
+      const oldSection = previousSections.get(section.name);
+      const queryOnly = section.queryOnly ? 1 : 0;
+      if (oldSection?.ordinal !== ordinal || oldSection?.query_only !== queryOnly) insertSection.run(index, section.name, ordinal, queryOnly);
+      const oldRecords = previousRecords.get(section.name);
+      if (oldRecords?.size) database.prepare("DELETE FROM standalone_index_records WHERE index_name=? AND section_name=? AND (ordinal<0 OR ordinal>=? OR typeof(ordinal)<>'integer')").run(index, section.name, section.values.length);
       for (const [recordOrdinal, value] of section.values.entries()) {
         const payload = JSON.stringify(value);
         const searchText = index === 'modules' ? String(value).split('/').at(-1).toLowerCase() : payload.toLowerCase();
-        insertRecord.run(index, section.name, recordOrdinal, searchText, payload);
+        const oldRecord = oldRecords?.get(recordOrdinal);
+        if (oldRecord?.payload_json !== payload || oldRecord?.search_text !== searchText) insertRecord.run(index, section.name, recordOrdinal, searchText, payload);
       }
     }
     refreshed++;
@@ -97,6 +119,8 @@ export function refreshStandaloneIndexes(database, root) {
   database.prepare('INSERT OR REPLACE INTO metadata(key,value) VALUES (?,?)').run('standalone_index_schema_version', schemaVersion);
   return refreshed;
 }
+
+export { readSource as readStandaloneIndexSource };
 
 export function standaloneIndexStatus(database, root, index) {
   const source = readSource(root, index);
@@ -141,6 +165,20 @@ export function queryStandaloneIndex(database, root, { index, query = '', limit 
     delete result.summary;
   }
   return { ready: true, index: result };
+}
+
+export function queryStandaloneIndexSnapshot(database, root, options) {
+  database.exec('BEGIN');
+  try {
+    const result = queryStandaloneIndex(database, root, options);
+    if (result.ready) {
+      const after = standaloneIndexStatus(database, root, options.index);
+      if (!after.ready || after.sourceHash !== result.index.compiledIndex.sourceHash) {
+        return { ready: false, index: options.index, unavailableReason: 'standalone-index-source-changed' };
+      }
+    }
+    return result;
+  } finally { database.exec('ROLLBACK'); }
 }
 
 export function querySecurityEvidence(database, root, limit = 12) {

@@ -1,4 +1,71 @@
 {
   "schemaVersion": 1,
-  "events": []
+  "events": [
+    {
+      "schemaVersion": 1,
+      "sequence": 1,
+      "kind": "observed",
+      "candidateId": "learned-7cf2be6011581343",
+      "createdAtUtc": "2026-10-14T09:44:08.5380277Z",
+      "previousHash": "",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/index-performance-20261014",
+        "retrospectiveHash": "09c08b3088ea08e84c478d80e01598c01d8e217a331d348715f774abae93c9db",
+        "packetFingerprint": "c4dd2f6fd9ecf2edb7a8718aae54bb6610e3f7fa1861e09bac81d787803e9572",
+        "signals": [
+          {
+            "id": "cost-wiki-verify",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'wiki-verify'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=126.02%",
+              "wiki-verify"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-7cf2be6011581343",
+          "changedPaths": [
+            ".llm-wiki/policies/affected-smoke-catalog.psd1",
+            ".llm-wiki/tools/Build-LlmWikiInProcessSqliteReader.ps1",
+            ".llm-wiki/tools/code-graph-database-path.mjs",
+            ".llm-wiki/tools/code-graph-index-query.mjs",
+            ".llm-wiki/tools/code-graph-index-query.test.mjs",
+            ".llm-wiki/tools/code-graph-standalone-cache.mjs",
+            ".llm-wiki/tools/code-graph-standalone-cache.test.mjs",
+            ".llm-wiki/tools/code-graph-standalone-fixture.mjs",
+            ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+            ".llm-wiki/tools/LlmWiki.SqliteReader/StandaloneIndexReader.cs",
+            ".llm-wiki/tools/LlmWikiInProcessSqlite.ps1",
+            ".llm-wiki/tools/LlmWikiStandaloneIndex.ps1",
+            ".llm-wiki/tools/Read-LlmWikiCompiledIndex.ps1",
+            ".llm-wiki/tools/read-standalone-index.mjs",
+            ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
+            ".llm-wiki/tools/Test-LlmWikiSqliteColdCheckout.ps1",
+            ".llm-wiki/tools/Test-LlmWikiStandaloneIndexRead.ps1",
+            ".llm-wiki/wiki.ps1",
+            ".llm-wiki/workflows/code-graph.md",
+            ".llm-wiki/workflows/index-pipeline.md"
+          ],
+          "expectedModules": [],
+          "expectedScopes": [
+            "Backend",
+            "Documentation",
+            "Tests"
+          ],
+          "expectedRules": [
+            "llm-wiki"
+          ],
+          "expectedChecks": [
+            "wiki-verify"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "7d4d1f09c2647eb045de1cc27627add5e7bd76df5970fca18f6420137ba3cdd0"
+      },
+      "reason": "",
+      "eventHash": "92985cf3448d1dc66f2178b1fdfc727d3eb57ef431a067cae275d45431b7a3be"
+    }
+  ]
 }

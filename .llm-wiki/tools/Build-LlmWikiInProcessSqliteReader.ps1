@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
     [switch]$Force,
+    [switch]$CheckOnly,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text'
 )
@@ -74,6 +75,7 @@ $inputPaths = @(
     $projectPath
     (Join-Path $PSScriptRoot 'LlmWiki.SqliteReader/DomainDataReader.cs')
     (Join-Path $PSScriptRoot 'LlmWiki.SqliteReader/CompiledIndexReader.cs')
+    (Join-Path $PSScriptRoot 'LlmWiki.SqliteReader/StandaloneIndexReader.cs')
     (Join-Path $PSScriptRoot 'LlmWiki.SqliteReader/ContextSearchReader.cs')
     (Join-Path $repositoryRoot 'FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs')
     (Join-Path $repositoryRoot 'FoodDiary.Development.Mcp/Protocol/WikiContextSearchResult.cs')
@@ -96,7 +98,7 @@ $assemblyPath = Join-Path $outputPath 'LlmWiki.SqliteReader.dll'
 $manifestPath = Join-Path $outputPath 'build-manifest.json'
 $stopwatch = [Diagnostics.Stopwatch]::StartNew()
 $reused = -not $Force -and (Test-Path -LiteralPath $assemblyPath -PathType Leaf) -and (Test-Path -LiteralPath $manifestPath -PathType Leaf)
-if (-not $reused) {
+if (-not $reused -and -not $CheckOnly) {
     $null = New-Item -ItemType Directory -Path $outputPath -Force
     $publishOutput = & dotnet publish $projectPath `
         --configuration Release `
@@ -131,7 +133,7 @@ if (-not $reused) {
 }
 $stopwatch.Stop()
 $result = [pscustomobject][ordered]@{
-    ready = $true
+    ready = (Test-Path -LiteralPath $assemblyPath -PathType Leaf) -and (Test-Path -LiteralPath $manifestPath -PathType Leaf)
     reused = $reused
     fingerprint = $fingerprint
     runtimeIdentifier = $runtimeIdentifier
@@ -140,4 +142,4 @@ $result = [pscustomobject][ordered]@{
     durationMs = [Math]::Round($stopwatch.Elapsed.TotalMilliseconds, 2)
 }
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 4; exit 0 }
-Write-Host "In-process SQLite reader: ready=True, reused=$reused, RID=$runtimeIdentifier, duration=$($result.durationMs)ms."
+Write-Host "In-process SQLite reader: ready=$($result.ready), reused=$reused, RID=$runtimeIdentifier, duration=$($result.durationMs)ms."

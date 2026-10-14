@@ -449,7 +449,10 @@ function Invoke-WikiTool {
         'Find-LlmWikiIntentOwnership.ps1'
         'Find-LlmWikiTraceCandidates.ps1'
     )
-    if ($Name -in $pureIndexedReaders -and $Command -notin $readOnlyFacadeCommands) {
+    if ($Name -eq 'Read-LlmWikiCompiledIndex.ps1') {
+        # This reader owns its direct read-only transaction and isolated recovery.
+        & $toolPath @ToolArguments
+    } elseif ($Name -in $pureIndexedReaders -and $Command -notin $readOnlyFacadeCommands) {
         & $toolPath @ToolArguments
     } elseif ($Command -in $readOnlyFacadeCommands -and -not ($Command -in $standaloneIndexCommands -and $Check)) {
         & (Join-Path $toolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') `

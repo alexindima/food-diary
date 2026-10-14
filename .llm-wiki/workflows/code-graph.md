@@ -15,6 +15,15 @@ sources:
   - .llm-wiki/tools/code-graph-context-projection.test.mjs
   - .llm-wiki/tools/code-graph-index-query.mjs
   - .llm-wiki/tools/code-graph-index-query.test.mjs
+  - .llm-wiki/tools/code-graph-standalone-cache.mjs
+  - .llm-wiki/tools/code-graph-database-path.mjs
+  - .llm-wiki/tools/code-graph-standalone-cache.test.mjs
+  - .llm-wiki/tools/read-standalone-index.mjs
+  - .llm-wiki/tools/Read-LlmWikiCompiledIndex.ps1
+  - .llm-wiki/tools/LlmWikiStandaloneIndex.ps1
+  - .llm-wiki/tools/LlmWiki.SqliteReader/StandaloneIndexReader.cs
+  - .llm-wiki/tools/Test-LlmWikiStandaloneIndexRead.ps1
+  - .llm-wiki/tools/code-graph-standalone-fixture.mjs
   - .llm-wiki/tools/code-graph-identity.mjs
   - .llm-wiki/tools/code-graph-query-terms.mjs
   - .llm-wiki/tools/code-graph-performance.test.mjs
@@ -81,6 +90,28 @@ sources:
 ---
 
 # Local Code Intelligence Graph
+
+All twelve standalone index commands read a consistent SQLite transaction and
+compare the published JSON source hash before and after the query. They use an
+existing in-process reader build for ASCII queries; Node retains ECMAScript
+Unicode folding and exact module-inventory serialization. A standalone read
+does not compile a missing .NET reader or prepare a complete repository clone.
+
+When the shared projection is missing, stale or unreadable, the same Node writer
+builds an isolated SQLite cache of only the requested published source. Its key
+includes source content, projector code and Node runtime. Publication is atomic,
+concurrent equivalent writers reuse the same generation, and corrupt derived
+caches are quarantined separately from the shared graph. Each index retains its
+current generation and one predecessor when old files are not busy. Source
+changes during preparation reject publication. The existing isolated recovery
+path remains available if the lightweight reader cannot prepare its projection.
+This validates the projection against its published source; `-CheckFreshness`
+and `verify` still establish generation and repository-source freshness.
+
+Standalone projection updates retain equal record payloads and section metadata.
+Only changed ordinal slots are inserted or updated; removed sections and trailing
+records are deleted within the existing writer transaction. Response order,
+counts, schema versions and literal substring query semantics remain unchanged.
 
 Every incremental build hashes dirty source paths even when size and modification time match cached metadata. Unchanged clean paths retain the metadata fast path. Repeated same-size edits to an already dirty file are covered in an isolated snapshot regression. `graph-build -BackendOnlyRefresh` prepares backend navigation without TypeScript prerequisites.
 

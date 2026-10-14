@@ -4,7 +4,8 @@ function Initialize-LlmWikiInProcessSqlite {
     [CmdletBinding()]
     param(
         [ValidateSet('', 'architecture-health', 'domain', 'runtime')]
-        [string]$Projection = ''
+        [string]$Projection = '',
+        [switch]$RequireExistingBuild
     )
 
     if (-not [string]::IsNullOrWhiteSpace($Projection)) {
@@ -22,7 +23,7 @@ function Initialize-LlmWikiInProcessSqlite {
         return $cachedState
     }
     $stopwatch = [Diagnostics.Stopwatch]::StartNew()
-    $build = & (Join-Path $PSScriptRoot 'Build-LlmWikiInProcessSqliteReader.ps1') -Format Json | ConvertFrom-Json
+    $build = & (Join-Path $PSScriptRoot 'Build-LlmWikiInProcessSqliteReader.ps1') -CheckOnly:$RequireExistingBuild -Format Json | ConvertFrom-Json
     if (-not [bool]$build.ready) { throw 'In-process SQLite reader build did not become ready.' }
     $outputPath = [string]$build.outputPath
     foreach ($assemblyName in @(

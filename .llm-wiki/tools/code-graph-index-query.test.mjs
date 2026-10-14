@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { mkdirSync, mkdtempSync, writeFileSync, rmSync } from 'node:fs';
 import { resolve, sep } from 'node:path';
-import { refreshStandaloneIndexes, queryStandaloneIndex, querySecurityEvidence } from './code-graph-index-query.mjs';
+import { refreshStandaloneIndexes, queryStandaloneIndex, queryStandaloneIndexSnapshot, querySecurityEvidence } from './code-graph-index-query.mjs';
 
 test('standalone SQLite indexes preserve counts, order, nested sections and literal Unicode queries', () => {
   const parent = resolve(import.meta.dirname, '../../.artifacts/llm-wiki/index-query-fixtures');
@@ -83,5 +83,73 @@ test('standalone SQLite indexes preserve counts, order, nested sections and lite
     database.close();
     assert.ok(resolve(root).startsWith(parent + sep));
     rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('standalone refresh retains unchanged records and handles edits, reorder, empty and removed sections', () => {
+  const parent = resolve(import.meta.dirname, '../../.artifacts/llm-wiki/index-query-fixtures');
+  mkdirSync(parent, { recursive: true });
+  const root = mkdtempSync(resolve(parent, 'delta-'));
+  const generated = resolve(root, '.llm-wiki/generated');
+  mkdirSync(generated, { recursive: true });
+  const db = new DatabaseSync(':memory:');
+  db.exec('CREATE TABLE metadata(key TEXT PRIMARY KEY,value TEXT NOT NULL)');
+  const write = document => writeFileSync(resolve(generated, 'quality-index.json'), JSON.stringify(document));
+  const records = [{name:'Alpha'},{name:'Beta'},{name:'Gamma'}];
+  try {
+    write({summary:{version:1},entries:records,obsolete:[{name:'Removed'}]});
+    assert.equal(refreshStandaloneIndexes(db,root),1);
+    db.exec(`CREATE TABLE writes(kind TEXT);
+      CREATE TRIGGER record_insert AFTER INSERT ON standalone_index_records BEGIN INSERT INTO writes VALUES('insert'); END;
+      CREATE TRIGGER record_update AFTER UPDATE ON standalone_index_records BEGIN INSERT INTO writes VALUES('update'); END;
+      CREATE TRIGGER record_delete AFTER DELETE ON standalone_index_records BEGIN INSERT INTO writes VALUES('delete'); END;`);
+    write({summary:{version:2},entries:records,obsolete:[{name:'Removed'}]});
+    assert.equal(refreshStandaloneIndexes(db,root),1);
+    assert.equal(db.prepare('SELECT COUNT(*) count FROM writes').get().count,0);
+    write({summary:{version:2},entries:[records[0],{name:'Edited'},records[2]],obsolete:[{name:'Removed'}]});
+    assert.equal(refreshStandaloneIndexes(db,root),1);
+    assert.deepEqual(db.prepare('SELECT kind FROM writes').all(),[{kind:'update'}].map(value=>Object.assign(Object.create(null),value)));
+    db.exec('DELETE FROM writes');
+    write({empty:[],entries:[records[2],records[0]]});
+    assert.equal(refreshStandaloneIndexes(db,root),1);
+    assert.deepEqual(queryStandaloneIndex(db,root,{index:'quality'}).index.sections,[{name:'empty',count:0,items:[]},{name:'entries',count:2,items:[records[2],records[0]]}]);
+    assert.equal(db.prepare("SELECT COUNT(*) count FROM writes WHERE kind='delete'").get().count,2);
+    assert.equal(db.prepare("SELECT COUNT(*) count FROM writes WHERE kind='update'").get().count,2);
+    assert.equal(db.prepare("SELECT COUNT(*) count FROM writes WHERE kind='insert'").get().count,0);
+    db.exec('DELETE FROM writes');
+    write({empty:[],entries:[]});
+    assert.equal(refreshStandaloneIndexes(db,root),1);
+    assert.equal(db.prepare('SELECT COUNT(*) count FROM standalone_index_records').get().count,0);
+    assert.equal(db.prepare("SELECT COUNT(*) count FROM writes WHERE kind='delete'").get().count,2);
+    assert.deepEqual(queryStandaloneIndexSnapshot(db,root,{index:'quality'}),queryStandaloneIndex(db,root,{index:'quality'}));
+    // The wrapper must end its read transaction even when source validation fails.
+    write({empty:[],entries:[{name:'Stale'}]});
+    assert.equal(queryStandaloneIndexSnapshot(db,root,{index:'quality'}).unavailableReason,'standalone-index-projection-stale');
+    assert.equal(refreshStandaloneIndexes(db,root),1);
+    assert.throws(()=>queryStandaloneIndexSnapshot(db,root,{index:'quality',limit:0}),/between 1 and 50/);
+    db.exec('BEGIN; ROLLBACK');
+    let changedDuringQuery = false;
+    db.function('instr', (text, term) => {
+      if (!changedDuringQuery) { changedDuringQuery = true; write({entries:[{name:'Concurrent edit'}]}); }
+      return String(text).indexOf(term) + 1;
+    });
+    assert.equal(queryStandaloneIndexSnapshot(db,root,{index:'quality',query:'Stale'}).unavailableReason,'standalone-index-source-changed');
+    db.exec('BEGIN; ROLLBACK');
+    refreshStandaloneIndexes(db,root);
+    db.prepare('INSERT INTO standalone_index_records VALUES (?,?,?,?,?)').run('quality','entries',-1,'invalid','{}');
+    db.prepare('INSERT INTO standalone_index_records VALUES (?,?,?,?,?)').run('quality','entries',0.5,'invalid','{}');
+    write({summary:{changed:true},entries:[{name:'Concurrent edit'}]});
+    refreshStandaloneIndexes(db,root);
+    assert.equal(queryStandaloneIndex(db,root,{index:'quality'}).index.sections[0].count,1);
+    const beforeInvalid=db.prepare('SELECT * FROM standalone_index_records').all();
+    write({'a.b':[],a:{b:[]}});
+    db.exec('BEGIN');
+    assert.throws(()=>refreshStandaloneIndexes(db,root),/Duplicate standalone index section/);
+    db.exec('ROLLBACK');
+    assert.deepEqual(db.prepare('SELECT * FROM standalone_index_records').all(),beforeInvalid);
+  } finally {
+    db.close();
+    assert.ok(resolve(root).startsWith(parent + sep));
+    rmSync(root,{recursive:true,force:true});
   }
 });
