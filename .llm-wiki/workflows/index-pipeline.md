@@ -18,6 +18,7 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiLinux.ps1
   - .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
+  - .llm-wiki/tools/Test-LlmWikiModulePageCache.ps1
   - .llm-wiki/tools/Test-LlmWikiBackendModuleModel.ps1
   - .llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1
   - .llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1
@@ -101,6 +102,15 @@ sources:
 ---
 
 # Run the Staged Index Pipeline
+
+Module-page generation supports `-ReuseUnchangedCheck` in both check and update
+mode. Its schema 2 receipt hashes every output Markdown page, all Git-visible
+C# contents, the repository path inventory, consumed manifests and catalog,
+generator helpers, and physical directories used for abstraction resolution.
+Missing, extra or changed output pages invalidate reuse. A successful forced
+generation also refreshes the receipt; failed checks and changing inputs never
+publish success. The pipeline forwards this opt-in with `-ReuseUnchangedChecks`.
+Use the generator without the flag to force reconstruction of every page.
 
 Measure cold generation separately from a repeated cache-hit check; OS caches
 and concurrent work can dominate wall-clock comparisons. A smaller generator

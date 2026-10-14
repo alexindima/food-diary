@@ -277,6 +277,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'index-selection' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiModulePageCache.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiFrontendSourceInventory.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiIndexFingerprint.ps1')

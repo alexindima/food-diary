@@ -1,17 +1,22 @@
 [CmdletBinding()]
 param(
-    [switch]$Check
+    [switch]$Check,
+    [switch]$ReuseUnchangedCheck
 )
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
-$repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+$repositoryRoot = @(& git -C $PSScriptRoot rev-parse --show-toplevel)
+if ($LASTEXITCODE -ne 0 -or $repositoryRoot.Count -ne 1) { throw 'Unable to resolve the module-page repository root.' }
+$repositoryRoot = [IO.Path]::GetFullPath([string]$repositoryRoot[0])
 $catalogPath = Join-Path $wikiRoot 'generated/repository-catalog.json'
 $boundaryManifestPath = Join-Path $repositoryRoot 'docs/architecture/backend-modules.json'
 $outputRoot = Join-Path $wikiRoot 'generated/modules'
 $generatorPath = '.llm-wiki/tools/Build-LlmWikiModulePages.ps1'
+$cachePath = Join-Path $repositoryRoot '.artifacts/llm-wiki/index-cache/module-pages.json'
 
 if (-not (Test-Path -LiteralPath $catalogPath)) {
     throw 'Repository catalog is missing. Run Build-LlmWikiCatalog.ps1 first.'
@@ -39,6 +44,51 @@ function ConvertTo-Slug {
 function Get-RepositoryFilePaths {
     $paths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard') -FailureMessage 'Unable to enumerate repository files.')
     return @($paths | Where-Object { $_ } | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique)
+}
+
+function Get-ModulePageCacheState([string[]]$Paths) {
+    if (-not $Paths) { $Paths = @(Get-RepositoryFilePaths) }
+    # Path presence affects source-area discovery even for non-C# files. Own
+    # Markdown outputs are checked separately, and artifact files are not sources.
+    $inventory = @($Paths | Where-Object { $_ -notmatch '^\.llm-wiki/generated/modules/|^\.artifacts/' })
+    $inputs = @($Paths | Where-Object { $_ -match '\.cs$' }) + @(
+        $generatorPath, '.llm-wiki/tools/Get-LlmWikiContractConsumers.ps1',
+        '.llm-wiki/tools/LlmWikiGitPaths.ps1', '.llm-wiki/tools/LlmWikiJson.ps1',
+        '.llm-wiki/tools/LlmWikiIndexCache.ps1', '.llm-wiki/generated/repository-catalog.json',
+        'docs/architecture/backend-modules.json', 'docs/architecture/module-dependencies.json'
+    )
+    # Resolve-AbstractionAreaPath also observes these physical directories.
+    $directoryFacts = @(
+        foreach ($module in $allModules) {
+            $areaProperty = $module.boundary.sourceMappings.PSObject.Properties['abstractionAreas']
+            $areas = if ($null -ne $areaProperty) { @($areaProperty.Value) } else { @($module.name) }
+            if (-not $areas) { $areas = @($module.name) }
+            foreach ($area in $areas) {
+                $root = (([string]$area).Replace('\', '/') -replace '^\./', '').Split('/')[0]
+                foreach ($directory in @($root, "Modules/$root/Application.Abstractions")) {
+                    "$directory`:$([IO.Directory]::Exists((Join-Path $repositoryRoot $directory)))"
+                }
+            }
+        }
+    )
+    $outputs = @(Get-ChildItem -LiteralPath $outputRoot -Filter '*.md' -File -ErrorAction SilentlyContinue | ForEach-Object { ConvertTo-RepositoryPath $_.FullName })
+    return [pscustomobject]@{
+        inputFingerprint = Get-LlmWikiIndexEntryFingerprint @(
+            'module-pages-cache=1',
+            ('inventory:' + (Get-LlmWikiIndexEntryFingerprint $inventory)),
+            ('contents:' + (Get-LlmWikiIndexInputFingerprint $repositoryRoot $inputs)),
+            ('directories:' + (Get-LlmWikiIndexEntryFingerprint $directoryFacts))
+        )
+        outputFingerprint = Get-LlmWikiIndexOutputSetFingerprint $repositoryRoot $outputs
+    }
+}
+
+function Save-ModulePageCache {
+    $current = Get-ModulePageCacheState
+    if ($current.inputFingerprint -cne $cacheState.inputFingerprint) {
+        throw 'Module-page inputs changed during generation; no cache receipt was published.'
+    }
+    Write-LlmWikiIndexSetCache $cachePath $current.inputFingerprint $current.outputFingerprint
 }
 
 function New-FrontMatter {
@@ -96,6 +146,11 @@ if ($missingBoundaryModules.Count -gt 0) {
     throw "Backend module boundary metadata is missing for: $($missingBoundaryModules -join ', ')."
 }
 $repositoryFilePaths = @(Get-RepositoryFilePaths)
+$cacheState = Get-ModulePageCacheState $repositoryFilePaths
+if ($ReuseUnchangedCheck -and (Test-LlmWikiIndexSetCache $cachePath $cacheState.inputFingerprint $cacheState.outputFingerprint)) {
+    Write-Host "Generated application-module pages cache hit: $($moduleNames.Count) modules; inputs, inventory, generator and every output are unchanged."
+    return
+}
 $repositoryAreas = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
 foreach ($repositoryFile in $repositoryFilePaths) {
     $area = [string]$repositoryFile
@@ -523,6 +578,7 @@ if ($Check) {
     }
 
     Write-Host "Generated application-module pages are current: $($moduleNames.Count) modules."
+    Save-ModulePageCache
     return
 }
 
@@ -540,3 +596,4 @@ Get-ChildItem -LiteralPath $outputRoot -File -Filter '*.md' |
     Remove-Item -Force
 
 Write-Host "Generated $($moduleNames.Count) application-module pages and index."
+Save-ModulePageCache

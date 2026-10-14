@@ -88,3 +88,38 @@ function Write-LlmWikiIndexCache([string]$ReceiptPath, [string]$OutputPath, [str
     $json = ([ordered]@{ schemaVersion = 1; inputFingerprint = $InputFingerprint; outputFingerprint = Get-LlmWikiFileSha256 $OutputPath } | ConvertTo-Json) + [Environment]::NewLine
     [IO.File]::WriteAllText($ReceiptPath, $json, (New-Object Text.UTF8Encoding($false)))
 }
+
+function Get-LlmWikiIndexEntryFingerprint([string[]]$Entry) {
+    $unique = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    foreach ($value in $Entry) { [void]$unique.Add($value) }
+    [string[]]$ordered = @($unique)
+    [Array]::Sort($ordered, [StringComparer]::Ordinal)
+    $sha = [Security.Cryptography.SHA256]::Create()
+    try { return ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($ordered -join "`n"))) -replace '-', '').ToLowerInvariant() }
+    finally { $sha.Dispose() }
+}
+
+function Get-LlmWikiIndexOutputSetFingerprint([string]$RepositoryRoot, [string[]]$OutputPath) {
+    $entries = @($OutputPath | ForEach-Object {
+        $relative = $_.Replace('\', '/')
+        $absolute = Join-Path $RepositoryRoot $relative
+        $hash = if (Test-Path -LiteralPath $absolute -PathType Leaf) { Get-LlmWikiFileSha256 $absolute } else { '<missing>' }
+        "$relative`:$hash"
+    })
+    return Get-LlmWikiIndexEntryFingerprint $entries
+}
+
+function Test-LlmWikiIndexSetCache([string]$ReceiptPath, [string]$InputFingerprint, [string]$OutputFingerprint) {
+    if (-not (Test-Path -LiteralPath $ReceiptPath -PathType Leaf)) { return $false }
+    try {
+        $receipt = Get-Content -LiteralPath $ReceiptPath -Raw | ConvertFrom-Json
+        return [int]$receipt.schemaVersion -eq 2 -and [string]$receipt.inputFingerprint -ceq $InputFingerprint -and
+            [string]$receipt.outputSetFingerprint -ceq $OutputFingerprint
+    } catch { return $false }
+}
+
+function Write-LlmWikiIndexSetCache([string]$ReceiptPath, [string]$InputFingerprint, [string]$OutputFingerprint) {
+    $null = New-Item -ItemType Directory -Path (Split-Path -Parent $ReceiptPath) -Force
+    $json = ([ordered]@{ schemaVersion = 2; inputFingerprint = $InputFingerprint; outputSetFingerprint = $OutputFingerprint } | ConvertTo-Json) + [Environment]::NewLine
+    [IO.File]::WriteAllText($ReceiptPath, $json, (New-Object Text.UTF8Encoding($false)))
+}

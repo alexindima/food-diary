@@ -883,17 +883,17 @@
     {
       "pageId": "workflow-quality-risk",
       "pagePath": ".llm-wiki/workflows/quality-risk.md",
-      "pageSha256": "2c0c8056627a5b848f8ffb56a7505c20d3c835bc0f99990766b0da26c58e261b",
+      "pageSha256": "6e27e45bbf73402e3dbf1e8143444be291a8beec9a1dc2d69552ba09821d131c",
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c8425d1f04c3284877ebf5a59901493646812bc1e93665b81da40c3107536a5f"
+          "sha256": "da58229eea8a75345d9d7ccf4475fdcae6114b208e1d721535c5efd017fa47bd"
         }
       ],
-      "reason": "Reviewed the repair for CI run 38472791255 at published SHA 0e873e160. Eight TypeScript files and one mocked recipe-provider C# test receive formatter-only changes; assertions, literals, permissions, retries, provider behavior and transport contracts are unchanged. Prettier check and targeted C# whitespace verification now pass. Refreshed quality inventory contains only updated source line counts; no risk threshold or test is relaxed.",
+      "reason": "Reviewed the regenerated quality delta: structural line and branch counts increase only in the Markdown generator, cache helper and smoke registration. Product source metrics and reference semantics are unchanged. The new cache is covered by 24 behavioral fixture cases; static references remain navigation evidence rather than execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "0e873e16007bf8e4f089d073d4b8bf7db21c756c",
-      "reviewedAtUtc": "2026-10-13T22:06:18.3969202Z"
+      "gitHead": "280f161282832dcec44ff921b5ba717e87702d9d",
+      "reviewedAtUtc": "2026-10-14T07:33:58.0082039Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -981,13 +981,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "89b4bb4f34a762f50a9f72bce6160ed94bf326e3eb9e850d02ce9c4578e2afad"
+          "sha256": "da58229eea8a75345d9d7ccf4475fdcae6114b208e1d721535c5efd017fa47bd"
         }
       ],
-      "reason": "Reassessed the combined master and Wiki usability sources after generation. The final quality refresh corrects the top-100 hotspot cutoff; WebPush remains in the complete file inventory. Current master formatter-only fixes and product security controls are preserved. Added Wiki helper reference/risk signals remain discovery evidence and do not constitute a security verdict.",
-      "baseRef": "b1f7ee8d72059f0ce0c7966f309e6590048275e4",
-      "gitHead": "cc98818e3fd2c0d607d4767ee4c8addd3348a9f3",
-      "reviewedAtUtc": "2026-10-14T06:56:55.6069213Z"
+      "reason": "Reviewed cache scope and the quality projection: schema 2 receipts are opt-in local tooling artifacts, validate current source/inventory/output hashes, and cannot relax schema 1 index checks. Missing, corrupt and extra pages fail validation; the preserved product security inventory and curated controls are unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "280f161282832dcec44ff921b5ba717e87702d9d",
+      "reviewedAtUtc": "2026-10-14T07:33:58.8046349Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
