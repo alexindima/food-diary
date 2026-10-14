@@ -325,7 +325,38 @@ if ($StaleExitCode) { $global:LASTEXITCODE = 17 }
         -not (Test-Path -LiteralPath $sharedMarker)) {
         throw 'Clean scopes and unscoped queries did not reuse one identical private checkout.'
     }
+    $revisionFile = Join-Path $cleanRepositoryRoot 'revision-fixture.txt'
+    [IO.File]::WriteAllText($revisionFile, 'next-head', [Text.Encoding]::ASCII)
+    & git -C $cleanRepositoryRoot add -- revision-fixture.txt
+    & git -C $cleanRepositoryRoot commit --quiet -m 'next revision'
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to advance the owned snapshot fixture revision.' }
+    $null = & (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $cleanSafeTool -ToolArguments @{}
+    $sourceHead = @(& git -C $cleanRepositoryRoot rev-parse HEAD)[0]
+    $privateHead = @(& git -C $cleanSnapshotRoot rev-parse HEAD)[0]
+    if ($sourceHead -cne $privateHead -or
+        [IO.File]::ReadAllText((Join-Path $cleanSnapshotRoot 'revision-fixture.txt')) -cne 'next-head' -or
+        -not [IO.File]::Exists($sharedMarker) -or
+        @(Get-ChildItem -LiteralPath $cleanSnapshotParent -Filter '*.ready' -File).Count -ne 1) {
+        throw 'Snapshot revision refresh lost its private checkout identity or returned stale source.'
+    }
     $cachedGuardPath = Join-Path $cleanSnapshotRoot '.llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1'
+    # History can change without changing the current checkout. A persistent
+    # slot must capture additions and deletions of these independent refs.
+    & git -C $cleanRepositoryRoot checkout --quiet -b history-evidence
+    [IO.File]::WriteAllText((Join-Path $cleanRepositoryRoot 'history-evidence.txt'), 'branch-only')
+    & git -C $cleanRepositoryRoot add -- history-evidence.txt
+    & git -C $cleanRepositoryRoot commit --quiet -m 'history evidence'
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to create owned history evidence.' }
+    $evidenceHead = @(& git -C $cleanRepositoryRoot rev-parse HEAD)[0]
+    & git -C $cleanRepositoryRoot checkout --quiet --detach $sourceHead
+    $null = & (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $cleanSafeTool -ToolArguments @{}
+    $capturedEvidence = @(& git -C $cleanSnapshotRoot rev-parse refs/heads/history-evidence)[0]
+    if ($capturedEvidence -cne $evidenceHead -or [IO.File]::Exists((Join-Path $cleanSnapshotRoot 'history-evidence.txt'))) { throw 'History refresh lost an independent ref or changed the captured checkout.' }
+    & git -C $cleanRepositoryRoot branch --quiet -D history-evidence
+    $null = & (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $cleanSafeTool -ToolArguments @{}
+    & git -C $cleanSnapshotRoot show-ref --verify --quiet refs/heads/history-evidence
+    if ($LASTEXITCODE -ne 1) { throw 'Deleted source history ref survived in the persistent snapshot.' }
+    $global:LASTEXITCODE = 0
     $cachedManagerPath = Join-Path $cleanSnapshotRoot '.llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1'
     $cachedManagerLf = [IO.File]::ReadAllText($cachedManagerPath).Replace("`r`n", "`n").Replace("`r", "`n")
     [IO.File]::WriteAllText($cachedManagerPath, $cachedManagerLf, [Text.UTF8Encoding]::new($false))

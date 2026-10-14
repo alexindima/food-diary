@@ -328,17 +328,33 @@ caching. Cold and warm context-cache SLA checks retain their existing limits.
 scripts. Its `read-only-isolation` child runs the destructive test fixtures in a
 private Git clone and cleans up that clone and its snapshot cache. The already
 private `sqlite-cold-checkout` child can overlap with it in the parallel batch.
-`read-only-retrieval` retains retrieval and ownership assertions and remains
-serial behind shared code-graph writers. `-MaxConcurrency 1` runs the same child
+`read-only-retrieval` retains retrieval and ownership assertions and joins the
+stable-graph reader batch after shared code-graph writers. `-MaxConcurrency 1` runs the same child
 groups sequentially for diagnosis; no assertions or receipt checks are skipped.
 
 Read-only clones seed their graph through SQLite's online backup API. Copying
 the database and WAL separately races with concurrent checkpoints and can lose
 committed rows. The backup is published only after completion, and snapshot
-schema 6 invalidates older clones seeded by raw file copies.
+schema 7 invalidates older clone slots. Slot identity uses the repository,
+partition and product overlay scope; the content receipt still includes `HEAD`
+and exact source hashes. A new revision resets the exclusively locked private
+checkout and applies the current overlay, retaining ignored compiler and graph
+caches instead of creating a full checkout for each commit.
+Git ref hashes also invalidate the content receipt when history changes without
+a checkout change; refresh mirrors refs into the detached private clone, including
+deleted refs, before Git precedent analysis. Verbose milestones separate
+checkout, overlay and SQLite backup time. Mutation rejection, final
+source validation and the bounded retention policy still apply.
 
 Groups marked `ParallelSafe` run concurrently in priority order. The long
 code-graph lane starts in the first worker batch to reduce idle tail time.
+Groups marked `StableGraphParallelSafe` run together only after that batch and
+the remaining serial fixtures finish. This batch contains trace, standalone
+index and retrieval readers; it does not overlap corruption or recovery writers.
+The planner exposes all three batches and the dispatcher preserves each group's
+assertions, receipts, cancellation and diagnostics. Fixtures prove both the
+writer barrier and concurrent reader dispatch. Context corpus evaluation uses
+up to four SQL workers and two runtime workers, bounded by the outer smoke limit.
 The monolithic Core/Full audit reports timings for context/diff, planning,
 compatibility/index contracts, topology/privacy, and its individual nested
 regression suites. These measurements do not change assertions or SLA limits.

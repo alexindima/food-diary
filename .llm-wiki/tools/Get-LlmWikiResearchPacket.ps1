@@ -23,6 +23,13 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $researchStopwatch = [Diagnostics.Stopwatch]::StartNew()
+$researchTimingPreviousMs = 0.0
+function Write-ResearchTiming([string]$Phase) {
+    $elapsedMs = $researchStopwatch.Elapsed.TotalMilliseconds
+    Write-Verbose ('Research phase={0} durationMs={1} elapsedMs={2}' -f $Phase,
+        [Math]::Round($elapsedMs - $script:researchTimingPreviousMs, 2), [Math]::Round($elapsedMs, 2))
+    $script:researchTimingPreviousMs = $elapsedMs
+}
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $workspacePolicy = Get-Content -LiteralPath (Join-Path $wikiRoot 'policies/workspace-policies.json') -Raw | ConvertFrom-Json
@@ -40,9 +47,13 @@ Write-Host "Research [1/3]: classify and scan current sources$(if ($Module) { " 
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiResearchPrimitives.ps1')
 $queryCacheEntry = $null
+$historyRefs = Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @(
+    'for-each-ref', '--format=%(refname) %(objectname)'
+) -FailureMessage 'Unable to capture Git history refs for research caching.'
+$historyRefsFingerprint = Get-LlmWikiSha256 ($historyRefs.Lines -join "`n")
 $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'research' -Arguments @{
     Objective = $Objective; BaseRef = $BaseRef; HeadRef = $HeadRef
-    ChangedPath = @($ChangedPath); ProposedPath = @($ProposedPath); Purpose = $Purpose; Limit = $Limit; Module = $Module; CompiledIndexSource = $CompiledIndexSource; Compact = [bool]$Compact; SkipHistory = [bool]$SkipHistory
+    ChangedPath = @($ChangedPath); ProposedPath = @($ProposedPath); Purpose = $Purpose; Limit = $Limit; Module = $Module; CompiledIndexSource = $CompiledIndexSource; Compact = [bool]$Compact; SkipHistory = [bool]$SkipHistory; HistoryRefs = $historyRefsFingerprint
 } -RelevantPath @($(if (@($ProposedPath).Count -gt 0) { $ProposedPath } else { $ChangedPath })) -DependencyPath @(
     '.llm-wiki/policies/query-indexes.json'
     '.llm-wiki/policies/workspace-policies.json'
@@ -73,6 +84,7 @@ if ($PSBoundParameters.ContainsKey('ChangedPath')) { $common.ChangedPath = $Chan
 if ($PSBoundParameters.ContainsKey('ProposedPath')) { $common.ProposedPath = $ProposedPath }
 $workflow = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') @common | ConvertFrom-Json
 $classificationDurationMs = [Math]::Round($researchStopwatch.Elapsed.TotalMilliseconds, 2)
+Write-ResearchTiming 'classification'
 $assessmentIntent = $Objective -match '(?i)\b(assess|assessment|audit|evaluate|evaluation|review|remaining blockers?|readiness|status)\b|\u043e\u0446\u0435\u043d|\u0430\u0443\u0434\u0438\u0442|\u0433\u043e\u0442\u043e\u0432\u043d|\u043e\u0441\u0442\u0430\u0432\u0448'
 $implementationIntent = $Objective -match '(?i)\b(fix|implement|change|update|improve|add|remove|replace|refactor|optimize)\b|\u0438\u0441\u043f\u0440\u0430\u0432|\u0440\u0435\u0430\u043b\u0438\u0437|\u0434\u043e\u0431\u0430\u0432|\u0438\u0437\u043c\u0435\u043d|\u043e\u0431\u043d\u043e\u0432|\u0443\u043b\u0443\u0447\u0448|\u0443\u0434\u0430\u043b|\u0437\u0430\u043c\u0435\u043d|\u043e\u043f\u0442\u0438\u043c\u0438\u0437'
 $effectivePurpose = if ($Purpose -eq 'Auto') { $(if ($assessmentIntent -and -not $implementationIntent) { 'Assessment' } else { 'Implementation' }) } else { $Purpose }
@@ -184,6 +196,7 @@ $contextArguments = @{ Query = $contextQuery; CompiledIndexSource = $CompiledInd
 if ($scopePaths.Count -gt 0) { $contextArguments.ScopePath = $scopePaths }
 $context = & (Join-Path $PSScriptRoot 'Find-LlmWikiContext.ps1') @contextArguments | ConvertFrom-Json
 $contextReadyDurationMs = [Math]::Round($researchStopwatch.Elapsed.TotalMilliseconds, 2)
+Write-ResearchTiming 'context'
 Write-Host 'Research [2/3]: current-source context ready.'
 $contextHttpClients = @(if ($context.PSObject.Properties['httpClients']) { @($context.httpClients) } else { @() })
 $contextHostedServices = @(if ($context.PSObject.Properties['hostedServices']) { @($context.hostedServices) } else { @() })
@@ -215,6 +228,7 @@ $precedents = if ($historyDeferred) {
         -Format Json | ConvertFrom-Json
 }
 
+Write-ResearchTiming 'git-precedents'
 $failureKnowledgePath = Join-Path (Split-Path -Parent $PSScriptRoot) 'knowledge/failures.json'
 $failureKnowledge = Get-Content -LiteralPath $failureKnowledgePath -Raw | ConvertFrom-Json
 $failureStopwords = @('fooddiary', 'project', 'service', 'repository', 'current', 'change', 'changes')
@@ -306,6 +320,7 @@ if (($repositoryAssessmentResearch -or $wikiInternalResearch) -and @($ProposedPa
     }
 }
 
+Write-ResearchTiming 'failure-knowledge-and-runtime-graph'
 if (@($ProposedPath).Count -gt 0) {
     $normalizedPlannedPaths = @($ProposedPath | Where-Object { $_ } | ForEach-Object { ([string]$_).Replace('\', '/').TrimEnd('/') })
     $graphEvidencePaths = @(
@@ -503,6 +518,7 @@ $nextActionState = if (-not $assessmentComplete) { 'discover' }
     elseif ($requiresDesign -or $requiresDecisionCheckpoint) { 'design' }
     else { 'implement' }
 
+Write-ResearchTiming 'research-plan-and-readiness'
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1
     objective = $Objective
@@ -624,6 +640,7 @@ if ($Compact -and $resultJson.Length -gt 30000) {
 }
 if ($Compact -and $resultJson.Length -gt 30000) { throw "Compact research exceeded its 30000-character output contract: $($resultJson.Length)." }
 Write-LlmWikiQueryCache -Entry $queryCacheEntry -Content $resultJson
+Write-ResearchTiming 'assemble-serialize-and-cache'
 if ($Format -eq 'Json') {
     Write-Output $resultJson
     exit 0

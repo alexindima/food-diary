@@ -285,14 +285,14 @@
       "pageSha256": "80ab35f01b2e06ceb9eaf25d594714294deb388f73c536ade1a9e1d6e39654c9",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "f264a51241762bd48747286085f1937f345bb0cf8024133532e21c141e4f25b2"
+          "path": ".llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1",
+          "sha256": "00aadd6948906620278e17e9ef2172bacbdfaf1cfb78dd801819b8d61e52e51f"
         }
       ],
-      "reason": "Reviewed the final brief and test-plan optimization: all risk, policy, ownership, required-check and scenario fields remain compatible. The exact scoped SQL impact is shared only within one request; standalone planner queries and cache invalidation remain intact. Test discovery uses the existing pruned source inventory with explicit legacy system/hidden exclusions, bounded escaped regex alternatives and request-local source text reuse. Full paired response parity passed across backend, frontend, Users and intent-only cases; source inventory and semantic planner checks passed. Updated brief and test-plan workflow documentation and source declarations; downstream workflow descriptions continue to apply.",
+      "reason": "Reviewed final Wiki performance sources and navigation claims: equivalent bounded Git precedent scoring; private checkout/source/ref freshness and mutation isolation; request-local test evidence and nearest-project selection; stable-graph reader scheduling with unchanged checks and SLA limits. Product code and domain contracts are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "41c23e0cf3b2b37ae68acc3e65140056ed277563",
-      "reviewedAtUtc": "2026-10-14T12:26:33.4649869Z"
+      "gitHead": "75219c34ebce1debb85576d34507c1f55cebf958",
+      "reviewedAtUtc": "2026-10-14T13:44:41.8145926Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -492,14 +492,14 @@
       "pageSha256": "f702d51cb0969966de791175e831339c9ad37670e9d6dcc0d07718b04266b23f",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "1fafbee70c4f9a78ec3a356bfef15c51b62ac54b9e0c23805efd96fc31495625"
+          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+          "sha256": "523a4ef66069c0576f6620ed9f9c5901233503d17b5d85b376a45819726db653"
         }
       ],
-      "reason": "Reviewed the facade diff: only Read-LlmWikiCompiledIndex dispatch now delegates direct read-only transactions and isolated recovery to its reader. Adaptive routing, diff, maintenance and dispatch commands retain their existing branches, parameters and evidence contracts; their workflow descriptions remain current.",
+      "reason": "Reviewed final Wiki performance sources and navigation claims: equivalent bounded Git precedent scoring; private checkout/source/ref freshness and mutation isolation; request-local test evidence and nearest-project selection; stable-graph reader scheduling with unchanged checks and SLA limits. Product code and domain contracts are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
-      "reviewedAtUtc": "2026-10-14T09:10:58.1184088Z"
+      "gitHead": "75219c34ebce1debb85576d34507c1f55cebf958",
+      "reviewedAtUtc": "2026-10-14T13:44:42.1207360Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -692,14 +692,14 @@
       "pageSha256": "e1815d477bee148fd58c18449a9c38acb874cd72736be66a90aa97417f10244c",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "f264a51241762bd48747286085f1937f345bb0cf8024133532e21c141e4f25b2"
+          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+          "sha256": "523a4ef66069c0576f6620ed9f9c5901233503d17b5d85b376a45819726db653"
         }
       ],
-      "reason": "Reviewed the final brief and test-plan optimization: all risk, policy, ownership, required-check and scenario fields remain compatible. The exact scoped SQL impact is shared only within one request; standalone planner queries and cache invalidation remain intact. Test discovery uses the existing pruned source inventory with explicit legacy system/hidden exclusions, bounded escaped regex alternatives and request-local source text reuse. Full paired response parity passed across backend, frontend, Users and intent-only cases; source inventory and semantic planner checks passed. Updated brief and test-plan workflow documentation and source declarations; downstream workflow descriptions continue to apply.",
+      "reason": "Reviewed final Wiki performance sources and navigation claims: equivalent bounded Git precedent scoring; private checkout/source/ref freshness and mutation isolation; request-local test evidence and nearest-project selection; stable-graph reader scheduling with unchanged checks and SLA limits. Product code and domain contracts are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "41c23e0cf3b2b37ae68acc3e65140056ed277563",
-      "reviewedAtUtc": "2026-10-14T12:26:34.4367310Z"
+      "gitHead": "75219c34ebce1debb85576d34507c1f55cebf958",
+      "reviewedAtUtc": "2026-10-14T13:44:42.4440746Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
@@ -855,13 +855,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "73f522984b2e8d8c0fc1a579e8a21d6129c5a0926ac4d320aa050fe76f0d3ec9"
+          "sha256": "d3936e9bafbcb7110150867dc08fb96e9698c730bf07306916f2eeb38c92aa94"
         }
       ],
-      "reason": "Reviewed regenerated quality metadata: only edited Wiki tool structural metrics and the new direct test reference to Get-LlmWikiDiffContext changed. Product/security symbols, runtime and sensitive-data semantics remain unchanged. These workflows still correctly describe static navigation/test-reference evidence, bounded SQL and security-discovery limits.",
+      "reason": "Reviewed final Wiki performance sources and navigation claims: equivalent bounded Git precedent scoring; private checkout/source/ref freshness and mutation isolation; request-local test evidence and nearest-project selection; stable-graph reader scheduling with unchanged checks and SLA limits. Product code and domain contracts are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "41c23e0cf3b2b37ae68acc3e65140056ed277563",
-      "reviewedAtUtc": "2026-10-14T12:37:42.7547106Z"
+      "gitHead": "75219c34ebce1debb85576d34507c1f55cebf958",
+      "reviewedAtUtc": "2026-10-14T13:44:42.9411856Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -949,13 +949,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "73f522984b2e8d8c0fc1a579e8a21d6129c5a0926ac4d320aa050fe76f0d3ec9"
+          "sha256": "d3936e9bafbcb7110150867dc08fb96e9698c730bf07306916f2eeb38c92aa94"
         }
       ],
-      "reason": "Reviewed regenerated quality metadata: only edited Wiki tool structural metrics and the new direct test reference to Get-LlmWikiDiffContext changed. Product/security symbols, runtime and sensitive-data semantics remain unchanged. These workflows still correctly describe static navigation/test-reference evidence, bounded SQL and security-discovery limits.",
+      "reason": "Reviewed final Wiki performance sources and navigation claims: equivalent bounded Git precedent scoring; private checkout/source/ref freshness and mutation isolation; request-local test evidence and nearest-project selection; stable-graph reader scheduling with unchanged checks and SLA limits. Product code and domain contracts are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "41c23e0cf3b2b37ae68acc3e65140056ed277563",
-      "reviewedAtUtc": "2026-10-14T12:37:43.2752340Z"
+      "gitHead": "75219c34ebce1debb85576d34507c1f55cebf958",
+      "reviewedAtUtc": "2026-10-14T13:44:43.4013060Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -975,17 +975,17 @@
     {
       "pageId": "workflow-task-brief",
       "pagePath": ".llm-wiki/workflows/task-brief.md",
-      "pageSha256": "788b8f6aa6bd6b38cb6dca5b8a8784669461c6fd95fb7c732777832943e8dcfd",
+      "pageSha256": "0aeb5c8441f0b52d5c88049225ca59f0ddeb1ca37fc524cfd7fb194543796dd8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "30289f32a19ec4149c7f2137ca9b10aceb38b155814c0a75d47ccfec4a6e6a78"
+          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
+          "sha256": "e2d1221411e998f0a34ca979305f156f64b6a4fcc963082e83e8e0775b6cf1f2"
         }
       ],
-      "reason": "Compared implicit QA exclusions with the page scope contract. Tracked source paths and explicit caller paths still take precedence; source inventories and SQLite freshness remain exact. Task-scope, task-baseline and research-confidence regressions passed on these boundaries.",
+      "reason": "Reviewed final Wiki performance sources and navigation claims: equivalent bounded Git precedent scoring; private checkout/source/ref freshness and mutation isolation; request-local test evidence and nearest-project selection; stable-graph reader scheduling with unchanged checks and SLA limits. Product code and domain contracts are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:27:01.3986395Z"
+      "gitHead": "75219c34ebce1debb85576d34507c1f55cebf958",
+      "reviewedAtUtc": "2026-10-14T13:44:43.6977154Z"
     },
     {
       "pageId": "workflow-task-contract",

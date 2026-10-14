@@ -159,8 +159,17 @@ function Get-ReadOnlySnapshotFingerprint {
 
     $head = (Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for the isolated read-only snapshot.').Lines[0].Trim()
     $material = [Collections.Generic.List[string]]::new()
-    $material.Add('schema=6')
-    $material.Add("head=$head")
+    $material.Add('schema=7')
+    # A slot owns an exclusively locked checkout, not one commit. Content
+    # readiness still includes HEAD so a revision change resets that checkout
+    # while preserving its ignored compiler and graph caches.
+    if (-not $SlotKey) { $material.Add("head=$head") }
+    if (-not $SlotKey) {
+        $sourceRefs = Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @(
+            'for-each-ref', '--format=%(refname) %(objectname)'
+        ) -FailureMessage 'Unable to capture Git history refs for the read-only snapshot.'
+        foreach ($sourceRef in $sourceRefs.Lines) { $material.Add("ref=$sourceRef") }
+    }
     if ($SlotKey -and -not [string]::IsNullOrWhiteSpace($Partition)) { $material.Add("partition=$Partition") }
     foreach ($relativePath in @($OverlayPath | Sort-Object -Unique)) {
         $material.Add($(if ($SlotKey) { "scope=$relativePath" } else { "$relativePath=$(Get-FileHashOrMissing (Join-Path $RepositoryRoot $relativePath))" }))
@@ -505,8 +514,17 @@ try {
         if ($cloneExitCode -ne 0 -or $checkoutExitCode -ne 0) {
             throw "Unable to create isolated read-only snapshot clone.`n$($cloneOutput.Trim())`n$($checkoutOutput.Trim())"
         }
+        Write-ReadOnlyTiming -Stage 'outer-checkout-ready'
+        # Mirroring only this detached, private clone keeps --all history current
+        # when refs change independently of HEAD, and removes deleted source refs.
+        $null = Invoke-LlmWikiGitCommand -RepositoryRoot $snapshotRoot -Arguments @(
+            '-c', 'protocol.file.allow=always', 'fetch', '--quiet', '--prune', '--no-tags', '--no-write-fetch-head',
+            '--no-auto-maintenance', $sourceRepositoryRoot, '+refs/*:refs/*'
+        ) -FailureMessage 'Unable to synchronize Git history in the private read-only snapshot.'
+        Write-ReadOnlyTiming -Stage 'outer-history-refs-ready'
         $snapshotCreated = $true
         Copy-WorkspaceOverlay -SourceRoot $sourceRepositoryRoot -SnapshotRoot $snapshotRoot -Path $overlayPaths
+        Write-ReadOnlyTiming -Stage 'outer-overlay-copied'
         $graphRelativePath = '.artifacts/llm-wiki/code-graph/code-graph.sqlite'
         if (-not (Test-Path -LiteralPath (Join-Path $snapshotRoot $graphRelativePath)) -and
             (Test-Path -LiteralPath (Join-Path $sourceRepositoryRoot $graphRelativePath))) {
@@ -517,6 +535,7 @@ try {
                 '.artifacts/llm-wiki/code-graph/code-graph.fingerprint'
             )
         }
+        Write-ReadOnlyTiming -Stage 'outer-graph-copied'
         $currentOverlayPaths = @(Select-RelevantOverlayPath -WorkspacePath @(Get-WorkspaceOverlayPaths -RepositoryRoot $sourceRepositoryRoot -RelevantPath $requestedScopePaths) -Arguments $ToolArguments)
         if ((Get-ReadOnlySnapshotFingerprint -RepositoryRoot $sourceRepositoryRoot -OverlayPath $currentOverlayPaths) -cne $snapshotContentFingerprint) {
             throw 'Workspace changed while preparing the read-only snapshot. Retry the query against the new state.'

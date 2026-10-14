@@ -46,6 +46,9 @@ function Get-SmokePriority([string]$Group) {
     0
 }
 $parallelSafeGroups = @($catalogGroups | Where-Object { [bool]$_.ParallelSafe } | ForEach-Object { [string]$_.Id })
+$stableGraphSafeGroups = @($catalogGroups | Where-Object {
+    -not [bool]$_.ParallelSafe -and $_.ContainsKey('StableGraphParallelSafe') -and [bool]$_.StableGraphParallelSafe
+} | ForEach-Object { [string]$_.Id })
 $parallelGroups = @(
     $groups |
         Where-Object { $_ -in $parallelSafeGroups } |
@@ -53,7 +56,12 @@ $parallelGroups = @(
 )
 $serialGroups = @(
     $groups |
-        Where-Object { $_ -notin $parallelSafeGroups } |
+        Where-Object { $_ -notin $parallelSafeGroups -and $_ -notin $stableGraphSafeGroups } |
+        Sort-Object @{ Expression = { Get-SmokePriority $_ }; Descending = $true }, @{ Expression = { $_ } }
+)
+$stableGraphGroups = @(
+    $groups |
+        Where-Object { $_ -in $stableGraphSafeGroups } |
         Sort-Object @{ Expression = { Get-SmokePriority $_ }; Descending = $true }, @{ Expression = { $_ } }
 )
 $planResult = [pscustomobject][ordered]@{
@@ -61,6 +69,7 @@ $planResult = [pscustomobject][ordered]@{
     maxConcurrency = $MaxConcurrency
     parallelGroups = $parallelGroups
     serialGroups = $serialGroups
+    stableGraphGroups = $stableGraphGroups
     groups = $groups
 }
 if ($Plan) {
@@ -292,6 +301,9 @@ $completed = $false
 try {
     Wait-SmokeBatch $parallelGroups $MaxConcurrency
     foreach ($group in $serialGroups) { Wait-SmokeBatch @($group) 1 }
+    # These readers may share a fully prepared graph, but must wait for all
+    # corruption, recovery and other mutable-state regressions above to finish.
+    Wait-SmokeBatch $stableGraphGroups $MaxConcurrency
     if ($groupFailures.Count -gt 0) {
         throw "Focused smoke failed in $($groupFailures.Count) group(s): $($groupFailures.group -join ', '). No aggregate success receipt will be published."
     }

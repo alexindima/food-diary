@@ -24,6 +24,7 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiApplicationModulePaths.ps1
   - .llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1
   - .llm-wiki/tools/Get-LlmWikiGitPrecedents.ps1
+  - .llm-wiki/tools/Test-LlmWikiGitPrecedents.ps1
   - .llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1
   - .llm-wiki/tools/Manage-LlmWikiAdaptiveSession.ps1
   - .llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1
@@ -101,6 +102,15 @@ inheriting an unrelated session baseline.
 A clean worktree, or a worktree whose changes are all outside that explicit
 scope, legitimately produces an empty overlay. The read-oriented command still
 runs from the captured `HEAD` snapshot and must accept that empty path set.
+Private checkout slots survive revision changes under their exclusive lock;
+`HEAD` and source-content receipts force a reset and current overlay before reuse.
+Research `-Verbose` reports classification, context, Git history, runtime graph,
+research planning and serialization time without changing the packet fields.
+Git precedents still inspect the latest 300 commits on every uncached request.
+The research cache includes a Git ref fingerprint, and private snapshots mirror
+current refs, so history updates without a `HEAD` change invalidate old evidence.
+Scope prefixes and token matches are prepared once, and each commit's matched
+paths are collected once with the existing score cap and twelve-path output.
 For changed paths, Git rename detection is disabled during overlay enumeration:
 both the removed source and added destination must be applied. Copying only the
 destination would leave stale `HEAD` declarations in the isolated graph.

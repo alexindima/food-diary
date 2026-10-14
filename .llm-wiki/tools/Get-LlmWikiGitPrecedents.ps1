@@ -16,6 +16,10 @@ $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $normalizedPaths = @($ScopePath | ForEach-Object { $_ -split '[;,]' } | ForEach-Object { $_.Trim().Replace('\', '/') } | Where-Object { $_ } | Sort-Object -Unique)
+$scopeMatchers = @($normalizedPaths | ForEach-Object {
+    $directory = if ([IO.Path]::HasExtension($_)) { Split-Path -Parent $_ } else { $_ }
+    [pscustomobject]@{ path = $_; prefix = $directory.Replace('\', '/').TrimEnd('/') + '/' }
+})
 $stopWords = @('about', 'after', 'before', 'change', 'create', 'from', 'into', 'that', 'this', 'with')
 $tokens = @([regex]::Matches($Objective.ToLowerInvariant(), '[\p{L}\p{Nd}]{4,}') | ForEach-Object Value | Where-Object { $_ -notin $stopWords } | Sort-Object -Unique)
 
@@ -37,15 +41,22 @@ $ranked = @(
     @(
         foreach ($commit in $commits) {
         $subject = $commit.subject.ToLowerInvariant()
-        $tokenMatches = @($tokens | Where-Object { $subject.Contains($_) }).Count
+        $matchedTokens = [Collections.Generic.List[string]]::new()
+        foreach ($token in $tokens) { if ($subject.Contains($token)) { $matchedTokens.Add($token) } }
         $pathMatches = 0
+        $matchedPaths = [Collections.Generic.List[string]]::new()
         foreach ($candidate in $commit.paths) {
-            foreach ($scope in $normalizedPaths) {
-                $scopeDirectory = if ([IO.Path]::HasExtension($scope)) { Split-Path -Parent $scope } else { $scope }
-                if ($candidate -eq $scope -or $candidate.StartsWith("$($scopeDirectory.Replace('\', '/').TrimEnd('/'))/", [StringComparison]::OrdinalIgnoreCase)) { $pathMatches++; break }
+            foreach ($scope in $scopeMatchers) {
+                if ($candidate -eq $scope.path -or $candidate.StartsWith($scope.prefix, [StringComparison]::OrdinalIgnoreCase)) {
+                    $pathMatches++
+                    if ($matchedPaths.Count -lt 12) { $matchedPaths.Add($candidate) }
+                    break
+                }
             }
+            # Scoring caps path evidence at five; output retains its first twelve.
+            if ($matchedPaths.Count -eq 12) { break }
         }
-        $score = ($tokenMatches * 4) + ([Math]::Min($pathMatches, 5) * 3)
+        $score = ($matchedTokens.Count * 4) + ([Math]::Min($pathMatches, 5) * 3)
         if ($score -le 0) { continue }
         [pscustomobject][ordered]@{
             hash = $commit.hash
@@ -53,14 +64,8 @@ $ranked = @(
             date = $commit.date
             subject = $commit.subject
             score = $score
-            matchedIntentTokens = @($tokens | Where-Object { $subject.Contains($_) })
-            matchedPaths = @($commit.paths | Where-Object {
-                $candidate = $_
-                @($normalizedPaths | Where-Object {
-                    $scopeDirectory = if ([IO.Path]::HasExtension($_)) { Split-Path -Parent $_ } else { $_ }
-                    $candidate -eq $_ -or $candidate.StartsWith("$($scopeDirectory.Replace('\', '/').TrimEnd('/'))/", [StringComparison]::OrdinalIgnoreCase)
-                }).Count -gt 0
-            } | Select-Object -First 12)
+            matchedIntentTokens = @($matchedTokens)
+            matchedPaths = @($matchedPaths)
         }
         }
     ) | Sort-Object @{ Expression = 'score'; Descending = $true }, @{ Expression = 'date'; Descending = $true } | Select-Object -First $Limit

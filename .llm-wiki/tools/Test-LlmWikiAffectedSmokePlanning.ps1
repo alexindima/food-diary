@@ -236,14 +236,22 @@ if ([string]$fullFocusedPlan.parallelGroups[1] -ne 'code-graph-core') {
 foreach ($group in @('read-only-isolation', 'sqlite-cold-checkout')) {
     if (@($fullFocusedPlan.parallelGroups) -notcontains $group) { throw "Private fixture group is not parallel: $group" }
 }
-if (@($fullFocusedPlan.serialGroups) -notcontains 'read-only-retrieval' -or @($fullFocusedPlan.groups) -contains 'read-only-guard') {
+if (@($fullFocusedPlan.stableGraphGroups) -notcontains 'read-only-retrieval' -or @($fullFocusedPlan.groups) -contains 'read-only-guard') {
     throw 'Read-only retrieval must stay behind shared graph writers, without replaying the legacy aggregate.'
 }
 if (@($fullFocusedPlan.serialGroups) -notcontains 'context-retrieval' -or @($fullFocusedPlan.parallelGroups) -notcontains 'context-search-evals' -or @($fullFocusedPlan.groups) -contains 'context-bundle') {
     throw 'The context-cache SLA fixture must remain isolated from parallel smoke groups.'
 }
-if (@($fullFocusedPlan.serialGroups) -notcontains 'trace-output') {
+if (@($fullFocusedPlan.stableGraphGroups) -notcontains 'trace-output') {
     throw 'Trace-output snapshot creation must not race the parallel code-graph writer.'
+}
+foreach ($group in @($fullFocusedPlan.stableGraphGroups)) {
+    if ($group -in @($fullFocusedPlan.parallelGroups) -or $group -in @($fullFocusedPlan.serialGroups)) {
+        throw "Stable graph group occurs in more than one execution batch: $group"
+    }
+}
+if (@($fullFocusedPlan.parallelGroups).Count + @($fullFocusedPlan.serialGroups).Count + @($fullFocusedPlan.stableGraphGroups).Count -ne @($fullFocusedPlan.groups).Count) {
+    throw 'Stable graph scheduling dropped a required smoke group.'
 }
 if (@($fullFocusedPlan.parallelGroups) -notcontains 'code-graph-core') {
     throw 'The code-graph smoke must remain in the parallel batch ahead of trace-output snapshot creation.'
@@ -323,7 +331,9 @@ try {
 @{ Groups = @(
     @{ Id = 'first'; IncludeInAll = $true; Priority = 3; ParallelSafe = $true; GraphDependent = $false },
     @{ Id = 'following'; IncludeInAll = $true; Priority = 2; ParallelSafe = $true; GraphDependent = $false },
-    @{ Id = 'serial'; IncludeInAll = $true; Priority = 1; ParallelSafe = $false; GraphDependent = $false }
+    @{ Id = 'serial'; IncludeInAll = $true; Priority = 1; ParallelSafe = $false; GraphDependent = $false },
+    @{ Id = 'stable-a'; IncludeInAll = $true; Priority = 1; ParallelSafe = $false; StableGraphParallelSafe = $true; GraphDependent = $false },
+    @{ Id = 'stable-b'; IncludeInAll = $true; Priority = 1; ParallelSafe = $false; StableGraphParallelSafe = $true; GraphDependent = $false }
 ) }
 '@)
         [IO.File]::WriteAllText((Join-Path $fixtureTools 'LlmWikiGitPaths.ps1'), @'
@@ -341,6 +351,23 @@ param($ToolPath, $ArgumentsPath, $StageName, $LogPath)
 $fixtureRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $arguments = Get-Content -LiteralPath $ArgumentsPath -Raw | ConvertFrom-Json
 $group = [string]$arguments.RequestedGroup[0]
+if ($group -like 'stable-*') {
+    $serialCompleted = if ($env:LLM_WIKI_SMOKE_MAX_CONCURRENCY -eq '2') {
+        Test-Path -LiteralPath (Join-Path $fixtureRoot 'serial.attempt')
+    } else {
+        [IO.File]::ReadAllText((Join-Path $fixtureRoot 'attempts.txt')).Contains('serial')
+    }
+    if (-not $serialCompleted) { throw 'Stable graph reader raced an earlier mutable-state fixture.' }
+    if ($env:LLM_WIKI_SMOKE_MAX_CONCURRENCY -eq '2') {
+        [IO.File]::WriteAllText((Join-Path $fixtureRoot "$group.entered"), '')
+        $peer = if ($group -eq 'stable-a') { 'stable-b' } else { 'stable-a' }
+        $deadline = [DateTime]::UtcNow.AddSeconds(10)
+        while (-not [IO.File]::Exists((Join-Path $fixtureRoot "$peer.entered"))) {
+            if ([DateTime]::UtcNow -ge $deadline) { throw 'Stable graph readers did not run concurrently.' }
+            Start-Sleep -Milliseconds 50
+        }
+    }
+}
 if ($env:LLM_WIKI_SMOKE_MAX_CONCURRENCY -eq '2') {
     [IO.File]::WriteAllText((Join-Path $fixtureRoot "$group.attempt"), $group)
 } else {
@@ -413,7 +440,7 @@ exit 0
                 throw 'Diagnostic smoke did not preserve its failure record and log.'
             }
         }
-        $expectedAttempts = if ($mode -eq 'fail-fast') { 'first' } else { 'first,following,serial' }
+        $expectedAttempts = if ($mode -eq 'fail-fast') { 'first' } else { 'first,following,serial,stable-a,stable-b' }
         $actualAttempts = if ($mode -eq 'parallel') { ($attempts | Sort-Object) -join ',' } else { $attempts -join ',' }
         if ($actualAttempts -cne $expectedAttempts) { throw "Smoke fixture '$mode' attempted the wrong groups: $($attempts -join ',')" }
         $workerEnvironments = @($attempts | ForEach-Object { Get-Content -LiteralPath (Join-Path $fixture "$_.environment.json") -Raw | ConvertFrom-Json })

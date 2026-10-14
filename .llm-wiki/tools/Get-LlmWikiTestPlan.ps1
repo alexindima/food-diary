@@ -286,6 +286,7 @@ if ($changedTypeNames.Count -gt 0) {
                 }
         )
     }
+    Write-TestPlanTiming 'test-source-inventory'
     foreach ($testFile in $testFiles) {
         $content = ''
         if (-not $testSourceContents.TryGetValue($testFile.FullName, [ref]$content)) {
@@ -293,19 +294,19 @@ if ($changedTypeNames.Count -gt 0) {
             $testSourceContents[$testFile.FullName] = $content
         }
         $relative = $testFile.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
-        $declaredTypeMatch = $false
-        foreach ($pattern in $declaredTypePatterns) {
-            if ($pattern.IsMatch($content)) { $declaredTypeMatch = $true; break }
-        }
-        if ($declaredTypeMatch) {
-            $null = $declaredTypeTests.Add($relative)
-            $null = $directTests.Add($relative)
-            continue
-        }
+        $typeMatch = $false
         foreach ($pattern in $typePatterns) {
-            if ($pattern.IsMatch($content)) { $null = $directTests.Add($relative); break }
+            if ($pattern.IsMatch($content)) { $typeMatch = $true; break }
+        }
+        # Declared names are a subset of all changed names. Files without any
+        # changed name cannot contain declaration evidence either.
+        if (-not $typeMatch) { continue }
+        $null = $directTests.Add($relative)
+        foreach ($pattern in $declaredTypePatterns) {
+            if ($pattern.IsMatch($content)) { $null = $declaredTypeTests.Add($relative); break }
         }
     }
+    Write-TestPlanTiming 'test-source-matching'
     $trackedCSharpFileSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
     $escapedConsumerNames = $escapedTypeNames
     foreach ($consumerNamesPattern in @(Split-LlmWikiGitGrepAlternatives -Alternative $escapedConsumerNames)) {
@@ -318,13 +319,18 @@ if ($changedTypeNames.Count -gt 0) {
             $null = $trackedCSharpFileSet.Add($trackedCSharpFile)
         }
     }
+    Write-TestPlanTiming 'consumer-git-search'
     $trackedCSharpFiles = @($trackedCSharpFileSet | Sort-Object)
     $projectByDirectory = [Collections.Generic.Dictionary[string,string]]::new([StringComparer]::Ordinal)
+    $consumerDirectories = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    $changedPaths = @($diff.changedPaths)
     foreach ($relativeSource in $trackedCSharpFiles) {
         $normalizedSource = $relativeSource.Replace('\', '/')
-        if ($normalizedSource -in @($diff.changedPaths) -or $normalizedSource -match '(?i)(^|/)(tests?|__tests__)/|\.Tests?/') { continue }
-        $absoluteSource = Join-Path $repositoryRoot $relativeSource
-        $directory = Split-Path -Parent $absoluteSource
+        if ($normalizedSource -in $changedPaths -or $normalizedSource -match '(?i)(^|/)(tests?|__tests__)/|\.Tests?/') { continue }
+        $directory = [IO.Path]::GetDirectoryName([IO.Path]::Combine($repositoryRoot, $relativeSource))
+        $null = $consumerDirectories.Add($directory)
+    }
+    foreach ($directory in $consumerDirectories) {
         $project = Find-LlmWikiNearestProject -RepositoryRoot $repositoryRoot -Directory $directory -Cache $projectByDirectory
         if ($project) { $null = $directConsumerProjects.Add($project) }
     }

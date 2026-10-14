@@ -32,6 +32,14 @@ try {
     if ((Find-LlmWikiNearestProject $fixture (Join-Path $fixture 'Parent/Feature/Deep') $fresh) -cne 'Parent/Feature/New.csproj') { throw 'New lookup did not observe a nearer project.' }
     if ((Find-LlmWikiNearestProject $fixture (Join-Path $fixture 'Parent/Nested/Code') $fresh) -cne 'Parent/Parent.csproj') { throw 'New lookup did not observe project removal.' }
     if (Find-LlmWikiNearestProject $fixture (Split-Path -Parent $fixture) $fresh) { throw 'Lookup escaped repository boundary.' }
+    $multiple = Join-Path $fixture 'Multiple'
+    $null = New-Item -ItemType Directory -Path $multiple -Force
+    foreach ($name in @('Z.csproj', 'A.csproj', '.Hidden.csproj')) {
+        [IO.File]::WriteAllText((Join-Path $multiple $name), '<Project />')
+    }
+    [IO.File]::SetAttributes((Join-Path $multiple '.Hidden.csproj'), [IO.FileAttributes]::Hidden)
+    $multipleCache = [Collections.Generic.Dictionary[string,string]]::new([StringComparer]::Ordinal)
+    if ((Find-LlmWikiNearestProject $fixture $multiple $multipleCache) -cne 'Multiple/A.csproj') { throw 'Native project discovery changed provider ordering or hidden-file exclusion.' }
     Write-Host 'Project lookup regression passed: nearest project, shared ancestors, missing project, fresh discovery and boundary.'
 } finally {
     $sandbox = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot)).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar

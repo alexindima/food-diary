@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
-    [ValidateRange(1, 4)][int]$MaxConcurrency = 2,
-    [ValidateRange(1, 4)][int]$RuntimeMaxConcurrency = 1
+    [ValidateRange(1, 4)][int]$MaxConcurrency = 4,
+    [ValidateRange(1, 4)][int]$RuntimeMaxConcurrency = 2
 )
 
 $ErrorActionPreference = 'Stop'

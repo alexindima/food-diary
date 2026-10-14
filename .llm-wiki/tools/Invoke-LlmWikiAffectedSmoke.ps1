@@ -313,6 +313,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'research-confidence' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiGitPrecedents.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiResearchConfidence.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiCoveragePlan.ps1')

@@ -153,6 +153,16 @@ Record a completed check without creating tracked evidence files:
   -Status passed -DurationSeconds 24 -CoverageScope application-contract
 ```
 
+Consumer project discovery deduplicates source directories within one request
+before finding their nearest project. Native project enumeration retains the
+provider's name ordering and hidden/system exclusion; its cache is local to
+the discovery pass so later requests observe project additions and removals.
+Verbose phases separate test inventory, text matching, Git consumer search and
+project discovery. The test and check selection contract is unchanged.
+Tests without any changed symbol skip the second declaration-specific search;
+declared names are included in the complete changed-name set. Matching tests
+still receive the same direct and declaration-specific evidence.
+
 Receipts live under the Git directory and are bound to the command, HEAD, and
 the current non-generated worktree fingerprint. A later `test-plan` marks an
 exact matching command as `satisfied` and exposes duration and coverage scope;
