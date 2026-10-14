@@ -99,6 +99,13 @@ try {
     if ($unicodeFile -notin @(Get-LlmWikiSourceFiles -RepositoryRoot $fixtureRepository -Filter '*.cs' | ForEach-Object FullName)) {
         throw 'Source inventory lost a Unicode filename on this runtime.'
     }
+    foreach ($forceMode in @($false, $true)) {
+        $withoutSystem = @(Get-LlmWikiSourceFiles -RepositoryRoot $fixtureRepository -Filter '*.cs' -ExcludeSystem -Force:$forceMode)
+        if (@($withoutSystem | Where-Object { $_.Attributes -band [IO.FileAttributes]::System }).Count -ne 0) {
+            throw 'Explicit system exclusion returned a system file.'
+        }
+        if ($unicodeFile -notin $withoutSystem.FullName) { throw 'System exclusion lost ordinary Unicode source files.' }
+    }
     $forcedExpected = @(Get-ChildItem -LiteralPath $fixtureRepository -Recurse -File -Force -Filter '*.cs' |
         Where-Object {
             -not $_.FullName.StartsWith($linkedDirectory + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -and
@@ -152,6 +159,14 @@ try {
     if ((Get-LlmWikiRuntimeTopologyFingerprint -RepositoryRoot $fixtureRepository).sourceFingerprint -cne $normalized.sourceFingerprint) { throw 'Deleting a source did not restore the fingerprint.' }
     Remove-Item -LiteralPath (Join-Path $fixtureRepository 'docker-compose.yml')
     if ((Get-LlmWikiRuntimeTopologyFingerprint -RepositoryRoot $fixtureRepository).sourceFileCount -ne $normalized.sourceFileCount - 1) { throw 'Missing Compose file was retained.' }
+    if ([IO.Path]::DirectorySeparatorChar -eq '\') {
+        $systemDirectory = Join-Path $fixtureRepository 'system-directory'
+        $systemNestedSource = Join-Path $systemDirectory 'nested/Included.cs'
+        Write-InventoryFixture $systemNestedSource 'system directory source'
+        [IO.File]::SetAttributes($systemDirectory, [IO.FileAttributes]::System)
+        if ($systemNestedSource -notin @(Get-LlmWikiSourceFiles -RepositoryRoot $fixtureRepository -Filter '*.cs' -Force | ForEach-Object FullName)) { throw 'Default inventory omitted a non-hidden system directory.' }
+        if ($systemNestedSource -in @(Get-LlmWikiSourceFiles -RepositoryRoot $fixtureRepository -Filter '*.cs' -Force -ExcludeSystem | ForEach-Object FullName)) { throw 'Explicit system exclusion descended into a system directory.' }
+    }
     Write-Host 'Source inventory passed: original paths and fingerprints, exclusions, links, Unicode, untracked sources and equal-time edits.'
 } finally {
     if ([IO.Path]::GetDirectoryName($fixtureRoot) -cne [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\', '/') -or

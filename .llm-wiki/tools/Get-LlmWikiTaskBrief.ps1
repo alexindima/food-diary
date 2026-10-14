@@ -23,6 +23,13 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$taskBriefTiming = [pscustomobject]@{ stopwatch = [Diagnostics.Stopwatch]::StartNew(); previousMs = 0.0 }
+function Write-TaskBriefTiming([string]$Phase) {
+    $elapsedMs = $taskBriefTiming.stopwatch.Elapsed.TotalMilliseconds
+    Write-Verbose ('Task brief phase={0} durationMs={1} elapsedMs={2}' -f $Phase,
+        [Math]::Round($elapsedMs - $taskBriefTiming.previousMs, 2), [Math]::Round($elapsedMs, 2))
+    $taskBriefTiming.previousMs = $elapsedMs
+}
 $toolsRoot = $PSScriptRoot
 $wikiRoot = Split-Path -Parent $toolsRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
@@ -54,6 +61,7 @@ if ($cacheEligible) {
             $compiledIndexDependencies
         )
     $cachedBrief = Read-LlmWikiQueryCache -Entry $queryCacheEntry
+    Write-TaskBriefTiming 'response-cache'
     if ($null -ne $cachedBrief) {
         Write-Output $cachedBrief
         exit 0
@@ -232,6 +240,7 @@ if ($CompiledIndexSource -eq 'Sqlite' -and $null -ne $intentCompiledResult -and
 $diff = if ($null -ne $DiffInput) { $DiffInput } else {
     & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') @diffArguments | ConvertFrom-Json
 }
+Write-TaskBriefTiming 'scope-and-diff'
 
 if ($effectivePaths.Count -eq 0 -and
     [string]::IsNullOrWhiteSpace($Intent) -and
@@ -306,25 +315,12 @@ if ($effectivePaths.Count -eq 0 -and
 $policy = if ($null -ne $PolicyInput) { $PolicyInput } else {
     & (Join-Path $toolsRoot 'Test-LlmWikiChangePolicy.ps1') @common | ConvertFrom-Json
 }
+Write-TaskBriefTiming 'policy'
 $matchedRuleIds = @($policy.matchedRules | ForEach-Object { if ($_.PSObject.Properties['id']) { $_.id } } | Where-Object { $_ })
 $ownership = if ($null -ne $OwnershipInput) { $OwnershipInput } else {
     & (Join-Path $toolsRoot 'Get-LlmWikiOwnershipImpact.ps1') @common -DiffInput $diff | ConvertFrom-Json
 }
-$testPlanArguments = @{} + $common
-$testPlanArguments.Limit = $Limit
-$testPlanArguments.CompiledIndexSource = $CompiledIndexSource
-if (-not [string]::IsNullOrWhiteSpace($Intent)) { $testPlanArguments.Intent = $Intent }
-$testPlan = if ($null -ne $TestPlanInput) { $TestPlanInput } elseif ($SkipTestPlan) {
-    [pscustomobject]@{ focusedTestFiles = @(); scenarios = @() }
-} else {
-    & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') @testPlanArguments -DiffInput $diff -PolicyInput $policy | ConvertFrom-Json
-}
-$rollout = if ($null -ne $RolloutInput) { $RolloutInput } else {
-    & (Join-Path $toolsRoot 'Get-LlmWikiRolloutPlan.ps1') @common -DiffInput $diff -PolicyInput $policy | ConvertFrom-Json
-}
-$decision = if ($null -ne $DecisionInput) { $DecisionInput } else {
-    & (Join-Path $toolsRoot 'Get-LlmWikiDecisionContext.ps1') @common -DiffInput $diff -PolicyInput $policy | ConvertFrom-Json
-}
+Write-TaskBriefTiming 'ownership'
 $changedPathsForQuality = @($diff.changedPaths)
 $impactStopwatch = [Diagnostics.Stopwatch]::StartNew()
 $impactIndexDiagnostics = $null
@@ -334,6 +330,7 @@ $impactResult = & (Join-Path $toolsRoot 'Manage-LlmWikiCodeGraph.ps1') `
     -SkipRefresh `
     -Format Json | ConvertFrom-Json
 $impactStopwatch.Stop()
+Write-TaskBriefTiming 'compiled-impact'
 if (-not [bool]$impactResult.ready) {
     throw "SQLite task-brief impact projection is unavailable ($($impactResult.unavailableReason)). Run ./.llm-wiki/wiki.ps1 graph-build and retry."
 }
@@ -356,6 +353,25 @@ $impactIndexDiagnostics = [ordered]@{
     sourceBytesMaterialized = [int64]$impactResult.sourceBytesMaterialized
     sourceHashes = $impactResult.sourceHashes
 }
+$testPlanArguments = @{} + $common
+$testPlanArguments.Limit = $Limit
+$testPlanArguments.CompiledIndexSource = $CompiledIndexSource
+$testPlanArguments.FrontendContractsInput = $frontendContract
+if (-not [string]::IsNullOrWhiteSpace($Intent)) { $testPlanArguments.Intent = $Intent }
+$testPlan = if ($null -ne $TestPlanInput) { $TestPlanInput } elseif ($SkipTestPlan) {
+    [pscustomobject]@{ focusedTestFiles = @(); scenarios = @() }
+} else {
+    & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') @testPlanArguments -DiffInput $diff -PolicyInput $policy | ConvertFrom-Json
+}
+Write-TaskBriefTiming 'test-plan'
+$rollout = if ($null -ne $RolloutInput) { $RolloutInput } else {
+    & (Join-Path $toolsRoot 'Get-LlmWikiRolloutPlan.ps1') @common -DiffInput $diff -PolicyInput $policy | ConvertFrom-Json
+}
+Write-TaskBriefTiming 'rollout'
+$decision = if ($null -ne $DecisionInput) { $DecisionInput } else {
+    & (Join-Path $toolsRoot 'Get-LlmWikiDecisionContext.ps1') @common -DiffInput $diff -PolicyInput $policy | ConvertFrom-Json
+}
+Write-TaskBriefTiming 'decision'
 $changedQualityFiles = @($qualityIndex.files | Where-Object { $changedPathsForQuality -contains $_.path })
 $changedTestGaps = @(
     $qualityIndex.criticalSymbols |
@@ -770,6 +786,7 @@ $briefOutput = if ($Compact) {
 if ($Format -eq 'Json') {
     $briefJson = $briefOutput | ConvertTo-Json -Depth 9
     if ($queryCacheEntry) { Write-LlmWikiQueryCache -Entry $queryCacheEntry -Content $briefJson }
+    Write-TaskBriefTiming 'assemble-and-serialize'
     Write-Output $briefJson
     exit 0
 }

@@ -4,7 +4,8 @@ function Get-LlmWikiSourceFiles {
         [Parameter(Mandatory)][string]$RepositoryRoot,
         [Parameter(Mandatory)][string]$Filter,
         [string[]]$ExcludedDirectory = @(),
-        [switch]$Force
+        [switch]$Force,
+        [switch]$ExcludeSystem
     )
 
     $excluded = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
@@ -12,11 +13,13 @@ function Get-LlmWikiSourceFiles {
     $directories = [Collections.Generic.Stack[IO.DirectoryInfo]]::new()
     $directories.Push([IO.DirectoryInfo]::new($RepositoryRoot))
     # Match the caller's hidden-entry contract without following directory links.
+    # System entries remain included unless a legacy caller excludes them.
     # File-content read failures still propagate.
     $options = $null
     if ($null -ne ('System.IO.EnumerationOptions' -as [type])) {
         $options = [IO.EnumerationOptions]::new()
         $options.AttributesToSkip = if ($Force) { [IO.FileAttributes]0 } else { [IO.FileAttributes]::Hidden }
+        if ($ExcludeSystem) { $options.AttributesToSkip = $options.AttributesToSkip -bor [IO.FileAttributes]::System }
         $options.IgnoreInaccessible = $true
         $options.MatchCasing = [IO.MatchCasing]::CaseInsensitive
         $options.MatchType = [IO.MatchType]::Win32
@@ -33,9 +36,9 @@ function Get-LlmWikiSourceFiles {
             # the explicit hidden filter matches the modern runtime's contract.
             try {
                 $files = @(Get-ChildItem -LiteralPath $directory.FullName -File -Force -Filter $Filter -ErrorAction Stop |
-                    Where-Object { $Force -or -not ($_.Attributes -band [IO.FileAttributes]::Hidden) })
+                    Where-Object { ($Force -or -not ($_.Attributes -band [IO.FileAttributes]::Hidden)) -and (-not $ExcludeSystem -or -not ($_.Attributes -band [IO.FileAttributes]::System)) })
                 $children = @(Get-ChildItem -LiteralPath $directory.FullName -Directory -Force -ErrorAction Stop |
-                    Where-Object { $Force -or -not ($_.Attributes -band [IO.FileAttributes]::Hidden) })
+                    Where-Object { ($Force -or -not ($_.Attributes -band [IO.FileAttributes]::Hidden)) -and (-not $ExcludeSystem -or -not ($_.Attributes -band [IO.FileAttributes]::System)) })
             } catch {
                 if ($_.CategoryInfo.Category -eq [Management.Automation.ErrorCategory]::PermissionDenied) { continue }
                 throw

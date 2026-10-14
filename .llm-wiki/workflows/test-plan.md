@@ -11,6 +11,8 @@ tags:
 sources:
   - docs/TESTING_STRATEGY.md
   - .llm-wiki/tools/Get-LlmWikiTestPlan.ps1
+  - .llm-wiki/tools/LlmWikiSourceInventory.ps1
+  - .llm-wiki/tools/Test-LlmWikiTestPlanPrecision.ps1
   - .llm-wiki/tools/LlmWikiModuleTestRoots.ps1
   - .llm-wiki/tools/LlmWikiProjectLookup.ps1
   - .llm-wiki/tools/Test-LlmWikiProjectLookup.ps1
@@ -22,6 +24,15 @@ sources:
 ---
 
 # Generate a change-aware test plan
+
+Discovery prunes build/dependency directories before walking them, preserves
+hidden/system exclusions, and captures matching test text once per invocation.
+Escaped symbol alternatives are prepared in bounded regex batches; selected
+tests and their priorities retain whole-word, case-insensitive matching.
+When a task brief supplies its current scoped frontend contracts, the planner
+uses that input instead of issuing the same impact query again. Direct calls
+still query SQLite, and caller-supplied data never enters the response cache.
+`-Verbose` reports phase durations without changing JSON output.
 
 `coverage-plan` also accepts exact Angular specs. It resolves their current
 workspace project and existing `test:coverage:*` and `test:ci:*` package scripts,

@@ -8,6 +8,7 @@ param(
     [string]$Intent,
     [object]$DiffInput,
     [object]$PolicyInput,
+    [object]$FrontendContractsInput,
     [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [ValidateSet('Text', 'Json')]
@@ -19,6 +20,13 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$testPlanTiming = [pscustomobject]@{ stopwatch = [Diagnostics.Stopwatch]::StartNew(); previousMs = 0.0 }
+function Write-TestPlanTiming([string]$Phase) {
+    $elapsedMs = $testPlanTiming.stopwatch.Elapsed.TotalMilliseconds
+    Write-Verbose ('Test plan phase={0} durationMs={1} elapsedMs={2}' -f $Phase,
+        [Math]::Round($elapsedMs - $testPlanTiming.previousMs, 2), [Math]::Round($elapsedMs, 2))
+    $testPlanTiming.previousMs = $elapsedMs
+}
 $toolsRoot = $PSScriptRoot
 $wikiRoot = Split-Path -Parent $toolsRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
@@ -26,15 +34,18 @@ $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $toolsRoot 'LlmWikiVerificationReceipts.ps1')
 . (Join-Path $toolsRoot 'LlmWikiModuleTestRoots.ps1')
 . (Join-Path $toolsRoot 'LlmWikiProjectLookup.ps1')
+. (Join-Path $toolsRoot 'LlmWikiSourceInventory.ps1')
+$testSourceContents = [Collections.Generic.Dictionary[string,string]]::new([StringComparer]::Ordinal)
 $moduleTestRoots = @(Get-LlmWikiModuleTestRoots -RepositoryRoot $repositoryRoot)
 $verificationReceipts = @(Get-LlmWikiVerificationReceipts $repositoryRoot)
+Write-TestPlanTiming 'initialization-and-receipts'
 $validReceiptFingerprint = Get-LlmWikiSha256 (@(
     $verificationReceipts |
         Where-Object validForCurrentState |
         ForEach-Object { "$($_.normalizedCommand):$($_.recordedAtUtc)" }
 ) -join '|')
 $queryCacheEntry = $null
-$cacheEligible = $Format -eq 'Json' -and $null -eq $DiffInput -and $null -eq $PolicyInput
+$cacheEligible = $Format -eq 'Json' -and $null -eq $DiffInput -and $null -eq $PolicyInput -and $null -eq $FrontendContractsInput
 if ($cacheEligible) {
     $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'test-plan' -Arguments @{
         BaseRef = $BaseRef; HeadRef = $HeadRef; ChangedPath = @($ChangedPath)
@@ -195,9 +206,11 @@ foreach ($changedPath in @($effectivePaths | Where-Object {
 
 $frontendContractPath = Join-Path $wikiRoot 'generated/frontend-contract-index.json'
 if (Test-Path -LiteralPath $frontendContractPath) {
-    . (Join-Path $PSScriptRoot 'Ensure-LlmWikiSqliteProjection.ps1')
-    $frontendImpact = Invoke-LlmWikiSqliteQuery -Arguments @{ Action = 'task-brief-impact'; ChangedPath = @($diff.changedPaths) }
-    $frontendContracts = $frontendImpact.groups.frontendContract
+    $frontendContracts = if ($null -ne $FrontendContractsInput) { $FrontendContractsInput } else {
+        . (Join-Path $PSScriptRoot 'Ensure-LlmWikiSqliteProjection.ps1')
+        $frontendImpact = Invoke-LlmWikiSqliteQuery -Arguments @{ Action = 'task-brief-impact'; ChangedPath = @($diff.changedPaths) }
+        $frontendImpact.groups.frontendContract
+    }
     $changedComponents = @(
         $frontendContracts.components |
             Where-Object { $_.path -in @($diff.changedPaths) -or $_.templatePath -in @($diff.changedPaths) }
@@ -240,7 +253,17 @@ $changedTypeNames = @($effectivePaths | Where-Object { $_ -match '\.(cs|ts)$' } 
         }
     }
 } | Sort-Object -Unique)
+Write-TestPlanTiming 'scope-frontend-and-symbols'
 if ($changedTypeNames.Count -gt 0) {
+    $escapedTypeNames = @($changedTypeNames | ForEach-Object { [regex]::Escape($_) })
+    $typePatterns = @(Split-LlmWikiGitGrepAlternatives -Alternative $escapedTypeNames | ForEach-Object {
+        [regex]::new(('\b(?:' + $_ + ')\b'), [Text.RegularExpressions.RegexOptions]::IgnoreCase)
+    })
+    $declaredTypePatterns = if ($changedDeclaredTypeNames.Count -gt 0) {
+        @(Split-LlmWikiGitGrepAlternatives -Alternative @($changedDeclaredTypeNames | ForEach-Object { [regex]::Escape($_) }) | ForEach-Object {
+            [regex]::new(('\b(?:' + $_ + ')\b'), [Text.RegularExpressions.RegexOptions]::IgnoreCase)
+        })
+    } else { @() }
     $testFiles = @()
     $testRoots = [Collections.Generic.List[string]]::new()
     $testRoots.Add('tests')
@@ -256,7 +279,7 @@ if ($changedTypeNames.Count -gt 0) {
         $absoluteTestRoot = Join-Path $repositoryRoot $testRoot
         if (-not (Test-Path -LiteralPath $absoluteTestRoot)) { continue }
         $testFiles += @(
-            Get-ChildItem -LiteralPath $absoluteTestRoot -Recurse -File -ErrorAction SilentlyContinue |
+            Get-LlmWikiSourceFiles -RepositoryRoot $absoluteTestRoot -Filter '*' -ExcludedDirectory @('bin','obj','.artifacts','node_modules') -ExcludeSystem |
                 Where-Object {
                     $_.FullName -notmatch '[\\/](?:bin|obj|\.artifacts|node_modules)[\\/]' -and
                     ($_.Extension -eq '.cs' -or $_.Name -match '\.(spec|test)\.ts$')
@@ -264,25 +287,27 @@ if ($changedTypeNames.Count -gt 0) {
         )
     }
     foreach ($testFile in $testFiles) {
-        $content = [System.IO.File]::ReadAllText($testFile.FullName)
+        $content = ''
+        if (-not $testSourceContents.TryGetValue($testFile.FullName, [ref]$content)) {
+            $content = [IO.File]::ReadAllText($testFile.FullName)
+            $testSourceContents[$testFile.FullName] = $content
+        }
         $relative = $testFile.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
-        $declaredTypeMatch = @($changedDeclaredTypeNames | Where-Object {
-            $content -match "\b$([regex]::Escape($_))\b"
-        }).Count -gt 0
+        $declaredTypeMatch = $false
+        foreach ($pattern in $declaredTypePatterns) {
+            if ($pattern.IsMatch($content)) { $declaredTypeMatch = $true; break }
+        }
         if ($declaredTypeMatch) {
             $null = $declaredTypeTests.Add($relative)
             $null = $directTests.Add($relative)
             continue
         }
-        foreach ($typeName in $changedTypeNames) {
-            if ($content -match "\b$([regex]::Escape($typeName))\b") {
-                $null = $directTests.Add($relative)
-                break
-            }
+        foreach ($pattern in $typePatterns) {
+            if ($pattern.IsMatch($content)) { $null = $directTests.Add($relative); break }
         }
     }
     $trackedCSharpFileSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
-    $escapedConsumerNames = @($changedTypeNames | ForEach-Object { [regex]::Escape($_) })
+    $escapedConsumerNames = $escapedTypeNames
     foreach ($consumerNamesPattern in @(Split-LlmWikiGitGrepAlternatives -Alternative $escapedConsumerNames)) {
         $consumerPattern = "(^|[^A-Za-z0-9_])($consumerNamesPattern)([^A-Za-z0-9_]|$)"
         foreach ($trackedCSharpFile in @(Invoke-LlmWikiGitPathList `
@@ -304,6 +329,7 @@ if ($changedTypeNames.Count -gt 0) {
         if ($project) { $null = $directConsumerProjects.Add($project) }
     }
 }
+Write-TestPlanTiming 'direct-test-and-consumer-discovery'
 if (-not [string]::IsNullOrWhiteSpace($Intent) -and $Intent -match '(?i)idempoten|duplicate|retry|replay|deduplic') {
     $behaviorAffinity = @($effectivePaths | ForEach-Object {
         [regex]::Matches(([string]$_).ToLowerInvariant(), '[a-z0-9]+') | ForEach-Object Value
@@ -311,10 +337,14 @@ if (-not [string]::IsNullOrWhiteSpace($Intent) -and $Intent -match '(?i)idempote
     foreach ($testRoot in (@('tests', 'Services/MailRelay/tests', 'Services/MailInbox/tests') + $moduleTestRoots)) {
         $absoluteTestRoot = Join-Path $repositoryRoot $testRoot
         if (-not (Test-Path -LiteralPath $absoluteTestRoot -PathType Container)) { continue }
-        foreach ($testFile in Get-ChildItem -LiteralPath $absoluteTestRoot -Recurse -File -Filter '*.cs' -ErrorAction SilentlyContinue) {
+        foreach ($testFile in Get-LlmWikiSourceFiles -RepositoryRoot $absoluteTestRoot -Filter '*.cs' -ExcludedDirectory @('bin','obj','.artifacts','node_modules') -ExcludeSystem) {
             if ($testFile.FullName -match '[\\/](?:bin|obj|\.artifacts|node_modules)[\\/]') { continue }
             $relative = $testFile.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
-            $content = [IO.File]::ReadAllText($testFile.FullName)
+            $content = ''
+            if (-not $testSourceContents.TryGetValue($testFile.FullName, [ref]$content)) {
+                $content = [IO.File]::ReadAllText($testFile.FullName)
+                $testSourceContents[$testFile.FullName] = $content
+            }
             if ($content -notmatch '(?i)idempoten|duplicate|retry|replay|deduplic') { continue }
             if ($behaviorAffinity.Count -eq 0 -or @($behaviorAffinity | Where-Object { $relative.ToLowerInvariant().Contains($_) }).Count -gt 0) {
                 $null = $behavioralIntentTests.Add($relative)
@@ -346,6 +376,7 @@ if ($repositoryAssessment) {
         }
     }
 }
+Write-TestPlanTiming 'behavioral-test-discovery'
 $neighborsByDirectory = [Collections.Generic.Dictionary[string,object]]::new([StringComparer]::Ordinal)
 foreach ($directTest in @($directTests)) {
     $directory = Split-Path -Parent (Join-Path $repositoryRoot $directTest)
@@ -881,6 +912,7 @@ $resultOutput = if ($Compact) {
 if ($Format -eq 'Json') {
     $resultJson = $resultOutput | ConvertTo-Json -Depth 8
     if ($queryCacheEntry) { Write-LlmWikiQueryCache -Entry $queryCacheEntry -Content $resultJson }
+    Write-TestPlanTiming 'rank-checks-and-serialize'
     Write-Output $resultJson
     exit 0
 }

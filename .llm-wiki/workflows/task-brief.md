@@ -12,6 +12,9 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiTaskBrief.ps1
   - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
   - .llm-wiki/tools/Get-LlmWikiOwnershipImpact.ps1
+  - .llm-wiki/tools/Get-LlmWikiTestPlan.ps1
+  - .llm-wiki/tools/LlmWikiSourceInventory.ps1
+  - .llm-wiki/tools/Test-LlmWikiTestPlanPrecision.ps1
   - .llm-wiki/tools/Test-LlmWikiChangePolicy.ps1
 ---
 
@@ -24,6 +27,19 @@ classification or editing.
 The brief computes diff and policy once, then passes those compiled objects to
 ownership, test-plan, rollout, and ADR analysis. Its JSON also includes the
 resolved rollout plan and decision context for downstream planning tools.
+It also queries the scoped compiled impact once and passes its frontend
+contracts to the test planner. Direct test-plan calls retain their own SQLite
+query. These inputs are reused only within the current request.
+
+Test discovery prunes build and dependency directories before descending into
+them, retains the planner's hidden/system-file rules, and does not follow
+directory links. Matching source text is captured once per request and reused
+for symbol and behavioral test selection. Word matching, test priorities and
+required checks are preserved; this does not reuse freshness across requests.
+
+Use `-Verbose` to inspect `Task brief phase=` and `Test plan phase=` durations.
+They distinguish cache lookup, scope/diff analysis, planners, compiled impact,
+test discovery and serialization without adding fields to the JSON response.
 
 Use one command to prepare or review a change:
 

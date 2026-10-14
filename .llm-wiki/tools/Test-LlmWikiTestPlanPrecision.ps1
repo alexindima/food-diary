@@ -6,6 +6,17 @@ $ErrorActionPreference = 'Stop'
 & (Join-Path $PSScriptRoot 'Test-LlmWikiProjectLookup.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $tool = Join-Path $PSScriptRoot 'Get-LlmWikiTestPlan.ps1'
+$frontendPath = 'FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts'
+$frontendDiff = & (Join-Path $PSScriptRoot 'Get-LlmWikiDiffContext.ps1') -ChangedPath $frontendPath -Format Json | ConvertFrom-Json
+$frontendPolicy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') -ChangedPath $frontendPath -Format Json | ConvertFrom-Json
+$frontendImpact = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') -Action task-brief-impact -ChangedPath $frontendPath -SkipRefresh -Format Json | ConvertFrom-Json
+if (-not $frontendImpact.ready) { throw 'Frontend impact fixture is not ready.' }
+$frontendPlanArguments = @{ Intent = 'Update dashboard behavior'; DiffInput = $frontendDiff; PolicyInput = $frontendPolicy; Format = 'Json'; NoBaseline = $true }
+$queriedFrontendPlan = & $tool @frontendPlanArguments | ConvertFrom-Json
+$reusedFrontendPlan = & $tool @frontendPlanArguments -FrontendContractsInput $frontendImpact.groups.frontendContract | ConvertFrom-Json
+if (($queriedFrontendPlan | ConvertTo-Json -Depth 20 -Compress) -cne ($reusedFrontendPlan | ConvertTo-Json -Depth 20 -Compress)) {
+    throw 'Sharing the scoped frontend impact changed the complete test plan.'
+}
 $scriptPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') -ProposedPath '.llm-wiki/tools/Write-LlmWikiContextEvaluationSnapshot.ps1' -Format Json | ConvertFrom-Json
 if ('.llm-wiki/tools/Test-LlmWikiContextEvaluationSnapshot.ps1' -notin $scriptPlan.required) { throw 'Fast plan lost the PowerShell companion test.' }
 $ciPlan = & $tool -ChangedPath '.github/workflows/ci-tests.yml' -Format Json | ConvertFrom-Json
