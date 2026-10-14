@@ -68,7 +68,8 @@ $featureIntent = $normalized -match '(\badd\b|\bcreate\b|\bimplement\b|\bfeature
 $architecturalIntent = $normalized -match '(architect|refactor|module|dependency|composition root|dependency injection|\bdi\b|ownership)' -or (Test-IntentTerm $ruArchitectureTerms)
 $criticalIntent = $normalized -match '\b(auth|authentication|login|password|credential|token|secret|oauth|google|payment|billing|subscription|migration|database|external provider|webhook|email|invite|privacy|security)\b' -or (Test-IntentTerm $ruCriticalTerms)
 $boundaryNegated = $normalized -match '\b(without changing|unchanged|no changes? to)\b'
-$visualVocabulary = $normalized -match '\b(visual|layout|style|styling|css|scss|html|template|responsive|viewport|spacing|colour|color|icon|label|caption|annotation|overlay|dialog|modal|button|disabled|corner|radius|border)\b'
+$visualVocabulary = $normalized -match '\b(visual|layout|style|styling|css|scss|html|template|responsive|viewport|spacing|colour|color|icon|label|caption|annotation|overlay|dialog|modal|button|disabled|corner|radius|border|display|presentation|capitalization|capitalize|uppercase|lowercase|sentence case|first letter)\b' -or
+    $normalized -match '(отображен|заглавн|прописн|строчн|первую букв|первая букв|регистр букв)'
 $localUiInteractionVocabulary = $normalized -match '\b(toggle|switch|selector|tab|dropdown|period|range|expand|collapse|selected|selection|local state|component state|interaction|interactive)\b'
 if ($boundaryNegated -and $visualVocabulary) {
     $criticalIntent = $false
@@ -90,6 +91,8 @@ $testInfrastructurePaths = @($routingPaths | Where-Object {
 $testOnlyChange = $scopeKnown -and $routingPaths.Count -gt 0 -and $testSourcePaths.Count -eq $routingPaths.Count -and $testInfrastructurePaths.Count -eq 0
 $visualIntent = $visualVocabulary -or $localUiInteractionVocabulary
 $boundaryChangeIntent = $normalized -match '\b(change|modify|add|remove|replace|migrate|integrate|send|store|persist|log|expose)\w*\s+(api|contract|provider|privacy|security|auth|token|credential|database|migration|webhook|payload|data)\b'
+$boundaryChangeIntent = $boundaryChangeIntent -or $normalized -match '(сохран|запис|хран|переда|пересчит|рассчит).{0,48}(данн|кбжу|калори|нутри|грам|порци|парол|токен|контракт|api)'
+$boundaryChangeIntent = $boundaryChangeIntent -or $normalized -match '\b(calculat|recalculat|comput|convert|round)\w*\b.{0,48}\b(calories|nutrition|macros|grams|portions|timestamps|timezones)\b'
 $criticalUiSurfaceReference = $normalized -match '\b(auth|authentication|login|oauth|payment|billing|privacy|security)\s+(dialog|modal|page|form|button|panel|screen)\b'
 $explicitCriticalBoundaryIntent = -not $criticalUiSurfaceReference -and $normalized -match '\b(fix|change|modify|add|remove|replace|migrate|integrate|link|send|store|persist|expose)\w*\b.{0,48}\b(auth|authentication|login|password|credential|token|secret|oauth|payment|billing|subscription|migration|database|provider|webhook|privacy|security)\b'
 $explicitCriticalIncidentIntent = $normalized -match '\b(bypass|unauthori[sz]ed|privilege escalation|credential leak|token leak|secret leak|data leak|exfiltrat|account takeover)\b'

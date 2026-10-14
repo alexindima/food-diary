@@ -3,7 +3,7 @@ id: workflow-review-report
 kind: workflow
 status: current
 title: Publish a change review report
-summary: Render the compiled change packet and release-readiness scorecard as deterministic Markdown or JSON for humans and CI.
+summary: Render the compiled change packet and release-readiness scorecard with explicit assessment provenance for humans and CI.
 tags:
   - workflow
   - review
@@ -12,12 +12,22 @@ tags:
 sources:
   - .llm-wiki/tools/LlmWikiChangePacket.ps1
   - .llm-wiki/tools/Get-LlmWikiReviewReport.ps1
+  - .llm-wiki/tools/LlmWikiReportFreshness.ps1
   - .llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1
   - .llm-wiki/tools/Get-LlmWikiChangePacket.ps1
   - .github/workflows/ci-tests.yml
 ---
 
 # Publish a Change Review Report
+
+Every report is an assessment snapshot with a UTC timestamp, packet fingerprint
+and hashes of its manifest, acceptance matrix and evidence. Markdown carries the
+same machine-readable provenance as JSON. `task-status` exposes
+`reviewReportFreshness`: `current`, `stale`, `missing`, `legacy-unclassified` or
+`invalid-metadata`. A historical `BLOCKED` verdict is superseded when its inputs
+change; it does not override later task validation. `task-finish` regenerates the
+report before sealing its hash. Run `task-finish -DryRun` to inspect planned
+learning-registry writes, and finish before the final delivery commit.
 
 Generate a Markdown summary for a pull request, task handoff, or CI job:
 

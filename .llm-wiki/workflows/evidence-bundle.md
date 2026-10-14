@@ -4,6 +4,7 @@ kind: workflow
 status: current
 sources:
   - .llm-wiki/tools/Manage-LlmWikiEvidence.ps1
+  - .llm-wiki/tools/LlmWikiEvidenceCommands.ps1
   - .llm-wiki/tools/New-LlmWikiEvidenceLineage.ps1
   - .llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1
   - .llm-wiki/tools/Get-LlmWikiContentFingerprint.ps1
@@ -20,6 +21,20 @@ sources:
 Evidence bundles record what a change required, what was verified, and which
 review decisions remain unresolved. They live under ignored `.artifacts/` and
 are not committed.
+
+Required checks retain the canonical policy command in `command`; the actual
+invocation is recorded separately in `executionCommand` and its lineage. Output
+location and logger flags do not redefine a test. `--no-build` needs a successful
+build receipt for the exact current repository state and the same test project
+or FoodDiary solution. Changed projects, filters and shell chains cannot satisfy
+the original requirement.
+
+An unknown `evidence-check` ID with an explicit command becomes a
+`supplementalChecks` entry. Supplemental observations have their own content and
+execution lineage, but never satisfy a required check or its reusable cache.
+Use a distinct ID; do not rename an obligation to avoid it. `evidence-artifact
+-Id` identifies an existing review obligation, while `acceptance-map -ReviewId`
+accepts multiple review IDs. Command-specific help shows these distinctions.
 
 ```powershell
 ./.llm-wiki/wiki.ps1 evidence-init

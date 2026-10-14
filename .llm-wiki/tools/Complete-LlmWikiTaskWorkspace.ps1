@@ -37,6 +37,11 @@ $sealedArtifactNames = @(
 )
 $completionPath = Join-Path $absoluteWorkspacePath 'completion.json'
 $completionMarkdownPath = Join-Path $absoluteWorkspacePath 'completion.md'
+$plannedTrackedWrites = @(
+    '.llm-wiki/knowledge/learning-promotions.json', '.llm-wiki/knowledge/eval-promotions.json',
+    '.llm-wiki/knowledge/learning-health.json', '.llm-wiki/knowledge/context-strategy-outcomes.json',
+    '.llm-wiki/knowledge/model-routing-outcomes.json', '.llm-wiki/knowledge/instruction-outcomes.json'
+)
 
 function Get-Sha256([string]$Path) {
     return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -153,6 +158,9 @@ if ($DryRun) {
         workspace = $normalizedWorkspacePath
         valid = $true
         dryRun = $true
+        plannedTrackedWrites = $plannedTrackedWrites
+        plannedTaskWrites = @('review-report.md', 'completion.json', 'completion.md', 'retrospective.json')
+        deliveryNote = 'Finish the task before the final commit and push so these learning observations are included in delivery.'
         verdict = $status.verdict
         score = $status.score
         issues = @()
@@ -304,6 +312,12 @@ if ($status.verdict -ne 'ready') {
 }
 
 $artifactHashes = [ordered]@{}
+& (Join-Path $PSScriptRoot 'Get-LlmWikiReviewReport.ps1') `
+    -PacketInput (Get-Content -LiteralPath (Join-Path $absoluteWorkspacePath 'change-packet.json') -Raw | ConvertFrom-Json) `
+    -ManifestPath "$normalizedWorkspacePath/change-manifest.json" `
+    -AcceptancePath "$normalizedWorkspacePath/acceptance-matrix.json" `
+    -EvidencePath "$normalizedWorkspacePath/evidence.json" `
+    -OutputPath "$normalizedWorkspacePath/review-report.md" | Out-Null
 foreach ($artifactName in $sealedArtifactNames) {
     $artifactHashes[$artifactName] = Get-Sha256 (Join-Path $absoluteWorkspacePath $artifactName)
 }

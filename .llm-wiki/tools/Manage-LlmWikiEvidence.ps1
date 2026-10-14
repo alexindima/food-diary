@@ -19,10 +19,12 @@ param(
     [string]$OutputPath,
     [ValidateSet('screenshot', 'browser-log', 'accessibility-report', 'video')]
     [string]$ArtifactKind = 'screenshot',
-    [switch]$NoExitOnFailure
+    [switch]$NoExitOnFailure,
+    [ValidateSet('Text', 'Json')][string]$Format = 'Text'
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiEvidenceCommands.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $absolutePath = if ([System.IO.Path]::IsPathRooted($Path)) { $Path } else { Join-Path $repositoryRoot $Path }
@@ -86,6 +88,14 @@ function Get-EvidenceMarkdown {
         }
     }
     $lines.Add('')
+    if ($Evidence.PSObject.Properties['supplementalChecks'] -and @($Evidence.supplementalChecks).Count -gt 0) {
+        $lines.Add('## Supplemental Checks')
+        $lines.Add('')
+        $lines.Add('These observations do not replace required verification.')
+        $lines.Add('')
+        foreach ($check in $Evidence.supplementalChecks) { $lines.Add("- $($check.id): $($check.status); ``$($check.command)``") }
+        $lines.Add('')
+    }
     $lines.Add('## Review Obligations')
     $lines.Add('')
     if (@($Evidence.reviews).Count -eq 0) {
@@ -178,6 +188,7 @@ switch ($Action) {
                 }
             )
             artifacts = @()
+            supplementalChecks = @()
             structuralViolations = @($policy.violations)
         }
         Write-EvidenceFile $evidence
@@ -267,28 +278,42 @@ switch ($Action) {
             throw "$Status requires -Reason. For known baseline failures, identify the failing tests and the evidence that they predate this change."
         }
         $evidence = Read-EvidenceFile
+        $policy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') -BaseRef ([string]$evidence.git.base) -ChangedPath @($evidence.change.changedPaths) -Format Json | ConvertFrom-Json
+        $requirement = @($policy.requiredChecks | Where-Object id -eq $Id | Select-Object -First 1)
         $entry = @($evidence.checks | Where-Object { $_.id -eq $Id } | Select-Object -First 1)
+        if (($entry.Count -gt 0) -ne ($requirement.Count -gt 0)) { throw "Required check '$Id' differs between the bundle and current policy. Reinitialize evidence before recording this result." }
         if ($entry.Count -eq 0) {
-            $entry = [pscustomobject]@{
-                id = $Id
-                status = $Status
-                command = $Command
-                durationSeconds = $DurationSeconds
-                reason = $Reason
+            if ([string]::IsNullOrWhiteSpace($Command)) { throw "Unknown check '$Id'. Required IDs: $(@($evidence.checks.id) -join ', '). Supply -EvidenceCommand to record a supplemental check." }
+            if (-not $evidence.PSObject.Properties['supplementalChecks']) { $evidence | Add-Member -NotePropertyName supplementalChecks -NotePropertyValue @() }
+            $entry = @($evidence.supplementalChecks | Where-Object id -eq $Id | Select-Object -First 1)
+            if ($entry.Count -eq 0) {
+                $entry = ,([pscustomobject]@{
+                    id = $Id
+                    status = $Status
+                    command = $Command
+                    durationSeconds = $DurationSeconds
+                    reason = $Reason
+                })
+                $evidence.supplementalChecks = @($evidence.supplementalChecks) + $entry
             }
-            $evidence.checks = @($evidence.checks) + $entry
-        } else {
-            $entry[0].status = $Status
-            if (-not [string]::IsNullOrWhiteSpace($Command)) { $entry[0].command = $Command }
-            if ($PSBoundParameters.ContainsKey('DurationSeconds')) { $entry[0].durationSeconds = $DurationSeconds }
-            $entry[0].reason = $Reason
         }
+        $executedCommand = if ($Command) { $Command } elseif ($entry[0].PSObject.Properties['executionCommand']) { [string]$entry[0].executionCommand } else { [string]$entry[0].command }
+        if ($requirement.Count -gt 0) {
+            $canonicalCommand = [string]$requirement[0].command
+            if (-not (Test-LlmWikiEvidenceExecutionCommand $canonicalCommand $executedCommand $repositoryRoot)) { throw "Execution command changes required check '$Id'. Keep '$canonicalCommand'; output flags are supported, while --no-build requires a successful current build receipt. Record a different check under a supplemental ID." }
+            $entry[0].command = $canonicalCommand
+        } else { $entry[0].command = $executedCommand }
+        $entry[0].status = $Status
+        $entry[0] | Add-Member -NotePropertyName executionCommand -NotePropertyValue $executedCommand -Force
+        if ($PSBoundParameters.ContainsKey('DurationSeconds')) { $entry[0].durationSeconds = $DurationSeconds }
+        $entry[0].reason = $Reason
         $lineage = & (Join-Path $PSScriptRoot 'New-LlmWikiEvidenceLineage.ps1') `
             -Kind manual-check `
             -EvidencePath $Path `
             -Id $Id `
-            -Command ([string]$entry[0].command) `
+            -Command $executedCommand `
             -Definition ([string]$entry[0].command) `
+            -PolicyInput $policy `
             -Reason $Reason `
             -Status $Status `
             -DurationSeconds $(if ($PSBoundParameters.ContainsKey('DurationSeconds')) { $DurationSeconds } else { $null }) `
@@ -381,7 +406,7 @@ switch ($Action) {
         $evidence = Read-EvidenceFile
         $markdown = Get-EvidenceMarkdown $evidence
         if ([string]::IsNullOrWhiteSpace($OutputPath)) {
-            Write-Output $markdown
+            if ($Format -eq 'Text') { Write-Output $markdown }
         } else {
             $absoluteOutputPath = if ([System.IO.Path]::IsPathRooted($OutputPath)) {
                 $OutputPath
@@ -404,6 +429,11 @@ switch ($Action) {
             -ChangedPath @($currentEvidence.change.changedPaths) `
             -EvidencePath $Path `
             -RequireEvidence `
+            -Format $Format `
             -FailOnViolation
+        return
     }
+}
+if ($Format -eq 'Json') {
+    [pscustomobject]@{ schemaVersion = 1; action = $Action; evidencePath = $Path; evidence = (Read-EvidenceFile) } | ConvertTo-Json -Depth 25
 }

@@ -14,6 +14,7 @@ $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $reviewLedgerPath = Join-Path $wikiRoot 'reviews/source-impact-reviews.json'
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiNavigationSemantics.ps1')
 
 function ConvertTo-RepositoryPath {
     param([string]$Path)
@@ -130,6 +131,14 @@ $sourceReviews = @(if (Test-Path -LiteralPath $reviewLedgerPath) {
 })
 
 $impacts = [System.Collections.Generic.List[object]]::new()
+$coordinateOnlySources = @{}
+foreach ($source in @($changedPaths | Where-Object { $_ -in @('.llm-wiki/generated/frontend-index.json', '.llm-wiki/generated/csharp-symbol-index.json') })) {
+    $beforeResult = Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('show', "${BaseRef}:$source") -AllowedExitCode @(0, 128)
+    $absoluteSource = Join-Path $repositoryRoot $source
+    if ($beforeResult.ExitCode -eq 0 -and [IO.File]::Exists($absoluteSource)) {
+        $coordinateOnlySources[$source] = Test-LlmWikiNavigationCoordinatesOnly $source ($beforeResult.Lines -join "`n") ([IO.File]::ReadAllText($absoluteSource))
+    }
+}
 foreach ($page in $pages) {
     $changedSources = @($page.Sources | Where-Object { $changedPathSet.ContainsKey($_) })
     if ($changedSources.Count -eq 0) {
@@ -148,7 +157,8 @@ foreach ($page in $pages) {
             }).Count -eq 0
         }).Count -eq 0
     } | Select-Object -First 1)
-    $reviewed = $pageChanged -or $page.Status -eq 'stale' -or -not [string]::IsNullOrWhiteSpace($page.GeneratedBy) -or $reviewReceipt.Count -gt 0
+    $coordinatesOnly = @($changedSources | Where-Object { -not $coordinateOnlySources.ContainsKey($_) -or -not $coordinateOnlySources[$_] }).Count -eq 0
+    $reviewed = $pageChanged -or $page.Status -eq 'stale' -or -not [string]::IsNullOrWhiteSpace($page.GeneratedBy) -or $reviewReceipt.Count -gt 0 -or $coordinatesOnly
     $impacts.Add([pscustomobject]@{
         Id = $page.Id
         Path = $page.Path
@@ -158,6 +168,7 @@ foreach ($page in $pages) {
         PageChanged = $pageChanged
         ReviewReceipt = if ($reviewReceipt.Count -gt 0) { $reviewReceipt[0] } else { $null }
         Reviewed = $reviewed
+        SourceDelta = $(if ($coordinatesOnly) { 'navigation-coordinates-only' } else { 'semantic-or-unclassified' })
     })
 }
 

@@ -14,6 +14,8 @@ sources:
   - .llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1
   - .llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1
   - .llm-wiki/tools/Start-LlmWikiDevelopment.ps1
+  - .llm-wiki/tools/LlmWikiNavigationSemantics.ps1
+  - scripts/ai/task-runtime.mjs
   - .llm-wiki/tools/Get-LlmWikiAdaptiveWorkflow.ps1
   - .llm-wiki/tools/Get-LlmWikiResearchPacket.ps1
   - .llm-wiki/tools/Get-LlmWikiNextResearchQuestion.ps1
@@ -43,6 +45,29 @@ sources:
 ---
 
 # Adaptive FoodDiary Development
+
+Supply `start -Criterion @('<observable outcome>', '<another outcome>')` when
+research has already established concrete defects or audit scenarios. These
+distinct criteria replace generic starter outcomes and keep the existing
+evidence requirements. Small display-only capitalization changes, including
+Russian intent, use the existing visual route; data persistence and API changes
+still require broader work.
+
+Implicit scope omits untracked QA evidence under `output/playwright`,
+`output/maintenance`, `output/qa` and `output/wiki-feedback`. Tracked sources and
+explicit `-ChangedPath` inputs remain in scope. `-ExcludedPath` is a prohibition,
+not a way to omit unrelated pre-existing work; task baselines handle that case.
+
+For browser-only assessments, discover owned runtimes with
+`node scripts/ai/task-runtime.mjs list`. The compact result lists checkout, owner,
+safe loopback URLs and observed readiness across repository worktrees. It probes
+only matching owned processes and excludes credentials. An unverified record is
+not proof that its application is ready.
+
+Known schema-1 frontend and C# navigation indexes distinguish numeric source-line
+changes from semantic changes during source-impact review. Index generation and
+freshness checks still verify the actual content; paths, selectors, consumers,
+array order and all other fields retain their review obligations.
 
 Research exposes canonical `nextActionState` values: `discover`, `assessment-complete`, `resolve-question`, `design`, or `implement`. Readiness and effective design flags follow that state. A completed Assessment does not require an implementation design checkpoint. Snapshot guards hash dirty file contents, including repeated edits whose Git status does not change.
 

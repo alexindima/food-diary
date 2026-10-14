@@ -37,6 +37,7 @@ function ConvertTo-Slug {
 }
 
 $renames = @()
+$implicitQaArtifacts = @()
 if (-not $PSBoundParameters.ContainsKey('ChangedPath')) {
     $workspaceHead = Test-LlmWikiWorkspaceHeadRef $HeadRef
     $gitArguments = @('diff', '--name-only', '--diff-filter=ACMRD', $BaseRef)
@@ -47,7 +48,9 @@ if (-not $PSBoundParameters.ContainsKey('ChangedPath')) {
     $ChangedPath = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments $gitArguments -FailureMessage "git diff failed for base '$BaseRef' and head '$HeadRef'.")
 
     if ($workspaceHead) {
-        $ChangedPath += @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'git ls-files failed while collecting untracked paths.')
+        $untrackedPaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'git ls-files failed while collecting untracked paths.')
+        $implicitQaArtifacts = @($untrackedPaths | Where-Object { $_ -match '^output/(?:playwright|maintenance|qa|wiki-feedback)(?:/|$)' })
+        $ChangedPath += @($untrackedPaths | Where-Object { $_ -notin $implicitQaArtifacts })
     }
     $renames = @(Get-LlmWikiGitRenames -RepositoryRoot $repositoryRoot -BaseRef $BaseRef -HeadRef $(if ($workspaceHead) { '' } else { $HeadRef }))
 }
@@ -65,7 +68,7 @@ $reviewMetadataPaths = @($allChangedPaths | Where-Object {
 $operationalArtifacts = @($allChangedPaths | Where-Object {
     $_ -eq '.llm-wiki/knowledge/verification-telemetry.json' -or
     $_ -match '^\.artifacts/llm-wiki/'
-})
+}) + $implicitQaArtifacts
 $changedPaths = @($allChangedPaths |
     Where-Object { $_ -notin $derivedWikiPaths -and $_ -notin $reviewMetadataPaths -and $_ -notin $operationalArtifacts } |
     Sort-Object -Unique)

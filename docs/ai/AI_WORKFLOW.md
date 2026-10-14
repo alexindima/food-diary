@@ -15,6 +15,15 @@ and accepted ADRs determine concrete behavior.
 5. Follow the existing verification planner, refresh affected artifacts, and
    hand off actual results and unresolved risks.
 
+Pass distinct observable outcomes with `start -Criterion` when defects or audit
+scenarios are already known. For a visual assessment without implementation,
+use the scoped browser guide and `node scripts/ai/task-runtime.mjs list` to find
+the owned runtime. Evidence IDs distinguish required checks from supplemental
+observations; `evidence-artifact -Id` refers to a review. Use `-Format Json` for
+machine-readable results and command-specific `-Help` for parameter semantics.
+Preview `task-finish -DryRun` and finish before the final delivery commit, because
+completion may record tracked learning observations.
+
 For critical calculations, specify independently derived input/output examples
 before implementation and preserve units, source provenance and rounding.
 For risky changes, perform a separate review pass from the final diff, relevant

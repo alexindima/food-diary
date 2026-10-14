@@ -102,6 +102,10 @@ sources:
 
 # Run the Staged Index Pipeline
 
+Measure cold generation separately from a repeated cache-hit check; OS caches
+and concurrent work can dominate wall-clock comparisons. A smaller generator
+time alone does not establish an equivalent improvement in the full pipeline.
+
 Generators refill free worker slots within each dependency stage rather than waiting for a fixed batch. Catalog and symbol generators enumerate Git-visible inputs before accessing the filesystem. Stage barriers, timeouts, transaction rollback, and every required generator remain in force.
 
 A complete `-Check` records the generation receipt. Only a successful `verify-full` records full verification after that generation still matches the source and index fingerprints and the facade's failure-registry, change-policy, and source-impact gates have passed. The inner regression runner does not publish full verification by itself. `verify-full -MaxConcurrency 2` bounds outer generator and regression group workers; nested runners retain their own limits. Affected verification cannot promote its scoped success to the full status. Dirty snapshot guards compare content hashes, and cached clones mutated by a read command are discarded.

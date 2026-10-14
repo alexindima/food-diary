@@ -177,17 +177,17 @@
     {
       "pageId": "workflow-acceptance-evidence-matrix",
       "pagePath": ".llm-wiki/workflows/acceptance-evidence-matrix.md",
-      "pageSha256": "5db5136dcfed34126b99bbc6a9d7ed273c28eeb6bf84c8dd7ce48f0fa39f1569",
+      "pageSha256": "afbb2b3953ad84c0ee010f6ddc21c3a2ed157d398d98547d078567a506d928a7",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "7ff6d34cf2950aedfbb902d388002d83f13c35e6531d1e6f186b325289aaaf47"
+          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+          "sha256": "692dbd96db142989d75315ff687ed13cfdb8b24b500b72416ac525361eee0b23"
         }
       ],
-      "reason": "Reviewed acceptance init composition: packet reuse requires matching objective, resolved base and explicit paths; full matrix parity and mismatch rejection pass. Mapping, evidence resolution, proof and readiness behavior remain unchanged.",
+      "reason": "Required check IDs and review mappings retain their meaning; supplemental checks are separate observations and cannot satisfy the acceptance matrix. The usability integration regression verifies pending required checks remain pending.",
       "baseRef": "HEAD",
-      "gitHead": "aeb5847fb77070baf9a676aa773ba77ae09e3ce3",
-      "reviewedAtUtc": "2026-09-09T22:02:26.6892662Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:23:51.8194498Z"
     },
     {
       "pageId": "workflow-adaptive-development",
@@ -234,13 +234,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "933acfec7d5de23f87eb77237729c4c653117e6beba4a8d5f224150bc2ae7b1f"
+          "sha256": "0d566e05f2e24c7ee1c0b0acccb94b7d3ba2e47f075e7d2844aee49cbf5283f5"
         }
       ],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
+      "reason": "Inspected the generated architecture-health delta: source coordinates for Wiki debt markers moved, while the project dependency graph, module boundaries and removal-candidate guidance retain their meaning. No product project or domain dependency changed.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:42.569503Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:30.4023902Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -260,17 +260,17 @@
     {
       "pageId": "workflow-change-manifest",
       "pagePath": ".llm-wiki/workflows/change-manifest.md",
-      "pageSha256": "21ab43d3671a8a24506a2e1bc714f1e3490986d71f1bb1c45e2a896e7cc89b7f",
+      "pageSha256": "f054da72ff6c702b40e55b1b99985d044ffce9104c1c7e4c4aa8a8c8fb6b80e8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
+          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+          "sha256": "692dbd96db142989d75315ff687ed13cfdb8b24b500b72416ac525361eee0b23"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Canonical required checks and review obligations remain the gating evidence. Actual execution commands have separate validated identity, while supplemental checks cannot compensate for unresolved required checks. Integration fixtures confirmed required checks stay pending and incompatible command writes are rejected.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:34:54.8543727Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:32.5804372Z"
     },
     {
       "pageId": "workflow-change-packet",
@@ -278,26 +278,14 @@
       "pageSha256": "23c1a9278403a636f6ec63e87fa3f5afd67333592db3e51c8c24dcb542ed6ec8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "f95543f786a6d29c980598ede659bca657661ff291d112abfc77309fff43022e"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "339342e0bf6788867c8fc2899a69105864495ab3e51e3fc8f4151f03c98cac34"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-          "sha256": "41e8243a3c0581d8bea51a52304d88c87ba5b1a891d367a315990468a6b7a7bc"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "a2faa5b30deae02ebe0f2c2aa645b0f7c3f8599aa9067d28139370df8bf7179a"
+          "sha256": "30289f32a19ec4149c7f2137ca9b10aceb38b155814c0a75d47ccfec4a6e6a78"
         }
       ],
-      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "reason": "Compared implicit QA exclusions with the page scope contract. Tracked source paths and explicit caller paths still take precedence; source inventories and SQLite freshness remain exact. Task-scope, task-baseline and research-confidence regressions passed on these boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:01.6763957Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:34.195358Z"
     },
     {
       "pageId": "workflow-code-graph",
@@ -305,26 +293,18 @@
       "pageSha256": "59e4d3519b22c1f11de331406c84660a02fa5a9a5d9be957517489b439ce4afd",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-holdout.json",
-          "sha256": "a03db7957600cbb9895ae3e8fa4f92bce37f4beaa542d8d9cab5b9dbc4dce9e9"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "30289f32a19ec4149c7f2137ca9b10aceb38b155814c0a75d47ccfec4a6e6a78"
         },
         {
-          "path": ".llm-wiki/evals/context-search-probe-4.json",
-          "sha256": "444935be1dec29ef9cc19941dc347af3752abf749668294225ae28cf90e52cb5"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "9c2779e2f57eda1ebe21015a68e6ea27833f1c046f6131e852989cbcfd7d3a6f"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiContextRanking.ps1",
-          "sha256": "ea24e663498a055bfa86a674fb51604bbbde67b5c4460349edd17ac66c488a48"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "93a94eedf90ab972372d28427f7c0a15ca44d96c194d2add5eb56f70b3cabab2"
         }
       ],
-      "reason": "Reviewed documented owner migrations and the generic SSR composition role. Two retired fixture paths are replaced by current Angular SSR and page-container owners; the Russian-only rewriting question is explicitly migrated to Angular SSR configuration, preserving all case counts and thresholds. The new suffix/identity-gated SSR role replaces an overly broad generated-utility affinity at the unchanged 700-rule budget. Positive SSR and negative client-route/SEO/pluralization checks pass in Node and .NET. Complete retrieval evaluation passes: promoted top10 494/494, holdout challenge MRR 0.9875, independent 100-case and unseen parity gates intact. This changes navigation ranking only, with no app runtime, credentials, provider or tenant behavior change.",
+      "reason": "Compared the JSON dispatcher with the page facade inputs. It preserves original bound parameters, lifecycle payloads and receipts while emitting one JSON document. Facade-contract and tool-contract regressions passed; no graph writer, parser or search ranking contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "d9640139ebecb9eab4d51444355de554e2e19b92",
-      "reviewedAtUtc": "2026-10-11T10:11:33.5743015Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:35.3812291Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -332,14 +312,18 @@
       "pageSha256": "d59b6b99ff0c566de2b31579a916ee8e62adbeedea3d928970b2200fa0b63eb6",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "c0c870c77b35daff84ece6b1d21a3d4129562fe50c02a91825727e408f57825d"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:33.3626013Z"
+      "reason": "Compared task status and completion with this page governance contract. Existing conformance, proof, requirement, impact, repair, confidence and critique gates remain unchanged; report freshness is an additive view and the final report is refreshed before its hash is sealed. Governed-delivery and research-confidence regressions passed.",
+      "baseRef": "HEAD",
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:36.5282654Z"
     },
     {
       "pageId": "workflow-context-budget-optimization",
@@ -362,14 +346,14 @@
       "pageSha256": "6905a9cfcb2c8ed64f714f760c972c46d47fa98b70bb6db940780fa6be0b34e0",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "03e5557aed0fa12e809720c2e35b674b414d71adc4e323e37286eb1727bc9fc0"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "30289f32a19ec4149c7f2137ca9b10aceb38b155814c0a75d47ccfec4a6e6a78"
         }
       ],
-      "reason": "Reviewed affected bundle, impact and maintenance guidance: every context request still probes current source bytes, including same-size edits with unchanged timestamps, and validates dependent files before cache reuse. Ranking, output bounds, ambiguity, snapshot isolation, governed workflows and writer recovery are preserved.",
+      "reason": "Compared implicit QA exclusions with the page scope contract. Tracked source paths and explicit caller paths still take precedence; source inventories and SQLite freshness remain exact. Task-scope, task-baseline and research-confidence regressions passed on these boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
-      "reviewedAtUtc": "2026-10-04T20:51:30.3730331Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:37.6811595Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -426,14 +410,14 @@
       "pageSha256": "e4de9df2c7adeae34ec774eebca8f821c2a90f1b85fe27d16d59d8d581495c23",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:34.9788762Z"
+      "reason": "Compared completion observation calls with the page lifecycle. The same sealed retrospective, guarded learning eligibility and outcome scoring remain in place; dry-run previews and the refreshed report add visibility before final delivery. Governed-delivery regressions passed.",
+      "baseRef": "HEAD",
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:38.7175729Z"
     },
     {
       "pageId": "workflow-controlled-learning-promotion",
@@ -441,14 +425,14 @@
       "pageSha256": "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:35.2888549Z"
+      "reason": "Compared completion observation calls with the page lifecycle. The same sealed retrospective, guarded learning eligibility and outcome scoring remain in place; dry-run previews and the refreshed report add visibility before final delivery. Governed-delivery regressions passed.",
+      "baseRef": "HEAD",
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:40.0317327Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -456,14 +440,18 @@
       "pageSha256": "1a4c6620169d6fbe556feae253e1e80b1f7a4f4d232962b8fe8b13635bfb608a",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "c0c870c77b35daff84ece6b1d21a3d4129562fe50c02a91825727e408f57825d"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:35.5745515Z"
+      "reason": "Compared task status and completion with this page governance contract. Existing conformance, proof, requirement, impact, repair, confidence and critique gates remain unchanged; report freshness is an additive view and the final report is refreshed before its hash is sealed. Governed-delivery and research-confidence regressions passed.",
+      "baseRef": "HEAD",
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:41.4415882Z"
     },
     {
       "pageId": "workflow-cost-aware-verification",
@@ -513,21 +501,17 @@
     {
       "pageId": "workflow-developer-experience",
       "pagePath": ".llm-wiki/workflows/developer-experience.md",
-      "pageSha256": "ef6996bd5373a4f25ad072892d14337856ea9365ee9154206096bd3743a9f7c3",
+      "pageSha256": "f702d51cb0969966de791175e831339c9ad37670e9d6dcc0d07718b04266b23f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-          "sha256": "75ba917cefa45d83e45b871b41d27a8e20954bfc5c38ef4147338b624f628234"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
-          "sha256": "a8bb234d92a449d1cddf43929f4a73c018a68e5cf142c70f926cc189bfbe8560"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "93a94eedf90ab972372d28427f7c0a15ca44d96c194d2add5eb56f70b3cabab2"
         }
       ],
-      "reason": "Reviewed the affected tooling guides against request-local reuse of the freshly checked repository, HEAD and content fingerprint. Normal scoped cache callers preserve their identity; dependency hashing remains independent and module discovery is deferred only for cache hits. Cache regressions and the unchanged latency gate pass. Seven counterbalanced pairs measure median warm context from 1050ms to 595ms; static reference indexes were regenerated and do not represent execution coverage.",
+      "reason": "Compared the JSON dispatcher with the page facade inputs. It preserves original bound parameters, lifecycle payloads and receipts while emitting one JSON document. Facade-contract and tool-contract regressions passed; no graph writer, parser or search ranking contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "c56471de66f23a84c14b84c7d03f3c505688b399",
-      "reviewedAtUtc": "2026-10-04T20:51:30.9074539Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:43.117031Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -629,14 +613,22 @@
       "pageSha256": "afe53d54c25e32851bd4696c4fc162d497360f95a6b31a95aa557991f57dc840",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "30289f32a19ec4149c7f2137ca9b10aceb38b155814c0a75d47ccfec4a6e6a78"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "c0c870c77b35daff84ece6b1d21a3d4129562fe50c02a91825727e408f57825d"
         }
       ],
-      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
+      "reason": "Compared task status and completion with this page governance contract. Existing conformance, proof, requirement, impact, repair, confidence and critique gates remain unchanged; report freshness is an additive view and the final report is refreshed before its hash is sealed. Governed-delivery and research-confidence regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
-      "reviewedAtUtc": "2026-10-05T08:37:22.5932749Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:46.0565627Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -671,14 +663,18 @@
       "pageSha256": "d93e8bf4522a803da1d1a59bd2cd49e0d6a6b39360281f4df4f1792621027fb1",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "c0c870c77b35daff84ece6b1d21a3d4129562fe50c02a91825727e408f57825d"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:39.1824496Z"
+      "reason": "Compared task status and completion with this page governance contract. Existing conformance, proof, requirement, impact, repair, confidence and critique gates remain unchanged; report freshness is an additive view and the final report is refreshed before its hash is sealed. Governed-delivery and research-confidence regressions passed.",
+      "baseRef": "HEAD",
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:46.9891607Z"
     },
     {
       "pageId": "workflow-index-pipeline",
@@ -743,14 +739,14 @@
       "pageSha256": "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
       "sources": [
         {
-          "path": ".llm-wiki/evals/cases.json",
-          "sha256": "acef17559a23db9ff1ac529cbe582e4b560a3b0e993b09a1110f4831f1e58e0e"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
         }
       ],
-      "reason": "Reviewed the sole cases.json edit: it corrects the static billing-security source path after module extraction, while retaining all expected classifications. No promoted case, event chain, approval state, retrospective or evaluation lifecycle behavior changes.",
+      "reason": "Compared completion observation calls with the page lifecycle. The same sealed retrospective, guarded learning eligibility and outcome scoring remain in place; dry-run previews and the refreshed report add visibility before final delivery. Governed-delivery regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "26f0e0dccc426778024b0bfe164af842f200197c",
-      "reviewedAtUtc": "2026-09-14T13:58:06.762685Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:48.0718757Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -804,17 +800,21 @@
     {
       "pageId": "workflow-plan-diff-conformance",
       "pagePath": ".llm-wiki/workflows/plan-diff-conformance.md",
-      "pageSha256": "bd822668f34d604e09bbacb4af4315b22b23dda78800c8fb26fe105ae693db36",
+      "pageSha256": "82ddb1109ba7b26835924019c29df7bbb942e5c0c321ea41bdebadf360848e00",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "c0c870c77b35daff84ece6b1d21a3d4129562fe50c02a91825727e408f57825d"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:40.7898583Z"
+      "reason": "Compared task status and completion with this page governance contract. Existing conformance, proof, requirement, impact, repair, confidence and critique gates remain unchanged; report freshness is an additive view and the final report is refreshed before its hash is sealed. Governed-delivery and research-confidence regressions passed.",
+      "baseRef": "HEAD",
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:49.2077125Z"
     },
     {
       "pageId": "workflow-post-task-retrospective",
@@ -822,14 +822,14 @@
       "pageSha256": "dbcac0a7ae8c9e8975807cd711fc7680b3c731e74459583b85917d9bb8e1827d",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:41.096778Z"
+      "reason": "Compared completion observation calls with the page lifecycle. The same sealed retrospective, guarded learning eligibility and outcome scoring remain in place; dry-run previews and the refreshed report add visibility before final delivery. Governed-delivery regressions passed.",
+      "baseRef": "HEAD",
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:50.4820143Z"
     },
     {
       "pageId": "workflow-privacy-review",
@@ -867,14 +867,18 @@
       "pageSha256": "7622935ab3aa92e0641117a4b5afc2b8faada090a2a8a83e9ea27a575f549281",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "6c4cd9d5ee6fdfcfd6398dc79f588b570b9f935a59795918d74447a4f1fc6181"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "c0c870c77b35daff84ece6b1d21a3d4129562fe50c02a91825727e408f57825d"
         }
       ],
-      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "reason": "Compared task status and completion with this page governance contract. Existing conformance, proof, requirement, impact, repair, confidence and critique gates remain unchanged; report freshness is an additive view and the final report is refreshed before its hash is sealed. Governed-delivery and research-confidence regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:10.4408799Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:51.8613973Z"
     },
     {
       "pageId": "workflow-quality-risk",
@@ -897,26 +901,14 @@
       "pageSha256": "1684cbe2c98211ca7fd946264d33e15af96696e64ee7ab094b94fc1086af0b85",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "f95543f786a6d29c980598ede659bca657661ff291d112abfc77309fff43022e"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "6c4cd9d5ee6fdfcfd6398dc79f588b570b9f935a59795918d74447a4f1fc6181"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-          "sha256": "091fb32324dd228ba39966bd8e18d113231cd6c6aa5d820f9082d8945dfd9cc0"
-        },
-        {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "4d7c8d07c7d40ddf7ec171ba92564c9d47f2121bde852d87a898281ee58d2a6c"
+          "sha256": "692dbd96db142989d75315ff687ed13cfdb8b24b500b72416ac525361eee0b23"
         }
       ],
-      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "reason": "Canonical required checks and review obligations remain the gating evidence. Actual execution commands have separate validated identity, while supplemental checks cannot compensate for unresolved required checks. Integration fixtures confirmed required checks stay pending and incompatible command writes are rejected.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:11.3249524Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:53.8068789Z"
     },
     {
       "pageId": "workflow-requirement-intelligence",
@@ -924,14 +916,18 @@
       "pageSha256": "d6032fccda979d114e265f30e4f14d9593ded53c6b79d85a2dfc467b07fa3a61",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "6c4cd9d5ee6fdfcfd6398dc79f588b570b9f935a59795918d74447a4f1fc6181"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "c0c870c77b35daff84ece6b1d21a3d4129562fe50c02a91825727e408f57825d"
         }
       ],
-      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "reason": "Compared task status and completion with this page governance contract. Existing conformance, proof, requirement, impact, repair, confidence and critique gates remain unchanged; report freshness is an additive view and the final report is refreshed before its hash is sealed. Governed-delivery and research-confidence regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:12.2194054Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:55.1010074Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -985,13 +981,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c8425d1f04c3284877ebf5a59901493646812bc1e93665b81da40c3107536a5f"
+          "sha256": "89b4bb4f34a762f50a9f72bce6160ed94bf326e3eb9e850d02ce9c4578e2afad"
         }
       ],
-      "reason": "Reviewed the repair for CI run 38472791255 at published SHA 0e873e160. Eight TypeScript files and one mocked recipe-provider C# test receive formatter-only changes; assertions, literals, permissions, retries, provider behavior and transport contracts are unchanged. Prettier check and targeted C# whitespace verification now pass. Refreshed quality inventory contains only updated source line counts; no risk threshold or test is relaxed.",
-      "baseRef": "HEAD",
-      "gitHead": "0e873e16007bf8e4f089d073d4b8bf7db21c756c",
-      "reviewedAtUtc": "2026-10-13T22:06:19.2376982Z"
+      "reason": "Reassessed the combined master and Wiki usability sources after generation. The final quality refresh corrects the top-100 hotspot cutoff; WebPush remains in the complete file inventory. Current master formatter-only fixes and product security controls are preserved. Added Wiki helper reference/risk signals remain discovery evidence and do not constitute a security verdict.",
+      "baseRef": "b1f7ee8d72059f0ce0c7966f309e6590048275e4",
+      "gitHead": "cc98818e3fd2c0d607d4767ee4c8addd3348a9f3",
+      "reviewedAtUtc": "2026-10-14T06:56:55.6069213Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -999,33 +995,29 @@
       "pageSha256": "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-          "sha256": "41e8243a3c0581d8bea51a52304d88c87ba5b1a891d367a315990468a6b7a7bc"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
         }
       ],
-      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "reason": "Compared completion observation calls with the page lifecycle. The same sealed retrospective, guarded learning eligibility and outcome scoring remain in place; dry-run previews and the refreshed report add visibility before final delivery. Governed-delivery regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:15.4784073Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:27:00.3459224Z"
     },
     {
       "pageId": "workflow-task-brief",
       "pagePath": ".llm-wiki/workflows/task-brief.md",
-      "pageSha256": "65f4d9ae72ac28fb74987f36e590addfb2bc44bac79e07844eaa04a52661e307",
+      "pageSha256": "788b8f6aa6bd6b38cb6dca5b8a8784669461c6fd95fb7c732777832943e8dcfd",
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
+          "sha256": "30289f32a19ec4149c7f2137ca9b10aceb38b155814c0a75d47ccfec4a6e6a78"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Compared implicit QA exclusions with the page scope contract. Tracked source paths and explicit caller paths still take precedence; source inventories and SQLite freshness remain exact. Task-scope, task-baseline and research-confidence regressions passed on these boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:35.4592038Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:27:01.3986395Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -1064,13 +1056,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "a96eb644887aa12666707da019e0d36366620e5e6936bb07e83f3dfdfc081e30"
+          "sha256": "93a94eedf90ab972372d28427f7c0a15ca44d96c194d2add5eb56f70b3cabab2"
         }
       ],
-      "reason": "Reviewed the declared changed sources and workflow instructions: SQLite is the sole compiled-index query provider. Packet, plan, evidence, acceptance and dispatch artifact schemas and workflow obligations are preserved; JSON serialization of artifacts is independent of compiled-index query selection.",
+      "reason": "Compared the JSON dispatcher with the page facade inputs. It preserves original bound parameters, lifecycle payloads and receipts while emitting one JSON document. Facade-contract and tool-contract regressions passed; no graph writer, parser or search ranking contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:16.6351724Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:27:02.4344421Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1094,17 +1086,33 @@
     {
       "pageId": "workflow-task-workspace",
       "pagePath": ".llm-wiki/workflows/task-workspace.md",
-      "pageSha256": "389153ec6bdaa0031c64a5294d755935731286a3500b49527087672f334804b2",
+      "pageSha256": "e7bbcdd3bf36678ac1f01992447ea0fb84eb6b4044cf3f613edd8328576d21ba",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-          "sha256": "c8232abe0b30042b156af01acbc49a55669378c5ff9b0dc2466837d5abd1d841"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
+          "sha256": "c7a4f29367da34386aea7dd35300f67043a52b6573accb8cca5126d3a44fdf10"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+          "sha256": "692dbd96db142989d75315ff687ed13cfdb8b24b500b72416ac525361eee0b23"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "c0c870c77b35daff84ece6b1d21a3d4129562fe50c02a91825727e408f57825d"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
+          "sha256": "bf68b05b2e1f2ed3fb50211651d4e690acd948de1cf2fb223a1f403429516314"
         }
       ],
-      "reason": "Reviewed the exact API transition acceptance and readiness collection normalization. Strict task completion and evidence requirements still apply; initialization, refresh, sealing and handoff behavior remain unchanged.",
+      "reason": "Compared task status and completion with this page governance contract. Existing conformance, proof, requirement, impact, repair, confidence and critique gates remain unchanged; report freshness is an additive view and the final report is refreshed before its hash is sealed. Governed-delivery and research-confidence regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "028efbba467e3bdece84fe1e43412aead89d2ae5",
-      "reviewedAtUtc": "2026-10-03T21:06:28.3147196Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:27:03.3388319Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1192,13 +1200,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "339342e0bf6788867c8fc2899a69105864495ab3e51e3fc8f4151f03c98cac34"
+          "sha256": "30289f32a19ec4149c7f2137ca9b10aceb38b155814c0a75d47ccfec4a6e6a78"
         }
       ],
-      "reason": "Reviewed the retrieval gate: frozen corpora and Node/.NET SQLite ranking consistency remain intact. Only retired JSON query comparisons were replaced by direct behavioral expectations; all 37 focused groups remain in the canonical catalog.",
+      "reason": "Compared implicit QA exclusions with the page scope contract. Tracked source paths and explicit caller paths still take precedence; source inventories and SQLite freshness remain exact. Task-scope, task-baseline and research-confidence regressions passed on these boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "912c88a34a31e8d7e85e650485b0e1280677a2a2",
-      "reviewedAtUtc": "2026-10-04T16:04:07.7119398Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:44.7925821Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1236,26 +1244,14 @@
       "pageSha256": "8b7ddf0a82ae6f60f4f1b215e468a49f9e0f366ac703995c5f283035fd2e6426",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-holdout.json",
-          "sha256": "a03db7957600cbb9895ae3e8fa4f92bce37f4beaa542d8d9cab5b9dbc4dce9e9"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-probe-4.json",
-          "sha256": "444935be1dec29ef9cc19941dc347af3752abf749668294225ae28cf90e52cb5"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "9c2779e2f57eda1ebe21015a68e6ea27833f1c046f6131e852989cbcfd7d3a6f"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiContextRanking.ps1",
-          "sha256": "ea24e663498a055bfa86a674fb51604bbbde67b5c4460349edd17ac66c488a48"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "30289f32a19ec4149c7f2137ca9b10aceb38b155814c0a75d47ccfec4a6e6a78"
         }
       ],
-      "reason": "Reviewed documented owner migrations and the generic SSR composition role. Two retired fixture paths are replaced by current Angular SSR and page-container owners; the Russian-only rewriting question is explicitly migrated to Angular SSR configuration, preserving all case counts and thresholds. The new suffix/identity-gated SSR role replaces an overly broad generated-utility affinity at the unchanged 700-rule budget. Positive SSR and negative client-route/SEO/pluralization checks pass in Node and .NET. Complete retrieval evaluation passes: promoted top10 494/494, holdout challenge MRR 0.9875, independent 100-case and unseen parity gates intact. This changes navigation ranking only, with no app runtime, credentials, provider or tenant behavior change.",
+      "reason": "Compared implicit QA exclusions with the page scope contract. Tracked source paths and explicit caller paths still take precedence; source inventories and SQLite freshness remain exact. Task-scope, task-baseline and research-confidence regressions passed on these boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "d9640139ebecb9eab4d51444355de554e2e19b92",
-      "reviewedAtUtc": "2026-10-11T10:11:34.1711922Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:52.8389028Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1278,30 +1274,14 @@
       "pageSha256": "891ba091baab5bb5ebac52ec2d8482eba48976374cc43486fa4fbbe800d24fa2",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-context-projection.mjs",
-          "sha256": "5a243e38926bddf04aec7ccd1ad903e0e5ee78a476e63d9d39287810ab971237"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-context-projection.test.mjs",
-          "sha256": "2507430dbd19d7d85b8fd6b23bf713169e6e0139b472ac573de86740a0b44b12"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-maintenance.mjs",
-          "sha256": "44f305954c59613348776401ad650df6c959c361f36a97d45a63664fe3f238eb"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "95e5bb441bba5cc7538a4ed0f879160e2555a02ac77e2b0cfeb785e9663c7487"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "8fe61a82556b4d93247f8485ab2ac3b072082413d7194c025c631ea88e0a48fc"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "93a94eedf90ab972372d28427f7c0a15ca44d96c194d2add5eb56f70b3cabab2"
         }
       ],
-      "reason": "Reviewed pass-local project-root lookup and indexed per-file source hydration against declared sources. Existing classifications, row ordering, FTS text, repair diagnostics, query contracts and transaction recovery remain intact; 22 focused Node regressions pass, including moves, ambiguous roots, Unicode, duplicate symbols and indexed query plans. Native real-database parity and affected verification are required before handoff.",
+      "reason": "Compared the JSON dispatcher with the page facade inputs. It preserves original bound parameters, lifecycle payloads and receipts while emitting one JSON document. Facade-contract and tool-contract regressions passed; no graph writer, parser or search ranking contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "8225b2c923acd96f8617cce3a3d83d6fb0997517",
-      "reviewedAtUtc": "2026-10-05T08:37:25.6783599Z"
+      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
+      "reviewedAtUtc": "2026-10-13T22:26:59.2450606Z"
     }
   ]
 }

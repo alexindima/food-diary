@@ -1,6 +1,7 @@
 @{
     SchemaVersion = 1
     Groups = @(
+        @{ Id = 'usability'; IncludeInAll = $true; ParallelSafe = $true; Priority = 35; GraphDependent = $true; Patterns = @('^\.llm-wiki/tools/(LlmWikiEvidenceCommands|LlmWikiNavigationSemantics|LlmWikiReportFreshness|Test-LlmWikiUsability)\.ps1$') }
         @{ Id = 'workspace-policy'; IncludeInAll = $true; ParallelSafe = $true; Priority = 0; GraphDependent = $false; Patterns = @('^\.llm-wiki/(tools/(Get-LlmWikiWorkspacePolicy|Test-LlmWikiWorkspacePolicyCache)\.ps1|policies/workspace-policies\.json)$') }
         @{ Id = 'adaptive-routing'; IncludeInAll = $false; ParallelSafe = $true; Priority = 0; GraphDependent = $false; Patterns = @('^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Start-LlmWikiDevelopment|Get-LlmWikiSolutionComparison|Get-LlmWikiWorkflowMetrics|Write-LlmWikiWorkflowMetric|Test-LlmWikiAdaptiveWorkflow|Test-LlmWikiWorkflowMetrics)|policies/experience-policies\.json|workflows/developer-experience\.md)') }
         @{ Id = 'adaptive-evals'; IncludeInAll = $true; ParallelSafe = $true; Priority = 100; GraphDependent = $true; Patterns = @('^\.llm-wiki/(tools/(Invoke-LlmWikiAdaptiveVerification|Get-LlmWikiIntegrationScan|Test-LlmWikiIntegrationScan|Invoke-LlmWikiEvals)|evals/|workflows/(integration-scan|evals|learned-regression-evals)\.md)') }

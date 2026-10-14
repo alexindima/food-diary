@@ -20,8 +20,10 @@ Use the diff context command before implementation handoff or PR review:
 ./.llm-wiki/tools/Get-LlmWikiDiffContext.ps1
 ```
 
-By default it compares the working tree, index, and untracked files with
-`HEAD`. For a committed change set:
+By default it compares the working tree, index, and untracked source files with
+`HEAD`. Untracked QA evidence under `output/playwright`, `output/maintenance`,
+`output/qa` and `output/wiki-feedback` is reported as an operational artifact;
+explicit `-ChangedPath` still includes it. For a committed change set:
 
 ```powershell
 ./.llm-wiki/tools/Get-LlmWikiDiffContext.ps1 `

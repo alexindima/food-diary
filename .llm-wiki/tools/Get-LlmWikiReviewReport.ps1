@@ -20,6 +20,7 @@ $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiChangePacket.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 
 function ConvertTo-MarkdownCell([object]$Value) {
     if ($null -eq $Value) { return '' }
@@ -107,6 +108,16 @@ $report = [pscustomobject][ordered]@{
         requiredFields = @('id', 'severity', 'kind', 'area', 'blocking', 'anchorStatus', 'location', 'trigger', 'consequence', 'testGap', 'remediation', 'evidence')
     }
     packetFingerprint = $packet.fingerprint
+    freshness = [pscustomobject][ordered]@{
+        state = 'assessment-snapshot'
+        assessedAtUtc = [DateTime]::UtcNow.ToString('o')
+        packetFingerprint = $packet.fingerprint
+        artifactHashes = @(foreach ($artifactPath in @($ManifestPath, $AcceptancePath, $EvidencePath)) {
+            $absoluteArtifact = Resolve-OutputPath $artifactPath
+            [pscustomobject]@{ path = $artifactPath; sha256 = $(if ([IO.File]::Exists($absoluteArtifact)) { (Get-FileHash -LiteralPath $absoluteArtifact -Algorithm SHA256).Hash.ToLowerInvariant() } else { '<missing>' }) }
+        })
+        refreshCommand = './.llm-wiki/wiki.ps1 report or task-finish -WorkspacePath <task>'
+    }
     objective = $packetObjective
     verdict = $readiness.verdict
     engineeringReadiness = $readiness.engineeringReadiness
@@ -138,6 +149,10 @@ if ($Format -eq 'Json') {
 } else {
     $lines = [System.Collections.Generic.List[string]]::new()
     $lines.Add('## LLM Wiki change review')
+    $lines.Add('')
+    $lines.Add("Assessment snapshot: $($report.freshness.assessedAtUtc). This verdict applies to the recorded packet and evidence hashes; later validation supersedes it.")
+    $lines.Add("Refresh: ``$($report.freshness.refreshCommand)``.")
+    $lines.Add('<!-- LLM_WIKI_REPORT_FRESHNESS: ' + ($report.freshness | ConvertTo-Json -Depth 8 -Compress) + ' -->')
     $lines.Add('')
     $lines.Add("**READINESS: $($report.verdict.ToUpperInvariant())** | score $($report.score)/$($report.maximumScore) | risk $($report.risk.level)")
     $lines.Add("Engineering: **$($report.engineeringReadiness.verdict.ToUpperInvariant())** | Governance: **$($report.governanceCompleteness.verdict.ToUpperInvariant())**")

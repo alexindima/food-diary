@@ -23,6 +23,12 @@ sources:
 
 # Generate a change-aware test plan
 
+`coverage-plan` also accepts exact Angular specs. It resolves their current
+workspace project and existing `test:coverage:*` and `test:ci:*` package scripts,
+using `--include` to constrain execution. Multiple Angular projects receive
+separate plans. Request frontend and backend coverage separately; a frontend
+spec does not imply a `.csproj` or a backend coverage build.
+
 The fast graph plan recognizes `Test-*.ps1` scripts as tests and discovers an
 existing same-directory `Test-<name>.ps1` companion for standard PowerShell
 implementation verbs. These are navigation candidates, not execution evidence.

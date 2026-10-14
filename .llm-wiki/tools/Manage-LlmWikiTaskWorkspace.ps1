@@ -327,6 +327,10 @@ if ($nextActions.Count -eq 0 -and $effectiveVerdict -eq 'ready') {
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1
     workspace = $normalizedWorkspacePath
+    reviewReportFreshness = $(& {
+        . (Join-Path $PSScriptRoot 'LlmWikiReportFreshness.ps1')
+        Get-LlmWikiReportFreshness -RepositoryRoot $repositoryRoot -ReportPath "$normalizedWorkspacePath/review-report.md" -PacketFingerprint $packet.fingerprint
+    })
     objective = $descriptor.objective
     verdict = $effectiveVerdict
     score = $readiness.score

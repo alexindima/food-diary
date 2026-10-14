@@ -78,6 +78,12 @@ open the cited source files before changing code.
 
 Choose the interface by outcome:
 
+`-Format Json` emits one JSON document; informational progress is suppressed in
+that mode. Evidence commands return their updated bundle. Command-specific
+`-Help` documents valid evidence IDs, supplemental checks and finalization
+side effects. `task-finish -DryRun` previews tracked learning writes; complete
+the task before the final delivery commit and push.
+
 | Need | Recommended interface | Why |
 | --- | --- | --- |
 | Retrieve code context, a backend trace, a focused test plan, or server health from an agent | Development MCP | It returns a compact structured payload, reuses one worktree snapshot, and uses the SQL-first retrieval path. |

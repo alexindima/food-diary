@@ -3,12 +3,16 @@ param(
     [Parameter(Mandatory)][string]$Objective,
     [string]$BaseRef = 'HEAD',
     [string[]]$ProposedPath,
+    [string[]]$Criterion = @(),
     [string]$WorkspacePath = '.artifacts/llm-wiki/tasks/current',
     [ValidateSet('Sqlite')][string]$CompiledIndexSource = 'Sqlite',
     [ValidateSet('Text', 'Json')][string]$Format = 'Text',
     [ValidateRange(1, 30)][int]$Limit = 12
 )
 $ErrorActionPreference = 'Stop'
+$Criterion = @($Criterion | ForEach-Object { ([string]$_).Trim() })
+if (@($Criterion | Where-Object { [string]::IsNullOrWhiteSpace($_) }).Count -gt 0) { throw 'Each -Criterion must describe a nonempty observable outcome.' }
+if (@($Criterion | Sort-Object -Unique).Count -ne $Criterion.Count) { throw 'Acceptance criteria must be distinct observable outcomes.' }
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiExtractionPlanning.ps1')
 $ProposedPath = @(
@@ -62,13 +66,15 @@ if ($isModuleExtraction) {
 }
 $scopes = @($workflow.inferred.scopes)
 $criteria = [Collections.Generic.List[string]]::new()
-if ($isModuleExtraction) {
+if ($Criterion.Count -gt 0) {
+    foreach ($item in $Criterion) { $criteria.Add($item) }
+} elseif ($isModuleExtraction) {
     foreach ($criterion in @($extractionPlan.criteria)) { $criteria.Add([string]$criterion) }
 } else {
     $criteria.Add('The primary requested outcome is implemented and observable.')
 }
-foreach ($criterion in @(Get-LlmWikiSupplementalAcceptanceCriteria $Objective $scopes $paths)) {
-    $criteria.Add([string]$criterion)
+if ($Criterion.Count -eq 0) {
+    foreach ($item in @(Get-LlmWikiSupplementalAcceptanceCriteria $Objective $scopes $paths)) { $criteria.Add([string]$item) }
 }
 $workspaceCreated = $false
 $workspaceMessage = 'not required by adaptive route'

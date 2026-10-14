@@ -9,6 +9,7 @@ param(
     [string]$Id,
     [string]$Command,
     [string]$Definition,
+    [object]$PolicyInput,
     [string]$Reason,
     [string]$Status,
     [Nullable[int]]$ExitCode,
@@ -18,15 +19,17 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiEvidenceCommands.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $absoluteEvidencePath = if ([System.IO.Path]::IsPathRooted($EvidencePath)) { $EvidencePath } else { Join-Path $repositoryRoot $EvidencePath }
 $evidence = Get-Content -LiteralPath $absoluteEvidencePath -Raw | ConvertFrom-Json
-$policy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') `
+$policy = if ($null -ne $PolicyInput) { $PolicyInput } else { & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') `
     -BaseRef ([string]$evidence.git.base) `
     -ChangedPath @($evidence.change.changedPaths) `
     -Format Json | ConvertFrom-Json
+}
 $requirement = if ($Kind -eq 'review-attestation') {
     $policy.reviewObligations | Where-Object id -eq $Id | Select-Object -First 1
 } else {
@@ -49,9 +52,10 @@ $dependencyPaths = if ($sourceRule -eq 'manual') {
 $content = & (Join-Path $PSScriptRoot 'Get-LlmWikiContentFingerprint.ps1') -Path @($dependencyPaths) -Format Json | ConvertFrom-Json
 $head = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for evidence lineage.').Lines[0]
 $policyHash = (Get-FileHash -LiteralPath (Join-Path $wikiRoot 'policies/change-policies.json') -Algorithm SHA256).Hash.ToLowerInvariant()
-$definitionValue = if (-not [string]::IsNullOrWhiteSpace($Definition)) { $Definition } elseif ($null -ne $requirement) {
+$definitionValue = if ($null -ne $requirement) {
     if ($Kind -eq 'review-attestation') { [string]$requirement.description } else { [string]$requirement.command }
-} else { '' }
+} elseif (-not [string]::IsNullOrWhiteSpace($Definition)) { $Definition } else { '' }
+if ($null -ne $requirement -and $Kind -ne 'review-attestation' -and -not (Test-LlmWikiEvidenceExecutionCommand $definitionValue $Command $repositoryRoot)) { throw "Execution command is incompatible with required check '$Id'." }
 $runtimeName = if ($Command -match '^(?:dotnet )') { 'dotnet' } elseif ($Command -match '(?:^|&& )npm ') { 'npm' } else { 'powershell' }
 $runtimeVersion = switch ($runtimeName) {
     'dotnet' { [string](& dotnet --version) }

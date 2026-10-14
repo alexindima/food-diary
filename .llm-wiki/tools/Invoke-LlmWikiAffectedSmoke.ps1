@@ -138,6 +138,10 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
     $stopwatch = [Diagnostics.Stopwatch]::StartNew()
     Write-Host "Affected tools smoke group starting: $group"
     switch ($group) {
+        'usability' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiUsability.ps1')
+            if (-not $?) { exit 1 }
+        }
         'adaptive-routing' {
             & (Join-Path $toolsRoot 'Test-LlmWikiAdaptiveWorkflow.ps1') -Group Routing
             if (-not $?) { exit 1 }

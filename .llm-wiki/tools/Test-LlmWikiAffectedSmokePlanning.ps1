@@ -265,7 +265,8 @@ foreach ($scope in @(@{ ChangedPath = @() }, @{ ChangedPath = @('.llm-wiki/tools
     $graphAlias = & $planner @scope -RequestedGroup code-graph -Plan -Format Json | ConvertFrom-Json
     if (($graphAlias.groups -join ',') -cne ($graphGroups -join ',')) { throw 'Legacy code-graph alias lost graph, trace, or unique quality-risk checks.' }
 }
-if ($fullFocusedPlan.groupCount -ne 37 -or @($fullFocusedPlan.groups) -contains 'code-graph') { throw 'Full focused planning must select the 37 canonical groups without replaying the graph alias.' }
+$expectedCanonicalGroups = @((Import-PowerShellDataFile -LiteralPath (Join-Path $PSScriptRoot '../policies/affected-smoke-catalog.psd1')).Groups | Where-Object { $_.IncludeInAll -and -not $_.ContainsKey('ExpandTo') } | ForEach-Object Id | Sort-Object -Unique)
+if ((($fullFocusedPlan.groups | Sort-Object) -join ',') -cne ($expectedCanonicalGroups -join ',') -or @($fullFocusedPlan.groups) -contains 'code-graph') { throw 'Full focused planning must select each registered canonical group exactly once without replaying aliases.' }
 $parseErrors = $null
 $plannerAst = [Management.Automation.Language.Parser]::ParseInput($plannerText, [ref]$null, [ref]$parseErrors)
 if (@($parseErrors).Count -gt 0) { throw 'Affected-smoke execution handlers do not parse.' }

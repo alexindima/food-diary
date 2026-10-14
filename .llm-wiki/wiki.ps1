@@ -298,6 +298,7 @@ Set-Item -LiteralPath "Env:GIT_CONFIG_KEY_$gitConfigCount" -Value 'core.safecrlf
 Set-Item -LiteralPath "Env:GIT_CONFIG_VALUE_$gitConfigCount" -Value 'false'
 $env:GIT_CONFIG_COUNT = [string]($gitConfigCount + 1)
 $toolsRoot = Join-Path $PSScriptRoot 'tools'
+if ($Format -eq 'Json') { $InformationPreference = 'Ignore' }
 if ($Help) {
     & (Join-Path $toolsRoot 'Show-LlmWikiCommandHelp.ps1') -Command $Command
     return
@@ -417,6 +418,17 @@ if ($Command -in @('develop', 'start')) {
     }
 }
 
+if (-not $explicitChangedPathInput -and $Command -in $deltaAwareCommands -and $null -ne $ChangedPath) {
+    $qaCandidates = @($ChangedPath | Where-Object { $_ -match '^output/(?:playwright|maintenance|qa|wiki-feedback)(?:/|$)' })
+    if ($qaCandidates.Count -gt 0) {
+        $scopeRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
+        $trackedQa = @(Invoke-LlmWikiGitPathList -RepositoryRoot $scopeRoot -Arguments (@('ls-files', '--cached', '--') + $qaCandidates))
+        $implicitQa = @($qaCandidates | Where-Object { $_ -notin $trackedQa })
+        $ChangedPath = @($ChangedPath | Where-Object { $_ -notin $implicitQa })
+        Write-Host "Task scope excludes $($implicitQa.Count) untracked QA artifact(s). Explicit -ChangedPath includes them when intended."
+    }
+}
+
 function Invoke-WikiTool {
     param(
         [string]$Name,
@@ -426,6 +438,7 @@ function Invoke-WikiTool {
     $toolPath = Join-Path $toolsRoot $Name
     $ToolArguments = @{} + $ToolArguments
     $toolCommand = Get-Command -Name $toolPath -ErrorAction Stop
+    if ($toolCommand.Parameters.ContainsKey('Format') -and -not $ToolArguments.ContainsKey('Format')) { $ToolArguments.Format = $Format }
     if ($toolCommand.Parameters.ContainsKey('CompiledIndexSource') -and
         -not $ToolArguments.ContainsKey('CompiledIndexSource')) {
         $ToolArguments.CompiledIndexSource = $CompiledIndexSource
@@ -613,6 +626,9 @@ $indexCommandTools = @{
     'modules' = 'Build-LlmWikiModulePages.ps1'
 }
 
+$wikiDispatchParameters = @{} + $PSBoundParameters
+$wikiDispatch = {
+$PSBoundParameters = $wikiDispatchParameters
 switch ($Command) {
     'verify-status' {
         $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
@@ -1210,6 +1226,7 @@ switch ($Command) {
             Limit = [Math]::Min($Limit, 30)
         }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $startArguments.ProposedPath = $ProposedPath }
+        if ($PSBoundParameters.ContainsKey('Criterion')) { $startArguments.Criterion = $Criterion }
         Invoke-WikiTool 'Start-LlmWikiDevelopment.ps1' $startArguments
     }
     'continue-ui' {
@@ -2910,5 +2927,28 @@ switch ($Command) {
     default {
         & (Join-Path $toolsRoot 'Show-LlmWikiHelp.ps1') -Tier core -Detailed:$Detailed
         break
+    }
+}
+}
+if ($Format -ne 'Json') {
+    . $wikiDispatch
+} else {
+    $wikiOutput = @(. $wikiDispatch)
+    if ($wikiOutput.Count -eq 0) {
+        [pscustomobject]@{ schemaVersion = 1; command = $Command; completed = $true } | ConvertTo-Json
+    } else {
+        $wikiOutputText = @($wikiOutput | ForEach-Object { if ($_ -is [string]) { $_ } else { $_ | ConvertTo-Json -Depth 100 -Compress } }) -join [Environment]::NewLine
+        try {
+            $wikiPayload = ConvertFrom-LlmWikiJson $wikiOutputText
+            ConvertTo-Json -InputObject $wikiPayload -Depth 100
+        } catch {
+            $wikiResults = [Collections.Generic.List[object]]::new()
+            $wikiMessages = [Collections.Generic.List[string]]::new()
+            foreach ($wikiItem in $wikiOutput) {
+                if ($wikiItem -isnot [string]) { $wikiResults.Add($wikiItem); continue }
+                try { $wikiResults.Add((ConvertFrom-LlmWikiJson $wikiItem)) } catch { $wikiMessages.Add($wikiItem) }
+            }
+            [pscustomobject]@{ schemaVersion = 1; command = $Command; completed = $true; results = @($wikiResults); messages = @($wikiMessages) } | ConvertTo-Json -Depth 100
+        }
     }
 }

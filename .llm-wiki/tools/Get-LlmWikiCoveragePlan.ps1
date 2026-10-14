@@ -11,6 +11,41 @@ $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $paths = @($ProposedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | ForEach-Object { ([string]$_).Replace('\', '/') } | Sort-Object -Unique)
 if ($paths.Count -eq 0) { throw "coverage-plan requires -PlannedPath for the test or production source under investigation." }
 
+$frontendPaths = @($paths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/.+\.(?:spec\.)?ts$' })
+if ($frontendPaths.Count -gt 0) {
+    if ($frontendPaths.Count -ne $paths.Count) { throw 'Request separate coverage plans for frontend and backend paths so both execution boundaries remain explicit.' }
+    $package = Get-Content -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Web.Client/package.json') -Raw | ConvertFrom-Json
+    $workspace = Get-Content -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Web.Client/angular.json') -Raw | ConvertFrom-Json
+    $projects = @($workspace.projects.PSObject.Properties | Sort-Object { ([string]$_.Value.sourceRoot).Length } -Descending)
+    $selected = foreach ($path in $frontendPaths) {
+        $relative = $path.Substring('FoodDiary.Web.Client/'.Length)
+        $project = @($projects | Where-Object { $relative.StartsWith(([string]$_.Value.sourceRoot).TrimEnd('/') + '/', [StringComparison]::Ordinal) } | Select-Object -First 1)
+        if ($project.Count -ne 1 -or $project[0].Value.architect.test.builder -ne '@angular/build:unit-test') { throw "No supported Angular test project owns '$path'." }
+        if (-not [IO.File]::Exists((Join-Path $repositoryRoot $path))) { throw "Coverage source does not exist: $path" }
+        $script = @($package.scripts.PSObject.Properties | Where-Object { $_.Name -like 'test:coverage:*' -and [string]$_.Value -match ('^ng test ' + [regex]::Escape($project[0].Name) + '(?:\s|$)') -and [string]$_.Value -match '--configuration=coverage(?:\s|$)' } | Select-Object -First 1)
+        if ($script.Count -ne 1) { throw "No package.json coverage script exists for Angular project '$($project[0].Name)'." }
+        if (-not $package.scripts.PSObject.Properties[$script[0].Name.Replace('test:coverage:', 'test:ci:')]) { throw "No focused test script exists for '$($project[0].Name)'." }
+        [pscustomobject]@{ path = $path; relative = $relative; project = $project[0].Name; script = $script[0].Name }
+    }
+    $plans = @(foreach ($group in @($selected | Group-Object project)) {
+        $includes = @($group.Group | Where-Object relative -match '\.spec\.ts$' | ForEach-Object { '--include=' + $_.relative }) -join ' '
+        $arguments = if ($includes) { " -- $includes" } else { '' }
+        [pscustomobject][ordered]@{
+            scope = [ordered]@{ paths = @($group.Group.path); testProject = $group.Name; integration = $false; framework = 'angular' }
+            commands = [ordered]@{ focusedTest = "cd FoodDiary.Web.Client && npm run $($group.Group[0].script.Replace('test:coverage:', 'test:ci:'))$arguments"; coverage = "cd FoodDiary.Web.Client && npm run $($group.Group[0].script)$arguments" }
+            commandEvidence = "FoodDiary.Web.Client/package.json:$($group.Group[0].script); angular.json:$($group.Name)=@angular/build:unit-test"
+        }
+    })
+    $result = [ordered]@{
+        schemaVersion = 1; scope = [ordered]@{ paths = $paths; query = $Query; framework = 'angular' }; plans = $plans
+        commands = $(if ($plans.Count -eq 1) { $plans[0].commands } else { $null })
+        notes = @('Run each plan from the repository root. Spec paths constrain execution with Angular --include; production-only paths retain project coverage.', 'Coverage proves execution, not assertion quality. Backend coverage is a separate request.')
+    }
+    if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 10; return }
+    foreach ($plan in $plans) { Write-Host "Coverage plan: $($plan.scope.testProject) [Angular]"; Write-Host "Focused: $($plan.commands.focusedTest)"; Write-Host "Coverage: $($plan.commands.coverage)" }
+    return
+}
+
 function Find-NearestProject([string]$RelativePath) {
     $candidate = Join-Path $repositoryRoot $RelativePath
     $directory = if (Test-Path -LiteralPath $candidate -PathType Leaf) { Split-Path -Parent $candidate } else { $candidate }

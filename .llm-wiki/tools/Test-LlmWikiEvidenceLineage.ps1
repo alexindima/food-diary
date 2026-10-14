@@ -11,6 +11,7 @@ $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiCollections.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiEvidenceCommands.ps1')
 if ([string]::IsNullOrWhiteSpace($WorkspacePath) -eq [string]::IsNullOrWhiteSpace($EvidencePath)) {
     throw 'Specify exactly one of WorkspacePath or EvidencePath.'
 }
@@ -67,14 +68,17 @@ function Test-Lineage([string]$Kind, [object]$Entry, [object]$Requirement) {
         if ([string]$lineage.subject.definition -cne $expectedDefinition) { $entryIssues.Add('definition changed') }
         if ([string]$lineage.subject.definitionFingerprint -cne (Get-Hash $expectedDefinition)) { $entryIssues.Add('definition fingerprint is invalid') }
         if ([string]$lineage.subject.sourceRule -cne [string]$Requirement.sourceRule) { $entryIssues.Add('source rule changed') }
-        $expectedPaths = @($policy.matchedRules | Where-Object id -eq $Requirement.sourceRule | Select-Object -First 1).matchedPaths
+        $expectedPaths = if ($Kind -eq 'supplemental') { @($evidence.change.changedPaths) } else { @($policy.matchedRules | Where-Object id -eq $Requirement.sourceRule | Select-Object -First 1).matchedPaths }
+        $expectedPaths = @($expectedPaths | Where-Object { $_ -notmatch '^\.llm-wiki/(generated|reviews)/|^\.artifacts/llm-wiki/' -and $_ -ne '.llm-wiki/knowledge/verification-telemetry.json' })
         if (-not (Test-LlmWikiSameSet @($lineage.dependencies.paths) $expectedPaths)) { $entryIssues.Add('dependency paths changed') }
         $content = & (Join-Path $PSScriptRoot 'Get-LlmWikiContentFingerprint.ps1') -Path $expectedPaths -Format Json | ConvertFrom-Json
         if ([string]$lineage.dependencies.contentFingerprint -cne [string]$content.fingerprint) { $entryIssues.Add('dependency content changed') }
         if ([string]$lineage.policyFingerprint -cne $policyHash) { $entryIssues.Add('change policy changed') }
-        if ($Kind -eq 'check') {
-            if ([string]$lineage.execution.command -cne [string]$Entry.command) { $entryIssues.Add('command does not match evidence') }
-            if ([string]$lineage.execution.commandFingerprint -cne (Get-Hash ([string]$Entry.command))) { $entryIssues.Add('command fingerprint is invalid') }
+        if ($Kind -in @('check', 'supplemental')) {
+            $executionCommand = if ($Entry.PSObject.Properties['executionCommand']) { [string]$Entry.executionCommand } else { [string]$Entry.command }
+            if ([string]$lineage.execution.command -cne $executionCommand) { $entryIssues.Add('command does not match evidence') }
+            if ([string]$lineage.execution.commandFingerprint -cne (Get-Hash $executionCommand)) { $entryIssues.Add('command fingerprint is invalid') }
+            if ($Kind -eq 'check' -and -not (Test-LlmWikiEvidenceExecutionCommand $expectedDefinition $executionCommand $repositoryRoot)) { $entryIssues.Add('execution command changes required verification') }
             $artifact = if ($lineage.PSObject.Properties['artifact']) { $lineage.artifact } else { $null }
             if ([string]$lineage.kind -eq 'executed-check' -and $null -ne $artifact) {
                 $artifactPath = [string]$artifact.path
@@ -122,7 +126,7 @@ function Test-Lineage([string]$Kind, [object]$Entry, [object]$Requirement) {
         status = [string]$Entry.status
         valid = $entryIssues.Count -eq 0
         reusable = $entryIssues.Count -eq 0 -and [string]$Entry.status -in @('passed', 'passed-with-known-baseline-failures', 'not-applicable', 'completed')
-        cacheReusable = $entryIssues.Count -eq 0 -and [string]$Entry.status -eq 'passed' -and
+        cacheReusable = $Kind -eq 'check' -and $entryIssues.Count -eq 0 -and [string]$Entry.status -eq 'passed' -and
             [string]$lineage.kind -eq 'executed-check' -and [int]$lineage.execution.exitCode -eq 0 -and
             $lineage.PSObject.Properties['artifact'] -and $null -ne $lineage.artifact
         issues = @($entryIssues)
@@ -137,6 +141,12 @@ foreach ($entry in @($evidence.checks | Where-Object status -in @('passed', 'pas
 foreach ($entry in @($evidence.reviews | Where-Object status -in @('completed', 'not-applicable'))) {
     $requirement = $policy.reviewObligations | Where-Object id -eq $entry.id | Select-Object -First 1
     if ($null -eq $requirement) { $issues.Add("review '$($entry.id)': requirement is no longer active.") } else { Test-Lineage 'review' $entry $requirement }
+}
+if ($evidence.PSObject.Properties['supplementalChecks']) {
+    foreach ($entry in @($evidence.supplementalChecks | Where-Object status -in @('passed', 'passed-with-known-baseline-failures', 'failed', 'not-applicable'))) {
+        if ([string]$entry.id -in @($policy.requiredChecks.id)) { $issues.Add("Supplemental check '$($entry.id)' collides with a required check."); continue }
+        Test-Lineage 'supplemental' $entry ([pscustomobject]@{ command = [string]$entry.command; sourceRule = 'manual' })
+    }
 }
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1

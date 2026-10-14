@@ -6,6 +6,7 @@ import {
     mkdirSync,
     openSync,
     readFileSync,
+    readdirSync,
     unlinkSync,
     writeFileSync,
 } from "node:fs";
@@ -137,6 +138,147 @@ export function processIdentity(pid) {
     } catch {
         return null;
     }
+}
+
+export async function listRuntimes(root = repositoryRoot, options = {}) {
+    let roots = [root];
+    if (options.includeWorktrees !== false) {
+        const inventory = command(
+            "git",
+            ["worktree", "list", "--porcelain"],
+            root,
+        );
+        roots = inventory
+            .split("\n")
+            .filter((line) => line.startsWith("worktree "))
+            .map((line) => line.slice(9));
+    }
+    const records = [];
+    let invalidRecordCount = 0;
+    const identities = new Map();
+    for (const checkout of roots) {
+        const base = join(checkout, ".artifacts", "task-runtime");
+        if (!existsSync(base)) continue;
+        for (const entry of readdirSync(base, { withFileTypes: true })) {
+            if (!entry.isDirectory() || entry.isSymbolicLink()) continue;
+            const statePath = join(base, entry.name, "runtime.json");
+            if (!existsSync(statePath)) continue;
+            try {
+                const state = JSON.parse(readFileSync(statePath, "utf8"));
+                if (
+                    typeof state.checkout !== "string" ||
+                    resolve(state.checkout) !== resolve(checkout)
+                )
+                    throw new Error("Runtime belongs to another checkout");
+                if (
+                    ![
+                        "starting",
+                        "ready",
+                        "failed",
+                        "stopped",
+                        "cleanup-failed",
+                    ].includes(state.status)
+                )
+                    throw new Error("Invalid runtime status");
+                if (
+                    options.includeInactive !== true &&
+                    !["starting", "ready", "cleanup-failed"].includes(
+                        state.status,
+                    )
+                )
+                    continue;
+                const localUrl = (value) => {
+                    if (typeof value !== "string") return null;
+                    const url = new URL(value);
+                    if (
+                        url.protocol !== "http:" ||
+                        !["localhost", "127.0.0.1", "[::1]"].includes(
+                            url.hostname,
+                        ) ||
+                        url.username ||
+                        url.password
+                    )
+                        return null;
+                    return url.origin;
+                };
+                const frontendUrl = localUrl(state.frontendUrl);
+                const apiUrl = localUrl(state.apiUrl);
+                const owners = state.processes ?? [];
+                const ownedProcessesAlive =
+                    owners.length > 0 &&
+                    owners.every(
+                        (owner) =>
+                            Number.isSafeInteger(owner.pid) &&
+                            owner.pid > 0 &&
+                            typeof owner.identity === "string" &&
+                            owner.identity.length > 0 &&
+                            (() => {
+                                if (!identities.has(owner.pid))
+                                    identities.set(
+                                        owner.pid,
+                                        processIdentity(owner.pid),
+                                    );
+                                return (
+                                    identities.get(owner.pid) === owner.identity
+                                );
+                            })(),
+                    );
+                const probe = async (url) => {
+                    if (!url || !ownedProcessesAlive || options.probe === false)
+                        return null;
+                    try {
+                        return (
+                            await fetch(url, {
+                                signal: AbortSignal.timeout(1000),
+                                redirect: "error",
+                            })
+                        ).ok;
+                    } catch {
+                        return false;
+                    }
+                };
+                const [frontendResponding, apiReady] = await Promise.all([
+                    probe(frontendUrl),
+                    probe(apiUrl ? `${apiUrl}/health/ready` : null),
+                ]);
+                records.push({
+                    name: entry.name,
+                    owner:
+                        typeof state.id === "string" &&
+                        /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/iu.test(
+                            state.id,
+                        )
+                            ? state.id
+                            : null,
+                    checkout,
+                    recordedStatus: state.status,
+                    observedStatus:
+                        state.status === "ready" &&
+                        ownedProcessesAlive &&
+                        frontendResponding === true &&
+                        apiReady === true
+                            ? "ready"
+                            : state.status === "ready"
+                              ? "unverified"
+                              : state.status,
+                    frontendUrl,
+                    apiUrl,
+                    ownedProcessesAlive,
+                    frontendResponding,
+                    apiReady,
+                });
+            } catch {
+                invalidRecordCount++;
+                if (options.includeInvalid === true)
+                    records.push({
+                        name: entry.name,
+                        checkout,
+                        observedStatus: "invalid-record",
+                    });
+            }
+        }
+    }
+    return { schemaVersion: 1, runtimes: records, invalidRecordCount };
 }
 
 export function stopOwnedProcess(owner) {
@@ -722,26 +864,30 @@ if (
 ) {
     try {
         const [action, option, name] = process.argv.slice(2);
-        if (
-            option !== "--name" ||
-            process.argv.length !== 5 ||
-            !["start", "stop", "status"].includes(action)
-        )
-            throw new Error(
-                "Use task-runtime.mjs start|stop|status --name <task-name>",
-            );
-        const state =
-            action === "start"
-                ? await startRuntime(name)
-                : action === "stop"
-                  ? stopRuntime(name)
-                  : JSON.parse(
-                        readFileSync(
-                            join(runtimeDirectory(name), "runtime.json"),
-                            "utf8",
-                        ),
-                    );
-        console.log(JSON.stringify(state, null, 2));
+        if (action === "list" && process.argv.length === 3) {
+            console.log(JSON.stringify(await listRuntimes(), null, 2));
+        } else {
+            if (
+                option !== "--name" ||
+                process.argv.length !== 5 ||
+                !["start", "stop", "status"].includes(action)
+            )
+                throw new Error(
+                    "Use task-runtime.mjs list or start|stop|status --name <task-name>",
+                );
+            const state =
+                action === "start"
+                    ? await startRuntime(name)
+                    : action === "stop"
+                      ? stopRuntime(name)
+                      : JSON.parse(
+                            readFileSync(
+                                join(runtimeDirectory(name), "runtime.json"),
+                                "utf8",
+                            ),
+                        );
+            console.log(JSON.stringify(state, null, 2));
+        }
     } catch (error) {
         console.error(error.message);
         process.exitCode = 1;
