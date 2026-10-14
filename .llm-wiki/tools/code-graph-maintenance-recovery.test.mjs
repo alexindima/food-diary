@@ -17,6 +17,9 @@ test('ordinary graph build repairs missing feature and identity mirrors despite 
     const build = () => JSON.parse(execFileSync(process.execPath,
       [join(import.meta.dirname, 'code-graph.mjs'), 'build', `--database=${path}`], { cwd: root, encoding: 'utf8', timeout: 120000 }));
     build();
+    assert.throws(() => execFileSync(process.execPath,
+      [join(import.meta.dirname, 'code-graph.mjs'), 'build', `--database=${path}`, '--write-cache-kib=0'],
+      { cwd: root, encoding: 'utf8', timeout: 120000, stdio: ['ignore', 'pipe', 'pipe'] }), /Graph write cache must be an integer/);
     let db = new DatabaseSync(path);
     const count = db.prepare('SELECT COUNT(*) count FROM context_search_features').get().count;
     const original = db.prepare('SELECT * FROM context_search_features ORDER BY context_rowid LIMIT 1').get();

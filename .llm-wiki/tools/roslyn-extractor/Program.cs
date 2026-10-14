@@ -18,6 +18,12 @@ if (args.Length == 1 && args[0] == "--http-dto-stdin") {
 string[] paths;
 string[] contextPaths;
 bool semantic = true;
+bool hasOuterConcurrency = int.TryParse(Environment.GetEnvironmentVariable("LLM_WIKI_SMOKE_MAX_CONCURRENCY"), out int outerLimit);
+int outerConcurrency = hasOuterConcurrency
+    ? Math.Clamp(outerLimit, 1, 8)
+    : 1;
+int maximumConcurrency = Math.Min(4, Math.Max(1, Environment.ProcessorCount / outerConcurrency));
+if (hasOuterConcurrency) { maximumConcurrency = Math.Min(maximumConcurrency, outerConcurrency); }
 if (args.Length == 1 && args[0] == "--stdin") {
     using JsonDocument input = JsonDocument.Parse(Console.In.ReadToEnd());
     if (input.RootElement.ValueKind == JsonValueKind.Array) {
@@ -29,6 +35,9 @@ if (args.Length == 1 && args[0] == "--stdin") {
             ? context.Deserialize<string[]>() ?? paths
             : paths;
         semantic = !input.RootElement.TryGetProperty("semantic", out JsonElement semanticElement) || semanticElement.GetBoolean();
+        if (input.RootElement.TryGetProperty("maxConcurrency", out JsonElement concurrencyElement)) {
+            maximumConcurrency = Math.Clamp(concurrencyElement.GetInt32(), 1, 4);
+        }
     }
 } else {
     paths = args;
@@ -40,16 +49,30 @@ if (paths.Length == 0) {
 }
 
 var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-Dictionary<string, SyntaxTree> trees = contextPaths
-    .Distinct(StringComparer.OrdinalIgnoreCase)
-    .ToDictionary(path => path, path => CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path), StringComparer.OrdinalIgnoreCase);
-IEnumerable<MetadataReference> references = ((string?)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES") ?? string.Empty)
-    .Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries)
-    .Select(path => MetadataReference.CreateFromFile(path));
+string[] uniqueContextPaths = contextPaths.Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
+var parsedTrees = new SyntaxTree[uniqueContextPaths.Length];
+var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maximumConcurrency };
+Parallel.For(0, uniqueContextPaths.Length, parallelOptions, index => {
+    string path = uniqueContextPaths[index];
+    parsedTrees[index] = CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path);
+});
+Dictionary<string, SyntaxTree> trees = uniqueContextPaths
+    .Select((path, index) => (Path: path, Tree: parsedTrees[index]))
+    .ToDictionary(item => item.Path, item => item.Tree, StringComparer.OrdinalIgnoreCase);
 var results = new List<ExtractionResult>();
 if (!semantic) {
-    results.AddRange(paths.Select(path => Extract(path, trees[path], null, null)));
+    var syntaxResults = new ExtractionResult[paths.Length];
+    Parallel.For(0, paths.Length, parallelOptions, index => {
+        string path = paths[index];
+        syntaxResults[index] = Extract(path, trees[path], null, null);
+    });
+    // Indexed slots preserve the input order and every edge's existing order.
+    results.AddRange(syntaxResults);
 } else {
+    MetadataReference[] references = ((string?)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES") ?? string.Empty)
+        .Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries)
+        .Select(path => MetadataReference.CreateFromFile(path))
+        .ToArray();
     HashSet<string> targetPaths = paths.ToHashSet(StringComparer.OrdinalIgnoreCase);
     Dictionary<string, string> projectKeys = contextPaths.Distinct(StringComparer.OrdinalIgnoreCase)
         .ToDictionary(path => path, ProjectKey, StringComparer.OrdinalIgnoreCase);

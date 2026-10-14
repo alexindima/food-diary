@@ -183,7 +183,48 @@ if (-not $fts.ready -or
     $null -eq $fts.rankingSummary.PSObject.Properties['topScoreMargin']) {
     throw 'SQLite FTS context search did not locate RecipeNutritionUpdater.'
 }
-$ambiguousSearch = & $manager search -Query 'заглушка notification pusher которая ничего не отправляет' -ChangeType Backend -Limit 5 -SkipRefresh -Format Json | ConvertFrom-Json
+# The unchanged graph is shared by these independent ranking assertions. Keep
+# the single-command transport above and evaluate the remainder in one existing
+# read-only search batch, retaining every query, limit and expectation.
+$rankingRequests = @(
+    @{ query='Recipe nutrition updater'; limit=20; changeType='Any' }
+    @{ query='заглушка notification pusher которая ничего не отправляет'; limit=5; changeType='Backend' }
+    @{ query='weekly check-in command handler'; limit=1; changeType='Any' }
+    @{ query='weekly check-in command handler'; limit=5; changeType='Any' }
+    @{ query='primary constructor backing field'; limit=10; changeType='Any' }
+    @{ query='MCP PowerShell command stage telemetry'; limit=10; changeType='Any' }
+    @{ query='Mail inbox SMTP rate limiter'; limit=10; changeType='Any' }
+    @{ query='weight history measurements'; limit=10; changeType='Any' }
+    @{ query='periodic cleanup fasting telemetry registration'; limit=10; changeType='Any' }
+    @{ query='регистрация resource renderer для уведомлений в JobManager'; limit=10; changeType='Any' }
+    @{ query=$russianServerQuery; limit=10; changeType='Any' }
+    @{ query='OpenFoodFacts barcode lookup query handler'; limit=10; changeType='Backend' }
+    @{ query='create meal command'; limit=10; changeType='Backend' }
+    @{ query='dashboard query'; limit=10; changeType='Backend' }
+    @{ query='Telegram notification sender'; limit=10; changeType='Backend' }
+)
+$rankingInputDirectory = Join-Path $repositoryRoot '.artifacts/llm-wiki/graph-regression-inputs'
+$null = [IO.Directory]::CreateDirectory($rankingInputDirectory)
+$rankingInput = Join-Path $rankingInputDirectory "$([guid]::NewGuid().ToString('N')).json"
+try {
+    [IO.File]::WriteAllText($rankingInput, (ConvertTo-Json -InputObject $rankingRequests -Depth 4 -Compress), [Text.UTF8Encoding]::new($false))
+    $batch = & $manager search-batch -InputPath $rankingInput -SkipRefresh -Format Json | ConvertFrom-Json
+    if ($batch.requestCount -ne $rankingRequests.Count -or @($batch.results).Count -ne $rankingRequests.Count) { throw 'Ranking batch lost a regression case.' }
+} finally { [IO.File]::Delete($rankingInput) }
+$rankingResults = @{}
+for ($index = 0; $index -lt $rankingRequests.Count; $index++) {
+    $request = $rankingRequests[$index]
+    $rankingResults["$($request.query)|$($request.limit)|$($request.changeType)"] = $batch.results[$index]
+}
+function Get-RegressionSearch([string]$Query, [int]$Limit = 10, [string]$ChangeType = 'Any') {
+    $key = "$Query|$Limit|$ChangeType"
+    if (-not $rankingResults.ContainsKey($key)) { throw "Unregistered ranking assertion: $key" }
+    return $rankingResults[$key]
+}
+$singleSearch = $fts | Select-Object * -ExcludeProperty durationMs | ConvertTo-Json -Depth 20 -Compress
+$batchSearch = Get-RegressionSearch 'Recipe nutrition updater' -Limit 20 | Select-Object * -ExcludeProperty durationMs | ConvertTo-Json -Depth 20 -Compress
+if ($singleSearch -cne $batchSearch) { throw 'Complete single/batch search parity failed beyond volatile timing.' }
+$ambiguousSearch = Get-RegressionSearch 'заглушка notification pusher которая ничего не отправляет' -ChangeType Backend -Limit 5
 if (-not $ambiguousSearch.rankingSummary.ambiguous -or
     $ambiguousSearch.rankingSummary.confidence -ne 'low' -or
     $ambiguousSearch.rankingSummary.sameNameCandidateCount -ne 2 -or
@@ -191,15 +232,15 @@ if (-not $ambiguousSearch.rankingSummary.ambiguous -or
     @($ambiguousSearch.records | Where-Object { $_.sameNameCandidateCount -eq 2 }).Count -ne 2) {
     throw 'SQLite FTS context search did not expose close-score ambiguity and same-name collision diagnostics.'
 }
-$limitOneSearch = & $manager search -Query 'weekly check-in command handler' -Limit 1 -SkipRefresh -Format Json | ConvertFrom-Json
-$limitFiveSearch = & $manager search -Query 'weekly check-in command handler' -Limit 5 -SkipRefresh -Format Json | ConvertFrom-Json
+$limitOneSearch = Get-RegressionSearch 'weekly check-in command handler' -Limit 1
+$limitFiveSearch = Get-RegressionSearch 'weekly check-in command handler' -Limit 5
 if ($limitOneSearch.records[0].path -ne $limitFiveSearch.records[0].path -or
     $limitOneSearch.rankingSummary.confidence -ne $limitFiveSearch.rankingSummary.confidence -or
     $limitOneSearch.rankingSummary.ambiguous -ne $limitFiveSearch.rankingSummary.ambiguous -or
     $limitOneSearch.rankingSummary.topScoreMargin -ne $limitFiveSearch.rankingSummary.topScoreMargin) {
     throw 'Context confidence and ambiguity changed when only the visible result limit changed.'
 }
-$prototypeTermSearch = & $manager search -Query 'primary constructor backing field' -Limit 10 -SkipRefresh -Format Json | ConvertFrom-Json
+$prototypeTermSearch = Get-RegressionSearch 'primary constructor backing field'
 if (-not $prototypeTermSearch.ready) {
     throw 'SQLite FTS context search did not safely handle a query term inherited by Object.prototype.'
 }
@@ -218,12 +259,12 @@ foreach ($searchCase in @(
     @{ Query = 'регистрация resource renderer для уведомлений в JobManager'; ExpectedPath = 'Modules/Notifications/Infrastructure/ModuleRegistration.cs' }
     @{ Query = $russianServerQuery; ExpectedPath = 'AGENTS.md' }
 )) {
-    $searchResult = & $manager search -Query $searchCase.Query -Limit 10 -SkipRefresh -Format Json | ConvertFrom-Json
+    $searchResult = Get-RegressionSearch $searchCase.Query
     if ($searchCase.ExpectedPath -notin @($searchResult.records.path)) {
         throw "SQLite FTS context search did not locate '$($searchCase.ExpectedPath)' for '$($searchCase.Query)'."
     }
 }
-$notificationRegistrationSearch = & $manager search -Query 'регистрация resource renderer для уведомлений в JobManager' -Limit 10 -SkipRefresh -Format Json | ConvertFrom-Json
+$notificationRegistrationSearch = Get-RegressionSearch 'регистрация resource renderer для уведомлений в JobManager'
 $notificationRegistration = @($notificationRegistrationSearch.records | Where-Object path -eq 'Modules/Notifications/Infrastructure/ModuleRegistration.cs')
 if ($notificationRegistration.Count -ne 1 -or $notificationRegistration[0].module -ne 'Notifications') {
     throw 'Context search did not preserve the Notifications module identity for its infrastructure registration.'
@@ -310,7 +351,7 @@ $auditRankingCases = @(
     @{ Query = 'Telegram notification sender'; ChangeType = 'Backend'; ExpectedPrefix = ''; ExpectedPattern = '^(?:FoodDiary\.Telegram\.Bot|Modules/Notifications/(?:Application|Infrastructure)|FoodDiary\.Integrations)/' }
 )
 foreach ($case in $auditRankingCases) {
-    $ranking = & $manager search -Query $case.Query -ChangeType $case.ChangeType -Limit 10 -SkipRefresh -Format Json | ConvertFrom-Json
+    $ranking = Get-RegressionSearch $case.Query -ChangeType $case.ChangeType
     $topPath = [string]@($ranking.records)[0].path
     $matches = if ($case.ExpectedPrefix) { $topPath.StartsWith($case.ExpectedPrefix, [StringComparison]::Ordinal) } else { $topPath -match $case.ExpectedPattern }
     if (-not $matches) { throw "Audit ranking regression for '$($case.Query)': top path was '$topPath'." }

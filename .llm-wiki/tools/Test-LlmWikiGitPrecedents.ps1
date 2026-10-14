@@ -7,13 +7,14 @@ $fixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Nam
 try {
     $tools = Join-Path $fixture '.llm-wiki/tools'
     $null = New-Item -ItemType Directory -Path $tools -Force
-    foreach ($name in @('Get-LlmWikiGitPrecedents.ps1', 'LlmWikiGitPaths.ps1')) {
+    foreach ($name in @('Get-LlmWikiGitPrecedents.ps1', 'LlmWikiGitPaths.ps1', 'LlmWikiGitHistory.ps1', 'LlmWikiGitHistoryScanner.cs', 'LlmWikiNativeCompilation.ps1', 'LlmWikiQueryCache.ps1', 'LlmWikiChangeSetSnapshot.ps1')) {
         Copy-Item -LiteralPath (Join-Path $PSScriptRoot $name) -Destination $tools
     }
     & git -C $fixture config user.name 'Wiki Tests'
     & git -C $fixture config user.email 'wiki@example.invalid'
     & git -C $fixture config core.quotepath false
     [IO.File]::WriteAllText((Join-Path $fixture 'README.md'), 'baseline')
+    [IO.File]::WriteAllText((Join-Path $fixture '.gitignore'), ".artifacts/`n")
     & git -C $fixture add --all
     & git -C $fixture commit --quiet -m baseline
     $feature = Join-Path $fixture 'Alpha/Feature'
@@ -46,6 +47,25 @@ try {
         @($fresh.precedents | Where-Object { $_.subject -eq 'fresh evidence' -and $_.matchedPaths -contains 'Alpha/Feature/Новая.cs' }).Count -ne 1) {
         throw 'Precedent search lost current Git history or Unicode path evidence.'
     }
+    $branch = (& git -C $fixture branch --show-current).Trim()
+    $head = (& git -C $fixture rev-parse HEAD).Trim()
+    & git -C $fixture checkout --quiet -b independent-history
+    [IO.File]::WriteAllText((Join-Path $feature 'Independent.cs'), 'independent evidence')
+    & git -C $fixture add --all
+    & git -C $fixture commit --quiet -m 'independent precedent'
+    & git -C $fixture checkout --quiet $branch
+    $independent = & $tool -Objective 'independent precedent' -Format Json | ConvertFrom-Json
+    if ((& git -C $fixture rev-parse HEAD).Trim() -cne $head -or $independent.searchedCommitCount -ne 4 -or @($independent.precedents | Where-Object subject -eq 'independent precedent').Count -ne 1) {
+        throw 'Independent branch evidence was not observed at unchanged HEAD.'
+    }
+    & git -C $fixture branch --force independent-history $head
+    $forced = & $tool -Objective 'independent precedent' -Format Json | ConvertFrom-Json
+    if ($forced.searchedCommitCount -ne 3 -or @($forced.precedents | Where-Object subject -eq 'independent precedent').Count -ne 0) {
+        throw 'Force-updated history returned unreachable cached evidence.'
+    }
+    & git -C $fixture branch --delete independent-history | Out-Null
+    $deleted = & $tool -Objective 'independent precedent' -Format Json | ConvertFrom-Json
+    if ($deleted.searchedCommitCount -ne 3) { throw 'Deleting an independent ref corrupted history discovery.' }
     Write-Host 'Git precedent regression passed: scope boundaries, score/output caps, tokens, intent-only search, fresh commits and Unicode.'
 } finally {
     $parent = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot -IndependentRepository)).TrimEnd('\', '/')

@@ -11,6 +11,9 @@ tags:
   - design
   - handoff
 sources:
+  - .llm-wiki/tools/LlmWikiGitHistory.ps1
+  - .llm-wiki/tools/LlmWikiGitHistoryScanner.cs
+  - .llm-wiki/tools/LlmWikiNativeCompilation.ps1
   - .llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1
   - .llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1
   - .llm-wiki/tools/Start-LlmWikiDevelopment.ps1
@@ -107,6 +110,9 @@ Private checkout slots survive revision changes under their exclusive lock;
 Research `-Verbose` reports classification, context, Git history, runtime graph,
 research planning and serialization time without changing the packet fields.
 Git precedents still inspect the latest 300 commits on every uncached request.
+Modern PowerShell parses and scores the bounded Git output in a native helper,
+preserving evidence, caps, ordering and confidence. Only the compiled helper is
+cached; Git history remains freshly observed, including independent ref changes.
 The research cache includes a Git ref fingerprint, and private snapshots mirror
 current refs, so history updates without a `HEAD` change invalidate old evidence.
 Scope prefixes and token matches are prepared once, and each commit's matched

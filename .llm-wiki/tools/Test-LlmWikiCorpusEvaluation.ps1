@@ -33,6 +33,9 @@ function Assert-FixtureProcessesStopped([string[]]$Paths) {
         $statePath = "$path.started.json"
         if (-not (Test-Path -LiteralPath $statePath)) { throw "Fixture did not start: $path" }
         $state = [IO.File]::ReadAllText($statePath) | ConvertFrom-Json
+        if ($null -eq $state -or $null -eq $state.PSObject.Properties['worker'] -or $null -eq $state.PSObject.Properties['child']) {
+            throw "Fixture process state was not published completely: $statePath"
+        }
         foreach ($ownedId in @($state.worker, $state.child) | Where-Object { $_ }) {
             $process = $null
             try { $process = [Diagnostics.Process]::GetProcessById([int]$ownedId) } catch [ArgumentException] { continue }
@@ -61,7 +64,9 @@ if ($source.mode -in @('wait', 'cancel')) {
     $child = [Diagnostics.Process]::Start($start)
     $childId = $child.Id
 }
-[IO.File]::WriteAllText("$CorpusPath.started.json", (@{worker=$PID;child=$childId} | ConvertTo-Json))
+$stateTemporary = "$CorpusPath.started.$PID.tmp"
+[IO.File]::WriteAllText($stateTemporary, (@{worker=$PID;child=$childId} | ConvertTo-Json))
+[IO.File]::Move($stateTemporary, "$CorpusPath.started.json", $true)
 if ($source.peer) {
     $deadline = [DateTime]::UtcNow.AddSeconds(8)
     while (-not (Test-Path -LiteralPath $source.peer)) {
@@ -119,7 +124,10 @@ $count = $results.Count + [int]($source.mode -eq 'count')
     if (Test-Path -LiteralPath "$pending.started.json") { throw 'Pool launched pending work after a worker failed.' }
 
     $timed = New-CorpusFixture 'timeout.json' 'wait'
-    Assert-PoolFailure @($timed) 'timed out' 3
+    # Process launch and PowerShell startup count toward the real pool timeout.
+    # Allow that startup under the outer full gate before timing out the sleeping
+    # worker; every worker/descendant termination assertion remains required.
+    Assert-PoolFailure @($timed) 'timed out' 10
     Assert-FixtureProcessesStopped @($timed)
     $env:LLM_WIKI_SMOKE_CANCEL_PATH = Join-Path $fixtureRoot 'cancel.signal'
     $cancelled = New-CorpusFixture 'cancelled.json' 'cancel'

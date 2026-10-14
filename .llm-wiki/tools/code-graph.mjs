@@ -1077,6 +1077,13 @@ function refreshContextSearch(database) {
 
 async function build(database, force = false, skipTypeScript = false) {
   const started = performance.now();
+  // Bound this writer connection's on-demand page cache. Full projection and
+  // recovery writes otherwise churn SQLite's default ~2 MiB cache repeatedly.
+  const writeCacheKiB = Number(options['write-cache-kib'] ?? 65536);
+  if (!Number.isInteger(writeCacheKiB) || writeCacheKiB < 2048 || writeCacheKiB > 65536) {
+    throw new Error('Graph write cache must be an integer from 2048 to 65536 KiB.');
+  }
+  database.exec(`PRAGMA cache_size = -${writeCacheKiB}`);
   const startingChangeSet = changeSetSnapshot();
   const storedParserVersion = database.prepare("SELECT value FROM metadata WHERE key='parser_version'").get()?.value;
   if (storedParserVersion !== parserVersion) force = true;

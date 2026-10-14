@@ -5,6 +5,8 @@ kind: workflow
 status: current
 summary: Query an incremental SQLite symbol and consumer graph as the primary Development MCP code-context route without replacing governed Wiki evidence or committed project knowledge.
 sources:
+  - .llm-wiki/tools/roslyn-extractor/Program.cs
+  - .llm-wiki/tools/Test-LlmWikiRoslynExtractor.ps1
   - .llm-wiki/tools/code-graph.mjs
   - Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.Batch.cs
   - Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.CandidateHydration.cs
@@ -682,6 +684,18 @@ does not turn graph bootstrap into a minute-long compilation; exact commands
 remain available immediately, while files touched by normal development gain
 semantic edges without an extra flag. Syntax edges remain the fallback when a
 bounded compilation contains unresolved external types.
+
+Syntax-tree parsing and cold syntax extraction use at most four workers, divided
+against the enclosing smoke concurrency and available processors. Indexed result
+slots preserve source, symbol and edge order; semantic compilation still owns
+its original project boundaries and reuses runtime references within that call.
+Regression checks compare complete serial and parallel results in both modes.
+The graph writer uses a connection-local page cache capped at 64 MiB, growing
+on demand, to reduce repeated page churn during projection and recovery writes.
+This does not change stored records, transactions or read-connection settings.
+Independent ranking assertions in the graph regression share one read-only
+search batch, while a single-command request retains transport and full-response
+parity coverage. Every ranking scenario and acceptance assertion remains active.
 
 Roslyn also records declared namespaces, namespace-shaped string literals, and
 reflection/convention filters that compare `Type.Namespace`. During an

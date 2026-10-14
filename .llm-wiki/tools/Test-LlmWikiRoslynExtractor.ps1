@@ -3,6 +3,8 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $project = Join-Path $PSScriptRoot 'roslyn-extractor/LlmWiki.RoslynExtractor.csproj'
+$repositoryRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
+$artifactRoot = Join-Path $repositoryRoot ".artifacts/llm-wiki/roslyn-regression/$PID"
 $fixtureRoot = Join-Path ([System.IO.Path]::GetTempPath()) "llm-wiki-roslyn-$([guid]::NewGuid().ToString('N'))"
 New-Item -ItemType Directory -Path $fixtureRoot -Force | Out-Null
 try {
@@ -30,7 +32,11 @@ internal interface IRealService { }
 internal sealed class RealService : IRealService { }
 internal sealed class RealCommand { }
 '@ | Set-Content -LiteralPath $fixture -Encoding utf8
-    $json = & dotnet run --project $project --no-launch-profile -- $fixture
+    $build = & dotnet build $project -c Release --artifacts-path $artifactRoot --nologo --verbosity quiet
+    if ($LASTEXITCODE -ne 0) { throw "Roslyn regression build failed: $build" }
+    $dlls = @(Get-ChildItem -LiteralPath (Join-Path $artifactRoot 'bin') -Recurse -Filter LlmWiki.RoslynExtractor.dll -File)
+    if ($dlls.Count -ne 1) { throw 'Roslyn regression did not publish exactly one extractor assembly.' }
+    $json = & dotnet $dlls[0].FullName $fixture
     if ($LASTEXITCODE -ne 0) { throw "Roslyn extractor exited with $LASTEXITCODE." }
     $result = @($json | ConvertFrom-Json)[0]
     $symbolNames = @($result.symbols | ForEach-Object name)
@@ -59,7 +65,33 @@ internal sealed class RealCommand { }
     if (@($result.edges | Where-Object target -eq 'This is ordinary user-facing text').Count -ne 0) {
         throw 'Roslyn extractor classified ordinary text as a qualified code literal.'
     }
+    $parallelPaths = @($fixture)
+    foreach ($index in 1..12) {
+        $path = Join-Path $fixtureDirectory "Concurrent$index.cs"
+        [IO.File]::WriteAllText($path, "namespace Fixture; public sealed class Concurrent$index { public int Value => $index; }", [Text.UTF8Encoding]::new($false))
+        $parallelPaths += $path
+    }
+    foreach ($semanticMode in @($false, $true)) {
+        $serial = $null
+        foreach ($concurrency in @(1,4)) {
+            $payload = @{ paths=$parallelPaths; contextPaths=$parallelPaths; semantic=$semanticMode; maxConcurrency=$concurrency } | ConvertTo-Json -Compress
+            $output = $payload | & dotnet $dlls[0].FullName --stdin
+            if ($LASTEXITCODE -ne 0) { throw 'Parallel Roslyn extraction failed.' }
+            if ($null -eq $serial) { $serial = $output } elseif (($serial -join "`n") -cne ($output -join "`n")) {
+                throw 'Parallel parsing/extraction changed the complete symbols, typed edges, tokens or file order.'
+            }
+            $records = @($output | ConvertFrom-Json)
+            if ($records.Count -ne $parallelPaths.Count -or (($records.path -join '|') -cne (($parallelPaths | ForEach-Object { $_.Replace('\','/') }) -join '|'))) {
+                throw 'Parallel extraction lost a source or reordered its output.'
+            }
+        }
+    }
     Write-Host 'LLM Wiki Roslyn extractor regression passed: syntax-aware declarations and typed relations are accurate.'
 } finally {
+    $expectedFixtureParent = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\','/')
+    if ([IO.Path]::GetDirectoryName([IO.Path]::GetFullPath($fixtureRoot)) -cne $expectedFixtureParent -or [IO.Path]::GetFileName($fixtureRoot) -notmatch '^llm-wiki-roslyn-[a-f0-9]{32}$') { throw 'Unowned Roslyn fixture cleanup.' }
     Remove-Item -LiteralPath $fixtureRoot -Recurse -Force -ErrorAction SilentlyContinue
+    $expectedArtifacts = [IO.Path]::GetFullPath((Join-Path $repositoryRoot '.artifacts/llm-wiki/roslyn-regression')).TrimEnd('\','/')
+    if ([IO.Path]::GetDirectoryName([IO.Path]::GetFullPath($artifactRoot)) -cne $expectedArtifacts -or [IO.Path]::GetFileName($artifactRoot) -cne [string]$PID) { throw 'Unowned Roslyn artifact cleanup.' }
+    if (Test-Path -LiteralPath $artifactRoot) { Remove-Item -LiteralPath $artifactRoot -Recurse -Force }
 }

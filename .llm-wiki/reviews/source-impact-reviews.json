@@ -240,14 +240,14 @@
       "pageSha256": "58810bcafe9de0e6e09ec7ce44659b61c6c2d807da6b207e95a00aa681b51685",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "facf24d1884b1489dc1334bc02138e9a8140f96a58dad8b84b691d3fd18d7baf"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "2f34b2c42476da6a22f279b57716f915ca78a199678a76d8a1be3a04eff1040b"
         }
       ],
-      "reason": "Reviewed combined delivery sources from UX commit fde9a7e5c and master recipe fix 8a9d9c1e0. Dashboard client IANA context remains internal and self-dashboard defaults are preserved. Existing additive recipe-import nutrition DTOs, HTTP mappings and OpenAPI snapshot changes from master are retained; all generated consumers match their owning contracts. Current master additionally retains cancellation-aware MailRelay logging and isolated calendar-test authentication clocks. Both are preserved through integration; there are no further frontend changes.",
-      "baseRef": "origin/master",
-      "gitHead": "a6dc6510e35576c1f6bf2f3354b14ab0740987ec",
-      "reviewedAtUtc": "2026-10-13T21:38:56.0840455Z"
+      "reason": "Reviewed final Wiki performance navigation against current owners and regressions: fresh bounded Git history with equivalent native scoring; fresh test discovery with Unicode/exclusion/order parity and bounded parallel reads; content/runtime-addressed compiled helpers with source-root reuse, exclusive publication and checksum recovery; order-preserving Roslyn extraction and project-bounded semantic references; all ranking assertions retained through the existing read-only batch plus full single/batch parity.",
+      "baseRef": "HEAD",
+      "gitHead": "ae0e26f302ee508399f696e990e4289c3debe160",
+      "reviewedAtUtc": "2026-10-14T15:14:20.7162751Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -605,14 +605,14 @@
       "pageSha256": "afe53d54c25e32851bd4696c4fc162d497360f95a6b31a95aa557991f57dc840",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "f264a51241762bd48747286085f1937f345bb0cf8024133532e21c141e4f25b2"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "2f34b2c42476da6a22f279b57716f915ca78a199678a76d8a1be3a04eff1040b"
         }
       ],
-      "reason": "Reviewed the final brief and test-plan optimization: all risk, policy, ownership, required-check and scenario fields remain compatible. The exact scoped SQL impact is shared only within one request; standalone planner queries and cache invalidation remain intact. Test discovery uses the existing pruned source inventory with explicit legacy system/hidden exclusions, bounded escaped regex alternatives and request-local source text reuse. Full paired response parity passed across backend, frontend, Users and intent-only cases; source inventory and semantic planner checks passed. Updated brief and test-plan workflow documentation and source declarations; downstream workflow descriptions continue to apply.",
+      "reason": "Reviewed final Wiki performance navigation against current owners and regressions: fresh bounded Git history with equivalent native scoring; fresh test discovery with Unicode/exclusion/order parity and bounded parallel reads; content/runtime-addressed compiled helpers with source-root reuse, exclusive publication and checksum recovery; order-preserving Roslyn extraction and project-bounded semantic references; all ranking assertions retained through the existing read-only batch plus full single/batch parity.",
       "baseRef": "HEAD",
-      "gitHead": "41c23e0cf3b2b37ae68acc3e65140056ed277563",
-      "reviewedAtUtc": "2026-10-14T12:26:33.6555175Z"
+      "gitHead": "ae0e26f302ee508399f696e990e4289c3debe160",
+      "reviewedAtUtc": "2026-10-14T15:14:21.3425784Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -651,25 +651,25 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "c771506aa565fdacd6c8ec19f64cd3e673b3ee7e2a9b87ffb856205e80f4b2d4",
+      "pageSha256": "c3c23cf579edec092168e33b73ce02f82d0e660ff75a1ed7966a57a98a00db41",
       "sources": [
         {
+          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
+          "sha256": "d0d4d7693e74f8c014b55b44101960af6039b7fede814505761e01d4c727a773"
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "61dbdb007a3004f99e0dc6086691cb58fd114104d5569b15eae7aa789c4cd6e0"
+          "sha256": "c98cc91bb3299ac090861da3b53133cc293e377d7ca3a551dbb68d013f9b5a88"
         },
         {
-          "path": ".llm-wiki/tools/LlmWikiSourceInventory.ps1",
-          "sha256": "f256d7ebd78edc63c3a1561cfe92856ee3b93d5cdd44e502431629f3d45dc7ad"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiSourceInventory.ps1",
-          "sha256": "81fc09dccc1a9d98e5e40ef5b780d7534a9a02bee2b3d73f8bcd9c6eb9f20ab7"
+          "path": ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
+          "sha256": "5bc46c7ccc21c5d189089837a0b7a9ef362eb1c90a84f66dbe96206ac413ffee"
         }
       ],
-      "reason": "Reviewed the final brief and test-plan optimization: all risk, policy, ownership, required-check and scenario fields remain compatible. The exact scoped SQL impact is shared only within one request; standalone planner queries and cache invalidation remain intact. Test discovery uses the existing pruned source inventory with explicit legacy system/hidden exclusions, bounded escaped regex alternatives and request-local source text reuse. Full paired response parity passed across backend, frontend, Users and intent-only cases; source inventory and semantic planner checks passed. Updated brief and test-plan workflow documentation and source declarations; downstream workflow descriptions continue to apply.",
+      "reason": "Reviewed final Wiki performance navigation against current owners and regressions: fresh bounded Git history with equivalent native scoring; fresh test discovery with Unicode/exclusion/order parity and bounded parallel reads; content/runtime-addressed compiled helpers with source-root reuse, exclusive publication and checksum recovery; order-preserving Roslyn extraction and project-bounded semantic references; all ranking assertions retained through the existing read-only batch plus full single/batch parity.",
       "baseRef": "HEAD",
-      "gitHead": "41c23e0cf3b2b37ae68acc3e65140056ed277563",
-      "reviewedAtUtc": "2026-10-14T12:26:34.1577268Z"
+      "gitHead": "ae0e26f302ee508399f696e990e4289c3debe160",
+      "reviewedAtUtc": "2026-10-14T15:38:35.6524202Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -805,14 +805,14 @@
       "pageSha256": "b60f38c1d4bb6323e6d9a1128ef46cbe3f2c097c8abd5f71e062f9d48a25997c",
       "sources": [
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "2ea8debda0a98c61b41e1ae7049945e622c4a06e3f69c43650c36ee64422cd38"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "2f34b2c42476da6a22f279b57716f915ca78a199678a76d8a1be3a04eff1040b"
         }
       ],
-      "reason": "Reviewed final target redaction and derived attention gates; allowed measurements and actual intake remain separate from goals. Integration preserves these security fixes unchanged. Recipe-import nutrient metadata stays in the existing user-requested provider flow; no new transfer, logging sink, persistence schema or private evidence is published. Current master additionally retains cancellation-aware MailRelay logging and isolated calendar-test authentication clocks. Both are preserved through integration; there are no further frontend changes.",
-      "baseRef": "origin/master",
-      "gitHead": "a6dc6510e35576c1f6bf2f3354b14ab0740987ec",
-      "reviewedAtUtc": "2026-10-13T21:38:57.3047525Z"
+      "reason": "Reviewed final Wiki performance navigation against current owners and regressions: fresh bounded Git history with equivalent native scoring; fresh test discovery with Unicode/exclusion/order parity and bounded parallel reads; content/runtime-addressed compiled helpers with source-root reuse, exclusive publication and checksum recovery; order-preserving Roslyn extraction and project-bounded semantic references; all ranking assertions retained through the existing read-only batch plus full single/batch parity.",
+      "baseRef": "HEAD",
+      "gitHead": "ae0e26f302ee508399f696e990e4289c3debe160",
+      "reviewedAtUtc": "2026-10-14T15:14:21.9843659Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -855,13 +855,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d3936e9bafbcb7110150867dc08fb96e9698c730bf07306916f2eeb38c92aa94"
+          "sha256": "e555e526fc94a24ca44a8769f2a2bcb98d3f3d9536d849818c603f86166e0eca"
         }
       ],
-      "reason": "Reviewed final Wiki performance sources and navigation claims: equivalent bounded Git precedent scoring; private checkout/source/ref freshness and mutation isolation; request-local test evidence and nearest-project selection; stable-graph reader scheduling with unchanged checks and SLA limits. Product code and domain contracts are unchanged.",
+      "reason": "Reviewed final Wiki performance navigation against current owners and regressions: fresh bounded Git history with equivalent native scoring; fresh test discovery with Unicode/exclusion/order parity and bounded parallel reads; content/runtime-addressed compiled helpers with source-root reuse, exclusive publication and checksum recovery; order-preserving Roslyn extraction and project-bounded semantic references; all ranking assertions retained through the existing read-only batch plus full single/batch parity.",
       "baseRef": "HEAD",
-      "gitHead": "75219c34ebce1debb85576d34507c1f55cebf958",
-      "reviewedAtUtc": "2026-10-14T13:44:42.9411856Z"
+      "gitHead": "ae0e26f302ee508399f696e990e4289c3debe160",
+      "reviewedAtUtc": "2026-10-14T15:00:48.1782075Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -949,13 +949,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d3936e9bafbcb7110150867dc08fb96e9698c730bf07306916f2eeb38c92aa94"
+          "sha256": "e555e526fc94a24ca44a8769f2a2bcb98d3f3d9536d849818c603f86166e0eca"
         }
       ],
-      "reason": "Reviewed final Wiki performance sources and navigation claims: equivalent bounded Git precedent scoring; private checkout/source/ref freshness and mutation isolation; request-local test evidence and nearest-project selection; stable-graph reader scheduling with unchanged checks and SLA limits. Product code and domain contracts are unchanged.",
+      "reason": "Reviewed final Wiki performance navigation against current owners and regressions: fresh bounded Git history with equivalent native scoring; fresh test discovery with Unicode/exclusion/order parity and bounded parallel reads; content/runtime-addressed compiled helpers with source-root reuse, exclusive publication and checksum recovery; order-preserving Roslyn extraction and project-bounded semantic references; all ranking assertions retained through the existing read-only batch plus full single/batch parity.",
       "baseRef": "HEAD",
-      "gitHead": "75219c34ebce1debb85576d34507c1f55cebf958",
-      "reviewedAtUtc": "2026-10-14T13:44:43.4013060Z"
+      "gitHead": "ae0e26f302ee508399f696e990e4289c3debe160",
+      "reviewedAtUtc": "2026-10-14T15:00:48.7405788Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -979,13 +979,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "e2d1221411e998f0a34ca979305f156f64b6a4fcc963082e83e8e0775b6cf1f2"
+          "sha256": "c98cc91bb3299ac090861da3b53133cc293e377d7ca3a551dbb68d013f9b5a88"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiTestPlanPrecision.ps1",
+          "sha256": "1d9cf8581a50ae01f941f4eea532ffb503df6f957de5c7a8f4182c2ee09ff354"
         }
       ],
-      "reason": "Reviewed final Wiki performance sources and navigation claims: equivalent bounded Git precedent scoring; private checkout/source/ref freshness and mutation isolation; request-local test evidence and nearest-project selection; stable-graph reader scheduling with unchanged checks and SLA limits. Product code and domain contracts are unchanged.",
+      "reason": "Reviewed final Wiki performance navigation against current owners and regressions: fresh bounded Git history with equivalent native scoring; fresh test discovery with Unicode/exclusion/order parity and bounded parallel reads; content/runtime-addressed compiled helpers with source-root reuse, exclusive publication and checksum recovery; order-preserving Roslyn extraction and project-bounded semantic references; all ranking assertions retained through the existing read-only batch plus full single/batch parity.",
       "baseRef": "HEAD",
-      "gitHead": "75219c34ebce1debb85576d34507c1f55cebf958",
-      "reviewedAtUtc": "2026-10-14T13:44:43.6977154Z"
+      "gitHead": "ae0e26f302ee508399f696e990e4289c3debe160",
+      "reviewedAtUtc": "2026-10-14T15:38:36.3589024Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -1212,14 +1216,14 @@
       "pageSha256": "8b7ddf0a82ae6f60f4f1b215e468a49f9e0f366ac703995c5f283035fd2e6426",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "f264a51241762bd48747286085f1937f345bb0cf8024133532e21c141e4f25b2"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "2f34b2c42476da6a22f279b57716f915ca78a199678a76d8a1be3a04eff1040b"
         }
       ],
-      "reason": "Reviewed the final brief and test-plan optimization: all risk, policy, ownership, required-check and scenario fields remain compatible. The exact scoped SQL impact is shared only within one request; standalone planner queries and cache invalidation remain intact. Test discovery uses the existing pruned source inventory with explicit legacy system/hidden exclusions, bounded escaped regex alternatives and request-local source text reuse. Full paired response parity passed across backend, frontend, Users and intent-only cases; source inventory and semantic planner checks passed. Updated brief and test-plan workflow documentation and source declarations; downstream workflow descriptions continue to apply.",
+      "reason": "Reviewed final Wiki performance navigation against current owners and regressions: fresh bounded Git history with equivalent native scoring; fresh test discovery with Unicode/exclusion/order parity and bounded parallel reads; content/runtime-addressed compiled helpers with source-root reuse, exclusive publication and checksum recovery; order-preserving Roslyn extraction and project-bounded semantic references; all ranking assertions retained through the existing read-only batch plus full single/batch parity.",
       "baseRef": "HEAD",
-      "gitHead": "41c23e0cf3b2b37ae68acc3e65140056ed277563",
-      "reviewedAtUtc": "2026-10-14T12:26:34.6978513Z"
+      "gitHead": "ae0e26f302ee508399f696e990e4289c3debe160",
+      "reviewedAtUtc": "2026-10-14T15:14:22.6002923Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1242,14 +1246,18 @@
       "pageSha256": "891ba091baab5bb5ebac52ec2d8482eba48976374cc43486fa4fbbe800d24fa2",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "1fafbee70c4f9a78ec3a356bfef15c51b62ac54b9e0c23805efd96fc31495625"
+          "path": ".llm-wiki/tools/code-graph-maintenance-recovery.test.mjs",
+          "sha256": "cbd4cf8c84913c78b09bc8ba852de89dfe9dc114c94685043748ce4749328c63"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "2f34b2c42476da6a22f279b57716f915ca78a199678a76d8a1be3a04eff1040b"
         }
       ],
-      "reason": "Reviewed the facade diff: only Read-LlmWikiCompiledIndex dispatch now delegates direct read-only transactions and isolated recovery to its reader. Adaptive routing, diff, maintenance and dispatch commands retain their existing branches, parameters and evidence contracts; their workflow descriptions remain current.",
+      "reason": "Reviewed final Wiki performance navigation against current owners and regressions: fresh bounded Git history with equivalent native scoring; fresh test discovery with Unicode/exclusion/order parity and bounded parallel reads; content/runtime-addressed compiled helpers with source-root reuse, exclusive publication and checksum recovery; order-preserving Roslyn extraction and project-bounded semantic references; all ranking assertions retained through the existing read-only batch plus full single/batch parity.",
       "baseRef": "HEAD",
-      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
-      "reviewedAtUtc": "2026-10-14T09:10:59.1586585Z"
+      "gitHead": "ae0e26f302ee508399f696e990e4289c3debe160",
+      "reviewedAtUtc": "2026-10-14T15:14:23.1973948Z"
     }
   ]
 }

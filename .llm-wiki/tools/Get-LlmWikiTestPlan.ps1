@@ -35,7 +35,9 @@ $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $toolsRoot 'LlmWikiModuleTestRoots.ps1')
 . (Join-Path $toolsRoot 'LlmWikiProjectLookup.ps1')
 . (Join-Path $toolsRoot 'LlmWikiSourceInventory.ps1')
+. (Join-Path $toolsRoot 'LlmWikiNativeTestDiscovery.ps1')
 $testSourceContents = [Collections.Generic.Dictionary[string,string]]::new([StringComparer]::Ordinal)
+$nativeScanner = $null
 $moduleTestRoots = @(Get-LlmWikiModuleTestRoots -RepositoryRoot $repositoryRoot)
 $verificationReceipts = @(Get-LlmWikiVerificationReceipts $repositoryRoot)
 Write-TestPlanTiming 'initialization-and-receipts'
@@ -275,38 +277,47 @@ if ($changedTypeNames.Count -gt 0) {
     foreach ($moduleTestRoot in $moduleTestRoots) { $testRoots.Add($moduleTestRoot) }
     if (@($effectivePaths | Where-Object { $_ -match '^Services/MailRelay/' }).Count -gt 0) { $testRoots.Add('Services/MailRelay/tests') }
     if (@($effectivePaths | Where-Object { $_ -match '^Services/MailInbox/' }).Count -gt 0) { $testRoots.Add('Services/MailInbox/tests') }
-    foreach ($testRoot in $testRoots) {
-        $absoluteTestRoot = Join-Path $repositoryRoot $testRoot
-        if (-not (Test-Path -LiteralPath $absoluteTestRoot)) { continue }
-        $testFiles += @(
-            Get-LlmWikiSourceFiles -RepositoryRoot $absoluteTestRoot -Filter '*' -ExcludedDirectory @('bin','obj','.artifacts','node_modules') -ExcludeSystem |
-                Where-Object {
-                    $_.FullName -notmatch '[\\/](?:bin|obj|\.artifacts|node_modules)[\\/]' -and
-                    ($_.Extension -eq '.cs' -or $_.Name -match '\.(spec|test)\.ts$')
-                }
-        )
+    $nativeScanner = Get-LlmWikiNativeTestScanner -RepositoryRoot $repositoryRoot
+    if ($null -ne $nativeScanner) {
+        $scan = $nativeScanner::Scan($repositoryRoot, $testRoots.ToArray(), [regex[]]@($typePatterns), [regex[]]@($declaredTypePatterns))
+        $testSourceContents = $scan.Contents
+        foreach ($relative in $scan.Direct) { $null = $directTests.Add($relative) }
+        foreach ($relative in $scan.Declared) { $null = $declaredTypeTests.Add($relative) }
+        Write-TestPlanTiming 'native-test-source-inventory-and-matching'
+    } else {
+        foreach ($testRoot in $testRoots) {
+            $absoluteTestRoot = Join-Path $repositoryRoot $testRoot
+            if (-not (Test-Path -LiteralPath $absoluteTestRoot)) { continue }
+            $testFiles += @(
+                Get-LlmWikiSourceFiles -RepositoryRoot $absoluteTestRoot -Filter '*' -ExcludedDirectory @('bin','obj','.artifacts','node_modules') -ExcludeSystem |
+                    Where-Object {
+                        $_.FullName -notmatch '[\\/](?:bin|obj|\.artifacts|node_modules)[\\/]' -and
+                        ($_.Extension -eq '.cs' -or $_.Name -match '\.(spec|test)\.ts$')
+                    }
+            )
+        }
+        Write-TestPlanTiming 'test-source-inventory'
+        foreach ($testFile in $testFiles) {
+            $content = ''
+            if (-not $testSourceContents.TryGetValue($testFile.FullName, [ref]$content)) {
+                $content = [IO.File]::ReadAllText($testFile.FullName)
+                $testSourceContents[$testFile.FullName] = $content
+            }
+            $relative = $testFile.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
+            $typeMatch = $false
+            foreach ($pattern in $typePatterns) {
+                if ($pattern.IsMatch($content)) { $typeMatch = $true; break }
+            }
+            # Declared names are a subset of all changed names. Files without any
+            # changed name cannot contain declaration evidence either.
+            if (-not $typeMatch) { continue }
+            $null = $directTests.Add($relative)
+            foreach ($pattern in $declaredTypePatterns) {
+                if ($pattern.IsMatch($content)) { $null = $declaredTypeTests.Add($relative); break }
+            }
+        }
+        Write-TestPlanTiming 'test-source-matching'
     }
-    Write-TestPlanTiming 'test-source-inventory'
-    foreach ($testFile in $testFiles) {
-        $content = ''
-        if (-not $testSourceContents.TryGetValue($testFile.FullName, [ref]$content)) {
-            $content = [IO.File]::ReadAllText($testFile.FullName)
-            $testSourceContents[$testFile.FullName] = $content
-        }
-        $relative = $testFile.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
-        $typeMatch = $false
-        foreach ($pattern in $typePatterns) {
-            if ($pattern.IsMatch($content)) { $typeMatch = $true; break }
-        }
-        # Declared names are a subset of all changed names. Files without any
-        # changed name cannot contain declaration evidence either.
-        if (-not $typeMatch) { continue }
-        $null = $directTests.Add($relative)
-        foreach ($pattern in $declaredTypePatterns) {
-            if ($pattern.IsMatch($content)) { $null = $declaredTypeTests.Add($relative); break }
-        }
-    }
-    Write-TestPlanTiming 'test-source-matching'
     $trackedCSharpFileSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
     $escapedConsumerNames = $escapedTypeNames
     foreach ($consumerNamesPattern in @(Split-LlmWikiGitGrepAlternatives -Alternative $escapedConsumerNames)) {
@@ -340,20 +351,33 @@ if (-not [string]::IsNullOrWhiteSpace($Intent) -and $Intent -match '(?i)idempote
     $behaviorAffinity = @($effectivePaths | ForEach-Object {
         [regex]::Matches(([string]$_).ToLowerInvariant(), '[a-z0-9]+') | ForEach-Object Value
     } | Where-Object { $_.Length -ge 5 -and $_ -notin @('fooddiary', 'modules', 'application', 'infrastructure', 'presentation', 'services') } | Sort-Object -Unique)
-    foreach ($testRoot in (@('tests', 'Services/MailRelay/tests', 'Services/MailInbox/tests') + $moduleTestRoots)) {
-        $absoluteTestRoot = Join-Path $repositoryRoot $testRoot
-        if (-not (Test-Path -LiteralPath $absoluteTestRoot -PathType Container)) { continue }
-        foreach ($testFile in Get-LlmWikiSourceFiles -RepositoryRoot $absoluteTestRoot -Filter '*.cs' -ExcludedDirectory @('bin','obj','.artifacts','node_modules') -ExcludeSystem) {
-            if ($testFile.FullName -match '[\\/](?:bin|obj|\.artifacts|node_modules)[\\/]') { continue }
-            $relative = $testFile.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
-            $content = ''
-            if (-not $testSourceContents.TryGetValue($testFile.FullName, [ref]$content)) {
-                $content = [IO.File]::ReadAllText($testFile.FullName)
-                $testSourceContents[$testFile.FullName] = $content
-            }
-            if ($content -notmatch '(?i)idempoten|duplicate|retry|replay|deduplic') { continue }
+    $behaviorRoots = [string[]](@('tests', 'Services/MailRelay/tests', 'Services/MailInbox/tests') + $moduleTestRoots)
+    if ($null -eq $nativeScanner) { $nativeScanner = Get-LlmWikiNativeTestScanner -RepositoryRoot $repositoryRoot }
+    if ($null -ne $nativeScanner) {
+        $behaviorPattern = [regex]::new('idempoten|duplicate|retry|replay|deduplic', [Text.RegularExpressions.RegexOptions]::IgnoreCase)
+        $behaviorScan = $nativeScanner::Scan($repositoryRoot, $behaviorRoots, [regex[]]@($behaviorPattern), [regex[]]@(), $testSourceContents, $true)
+        $testSourceContents = $behaviorScan.Contents
+        foreach ($relative in $behaviorScan.Direct) {
             if ($behaviorAffinity.Count -eq 0 -or @($behaviorAffinity | Where-Object { $relative.ToLowerInvariant().Contains($_) }).Count -gt 0) {
                 $null = $behavioralIntentTests.Add($relative)
+            }
+        }
+    } else {
+        foreach ($testRoot in $behaviorRoots) {
+            $absoluteTestRoot = Join-Path $repositoryRoot $testRoot
+            if (-not (Test-Path -LiteralPath $absoluteTestRoot -PathType Container)) { continue }
+            foreach ($testFile in Get-LlmWikiSourceFiles -RepositoryRoot $absoluteTestRoot -Filter '*.cs' -ExcludedDirectory @('bin','obj','.artifacts','node_modules') -ExcludeSystem) {
+                if ($testFile.FullName -match '[\\/](?:bin|obj|\.artifacts|node_modules)[\\/]') { continue }
+                $relative = $testFile.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
+                $content = ''
+                if (-not $testSourceContents.TryGetValue($testFile.FullName, [ref]$content)) {
+                    $content = [IO.File]::ReadAllText($testFile.FullName)
+                    $testSourceContents[$testFile.FullName] = $content
+                }
+                if ($content -notmatch '(?i)idempoten|duplicate|retry|replay|deduplic') { continue }
+                if ($behaviorAffinity.Count -eq 0 -or @($behaviorAffinity | Where-Object { $relative.ToLowerInvariant().Contains($_) }).Count -gt 0) {
+                    $null = $behavioralIntentTests.Add($relative)
+                }
             }
         }
     }

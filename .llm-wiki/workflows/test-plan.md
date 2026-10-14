@@ -9,6 +9,10 @@ tags:
   - testing
   - planning
 sources:
+  - .llm-wiki/tools/LlmWikiNativeCompilation.ps1
+  - .llm-wiki/tools/LlmWikiNativeTestDiscovery.ps1
+  - .llm-wiki/tools/LlmWikiTestSourceScanner.cs
+  - .llm-wiki/tools/Test-LlmWikiNativeTestDiscovery.ps1
   - docs/TESTING_STRATEGY.md
   - .llm-wiki/tools/Get-LlmWikiTestPlan.ps1
   - .llm-wiki/tools/LlmWikiSourceInventory.ps1
@@ -162,6 +166,15 @@ project discovery. The test and check selection contract is unchanged.
 Tests without any changed symbol skip the second declaration-specific search;
 declared names are included in the complete changed-name set. Matching tests
 still receive the same direct and declaration-specific evidence.
+
+Modern PowerShell batches test-file discovery and text matching in a native .NET
+helper. It uses the same regular expressions, boundaries, hidden/system filtering
+and directory exclusions, retains file order, and rereads source contents on each
+request. Bounded parallel reads also cover behavioral intent matching; captured
+contents are shared only within that request. Windows PowerShell retains the
+original scanner. Content-addressed compiled helpers are shared through the
+source repository's ignored artifacts, with an exclusive publication lease and
+payload checksum; changes, missing artifacts and corruption trigger compilation.
 
 Receipts live under the Git directory and are bound to the command, HEAD, and
 the current non-generated worktree fingerprint. A later `test-plan` marks an

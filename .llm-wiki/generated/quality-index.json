@@ -5,11 +5,11 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6621,
-    "wikiToolFiles": 214,
+    "productionFiles": 6624,
+    "wikiToolFiles": 217,
     "wikiToolsWithoutTestReferences": 5,
-    "criticalSymbols": 1001,
-    "criticalSymbolsWithTestReferences": 954,
+    "criticalSymbols": 1004,
+    "criticalSymbolsWithTestReferences": 957,
     "criticalSymbolsWithoutTestReferences": 47,
     "debtMarkers": 12
   },
@@ -48,11 +48,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-      "nonBlankLines": 931,
-      "decisionPoints": 182,
+      "nonBlankLines": 955,
+      "decisionPoints": 189,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 293.62
+      "structuralRiskScore": 304.6
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/telegram-auth.service.ts",
@@ -1250,11 +1250,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiGitPrecedents.ps1",
-      "nonBlankLines": 86,
-      "decisionPoints": 19,
+      "nonBlankLines": 43,
+      "decisionPoints": 5,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 32.22
+      "structuralRiskScore": 10.36
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiGraphResearch.ps1",
@@ -1426,11 +1426,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-      "nonBlankLines": 931,
-      "decisionPoints": 182,
+      "nonBlankLines": 955,
+      "decisionPoints": 189,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 293.62
+      "structuralRiskScore": 304.6
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiToolingContext.ps1",
@@ -1705,6 +1705,14 @@
       "structuralRiskScore": 10.02
     },
     {
+      "path": ".llm-wiki/tools/LlmWikiGitHistory.ps1",
+      "nonBlankLines": 51,
+      "decisionPoints": 12,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 21.02
+    },
+    {
       "path": ".llm-wiki/tools/LlmWikiGitPaths.ps1",
       "nonBlankLines": 177,
       "decisionPoints": 26,
@@ -1767,6 +1775,22 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 9.76
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiNativeCompilation.ps1",
+      "nonBlankLines": 70,
+      "decisionPoints": 9,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 16.9
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiNativeTestDiscovery.ps1",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.12
     },
     {
       "path": ".llm-wiki/tools/LlmWikiNavigationSemantics.ps1",
@@ -65282,9 +65306,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiChangeSetSnapshot.ps1",
       "line": 1,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiCriticalToolContracts.ps1",
+        ".llm-wiki/tools/Test-LlmWikiGitPrecedents.ps1",
         ".llm-wiki/tools/Test-LlmWikiReadOnlyOverlayPaths.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -65364,6 +65389,18 @@
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
         ".llm-wiki/tools/Test-LlmWikiGeneratedArtifacts.ps1"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "LlmWikiGitHistory",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/LlmWikiGitHistory.ps1",
+      "line": 1,
+      "testReferenceCount": 1,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiGitPrecedents.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -65501,6 +65538,31 @@
       "coveredThrough": []
     },
     {
+      "name": "LlmWikiNativeCompilation",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/LlmWikiNativeCompilation.ps1",
+      "line": 1,
+      "testReferenceCount": 1,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiGitPrecedents.ps1"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "LlmWikiNativeTestDiscovery",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/LlmWikiNativeTestDiscovery.ps1",
+      "line": 1,
+      "testReferenceCount": 2,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiNativeTestDiscovery.ps1",
+        ".llm-wiki/tools/Test-LlmWikiTestPlanPrecision.ps1"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "LlmWikiNavigationSemantics",
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiNavigationSemantics.ps1",
@@ -65571,9 +65633,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
       "line": 1,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiContextCache.ps1",
+        ".llm-wiki/tools/Test-LlmWikiGitPrecedents.ps1",
         ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -65632,7 +65695,7 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiSmokeSandbox.ps1",
       "line": 1,
-      "testReferenceCount": 45,
+      "testReferenceCount": 46,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAcceptancePacketReuse.ps1",
         ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
@@ -65660,6 +65723,7 @@
         ".llm-wiki/tools/Test-LlmWikiMemoryIsolation.ps1",
         ".llm-wiki/tools/Test-LlmWikiModulePageCache.ps1",
         ".llm-wiki/tools/Test-LlmWikiModuleTestRoots.ps1",
+        ".llm-wiki/tools/Test-LlmWikiNativeTestDiscovery.ps1",
         ".llm-wiki/tools/Test-LlmWikiOperationalTelemetry.ps1",
         ".llm-wiki/tools/Test-LlmWikiOutcomeViews.ps1",
         ".llm-wiki/tools/Test-LlmWikiProjectLookup.ps1",
@@ -65688,9 +65752,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiSourceInventory.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        ".llm-wiki/tools/Test-LlmWikiIndexSelection.ps1"
+        ".llm-wiki/tools/Test-LlmWikiIndexSelection.ps1",
+        ".llm-wiki/tools/Test-LlmWikiNativeTestDiscovery.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
