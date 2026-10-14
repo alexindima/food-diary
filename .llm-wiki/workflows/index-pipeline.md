@@ -104,6 +104,10 @@ sources:
   - .llm-wiki/tools/code-graph-process.mjs
   - .llm-wiki/tools/code-graph-performance.test.mjs
   - .llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1
+  - .llm-wiki/tools/LlmWikiSmokeScheduling.ps1
+  - .llm-wiki/tools/Test-LlmWikiSmokeScheduling.ps1
+  - .llm-wiki/tools/LlmWikiSourceMatching.cs
+  - .llm-wiki/tools/LlmWikiNativeCompilation.ps1
   - .llm-wiki/tools/LlmWikiProcess.ps1
   - .llm-wiki/wiki.ps1
   - .github/workflows/ci-tests.yml
@@ -723,6 +727,21 @@ graph prewarm, total wall time, and group durations sorted by cost. Parallel
 group times overlap and must not be summed as elapsed time. Timing summaries
 survive successful sandbox cleanup; aggregate cache hits retain the prior
 receipt duration and do not execute a new run.
+
+Independent lanes use the median of up to five recent successful executions at
+the same worker count to start longer groups first. Cached, failed and incomplete
+runs do not supply new duration samples. A lane with incomplete history retains
+the catalog order; `-Scheduling Catalog` selects that order explicitly. Serial
+checks and the stable-graph boundary keep their existing isolation rules.
+`verify-full -ResumePassedStages:$false` forces both full stages and nested smoke
+groups to execute, while retaining graph and compiler caches.
+
+Module generation shares captured C# text with its contract-consumer scans only
+within the request. Compiled substring and path-prefix matching retain the same
+ordinal/case rules, source ordering and live inherited test evidence. Cache
+fingerprints include the native implementation and its loader dependencies.
+The 24 cache-invalidation scenarios use a two-module fixture with multiple
+outputs and Users contract evidence; full index verification checks all modules.
 
 To profile the complete focused catalog even when a regression fails, run
 `./.llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1 -AllGroups -CollectFailures`.

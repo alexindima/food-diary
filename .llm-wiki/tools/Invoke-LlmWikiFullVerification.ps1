@@ -55,7 +55,7 @@ $checks = @(
     [pscustomobject]@{
         name = 'focused tool regressions'
         script = Join-Path $toolsRoot 'Invoke-LlmWikiParallelSmoke.ps1'
-        arguments = "-AllGroups -MaxConcurrency $IndexConcurrency"
+        arguments = "-AllGroups -MaxConcurrency $IndexConcurrency$(if (-not $ResumePassedStages) { ' -NoCache' })"
     }
 )
 if ($FullTools -or $CoreTools) {

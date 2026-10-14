@@ -866,3 +866,17 @@ ranking consistency and frozen historical evaluation artifacts remain valid
 independent checks. Cold/warm SQLite telemetry reports p50/p95 without a retired
 provider. Latency measurements must distinguish query time from preparation,
 process startup and serialization, and record machine load caveats.
+
+An unchanged dense search projection can repair missing identity or feature
+mirrors without rewriting its healthy FTS body. This route requires exact
+source, environment and record-cache fingerprints and computes every feature
+with the full writer's derivation. Invalid receipts, orphan rows, missing body
+records or changed sources use the ordinary complete recovery. Repairs remain
+inside the graph transaction and roll back together on failure.
+
+Set `LLM_WIKI_GRAPH_PROFILE_DIRECTORY` to an owned artifact directory to record
+per-process JSON timings for source snapshots, inventory, extraction, projections,
+transaction commit, ownership validation and build-lock waiting. Profiling keeps
+the command JSON unchanged and records successful and failed operations.
+Related regression test plans may pass `-SkipRefresh` after an explicit build;
+the default test-plan call continues to verify freshness automatically.

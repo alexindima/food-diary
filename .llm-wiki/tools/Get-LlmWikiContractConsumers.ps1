@@ -5,7 +5,9 @@ param(
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [switch]$IncludeTests,
-    [switch]$Fast
+    [switch]$Fast,
+    # Optional request-local source text; inventory still comes from current Git.
+    [Collections.Generic.Dictionary[string, string]]$SourceTextByPath
 )
 
 $ErrorActionPreference = 'Stop'
@@ -28,7 +30,10 @@ $searchMatches = @(
     foreach ($path in $sourcePaths | Sort-Object -Unique) {
         $absolutePath = [IO.Path]::Combine($repositoryRoot, $path)
         if (-not [IO.File]::Exists($absolutePath)) { continue }
-        $text = [IO.File]::ReadAllText($absolutePath)
+        $sourceKey = $path.Replace('\', '/')
+        $text = if ($null -ne $SourceTextByPath -and $SourceTextByPath.ContainsKey($sourceKey)) {
+            $SourceTextByPath[$sourceKey]
+        } else { [IO.File]::ReadAllText($absolutePath) }
         if ($text -notmatch $contractPattern) { continue }
         $matchingSourceText[$path.Replace('\', '/')] = $text
         $lineNumber = 0

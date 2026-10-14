@@ -5,11 +5,11 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6624,
-    "wikiToolFiles": 217,
+    "productionFiles": 6625,
+    "wikiToolFiles": 218,
     "wikiToolsWithoutTestReferences": 5,
-    "criticalSymbols": 1004,
-    "criticalSymbolsWithTestReferences": 957,
+    "criticalSymbols": 1005,
+    "criticalSymbolsWithTestReferences": 958,
     "criticalSymbolsWithoutTestReferences": 47,
     "debtMarkers": 12
   },
@@ -239,20 +239,20 @@
       "structuralRiskScore": 166.26
     },
     {
+      "path": ".llm-wiki/tools/Build-LlmWikiModulePages.ps1",
+      "nonBlankLines": 570,
+      "decisionPoints": 101,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 164.9
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts",
       "nonBlankLines": 619,
       "decisionPoints": 99,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 160.88
-    },
-    {
-      "path": ".llm-wiki/tools/Build-LlmWikiModulePages.ps1",
-      "nonBlankLines": 560,
-      "decisionPoints": 97,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 158.7
     },
     {
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
@@ -727,20 +727,20 @@
       "structuralRiskScore": 100.42
     },
     {
+      "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
+      "nonBlankLines": 362,
+      "decisionPoints": 60,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 99.24
+    },
+    {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-lessons.service.ts",
       "nonBlankLines": 442,
       "decisionPoints": 60,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 98.84
-    },
-    {
-      "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
-      "nonBlankLines": 361,
-      "decisionPoints": 59,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 97.72
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.ts",
@@ -890,19 +890,19 @@
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiModulePages.ps1",
-      "nonBlankLines": 560,
-      "decisionPoints": 97,
+      "nonBlankLines": 570,
+      "decisionPoints": 101,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 158.7
+      "structuralRiskScore": 164.9
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-      "nonBlankLines": 282,
-      "decisionPoints": 38,
+      "nonBlankLines": 290,
+      "decisionPoints": 40,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 64.64
+      "structuralRiskScore": 67.8
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiRuntimeTopology.ps1",
@@ -1170,11 +1170,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiContractConsumers.ps1",
-      "nonBlankLines": 130,
-      "decisionPoints": 27,
+      "nonBlankLines": 135,
+      "decisionPoints": 28,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 45.1
+      "structuralRiskScore": 46.7
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiCoveragePlan.ps1",
@@ -1266,11 +1266,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1",
-      "nonBlankLines": 76,
-      "decisionPoints": 18,
+      "nonBlankLines": 77,
+      "decisionPoints": 19,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 30.52
+      "structuralRiskScore": 32.04
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiImpact.ps1",
@@ -1547,10 +1547,10 @@
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1",
       "nonBlankLines": 133,
-      "decisionPoints": 23,
+      "decisionPoints": 24,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 39.16
+      "structuralRiskScore": 40.66
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
@@ -1578,11 +1578,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
-      "nonBlankLines": 361,
-      "decisionPoints": 59,
+      "nonBlankLines": 362,
+      "decisionPoints": 60,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 97.72
+      "structuralRiskScore": 99.24
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
@@ -1879,6 +1879,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 16.82
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiSmokeScheduling.ps1",
+      "nonBlankLines": 33,
+      "decisionPoints": 11,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 19.16
     },
     {
       "path": ".llm-wiki/tools/LlmWikiSourceInventory.ps1",
@@ -65306,10 +65314,11 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiChangeSetSnapshot.ps1",
       "line": 1,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiCriticalToolContracts.ps1",
         ".llm-wiki/tools/Test-LlmWikiGitPrecedents.ps1",
+        ".llm-wiki/tools/Test-LlmWikiModulePageCache.ps1",
         ".llm-wiki/tools/Test-LlmWikiReadOnlyOverlayPaths.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -65410,7 +65419,7 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiGitPaths.ps1",
       "line": 1,
-      "testReferenceCount": 20,
+      "testReferenceCount": 21,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
         ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
@@ -65429,6 +65438,7 @@
         ".llm-wiki/tools/Test-LlmWikiModulePageCache.ps1",
         ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
         ".llm-wiki/tools/Test-LlmWikiReadOnlyOverlayPaths.ps1",
+        ".llm-wiki/tools/Test-LlmWikiSqliteColdCheckout.ps1",
         ".llm-wiki/tools/Test-LlmWikiStageFingerprint.ps1",
         ".llm-wiki/tools/Test-LlmWikiTelemetryValidationReuse.ps1",
         ".llm-wiki/tools/Test-LlmWikiToolStartup.ps1"
@@ -65542,9 +65552,11 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiNativeCompilation.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 3,
       "testReferences": [
-        ".llm-wiki/tools/Test-LlmWikiGitPrecedents.ps1"
+        ".llm-wiki/tools/Test-LlmWikiGitPrecedents.ps1",
+        ".llm-wiki/tools/Test-LlmWikiModulePageCache.ps1",
+        ".llm-wiki/tools/Test-LlmWikiQualitySelfCoverage.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -65633,10 +65645,11 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
       "line": 1,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiContextCache.ps1",
         ".llm-wiki/tools/Test-LlmWikiGitPrecedents.ps1",
+        ".llm-wiki/tools/Test-LlmWikiModulePageCache.ps1",
         ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -65695,7 +65708,7 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiSmokeSandbox.ps1",
       "line": 1,
-      "testReferenceCount": 46,
+      "testReferenceCount": 47,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAcceptancePacketReuse.ps1",
         ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
@@ -65730,6 +65743,7 @@
         ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
         ".llm-wiki/tools/Test-LlmWikiReadOnlyOverlayPaths.ps1",
         ".llm-wiki/tools/Test-LlmWikiSchedulerLocks.ps1",
+        ".llm-wiki/tools/Test-LlmWikiSmokeScheduling.ps1",
         ".llm-wiki/tools/Test-LlmWikiSqliteColdCheckout.ps1",
         ".llm-wiki/tools/Test-LlmWikiTaskBaseline.ps1",
         ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
@@ -65743,6 +65757,19 @@
         ".llm-wiki/tools/Test-LlmWikiWorkflowMetrics.ps1",
         ".llm-wiki/tools/Test-LlmWikiWorkflowRecovery.ps1",
         ".llm-wiki/tools/Test-LlmWikiWorkspacePolicyCache.ps1"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "LlmWikiSmokeScheduling",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/LlmWikiSmokeScheduling.ps1",
+      "line": 1,
+      "testReferenceCount": 2,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
+        ".llm-wiki/tools/Test-LlmWikiSmokeScheduling.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -66863,22 +66890,22 @@
   "debtMarkers": [
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-      "line": 238,
+      "line": 246,
       "marker": "TODO"
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-      "line": 238,
+      "line": 246,
       "marker": "FIXME"
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-      "line": 238,
+      "line": 246,
       "marker": "HACK"
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-      "line": 238,
+      "line": 246,
       "marker": "SuppressMessage"
     },
     {

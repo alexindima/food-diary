@@ -57,6 +57,8 @@ if ($ReuseUnchangedCheck -and
 }
 
 . (Join-Path $PSScriptRoot 'LlmWikiQualityText.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiNativeCompilation.ps1')
+$sourceMatchingType = Get-LlmWikiCompiledToolType -RepositoryRoot $repositoryRoot -SourceFile 'LlmWikiSourceMatching.cs' -ClassName SourceMatching
 $symbols = (Get-Content -LiteralPath $symbolIndexPath -Raw | ConvertFrom-Json).symbols
 $criticalRoles = @('CommandHandler', 'QueryHandler', 'Handler', 'Controller', 'Validator')
 $criticalSymbols = @($symbols | Where-Object { $_.role -in $criticalRoles -and $_.kind -ne 'interface' })
@@ -166,9 +168,15 @@ foreach ($candidate in $symbolCoverage) {
     }
     $consumersByPath[$candidate.path].Add($candidate)
 }
+$productionMatches = if ($null -ne $sourceMatchingType) {
+    $sourceMatchingType::FindContentMatches([string[]]@($symbolCoverage | Where-Object testReferenceCount -eq 0 | ForEach-Object name), [string[]]@($productionSourceFiles | ForEach-Object content), $false)
+} else { $null }
 foreach ($coverage in @($symbolCoverage | Where-Object testReferenceCount -eq 0)) {
+    $matchingSources = if ($null -ne $productionMatches) {
+        @($productionMatches[$coverage.name] | ForEach-Object { $productionSourceFiles[$_] })
+    } else { $productionSourceFiles }
     $consumerCoverage = @(
-        foreach ($sourceFile in $productionSourceFiles) {
+        foreach ($sourceFile in $matchingSources) {
             if ($sourceFile.path -eq $coverage.path -or $sourceFile.content.IndexOf($coverage.name, [StringComparison]::Ordinal) -lt 0) { continue }
             foreach ($consumer in $consumersByPath[$sourceFile.path]) {
                 # Keep live objects: earlier iterations can add inherited coverage.

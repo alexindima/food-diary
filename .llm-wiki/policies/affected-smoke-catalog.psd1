@@ -51,6 +51,8 @@
         @{ When = 'adaptive-evals'; Remove = @('adaptive-routing', 'adaptive-experience') }
     )
     AdditionalMatches = @(
+        @{ Pattern = '^\.llm-wiki/tools/(LlmWikiSmokeScheduling|Test-LlmWikiSmokeScheduling)\.ps1$'; Groups = @('facade-contract') }
+        @{ Pattern = '^\.llm-wiki/tools/LlmWikiSourceMatching\.cs$'; Groups = @('index-selection', 'contract-consumers') }
         @{ Pattern = '^\.llm-wiki/tools/LlmWikiSmokeSandbox\.ps1$'; Groups = @('index-selection') }
         @{ Pattern = '^\.llm-wiki/tools/(LlmWikiJson|Test-LlmWikiPortable)\.ps1$'; Groups = @('verification-cache') }
         @{ Pattern = '^\.llm-wiki/tools/Manage-LlmWikiInstructionOutcome\.ps1$'; Groups = @('verification-cache') }

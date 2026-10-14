@@ -3,6 +3,14 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $result = & (Join-Path $PSScriptRoot 'Get-LlmWikiContractConsumers.ps1') -Contract IUserContextService -Format Json | ConvertFrom-Json
+$sourceRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+$requestText = [Collections.Generic.Dictionary[string,string]]::new([StringComparer]::Ordinal)
+foreach ($path in @(Invoke-LlmWikiGitPathList -RepositoryRoot $sourceRoot -Arguments @('ls-files','--cached','--others','--exclude-standard','--','*.cs'))) {
+    if ([IO.File]::Exists((Join-Path $sourceRoot $path))) { $requestText[$path.Replace('\','/')] = [IO.File]::ReadAllText((Join-Path $sourceRoot $path)) }
+}
+$reused = & (Join-Path $PSScriptRoot 'Get-LlmWikiContractConsumers.ps1') -Contract IUserContextService -SourceTextByPath $requestText -Format Json | ConvertFrom-Json
+if (($reused | ConvertTo-Json -Depth 20 -Compress) -cne ($result | ConvertTo-Json -Depth 20 -Compress)) { throw 'Request-local contract sources differ from the authoritative consumer scan.' }
 if ($result.declarationPath -ne 'Modules/Users/Application/Common/IUserContextService.cs') {
     throw "Unexpected IUserContextService declaration: $($result.declarationPath)"
 }

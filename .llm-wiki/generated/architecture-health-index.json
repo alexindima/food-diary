@@ -6032,22 +6032,22 @@
   "explicitDebtMarkers": [
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-      "line": 238,
+      "line": 246,
       "marker": "TODO"
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-      "line": 238,
+      "line": 246,
       "marker": "FIXME"
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-      "line": 238,
+      "line": 246,
       "marker": "HACK"
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-      "line": 238,
+      "line": 246,
       "marker": "SuppressMessage"
     },
     {

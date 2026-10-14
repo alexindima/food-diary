@@ -3,6 +3,23 @@ param()
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiQualityText.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiNativeCompilation.ps1')
+$matchingType = Get-LlmWikiCompiledToolType -RepositoryRoot (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) -SourceFile 'LlmWikiSourceMatching.cs' -ClassName SourceMatching
+if ($null -ne $matchingType) {
+    $sourceNames = [string[]]@('Handler', 'handler', 'Ядро', 'IThing', '')
+    $sourceContents = [string[]]@('public class Handler {}', 'HandlerSuffix handler Ядро', 'IThing and ЯДРО', '')
+    foreach ($ignoreCase in @($false, $true)) {
+        $comparison = if ($ignoreCase) { [StringComparison]::OrdinalIgnoreCase } else { [StringComparison]::Ordinal }
+        $actual = $matchingType::FindContentMatches($sourceNames, $sourceContents, $ignoreCase)
+        foreach ($name in $sourceNames) {
+            $expected = @(for ($i=0; $i -lt $sourceContents.Length; $i++) { if ($sourceContents[$i].IndexOf($name,$comparison) -ge 0) { $i } })
+            if (($actual[$name] -join ',') -cne ($expected -join ',')) { throw 'Native source matching changed substring, Unicode or case semantics.' }
+        }
+    }
+    $sourcePaths = [string[]]@('Modules/Users/A.cs','modules/users/B.cs','Modules/UsersExtra/C.cs','Modules/Ядро/D.cs')
+    if (($matchingType::FindPrefix($sourcePaths,'Modules/Users/') -join ',') -cne '0,1' -or
+        ($matchingType::FindPrefix($sourcePaths,'modules/ядро/') -join ',') -cne '3') { throw 'Native prefix matching lost area boundaries or case behavior.' }
+}
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 $unorderedPaths = [string[]]@('z.ps1', 'A.cs', 'a.cs', 'A.cs', 'путь.ts', "$([char]0xe000).cs", "$([char]::ConvertFromUtf32(0x1f600)).cs")
 $expectedPaths = @($unorderedPaths | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique)

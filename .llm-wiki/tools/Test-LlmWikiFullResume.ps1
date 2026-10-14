@@ -9,7 +9,7 @@ try {
     foreach ($name in @('Invoke-LlmWikiFullVerification.ps1', 'Get-LlmWikiVerificationStageFingerprint.ps1', 'LlmWikiGitPaths.ps1', 'LlmWikiProcess.ps1', 'Write-LlmWikiWorkflowMetric.ps1')) {
         Copy-Item -LiteralPath (Join-Path $ToolsRoot $name) -Destination $fixtureTools
     }
-    $stub = 'param([switch]$Check, [int]$MaxConcurrency, [switch]$AllGroups); Add-Content -LiteralPath (Join-Path $PSScriptRoot "../../.artifacts/count.txt") -Value run'
+    $stub = 'param([switch]$Check, [int]$MaxConcurrency, [switch]$AllGroups, [switch]$NoCache); Add-Content -LiteralPath (Join-Path $PSScriptRoot "../../.artifacts/count.txt") -Value run; if ($AllGroups) { Add-Content -LiteralPath (Join-Path $PSScriptRoot "../../.artifacts/no-cache.txt") -Value ([string][bool]$NoCache) }'
     foreach ($name in @('Test-LlmWikiSessionResolution.ps1', 'Test-LlmWikiProcess.ps1', 'Invoke-LlmWikiIndexPipeline.ps1', 'Invoke-LlmWikiParallelSmoke.ps1')) {
         [IO.File]::WriteAllText((Join-Path $fixtureTools $name), $stub)
     }
@@ -36,7 +36,13 @@ try {
         $counts += [IO.File]::ReadAllLines((Join-Path $root '.artifacts/count.txt')).Length
     }
     if (($counts -join ',') -ne '4,4,8,8') { throw "Full resume expected 4,4,8,8 runs; got $($counts -join ',')." }
-    Write-Host 'Full resume passed: four stages run once, unchanged input resumes, changed Unicode content reruns all four.'
+    & $shellPath -NoLogo -NoProfile -File $runner *> $log
+    if ($LASTEXITCODE -ne 0) { throw "Forced full fixture failed: $([IO.File]::ReadAllText($log))" }
+    if ([IO.File]::ReadAllLines((Join-Path $root '.artifacts/count.txt')).Length -ne 12 -or
+        ([IO.File]::ReadAllLines((Join-Path $root '.artifacts/no-cache.txt')) -join ',') -ne 'False,False,True') {
+        throw 'Disabling full-stage resume must also force every nested smoke group.'
+    }
+    Write-Host 'Full resume passed: unchanged stages resume, changed Unicode content reruns, and forced full execution disables nested smoke receipts.'
 } finally {
     $resolved = [IO.Path]::GetFullPath($root)
     if (-not $resolved.StartsWith([IO.Path]::GetFullPath([IO.Path]::GetTempPath()), [StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe fixture cleanup.' }

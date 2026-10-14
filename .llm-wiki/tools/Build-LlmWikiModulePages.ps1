@@ -55,6 +55,8 @@ function Get-ModulePageCacheState([string[]]$Paths) {
         $generatorPath, '.llm-wiki/tools/Get-LlmWikiContractConsumers.ps1',
         '.llm-wiki/tools/LlmWikiGitPaths.ps1', '.llm-wiki/tools/LlmWikiJson.ps1',
         '.llm-wiki/tools/LlmWikiIndexCache.ps1', '.llm-wiki/generated/repository-catalog.json',
+        '.llm-wiki/tools/LlmWikiSourceMatching.cs', '.llm-wiki/tools/LlmWikiNativeCompilation.ps1',
+        '.llm-wiki/tools/LlmWikiQueryCache.ps1', '.llm-wiki/tools/LlmWikiChangeSetSnapshot.ps1',
         'docs/architecture/backend-modules.json', 'docs/architecture/module-dependencies.json'
     )
     # Resolve-AbstractionAreaPath also observes these physical directories.
@@ -152,6 +154,11 @@ if ($ReuseUnchangedCheck -and (Test-LlmWikiIndexSetCache $cachePath $cacheState.
     return
 }
 $repositoryAreas = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+. (Join-Path $PSScriptRoot 'LlmWikiNativeCompilation.ps1')
+$sourceMatchingType = Get-LlmWikiCompiledToolType -RepositoryRoot $repositoryRoot -SourceFile 'LlmWikiSourceMatching.cs' -ClassName SourceMatching
+$allSourceText = if ($null -ne $sourceMatchingType) {
+    $sourceMatchingType::ReadSources($repositoryRoot, [string[]]@($repositoryFilePaths | Where-Object { $_ -match '\.cs$' }))
+} else { $null }
 foreach ($repositoryFile in $repositoryFilePaths) {
     $area = [string]$repositoryFile
     while ($area.Contains('/')) {
@@ -171,7 +178,7 @@ $sourceFiles = @(
             $repositoryPath = $_.Replace('\', '/')
             [pscustomobject]@{
                 path = $repositoryPath
-                content = [IO.File]::ReadAllText((Join-Path $repositoryRoot $repositoryPath))
+                content = $(if ($null -ne $allSourceText) { $allSourceText[$repositoryPath] } else { [IO.File]::ReadAllText((Join-Path $repositoryRoot $repositoryPath)) })
             }
         }
 )
@@ -186,6 +193,7 @@ $allTestFiles = @(
         ForEach-Object { $_.Replace('\', '/') }
 )
 $sourceFilesByArea = @{}
+$sourceFilePaths = [string[]]@($sourceFiles | ForEach-Object path)
 
 function Get-SourceFilesUnder {
     param([string]$Area)
@@ -197,9 +205,11 @@ function Get-SourceFilesUnder {
 
     $prefix = $normalizedArea + '/'
     $matches = [Collections.Generic.List[object]]::new()
-    foreach ($sourceFile in $sourceFiles) {
-        if ($sourceFile.path.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase)) {
-            $matches.Add($sourceFile)
+    if ($null -ne $sourceMatchingType) {
+        foreach ($index in $sourceMatchingType::FindPrefix($sourceFilePaths, $prefix)) { $matches.Add($sourceFiles[$index]) }
+    } else {
+        foreach ($sourceFile in $sourceFiles) {
+            if ($sourceFile.path.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase)) { $matches.Add($sourceFile) }
         }
     }
     $sourceFilesByArea[$normalizedArea] = $matches
@@ -338,8 +348,8 @@ function Get-HostConsumers {
 }
 
 $generatedFiles = [ordered]@{}
-$usersContextReadiness = & (Join-Path $PSScriptRoot 'Get-LlmWikiContractConsumers.ps1') -Contract IUserContextService -Format Json | ConvertFrom-Json
-$usersProfileReadiness = & (Join-Path $PSScriptRoot 'Get-LlmWikiContractConsumers.ps1') -Contract IUserProfileReadService -Format Json | ConvertFrom-Json
+$usersContextReadiness = & (Join-Path $PSScriptRoot 'Get-LlmWikiContractConsumers.ps1') -Contract IUserContextService -SourceTextByPath $allSourceText -Format Json | ConvertFrom-Json
+$usersProfileReadiness = & (Join-Path $PSScriptRoot 'Get-LlmWikiContractConsumers.ps1') -Contract IUserProfileReadService -SourceTextByPath $allSourceText -Format Json | ConvertFrom-Json
 $indexLines = New-FrontMatter 'generated.application-modules' @(
     $generatorPath
     '.llm-wiki/generated/repository-catalog.json'

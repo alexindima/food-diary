@@ -10,7 +10,7 @@ import { searchContextBatch } from './code-graph-batch.mjs';
 import { refreshStandaloneIndexes, queryStandaloneIndex, querySecurityEvidence } from './code-graph-index-query.mjs';
 import { englishMorphologicalVariants } from './code-graph-query-terms.mjs';
 import { findIdentityCandidates } from './code-graph-identity.mjs';
-import { createContextSourceReader, replaceContextSearchRecords } from './code-graph-context-projection.mjs';
+import { createContextSourceReader, replaceContextSearchRecords, repairMissingContextMirrors } from './code-graph-context-projection.mjs';
 import { runGraphProcess } from './code-graph-process.mjs';
 import { collectGraphInputs } from './code-graph-inputs.mjs';
 import { discoverProjectOwnership, createProjectOwnershipResolver, inspectProjectionOwnership, inspectProjectionCompleteness } from './code-graph-maintenance.mjs';
@@ -33,6 +33,12 @@ const contextSearchRankingPath = resolve(repositoryRoot, '.llm-wiki/policies/con
 const contextSearchRankingText = readFileSync(contextSearchRankingPath, 'utf8');
 const contextSearchRanking = JSON.parse(contextSearchRankingText);
 if (contextSearchRanking.schemaVersion !== 1) throw new Error(`Unsupported context-search ranking schema: ${contextSearchRanking.schemaVersion}`);
+const graphProfileDirectory = process.env.LLM_WIKI_GRAPH_PROFILE_DIRECTORY;
+const graphProfileStarted = performance.now();
+const graphPhaseMs = {};
+function recordGraphPhase(name, started) {
+  if (graphProfileDirectory) graphPhaseMs[name] = (graphPhaseMs[name] ?? 0) + performance.now() - started;
+}
 
 function publishGraphDependencyFingerprint(databasePath, result) {
   const fingerprint = sha256(JSON.stringify({
@@ -66,7 +72,8 @@ function graphDependencyFingerprintPath(databasePath) {
     : `${databasePath}.fingerprint`;
 }
 
-async function withBuildLock(callback) {
+async function withBuildLock(callback, lockTiming = () => {}) {
+  const lockStarted = performance.now();
   const lockPath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/build.lock');
   const ownerPath = resolve(lockPath, 'owner.json');
   const ownerToken = randomUUID();
@@ -99,6 +106,7 @@ async function withBuildLock(callback) {
     }
   }
   try {
+    lockTiming(performance.now() - lockStarted);
     return await callback();
   } finally {
     try {
@@ -1008,6 +1016,10 @@ function refreshContextSearch(database) {
     return { refreshed: false, documents: existingCount, fingerprint };
   }
 
+  const repair = repairMissingContextMirrors(database, records, { fingerprint, environmentFingerprint },
+    (path, recordType) => contextSearchFeatures(path, recordType, resolveOwner));
+  if (repair) return { refreshed: true, documents: existingCount, fingerprint, ...repair };
+
   const sourceReader = createContextSourceReader(database);
 
   const insertIdentity = database.prepare('INSERT INTO context_search_identity(rowid, path, title) VALUES (?, ?, ?)');
@@ -1085,6 +1097,8 @@ async function build(database, force = false, skipTypeScript = false) {
   }
   database.exec(`PRAGMA cache_size = -${writeCacheKiB}`);
   const startingChangeSet = changeSetSnapshot();
+  recordGraphPhase('sourceSnapshot', started);
+  let phaseStarted = performance.now();
   const storedParserVersion = database.prepare("SELECT value FROM metadata WHERE key='parser_version'").get()?.value;
   if (storedParserVersion !== parserVersion) force = true;
   const existing = new Map(database.prepare('SELECT id, path, size, mtime_ms, content_hash FROM files').all().map((item) => [item.path, item]));
@@ -1105,9 +1119,15 @@ async function build(database, force = false, skipTypeScript = false) {
     skipRead: path => skipTypeScript && languageOf(path) === 'typescript',
   });
   const typescriptCandidates = candidates.filter((item) => !item.metadataOnly && languageOf(item.path) === 'typescript');
+  recordGraphPhase('sourceInventory', phaseStarted);
+  phaseStarted = performance.now();
   if (!skipTypeScript && typescriptCandidates.length > 0) assertTypeScriptCompilerAvailable();
   const roslynResults = extractCSharp(database, candidates.filter((item) => !item.metadataOnly && languageOf(item.path) === 'csharp'), knownPaths);
+  recordGraphPhase('csharpExtraction', phaseStarted);
+  phaseStarted = performance.now();
   const typescriptResults = skipTypeScript ? new Map() : extractTypeScript(typescriptCandidates);
+  recordGraphPhase('typescriptExtraction', phaseStarted);
+  phaseStarted = performance.now();
 
   database.exec('BEGIN IMMEDIATE');
   try {
@@ -1135,10 +1155,20 @@ async function build(database, force = false, skipTypeScript = false) {
     database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)').run('parser_version', parserVersion);
     database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)').run('updated_at_utc', new Date().toISOString());
     database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)').run('typescript_projection_complete', skipTypeScript ? 'false' : 'true');
+    recordGraphPhase('sourceRows', phaseStarted);
+    phaseStarted = performance.now();
     queryCategoriesRefreshed = refreshQueryLayer(database);
+    recordGraphPhase('queryProjections', phaseStarted);
+    phaseStarted = performance.now();
     compiledIndexes = refreshCompiledIndexes(database);
+    recordGraphPhase('compiledIndexes', phaseStarted);
+    phaseStarted = performance.now();
     contextSearch = refreshContextSearch(database);
+    recordGraphPhase('contextSearch', phaseStarted);
+    phaseStarted = performance.now();
     const completedChangeSet = changeSetSnapshot();
+    recordGraphPhase('finalSourceSnapshot', phaseStarted);
+    phaseStarted = performance.now();
     if (completedChangeSet.fingerprint !== startingChangeSet.fingerprint) {
       throw new Error('Worktree changed while the code graph was being refreshed; retry the build.');
     }
@@ -1147,6 +1177,7 @@ async function build(database, force = false, skipTypeScript = false) {
     database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)')
       .run('change_set_git_head', completedChangeSet.head);
     database.exec('COMMIT');
+    recordGraphPhase('transactionCommit', phaseStarted);
   } catch (error) {
     try {
       database.exec('ROLLBACK');
@@ -2875,6 +2906,7 @@ const options = Object.fromEntries(argumentsList.map((argument) => {
 }));
 const databasePath = resolve(repositoryRoot, options.database ?? '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
 let database;
+let graphProfileSucceeded = false;
 try {
   if (options['path-stdin'] === 'true') {
     if (options.path !== undefined) throw new Error('Use either --path or --path-stdin, not both.');
@@ -2892,7 +2924,9 @@ try {
       try {
         const completeBuild = async () => {
           const buildResult = await build(database, options.force === 'true', options['skip-typescript'] === 'true');
+          const ownershipStarted = performance.now();
           const ownership = inspectProjectionOwnership(database, discoverProjectOwnership(repositoryPaths()), true);
+          recordGraphPhase('ownershipValidation', ownershipStarted);
           return {
             ...buildResult,
             ownership,
@@ -2919,7 +2953,7 @@ try {
         database?.close();
         database = undefined;
       }
-    });
+    }, duration => { if (graphProfileDirectory) graphPhaseMs.lockWait = duration; });
   } else {
     database = openDatabase(databasePath);
   }
@@ -2997,6 +3031,14 @@ try {
     };
   }
   process.stdout.write(`${JSON.stringify(result)}\n`);
+  graphProfileSucceeded = true;
 } finally {
   database?.close();
+  if (graphProfileDirectory) {
+    mkdirSync(graphProfileDirectory, { recursive: true });
+    writeFileSync(resolve(graphProfileDirectory, `${process.pid}-${randomUUID()}.json`), JSON.stringify({
+      schemaVersion: 1, action, databasePath, succeeded: graphProfileSucceeded,
+      totalMs: performance.now() - graphProfileStarted, phasesMs: graphPhaseMs,
+    }));
+  }
 }

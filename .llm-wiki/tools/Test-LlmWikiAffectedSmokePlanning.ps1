@@ -2,6 +2,8 @@
 param()
 
 $ErrorActionPreference = 'Stop'
+& (Join-Path $PSScriptRoot 'Test-LlmWikiSmokeScheduling.ps1')
+if (-not $?) { throw 'Smoke scheduling regression failed.' }
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $planner = Join-Path $PSScriptRoot 'Invoke-LlmWikiAffectedSmoke.ps1'
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
@@ -223,7 +225,7 @@ foreach ($observabilityContract in @('Code graph prewarm still running', 'CodeGr
 if ($parallelRunnerText -notmatch "ContainsKey\('RequestedGroup'\).*ChangedPath = @\(\)") {
     throw 'Forced smoke groups still perform an unnecessary full Git diff before planning.'
 }
-$fullFocusedPlan = & $parallelRunner -AllGroups -Plan -Format Json | ConvertFrom-Json
+$fullFocusedPlan = & $parallelRunner -AllGroups -Scheduling Catalog -Plan -Format Json | ConvertFrom-Json
 if (@($fullFocusedPlan.groups) -contains 'full-tools' -or @($fullFocusedPlan.groups) -contains 'tool-contract') {
     throw 'The complete focused catalog contains a fallback-only or monolithic smoke group.'
 }
@@ -326,6 +328,7 @@ try {
         $null = New-Item -ItemType Directory -Path $fixtureTools -Force
         $null = New-Item -ItemType Directory -Path (Join-Path $fixture '.llm-wiki/policies') -Force
         Copy-Item -LiteralPath $parallelRunner -Destination $fixtureTools
+        Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'LlmWikiSmokeScheduling.ps1') -Destination $fixtureTools
         Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'LlmWikiProcess.ps1') -Destination $fixtureTools
         [IO.File]::WriteAllText((Join-Path $fixture '.llm-wiki/policies/affected-smoke-catalog.psd1'), @'
 @{ Groups = @(

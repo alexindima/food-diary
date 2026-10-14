@@ -226,13 +226,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "0d566e05f2e24c7ee1c0b0acccb94b7d3ba2e47f075e7d2844aee49cbf5283f5"
+          "sha256": "412c04b5c9e6e16b4abb47901a2fb1ed0855d9a3f4c94bab7ec17c2d802e2030"
         }
       ],
-      "reason": "Inspected the generated architecture-health delta: source coordinates for Wiki debt markers moved, while the project dependency graph, module boundaries and removal-candidate guidance retain their meaning. No product project or domain dependency changed.",
+      "reason": "Architecture health changed only the four debt-marker line references in the quality generator; project/module edges and enforcement are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:26:30.4023902Z"
+      "gitHead": "d8871639c8553673ed25ffc5274883c34615b555",
+      "reviewedAtUtc": "2026-10-14T21:58:05.7063284Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -241,13 +241,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "2f34b2c42476da6a22f279b57716f915ca78a199678a76d8a1be3a04eff1040b"
+          "sha256": "1c6dc45df7d4946f95a99225fa0e0bd39a4f3074cfb380c734890573fe1f8b45"
         }
       ],
-      "reason": "Reviewed final Wiki performance navigation against current owners and regressions: fresh bounded Git history with equivalent native scoring; fresh test discovery with Unicode/exclusion/order parity and bounded parallel reads; content/runtime-addressed compiled helpers with source-root reuse, exclusive publication and checksum recovery; order-preserving Roslyn extraction and project-bounded semantic references; all ranking assertions retained through the existing read-only batch plus full single/batch parity.",
+      "reason": "Graph optimization preserves compiled contract records and complete identity/feature projections; native contract source reuse matches the authoritative scan exactly.",
       "baseRef": "HEAD",
-      "gitHead": "ae0e26f302ee508399f696e990e4289c3debe160",
-      "reviewedAtUtc": "2026-10-14T15:14:20.7162751Z"
+      "gitHead": "d8871639c8553673ed25ffc5274883c34615b555",
+      "reviewedAtUtc": "2026-10-14T21:58:08.9271363Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -499,7 +499,7 @@
       "reason": "Reviewed final Wiki performance sources and navigation claims: equivalent bounded Git precedent scoring; private checkout/source/ref freshness and mutation isolation; request-local test evidence and nearest-project selection; stable-graph reader scheduling with unchanged checks and SLA limits. Product code and domain contracts are unchanged.",
       "baseRef": "HEAD",
       "gitHead": "75219c34ebce1debb85576d34507c1f55cebf958",
-      "reviewedAtUtc": "2026-10-14T13:44:42.1207360Z"
+      "reviewedAtUtc": "2026-10-14T13:44:42.120736Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -606,13 +606,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "2f34b2c42476da6a22f279b57716f915ca78a199678a76d8a1be3a04eff1040b"
+          "sha256": "1c6dc45df7d4946f95a99225fa0e0bd39a4f3074cfb380c734890573fe1f8b45"
         }
       ],
-      "reason": "Reviewed final Wiki performance navigation against current owners and regressions: fresh bounded Git history with equivalent native scoring; fresh test discovery with Unicode/exclusion/order parity and bounded parallel reads; content/runtime-addressed compiled helpers with source-root reuse, exclusive publication and checksum recovery; order-preserving Roslyn extraction and project-bounded semantic references; all ranking assertions retained through the existing read-only batch plus full single/batch parity.",
+      "reason": "No impact rules or ownership models changed; optimized graph recovery preserves the complete source-backed projection, with unchanged scope and consumer assertions.",
       "baseRef": "HEAD",
-      "gitHead": "ae0e26f302ee508399f696e990e4289c3debe160",
-      "reviewedAtUtc": "2026-10-14T15:14:21.3425784Z"
+      "gitHead": "d8871639c8553673ed25ffc5274883c34615b555",
+      "reviewedAtUtc": "2026-10-14T21:58:07.1191774Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -806,13 +806,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "2f34b2c42476da6a22f279b57716f915ca78a199678a76d8a1be3a04eff1040b"
+          "sha256": "1c6dc45df7d4946f95a99225fa0e0bd39a4f3074cfb380c734890573fe1f8b45"
         }
       ],
-      "reason": "Reviewed final Wiki performance navigation against current owners and regressions: fresh bounded Git history with equivalent native scoring; fresh test discovery with Unicode/exclusion/order parity and bounded parallel reads; content/runtime-addressed compiled helpers with source-root reuse, exclusive publication and checksum recovery; order-preserving Roslyn extraction and project-bounded semantic references; all ranking assertions retained through the existing read-only batch plus full single/batch parity.",
+      "reason": "Source text remains request-local and compiled helper caches retain their existing checksum/lease guards. Optional profiling records timings and database paths, never source contents or user payloads.",
       "baseRef": "HEAD",
-      "gitHead": "ae0e26f302ee508399f696e990e4289c3debe160",
-      "reviewedAtUtc": "2026-10-14T15:14:21.9843659Z"
+      "gitHead": "d8871639c8553673ed25ffc5274883c34615b555",
+      "reviewedAtUtc": "2026-10-14T21:58:05.1566Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -855,13 +855,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e555e526fc94a24ca44a8769f2a2bcb98d3f3d9536d849818c603f86166e0eca"
+          "sha256": "15e43f0c025fe2f5125eaa299f3a68670302dc319069dce7c7cb934433c71cd1"
         }
       ],
-      "reason": "Reviewed final Wiki performance navigation against current owners and regressions: fresh bounded Git history with equivalent native scoring; fresh test discovery with Unicode/exclusion/order parity and bounded parallel reads; content/runtime-addressed compiled helpers with source-root reuse, exclusive publication and checksum recovery; order-preserving Roslyn extraction and project-bounded semantic references; all ranking assertions retained through the existing read-only batch plus full single/batch parity.",
+      "reason": "Three paired old/new generations on identical current inputs produced byte-identical quality JSON and exact checks for every module page. Native preselection preserves substring/case ordering and live consumer-attributed coverage.",
       "baseRef": "HEAD",
-      "gitHead": "ae0e26f302ee508399f696e990e4289c3debe160",
-      "reviewedAtUtc": "2026-10-14T15:00:48.1782075Z"
+      "gitHead": "d8871639c8553673ed25ffc5274883c34615b555",
+      "reviewedAtUtc": "2026-10-14T21:58:08.3360113Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -949,13 +949,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e555e526fc94a24ca44a8769f2a2bcb98d3f3d9536d849818c603f86166e0eca"
+          "sha256": "15e43f0c025fe2f5125eaa299f3a68670302dc319069dce7c7cb934433c71cd1"
         }
       ],
-      "reason": "Reviewed final Wiki performance navigation against current owners and regressions: fresh bounded Git history with equivalent native scoring; fresh test discovery with Unicode/exclusion/order parity and bounded parallel reads; content/runtime-addressed compiled helpers with source-root reuse, exclusive publication and checksum recovery; order-preserving Roslyn extraction and project-bounded semantic references; all ranking assertions retained through the existing read-only batch plus full single/batch parity.",
+      "reason": "Quality-index optimization retains complete generated evidence on identical inputs; no security rule, backend authorization or API contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "ae0e26f302ee508399f696e990e4289c3debe160",
-      "reviewedAtUtc": "2026-10-14T15:00:48.7405788Z"
+      "gitHead": "d8871639c8553673ed25ffc5274883c34615b555",
+      "reviewedAtUtc": "2026-10-14T21:58:10.9744179Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1217,13 +1217,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "2f34b2c42476da6a22f279b57716f915ca78a199678a76d8a1be3a04eff1040b"
+          "sha256": "1c6dc45df7d4946f95a99225fa0e0bd39a4f3074cfb380c734890573fe1f8b45"
         }
       ],
-      "reason": "Reviewed final Wiki performance navigation against current owners and regressions: fresh bounded Git history with equivalent native scoring; fresh test discovery with Unicode/exclusion/order parity and bounded parallel reads; content/runtime-addressed compiled helpers with source-root reuse, exclusive publication and checksum recovery; order-preserving Roslyn extraction and project-bounded semantic references; all ranking assertions retained through the existing read-only batch plus full single/batch parity.",
+      "reason": "SQLite remains the only provider. Missing mirrors repair only with exact current source/environment/cache fingerprints and dense records; invalid state rebuilds. Retrieval stayed at top1 483/494 and top10 494/494.",
       "baseRef": "HEAD",
-      "gitHead": "ae0e26f302ee508399f696e990e4289c3debe160",
-      "reviewedAtUtc": "2026-10-14T15:14:22.6002923Z"
+      "gitHead": "d8871639c8553673ed25ffc5274883c34615b555",
+      "reviewedAtUtc": "2026-10-14T21:58:06.3494237Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1246,18 +1246,26 @@
       "pageSha256": "891ba091baab5bb5ebac52ec2d8482eba48976374cc43486fa4fbbe800d24fa2",
       "sources": [
         {
+          "path": ".llm-wiki/tools/code-graph-context-projection.mjs",
+          "sha256": "5d96f898a23d83fcdeb5823ac41060ab769d79bb9b642b8428d5d55771824b55"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph-context-projection.test.mjs",
+          "sha256": "d8f923568a0cec993d11a73b8b523e8fafa54811b0e56c7eaa56541caf87ac57"
+        },
+        {
           "path": ".llm-wiki/tools/code-graph-maintenance-recovery.test.mjs",
-          "sha256": "cbd4cf8c84913c78b09bc8ba852de89dfe9dc114c94685043748ce4749328c63"
+          "sha256": "5196ab83ca7b28d13f8f83b060ebc5c76a432fa877da160882f1774ef37b95ae"
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "2f34b2c42476da6a22f279b57716f915ca78a199678a76d8a1be3a04eff1040b"
+          "sha256": "1c6dc45df7d4946f95a99225fa0e0bd39a4f3074cfb380c734890573fe1f8b45"
         }
       ],
-      "reason": "Reviewed final Wiki performance navigation against current owners and regressions: fresh bounded Git history with equivalent native scoring; fresh test discovery with Unicode/exclusion/order parity and bounded parallel reads; content/runtime-addressed compiled helpers with source-root reuse, exclusive publication and checksum recovery; order-preserving Roslyn extraction and project-bounded semantic references; all ranking assertions retained through the existing read-only batch plus full single/batch parity.",
+      "reason": "Recovery uses the full original feature derivation inside one transaction; missing mirrors repair narrowly, uncertainty uses full recovery, and injected interrupted repairs roll back before retry.",
       "baseRef": "HEAD",
-      "gitHead": "ae0e26f302ee508399f696e990e4289c3debe160",
-      "reviewedAtUtc": "2026-10-14T15:14:23.1973948Z"
+      "gitHead": "d8871639c8553673ed25ffc5274883c34615b555",
+      "reviewedAtUtc": "2026-10-14T21:58:09.9082425Z"
     }
   ]
 }

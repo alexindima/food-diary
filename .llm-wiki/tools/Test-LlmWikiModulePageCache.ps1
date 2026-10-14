@@ -39,14 +39,24 @@ function Assert-Cache([bool]$Expected, [string[]]$Argument, [int]$Exit = 0) {
 }
 try {
     Write-Fixture '.gitignore' ".artifacts/`n"
-    foreach ($tool in @('Build-LlmWikiModulePages.ps1', 'Get-LlmWikiContractConsumers.ps1', 'LlmWikiJson.ps1', 'LlmWikiGitPaths.ps1', 'LlmWikiIndexCache.ps1')) {
+    foreach ($tool in @('Build-LlmWikiModulePages.ps1', 'Get-LlmWikiContractConsumers.ps1', 'LlmWikiJson.ps1', 'LlmWikiGitPaths.ps1', 'LlmWikiIndexCache.ps1', 'LlmWikiSourceMatching.cs', 'LlmWikiNativeCompilation.ps1', 'LlmWikiQueryCache.ps1', 'LlmWikiChangeSetSnapshot.ps1')) {
         Write-Fixture ".llm-wiki/tools/$tool" ([IO.File]::ReadAllText((Join-Path $PSScriptRoot $tool)))
     }
     foreach ($path in @('.llm-wiki/generated/repository-catalog.json', 'docs/architecture/backend-modules.json', 'docs/architecture/module-dependencies.json')) {
         Write-Fixture $path ([IO.File]::ReadAllText((Join-Path $repositoryRoot $path)))
     }
+    # These scenarios exercise cache invalidation and complete output sets. Two
+    # modules preserve multiple pages and the Users contract evidence while
+    # keeping every scenario independent of unrelated repository module growth.
+    $fixtureCatalogPath = Join-Path $fixture '.llm-wiki/generated/repository-catalog.json'
+    $fixtureCatalog = Get-Content -LiteralPath $fixtureCatalogPath -Raw | ConvertFrom-Json
+    $fixtureCatalog.applicationModules = @($fixtureCatalog.applicationModules | Where-Object { $_.name -in @('Users','Billing') })
+    $fixtureCatalog.extractedApplicationModules = @($fixtureCatalog.extractedApplicationModules | Where-Object { $_.name -in @('Users','Billing') })
+    [IO.File]::WriteAllText($fixtureCatalogPath, ($fixtureCatalog | ConvertTo-Json -Depth 30))
     $manifestPath = Join-Path $fixture 'docs/architecture/backend-modules.json'
     $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
+    $manifest.modules = [pscustomobject]@{ Users=$manifest.modules.Users; Billing=$manifest.modules.Billing }
+    $manifest.inventory.totalModules = 2
     $manifest.modules.Users.sourceMappings.abstractionAreas = @('Users')
     $manifest.modules.Users.sourceMappings | Add-Member -NotePropertyName infrastructureProjects -NotePropertyValue @('Modules/Users/Infrastructure') -Force
     [IO.File]::WriteAllText($manifestPath, ($manifest | ConvertTo-Json -Depth 20))

@@ -4,6 +4,7 @@ param()
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $sandboxRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'sqlite-cold-checkout'
 $checkoutRoot = Join-Path $sandboxRoot 'repository'
 $shellPath = (Get-Process -Id $PID).Path
@@ -14,7 +15,19 @@ try {
     & git -C $checkoutRoot checkout --quiet --force HEAD
     if ($LASTEXITCODE -ne 0) { throw 'Unable to check out the cold-checkout fixture.' }
     $checkoutWiki = Join-Path $checkoutRoot '.llm-wiki'
-    Get-ChildItem -LiteralPath (Join-Path $repositoryRoot '.llm-wiki') -Force | Copy-Item -Destination $checkoutWiki -Recurse -Force
+    # Carry current tracked/untracked Wiki sources, including uncommitted edits,
+    # without inheriting ignored bin/obj outputs or temporary Wiki artifacts.
+    $fixturePrefix = [IO.Path]::GetFullPath($checkoutRoot).TrimEnd('\','/') + [IO.Path]::DirectorySeparatorChar
+    foreach ($path in @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files','--cached','--others','--exclude-standard','--','.llm-wiki'))) {
+        $source = Join-Path $repositoryRoot $path
+        $destination = [IO.Path]::GetFullPath((Join-Path $checkoutRoot $path))
+        if (-not $destination.StartsWith($fixturePrefix,[StringComparison]::OrdinalIgnoreCase)) { throw 'Cold Wiki overlay escaped its fixture.' }
+        if ([IO.File]::Exists($source)) {
+            [void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($destination))
+            [IO.File]::Copy($source,$destination,$true)
+        } elseif ([IO.File]::Exists($destination)) { [IO.File]::Delete($destination) }
+    }
+    Assert-ColdCheckout (-not (Test-Path (Join-Path $checkoutRoot '.llm-wiki/tools/roslyn-extractor/bin'))) 'Cold fixture inherited Roslyn build outputs.'
     Assert-ColdCheckout (-not (Test-Path (Join-Path $checkoutRoot 'FoodDiary.Web.Client/node_modules'))) 'Cold fixture unexpectedly has TypeScript dependencies.'
     $databasePath = Join-Path $checkoutRoot '.artifacts/llm-wiki/code-graph/code-graph.sqlite'
     Assert-ColdCheckout (-not (Test-Path $databasePath)) 'Cold fixture unexpectedly has a SQLite projection.'

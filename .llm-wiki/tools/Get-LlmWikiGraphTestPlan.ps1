@@ -2,6 +2,7 @@
 param(
     [string[]]$ChangedPath,
     [string[]]$ProposedPath,
+    [switch]$SkipRefresh,
     [ValidateRange(1, 500)][int]$Limit = 100,
     [ValidateSet('Text','Json')][string]$Format = 'Text'
 )
@@ -10,7 +11,7 @@ $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $scope = [string[]]@((@($ProposedPath) + @($ChangedPath)) | Where-Object { $_ } | Sort-Object -Unique)
 if ($scope.Length -eq 0) { throw 'Fast graph test-plan requires -ChangedPath or -PlannedPath.' }
-$impact = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') -Action impact -ChangedPath $scope -Limit ([Math]::Min(500, $Limit * 10)) -Format Json | ConvertFrom-Json
+$impact = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') -Action impact -ChangedPath $scope -Limit ([Math]::Min(500, $Limit * 10)) -SkipRefresh:$SkipRefresh -Format Json | ConvertFrom-Json
 $isTestPath = { param($Path) [string]$Path -match '(^|/)(?:tests?/|[^/]+\.Tests?/)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$|(^|/)Test-[^/]+\.ps1$' }
 $scoped = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
 $graphConsumers = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)

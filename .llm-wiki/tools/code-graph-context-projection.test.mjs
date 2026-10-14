@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { test } from 'node:test';
-import { createContextSourceReader, replaceContextSearchRecords } from './code-graph-context-projection.mjs';
+import { createContextSourceReader, replaceContextSearchRecords, repairMissingContextMirrors } from './code-graph-context-projection.mjs';
 
 test('indexed source reads preserve duplicate symbols, binary ordering, empty files and live file changes', () => {
   const db = new DatabaseSync(':memory:');
@@ -70,6 +70,82 @@ const snapshot = database => ({
   features: database.prepare('SELECT * FROM context_search_features ORDER BY context_rowid').all(),
   matches: database.prepare(`SELECT rowid,record_key,bm25(context_search) score FROM context_search
     WHERE context_search MATCH '"orchard"* OR "star"*' ORDER BY score,path,rowid`).all(),
+});
+
+const repairState = records => ({ fingerprint: hash(['environment', records.map(record => record.fingerprint)]), environmentFingerprint: 'environment' });
+const fixtureFeatures = () => ({layer:'application',module:'Area',role:'handler',isTest:0,extension:'.cs'});
+
+test('missing mirrors of verified unchanged records repair without rewriting any healthy FTS body', () => {
+  const db = fixture();
+  const records = [descriptor('a'), descriptor('b'), descriptor('c')];
+  try {
+    refresh(db, records);
+    const expected = snapshot(db);
+    db.prepare('DELETE FROM context_search_features WHERE context_rowid=2').run();
+    db.prepare('DELETE FROM context_search_identity WHERE rowid=3').run();
+    const changes = db.prepare('SELECT total_changes() changes').get().changes;
+    db.exec('BEGIN IMMEDIATE');
+    const repair = repairMissingContextMirrors(db,records,repairState(records),fixtureFeatures);
+    db.exec('COMMIT');
+    assert.deepEqual(repair,{mode:'mirror-repair',repairedFeatures:1,repairedIdentity:1});
+    assert.deepEqual(snapshot(db),expected);
+    // FTS identity updates have their own internal writes. The body FTS rows
+    // and their dense ordinals must still equal the complete original snapshot.
+    assert.ok(db.prepare('SELECT total_changes() changes').get().changes > changes);
+  } finally { db.close(); }
+});
+
+test('mirror repair rejects changed sources, invalid receipts, orphan features/identity and missing body records', () => {
+  const records = [descriptor('a'),descriptor('b'),descriptor('c')];
+  const corruptions = [
+    db => db.prepare("DELETE FROM metadata WHERE key='context_search_record_cache'").run(),
+    db => db.prepare("UPDATE metadata SET value='invalid' WHERE key='context_search_record_cache'").run(),
+    db => db.prepare("UPDATE metadata SET value=json_set(value,'$.environmentFingerprint','changed') WHERE key='context_search_record_cache'").run(),
+    db => db.prepare("UPDATE metadata SET value=json_set(value,'$.records[0]','invalid') WHERE key='context_search_record_cache'").run(),
+    db => db.prepare('INSERT INTO context_search_features VALUES (99,?,?,?,?,?,?,?)').run('code','orphan','other','other','other',0,'.cs'),
+    db => db.prepare('INSERT INTO context_search_identity(rowid,path,title) VALUES (99,?,?)').run('orphan','orphan'),
+    db => db.prepare('DELETE FROM context_search WHERE rowid=2').run(),
+  ];
+  for (const corrupt of corruptions) {
+    const db = fixture();
+    try {
+      refresh(db,records);
+      corrupt(db);
+      const before = snapshot(db);
+      assert.equal(repairMissingContextMirrors(db,records,repairState(records),fixtureFeatures),null);
+      assert.deepEqual(snapshot(db),before);
+      assert.equal(refresh(db,records).mode,'full');
+    } finally { db.close(); }
+  }
+  const db = fixture();
+  try {
+    refresh(db,records);
+    const changed = [descriptor('a','changed source'),records[1],records[2]];
+    assert.equal(repairMissingContextMirrors(db,changed,repairState(changed),fixtureFeatures),null);
+  } finally { db.close(); }
+});
+
+test('failed mirror repair rolls back complete feature rows before retrying', () => {
+  const db = fixture();
+  const records = [descriptor('a'),descriptor('b'),descriptor('c')];
+  try {
+    refresh(db,records);
+    const complete = snapshot(db);
+    db.prepare('DELETE FROM context_search_features WHERE context_rowid IN (1,2)').run();
+    const missing = snapshot(db);
+    db.exec('BEGIN IMMEDIATE');
+    let calls = 0;
+    assert.throws(() => repairMissingContextMirrors(db,records,repairState(records),() => {
+      if (++calls === 2) throw new Error('interrupted mirror repair');
+      return fixtureFeatures();
+    }),/interrupted mirror repair/);
+    db.exec('ROLLBACK');
+    assert.deepEqual(snapshot(db),missing);
+    db.exec('BEGIN IMMEDIATE');
+    repairMissingContextMirrors(db,records,repairState(records),fixtureFeatures);
+    db.exec('COMMIT');
+    assert.deepEqual(snapshot(db),complete);
+  } finally { db.close(); }
 });
 
 test('incremental projection matches full replacement including dense ordinals, ties and FTS scores', () => {

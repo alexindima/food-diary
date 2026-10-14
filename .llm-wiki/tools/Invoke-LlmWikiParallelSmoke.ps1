@@ -6,6 +6,8 @@ param(
     [switch]$AllGroups,
     [switch]$CollectFailures,
     [switch]$NoCache,
+    [ValidateSet('History', 'Catalog')]
+    [string]$Scheduling = 'History',
     [ValidateRange(1, 8)]
     [int]$MaxConcurrency = 4,
     [ValidateRange(30, 3600)]
@@ -22,6 +24,7 @@ param(
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiProcess.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeScheduling.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $planner = Join-Path $PSScriptRoot 'Invoke-LlmWikiAffectedSmoke.ps1'
 $smokeCatalog = Import-PowerShellDataFile -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/policies/affected-smoke-catalog.psd1')
@@ -45,28 +48,25 @@ function Get-SmokePriority([string]$Group) {
     if ($durationPriority.ContainsKey($Group)) { return [int]$durationPriority[$Group] }
     0
 }
+$durationEstimates = if ($Scheduling -eq 'History') {
+    Get-LlmWikiSmokeDurationEstimates -HistoryRoot (Join-Path $repositoryRoot '.artifacts/llm-wiki/parallel-smoke') -MaxConcurrency $MaxConcurrency
+} else { @{} }
 $parallelSafeGroups = @($catalogGroups | Where-Object { [bool]$_.ParallelSafe } | ForEach-Object { [string]$_.Id })
 $stableGraphSafeGroups = @($catalogGroups | Where-Object {
     -not [bool]$_.ParallelSafe -and $_.ContainsKey('StableGraphParallelSafe') -and [bool]$_.StableGraphParallelSafe
 } | ForEach-Object { [string]$_.Id })
-$parallelGroups = @(
-    $groups |
-        Where-Object { $_ -in $parallelSafeGroups } |
-        Sort-Object @{ Expression = { Get-SmokePriority $_ }; Descending = $true }, @{ Expression = { $_ } }
-)
+$parallelGroups = @(Get-LlmWikiSmokeSchedule -Groups @($groups | Where-Object { $_ -in $parallelSafeGroups }) -Priority $durationPriority -Duration $durationEstimates)
 $serialGroups = @(
     $groups |
         Where-Object { $_ -notin $parallelSafeGroups -and $_ -notin $stableGraphSafeGroups } |
         Sort-Object @{ Expression = { Get-SmokePriority $_ }; Descending = $true }, @{ Expression = { $_ } }
 )
-$stableGraphGroups = @(
-    $groups |
-        Where-Object { $_ -in $stableGraphSafeGroups } |
-        Sort-Object @{ Expression = { Get-SmokePriority $_ }; Descending = $true }, @{ Expression = { $_ } }
-)
+$stableGraphGroups = @(Get-LlmWikiSmokeSchedule -Groups @($groups | Where-Object { $_ -in $stableGraphSafeGroups }) -Priority $durationPriority -Duration $durationEstimates)
 $planResult = [pscustomobject][ordered]@{
     groupCount = $groups.Count
     maxConcurrency = $MaxConcurrency
+    scheduling = $Scheduling
+    durationEstimates = $durationEstimates
     parallelGroups = $parallelGroups
     serialGroups = $serialGroups
     stableGraphGroups = $stableGraphGroups
@@ -264,7 +264,8 @@ function Wait-SmokeBatch([string[]]$BatchGroups, [int]$Concurrency) {
             $standardOutput = [string]$item.StandardOutput.GetAwaiter().GetResult()
             $standardError = [string]$item.StandardError.GetAwaiter().GetResult()
             $duration = [Math]::Round(([DateTime]::UtcNow - $item.StartedAt).TotalSeconds, 2)
-            $groupTimings.Add([pscustomobject]@{ group = $item.Group; durationSeconds = $duration; exitCode = $exitCode })
+            $executed = -not $standardOutput.Contains('Affected tools smoke group cached:')
+            $groupTimings.Add([pscustomobject]@{ group = $item.Group; durationSeconds = $duration; exitCode = $exitCode; executed = $executed })
             $item.Process.Dispose()
             $running.Remove($item) | Out-Null
             Remove-Item -LiteralPath $item.ArgumentsPath -Force -ErrorAction SilentlyContinue

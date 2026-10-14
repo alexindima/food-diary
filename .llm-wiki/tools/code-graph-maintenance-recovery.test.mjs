@@ -26,13 +26,17 @@ test('ordinary graph build repairs missing feature and identity mirrors despite 
     const originalIdentity = db.prepare('SELECT * FROM context_search_identity WHERE rowid = ?').get(original.context_rowid);
     db.prepare('DELETE FROM context_search_identity WHERE rowid = ?').run(original.context_rowid);
     db.close();
-    build();
+    const identityRepair = build();
+    assert.equal(identityRepair.contextSearch.mode, 'mirror-repair');
+    assert.equal(identityRepair.contextSearch.repairedIdentity, 1);
     db = new DatabaseSync(path);
     assert.deepEqual(db.prepare('SELECT * FROM context_search_identity WHERE rowid = ?').get(original.context_rowid), originalIdentity);
     db.prepare('DELETE FROM context_search_features WHERE context_rowid = ?').run(original.context_rowid);
     assert.equal(inspectProjectionCompleteness(db)[0].kind, 'missing-projection-features');
     db.close();
-    build();
+    const featuresRepair = build();
+    assert.equal(featuresRepair.contextSearch.mode, 'mirror-repair');
+    assert.equal(featuresRepair.contextSearch.repairedFeatures, 1);
     db = new DatabaseSync(path);
     try {
       assert.equal(inspectProjectionCompleteness(db).length, 0);
