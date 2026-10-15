@@ -651,25 +651,17 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "c3c23cf579edec092168e33b73ce02f82d0e660ff75a1ed7966a57a98a00db41",
+      "pageSha256": "69689fae0e8d6dbf40dc5acb8923eedc7e731e6d9f36b100aa8abce7be98cf58",
       "sources": [
         {
-          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "d0d4d7693e74f8c014b55b44101960af6039b7fede814505761e01d4c727a773"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "c98cc91bb3299ac090861da3b53133cc293e377d7ca3a551dbb68d013f9b5a88"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1",
-          "sha256": "5bc46c7ccc21c5d189089837a0b7a9ef362eb1c90a84f66dbe96206ac413ffee"
+          "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
+          "sha256": "7ea787fe0e8a3a8b6438478ebe2e2ea5edf643db6c04c289ea6bc97fee7c2753"
         }
       ],
-      "reason": "Reviewed final Wiki performance navigation against current owners and regressions: fresh bounded Git history with equivalent native scoring; fresh test discovery with Unicode/exclusion/order parity and bounded parallel reads; content/runtime-addressed compiled helpers with source-root reuse, exclusive publication and checksum recovery; order-preserving Roslyn extraction and project-bounded semantic references; all ranking assertions retained through the existing read-only batch plus full single/batch parity.",
+      "reason": "CI repair changes only verification fixtures: hidden entries use dot names plus Windows attributes, preserving scanner exclusion/count guarantees; Core audit accepts the documented module-page cache opt-in while retaining its exact allowlist and gating assertion.",
       "baseRef": "HEAD",
-      "gitHead": "ae0e26f302ee508399f696e990e4289c3debe160",
-      "reviewedAtUtc": "2026-10-14T15:38:35.6524202Z"
+      "gitHead": "01ccc7bf347e67e63db2fd76bd1d29fd8d4d1e2f",
+      "reviewedAtUtc": "2026-10-15T09:10:08.2469296Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1089,17 +1081,17 @@
     {
       "pageId": "workflow-test-plan",
       "pagePath": ".llm-wiki/workflows/test-plan.md",
-      "pageSha256": "36583b8f66739cd95c1f1cd5544883d0fc2924eef26a80410247f92a70d5967e",
+      "pageSha256": "914d14e38ad1ef6a56865d712a904fa6180b69a232aeb6e9bc2e6f20455dbba4",
       "sources": [
         {
-          "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "8a54a9e42ba860e25cd7f6020b2dadee1bb6aedf2ec429e91a83845c7a4d4e27"
+          "path": ".llm-wiki/tools/Test-LlmWikiNativeTestDiscovery.ps1",
+          "sha256": "95ffa0abb18533f74df6e0e7b9856c4953931c4d60ca0d13542ae5887d2d4499"
         }
       ],
-      "reason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities.",
+      "reason": "CI repair changes only verification fixtures: hidden entries use dot names plus Windows attributes, preserving scanner exclusion/count guarantees; Core audit accepts the documented module-page cache opt-in while retaining its exact allowlist and gating assertion.",
       "baseRef": "HEAD",
-      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
-      "reviewedAtUtc": "2026-10-11T02:03:03.2691003Z"
+      "gitHead": "01ccc7bf347e67e63db2fd76bd1d29fd8d4d1e2f",
+      "reviewedAtUtc": "2026-10-15T09:10:09.4249250Z"
     },
     {
       "pageId": "workflow-trace-feature",

@@ -873,7 +873,7 @@ $taskBaselineText = Get-Content -LiteralPath (Join-Path $toolsRoot 'Manage-LlmWi
 Assert-Wiki ($wikiFacadeText -match '\$exactModuleName\.Count -gt 0 -or \$Query -match') 'Trace facade no longer routes exact backend module names before probing unrelated frontend symbols.'
 Assert-Wiki ($qualityBuilderText -match 'inputFingerprint' -and $qualityBuilderText -match 'outputFingerprint') 'Quality-index cache does not bind both inputs and generated output.'
 Assert-Wiki ($qualityBuilderText -match 'Build-LlmWikiQualityIndex\.ps1' -and $qualityBuilderText -match 'LlmWikiJson\.ps1') 'Quality-index cache fingerprint omits generator implementation inputs.'
-Assert-Wiki ($indexPipelineText -match "cacheableTools = @\('Build-LlmWikiQualityIndex\.ps1', 'Build-LlmWikiBackendContractIndex\.ps1', 'Build-LlmWikiFrontendIndex\.ps1', 'Build-LlmWikiFrontendContractIndex\.ps1', 'Build-LlmWikiArchitectureHealthIndex\.ps1'\)" -and
+Assert-Wiki ($indexPipelineText -match "cacheableTools = @\('Build-LlmWikiQualityIndex\.ps1', 'Build-LlmWikiBackendContractIndex\.ps1', 'Build-LlmWikiFrontendIndex\.ps1', 'Build-LlmWikiFrontendContractIndex\.ps1', 'Build-LlmWikiArchitectureHealthIndex\.ps1', 'Build-LlmWikiModulePages\.ps1'\)" -and
     $indexPipelineText -match '\$ReuseUnchangedChecks -and \$toolName -in \$cacheableTools') 'Index pipeline does not limit unchanged-result reuse to the approved cacheable indexes.'
 Assert-Wiki ($wikiFacadeText.Contains('DeferPossiblyConcurrentStale = $true; ReuseUnchangedChecks = $true') -and
     $wikiFacadeText.Contains('$indexArguments = @{ Check = $true; AffectedOnly = $true; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly; Area = $Area }') -and
