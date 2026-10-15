@@ -19,16 +19,18 @@ try {
         'Boundary.cs' = 'ExtraBillingHandler BillingHandlerSuffix ЖBillingHandlerЖ'
         'Capital.SPEC.TS' = 'billinghandler'
         'NonTest.ts' = 'BillingHandler'
-        'Hidden.cs' = 'BillingHandler'
+        '.Hidden.cs' = 'BillingHandler'
         'Removed.cs' = 'BillingHandler'
     }
     foreach ($entry in $cases.GetEnumerator()) { [IO.File]::WriteAllText((Join-Path $root $entry.Key), $entry.Value) }
-    $hidden = Join-Path $root 'Hidden.cs'
+    # Unix derives Hidden from a leading dot; Windows requires the attribute.
+    $hidden = Join-Path $root '.Hidden.cs'
     [IO.File]::SetAttributes($hidden, [IO.FileAttributes]::Hidden)
-    foreach ($excluded in @('bin','obj','.artifacts','node_modules')) {
+    foreach ($excluded in @('bin','obj','.artifacts','node_modules','.hidden')) {
         $directory = Join-Path $root $excluded
         $null = New-Item -ItemType Directory -Path $directory -Force
         [IO.File]::WriteAllText((Join-Path $directory 'Ignored.cs'), 'BillingHandler')
+        if ($excluded -eq '.hidden') { [IO.File]::SetAttributes($directory, [IO.FileAttributes]::Hidden) }
     }
     $scanner = Get-LlmWikiNativeTestScanner -RepositoryRoot $fixture
     if ($null -eq $scanner) { Write-Host 'Native scanner unavailable; legacy scanner remains active.'; return }
@@ -37,7 +39,7 @@ try {
         ($_.Extension -eq '.cs' -or $_.Name -match '\.(spec|test)\.ts$') -and $patterns[0].IsMatch([IO.File]::ReadAllText($_.FullName))
     } | ForEach-Object { $_.FullName.Substring($fixture.Length + 1).Replace('\','/') } | Sort-Object)
     if (($expected -join '|') -cne (($scan.Direct | Sort-Object) -join '|') -or $scan.Declared.Count -ne 3 -or $scan.Contents.Count -ne 5) {
-        throw 'Native scanner changed legacy boundaries, casing, Unicode, file filters or hidden/build exclusion.'
+        throw "Native scanner changed legacy boundaries, casing, Unicode, file filters or hidden/build exclusion. Expected direct: $($expected -join ', '); actual: $($scan.Direct -join ', '); declared: $($scan.Declared.Count) (expected 3); contents: $($scan.Contents.Count) (expected 5)."
     }
     $membersOnly = $scanner::Scan($fixture, [string[]]@('tests'), [regex[]]$patterns, [regex[]]@($null))
     $empty = $scanner::Scan($fixture, [string[]]@('tests'), $null, $null)
