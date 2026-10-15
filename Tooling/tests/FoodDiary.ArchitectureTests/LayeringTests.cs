@@ -193,6 +193,8 @@ public class LayeringTests {
             "Microsoft.Extensions.Configuration.Json",
             "Microsoft.Extensions.Configuration.UserSecrets",
             "Npgsql.EntityFrameworkCore.PostgreSQL",
+            // Temporary DataProtection security floor: docs/dependencies/overrides.md.
+            "System.Security.Cryptography.Xml",
         ];
 
         string[] packages = ProjectReferenceReader.ReadPackageReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj");

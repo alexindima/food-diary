@@ -101,6 +101,8 @@ public sealed class MailRelayArchitectureTests {
                 "OpenTelemetry.Instrumentation.AspNetCore",
                 "OpenTelemetry.Instrumentation.Http",
                 "RabbitMQ.Client",
+                // Temporary MimeKit security floor: docs/dependencies/overrides.md.
+                "System.Security.Cryptography.Pkcs",
             ],
             ["Services/MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj"] = [
                 "Microsoft.Extensions.Hosting",

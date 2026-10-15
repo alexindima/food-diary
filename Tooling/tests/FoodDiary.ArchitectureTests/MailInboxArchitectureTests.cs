@@ -97,6 +97,8 @@ public sealed class MailInboxArchitectureTests {
                 "OpenTelemetry.Extensions.Hosting",
                 "OpenTelemetry.Instrumentation.AspNetCore",
                 "SmtpServer",
+                // Temporary MimeKit security floor: docs/dependencies/overrides.md.
+                "System.Security.Cryptography.Pkcs",
             ],
             ["Services/MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj"] = [
                 "Microsoft.Extensions.Hosting",

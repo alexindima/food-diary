@@ -166,13 +166,13 @@
       "sources": [
         {
           "path": "Directory.Packages.props",
-          "sha256": "1f22c0fff4fe9f06e1ce76a8a5abac3eeec8d505a2d57c1fd8a0fda970ff40bf"
+          "sha256": "24d371f5305c09b764b1a2c5995b62f0d92a4facc17e75728857c4e4ffb14384"
         }
       ],
-      "reason": "Root Wiki commands moved verbatim into the linked AI_WORKFLOW guide; indexed documentation is current and regenerated for the development dependencies.",
+      "reason": "Reviewed the manifest-only repair: explicit cryptography security references upgrade Pkcs/Xml to 10.0.13 in their existing parent consumers. Lockfile comparison confirms no other resolved package versions change. Existing module/project edges, HTTP contracts, persistence mappings, runtime registrations, and documented ownership remain unchanged; generated package navigation is refreshed.",
       "baseRef": "HEAD",
-      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
-      "reviewedAtUtc": "2026-10-10T08:41:16.3801073Z"
+      "gitHead": "d642029847a578a9ffca927edabccd18ed2dcca7",
+      "reviewedAtUtc": "2026-10-15T07:39:52.7322665Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -678,13 +678,13 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "04d51ee4937210decec84f32681d7983f63fd1efa13df8e79f71aead0c1cd595"
+          "sha256": "eaa20f8a88ebc0933c1c0f49eb93f73b9ee34f7612dc756e9acd69d5e06fca84"
         }
       ],
-      "reason": "Task completion added its own learning, eval and instruction-outcome observations through the existing managed workflow. Reviewed the observation-only diffs and verified all three registries with their native validators; no promotion approval, applied policy, instruction scope or eval execution contract changed. Existing guides continue to describe the same review and promotion boundaries.",
+      "reason": "Reviewed the task-finish observations from the bounded dependency repair: this adds measured instruction-consumption outcomes for the existing guides without changing their authority, thresholds, workflow commands, or promoted instructions. The instruction-effectiveness page still accurately describes candidate-only feedback and explicit review before promotion.",
       "baseRef": "HEAD",
-      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
-      "reviewedAtUtc": "2026-10-14T09:48:37.4083628Z"
+      "gitHead": "d642029847a578a9ffca927edabccd18ed2dcca7",
+      "reviewedAtUtc": "2026-10-15T08:16:12.2819744Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1216,14 +1216,14 @@
       "pageSha256": "8b7ddf0a82ae6f60f4f1b215e468a49f9e0f366ac703995c5f283035fd2e6426",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "1c6dc45df7d4946f95a99225fa0e0bd39a4f3074cfb380c734890573fe1f8b45"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "dbf4f19a71b8d7ed686ebcfa44c2b0d5935915f46ad8acb9834e51319763f453"
         }
       ],
-      "reason": "SQLite remains the only provider. Missing mirrors repair only with exact current source/environment/cache fingerprints and dense records; invalid state rebuilds. Retrieval stayed at top1 483/494 and top10 494/494.",
+      "reason": "Reviewed the bounded crypto repair and guard reconciliation: only Pkcs/Xml resolved versions change; seven existing consumers declare explicit security references; three architecture guards retain exact sets with only those documented packages added. No module edges, routes, persistence behavior, runtime registrations or durable boundary policy changes. Project references are formatted by the repository formatter.",
       "baseRef": "HEAD",
-      "gitHead": "d8871639c8553673ed25ffc5274883c34615b555",
-      "reviewedAtUtc": "2026-10-14T21:58:06.3494237Z"
+      "gitHead": "d642029847a578a9ffca927edabccd18ed2dcca7",
+      "reviewedAtUtc": "2026-10-15T08:01:37.4865545Z"
     },
     {
       "pageId": "workflow.review-diff",

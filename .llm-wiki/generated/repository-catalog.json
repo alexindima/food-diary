@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 295,
-    "documentationPages": 232
+    "documentationPages": 233
   },
   "dotnet": {
     "projects": [
@@ -187,6 +187,10 @@
           },
           {
             "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
+            "version": null
+          },
+          {
+            "name": "System.Security.Cryptography.Xml",
             "version": null
           }
         ]
@@ -1200,6 +1204,10 @@
           },
           {
             "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
+            "version": null
+          },
+          {
+            "name": "System.Security.Cryptography.Pkcs",
             "version": null
           }
         ]
@@ -6320,6 +6328,10 @@
           },
           {
             "name": "System.IdentityModel.Tokens.Jwt",
+            "version": null
+          },
+          {
+            "name": "System.Security.Cryptography.Xml",
             "version": null
           }
         ]
@@ -11641,6 +11653,10 @@
           {
             "name": "System.IdentityModel.Tokens.Jwt",
             "version": null
+          },
+          {
+            "name": "System.Security.Cryptography.Xml",
+            "version": null
           }
         ]
       },
@@ -12875,6 +12891,10 @@
           {
             "name": "Npgsql",
             "version": null
+          },
+          {
+            "name": "System.Security.Cryptography.Pkcs",
+            "version": null
           }
         ]
       },
@@ -13072,6 +13092,10 @@
           },
           {
             "name": "SmtpServer",
+            "version": null
+          },
+          {
+            "name": "System.Security.Cryptography.Pkcs",
             "version": null
           }
         ]
@@ -13509,6 +13533,10 @@
           },
           {
             "name": "RabbitMQ.Client",
+            "version": null
+          },
+          {
+            "name": "System.Security.Cryptography.Pkcs",
             "version": null
           }
         ]
@@ -15944,6 +15972,7 @@
       "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
       "docs/backend/TELEGRAM_CLIENT_RUNBOOK.md",
       "docs/backend/TELEGRAM_TEST_STAND.md",
+      "docs/dependencies/overrides.md",
       "docs/experiments/content-reports-wiki-first-extraction.md",
       "docs/experiments/images-wiki-first-extraction-report.md",
       "docs/experiments/open-food-facts-wiki-first-extraction-report.md",
