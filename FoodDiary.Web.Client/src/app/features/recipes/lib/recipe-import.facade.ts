@@ -110,6 +110,9 @@ function recipeImportErrorKey(error: unknown): string {
             if (body.error === 'Ai.InvalidRecipeVideo') {
                 return 'RECIPE_MANAGE.IMPORT.VIDEO_INVALID';
             }
+            if (body.error === 'Ai.RecipeVideoUnavailable') {
+                return 'RECIPE_MANAGE.IMPORT.VIDEO_SOURCE_ERROR';
+            }
             if (body.error === 'Ai.VideoBusy') {
                 return 'RECIPE_MANAGE.IMPORT.VIDEO_BUSY';
             }

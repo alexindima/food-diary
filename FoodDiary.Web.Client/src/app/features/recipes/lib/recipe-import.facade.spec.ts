@@ -44,10 +44,13 @@ describe('recipe import', () => {
         expect(ai.importRecipe).not.toHaveBeenCalled();
         expect(facade.busy()).toBe(false);
     });
-    it('can recognize video speech from a URL without an uploaded file', async () => {
-        await facade.recognizeAsync('https://example.org/reel', '', true);
-        expect(ai.importRecipeVideo).toHaveBeenCalledWith({ sourceUrl: 'https://example.org/reel', text: null }, null);
-    });
+    it.each(['https://example.org/reel', 'https://www.youtube.com/shorts/yNgjOzU3QaU', 'https://www.youtube.com/watch?v=ncD_3gaRKbM'])(
+        'recognizes speech from %s without an uploaded file',
+        async sourceUrl => {
+            await facade.recognizeAsync(sourceUrl, '', true);
+            expect(ai.importRecipeVideo).toHaveBeenCalledWith({ sourceUrl, text: null }, null);
+        },
+    );
     it('rejects video mode with caption only or an oversized file before calling the API', async () => {
         await facade.recognizeAsync('', 'caption', true);
         expect(facade.errorKey()).toContain('VIDEO_REQUIRED');
@@ -92,6 +95,24 @@ describe('recipe import', () => {
 });
 
 describe('recipe import video validation failures', () => {
+    it('distinguishes unavailable remote audio from an invalid uploaded file and allows retry', async () => {
+        ai.importRecipeVideo.mockReturnValue(
+            throwError(
+                () =>
+                    new HttpErrorResponse({
+                        status: 502,
+                        error: { error: 'Ai.RecipeVideoUnavailable' },
+                    }),
+            ),
+        );
+        expect(await facade.recognizeAsync('https://www.youtube.com/shorts/yNgjOzU3QaU', '', true)).toBeNull();
+        expect(facade.errorKey()).toBe('RECIPE_MANAGE.IMPORT.VIDEO_SOURCE_ERROR');
+        expect(facade.busy()).toBe(false);
+
+        ai.importRecipeVideo.mockReturnValue(of({ name: 'Salad' }));
+        expect(await facade.recognizeAsync('https://www.youtube.com/shorts/yNgjOzU3QaU', '', true)).toEqual({ name: 'Salad' });
+        expect(facade.errorKey()).toBeNull();
+    });
     it.each([
         ['Ai.InvalidRecipeVideo', 'RECIPE_MANAGE.IMPORT.VIDEO_INVALID'],
         ['Ai.InvalidRecipeUrl', 'RECIPE_MANAGE.IMPORT.INVALID_ERROR'],

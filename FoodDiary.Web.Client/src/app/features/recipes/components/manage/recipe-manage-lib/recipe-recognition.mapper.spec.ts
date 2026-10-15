@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { RecipeImportResult } from '../../../../../shared/models/recipe-import.data';
+import { buildRecipeDto, createRecipeFormValue } from './recipe-manage-form.mapper';
 import { mapRecognizedRecipe } from './recipe-recognition.mapper';
 
 const OUT_OF_RANGE_STEP_INDEX = 4;
@@ -24,6 +25,29 @@ const salad: RecipeImportResult = {
 };
 
 describe('recognized recipe mapping', () => {
+    it('keeps ingredient names separate from quantity text in the editor and save payload', () => {
+        const draft = mapRecognizedRecipe(
+            {
+                ...salad,
+                ingredients: [
+                    { name: 'cornflour / cornstarch', amount: '2 tsp', stepIndex: 0 },
+                    { name: 'light soy sauce ((Note 2))', amount: '1 tbsp', stepIndex: 0 },
+                    { name: 'sesame oil', amount: '1/2 tsp', stepIndex: 0 },
+                ],
+            },
+            'Source',
+            'Author',
+        );
+        const expectedFields = [
+            ['cornflour / cornstarch', '2 tsp'],
+            ['light soy sauce ((Note 2))', '1 tbsp'],
+            ['sesame oil', '1/2 tsp'],
+        ];
+        expect(draft.steps?.[0]?.ingredients.map(item => [item.textName, item.amountText])).toEqual(expectedFields);
+        const payload = buildRecipeDto({ ...createRecipeFormValue(), ...draft }, 'recipe', 1, value => value ?? 0);
+        expect(payload.steps[0].ingredients.map(item => [item.textName, item.amountText])).toEqual(expectedFields);
+    });
+
     it('keeps quantities as text and attaches ingredients once', () => {
         const draft = mapRecognizedRecipe(salad, 'Источник', 'Со слов автора');
         expect(draft.steps?.[0]?.ingredients.map(item => item.amountText)).toEqual(['180 г', '1½ зубчика', 'щепотка']);

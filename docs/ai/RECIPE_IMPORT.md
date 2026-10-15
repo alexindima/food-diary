@@ -31,6 +31,21 @@ metadata (`og:video`, video/source tags) from public HTML. It does not execute p
 scripts or use Instagram credentials. Instagram can refuse this access; uploading
 the saved video or pasting its caption remains the fallback.
 
+Public YouTube watch, Shorts and youtu.be links resolve an MP4/WebM audio-only
+stream through pinned YoutubeExplode 6.6.2. IDs retain their case. Metadata must
+state a positive duration up to five minutes before downloading; the decoded WAV
+duration is checked again. The stream retains the 50 MiB input cap. Unknown/live,
+unavailable or restricted videos are rejected, without account cookies. Site or
+network restrictions can still prevent access. Source failures have localized
+guidance distinct from invalid media, size or duration errors.
+
+The dedicated YouTube HTTP client permits HTTPS/443 for YouTube API/page hosts
+and googlevideo.com subdomains only, including library redirects. It retains
+public-DNS connection checks and bounds metadata at four MiB and ten seconds.
+Media passes through the shared byte limit. FFmpeg still reads a generated local
+file; no downloader executable or JavaScript runtime is added. Tests mock YouTube
+transport and all AI provider calls.
+
 After checking AI consent, the backend downloads/copies the bounded file and runs
 local FFmpeg with a forced MP4/WebM demuxer and local file/pipe protocols only.
 Two request slots are admitted before multipart binding, with a 429 busy response
@@ -74,7 +89,14 @@ selection control. It has an explicit label and is disabled during recognition.
 ## Draft semantics
 
 AI extracts the stated quantities, including fractions, pinches and to-taste
-qualifiers, into text ingredients. Each source ingredient row is attached once
+qualifiers, into text ingredients. Ingredient `name` contains the food name and
+preparation notes; `amount` contains the quantity and unit, without repeating the
+name. For example, `2 tsp cornflour / cornstarch` becomes `cornflour / cornstarch`
+and `2 tsp`. The provider adapter repairs clear duplicated quantity/name text
+using recognized units without converting measurements. Correctly separated
+fields are preserved. An uncertain duplicated source line is retained in the name
+with an empty amount rather than guessing a quantity or losing source text.
+Each source ingredient row is attached once
 to its first evidenced cooking step using a zero-based `stepIndex`. Separate
 rows for the same ingredient in different mixtures retain their quantities and
 step assignments. An unknown assignment (or a legacy response without it) falls

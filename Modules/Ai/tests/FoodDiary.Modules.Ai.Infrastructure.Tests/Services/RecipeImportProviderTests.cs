@@ -141,6 +141,72 @@ public sealed class RecipeImportProviderTests {
         Assert.Single(recipe.Ingredients);
     }
 
+    [Theory]
+    [InlineData("2 tsp cornflour / cornstarch", "cornflour / cornstarch", "2 tsp")]
+    [InlineData("1 tbsp light soy sauce ((Note 2))", "light soy sauce ((Note 2))", "1 tbsp")]
+    [InlineData("1.5 tbsp dark soy sauce ((Note 3))", "dark soy sauce ((Note 3))", "1.5 tbsp")]
+    [InlineData("2 tbsp Chinese black vinegar ((Note 4))", "Chinese black vinegar ((Note 4))", "2 tbsp")]
+    [InlineData("1 tbsp Chinese cooking wine (Note 5)", "Chinese cooking wine (Note 5)", "1 tbsp")]
+    [InlineData("3 tbsp sugar (, any)", "sugar (, any)", "3 tbsp")]
+    [InlineData("1/2 tsp sesame oil", "sesame oil", "1/2 tsp")]
+    [InlineData("1 1/2 cups chicken stock", "chicken stock", "1 1/2 cups")]
+    [InlineData("½ tsp black pepper", "black pepper", "½ tsp")]
+    [InlineData("1½ зубчика чеснока", "чеснока", "1½ зубчика")]
+    [InlineData("1,5 ст. л. соевого соуса", "соевого соуса", "1,5 ст. л.")]
+    [InlineData("250ml water", "water", "250ml")]
+    [InlineData("2–3 tbsp olive oil", "olive oil", "2–3 tbsp")]
+    public async Task Provider_SeparatesDuplicatedIngredientLine(string line, string expectedName, string expectedAmount) {
+        RecipeImportDraftModel recipe = await ImportIngredientsAsync(new RecipeImportIngredientModel(line, line, StepIndex: 1));
+
+        Assert.Equal(new RecipeImportIngredientModel(expectedName, expectedAmount, StepIndex: 1), Assert.Single(recipe.Ingredients));
+        Assert.Equal(new RecipeImportNutritionModel("recipe", 2220, 112, 164, 72, 8, 0), recipe.Nutrition);
+    }
+
+    [Theory]
+    [InlineData("2 tsp cornflour", "2 tsp", "cornflour", "2 tsp")]
+    [InlineData("cornflour", "2 tsp cornflour", "cornflour", "2 tsp")]
+    [InlineData("2 tsp cornflour", null, "cornflour", "2 tsp")]
+    [InlineData("salt to taste", "salt to taste", "salt", "to taste")]
+    [InlineData("соль по вкусу", "соль по вкусу", "соль", "по вкусу")]
+    [InlineData("Salt", "Salt", "Salt", null)]
+    [InlineData("7 Up", "7 Up", "7 Up", null)]
+    [InlineData("2% milk", "2% milk", "2% milk", null)]
+    public async Task Provider_RemovesOnlyDemonstrableIngredientOverlap(
+        string name, string? amount, string expectedName, string? expectedAmount) {
+        RecipeImportDraftModel recipe = await ImportIngredientsAsync(new RecipeImportIngredientModel(name, amount, StepIndex: 1));
+
+        Assert.Equal(new RecipeImportIngredientModel(expectedName, expectedAmount, StepIndex: 1), Assert.Single(recipe.Ingredients));
+    }
+
+    [Fact]
+    public async Task Provider_PreservesSeparatedRowsAndAmbiguousQuantities() {
+        RecipeImportIngredientModel[] ingredients = [
+            new("cornflour / cornstarch", "2 tsp", 1),
+            new("light soy sauce ((Note 2))", "1 tbsp", 1),
+            new("Salt", "to taste", 1),
+            new("Chicken", "1.25 kg/3 lb", 1),
+            new("Flour", "1 cup (125 g)", 1),
+            new("2% milk", "100 ml", 1),
+            new("7 Up", "250 ml", 1),
+            new("Pepper", Amount: null, StepIndex: 1),
+            new("2 tsp cornflour", "3 tsp", 1),
+            new("1 tsp (plus 1/2 tsp) oil", Amount: null, StepIndex: 1),
+            new("cornflour / cornstarch", "1 tbsp", 0),
+        ];
+
+        RecipeImportDraftModel recipe = await ImportIngredientsAsync(ingredients);
+
+        Assert.Equal(ingredients, recipe.Ingredients);
+    }
+
+    private static async Task<RecipeImportDraftModel> ImportIngredientsAsync(params RecipeImportIngredientModel[] ingredients) {
+        var draft = new RecipeImportDraftModel("Kung Pao Chicken", Description: null, ingredients, ["Preheat", "Mix sauce"], 4, 10, 20,
+            "Nutrition per recipe", SourceUrl: null, new RecipeImportNutritionModel("recipe", 2220, 112, 164, 72, 8, 0));
+        using var handler = new ProviderHandler(JsonSerializer.Serialize(draft));
+        using var http = new HttpClient(handler);
+        return ResultAssert.Success(await CreateClient(http).ImportRecipeAsync("Recipe source", "en", CancellationToken.None)).Value;
+    }
+
     private static OpenAiFoodClient CreateClient(HttpClient http) => new(http,
         Options.Create(new OpenAiOptions { ApiKey = "unit-test-key", TextModel = "text-model" }), NullLogger<OpenAiFoodClient>.Instance);
 

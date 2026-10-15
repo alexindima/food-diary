@@ -75,7 +75,7 @@ public sealed class RecipeVideoProcessorTests {
 
     private static string FfmpegPath => Environment.GetEnvironmentVariable("FOODDIARY_TEST_FFMPEG")!;
     private static RecipeVideoProcessor CreateProcessor(HttpClient http, string ffmpeg) => new(http,
-        Options.Create(new RecipeVideoOptions { FfmpegPath = ffmpeg }), NullLogger<RecipeVideoProcessor>.Instance);
+        Options.Create(new RecipeVideoOptions { FfmpegPath = ffmpeg }), NullLogger<RecipeVideoProcessor>.Instance, new RecipeYouTubeVideoSource(http));
 
     private static async Task<byte[]> GenerateVideoAsync(bool audio, int duration, CancellationToken cancellationToken) {
         string path = Path.Combine(Path.GetTempPath(), "fooddiary-fixture-" + Guid.NewGuid().ToString("N") + ".mp4");

@@ -4,6 +4,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageVersion Include="YoutubeExplode" Version="6.6.2" />
     <PackageVersion Include="FsCheck.Xunit" Version="3.4.0" />
     <!-- Analyzers -->
     <PackageVersion Include="Meziantou.Analyzer" Version="3.0.195" />

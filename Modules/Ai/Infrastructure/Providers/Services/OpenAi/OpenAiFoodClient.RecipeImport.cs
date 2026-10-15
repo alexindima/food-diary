@@ -43,8 +43,10 @@ public sealed partial class OpenAiFoodClient {
                 return Result.Failure<OpenAiFoodClientResponse<RecipeImportDraftModel>>(
                     AiErrors.InvalidResponse("Invalid recipe draft returned by the provider."));
             }
+            RecipeImportDraftModel validDraft = draft!;
+            validDraft = validDraft with { Ingredients = validDraft.Ingredients.Select(RecipeImportIngredientNormalizer.Normalize).ToArray() };
             return Result.Success(new OpenAiFoodClientResponse<RecipeImportDraftModel>(
-                draft!, operation, _options.TextModel, ExtractUsage(json)));
+                validDraft, operation, _options.TextModel, ExtractUsage(json)));
         } catch (JsonException) {
             return Result.Failure<OpenAiFoodClientResponse<RecipeImportDraftModel>>(
                 AiErrors.InvalidResponse("Invalid recipe JSON returned by the provider."));
@@ -73,7 +75,14 @@ public sealed partial class OpenAiFoodClient {
             "Remove calls to follow, save or share. Translate recipe name, description, ingredient names and steps to the requested language. " +
             "Preserve the quantities and units actually stated, including fractions, pinches, optional and to-taste qualifiers. " +
             "Never invent quantities, portions, time, ingredients, steps or nutrition. Unknown amounts, servings and times are null. " +
-            "Amounts are display text, not estimated grams. Preserve every source ingredient row once, including the same ingredient " +
+            "Amounts are display text, not estimated grams. " +
+            "Keep ingredient name and amount separate: name contains only the food name and preparation notes; " +
+            "amount contains only the stated quantity, unit and quantity qualifiers, never the food name or the full ingredient line. " +
+            "For example, '2 tsp cornflour / cornstarch' becomes name='cornflour / cornstarch', amount='2 tsp'; " +
+            "'1 tbsp light soy sauce ((Note 2))' becomes name='light soy sauce ((Note 2))', amount='1 tbsp'; " +
+            "'2 eggs' becomes name='eggs', amount='2'; 'salt to taste' becomes name='salt', amount='to taste'. " +
+            "Never copy the same full source line into both name and amount. Preserve number-bearing food names such as '2% milk' and '7 Up'. " +
+            "Preserve every source ingredient row once, including the same ingredient " +
             "listed separately for different mixtures or steps; never merge these rows or their amounts. Ingredients may be text-only. " +
             "For each ingredient, stepIndex is the zero-based index of the first step that actually uses that source row. " +
             "Use ingredient group headings and the instructions as evidence. Preheating an oven does not use ingredients. " +
@@ -94,7 +103,8 @@ public sealed partial class OpenAiFoodClient {
               "properties":{
                 "name":{"type":"string"},"description":{"type":["string","null"]},
                 "ingredients":{"type":"array","items":{"type":"object","additionalProperties":false,
-                  "properties":{"name":{"type":"string"},"amount":{"type":["string","null"]},
+                  "properties":{"name":{"type":"string","description":"Ingredient name only, including preparation notes but excluding its quantity and unit."},
+                    "amount":{"type":["string","null"],"description":"Quantity and unit only, including quantity qualifiers; never repeat the ingredient name or full source line. Null if unstated."},
                     "stepIndex":{"type":["integer","null"]}},"required":["name","amount","stepIndex"]}},
                 "steps":{"type":"array","items":{"type":"string"}},
                 "servings":{"type":["integer","null"]},"prepMinutes":{"type":["integer","null"]},

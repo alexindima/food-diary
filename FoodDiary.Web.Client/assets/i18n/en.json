@@ -4899,11 +4899,12 @@
             "SOURCE_LABEL": "Source",
             "INGREDIENTS_LABEL": "Ingredients",
             "VIDEO_LABEL": "Recognize speech from video",
-            "VIDEO_HINT": "Use the public video URL above, or upload the saved video. Only the extracted audio is sent to AI; text shown on screen is not read.",
+            "VIDEO_HINT": "Paste a public YouTube link (including Shorts) or a direct video link above, or upload a saved video. Only audio is sent to AI; text shown on screen is not read.",
             "VIDEO_FILE_LABEL": "Video file (optional when using a URL)",
-            "VIDEO_LIMITS": "MP4 or WebM, up to 50 MB, with an audio track up to 5 minutes. Instagram may block downloads; upload the saved file in that case.",
+            "VIDEO_LIMITS": "Videos up to 5 minutes. Uploaded files: MP4 or WebM, up to 50 MB. If the site blocks access, upload a saved file.",
             "VIDEO_REQUIRED": "Add a public video URL or choose a video file.",
-            "VIDEO_INVALID": "Use MP4 or WebM up to 50 MB, with an audio track up to 5 minutes. Additional caption text must be at most 8,000 characters.",
+            "VIDEO_INVALID": "Check that the video has an audio track and is no longer than 5 minutes. Uploaded files must be MP4 or WebM, up to 50 MB; additional text must be at most 8,000 characters.",
+            "VIDEO_SOURCE_ERROR": "Could not access the video's audio. The video may be private, unavailable or blocked by the site. Try another public link, upload a saved video, or turn off speech recognition and paste the recipe text.",
             "VIDEO_BUSY": "Video recognition is busy. Try again shortly."
         },
         "TOUR": {

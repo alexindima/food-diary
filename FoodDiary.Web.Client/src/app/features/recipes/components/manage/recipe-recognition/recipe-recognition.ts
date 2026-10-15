@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiCheckboxComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiCheckboxComponent, FdUiInlineAlertComponent } from 'fd-ui-kit';
 
 import type { RecipeImportResult } from '../../../../../shared/models/recipe-import.data';
 import { RecipeClipboardSuggestion } from '../../../lib/recipe-clipboard-suggestion';
@@ -9,7 +9,7 @@ import { RecipeVideoInputComponent } from '../recipe-video-input/recipe-video-in
 
 @Component({
     selector: 'fd-recipe-recognition',
-    imports: [TranslatePipe, FdUiButtonComponent, FdUiCheckboxComponent, RecipeVideoInputComponent],
+    imports: [TranslatePipe, FdUiButtonComponent, FdUiCheckboxComponent, FdUiInlineAlertComponent, RecipeVideoInputComponent],
     templateUrl: './recipe-recognition.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [RecipeImportFacade, RecipeClipboardSuggestion],

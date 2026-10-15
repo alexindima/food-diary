@@ -13,6 +13,17 @@ public static class AiProviderRegistration {
     public static IServiceCollection AddAiProvider(this IServiceCollection services, IConfiguration configuration) {
         services.AddOptions<RecipeVideoOptions>().Bind(configuration.GetSection(RecipeVideoOptions.SectionName))
             .Validate(RecipeVideoOptions.IsValid, "RecipeVideo:FfmpegPath must not be empty.").ValidateOnStart();
+        services.AddHttpClient<RecipeYouTubeVideoSource>(client => client.Timeout = TimeSpan.FromSeconds(30))
+            .RemoveAllLoggers()
+            .AddHttpMessageHandler(() => new RecipeYouTubeHttpHandler())
+            .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
+                AllowAutoRedirect = false,
+                UseCookies = false,
+                UseProxy = false,
+                ConnectTimeout = TimeSpan.FromSeconds(5),
+                PooledConnectionLifetime = TimeSpan.FromMinutes(1),
+                ConnectCallback = RecipeSourceReader.ConnectPublicAsync,
+            });
         services.AddHttpClient<IRecipeVideoProcessor, RecipeVideoProcessor>(client => client.Timeout = TimeSpan.FromSeconds(30))
             .RemoveAllLoggers()
             .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {

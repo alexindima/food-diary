@@ -49,7 +49,7 @@
         </fd-ui-button>
     </div>
     @if (facade.errorKey()) {
-        <div class="fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm" role="alert">{{ facade.errorKey() | translate }}</div>
+        <fd-ui-inline-alert severity="danger" role="alert" [message]="facade.errorKey() | translate" />
     }
     @if (reviewKeys().length > 0) {
         <div class="fd-ui-notice-surface fd-stack fd-gap-sm" role="status">

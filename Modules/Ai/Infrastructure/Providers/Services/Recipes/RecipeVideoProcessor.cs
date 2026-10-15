@@ -13,8 +13,9 @@ using Microsoft.Extensions.Options;
 namespace FoodDiary.Modules.Ai.Infrastructure.Providers.Services.Recipes;
 
 public sealed partial class RecipeVideoProcessor(
-    HttpClient httpClient, IOptions<RecipeVideoOptions> options, ILogger<RecipeVideoProcessor> logger) : IRecipeVideoProcessor {
-    private const long MaximumVideoBytes = 50 * 1024 * 1024;
+    HttpClient httpClient, IOptions<RecipeVideoOptions> options, ILogger<RecipeVideoProcessor> logger,
+    RecipeYouTubeVideoSource youTube) : IRecipeVideoProcessor {
+    internal const long MaximumVideoBytes = 50 * 1024 * 1024;
     private const int MaximumAudioBytes = 10 * 1024 * 1024;
     private static readonly SemaphoreSlim ProcessingSlots = new(2);
 
@@ -94,6 +95,10 @@ public sealed partial class RecipeVideoProcessor(
     private async Task DownloadAsync(Uri url, Stream destination, CancellationToken cancellationToken) {
         bool inspectedPage = false;
         for (int hop = 0; hop < 5; hop++) {
+            if (RecipeYouTubeVideoSource.IsYouTubeUrl(url)) {
+                await youTube.DownloadAsync(url, destination, cancellationToken).ConfigureAwait(false);
+                return;
+            }
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.UserAgent.ParseAdd("FoodDiary-RecipeImport/1.0");
             using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
@@ -148,7 +153,7 @@ public sealed partial class RecipeVideoProcessor(
         return null;
     }
 
-    private static async Task CopyBoundedAsync(Stream source, Stream destination, CancellationToken cancellationToken) {
+    internal static async Task CopyBoundedAsync(Stream source, Stream destination, CancellationToken cancellationToken) {
         byte[] buffer = new byte[64 * 1024];
         long total = 0;
         int read;
