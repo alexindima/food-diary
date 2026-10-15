@@ -73,8 +73,8 @@ if ($unknownGroups -notcontains 'tool-contract' -or $unknownGroups -contains 'fu
     throw 'Unknown Wiki tools must use the bounded tool-contract gate, never the monolithic full-tools fallback.'
 }
 $monolithGroups = @(Get-Groups '.llm-wiki/tools/Test-LlmWikiTools.ps1')
-if ($monolithGroups -notcontains 'tool-contract' -or $monolithGroups -contains 'full-tools') {
-    throw 'Changing the legacy monolith must not trigger that same monolith during local affected verification.'
+if ($monolithGroups -notcontains 'facade-contract' -or $monolithGroups -contains 'full-tools') {
+    throw 'Changing audit assertions must run the inventory guard without replaying the monolithic audit locally.'
 }
 $learningGroups = @(Get-Groups '.llm-wiki/tools/Manage-LlmWikiLearningPromotion.ps1')
 if ($learningGroups -notcontains 'knowledge-isolation' -or $learningGroups -contains 'full-tools') {

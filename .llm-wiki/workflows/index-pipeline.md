@@ -376,6 +376,9 @@ common memory-isolation assertion run by every shard. CI uses separate checkout/
 `-AuditShard All` remains the default complete sequential audit. Run individual
 shards sequentially in a shared checkout to avoid contending on the snapshot
 lock; independent CI jobs provide their parallel isolation.
+Changing audit assertions selects the bounded `facade-contract` group locally,
+including the frozen inventory guard. Review assertion coverage before updating
+its expected hash; the full monolithic audit remains opt-in.
 
 SQLite is the only compiled-index query provider. Generated JSON snapshots remain
 inputs for the sole Node projection writer and reviewable Git artifacts. Queries

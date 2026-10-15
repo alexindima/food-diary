@@ -9,9 +9,9 @@ if ($parseErrors.Count) { throw 'Full audit has syntax errors.' }
 # Frozen from the unsharded audit at 45e8de30e. Updating assertions requires an
 # intentional inventory refresh, never silently dropping coverage during moves.
 $expected = @{
-    # Compared with 63d3954eb: linkGoogle now requires generated SDK transport
-    # and adds a POST-method assertion; its discovery and endpoint checks remain.
-    Core = @{ count = 336; hash = 'c91ff39543ed6c226d74276bccf4e3b550132ff2aa90d53cc733a356d9436d8e' }
+    # Compared with 01ccc7bf3: the exact cache allowlist assertion also includes
+    # documented module-page reuse. No assertions were removed; count is unchanged.
+    Core = @{ count = 336; hash = 'b9adb97be65d5c2c2281a60d7557cd6442fcb1a4dc04a3224103da57cd73f2d1' }
     # The lease assertion requires fresh-orphan recovery with unchanged stable
     # lock identity; its old unlink requirement is replaced. Counts remain frozen.
     Governed = @{ count = 376; hash = '992083313b939fab1e649bd4f61fe64e1d46bcfb017b0f580e3a41f6d2c2922f' }
