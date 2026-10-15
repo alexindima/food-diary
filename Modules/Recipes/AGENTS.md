@@ -10,6 +10,8 @@ Keep nested recipe/cycle validation, nutrition/rounding, servings/unit conversio
 
 ## Error ownership
 
+Account purge runs recipe cleanup after owned meals and meal plans have removed their references and before product cleanup. Keep every owner operation in the Users coordinator transaction.
+
 Feature error factories belong to their existing owner contracts; call them directly.
 The corresponding central Errors facades are retired. Preserve exact codes, messages,
 kinds and parameter formatting. Reference the owner explicitly; this grants no foreign

@@ -71,14 +71,14 @@
       "pageSha256": "22d451dce128566c39c8a170ad3287bb53c91c70b38e751a906ec296f68d05d3",
       "sources": [
         {
-          "path": "Shared/FoodDiary.Domain.Primitives/AGENTS.md",
-          "sha256": "26990e81ef5c22dcd8e59c7315decd075d9c8aeadcb26d8630cf8b5ae3f4d620"
+          "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
+          "sha256": "45a1642c88ee7e3624fbbd2cea4eaae888d3e7afd78bd60457853b182beba059"
         }
       ],
-      "reason": "Reviewed owner typed boundaries against actual unchanged snapshots and SDK outputs; four real-host OpenAPI tests and full frontend SDK verification passed. Scalar transport/storage shapes remain explicit adapters.",
+      "reason": "Reviewed the current Primary Backend page against RecipeUsageQuery, RecipeOverviewReadService and the updated composition guide. Meal-plan usage is a no-tracking scalar count in the existing host-composed reader and caller transaction; ports, module dependencies, writes, schema and transport contracts remain unchanged. The page describes these boundaries correctly. Architecture suite2272 passes; real UI/API rejects a used recipe and permits deletion after removing the plan reference.",
       "baseRef": "HEAD",
-      "gitHead": "ec53116e39102f9ca24a0d71819d62c65ae5f269",
-      "reviewedAtUtc": "2026-10-08T19:37:48.8095876Z"
+      "gitHead": "7c0537f04c8007c83771813fce48c91255472da1",
+      "reviewedAtUtc": "2026-10-15T15:28:32.6482066Z"
     },
     {
       "pageId": "system.architecture",
@@ -166,13 +166,13 @@
       "sources": [
         {
           "path": "Directory.Packages.props",
-          "sha256": "24d371f5305c09b764b1a2c5995b62f0d92a4facc17e75728857c4e4ffb14384"
+          "sha256": "1185cfcaefd6a099e860e0a0f4abd3ce6520f4d1f8569d602126a4d7b9018bce"
         }
       ],
-      "reason": "Reviewed the manifest-only repair: explicit cryptography security references upgrade Pkcs/Xml to 10.0.13 in their existing parent consumers. Lockfile comparison confirms no other resolved package versions change. Existing module/project edges, HTTP contracts, persistence mappings, runtime registrations, and documented ownership remain unchanged; generated package navigation is refreshed.",
+      "reason": "Reviewed authoritative sources for this bounded dependency extension: pinned YoutubeExplode6.6.2 is confined to AI Infrastructure with HTTPS host/redirect and public-DNS gates, bounded audio/metadata and unchanged localFFmpeg, consent, quota and API shapes.306 infrastructure tests,8 app tests and both real audio downloads verify the flow. Frontend uses existing inline-alert and EN/RU copy, observed in both themes and390px. No persistence or project-graph change; transitive lockfile changes only add the pinned dependency. Affected generated navigation matches these sources.",
       "baseRef": "HEAD",
-      "gitHead": "d642029847a578a9ffca927edabccd18ed2dcca7",
-      "reviewedAtUtc": "2026-10-15T07:39:52.7322665Z"
+      "gitHead": "7c0537f04c8007c83771813fce48c91255472da1",
+      "reviewedAtUtc": "2026-10-15T16:37:10.9104889Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -211,13 +211,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "ef57d2f1090efc66c153fd23f3ec79633fbead6d01fa2744b6939da262476342"
+          "sha256": "e7e7ab241df2d89cd35c6df0bf01df27969e7004ed2ca7e24909d60cc46d0759"
         }
       ],
-      "reason": "Recipe import adds nullable stepIndex and nutrition response fields. Routes, requests, legacy fields and existing response shapes stay compatible; old responses are covered by adapter/provider tests and regenerated SDK export snapshots pass.",
+      "reason": "Reviewed the meal-plan API snapshot and current controller/query/repository: GET meal-plans adds only optional boolean isCurated, omission preserves the combined catalog, ownership filtering remains in place, and API compatibility reports one additive parameter with zero breaking changes or behavioral restrictions. Real-host OpenAPI export, snapshot tests and regenerated SDK checks passed. The compatibility workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "727f27f699c493f90cf88fc2ea93bcfa4b2fc1ae",
-      "reviewedAtUtc": "2026-10-13T18:12:52.9097281Z"
+      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
+      "reviewedAtUtc": "2026-10-15T17:10:45.0077160Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -226,13 +226,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "412c04b5c9e6e16b4abb47901a2fb1ed0855d9a3f4c94bab7ec17c2d802e2030"
+          "sha256": "73f97f0d9e1fd8e9552424549fd0035c756961e8371e8b26355d65ee061643b6"
         }
       ],
-      "reason": "Architecture health changed only the four debt-marker line references in the quality generator; project/module edges and enforcement are unchanged.",
+      "reason": "Reviewed the regenerated architecture projection against the intentional Marketing Infrastructure to Users Contracts edge, owner purge adapter registration, persistence capability fingerprints and runtime boundary inventory. All 2272 architecture tests pass. No dependency guard was relaxed; unrelated concurrent changes are outside this audit.",
       "baseRef": "HEAD",
-      "gitHead": "d8871639c8553673ed25ffc5274883c34615b555",
-      "reviewedAtUtc": "2026-10-14T21:58:05.7063284Z"
+      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
+      "reviewedAtUtc": "2026-10-15T18:07:16.9025476Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -240,14 +240,14 @@
       "pageSha256": "58810bcafe9de0e6e09ec7ce44659b61c6c2d807da6b207e95a00aa681b51685",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "1c6dc45df7d4946f95a99225fa0e0bd39a4f3074cfb380c734890573fe1f8b45"
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "38b4d74e2707255082a7418e1db9b8d60cf79c23e36aa071bfe959da3ff5fd04"
         }
       ],
-      "reason": "Graph optimization preserves compiled contract records and complete identity/feature projections; native contract source reuse matches the authoritative scan exactly.",
+      "reason": "Reviewed R2 purge participant implementers and DI consumers against the unchanged IUserDataPurgeParticipant contract. This audit changes internal deletion ordering and owner cleanup only, with no HTTP route, serialized payload or schema change. The regenerated contract index remains navigation evidence; concurrent feature contracts were not certified by this review.",
       "baseRef": "HEAD",
-      "gitHead": "d8871639c8553673ed25ffc5274883c34615b555",
-      "reviewedAtUtc": "2026-10-14T21:58:08.9271363Z"
+      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
+      "reviewedAtUtc": "2026-10-15T18:07:18.5197364Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -805,14 +805,14 @@
       "pageSha256": "b60f38c1d4bb6323e6d9a1128ef46cbe3f2c097c8abd5f71e062f9d48a25997c",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "1c6dc45df7d4946f95a99225fa0e0bd39a4f3074cfb380c734890573fe1f8b45"
+          "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
+          "sha256": "66238fb34a662f967225003529e7f9d476519a53d9468ead22d31ee8f865e895"
         }
       ],
-      "reason": "Source text remains request-local and compiled helper caches retain their existing checksum/lease guards. Optional profiling records timings and database paths, never source contents or user payloads.",
+      "reason": "Reviewed PERSONAL_DATA_LIFECYCLE against exact-user Marketing deletion within the coordinator transaction and child-first Meals, MealPlanning and Recipes cleanup. A real local PostgreSQL fixture verifies populated-account content removal. Minimal achievement queue metadata and owned external objects were inspected and cleaned separately; anonymous and other-owner rows remain outside the exact-user predicates.",
       "baseRef": "HEAD",
-      "gitHead": "d8871639c8553673ed25ffc5274883c34615b555",
-      "reviewedAtUtc": "2026-10-14T21:58:05.1566Z"
+      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
+      "reviewedAtUtc": "2026-10-15T18:07:19.8678288Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -855,13 +855,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "15e43f0c025fe2f5125eaa299f3a68670302dc319069dce7c7cb934433c71cd1"
+          "sha256": "f3e319bc9fe3a995a1eb0c4a74dc9c41c1ad4f97ff4848963216e75ee0f89351"
         }
       ],
-      "reason": "Three paired old/new generations on identical current inputs produced byte-identical quality JSON and exact checks for every module page. Native preselection preserves substring/case ordering and live consumer-attributed coverage.",
+      "reason": "Reviewed regenerated quality navigation against executed evidence: full backend build, 2272 architecture tests, 5131 frontend tests with a final 38-test focused rerun, 240 admin tests, both frontend builds and rendered rechecks. Six Docker-backed integration tests were skipped and are reported separately from the real native PostgreSQL fixture. Static test-reference signals are not described as execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "d8871639c8553673ed25ffc5274883c34615b555",
-      "reviewedAtUtc": "2026-10-14T21:58:08.3360113Z"
+      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
+      "reviewedAtUtc": "2026-10-15T18:07:21.1983793Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -934,13 +934,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3c71180bacec6675fb677cd82a699bfd941842e49bc1ab7419fd2c84a84f885e"
+          "sha256": "ce28cb7ff5da915bc68e8fe1485d9ea8b56915007bf20c865d8b4fbfae61c859"
         }
       ],
-      "reason": "Combined delivery changes no deployment configuration, host composition, worker schedule, database schema or provider endpoint. Master recipe-import metadata remains in the established OpenAI implementation; UX changes preserve cancellation, permission lifecycle and retry ownership. Build and temporary outputs for delivery are scoped on D. Current master additionally retains cancellation-aware MailRelay logging and isolated calendar-test authentication clocks. Both are preserved through integration; there are no further frontend changes.",
-      "baseRef": "origin/master",
-      "gitHead": "a6dc6510e35576c1f6bf2f3354b14ab0740987ec",
-      "reviewedAtUtc": "2026-10-13T21:38:58.8157265Z"
+      "reason": "Reviewed API and JobManager Marketing module composition and the fifteen ordered purge participants. The new adapter uses the existing owner transaction, cancellation and exact-user filter; populated-account rollback and successful purge were observed on local PostgreSQL. No global worker batch, production service or deployment was run. The running API remains on its earlier build after an approval-policy rejection of restart.",
+      "baseRef": "HEAD",
+      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
+      "reviewedAtUtc": "2026-10-15T18:07:23.4284676Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -949,13 +949,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "15e43f0c025fe2f5125eaa299f3a68670302dc319069dce7c7cb934433c71cd1"
+          "sha256": "f3e319bc9fe3a995a1eb0c4a74dc9c41c1ad4f97ff4848963216e75ee0f89351"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "ce28cb7ff5da915bc68e8fe1485d9ea8b56915007bf20c865d8b4fbfae61c859"
         }
       ],
-      "reason": "Quality-index optimization retains complete generated evidence on identical inputs; no security rule, backend authorization or API contract changed.",
+      "reason": "Reviewed owner predicates, existing transaction boundaries and local fixture handling for the R2 cleanup changes. Observed revoked-session requests return 401 and revoked sharing requests return 403. Secrets and raw authentication links are excluded from reports. This source-impact receipt records a bounded journey review and does not claim a repository vulnerability scan or production security verdict.",
       "baseRef": "HEAD",
-      "gitHead": "d8871639c8553673ed25ffc5274883c34615b555",
-      "reviewedAtUtc": "2026-10-14T21:58:10.9744179Z"
+      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
+      "reviewedAtUtc": "2026-10-15T18:07:24.7516895Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1108,17 +1112,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "28d92b8e17af6a519fea63d0deebd5455c66765ac49c968d36c06dd00b8099f1"
+          "sha256": "ab62c4bd3d01bcfe97431b8d10e56be25fc84ef136dc405383870f88fd7c07ee"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "6d9139300b7e9fe2e2cb368ec7e052f32646c877c60ec2af337032e79aa93c7c"
+          "sha256": "4356fe89863c8e7a213ff8071a8c8a4eaa1daa9a44f0e3ef26acc945ae80d50f"
         }
       ],
-      "reason": "Reviewed generated merged indexes against the current owning sources: optional auth reset input, meal facade retry forwarding, Dashboard IANA context and master recipe-import nutrition contracts are present. Code and existing tests remain authoritative; no tracing algorithm or architectural ownership change is introduced by delivery. Current master additionally retains cancellation-aware MailRelay logging and isolated calendar-test authentication clocks. Both are preserved through integration; there are no further frontend changes.",
-      "baseRef": "origin/master",
-      "gitHead": "a6dc6510e35576c1f6bf2f3354b14ab0740987ec",
-      "reviewedAtUtc": "2026-10-13T21:39:00.3845191Z"
+      "reason": "Reviewed the frontend index and contract index after replacing the product quality expansion with an explicit info hint. Existing consumer and route tracing semantics remain unchanged; the added UI-kit button dependency is captured by the indexes and the trace guide remains current.",
+      "baseRef": "HEAD",
+      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
+      "reviewedAtUtc": "2026-10-15T17:27:26.7788544Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1202,13 +1206,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "28d92b8e17af6a519fea63d0deebd5455c66765ac49c968d36c06dd00b8099f1"
+          "sha256": "ab62c4bd3d01bcfe97431b8d10e56be25fc84ef136dc405383870f88fd7c07ee"
         }
       ],
-      "reason": "Reviewed the merged recipe summary: CALORIES_PER_SERVING label and parent per-serving calculations are preserved while locale-reactive number formatting remains. Optional reset-mode input and editor-scoped retry key preserve existing callers. Generated recipe-import SDK and owning semantic mapper changes from master are retained without handwritten generated-source edits. Current master additionally retains cancellation-aware MailRelay logging and isolated calendar-test authentication clocks. Both are preserved through integration; there are no further frontend changes.",
-      "baseRef": "origin/master",
-      "gitHead": "a6dc6510e35576c1f6bf2f3354b14ab0740987ec",
-      "reviewedAtUtc": "2026-10-13T21:38:56.8326678Z"
+      "reason": "Reviewed the refreshed NutrientBadges contract: selector and public inputs remain compatible; an existing UI-kit button and hint replace inline expansion. Product, recipe, meal and favorite-row consumer tests passed, plus desktop/mobile, keyboard and Russian/English touch checks. The frontend contract review workflow remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
+      "reviewedAtUtc": "2026-10-15T17:27:25.4221822Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1217,13 +1221,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "dbf4f19a71b8d7ed686ebcfa44c2b0d5935915f46ad8acb9834e51319763f453"
+          "sha256": "8ddda42dcfba6e418b11effcd481a9d09917f9c5f26bdfe70c2bb8ad80ee3dbc"
         }
       ],
-      "reason": "Reviewed the bounded crypto repair and guard reconciliation: only Pkcs/Xml resolved versions change; seven existing consumers declare explicit security references; three architecture guards retain exact sets with only those documented packages added. No module edges, routes, persistence behavior, runtime registrations or durable boundary policy changes. Project references are formatted by the repository formatter.",
+      "reason": "Reviewed the regenerated repository catalog and unchanged query guidance for this audit. The new Marketing purge adapter and updated scoped guides retain their current module ownership. Code, provider-backed fixture results and scoped AGENTS remain authoritative; catalog freshness is not presented as retrieval-quality or whole-repository behavioral certification.",
       "baseRef": "HEAD",
-      "gitHead": "d642029847a578a9ffca927edabccd18ed2dcca7",
-      "reviewedAtUtc": "2026-10-15T08:01:37.4865545Z"
+      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
+      "reviewedAtUtc": "2026-10-15T18:07:22.3819819Z"
     },
     {
       "pageId": "workflow.review-diff",

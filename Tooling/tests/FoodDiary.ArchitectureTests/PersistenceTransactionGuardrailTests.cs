@@ -107,6 +107,7 @@ public sealed class PersistenceTransactionGuardrailTests {
             ArchitectureTestPaths.FromRoot("Modules", "Notifications", "Infrastructure", "Persistence", "NotificationRepository.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Fasting", "Infrastructure", "Persistence", "FastingTelemetryEventRepository.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Marketing", "Infrastructure", "Persistence", "MarketingAttributionEventRepository.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Marketing", "Infrastructure", "Persistence", "MarketingUserDataPurgeParticipant.cs"),
             identityLoginEvents,
             ArchitectureTestPaths.FromRoot("Modules", "Identity", "Infrastructure", "Persistence", "Authentication", "TelegramLoginTicketStore.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Identity", "Infrastructure", "Persistence", "Authentication", "TelegramOperationStore.cs"),

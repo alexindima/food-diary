@@ -527,7 +527,7 @@ export class MealManageFormComponent implements UnsavedEditor {
         }
 
         if (this.mealSignalForm().invalid() || this.itemListItems().some(item => item.amountError !== null)) {
-            this.setGlobalError('FORM_ERRORS.UNKNOWN');
+            this.setGlobalError('FORM_ERRORS.CHECK_FIELDS');
             return;
         }
 
@@ -546,7 +546,7 @@ export class MealManageFormComponent implements UnsavedEditor {
 
     private handleInvalidSubmit(): void {
         this.itemsTouchedState.markTouched();
-        this.setGlobalError('FORM_ERRORS.UNKNOWN');
+        this.setGlobalError('FORM_ERRORS.CHECK_FIELDS');
     }
 
     private buildMealManageDto(): MealManageDto {

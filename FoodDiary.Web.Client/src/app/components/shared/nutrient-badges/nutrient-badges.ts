@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective, FdUiStopActivationDirective } from 'fd-ui-kit';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import type { QualityGrade } from '../../../shared/models/quality-grade.data';
@@ -14,13 +15,12 @@ export type NutrientBadgesQuality = {
 
 @Component({
     selector: 'fd-nutrient-badges',
-    imports: [FdUiStopActivationDirective, CommonModule, TranslatePipe, FdUiHintDirective, FdUiIconComponent],
+    imports: [FdUiStopActivationDirective, CommonModule, TranslatePipe, FdUiHintDirective, FdUiIconComponent, FdUiButtonComponent],
     templateUrl: './nutrient-badges.html',
     styleUrls: ['./nutrient-badges.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NutrientBadgesComponent {
-    protected readonly explanationVisible = signal(false);
     public readonly proteins = input.required<number>();
     public readonly fats = input.required<number>();
     public readonly carbs = input.required<number>();

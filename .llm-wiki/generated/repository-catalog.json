@@ -1640,6 +1640,10 @@
           {
             "name": "Npgsql",
             "version": null
+          },
+          {
+            "name": "YoutubeExplode",
+            "version": null
           }
         ]
       },
@@ -7442,6 +7446,7 @@
           "Modules/Marketing/Application/FoodDiary.Modules.Marketing.Application.csproj",
           "Modules/Marketing/Domain/FoodDiary.Modules.Marketing.Domain.csproj",
           "Modules/Marketing/PersistenceModel/FoodDiary.Modules.Marketing.PersistenceModel.csproj",
+          "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj"
         ],

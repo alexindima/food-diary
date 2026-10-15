@@ -31,7 +31,7 @@ using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
 namespace FoodDiary.Modules.MealPlanning.Application.Tests.MealPlans;
 
 [ExcludeFromCodeCoverage]
-public class MealPlansFeatureTests {
+public partial class MealPlansFeatureTests {
     private static ShoppingListReadModel ToReadModel(ShoppingList list) =>
         new(
             list.Id.Value,
@@ -349,7 +349,7 @@ public class MealPlansFeatureTests {
     public async Task GetMealPlans_WithDietTypeFilter_ReturnsCuratedAndUserPlans() {
         var userId = UserId.New();
         var curated = MealPlan.CreateCurated("Keto curated", description: null, DietType.Keto, 1, targetCaloriesPerDay: null);
-        var userPlan = MealPlan.CreateForUser(userId, "User plan", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
+        var userPlan = MealPlan.CreateForUser(userId, "User plan", description: null, DietType.Keto, 1, targetCaloriesPerDay: null);
         var repository = new StubMealPlanRepository(curated, curatedPlans: [curated], userPlans: [userPlan]);
         GetMealPlansQueryHandler handler = CreateMealPlansHandler(repository);
 

@@ -40,7 +40,7 @@ describe('MealPlansListPageComponent', () => {
 
         component['openPlan'](entityId<'meal-plan'>('plan-1'));
 
-        expect(router.navigate).toHaveBeenCalledWith(['/meal-plans', 'plan-1']);
+        expect(router.navigate).toHaveBeenCalledWith(['/meal-plans', 'plan-1'], { queryParamsHandling: 'preserve' });
     });
 });
 

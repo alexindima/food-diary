@@ -148,7 +148,7 @@
         "tracked:MarketingAttributionEvent"
       ],
       "reason": "Registers only the owned attribution set with the shared connection and save coordinator; standalone batched retention semantics remain unchanged.",
-      "technicalSourceSha256": "f3ce25c15c2a62d8cac9836694b1fb27aa94978e82ff0e03f287dfaf9a336818"
+      "technicalSourceSha256": "5088336026b9790e06264cc2ba5374f4d9fe1a73a2bf1fa048e27f4e653073a3"
     },
     "Modules/DailyAdvices/Infrastructure/ModuleRegistration.cs": {
       "module": "DailyAdvices",
@@ -950,17 +950,32 @@
       ],
       "reason": "Marketing-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
     },
+    "Modules/Marketing/Infrastructure/Persistence/MarketingUserDataPurgeParticipant.cs": {
+      "module": "Marketing",
+      "capabilities": [
+        "context:CurrentTransaction",
+        "context:Database",
+        "entity:MarketingAttributionEvent",
+        "tracked:MarketingAttributionEvent",
+        "write:MarketingAttributionEvent"
+      ],
+      "reason": "Marketing removes only attribution linked to the purged UserId, including when public content is reassigned. Anonymous and other users records remain under normal retention. Binds the live Users coordinator transaction; no shared SaveChanges, commit, raw SQL or foreign aggregate writes.",
+      "technicalSourceSha256": "692c8641b67f1617226eb3af5e321dfdb624911813b9d64bac6e64732cbdb278"
+    },
     "Modules/MealPlanning/Infrastructure/Persistence/MealPlanningUserDataPurgeParticipant.cs": {
       "module": "MealPlanning",
       "capabilities": [
         "context:CurrentTransaction",
         "context:Database",
+        "entity:MealPlan",
         "entity:ShoppingList",
+        "tracked:MealPlan",
         "tracked:ShoppingList",
+        "write:MealPlan",
         "write:ShoppingList"
       ],
-      "reason": "MealPlanning purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
-      "technicalSourceSha256": "ae15613ac451b583a4bebecda8bfe9ec2f78e499451c5c235a642a68665bb9e8"
+      "reason": "MealPlanning deletes only the purged owner shopping lists and meal plans before Recipes removes referenced recipes. Curated and other users plans remain. Binds the live Users transaction without saving or committing; covered by linked-reference PostgreSQL cleanup regression.",
+      "technicalSourceSha256": "b64f7edc59dcf3083e66dbc2f70aa493cffe3686a2bd88837fc9a8871a7c6825"
     },
     "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/MealPlanRepository.cs": {
       "module": "MealPlanning",
@@ -1010,7 +1025,7 @@
         "write:MealItem"
       ],
       "reason": "Meals purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
-      "technicalSourceSha256": "0f9a26f94667f36933f4e67579a1fe7a36c6540d663cf5a3739b8d505bd63a97"
+      "technicalSourceSha256": "71c1006b1765ffaea84490cb3c27ee7ace3dea022707eae15ee42553317b4ea4"
     },
     "Modules/Notifications/Infrastructure/ModuleRegistration.cs": {
       "module": "Notifications",
@@ -1194,7 +1209,7 @@
         "write:Recipe"
       ],
       "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity.",
-      "technicalSourceSha256": "95cfce400db84fc84e36cdd2b1f94116802226f93344c3b2de0b5294ca1326f5"
+      "technicalSourceSha256": "72dcaefb17d38ddb1317e3eea204e53e3ec005d9f37fd9b51b57f650c6357574"
     },
     "Modules/Usda/Infrastructure/Persistence/UsdaFoodRepository.cs": {
       "module": "Usda",
@@ -1437,11 +1452,14 @@
       "module": "ReadModelComposition",
       "capabilities": [
         "entity:MealItem",
+        "entity:MealPlan",
+        "entity:MealPlanDay",
+        "entity:MealPlanMeal",
         "entity:Product",
         "entity:Recipe",
         "entity:User"
       ],
-      "reason": "ADR 0038: host-composed no-tracking SQL projection. Recipes overview projects MealItem usage counters; author first name from Users; no foreign writes."
+      "reason": "ADR 0038: host-composed no-tracking SQL projection. Recipes overview projects diary, nested recipe and all meal-plan usage counters; author first name from Users; no foreign writes."
     },
     "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayReadService.cs": {
       "module": "ReadModelComposition",
@@ -1667,9 +1685,12 @@
       "module": "Recipes",
       "capabilities": [
         "entity:MealItem",
+        "entity:MealPlan",
+        "entity:MealPlanDay",
+        "entity:MealPlanMeal",
         "entity:Recipe"
       ],
-      "reason": "Read-only recipe usage projection across Meals and nested recipes; preserves visibility and the caller transaction."
+      "reason": "Read-only recipe usage projection across Meals, nested recipes and all meal-plan meals, including hidden catalog templates and other users' plans; preserves recipe visibility and the caller transaction."
     },
     "Modules/Recipes/Infrastructure/RecipesModuleRegistration.cs": {
       "module": "Recipes",

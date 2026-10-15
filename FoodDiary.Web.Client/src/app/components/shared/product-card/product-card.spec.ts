@@ -144,6 +144,31 @@ describe('ProductCardComponent content', () => {
 });
 
 describe('ProductCardComponent events', () => {
+    it.each(['label', 'bar', 'value'])('opens product details when clicking the quality %s', async part => {
+        const { component, el, fixture } = await setupProductCardAsync();
+        fixture.detectChanges();
+        const opened = vi.fn();
+        component.open.subscribe(opened);
+
+        el.querySelector<HTMLElement>(`.entity-card__quality-${part}`)?.click();
+
+        expect(opened).toHaveBeenCalledOnce();
+        expect(el.querySelector('.nutrient-badges__explanation')).toBeNull();
+    });
+
+    it('does not open product details when activating the quality info button', async () => {
+        const { component, el, fixture } = await setupProductCardAsync();
+        fixture.detectChanges();
+        const opened = vi.fn();
+        component.open.subscribe(opened);
+
+        el.querySelector<HTMLButtonElement>('.nutrient-badges__quality-help button')?.click();
+        fixture.detectChanges();
+
+        expect(opened).not.toHaveBeenCalled();
+        expect(el.ownerDocument.querySelector('[role="tooltip"]')?.textContent).toContain('PRODUCT_CARD.QUALITY_EXPLANATION');
+    });
+
     it('should emit open on card click', async () => {
         const { component, el, fixture } = await setupProductCardAsync();
         fixture.detectChanges();

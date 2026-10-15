@@ -10,16 +10,20 @@ namespace FoodDiary.Modules.MealPlanning.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MealPlanHttpMappingsTests {
-    [Fact]
-    public void ToQuery_MapsUserIdAndDietType() {
+    [Theory]
+    [InlineData(null)]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void ToQuery_MapsUserIdDietTypeAndSource(bool? isCurated) {
         var userId = Guid.NewGuid();
 
-        GetMealPlansQuery query = userId.ToQuery("LowCarb", 2, 25);
+        GetMealPlansQuery query = userId.ToQuery("LowCarb", 2, 25, isCurated);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal("LowCarb", query.DietType);
         Assert.Equal(2, query.Page);
         Assert.Equal(25, query.Limit);
+        Assert.Equal(isCurated, query.IsCurated);
     }
 
     [Fact]

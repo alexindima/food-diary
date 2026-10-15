@@ -3,12 +3,12 @@
   "summary": {
     "components": 497,
     "componentsWithoutDirectSpecs": 132,
-    "inputs": 1604,
-    "outputs": 553,
+    "inputs": 1606,
+    "outputs": 554,
     "apiCalls": 315,
-    "templatesWithTranslations": 358,
-    "translationKeys": 2151,
-    "consumerEdges": 1261,
+    "templatesWithTranslations": 359,
+    "translationKeys": 2154,
+    "consumerEdges": 1264,
     "consumedComponents": 316,
     "unconsumedComponents": 180
   },
@@ -8045,6 +8045,11 @@
           "name": "filtered",
           "type": "",
           "required": false
+        },
+        {
+          "name": "source",
+          "type": "MealPlanSource",
+          "required": false
         }
       ],
       "outputs": [
@@ -8070,9 +8075,18 @@
           "name": "selectedType",
           "type": "DietType | null",
           "required": true
+        },
+        {
+          "name": "selectedSource",
+          "type": "MealPlanSource",
+          "required": false
         }
       ],
       "outputs": [
+        {
+          "name": "sourceChange",
+          "type": "MealPlanSource"
+        },
         {
           "name": "filterChange",
           "type": "DietType | null"
@@ -18247,7 +18261,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/login",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 157,
+      "line": 161,
       "publicMethod": "login",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18259,7 +18273,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/register",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 167,
+      "line": 171,
       "publicMethod": "register",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18271,7 +18285,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/verify-email",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 188,
+      "line": 192,
       "publicMethod": "verifyEmail",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18283,7 +18297,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/verify-email/resend",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 197,
+      "line": 201,
       "publicMethod": "resendEmailVerification",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18295,7 +18309,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/restore",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 211,
+      "line": 215,
       "publicMethod": "restoreAccount",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18307,7 +18321,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/google",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 230,
+      "line": 234,
       "publicMethod": "loginWithGoogle",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18319,7 +18333,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/google/link",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 240,
+      "line": 244,
       "publicMethod": "linkGoogle",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18331,7 +18345,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/unlink",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 247,
+      "line": 251,
       "publicMethod": "unlinkTelegram",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18343,7 +18357,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/backup-email",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 251,
+      "line": 255,
       "publicMethod": "requestTelegramBackupEmail",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18355,7 +18369,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/backup-email/oidc/start",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 258,
+      "line": 262,
       "publicMethod": "startTelegramBackupEmail",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18367,7 +18381,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/backup-email/oidc/complete",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 264,
+      "line": 268,
       "publicMethod": "completeTelegramBackupEmail",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18379,7 +18393,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/password-reset/request",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 271,
+      "line": 275,
       "publicMethod": "requestPasswordReset",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18391,7 +18405,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/password-reset/confirm",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 283,
+      "line": 287,
       "publicMethod": "confirmPasswordReset",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18403,7 +18417,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/admin-sso/start",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 293,
+      "line": 297,
       "publicMethod": "startAdminSso",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18415,7 +18429,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/refresh",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 337,
+      "line": 341,
       "publicMethod": "refreshSessionAsync",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18427,7 +18441,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/logout",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 367,
+      "line": 371,
       "publicMethod": "onLogoutAsync",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18439,7 +18453,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/impersonation/exchange",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 521,
+      "line": 541,
       "publicMethod": "captureImpersonationCodeFromQueryAsync",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -21639,6 +21653,14 @@
     },
     {
       "feature": "meal-plans",
+      "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plan-list-sections/meal-plan-list-filters/meal-plan-list-filters.html",
+      "keys": [
+        "MEAL_PLANS.DIET_FILTER",
+        "MEAL_PLANS.SOURCE.LABEL"
+      ]
+    },
+    {
+      "feature": "meal-plans",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plans-list-page.html",
       "keys": [
         "MEAL_PLANS.ERROR_LOAD",
@@ -23421,6 +23443,7 @@
         "GENERAL.UNITS.G",
         "GENERAL.UNITS.KCAL",
         "PRODUCT_CARD.QUALITY_EXPLANATION",
+        "PRODUCT_CARD.QUALITY_HELP",
         "PRODUCT_CARD.QUALITY_SCORE"
       ]
     },
@@ -28108,6 +28131,23 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/nutrient-badges/nutrient-badges.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "ariaLabel",
+        "fill",
+        "icon",
+        "iconSize",
+        "size",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/page-header/page-header.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -32285,7 +32325,8 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-day-editor-drawer/cycle-day-editor-drawer.html",
       "occurrences": 1,
       "inputsUsed": [
-        "label"
+        "label",
+        "latestDate"
       ],
       "outputsHandled": []
     },
@@ -35064,6 +35105,19 @@
       "component": "FdUiInlineAlertComponent",
       "selector": "fd-ui-inline-alert",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "message",
+        "severity"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiInlineAlertComponent",
+      "selector": "fd-ui-inline-alert",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert.ts",
       "consumerFeature": "statistics",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
       "occurrences": 1,
@@ -37563,6 +37617,26 @@
       "component": "FdUiSegmentedToggleComponent",
       "selector": "fd-ui-segmented-toggle",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
+      "consumerFeature": "meal-plans",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plan-list-sections/meal-plan-list-filters/meal-plan-list-filters.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "appearance",
+        "ariaLabel",
+        "fitContent",
+        "options",
+        "selectedValue",
+        "shrinkItems",
+        "stackOnNarrow"
+      ],
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
+    },
+    {
+      "component": "FdUiSegmentedToggleComponent",
+      "selector": "fd-ui-segmented-toggle",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
       "consumerFeature": "meals",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-nutrition-sidebar/meal-nutrition-sidebar.html",
       "occurrences": 1,
@@ -39987,7 +40061,8 @@
       "inputsUsed": [
         "filtered",
         "isLoading",
-        "plans"
+        "plans",
+        "source"
       ],
       "outputsHandled": [
         "filterReset",
@@ -40002,10 +40077,12 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plans-list-page.html",
       "occurrences": 1,
       "inputsUsed": [
+        "selectedSource",
         "selectedType"
       ],
       "outputsHandled": [
-        "filterChange"
+        "filterChange",
+        "sourceChange"
       ]
     },
     {

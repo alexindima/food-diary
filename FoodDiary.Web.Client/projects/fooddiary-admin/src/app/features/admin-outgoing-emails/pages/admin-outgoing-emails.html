@@ -43,7 +43,7 @@
                         <tr>
                             <td>{{ mail.createdAtUtc | date: 'short' }}</td>
                             <td>{{ mail.to.join(', ') }}</td>
-                            <td>{{ `ADMIN_OUTGOING.PURPOSES.${mail.purpose}` | translate }}</td>
+                            <td>{{ purposeLabelKey(mail.purpose) | translate }}</td>
                             <td>{{ `ADMIN_OUTGOING.STATUSES.${mail.status}` | translate }}</td>
                             <td>
                                 <a routerLink="." queryParamsHandling="merge" [queryParams]="{ id: mail.id, page: 1 }">{{

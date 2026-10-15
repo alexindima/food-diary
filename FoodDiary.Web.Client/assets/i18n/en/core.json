@@ -110,10 +110,11 @@
         "MEAL": {
             "INVALID_MIN_AMOUNT": "Value must be greater than 0"
         },
-        "INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO": "Value must be greater than 0",
+        "INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO": "Value must be {{ min }} or more",
         "INVALID_MAX_AMOUNT": "Value must be {{ max }} or less",
         "MAX_LENGTH": "Use {{ requiredLength }} characters or fewer",
         "UNKNOWN": "Unknown error",
+        "CHECK_FIELDS": "Check the highlighted fields.",
         "SAVE_CONNECTION": "Could not connect to the server. Your changes are still here. Check your connection and try saving again.",
         "RATE_LIMITED": "Too many requests. Please wait a minute before trying again."
     },
@@ -596,7 +597,7 @@
         "DUPLICATE_BUTTON": "Duplicate & edit",
         "ADD_FAVORITE": "Add to favorites",
         "REMOVE_FAVORITE": "Remove from favorites",
-        "WARNING_IN_USE": "Recipe is used in meals and cannot be removed.",
+        "WARNING_IN_USE": "Recipe is already in use and cannot be removed.",
         "WARNING_NOT_OWNER": "Only the author can edit or delete this recipe.",
         "CONFIRM_DELETE": "Delete recipe",
         "CANCEL_BUTTON": "Cancel",

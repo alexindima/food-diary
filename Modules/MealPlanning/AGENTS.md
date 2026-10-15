@@ -20,6 +20,7 @@ aggregates by ProductId, scales servings, rounds amounts ToEven and creates a ne
 list on every invocation; it does not merge into an existing list. Preserve Product
 SetNull, Recipe Restrict, list/item/source cascade and scalar source IDs without
 MealPlan/Recipe foreign keys.
+Account purge deletes owned meal plans and their recipe references before recipe cleanup; curated plans and other users' plans are preserved. Users retains the coordinated transaction.
 
 The ShoppingList-to-User relationship is deliberately one-way: preserve scalar
 `UserId` and schema-equivalent `HasOne<User>().WithMany()`;

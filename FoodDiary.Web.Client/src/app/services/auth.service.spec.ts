@@ -11,6 +11,7 @@ import { LocalizationService } from '../shared/i18n/localization.service';
 import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { AuthService } from './auth.service';
 import { NavigationService } from './navigation.service';
+import { ACCOUNT_ACCESS_STORAGE_KEY } from './token-storage.service';
 
 const JWT_SECONDS_PER_MS = 1000;
 const JWT_ONE_MINUTE_SECONDS = 60;
@@ -179,6 +180,98 @@ function createSessionRemovalEvent(): StorageEvent {
     Object.defineProperty(event, 'storageArea', { value: localStorage });
     return event;
 }
+
+describe('account access across tabs', () => {
+    const premiumToken = createFakeJwt({ nameid: 'user-123', role: ['User', 'Premium'] });
+    const premiumResponse = { ...loginAuthResponse, accessToken: premiumToken };
+
+    function publishAccessSnapshot(snapshot: unknown): void {
+        const newValue = JSON.stringify(snapshot);
+        localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, newValue);
+        const event = new StorageEvent('storage', { key: ACCOUNT_ACCESS_STORAGE_KEY, newValue });
+        Object.defineProperty(event, 'storageArea', { value: localStorage });
+        window.dispatchEvent(event);
+    }
+
+    it.each([true, false])('refreshes changed roles without granting the stored hint (remembered=%s)', async remembered => {
+        authenticateForCrossTabTest(remembered);
+
+        publishAccessSnapshot(['user-123', 'Premium', 'User']);
+        publishAccessSnapshot(['user-123', 'Premium', 'User']);
+
+        expect(service.isPremium()).toBe(false);
+        const refreshed = firstValueFrom(service.refreshToken());
+        httpMock.expectOne(`${authBaseUrl}/refresh`).flush(premiumResponse);
+        await refreshed;
+
+        expect(service.isPremium()).toBe(true);
+        expect(JSON.parse(localStorage.getItem(ACCOUNT_ACCESS_STORAGE_KEY) ?? 'null')).toEqual(['user-123', 'Premium', 'User']);
+        expect(localStorage.getItem('authToken')).toBe(remembered ? premiumToken : null);
+        expect(sessionStorage.getItem('authToken')).toBe(remembered ? null : premiumToken);
+        publishAccessSnapshot(['user-123', 'Premium', 'User']);
+        httpMock.expectNone(`${authBaseUrl}/refresh`);
+    });
+
+    it('refreshes stale session-only roles when a tab is reloaded after the change', async () => {
+        authenticateForCrossTabTest(false);
+        localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, JSON.stringify(['user-123', 'Premium', 'User']));
+
+        const restored = service.restoreSessionAsync();
+        httpMock.expectOne(`${authBaseUrl}/refresh`).flush(premiumResponse);
+        await restored;
+
+        expect(service.isPremium()).toBe(true);
+        expect(service.isAuthReady()).toBe(true);
+        expect(localStorage.getItem('authToken')).toBeNull();
+    });
+
+    it.each([['other-user', 'Premium'], ['user-123', 1], null])('ignores unrelated or invalid snapshots %j', snapshot => {
+        authenticateForCrossTabTest(false);
+        publishAccessSnapshot(snapshot);
+        expect(service.isPremium()).toBe(false);
+        httpMock.expectNone(`${authBaseUrl}/refresh`);
+    });
+
+    it('keeps valid access on a transient refresh failure', async () => {
+        authenticateForCrossTabTest(false);
+        publishAccessSnapshot(['user-123', 'Premium', 'User']);
+        const refreshed = firstValueFrom(service.refreshToken());
+        httpMock.expectOne(`${authBaseUrl}/refresh`).flush('Unavailable', {
+            status: HttpStatusCode.ServiceUnavailable,
+            statusText: 'Unavailable',
+        });
+
+        expect(await refreshed).toBeNull();
+        expect(service.isAuthenticated()).toBe(true);
+        expect(service.isPremium()).toBe(false);
+        expect(service.getToken()).toBe(loginFakeToken);
+    });
+
+    it('does not replace an impersonated identity with a cookie session', () => {
+        authenticateForCrossTabTest(false);
+        sessionStorage.setItem('authToken', createFakeJwt({ nameid: 'user-123', role: 'User', fd_impersonation: 'true' }));
+        service.initializeAuth();
+
+        publishAccessSnapshot(['user-123', 'Premium', 'User']);
+
+        expect(service.isImpersonating()).toBe(true);
+        httpMock.expectNone(`${authBaseUrl}/refresh`);
+    });
+
+    it('does not restore access if another tab logs out during the refresh', async () => {
+        authenticateForCrossTabTest(false);
+        publishAccessSnapshot(['user-123', 'Premium', 'User']);
+        const refreshed = firstValueFrom(service.refreshToken());
+        const request = httpMock.expectOne(`${authBaseUrl}/refresh`);
+        localStorage.removeItem('refreshSession');
+        window.dispatchEvent(createSessionRemovalEvent());
+        request.flush(premiumResponse);
+
+        expect(await refreshed).toBeNull();
+        expect(service.isAuthenticated()).toBe(false);
+        expect(localStorage.getItem(ACCOUNT_ACCESS_STORAGE_KEY)).toBeNull();
+    });
+});
 
 describe('refresh after a new login', () => {
     it('does not replace a new user with an older refresh response', async () => {

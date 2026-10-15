@@ -30,7 +30,7 @@ import { ThemeService } from '../shared/theme/theme.service';
 import { FrontendLoggerService } from './frontend-logger.service';
 import { JwtDecoderService } from './jwt-decoder.service';
 import { NavigationService } from './navigation.service';
-import { TokenStorageService } from './token-storage.service';
+import { ACCOUNT_ACCESS_STORAGE_KEY, TokenStorageService } from './token-storage.service';
 
 const TOKEN_EXPIRATION_LEEWAY_SECONDS = 30;
 const AUTH_REFRESH_LOCK_NAME = 'fooddiary.auth.refresh';
@@ -80,6 +80,10 @@ export class AuthService {
             const storageCleared = event.key === null;
             if ((sessionRemoved || storageCleared) && this.isAuthenticated() && !this.tokenStorage.hasRefreshSession()) {
                 void this.onLogoutAsync(true);
+            }
+            if (event.key === ACCOUNT_ACCESS_STORAGE_KEY && this.hasUpdatedAccountAccess()) {
+                // The snapshot is only an invalidation hint; roles always come from the server.
+                void firstValueFrom(this.refreshToken());
             }
         });
         inject(DestroyRef).onDestroy(stopListening);
@@ -443,6 +447,7 @@ export class AuthService {
         if (userId.length > 0) {
             this.tokenStorage.setUserId(userId);
             this.userSignal.set(userId);
+            this.tokenStorage.saveAccountAccess(userId, this.jwtDecoder.extractRoles(authResponse.accessToken));
         } else {
             this.logger.warn('Auth response did not include user ID');
             this.tokenStorage.clearUserId();
@@ -467,6 +472,9 @@ export class AuthService {
         }
         this.initializeAuth();
         if (this.isAuthenticated()) {
+            if (this.hasUpdatedAccountAccess()) {
+                await firstValueFrom(this.refreshToken());
+            }
             return;
         }
 
@@ -476,6 +484,18 @@ export class AuthService {
         }
 
         await firstValueFrom(this.refreshToken());
+    }
+
+    private hasUpdatedAccountAccess(): boolean {
+        const token = this.authTokenSignal();
+        const userId = this.userSignal();
+        return (
+            token !== null &&
+            userId !== null &&
+            !this.isImpersonating() &&
+            this.tokenStorage.hasRefreshSession() &&
+            this.tokenStorage.hasUpdatedAccountAccess(userId, this.jwtDecoder.extractRoles(token))
+        );
     }
 
     private clearStoredIdentity(): void {

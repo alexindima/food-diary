@@ -33,6 +33,18 @@ describe('MealPlanListFiltersComponent', () => {
 
         expect(filterChange).toHaveBeenCalledWith('Balanced');
     });
+
+    it('visibly marks the selected diet and emits a source change', () => {
+        const fixture = createComponent('Keto');
+        const element: HTMLElement = fixture.debugElement.nativeElement as HTMLElement;
+        const active = element.querySelector('fd-ui-button button[aria-pressed="true"]');
+        expect(active?.textContent).toContain('MEAL_PLANS.DIET_TYPE.KETO');
+        expect(active?.classList.contains('fd-ui-button--primary')).toBe(true);
+        const changed = vi.fn();
+        fixture.componentInstance.sourceChange.subscribe(changed);
+        fixture.componentInstance['selectSource']('saved');
+        expect(changed).toHaveBeenCalledWith('saved');
+    });
 });
 
 function createComponent(selectedType: DietType | null): ComponentFixture<MealPlanListFiltersComponent> {

@@ -48,7 +48,26 @@ describe('MealPlanDetailPageComponent', () => {
         onSuccess();
 
         expect(facade.adopt).toHaveBeenCalledWith('plan-1', expect.any(Function));
-        expect(router.navigate).toHaveBeenCalledWith(['/meal-plans']);
+        expect(router.navigate).toHaveBeenCalledWith(['/meal-plans'], { queryParams: { source: 'saved' } });
+    });
+
+    it('prepares the diary draft without leaving the plan page', () => {
+        const plan = createMealPlan();
+        const facade = createFacadeStub(plan);
+        const router = createRouterStub();
+        const component = createComponent(facade, 'plan-1', router);
+
+        component['addMealToDiary'](plan.days[0].meals[0]);
+
+        expect(facade.addMealToDiary).toHaveBeenCalledWith(plan.days[0].meals[0]);
+        expect(router.navigate).not.toHaveBeenCalled();
+    });
+
+    it('preserves list filters when returning to the list', () => {
+        const router = createRouterStub();
+        const component = createComponent(createFacadeStub(createMealPlan()), 'plan-1', router);
+        component['goBack']();
+        expect(router.navigate).toHaveBeenCalledWith(['/meal-plans'], { queryParamsHandling: 'preserve' });
     });
 
     it('generates shopping list and navigates to shopping lists through facade callback', () => {
@@ -66,6 +85,7 @@ describe('MealPlanDetailPageComponent', () => {
 });
 
 type FacadeStub = {
+    addMealToDiary: ReturnType<typeof vi.fn>;
     pendingAction: ReturnType<typeof signal<'adopt' | 'shopping' | 'delete' | null>>;
     deletePlan: ReturnType<typeof vi.fn<(id: string, onSuccess: () => void) => void>>;
     selectedPlan: ReturnType<typeof signal<MealPlan | null>>;
@@ -115,6 +135,7 @@ function createRouterStub(): { navigate: ReturnType<typeof vi.fn<(commands: stri
 
 function createFacadeStub(plan: MealPlan | null): FacadeStub {
     return {
+        addMealToDiary: vi.fn(),
         pendingAction: signal(null),
         deletePlan: vi.fn(),
         selectedPlan: signal(plan),
@@ -149,7 +170,7 @@ describe('Meal plan deletion confirmation', () => {
         expect(facade.deletePlan).toHaveBeenCalledWith('plan-1', expect.any(Function));
         expect(router.navigate).not.toHaveBeenCalled();
         facade.deletePlan.mock.calls[0][1]();
-        expect(router.navigate).toHaveBeenCalledWith(['/meal-plans']);
+        expect(router.navigate).toHaveBeenCalledWith(['/meal-plans'], { queryParamsHandling: 'preserve' });
         facade.selectedPlan.set(createMealPlan());
         facade.deletePlan.mockClear();
         component['confirmDeletePlan']();

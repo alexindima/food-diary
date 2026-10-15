@@ -32,8 +32,9 @@ public sealed class MealPlansController(ISender mediator) : AuthorizedController
     public Task<IActionResult> GetPage(
         [FromCurrentUser] Guid userId,
         [FromQuery, MaxLength(MaximumDietTypeLength)] string? dietType = null,
-        [FromQuery] OffsetPaginationHttpQuery? pagination = null) =>
-        HandleOk(userId.ToQuery(dietType, pagination?.Page ?? 1, pagination?.Limit ?? 20), static value => new PagedHttpResponse<MealPlanSummaryHttpResponse>(
+        [FromQuery] OffsetPaginationHttpQuery? pagination = null,
+        [FromQuery] bool? isCurated = null) =>
+        HandleOk(userId.ToQuery(dietType, pagination?.Page ?? 1, pagination?.Limit ?? 20, isCurated), static value => new PagedHttpResponse<MealPlanSummaryHttpResponse>(
             value.Data.ToHttpResponse(), value.Page, value.Limit, value.TotalPages, value.TotalItems));
 
     [HttpGet("{id:guid}")]

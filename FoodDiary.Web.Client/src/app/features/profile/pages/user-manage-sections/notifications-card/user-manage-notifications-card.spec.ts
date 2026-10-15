@@ -51,6 +51,11 @@ describe('UserManageNotificationsCardComponent status state', () => {
         expect(component['pushNotificationsDeviceStatusKey']()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_SETUP_REQUIRED');
         expect(component['pushNotificationsHintKey']()).toBe('USER_MANAGE.NOTIFICATIONS_SETUP_REQUIRED_HINT');
 
+        fixture.componentRef.setInput('notificationPermission', 'granted');
+        fixture.detectChanges();
+        expect(component['pushNotificationsHintKey']()).toBe('USER_MANAGE.NOTIFICATIONS_UNAVAILABLE_HINT');
+        expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('USER_MANAGE.NOTIFICATIONS_SETUP_REQUIRED_HINT');
+
         fixture.componentRef.setInput('pushNotificationsSubscribed', true);
         fixture.detectChanges();
         expect(component['pushNotificationsDeviceStatusKey']()).toBe('USER_MANAGE.NOTIFICATIONS_STATUS_ENABLED');

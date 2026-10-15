@@ -22,11 +22,12 @@ internal sealed class MealPlanRepository(DbSet<MealPlan> plans, IMealPlanComposi
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
     public async Task<(IReadOnlyList<MealPlanSummaryReadModel> Items, int Total)> GetPageSummaryReadModelsAsync(
-        UserId userId, DietType? dietType, int page, int limit, CancellationToken cancellationToken = default) {
+        UserId userId, DietType? dietType, int page, int limit, bool? isCurated = null, CancellationToken cancellationToken = default) {
         int normalizedPage = Math.Clamp(page, 1, 10_000);
         int normalizedLimit = Math.Clamp(limit, 1, 100);
         IQueryable<MealPlan> query = plans.AsNoTracking().Where(plan =>
-            (plan.UserId == userId || plan.IsCurated) && (!dietType.HasValue || plan.DietType == dietType.Value));
+            (plan.UserId == userId || plan.IsCurated) && (!dietType.HasValue || plan.DietType == dietType.Value) &&
+            (!isCurated.HasValue || plan.IsCurated == isCurated.Value));
         int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         List<MealPlanSummaryReadModel> items = await ProjectSummaryReadModels(query
                 .OrderByDescending(plan => plan.IsCurated)

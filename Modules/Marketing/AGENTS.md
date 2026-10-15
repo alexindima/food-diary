@@ -8,6 +8,7 @@
 - Register application behavior through `AddMarketingApplication`; composition roots use Infrastructure's `AddMarketingModule` facade.
 - Keep shared `FoodDiaryDbContext`, historical migrations, and model snapshot in central Infrastructure.
 - Attribution data is private user/session-linked data. Preserve bounded retention, idempotent event IDs, unique conversion constraints, and cancellation-aware cleanup batches.
+- Physical account cleanup removes that user's attribution through Marketing's `IUserDataPurgeParticipant` in the Users coordinator transaction. Do not reassign these private records with shared content; anonymous events and other users' attribution retain their normal retention policy.
 
 ## Verification
 

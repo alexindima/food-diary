@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Modules.Meals.Infrastructure.Persistence;
 
 internal sealed class MealsUserDataPurgeParticipant(MealsDbContext context, IModuleTransactionCoordinator coordinator) : IUserDataPurgeParticipant {
-    public int Order => 50;
+    public int Order => 5;
 
     public async Task PurgeAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
         await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);

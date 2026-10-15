@@ -2,11 +2,19 @@ using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Application.Abstractions.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Infrastructure;
+using FoodDiary.Modules.Marketing.Infrastructure;
+using FoodDiary.Modules.Marketing.Domain.Entities.Tracking;
+using FoodDiary.Modules.Marketing.Domain.ValueObjects;
 using FoodDiary.Modules.Recipes.Infrastructure;
 using FoodDiary.Modules.Products.Infrastructure;
 using FoodDiary.Modules.RecentItems.Infrastructure;
 using FoodDiary.Modules.RecentItems.Domain.Enums;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
+using FoodDiary.Modules.MealPlanning.Domain.Enums;
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Infrastructure;
 using FoodDiary.Modules.MealPlanning.Infrastructure;
 using FoodDiary.Modules.Identity.Infrastructure;
@@ -111,13 +119,20 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
             servings: 2,
             imageAssetId: imageAsset.Id,
             visibility: Visibility.Private);
-        recipe.AddStep(1, "Mix ingredients", imageAssetId: imageAsset.Id);
+        recipe.AddStep(1, "Mix ingredients", imageAssetId: imageAsset.Id)
+            .AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(100));
         var shoppingList = ShoppingList.Create(deletedUser.Id, "Cleanup");
         shoppingList.AddItem("Apple", product.Id, 1, MeasurementUnit.Pcs, "Fruit", isChecked: false, 0);
         var recentItem = RecentItem.Create(deletedUser.Id, RecentItemType.Product, product.Id.Value);
         var aiUsage = AiUsage.Create(deletedUser.Id, "vision", "gpt-4.1-mini", 10, 20, 30);
         var recordedAt = new DateTime(2026, 7, 26, 8, 0, 0, DateTimeKind.Utc);
         var meal = FoodDiary.Modules.Meals.Domain.Entities.Meal.Create(deletedUser.Id, recordedAt);
+        meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(100));
+        meal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(1));
+        var ownedPlan = MealPlan.CreateForUser(deletedUser.Id, "Owned plan", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
+        ownedPlan.AddDay(1).AddMeal(MealType.Dinner, recipe.Id, servings: 1);
+        var survivingPlan = MealPlan.CreateForUser(survivingUser.Id, "Surviving plan", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
+        var curatedPlan = MealPlan.CreateCurated("Catalog plan", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         var hydration = HydrationEntry.Create(deletedUser.Id, recordedAt, 250);
         var weight = WeightEntry.Create(deletedUser.Id, recordedAt, 72.5);
         var waist = WaistEntry.Create(deletedUser.Id, recordedAt, 84);
@@ -139,6 +154,13 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         var authoredTask = ClientTask.Create(deletedUser.Id, survivingUser.Id, "Review plan", details: null, dueAtUtc: null);
 
         context.Users.AddRange(deletedUser, survivingUser);
+        context.MarketingAttributionEvents.AddRange(
+            MarketingAttributionEvent.Create("signup_completed", recordedAt, deletedUser.Id,
+                new AnonymousVisitorId("deleted-visitor"), new MarketingSessionId("deleted-session"), "/"),
+            MarketingAttributionEvent.Create("signup_completed", recordedAt, survivingUser.Id,
+                new AnonymousVisitorId("survivor-visitor"), new MarketingSessionId("survivor-session"), "/"),
+            MarketingAttributionEvent.Create("landing_view", recordedAt, userId: null,
+                new AnonymousVisitorId("anonymous-visitor"), new MarketingSessionId("anonymous-session"), "/"));
         context.AdminImpersonationSessions.AddRange(targetedSession, actorSession);
         context.ClientTasks.AddRange(assignedTask, authoredTask);
         context.ImageAssets.Add(imageAsset);
@@ -148,6 +170,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         context.RecentItems.Add(recentItem);
         context.AiUsages.Add(aiUsage);
         context.Meals.Add(meal);
+        context.MealPlans.AddRange(ownedPlan, survivingPlan, curatedPlan);
         context.HydrationEntries.Add(hydration);
         context.WeightEntries.Add(weight);
         context.WaistEntries.Add(waist);
@@ -173,6 +196,9 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
             """).SingleAsync());
         Assert.Equal(survivorOperation.Value, Assert.Single(await telegram.ListReadyAsync(123, CancellationToken.None)));
         Assert.False(await verificationContext.Users.AnyAsync(user => user.Id == deletedUser.Id));
+        Assert.False(await verificationContext.MarketingAttributionEvents.AnyAsync(item => item.UserId == deletedUser.Id));
+        Assert.True(await verificationContext.MarketingAttributionEvents.AnyAsync(item => item.UserId == survivingUser.Id));
+        Assert.True(await verificationContext.MarketingAttributionEvents.AnyAsync(item => item.UserId == null));
         Assert.False(await verificationContext.Products.AnyAsync());
         Assert.False(await verificationContext.Recipes.AnyAsync());
         Assert.False(await verificationContext.RecipeSteps.AnyAsync());
@@ -182,6 +208,9 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         Assert.False(await verificationContext.RecentItems.AnyAsync());
         Assert.False(await verificationContext.AiUsages.AnyAsync());
         Assert.False(await verificationContext.Meals.AnyAsync());
+        Assert.False(await verificationContext.MealPlans.AnyAsync(plan => plan.Id == ownedPlan.Id));
+        Assert.True(await verificationContext.MealPlans.AnyAsync(plan => plan.Id == survivingPlan.Id));
+        Assert.True(await verificationContext.MealPlans.AnyAsync(plan => plan.Id == curatedPlan.Id));
         Assert.False(await verificationContext.HydrationEntries.AnyAsync());
         Assert.False(await verificationContext.WeightEntries.AnyAsync());
         Assert.False(await verificationContext.WaistEntries.AnyAsync());
@@ -342,12 +371,13 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         services.AddMealsPersistence();
         services.AddProductsPersistence();
         services.AddRecentItemsModule();
+        services.AddMarketingModule();
         services.AddRecipesPersistence();
         services.AddSingleton(outbox);
         if (extra is not null) { services.AddSingleton(extra); }
         ServiceProvider provider = services.BuildServiceProvider();
         IUserDataPurgeParticipant[] participants = [.. provider.GetServices<IUserDataPurgeParticipant>()];
-        Assert.Equal(extra is null ? 14 : 15, participants.Length);
+        Assert.Equal(extra is null ? 15 : 16, participants.Length);
         service = new UserCleanupService(provider.GetRequiredService<UsersDbContext>(), participants, NullLogger<UserCleanupService>.Instance,
             provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(),
             new FoodDiary.Persistence.Runtime.Persistence.Shared.EfModuleScopeGuard(context));

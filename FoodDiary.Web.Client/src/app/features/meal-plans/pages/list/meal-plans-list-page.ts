@@ -58,7 +58,7 @@ export class MealPlansListPageComponent {
     }
 
     protected openPlan(id: MealPlanId): void {
-        void this.router.navigate(['/meal-plans', id]);
+        void this.router.navigate(['/meal-plans', id], { queryParamsHandling: 'preserve' });
     }
 
     protected startMealPlansListTour(force = true): void {

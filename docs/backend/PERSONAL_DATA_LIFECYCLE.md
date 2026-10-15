@@ -32,6 +32,8 @@ All values are validated options and can be shortened to meet a deployment's pol
 
 `UserCleanupService` runs each user purge in its own database transaction. It removes or reassigns user-owned public catalog content according to configuration, deletes user-dependent diary/tracking data, queues object-store deletion before removing image metadata, and finally removes roles and the user row. A failure rolls back that user's transaction and processing continues with the next account.
 
+Owned meal items and meal plans are removed before recipes, and recipes before products, so retained source foreign keys do not block the delete path. User-linked marketing attribution is removed in the same transaction; its normal 365-day retention does not retain records linked to a physically purged account. Anonymous attribution and other users' records keep their normal retention policy.
+
 The database foreign-key model is the final safety net for dependent feature rows. Schema changes that add a user-linked table must update cleanup coverage before release.
 
 ## Operational evidence

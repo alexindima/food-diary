@@ -29310,6 +29310,13 @@
                         }
                     },
                     {
+                        "in": "query",
+                        "name": "isCurated",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
                         "in": "path",
                         "name": "version",
                         "required": true,

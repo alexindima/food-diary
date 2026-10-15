@@ -13,7 +13,7 @@ import { MealPlanFacade } from '../meal-plan.facade';
 import { type MealPlanListQuery, mealPlanListQueryKey } from './meal-plan-list-query';
 import { MEAL_PLAN_LIST_QUERY_STATE } from './meal-plan-list-query-state';
 
-const initial: MealPlanListQuery = { page: 2, dietType: 'Balanced' };
+const initial: MealPlanListQuery = { page: 2, dietType: 'Balanced', source: 'all' };
 const current = signal(initial);
 const changes = new Subject<MealPlanListQuery>();
 const getPage = vi.fn();
@@ -58,11 +58,35 @@ beforeEach(() => {
     });
 });
 describe('MealPlanFacade route list state', () => {
+    it('switches to saved plans on page one while keeping the diet and excluding previous counts', async () => {
+        const facade = TestBed.inject(MealPlanFacade);
+        await settleAsync();
+        const pending = new Subject<PageOf<MealPlanSummary>>();
+        getPage.mockReturnValueOnce(pending);
+        facade.filterBySource('saved');
+        await settleAsync();
+        expect(current()).toEqual({ page: 1, dietType: 'Balanced', source: 'saved' });
+        expect(getPage).toHaveBeenLastCalledWith('Balanced', 1, PAGE_SIZE, false);
+        expect(facade.totalItems()).toBe(0);
+        pending.next({ ...response(1, 1), totalItems: 1 });
+        pending.complete();
+        await settleAsync();
+        expect(facade.totalItems()).toBe(1);
+        facade.loadPlans('Keto');
+        await settleAsync();
+        expect(getPage).toHaveBeenLastCalledWith('Keto', 1, PAGE_SIZE, false);
+        const back: MealPlanListQuery = { page: 2, dietType: 'Balanced', source: 'curated' };
+        current.set(back);
+        changes.next(back);
+        await settleAsync();
+        expect(facade.sourceFilter()).toBe('curated');
+        expect(getPage).toHaveBeenLastCalledWith('Balanced', 2, PAGE_SIZE, true);
+    });
     it('restores URL diet/page and does not reset on initial load', async () => {
         const f = TestBed.inject(MealPlanFacade);
         f.loadPlans();
         await settleAsync();
-        expect(getPage).toHaveBeenLastCalledWith('Balanced', 2, PAGE_SIZE);
+        expect(getPage).toHaveBeenLastCalledWith('Balanced', 2, PAGE_SIZE, undefined);
         expect(f.pageIndex()).toBe(1);
     });
     it('resets a new diet to page one and preserves a valid empty result without looping', async () => {
@@ -71,7 +95,7 @@ describe('MealPlanFacade route list state', () => {
         getPage.mockImplementation((_diet: string, page: number) => of({ ...response(page, 0), totalItems: 0 }));
         f.loadPlans('Keto');
         await settleAsync();
-        expect(current()).toEqual({ page: 1, dietType: 'Keto' });
+        expect(current()).toEqual({ page: 1, dietType: 'Keto', source: 'all' });
         const count = getPage.mock.calls.length;
         await settleAsync();
         expect(getPage).toHaveBeenCalledTimes(count);
@@ -81,15 +105,15 @@ describe('MealPlanFacade route list state', () => {
         TestBed.inject(MealPlanFacade);
         await settleAsync();
         await settleAsync();
-        expect(writeAsync).toHaveBeenCalledWith({ page: 1, dietType: 'Balanced' }, { replaceUrl: true });
-        expect(getPage).toHaveBeenLastCalledWith('Balanced', 1, PAGE_SIZE);
+        expect(writeAsync).toHaveBeenCalledWith({ page: 1, dietType: 'Balanced', source: 'all' }, { replaceUrl: true });
+        expect(getPage).toHaveBeenLastCalledWith('Balanced', 1, PAGE_SIZE, undefined);
     });
     it('never lets an older response overwrite a newer browser diet', async () => {
         const old = new Subject<PageOf<MealPlanSummary>>();
         getPage.mockReturnValueOnce(old);
         TestBed.inject(MealPlanFacade);
         await settleAsync();
-        const next: MealPlanListQuery = { page: 1, dietType: 'Keto' };
+        const next: MealPlanListQuery = { page: 1, dietType: 'Keto', source: 'all' };
         current.set(next);
         changes.next(next);
         await settleAsync();
@@ -110,7 +134,7 @@ describe('MealPlanFacade result identity', () => {
         expect(facade.totalItems()).toBe(TOTAL_ITEMS);
         const pending = new Subject<PageOf<MealPlanSummary>>();
         getPage.mockReturnValueOnce(pending);
-        const next: MealPlanListQuery = { page: 1, dietType: 'Keto' };
+        const next: MealPlanListQuery = { page: 1, dietType: 'Keto', source: 'all' };
         current.set(next);
         changes.next(next);
         await settleAsync();

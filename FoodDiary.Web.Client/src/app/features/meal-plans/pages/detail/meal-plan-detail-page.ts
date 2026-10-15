@@ -88,7 +88,9 @@ export class MealPlanDetailPageComponent {
             )
             .subscribe(confirmed => {
                 if (confirmed === true && this.facade.selectedPlan()?.id === plan.id) {
-                    this.facade.deletePlan(plan.id, () => void this.router.navigate(['/meal-plans']));
+                    this.facade.deletePlan(plan.id, () => {
+                        this.goBack();
+                    });
                 }
             });
     }
@@ -98,7 +100,7 @@ export class MealPlanDetailPageComponent {
         if (plan === null) {
             return;
         }
-        this.facade.adopt(plan.id, () => void this.router.navigate(['/meal-plans']));
+        this.facade.adopt(plan.id, () => void this.router.navigate(['/meal-plans'], { queryParams: { source: 'saved' } }));
     }
 
     protected generateShoppingList(): void {
@@ -110,11 +112,11 @@ export class MealPlanDetailPageComponent {
     }
 
     protected addMealToDiary(meal: MealPlanMeal): void {
-        this.facade.addMealToDiary(meal, () => void this.router.navigate(['/dashboard']));
+        this.facade.addMealToDiary(meal);
     }
 
     protected goBack(): void {
-        void this.router.navigate(['/meal-plans']);
+        void this.router.navigate(['/meal-plans'], { queryParamsHandling: 'preserve' });
     }
 
     protected startMealPlanDetailTour(force = true): void {

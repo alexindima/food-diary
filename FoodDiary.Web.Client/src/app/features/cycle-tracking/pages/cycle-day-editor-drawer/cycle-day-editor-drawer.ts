@@ -1,5 +1,5 @@
 import { CdkTrapFocus } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { type FieldTree, FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -20,6 +20,7 @@ import {
     type CycleFlowLevel,
     type OvulationTestResult,
 } from '../../../../shared/models/cycle.data';
+import { CurrentLocalDayService } from '../../../../shared/platform/current-local-day.service';
 import { CYCLE_SYMPTOM_FIELDS, type CycleSymptomField } from '../../lib/cycle-tracking.config';
 import type { CycleDayFormModel } from '../../lib/cycle-tracking.facade';
 
@@ -50,6 +51,8 @@ const SYMPTOM_SEVERITY_SEVERE_VALUE = String(SYMPTOM_SEVERITY_SEVERE);
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CycleDayEditorDrawerComponent {
+    protected readonly today = inject(CurrentLocalDayService).today;
+
     public readonly dayForm = input.required<FieldTree<CycleDayFormModel>>();
     public readonly isSaving = input.required<boolean>();
     public readonly saveError = input<string | null>(null);

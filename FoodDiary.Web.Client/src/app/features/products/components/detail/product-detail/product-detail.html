@@ -29,7 +29,7 @@
         </div>
     </header>
 
-    <div class="product-detail fd-stack fd-gap-lg">
+    <div class="product-detail" [class.product-detail--with-photo]="images().length > 0">
         @if (images().length > 0) {
             <fd-public-product-gallery [images]="images()" [name]="product.name" />
         }

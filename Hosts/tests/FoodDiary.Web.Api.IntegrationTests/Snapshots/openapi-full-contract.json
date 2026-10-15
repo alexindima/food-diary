@@ -13224,6 +13224,12 @@
               "Required": false,
               "Type": "string",
               "MaxLength": 32
+            },
+            {
+              "Name": "isCurated",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
             }
           ],
           "PathParameters": [

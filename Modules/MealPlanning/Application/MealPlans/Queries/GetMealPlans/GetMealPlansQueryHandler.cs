@@ -30,7 +30,7 @@ public sealed class GetMealPlansQueryHandler(
         DietType? dietTypeFilter = EnumFilterParser.ParseOptional<DietType>(query.DietType);
 
         (IReadOnlyList<MealPlanSummaryReadModel> items, int total) = await mealPlanRepository
-            .GetPageSummaryReadModelsAsync(userIdResult.Value, dietTypeFilter, query.Page, query.Limit, cancellationToken)
+            .GetPageSummaryReadModelsAsync(userIdResult.Value, dietTypeFilter, query.Page, query.Limit, query.IsCurated, cancellationToken)
             .ConfigureAwait(false);
         int totalPages = total == 0 ? 0 : (int)Math.Ceiling(total / (double)query.Limit);
         return Result.Success(new PagedResponse<MealPlanSummaryModel>(

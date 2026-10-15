@@ -96,7 +96,9 @@ export class UserManageNotificationsCardComponent {
             return 'USER_MANAGE.NOTIFICATIONS_ENABLED_HINT';
         }
 
-        return 'USER_MANAGE.NOTIFICATIONS_SETUP_REQUIRED_HINT';
+        return this.notificationPermission() === 'granted'
+            ? 'USER_MANAGE.NOTIFICATIONS_UNAVAILABLE_HINT'
+            : 'USER_MANAGE.NOTIFICATIONS_SETUP_REQUIRED_HINT';
     });
     protected readonly activeFastingReminderPresetId = computed(() => {
         const presetId = resolveFastingReminderPresetId(this.fastingCheckInReminderHours(), this.fastingCheckInFollowUpReminderHours());

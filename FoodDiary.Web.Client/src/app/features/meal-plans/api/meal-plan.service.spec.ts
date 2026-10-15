@@ -30,14 +30,16 @@ describe('MealPlanService', () => {
         httpMock.verify();
     });
 
-    it('loads meal plans with optional diet type filter', () => {
+    it.each([undefined, true, false])('loads meal plans with diet and optional source %s', isCurated => {
         const page = { data: [createSummary()], page: 1, limit: 50, totalPages: 1, totalItems: 1 };
 
-        service.getPage('Keto').subscribe(result => {
+        service.getPage('Keto', 1, page.limit, isCurated).subscribe(result => {
             expect(result).toEqual(page);
         });
 
-        const request = httpMock.expectOne(`${environment.apiUrls.mealPlans}?dietType=Keto&page=1&limit=50`);
+        const request = httpMock.expectOne(req => req.url === environment.apiUrls.mealPlans && req.params.get('dietType') === 'Keto');
+        expect(request.request.params.get('isCurated')).toBe(isCurated === undefined ? null : String(isCurated));
+        expect(request.request.params.get('page')).toBe('1');
         expect(request.request.method).toBe('GET');
         request.flush(page);
     });

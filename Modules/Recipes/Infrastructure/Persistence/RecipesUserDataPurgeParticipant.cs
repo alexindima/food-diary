@@ -11,7 +11,7 @@ internal sealed class RecipesUserDataPurgeParticipant(
     RecipesDbContext context,
     IModuleTransactionCoordinator coordinator,
     IImageAssetOwnershipService imageAssetOwnershipService) : IUserDataPurgeParticipant {
-    public int Order => 20;
+    public int Order => 7;
 
     public async Task PurgeAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
         await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);

@@ -9,6 +9,7 @@ live in Domain.Contracts. Use canonical project and folder namespaces. Keep fore
 User/Product/Recipe/Image relationships scalar and preserve database constraints,
 nutrition snapshots and source fallback behavior. Historical migrations remain central.
 Hosts compose AddMealsModule; JobManager composes AddMealsPersistence only.
+Account purge removes owned meal items before recipe and product owners remove their referenced sources, within the existing Users transaction.
 
 ## Error ownership
 

@@ -23,6 +23,9 @@ const DEFAULT_CARBS = 50;
 const DEFAULT_FIBER = 5;
 const DEFAULT_ITEM_COUNT = 2;
 const DEFAULT_PAGE = 1;
+const OUTSIDE_HISTORY_PAGE = 999;
+const POPULATED_HISTORY_COUNT = 25;
+const LAST_HISTORY_PAGE = 3;
 const NEXT_PAGE = 2;
 const TEST_YEAR = 2026;
 const MAY_INDEX = 4;
@@ -94,7 +97,7 @@ function createPageOf(meals: Meal[], page = DEFAULT_PAGE): PageOf<Meal> {
         page,
         limit: MEAL_LIST_PAGE_SIZE,
         totalItems: meals.length,
-        totalPages: DEFAULT_PAGE,
+        totalPages: page,
     };
 }
 
@@ -438,6 +441,45 @@ function registerListFailureTests(): void {
 }
 
 function registerListRaceTests(): void {
+    it.each([true, false])('restores an out-of-range page with initial overview=%s', includeFavorites => {
+        const lastMeal = createMeal({ id: entityId<'meal'>('last-page-meal') });
+        const outside = createOverview([]);
+        outside.allMeals = {
+            data: [],
+            page: OUTSIDE_HISTORY_PAGE,
+            limit: MEAL_LIST_PAGE_SIZE,
+            totalItems: POPULATED_HISTORY_COUNT,
+            totalPages: LAST_HISTORY_PAGE,
+        };
+        const last = createOverview([lastMeal]);
+        last.allMeals = {
+            data: [lastMeal],
+            page: LAST_HISTORY_PAGE,
+            limit: MEAL_LIST_PAGE_SIZE,
+            totalItems: POPULATED_HISTORY_COUNT,
+            totalPages: LAST_HISTORY_PAGE,
+        };
+        mealService.queryOverview.mockReturnValueOnce(of(outside)).mockReturnValueOnce(of(last));
+        const filters = emptyMealFilters({ hasImage: false });
+        const request = includeFavorites
+            ? facade.loadInitialOverview(filters, OUTSIDE_HISTORY_PAGE)
+            : facade.loadMeals(OUTSIDE_HISTORY_PAGE, filters);
+        request.subscribe();
+
+        expect(facade.mealData.items()).toEqual([lastMeal]);
+        expect(facade.currentPageIndex()).toBe(2);
+        expect(facade.mealData.totalItems).toBe(POPULATED_HISTORY_COUNT);
+        expect(mealService.queryOverview).toHaveBeenLastCalledWith(
+            LAST_HISTORY_PAGE,
+            MEAL_LIST_PAGE_SIZE,
+            { hasImage: false },
+            {
+                limit: MEAL_LIST_OVERVIEW_FAVORITES_LIMIT,
+                include: includeFavorites,
+            },
+        );
+    });
+
     it('cancels an initial overview when a newer filtered page is requested', () => {
         const old = new Subject<MealOverview>();
         const current = new Subject<MealOverview>();

@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4581,
-    "symbols": 4516,
+    "sourceFiles": 4585,
+    "symbols": 4520,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2328,
+      "class": 2332,
       "enum": 71,
       "interface": 413,
       "record": 1563,
@@ -27,12 +27,12 @@
       "Entity": 102,
       "Event": 19,
       "Factory": 15,
-      "Handler": 8,
+      "Handler": 9,
       "LookupRepository": 3,
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1857,
+      "Other": 1860,
       "Query": 301,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
@@ -6166,6 +6166,13 @@
       "line": 5
     },
     {
+      "name": "RecipeImportIngredientNormalizer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/RecipeImportIngredientNormalizer.cs",
+      "line": 5
+    },
+    {
       "name": "RecipeSourceReader",
       "kind": "class",
       "role": "Other",
@@ -6185,6 +6192,20 @@
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoProcessor.cs",
       "line": 14
+    },
+    {
+      "name": "RecipeYouTubeHttpHandler",
+      "kind": "class",
+      "role": "Handler",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeYouTubeHttpHandler.cs",
+      "line": 4
+    },
+    {
+      "name": "RecipeYouTubeVideoSource",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeYouTubeVideoSource.cs",
+      "line": 7
     },
     {
       "name": "AiPersistenceModelRegistration",
@@ -18329,7 +18350,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Marketing/Infrastructure/ModuleRegistration.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "MarketingAttributionEventRepository",
@@ -18351,6 +18372,13 @@
       "role": "Other",
       "path": "Modules/Marketing/Infrastructure/Persistence/MarketingDbContext.cs",
       "line": 6
+    },
+    {
+      "name": "MarketingUserDataPurgeParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Marketing/Infrastructure/Persistence/MarketingUserDataPurgeParticipant.cs",
+      "line": 7
     },
     {
       "name": "MarketingAttributionEventConfiguration",

@@ -30,6 +30,7 @@ const TOTAL_CALORIES = 300;
 const UPDATED_TOTAL_CALORIES = 450;
 const NORMALIZED_SATIETY_LEVEL = 5;
 const STALE_RECIPE_AMOUNT = 999;
+const EXCESS_MANUAL_NUTRIENT = 10_001;
 const EMPTY_TOTALS: NutritionTotals = {
     calories: 0,
     proteins: 0,
@@ -174,7 +175,7 @@ describe('MealManageFormComponent submit behavior', () => {
         await waitForAsyncTasksAsync();
 
         expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
-        expect(component['globalError']()).toBe('FORM_ERRORS.UNKNOWN');
+        expect(component['globalError']()).toBe('FORM_ERRORS.CHECK_FIELDS');
     });
 
     it('should show backend validation message when submit fails', async () => {
@@ -727,6 +728,30 @@ describe('MealManageForm manual item dialog', () => {
     });
 });
 
+describe('Meal form native nutrition validation messages', () => {
+    it.each([{ manualCalories: -1 }, { manualFiber: -1 }, { manualProteins: EXCESS_MANUAL_NUTRIENT }])(
+        'explains invalid manual values on native submission: %j',
+        async patch => {
+            const { component, fixture, mealManageFacade } = await setupComponentAsync();
+            setValidManualMeal(component);
+            component['patchMealFormModel'](patch);
+            fixture.detectChanges();
+
+            (fixture.nativeElement as HTMLElement)
+                .querySelector('form')
+                ?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(component['globalError']()).toBe('FORM_ERRORS.CHECK_FIELDS');
+            expect((fixture.nativeElement as HTMLElement).querySelector('.meal-manage__footer-error')?.textContent).toContain(
+                'FORM_ERRORS.CHECK_FIELDS',
+            );
+            expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+        },
+    );
+});
+
 describe('Meal form manual nutrition validation', () => {
     it.each([null, -1, Number.NaN, Number.POSITIVE_INFINITY])('does not submit invalid manual calories %s', async manualCalories => {
         const { component, fixture, mealManageFacade } = await setupComponentAsync();
@@ -769,7 +794,7 @@ describe('Meal form manual nutrition validation', () => {
     });
 
     it('submits explicit zero calories and macros as a valid manual meal', async () => {
-        const { component, mealManageFacade } = await setupComponentAsync();
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
         setValidManualMeal(component);
         component['patchMealFormModel']({
             manualCalories: 0,
@@ -779,7 +804,11 @@ describe('Meal form manual nutrition validation', () => {
             manualFiber: 0,
             manualAlcohol: 0,
         });
-        await component['onSubmitAsync']();
+        fixture.detectChanges();
+        (fixture.nativeElement as HTMLElement)
+            .querySelector('form')
+            ?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        await fixture.whenStable();
         expect(component['caloriesError']()).toBeNull();
         expect(component['macrosError']()).toBeNull();
         expect(mealManageFacade.submitMealAsync).toHaveBeenCalledOnce();
@@ -822,7 +851,7 @@ describe('Meal form selected amount validation', () => {
             .querySelector('form')
             ?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
         await fixture.whenStable();
-        expect(component['globalError']()).toBe('FORM_ERRORS.UNKNOWN');
+        expect(component['globalError']()).toBe('FORM_ERRORS.CHECK_FIELDS');
         expect(component['generalFieldErrors']().date).not.toBeNull();
         expect(component['generalFieldErrors']().time).not.toBeNull();
         expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();

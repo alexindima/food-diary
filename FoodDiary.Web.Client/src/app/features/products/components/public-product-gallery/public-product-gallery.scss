@@ -17,7 +17,11 @@ button:focus-visible {
 }
 .cover {
     width: 100%;
-    aspect-ratio: 1;
+    height: min(240px, 28dvh);
+    cursor: zoom-in;
+}
+.cover img {
+    object-fit: contain;
 }
 img {
     display: block;
@@ -27,7 +31,7 @@ img {
 }
 .thumbnails {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, var(--fd-size-control-lg)));
     align-items: start;
     gap: var(--fd-space-xs);
     margin-top: var(--fd-space-sm);

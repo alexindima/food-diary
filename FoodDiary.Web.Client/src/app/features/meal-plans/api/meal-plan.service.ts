@@ -22,8 +22,8 @@ export class MealPlanService {
     protected readonly baseUrl = environment.apiUrls.mealPlans;
     private readonly sdk = createSdkConnection(MealPlansSdk, this.baseUrl, inject(HttpClient));
 
-    public getPage(dietType?: string, page = 1, limit = DEFAULT_PAGE_SIZE): Observable<PageOf<MealPlanSummary>> {
-        return this.sdk.client.getMealPlans({ version: this.sdk.version, page, limit, dietType: sdkQueryString(dietType) }).pipe(
+    public getPage(dietType?: string, page = 1, limit = DEFAULT_PAGE_SIZE, isCurated?: boolean): Observable<PageOf<MealPlanSummary>> {
+        return this.sdk.client.getMealPlans({ version: this.sdk.version, page, limit, dietType: sdkQueryString(dietType), isCurated }).pipe(
             map(value => sdkPage(value, mealPlanSummaryFromSdk)),
             catchError((error: unknown) => rethrowApiError('Get meal plans error', error)),
         );

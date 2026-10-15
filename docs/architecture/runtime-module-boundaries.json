@@ -13,6 +13,16 @@
       "reason": "Identity removes its Telegram operation payloads and receipts for the purged owner; Users retains transaction ownership and rollback. See ADR 0037 and UserCleanupServiceIntegrationTests."
     },
     {
+      "contract": "IUserDataPurgeParticipant",
+      "contractOwner": "Users",
+      "provider": "Marketing",
+      "implementation": "MarketingUserDataPurgeParticipant",
+      "source": "Modules/Marketing/Infrastructure/Persistence/MarketingUserDataPurgeParticipant.cs",
+      "consumers": ["Users"],
+      "transaction": "owner-purge-transaction",
+      "reason": "Marketing deletes attribution linked to the exact purged UserId within the Users coordinator transaction; anonymous and other users' attribution remain under normal retention. Verified by UserCleanupServiceIntegrationTests and an owned native PostgreSQL purge fixture."
+    },
+    {
       "contract": "IFavoriteMealSourceReadService",
       "contractOwner": "Favorites",
       "provider": "Meals",

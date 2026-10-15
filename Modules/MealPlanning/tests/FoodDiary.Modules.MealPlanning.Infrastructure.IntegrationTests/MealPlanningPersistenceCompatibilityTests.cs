@@ -84,9 +84,15 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
         (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> beyondItems, int beyondTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 3, limit: 1);
         (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> balancedItems, int balancedTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Balanced, page: 1, limit: 50);
         (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> allItems, int allTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, dietType: null, page: 1, limit: 50);
+        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> savedItems, int savedTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 1, limit: 1, isCurated: false);
+        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> savedBeyond, int savedBeyondTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 2, limit: 1, isCurated: false);
+        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> curatedItems, int curatedTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 1, limit: 1, isCurated: true);
+        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> allSavedItems, int allSavedTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, dietType: null, page: 1, limit: 50, isCurated: false);
 
         Guid firstId = Assert.Single(firstItems).Id;
         Guid secondId = Assert.Single(secondItems).Id;
+        Guid savedId = Assert.Single(savedItems).Id;
+        Guid curatedId = Assert.Single(curatedItems).Id;
         Assert.Multiple(
             () => Assert.Equal(2, firstTotal),
             () => Assert.Equal(curatedKeto.Id.Value, firstId),
@@ -99,6 +105,15 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
             () => Assert.Equal(4, allTotal),
             () => Assert.Equal(4, allItems.Count),
             () => Assert.DoesNotContain(allItems, plan => plan.Id == foreignKeto.Id),
+            () => Assert.Equal(1, savedTotal),
+            () => Assert.Equal(ownKeto.Id.Value, savedId),
+            () => Assert.Equal(1, savedBeyondTotal),
+            () => Assert.Empty(savedBeyond),
+            () => Assert.Equal(1, curatedTotal),
+            () => Assert.Equal(curatedKeto.Id.Value, curatedId),
+            () => Assert.Equal(2, allSavedTotal),
+            () => Assert.All(allSavedItems, plan => Assert.False(plan.IsCurated)),
+            () => Assert.DoesNotContain(allSavedItems, plan => plan.Id == foreignKeto.Id),
             () => Assert.Empty(context.ChangeTracker.Entries()));
     }
 

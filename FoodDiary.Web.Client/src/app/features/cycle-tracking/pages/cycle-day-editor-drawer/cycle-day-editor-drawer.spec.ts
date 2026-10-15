@@ -6,6 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { BLEEDING_TYPE_BLEEDING, BLEEDING_TYPE_SPOTTING, CYCLE_FLOW_LIGHT } from '../../../../shared/models/cycle.data';
 import { calendarDate } from '../../../../shared/models/semantics/date-value';
+import { CurrentLocalDayService } from '../../../../shared/platform/current-local-day.service';
 import type { CycleDayFormModel } from '../../lib/cycle-tracking.facade';
 import { CycleDayEditorDrawerComponent } from './cycle-day-editor-drawer';
 
@@ -36,6 +37,39 @@ const INITIAL_DAY: CycleDayFormModel = {
     hadSex: false,
     notes: null,
 };
+
+describe('cycle day editor calendar bounds', () => {
+    it.each([
+        ['2026-10-31', '2026-11-01'],
+        ['2026-12-31', '2027-01-01'],
+        ['2028-02-29', '2028-03-01'],
+    ])('allows %s and blocks %s until the local day advances', async (today, tomorrow) => {
+        const localDay = signal(new Date(`${today}T23:59:00`));
+        TestBed.configureTestingModule({
+            imports: [CycleDayEditorDrawerComponent],
+            providers: [provideTranslateTesting(), { provide: CurrentLocalDayService, useValue: { today: localDay.asReadonly() } }],
+        });
+        const fixture = TestBed.createComponent(CycleDayEditorDrawerComponent);
+        const dayForm = TestBed.runInInjectionContext(() => form(signal({ ...INITIAL_DAY, date: calendarDate(today) })));
+        fixture.componentRef.setInput('dayForm', dayForm);
+        fixture.componentRef.setInput('isSaving', false);
+        fixture.componentRef.setInput('ovulationTestOptions', []);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const host = fixture.nativeElement as HTMLElement;
+        host.querySelector<HTMLButtonElement>('fd-ui-date-input button')?.click();
+        fixture.detectChanges();
+        const currentDate = document.querySelector<HTMLButtonElement>(`[data-date="${today}"]`);
+        const futureDate = document.querySelector<HTMLButtonElement>(`[data-date="${tomorrow}"]`);
+        expect(currentDate?.disabled).toBe(false);
+        expect(futureDate?.disabled).toBe(true);
+
+        localDay.set(new Date(`${tomorrow}T00:01:00`));
+        fixture.detectChanges();
+        expect(futureDate?.disabled).toBe(false);
+    });
+});
 
 describe('CycleDayEditorDrawerComponent', () => {
     let fixture: ComponentFixture<CycleDayEditorDrawerComponent>;

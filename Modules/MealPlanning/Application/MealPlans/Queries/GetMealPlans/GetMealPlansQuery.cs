@@ -9,4 +9,5 @@ public record GetMealPlansQuery(
     Guid? UserId,
     string? DietType,
     int Page = 1,
-    int Limit = 20) : IQuery<Result<PagedResponse<MealPlanSummaryModel>>>, IUserRequest;
+    int Limit = 20,
+    bool? IsCurated = null) : IQuery<Result<PagedResponse<MealPlanSummaryModel>>>, IUserRequest;

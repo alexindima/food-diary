@@ -16,6 +16,8 @@
         <fd-meal-plan-list-filters
             data-tour-id="meal-plans-filters"
             [selectedType]="facade.dietTypeFilter()"
+            [selectedSource]="facade.sourceFilter()"
+            (sourceChange)="facade.filterBySource($event)"
             (filterChange)="filterByDiet($event)"
         />
         @if (facade.hasLoadError() && !facade.isLoading()) {
@@ -31,6 +33,7 @@
                 [isLoading]="facade.isLoading()"
                 [plans]="planCards()"
                 [filtered]="facade.dietTypeFilter() !== null"
+                [source]="facade.sourceFilter()"
                 (filterReset)="filterByDiet(null)"
                 (planOpen)="openPlan($event)"
             />

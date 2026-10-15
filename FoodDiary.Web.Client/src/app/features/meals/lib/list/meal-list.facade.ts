@@ -10,9 +10,10 @@ import { NavigationService } from '../../../../services/navigation.service';
 import { toLocalDayEndIso, toLocalDayStartIso } from '../../../../shared/lib/local-date.utils';
 import { resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
-import type { FavoriteMeal, Meal, MealDaySummary, MealFilters } from '../../../../shared/models/meal.data';
+import type { FavoriteMeal, Meal, MealDaySummary, MealFilters, MealOverview } from '../../../../shared/models/meal.data';
 import { type UtcInstant, utcInstant } from '../../../../shared/models/semantics/date-value';
 import type { FavoriteMealId, MealId } from '../../../../shared/models/semantics/entity-id';
+import { resolvePaginationPage } from '../../../../shared/navigation/pagination-query.utils';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealService } from '../../api/meal.service';
@@ -111,39 +112,45 @@ export class MealListFacade {
         return defer(() => {
             this.overviewRequests.next();
             this.mealData.setLoading(true);
-            return this.mealService
-                .queryOverview(page, this.pageSize, this.buildFilters(filtersModel), {
-                    limit: MEAL_LIST_OVERVIEW_FAVORITES_LIMIT,
-                    include: includeFavorites,
-                })
-                .pipe(
-                    tap(data => {
-                        this.mealData.setData(data.allMeals);
-                        this.daySummaries.set(data.daySummaries ?? []);
-                        this.currentPageIndex.set(data.allMeals.page - 1);
-                        if (includeFavorites) {
-                            this.favorites.set(data.favoriteItems);
-                            this.favoriteTotalCount.set(data.favoriteTotalCount);
-                        }
-                        this.clearError();
-                    }),
-                    map(() => void 0),
-                    catchError(() => {
-                        this.mealData.clearData();
-                        this.daySummaries.set([]);
-                        if (includeFavorites) {
-                            this.favorites.set([]);
-                            this.favoriteTotalCount.set(0);
-                        }
-                        this.showLoadError();
-                        return of(void 0);
-                    }),
-                    finalize(() => {
-                        this.mealData.setLoading(false);
-                    }),
-                    takeUntil(this.overviewRequests),
-                    takeUntilDestroyed(this.destroyRef),
-                );
+            return this.queryOverview(page, filtersModel, includeFavorites).pipe(
+                switchMap(data => {
+                    const resolvedPage = resolvePaginationPage(page, data.allMeals.totalPages);
+                    return resolvedPage === page ? of(data) : this.queryOverview(resolvedPage, filtersModel, includeFavorites);
+                }),
+                tap(data => {
+                    this.mealData.setData(data.allMeals);
+                    this.daySummaries.set(data.daySummaries ?? []);
+                    this.currentPageIndex.set(data.allMeals.page - 1);
+                    if (includeFavorites) {
+                        this.favorites.set(data.favoriteItems);
+                        this.favoriteTotalCount.set(data.favoriteTotalCount);
+                    }
+                    this.clearError();
+                }),
+                map(() => void 0),
+                catchError(() => {
+                    this.mealData.clearData();
+                    this.daySummaries.set([]);
+                    if (includeFavorites) {
+                        this.favorites.set([]);
+                        this.favoriteTotalCount.set(0);
+                    }
+                    this.showLoadError();
+                    return of(void 0);
+                }),
+                finalize(() => {
+                    this.mealData.setLoading(false);
+                }),
+                takeUntil(this.overviewRequests),
+                takeUntilDestroyed(this.destroyRef),
+            );
+        });
+    }
+
+    private queryOverview(page: number, filters: MealListStructuredFilters, includeFavorites: boolean): Observable<MealOverview> {
+        return this.mealService.queryOverview(page, this.pageSize, this.buildFilters(filters), {
+            limit: MEAL_LIST_OVERVIEW_FAVORITES_LIMIT,
+            include: includeFavorites,
         });
     }
 

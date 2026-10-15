@@ -2,6 +2,8 @@ import { inject, Service } from '@angular/core';
 
 import { BrowserStorageService } from '../shared/platform/browser-storage.service';
 
+export const ACCOUNT_ACCESS_STORAGE_KEY = 'accountAccess';
+
 @Service()
 export class TokenStorageService {
     private readonly storage = inject(BrowserStorageService);
@@ -36,6 +38,32 @@ export class TokenStorageService {
     public clearToken(): void {
         this.storage.removeItem('local', 'authToken');
         this.storage.removeItem('session', 'authToken');
+    }
+
+    public saveAccountAccess(userId: string, roles: readonly string[]): void {
+        this.storage.setItem('local', ACCOUNT_ACCESS_STORAGE_KEY, this.serializeAccountAccess(userId, roles));
+    }
+
+    public hasUpdatedAccountAccess(userId: string, roles: readonly string[]): boolean {
+        const stored = this.storage.getItem('local', ACCOUNT_ACCESS_STORAGE_KEY);
+        if (stored === null) {
+            return false;
+        }
+        try {
+            const snapshot: unknown = JSON.parse(stored);
+            return (
+                Array.isArray(snapshot) &&
+                snapshot[0] === userId &&
+                snapshot.every(value => typeof value === 'string') &&
+                stored !== this.serializeAccountAccess(userId, roles)
+            );
+        } catch {
+            return false;
+        }
+    }
+
+    private serializeAccountAccess(userId: string, roles: readonly string[]): string {
+        return JSON.stringify([userId, ...new Set([...roles].sort())]);
     }
 
     public hasRefreshSession(): boolean {
@@ -128,6 +156,7 @@ export class TokenStorageService {
     public clearAll(): void {
         this.clearToken();
         this.clearRefreshSession();
+        this.storage.removeItem('local', ACCOUNT_ACCESS_STORAGE_KEY);
         this.clearUserId();
         this.clearEmailConfirmed();
         this.clearMustChangePassword();

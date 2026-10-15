@@ -88,6 +88,10 @@ export class AdminOutgoingEmailsComponent {
         });
     }
 
+    protected purposeLabelKey(purpose: string): string {
+        return `ADMIN_OUTGOING.PURPOSES.${this.purposes.includes(purpose) ? purpose : 'other'}`;
+    }
+
     protected load(reset = false): void {
         if (reset) {
             this.page.set(1);

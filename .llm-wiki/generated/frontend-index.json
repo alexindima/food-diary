@@ -3332,7 +3332,7 @@
       "role": "Component",
       "selector": "fd-nutrient-badges",
       "path": "FoodDiary.Web.Client/src/app/components/shared/nutrient-badges/nutrient-badges.ts",
-      "line": 22
+      "line": 23
     },
     {
       "name": "NutrientsSummaryChartsComponent",
@@ -3682,7 +3682,7 @@
       "role": "Component",
       "selector": "fd-cycle-day-editor-drawer",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-day-editor-drawer/cycle-day-editor-drawer.ts",
-      "line": 52
+      "line": 53
     },
     {
       "name": "CycleDayItemComponent",
@@ -4641,14 +4641,14 @@
       "role": "Component",
       "selector": "fd-meal-plan-list-content",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plan-list-sections/meal-plan-list-content/meal-plan-list-content.ts",
-      "line": 30
+      "line": 31
     },
     {
       "name": "MealPlanListFiltersComponent",
       "role": "Component",
       "selector": "fd-meal-plan-list-filters",
       "path": "FoodDiary.Web.Client/src/app/features/meal-plans/pages/list/meal-plan-list-sections/meal-plan-list-filters/meal-plan-list-filters.ts",
-      "line": 14
+      "line": 16
     },
     {
       "name": "MealPlansListPageComponent",
@@ -4865,7 +4865,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/list/meal-list.facade.ts",
-      "line": 32
+      "line": 33
     },
     {
       "name": "MealManageFacade",
@@ -6573,7 +6573,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/token-storage.service.ts",
-      "line": 6
+      "line": 8
     },
     {
       "name": "UnsavedChangesService",
@@ -6783,7 +6783,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/meal-plans.service.ts",
-      "line": 59
+      "line": 60
     },
     {
       "name": "MealsSdk",
@@ -7371,7 +7371,7 @@
       "role": "Component",
       "selector": "fd-sidebar-mobile",
       "path": "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar-mobile/sidebar-mobile.ts",
-      "line": 34
+      "line": 35
     },
     {
       "name": "SidebarRouteLinksComponent",
@@ -7949,16 +7949,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4122,
-      "russianProperties": 4122,
+      "englishProperties": 4131,
+      "russianProperties": 4131,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1232,
-      "russianProperties": 1232,
+      "englishProperties": 1233,
+      "russianProperties": 1233,
       "countsMatch": true
     },
     {

@@ -78,7 +78,9 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
 
         int totalItems = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
         IQueryable<Recipe> orderedQuery = string.Equals(sortBy, "popular", StringComparison.OrdinalIgnoreCase)
-            ? query.AsNoTracking().OrderByDescending(r => context.MealItems.AsNoTracking().Count(item => item.RecipeId == r.Id) + r.NestedRecipeUsages.Count).ThenByDescending(r => r.CreatedOnUtc)
+            ? query.AsNoTracking().OrderByDescending(r => context.MealItems.AsNoTracking().Count(item => item.RecipeId == r.Id) + r.NestedRecipeUsages.Count +
+                context.MealPlans.AsNoTracking().SelectMany(plan => plan.Days).SelectMany(day => day.Meals)
+                    .Count(meal => meal.RecipeId == r.Id)).ThenByDescending(r => r.CreatedOnUtc)
             : query.AsNoTracking().OrderByDescending(r => r.CreatedOnUtc);
 
         List<RecipeOverviewReadRow> rows = await ProjectRows(orderedQuery.AsNoTracking()
@@ -178,7 +180,9 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
             recipe.TotalFiber, recipe.TotalAlcohol, recipe.IsNutritionAutoCalculated,
             recipe.ManualCalories, recipe.ManualProteins, recipe.ManualFats, recipe.ManualCarbs,
             recipe.ManualFiber, recipe.ManualAlcohol, recipe.Visibility,
-            context.MealItems.AsNoTracking().Count(item => item.RecipeId == recipe.Id) + recipe.NestedRecipeUsages.Count, recipe.CreatedOnUtc,
+            context.MealItems.AsNoTracking().Count(item => item.RecipeId == recipe.Id) + recipe.NestedRecipeUsages.Count +
+                context.MealPlans.AsNoTracking().SelectMany(plan => plan.Days).SelectMany(day => day.Meals)
+                    .Count(meal => meal.RecipeId == recipe.Id), recipe.CreatedOnUtc,
             recipe.Steps
                 .OrderBy(step => step.StepNumber)
                 .Select(step => new RecipeOverviewStepReadItem(

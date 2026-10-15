@@ -10,7 +10,7 @@ import { QuickMealService } from '../../meals/contracts/quick-meal';
 import { RECIPE_LOOKUP } from '../../recipes/contracts/recipe-lookup';
 import { MealPlanService } from '../api/meal-plan.service';
 import type { DietType, MealPlan, MealPlanMeal, MealPlanSummary } from '../models/meal-plan.data';
-import { type MealPlanListQuery, mealPlanListQueryKey } from './list/meal-plan-list-query';
+import { type MealPlanListQuery, mealPlanListQueryKey, type MealPlanSource } from './list/meal-plan-list-query';
 import { MEAL_PLAN_LIST_QUERY_STATE } from './list/meal-plan-list-query-state';
 
 @Injectable()
@@ -20,15 +20,18 @@ export class MealPlanFacade {
     private readonly recipeLookup = inject(RECIPE_LOOKUP);
     private readonly quickMeal = inject(QuickMealService);
     private readonly queryState = inject(MEAL_PLAN_LIST_QUERY_STATE, { optional: true });
-    private readonly initialQuery: MealPlanListQuery = this.queryState?.initial ?? { page: 1, dietType: null };
+    private readonly initialQuery: MealPlanListQuery = this.queryState?.initial ?? { page: 1, dietType: null, source: 'all' };
     public readonly hasMealDraft = this.quickMeal.hasItems;
     public readonly addingMealId = signal<MealPlanMealId | null>(null);
     private readonly selectedPlanId = signal<MealPlanId | null>(null);
 
     public readonly dietTypeFilter = signal(this.initialQuery.dietType);
+    public readonly sourceFilter = signal(this.initialQuery.source);
     public readonly pageIndex = signal(this.initialQuery.page - 1);
     public readonly pageSize = 50;
-    private readonly lastLoadedPage = signal<{ dietType: DietType | null; page: PageOf<MealPlanSummary> } | null>(null);
+    private readonly lastLoadedPage = signal<{ dietType: DietType | null; source: MealPlanSource; page: PageOf<MealPlanSummary> } | null>(
+        null,
+    );
     public readonly pendingAction = signal<'adopt' | 'shopping' | 'delete' | null>(null);
     public readonly actionErrorKey = signal<string | null>(null);
     private readonly plansResource = resource({
@@ -60,7 +63,7 @@ export class MealPlanFacade {
         effect(() => {
             const page = this.currentLoadedPage();
             if (page !== null) {
-                this.lastLoadedPage.set({ dietType: this.currentListQuery().dietType, page });
+                this.lastLoadedPage.set({ dietType: this.currentListQuery().dietType, source: this.currentListQuery().source, page });
             }
         });
     }
@@ -81,6 +84,14 @@ export class MealPlanFacade {
         this.pageIndex.set(Math.max(0, Math.min(index, lastIndex)));
     }
 
+    public filterBySource(source: MealPlanSource): void {
+        if (source !== this.sourceFilter()) {
+            this.pageIndex.set(0);
+            this.lastLoadedPage.set(null);
+            this.sourceFilter.set(source);
+        }
+    }
+
     public retryPlans(): void {
         this.plansResource.reload();
     }
@@ -91,10 +102,11 @@ export class MealPlanFacade {
         }
         this.queryState.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(query => {
             this.dietTypeFilter.set(query.dietType);
+            this.sourceFilter.set(query.source);
             this.pageIndex.set(query.page - 1);
         });
         effect(() => {
-            this.writeListQuery({ page: this.pageIndex() + 1, dietType: this.dietTypeFilter() });
+            this.writeListQuery({ page: this.pageIndex() + 1, dietType: this.dietTypeFilter(), source: this.sourceFilter() });
         });
         void this.queryState.normalizePageAsync().catch(() => {
             /* Retain the current catalogue if navigation fails. */
@@ -102,7 +114,7 @@ export class MealPlanFacade {
     }
 
     private currentListQuery(): MealPlanListQuery {
-        return this.queryState?.current() ?? { page: this.pageIndex() + 1, dietType: this.dietTypeFilter() };
+        return this.queryState?.current() ?? { page: this.pageIndex() + 1, dietType: this.dietTypeFilter(), source: this.sourceFilter() };
     }
 
     private currentLoadedPage(): PageOf<MealPlanSummary> | null {
@@ -115,12 +127,14 @@ export class MealPlanFacade {
 
     private cachedListPage(): PageOf<MealPlanSummary> | null {
         const loaded = this.lastLoadedPage();
-        return loaded?.dietType === this.currentListQuery().dietType ? loaded.page : null;
+        const query = this.currentListQuery();
+        return loaded?.dietType === query.dietType && loaded.source === query.source ? loaded.page : null;
     }
 
     private async loadListPageAsync(query: MealPlanListQuery): Promise<{ key: string; page: PageOf<MealPlanSummary> }> {
         const key = mealPlanListQueryKey(query);
-        const page = await firstValueFrom(this.service.getPage(query.dietType ?? undefined, query.page, this.pageSize));
+        const isCurated = query.source === 'all' ? undefined : query.source === 'curated';
+        const page = await firstValueFrom(this.service.getPage(query.dietType ?? undefined, query.page, this.pageSize, isCurated));
         if (key === mealPlanListQueryKey(this.currentListQuery())) {
             const resolved = resolvePaginationPage(query.page, page.totalPages);
             if (resolved !== query.page) {
@@ -143,7 +157,7 @@ export class MealPlanFacade {
         this.selectedPlanId.set(id);
     }
 
-    public addMealToDiary(meal: MealPlanMeal, onSuccess: () => void): void {
+    public addMealToDiary(meal: MealPlanMeal): void {
         if (this.addingMealId() !== null || this.hasMealDraft()) {
             return;
         }
@@ -165,7 +179,6 @@ export class MealPlanFacade {
                     }
                     this.quickMeal.addRecipe(recipe, meal.servings);
                     this.quickMeal.updateDetails({ mealType: normalizeMealType(meal.mealType) ?? 'OTHER' });
-                    onSuccess();
                 },
                 error: () => {
                     this.actionErrorKey.set('MEAL_PLANS.ERROR_ADD_MEAL');

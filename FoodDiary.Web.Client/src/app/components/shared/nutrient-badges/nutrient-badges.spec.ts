@@ -84,19 +84,19 @@ describe('NutrientBadgesComponent', () => {
         expect(component['alcohol']()).toBe(0);
     });
 
-    it('keeps the quality explanation open after activation and closes it on the next activation', () => {
+    it('shows the explanation in a hint from the info button without expanding the badges', () => {
         fixture.componentRef.setInput('quality', { score: CARB_VALUE, grade: 'yellow', hintKey: 'QUALITY.YELLOW' });
         fixture.detectChanges();
         const root = fixture.nativeElement as HTMLElement;
-        const button = root.querySelector<HTMLButtonElement>('button.nutrient-badges__chip--quality');
-        expect(button?.getAttribute('aria-expanded')).toBe('false');
+        const button = root.querySelector<HTMLButtonElement>('.nutrient-badges__quality-help button');
+        expect(button?.getAttribute('aria-label')).toBe('PRODUCT_CARD.QUALITY_HELP');
         button?.click();
         fixture.detectChanges();
-        expect(button?.getAttribute('aria-expanded')).toBe('true');
-        expect(root.querySelector('[role="status"]')?.textContent).toContain('PRODUCT_CARD.QUALITY_EXPLANATION');
-        button?.click();
-        fixture.detectChanges();
+        expect(root.ownerDocument.querySelector('[role="tooltip"]')?.textContent).toContain('PRODUCT_CARD.QUALITY_EXPLANATION');
         expect(root.querySelector('[role="status"]')).toBeNull();
+        button?.click();
+        fixture.detectChanges();
+        expect(root.ownerDocument.querySelector('[role="tooltip"]')).toBeNull();
     });
 });
 

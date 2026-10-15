@@ -1,13 +1,25 @@
-<div class="meal-plans-list__filters fd-row fd-wrap fd-gap-xs">
-    @for (option of options(); track option.value) {
-        <fd-ui-button
-            variant="secondary"
-            size="sm"
-            [fill]="option.fill"
-            [ariaPressed]="selectedType() === option.value"
-            (click)="filterChange.emit(option.value)"
-        >
-            {{ option.labelKey | translate }}
-        </fd-ui-button>
-    }
+<div class="fd-stack fd-gap-md">
+    <fd-ui-segmented-toggle
+        appearance="soft"
+        [options]="sourceOptions"
+        [selectedValue]="selectedSource()"
+        [ariaLabel]="'MEAL_PLANS.SOURCE.LABEL' | translate"
+        [fitContent]="true"
+        [shrinkItems]="true"
+        [stackOnNarrow]="false"
+        (selectedValueChange)="selectSource($event)"
+    />
+    <div class="meal-plans-list__filters fd-row fd-wrap fd-gap-xs" role="group" [attr.aria-label]="'MEAL_PLANS.DIET_FILTER' | translate">
+        @for (option of options(); track option.value) {
+            <fd-ui-button
+                size="sm"
+                [variant]="selectedType() === option.value ? 'primary' : 'secondary'"
+                [fill]="option.fill"
+                [ariaPressed]="selectedType() === option.value"
+                (click)="filterChange.emit(option.value)"
+            >
+                {{ option.labelKey | translate }}
+            </fd-ui-button>
+        }
+    </div>
 </div>

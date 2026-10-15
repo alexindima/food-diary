@@ -34,6 +34,7 @@ export interface GetMealPlansRequestParams {
     dietType?: string;
     page?: number;
     limit?: number;
+    isCurated?: boolean;
 }
 
 export interface GetMealPlansByIdRequestParams {
@@ -182,6 +183,7 @@ export class MealPlansSdk extends BaseService {
         const dietType = requestParameters?.dietType;
         const page = requestParameters?.page;
         const limit = requestParameters?.limit;
+        const isCurated = requestParameters?.isCurated;
 
         let localVarQueryParameters = new OpenApiHttpParams(this.encoder);
 
@@ -190,6 +192,8 @@ export class MealPlansSdk extends BaseService {
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Page', <any>page, QueryParamStyle.Form, true);
 
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Limit', <any>limit, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'isCurated', <any>isCurated, QueryParamStyle.Form, true);
 
         let localVarHeaders = this.defaultHeaders;
 

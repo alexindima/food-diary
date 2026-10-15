@@ -23,6 +23,7 @@ const HTTP_CREATED_STATUS = 201;
 const HTTP_NO_CONTENT_STATUS = 204;
 const NETWORK_AUDIT_DEFAULT_MAX_REQUESTS = 8;
 const NETWORK_AUDIT_QUIET_MS = 500;
+const MOBILE_NAVIGATION_DIALOG_COUNT = 4;
 // These views compose independent sections in addition to the four shared shell requests.
 const NETWORK_AUDIT_REQUEST_BUDGETS: Readonly<Record<string, number>> = {
     '/profile': 9,
@@ -373,12 +374,13 @@ test.describe('authenticated accessibility', () => {
                 expect(results.violations, `Accessibility violations on ${route} (${viewport.name})`).toEqual([]);
                 expect.soft(runtimeErrors, `Runtime errors on ${route} (${viewport.name})`).toEqual([]);
                 if (route === '/products') {
-                    const quality = page.getByRole('button', { name: 'Healthiness', exact: true }).first();
+                    const quality = page.getByRole('button', { name: 'How healthiness is calculated', exact: true }).first();
                     await quality.click();
-                    await expect(quality).toHaveAttribute('aria-expanded', 'true');
-                    await expect(page.locator('.nutrient-badges__explanation').first()).toBeVisible();
+                    await expect(page.getByRole('tooltip')).toBeVisible();
+                    await expect(quality).toHaveAttribute('aria-describedby', /fd-ui-hint-/u);
+                    await expect(page.locator('.nutrient-badges__explanation')).toHaveCount(0);
                     await quality.click();
-                    await expect(quality).toHaveAttribute('aria-expanded', 'false');
+                    await expect(page.getByRole('tooltip')).toHaveCount(0);
                     await page.screenshot({ path: testInfo.outputPath(`products-${viewport.name}.png`) });
                 }
                 runtimeErrors.length = 0;
@@ -620,6 +622,35 @@ test.describe('session routing smoke', () => {
         await expect(page.locator('fd-hero')).toBeHidden();
         await expect(page).toHaveURL(/\/dashboard$/);
         await expect(page.locator('html')).not.toHaveClass(/fd-session-route-pending/);
+    });
+});
+
+test.describe('mobile navigation keyboard regression', () => {
+    test('keeps keyboard focus inside mobile navigation dialogs and restores the trigger', async ({ page }) => {
+        await page.setViewportSize({ width: 390, height: 844 });
+        await authenticateUserAsync(page);
+        await mockAuthenticatedClientApiAsync(page);
+        await page.goto('/products');
+        await expect(page.getByRole('heading', { name: 'Products', exact: true })).toBeVisible();
+
+        const triggers = page.locator('fd-sidebar-mobile button[aria-haspopup="dialog"]');
+        await expect(triggers).toHaveCount(MOBILE_NAVIGATION_DIALOG_COUNT);
+        for (const trigger of await triggers.all()) {
+            await trigger.click();
+            const dialog = page.getByRole('dialog');
+            await expect(dialog).toBeVisible();
+            const actions = dialog.locator('a[href], button:not([disabled])');
+            await expect(actions.first()).toBeFocused();
+
+            await page.keyboard.press('Shift+Tab');
+            await expect(actions.last()).toBeFocused();
+            await page.keyboard.press('Tab');
+            await expect(actions.first()).toBeFocused();
+
+            await page.keyboard.press('Escape');
+            await expect(dialog).toBeHidden();
+            await expect(trigger).toBeFocused();
+        }
     });
 });
 

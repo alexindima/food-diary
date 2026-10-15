@@ -36,7 +36,7 @@
 
         <form class="cycle-drawer__form" [formRoot]="dayForm()">
             <fieldset class="cycle-drawer__body fd-stack fd-gap-card-content" [disabled]="isSaving()">
-                <fd-ui-date-input [label]="'CYCLE_TRACKING.DAY_DATE' | translate" [formField]="dayForm().date" />
+                <fd-ui-date-input [label]="'CYCLE_TRACKING.DAY_DATE' | translate" [formField]="dayForm().date" [latestDate]="today()" />
 
                 <fieldset class="cycle-drawer__fieldset fd-stack fd-gap-xs">
                     <legend class="cycle-drawer__legend fd-ui-action-text">{{ 'CYCLE_TRACKING.BLEEDING_TYPE' | translate }}</legend>

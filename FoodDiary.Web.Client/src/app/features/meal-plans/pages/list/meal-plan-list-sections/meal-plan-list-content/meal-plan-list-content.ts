@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiActivateDirective } from 'fd-ui-kit';
@@ -10,6 +10,7 @@ import { map } from 'rxjs';
 import { LocalizedNumberPipe } from '../../../../../../shared/i18n/localized-number.pipe';
 import type { MealPlanId } from '../../../../../../shared/models/semantics/entity-id';
 import { FdCardHoverDirective } from '../../../../../../shared/ui/card-hover.directive';
+import type { MealPlanSource } from '../../../../lib/list/meal-plan-list-query';
 import type { MealPlanCardViewModel } from '../../../../lib/meal-plan-view.mapper';
 
 @Component({
@@ -35,6 +36,13 @@ export class MealPlanListContentComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly plans = input.required<MealPlanCardViewModel[]>();
     public readonly filtered = input(false);
+    public readonly source = input<MealPlanSource>('all');
+    protected readonly emptyLabelKey = computed(() => {
+        if (this.filtered()) {
+            return 'MEAL_PLANS.EMPTY_FILTERED';
+        }
+        return this.source() === 'saved' ? 'MEAL_PLANS.EMPTY_SAVED' : 'MEAL_PLANS.EMPTY';
+    });
     public readonly filterReset = output();
     public readonly planOpen = output<MealPlanId>();
 

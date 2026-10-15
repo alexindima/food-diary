@@ -109,18 +109,20 @@
         color: var(--fd-color-text-muted);
     }
     &__list-row {
-        display: flex;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
         gap: var(--fd-space-md);
         padding-block: var(--fd-space-xxs);
         border-bottom: var(--fd-border-subtle);
     }
-    &__list-row > span {
+    &__list-row > span,
+    &__list-row > strong {
         min-width: 0;
         overflow-wrap: anywhere;
     }
     &__list-row > strong {
-        flex-shrink: 0;
+        text-align: end;
     }
     &__list-more {
         align-self: flex-start;

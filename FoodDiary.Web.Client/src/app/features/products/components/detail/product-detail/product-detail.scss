@@ -1,9 +1,23 @@
+@use 'variables' as variables;
+
 :host {
     --fd-dialog-header-border: var(--fd-border-strong);
     --fd-space-dialog-header-margin-bottom: var(--fd-space-md);
     --fd-dialog-body-padding-block: 0;
 }
 .product-detail {
+    display: grid;
+    gap: var(--fd-space-lg);
+    align-items: start;
+
+    &--with-photo {
+        grid-template-columns: minmax(0, 240px) minmax(0, 1fr);
+    }
+
+    > fd-product-detail-summary {
+        min-width: 0;
+    }
+
     &__footer {
         border-top: var(--fd-border-strong);
         padding-top: var(--fd-space-dialog-footer-padding-top);
@@ -129,5 +143,11 @@
             --fd-button-text-active: var(--fd-color-amber-500);
             --fd-button-text-disabled: var(--fd-color-amber-500);
         }
+    }
+}
+
+@media #{variables.$media-tablet} {
+    .product-detail--with-photo {
+        grid-template-columns: minmax(0, 1fr);
     }
 }

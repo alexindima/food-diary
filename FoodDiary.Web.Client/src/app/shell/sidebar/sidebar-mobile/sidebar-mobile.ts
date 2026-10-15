@@ -1,3 +1,4 @@
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import {
     afterNextRender,
     ChangeDetectionStrategy,
@@ -26,7 +27,7 @@ import { SidebarRouteLinksComponent } from '../sidebar-route-links/sidebar-route
 
 @Component({
     selector: 'fd-sidebar-mobile',
-    imports: [RouterModule, FdUiHintDirective, FdUiIconComponent, SidebarRouteLinksComponent, TranslatePipe],
+    imports: [CdkTrapFocus, RouterModule, FdUiHintDirective, FdUiIconComponent, SidebarRouteLinksComponent, TranslatePipe],
     templateUrl: './sidebar-mobile.html',
     styleUrl: '../sidebar.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -99,21 +99,19 @@ describe('MealPlanFacade personal deletion', () => {
 });
 
 describe('MealPlanFacade', () => {
-    it('prepares the selected plan meal with its servings and type before navigating', () => {
-        const onSuccess = vi.fn();
-        facade.addMealToDiary(createPlannedMeal(), onSuccess);
+    it('prepares the selected plan meal with its servings and type in the diary draft', () => {
+        facade.addMealToDiary(createPlannedMeal());
         expect(quickMeal.addRecipe).toHaveBeenCalledWith({ id: 'recipe-1' }, 2);
         expect(quickMeal.updateDetails).toHaveBeenCalledWith({ mealType: 'BREAKFAST' });
-        expect(onSuccess).toHaveBeenCalledOnce();
     });
     it('preserves an existing diary draft and reports an unavailable recipe', () => {
         const meal = createPlannedMeal();
         quickMeal.hasItems.set(true);
-        facade.addMealToDiary(meal, vi.fn());
+        facade.addMealToDiary(meal);
         expect(recipeLookup.getById).not.toHaveBeenCalled();
         quickMeal.hasItems.set(false);
         recipeLookup.getById.mockReturnValueOnce(of(null));
-        facade.addMealToDiary(meal, vi.fn());
+        facade.addMealToDiary(meal);
         expect(quickMeal.addRecipe).not.toHaveBeenCalled();
         expect(facade.actionErrorKey()).toBe('MEAL_PLANS.ERROR_ADD_MEAL');
     });
@@ -122,7 +120,7 @@ describe('MealPlanFacade', () => {
 
         await waitForAsync(() => facade.plans().length > 0);
 
-        expect(mealPlanService.getPage).toHaveBeenLastCalledWith('Keto', 1, PAGE_SIZE);
+        expect(mealPlanService.getPage).toHaveBeenLastCalledWith('Keto', 1, PAGE_SIZE, undefined);
         expect(facade.plans()).toEqual([createSummary()]);
     });
 
@@ -159,7 +157,7 @@ describe('MealPlanFacade', () => {
         facade.retryPlans();
         await waitForAsync(() => facade.plans().length > 0);
         expect(facade.hasLoadError()).toBe(false);
-        expect(mealPlanService.getPage).toHaveBeenLastCalledWith('Keto', 1, PAGE_SIZE);
+        expect(mealPlanService.getPage).toHaveBeenLastCalledWith('Keto', 1, PAGE_SIZE, undefined);
         expect(facade.plans()).toEqual([createSummary()]);
     });
 
@@ -208,7 +206,7 @@ describe('MealPlanFacade pagination', () => {
         facade.changePage(1);
         await waitForAsync(() => facade.isLoading());
         expect(facade.totalItems()).toBe(MULTI_PAGE_TOTAL);
-        expect(mealPlanService.getPage).toHaveBeenLastCalledWith(undefined, 2, PAGE_SIZE);
+        expect(mealPlanService.getPage).toHaveBeenLastCalledWith(undefined, 2, PAGE_SIZE, undefined);
         pending.error(new Error('Unavailable'));
         await waitForAsync(() => facade.hasLoadError());
         expect(facade.pageIndex()).toBe(1);
@@ -216,7 +214,7 @@ describe('MealPlanFacade pagination', () => {
         mealPlanService.getPage.mockReturnValueOnce(of(createPage(2, MULTI_PAGE_TOTAL)));
         facade.retryPlans();
         await waitForAsync(() => facade.plans()[0]?.id === 'page-2');
-        expect(mealPlanService.getPage).toHaveBeenLastCalledWith(undefined, 2, PAGE_SIZE);
+        expect(mealPlanService.getPage).toHaveBeenLastCalledWith(undefined, 2, PAGE_SIZE, undefined);
         expect(facade.hasLoadError()).toBe(false);
     });
 
@@ -236,7 +234,7 @@ describe('MealPlanFacade pagination', () => {
         expect(facade.pageIndex()).toBe(0);
         expect(facade.totalItems()).toBe(1);
         expect(facade.plans()[0]?.id).toBe('page-1');
-        expect(mealPlanService.getPage).toHaveBeenLastCalledWith('Keto', 1, PAGE_SIZE);
+        expect(mealPlanService.getPage).toHaveBeenLastCalledWith('Keto', 1, PAGE_SIZE, undefined);
     });
 
     it('bounds page requests and avoids reloading the current page', async () => {
@@ -249,7 +247,7 @@ describe('MealPlanFacade pagination', () => {
         facade.changePage(OUT_OF_RANGE_PAGE);
         await waitForAsync(() => facade.plans()[0]?.id === 'page-2');
         expect(facade.pageIndex()).toBe(1);
-        expect(mealPlanService.getPage).toHaveBeenLastCalledWith(undefined, 2, PAGE_SIZE);
+        expect(mealPlanService.getPage).toHaveBeenLastCalledWith(undefined, 2, PAGE_SIZE, undefined);
     });
 });
 
