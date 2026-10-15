@@ -651,17 +651,25 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "69689fae0e8d6dbf40dc5acb8923eedc7e731e6d9f36b100aa8abce7be98cf58",
+      "pageSha256": "9592620f8f4f83efc4cc32a74eecbb9d2849e7eac7bc7fe87e04481a5a5b66f1",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
-          "sha256": "7ea787fe0e8a3a8b6438478ebe2e2ea5edf643db6c04c289ea6bc97fee7c2753"
+          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
+          "sha256": "06ab7fe0939384e46618e295a47bc2c7de0c3b27ae97b9c58dbde5f04de36efc"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
+          "sha256": "2fb9e93f96553e6e6df8e87d5d405990104c476600335b458cb90e2fea9691ac"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
+          "sha256": "6d62a2de46c38a4b5cc06babcb2188122825ff186b91d53eea5224b5973ad425"
         }
       ],
-      "reason": "CI repair changes only verification fixtures: hidden entries use dot names plus Windows attributes, preserving scanner exclusion/count guarantees; Core audit accepts the documented module-page cache opt-in while retaining its exact allowlist and gating assertion.",
+      "reason": "Reviewed the unchanged 713-assertion inventory: only the Core cache allowlist expression gained the documented module-page generator, with count 336 and all other partition hashes unchanged. Audit edits now select the bounded facade/inventory guard before publication; the planner regression requires it and still rejects automatic full-tools fallback. Navigation documents this routing.",
       "baseRef": "HEAD",
-      "gitHead": "01ccc7bf347e67e63db2fd76bd1d29fd8d4d1e2f",
-      "reviewedAtUtc": "2026-10-15T09:10:08.2469296Z"
+      "gitHead": "b66b67de1ea90d3bd0896e3d39197456b926039a",
+      "reviewedAtUtc": "2026-10-15T10:12:03.5258554Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
