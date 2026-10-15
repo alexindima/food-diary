@@ -24,6 +24,8 @@ sources:
   - .llm-wiki/generated/repository-catalog.json
   - FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs
   - FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs
+  - FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs
+  - .llm-wiki/evals/development-context-flow-coverage.json
   - .llm-wiki/tools/LlmWiki.SqliteReader/ContextSearchReader.cs
   - AGENTS.md
 ---
@@ -40,6 +42,18 @@ timestamps. A global token cannot replace a scoped cache snapshot. Module source
 directory discovery runs only on a cache miss.
 
 CLI and MCP context ranking share `FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs`. The CLI adapter restores indexed layer, module, role, and test features while preserving its response shape. Identical concurrent MCP command-cache misses share a bounded gate; cancelling a waiter leaves the running command intact.
+
+The MCP development bundle keeps implementation and test discovery together for
+mixed requests. Explicit flow requests expand from source-name anchors into
+bounded SQLite type and mediator relationships. `flowScope` reports relationship
+evidence, missing stages, and truncation; it does not certify a complete runtime
+chain. Ordinary navigation keeps ten paths; flow requests including tests or
+background jobs allow twelve. Compact output keeps forty links and preserves
+the missing-stage warnings. The flow-coverage corpus checks every required form,
+handler, service, and worker from the observed assessment failures, including
+English paraphrases. It measures source coverage separately from packet assembly.
+The Infrastructure context layer includes host-registered cross-module SQL
+read projections in `FoodDiary.ReadModel.Composition`.
 
 The CLI reads candidate features in one parameterized batch from `context_search_features`, joining the FTS table by rowid. It selects the first source row for each requested path and record type, preserving the earlier feature selection and candidate order without scanning the FTS table once per candidate.
 

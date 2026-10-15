@@ -84,7 +84,7 @@
       "expectedLayers": [],
       "maximumExpectedRank": 3,
       "expectedTestPaths": [
-        "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs"
+        "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardSnapshotBuilderTests.cs"
       ]
     },
     {
@@ -98,7 +98,7 @@
       "expectedLayers": [],
       "maximumExpectedRank": 3,
       "expectedTestPaths": [
-        "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs"
+        "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardSnapshotBuilderTests.cs"
       ]
     },
     {
@@ -140,7 +140,7 @@
       "expectedLayers": [],
       "maximumExpectedRank": 3,
       "expectedTestPaths": [
-        "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealNutritionServiceTests.cs"
+        "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/MealNutritionServiceTests.cs"
       ],
       "requiredScopePaths": [
         "Modules/Meals/Application/Services/MealNutritionService.cs",
@@ -158,7 +158,7 @@
       "expectedLayers": [],
       "maximumExpectedRank": 3,
       "expectedTestPaths": [
-        "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealNutritionServiceTests.cs"
+        "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/MealNutritionServiceTests.cs"
       ],
       "requiredScopePaths": [
         "Modules/Meals/Application/Services/MealNutritionService.cs",

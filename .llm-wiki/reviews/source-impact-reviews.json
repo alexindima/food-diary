@@ -241,13 +241,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "38b4d74e2707255082a7418e1db9b8d60cf79c23e36aa071bfe959da3ff5fd04"
+          "sha256": "cfac9a44fdff5545e9086f0b39e9e8e41614aa7e3bb929145ff91efd0516cdcc"
         }
       ],
-      "reason": "Reviewed R2 purge participant implementers and DI consumers against the unchanged IUserDataPurgeParticipant contract. This audit changes internal deletion ordering and owner cleanup only, with no HTTP route, serialized payload or schema change. The regenerated contract index remains navigation evidence; concurrent feature contracts were not certified by this review.",
+      "reason": "Integrated the additive local IWikiFlowScopeSearch capability and optional DevelopmentContext evidence without changing product HTTP contracts. The regenerated contract projection retains current master consumers and adds only the new tooling interface and its production/test references.",
       "baseRef": "HEAD",
-      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
-      "reviewedAtUtc": "2026-10-15T18:07:18.5197364Z"
+      "gitHead": "079fdf62e047f748e95f60512ca40df6f8c3e15d",
+      "reviewedAtUtc": "2026-10-15T21:25:50.6031523Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -855,13 +855,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f3e319bc9fe3a995a1eb0c4a74dc9c41c1ad4f97ff4848963216e75ee0f89351"
+          "sha256": "5bb6c49d5917160ac9a6892464f2697ddce7759eb15319a2de6139e0c456073e"
         }
       ],
-      "reason": "Reviewed regenerated quality navigation against executed evidence: full backend build, 2272 architecture tests, 5131 frontend tests with a final 38-test focused rerun, 240 admin tests, both frontend builds and rendered rechecks. Six Docker-backed integration tests were skipped and are reported separately from the real native PostgreSQL fixture. Static test-reference signals are not described as execution coverage.",
+      "reason": "Reviewed the integrated source and regenerated quality evidence. Bounded SQLite expansion, mixed implementation/test routing, composition classification and strict flow regressions are unchanged from the previously verified branch. Existing ranking vocabulary stays within the 700-rule budget; runtime topology changes only its source inventory fingerprint and file count.",
       "baseRef": "HEAD",
-      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
-      "reviewedAtUtc": "2026-10-15T18:07:21.1983793Z"
+      "gitHead": "079fdf62e047f748e95f60512ca40df6f8c3e15d",
+      "reviewedAtUtc": "2026-10-15T21:25:54.3049529Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -934,13 +934,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "ce28cb7ff5da915bc68e8fe1485d9ea8b56915007bf20c865d8b4fbfae61c859"
+          "sha256": "df4f1ab4b5f5fde1e9a9b6203ddabec604b5780f6a23e782056ed997f95be452"
         }
       ],
-      "reason": "Reviewed API and JobManager Marketing module composition and the fifteen ordered purge participants. The new adapter uses the existing owner transaction, cancellation and exact-user filter; populated-account rollback and successful purge were observed on local PostgreSQL. No global worker batch, production service or deployment was run. The running API remains on its earlier build after an approval-policy rejection of restart.",
+      "reason": "Reviewed current topology and runtime-impact guidance against the integrated master sources. The generated topology diff changes only its source fingerprint and file count for the new local tooling types; hosts, workers, recurring jobs, providers and deployment configuration are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
-      "reviewedAtUtc": "2026-10-15T18:07:23.4284676Z"
+      "gitHead": "079fdf62e047f748e95f60512ca40df6f8c3e15d",
+      "reviewedAtUtc": "2026-10-15T21:26:30.4623057Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -949,17 +949,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f3e319bc9fe3a995a1eb0c4a74dc9c41c1ad4f97ff4848963216e75ee0f89351"
+          "sha256": "5bb6c49d5917160ac9a6892464f2697ddce7759eb15319a2de6139e0c456073e"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "ce28cb7ff5da915bc68e8fe1485d9ea8b56915007bf20c865d8b4fbfae61c859"
+          "sha256": "df4f1ab4b5f5fde1e9a9b6203ddabec604b5780f6a23e782056ed997f95be452"
+        },
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "4a586e42da7de1a32f1394565d44bd5595b26768aa18e1389090188edbb502db"
         }
       ],
-      "reason": "Reviewed owner predicates, existing transaction boundaries and local fixture handling for the R2 cleanup changes. Observed revoked-session requests return 401 and revoked sharing requests return 403. Secrets and raw authentication links are excluded from reports. This source-impact receipt records a bounded journey review and does not claim a repository vulnerability scan or production security verdict.",
+      "reason": "Reviewed the integrated bounded read-only SQLite navigation, exact snapshot validation, unavailable/partial states and privacy-preserving aggregate telemetry. Product authorization, private-data lifecycle, providers and deployment behavior are unchanged. Regenerated topology and quality evidence retain the current master baseline.",
       "baseRef": "HEAD",
-      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
-      "reviewedAtUtc": "2026-10-15T18:07:24.7516895Z"
+      "gitHead": "079fdf62e047f748e95f60512ca40df6f8c3e15d",
+      "reviewedAtUtc": "2026-10-15T21:26:34.0633782Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

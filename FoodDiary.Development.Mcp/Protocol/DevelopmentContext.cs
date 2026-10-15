@@ -19,7 +19,8 @@ public sealed record DevelopmentContext(
     bool BaselineAvailable = false,
     WikiContextSearchResult? SqlContextSearch = null,
     string ContextRetrievalSource = "sqlite",
-    string? ContextFallbackReason = null) {
+    string? ContextFallbackReason = null,
+    DevelopmentFlowScope? FlowScope = null) {
     public IReadOnlyList<string> SuggestedStartingPaths => ExpandedScopePaths.Take(3).ToArray();
     public IReadOnlyList<string> AdditionalCandidatePaths => ExpandedScopePaths.Skip(3).ToArray();
     public string ScopeInterpretation => "Ranked navigation candidates, not a confirmed edit scope or complete dependency chain. Read suggested starting paths first; additional candidates remain available for discovery and test planning.";
@@ -31,12 +32,26 @@ public sealed record DevelopmentContext(
         _ => "ranked-candidates",
     };
 
-    public IReadOnlyList<string> RetrievalWarnings => RetrievalAssessment switch {
-        "low-confidence" => ["The leading source candidate has low confidence. Refine the query or inspect the candidates; this does not establish whether the requested feature exists."],
-        "ambiguous" => ["The leading source candidate is ambiguous. Inspect alternatives before choosing an edit scope."],
-        "unavailable" => ["No fresh ranked source candidates are available. Inspect component errors or provide a planned path."],
-        _ => [],
+    public string FlowCoverageAssessment => FlowScope switch {
+        null => "not-assessed",
+        { Ready: false } => "unavailable",
+        { MissingStages.Count: > 0 } => "partial",
+        _ => "bounded-evidence",
     };
+
+    public IReadOnlyList<string> RetrievalWarnings {
+        get {
+            IReadOnlyList<string> warnings = RetrievalAssessment switch {
+                "low-confidence" => ["The leading source candidate has low confidence. Refine the query or inspect the candidates; this does not establish whether the requested feature exists."],
+                "ambiguous" => ["The leading source candidate is ambiguous. Inspect alternatives before choosing an edit scope."],
+                "unavailable" => ["No fresh ranked source candidates are available. Inspect component errors or provide a planned path."],
+                _ => [],
+            };
+            return FlowScope is { Ready: true, MissingStages.Count: > 0 } flow
+                ? [.. warnings, $"The bounded flow scope has no source evidence for these stages: {string.Join(", ", flow.MissingStages)}. Continue discovery before choosing an edit scope."]
+                : warnings;
+        }
+    }
 
     public DevelopmentContext WithoutRawOutput() => this with {
         ChangeContext = ChangeContext?.WithoutRawOutput(),
@@ -50,5 +65,10 @@ public sealed record DevelopmentContext(
         TestPlan = TestPlan?.ToCompactTestPlan(includeRawOutput: includeRawOutput),
         ExpandedScopePaths = ExpandedScopePaths.Take(20).ToArray(),
         SqlContextSearch = SqlContextSearch?.ToCompact(),
+        FlowScope = FlowScope is null ? null : FlowScope with {
+            Paths = FlowScope.Paths.Take(20).ToArray(),
+            Links = FlowScope.Links.Take(40).ToArray(),
+            Truncated = FlowScope.Truncated || FlowScope.Links.Count > 40,
+        },
     };
 }

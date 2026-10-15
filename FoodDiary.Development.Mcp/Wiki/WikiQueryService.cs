@@ -164,6 +164,7 @@ public sealed class WikiQueryService(
                 (contextSearch is null ? "sqlite-reader-not-configured" : "sqlite-no-candidates");
         string[] initialRelevantPaths = NormalizePaths([plannedPath]);
         List<DevelopmentContextComponentError> errors = [];
+        DevelopmentFlowScope? flowScope = null;
         string[] expandedScopePaths;
         if (useSqlContext) {
             expandedScopePaths = [.. new[] { plannedPath }
@@ -171,6 +172,21 @@ public sealed class WikiQueryService(
                 .Cast<string>()
                 .Concat(sqlContext!.Candidates.Take(10).Select(candidate => candidate.Path))
                 .Distinct(StringComparer.OrdinalIgnoreCase)];
+            if (contextSearch is IWikiFlowScopeSearch flowSearch &&
+                !HasTestIntent(query) &&
+                (SqliteFlowScopeReader.RequestsFlow(query) ||
+                    (SqliteFlowScopeReader.RequestsTests(query) &&
+                        !query.Contains("wiki", StringComparison.OrdinalIgnoreCase) && !query.Contains("вики", StringComparison.OrdinalIgnoreCase)))) {
+                flowScope = await flowSearch.ExpandFlowScopeAsync(query, expandedScopePaths, sqlContext.QueryTerms,
+                    SqliteFlowScopeReader.RequestsTests(query), fullSnapshot.Fingerprint, cancellationToken).ConfigureAwait(false);
+                if (flowScope.Ready) {
+                    expandedScopePaths = [.. NormalizePaths(new[] { plannedPath }.Concat(flowScope.Paths)).Take(20)];
+                } else {
+                    errors.Add(new DevelopmentContextComponentError("flow-scope",
+                        DevelopmentMcpErrorCodes.ContextSearchUnavailable,
+                        $"Indexed flow expansion is unavailable ({flowScope.UnavailableReason}). The lexical scope is retained."));
+                }
+            }
         } else {
             errors.Add(CreateContextSearchError(contextUnavailableReason!));
             expandedScopePaths = initialRelevantPaths;
@@ -243,7 +259,8 @@ public sealed class WikiQueryService(
             BaselineAvailable: baselineAvailable,
             SqlContextSearch: sqlContext,
             ContextRetrievalSource: useSqlContext ? "sqlite" : "unavailable",
-            ContextFallbackReason: contextUnavailableReason);
+            ContextFallbackReason: contextUnavailableReason,
+            FlowScope: flowScope);
     }
 
     private static DevelopmentContextComponentError CreateContextSearchError(string unavailableReason) {
@@ -457,6 +474,10 @@ public sealed class WikiQueryService(
         if (normalized.StartsWith("FoodDiary.Infrastructure/", StringComparison.OrdinalIgnoreCase)) {
             return "Infrastructure";
         }
+        if (normalized.StartsWith("FoodDiary.ReadModel.Composition/", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(normalized, "FoodDiary.ReadModel.Composition", StringComparison.OrdinalIgnoreCase)) {
+            return "Infrastructure";
+        }
         if (normalized.StartsWith("FoodDiary.Domain/", StringComparison.OrdinalIgnoreCase)) {
             return "Domain";
         }
@@ -502,7 +523,17 @@ public sealed class WikiQueryService(
                 term.StartsWith("plan", StringComparison.Ordinal) ||
                 term.StartsWith("выбир", StringComparison.Ordinal) ||
                 term.StartsWith("план", StringComparison.Ordinal));
-        return !asksHowWikiPlansTests && terms.Any(term =>
+        bool mixedImplementationIntent = terms.Any(term =>
+            term is "implementation" or "implement" or "code" or "trace" or "chain" ||
+            term.StartsWith("реализац", StringComparison.Ordinal) ||
+            term.StartsWith("цепоч", StringComparison.Ordinal) ||
+            term.StartsWith("прослед", StringComparison.Ordinal)) ||
+            (terms.Contains("flow", StringComparer.Ordinal) && terms.Any(term => term is "client" or "server" or "backend" or "frontend"));
+        bool testFirst = terms.FirstOrDefault() is "test" or "tests" or "testing" or "spec" or "specs" ||
+            (terms.Length > 1 && terms[0] is "find" or "show" or "найди" or "покажи" &&
+                (terms[1] is "test" or "tests" || terms[1].StartsWith("тест", StringComparison.Ordinal)));
+        bool asksForBoth = mixedImplementationIntent && terms.Any(term => term is "and" or "и");
+        return !asksHowWikiPlansTests && (!mixedImplementationIntent || (testFirst && !asksForBoth)) && terms.Any(term =>
                 term is "test" or "tests" or "testing" or "spec" or "specs" ||
                 term.StartsWith("тест", StringComparison.Ordinal));
     }

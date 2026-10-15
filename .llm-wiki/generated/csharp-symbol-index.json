@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4585,
-    "symbols": 4520,
+    "sourceFiles": 4589,
+    "symbols": 4524,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2332,
+      "class": 2333,
       "enum": 71,
-      "interface": 413,
-      "record": 1563,
+      "interface": 414,
+      "record": 1565,
       "record struct": 141
     },
     "roles": {
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1860,
+      "Other": 1864,
       "Query": 301,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
@@ -244,6 +244,20 @@
       "line": 6
     },
     {
+      "name": "DevelopmentFlowLink",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Protocol/DevelopmentFlowLink.cs",
+      "line": 2
+    },
+    {
+      "name": "DevelopmentFlowScope",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Protocol/DevelopmentFlowScope.cs",
+      "line": 2
+    },
+    {
       "name": "DevelopmentMcpErrorCodes",
       "kind": "class",
       "role": "Other",
@@ -377,6 +391,13 @@
       "line": 4
     },
     {
+      "name": "IWikiFlowScopeSearch",
+      "kind": "interface",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Wiki/IWikiFlowScopeSearch.cs",
+      "line": 4
+    },
+    {
       "name": "PowerShellWikiCommandExecutor",
       "kind": "class",
       "role": "Other",
@@ -389,6 +410,13 @@
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
       "line": 9
+    },
+    {
+      "name": "SqliteFlowScopeReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs",
+      "line": 11
     },
     {
       "name": "SqliteWikiContextSearch",

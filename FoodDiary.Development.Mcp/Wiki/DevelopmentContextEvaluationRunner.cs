@@ -97,7 +97,10 @@ internal static class DevelopmentContextEvaluationRunner {
                 compactCharacters,
                 Math.Round(stopwatch.Elapsed.TotalMilliseconds, 2, MidpointRounding.AwayFromZero),
                 [.. context.ComponentErrors.Select(error => $"{error.Component}:{error.ErrorCode}")],
-                [.. context.ExpandedScopePaths.Take(12)], preciseRanking, namedTestsPresent, requiredScopePathsPresent));
+                [.. context.ExpandedScopePaths.Take(20)], preciseRanking, namedTestsPresent, requiredScopePathsPresent,
+                [.. (evaluationCase.RequiredScopePaths ?? []).Where(path =>
+                    !context.ExpandedScopePaths.Contains(path, StringComparer.OrdinalIgnoreCase))],
+                context.FlowScope?.DurationMilliseconds));
         }
 
         double sqlitePrimaryRate = Rate(results.Count(result => result.SqlitePrimary), results.Count);
@@ -280,5 +283,7 @@ internal static class DevelopmentContextEvaluationRunner {
         string[] ExpandedScopePaths,
         bool PreciseRanking,
         bool NamedTestsPresent,
-        bool RequiredScopePathsPresent);
+        bool RequiredScopePathsPresent,
+        string[] MissingRequiredScopePaths,
+        double? FlowExpansionDurationMilliseconds);
 }

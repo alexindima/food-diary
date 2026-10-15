@@ -6,6 +6,7 @@ sources:
   - .llm-wiki/evals/context-search-conversational.json
   - .llm-wiki/evals/context-search-conversational-paraphrases.json
   - .llm-wiki/evals/development-context-cross-layer.json
+  - .llm-wiki/evals/development-context-flow-coverage.json
   - .llm-wiki/evals/development-context-historical.json
   - .llm-wiki/evals/development-context-symptoms.json
   - .llm-wiki/evals/cases.json
@@ -21,6 +22,13 @@ sources:
 ---
 
 # AI Development Evals
+
+The flow-coverage corpus preserves two observed discovery failures: meal-form
+updates with server nutrition recalculation and tests, and photo recognition
+through queued processing. Russian originals and English paraphrases require
+every declared handler/service/worker path. Reports list missing required paths
+and flow-expansion time separately from total bundle time. These are
+source-informed regression probes, not an overall Wiki quality score.
 
 `Test-LlmWikiDevelopmentContextEvaluation.ps1` also runs a frozen practical
 retrieval corpus and separate paraphrases. Optional `maximumExpectedRank`,

@@ -123,21 +123,21 @@ public sealed class ChangeSetSnapshotServiceTests {
             $"fooddiary-snapshot-{Guid.NewGuid():N}");
         Directory.CreateDirectory(repositoryRoot);
         try {
-            RunGit(repositoryRoot, "init", "--quiet");
-            RunGit(repositoryRoot, "config", "user.email", "snapshot@example.invalid");
-            RunGit(repositoryRoot, "config", "user.name", "Snapshot Test");
+            await RunGitAsync(repositoryRoot, "init", "--quiet");
+            await RunGitAsync(repositoryRoot, "config", "user.email", "snapshot@example.invalid");
+            await RunGitAsync(repositoryRoot, "config", "user.name", "Snapshot Test");
             await File.WriteAllTextAsync(Path.Combine(repositoryRoot, "source.txt"), "one");
-            RunGit(repositoryRoot, "add", "source.txt");
-            RunGit(repositoryRoot, "commit", "--quiet", "-m", "first");
-            string firstHead = RunGit(repositoryRoot, "rev-parse", "HEAD").Trim();
-            string branch = RunGit(repositoryRoot, "symbolic-ref", "--short", "HEAD").Trim();
+            await RunGitAsync(repositoryRoot, "add", "source.txt");
+            await RunGitAsync(repositoryRoot, "commit", "--quiet", "-m", "first");
+            string firstHead = (await RunGitAsync(repositoryRoot, "rev-parse", "HEAD")).Trim();
+            string branch = (await RunGitAsync(repositoryRoot, "symbolic-ref", "--short", "HEAD")).Trim();
             await File.WriteAllTextAsync(Path.Combine(repositoryRoot, "source.txt"), "two");
-            RunGit(repositoryRoot, "add", "source.txt");
-            RunGit(repositoryRoot, "commit", "--quiet", "-m", "second");
+            await RunGitAsync(repositoryRoot, "add", "source.txt");
+            await RunGitAsync(repositoryRoot, "commit", "--quiet", "-m", "second");
 
             using (ChangeSetSnapshotService service = new(TimeProvider.System, repositoryRoot)) {
                 ChangeSetSnapshot initial = await service.GetAsync(CancellationToken.None);
-                RunGit(repositoryRoot, "update-ref", $"refs/heads/{branch}", firstHead);
+                await RunGitAsync(repositoryRoot, "update-ref", $"refs/heads/{branch}", firstHead);
 
                 ChangeSetSnapshot refreshed = await service.GetAsync(CancellationToken.None);
 
@@ -162,14 +162,14 @@ public sealed class ChangeSetSnapshotServiceTests {
         Directory.CreateDirectory(scopedDirectory);
         Directory.CreateDirectory(unrelatedDirectory);
         try {
-            RunGit(repositoryRoot, "init", "--quiet");
-            RunGit(repositoryRoot, "config", "user.email", "snapshot@example.invalid");
-            RunGit(repositoryRoot, "config", "user.name", "Snapshot Test");
+            await RunGitAsync(repositoryRoot, "init", "--quiet");
+            await RunGitAsync(repositoryRoot, "config", "user.email", "snapshot@example.invalid");
+            await RunGitAsync(repositoryRoot, "config", "user.name", "Snapshot Test");
             await File.WriteAllTextAsync(Path.Combine(scopedDirectory, "existing.cs"), "one");
             await File.WriteAllTextAsync(Path.Combine(scopedDirectory, "deleted.cs"), "delete me");
             await File.WriteAllTextAsync(Path.Combine(unrelatedDirectory, "other.cs"), "other");
-            RunGit(repositoryRoot, "add", ".");
-            RunGit(repositoryRoot, "commit", "--quiet", "-m", "baseline");
+            await RunGitAsync(repositoryRoot, "add", ".");
+            await RunGitAsync(repositoryRoot, "commit", "--quiet", "-m", "baseline");
             await File.WriteAllTextAsync(Path.Combine(scopedDirectory, "existing.cs"), "two");
             File.Delete(Path.Combine(scopedDirectory, "deleted.cs"));
             await File.WriteAllTextAsync(Path.Combine(unrelatedDirectory, "other.cs"), "changed");
@@ -201,16 +201,16 @@ public sealed class ChangeSetSnapshotServiceTests {
         Directory.CreateDirectory(Path.Combine(repositoryRoot, "Scoped"));
         Directory.CreateDirectory(Path.Combine(repositoryRoot, "Unrelated"));
         try {
-            RunGit(repositoryRoot, "init", "--quiet");
-            RunGit(repositoryRoot, "config", "user.email", "snapshot@example.invalid");
-            RunGit(repositoryRoot, "config", "user.name", "Snapshot Test");
+            await RunGitAsync(repositoryRoot, "init", "--quiet");
+            await RunGitAsync(repositoryRoot, "config", "user.email", "snapshot@example.invalid");
+            await RunGitAsync(repositoryRoot, "config", "user.name", "Snapshot Test");
             await File.WriteAllTextAsync(Path.Combine(repositoryRoot, "Scoped", "source.cs"), "tracked source");
-            RunGit(repositoryRoot, "add", ".");
-            RunGit(repositoryRoot, "commit", "--quiet", "-m", "baseline");
+            await RunGitAsync(repositoryRoot, "add", ".");
+            await RunGitAsync(repositoryRoot, "commit", "--quiet", "-m", "baseline");
             using var service = new ChangeSetSnapshotService(TimeProvider.System, repositoryRoot);
             ChangeSetSnapshot initial = await service.GetAsync(["Scoped"], CancellationToken.None);
 
-            RunGit(repositoryRoot, "mv", "Scoped/source.cs", "Unrelated/source.cs");
+            await RunGitAsync(repositoryRoot, "mv", "Scoped/source.cs", "Unrelated/source.cs");
             await service.RefreshAsync(CancellationToken.None);
             ChangeSetSnapshot moved = await service.GetAsync(["Scoped"], CancellationToken.None);
 
@@ -248,7 +248,7 @@ public sealed class ChangeSetSnapshotServiceTests {
         }
     }
 
-    private static string RunGit(string repositoryRoot, params string[] arguments) {
+    private static async Task<string> RunGitAsync(string repositoryRoot, params string[] arguments) {
         using System.Diagnostics.Process process = new() {
             StartInfo = new System.Diagnostics.ProcessStartInfo {
                 FileName = "git",
@@ -265,11 +265,17 @@ public sealed class ChangeSetSnapshotServiceTests {
         FoodDiary.Development.Mcp.Infrastructure.GitProcessEnvironment
             .ClearLocalRepositoryVariables(process.StartInfo);
         process.Start();
-        string output = process.StandardOutput.ReadToEnd();
-        string error = process.StandardError.ReadToEnd();
-        process.WaitForExit();
-        Assert.True(process.ExitCode == 0, error);
-        return output;
+        using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(30));
+        Task<string> output = process.StandardOutput.ReadToEndAsync(timeout.Token);
+        Task<string> error = process.StandardError.ReadToEndAsync(timeout.Token);
+        try {
+            await process.WaitForExitAsync(timeout.Token);
+        } catch (OperationCanceledException exception) {
+            if (!process.HasExited) { process.Kill(entireProcessTree: true); }
+            throw new TimeoutException("Git fixture command exceeded its 30-second timeout.", exception);
+        }
+        Assert.True(process.ExitCode == 0, await error);
+        return await output;
     }
 
     [Theory]
@@ -295,12 +301,12 @@ public sealed class ChangeSetSnapshotServiceTests {
                 Path.Combine(repositoryRoot, ".llm-wiki", "policies", "context-search-ranking.json"));
             await File.WriteAllTextAsync(Path.Combine(repositoryRoot, ".gitignore"), ".artifacts/\n");
             await File.WriteAllTextAsync(Path.Combine(repositoryRoot, sourcePath), "tracked source");
-            RunGit(repositoryRoot, "init", "--quiet");
-            RunGit(repositoryRoot, "config", "user.email", "snapshot@example.invalid");
-            RunGit(repositoryRoot, "config", "user.name", "Snapshot Test");
-            RunGit(repositoryRoot, "add", ".");
-            RunGit(repositoryRoot, "commit", "--quiet", "-m", "baseline");
-            RunGit(repositoryRoot, "mv", "-f", sourcePath, destinationPath);
+            await RunGitAsync(repositoryRoot, "init", "--quiet");
+            await RunGitAsync(repositoryRoot, "config", "user.email", "snapshot@example.invalid");
+            await RunGitAsync(repositoryRoot, "config", "user.name", "Snapshot Test");
+            await RunGitAsync(repositoryRoot, "add", ".");
+            await RunGitAsync(repositoryRoot, "commit", "--quiet", "-m", "baseline");
+            await RunGitAsync(repositoryRoot, "mv", "-f", sourcePath, destinationPath);
             using var service = new ChangeSetSnapshotService(TimeProvider.System, repositoryRoot);
             ChangeSetSnapshot snapshot = await service.GetAsync(CancellationToken.None);
             Assert.Equal(new[] { sourcePath, destinationPath }.Order(StringComparer.Ordinal), snapshot.ChangedPaths, StringComparer.Ordinal);

@@ -117,6 +117,10 @@ $batchGroups = @(Get-Groups '.llm-wiki/tools/code-graph-batch.mjs')
 foreach ($rankingSource in @(
     '.llm-wiki/tools/code-graph.mjs'
     'FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs'
+    'FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs'
+    'FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs'
+    '.llm-wiki/evals/development-context-flow-coverage.json'
+    '.llm-wiki/tools/Test-LlmWikiDevelopmentContextEvaluation.ps1'
     'Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.QueryPreparation.cs'
 )) {
     $rankingGroups = @(Get-Groups $rankingSource)

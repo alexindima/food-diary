@@ -97,7 +97,10 @@ public sealed class ProtocolCompactionTests {
             ScopeMismatch: false,
             EffectiveLayers: ["Application"],
             CrossLayerScope: false,
-            SqlContextSearch: search);
+            SqlContextSearch: search,
+            FlowScope: new DevelopmentFlowScope(Ready: true, [],
+                [.. Enumerable.Range(1, 50).Select(_ => new DevelopmentFlowLink("source.cs", "target.cs", "type-reference", "Name"))],
+                ["worker"], Truncated: false, DurationMilliseconds: 1));
 
         DevelopmentContext compact = context.ToCompact(includeRawOutput: true);
         DevelopmentContext withoutRaw = context.WithoutRawOutput();
@@ -111,6 +114,10 @@ public sealed class ProtocolCompactionTests {
             () => Assert.Contains("not a confirmed edit scope", compact.ScopeInterpretation, StringComparison.Ordinal),
             () => Assert.Equal(24, compactSearch.QueryTerms.Count),
             () => Assert.Equal(20, compactSearch.Candidates.Count),
+            () => Assert.Equal(40, compact.FlowScope!.Links.Count),
+            () => Assert.True(compact.FlowScope!.Truncated),
+            () => Assert.Equal("partial", compact.FlowCoverageAssessment),
+            () => Assert.Contains(compact.RetrievalWarnings, warning => warning.Contains("worker", StringComparison.Ordinal)),
             () => Assert.Equal("raw", compact.ChangeContext!.RawOutput),
             () => Assert.Null(withoutRaw.ChangeContext!.RawOutput),
             () => Assert.Null(withoutRaw.BackendTrace!.RawOutput),

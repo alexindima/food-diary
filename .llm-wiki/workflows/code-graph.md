@@ -80,6 +80,8 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiCorpusEvaluation.ps1
   - .llm-wiki/tools/Test-LlmWikiDevelopmentContextEvaluation.ps1
   - FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs
+  - FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs
+  - .llm-wiki/evals/development-context-flow-coverage.json
   - FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs
   - .llm-wiki/tools/LlmWiki.SqliteReader/ContextSearchReader.cs
   - FoodDiary.Development.Mcp/Wiki/WikiContextSearchEvaluationRunner.cs
@@ -92,6 +94,13 @@ sources:
 ---
 
 # Local Code Intelligence Graph
+
+Development MCP flow requests use one source-name anchor and a read-only batch
+for related handlers, clients, and optional tests, then follow at most two graph
+hops with bounded fan-out. Common framework types cannot expand the scope.
+The resulting `flowScope` distinguishes indexed relationship leads, missing
+stages, and truncation. Its coverage assessment is separate from successful
+brief/test-plan assembly and never certifies a complete execution chain.
 
 All twelve standalone index commands read a consistent SQLite transaction and
 compare the published JSON source hash before and after the query. They use an

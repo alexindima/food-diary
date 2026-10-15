@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "description": "Source-informed regressions from the October assessment and English paraphrases. Require every declared production link. This is not a blind benchmark or a global Wiki quality score.",
+  "thresholds": {
+    "minimumSqlitePrimaryRate": 1,
+    "minimumScopeRecallRate": 1,
+    "minimumSqlTopTenRecallRate": 1,
+    "minimumCompleteBundleRate": 1,
+    "minimumFocusedChecksRate": 1,
+    "minimumExpectedLayersRate": 1,
+    "minimumExplainableRankingRate": 1,
+    "minimumContextBundleReadyRate": 1,
+    "minimumUnplannedQueryRate": 1,
+    "maximumAverageExpandedScopePaths": 12,
+    "maximumP95DurationMilliseconds": 20000,
+    "maximumWarmP95DurationMilliseconds": 10000,
+    "maximumCompactCharacters": 120000
+  },
+  "cases": [
+    {
+      "id": "meal-nutrition-chain-and-tests-ru",
+      "intent": "После изменения количества продукта в приёме пищи калории после повторного открытия отличаются от формы. Найди цепочку от формы до сохранения и пересчёта на сервере и тесты.",
+      "query": "После изменения количества продукта в приёме пищи калории после повторного открытия отличаются от формы. Найди цепочку от формы до сохранения и пересчёта на сервере и тесты.",
+      "plannedPath": null,
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
+        "Modules/Meals/Application/Services/MealNutritionService.cs"
+      ],
+      "expectedLayers": [
+        "Frontend",
+        "Application"
+      ],
+      "requiredScopePaths": [
+        "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
+        "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealCommandHandler.cs",
+        "Modules/Meals/Application/Services/MealNutritionService.cs"
+      ],
+      "expectedTestPaths": [
+        "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/MealNutritionServiceTests.cs"
+      ]
+    },
+    {
+      "id": "meal-nutrition-chain-and-tests-en",
+      "intent": "After changing a product quantity in a meal, calories differ from the form when reopened. Trace the implementation from the meal form through saving and server nutrition recalculation, including tests.",
+      "query": "After changing a product quantity in a meal, calories differ from the form when reopened. Trace the implementation from the meal form through saving and server nutrition recalculation, including tests.",
+      "plannedPath": null,
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
+        "Modules/Meals/Application/Services/MealNutritionService.cs"
+      ],
+      "expectedLayers": [
+        "Frontend",
+        "Application"
+      ],
+      "requiredScopePaths": [
+        "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
+        "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealCommandHandler.cs",
+        "Modules/Meals/Application/Services/MealNutritionService.cs"
+      ],
+      "expectedTestPaths": [
+        "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/MealNutritionServiceTests.cs"
+      ]
+    },
+    {
+      "id": "photo-recognition-job-chain-ru",
+      "intent": "Как проходит распознавание фото еды: загрузка изображения, запуск задания, запрос к провайдеру, сохранение результата и получение результата на клиенте?",
+      "query": "Как проходит распознавание фото еды: загрузка изображения, запуск задания, запрос к провайдеру, сохранение результата и получение результата на клиенте?",
+      "plannedPath": null,
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
+        "FoodDiary.Web.Client/src/app/shared/api/image-upload.service.ts",
+        "Modules/Ai/Infrastructure/Persistence/FoodRecognitionJobStore.cs"
+      ],
+      "expectedLayers": [
+        "Frontend",
+        "Application"
+      ],
+      "requiredScopePaths": [
+        "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandHandler.cs",
+        "Modules/Ai/Application/Commands/ProcessNextFoodRecognition/ProcessNextFoodRecognitionCommandHandler.cs",
+        "FoodDiary.JobManager/Services/FoodRecognitionWorker.cs",
+        "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts"
+      ]
+    },
+    {
+      "id": "photo-recognition-job-chain-en",
+      "intent": "Trace food photo recognition: image upload, starting the background job, provider request, result persistence and receiving the result on the client.",
+      "query": "Trace food photo recognition: image upload, starting the background job, provider request, result persistence and receiving the result on the client.",
+      "plannedPath": null,
+      "expectedPaths": [
+        "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
+        "FoodDiary.Web.Client/src/app/shared/api/image-upload.service.ts",
+        "Modules/Ai/Infrastructure/Persistence/FoodRecognitionJobStore.cs"
+      ],
+      "expectedLayers": [
+        "Frontend",
+        "Application"
+      ],
+      "requiredScopePaths": [
+        "Modules/Ai/Application/Commands/StartFoodRecognition/StartFoodRecognitionCommandHandler.cs",
+        "Modules/Ai/Application/Commands/ProcessNextFoodRecognition/ProcessNextFoodRecognitionCommandHandler.cs",
+        "FoodDiary.JobManager/Services/FoodRecognitionWorker.cs",
+        "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts"
+      ]
+    },
+    {
+      "id": "composed-sql-projection-layer",
+      "intent": "Find the database dashboard meal projection implementation",
+      "query": "database dashboard meal projection implementation",
+      "plannedPath": null,
+      "expectedPaths": [
+        "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealProjection.cs"
+      ],
+      "expectedLayers": [
+        "Infrastructure"
+      ],
+      "requiredScopePaths": [
+        "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealProjection.cs"
+      ],
+      "maximumExpectedRank": 3
+    }
+  ]
+}

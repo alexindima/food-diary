@@ -27,11 +27,12 @@ $json = & dotnet $assemblyPath --evaluate-development-context-bundles $resolvedC
 if ($LASTEXITCODE -ne 0) { throw "Development-context evaluation failed with exit code $LASTEXITCODE." }
 $evaluation = $json | ConvertFrom-Json
 if (-not $evaluation.passed) {
-    throw "Development-context evaluation missed its thresholds: sqlite=$($evaluation.metrics.sqlitePrimaryRate), scope=$($evaluation.metrics.scopeRecallRate), complete=$($evaluation.metrics.completeBundleRate), checks=$($evaluation.metrics.focusedChecksRate), contextReady=$($evaluation.metrics.contextBundleReadyRate), unplanned=$($evaluation.metrics.unplannedQueryRate), warmP95=$($evaluation.metrics.warmP95DurationMilliseconds)ms."
+    $failedCases = @($evaluation.failures | Select-Object -First 8 | ForEach-Object { $_.id }) -join ', '
+    throw "Development-context evaluation missed its thresholds: sqlite=$($evaluation.metrics.sqlitePrimaryRate), scope=$($evaluation.metrics.scopeRecallRate), complete=$($evaluation.metrics.completeBundleRate), checks=$($evaluation.metrics.focusedChecksRate), contextReady=$($evaluation.metrics.contextBundleReadyRate), unplanned=$($evaluation.metrics.unplannedQueryRate), warmP95=$($evaluation.metrics.warmP95DurationMilliseconds)ms; failing cases=[$failedCases]."
 }
 Write-Host "LLM Wiki development-context evaluation passed: cases=$($evaluation.caseCount), sqlite=$($evaluation.metrics.sqlitePrimaryRate), scope=$($evaluation.metrics.scopeRecallRate), complete=$($evaluation.metrics.completeBundleRate), checks=$($evaluation.metrics.focusedChecksRate), contextReady=$($evaluation.metrics.contextBundleReadyRate), unplanned=$($evaluation.metrics.unplannedQueryRate), averageScope=$($evaluation.metrics.averageExpandedScopePaths), warmP95=$($evaluation.metrics.warmP95DurationMilliseconds)ms, cold=$($evaluation.metrics.coldStartDurationMilliseconds)ms, maxCompact=$($evaluation.metrics.maximumCompactCharacters) chars."
 if ($includePractical) {
-    foreach ($name in @('development-context-practical.json', 'development-context-practical-holdout.json', 'development-context-historical.json', 'development-context-symptoms.json', 'development-context-cross-layer.json', 'development-context-wiki-planning.json')) {
+    foreach ($name in @('development-context-practical.json', 'development-context-practical-holdout.json', 'development-context-historical.json', 'development-context-symptoms.json', 'development-context-cross-layer.json', 'development-context-wiki-planning.json', 'development-context-flow-coverage.json')) {
         & $PSCommandPath -CorpusPath (Join-Path $PSScriptRoot "../evals/$name") -SkipBuild
     }
 }

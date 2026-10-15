@@ -117,6 +117,10 @@ sources:
 
 # Run the Staged Index Pipeline
 
+Changes to the MCP scope router, SQLite flow reader, and development-context
+corpora select both context retrieval groups in affected verification. This
+keeps mixed-intent and required-chain coverage in the local verification route.
+
 Standalone index queries bypass full snapshot preparation when their published
 source matches a read-only SQLite transaction. Missing or stale projections use
 a separate content-addressed cache of the selected JSON index, preserving the

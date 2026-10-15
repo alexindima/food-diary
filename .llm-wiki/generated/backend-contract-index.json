@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1351,
+    "contracts": 1352,
     "ambiguousContracts": 29,
-    "consumerEdges": 10538,
-    "productionConsumerEdges": 6028,
-    "testConsumerEdges": 4510,
-    "consumedContracts": 1351,
+    "consumerEdges": 10542,
+    "productionConsumerEdges": 6030,
+    "testConsumerEdges": 4512,
+    "consumedContracts": 1352,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -16877,6 +16877,23 @@
       ],
       "definitionPaths": [
         "FoodDiary.Development.Mcp/Wiki/IWikiContextSearch.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IWikiFlowScopeSearch",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/Wiki/IWikiFlowScopeSearch.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -133597,6 +133614,58 @@
       "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs",
       "isTest": true,
       "referenceCount": 26
+    },
+    {
+      "contract": "IWikiContextSearch",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/Wiki/IWikiContextSearch.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.FlowScope.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IWikiFlowScopeSearch",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/Wiki/IWikiFlowScopeSearch.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWikiFlowScopeSearch",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/Wiki/IWikiFlowScopeSearch.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWikiFlowScopeSearch",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/Wiki/IWikiFlowScopeSearch.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.FlowScope.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "LessonDetailHttpResponse",

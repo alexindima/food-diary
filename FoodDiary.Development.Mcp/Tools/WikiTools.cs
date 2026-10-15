@@ -75,7 +75,7 @@ public sealed class WikiTools(WikiQueryService queries, IServerStatusService sta
             cancellationToken);
 
     [McpServerTool(Name = "get_development_context", ReadOnly = true, Idempotent = true)]
-    [Description("Ranks repository sources with SQLite, suggests starting paths, and builds change context and a test plan against one verified Git/worktree snapshot. Candidates are navigation evidence, not a complete dependency chain.")]
+    [Description("Ranks repository sources with SQLite, expands flow requests through bounded indexed relationships, reports missing stages, and builds change context and a test plan against one verified Git/worktree snapshot. Candidates and links are navigation evidence, not a complete runtime dependency chain.")]
     public Task<CallToolResult> GetDevelopmentContextAsync(
         [Description("The intended code or architecture change.")] string intent,
         [Description("The behavior, bug symptoms, symbol, or feature to find in backend, frontend, or tooling sources.")] string query,

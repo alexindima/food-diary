@@ -51,6 +51,16 @@ calls can succeed without `pwsh`. Codex and an IDE can also inherit different
   explicit partial result with a recovery action if SQL remains unavailable or
   returns no scope. It never invokes the JSON trace automatically. It refreshes
   the fingerprint between phases and rejects the result if the snapshot changed.
+  Mixed implementation-and-test queries keep production retrieval and add test
+  evidence; test-only queries retain the `Tests` route. Flow queries also return
+  `flowScope`: bounded source-name searches plus indexed type references,
+  interface implementations/consumers, and mediator dispatch links. The same
+  exact snapshot is required for each read. Ordinary client/server navigation
+  keeps ten paths; requests with tests or background jobs allow twelve.
+  `missingStages` and `truncated` expose discovery gaps and budget limits.
+  Name-based graph relationships are leads to inspect, not proof of execution.
+  Infrastructure-layer coverage includes host-registered SQL read projections
+  in `FoodDiary.ReadModel.Composition`, whose scoped guide defines ownership.
 - `get_server_status` reports repository, Git HEAD, Wiki, index presence, and
   runtime identity (PID, process start, startup HEAD, build HEAD/source
   fingerprint, assembly MVID/hash, and build timestamps).

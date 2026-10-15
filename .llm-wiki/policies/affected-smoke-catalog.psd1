@@ -57,14 +57,16 @@
         @{ Pattern = '^\.llm-wiki/tools/(LlmWikiJson|Test-LlmWikiPortable)\.ps1$'; Groups = @('verification-cache') }
         @{ Pattern = '^\.llm-wiki/tools/Manage-LlmWikiInstructionOutcome\.ps1$'; Groups = @('verification-cache') }
         @{ Pattern = '^\.llm-wiki/tools/(Get-LlmWikiTaskAudit|Get-LlmWikiTaskHandoff)\.ps1$'; Groups = @('facade-contract') }
-        @{ Pattern = '^\.llm-wiki/tools/code-graph\.mjs$|^FoodDiary\.Development\.Mcp/Wiki/SqliteContextSearchReader\.cs$|^Tooling/tests/FoodDiary\.Development\.Mcp\.Tests/SqliteWikiContextSearchTests[^/]*\.cs$'; Groups = @('context-bundle') }
+        @{ Pattern = '^\.llm-wiki/tools/code-graph\.mjs$|^FoodDiary\.Development\.Mcp/Wiki/(SqliteContextSearchReader|SqliteWikiContextSearch|SqliteFlowScopeReader|WikiQueryService|DevelopmentContextEvaluationRunner)\.cs$|^Tooling/tests/FoodDiary\.Development\.Mcp\.Tests/(SqliteWikiContextSearchTests|SqliteFlowScopeReaderTests|WikiQueryServiceTests)[^/]*\.cs$'; Groups = @('context-bundle') }
         @{ Pattern = '^\.llm-wiki/tools/(Get-LlmWikiTaskHandoff|Test-LlmWikiTaskHandoff)\.ps1$'; Groups = @('governed-delivery') }
         @{ Pattern = '^\.llm-wiki/tools/code-graph-batch\.mjs$'; Groups = @('context-bundle') }
         @{ Pattern = '^\.llm-wiki/tools/(LlmWikiSourceInventory|Test-LlmWikiSourceInventory)\.ps1$'; Groups = @('domain-data-query') }
         @{ Pattern = '^\.llm-wiki/tools/LlmWikiGitPaths\.ps1$'; Groups = @('api-compatibility') }
         @{ Pattern = '^\.llm-wiki/tools/(Manage-LlmWikiModelRouting|Manage-LlmWikiVerificationPlan)\.ps1$'; Groups = @('strict-shapes') }
         @{ Pattern = '^\.llm-wiki/tools/LlmWikiQueryCache\.ps1$'; Groups = @('context-bundle') }
+        @{ Pattern = '^\.llm-wiki/tools/Test-LlmWikiDevelopmentContextEvaluation\.ps1$'; Groups = @('context-bundle') }
         @{ Pattern = '^\.llm-wiki/evals/context-search[^/]*\.json$'; Groups = @('context-bundle') }
+        @{ Pattern = '^\.llm-wiki/evals/development-context[^/]*\.json$'; Groups = @('context-bundle') }
         @{ Pattern = '^\.llm-wiki/policies/context-search-ranking\.json$'; Groups = @('context-bundle') }
     )
 }

@@ -399,6 +399,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Find-LlmWikiContext.ps1') -Module Users -Format Json | Out-Null
             if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiDevelopmentContextEvaluation.ps1') -CorpusPath (Join-Path $toolsRoot '../evals/development-context-flow-coverage.json')
+            if (-not $?) { exit 1 }
         }
         'context-feedback' {
             & (Join-Path $toolsRoot 'Test-LlmWikiContextFeedbackMetrics.ps1')

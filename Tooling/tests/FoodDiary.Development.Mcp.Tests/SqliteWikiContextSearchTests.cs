@@ -82,6 +82,29 @@ public sealed partial class SqliteWikiContextSearchTests : IDisposable {
     }
 
     [Theory]
+    [InlineData("After local midnight stock is counted in yesterday instead of today on inventory", true)]
+    [InlineData("Where is the inventory midnight backup configured?", false)]
+    public async Task SearchAsync_RelativeDatesSelectCalendarLoadingWithoutPromotingMidnightJobs(string query, bool expectedBoost) {
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            DELETE FROM context_search_identity;
+            INSERT INTO context_search VALUES
+                ('code','inventory','Modules/Inventory/Application/Services/InventorySectionDataLoader.cs','inventory',
+                    'csharp','InventorySectionDataLoader','inventory stock local midnight today yesterday backup calendar');
+            INSERT INTO context_search_identity(rowid,path,title) SELECT rowid,path,title FROM context_search;
+            """;
+        await command.ExecuteNonQueryAsync();
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            query, 10, "Any", module: null, scopePaths: null, CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+        WikiContextSearchCandidate candidate = Assert.Single(result.Candidates);
+        Assert.Equal(expectedBoost, candidate.Reasons.Any(reason => reason.Contains("structural role local-day-loader", StringComparison.Ordinal)));
+    }
+
+    [Theory]
     [InlineData("Frontend", "client interface for dashboard layout service", false)]
     [InlineData("Backend", "client interface for dashboard layout service", true)]
     [InlineData("Frontend", "dashboard layout service", true)]

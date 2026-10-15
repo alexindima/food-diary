@@ -3,7 +3,7 @@ using NSubstitute;
 namespace FoodDiary.Development.Mcp.Tests;
 
 [ExcludeFromCodeCoverage]
-public sealed class WikiQueryServiceTests {
+public sealed partial class WikiQueryServiceTests {
     private readonly IWikiCommandExecutor _executor = Substitute.For<IWikiCommandExecutor>();
     private readonly IChangeSetSnapshotService _snapshots = Substitute.For<IChangeSetSnapshotService>();
 
@@ -883,6 +883,9 @@ public sealed class WikiQueryServiceTests {
     [InlineData("ModulesExtra/Sample/Infrastructure/Reader.cs", null)]
     [InlineData("Other/Modules/Sample/Domain/Entity.cs", null)]
     [InlineData("FoodDiary.Infrastructure/Reader.cs", "Infrastructure")]
+    [InlineData("FoodDiary.ReadModel.Composition/Dashboard/Reader.cs", "Infrastructure")]
+    [InlineData("FoodDiary.ReadModel.Composition", "Infrastructure")]
+    [InlineData("FoodDiary.ReadModel.CompositionExtra/Reader.cs", null)]
     [InlineData("fooddiary.domain\\Entity.cs", "Domain")]
     public async Task GetDevelopmentContextAsync_InfersExactModuleLayerSegments(string path, string? expectedLayer) {
         DevelopmentContext result = await GetDevelopmentContextForPathsAsync([path]);
@@ -1143,6 +1146,14 @@ public sealed class WikiQueryServiceTests {
     [InlineData("How does wiki select tests from the dependency graph?", "Any")]
     [InlineData("tests for wiki test plan selection", "Tests")]
     [InlineData("Как тестируется выбор тестов в вики?", "Tests")]
+    [InlineData("Найди цепочку от формы до сохранения и пересчёта на сервере и тесты.", "Any")]
+    [InlineData("Find the implementation and tests for updating a meal", "Any")]
+    [InlineData("Trace the client and server flow, including tests", "Any")]
+    [InlineData("Найди тесты и реализацию сохранения приёма пищи", "Any")]
+    [InlineData("tests for the meal command handler", "Tests")]
+    [InlineData("tests for code generation", "Tests")]
+    [InlineData("tests for the backend flow", "Tests")]
+    [InlineData("Find tests and the implementation of the backend flow", "Any")]
     public async Task GetDevelopmentContextAsync_InfersTestSearchTypeFromQueryWithoutPlannedPath(
         string query,
         string expectedChangeType) {
