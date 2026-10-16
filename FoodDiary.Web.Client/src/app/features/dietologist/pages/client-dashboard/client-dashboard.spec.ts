@@ -9,6 +9,7 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import type { ClientTask, RecommendationTemplate } from '../../../../shared/models/dietologist.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { DietologistFacade } from '../../lib/dietologist.facade';
@@ -156,6 +157,71 @@ describe('ClientDashboardComponent initial dashboard races', () => {
         await reload;
 
         expect(component['dashboard']()?.date).toBe(latestSnapshot.date);
+        expect(component['detailsLoading']()).toBe(false);
+    });
+});
+
+describe('ClientDashboardComponent writes during initial loading', () => {
+    it.each([false, true])('preserves local writes and loaded history, including duplicate IDs: %s', async duplicate => {
+        const initialRequest = new Subject<Record<string, unknown>>();
+        const createdTask: ClientTask = {
+            id: entityId<'client-task'>('new-task'),
+            dietologistUserId: entityId<'user'>('diet-1'),
+            clientUserId: entityId<'user'>('client-1'),
+            title: 'New task',
+            details: null,
+            dueAtUtc: null,
+            status: 'Open',
+            isOverdue: false,
+            createdAtUtc: utcInstant('2026-05-23T00:00:00Z'),
+            statusChangedAtUtc: null,
+        };
+        const cancelledTask: ClientTask = { ...createdTask, status: 'Cancelled' };
+        const template: RecommendationTemplate = {
+            id: entityId<'recommendation-template'>('new-template'),
+            name: 'New template',
+            text: 'Add protein',
+            isArchived: false,
+            createdAtUtc: createdTask.createdAtUtc,
+            modifiedAtUtc: null,
+        };
+        const recommendation = {
+            id: entityId<'recommendation'>('rec-1'),
+            dietologistUserId: createdTask.dietologistUserId,
+            dietologistFirstName: null,
+            dietologistLastName: null,
+            text: 'Add protein',
+            isRead: false,
+            createdAtUtc: createdTask.createdAtUtc,
+            readAtUtc: null,
+        };
+        dietologistService.getClientDashboard.mockReturnValueOnce(initialRequest);
+        dietologistService.getTasksForClient.mockReturnValueOnce(
+            of([{ ...createdTask, id: entityId<'client-task'>('old-task') }, ...(duplicate ? [createdTask] : [])]),
+        );
+        dietologistService.getRecommendationsForClient.mockReturnValueOnce(
+            of([{ ...recommendation, id: entityId<'recommendation'>('old-rec') }, ...(duplicate ? [recommendation] : [])]),
+        );
+        dietologistService.searchRecommendationTemplates.mockReturnValueOnce(
+            of([{ ...template, id: entityId<'recommendation-template'>('old-template') }, ...(duplicate ? [template] : [])]),
+        );
+        dietologistService.createTask.mockReturnValueOnce(of(createdTask));
+        dietologistService.cancelTask.mockReturnValueOnce(of(cancelledTask));
+        dietologistService.createRecommendationTemplate.mockReturnValueOnce(of(template));
+        createComponent('client-1', true);
+        component['taskModel'].set({ title: 'New task', details: '', dueDate: '' });
+        await component['submitTaskAsync']();
+        component['cancelTask'](createdTask);
+        component['recommendationModel'].set({ text: 'Add protein', templateName: 'New template' });
+        component['createRecommendationTemplate']();
+        await component['submitRecommendationAsync']();
+
+        initialRequest.next(createDashboardSnapshot());
+        initialRequest.complete();
+
+        expect(component['tasks']()).toEqual([cancelledTask, expect.objectContaining({ id: 'old-task' })]);
+        expect(component['recommendations']()).toEqual([recommendation, expect.objectContaining({ id: 'old-rec' })]);
+        expect(component['recommendationTemplates']()).toEqual([template, expect.objectContaining({ id: 'old-template' })]);
         expect(component['detailsLoading']()).toBe(false);
     });
 });

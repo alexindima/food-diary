@@ -4032,7 +4032,7 @@
       "role": "Component",
       "selector": "fd-client-dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
-      "line": 127
+      "line": 135
     },
     {
       "name": "ClientDashboardFastingCardComponent",

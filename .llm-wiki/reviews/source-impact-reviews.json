@@ -855,13 +855,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fec9a22c78473f6f36922107102b1f18affc55e17ee71c69292e56f14eb6232c"
+          "sha256": "c197f3bd480a4c20b0d2c13597631776f5f538eee4e0a530c3330cd8a091756b"
         }
       ],
-      "reason": "Current workflow guidance remains accurate. Final source has bounded typed error handling and one shared sequence guard; auth41/dashboard35 tests cover failures and both completion orders, full frontend5951 and Docker composition2 passed. The regenerated quality index reflects these current methods; no guide semantics changed.",
+      "reason": "Reviewed current client-dashboard orchestration and regenerated quality index. Initial task/recommendation/template reads merge with already successful local writes by semantic ID; task cancellation wins over duplicate older reads; template name ordering is preserved. Two pending-initial regression cases and the original browser race passed, including Russian mobile. Full frontend verification passed with5953tests; workflow text remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "333389de85cdc10220644de07c4f85208db4e991",
-      "reviewedAtUtc": "2026-10-16T08:13:53.1266576Z"
+      "gitHead": "3330adba8c212b980932999efb2d0f90de1ddef7",
+      "reviewedAtUtc": "2026-10-16T09:36:45.4768488Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -949,13 +949,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "fec9a22c78473f6f36922107102b1f18affc55e17ee71c69292e56f14eb6232c"
+          "sha256": "c197f3bd480a4c20b0d2c13597631776f5f538eee4e0a530c3330cd8a091756b"
         }
       ],
-      "reason": "The indexed auth change preserves HTTP endpoints, account privacy, credentials, sessions and provider behavior. Final separate review verifies generic non-429 errors, existing localized throttling, no added secret logging and unchanged authorization boundaries. Current security review workflow remains applicable.",
+      "reason": "The bounded in-memory merge changes no API payload, credentials, persistence, provider or authorization boundary. Current source and browser probes verify unrelated account404/admin403 and immediate sharing revocation403. Native cleanup used exact audit-owned IDs with creation/email/soft-delete guards. No secret logging or cross-client request behavior was introduced; security-review guidance remains applicable.",
       "baseRef": "HEAD",
-      "gitHead": "333389de85cdc10220644de07c4f85208db4e991",
-      "reviewedAtUtc": "2026-10-16T08:13:55.9394949Z"
+      "gitHead": "3330adba8c212b980932999efb2d0f90de1ddef7",
+      "reviewedAtUtc": "2026-10-16T09:36:46.1237489Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

@@ -86,6 +86,14 @@ type DateFilterFormModel = {
     dateTo: string;
 };
 
+type ClientDashboardDetails = {
+    dashboard: DietologistDashboardSnapshot | null;
+    goals: DietologistClientGoals | null;
+    recommendations: DietologistRecommendation[];
+    tasks: ClientTask[];
+    templates: RecommendationTemplate[];
+};
+
 type RecommendationFormModel = {
     text: string;
     templateName: string;
@@ -578,13 +586,7 @@ export class ClientDashboardComponent {
         return value;
     }
 
-    private loadClientDetails(client: ClientSummary): Observable<{
-        dashboard: DietologistDashboardSnapshot | null;
-        goals: DietologistClientGoals | null;
-        recommendations: DietologistRecommendation[];
-        tasks: ClientTask[];
-        templates: RecommendationTemplate[];
-    }> {
+    private loadClientDetails(client: ClientSummary): Observable<ClientDashboardDetails> {
         const reloadSequence = ++this.dashboardReloadSequence;
         const language = resolveTranslateLanguage(this.translateService);
         this.sectionLoadError.set(null);
@@ -611,9 +613,11 @@ export class ClientDashboardComponent {
             tap(result => {
                 this.applyDashboardIfCurrent(result.dashboard, reloadSequence);
                 this.goals.set(result.goals);
-                this.recommendations.set(result.recommendations);
-                this.tasks.set(result.tasks);
-                this.recommendationTemplates.set(result.templates);
+                this.recommendations.update(items => this.mergeInitialItems(result.recommendations, items));
+                this.tasks.update(items => this.mergeInitialItems(result.tasks, items));
+                this.recommendationTemplates.update(items =>
+                    this.mergeInitialItems(result.templates, items).sort((left, right) => left.name.localeCompare(right.name)),
+                );
             }),
         );
     }
@@ -645,6 +649,11 @@ export class ClientDashboardComponent {
             this.dashboard.set(dashboard);
             this.detailsLoading.set(false);
         }
+    }
+
+    private mergeInitialItems<T extends { id: string }>(loaded: T[], current: T[]): T[] {
+        const currentIds = new Set(current.map(item => item.id));
+        return [...current, ...loaded.filter(item => !currentIds.has(item.id))];
     }
 
     private loadDietologistDashboardSnapshot(client: ClientSummary, language: string): Observable<DietologistDashboardSnapshot> {
