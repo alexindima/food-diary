@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { calendarDate, utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { createClientValueFormatting } from '../../../lib/client-value-formatting';
+import type { DietologistDashboardSnapshot } from '../../../lib/dietologist-dashboard.data';
 import { createClient } from '../../clients/dietologist-clients-lib/dietologist-clients.test-data';
 import {
     buildBodyTiles,
@@ -170,8 +171,8 @@ describe('client dashboard detail mapper', () => {
         expect(buildHydrationView(snapshot as never)).toEqual({ total: '1500 ml', goal: '2000 ml', progress: 75 });
         expect(buildFastingView(snapshot as never)).toEqual(
             expect.objectContaining({
-                status: 'Active',
-                protocol: 'Fast16Eat8',
+                status: 'FASTING.BADGE_ACTIVE',
+                protocol: 'FASTING.PROTOCOL_16_8',
                 plannedDuration: '16 h',
             }),
         );
@@ -213,6 +214,38 @@ describe('client dashboard detail mapper', () => {
                 statusKey: 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.READ',
             },
         ]);
+    });
+});
+
+describe('client fasting localization', () => {
+    it('localizes shared status and protocol with the current report translator', () => {
+        const snapshot = createDashboardSnapshot() as DietologistDashboardSnapshot;
+        const session = snapshot.currentFastingSession;
+        if (session === null || session === undefined) {
+            throw new Error('Fasting fixture must include a session');
+        }
+        session.protocol = 'Fast24';
+        const translations: Record<string, string> = {
+            'FASTING.BADGE_ACTIVE': 'В процессе',
+            'FASTING.PROTOCOL_24_0': '24 ч',
+        };
+
+        expect(buildFastingView(snapshot, undefined, key => translations[key] ?? key)).toEqual(
+            expect.objectContaining({ status: 'В процессе', protocol: '24 ч' }),
+        );
+    });
+
+    it('uses the localized plan type for an unknown or absent protocol', () => {
+        const snapshot = createDashboardSnapshot() as DietologistDashboardSnapshot;
+        const session = snapshot.currentFastingSession;
+        if (session === null || session === undefined) {
+            throw new Error('Fasting fixture must include a session');
+        }
+        session.planType = 'Cyclic';
+        session.protocol = 'FutureCyclicProtocol';
+        expect(buildFastingView(snapshot)?.protocol).toBe('FASTING.MODE_CYCLIC');
+        session.protocol = '';
+        expect(buildFastingView(snapshot)?.protocol).toBe('FASTING.MODE_CYCLIC');
     });
 });
 

@@ -86,10 +86,12 @@ public sealed class CommunityPlanningContextIntegrationTests(PostgresDatabaseFix
         await new MealPlanningUserDataPurgeParticipant(planning,
             provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>())
             .PurgeAsync(user.Id, reassignTarget: null, CancellationToken.None);
+        Assert.False(await read.ShoppingLists.AnyAsync(item => item.Id == list.Id));
         Assert.False(await read.ShoppingListItems.AnyAsync(item => item.ShoppingListId == list.Id));
-        planning.MealPlans.Remove(await planning.MealPlans.SingleAsync(item => item.Id == plan.Id));
-        await unitOfWork.SaveChangesAsync();
+        Assert.False(await read.MealPlans.AnyAsync(item => item.Id == plan.Id));
+        Assert.False(await read.MealPlanDays.AnyAsync(item => item.MealPlanId == plan.Id));
         Assert.False(await read.MealPlanMeals.AnyAsync(item => item.RecipeId == recipe.Id));
+        Assert.True(await read.Recipes.AnyAsync(item => item.Id == recipe.Id));
         central.Users.Remove(user);
         await unitOfWork.SaveChangesAsync();
         Assert.False(await read.RecipeLikes.AnyAsync(item => item.UserId == user.Id));

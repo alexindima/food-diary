@@ -58,6 +58,7 @@ public sealed class RecipeUsageCompositionIntegrationTests(PostgresDatabaseFixtu
             var meal = Meal.Create(owner.Id, DateTime.UtcNow);
             meal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(1));
             var parent = Recipe.Create(owner.Id, "Parent recipe", servings: 1);
+            parent.ChangeVisibility(Visibility.Private);
             parent.AddStep(1, "Mix").AddNestedRecipeIngredient(recipe.Id, RecipeServingQuantity.FromServings(1));
             var catalogPlan = MealPlan.CreateCurated("Catalog plan", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
             catalogPlan.AddDay(1).AddMeal(MealType.Breakfast, recipe.Id);

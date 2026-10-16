@@ -413,7 +413,7 @@ describe('AuthComponent register results', () => {
 describe('AuthComponent password reset', () => {
     it('should request password reset through the configured signal form action', async () => {
         const { authFlowFacadeSpy, component } = createComponent();
-        authFlowFacadeSpy.requestPasswordReset.mockReturnValue(of(true));
+        authFlowFacadeSpy.requestPasswordReset.mockReturnValue(of('success'));
         component['onPasswordResetOpen']();
         component['passwordResetModel'].set({ email: 'user@example.com' });
 
@@ -435,7 +435,7 @@ describe('AuthComponent password reset', () => {
 
     it('should mark reset as sent and start cooldown after successful request', async () => {
         const { authFlowFacadeSpy, component } = createComponent();
-        authFlowFacadeSpy.requestPasswordReset.mockReturnValue(of(true));
+        authFlowFacadeSpy.requestPasswordReset.mockReturnValue(of('success'));
         component['onPasswordResetOpen']();
         component['passwordResetModel'].set({ email: 'user@example.com' });
 
@@ -444,6 +444,21 @@ describe('AuthComponent password reset', () => {
         expect(authFlowFacadeSpy.requestPasswordReset).toHaveBeenCalledOnce();
         expect(component['passwordResetSent']()).toBe(true);
         expect(component['passwordResetCooldownSeconds']()).toBe(2);
+        expect(component['isPasswordResetting']()).toBe(false);
+    });
+
+    it('should explain throttling and preserve the reset email without starting a success cooldown', async () => {
+        const { authFlowFacadeSpy, component } = createComponent();
+        authFlowFacadeSpy.requestPasswordReset.mockReturnValue(of('rateLimited'));
+        component['onPasswordResetOpen']();
+        component['passwordResetModel'].set({ email: 'user@example.com' });
+
+        await submit(component['passwordResetForm']);
+
+        expect(component['globalError']()).toBe('FORM_ERRORS.RATE_LIMITED');
+        expect(component['passwordResetModel']().email).toBe('user@example.com');
+        expect(component['passwordResetSent']()).toBe(false);
+        expect(component['passwordResetCooldownSeconds']()).toBe(0);
         expect(component['isPasswordResetting']()).toBe(false);
     });
 

@@ -18,6 +18,23 @@ const DATE_ONLY_LENGTH = 10;
 const STABLE_DELTA_THRESHOLD = 0.05;
 const ONE_DECIMAL_PRECISION = 10;
 const QUANTITY_FRACTION_DIGITS = 20;
+const FASTING_STATUS_LABEL_KEYS: Record<FastingSession['status'], string> = {
+    Active: 'FASTING.BADGE_ACTIVE',
+    Completed: 'FASTING.BADGE_COMPLETED',
+    Interrupted: 'FASTING.BADGE_INTERRUPTED',
+    Skipped: 'FASTING.BADGE_SKIPPED',
+    Postponed: 'FASTING.BADGE_POSTPONED',
+};
+const FASTING_PROTOCOL_LABEL_KEYS: Readonly<Record<string, string>> = {
+    Fast16Eat8: 'FASTING.PROTOCOL_16_8',
+    Fast18Eat6: 'FASTING.PROTOCOL_18_6',
+    Fast20Eat4: 'FASTING.PROTOCOL_20_4',
+    Fast24: 'FASTING.PROTOCOL_24_0',
+    Fast36: 'FASTING.PROTOCOL_36_0',
+    Fast72: 'FASTING.PROTOCOL_72_0',
+    Custom: 'FASTING.PROTOCOL_CUSTOM',
+    CustomIntermittent: 'FASTING.PROTOCOL_CUSTOM_INTERMITTENT',
+};
 
 export type ClientDashboardSection = {
     isVisible: boolean;
@@ -348,6 +365,7 @@ export function buildHydrationView(
 export function buildFastingView(
     snapshot: DietologistDashboardSnapshot | null,
     formatting: ClientValueFormatting = DEFAULT_CLIENT_VALUE_FORMATTING,
+    translate: (key: string) => string = key => key,
 ): ClientFastingView | null {
     if (snapshot?.currentFastingSession === null || snapshot?.currentFastingSession === undefined) {
         return null;
@@ -355,8 +373,8 @@ export function buildFastingView(
 
     const session = snapshot.currentFastingSession;
     return {
-        status: session.status,
-        protocol: formatFastingProtocol(session),
+        status: translate(FASTING_STATUS_LABEL_KEYS[session.status]),
+        protocol: formatFastingProtocol(session, translate),
         startedAtUtc: session.startedAtUtc,
         plannedDuration: formatting.number(session.plannedDurationHours, 'h'),
         checkInSummary: formatFastingCheckIn(session),
@@ -472,12 +490,9 @@ function getMealItemUnit(item: MealItem | MealItemResponseDto, language: string)
     return `GENERAL.UNITS.${unit?.toUpperCase() ?? 'G'}`;
 }
 
-function formatFastingProtocol(session: FastingSession): string {
-    if (session.protocol.length > 0) {
-        return session.protocol;
-    }
-
-    return session.planType;
+function formatFastingProtocol(session: FastingSession, translate: (key: string) => string): string {
+    const labelKey = FASTING_PROTOCOL_LABEL_KEYS[session.protocol] ?? `FASTING.MODE_${session.planType.toUpperCase()}`;
+    return translate(labelKey);
 }
 
 function formatFastingCheckIn(session: FastingSession): string | null {

@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { type CanActivateFn, Router } from '@angular/router';
+import { type CanActivateFn, Router, type UrlTree } from '@angular/router';
 
 import { AdminAuthService } from '../features/admin-auth/contracts/admin-session';
 
@@ -21,7 +21,7 @@ export const adminAuthGuard: CanActivateFn = async (_route, state) => {
         authService.refreshTokenState();
 
         if (upgraded && authService.isAdmin()) {
-            return true;
+            return sanitizedAdminDestination(router, state.url);
         }
 
         return router.createUrlTree(['/unauthorized'], {
@@ -29,5 +29,22 @@ export const adminAuthGuard: CanActivateFn = async (_route, state) => {
         });
     }
 
-    return true;
+    return sanitizedAdminDestination(router, state.url);
 };
+
+function sanitizedAdminDestination(router: Router, url: string): true | UrlTree {
+    const destination = router.parseUrl(url);
+    const fragmentParams = new URLSearchParams(destination.fragment ?? '');
+    if (!Object.hasOwn(destination.queryParams, 'code') && !fragmentParams.has('code')) {
+        return true;
+    }
+
+    delete destination.queryParams['code'];
+    if (fragmentParams.has('code')) {
+        fragmentParams.delete('code');
+        const nextFragment = fragmentParams.toString();
+        destination.fragment = nextFragment.length > 0 ? nextFragment : null;
+    }
+
+    return destination;
+}

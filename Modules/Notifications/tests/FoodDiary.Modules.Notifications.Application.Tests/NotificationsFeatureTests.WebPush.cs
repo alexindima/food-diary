@@ -17,7 +17,7 @@ namespace FoodDiary.Modules.Notifications.Application.Tests;
 public partial class NotificationsFeatureTests {
 
     [Fact]
-    public async Task GetWebPushSubscriptions_FiltersExpiredSubscriptions() {
+    public async Task GetWebPushSubscriptions_IncludesSubscriptionsWithoutExpiryAndFiltersExpiredSubscriptions() {
         User user = CreateUser();
         var utcNow = new DateTime(2026, 5, 28, 8, 0, 0, DateTimeKind.Utc);
         var active = WebPushSubscription.Create(
@@ -32,7 +32,11 @@ public partial class NotificationsFeatureTests {
             "p256",
             "auth",
             utcNow.AddMinutes(-1));
-        var repository = new InMemoryWebPushSubscriptionRepository([active, expired]);
+        var withoutExpiry = WebPushSubscription.Create(
+            user.Id, "https://push.example.com/without-expiry", "p256", "auth");
+        var expiresNow = WebPushSubscription.Create(
+            user.Id, "https://push.example.com/expires-now", "p256", "auth", utcNow);
+        var repository = new InMemoryWebPushSubscriptionRepository([active, withoutExpiry, expired, expiresNow]);
         var handler = new GetWebPushSubscriptionsQueryHandler(
             repository,
             CreateCurrentUserAccessService(user),
@@ -41,10 +45,10 @@ public partial class NotificationsFeatureTests {
         Result<IReadOnlyList<WebPushSubscriptionModel>> result = await handler.Handle(new GetWebPushSubscriptionsQuery(user.Id.Value), CancellationToken.None);
 
         ResultAssert.Success(result);
-        WebPushSubscriptionModel item = Assert.Single(result.Value);
-        Assert.Equal(active.Endpoint, item.Endpoint);
+        Assert.Equal([active.Endpoint, withoutExpiry.Endpoint], result.Value.Select(item => item.Endpoint), StringComparer.Ordinal);
+        Assert.Null(result.Value[1].ExpirationTimeUtc);
         Assert.Empty(repository.DeletedEndpoints);
-        Assert.Equal(2, repository.Subscriptions.Count);
+        Assert.Equal(4, repository.Subscriptions.Count);
     }
 
     [Fact]

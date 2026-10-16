@@ -529,9 +529,9 @@
         "ADD_TO_MEAL": "Add to meal",
         "NO_BARCODE": "No barcode",
         "QUALITY_SCORE": "Healthiness",
-        "TO_DIARY": "To diary",
         "QUALITY_HELP": "How healthiness is calculated",
-        "QUALITY_EXPLANATION": "A rough score from 0 to 100, based on protein and fibre per calorie, energy density, macro balance, alcohol and product type. Red: 0–33; yellow: 34–66; green: 67–100. Missing data reduces accuracy. Individual needs are not considered."
+        "QUALITY_EXPLANATION": "A rough score from 0 to 100, based on protein and fibre per calorie, energy density, macro balance, alcohol and product type. Red: 0–33; yellow: 34–66; green: 67–100. Missing data reduces accuracy. Individual needs are not considered.",
+        "TO_DIARY": "To diary"
     },
     "RECIPE_CARD": {
         "ADD_TO_MEAL": "Add to meal",
@@ -5397,7 +5397,7 @@
         "TIME_ZONE": "Time zone",
         "TIME_ZONE_SEARCH": "Search city or region",
         "TIME_ZONE_NO_RESULTS": "No matching time zones. Try another city or region.",
-        "TIME_ZONE_HINT": "Used for calendar days in Telegram summaries. Choose your region, for example Asia/Tbilisi. Until selected, summaries use UTC.",
+        "TIME_ZONE_HINT": "Used for calendar days in shared dietologist reports and Telegram summaries. Choose your region, for example Asia/Tbilisi. Until selected, these reports use UTC.",
         "LANGUAGE": "Language",
         "LANGUAGE_PLACEHOLDER": "Select language",
         "THEME": "Theme",
@@ -7797,6 +7797,7 @@
                 "DELTA": "{{delta}} since previous entry"
             },
             "DATE_FILTER": {
+                "TIME_ZONE_HINT": "Report days use the client's saved time zone. If it is unset, UTC is used. Meal times are shown in your local time.",
                 "FROM_LABEL": "From",
                 "FROM_PLACEHOLDER": "Start date",
                 "TO_LABEL": "To",

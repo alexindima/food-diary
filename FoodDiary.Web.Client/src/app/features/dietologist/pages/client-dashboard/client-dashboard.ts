@@ -304,7 +304,9 @@ export class ClientDashboardComponent {
         this.client()?.permissions.shareHydration === true ? buildHydrationView(this.dashboard(), this.valueFormatting()) : null,
     );
     protected readonly fastingSummary = computed<ClientFastingView | null>(() =>
-        this.client()?.permissions.shareFasting === true ? buildFastingView(this.dashboard(), this.valueFormatting()) : null,
+        this.client()?.permissions.shareFasting === true
+            ? buildFastingView(this.dashboard(), this.valueFormatting(), key => this.translateService.instant(key))
+            : null,
     );
     protected readonly recommendationItems = computed<ClientRecommendationView[]>(() => buildRecommendationViews(this.recommendations()));
 
@@ -329,9 +331,6 @@ export class ClientDashboardComponent {
             )
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
-                next: () => {
-                    this.detailsLoading.set(false);
-                },
                 error: () => {
                     this.loading.set(false);
                     this.detailsLoading.set(false);
@@ -586,13 +585,14 @@ export class ClientDashboardComponent {
         tasks: ClientTask[];
         templates: RecommendationTemplate[];
     }> {
+        const reloadSequence = ++this.dashboardReloadSequence;
         const language = resolveTranslateLanguage(this.translateService);
         this.sectionLoadError.set(null);
 
         return forkJoin({
             dashboard: this.shouldLoadDietologistDashboardSnapshot(client)
                 ? this.loadDietologistDashboardSnapshot(client, language).pipe(
-                      this.handleSectionLoadError<DietologistDashboardSnapshot, null>(null),
+                      this.handleSectionLoadError<DietologistDashboardSnapshot, null>(null, reloadSequence),
                   )
                 : of(null),
             goals: client.permissions.shareGoals
@@ -609,7 +609,7 @@ export class ClientDashboardComponent {
                 .pipe(this.handleSectionLoadError<RecommendationTemplate[], RecommendationTemplate[]>([])),
         }).pipe(
             tap(result => {
-                this.dashboard.set(result.dashboard);
+                this.applyDashboardIfCurrent(result.dashboard, reloadSequence);
                 this.goals.set(result.goals);
                 this.recommendations.set(result.recommendations);
                 this.tasks.set(result.tasks);
@@ -625,7 +625,7 @@ export class ClientDashboardComponent {
     private async reloadDashboardAsync(client: ClientSummary): Promise<void> {
         const reloadSequence = ++this.dashboardReloadSequence;
         if (!this.shouldLoadDietologistDashboardSnapshot(client)) {
-            this.dashboard.set(null);
+            this.applyDashboardIfCurrent(null, reloadSequence);
             return;
         }
 
@@ -633,16 +633,18 @@ export class ClientDashboardComponent {
         this.sectionLoadError.set(null);
         const result = await firstValueFrom(
             this.loadDietologistDashboardSnapshot(client, resolveTranslateLanguage(this.translateService))
-                .pipe(this.handleSectionLoadError<DietologistDashboardSnapshot, null>(null))
+                .pipe(this.handleSectionLoadError<DietologistDashboardSnapshot, null>(null, reloadSequence))
                 .pipe(takeUntilDestroyed(this.destroyRef)),
         );
 
-        if (reloadSequence !== this.dashboardReloadSequence) {
-            return;
-        }
+        this.applyDashboardIfCurrent(result, reloadSequence);
+    }
 
-        this.dashboard.set(result);
-        this.detailsLoading.set(false);
+    private applyDashboardIfCurrent(dashboard: DietologistDashboardSnapshot | null, reloadSequence: number): void {
+        if (reloadSequence === this.dashboardReloadSequence) {
+            this.dashboard.set(dashboard);
+            this.detailsLoading.set(false);
+        }
     }
 
     private loadDietologistDashboardSnapshot(client: ClientSummary, language: string): Observable<DietologistDashboardSnapshot> {
@@ -719,11 +721,16 @@ export class ClientDashboardComponent {
         return next;
     }
 
-    private handleSectionLoadError<T, TFallback>(fallback: TFallback): (source: Observable<T>) => Observable<T | TFallback> {
+    private handleSectionLoadError<T, TFallback>(
+        fallback: TFallback,
+        reloadSequence?: number,
+    ): (source: Observable<T>) => Observable<T | TFallback> {
         return source =>
             source.pipe(
                 catchError(() => {
-                    this.sectionLoadError.set('DIETOLOGIST.CLIENT_DASHBOARD.PARTIAL_LOAD_ERROR');
+                    if (reloadSequence === undefined || reloadSequence === this.dashboardReloadSequence) {
+                        this.sectionLoadError.set('DIETOLOGIST.CLIENT_DASHBOARD.PARTIAL_LOAD_ERROR');
+                    }
                     return of(fallback);
                 }),
             );

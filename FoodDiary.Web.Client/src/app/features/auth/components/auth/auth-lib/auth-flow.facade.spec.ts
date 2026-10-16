@@ -109,7 +109,7 @@ describe('AuthFlowFacade simple flows', () => {
         authServiceMock.requestPasswordReset.mockReturnValue(of({}));
 
         await expect(firstValueFrom(facade.loginWithGoogle({ credential: 'credential', rememberMe: true }))).resolves.toBe('success');
-        await expect(firstValueFrom(facade.requestPasswordReset({ email: 'user@example.com' }))).resolves.toBe(true);
+        await expect(firstValueFrom(facade.requestPasswordReset({ email: 'user@example.com' }))).resolves.toBe('success');
     });
 
     it('should preserve the Google account-link-required outcome', async () => {
@@ -167,6 +167,21 @@ function createAuthResponse(language: string): AuthResponse {
 }
 
 describe('Auth rate limits', () => {
+    it('preserves password reset throttling without retrying the request', async () => {
+        authServiceMock.requestPasswordReset.mockReturnValue(throwError(() => new HttpErrorResponse({ status: 429 })));
+        const facade = TestBed.inject(AuthFlowFacade);
+
+        expect(await firstValueFrom(facade.requestPasswordReset({ email: 'user@example.com' }))).toBe('rateLimited');
+        expect(authServiceMock.requestPasswordReset).toHaveBeenCalledOnce();
+    });
+
+    it('keeps other password reset errors generic', async () => {
+        authServiceMock.requestPasswordReset.mockReturnValue(throwError(() => new HttpErrorResponse({ status: 500 })));
+        const facade = TestBed.inject(AuthFlowFacade);
+
+        expect(await firstValueFrom(facade.requestPasswordReset({ email: 'user@example.com' }))).toBe('unknown');
+    });
+
     it('distinguishes throttling from invalid credentials without retrying automatically', async () => {
         authServiceMock.login.mockReturnValue(throwError(() => new HttpErrorResponse({ status: 429 })));
         const facade = TestBed.inject(AuthFlowFacade);

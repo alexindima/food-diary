@@ -1,51 +1,53 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, DefaultUrlSerializer, Router, RouterStateSnapshot } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AdminAuthService } from '../features/admin-auth/contracts/admin-session';
 import { adminAuthGuard } from './admin-auth.guard';
 
-describe('adminAuthGuard', () => {
-    let authService: {
-        applySsoFromQueryAsync: ReturnType<typeof vi.fn>;
-        refreshTokenState: ReturnType<typeof vi.fn>;
-        isAuthenticated: ReturnType<typeof vi.fn>;
-        isAdmin: ReturnType<typeof vi.fn>;
-        tryUpgradeToAdminAsync: ReturnType<typeof vi.fn>;
+let authService: {
+    applySsoFromQueryAsync: ReturnType<typeof vi.fn>;
+    refreshTokenState: ReturnType<typeof vi.fn>;
+    isAuthenticated: ReturnType<typeof vi.fn>;
+    isAdmin: ReturnType<typeof vi.fn>;
+    tryUpgradeToAdminAsync: ReturnType<typeof vi.fn>;
+};
+let router: {
+    createUrlTree: ReturnType<typeof vi.fn>;
+    parseUrl: ReturnType<typeof vi.fn>;
+};
+let route: ActivatedRouteSnapshot;
+let state: RouterStateSnapshot;
+
+beforeEach(() => {
+    authService = {
+        applySsoFromQueryAsync: vi.fn(),
+        refreshTokenState: vi.fn(),
+        isAuthenticated: vi.fn(),
+        isAdmin: vi.fn(),
+        tryUpgradeToAdminAsync: vi.fn(),
     };
-    let router: {
-        createUrlTree: ReturnType<typeof vi.fn>;
+    authService.applySsoFromQueryAsync.mockResolvedValue(void 0);
+    authService.tryUpgradeToAdminAsync.mockResolvedValue(false);
+
+    router = {
+        createUrlTree: vi.fn(),
+        parseUrl: vi.fn((url: string) => new DefaultUrlSerializer().parse(url)),
     };
-    let route: ActivatedRouteSnapshot;
-    let state: RouterStateSnapshot;
+    router.createUrlTree.mockImplementation((commands: unknown[], extras: unknown) => ({ commands, extras }));
 
-    beforeEach(() => {
-        authService = {
-            applySsoFromQueryAsync: vi.fn(),
-            refreshTokenState: vi.fn(),
-            isAuthenticated: vi.fn(),
-            isAdmin: vi.fn(),
-            tryUpgradeToAdminAsync: vi.fn(),
-        };
-        authService.applySsoFromQueryAsync.mockResolvedValue(void 0);
-        authService.tryUpgradeToAdminAsync.mockResolvedValue(false);
-
-        router = {
-            createUrlTree: vi.fn(),
-        };
-        router.createUrlTree.mockImplementation((commands: unknown[], extras: unknown) => ({ commands, extras }));
-
-        TestBed.configureTestingModule({
-            providers: [
-                { provide: AdminAuthService, useValue: authService },
-                { provide: Router, useValue: router },
-            ],
-        });
-
-        route = new ActivatedRouteSnapshot();
-        state = Object.assign(Object.create(RouterStateSnapshot.prototype), { url: '/users?page=2' }) as RouterStateSnapshot;
+    TestBed.configureTestingModule({
+        providers: [
+            { provide: AdminAuthService, useValue: authService },
+            { provide: Router, useValue: router },
+        ],
     });
 
+    route = new ActivatedRouteSnapshot();
+    state = Object.assign(Object.create(RouterStateSnapshot.prototype), { url: '/users?page=2' }) as RouterStateSnapshot;
+});
+
+describe('adminAuthGuard', () => {
     it('should allow authenticated admin', async () => {
         authService.isAuthenticated.mockReturnValue(true);
         authService.isAdmin.mockReturnValue(true);
@@ -69,6 +71,31 @@ describe('adminAuthGuard', () => {
             commands: ['/unauthorized'],
             extras: { queryParams: { reason: 'unauthenticated', returnUrl: '/users?page=2' } },
         });
+    });
+
+    it.each([
+        ['/users?page=2#code=one-time-code', '/users?page=2'],
+        ['/users?page=2&code=one-time-code#details', '/users?page=2#details'],
+        ['/users?code=one-time-code#code=one-time-code&tab=activity', '/users#tab=activity'],
+    ])('redirects successful SSO navigation from %s to %s', async (url, expectedUrl) => {
+        authService.isAuthenticated.mockReturnValue(true);
+        authService.isAdmin.mockReturnValue(true);
+        state = Object.assign(Object.create(RouterStateSnapshot.prototype), { url }) as RouterStateSnapshot;
+
+        const result = await TestBed.runInInjectionContext(async () => adminAuthGuard(route, state));
+
+        expect(result).toEqual(new DefaultUrlSerializer().parse(expectedUrl));
+    });
+
+    it('cleans the SSO destination after an admin upgrade', async () => {
+        authService.isAuthenticated.mockReturnValue(true);
+        authService.isAdmin.mockReturnValueOnce(false).mockReturnValueOnce(true);
+        authService.tryUpgradeToAdminAsync.mockResolvedValue(true);
+        state = Object.assign(Object.create(RouterStateSnapshot.prototype), { url: '/users#code=one-time-code' }) as RouterStateSnapshot;
+
+        const result = await TestBed.runInInjectionContext(async () => adminAuthGuard(route, state));
+
+        expect(result).toEqual(new DefaultUrlSerializer().parse('/users'));
     });
 
     it('should allow non-admin after successful admin upgrade', async () => {

@@ -10,6 +10,7 @@ import type { GoogleLoginRequest } from '../../../models/google-auth.data';
 
 export type AuthLoginResult = 'success' | 'invalidCredentials' | 'accountDeleted' | 'rateLimited' | 'unknown';
 export type AuthRegisterResult = 'success' | 'emailExists' | 'accountDeleted' | 'rateLimited' | 'unknown';
+export type AuthPasswordResetResult = 'success' | 'rateLimited' | 'unknown';
 export type GoogleLoginResult = 'success' | 'accountLinkRequired' | 'unknown';
 
 @Service()
@@ -84,10 +85,16 @@ export class AuthFlowFacade {
         );
     }
 
-    public requestPasswordReset(formValue: Partial<PasswordResetRequest>): Observable<boolean> {
+    public requestPasswordReset(formValue: Partial<PasswordResetRequest>): Observable<AuthPasswordResetResult> {
         return this.authService.requestPasswordReset(new PasswordResetRequest(formValue)).pipe(
-            map(() => true),
-            catchError(() => of(false)),
+            map(() => 'success' as const),
+            catchError((error: unknown) =>
+                of(
+                    error instanceof HttpErrorResponse && error.status === Number(HttpStatusCode.TooManyRequests)
+                        ? ('rateLimited' as const)
+                        : ('unknown' as const),
+                ),
+            ),
         );
     }
 

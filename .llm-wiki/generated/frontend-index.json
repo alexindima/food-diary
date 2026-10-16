@@ -3472,7 +3472,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-flow.facade.ts",
-      "line": 16
+      "line": 17
     },
     {
       "name": "AuthFormManager",
@@ -7949,16 +7949,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4131,
-      "russianProperties": 4131,
+      "englishProperties": 4132,
+      "russianProperties": 4132,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1233,
-      "russianProperties": 1233,
+      "englishProperties": 1235,
+      "russianProperties": 1235,
       "countsMatch": true
     },
     {

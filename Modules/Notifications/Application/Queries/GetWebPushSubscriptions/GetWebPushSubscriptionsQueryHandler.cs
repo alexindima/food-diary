@@ -32,7 +32,7 @@ public sealed class GetWebPushSubscriptionsQueryHandler(
             .ConfigureAwait(false);
 
         IReadOnlyList<WebPushSubscriptionModel> activeSubscriptions = [.. subscriptions
-            .Where(subscription => subscription.ExpirationTimeUtc > utcNow)
+            .Where(subscription => subscription.ExpirationTimeUtc is null || subscription.ExpirationTimeUtc > utcNow)
             .Select(subscription => subscription.ToModel())];
 
         return Result.Success(activeSubscriptions);

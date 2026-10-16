@@ -143,6 +143,67 @@
       "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
       "previousEventHash": "06ef834f09e26ca25e9336f742048092c28e5aff68b0274cf1ce87aa61c595d3",
       "eventHash": "2c62dbc8e5e14fa2a4f92e53a351c7f7a2fbcd1f86014d55d659752643877fdd"
+    },
+    {
+      "schemaVersion": 2,
+      "eventId": "86e0bcac78334011a9c6bc37d2703815",
+      "workspace": ".artifacts/llm-wiki/tasks/focused-closure-20261016",
+      "recordedAtUtc": "2026-10-16T08:58:21.3613206Z",
+      "completionFingerprint": "634a07b346f8a53928b90e8b11521b73a6ac9e55bb41c83e76cc88f318dd1a35",
+      "retrospectiveHash": "28e5ef70ed00a8bf0cda2f14c646606a5ad7c6aea53b94b1ec9d170af27e4f5a",
+      "instructionSetFingerprint": "a7deee692ad447f322a2f8ac4b25de3e507e673e0c2c9bff78673ab2b6d5d171",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "fingerprint": "653da684e31eb77470f5a7208ffb17b0e66c80d00a5f6af4a7c5d9a6fc869d0f"
+        },
+        {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "fingerprint": "3cb73f4dd17f84f25bd02b78d9e29e5d4ca7caaec8ba2d8098f07161cac9edfb"
+        },
+        {
+          "path": "FoodDiary.Web.Client/projects/fooddiary-admin/AGENTS.md",
+          "fingerprint": "973d85ff39c3cf4f86a52463237a53ec84f313f3eedbfca6e9cb201a88d5da96"
+        },
+        {
+          "path": "FoodDiary.Web.Client/src/app/features/AGENTS.md",
+          "fingerprint": "a6d97182073a246c9dc9fa52882726d72824b550ffdcee3c3f587716611c33b7"
+        },
+        {
+          "path": "Modules/Notifications/AGENTS.md",
+          "fingerprint": "d1148325d284c1991bda930cafc8944517c4a87e9761495d2456631fee70387b"
+        },
+        {
+          "path": "Modules/Notifications/Application/AGENTS.md",
+          "fingerprint": "cce7048daf8a3daa9a24b4c9fb601c885c8e5cb5cb020bec06922fc086b478aa"
+        },
+        {
+          "path": "Platform/tests/AGENTS.md",
+          "fingerprint": "c9d02dd67975643efed7054fb7ea1a0dcca9151f09fbf33b3bf41b96bd7ad575"
+        }
+      ],
+      "taskSignals": {
+        "riskLevel": "critical",
+        "complexityScore": 90,
+        "complexityBandUpperBound": 100,
+        "cohortKey": "critical|complexity<=100",
+        "modelRouteId": "unrouted",
+        "contextStrategyId": "default"
+      },
+      "outcome": {
+        "score": 75.0,
+        "quality": "excellent",
+        "readinessScore": 100.0,
+        "confidenceScore": 100.0,
+        "critiqueScore": 100.0,
+        "verificationScore": 0.0,
+        "repairAttempts": 0,
+        "falseNegativeCount": 0
+      },
+      "success": true,
+      "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
+      "previousEventHash": "2c62dbc8e5e14fa2a4f92e53a351c7f7a2fbcd1f86014d55d659752643877fdd",
+      "eventHash": "2422ae17120a489657a6fc6ab0bae83403035f1a641a2acfa45e45bc4bd0c3e0"
     }
   ]
 }

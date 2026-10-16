@@ -378,15 +378,15 @@ export class AuthComponent {
 
         this.isPasswordResetting.set(true);
 
-        const success = await firstValueFrom(this.authFlowFacade.requestPasswordReset(this.passwordResetModel()));
+        const result = await firstValueFrom(this.authFlowFacade.requestPasswordReset(this.passwordResetModel()));
         this.isPasswordResetting.set(false);
-        if (success) {
+        if (result === 'success') {
             this.passwordResetSent.set(true);
             this.startPasswordResetCooldown();
             return;
         }
 
-        this.setGlobalError('FORM_ERRORS.UNKNOWN');
+        this.setGlobalError(result === 'rateLimited' ? 'FORM_ERRORS.RATE_LIMITED' : 'FORM_ERRORS.UNKNOWN');
     }
 
     private startPasswordResetCooldown(seconds = this.passwordResetCooldownSecondsDefault): void {

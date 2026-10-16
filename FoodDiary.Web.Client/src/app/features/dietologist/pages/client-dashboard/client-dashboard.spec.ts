@@ -18,6 +18,7 @@ import { ClientDashboardComponent } from './client-dashboard';
 let fixture: ComponentFixture<ClientDashboardComponent>;
 let component: ClientDashboardComponent;
 const EXPECTED_METRIC_TILE_COUNT = 4;
+const EXPECTED_DAILY_CALORIE_TARGET = 1800;
 const SELECTED_YEAR = 2026;
 const SELECTED_DAY = 22;
 const PERIOD_START_DAY = 16;
@@ -121,6 +122,61 @@ describe('ClientDashboardComponent task deadlines', () => {
         });
     });
 });
+
+describe('ClientDashboardComponent initial dashboard races', () => {
+    it.each(['success', 'error'])('keeps the selected period after stale initial %s', async outcome => {
+        const { initialRequest, periodRequest, latestSnapshot, reload } = createPendingInitialDashboardRequests();
+        periodRequest.next(latestSnapshot);
+        periodRequest.complete();
+        await reload;
+
+        if (outcome === 'error') {
+            initialRequest.error(new Error('stale initial failure'));
+        } else {
+            initialRequest.next(createDashboardSnapshot());
+            initialRequest.complete();
+        }
+
+        expect(component['dashboard']()?.date).toBe(latestSnapshot.date);
+        expect(component['detailsLoading']()).toBe(false);
+        expect(component['sectionLoadError']()).toBeNull();
+        expect(component['goals']()?.dailyCalorieTarget).toBe(EXPECTED_DAILY_CALORIE_TARGET);
+    });
+
+    it('keeps the current period loading when the initial request finishes first', async () => {
+        const { initialRequest, periodRequest, latestSnapshot, reload } = createPendingInitialDashboardRequests();
+        initialRequest.next(createDashboardSnapshot());
+        initialRequest.complete();
+
+        expect(component['dashboard']()).toBeNull();
+        expect(component['detailsLoading']()).toBe(true);
+
+        periodRequest.next(latestSnapshot);
+        periodRequest.complete();
+        await reload;
+
+        expect(component['dashboard']()?.date).toBe(latestSnapshot.date);
+        expect(component['detailsLoading']()).toBe(false);
+    });
+});
+
+function createPendingInitialDashboardRequests(): {
+    initialRequest: Subject<Record<string, unknown>>;
+    periodRequest: Subject<Record<string, unknown>>;
+    latestSnapshot: Record<string, unknown> & { date: string };
+    reload: Promise<void>;
+} {
+    const initialRequest = new Subject<Record<string, unknown>>();
+    const periodRequest = new Subject<Record<string, unknown>>();
+    dietologistService.getClientDashboard.mockReturnValueOnce(initialRequest).mockReturnValueOnce(periodRequest);
+    dietologistService.getMyClients.mockReturnValueOnce(
+        of([createClient({ userId: entityId<'user'>('client-1'), permissions: { ...createClient().permissions, shareGoals: true } })]),
+    );
+    createComponent('client-1');
+    component['dateFilterModel'].set({ dateFrom: '2026-05-22', dateTo: '2026-05-22' });
+    const reload = component['applyDateFilterAsync']();
+    return { initialRequest, periodRequest, latestSnapshot: { ...createDashboardSnapshot(), date: '2026-05-22T00:00:00Z' }, reload };
+}
 
 function registerLoadingTests(): void {
     it('loads selected client by route id', () => {

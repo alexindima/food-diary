@@ -855,13 +855,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5bb6c49d5917160ac9a6892464f2697ddce7759eb15319a2de6139e0c456073e"
+          "sha256": "fec9a22c78473f6f36922107102b1f18affc55e17ee71c69292e56f14eb6232c"
         }
       ],
-      "reason": "Reviewed the integrated source and regenerated quality evidence. Bounded SQLite expansion, mixed implementation/test routing, composition classification and strict flow regressions are unchanged from the previously verified branch. Existing ranking vocabulary stays within the 700-rule budget; runtime topology changes only its source inventory fingerprint and file count.",
+      "reason": "Current workflow guidance remains accurate. Final source has bounded typed error handling and one shared sequence guard; auth41/dashboard35 tests cover failures and both completion orders, full frontend5951 and Docker composition2 passed. The regenerated quality index reflects these current methods; no guide semantics changed.",
       "baseRef": "HEAD",
-      "gitHead": "079fdf62e047f748e95f60512ca40df6f8c3e15d",
-      "reviewedAtUtc": "2026-10-15T21:25:54.3049529Z"
+      "gitHead": "333389de85cdc10220644de07c4f85208db4e991",
+      "reviewedAtUtc": "2026-10-16T08:13:53.1266576Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -949,21 +949,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5bb6c49d5917160ac9a6892464f2697ddce7759eb15319a2de6139e0c456073e"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "df4f1ab4b5f5fde1e9a9b6203ddabec604b5780f6a23e782056ed997f95be452"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "4a586e42da7de1a32f1394565d44bd5595b26768aa18e1389090188edbb502db"
+          "sha256": "fec9a22c78473f6f36922107102b1f18affc55e17ee71c69292e56f14eb6232c"
         }
       ],
-      "reason": "Reviewed the integrated bounded read-only SQLite navigation, exact snapshot validation, unavailable/partial states and privacy-preserving aggregate telemetry. Product authorization, private-data lifecycle, providers and deployment behavior are unchanged. Regenerated topology and quality evidence retain the current master baseline.",
+      "reason": "The indexed auth change preserves HTTP endpoints, account privacy, credentials, sessions and provider behavior. Final separate review verifies generic non-429 errors, existing localized throttling, no added secret logging and unchanged authorization boundaries. Current security review workflow remains applicable.",
       "baseRef": "HEAD",
-      "gitHead": "079fdf62e047f748e95f60512ca40df6f8c3e15d",
-      "reviewedAtUtc": "2026-10-15T21:26:34.0633782Z"
+      "gitHead": "333389de85cdc10220644de07c4f85208db4e991",
+      "reviewedAtUtc": "2026-10-16T08:13:55.9394949Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1116,17 +1108,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "ab62c4bd3d01bcfe97431b8d10e56be25fc84ef136dc405383870f88fd7c07ee"
+          "sha256": "38c9d9c18e36c08df0db2a889ee3ecbc20f0f518338c961a875affb881dc260a"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "4356fe89863c8e7a213ff8071a8c8a4eaa1daa9a44f0e3ef26acc945ae80d50f"
+          "sha256": "67d2e266eb85ae839c4ce864340e17ff548f4ee6d090ab561bcd0126ea7413ab"
         }
       ],
-      "reason": "Reviewed the frontend index and contract index after replacing the product quality expansion with an explicit info hint. Existing consumer and route tracing semantics remain unchanged; the added UI-kit button dependency is captured by the indexes and the trace guide remains current.",
+      "reason": "Both frontend and frontend-contract generated inputs were reviewed against final sources: AuthService to AuthFlowFacade to AuthComponent; DietologistFacade to ClientDashboardComponent. Six bounded source/test paths, no cross-feature dependency or HTTP contract change. Current trace-feature workflow needs no prose update.",
       "baseRef": "HEAD",
-      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
-      "reviewedAtUtc": "2026-10-15T17:27:26.7788544Z"
+      "gitHead": "333389de85cdc10220644de07c4f85208db4e991",
+      "reviewedAtUtc": "2026-10-16T08:27:44.5774176Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1210,13 +1202,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "ab62c4bd3d01bcfe97431b8d10e56be25fc84ef136dc405383870f88fd7c07ee"
+          "sha256": "38c9d9c18e36c08df0db2a889ee3ecbc20f0f518338c961a875affb881dc260a"
         }
       ],
-      "reason": "Reviewed the refreshed NutrientBadges contract: selector and public inputs remain compatible; an existing UI-kit button and hint replace inline expansion. Product, recipe, meal and favorite-row consumer tests passed, plus desktop/mobile, keyboard and Russian/English touch checks. The frontend contract review workflow remains accurate.",
+      "reason": "Final component and consumer contracts reviewed: no selector, template, input/output or API payload changes. One AuthFlowFacade reset consumer handles its typed result; existing EN/RU key and form-error semantics reused. Client dashboard sequence gate changes only asynchronous state application. Source/tests and browser evidence in final-review.md and checkpoint.json; contract-review guidance remains current.",
       "baseRef": "HEAD",
-      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
-      "reviewedAtUtc": "2026-10-15T17:27:25.4221822Z"
+      "gitHead": "333389de85cdc10220644de07c4f85208db4e991",
+      "reviewedAtUtc": "2026-10-16T08:27:43.9994350Z"
     },
     {
       "pageId": "workflow.query-context",

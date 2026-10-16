@@ -26,6 +26,7 @@ const bundleScopedEntryPoints = [
             path.join(rootDir, 'src', 'app', 'components', 'shared', 'meals-preview', 'meals-preview-entry', 'meals-preview-entry.ts'),
             path.join(rootDir, 'src', 'app', 'components', 'shared', 'meal-details-fields', 'meal-details-fields.ts'),
             path.join(rootDir, 'src', 'app', 'components', 'shared', 'meal-satiety-fields', 'meal-satiety-fields.ts'),
+            path.join(rootDir, 'src', 'app', 'components', 'shared', 'nutrient-badges', 'nutrient-badges.ts'),
             path.join(rootDir, 'src', 'app', 'components', 'shared', 'product-card', 'product-card.ts'),
             path.join(rootDir, 'src', 'app', 'components', 'shared', 'recipe-card', 'recipe-card.ts'),
             path.join(rootDir, 'src', 'app', 'features', 'meals', 'components', 'quick-meal-drawer', 'quick-meal-drawer.ts'),
