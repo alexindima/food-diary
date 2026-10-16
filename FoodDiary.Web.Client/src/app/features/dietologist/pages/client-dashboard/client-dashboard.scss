@@ -1,28 +1,33 @@
+@use 'variables' as variables;
+
 .client-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fd-space-page-card-gap);
     padding: var(--fd-space-lg);
     max-width: 800px;
     margin: 0 auto;
 
     &__header {
-        margin-bottom: var(--fd-space-lg);
         overflow-wrap: anywhere;
-    }
-
-    &__actions {
-        margin-bottom: var(--fd-space-md);
     }
 
     &__date-filter {
         display: grid;
-        grid-template-columns: repeat(2, minmax(180px, 220px)) 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
         gap: var(--fd-space-sm);
-        align-items: end;
+        align-items: start;
         padding: var(--fd-space-md);
     }
 
     &__date-actions {
+        grid-column: 1 / -1;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: flex-start;
+    }
+
+    &__sections {
+        gap: var(--fd-space-page-card-gap);
     }
 
     &__section {
@@ -78,14 +83,39 @@
     }
 }
 
-@media (max-width: 720px) {
+@media #{variables.$media-tablet} {
     .client-dashboard {
         &__date-filter {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        &__date-apply {
+            --fd-button-host-width: 100%;
+            --fd-button-width: 100%;
+            grid-column: 1 / -1;
         }
 
         &__date-actions {
-            justify-content: stretch;
+            --fd-button-host-width: 100%;
+            --fd-button-width: 100%;
+            --fd-button-height-explicit: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+
+        &__date-presets,
+        &__date-navigation {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            align-items: stretch;
+        }
+    }
+}
+
+@media #{variables.$media-mobile} {
+    .client-dashboard {
+        &__date-filter {
+            grid-template-columns: 1fr;
         }
     }
 }

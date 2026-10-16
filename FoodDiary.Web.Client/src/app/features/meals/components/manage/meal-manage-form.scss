@@ -30,7 +30,7 @@
         overflow: visible;
 
         @media #{variables.$media-tablet} {
-            grid-template-columns: 1fr;
+            grid-template-columns: minmax(0, 1fr);
         }
     }
 
@@ -152,7 +152,7 @@
     }
 
     &__items-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 
     &__satiety-note {
@@ -282,6 +282,7 @@
 
     &__ai-summary-list {
         flex: 1;
+        min-width: 0;
     }
 
     &__ai-summary-row {

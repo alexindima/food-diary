@@ -1,5 +1,19 @@
+@use 'variables' as variables;
+
+.lesson-edit-dialog {
+    grid-template-columns: minmax(0, 1fr);
+}
+
 .form-row--inline > :where(:not(template)) {
     flex: 1;
+    min-width: 0;
+}
+
+@media #{variables.$media-tablet} {
+    .form-row--inline {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
 
 .content-counter {

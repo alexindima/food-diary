@@ -1,7 +1,7 @@
 import { UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormField, FormRoot, maxLength, required } from '@angular/forms/signals';
+import { form, FormField, FormRoot, maxLength, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -175,12 +175,23 @@ export class ClientDashboardComponent {
         path => {
             required(path.dateFrom);
             required(path.dateTo);
+            validate(path.dateTo, context => {
+                const start = parseLocalDateInputValue(context.valueOf(path.dateFrom));
+                const end = parseLocalDateInputValue(context.value());
+                return start !== null && end !== null && start > end ? { kind: 'dateOrder' } : undefined;
+            });
         },
         {
             submission: {
                 action: this.submitDateFilterFormAsync,
             },
         },
+    );
+    protected readonly dateFilterRangeInvalid = computed(() =>
+        this.dateFilterForm
+            .dateTo()
+            .errors()
+            .some(error => error.kind === 'dateOrder'),
     );
 
     protected toggleDiscussion(recommendationId: string): void {

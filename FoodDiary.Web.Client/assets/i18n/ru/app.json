@@ -3986,6 +3986,7 @@
                 "FROM_PLACEHOLDER": "Дата начала",
                 "TO_LABEL": "По",
                 "TO_PLACEHOLDER": "Дата конца",
+                "INVALID_RANGE": "Дата конца должна быть не раньше даты начала.",
                 "PREVIOUS_PERIOD": "Предыдущий период",
                 "TODAY": "Сегодня",
                 "LAST_7": "7 дней",

@@ -88,6 +88,7 @@ beforeEach(() => {
 
 describe('ClientDashboardComponent', () => {
     registerLoadingTests();
+    registerDateValidationTests();
     registerActionTests();
 });
 
@@ -328,6 +329,51 @@ function registerLoadingTests(): void {
             expect.objectContaining({ id: 'meal-1', title: 'MEAL_TYPES.LUNCH', calories: '640 kcal' }),
         );
         expect(component['bodyTiles']().map(tile => tile.value)).toEqual(['1']);
+    });
+}
+
+function registerDateValidationTests(): void {
+    it('shows a reversed date range error without reloading and recovers when corrected', () => {
+        createComponent('client-1');
+        component['dateFilterModel'].set({ dateFrom: '2026-05-23', dateTo: '2026-05-22' });
+        fixture.detectChanges();
+
+        component['applyDateFilter']();
+
+        expect(component['dateFilterForm']().invalid()).toBe(true);
+        expect(component['dateFilterRangeInvalid']()).toBe(true);
+        expect(dietologistService.getClientDashboard).toHaveBeenCalledTimes(1);
+        const root = fixture.nativeElement as HTMLElement;
+        expect(root.querySelector('.fd-ui-date-input__error')?.textContent).toContain(
+            'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.INVALID_RANGE',
+        );
+        expect(root.querySelector<HTMLButtonElement>('.client-dashboard__date-apply button')?.disabled).toBe(true);
+
+        component['dateFilterModel'].set({ dateFrom: '2026-05-22', dateTo: '2026-05-23' });
+        fixture.detectChanges();
+        component['applyDateFilter']();
+
+        expect(component['dateFilterForm']().invalid()).toBe(false);
+        expect(component['dateFilterRangeInvalid']()).toBe(false);
+        expect(root.querySelector('.fd-ui-date-input__error')).toBeNull();
+        expect(dietologistService.getClientDashboard).toHaveBeenCalledTimes(2);
+    });
+
+    it.each([
+        ['2026-05-22', '2026-05-22'],
+        ['2028-02-29', '2028-02-29'],
+        ['2026-12-31', '2027-01-01'],
+        ['2026-03-07', '2026-03-09'],
+    ])('accepts inclusive calendar report boundaries %s to %s', (dateFrom, dateTo) => {
+        createComponent('client-1');
+        component['dateFilterModel'].set({ dateFrom, dateTo });
+
+        expect(component['dateFilterForm']().invalid()).toBe(false);
+        component['applyDateFilter']();
+
+        expect(component['selectedDateFrom']()).toBe(dateFrom);
+        expect(component['selectedDateTo']()).toBe(dateTo);
+        expect(dietologistService.getClientDashboard).toHaveBeenCalledTimes(2);
     });
 }
 

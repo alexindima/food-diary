@@ -7,7 +7,7 @@
     "outputs": 554,
     "apiCalls": 315,
     "templatesWithTranslations": 359,
-    "translationKeys": 2155,
+    "translationKeys": 2156,
     "consumerEdges": 1264,
     "consumedComponents": 316,
     "unconsumedComponents": 180
@@ -20901,6 +20901,7 @@
         "DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.APPLY",
         "DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.FROM_LABEL",
         "DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.FROM_PLACEHOLDER",
+        "DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.INVALID_RANGE",
         "DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.LAST_14",
         "DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.LAST_30",
         "DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.LAST_7",
@@ -32354,6 +32355,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.html",
       "occurrences": 3,
       "inputsUsed": [
+        "error",
         "label",
         "placeholder"
       ],
