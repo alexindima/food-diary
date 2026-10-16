@@ -87,13 +87,13 @@
       "sources": [
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "6b3dae6223782d01e663b5187152a6cf7bbd4345020e192c5b03aaaa87f74c81"
+          "sha256": "bd82a4686ff07ce83a77e2ecb46fa85905293ea14d0536b188a49bcccb47cead"
         }
       ],
-      "reason": "The explicit owner-contract edges in ProjectDependencyMatrixTests were reviewed. 2244 architecture tests and current architecture-health (1666 production/1511 test edges) confirm allowed directions, closure and cycles. Typed identities/settings remain in existing owners; runtime shape, transaction and composition rules on this page remain current. Durable scalar boundaries are in PRIMITIVE_TYPES.md.",
-      "baseRef": "HEAD",
-      "gitHead": "4661284988a35a76c243cfcbcd9e748dc17811e5",
-      "reviewedAtUtc": "2026-10-09T11:35:50.689581Z"
+      "reason": "Reviewed outgoing ProjectDependencyMatrixTests diff: Marketing.Infrastructure adds the narrow Users.Contracts reference for IUserDataPurgeParticipant; owner-scoped purge joins IModuleTransactionCoordinator. The current architecture page already documents owner contexts, narrow contracts and composition roots. Architecture index reports zero dependency violations; no new project, schema or foreign aggregate write is introduced.",
+      "baseRef": "origin/master",
+      "gitHead": "2f849bba5fbe425f167ca90764c2fffb81b787d5",
+      "reviewedAtUtc": "2026-10-16T15:06:36.0378918Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -227,12 +227,16 @@
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
           "sha256": "73f97f0d9e1fd8e9552424549fd0035c756961e8371e8b26355d65ee061643b6"
+        },
+        {
+          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "bd82a4686ff07ce83a77e2ecb46fa85905293ea14d0536b188a49bcccb47cead"
         }
       ],
-      "reason": "Reviewed the regenerated architecture projection against the intentional Marketing Infrastructure to Users Contracts edge, owner purge adapter registration, persistence capability fingerprints and runtime boundary inventory. All 2272 architecture tests pass. No dependency guard was relaxed; unrelated concurrent changes are outside this audit.",
-      "baseRef": "HEAD",
-      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
-      "reviewedAtUtc": "2026-10-15T18:07:16.9025476Z"
+      "reason": "Reviewed architecture-health projection delta: one intentional Marketing-to-Users.Contracts edge and source-line relocation, with zero dependency violations and no unused allowances or untracked production projects. Current workflow correctly distinguishes enforced graph failures from hotspot/removal leads; its guidance remains current.",
+      "baseRef": "origin/master",
+      "gitHead": "2f849bba5fbe425f167ca90764c2fffb81b787d5",
+      "reviewedAtUtc": "2026-10-16T15:06:36.2829067Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -678,13 +682,13 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "eaa20f8a88ebc0933c1c0f49eb93f73b9ee34f7612dc756e9acd69d5e06fca84"
+          "sha256": "f8d88ee6b054e9d0cceeee452bda839e065d97bfcbbe74e43f5f51f04a20edf1"
         }
       ],
-      "reason": "Reviewed the task-finish observations from the bounded dependency repair: this adds measured instruction-consumption outcomes for the existing guides without changing their authority, thresholds, workflow commands, or promoted instructions. The instruction-effectiveness page still accurately describes candidate-only feedback and explicit review before promotion.",
-      "baseRef": "HEAD",
-      "gitHead": "d642029847a578a9ffca927edabccd18ed2dcca7",
-      "reviewedAtUtc": "2026-10-15T08:16:12.2819744Z"
+      "reason": "Reviewed the appended focused-closure instruction outcome: completion, retrospective, instruction fingerprints and previous-event hash are preserved. No instruction, scoring policy or adoption threshold changed. The current workflow describes this append-only integrity model and does not treat an observation as authority to rewrite AGENTS.md.",
+      "baseRef": "origin/master",
+      "gitHead": "2f849bba5fbe425f167ca90764c2fffb81b787d5",
+      "reviewedAtUtc": "2026-10-16T15:06:36.8972303Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -805,14 +809,18 @@
       "pageSha256": "b60f38c1d4bb6323e6d9a1128ef46cbe3f2c097c8abd5f71e062f9d48a25997c",
       "sources": [
         {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "5b7a4e82fc1e133debb57561da64d611fa45714cca8d81de01ef1d26d8b923f1"
+        },
+        {
           "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
           "sha256": "66238fb34a662f967225003529e7f9d476519a53d9468ead22d31ee8f865e895"
         }
       ],
-      "reason": "Reviewed PERSONAL_DATA_LIFECYCLE against exact-user Marketing deletion within the coordinator transaction and child-first Meals, MealPlanning and Recipes cleanup. A real local PostgreSQL fixture verifies populated-account content removal. Minimal achievement queue metadata and owned external objects were inspected and cleaned separately; anonymous and other-owner rows remain outside the exact-user predicates.",
-      "baseRef": "HEAD",
-      "gitHead": "122e5762fe704a4f380d2e1e45ad1033f172c8a1",
-      "reviewedAtUtc": "2026-10-15T18:07:19.8678288Z"
+      "reason": "Reviewed lifecycle documentation and owner purge participant: meals/plans precede recipes/products, and user-linked marketing attribution is removed in the same transaction. R4 exact-ID native purge removed all substantive records for three owned accounts, including the marketing event; immutable audit evidence and one technical achievement queue record remain explicit. Sensitive-data projection delta is source-line relocation. Current privacy workflow still requires checking queue/log copies and provider sharing.",
+      "baseRef": "origin/master",
+      "gitHead": "2f849bba5fbe425f167ca90764c2fffb81b787d5",
+      "reviewedAtUtc": "2026-10-16T15:06:37.2421102Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -855,13 +863,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c197f3bd480a4c20b0d2c13597631776f5f538eee4e0a530c3330cd8a091756b"
+          "sha256": "23a0ffc627f0bd2c98b3658dae6f803d15d8a762d02b3e19f22792d1c54c8d33"
         }
       ],
-      "reason": "Reviewed current client-dashboard orchestration and regenerated quality index. Initial task/recommendation/template reads merge with already successful local writes by semantic ID; task cancellation wins over duplicate older reads; template name ordering is preserved. Two pending-initial regression cases and the original browser race passed, including Russian mobile. Full frontend verification passed with5953tests; workflow text remains accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "3330adba8c212b980932999efb2d0f90de1ddef7",
-      "reviewedAtUtc": "2026-10-16T09:36:45.4768488Z"
+      "reason": "Reviewed updated quality projection and affected specs: client-dashboard complexity rises with bounded cross-field validation; five new component cases cover invalid recovery and calendar boundaries. Full frontend verify passed, with focused profile and two-timezone tests plus real Chrome evidence. Static test-reference and complexity metrics remain navigation signals, as the current page states, rather than execution coverage.",
+      "baseRef": "origin/master",
+      "gitHead": "2f849bba5fbe425f167ca90764c2fffb81b787d5",
+      "reviewedAtUtc": "2026-10-16T15:06:37.7431515Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -934,13 +942,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "df4f1ab4b5f5fde1e9a9b6203ddabec604b5780f6a23e782056ed997f95be452"
+          "sha256": "ca26f265e3a1cda5cad88d46fad6f3837b28bdd51ddbebc05d247ca0f02b8b35"
         }
       ],
-      "reason": "Reviewed current topology and runtime-impact guidance against the integrated master sources. The generated topology diff changes only its source fingerprint and file count for the new local tooling types; hosts, workers, recurring jobs, providers and deployment configuration are unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "079fdf62e047f748e95f60512ca40df6f8c3e15d",
-      "reviewedAtUtc": "2026-10-15T21:26:30.4623057Z"
+      "reason": "Reviewed outgoing runtime projection and registration: RecipeVideoProcessor now uses the dedicated RecipeYouTubeHttpHandler with bounded redirects/responses and cancellation; no additional host, worker or recurring job is introduced. Current workflow requires inspecting actual provider code and does not infer effective exposure from declarations. Local Docker/mail/S3/provider blockers are explicit in R4 and are not claimed healthy.",
+      "baseRef": "origin/master",
+      "gitHead": "2f849bba5fbe425f167ca90764c2fffb81b787d5",
+      "reviewedAtUtc": "2026-10-16T15:06:38.0678818Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -949,13 +957,25 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c197f3bd480a4c20b0d2c13597631776f5f538eee4e0a530c3330cd8a091756b"
+          "sha256": "23a0ffc627f0bd2c98b3658dae6f803d15d8a762d02b3e19f22792d1c54c8d33"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "ca26f265e3a1cda5cad88d46fad6f3837b28bdd51ddbebc05d247ca0f02b8b35"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "5b7a4e82fc1e133debb57561da64d611fa45714cca8d81de01ef1d26d8b923f1"
+        },
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "4a586e42da7de1a32f1394565d44bd5595b26768aa18e1389090188edbb502db"
         }
       ],
-      "reason": "The bounded in-memory merge changes no API payload, credentials, persistence, provider or authorization boundary. Current source and browser probes verify unrelated account404/admin403 and immediate sharing revocation403. Native cleanup used exact audit-owned IDs with creation/email/soft-delete guards. No secret logging or cross-client request behavior was introduced; security-review guidance remains applicable.",
-      "baseRef": "HEAD",
-      "gitHead": "3330adba8c212b980932999efb2d0f90de1ddef7",
-      "reviewedAtUtc": "2026-10-16T09:36:46.1237489Z"
+      "reason": "Reviewed changed security navigation sources: local-day search ranking terms expand recall; sensitive projection changes only line anchors; runtime projection adds RecipeYouTubeHttpHandler as an inferred outbound-policy lead. Handler/registration and focused tests expose HTTPS host/redirect/size/endpoint checks for review. No vulnerability-scan or external-provider assurance is inferred. Existing security workflow already makes these limitations explicit.",
+      "baseRef": "origin/master",
+      "gitHead": "2f849bba5fbe425f167ca90764c2fffb81b787d5",
+      "reviewedAtUtc": "2026-10-16T15:06:38.6829230Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1108,17 +1128,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "38c9d9c18e36c08df0db2a889ee3ecbc20f0f518338c961a875affb881dc260a"
+          "sha256": "23761588f4e5b4df21ff679e046d9de01ac47ef2ca0de97fa8e7390c721b42a7"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "67d2e266eb85ae839c4ce864340e17ff548f4ee6d090ab561bcd0126ea7413ab"
+          "sha256": "5f62c92d47a76509b108a26cac1d053a8000b7092c5b79fa33de4d7d8246f953"
         }
       ],
-      "reason": "Both frontend and frontend-contract generated inputs were reviewed against final sources: AuthService to AuthFlowFacade to AuthComponent; DietologistFacade to ClientDashboardComponent. Six bounded source/test paths, no cross-feature dependency or HTTP contract change. Current trace-feature workflow needs no prose update.",
-      "baseRef": "HEAD",
-      "gitHead": "333389de85cdc10220644de07c4f85208db4e991",
-      "reviewedAtUtc": "2026-10-16T08:27:44.5774176Z"
+      "reason": "Reviewed frontend source/contract projection deltas against the current component templates and adapters. The new date error binding and localized key remain attached to the dietologist client-dashboard owner; profile/meal/admin changes add no cross-feature API contract. The complete context-search, context-retrieval, facade-contract and tool-contract smoke groups passed on stable commit2f849bba5. Current trace workflow remains an explicitly bounded navigation aid.",
+      "baseRef": "origin/master",
+      "gitHead": "2f849bba5fbe425f167ca90764c2fffb81b787d5",
+      "reviewedAtUtc": "2026-10-16T15:06:39.2181001Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1202,13 +1222,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "38c9d9c18e36c08df0db2a889ee3ecbc20f0f518338c961a875affb881dc260a"
+          "sha256": "23761588f4e5b4df21ff679e046d9de01ac47ef2ca0de97fa8e7390c721b42a7"
         }
       ],
-      "reason": "Final component and consumer contracts reviewed: no selector, template, input/output or API payload changes. One AuthFlowFacade reset consumer handles its typed result; existing EN/RU key and form-error semantics reused. Client dashboard sequence gate changes only asynchronous state application. Source/tests and browser evidence in final-review.md and checkpoint.json; contract-review guidance remains current.",
-      "baseRef": "HEAD",
-      "gitHead": "333389de85cdc10220644de07c4f85208db4e991",
-      "reviewedAtUtc": "2026-10-16T08:27:43.9994350Z"
+      "reason": "Reviewed generated selector/consumer/translation changes with real route consumers. Report range errors use the existing fd-ui-date-input error input; EN/RU key parity and generated SDK checks passed in full npm verify. Chrome R4 evidence covers date error recovery, keyboard paths and responsive profile/meal/admin lesson consumers. Public contracts remain compatible; workflow already requires these checks.",
+      "baseRef": "origin/master",
+      "gitHead": "2f849bba5fbe425f167ca90764c2fffb81b787d5",
+      "reviewedAtUtc": "2026-10-16T15:06:36.6104574Z"
     },
     {
       "pageId": "workflow.query-context",
