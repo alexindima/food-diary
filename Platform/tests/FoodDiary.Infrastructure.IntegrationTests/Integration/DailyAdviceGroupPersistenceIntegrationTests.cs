@@ -3,8 +3,6 @@ using FoodDiary.Modules.DailyAdvices.Application.Abstractions.Models;
 using FoodDiary.Modules.DailyAdvices.Domain.Entities.Content;
 using FoodDiary.Modules.DailyAdvices.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
@@ -12,11 +10,8 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class DailyAdviceGroupPersistenceIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
-    public async Task UpgradePreservesLegacyRowsAndAssignsDistinctGroups() {
-        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
-        await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(connectionString);
-        IMigrator migrator = context.GetService<IMigrator>();
-        await migrator.MigrateAsync("20260917010000_ConvertOtherMealsToSnack");
+    public async Task NewRowsReceiveDistinctGroupsByDatabaseDefault() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         await context.Database.ExecuteSqlRawAsync("""
             DELETE FROM "DailyAdvices";
             INSERT INTO "DailyAdvices" ("Id", "Value", "Locale", "Weight", "CreatedOnUtc") VALUES
@@ -24,7 +19,6 @@ public sealed class DailyAdviceGroupPersistenceIntegrationTests(PostgresDatabase
             ('22222222-2222-2222-2222-222222222222', 'Second', 'ru', 2, NOW()),
             ('33333333-3333-3333-3333-333333333333', 'Third', 'en', 3, NOW());
             """);
-        await migrator.MigrateAsync();
         List<DailyAdvice> rows = await context.DailyAdvices.OrderBy(item => item.Value).ToListAsync();
         Assert.Multiple(() => Assert.Equal(3, rows.Count),
             () => Assert.Equal(3, rows.Select(item => item.GroupId).Distinct().Count()),

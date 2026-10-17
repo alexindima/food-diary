@@ -60,7 +60,8 @@ public sealed class CyclesModuleExtractionTests {
         Assert.Empty(Directory.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "Configurations", "Cycles"))
             ? SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "Configurations", "Cycles")) : []);
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "FoodDiaryDbContext.cs")));
-        Assert.NotEmpty(Directory.GetFiles(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Migrations"), "*Cycle*.cs"));
+        string[] centralMigrations = Directory.GetFiles(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Migrations"), "*.cs");
+        Assert.Contains(centralMigrations, path => File.ReadAllText(path).Contains("name: \"CycleProfiles\"", StringComparison.Ordinal));
     }
 
     [Theory]

@@ -85,4 +85,8 @@
     <ProjectReference Include="../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
     <ProjectReference Include="../Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations/InitialBaseline.Seed.sql" />
+  </ItemGroup>
 </Project>

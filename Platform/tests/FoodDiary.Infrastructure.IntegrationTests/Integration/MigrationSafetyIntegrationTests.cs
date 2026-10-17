@@ -1,307 +1,262 @@
-using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
-using FoodDiary.Modules.Recipes.Domain.Entities;
-using FoodDiary.Modules.Fasting.Domain.Enums;
-using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
-using FoodDiary.Modules.Users.Domain.Entities;
+using System.Data.Common;
 using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Modules.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
-using FoodDiary.Modules.Identity.Infrastructure.Persistence;
-using FoodDiary.Modules.Identity.Infrastructure.Persistence.Authentication;
-using FoodDiary.Modules.Identity.PersistenceModel.Authentication;
+using Npgsql;
+using Testcontainers.PostgreSql;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture databaseFixture) {
-    private const string InitialMigration = "20251108210736_InitialCreate";
-    private const string BeforeFastingProtocolRenameMigration = "20260810221016_AddWeeklyGoals";
+    private const string Baseline = "20261017130323_InitialBaseline";
 
     [RequiresDockerFact]
-    public async Task TelegramSecurityUpgrade_InvalidatesLegacyProofsAndKeepsLinkProvenanceConservative() {
-        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var emailUser = User.Create($"legacy-telegram-{Guid.NewGuid():N}@example.com", "hash");
-        emailUser.LinkTelegram(123456);
-        emailUser.CompleteEmailVerification();
-        var telegramUser = User.CreateTelegram(654321, "hash");
-        context.Users.AddRange(emailUser, telegramUser);
-        await context.SaveChangesAsync();
-        string previous = context.Database.GetMigrations().TakeWhile(value => !value.EndsWith("_HardenTelegramAssertionRecovery", StringComparison.Ordinal)).Last();
-        await context.GetService<IMigrator>().MigrateAsync(previous);
-        DateTime oldAuthDate = DateTime.UtcNow.AddMinutes(-1);
-        string oldFingerprint = new('a', 64);
-        await context.Database.ExecuteSqlInterpolatedAsync(
-            $"INSERT INTO \"ConsumedTelegramAssertions\" (\"Fingerprint\", \"ExpiresAtUtc\") VALUES ({oldFingerprint}, {oldAuthDate.AddDays(1)})");
+    public async Task CleanDatabase_MigrateToLatest_AppliesBaselineAndReferenceData() {
+        await using FoodDiaryDbContext context = await CreateBaselineDatabaseAsync();
+        Assert.Equal([Baseline], await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
+        Assert.Empty(await context.Database.GetPendingMigrationsAsync());
+        Assert.False(context.Database.HasPendingModelChanges());
+        Assert.Equal(5, await context.Database.SqlQuery<int>($"""
+            SELECT count(*)::integer AS "Value" FROM "Roles"
+            """).SingleAsync());
+        Assert.Equal(10, await context.Database.SqlQuery<int>($"""
+            SELECT count(*)::integer AS "Value" FROM "DailyAdvices"
+            """).SingleAsync());
+        Assert.Equal(10, await context.Database.SqlQuery<int>($"""
+            SELECT count(*)::integer AS "Value" FROM "EmailTemplates"
+            """).SingleAsync());
+        Assert.Equal(14, await context.Database.SqlQuery<int>($"""
+            SELECT count(*)::integer AS "Value" FROM "AchievementDefinitions"
+            """).SingleAsync());
+        Assert.True(await context.Database.SqlQuery<bool>($"""
+            SELECT "NotBeforeUtc" > NOW() + INTERVAL '4 minutes' AS "Value" FROM "TelegramAssertionPolicies"
+            """).SingleAsync());
+        // The script validates columns, constraints, indexes, sequences and extensions.
+        await AdoptAsync(context);
         await context.Database.MigrateAsync();
-        context.ChangeTracker.Clear();
-        Assert.Empty(await context.Set<ConsumedTelegramAssertion>().ToArrayAsync());
-        User recovered = await context.Users.SingleAsync(user => user.Id == emailUser.Id);
-        Assert.False(recovered.TelegramLinkVerifiedForRecovery);
-        Assert.True((await context.Users.SingleAsync(user => user.Id == telegramUser.Id)).TelegramLinkVerifiedForRecovery);
-        recovered.CompletePasswordReset("owner-hash");
-        Assert.Null(recovered.TelegramUserId);
+        Assert.Equal(context.Database.GetMigrations(), await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
+    }
+
+    [RequiresDockerTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task LegacyDatabase_AdoptionPreservesEveryApplicationRowAndIsRepeatable(bool hasRemovedSeedMarker) {
+        await using FoodDiaryDbContext context = await CreateLegacyDatabaseAsync();
+        if (hasRemovedSeedMarker) {
+            await context.Database.ExecuteSqlRawAsync("""
+                INSERT INTO "__EFMigrationsHistory" VALUES ('20260208133129_SeedEmailTemplates', '10.0.11');
+                """);
+        }
+        var user = User.Create("baseline-preservation@example.com", "test-hash");
+        user.SetLanguage("ru");
+        context.Users.Add(user);
         await context.SaveChangesAsync();
-        context.ChangeTracker.Clear();
-        Assert.Null((await context.Users.SingleAsync(user => user.Id == emailUser.Id)).TelegramUserId);
-        await using IdentityDbContext identity = new(new DbContextOptionsBuilder<IdentityDbContext>().UseNpgsql(context.Database.GetConnectionString()).Options);
-        TelegramAssertionPolicy policy = await identity.Set<TelegramAssertionPolicy>().SingleAsync();
-        Assert.True(policy.NotBeforeUtc > DateTime.UtcNow.AddMinutes(4));
-        var guard = new TelegramAssertionReplayGuard(identity, TimeProvider.System);
-        Assert.False(await guard.TryConsumeAsync("canonical-legacy-proof", oldAuthDate.AddDays(1), oldAuthDate));
-        Assert.False(await guard.TryConsumeAsync("future-dated-legacy-proof", oldAuthDate.AddDays(1), oldAuthDate.AddMinutes(5)));
-        Assert.True(await guard.TryConsumeAsync("canonical-fresh-proof", policy.NotBeforeUtc.AddDays(1), policy.NotBeforeUtc));
-        Assert.False(await guard.TryConsumeAsync("canonical-fresh-proof", policy.NotBeforeUtc.AddDays(1), policy.NotBeforeUtc));
+        await context.Database.ExecuteSqlRawAsync("""
+            UPDATE "EmailTemplates" SET "HtmlBody" = '<p>Custom template / Свой шаблон</p>';
+            INSERT INTO "ConsumedTelegramAssertions" ("Fingerprint", "ExpiresAtUtc")
+                VALUES ('v2:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef', NOW() + INTERVAL '1 hour');
+            """);
+        string before = await ReadApplicationDataAsync(context);
+
+        await AdoptAsync(context);
+        await AdoptAsync(context);
+
+        Assert.Equal(before, await ReadApplicationDataAsync(context));
+        Assert.Equal([Baseline], await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
+        await context.Database.MigrateAsync();
         Assert.Empty(await context.Database.GetPendingMigrationsAsync());
     }
 
-    [RequiresDockerFact]
-    public async Task PublicProductDescriptions_BackfillOnlyMissingPublicRecipeSnapshots() {
-        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
-        await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(connectionString);
-        await context.Database.MigrateAsync();
-        var user = User.Create($"public-snapshots-{Guid.NewGuid():N}@example.com", "hash");
-        context.Users.Add(user);
-        await context.SaveChangesAsync();
-        context.ChangeTracker.Clear();
-        // Seed the current user model before restoring the recipe backfill's starting schema.
-        await context.GetService<IMigrator>().MigrateAsync("20260928205829_AddRecipePublicIngredientDescriptions");
-        var recipe = Recipe.Create(user.Id, "Public recipe", 1, visibility: FoodDiary.Domain.Primitives.Visibility.Public);
-        var privateRecipe = Recipe.Create(user.Id, "Private recipe", 1, visibility: FoodDiary.Domain.Primitives.Visibility.Private);
-        RecipeStep step = recipe.AddStep(1, "Mix");
-        RecipeStep privateStep = privateRecipe.AddStep(1, "Mix privately");
-        context.Recipes.AddRange(recipe, privateRecipe);
-        foreach (FoodDiary.Modules.Products.Domain.Contracts.Enums.MeasurementUnit unit in Enum.GetValues<FoodDiary.Modules.Products.Domain.Contracts.Enums.MeasurementUnit>()) {
-            var product = FoodDiary.Modules.Products.Domain.Entities.Product.Create(user.Id, $"Ingredient {unit}", unit,
-                baseAmount: unit == FoodDiary.Modules.Products.Domain.Contracts.Enums.MeasurementUnit.Pcs ? 1 : 100, defaultPortionAmount: null, caloriesPerBase: 100, proteinsPerBase: 1, fatsPerBase: 2,
-                carbsPerBase: 3, fiberPerBase: 0, alcoholPerBase: 0, visibility: FoodDiary.Domain.Primitives.Visibility.Private);
-            context.Products.Add(product);
-            step.AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(25));
-            RecipeIngredient authored = step.AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(50));
-            authored.SetPublicDescription("Author name", "Author unit");
-            privateStep.AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(75));
+    [RequiresDockerTheory]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public async Task LegacyDatabase_IncompleteOrUnknownHistoryIsRejectedAtomically(bool unknownMigration, bool additionalMigration) {
+        await using FoodDiaryDbContext context = await CreateLegacyDatabaseAsync();
+        if (!additionalMigration) {
+            await context.Database.ExecuteSqlRawAsync("""
+                DELETE FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260209005246_AddShoppingLists';
+                """);
         }
-        step.AddTextIngredient("Salt", "to taste");
-        await context.SaveChangesAsync();
-        await context.Database.MigrateAsync();
-        context.ChangeTracker.Clear();
+        if (unknownMigration) {
+            await context.Database.ExecuteSqlRawAsync("""
+                INSERT INTO "__EFMigrationsHistory" VALUES ('20260209005246_UnknownMigration', '10.0.11');
+                """);
+        }
+        string[] history = [.. await context.Database.GetAppliedMigrationsAsync()];
+        string before = await ReadApplicationDataAsync(context);
 
-        List<RecipeIngredient> ingredients = await context.RecipeIngredients.ToListAsync();
-        foreach (RecipeIngredient ingredient in ingredients) {
-            if (ingredient.Amount == 25) {
-                Assert.StartsWith("Ingredient ", ingredient.PublicName, StringComparison.Ordinal);
-                Assert.Contains(ingredient.PublicUnit, new[] { "G", "Ml", "Pcs" }, StringComparer.Ordinal);
-            } else if (ingredient.Amount == 50) {
-                Assert.Equal("Author name", ingredient.PublicName);
-                Assert.Equal("Author unit", ingredient.PublicUnit);
-            } else {
-                Assert.Null(ingredient.PublicName);
-                Assert.Null(ingredient.PublicUnit);
-            }
-        }
-        Assert.Equal(10, ingredients.Count);
-        Assert.All(await context.Products.ToListAsync(), product => Assert.Equal(FoodDiary.Domain.Primitives.Visibility.Private, product.Visibility));
+        PostgresException failure = await Assert.ThrowsAsync<PostgresException>(() => AdoptAsync(context));
+
+        Assert.Contains("Incomplete or unknown legacy migration history", failure.MessageText, StringComparison.Ordinal);
+        Assert.Equal(history, await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
+        Assert.Equal(before, await ReadApplicationDataAsync(context));
+    }
+
+    [RequiresDockerTheory]
+    [InlineData("DROP INDEX \"IX_BillingPayments_EffectiveOccurredAtUtc\";")]
+    [InlineData("ALTER TABLE \"FastingCheckIns\" DROP CONSTRAINT \"FK_FastingCheckIns_Users_UserId\";")]
+    [InlineData("ALTER TABLE \"Users\" ALTER COLUMN \"HasPassword\" DROP NOT NULL;")]
+    public async Task LegacyDatabase_SchemaDriftIsRejectedWithoutChangingHistory(string driftSql) {
+        await using FoodDiaryDbContext context = await CreateLegacyDatabaseAsync();
+        await context.Database.ExecuteSqlRawAsync(driftSql);
+        string[] history = [.. await context.Database.GetAppliedMigrationsAsync()];
+
+        PostgresException failure = await Assert.ThrowsAsync<PostgresException>(() => AdoptAsync(context));
+
+        Assert.Contains("Schema differs", failure.MessageText, StringComparison.Ordinal);
+        Assert.Equal(history, await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
     }
 
     [RequiresDockerFact]
-    public async Task RecipeLanguage_BackfillsAuthorPreferenceOnUpgrade() {
-        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
-        await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(connectionString);
-        await context.Database.MigrateAsync();
-        foreach (string? language in new string?[] { "ru", "en", null }) {
-            var user = User.Create($"language-{Guid.NewGuid():N}@example.com", "hash");
-            if (language is not null) { user.SetLanguage(language); }
-            context.Users.Add(user);
-            context.Recipes.Add(Recipe.Create(user.Id, language ?? "fallback", servings: 1));
-        }
-        await context.SaveChangesAsync();
-        string previous = context.Database.GetMigrations().TakeWhile(value => !value.EndsWith("_AddRecipeLanguage", StringComparison.Ordinal)).Last();
-        await context.GetService<IMigrator>().MigrateAsync(previous);
-        await context.Database.MigrateAsync();
-        context.ChangeTracker.Clear();
-        List<Recipe> recipes = await context.Recipes.ToListAsync();
-        Assert.Equal(3, recipes.Count);
-        foreach (Recipe recipe in recipes) {
-            Assert.Equal(string.Equals(recipe.Name, "ru", StringComparison.Ordinal) ? "ru" : "en", recipe.Language);
-            Assert.False(recipe.LanguageConfirmed);
-        }
+    public async Task Postgres18_AdoptionPreservesRowsAndStillRejectsNullabilityDrift() {
+        await using PostgreSqlContainer postgres = new PostgreSqlBuilder("postgres:18-alpine")
+            .WithDatabase("fooddiary_baseline")
+            .WithUsername("postgres")
+            .WithPassword(Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32)))
+            .WithPortBinding(5432, assignRandomHostPort: true)
+            .Build();
+        await postgres.StartAsync();
+        await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(postgres.GetConnectionString());
+        await ExecuteFixtureAsync(context, "PreBaseline.sql");
+        string before = await ReadApplicationDataAsync(context);
+
+        await AdoptAsync(context);
+
+        Assert.Equal(before, await ReadApplicationDataAsync(context));
+        Assert.Equal([Baseline], await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
+        await context.Database.ExecuteSqlRawAsync("ALTER TABLE \"Users\" ALTER COLUMN \"HasPassword\" DROP NOT NULL;");
+
+        PostgresException failure = await Assert.ThrowsAsync<PostgresException>(() => AdoptAsync(context));
+
+        Assert.Contains("Schema differs", failure.MessageText, StringComparison.Ordinal);
+        Assert.Equal([Baseline], await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
     }
 
     [RequiresDockerFact]
-    public async Task RecipeCategories_NormalizeLegacyValuesOnUpgrade() {
-        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
-        await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(connectionString);
-        await context.Database.MigrateAsync();
-        var user = User.Create($"categories-{Guid.NewGuid():N}@example.com", "hash");
-        context.Users.Add(user);
-        string?[] legacyValues = [null, "", "  Салаты  ", "SOUPS", "Dinner", "unknown", "pasta"];
-        foreach (int index in Enumerable.Range(0, legacyValues.Length)) {
-            context.Recipes.Add(Recipe.Create(user.Id, index.ToString(System.Globalization.CultureInfo.InvariantCulture), servings: 1));
-        }
-        await context.SaveChangesAsync();
-        await context.GetService<IMigrator>().MigrateAsync("20260927150611_AddRecipeLanguage");
-        for (int index = 0; index < legacyValues.Length; index++) {
-            string name = index.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            await context.Database.ExecuteSqlInterpolatedAsync($"UPDATE \"Recipes\" SET \"Category\" = {legacyValues[index]} WHERE \"Name\" = {name}");
-        }
-        await context.Database.MigrateAsync();
-        context.ChangeTracker.Clear();
-        List<Recipe> recipes = await context.Recipes.OrderBy(recipe => recipe.Name).ToListAsync();
-        Assert.Equal(new[] { "other", "other", "salads", "soups", "other", "other", "pasta" },
-            recipes.Select(recipe => FoodDiary.Modules.Recipes.Domain.Contracts.Enums.RecipeCategoryCodes.ToCode(recipe.Category)), StringComparer.Ordinal);
+    public async Task LegacyDatabase_OrdinaryUpdateRequiresExplicitAdoption() {
+        await using FoodDiaryDbContext context = await CreateLegacyDatabaseAsync();
+        string before = await ReadApplicationDataAsync(context);
+        string[] history = [.. await context.Database.GetAppliedMigrationsAsync()];
+
+        PostgresException failure = await Assert.ThrowsAsync<PostgresException>(() => context.Database.MigrateAsync());
+
+        Assert.Contains("Adopt-InitialBaseline.sql", failure.MessageText, StringComparison.Ordinal);
+        Assert.Equal(history, await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
+        Assert.Equal(before, await ReadApplicationDataAsync(context));
+    }
+
+    [RequiresDockerFact]
+    public async Task BaselineRollback_IsRejectedWithoutDroppingApplicationTables() {
+        await using FoodDiaryDbContext context = await CreateBaselineDatabaseAsync();
+        string before = await ReadApplicationDataAsync(context);
+
+        await Assert.ThrowsAsync<NotSupportedException>(() => context.GetService<IMigrator>().MigrateAsync("0"));
+
+        Assert.Equal(before, await ReadApplicationDataAsync(context));
+        Assert.Equal([Baseline], await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
+    }
+
+    [RequiresDockerFact]
+    public async Task CleanDatabase_ReferenceContentMatchesTheFrozenLegacyDatabase() {
+        await using FoodDiaryDbContext legacy = await CreateLegacyDatabaseAsync();
+        await using FoodDiaryDbContext fresh = await CreateBaselineDatabaseAsync();
+
+        Assert.Equal(await ReadReferenceContentAsync(legacy), await ReadReferenceContentAsync(fresh), StringComparer.Ordinal);
+    }
+
+    [RequiresDockerFact]
+    public async Task IdempotentScript_PreservesReferenceContentAndCanRunTwice() {
+        await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(await databaseFixture.CreateIsolatedDatabaseAsync());
+        string script = context.GetService<IMigrator>().GenerateScript(toMigration: Baseline, options: MigrationsSqlGenerationOptions.Idempotent);
+
+        await ExecuteSqlAsync(context, script);
+        string before = await ReadApplicationDataAsync(context);
+        await ExecuteSqlAsync(context, script);
+
+        Assert.Equal(before, await ReadApplicationDataAsync(context));
+        await using FoodDiaryDbContext legacy = await CreateLegacyDatabaseAsync();
+        Assert.Equal(await ReadReferenceContentAsync(legacy), await ReadReferenceContentAsync(context), StringComparer.Ordinal);
+        await AdoptAsync(context);
+    }
+
+    private static async Task<string[]> ReadReferenceContentAsync(FoodDiaryDbContext context) {
+        // Installation-time audit timestamps vary; reference identities and all content must match.
+        const string query = """
+            SELECT jsonb_build_object('table', 'advice', 'row', to_jsonb(t))::text AS "Value" FROM "DailyAdvices" t
+            UNION ALL SELECT jsonb_build_object('table', 'template', 'row', to_jsonb(t) - 'CreatedOnUtc' - 'ModifiedOnUtc')::text FROM "EmailTemplates" t
+            UNION ALL SELECT jsonb_build_object('table', 'achievement', 'row', to_jsonb(t) - 'CreatedOnUtc')::text FROM "AchievementDefinitions" t
+            UNION ALL SELECT jsonb_build_object('table', 'role', 'row', to_jsonb(t) - 'CreatedOnUtc')::text FROM "Roles" t
+            """;
+        return await context.Database.SqlQueryRaw<string>(query).OrderBy(value => value).ToArrayAsync();
     }
 
     [Fact]
     public void MigrationTypes_AreExcludedFromCodeCoverage() {
-        string?[] migrationTypesMissingAttribute = [.. typeof(global::FoodDiary.Infrastructure.Persistence.FoodDiaryDbContext).Assembly
-            .GetTypes()
-            .Where(static type => string.Equals(type.Namespace, "FoodDiary.Infrastructure.Migrations", StringComparison.Ordinal))
-            .Where(static type => !type.IsNested)
-            .Where(static type => typeof(Migration).IsAssignableFrom(type) || typeof(ModelSnapshot).IsAssignableFrom(type))
-            .Where(static type => type.GetCustomAttributes(typeof(ExcludeFromCodeCoverageAttribute), inherit: false).Length == 0)
-            .Select(static type => type.FullName)
-            .Order(StringComparer.Ordinal)];
-
-        Assert.Empty(migrationTypesMissingAttribute);
+        Type[] types = [.. typeof(FoodDiaryDbContext).Assembly.GetTypes()
+            .Where(type => typeof(Migration).IsAssignableFrom(type) || typeof(ModelSnapshot).IsAssignableFrom(type))];
+        Assert.NotEmpty(types);
+        Assert.All(types, type => Assert.True(Attribute.IsDefined(type, typeof(ExcludeFromCodeCoverageAttribute))));
     }
 
-    [RequiresDockerFact]
-    public async Task LegacyRecipeIngredients_ReceiveStablePositionsOnUpgrade() {
-        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
-        await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(connectionString);
-        await context.Database.MigrateAsync();
-        var user = User.Create($"recipe-order-{Guid.NewGuid():N}@example.com", "hash");
-        var recipe = Recipe.Create(user.Id, "Ordered recipe", 1);
-        RecipeStep step = recipe.AddStep(1, "Mix");
-        step.AddTextIngredient("Salt");
-        step.AddTextIngredient("Tomatoes");
-        context.Users.Add(user);
-        context.Recipes.Add(recipe);
-        await context.SaveChangesAsync();
-        await context.Database.ExecuteSqlRawAsync("""
-            UPDATE "RecipeIngredients" SET "CreatedOnUtc" =
-                CASE "TextName" WHEN 'Salt' THEN TIMESTAMPTZ '2026-01-01 00:00:00+00'
-                    ELSE TIMESTAMPTZ '2026-01-02 00:00:00+00' END;
-            """);
-        IMigrator migrator = context.GetService<IMigrator>();
-        await migrator.MigrateAsync("20260926141133_AddRecipeTextIngredients");
-        await context.Database.MigrateAsync();
-        context.ChangeTracker.Clear();
-        List<RecipeIngredient> ingredients = await context.RecipeIngredients.OrderBy(ingredient => ingredient.Position).ToListAsync();
-        Assert.Equal(new[] { "Salt", "Tomatoes" }, ingredients.Select(ingredient => ingredient.TextName), StringComparer.Ordinal);
-        Assert.Equal(new[] { 0, 1 }, ingredients.Select(ingredient => ingredient.Position));
-    }
-
-    [RequiresDockerFact]
-    public async Task CleanDatabase_MigrateToLatest_AppliesFullMigrationChain() {
-        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
-        await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(connectionString);
-
-        await context.Database.MigrateAsync();
-
-        var allMigrations = context.Database.GetMigrations().ToList();
-        var appliedMigrations = (await context.Database.GetAppliedMigrationsAsync()).ToList();
-        var pendingMigrations = (await context.Database.GetPendingMigrationsAsync()).ToList();
-
-        Assert.Equal(allMigrations, appliedMigrations);
-        Assert.Empty(pendingMigrations);
-        Assert.True(await context.Database.CanConnectAsync());
-    }
-
-    [RequiresDockerFact]
-    public async Task DatabaseAtInitialCreate_CanUpgradeToLatest() {
-        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
-
-        await using (FoodDiaryDbContext initialContext = databaseFixture.CreateDbContext(connectionString)) {
-            IMigrator migrator = initialContext.GetService<IMigrator>();
-            await migrator.MigrateAsync(InitialMigration);
-
-            IEnumerable<string> appliedMigrations = await initialContext.Database.GetAppliedMigrationsAsync();
-            Assert.Equal([InitialMigration], appliedMigrations, StringComparer.Ordinal);
+    private async Task<FoodDiaryDbContext> CreateLegacyDatabaseAsync() {
+        FoodDiaryDbContext context = databaseFixture.CreateDbContext(await databaseFixture.CreateIsolatedDatabaseAsync());
+        try {
+            await context.Database.OpenConnectionAsync();
+            await ExecuteFixtureAsync(context, "PreBaseline.sql");
+            return context;
+        } catch {
+            await context.DisposeAsync();
+            throw;
         }
-
-        await using FoodDiaryDbContext upgradedContext = databaseFixture.CreateDbContext(connectionString);
-        await upgradedContext.Database.MigrateAsync();
-
-        var allMigrations = upgradedContext.Database.GetMigrations().ToList();
-        var appliedAfterUpgrade = (await upgradedContext.Database.GetAppliedMigrationsAsync()).ToList();
-        var pendingAfterUpgrade = (await upgradedContext.Database.GetPendingMigrationsAsync()).ToList();
-
-        Assert.Equal(allMigrations, appliedAfterUpgrade);
-        Assert.Empty(pendingAfterUpgrade);
     }
 
-    [RequiresDockerFact]
-    public async Task DatabaseWithLegacyFastingProtocols_UpgradesToCanonicalValues() {
-        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
-        FastingProtocol[] protocols = [
-            FastingProtocol.Fast16Eat8,
-            FastingProtocol.Fast18Eat6,
-            FastingProtocol.Fast20Eat4,
-            FastingProtocol.Fast24,
-            FastingProtocol.Fast36,
-            FastingProtocol.Fast72,
-        ];
-
-        await using (FoodDiaryDbContext legacyContext = databaseFixture.CreateDbContext(connectionString)) {
-            IMigrator migrator = legacyContext.GetService<IMigrator>();
-            await migrator.MigrateAsync(BeforeFastingProtocolRenameMigration);
-
-            var user = User.Create($"fasting-migration-{Guid.NewGuid():N}@example.com", "hash");
-            // Seed the historical Users schema directly so later User properties do not
-            // require changing the schema under test before applying its migrations.
-            await legacyContext.Database.ExecuteSqlInterpolatedAsync($"""
-                INSERT INTO "Users" ("Id", "Email", "Password", "CreatedOnUtc", "ActivityLevel", "CalorieCyclingEnabled")
-                VALUES ({user.Id.Value}, {user.Email}, 'hash', {DateTime.UtcNow}, 'Sedentary', false);
-                """);
-            legacyContext.FastingSessions.AddRange(protocols.Select(protocol =>
-                FastingSession.Create(user.Id, protocol, FastingSession.GetDefaultDuration(protocol), DateTime.UtcNow)));
-            legacyContext.FastingPlans.Add(FastingPlan.CreateExtended(
-                user.Id,
-                FastingProtocol.Fast24,
-                24,
-                DateTime.UtcNow));
-            legacyContext.FastingTelemetryEvents.Add(FastingTelemetryEvent.Create(
-                "migration-test",
-                DateTime.UtcNow,
-                protocol: FastingProtocol.Fast24.ToString()));
-            await legacyContext.SaveChangesAsync();
-
-            await legacyContext.Database.ExecuteSqlRawAsync("""
-                UPDATE "FastingSessions"
-                SET "Protocol" = CASE "Protocol"
-                    WHEN 'Fast16Eat8' THEN 'F16_8'
-                    WHEN 'Fast18Eat6' THEN 'F18_6'
-                    WHEN 'Fast20Eat4' THEN 'F20_4'
-                    WHEN 'Fast24' THEN 'F24_0'
-                    WHEN 'Fast36' THEN 'F36_0'
-                    WHEN 'Fast72' THEN 'F72_0'
-                    ELSE "Protocol"
-                END;
-
-                UPDATE "FastingPlans" SET "Protocol" = 'F24_0' WHERE "Protocol" = 'Fast24';
-                UPDATE "FastingTelemetryEvents" SET "Protocol" = 'F24_0' WHERE "Protocol" = 'Fast24';
-                """);
+    private async Task<FoodDiaryDbContext> CreateBaselineDatabaseAsync() {
+        FoodDiaryDbContext context = databaseFixture.CreateDbContext(await databaseFixture.CreateIsolatedDatabaseAsync());
+        try {
+            await context.GetService<IMigrator>().MigrateAsync(Baseline);
+            return context;
+        } catch {
+            await context.DisposeAsync();
+            throw;
         }
+    }
 
-        await using FoodDiaryDbContext upgradedContext = databaseFixture.CreateDbContext(connectionString);
-        await upgradedContext.Database.MigrateAsync();
+    private static Task AdoptAsync(FoodDiaryDbContext context) =>
+        ExecuteFixtureAsync(context, "Adopt-InitialBaseline.sql");
 
-        FastingProtocol[] storedSessionProtocols = await upgradedContext.FastingSessions
-            .Select(session => session.Protocol)
-            .ToArrayAsync();
-        Array.Sort(storedSessionProtocols);
-        FastingProtocol? storedPlanProtocol = await upgradedContext.FastingPlans
-            .Select(plan => plan.Protocol)
-            .SingleAsync();
-        string? storedTelemetryProtocol = await upgradedContext.FastingTelemetryEvents
-            .Select(telemetryEvent => telemetryEvent.Protocol)
-            .SingleAsync();
+    private static async Task ExecuteFixtureAsync(FoodDiaryDbContext context, string name) {
+        await ExecuteSqlAsync(context, await ReadFixtureAsync(name));
+    }
 
-        Assert.Multiple(
-            () => Assert.Equal(protocols, storedSessionProtocols),
-            () => Assert.Equal(FastingProtocol.Fast24, storedPlanProtocol),
-            () => Assert.Equal(nameof(FastingProtocol.Fast24), storedTelemetryProtocol));
+    private static async Task ExecuteSqlAsync(FoodDiaryDbContext context, string sql) {
+        if (context.Database.GetDbConnection().State != System.Data.ConnectionState.Open) {
+            await context.Database.OpenConnectionAsync();
+        }
+        await using DbCommand command = context.Database.GetDbConnection().CreateCommand();
+        // Execute the captured SQL verbatim; HTML/JSON braces are not format placeholders.
+        command.CommandText = sql;
+        await command.ExecuteNonQueryAsync();
+    }
+
+    private static Task<string> ReadFixtureAsync(string name) =>
+        File.ReadAllTextAsync(Path.Combine(AppContext.BaseDirectory, "Fixtures", name));
+
+    private static async Task<string> ReadApplicationDataAsync(FoodDiaryDbContext context) {
+        string[] tables = await context.Database.SqlQuery<string>($"""
+            SELECT tablename::text AS "Value" FROM pg_tables
+            WHERE schemaname = 'public' AND tablename <> '__EFMigrationsHistory' ORDER BY tablename
+            """).ToArrayAsync();
+        var rows = new List<string>();
+        foreach (string table in tables) {
+            string quotedTable = table.Replace("\"", "\"\"", StringComparison.Ordinal);
+            string query = $"SELECT COALESCE(jsonb_agg(to_jsonb(t) ORDER BY to_jsonb(t)::text COLLATE \"C\"), '[]'::jsonb)::text AS \"Value\" FROM public.\"{quotedTable}\" t";
+            rows.Add(table + ":" + await context.Database.SqlQueryRaw<string>(query).SingleAsync());
+        }
+        return string.Join('\n', rows);
     }
 }

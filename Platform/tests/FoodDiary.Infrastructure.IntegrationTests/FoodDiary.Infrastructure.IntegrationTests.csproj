@@ -4,6 +4,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Update="Fixtures/*.sql" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../scripts/database/Adopt-InitialBaseline.sql" Link="Fixtures/Adopt-InitialBaseline.sql" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />

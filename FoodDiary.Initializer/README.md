@@ -8,9 +8,8 @@ Thin console host for operational database tasks.
 dotnet run --project FoodDiary.Initializer -- status
 dotnet run --project FoodDiary.Initializer -- list
 dotnet run --project FoodDiary.Initializer -- update
-dotnet run --project FoodDiary.Initializer -- update 20260209005246_AddShoppingLists
+dotnet run --project FoodDiary.Initializer -- update 20261017130323_InitialBaseline
 dotnet run --project FoodDiary.Initializer -- rollback-last
-dotnet run --project FoodDiary.Initializer -- rollback 0
 ```
 
 ## Configuration
@@ -34,3 +33,13 @@ controls its timeout and defaults to 30 seconds.
 - EF Core migrations stay in `FoodDiary.Infrastructure` next to `FoodDiaryDbContext`.
 - `FoodDiary.Initializer` only executes operational commands.
 - `rollback-last` is a convenience wrapper around migrating to the previous applied migration.
+
+## Migration history baseline
+
+The primary database uses `20261017130323_InitialBaseline`. New databases use the
+normal `update` command. Existing databases must first finish the old migration
+chain and explicitly run `scripts/database/Adopt-InitialBaseline.sql` before the
+first deployment of the new Initializer. Ordinary `update` does not adopt old
+history automatically, and rolling back this baseline is unsupported.
+See [the migration runbook](../docs/backend/BACKEND_MIGRATION_SAFETY.md) for the
+required backup, stopped-writer cutover, checks and recovery procedure.

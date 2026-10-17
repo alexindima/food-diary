@@ -53,7 +53,7 @@ public sealed class InitializerTests {
 
     [Theory]
     [InlineData(null, true)]
-    [InlineData("20260209005246_AddShoppingLists", false)]
+    [InlineData("20261017130323_InitialBaseline", false)]
     public void UpdateCommand_ComposesBootstrapOnlyForLatest(string? target, bool expectsBootstrap) {
         var services = new ServiceCollection();
         IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(
