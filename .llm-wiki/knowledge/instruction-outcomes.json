@@ -357,6 +357,47 @@
       "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
       "previousEventHash": "2422ae17120a489657a6fc6ab0bae83403035f1a641a2acfa45e45bc4bd0c3e0",
       "eventHash": "0e46e2c4408b4bc59843a15d1d8abbbacc86fd20c74c883dcebccdc8b4e472b2"
+    },
+    {
+      "schemaVersion": 2,
+      "eventId": "4f9fa6f7a18748e88f5f5847c39ede60",
+      "workspace": ".artifacts/llm-wiki/tasks/bugtriage-transport",
+      "recordedAtUtc": "2026-10-17T12:24:39.2056764Z",
+      "completionFingerprint": "8b9029704979f3ac9788fcc3aa96735518136ccedb7ffec05feb35e26fd42ac1",
+      "retrospectiveHash": "53d1f5b32a81bc599e74d6a00fd488055560e871e858a5977c7bbc6bb62310d6",
+      "instructionSetFingerprint": "1a5027f40abca3263ab21512ab78aba2b9e847c48d019083ab4b84e88dc31de7",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "fingerprint": "997762017a8b9c43002f825cb93149d0e886a415264eea23de89be5b07595e7c"
+        },
+        {
+          "path": "Services/BugTriage/AGENTS.md",
+          "fingerprint": "59815410863f6d28df1a0d29779352be396aead1b705c9fd066d25426b6b20b0"
+        }
+      ],
+      "taskSignals": {
+        "riskLevel": "low",
+        "complexityScore": 16,
+        "complexityBandUpperBound": 34,
+        "cohortKey": "low|complexity<=34",
+        "modelRouteId": "unrouted",
+        "contextStrategyId": "default"
+      },
+      "outcome": {
+        "score": 95.0,
+        "quality": "excellent",
+        "readinessScore": 100.0,
+        "confidenceScore": 90.0,
+        "critiqueScore": 90.0,
+        "verificationScore": 100.0,
+        "repairAttempts": 0,
+        "falseNegativeCount": 0
+      },
+      "success": true,
+      "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
+      "previousEventHash": "0e46e2c4408b4bc59843a15d1d8abbbacc86fd20c74c883dcebccdc8b4e472b2",
+      "eventHash": "aa39e32f84fb3fabe2657f294031bf51a575062588fe8a0bd9cbb13fe5e6e53b"
     }
   ]
 }

@@ -23,17 +23,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
-        },
-        {
-          "path": "docs/README.md",
-          "sha256": "76c19ff565165f5f4d46669e91393da0fb72876f18badaa2263b61d294aa3956"
+          "sha256": "997762017a8b9c43002f825cb93149d0e886a415264eea23de89be5b07595e7c"
         }
       ],
-      "reason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities.",
+      "reason": "Reviewed the six affected pages against the root transport guidance and BugTriage runbook. The service ownership, independent mail/audit lifecycle, knowledge authority and Wiki workflow are unchanged; detailed transport authority remains in the linked runbook.",
       "baseRef": "HEAD",
-      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
-      "reviewedAtUtc": "2026-10-11T02:02:59.7361957Z"
+      "gitHead": "b5ed198a65bafb47e598db79afdabfdf7e887b1a",
+      "reviewedAtUtc": "2026-10-17T12:21:21.9276268Z"
     },
     {
       "pageId": "module.frontend",
@@ -57,13 +53,13 @@
       "sources": [
         {
           "path": "docs/backend/BUG_TRIAGE.md",
-          "sha256": "759b540d3cfd7ebb7e218037db0707c2dbf66fc3cefa36b0da2b4a1fed8b99a8"
+          "sha256": "6540cb94215c774cdb10b1c81f610c527d46dc0fdacc2db3ee89474053c9df93"
         }
       ],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
+      "reason": "Reviewed the six affected pages against the root transport guidance and BugTriage runbook. The service ownership, independent mail/audit lifecycle, knowledge authority and Wiki workflow are unchanged; detailed transport authority remains in the linked runbook.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:40.7976729Z"
+      "gitHead": "b5ed198a65bafb47e598db79afdabfdf7e887b1a",
+      "reviewedAtUtc": "2026-10-17T12:21:22.1470195Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -132,17 +128,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
-        },
-        {
-          "path": "docs/README.md",
-          "sha256": "76c19ff565165f5f4d46669e91393da0fb72876f18badaa2263b61d294aa3956"
+          "sha256": "997762017a8b9c43002f825cb93149d0e886a415264eea23de89be5b07595e7c"
         }
       ],
-      "reason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities.",
+      "reason": "Reviewed the six affected pages against the root transport guidance and BugTriage runbook. The service ownership, independent mail/audit lifecycle, knowledge authority and Wiki workflow are unchanged; detailed transport authority remains in the linked runbook.",
       "baseRef": "HEAD",
-      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
-      "reviewedAtUtc": "2026-10-11T02:03:01.1830676Z"
+      "gitHead": "b5ed198a65bafb47e598db79afdabfdf7e887b1a",
+      "reviewedAtUtc": "2026-10-17T12:21:22.3349080Z"
     },
     {
       "pageId": "system.quality-index",
@@ -1149,13 +1141,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
+          "sha256": "997762017a8b9c43002f825cb93149d0e886a415264eea23de89be5b07595e7c"
         }
       ],
-      "reason": "Root Wiki commands moved verbatim into the linked AI_WORKFLOW guide; indexed documentation is current and regenerated for the development dependencies.",
+      "reason": "Reviewed the six affected pages against the root transport guidance and BugTriage runbook. The service ownership, independent mail/audit lifecycle, knowledge authority and Wiki workflow are unchanged; detailed transport authority remains in the linked runbook.",
       "baseRef": "HEAD",
-      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
-      "reviewedAtUtc": "2026-10-10T08:41:16.7242376Z"
+      "gitHead": "b5ed198a65bafb47e598db79afdabfdf7e887b1a",
+      "reviewedAtUtc": "2026-10-17T12:21:22.6004890Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1208,14 +1200,14 @@
       "pageSha256": "3af71b64bf35f63f76cf5e8784f96c6d4b40579bd8e96f2bebd0ae99f02caffa",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "ee9d6790dafbfd16fae193a0134a0159eedf18ab3b29cd7df38de96b2db4c4fe"
+          "path": "AGENTS.md",
+          "sha256": "997762017a8b9c43002f825cb93149d0e886a415264eea23de89be5b07595e7c"
         }
       ],
-      "reason": "Reviewed generated module, data, catalog and runtime navigation against current source and existing architecture guidance. Added DbSet capability metadata documents the owning Identity persistence boundary; task completion adds one instruction outcome for this isolated validated security task.",
+      "reason": "Reviewed the six affected pages against the root transport guidance and BugTriage runbook. The service ownership, independent mail/audit lifecycle, knowledge authority and Wiki workflow are unchanged; detailed transport authority remains in the linked runbook.",
       "baseRef": "HEAD",
-      "gitHead": "e8d77407540e9ec32620cd9f05fb09308b1a6be7",
-      "reviewedAtUtc": "2026-10-17T10:35:15.1164497Z"
+      "gitHead": "b5ed198a65bafb47e598db79afdabfdf7e887b1a",
+      "reviewedAtUtc": "2026-10-17T12:21:22.9500205Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1223,14 +1215,14 @@
       "pageSha256": "7023047356e2bba7ad98e23c670c27159e08fbbf5d5ee242cf860fd1bbecc46e",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "1fafbee70c4f9a78ec3a356bfef15c51b62ac54b9e0c23805efd96fc31495625"
+          "path": "AGENTS.md",
+          "sha256": "997762017a8b9c43002f825cb93149d0e886a415264eea23de89be5b07595e7c"
         }
       ],
-      "reason": "Reviewed the facade diff: only Read-LlmWikiCompiledIndex dispatch now delegates direct read-only transactions and isolated recovery to its reader. Adaptive routing, diff, maintenance and dispatch commands retain their existing branches, parameters and evidence contracts; their workflow descriptions remain current.",
+      "reason": "Reviewed the six affected pages against the root transport guidance and BugTriage runbook. The service ownership, independent mail/audit lifecycle, knowledge authority and Wiki workflow are unchanged; detailed transport authority remains in the linked runbook.",
       "baseRef": "HEAD",
-      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
-      "reviewedAtUtc": "2026-10-14T09:10:58.8208267Z"
+      "gitHead": "b5ed198a65bafb47e598db79afdabfdf7e887b1a",
+      "reviewedAtUtc": "2026-10-17T12:21:23.3635989Z"
     },
     {
       "pageId": "workflow.self-maintenance",

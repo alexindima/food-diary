@@ -52,7 +52,7 @@ Save a private JSON file at `%USERPROFILE%\.codex\secrets\food-diary.bugtriage.j
 }
 ```
 
-An SSH tunnel may instead use `http://127.0.0.1:5099`; no inbound connection to the workstation is needed. Do not expose the JSON file or its contents in prompts, terminal output or screenshots.
+For SSH, the existing `http://127.0.0.1:15099` or `http://127.0.0.1:5099` configuration selects a fixed authenticated stdio connection: `ssh -W 127.0.0.1:5099 fooddiary-bugtriage`. The equivalent `localhost` and `::1` selectors are supported. These URLs never cause a connection to a workstation TCP listener. Other plaintext ports and base paths are rejected. HTTPS uses normal certificate verification, without environment/system proxies; redirects are forbidden in both modes. Do not expose the JSON file or its contents in prompts, terminal output or screenshots.
 
 ```powershell
 python Services/BugTriage/worker/bugtriage.py list
@@ -99,7 +99,7 @@ The queue limits require a service restart with the updated build, but no schema
 ```powershell
 dotnet test Services/BugTriage/tests/FoodDiary.BugTriage.Tests
 dotnet test Services/MailInbox/tests/FoodDiary.MailInbox.IntegrationTests
-python -m unittest discover -s Services/BugTriage/worker -p test_bugtriage.py
+python -m unittest discover -s Services/BugTriage/worker -p 'test_*.py'
 dotnet test Tooling/tests/FoodDiary.ArchitectureTests
 ```
 
@@ -107,7 +107,7 @@ PostgreSQL tests require Docker. They exercise duplicate imports, competing clai
 
 The production Deploy workflow builds and signs the BugTriage image, then invokes `Services/BugTriage/deployment/deploy.py` after MailInbox is updated. This idempotently provisions a separate PostgreSQL container and volume, initializes the schema with the owner role, grants only DML to the runtime role, and checks the token-protected API. Private configuration lives in `/opt/fooddiary/bugtriage/.env` (mode 0600); existing tokens are preserved across deployments. MailInbox read capabilities are copied server-side without being printed. PostgreSQL has no published port and uses a dedicated internal Docker network.
 
-The API binds only to server loopback port 5099. The provisioned workstation uses SSH alias `fooddiary-bugtriage`, a dedicated key restricted to local forwarding to `127.0.0.1:5099`, and local port 15099. Run `./Services/BugTriage/worker/Connect-BugTriage.ps1` before bridge commands. The private JSON uses `http://127.0.0.1:15099`; no new DNS, SSO or public HTTPS endpoint is needed. The administrative `fooddiary-prod` alias is used only for provisioning and maintenance.
+The API binds only to server loopback port 5099. The provisioned workstation uses SSH alias `fooddiary-bugtriage` and a dedicated key restricted to forwarding to `127.0.0.1:5099`. Each mail or audit request owns a new SSH process and exchanges HTTP through its private stdin/stdout; there is no shared local listener or control socket. Host key checking is strict and interactive prompts, agent forwarding and local/remote commands are disabled. Pin the server host key through trusted provisioning before use. Run `./Services/BugTriage/worker/Connect-BugTriage.ps1` before bridge commands: it checks the same route using a credential-free request that must return 401. The private JSON can keep `http://127.0.0.1:15099`; no production change, new DNS, SSO or public HTTPS endpoint is needed. Failed authentication, malformed/oversized responses and a 30-second SSH deadline fail closed; no fallback to local HTTP occurs. The administrative `fooddiary-prod` alias is used only for provisioning and maintenance.
 
 After activation, send a synthetic bug with an image and verify import, claim, MIME retrieval, renewal and completion before scheduling unattended work. Enabling autonomous processing of arbitrary public mail requires an explicit admission policy; this deployment does not itself enable a Codex schedule.
 

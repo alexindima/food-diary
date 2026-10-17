@@ -4,7 +4,7 @@ Use only when the task authorizes saving sanitized audit results in BugTriage. G
 
 ## Start and recovery
 
-Run `./Services/BugTriage/worker/Connect-BugTriage.ps1` for publication through the existing forwarding-only BugTriage connection. Use it solely for this API; production host correlation still follows the production-audit skill. The bridge loads the private BugTriage configuration without printing its key.
+Run `./Services/BugTriage/worker/Connect-BugTriage.ps1` to check the credential-free authenticated SSH stdio route used for publication. Each bridge request owns its forwarding-only SSH connection; do not start or trust a local port 15099 listener. Use it solely for this API; production host correlation still follows the production-audit skill. The bridge loads the private BugTriage configuration without printing its key.
 
 1. Run `python Services/BugTriage/worker/audit.py retry` to retry saved completions using their existing IDs and payloads. Do not repeat investigation or PR creation for a publication retry. Failure must not prevent today's read-only audit.
 2. Run `python Services/BugTriage/worker/audit.py start` once. It prints a private `run.json` path and saves the UUID and UTC interval before requesting registration. Use that file's `[fromUtc,toUtc)` interval for every collection and report. If registration fails, the file still exists; continue with its interval.

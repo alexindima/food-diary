@@ -12,6 +12,8 @@ import uuid
 from email.parser import BytesParser
 from pathlib import Path
 
+import ssh_transport
+
 MAX_MIME = 10 * 1024 * 1024
 
 
@@ -20,19 +22,38 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         raise ValueError("API redirects are not allowed")
 
 
-def load_config(path):
-    config = json.loads(Path(path).read_text(encoding="utf-8-sig"))
-    parsed = urllib.parse.urlsplit(config["baseUrl"])
-    if (parsed.scheme != "https" and not (
-        parsed.scheme == "http" and parsed.hostname in ("localhost", "127.0.0.1", "::1")
-    )) or parsed.username or parsed.password or parsed.query or parsed.fragment:
-        raise ValueError("Use HTTPS or an SSH tunnel bound to loopback, without URL credentials")
+def validate_config(config):
+    url = config["baseUrl"]
+    if not isinstance(url, str) or any(ord(char) <= 32 or ord(char) == 127 for char in url):
+        raise ValueError("Invalid BugTriage URL")
+    parsed = urllib.parse.urlsplit(url)
+    if parsed.username is not None or parsed.password is not None or parsed.query or parsed.fragment:
+        raise ValueError("URL credentials, query and fragment are not allowed")
+    if parsed.scheme == "http":
+        # Legacy loopback URLs are selectors for the fixed authenticated SSH route.
+        # They never authorize a connection to a workstation TCP listener.
+        if (parsed.hostname not in ("localhost", "127.0.0.1", "::1")
+                or parsed.port not in (5099, 15099) or parsed.path not in ("", "/")):
+            raise ValueError("Use the provisioned SSH selector or verified HTTPS")
+    elif parsed.scheme != "https":
+        raise ValueError("Use the provisioned SSH selector or verified HTTPS")
     if not parsed.hostname or not 32 <= len(config["apiKey"]) <= 256:
         raise ValueError("Invalid BugTriage configuration")
+    # Validate port syntax/range even for HTTPS before attaching any credential.
+    parsed.port
+    return parsed
+
+
+def load_config(path):
+    config = json.loads(Path(path).read_text(encoding="utf-8-sig"))
+    validate_config(config)
     return config
 
 
 def call_api(config, method, path, data=None, lease=None, binary=False):
+    parsed = validate_config(config)
+    if not path.startswith("/") or path.startswith("//") or any(ord(char) <= 32 or ord(char) == 127 for char in path) or "#" in path:
+        raise ValueError("Invalid API path")
     headers = {"X-BugTriage-Key": config["apiKey"]}
     if lease:
         headers["X-BugTriage-Lease"] = str(uuid.UUID(lease))
@@ -40,13 +61,17 @@ def call_api(config, method, path, data=None, lease=None, binary=False):
     if data is not None:
         headers["Content-Type"] = "application/json"
         payload = json.dumps(data).encode("utf-8")
-    request = urllib.request.Request(config["baseUrl"].rstrip("/") + path, payload, headers, method=method)
-    opener = urllib.request.build_opener(NoRedirect())
-    with opener.open(request, timeout=30) as response:
-        content = response.read(MAX_MIME + 1)
-        if len(content) > MAX_MIME:
-            raise ValueError("Response exceeds size limit")
-        return content if binary else json.loads(content) if content else None
+    if parsed.scheme == "http":
+        content = ssh_transport.request(method, path, payload, headers)
+    else:
+        request = urllib.request.Request(config["baseUrl"].rstrip("/") + path, payload, headers, method=method)
+        # A proxy selected by environment/system settings must not receive the key.
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect())
+        with opener.open(request, timeout=30) as response:
+            content = response.read(MAX_MIME + 1)
+            if len(content) > MAX_MIME:
+                raise ValueError("Response exceeds size limit")
+    return content if binary else json.loads(content) if content else None
 
 
 def save_private(path, content):
