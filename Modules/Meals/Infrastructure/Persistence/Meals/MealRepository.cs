@@ -14,6 +14,7 @@ using Product = FoodDiary.Modules.Products.Contracts.Models.ProductSnapshotReadM
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using FoodDiary.Domain.Primitives;
 
 namespace FoodDiary.Modules.Meals.Infrastructure.Persistence.Meals;
 
@@ -451,11 +452,12 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
         IReadOnlyDictionary<ProductId, Product> legacyProductsById) {
         return [.. meal.Items
             .OrderBy(static item => item.Id.Value)
-            .Select(item => ToMealItemProjectionReadModel(item, legacyRecipesById, legacyProductsById))];
+            .Select(item => ToMealItemProjectionReadModel(item, meal.UserId, legacyRecipesById, legacyProductsById))];
     }
 
     private static MealItemProjectionReadModel ToMealItemProjectionReadModel(
         MealItem item,
+        UserId userId,
         IReadOnlyDictionary<RecipeId, MealRecipeSourceReadModel> legacyRecipesById,
         IReadOnlyDictionary<ProductId, Product> legacyProductsById) {
         MealRecipeSourceReadModel? legacyRecipe = item.RecipeId is { } recipeId
@@ -464,6 +466,12 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
                 : null;
         Product? legacyProduct = item.ProductId is { } productId
             && legacyProductsById.TryGetValue(productId, out Product? product) ? product : null;
+        if (legacyProduct is not null && legacyProduct.Visibility != Visibility.Public && legacyProduct.OwnerUserId != userId.Value) {
+            legacyProduct = null;
+        }
+        if (legacyRecipe is { IsPublic: false } && legacyRecipe.OwnerUserId != userId.Value) {
+            legacyRecipe = null;
+        }
 
         return new MealItemProjectionReadModel(
             item.Id.Value,

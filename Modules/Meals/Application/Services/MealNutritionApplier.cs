@@ -14,12 +14,20 @@ internal static class MealNutritionApplier {
         MealNutritionInput input,
         CancellationToken cancellationToken) {
         if (!input.IsNutritionAutoCalculated) {
-            return ApplyManualNutrition(meal, input);
+            Result<ManualNutritionInput> manualValidation = ManualNutritionValidator.Validate(
+                input.ManualCalories, input.ManualProteins, input.ManualFats,
+                input.ManualCarbs, input.ManualFiber, input.ManualAlcohol);
+            if (manualValidation.IsFailure) {
+                return manualValidation;
+            }
         }
-
         Result<MealNutritionSummary> nutritionResult = await mealNutritionService.CalculateAsync(meal, userId, cancellationToken).ConfigureAwait(false);
         if (nutritionResult.IsFailure) {
             return nutritionResult;
+        }
+
+        if (!input.IsNutritionAutoCalculated) {
+            return ApplyManualNutrition(meal, input);
         }
 
         meal.ApplyNutrition(new MealNutritionUpdate(

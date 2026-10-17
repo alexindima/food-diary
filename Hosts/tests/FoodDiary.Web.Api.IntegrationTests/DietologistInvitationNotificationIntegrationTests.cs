@@ -224,6 +224,12 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
 
         Assert.NotEqual(Guid.Empty, authPayload.User.Id);
+        string token = factory.EmailSender.GetRequiredEmailVerificationToken(email);
+        using HttpResponseMessage verificationResponse = await client.PostAsJsonAsync(
+            "/api/v1/auth/verify-email",
+            new { UserId = authPayload.User.Id, Token = token }).ConfigureAwait(false);
+        await AssertStatusCodeAsync(HttpStatusCode.NoContent, verificationResponse).ConfigureAwait(false);
+
         return new AuthenticatedUser(client, email, authPayload.User.Id);
     }
 

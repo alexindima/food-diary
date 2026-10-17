@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6633,
+    "productionFiles": 6635,
     "wikiToolFiles": 218,
     "wikiToolsWithoutTestReferences": 5,
     "criticalSymbols": 1006,
@@ -471,6 +471,14 @@
       "structuralRiskScore": 119.76
     },
     {
+      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
+      "nonBlankLines": 492,
+      "decisionPoints": 73,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 119.34
+    },
+    {
       "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts",
       "nonBlankLines": 472,
       "decisionPoints": 72,
@@ -591,14 +599,6 @@
       "structuralRiskScore": 111.68
     },
     {
-      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
-      "nonBlankLines": 484,
-      "decisionPoints": 68,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 111.68
-    },
-    {
       "path": ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",
       "nonBlankLines": 301,
       "decisionPoints": 69,
@@ -663,6 +663,14 @@
       "structuralRiskScore": 107.4
     },
     {
+      "path": "Modules/Users/Domain/Entities/User.Profile.cs",
+      "nonBlankLines": 377,
+      "decisionPoints": 66,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 106.54
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
       "nonBlankLines": 329,
       "decisionPoints": 65,
@@ -677,6 +685,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 106.06
+    },
+    {
+      "path": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
+      "nonBlankLines": 387,
+      "decisionPoints": 65,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 105.24
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
@@ -725,22 +741,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 101.08
-    },
-    {
-      "path": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
-      "nonBlankLines": 380,
-      "decisionPoints": 62,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 100.6
-    },
-    {
-      "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "nonBlankLines": 371,
-      "decisionPoints": 62,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 100.42
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
@@ -4498,11 +4498,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/MealPlanning/MealPlanCompositionReader.cs",
-      "nonBlankLines": 71,
-      "decisionPoints": 1,
+      "nonBlankLines": 88,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.92
+      "structuralRiskScore": 9.26
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayProjection.cs",
@@ -4514,11 +4514,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayReadService.cs",
-      "nonBlankLines": 106,
-      "decisionPoints": 26,
+      "nonBlankLines": 107,
+      "decisionPoints": 48,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 41.12
+      "structuralRiskScore": 74.14
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Meals/MealProductNutritionQuery.cs",
@@ -4530,11 +4530,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Meals/MealSourceSnapshotQuery.cs",
-      "nonBlankLines": 51,
+      "nonBlankLines": 54,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.02
+      "structuralRiskScore": 4.08
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
@@ -29067,10 +29067,10 @@
     {
       "path": "Modules/Dietologist/Application/Commands/AcceptInvitationForCurrentUser/AcceptInvitationForCurrentUserCommandHandler.cs",
       "nonBlankLines": 77,
-      "decisionPoints": 8,
+      "decisionPoints": 9,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.54
+      "structuralRiskScore": 17.04
     },
     {
       "path": "Modules/Dietologist/Application/Commands/ArchiveRecommendationTemplate/ArchiveRecommendationTemplateCommand.cs",
@@ -29098,11 +29098,11 @@
     },
     {
       "path": "Modules/Dietologist/Application/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandHandler.cs",
-      "nonBlankLines": 90,
-      "decisionPoints": 4,
+      "nonBlankLines": 99,
+      "decisionPoints": 5,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.8
+      "structuralRiskScore": 11.48
     },
     {
       "path": "Modules/Dietologist/Application/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandValidator.cs",
@@ -29283,10 +29283,10 @@
     {
       "path": "Modules/Dietologist/Application/Commands/DeclineInvitationForCurrentUser/DeclineInvitationForCurrentUserCommandHandler.cs",
       "nonBlankLines": 72,
-      "decisionPoints": 7,
+      "decisionPoints": 8,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.94
+      "structuralRiskScore": 15.44
     },
     {
       "path": "Modules/Dietologist/Application/Commands/DisconnectDietologist/DisconnectDietologistCommand.cs",
@@ -29738,11 +29738,11 @@
     },
     {
       "path": "Modules/Dietologist/Application/Queries/GetInvitationByToken/GetInvitationByTokenQueryHandler.cs",
-      "nonBlankLines": 57,
-      "decisionPoints": 8,
+      "nonBlankLines": 58,
+      "decisionPoints": 9,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.14
+      "structuralRiskScore": 16.66
     },
     {
       "path": "Modules/Dietologist/Application/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQuery.cs",
@@ -29754,11 +29754,11 @@
     },
     {
       "path": "Modules/Dietologist/Application/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQueryHandler.cs",
-      "nonBlankLines": 58,
-      "decisionPoints": 5,
+      "nonBlankLines": 62,
+      "decisionPoints": 6,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.66
+      "structuralRiskScore": 12.24
     },
     {
       "path": "Modules/Dietologist/Application/Queries/GetMyClientTasks/GetMyClientTasksQuery.cs",
@@ -34890,11 +34890,11 @@
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramInitData.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.24
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramLoginWidgetData.cs",
@@ -36338,11 +36338,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 1,
+      "nonBlankLines": 34,
+      "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.04
+      "structuralRiskScore": 3.68
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramLoginTicketStore.cs",
@@ -36370,11 +36370,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/IdentityDbContext.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Users/AccessTokenSessionReader.cs",
@@ -36426,19 +36426,19 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs",
-      "nonBlankLines": 117,
-      "decisionPoints": 14,
+      "nonBlankLines": 122,
+      "decisionPoints": 15,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 25.34
+      "structuralRiskScore": 26.94
     },
     {
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramLoginWidgetValidator.cs",
-      "nonBlankLines": 79,
+      "nonBlankLines": 81,
       "decisionPoints": 13,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.08
+      "structuralRiskScore": 23.12
     },
     {
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcProvider.cs",
@@ -36505,6 +36505,14 @@
       "structuralRiskScore": 0.14
     },
     {
+      "path": "Modules/Identity/PersistenceModel/Authentication/TelegramAssertionPolicy.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
       "path": "Modules/Identity/PersistenceModel/Authentication/TelegramLoginTicket.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
@@ -36527,6 +36535,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/TelegramAssertionPolicyConfiguration.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
     },
     {
       "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/TelegramLoginTicketConfiguration.cs",
@@ -38426,11 +38442,11 @@
     },
     {
       "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanCompositionReader.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.22
     },
     {
       "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanReadModelRepository.cs",
@@ -38690,11 +38706,11 @@
     },
     {
       "path": "Modules/MealPlanning/Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
-      "nonBlankLines": 133,
-      "decisionPoints": 8,
+      "nonBlankLines": 139,
+      "decisionPoints": 10,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.66
+      "structuralRiskScore": 19.78
     },
     {
       "path": "Modules/MealPlanning/Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandValidator.cs",
@@ -38962,11 +38978,11 @@
     },
     {
       "path": "Modules/MealPlanning/Application/ShoppingLists/Common/ShoppingListCreationItem.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
+      "structuralRiskScore": 0.24
     },
     {
       "path": "Modules/MealPlanning/Application/ShoppingLists/Common/ShoppingListCreationRequest.cs",
@@ -39154,11 +39170,11 @@
     },
     {
       "path": "Modules/MealPlanning/Application/ShoppingLists/Services/ShoppingListCreationService.cs",
-      "nonBlankLines": 37,
+      "nonBlankLines": 38,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.74
+      "structuralRiskScore": 3.76
     },
     {
       "path": "Modules/MealPlanning/Application/ShoppingLists/Services/ShoppingListItemBuilder.cs",
@@ -39210,11 +39226,11 @@
     },
     {
       "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlanRecipeIngredientSnapshot.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlanRecipeSnapshot.cs",
@@ -39410,11 +39426,11 @@
     },
     {
       "path": "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/MealPlanRepository.cs",
-      "nonBlankLines": 178,
+      "nonBlankLines": 180,
       "decisionPoints": 20,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 33.56
+      "structuralRiskScore": 33.6
     },
     {
       "path": "Modules/MealPlanning/Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs",
@@ -39778,11 +39794,11 @@
     },
     {
       "path": "Modules/Meals/Application.Abstractions/Models/MealRecipeSourceReadModel.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
+      "structuralRiskScore": 0.28
     },
     {
       "path": "Modules/Meals/Application/AssemblyInfo.cs",
@@ -39874,11 +39890,11 @@
     },
     {
       "path": "Modules/Meals/Application/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
-      "nonBlankLines": 176,
-      "decisionPoints": 12,
+      "nonBlankLines": 179,
+      "decisionPoints": 13,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.52
+      "structuralRiskScore": 25.08
     },
     {
       "path": "Modules/Meals/Application/Commands/RepeatMeal/RepeatMealCommandValidator.cs",
@@ -40242,11 +40258,11 @@
     },
     {
       "path": "Modules/Meals/Application/Services/MealNutritionApplier.cs",
-      "nonBlankLines": 59,
-      "decisionPoints": 3,
+      "nonBlankLines": 67,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.68
+      "structuralRiskScore": 8.84
     },
     {
       "path": "Modules/Meals/Application/Services/MealNutritionCalculator.cs",
@@ -40267,10 +40283,10 @@
     {
       "path": "Modules/Meals/Application/Services/MealNutritionService.cs",
       "nonBlankLines": 78,
-      "decisionPoints": 8,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.56
+      "structuralRiskScore": 16.56
     },
     {
       "path": "Modules/Meals/Application/Services/MealNutritionSummary.cs",
@@ -40650,11 +40666,11 @@
     },
     {
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
-      "nonBlankLines": 484,
-      "decisionPoints": 68,
+      "nonBlankLines": 492,
+      "decisionPoints": 73,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 111.68
+      "structuralRiskScore": 119.34
     },
     {
       "path": "Modules/Meals/Infrastructure/Persistence/MealsDbContext.cs",
@@ -42930,11 +42946,11 @@
     },
     {
       "path": "Modules/Products/Contracts/Models/ProductSnapshotReadModel.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Products/Domain.Contracts/Enums/MeasurementUnit.cs",
@@ -47026,11 +47042,11 @@
     },
     {
       "path": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
-      "nonBlankLines": 380,
-      "decisionPoints": 62,
+      "nonBlankLines": 387,
+      "decisionPoints": 65,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 100.6
+      "structuralRiskScore": 105.24
     },
     {
       "path": "Modules/Users/Application/Services/UserAuthenticationRegistrationService.cs",
@@ -47362,11 +47378,11 @@
     },
     {
       "path": "Modules/Users/Contracts/Common/UserAuthenticationErrors.cs",
-      "nonBlankLines": 36,
+      "nonBlankLines": 40,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.22
+      "structuralRiskScore": 2.3
     },
     {
       "path": "Modules/Users/Contracts/Common/UserErrors.cs",
@@ -47522,11 +47538,11 @@
     },
     {
       "path": "Modules/Users/Contracts/Models/UserDietologistProfileModel.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/Users/Contracts/Models/UserEmailVerificationDeliveryModel.cs",
@@ -47890,11 +47906,11 @@
     },
     {
       "path": "Modules/Users/Domain/Entities/User.Credentials.cs",
-      "nonBlankLines": 107,
-      "decisionPoints": 7,
+      "nonBlankLines": 114,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.64
+      "structuralRiskScore": 15.78
     },
     {
       "path": "Modules/Users/Domain/Entities/User.Goals.cs",
@@ -47914,11 +47930,11 @@
     },
     {
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "nonBlankLines": 371,
-      "decisionPoints": 62,
+      "nonBlankLines": 377,
+      "decisionPoints": 66,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 100.42
+      "structuralRiskScore": 106.54
     },
     {
       "path": "Modules/Users/Domain/Entities/User.Tdee.cs",
@@ -47930,11 +47946,11 @@
     },
     {
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "nonBlankLines": 542,
+      "nonBlankLines": 544,
       "decisionPoints": 39,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 69.34
+      "structuralRiskScore": 69.38
     },
     {
       "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
@@ -55084,10 +55100,12 @@
       "name": "GenerateShoppingListCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
-      "line": 15,
-      "testReferenceCount": 2,
+      "line": 16,
+      "testReferenceCount": 4,
       "testReferences": [
+        "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/MealPlansFeatureTests.PrivateIngredientUnits.cs",
         "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/MealPlansFeatureTests.cs",
+        "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests/MealPlanningPersistenceCompatibilityTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -59451,7 +59469,7 @@
       "name": "GetInvitationByTokenQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetInvitationByToken/GetInvitationByTokenQueryHandler.cs",
-      "line": 15,
+      "line": 16,
       "testReferenceCount": 4,
       "testReferences": [
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.ReadQueryTests.cs",
@@ -59466,7 +59484,7 @@
       "name": "GetInvitationForCurrentUserQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQueryHandler.cs",
-      "line": 14,
+      "line": 15,
       "testReferenceCount": 4,
       "testReferences": [
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.ReadQueryTests.cs",
@@ -63559,7 +63577,7 @@
       "role": "Validator",
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs",
       "line": 16,
-      "testReferenceCount": 11,
+      "testReferenceCount": 12,
       "testReferences": [
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.Telegram.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
@@ -63568,6 +63586,7 @@
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramBackupEmailServiceTests.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramOnboardingTests.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UnlinkTelegramCommandTests.cs",
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/Integration/TelegramAssertionReplayGuardIntegrationTests.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramAuthValidatorsTests.cs",
         "Platform/tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",

@@ -21,7 +21,13 @@ concurrency:
 
 jobs:
   deploy:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    if: >-
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/master') ||
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_branch == 'master' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -29,6 +35,23 @@ jobs:
       packages: write
 
     steps:
+      - name: Authorize deployment source
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          # Resolve master through the API before checking out or executing source.
+          master_sha=$(curl --fail --silent --show-error \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/git/ref/heads/master" | jq -er '.object.sha')
+          [[ "${SOURCE_COMMIT_SHA}" =~ ^[0-9a-f]{40}$ ]]
+          if [[ "${SOURCE_COMMIT_SHA}" != "${master_sha}" ]]; then
+            echo 'Deployment source must be the current master commit.' >&2
+            exit 1
+          fi
+
       - name: Initialize deploy diagnostics
         shell: bash
         run: |

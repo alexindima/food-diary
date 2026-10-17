@@ -19,13 +19,13 @@ public sealed class MealNutritionService(
         UserId userId,
         CancellationToken cancellationToken = default) {
         var productIds = meal.Items
-            .Where(i => i.ProductId.HasValue)
+            .Where(i => i.ProductId.HasValue && !i.HasNutritionSnapshot)
             .Select(i => i.ProductId!.Value)
             .Distinct()
             .ToList();
 
         var recipeIds = meal.Items
-            .Where(i => i.RecipeId.HasValue)
+            .Where(i => i.RecipeId.HasValue && !i.HasNutritionSnapshot)
             .Select(i => i.RecipeId!.Value)
             .Distinct()
             .ToList();

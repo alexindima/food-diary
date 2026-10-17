@@ -31,6 +31,9 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
         }
 
         Dictionary<string, StringValues> parsed = QueryHelpers.ParseQuery(initData);
+        if (parsed.Any(entry => entry.Value.Count != 1)) {
+            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
+        }
         if (!parsed.TryGetValue("hash", out StringValues hashValues)) {
             return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
         }
@@ -77,7 +80,9 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
             user.LastName,
             user.PhotoUrl,
             user.LanguageCode,
-            authDateUtc);
+            authDateUtc,
+            ReplayIdentity: "miniapp:" + hash,
+            ExpiresAtUtc: authDateUtc.AddSeconds(_options.AuthTtlSeconds));
 
         return Result.Success(telegramInitData);
     }

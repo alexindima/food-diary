@@ -3,6 +3,7 @@ using FoodDiary.Modules.Dietologist.Application.Queries.GetClientGoals;
 using FoodDiary.Modules.Dietologist.Application.Queries.GetInvitationByToken;
 using FoodDiary.Modules.Dietologist.Application.Queries.GetInvitationForCurrentUser;
 using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Modules.Dietologist.Application.Common;
@@ -12,13 +13,15 @@ namespace FoodDiary.Modules.Dietologist.Application.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class DietologistReadFailureTests {
     [Fact]
-    public async Task GoalsAndInvitationPreserveEmailFailureAfterAccessSucceedsAsync() {
+    public async Task GoalsAndInvitationPreserveUserLookupFailureAfterAccessSucceedsAsync() {
         var userId = UserId.New();
         var error = new Error("Users.EmailUnavailable", "Email lookup failed");
         ICurrentUserAccessService access = Substitute.For<ICurrentUserAccessService>();
         access.EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>()).Returns((Error?)null);
         IDietologistUserContextService users = Substitute.For<IDietologistUserContextService>();
         users.GetAccessibleUserEmailAsync(userId, Arg.Any<CancellationToken>()).Returns(Result.Failure<string>(error));
+        users.GetAccessibleProfileAsync(userId, Arg.Any<CancellationToken>()).Returns(Result.Failure<UserDietologistProfileModel>(error));
+        users.GetAccessibleProfileAsync(userId, Arg.Any<CancellationToken>()).Returns(Result.Failure<FoodDiary.Modules.Users.Contracts.Models.UserDietologistProfileModel>(error));
         IDietologistInvitationReadModelRepository invitations = Substitute.For<IDietologistInvitationReadModelRepository>();
 
         FoodDiary.Results.Result<FoodDiary.Modules.Dietologist.Application.Models.ClientGoalsModel> goals = await new GetClientGoalsQueryHandler(invitations, users, access)

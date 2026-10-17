@@ -161,8 +161,11 @@ public sealed class RepeatMealCommandHandler(
         Meal newMeal,
         UserId userId,
         CancellationToken cancellationToken) {
+        Result<MealNutritionSummary> nutritionResult = await mealNutritionService.CalculateAsync(newMeal, userId, cancellationToken).ConfigureAwait(false);
+        if (nutritionResult.IsFailure) {
+            return Result.Failure(nutritionResult.Error);
+        }
         if (sourceMeal.IsNutritionAutoCalculated) {
-            Result<MealNutritionSummary> nutritionResult = await mealNutritionService.CalculateAsync(newMeal, userId, cancellationToken).ConfigureAwait(false);
             if (nutritionResult.IsSuccess) {
                 newMeal.ApplyNutrition(new MealNutritionUpdate(
                     nutritionResult.Value.Calories,

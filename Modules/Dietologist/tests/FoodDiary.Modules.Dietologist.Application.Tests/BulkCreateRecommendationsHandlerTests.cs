@@ -114,6 +114,88 @@ public sealed class BulkCreateRecommendationsHandlerTests {
             Arg.Any<CancellationToken>());
     }
 
+    [Fact]
+    public async Task Handle_WhenActiveClientSharesNoCategories_DoesNotCreateRecommendation() {
+        var dietologist = User.Create("dietologist@example.com", "hash");
+        var clientId = UserId.New();
+        IRecommendationRepository recommendations = Substitute.For<IRecommendationRepository>();
+        IRecommendationBulkDispatchRepository dispatches = Substitute.For<IRecommendationBulkDispatchRepository>();
+        dispatches.GetExistingAsync(
+                dietologist.Id, "no-permission", Arg.Any<IReadOnlyCollection<UserId>>(), Arg.Any<CancellationToken>())
+            .Returns([]);
+        IDietologistInvitationReadModelRepository invitations = CreateInvitationRepository(dietologist.Id, clientId);
+        invitations.GetActiveByClientAndDietologistReadModelAsync(clientId, dietologist.Id, Arg.Any<CancellationToken>())
+            .Returns(CreateInvitationWithoutPermissions(dietologist.Id, clientId));
+        var handler = new BulkCreateRecommendationsCommandHandler(
+            recommendations, dispatches, dispatches, invitations, CreateUserContext(dietologist));
+
+        Result<BulkRecommendationResultModel> result = await handler.Handle(
+            new BulkCreateRecommendationsCommand(dietologist.Id.Value, [clientId.Value], "Recommendation", "no-permission"),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        BulkRecommendationRecipientResultModel recipient = Assert.Single(result.Value.Recipients);
+        Assert.Multiple(
+            () => Assert.False(recipient.Succeeded),
+            () => Assert.Equal("Dietologist.PermissionDenied", recipient.ErrorCode),
+            () => Assert.Null(recipient.RecommendationId),
+            () => Assert.False(recipient.WasAlreadyProcessed));
+        await recommendations.DidNotReceive().AddAsync(Arg.Any<Recommendation>(), Arg.Any<CancellationToken>());
+        await dispatches.DidNotReceive().AddAsync(Arg.Any<RecommendationBulkDispatch>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_WhenOneActiveClientSharesNoCategories_OnlyCreatesForPermittedClient() {
+        var dietologist = User.Create("dietologist@example.com", "hash");
+        var permittedClientId = UserId.New();
+        var deniedClientId = UserId.New();
+        IRecommendationRepository recommendations = Substitute.For<IRecommendationRepository>();
+        IRecommendationBulkDispatchRepository dispatches = Substitute.For<IRecommendationBulkDispatchRepository>();
+        dispatches.GetExistingAsync(
+                dietologist.Id, "mixed-permissions", Arg.Any<IReadOnlyCollection<UserId>>(), Arg.Any<CancellationToken>())
+            .Returns([]);
+        IDietologistInvitationReadModelRepository invitations = CreateInvitationRepository(dietologist.Id, permittedClientId);
+        invitations.GetActiveByClientAndDietologistReadModelAsync(deniedClientId, dietologist.Id, Arg.Any<CancellationToken>())
+            .Returns(CreateInvitationWithoutPermissions(dietologist.Id, deniedClientId));
+        var handler = new BulkCreateRecommendationsCommandHandler(
+            recommendations, dispatches, dispatches, invitations, CreateUserContext(dietologist));
+
+        Result<BulkRecommendationResultModel> result = await handler.Handle(
+            new BulkCreateRecommendationsCommand(
+                dietologist.Id.Value, [permittedClientId.Value, deniedClientId.Value], "Recommendation", "mixed-permissions"),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Collection(
+            result.Value.Recipients,
+            recipient => Assert.Multiple(
+                () => Assert.Equal(permittedClientId.Value, recipient.ClientUserId),
+                () => Assert.True(recipient.Succeeded)),
+            recipient => Assert.Multiple(
+                () => Assert.Equal(deniedClientId.Value, recipient.ClientUserId),
+                () => Assert.False(recipient.Succeeded),
+                () => Assert.Equal("Dietologist.PermissionDenied", recipient.ErrorCode)));
+        await recommendations.Received(1).AddAsync(Arg.Any<Recommendation>(), Arg.Any<CancellationToken>());
+        await recommendations.DidNotReceive().AddAsync(
+            Arg.Is<Recommendation>(recommendation => recommendation.ClientUserId == deniedClientId), Arg.Any<CancellationToken>());
+        await dispatches.Received(1).AddAsync(Arg.Any<RecommendationBulkDispatch>(), Arg.Any<CancellationToken>());
+        await dispatches.DidNotReceive().AddAsync(
+            Arg.Is<RecommendationBulkDispatch>(dispatch => dispatch.ClientUserId == deniedClientId), Arg.Any<CancellationToken>());
+    }
+
+    private static DietologistInvitationReadModel CreateInvitationWithoutPermissions(UserId dietologistId, UserId clientId) =>
+        CreateInvitation(dietologistId, clientId) with {
+            Permissions = new DietologistPermissionsReadModel(
+                ShareMeals: false,
+                ShareStatistics: false,
+                ShareWeight: false,
+                ShareWaist: false,
+                ShareGoals: false,
+                ShareHydration: false,
+                ShareProfile: false,
+                ShareFasting: false),
+        };
+
     private static IDietologistInvitationReadModelRepository CreateInvitationRepository(
         UserId dietologistId,
         UserId activeClientId) {

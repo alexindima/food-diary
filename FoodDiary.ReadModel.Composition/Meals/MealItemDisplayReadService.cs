@@ -1,4 +1,5 @@
 using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Products.FoodQuality.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
@@ -34,17 +35,17 @@ public sealed class MealItemDisplayReadService(ICompositionReadContext context) 
                 item.SnapshotCarbsPerBase,
                 item.SnapshotFiberPerBase,
                 item.SnapshotAlcoholPerBase,
-                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => product.Name).SingleOrDefault(),
-                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => product.ImageUrl).SingleOrDefault(),
-                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (string?)product.BaseUnit.ToString()).SingleOrDefault(),
-                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (double?)product.BaseAmount).SingleOrDefault(),
-                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (double?)product.CaloriesPerBase).SingleOrDefault(),
-                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (double?)product.ProteinsPerBase).SingleOrDefault(),
-                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (double?)product.FatsPerBase).SingleOrDefault(),
-                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (double?)product.CarbsPerBase).SingleOrDefault(),
-                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (double?)product.FiberPerBase).SingleOrDefault(),
-                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (double?)product.AlcoholPerBase).SingleOrDefault(),
-                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (ProductType?)product.ProductType).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId && (product.UserId == userId || product.Visibility == Visibility.Public)).Select(product => product.Name).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId && (product.UserId == userId || product.Visibility == Visibility.Public)).Select(product => product.ImageUrl).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId && (product.UserId == userId || product.Visibility == Visibility.Public)).Select(product => (string?)product.BaseUnit.ToString()).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId && (product.UserId == userId || product.Visibility == Visibility.Public)).Select(product => (double?)product.BaseAmount).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId && (product.UserId == userId || product.Visibility == Visibility.Public)).Select(product => (double?)product.CaloriesPerBase).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId && (product.UserId == userId || product.Visibility == Visibility.Public)).Select(product => (double?)product.ProteinsPerBase).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId && (product.UserId == userId || product.Visibility == Visibility.Public)).Select(product => (double?)product.FatsPerBase).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId && (product.UserId == userId || product.Visibility == Visibility.Public)).Select(product => (double?)product.CarbsPerBase).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId && (product.UserId == userId || product.Visibility == Visibility.Public)).Select(product => (double?)product.FiberPerBase).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId && (product.UserId == userId || product.Visibility == Visibility.Public)).Select(product => (double?)product.AlcoholPerBase).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId && (product.UserId == userId || product.Visibility == Visibility.Public)).Select(product => (ProductType?)product.ProductType).SingleOrDefault(),
                 item.RecipeId.HasValue ? item.RecipeId.Value.Value : null,
                 item.SnapshotName,
                 item.SnapshotImageUrl,

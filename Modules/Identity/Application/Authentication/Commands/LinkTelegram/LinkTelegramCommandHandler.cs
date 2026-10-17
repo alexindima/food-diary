@@ -30,7 +30,7 @@ public sealed class LinkTelegramCommandHandler(
 
         TelegramInitData initData = initDataResult.Value;
         bool consumed = await replayGuard
-            .TryConsumeAsync(command.InitData, initData.AuthDateUtc.AddDays(1), cancellationToken)
+            .TryConsumeAsync(initData.ReplayIdentity, initData.ExpiresAtUtc, initData.AuthDateUtc, cancellationToken)
             .ConfigureAwait(false);
         if (!consumed) {
             return Result.Failure<UserModel>(IdentityErrors.TelegramAssertionAlreadyUsed);

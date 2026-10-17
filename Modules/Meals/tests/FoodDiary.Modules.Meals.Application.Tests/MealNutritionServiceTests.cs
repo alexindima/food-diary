@@ -19,6 +19,51 @@ namespace FoodDiary.Modules.Meals.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public class MealNutritionServiceTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task ManualNutrition_RejectsInaccessibleProductAndRecipeReferences(bool recipeSource) {
+        var userId = UserId.New();
+        var meal = Meal.Create(userId, DateTime.UtcNow);
+        if (recipeSource) {
+            meal.AddRecipe(RecipeId.New(), RecipeServingQuantity.FromServings(1));
+        } else {
+            meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(100));
+        }
+        Result result = await MealNutritionApplier.ApplyAsync(meal, userId, CreateService(),
+            new MealNutritionInput(IsNutritionAutoCalculated: false, 600, 30, 20, 50, 5, 0), CancellationToken.None);
+        ResultAssert.Failure(result);
+        Assert.Contains("NotAccessible", result.Error.Code, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ManualNutrition_StoresAuthorizedSourceSnapshotWithoutReplacingManualTotals() {
+        var userId = UserId.New();
+        var product = Product.Create(userId, "Rice", MeasurementUnit.G, 100, 100, 130, 3, 1, 25, 2, 0);
+        var meal = Meal.Create(userId, DateTime.UtcNow);
+        MealItem item = meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(200));
+        MealNutritionService service = CreateService(products: new Dictionary<ProductId, Product> { [product.Id] = product });
+        Result result = await MealNutritionApplier.ApplyAsync(meal, userId, service,
+            new MealNutritionInput(IsNutritionAutoCalculated: false, 600, 30, 20, 50, 5, 0), CancellationToken.None);
+        ResultAssert.Success(result);
+        Assert.False(meal.IsNutritionAutoCalculated);
+        Assert.Equal(600, meal.TotalCalories);
+        Assert.Equal(30, meal.TotalProteins);
+        Assert.True(item.HasNutritionSnapshot);
+        Assert.Equal("Rice", item.SnapshotName);
+    }
+
+    [Fact]
+    public async Task HistoricalSnapshot_RemainsUsableAfterSourceBecomesInaccessible() {
+        var userId = UserId.New();
+        var meal = Meal.Create(userId, DateTime.UtcNow);
+        MealItem item = meal.AddProduct(ProductId.New(), ProductUnitQuantity.FromUnits(200));
+        item.ApplyProductSnapshot("Historical rice", imageUrl: null, MeasurementUnit.G, 100, 130, 3, 1, 25, 2, 0);
+        MealNutritionSummary summary = ResultAssert.Success(await CreateService().CalculateAsync(meal, userId));
+        Assert.Equal(260, summary.Calories);
+        Assert.Equal("Historical rice", item.SnapshotName);
+    }
+
     [Fact]
     public async Task CalculateAsync_WhenMealHasNoItems_ReturnsZeroNutrition() {
         var userId = UserId.New();

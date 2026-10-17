@@ -32,7 +32,7 @@ public sealed class TelegramLoginWidgetCommandHandler(
         }
 
         bool consumed = await replayGuard
-            .TryConsumeAsync("widget:" + command.Hash, validationResult.Value.AuthDateUtc.AddDays(1), cancellationToken)
+            .TryConsumeAsync(validationResult.Value.ReplayIdentity, validationResult.Value.ExpiresAtUtc, validationResult.Value.AuthDateUtc, cancellationToken)
             .ConfigureAwait(false);
         if (!consumed) {
             return Result.Failure<AuthenticationModel>(IdentityErrors.TelegramAssertionAlreadyUsed);

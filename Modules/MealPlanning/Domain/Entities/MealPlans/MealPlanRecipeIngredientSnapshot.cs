@@ -4,8 +4,9 @@ using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 namespace FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
 
 public sealed record MealPlanRecipeIngredientSnapshot(
-    ProductId ProductId,
+    ProductId? ProductId,
     double Amount,
     string Name,
-    MeasurementUnit BaseUnit,
-    string? Category);
+    MeasurementUnit? BaseUnit,
+    string? Category,
+    string? PublishedUnit = null);

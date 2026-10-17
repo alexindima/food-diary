@@ -43,7 +43,7 @@ public sealed class SaveCatalogMealPlanCommandHandler(IMealPlanCatalogRepository
 
         plan.UpdateCatalogWithDuration(command.Name, command.Description, dietType,
             PlanDurationDays.FromDays(command.DurationDays), command.TargetCaloriesPerDay, command.IsPublished);
-        IReadOnlyDictionary<RecipeId, MealPlanRecipeSnapshot> snapshots = await composition.GetRecipeSnapshotsAsync([.. recipeIds.Select(id => new RecipeId(id))], cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<RecipeId, MealPlanRecipeSnapshot> snapshots = await composition.GetRecipeSnapshotsAsync([.. recipeIds.Select(id => new RecipeId(id))], viewerId: null, cancellationToken).ConfigureAwait(false);
         foreach (CatalogDayInput input in command.Days.OrderBy(day => day.DayNumber)) {
             MealPlanDay day = plan.AddTypedDay(PlanDayNumber.FromIndex(input.DayNumber));
             foreach (CatalogMealInput meal in input.Meals) {

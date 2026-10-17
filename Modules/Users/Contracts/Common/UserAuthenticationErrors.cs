@@ -3,6 +3,11 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.Users.Contracts.Common;
 
 public static class UserAuthenticationErrors {
+    public static Error EmailVerificationRequired => new(
+        "Authentication.EmailVerificationRequired",
+        "Verify your email address before linking another sign-in method.",
+        Kind: ErrorKind.Conflict);
+
     public static Error GoogleAccountLinkRequired => new(
         "Authentication.GoogleAccountLinkRequired",
         "Sign in with your existing account before linking Google.",

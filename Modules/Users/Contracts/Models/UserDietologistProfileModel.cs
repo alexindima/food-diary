@@ -6,4 +6,5 @@ public sealed record UserDietologistProfileModel(
     string? FirstName,
     string? LastName,
     string? Language,
-    bool IsDietologist);
+    bool IsDietologist,
+    bool IsEmailConfirmed = false);

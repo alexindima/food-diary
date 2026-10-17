@@ -12,6 +12,7 @@ public sealed class IdentityDbContext(DbContextOptions<IdentityDbContext> option
     public DbSet<UserLoginEvent> UserLoginEvents => Set<UserLoginEvent>();
     public DbSet<UserRefreshTokenSession> UserRefreshTokenSessions => Set<UserRefreshTokenSession>();
     public DbSet<ConsumedTelegramAssertion> ConsumedTelegramAssertions => Set<ConsumedTelegramAssertion>();
+    public DbSet<TelegramAssertionPolicy> TelegramAssertionPolicies => Set<TelegramAssertionPolicy>();
     public DbSet<TelegramLoginTicket> TelegramLoginTickets => Set<TelegramLoginTicket>();
     public DbSet<TelegramOperation> TelegramOperations => Set<TelegramOperation>();
 

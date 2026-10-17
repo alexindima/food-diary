@@ -9,4 +9,7 @@ public sealed record MealRecipeSourceReadModel(
     double? TotalFats,
     double? TotalCarbs,
     double? TotalFiber,
-    double? TotalAlcohol);
+    double? TotalAlcohol) {
+    public Guid OwnerUserId { get; init; }
+    public bool IsPublic { get; init; }
+}

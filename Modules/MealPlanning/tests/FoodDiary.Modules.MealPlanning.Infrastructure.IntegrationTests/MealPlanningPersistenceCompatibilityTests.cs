@@ -10,12 +10,88 @@ using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using FoodDiary.Modules.MealPlanning.Application;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Modules.MealPlanning.Infrastructure.Persistence.ShoppingLists;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.GenerateShoppingList;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerFact]
+    public async Task ShoppingSnapshots_UseRequestingViewerAndKeepOnlyPublishedPrivateIngredientDescriptions() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var author = User.Create($"plan-author-{Guid.NewGuid():N}@example.com", "hash");
+        var viewer = User.Create($"plan-viewer-{Guid.NewGuid():N}@example.com", "hash");
+        var privateProduct = Product.Create(author.Id, "Secret supplier product", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
+        var viewerProduct = Product.Create(viewer.Id, "Viewer rice", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
+        privateProduct.ChangeVisibility(FoodDiary.Domain.Primitives.Visibility.Private);
+        viewerProduct.ChangeVisibility(FoodDiary.Domain.Primitives.Visibility.Private);
+        var publicProduct = Product.Create(author.Id, "Public rice", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
+        publicProduct.ChangeVisibility(FoodDiary.Domain.Primitives.Visibility.Public);
+        var recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe.Create(author.Id, "Published dish", 2);
+        recipe.ChangeVisibility(FoodDiary.Domain.Primitives.Visibility.Public);
+        FoodDiary.Modules.Recipes.Domain.Entities.RecipeStep step = recipe.AddStep(1, "Cook");
+        step.AddProductIngredient(privateProduct.Id, ProductUnitQuantity.FromUnits(250)).SetPublicDescription("Published ingredient", "g");
+        step.AddProductIngredient(viewerProduct.Id, ProductUnitQuantity.FromUnits(100));
+        step.AddProductIngredient(publicProduct.Id, ProductUnitQuantity.FromUnits(50));
+        var plan = MealPlan.CreateCurated("Curated", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
+        plan.AddDay(1).AddMeal(MealType.Lunch, recipe.Id, 1);
+        context.AddRange(author, viewer, privateProduct, viewerProduct, publicProduct, recipe, plan);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var reader = new FoodDiary.ReadModel.Composition.MealPlanning.MealPlanCompositionReader(context);
+        var repository = new FoodDiary.Modules.MealPlanning.Infrastructure.Persistence.MealPlans.MealPlanRepository(context.MealPlans, reader);
+        MealPlan loaded = (await repository.GetAccessibleByIdAsync(plan.Id, viewer.Id, includeDays: true))!;
+        MealPlanRecipeSnapshot snapshot = Assert.Single(Assert.Single(loaded.Days).Meals).RecipeSnapshot!;
+        Assert.Equal(3, snapshot.Ingredients.Count);
+        Assert.Contains(snapshot.Ingredients, item => item.ProductId == viewerProduct.Id && string.Equals(item.Name, viewerProduct.Name, StringComparison.Ordinal));
+        Assert.Contains(snapshot.Ingredients, item => item.ProductId == publicProduct.Id);
+        MealPlanRecipeIngredientSnapshot hidden = Assert.Single(snapshot.Ingredients, item => item.ProductId is null);
+        Assert.Equal("Published ingredient", hidden.Name);
+        Assert.Equal(MeasurementUnit.G, hidden.BaseUnit);
+        Assert.Null(hidden.Category);
+        Assert.DoesNotContain(snapshot.Ingredients, item => item.ProductId == privateProduct.Id || string.Equals(item.Name, privateProduct.Name, StringComparison.Ordinal));
+        MealPlanRecipeSnapshot authorSnapshot = (await reader.GetRecipeSnapshotsAsync([recipe.Id], author.Id))[recipe.Id];
+        Assert.Contains(authorSnapshot.Ingredients, item => item.ProductId == privateProduct.Id);
+        Assert.DoesNotContain((await reader.GetRecipeSnapshotsAsync([recipe.Id], viewerId: null))[recipe.Id].Ingredients, item => item.ProductId == viewerProduct.Id);
+
+        var services = new ServiceCollection();
+        services.AddMealPlanningApplication();
+        services.AddSingleton<IShoppingListWriteRepository>(new ShoppingListRepository(context.ShoppingLists));
+        await using ServiceProvider provider = services.BuildServiceProvider();
+        var handler = new GenerateShoppingListCommandHandler(repository,
+            provider.GetRequiredService<IShoppingListCreationService>(), new OwnedUserAccess(viewer.Id));
+        FoodDiary.Results.Result<ShoppingListModel> generated = await handler.Handle(
+            new GenerateShoppingListCommand(viewer.Id.Value, plan.Id.Value), CancellationToken.None);
+        Assert.True(generated.IsSuccess, generated.Error.Message);
+        ShoppingListItemModel publishedItem = Assert.Single(generated.Value.Items, item => item.ProductId is null);
+        Assert.Equal("Published ingredient", publishedItem.Name);
+        Assert.Equal(125, publishedItem.Amount);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        ShoppingList saved = (await new ShoppingListRepository(context.ShoppingLists)
+            .GetByIdAsync(new ShoppingListId(generated.Value.Id), viewer.Id, includeItems: true))!;
+        Assert.DoesNotContain(saved.Items, item => item.ProductId == privateProduct.Id || string.Equals(item.Name, privateProduct.Name, StringComparison.Ordinal));
+        Assert.Contains(saved.Items, item => item.ProductId == viewerProduct.Id);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class OwnedUserAccess(UserId owner) : ICurrentUserAccessService {
+        public Task<FoodDiary.Results.Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
+            Assert.Equal(owner, userId);
+            cancellationToken.ThrowIfCancellationRequested();
+            return Task.FromResult<FoodDiary.Results.Error?>(null);
+        }
+    }
+
     [RequiresDockerFact]
     public async Task DeletePersonalPlan_ProtectsForeignAndCuratedAndPreservesRecipesProductsAndShoppingSources() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();

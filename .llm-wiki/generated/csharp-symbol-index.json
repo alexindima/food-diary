@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4589,
-    "symbols": 4524,
+    "sourceFiles": 4591,
+    "symbols": 4526,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2333,
+      "class": 2335,
       "enum": 71,
       "interface": 414,
       "record": 1565,
@@ -22,7 +22,7 @@
     "roles": {
       "Command": 231,
       "CommandHandler": 225,
-      "Configuration": 100,
+      "Configuration": 101,
       "Controller": 112,
       "Entity": 102,
       "Event": 19,
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1864,
+      "Other": 1865,
       "Query": 301,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
@@ -1711,7 +1711,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/MealPlanning/MealPlanCompositionReader.cs",
-      "line": 11
+      "line": 14
     },
     {
       "name": "MealItemDisplayProjection",
@@ -1725,7 +1725,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayReadService.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "MealProductNutritionQuery",
@@ -1739,7 +1739,7 @@
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Meals/MealSourceSnapshotQuery.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ProductOverviewReadService",
@@ -10972,7 +10972,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetInvitationByToken/GetInvitationByTokenQueryHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "GetInvitationForCurrentUserQuery",
@@ -10986,7 +10986,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQueryHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "GetMyClientsQuery",
@@ -16820,6 +16820,13 @@
       "line": 6
     },
     {
+      "name": "TelegramAssertionPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/PersistenceModel/Authentication/TelegramAssertionPolicy.cs",
+      "line": 6
+    },
+    {
       "name": "TelegramLoginTicket",
       "kind": "class",
       "role": "Other",
@@ -16838,6 +16845,13 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/ConsumedTelegramAssertionConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "TelegramAssertionPolicyConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/TelegramAssertionPolicyConfiguration.cs",
       "line": 6
     },
     {
@@ -18483,7 +18497,7 @@
       "kind": "interface",
       "role": "Other",
       "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanCompositionReader.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "IMealPlanReadModelRepository",
@@ -18707,7 +18721,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "GenerateShoppingListCommandValidator",
@@ -20394,7 +20408,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
-      "line": 19
+      "line": 20
     },
     {
       "name": "MealsDbContext",

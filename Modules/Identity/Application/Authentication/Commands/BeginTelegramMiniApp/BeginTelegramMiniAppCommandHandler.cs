@@ -20,7 +20,7 @@ public sealed class BeginTelegramMiniAppCommandHandler(
         if (proof.IsFailure) {
             return Result.Failure<TelegramAuthenticationIntentModel>(proof.Error);
         }
-        if (!await replayGuard.TryConsumeAsync(command.InitData, proof.Value.AuthDateUtc.AddDays(1), cancellationToken).ConfigureAwait(false)) {
+        if (!await replayGuard.TryConsumeAsync(proof.Value.ReplayIdentity, proof.Value.ExpiresAtUtc, proof.Value.AuthDateUtc, cancellationToken).ConfigureAwait(false)) {
             return Result.Failure<TelegramAuthenticationIntentModel>(TelegramIdentityErrors.InvalidProof);
         }
         return await intents.CreateAsync(proof.Value.UserId, proof.Value.FirstName, proof.Value.LastName,

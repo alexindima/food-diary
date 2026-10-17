@@ -194,13 +194,13 @@ public sealed class TelegramOnboardingTests {
         _accounts.IsRegisteredAsync(123, Arg.Any<CancellationToken>()).Returns(Result.Success(value: false));
         ITelegramAuthValidator validator = Substitute.For<ITelegramAuthValidator>();
         ITelegramAssertionReplayGuard replay = Substitute.For<ITelegramAssertionReplayGuard>();
-        validator.ValidateInitData("signed").Returns(Result.Success(new TelegramInitData(123, Username: null, "Alex", LastName: null, PhotoUrl: null, "ru", DateTime.UtcNow)));
-        replay.TryConsumeAsync("signed", Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(returnThis: true);
+        validator.ValidateInitData("signed").Returns(Result.Success(new TelegramInitData(123, Username: null, "Alex", LastName: null, PhotoUrl: null, "ru", DateTime.UtcNow, ReplayIdentity: "signed", ExpiresAtUtc: DateTime.UtcNow.AddDays(1))));
+        replay.TryConsumeAsync("signed", Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(returnThis: true);
         var handler = new BeginTelegramMiniAppCommandHandler(validator, replay, _policy, CreateIntents());
         Result<TelegramAuthenticationIntentModel> result = await handler.Handle(new BeginTelegramMiniAppCommand("signed", "browser"), CancellationToken.None);
         Assert.True(result.IsSuccess);
         Assert.Equal("onboarding", result.Value.NextAction);
-        await replay.Received(1).TryConsumeAsync("signed", Arg.Any<DateTime>(), Arg.Any<CancellationToken>());
+        await replay.Received(1).TryConsumeAsync("signed", Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>());
         await _accounts.DidNotReceive().RegisterAsync(Arg.Any<UserTelegramRegistrationModel>(), Arg.Any<CancellationToken>());
     }
 

@@ -7,5 +7,7 @@ public sealed record TelegramInitData(
     string? LastName,
     string? PhotoUrl,
     string? LanguageCode,
-    DateTime AuthDateUtc
+    DateTime AuthDateUtc,
+    string ReplayIdentity,
+    DateTime ExpiresAtUtc
 );

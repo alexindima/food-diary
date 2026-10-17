@@ -19,7 +19,7 @@ public sealed class ProductSnapshotReadService(DbSet<Product> records, Func<Canc
             .Select(product => new ProductSnapshotReadModel(product.Id, product.Name, product.ImageUrl,
                 product.BaseUnit, product.BaseAmount, product.CaloriesPerBase, product.ProteinsPerBase,
                 product.FatsPerBase, product.CarbsPerBase, product.FiberPerBase, product.AlcoholPerBase,
-                product.ProductType, product.Visibility, product.Category))
+                product.ProductType, product.Visibility, product.Category) { OwnerUserId = product.UserId.Value })
             .ToDictionaryAsync(product => product.Id, cancellationToken).ConfigureAwait(false);
     }
 }

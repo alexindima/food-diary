@@ -118,8 +118,8 @@ public sealed class TelegramAuthenticationBoundaryTests {
         _policy.LoginEnabled.Returns(!string.Equals(scenario, "disabled", StringComparison.Ordinal));
         validator.ValidateInitData("proof").Returns(string.Equals(scenario, "invalid", StringComparison.Ordinal)
             ? Result.Failure<TelegramInitData>(TelegramIdentityErrors.InvalidProof)
-            : Result.Success(new TelegramInitData(123, Username: null, FirstName: null, LastName: null, PhotoUrl: null, LanguageCode: null, DateTime.UtcNow)));
-        replay.TryConsumeAsync(Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(returnThis: false);
+            : Result.Success(new TelegramInitData(123, Username: null, FirstName: null, LastName: null, PhotoUrl: null, LanguageCode: null, DateTime.UtcNow, ReplayIdentity: "proof", ExpiresAtUtc: DateTime.UtcNow.AddDays(1))));
+        replay.TryConsumeAsync(Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(returnThis: false);
         var handler = new BeginTelegramMiniAppCommandHandler(validator, replay, _policy, Intents());
         Result<TelegramAuthenticationIntentModel> result = await handler.Handle(new BeginTelegramMiniAppCommand("proof", "browser"), CancellationToken.None);
         Assert.True(result.IsFailure);

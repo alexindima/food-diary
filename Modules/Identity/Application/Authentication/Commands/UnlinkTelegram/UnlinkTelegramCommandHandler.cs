@@ -31,7 +31,7 @@ public sealed class UnlinkTelegramCommandHandler(ITelegramAuthValidator validato
         if (principal.Value.UserId.Value != command.UserId) {
             return InvalidProof();
         }
-        if (!await replayGuard.TryConsumeAsync(command.InitData, proof.Value.AuthDateUtc.AddDays(1), cancellationToken).ConfigureAwait(false)) {
+        if (!await replayGuard.TryConsumeAsync(proof.Value.ReplayIdentity, proof.Value.ExpiresAtUtc, proof.Value.AuthDateUtc, cancellationToken).ConfigureAwait(false)) {
             return InvalidProof();
         }
         Result result = await accounts.UnlinkAsync(principal.Value.UserId, proof.Value.UserId, principal.Value.SecurityVersion, cancellationToken).ConfigureAwait(false);

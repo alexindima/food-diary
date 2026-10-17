@@ -49,12 +49,17 @@ public sealed partial class User {
             throw new ArgumentOutOfRangeException(nameof(telegramUserId));
         }
         if (TelegramUserId == telegramUserId) {
+            if (!TelegramLinkVerifiedForRecovery && (Email is null || IsEmailConfirmed)) {
+                TelegramLinkVerifiedForRecovery = true;
+                SetModified();
+            }
             return;
         }
         if (TelegramUserId.HasValue) {
             throw new InvalidOperationException("Disconnect the current Telegram identity before linking another one.");
         }
         ApplyAccountState(GetAccountState().WithTelegram(telegramUserId));
+        TelegramLinkVerifiedForRecovery = Email is null || IsEmailConfirmed;
         AdvanceSecurityVersion();
         SetModified();
     }
@@ -89,6 +94,7 @@ public sealed partial class User {
             throw new InvalidOperationException("Add another sign-in method before disconnecting Telegram.");
         }
         ApplyAccountState(GetAccountState().WithTelegram(null));
+        TelegramLinkVerifiedForRecovery = false;
         TelegramOidcIssuer = null;
         TelegramOidcSubject = null;
         AdvanceSecurityVersion();

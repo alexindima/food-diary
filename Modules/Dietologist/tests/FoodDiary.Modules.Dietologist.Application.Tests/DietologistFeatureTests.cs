@@ -53,6 +53,7 @@ public partial class DietologistFeatureTests {
 
     private static User CreateUser(UserId? id = null, string email = "user@example.com") {
         var user = User.Create(email, "hashed-password");
+        user.SetEmailConfirmed(isConfirmed: true);
         if (id is not null) {
             typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, id);
         }
@@ -519,7 +520,7 @@ public partial class DietologistFeatureTests {
             user.FirstName,
             user.LastName,
             user.Language,
-            user.HasRole(RoleNames.Dietologist));
+            user.HasRole(RoleNames.Dietologist), user.IsEmailConfirmed);
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryUserRepository : IUserRepository, ICurrentUserAccessService, IDietologistUserContextService, IUserDietologistProfileReadService {

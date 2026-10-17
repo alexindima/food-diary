@@ -56,7 +56,7 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
             return Result.Failure(DietologistErrors.InvitationNotFound);
         }
 
-        if (!string.Equals(invitation.DietologistEmail, user.Email, StringComparison.OrdinalIgnoreCase)) {
+        if (!user.IsEmailConfirmed || !string.Equals(invitation.DietologistEmail, user.Email, StringComparison.OrdinalIgnoreCase)) {
             return Result.Failure(DietologistErrors.AccessDenied);
         }
 

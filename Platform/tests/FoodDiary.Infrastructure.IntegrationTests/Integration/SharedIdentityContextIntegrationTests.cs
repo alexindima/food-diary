@@ -36,7 +36,7 @@ public sealed class SharedIdentityContextIntegrationTests(PostgresDatabaseFixtur
         (User user, UserRefreshTokenSession session) = await SeedAsync(provider);
         FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
         IdentityDbContext owned = provider.GetRequiredService<IdentityDbContext>();
-        Assert.Equal(7, owned.Model.GetEntityTypes().Count());
+        Assert.Equal(8, owned.Model.GetEntityTypes().Count());
         Assert.Same(shared.Database.GetDbConnection(), owned.Database.GetDbConnection());
         Assert.Empty(shared.ChangeTracker.Entries<UserRefreshTokenSession>());
         Assert.Empty(shared.ChangeTracker.Entries<UserLoginEvent>());
@@ -70,7 +70,9 @@ public sealed class SharedIdentityContextIntegrationTests(PostgresDatabaseFixtur
             string ticket = await provider.GetRequiredService<ITelegramLoginTicketStore>().CreateAsync(
                 "context-test", "browser", "synthetic payload", DateTime.UtcNow.AddMinutes(5), CancellationToken.None);
             Assert.Equal(43, ticket.Length);
-            Assert.True(await provider.GetRequiredService<ITelegramAssertionReplayGuard>().TryConsumeAsync("synthetic assertion", DateTime.UtcNow.AddMinutes(5)));
+            DateTime assertionDate = await owned.Set<FoodDiary.Modules.Identity.PersistenceModel.Authentication.TelegramAssertionPolicy>()
+                .Select(policy => policy.NotBeforeUtc).SingleAsync();
+            Assert.True(await provider.GetRequiredService<ITelegramAssertionReplayGuard>().TryConsumeAsync("synthetic assertion", assertionDate.AddMinutes(5), assertionDate));
             Assert.NotNull(await provider.GetRequiredService<ITelegramOperationStore>().RegisterAsync(123, 1, user.Id, 0, "synthetic operation", CancellationToken.None));
             ITelegramOperationStore operations = provider.GetRequiredService<ITelegramOperationStore>();
             TelegramOperationId operationId = Assert.Single(await operations.ListReadyAsync(123, CancellationToken.None));

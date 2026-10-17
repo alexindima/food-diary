@@ -11,6 +11,11 @@
         "uuid": "^11.1.1"
     },
     "scripts": {
+        "postinstall": "node scripts/apply-dependency-patches.mjs",
+        "prebuild": "node scripts/apply-dependency-patches.mjs --check",
+        "prelint": "node scripts/apply-dependency-patches.mjs --check",
+        "prestylelint": "node scripts/apply-dependency-patches.mjs --check",
+        "test:dependency-patches": "node --test scripts/dependency-patches.test.mjs",
         "prepare": "cd .. && husky FoodDiary.Web.Client/.husky",
         "ng": "ng",
         "sdk:update": "node scripts/generate-api-sdk.mjs --export",
@@ -43,7 +48,7 @@
         "check:api-client-usage": "node --test scripts/check-api-client-usage.test.mjs && node scripts/check-api-client-usage.mjs",
         "check:import-boundaries": "node --test scripts/check-import-boundaries.test.mjs",
         "check:format:ci": "prettier --check \"src/**/*.{ts,html}\" \"projects/**/*.{ts,html}\"",
-        "verify": "npm run test:sdk && npm run test:ai-development && npm run test:performance-build && npm run sdk:check && npm run sdk:admin:check && npm run sdk:bot:check && npm run check:import-boundaries && npm run lint && npm run lint:deps:strict && npm run check:depcruise-baseline && npm run check:component-logic && npm run check:state-ownership && npm run stylelint && npm run audit:design-tokens && npm run build && npm run build:admin && npm run build:tour && npm run check:seo-prerender && npm run test:mcp && npm run test:ci:app && npm run test:ci:ui-kit && npm run test:ci:tour && npm run test:ci:admin && npm run check:i18n",
+        "verify": "npm run test:dependency-patches && npm run test:sdk && npm run test:ai-development && npm run test:performance-build && npm run sdk:check && npm run sdk:admin:check && npm run sdk:bot:check && npm run check:import-boundaries && npm run lint && npm run lint:deps:strict && npm run check:depcruise-baseline && npm run check:component-logic && npm run check:state-ownership && npm run stylelint && npm run audit:design-tokens && npm run build && npm run build:admin && npm run build:tour && npm run check:seo-prerender && npm run test:mcp && npm run test:ci:app && npm run test:ci:ui-kit && npm run test:ci:tour && npm run test:ci:admin && npm run check:i18n",
         "stylelint": "stylelint '**/*.{css,scss}'",
         "stylelint:fix": "stylelint '**/*.{css,scss}' --fix",
         "prettier": "prettier --check '**/*.{js,ts,css,scss,html,json,md}'",

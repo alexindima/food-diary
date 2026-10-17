@@ -68,7 +68,7 @@ public sealed class InviteDietologistCommandHandler(
         await invitationRepository.AddAsync(invitation, cancellationToken).ConfigureAwait(false);
         await EnqueueInvitationEmailAsync(normalizedEmail, invitation, rawToken, user, cancellationToken).ConfigureAwait(false);
 
-        if (registeredDietologist is not null) {
+        if (registeredDietologist is { IsEmailConfirmed: true }) {
             await NotifyRegisteredDietologistAsync(registeredDietologist, user, invitation, cancellationToken).ConfigureAwait(false);
         }
 

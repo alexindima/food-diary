@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1352,
     "ambiguousContracts": 29,
-    "consumerEdges": 10542,
+    "consumerEdges": 10551,
     "productionConsumerEdges": 6030,
-    "testConsumerEdges": 4512,
+    "testConsumerEdges": 4521,
     "consumedContracts": 1352,
     "unconsumedContracts": 0
   },
@@ -23261,6 +23261,19 @@
         "Modules/Dietologist/Application/Commands/AcceptInvitationForCurrentUser/AcceptInvitationForCurrentUserCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.InvitationVerificationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AcceptInvitationForCurrentUserCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Commands/AcceptInvitationForCurrentUser/AcceptInvitationForCurrentUserCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -29381,7 +29394,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/BulkCreateRecommendationsHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "BulkCreateRecommendationsCommand",
@@ -37462,6 +37475,19 @@
         "Modules/Dietologist/Application/Commands/DeclineInvitationForCurrentUser/DeclineInvitationForCurrentUserCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.InvitationVerificationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DeclineInvitationForCurrentUserCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Commands/DeclineInvitationForCurrentUser/DeclineInvitationForCurrentUserCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -43019,9 +43045,35 @@
         "Modules/MealPlanning/Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/MealPlansFeatureTests.PrivateIngredientUnits.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GenerateShoppingListCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/MealPlansValidatorTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "GenerateShoppingListCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests/MealPlanningPersistenceCompatibilityTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "GenerateShoppingListCommand",
@@ -50132,6 +50184,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetInvitationForCurrentUserQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.InvitationVerificationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -71979,6 +72044,19 @@
         "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests/MealPlanningPersistenceCompatibilityTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/CreateMealFromRecognitionTests.cs",
       "isTest": true,
       "referenceCount": 6
@@ -74230,7 +74308,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/BulkCreateRecommendationsHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 7
     },
     {
       "contract": "IDietologistInvitationReadModelRepository",
@@ -98591,7 +98669,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/TelegramIdentityRecoveryTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IPasswordHasher",
@@ -107535,7 +107613,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/BulkCreateRecommendationsHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 8
     },
     {
       "contract": "IRecommendationBulkDispatchRepository",
@@ -108289,7 +108367,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/BulkCreateRecommendationsHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 8
     },
     {
       "contract": "IRecommendationRepository",
@@ -118583,6 +118661,19 @@
         "Modules/MealPlanning/Application/ShoppingLists/Common/IShoppingListCreationService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests/MealPlanningPersistenceCompatibilityTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IShoppingListCreationService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application/ShoppingLists/Common/IShoppingListCreationService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/MealPlanningModuleExtractionTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -118963,6 +119054,19 @@
       "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListCreationServiceTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "IShoppingListWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Application.Abstractions/ShoppingLists/Common/IShoppingListWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests/MealPlanningPersistenceCompatibilityTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IShoppingListWriteRepository",
@@ -125709,7 +125813,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/TelegramIdentityRecoveryTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IUserGoogleIdentityRepository",
@@ -126450,7 +126554,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/TelegramIdentityRecoveryTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 8
     },
     {
       "contract": "IUserLookupRepository",
@@ -130166,6 +130270,19 @@
         "Modules/Users/Contracts/Common/IUserRoleMembershipService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.InvitationVerificationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserRoleMembershipService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserRoleMembershipService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserBillingServiceTests.cs",
       "isTest": true,
       "referenceCount": 5
@@ -130805,7 +130922,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/TelegramIdentityRecoveryTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 8
     },
     {
       "contract": "IUserWriteRepository",
@@ -137266,7 +137383,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Infrastructure.IntegrationTests/Integration/MealRepositoryIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 12
+      "referenceCount": 13
     },
     {
       "contract": "MealProductNutritionQuery",
@@ -137331,7 +137448,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Infrastructure.IntegrationTests/Integration/MealRepositoryIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 12
+      "referenceCount": 13
     },
     {
       "contract": "MealSourceSnapshotQuery",

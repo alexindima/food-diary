@@ -1,5 +1,6 @@
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using System.Globalization;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
@@ -62,7 +63,7 @@ public sealed class GenerateShoppingListCommandHandler(
                 .Select(item => new ShoppingListCreationItem(
                     item.ProductId,
                     item.Name,
-                    Math.Round(item.TotalAmount, 1, MidpointRounding.ToEven),
+                    item.Unit.HasValue ? Math.Round(item.TotalAmount, 1, MidpointRounding.ToEven) : null,
                     item.Unit,
                     item.Category,
                     item.SortOrder,
@@ -74,10 +75,12 @@ public sealed class GenerateShoppingListCommandHandler(
                         source.DayNumber,
                         source.MealType,
                         Math.Round(source.Amount, 1, MidpointRounding.ToEven),
-                        source.Unit))]))]);
+                        source.Unit))],
+                    item.Unit.HasValue || string.IsNullOrWhiteSpace(item.PublishedUnit) ? null :
+                        string.Create(CultureInfo.InvariantCulture, $"{Math.Round(item.TotalAmount, 1, MidpointRounding.ToEven)} {item.PublishedUnit}")))]);
 
-    private static Dictionary<ProductId, AggregatedIngredient> AggregateIngredients(MealPlan plan) {
-        var aggregated = new Dictionary<ProductId, AggregatedIngredient>();
+    private static Dictionary<(ProductId?, string?, string?), AggregatedIngredient> AggregateIngredients(MealPlan plan) {
+        var aggregated = new Dictionary<(ProductId?, string?, string?), AggregatedIngredient>();
         int sortOrder = 0;
 
         foreach (MealPlanDay day in plan.Days.OrderBy(d => d.DayNumber)) {
@@ -92,7 +95,8 @@ public sealed class GenerateShoppingListCommandHandler(
                     : 1.0;
 
                 foreach (MealPlanRecipeIngredientSnapshot ingredient in recipe.Ingredients) {
-                    ProductId productId = ingredient.ProductId;
+                    ProductId? productId = ingredient.ProductId;
+                    (ProductId?, string?, string?) key = (productId, productId.HasValue ? null : ingredient.Name, ingredient.BaseUnit?.ToString() ?? ingredient.PublishedUnit);
                     double scaledAmount = ingredient.Amount * servingsMultiplier;
 
                     var source = new IngredientSource {
@@ -105,14 +109,15 @@ public sealed class GenerateShoppingListCommandHandler(
                         Unit = ingredient.BaseUnit,
                     };
 
-                    if (aggregated.TryGetValue(productId, out AggregatedIngredient? existing)) {
+                    if (aggregated.TryGetValue(key, out AggregatedIngredient? existing)) {
                         existing.TotalAmount += scaledAmount;
                         existing.Sources.Add(source);
                     } else {
-                        aggregated[productId] = new AggregatedIngredient {
+                        aggregated[key] = new AggregatedIngredient {
                             ProductId = productId,
                             Name = ingredient.Name,
                             Unit = ingredient.BaseUnit,
+                            PublishedUnit = ingredient.PublishedUnit,
                             Category = ingredient.Category,
                             TotalAmount = scaledAmount,
                             SortOrder = sortOrder++,
@@ -127,9 +132,10 @@ public sealed class GenerateShoppingListCommandHandler(
     }
 
     private sealed class AggregatedIngredient {
-        public required ProductId ProductId { get; init; }
+        public required ProductId? ProductId { get; init; }
         public required string Name { get; init; }
         public global::FoodDiary.Modules.Products.Domain.Contracts.Enums.MeasurementUnit? Unit { get; init; }
+        public string? PublishedUnit { get; init; }
         public string? Category { get; init; }
         public double TotalAmount { get; set; }
         public int SortOrder { get; init; }

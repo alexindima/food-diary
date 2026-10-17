@@ -6557,7 +6557,8 @@
           "Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj",
           "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
           "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj",
-          "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj"
+          "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj",
+          "Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
         "packageReferences": [
           {

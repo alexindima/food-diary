@@ -24,7 +24,7 @@ public sealed class UnlinkTelegramCommandTests {
         ITelegramAuthValidator validator = Substitute.For<ITelegramAuthValidator>();
         validator.ValidateInitData("proof").Returns(Is("signature")
             ? Result.Failure<TelegramInitData>(new Error("Proof.Invalid", "Invalid"))
-            : Result.Success(new TelegramInitData(123, Username: null, FirstName: null, LastName: null, PhotoUrl: null, LanguageCode: null, now)));
+            : Result.Success(new TelegramInitData(123, Username: null, FirstName: null, LastName: null, PhotoUrl: null, LanguageCode: null, now, ReplayIdentity: "signed-proof", ExpiresAtUtc: now.AddDays(1))));
         IUserAuthenticationIdentityService identities = Substitute.For<IUserAuthenticationIdentityService>();
         identities.AuthenticateTelegramAsync(123, now, Arg.Any<CancellationToken>()).Returns(Result.Failure<UserAuthenticationPrincipalModel>(new Error("User.Missing", "Missing")));
         IUserTelegramAccountService accounts = Substitute.For<IUserTelegramAccountService>();
@@ -52,9 +52,9 @@ public sealed class UnlinkTelegramCommandTests {
         UserAuthenticationPrincipalModel principal = UserAuthenticationIdentityService.ToAuthenticationPrincipal(user, now);
         ITelegramAuthValidator validator = Substitute.For<ITelegramAuthValidator>();
         validator.ValidateInitData("signed-proof").Returns(Result.Success(new TelegramInitData(123, Username: null,
-            FirstName: null, LastName: null, PhotoUrl: null, LanguageCode: null, now.AddMinutes(minutesOffset))));
+            FirstName: null, LastName: null, PhotoUrl: null, LanguageCode: null, now.AddMinutes(minutesOffset), ReplayIdentity: "signed-proof", ExpiresAtUtc: now.AddMinutes(minutesOffset).AddDays(1))));
         ITelegramAssertionReplayGuard replay = Substitute.For<ITelegramAssertionReplayGuard>();
-        replay.TryConsumeAsync("signed-proof", Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(unused);
+        replay.TryConsumeAsync("signed-proof", Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(unused);
         IUserAuthenticationIdentityService identities = Substitute.For<IUserAuthenticationIdentityService>();
         identities.AuthenticateTelegramAsync(123, now, Arg.Any<CancellationToken>()).Returns(Result.Success(principal));
         IUserTelegramAccountService accounts = Substitute.For<IUserTelegramAccountService>();

@@ -69,6 +69,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task LinkTelegramHandler_WhenSameTelegramIdAlreadyLinked_ReturnsCurrentUser() {
         var user = User.Create("same-telegram@example.com", "secret");
+        user.SetEmailConfirmed(isConfirmed: true);
         user.LinkTelegram(123456);
         LinkTelegramCommandHandler handler = CreateLinkTelegramHandler(new StubUserRepository(user));
 
@@ -83,6 +84,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task LinkTelegramHandler_WhenTelegramIdBelongsToAnotherUser_ReturnsFailure() {
         var user = User.Create("current-telegram@example.com", "secret");
+        user.SetEmailConfirmed(isConfirmed: true);
         var existing = User.Create("existing-telegram@example.com", "secret");
         existing.LinkTelegram(123456);
         LinkTelegramCommandHandler handler = CreateLinkTelegramHandler(new StubUserRepository(user, existing));
@@ -98,6 +100,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task LinkTelegramHandler_WithAvailableTelegramId_LinksCurrentUser() {
         var user = User.Create("link@example.com", "secret");
+        user.SetEmailConfirmed(isConfirmed: true);
         LinkTelegramCommandHandler handler = CreateLinkTelegramHandler(new StubUserRepository(user));
 
         Result<UserModel> result = await handler.Handle(

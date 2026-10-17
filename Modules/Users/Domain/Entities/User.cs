@@ -71,6 +71,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     public int FastingCheckInReminderHours { get => Preferences.FastingCheckInReminderHours; private set => Preferences.FastingCheckInReminderHours = value; }
     public int FastingCheckInFollowUpReminderHours { get => Preferences.FastingCheckInFollowUpReminderHours; private set => Preferences.FastingCheckInFollowUpReminderHours = value; }
     public long? TelegramUserId { get; private set; }
+    public bool TelegramLinkVerifiedForRecovery { get; private set; }
     public string? TelegramOidcIssuer { get; private set; }
     public string? TelegramOidcSubject { get; private set; }
     public string? TimeZoneId { get => Preferences.TimeZoneId; private set => Preferences.TimeZoneId = value; }
@@ -108,6 +109,7 @@ public sealed partial class User : AggregateRoot<UserId> {
 
         User user = CreateCore(normalizedEmail: null, inaccessiblePasswordHash, hasPassword: false);
         user.ApplyAccountState(user.GetAccountState().WithTelegram(telegramUserId));
+        user.TelegramLinkVerifiedForRecovery = true;
         return user;
     }
 

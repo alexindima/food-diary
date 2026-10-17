@@ -27,7 +27,7 @@ internal static class TelegramAuthTimestampValidator {
             return Status.Invalid;
         }
 
-        return nowUtc > expiresAtUtc
+        return nowUtc >= expiresAtUtc
             ? Status.Expired
             : Status.Valid;
     }

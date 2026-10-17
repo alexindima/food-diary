@@ -58,10 +58,10 @@ public sealed class TelegramBackupEmailServiceTests {
         }
         _validator.ValidateInitData("proof").Returns(string.Equals(scenario, "invalid-signature", StringComparison.Ordinal)
             ? Result.Failure<TelegramInitData>(TelegramIdentityErrors.InvalidProof)
-            : Result.Success(new TelegramInitData(123, Username: null, FirstName: null, LastName: null, PhotoUrl: null, LanguageCode: null, proofTime)));
+            : Result.Success(new TelegramInitData(123, Username: null, FirstName: null, LastName: null, PhotoUrl: null, LanguageCode: null, proofTime, ReplayIdentity: "proof", ExpiresAtUtc: proofTime.AddDays(1))));
         _identities.AuthenticateTelegramAsync(123, Now, Arg.Any<CancellationToken>()).Returns(string.Equals(scenario, "missing-user", StringComparison.Ordinal)
             ? Result.Failure<UserAuthenticationPrincipalModel>(UserErrors.NotFound()) : Result.Success(principal));
-        _replay.TryConsumeAsync("proof", Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(returnThis: false);
+        _replay.TryConsumeAsync("proof", Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(returnThis: false);
 
         Result result = await Create().RequestAsync(string.Equals(scenario, "other-user", StringComparison.Ordinal) ? Guid.NewGuid() : user.Id.Value,
             "backup@example.com", "proof", CancellationToken.None);
@@ -93,10 +93,10 @@ public sealed class TelegramBackupEmailServiceTests {
     public async Task Request_SendsBoundProofWithoutAssigningEmail() {
         var user = User.CreateTelegram(123, "hash");
         _validator.ValidateInitData("proof").Returns(Result.Success(new TelegramInitData(123, Username: null,
-            FirstName: null, LastName: null, PhotoUrl: null, "ru", Now)));
+            FirstName: null, LastName: null, PhotoUrl: null, "ru", Now, ReplayIdentity: "proof", ExpiresAtUtc: Now.AddDays(1))));
         _identities.AuthenticateTelegramAsync(123, Now, Arg.Any<CancellationToken>())
             .Returns(Result.Success(UserAuthenticationIdentityService.ToAuthenticationPrincipal(user, Now)));
-        _replay.TryConsumeAsync("proof", Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(returnThis: true);
+        _replay.TryConsumeAsync("proof", Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(returnThis: true);
         _tickets.CreateAsync("telegram-backup-email", user.Id.Value.ToString("D"), Arg.Any<string>(), Now.AddMinutes(15), Arg.Any<CancellationToken>()).Returns("ticket");
 
         Result result = await Create().RequestAsync(user.Id.Value, "Backup@example.com", "proof", CancellationToken.None);

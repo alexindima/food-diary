@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using FoodDiary.Results;
+using FoodDiary.Testing.Assertions;
 using MsOptions = Microsoft.Extensions.Options.Options;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Tests.Integrations;
@@ -14,6 +15,40 @@ namespace FoodDiary.Modules.Identity.Infrastructure.Tests.Integrations;
 public sealed class TelegramAuthValidatorsTests {
     private const string BotToken = "123456:test-token";
     private static readonly DateTime NowUtc = new(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc);
+
+    [Fact]
+    public void EquivalentInitData_UsesOneReplayIdentityAndConfiguredLifetime() {
+        long authDate = new DateTimeOffset(NowUtc.AddMinutes(-5)).ToUnixTimeSeconds();
+        string original = CreateSignedInitData(authDate, "{\"id\":42,\"first_name\":\"Alex User\"}");
+        string reordered = string.Join('&', original.Split('&').Reverse());
+        string encoded = reordered.Replace("%20", "+", StringComparison.Ordinal).Replace("%7B", "%7b", StringComparison.Ordinal);
+        TelegramAuthValidator validator = CreateInitDataValidator(authTtlSeconds: 172800);
+        TelegramInitData proof = ResultAssert.Success(validator.ValidateInitData(original));
+        TelegramInitData alternate = ResultAssert.Success(validator.ValidateInitData(encoded));
+        Assert.Equal(proof.ReplayIdentity, alternate.ReplayIdentity);
+        Assert.StartsWith("miniapp:", proof.ReplayIdentity, StringComparison.Ordinal);
+        Assert.Equal(proof.AuthDateUtc.AddDays(2), proof.ExpiresAtUtc);
+        Assert.Equal(proof.UserId, alternate.UserId);
+    }
+
+    [Fact]
+    public void EquivalentWidgetHashCase_UsesOneReplayIdentity() {
+        long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
+        TelegramLoginWidgetData upper = CreateSignedWidgetData(authDate);
+        TelegramLoginWidgetData lower = upper with { Hash = upper.Hash.ToLowerInvariant() };
+        TelegramLoginWidgetValidator validator = CreateWidgetValidator();
+        TelegramInitData proof = ResultAssert.Success(validator.ValidateLoginWidget(upper));
+        TelegramInitData alternate = ResultAssert.Success(validator.ValidateLoginWidget(lower));
+        Assert.Equal(proof.ReplayIdentity, alternate.ReplayIdentity);
+        Assert.StartsWith("widget:", proof.ReplayIdentity, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ExactExpiry_IsRejectedBeforeReplayMarkerCanBeRemoved() {
+        long authDate = new DateTimeOffset(NowUtc.AddHours(-1)).ToUnixTimeSeconds();
+        ResultAssert.Failure(CreateInitDataValidator().ValidateInitData(CreateSignedInitData(authDate)), "Authentication.TelegramAuthExpired");
+        ResultAssert.Failure(CreateWidgetValidator().ValidateLoginWidget(CreateSignedWidgetData(authDate)), "Authentication.TelegramAuthExpired");
+    }
 
     [Fact]
     public void ValidateInitData_WithValidSignedPayload_ReturnsUser() {

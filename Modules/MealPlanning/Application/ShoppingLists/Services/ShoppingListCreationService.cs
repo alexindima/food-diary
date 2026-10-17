@@ -22,7 +22,8 @@ internal sealed class ShoppingListCreationService(IShoppingListWriteRepository s
                 ShoppingQuantity.FromFields(item.Amount, item.Unit),
                 item.Category,
                 isChecked: false,
-                item.SortOrder);
+                item.SortOrder,
+                note: item.Note);
 
             foreach (ShoppingListCreationSource source in item.Sources) {
                 shoppingListItem.AddMealPlanSourceWithQuantity(

@@ -1,5 +1,8 @@
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models;
@@ -51,7 +54,7 @@ public sealed class MealPlanCompositionReader(ICompositionReadContext context) :
     }
 
     public async Task<IReadOnlyDictionary<RecipeId, MealPlanRecipeSnapshot>> GetRecipeSnapshotsAsync(
-        IReadOnlyCollection<RecipeId> ids, CancellationToken cancellationToken = default) {
+        IReadOnlyCollection<RecipeId> ids, UserId? viewerId, CancellationToken cancellationToken = default) {
         if (ids.Count == 0) { return new Dictionary<RecipeId, MealPlanRecipeSnapshot>(); }
         var recipes = await context.Recipes.AsNoTracking()
             .Where(recipe => Enumerable.Contains(ids, recipe.Id))
@@ -60,15 +63,30 @@ public sealed class MealPlanCompositionReader(ICompositionReadContext context) :
         var ingredients = await context.Recipes.AsNoTracking()
             .Where(recipe => Enumerable.Contains(ids, recipe.Id))
             .SelectMany(recipe => recipe.Steps.SelectMany(step => step.Ingredients)
-                .Select(ingredient => new { RecipeId = recipe.Id, ingredient.ProductId, ingredient.Amount }))
-            .Join(context.Products.AsNoTracking(), ingredient => ingredient.ProductId, product => (ProductId?)product.Id,
-                (ingredient, product) => new {
-                    ingredient.RecipeId,
-                    Ingredient = new MealPlanRecipeIngredientSnapshot(product.Id, ingredient.Amount, product.Name, product.BaseUnit, product.Category),
-                })
+                .Select(ingredient => new { RecipeId = recipe.Id, ingredient.ProductId, ingredient.Amount, ingredient.PublicName, ingredient.PublicUnit, ingredient.TextName }))
+            .Where(ingredient => ingredient.ProductId.HasValue)
+            .GroupJoin(context.Products.AsNoTracking().Where(product => product.Visibility == Visibility.Public || product.UserId == viewerId),
+                ingredient => ingredient.ProductId, product => (ProductId?)product.Id,
+                (ingredient, products) => new { Ingredient = ingredient, Products = products })
+            .SelectMany(row => row.Products.DefaultIfEmpty(), (row, product) => new {
+                row.Ingredient.RecipeId,
+                ProductId = product == null ? null : (ProductId?)product.Id,
+                row.Ingredient.Amount,
+                Name = product == null ? row.Ingredient.PublicName ?? row.Ingredient.TextName : product.Name,
+                BaseUnit = product == null ? null : (MeasurementUnit?)product.BaseUnit,
+                PublicUnit = product == null ? row.Ingredient.PublicUnit : null,
+                Category = product == null ? null : product.Category,
+            })
             .ToListAsync(cancellationToken).ConfigureAwait(false);
-        ILookup<RecipeId, MealPlanRecipeIngredientSnapshot> byRecipe = ingredients.ToLookup(item => item.RecipeId, item => item.Ingredient);
+        ILookup<RecipeId, MealPlanRecipeIngredientSnapshot> byRecipe = ingredients
+            .Where(item => !string.IsNullOrWhiteSpace(item.Name))
+            .ToLookup(item => item.RecipeId, item => new MealPlanRecipeIngredientSnapshot(item.ProductId,
+                item.Amount, item.Name!, item.BaseUnit ?? ParsePublicUnit(item.PublicUnit), item.Category, item.PublicUnit));
         return recipes.ToDictionary(recipe => recipe.Id,
             recipe => new MealPlanRecipeSnapshot(recipe.Id, recipe.Name, recipe.Servings, byRecipe[recipe.Id].ToArray(), recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs));
     }
+
+    private static MeasurementUnit? ParsePublicUnit(string? unit) =>
+        Enum.TryParse(unit, ignoreCase: true, out MeasurementUnit parsed) &&
+        string.Equals(Enum.GetName(parsed), unit, StringComparison.OrdinalIgnoreCase) ? parsed : null;
 }

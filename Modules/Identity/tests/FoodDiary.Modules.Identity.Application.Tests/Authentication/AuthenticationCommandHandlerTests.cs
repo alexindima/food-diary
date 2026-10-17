@@ -75,7 +75,7 @@ public sealed partial class AuthenticationCommandHandlerTests : IDisposable {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubTelegramAssertionReplayGuard(bool consume = true) : ITelegramAssertionReplayGuard {
-        public Task<bool> TryConsumeAsync(string signedAssertion, DateTime expiresAtUtc, CancellationToken cancellationToken = default) =>
+        public Task<bool> TryConsumeAsync(string signedAssertion, DateTime expiresAtUtc, DateTime authDateUtc, CancellationToken cancellationToken = default) =>
             Task.FromResult(consume);
     }
 
@@ -296,7 +296,7 @@ public sealed partial class AuthenticationCommandHandlerTests : IDisposable {
                 ? FoodDiary.Results.Result.Failure<TelegramInitData>(
                     Errors.Validation.Invalid("initData", "Invalid Telegram init data."))
                 : FoodDiary.Results.Result.Success(
-                    new TelegramInitData(123456, "alex", "Alex", "User", PhotoUrl: null, "en", DateTime.UtcNow));
+                    new TelegramInitData(123456, "alex", "Alex", "User", PhotoUrl: null, "en", DateTime.UtcNow, ReplayIdentity: "proof", ExpiresAtUtc: DateTime.UtcNow.AddDays(1)));
     }
 
     [ExcludeFromCodeCoverage]
@@ -306,7 +306,7 @@ public sealed partial class AuthenticationCommandHandlerTests : IDisposable {
                 ? FoodDiary.Results.Result.Failure<TelegramInitData>(
                     Errors.Validation.Invalid("hash", "Invalid Telegram login widget hash."))
                 : FoodDiary.Results.Result.Success(
-                    new TelegramInitData(data.Id, data.Username, data.FirstName, data.LastName, data.PhotoUrl, LanguageCode: null, DateTime.UtcNow));
+                    new TelegramInitData(data.Id, data.Username, data.FirstName, data.LastName, data.PhotoUrl, LanguageCode: null, DateTime.UtcNow, ReplayIdentity: "proof", ExpiresAtUtc: DateTime.UtcNow.AddDays(1)));
     }
 
     [ExcludeFromCodeCoverage]

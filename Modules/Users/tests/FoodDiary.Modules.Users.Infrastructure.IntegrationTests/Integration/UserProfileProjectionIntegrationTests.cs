@@ -18,6 +18,20 @@ namespace FoodDiary.Modules.Users.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class UserProfileProjectionIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task DietologistProfile_ReadsPersistedMailboxConfirmation() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"invitation-profile-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        var service = new UserProfileProjectionService(context.Users);
+        Assert.False((await service.FindByIdAsync(user.Id, CancellationToken.None))!.IsEmailConfirmed);
+        user.SetEmailConfirmed(isConfirmed: true);
+        Assert.False((await service.FindByEmailAsync(user.Email!, CancellationToken.None))!.IsEmailConfirmed);
+        await context.SaveChangesAsync();
+        Assert.True((await service.FindByIdAsync(user.Id, CancellationToken.None))!.IsEmailConfirmed);
+    }
+
+    [RequiresDockerFact]
     public async Task TdeeProfile_UsesRecordedWeightWithoutPersistingItOnUser() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create("tdee-recorded-weight@example.com", "hash");

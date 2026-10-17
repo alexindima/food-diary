@@ -62,7 +62,9 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: FoodDiary.Web.Client/package-lock.json
-      - run: npm ci --ignore-scripts
+      - run: |
+          npm ci --ignore-scripts
+          node scripts/apply-dependency-patches.mjs
         working-directory: FoodDiary.Web.Client
       - run: npx playwright install --with-deps chromium
         working-directory: FoodDiary.Web.Client

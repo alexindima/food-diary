@@ -577,7 +577,8 @@ public partial class MealPlansFeatureTests {
                     item.Unit,
                     item.Category,
                     isChecked: false,
-                    item.SortOrder);
+                    item.SortOrder,
+                    note: item.Note);
                 foreach (ShoppingListCreationSource source in item.Sources) {
                     listItem.AddMealPlanSource(
                         source.MealPlanId,

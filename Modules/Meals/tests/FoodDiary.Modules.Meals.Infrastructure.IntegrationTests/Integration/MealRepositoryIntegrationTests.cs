@@ -27,6 +27,39 @@ namespace FoodDiary.Modules.Meals.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task LegacyManualReferences_DoNotExposeForeignPrivateMetadataThroughEitherReader() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var owner = User.Create($"legacy-owner-{Guid.NewGuid():N}@example.com", "hash");
+        var attacker = User.Create($"legacy-attacker-{Guid.NewGuid():N}@example.com", "hash");
+        var product = FoodDiary.Modules.Products.Domain.Entities.Product.Create(owner.Id, "Private product", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
+        product.ChangeVisibility(FoodDiary.Domain.Primitives.Visibility.Private);
+        var recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe.Create(owner.Id, "Private recipe", 2);
+        recipe.ChangeVisibility(FoodDiary.Domain.Primitives.Visibility.Private);
+        recipe.SetManualNutrition(600, 20, 30, 50, 5, 0);
+        var meal = Meal.Create(attacker.Id, DateTime.UtcNow);
+        meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(100));
+        meal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(1));
+        context.AddRange(owner, attacker, product, recipe, meal);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var repository = new MealRepository(context.Meals, new MealProductNutritionQuery(context), new ProductSnapshotReadService(context.Products), new MealSourceSnapshotQuery(context));
+        MealProjectionReadModel projection = (await repository.GetByIdMealProjectionAsync(meal.Id, attacker.Id))!;
+        Assert.All(projection.Items, item => {
+            Assert.Null(item.ProductName);
+            Assert.Null(item.ProductCaloriesPerBase);
+            Assert.Null(item.RecipeName);
+            Assert.Null(item.RecipeTotalCalories);
+        });
+        var display = new MealItemDisplayReadService(context);
+        IReadOnlyList<MealItemDisplayReadModel> displayed = await display.GetByMealIdsAsync(attacker.Id, [meal.Id]);
+        Assert.All(displayed, item => {
+            Assert.Null(item.ProductName);
+            Assert.Null(item.ProductCaloriesPerBase);
+            Assert.Null(item.RecipeName);
+        });
+    }
+
+    [RequiresDockerFact]
     public async Task Projection_LoadsAiImageAndLegacyRecipeWithoutTrackingForeignEntities() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"projection-{Guid.NewGuid():N}@example.com", "hash");

@@ -4,6 +4,7 @@ using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Modules.Meals.Application.Abstractions.Models;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using FoodDiary.Domain.Primitives;
 
 namespace FoodDiary.ReadModel.Composition.Meals;
 
@@ -36,6 +37,8 @@ public sealed class MealSourceSnapshotQuery(ICompositionReadContext context) : I
             .Select(recipe => new {
                 recipe.Id,
                 recipe.Name,
+                OwnerUserId = recipe.UserId.Value,
+                IsPublic = recipe.Visibility == Visibility.Public,
                 recipe.ImageUrl,
                 recipe.Servings,
                 recipe.TotalCalories,
@@ -48,7 +51,7 @@ public sealed class MealSourceSnapshotQuery(ICompositionReadContext context) : I
             .ToDictionaryAsync(recipe => recipe.Id, recipe => new MealRecipeSourceReadModel(
                 recipe.Name, recipe.ImageUrl, recipe.Servings, recipe.TotalCalories,
                 recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs,
-                recipe.TotalFiber, recipe.TotalAlcohol), cancellationToken)
+                recipe.TotalFiber, recipe.TotalAlcohol) { OwnerUserId = recipe.OwnerUserId, IsPublic = recipe.IsPublic }, cancellationToken)
             .ConfigureAwait(false);
     }
 }

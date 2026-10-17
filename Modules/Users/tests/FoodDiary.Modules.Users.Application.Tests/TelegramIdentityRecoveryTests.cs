@@ -10,6 +10,36 @@ namespace FoodDiary.Modules.Users.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramIdentityRecoveryTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task EmailAccount_CannotLinkTelegramBeforeMailboxConfirmation(bool confirmed) {
+        var user = User.Create("mailbox@example.com", "hash");
+        user.SetEmailConfirmed(confirmed);
+        IUserLookupRepository lookup = Substitute.For<IUserLookupRepository>();
+        IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
+        lookup.GetByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(user);
+        var service = new UserAuthenticationIdentityService(lookup, writer, Substitute.For<IUserGoogleIdentityRepository>(), Substitute.For<IPasswordHasher>());
+
+        Result<UserModel> result = await service.LinkTelegramAsync(user.Id, 123, CancellationToken.None);
+
+        Assert.Equal(confirmed, result.IsSuccess);
+        Assert.Equal(confirmed ? 123L : (long?)null, user.TelegramUserId);
+        await writer.Received(confirmed ? 1 : 0).UpdateAsync(user, Arg.Any<CancellationToken>());
+        if (!confirmed) { Assert.Equal("Authentication.EmailVerificationRequired", result.Error.Code); }
+    }
+
+    [Fact]
+    public async Task TelegramFirstAccount_SameIdentityRemainsIdempotent() {
+        var user = User.CreateTelegram(123, "hash");
+        IUserLookupRepository lookup = Substitute.For<IUserLookupRepository>();
+        IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
+        lookup.GetByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(user);
+        var service = new UserAuthenticationIdentityService(lookup, writer, Substitute.For<IUserGoogleIdentityRepository>(), Substitute.For<IPasswordHasher>());
+        ResultAssert.Success(await service.LinkTelegramAsync(user.Id, 123, CancellationToken.None));
+        Assert.Empty(writer.ReceivedCalls());
+    }
+
     [Fact]
     public void CorruptSystemTimeZone_IsRejectedAfterTrimmingInput() {
         string? requested = null;

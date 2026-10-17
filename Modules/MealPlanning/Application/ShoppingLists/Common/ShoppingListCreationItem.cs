@@ -4,10 +4,11 @@ using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
 
 public sealed record ShoppingListCreationItem(
-    ProductId ProductId,
+    ProductId? ProductId,
     string Name,
-    double Amount,
+    double? Amount,
     MeasurementUnit? Unit,
     string? Category,
     int SortOrder,
-    IReadOnlyList<ShoppingListCreationSource> Sources);
+    IReadOnlyList<ShoppingListCreationSource> Sources,
+    string? Note = null);

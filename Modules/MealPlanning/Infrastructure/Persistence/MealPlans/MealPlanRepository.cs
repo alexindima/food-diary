@@ -71,7 +71,7 @@ internal sealed class MealPlanRepository(DbSet<MealPlan> plans, IMealPlanComposi
         }
 
         MealPlan? result = await query.FirstOrDefaultAsync(p => p.Id == id, cancellationToken).ConfigureAwait(false);
-        if (includeDays && result is not null) { await LoadRecipeSnapshotsAsync(result, cancellationToken).ConfigureAwait(false); }
+        if (includeDays && result is not null) { await LoadRecipeSnapshotsAsync(result, result.UserId, cancellationToken).ConfigureAwait(false); }
         return result;
     }
 
@@ -90,7 +90,8 @@ internal sealed class MealPlanRepository(DbSet<MealPlan> plans, IMealPlanComposi
             id,
             plan => plan.IsCurated || plan.UserId == userId,
             includeDays,
-            cancellationToken);
+            cancellationToken,
+            userId);
 
     public Task<MealPlanReadModel?> GetReadModelByIdAsync(
         MealPlanId id, CancellationToken cancellationToken = default) =>
@@ -174,7 +175,8 @@ internal sealed class MealPlanRepository(DbSet<MealPlan> plans, IMealPlanComposi
         MealPlanId id,
         System.Linq.Expressions.Expression<Func<MealPlan, bool>> accessPredicate,
         bool includeDays,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken,
+        UserId? viewerId = null) {
         IQueryable<MealPlan> query = plans
             .AsNoTracking()
             .Where(accessPredicate);
@@ -187,17 +189,17 @@ internal sealed class MealPlanRepository(DbSet<MealPlan> plans, IMealPlanComposi
         }
 
         MealPlan? result = await query.FirstOrDefaultAsync(plan => plan.Id == id, cancellationToken).ConfigureAwait(false);
-        if (includeDays && result is not null) { await LoadRecipeSnapshotsAsync(result, cancellationToken).ConfigureAwait(false); }
+        if (includeDays && result is not null) { await LoadRecipeSnapshotsAsync(result, viewerId, cancellationToken).ConfigureAwait(false); }
         return result;
     }
 
-    private async Task LoadRecipeSnapshotsAsync(MealPlan plan, CancellationToken cancellationToken) {
+    private async Task LoadRecipeSnapshotsAsync(MealPlan plan, UserId? viewerId, CancellationToken cancellationToken) {
         MealPlanMeal[] meals = [.. plan.Days.SelectMany(day => day.Meals)];
         RecipeId[] ids = [.. meals.Select(meal => meal.RecipeId).Distinct()];
         if (ids.Length == 0) { return; }
 
         IReadOnlyDictionary<RecipeId, MealPlanRecipeSnapshot> snapshots = await composition
-            .GetRecipeSnapshotsAsync(ids, cancellationToken).ConfigureAwait(false);
+            .GetRecipeSnapshotsAsync(ids, viewerId, cancellationToken).ConfigureAwait(false);
         foreach (MealPlanMeal meal in meals) {
             meal.SetRecipeSnapshot(snapshots.GetValueOrDefault(meal.RecipeId));
         }

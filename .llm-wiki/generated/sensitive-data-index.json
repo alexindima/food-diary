@@ -6,9 +6,9 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1691,
+    "candidateFields": 1692,
     "credential": 158,
-    "identity": 180,
+    "identity": 181,
     "health": 795,
     "financial": 138,
     "privateContent": 420,
@@ -680,7 +680,7 @@
       "name": "PasswordResetSentAtUtc",
       "type": "normalizedIssuedAtUtc,",
       "path": "Modules/Users/Domain/Entities/User.Credentials.cs",
-      "line": 105
+      "line": 112
     },
     {
       "category": "credential",
@@ -736,21 +736,21 @@
       "name": "HasPassword",
       "type": "Password,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 384
+      "line": 386
     },
     {
       "category": "credential",
       "name": "PasswordResetTokenHash",
       "type": "EmailConfirmationSentAtUtc,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 390
+      "line": 392
     },
     {
       "category": "credential",
       "name": "PasswordResetSentAtUtc",
       "type": "PasswordResetTokenExpiresAtUtc,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 392
+      "line": 394
     },
     {
       "category": "credential",
@@ -6693,140 +6693,140 @@
       "name": "NutritionProfile",
       "type": "UserNutritionProfile",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 94
+      "line": 95
     },
     {
       "category": "health",
       "name": "TuesdayCalories",
       "type": "MondayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 249
+      "line": 251
     },
     {
       "category": "health",
       "name": "ThursdayCalories",
       "type": "WednesdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 251
+      "line": 253
     },
     {
       "category": "health",
       "name": "SaturdayCalories",
       "type": "FridayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 253
+      "line": 255
     },
     {
       "category": "health",
       "name": "DesiredWaistCm",
       "type": "DesiredWeightKg,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 266
+      "line": 268
     },
     {
       "category": "health",
       "name": "MondayCalories",
       "type": "CalorieCyclingEnabled,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 268
+      "line": 270
     },
     {
       "category": "health",
       "name": "WednesdayCalories",
       "type": "TuesdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 270
+      "line": 272
     },
     {
       "category": "health",
       "name": "FridayCalories",
       "type": "ThursdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 272
+      "line": 274
     },
     {
       "category": "health",
       "name": "SundayCalories",
       "type": "SaturdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 274
+      "line": 276
     },
     {
       "category": "health",
       "name": "HydrationGoal",
       "type": "StepGoal,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 309
+      "line": 311
     },
     {
       "category": "health",
       "name": "BirthDate",
       "type": "LastName,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 321
+      "line": 323
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "Gender,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 323
+      "line": 325
     },
     {
       "category": "health",
       "name": "ActivityLevel",
       "type": "HeightCm,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 325
+      "line": 327
     },
     {
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "PushNotificationsEnabled,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 333
+      "line": 335
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
       "type": "SocialPushNotificationsEnabled,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 335
+      "line": 337
     },
     {
       "category": "health",
       "name": "Gender",
       "type": "BirthDate,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 157
+      "line": 163
     },
     {
       "category": "health",
       "name": "HeightCm",
       "type": "WeightKg,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 157
+      "line": 163
     },
     {
       "category": "health",
       "name": "Gender",
       "type": "gender,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 167
+      "line": 173
     },
     {
       "category": "health",
       "name": "HeightCm",
       "type": "height,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 168
+      "line": 174
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "weight,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 168
+      "line": 174
     },
     {
       "category": "health",
@@ -8681,7 +8681,7 @@
       "name": "EmailConfirmationSentAtUtc",
       "type": "normalizedIssuedAtUtc,",
       "path": "Modules/Users/Domain/Entities/User.Credentials.cs",
-      "line": 63
+      "line": 70
     },
     {
       "category": "identity",
@@ -8727,31 +8727,38 @@
     },
     {
       "category": "identity",
-      "name": "TelegramOidcIssuer",
-      "type": "string?",
+      "name": "TelegramLinkVerifiedForRecovery",
+      "type": "bool",
       "path": "Modules/Users/Domain/Entities/User.cs",
       "line": 74
     },
     {
       "category": "identity",
-      "name": "TelegramOidcSubject",
+      "name": "TelegramOidcIssuer",
       "type": "string?",
       "path": "Modules/Users/Domain/Entities/User.cs",
       "line": 75
     },
     {
       "category": "identity",
+      "name": "TelegramOidcSubject",
+      "type": "string?",
+      "path": "Modules/Users/Domain/Entities/User.cs",
+      "line": 76
+    },
+    {
+      "category": "identity",
       "name": "IsEmailConfirmed",
       "type": "MustChangePassword,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 386
+      "line": 388
     },
     {
       "category": "identity",
       "name": "EmailConfirmationTokenExpiresAtUtc",
       "type": "EmailConfirmationTokenHash,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 388
+      "line": 390
     },
     {
       "category": "identity",
@@ -11810,7 +11817,7 @@
       "name": "ProfileImageAssetId",
       "type": "ProfileImage,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 327
+      "line": 329
     },
     {
       "category": "privateContent",

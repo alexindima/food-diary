@@ -36,7 +36,7 @@ public sealed class TelegramBackupEmailService(ITelegramAuthValidator validator,
         if (principal.Value.UserId.Value != userId || principal.Value.Email is not null) {
             return InvalidProof();
         }
-        if (!await replay.TryConsumeAsync(initData, proof.Value.AuthDateUtc.AddDays(1), cancellationToken).ConfigureAwait(false)) {
+        if (!await replay.TryConsumeAsync(proof.Value.ReplayIdentity, proof.Value.ExpiresAtUtc, proof.Value.AuthDateUtc, cancellationToken).ConfigureAwait(false)) {
             return InvalidProof();
         }
         return await SendAsync(principal.Value, address.Address, cancellationToken).ConfigureAwait(false);

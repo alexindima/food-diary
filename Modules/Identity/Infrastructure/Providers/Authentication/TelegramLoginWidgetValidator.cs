@@ -46,7 +46,9 @@ public sealed class TelegramLoginWidgetValidator(IOptions<TelegramAuthOptions> o
             data.LastName,
             data.PhotoUrl,
             LanguageCode: null,
-            authDateUtc);
+            authDateUtc,
+            ReplayIdentity: "widget:" + data.Hash.ToLowerInvariant(),
+            ExpiresAtUtc: authDateUtc.AddSeconds(_options.AuthTtlSeconds));
 
         return Result.Success(telegramInitData);
     }

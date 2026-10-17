@@ -19,6 +19,13 @@ public sealed partial class User {
         UserSecurityState nextState = GetSecurityState()
             .WithPassword(NormalizeRequiredPasswordHash(hashedPassword))
             .WithoutPasswordResetToken();
+        // Mailbox recovery must remove identities attached before mailbox ownership was established.
+        if (TelegramUserId.HasValue && !TelegramLinkVerifiedForRecovery) {
+            ApplyAccountState(GetAccountState().WithTelegram(null));
+            TelegramLinkVerifiedForRecovery = false;
+            TelegramOidcIssuer = null;
+            TelegramOidcSubject = null;
+        }
         ApplySecurityState(nextState);
         AdvanceSecurityVersion();
         SetModified();

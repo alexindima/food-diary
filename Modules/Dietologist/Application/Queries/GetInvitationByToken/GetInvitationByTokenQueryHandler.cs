@@ -10,6 +10,7 @@ using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Dietologist.Application.Common;
 using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Contracts.Models;
 
 namespace FoodDiary.Modules.Dietologist.Application.Queries.GetInvitationByToken;
 
@@ -41,9 +42,9 @@ public sealed class GetInvitationByTokenQueryHandler(
             return Result.Failure<InvitationModel>(DietologistErrors.InvitationNotFound);
         }
 
-        string? userEmail = await dietologistUserContextService.GetUserEmailByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (userEmail is null ||
-            !string.Equals(invitation.DietologistEmail, userEmail, StringComparison.OrdinalIgnoreCase)) {
+        Result<UserDietologistProfileModel> userResult = await dietologistUserContextService.GetAccessibleProfileAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure || !userResult.Value.IsEmailConfirmed ||
+            !string.Equals(invitation.DietologistEmail, userResult.Value.Email, StringComparison.OrdinalIgnoreCase)) {
             return Result.Failure<InvitationModel>(DietologistErrors.InvitationNotFound);
         }
 

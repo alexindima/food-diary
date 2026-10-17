@@ -244,7 +244,14 @@ internal sealed class UserAuthenticationIdentityService(
         }
 
         User user = userResult.Value;
+        if (user.Email is not null && !user.IsEmailConfirmed) {
+            return Result.Failure<UserModel>(UserAuthenticationErrors.EmailVerificationRequired);
+        }
         if (user.TelegramUserId == telegramUserId) {
+            if (!user.TelegramLinkVerifiedForRecovery) {
+                user.LinkTelegram(telegramUserId);
+                await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+            }
             return Result.Success(user.ToModel());
         }
         if (user.TelegramUserId.HasValue) {

@@ -69,7 +69,7 @@ public sealed class BulkCreateRecommendationsCommandHandler(
                 ErrorCode: null);
         }
 
-        Result accessResult = await DietologistAccessPolicy.EnsureCanAccessClientReadModelAsync(
+        Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientReadModelAsync(
             invitationRepository,
             dietologistId,
             clientId,
@@ -81,6 +81,16 @@ public sealed class BulkCreateRecommendationsCommandHandler(
                 RecommendationId: null,
                 WasAlreadyProcessed: false,
                 ErrorCode: accessResult.Error.Code);
+        }
+
+        Error? permissionError = DietologistAccessPolicy.EnsureRecommendationPermission(accessResult.Value);
+        if (permissionError is not null) {
+            return new(
+                ClientUserId: clientId.Value,
+                Succeeded: false,
+                RecommendationId: null,
+                WasAlreadyProcessed: false,
+                ErrorCode: permissionError.Code);
         }
 
         var recommendation = Recommendation.Create(dietologistId, clientId, text);

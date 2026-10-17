@@ -4,6 +4,38 @@ namespace FoodDiary.Modules.Users.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramAccountTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void MailboxRecovery_RemovesOnlyPreVerificationExternalIdentities(bool confirmed) {
+        var user = User.Create("recovered@example.com", "old-hash");
+        user.SetEmailConfirmed(confirmed);
+        user.LinkTelegram(123);
+        user.BindTelegramOidcIdentity("https://oauth.telegram.org", "telegram-subject");
+        user.LinkGoogleIdentity("https://accounts.google.com", "google-subject");
+        long securityVersion = user.SecurityVersion;
+
+        user.CompletePasswordReset("new-hash");
+
+        Assert.Equal("new-hash", user.Password);
+        Assert.True(user.SecurityVersion > securityVersion);
+        Assert.Equal(confirmed ? 123L : (long?)null, user.TelegramUserId);
+        Assert.Equal(confirmed ? "telegram-subject" : null, user.TelegramOidcSubject);
+        Assert.Equal("google-subject", user.GoogleSubject);
+    }
+
+    [Fact]
+    public void Recovery_RemovesLegacyTelegramLinkedBeforeMailboxConfirmationEvenAfterEmailVerification() {
+        var user = User.Create("pre-registered@example.com", "attacker-hash");
+        user.LinkTelegram(123);
+        user.BindTelegramOidcIdentity("https://oauth.telegram.org", "attacker-subject");
+        user.CompleteEmailVerification();
+        Assert.False(user.TelegramLinkVerifiedForRecovery);
+        user.CompletePasswordReset("owner-hash");
+        Assert.Null(user.TelegramUserId);
+        Assert.Null(user.TelegramOidcSubject);
+    }
+
     [Fact]
     public void EmailAndOidcIdentity_RequireAnUnclaimedAddressAndLinkedTelegram() {
         var user = User.CreateTelegram(123, "hash");

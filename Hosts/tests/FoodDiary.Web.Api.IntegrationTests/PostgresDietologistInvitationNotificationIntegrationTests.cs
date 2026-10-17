@@ -41,7 +41,19 @@ public sealed class PostgresDietologistInvitationNotificationIntegrationTests(Po
         Assert.All(invitationNotificationsAfterReadAll, notification => Assert.True(notification.IsRead));
     }
 
-    private async Task<AuthenticatedUser> CreateAuthenticatedClientAsync(string emailPrefix = "api-tests") {
+    [RequiresDockerFact]
+    public async Task InviteUnconfirmedRecipient_DoesNotCreateInAppNotification() {
+        AuthenticatedUser clientUser = await CreateAuthenticatedClientAsync("client");
+        AuthenticatedUser recipient = await CreateAuthenticatedClientAsync("unconfirmed", confirmEmail: false);
+
+        await InviteDietologistAsync(clientUser.Client, recipient.Email);
+
+        List<NotificationPayload> notifications = await GetNotificationsAsync(recipient.Client);
+        Assert.DoesNotContain(notifications, notification =>
+            string.Equals(notification.Type, "DietologistInvitationReceived", StringComparison.Ordinal));
+    }
+
+    private async Task<AuthenticatedUser> CreateAuthenticatedClientAsync(string emailPrefix = "api-tests", bool confirmEmail = true) {
         HttpClient client = factory.CreateClient();
         string email = $"{emailPrefix}-{Guid.NewGuid():N}@example.com";
         HttpResponseMessage registerResponse = await client.PostAsJsonAsync(
@@ -52,6 +64,14 @@ public sealed class PostgresDietologistInvitationNotificationIntegrationTests(Po
         AuthPayload? authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(authPayload);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
+
+        if (confirmEmail) {
+            string token = factory.EmailSender.GetRequiredEmailVerificationToken(email);
+            using HttpResponseMessage verificationResponse = await client.PostAsJsonAsync(
+                "/api/v1/auth/verify-email",
+                new { UserId = authPayload.User.Id, Token = token }).ConfigureAwait(false);
+            await AssertStatusCodeAsync(HttpStatusCode.NoContent, verificationResponse).ConfigureAwait(false);
+        }
 
         return new AuthenticatedUser(client, email);
     }
@@ -83,7 +103,10 @@ public sealed class PostgresDietologistInvitationNotificationIntegrationTests(Po
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed record AuthPayload(string AccessToken);
+    private sealed record AuthPayload(string AccessToken, AuthUserPayload User);
+
+    [ExcludeFromCodeCoverage]
+    private sealed record AuthUserPayload(Guid Id);
 
     [ExcludeFromCodeCoverage]
     private sealed record AuthenticatedUser(HttpClient Client, string Email);

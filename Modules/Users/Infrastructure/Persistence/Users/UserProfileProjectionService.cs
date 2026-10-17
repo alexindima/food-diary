@@ -95,7 +95,7 @@ public sealed class UserProfileProjectionService(DbSet<User> users, Func<Cancell
 
     private static IQueryable<UserDietologistProfileModel> DietologistProfiles(IQueryable<User> users) =>
         users.AsNoTracking().Select(user => new UserDietologistProfileModel(user.Id.Value, user.Email, user.FirstName,
-            user.LastName, user.Preferences.Language, user.UserRoles.Any(role => role.Role.Name == RoleNames.Dietologist)));
+            user.LastName, user.Preferences.Language, user.UserRoles.Any(role => role.Role.Name == RoleNames.Dietologist), user.IsEmailConfirmed));
 
     public async Task<Result<UserHydrationProfileModel>> GetHydrationProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {

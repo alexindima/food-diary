@@ -7,6 +7,9 @@ using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
+using FoodDiary.Modules.Identity.Infrastructure.Persistence;
+using FoodDiary.Modules.Identity.Infrastructure.Persistence.Authentication;
+using FoodDiary.Modules.Identity.PersistenceModel.Authentication;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
@@ -15,6 +18,43 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     private const string InitialMigration = "20251108210736_InitialCreate";
     private const string BeforeFastingProtocolRenameMigration = "20260810221016_AddWeeklyGoals";
+
+    [RequiresDockerFact]
+    public async Task TelegramSecurityUpgrade_InvalidatesLegacyProofsAndKeepsLinkProvenanceConservative() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var emailUser = User.Create($"legacy-telegram-{Guid.NewGuid():N}@example.com", "hash");
+        emailUser.LinkTelegram(123456);
+        emailUser.CompleteEmailVerification();
+        var telegramUser = User.CreateTelegram(654321, "hash");
+        context.Users.AddRange(emailUser, telegramUser);
+        await context.SaveChangesAsync();
+        string previous = context.Database.GetMigrations().TakeWhile(value => !value.EndsWith("_HardenTelegramAssertionRecovery", StringComparison.Ordinal)).Last();
+        await context.GetService<IMigrator>().MigrateAsync(previous);
+        DateTime oldAuthDate = DateTime.UtcNow.AddMinutes(-1);
+        string oldFingerprint = new('a', 64);
+        await context.Database.ExecuteSqlInterpolatedAsync(
+            $"INSERT INTO \"ConsumedTelegramAssertions\" (\"Fingerprint\", \"ExpiresAtUtc\") VALUES ({oldFingerprint}, {oldAuthDate.AddDays(1)})");
+        await context.Database.MigrateAsync();
+        context.ChangeTracker.Clear();
+        Assert.Empty(await context.Set<ConsumedTelegramAssertion>().ToArrayAsync());
+        User recovered = await context.Users.SingleAsync(user => user.Id == emailUser.Id);
+        Assert.False(recovered.TelegramLinkVerifiedForRecovery);
+        Assert.True((await context.Users.SingleAsync(user => user.Id == telegramUser.Id)).TelegramLinkVerifiedForRecovery);
+        recovered.CompletePasswordReset("owner-hash");
+        Assert.Null(recovered.TelegramUserId);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        Assert.Null((await context.Users.SingleAsync(user => user.Id == emailUser.Id)).TelegramUserId);
+        await using IdentityDbContext identity = new(new DbContextOptionsBuilder<IdentityDbContext>().UseNpgsql(context.Database.GetConnectionString()).Options);
+        TelegramAssertionPolicy policy = await identity.Set<TelegramAssertionPolicy>().SingleAsync();
+        Assert.True(policy.NotBeforeUtc > DateTime.UtcNow.AddMinutes(4));
+        var guard = new TelegramAssertionReplayGuard(identity, TimeProvider.System);
+        Assert.False(await guard.TryConsumeAsync("canonical-legacy-proof", oldAuthDate.AddDays(1), oldAuthDate));
+        Assert.False(await guard.TryConsumeAsync("future-dated-legacy-proof", oldAuthDate.AddDays(1), oldAuthDate.AddMinutes(5)));
+        Assert.True(await guard.TryConsumeAsync("canonical-fresh-proof", policy.NotBeforeUtc.AddDays(1), policy.NotBeforeUtc));
+        Assert.False(await guard.TryConsumeAsync("canonical-fresh-proof", policy.NotBeforeUtc.AddDays(1), policy.NotBeforeUtc));
+        Assert.Empty(await context.Database.GetPendingMigrationsAsync());
+    }
 
     [RequiresDockerFact]
     public async Task PublicProductDescriptions_BackfillOnlyMissingPublicRecipeSnapshots() {
