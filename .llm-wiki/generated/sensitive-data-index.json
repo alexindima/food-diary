@@ -680,7 +680,7 @@
       "name": "PasswordResetSentAtUtc",
       "type": "normalizedIssuedAtUtc,",
       "path": "Modules/Users/Domain/Entities/User.Credentials.cs",
-      "line": 112
+      "line": 123
     },
     {
       "category": "credential",
@@ -8681,7 +8681,7 @@
       "name": "EmailConfirmationSentAtUtc",
       "type": "normalizedIssuedAtUtc,",
       "path": "Modules/Users/Domain/Entities/User.Credentials.cs",
-      "line": 70
+      "line": 81
     },
     {
       "category": "identity",

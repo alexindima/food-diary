@@ -385,11 +385,7 @@ internal sealed class UserAuthenticationIdentityService(
 
     private void UpgradePasswordHashIfNeeded(User user, string password) {
         if (passwordHasher.NeedsRehash(user.Password)) {
-            bool mustChangePassword = user.MustChangePassword;
-            user.UpdatePassword(passwordHasher.Hash(password));
-            if (mustChangePassword) {
-                user.RequirePasswordChange();
-            }
+            user.UpgradePasswordHash(passwordHasher.Hash(password));
         }
     }
 

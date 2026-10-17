@@ -5659,28 +5659,28 @@
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"An email address is required before confirming it.\")",
       "path": "Modules/Users/Domain/Entities/User.Credentials.cs",
-      "line": 85
+      "line": 96
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"An email address is already assigned.\")",
       "path": "Modules/Users/Domain/Entities/User.Credentials.cs",
-      "line": 94
+      "line": 105
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Issuance date cannot be in the future.\")",
       "path": "Modules/Users/Domain/Entities/User.Credentials.cs",
-      "line": 122
+      "line": 133
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Issuance date cannot be earlier than the previous issuance date.\")",
       "path": "Modules/Users/Domain/Entities/User.Credentials.cs",
-      "line": 128
+      "line": 139
     },
     {
       "area": "FoodDiary",

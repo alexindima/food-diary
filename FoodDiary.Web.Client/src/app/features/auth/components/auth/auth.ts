@@ -444,7 +444,7 @@ export class AuthComponent {
         }
 
         const adminPath = normalizeAdminReturnUrl(adminReturnUrl, adminAppUrl, this.document.location.origin);
-        if (adminPath === null || adminPath.length === 0) {
+        if (adminPath === null) {
             return null;
         }
 
@@ -453,8 +453,11 @@ export class AuthComponent {
         }
 
         try {
-            const response = await firstValueFrom(this.authService.startAdminSso());
             const adminUrl = new URL(adminPath, adminAppUrl);
+            if (adminUrl.origin !== new URL(adminAppUrl).origin) {
+                return null;
+            }
+            const response = await firstValueFrom(this.authService.startAdminSso());
             adminUrl.searchParams.set('code', response.code);
             return adminUrl.toString();
         } catch {

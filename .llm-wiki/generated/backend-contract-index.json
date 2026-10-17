@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1352,
     "ambiguousContracts": 29,
-    "consumerEdges": 10574,
+    "consumerEdges": 10586,
     "productionConsumerEdges": 6030,
-    "testConsumerEdges": 4544,
+    "testConsumerEdges": 4556,
     "consumedContracts": 1352,
     "unconsumedContracts": 0
   },
@@ -27174,6 +27174,19 @@
         "Modules/Admin/Presentation/Requests/AdminUserSetPasswordHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PasswordResetRevocationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminUserSetPasswordHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminUserSetPasswordHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -30199,6 +30212,19 @@
         "Modules/Users/Application/Commands/ChangePassword/ChangePasswordCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ResetRevocation.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ChangePasswordCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Commands/ChangePassword/ChangePasswordCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -30279,6 +30305,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Presentation/Mappings/UserHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ChangePasswordHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Presentation/Requests/ChangePasswordHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PasswordResetRevocationIntegrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -31856,6 +31895,19 @@
         "Modules/Identity/Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ResetRevocation.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ConfirmPasswordResetCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -31910,6 +31962,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ConfirmPasswordResetHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/ConfirmPasswordResetHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PasswordResetRevocationIntegrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -41942,19 +42007,6 @@
       "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FastingTelemetryEventTests.cs",
       "isTest": true,
       "referenceCount": 8
-    },
-    {
-      "contract": "FastingTelemetryEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MigrationSafetyIntegrationTests.cs",
-      "isTest": true,
-      "referenceCount": 1
     },
     {
       "contract": "FastingTelemetryEvent",
@@ -98681,6 +98733,19 @@
         "Shared/FoodDiary.Authentication.Contracts/Authentication/Common/IPasswordHasher.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PasswordResetRevocationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IPasswordHasher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Authentication.Contracts/Authentication/Common/IPasswordHasher.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/TestInfrastructure/PostgresApiWebApplicationFactory.cs",
       "isTest": true,
       "referenceCount": 2
@@ -130622,6 +130687,19 @@
         "Modules/Users/Contracts/Common/IUserSessionRevocationService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ResetRevocation.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserSessionRevocationService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserSessionRevocationService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UsersFeatureTests.cs",
       "isTest": true,
       "referenceCount": 7
@@ -134772,6 +134850,19 @@
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/ImpersonationRevocationTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "LoginHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/LoginHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PasswordResetRevocationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "LoginHttpRequest",
@@ -146414,6 +146505,19 @@
         "Modules/Identity/Presentation/Features/Auth/Requests/RegisterHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PasswordResetRevocationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RegisterHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/RegisterHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs",
       "isTest": true,
       "referenceCount": 7
@@ -148072,6 +148176,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RequestPasswordResetHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/RequestPasswordResetHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PasswordResetRevocationIntegrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -150407,6 +150524,19 @@
         "Modules/Users/Application/Commands/SetPassword/SetPasswordCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ResetRevocation.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "SetPasswordCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Commands/SetPassword/SetPasswordCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -150487,6 +150617,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Presentation/Mappings/UserHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "SetPasswordHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Presentation/Requests/SetPasswordHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PasswordResetRevocationIntegrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -150592,6 +150735,19 @@
       "consumerPath": "Modules/Users/Application/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommandHandler.cs",
       "isTest": false,
       "referenceCount": 2
+    },
+    {
+      "contract": "SetUserPasswordByAdministratorCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ResetRevocation.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "SetUserPasswordByAdministratorCommand",

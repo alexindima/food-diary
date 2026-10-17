@@ -32,9 +32,11 @@ export function normalizeAdminReturnUrl(value: string, adminAppUrl: string, fall
         }
 
         const search = parsed.searchParams.toString();
-        return search.length > 0 ? `${parsed.pathname}?${search}` : parsed.pathname;
+        const path = search.length > 0 ? `${parsed.pathname}?${search}` : parsed.pathname;
+        // Removing the origin must not turn a same-origin pathname into a network-path reference.
+        return new URL(path, parsed).origin === parsed.origin ? path : '/';
     } catch {
-        return decoded.startsWith('/') ? decoded : '/';
+        return '/';
     }
 }
 

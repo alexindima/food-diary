@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2559,
+    "typescriptFiles": 2560,
     "symbols": 829,
     "routes": 108,
     "features": 46,
-    "specs": 738,
+    "specs": 739,
     "localeFiles": 5,
     "roles": {
       "Component": 492,
@@ -456,6 +456,7 @@
       ],
       "tests": [
         "FoodDiary.Web.Client/src/app/features/auth/api/telegram-auth.service.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-admin-redirect.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-admin-return-url.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-countdown.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-flow.facade.spec.ts",

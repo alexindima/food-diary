@@ -25,6 +25,31 @@ describe('normalizeAdminReturnUrl', () => {
     it('should fall back to root for malformed absolute values', () => {
         expect(normalizeAdminReturnUrl('http://[::1', ADMIN_APP_URL, APP_ORIGIN)).toBe('/');
     });
+
+    it.each([
+        `${ADMIN_APP_URL}//attacker.example/capture`,
+        `${ADMIN_APP_URL}///attacker.example/capture?tab=users`,
+        `${ADMIN_APP_URL}/.//attacker.example/capture`,
+        `${ADMIN_APP_URL}/%2e%2e//attacker.example/capture`,
+        `${ADMIN_APP_URL}/\\attacker.example/capture`,
+        `${ADMIN_APP_URL}/%2f%2fattacker.example/capture`,
+        encodeURIComponent(`${ADMIN_APP_URL}//attacker.example/capture`),
+        '//admin.fooddiary.club//attacker.example/capture',
+        '//[invalid',
+    ])('should reject a path that becomes a network reference: %s', value => {
+        const path = normalizeAdminReturnUrl(value, ADMIN_APP_URL, APP_ORIGIN);
+
+        expect(path).toBe('/');
+        expect(new URL(path ?? '/', ADMIN_APP_URL).origin).toBe(ADMIN_APP_URL);
+    });
+
+    it.each([
+        ['/users?tab=active#ignored', '/users?tab=active'],
+        [`${ADMIN_APP_URL}/users?tab=active`, '/users?tab=active'],
+        ['/users/a//b?query=%2F%2Fattacker.example', '/users/a//b?query=%2F%2Fattacker.example'],
+    ])('should preserve an unambiguous local path: %s', (value, expected) => {
+        expect(normalizeAdminReturnUrl(value, ADMIN_APP_URL, APP_ORIGIN)).toBe(expected);
+    });
 });
 
 describe('buildAdminUnauthorizedUrl', () => {

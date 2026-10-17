@@ -487,6 +487,63 @@
       "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
       "previousEventHash": "aa39e32f84fb3fabe2657f294031bf51a575062588fe8a0bd9cbb13fe5e6e53b",
       "eventHash": "5e268bbefc4784f0088bc9252efd9e769f198be37d9d897f1b11cac7a048c12d"
+    },
+    {
+      "schemaVersion": 2,
+      "eventId": "2d3639043f634e4d9545d28469e98f03",
+      "workspace": ".artifacts/llm-wiki/tasks/auth-security-fixes",
+      "recordedAtUtc": "2026-10-17T20:18:15.7026957Z",
+      "completionFingerprint": "d06c4fad57a77d3fb80b556e9778c171df7faabc3f9ff3d900aca342afe71a63",
+      "retrospectiveHash": "8876ffd5f00844cf3acfdfb10324e7e42be7142e313ae70bf4ad838cd0bd9401",
+      "instructionSetFingerprint": "4be553dcf846b6172cfb507c003cf784971bccf1f41d2b0a39724ded1d18ad0a",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "fingerprint": "997762017a8b9c43002f825cb93149d0e886a415264eea23de89be5b07595e7c"
+        },
+        {
+          "path": "FoodDiary.Web.Client/src/app/features/AGENTS.md",
+          "fingerprint": "a6d97182073a246c9dc9fa52882726d72824b550ffdcee3c3f587716611c33b7"
+        },
+        {
+          "path": "Hosts/tests/AGENTS.md",
+          "fingerprint": "3430eb639acde7b34b2a978d180d7ec3236b8322793784d6392a2d6281afda5d"
+        },
+        {
+          "path": "Modules/Identity/tests/AGENTS.md",
+          "fingerprint": "d7bfd8129f93e790bc2f03e07fe234fe62487024d37b83564477b4562d49cd12"
+        },
+        {
+          "path": "Modules/Users/Application/AGENTS.md",
+          "fingerprint": "0da845f64568763e8a7a36e266c271e7a20fc53ba54182155e504fb00cdba427"
+        },
+        {
+          "path": "Modules/Users/Domain/AGENTS.md",
+          "fingerprint": "f66e238e0a53cc720a705cdd2f7dcc378bb8055bf79a9502ba37ee0575fcf636"
+        }
+      ],
+      "taskSignals": {
+        "riskLevel": "critical",
+        "complexityScore": 81,
+        "complexityBandUpperBound": 100,
+        "cohortKey": "critical|complexity<=100",
+        "modelRouteId": "unrouted",
+        "contextStrategyId": "default"
+      },
+      "outcome": {
+        "score": 68.75,
+        "quality": "good",
+        "readinessScore": 100.0,
+        "confidenceScore": 90.0,
+        "critiqueScore": 85.0,
+        "verificationScore": 0.0,
+        "repairAttempts": 0,
+        "falseNegativeCount": 0
+      },
+      "success": false,
+      "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
+      "previousEventHash": "5e268bbefc4784f0088bc9252efd9e769f198be37d9d897f1b11cac7a048c12d",
+      "eventHash": "70fe63ccdb32a234275a0119fdfb395e2c8ed768cdeaf56e977187f7d0fc6ce7"
     }
   ]
 }

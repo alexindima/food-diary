@@ -687,14 +687,6 @@
       "structuralRiskScore": 106.06
     },
     {
-      "path": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
-      "nonBlankLines": 387,
-      "decisionPoints": 65,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 105.24
-    },
-    {
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
       "nonBlankLines": 494,
       "decisionPoints": 63,
@@ -717,6 +709,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 103.68
+    },
+    {
+      "path": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
+      "nonBlankLines": 383,
+      "decisionPoints": 64,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 103.66
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
@@ -5210,11 +5210,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-      "nonBlankLines": 310,
-      "decisionPoints": 55,
+      "nonBlankLines": 316,
+      "decisionPoints": 57,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 88.7
+      "structuralRiskScore": 91.82
     },
     {
       "path": "FoodDiary.Web.Api/Build/ApiBuildInfo.cs",
@@ -10138,11 +10138,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-admin-return-url.utils.ts",
-      "nonBlankLines": 41,
+      "nonBlankLines": 43,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.82
+      "structuralRiskScore": 9.86
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-countdown.utils.ts",
@@ -10242,11 +10242,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
-      "nonBlankLines": 476,
+      "nonBlankLines": 479,
       "decisionPoints": 54,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 90.52
+      "structuralRiskScore": 90.58
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/telegram-entry-button/telegram-entry-button.ts",
@@ -47050,11 +47050,11 @@
     },
     {
       "path": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
-      "nonBlankLines": 387,
-      "decisionPoints": 65,
+      "nonBlankLines": 383,
+      "decisionPoints": 64,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 105.24
+      "structuralRiskScore": 103.66
     },
     {
       "path": "Modules/Users/Application/Services/UserAuthenticationRegistrationService.cs",
@@ -47914,11 +47914,11 @@
     },
     {
       "path": "Modules/Users/Domain/Entities/User.Credentials.cs",
-      "nonBlankLines": 114,
+      "nonBlankLines": 124,
       "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.78
+      "structuralRiskScore": 15.98
     },
     {
       "path": "Modules/Users/Domain/Entities/User.Goals.cs",
@@ -54139,8 +54139,9 @@
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/ChangePassword/ChangePasswordCommandHandler.cs",
       "line": 9,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ResetRevocation.cs",
         "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UsersFeatureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
@@ -56032,8 +56033,9 @@
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/SetPassword/SetPasswordCommandHandler.cs",
       "line": 9,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ResetRevocation.cs",
         "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UsersFeatureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
@@ -56045,11 +56047,12 @@
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommandHandler.cs",
       "line": 11,
-      "testReferenceCount": 4,
+      "testReferenceCount": 5,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserAdministrationMutationServiceTests.cs",
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ResetRevocation.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
