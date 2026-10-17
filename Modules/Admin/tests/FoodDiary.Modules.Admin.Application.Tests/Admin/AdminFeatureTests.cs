@@ -57,7 +57,7 @@ public partial class AdminFeatureTests {
                 target.Id.Value,
                 "Support case",
                 "127.0.0.1",
-                "Test"),
+                "Test", Guid.NewGuid()),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -76,7 +76,7 @@ public partial class AdminFeatureTests {
                 target.Id.Value,
                 "Support case",
                 "127.0.0.1",
-                "Test"),
+                "Test", Guid.NewGuid()),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -96,7 +96,7 @@ public partial class AdminFeatureTests {
                 Guid.Empty,
                 "Support case",
                 "127.0.0.1",
-                "Test"),
+                "Test", Guid.NewGuid()),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -118,7 +118,7 @@ public partial class AdminFeatureTests {
                 target.Id.Value,
                 "Support case",
                 "127.0.0.1",
-                "Test"),
+                "Test", Guid.NewGuid()),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -140,7 +140,7 @@ public partial class AdminFeatureTests {
                 target.Id.Value,
                 "Support case",
                 "127.0.0.1",
-                "Test"),
+                "Test", Guid.NewGuid()),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -161,7 +161,7 @@ public partial class AdminFeatureTests {
                 target.Id.Value,
                 "Support case",
                 "127.0.0.1",
-                "Test"),
+                "Test", Guid.NewGuid()),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -180,7 +180,7 @@ public partial class AdminFeatureTests {
                 actor.Id.Value,
                 "Support case",
                 "127.0.0.1",
-                "Test"),
+                "Test", Guid.NewGuid()),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -200,7 +200,7 @@ public partial class AdminFeatureTests {
                 missingTargetId,
                 "Support case",
                 "127.0.0.1",
-                "Test"),
+                "Test", Guid.NewGuid()),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -210,6 +210,8 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task StartAdminImpersonationHandler_WithValidRequest_CreatesSessionAndReturnsToken() {
         User actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        actor.UpdatePassword("updated-hash");
+        var actorSessionId = Guid.NewGuid();
         User target = CreateUserWithRoles("client@example.com", [RoleNames.Premium]);
         var sessionRepository = new RecordingImpersonationSessionRepository();
         var issuer = new StubImpersonationTokenIssuer();
@@ -221,7 +223,7 @@ public partial class AdminFeatureTests {
                 target.Id.Value,
                 "  Support case with billing issue  ",
                 "127.0.0.1",
-                "Test"),
+                "Test", actorSessionId),
             CancellationToken.None);
 
         ResultAssert.Success(result);
@@ -236,9 +238,31 @@ public partial class AdminFeatureTests {
         Assert.Multiple(
             () => Assert.Equal(target.Id, issuer.LastRequest.SubjectId),
             () => Assert.Equal(actor.Id, issuer.LastRequest.ActorId),
+            () => Assert.Equal(actor.SecurityVersion, issuer.LastRequest.ActorSecurityVersion),
+            () => Assert.Equal(actorSessionId, issuer.LastRequest.ActorSessionId),
+            () => Assert.Equal(target.SecurityVersion, issuer.LastRequest.SecurityVersion),
             () => Assert.Equal(target.Email, issuer.LastRequest.Email),
             () => Assert.Equal("Support case with billing issue", issuer.LastRequest.Reason),
             () => Assert.Equal([RoleNames.Premium], issuer.LastRequest.Roles, StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public async Task StartAdminImpersonationHandler_WithEmptyActorSession_ReturnsValidationWithoutIssuingToken() {
+        User actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User target = CreateUserWithRoles("client@example.com", []);
+        var sessions = new RecordingImpersonationSessionRepository();
+        var issuer = new StubImpersonationTokenIssuer();
+        StartAdminImpersonationCommandHandler handler = CreateStartImpersonationHandler(actor, target, sessions, issuer);
+
+        Result<AdminImpersonationStartModel> result = await handler.Handle(
+            new StartAdminImpersonationCommand(actor.Id.Value, target.Id.Value, "Support case", ActorIpAddress: null, ActorUserAgent: null, Guid.Empty),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("ActorSessionId", result.Error.Message, StringComparison.Ordinal);
+        Assert.Null(issuer.LastRequest);
+        Assert.Equal(0, sessions.AddCallCount);
     }
 
     [Fact]

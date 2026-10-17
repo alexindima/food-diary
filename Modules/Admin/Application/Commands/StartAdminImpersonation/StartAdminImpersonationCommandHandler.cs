@@ -46,7 +46,7 @@ public sealed class StartAdminImpersonationCommandHandler(
         }
 
         UserAuthenticationPrincipalModel target = targetResult.Value;
-        string token = GenerateToken(target, actorUserId, reason);
+        string token = GenerateToken(target, actorResult.Value, command.ActorSessionId, reason);
         string code = await handoffService.CreateCodeAsync(token, cancellationToken).ConfigureAwait(false);
         await StartSessionAsync(command, actorUserId, target.UserId, reason, cancellationToken).ConfigureAwait(false);
         LogStart(actorUserId, target, reason);
@@ -79,6 +79,11 @@ public sealed class StartAdminImpersonationCommandHandler(
         if (command.ActorUserId == command.TargetUserId) {
             return Result.Failure<ImpersonationUserIds>(
                 Errors.Validation.Invalid(nameof(command.TargetUserId), "Actor and target users must be different."));
+        }
+
+        if (command.ActorSessionId == Guid.Empty) {
+            return Result.Failure<ImpersonationUserIds>(
+                Errors.Validation.Invalid(nameof(command.ActorSessionId), "Actor session id must not be empty."));
         }
 
         return Result.Success(new ImpersonationUserIds(actorUserIdResult.Value, targetUserIdResult.Value));
@@ -115,9 +120,14 @@ public sealed class StartAdminImpersonationCommandHandler(
         return result;
     }
 
-    private string GenerateToken(UserAuthenticationPrincipalModel target, UserId actorUserId, string reason) {
+    private string GenerateToken(
+        UserAuthenticationPrincipalModel target,
+        UserAuthenticationPrincipalModel actor,
+        Guid actorSessionId,
+        string reason) {
         return impersonationTokenIssuer.IssueAccessToken(new ImpersonationTokenRequest(
-            target.UserId, target.Email, target.Roles, actorUserId, reason, target.SecurityVersion));
+            target.UserId, target.Email, target.Roles, actor.UserId, reason, target.SecurityVersion,
+            actor.SecurityVersion, actorSessionId));
     }
 
     private async Task StartSessionAsync(

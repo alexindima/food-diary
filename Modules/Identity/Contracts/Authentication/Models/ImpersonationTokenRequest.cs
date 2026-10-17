@@ -8,4 +8,6 @@ public sealed record ImpersonationTokenRequest(
     IReadOnlyCollection<string> Roles,
     UserId ActorId,
     string Reason,
-    long SecurityVersion);
+    long SecurityVersion,
+    long ActorSecurityVersion,
+    Guid ActorSessionId);

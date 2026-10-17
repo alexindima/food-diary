@@ -7,12 +7,15 @@ namespace FoodDiary.Modules.Identity.Application.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class AuthenticationContractTests {
     [Fact]
-    public void JwtImpersonationContext_StoresActorAndReason() {
+    public void JwtImpersonationContext_StoresActorRevocationBindingsAndReason() {
         var actorUserId = UserId.New();
+        var actorSessionId = Guid.NewGuid();
 
-        var context = new JwtImpersonationContext(actorUserId, "Support request");
+        var context = new JwtImpersonationContext(actorUserId, "Support request", 5, actorSessionId);
 
         Assert.Equal(actorUserId, context.ActorUserId);
+        Assert.Equal(5, context.ActorSecurityVersion);
+        Assert.Equal(actorSessionId, context.ActorSessionId);
         Assert.Equal("Support request", context.Reason);
     }
 

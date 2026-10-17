@@ -83,13 +83,13 @@
       "sources": [
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "eacce7a4e7a7d99e4fc06c08f249f6f0b244948b55406b5f01f41d43ba3e1386"
+          "sha256": "52f2545f07c6cbdd6348e0bb141b6cf48f569d87128179aa3a079a7dd7ee6fc9"
         }
       ],
-      "reason": "Reviewed generated module, data, catalog and runtime navigation against current source and existing architecture guidance. Added DbSet capability metadata documents the owning Identity persistence boundary; task completion adds one instruction outcome for this isolated validated security task.",
+      "reason": "The revised in-process impersonation contracts require the actor version and trusted session; all production callers are updated and the HTTP Swagger contract remains unchanged. The persisted Users reader adds an indexed, uncached boolean Admin-membership check within its own module. Independent security review traced the shared bearer gate and revocation writes; focused real HTTP regressions execute the boundary. Generated catalog, contract, quality and runtime data are refreshed; these workflows still describe their navigation and verification roles accurately. No new host, worker, external provider, transaction owner or personal-data storage is introduced.",
       "baseRef": "HEAD",
-      "gitHead": "e8d77407540e9ec32620cd9f05fb09308b1a6be7",
-      "reviewedAtUtc": "2026-10-17T10:35:07.2763283Z"
+      "gitHead": "c8b050e39253a53c183d8076d0c19535e153151d",
+      "reviewedAtUtc": "2026-10-17T13:11:38.0416917Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -218,13 +218,13 @@
       "sources": [
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "eacce7a4e7a7d99e4fc06c08f249f6f0b244948b55406b5f01f41d43ba3e1386"
+          "sha256": "52f2545f07c6cbdd6348e0bb141b6cf48f569d87128179aa3a079a7dd7ee6fc9"
         }
       ],
-      "reason": "Reviewed CI deploy-source guards, dependency patch execution and isolated test evidence against current workflow guidance. Guard tests passed 9/9 and dependency tests 6/6; existing full application and SQL validation is bound to the unchanged production source hashes. No UI text or rendered component changes are part of this commit.",
+      "reason": "The revised in-process impersonation contracts require the actor version and trusted session; all production callers are updated and the HTTP Swagger contract remains unchanged. The persisted Users reader adds an indexed, uncached boolean Admin-membership check within its own module. Independent security review traced the shared bearer gate and revocation writes; focused real HTTP regressions execute the boundary. Generated catalog, contract, quality and runtime data are refreshed; these workflows still describe their navigation and verification roles accurately. No new host, worker, external provider, transaction owner or personal-data storage is introduced.",
       "baseRef": "HEAD",
-      "gitHead": "e8d77407540e9ec32620cd9f05fb09308b1a6be7",
-      "reviewedAtUtc": "2026-10-17T10:35:08.6146599Z"
+      "gitHead": "c8b050e39253a53c183d8076d0c19535e153151d",
+      "reviewedAtUtc": "2026-10-17T13:11:38.7086815Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -233,13 +233,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "c9cef01ab4cbdc30d6ea6b53e99f9924d9bc06b675cd85dead309d98b8a9f4f4"
+          "sha256": "45adc592a6375a8a659201a394ae4c89fd347166985643cde9640dd8828925cb"
         }
       ],
-      "reason": "Reviewed the isolated security source set and generated backend contracts: HTTP shapes are unchanged, existing OpenAPI 23-test verification remains applicable, and the two invitation HTTP fixture files now verify email through the real route; all 7 invitation tests passed in this checkout.",
+      "reason": "The revised in-process impersonation contracts require the actor version and trusted session; all production callers are updated and the HTTP Swagger contract remains unchanged. The persisted Users reader adds an indexed, uncached boolean Admin-membership check within its own module. Independent security review traced the shared bearer gate and revocation writes; focused real HTTP regressions execute the boundary. Generated catalog, contract, quality and runtime data are refreshed; these workflows still describe their navigation and verification roles accurately. No new host, worker, external provider, transaction owner or personal-data storage is introduced.",
       "baseRef": "HEAD",
-      "gitHead": "e8d77407540e9ec32620cd9f05fb09308b1a6be7",
-      "reviewedAtUtc": "2026-10-17T10:35:09.6945288Z"
+      "gitHead": "c8b050e39253a53c183d8076d0c19535e153151d",
+      "reviewedAtUtc": "2026-10-17T13:11:39.8328340Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -831,13 +831,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "58a2ede79863e46072379692d59e98920125ddb6cc2cfdb98897aee9db8e7100"
+          "sha256": "3a8702ed2ead2bcd38e4c98d10c637277ac7fb21543f376e60f9b5a0b7fc56f7"
         }
       ],
-      "reason": "Reviewed CI deploy-source guards, dependency patch execution and isolated test evidence against current workflow guidance. Guard tests passed 9/9 and dependency tests 6/6; existing full application and SQL validation is bound to the unchanged production source hashes. No UI text or rendered component changes are part of this commit.",
+      "reason": "The revised in-process impersonation contracts require the actor version and trusted session; all production callers are updated and the HTTP Swagger contract remains unchanged. The persisted Users reader adds an indexed, uncached boolean Admin-membership check within its own module. Independent security review traced the shared bearer gate and revocation writes; focused real HTTP regressions execute the boundary. Generated catalog, contract, quality and runtime data are refreshed; these workflows still describe their navigation and verification roles accurately. No new host, worker, external provider, transaction owner or personal-data storage is introduced.",
       "baseRef": "HEAD",
-      "gitHead": "e8d77407540e9ec32620cd9f05fb09308b1a6be7",
-      "reviewedAtUtc": "2026-10-17T10:35:14.3791096Z"
+      "gitHead": "c8b050e39253a53c183d8076d0c19535e153151d",
+      "reviewedAtUtc": "2026-10-17T13:11:40.8220166Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -910,13 +910,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "e9e7d8744c72f8b6ad352622744ec9d3728e7937ad834358a3681f106e540958"
+          "sha256": "6befd76a944ec00dcfb01786cbb5157974f88c605e1a460ba3080f4283a96ab8"
         }
       ],
-      "reason": "Reviewed generated module, data, catalog and runtime navigation against current source and existing architecture guidance. Added DbSet capability metadata documents the owning Identity persistence boundary; task completion adds one instruction outcome for this isolated validated security task.",
+      "reason": "The revised in-process impersonation contracts require the actor version and trusted session; all production callers are updated and the HTTP Swagger contract remains unchanged. The persisted Users reader adds an indexed, uncached boolean Admin-membership check within its own module. Independent security review traced the shared bearer gate and revocation writes; focused real HTTP regressions execute the boundary. Generated catalog, contract, quality and runtime data are refreshed; these workflows still describe their navigation and verification roles accurately. No new host, worker, external provider, transaction owner or personal-data storage is introduced.",
       "baseRef": "HEAD",
-      "gitHead": "e8d77407540e9ec32620cd9f05fb09308b1a6be7",
-      "reviewedAtUtc": "2026-10-17T10:35:16.5089124Z"
+      "gitHead": "c8b050e39253a53c183d8076d0c19535e153151d",
+      "reviewedAtUtc": "2026-10-17T13:11:42.0486731Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -925,21 +925,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "58a2ede79863e46072379692d59e98920125ddb6cc2cfdb98897aee9db8e7100"
+          "sha256": "3a8702ed2ead2bcd38e4c98d10c637277ac7fb21543f376e60f9b5a0b7fc56f7"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "e9e7d8744c72f8b6ad352622744ec9d3728e7937ad834358a3681f106e540958"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "53f61b9217849258d410cd578569de42fd71cee1af4de35693035c42fcc70812"
+          "sha256": "6befd76a944ec00dcfb01786cbb5157974f88c605e1a460ba3080f4283a96ab8"
         }
       ],
-      "reason": "Reviewed Telegram recovery and replay boundaries, verified-mailbox invitation authorization, private meal snapshots and shopping projections against owning code and SQL regressions; generated sensitive-data and runtime indexes describe these changes without altering documented workflow guarantees.",
+      "reason": "The revised in-process impersonation contracts require the actor version and trusted session; all production callers are updated and the HTTP Swagger contract remains unchanged. The persisted Users reader adds an indexed, uncached boolean Admin-membership check within its own module. Independent security review traced the shared bearer gate and revocation writes; focused real HTTP regressions execute the boundary. Generated catalog, contract, quality and runtime data are refreshed; these workflows still describe their navigation and verification roles accurately. No new host, worker, external provider, transaction owner or personal-data storage is introduced.",
       "baseRef": "HEAD",
-      "gitHead": "e8d77407540e9ec32620cd9f05fb09308b1a6be7",
-      "reviewedAtUtc": "2026-10-17T10:35:17.5786155Z"
+      "gitHead": "c8b050e39253a53c183d8076d0c19535e153151d",
+      "reviewedAtUtc": "2026-10-17T13:11:43.0156779Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1200,14 +1196,14 @@
       "pageSha256": "3af71b64bf35f63f76cf5e8784f96c6d4b40579bd8e96f2bebd0ae99f02caffa",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "997762017a8b9c43002f825cb93149d0e886a415264eea23de89be5b07595e7c"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "c2015cba3c024e4d0f46a6422b3d86868edcc450771faf9ba423209057329bff"
         }
       ],
-      "reason": "Reviewed the six affected pages against the root transport guidance and BugTriage runbook. The service ownership, independent mail/audit lifecycle, knowledge authority and Wiki workflow are unchanged; detailed transport authority remains in the linked runbook.",
+      "reason": "The revised in-process impersonation contracts require the actor version and trusted session; all production callers are updated and the HTTP Swagger contract remains unchanged. The persisted Users reader adds an indexed, uncached boolean Admin-membership check within its own module. Independent security review traced the shared bearer gate and revocation writes; focused real HTTP regressions execute the boundary. Generated catalog, contract, quality and runtime data are refreshed; these workflows still describe their navigation and verification roles accurately. No new host, worker, external provider, transaction owner or personal-data storage is introduced.",
       "baseRef": "HEAD",
-      "gitHead": "b5ed198a65bafb47e598db79afdabfdf7e887b1a",
-      "reviewedAtUtc": "2026-10-17T12:21:22.9500205Z"
+      "gitHead": "c8b050e39253a53c183d8076d0c19535e153151d",
+      "reviewedAtUtc": "2026-10-17T13:11:41.4597085Z"
     },
     {
       "pageId": "workflow.review-diff",

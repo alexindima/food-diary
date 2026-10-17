@@ -1,5 +1,6 @@
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using System.Security.Claims;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Web.Api.Extensions;
@@ -133,7 +134,7 @@ public sealed class AccessTokenSecurityStateValidatorTests {
     }
 
     [Fact]
-    public async Task IsCurrentAsync_WithImpersonation_KeepsSeparateTokenFlow() {
+    public async Task IsCurrentAsync_WithLegacyImpersonation_RejectsUnboundToken() {
         var userId = Guid.NewGuid();
         IUserAccessTokenSecurityReader reader = Substitute.For<IUserAccessTokenSecurityReader>();
         reader.IsCurrentAsync(userId, 3, Arg.Any<CancellationToken>()).Returns(returnThis: true);
@@ -143,7 +144,109 @@ public sealed class AccessTokenSecurityStateValidatorTests {
             new Claim(FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions.JwtImpersonationClaimNames.ActorUserId, Guid.NewGuid().ToString()),
         ]));
         IUserAccessTokenSessionReader sessions = Substitute.For<IUserAccessTokenSessionReader>();
-        Assert.True(await AccessTokenSecurityStateValidator.IsCurrentAsync(principal, reader, sessions, CancellationToken.None));
+        Assert.False(await AccessTokenSecurityStateValidator.IsCurrentAsync(principal, reader, sessions, CancellationToken.None));
         await sessions.DidNotReceiveWithAnyArgs().IsActiveAsync(default, default, default);
     }
+
+    [Theory]
+    [InlineData(true, true, true, true)]
+    [InlineData(false, true, true, false)]
+    [InlineData(true, false, true, false)]
+    [InlineData(true, true, false, false)]
+    public async Task IsCurrentAsync_WithImpersonation_RequiresCurrentTargetAdministratorAndOriginatingSession(
+        bool targetCurrent, bool actorCurrent, bool sessionActive, bool expected) {
+        var targetId = Guid.NewGuid();
+        var actorId = Guid.NewGuid();
+        var sessionId = Guid.NewGuid();
+        using var cancellation = new CancellationTokenSource();
+        IUserAccessTokenSecurityReader reader = Substitute.For<IUserAccessTokenSecurityReader>();
+        reader.IsCurrentAsync(targetId, 3, cancellation.Token).Returns(targetCurrent);
+        reader.IsCurrentAdministratorAsync(actorId, 5, cancellation.Token).Returns(actorCurrent);
+        IUserAccessTokenSessionReader sessions = Substitute.For<IUserAccessTokenSessionReader>();
+        sessions.IsActiveAsync(actorId, sessionId, cancellation.Token).Returns(sessionActive);
+
+        bool result = await AccessTokenSecurityStateValidator.IsCurrentAsync(
+            CreateBoundPrincipal(targetId, actorId, sessionId), reader, sessions, cancellation.Token);
+
+        Assert.Equal(expected, result);
+        if (targetCurrent) {
+            await reader.Received(1).IsCurrentAdministratorAsync(actorId, 5, cancellation.Token);
+        } else {
+            await reader.DidNotReceiveWithAnyArgs().IsCurrentAdministratorAsync(default, default, default);
+        }
+        if (targetCurrent && actorCurrent) {
+            await sessions.Received(1).IsActiveAsync(actorId, sessionId, cancellation.Token);
+        } else {
+            await sessions.DidNotReceiveWithAnyArgs().IsActiveAsync(default, default, default);
+        }
+    }
+
+    [Theory]
+    [InlineData(JwtImpersonationClaimNames.ActorSecurityVersion, null)]
+    [InlineData(JwtImpersonationClaimNames.ActorSecurityVersion, "")]
+    [InlineData(JwtImpersonationClaimNames.ActorSecurityVersion, "-1")]
+    [InlineData(JwtImpersonationClaimNames.ActorSecurityVersion, "+5")]
+    [InlineData(JwtImpersonationClaimNames.ActorSecurityVersion, " 5")]
+    [InlineData(JwtImpersonationClaimNames.ActorSecurityVersion, "not-a-number")]
+    [InlineData(JwtImpersonationClaimNames.ActorSecurityVersion, "9223372036854775808")]
+    [InlineData(JwtImpersonationClaimNames.ActorSessionId, null)]
+    [InlineData(JwtImpersonationClaimNames.ActorSessionId, "invalid")]
+    [InlineData(JwtImpersonationClaimNames.ActorSessionId, "00000000-0000-0000-0000-000000000000")]
+    [InlineData(JwtImpersonationClaimNames.ActorUserId, null)]
+    [InlineData(JwtImpersonationClaimNames.ActorUserId, "invalid")]
+    [InlineData(JwtImpersonationClaimNames.ActorUserId, "00000000-0000-0000-0000-000000000000")]
+    [InlineData(JwtImpersonationClaimNames.IsImpersonation, "TRUE")]
+    [InlineData(JwtImpersonationClaimNames.IsImpersonation, "false")]
+    public async Task IsCurrentAsync_WithMalformedImpersonationBinding_RejectsBeforeActorLookups(string type, string? value) {
+        var targetId = Guid.NewGuid();
+        ClaimsPrincipal principal = CreateBoundPrincipal(targetId, Guid.NewGuid(), Guid.NewGuid());
+        var identity = (ClaimsIdentity)principal.Identity!;
+        identity.RemoveClaim(identity.FindFirst(type));
+        if (value is not null) {
+            identity.AddClaim(new Claim(type, value));
+        }
+        IUserAccessTokenSecurityReader reader = Substitute.For<IUserAccessTokenSecurityReader>();
+        reader.IsCurrentAsync(targetId, 3, Arg.Any<CancellationToken>()).Returns(returnThis: true);
+        IUserAccessTokenSessionReader sessions = CreateActiveSessionReader();
+
+        Assert.False(await AccessTokenSecurityStateValidator.IsCurrentAsync(principal, reader, sessions, CancellationToken.None));
+        await reader.DidNotReceiveWithAnyArgs().IsCurrentAdministratorAsync(default, default, default);
+        await sessions.DidNotReceiveWithAnyArgs().IsActiveAsync(default, default, default);
+    }
+
+    [Fact]
+    public async Task IsCurrentAsync_WithTargetAsActor_RejectsToken() {
+        var targetId = Guid.NewGuid();
+        IUserAccessTokenSecurityReader reader = Substitute.For<IUserAccessTokenSecurityReader>();
+        reader.IsCurrentAsync(targetId, 3, Arg.Any<CancellationToken>()).Returns(returnThis: true);
+
+        Assert.False(await AccessTokenSecurityStateValidator.IsCurrentAsync(
+            CreateBoundPrincipal(targetId, targetId, Guid.NewGuid()), reader, CreateActiveSessionReader(), CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task IsCurrentAsync_WithAnotherActorOrSessionActive_RejectsUnrelatedBinding() {
+        var targetId = Guid.NewGuid();
+        var actorId = Guid.NewGuid();
+        var sessionId = Guid.NewGuid();
+        IUserAccessTokenSecurityReader reader = Substitute.For<IUserAccessTokenSecurityReader>();
+        reader.IsCurrentAsync(targetId, 3, Arg.Any<CancellationToken>()).Returns(returnThis: true);
+        reader.IsCurrentAdministratorAsync(actorId, 5, Arg.Any<CancellationToken>()).Returns(returnThis: true);
+        IUserAccessTokenSessionReader sessions = Substitute.For<IUserAccessTokenSessionReader>();
+        sessions.IsActiveAsync(Guid.NewGuid(), sessionId, Arg.Any<CancellationToken>()).Returns(returnThis: true);
+        sessions.IsActiveAsync(actorId, Guid.NewGuid(), Arg.Any<CancellationToken>()).Returns(returnThis: true);
+
+        Assert.False(await AccessTokenSecurityStateValidator.IsCurrentAsync(
+            CreateBoundPrincipal(targetId, actorId, sessionId), reader, sessions, CancellationToken.None));
+    }
+
+    private static ClaimsPrincipal CreateBoundPrincipal(Guid targetId, Guid actorId, Guid sessionId) =>
+        new(new ClaimsIdentity([
+            new Claim(ClaimTypes.NameIdentifier, targetId.ToString()),
+            new Claim(JwtSecurityClaimNames.SecurityVersion, "3"),
+            new Claim(JwtImpersonationClaimNames.IsImpersonation, "true"),
+            new Claim(JwtImpersonationClaimNames.ActorUserId, actorId.ToString()),
+            new Claim(JwtImpersonationClaimNames.ActorSecurityVersion, "5"),
+            new Claim(JwtImpersonationClaimNames.ActorSessionId, sessionId.ToString()),
+        ]));
 }

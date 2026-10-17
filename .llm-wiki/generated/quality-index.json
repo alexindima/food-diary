@@ -5226,11 +5226,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/AccessTokenSecurityStateValidator.cs",
-      "nonBlankLines": 39,
-      "decisionPoints": 8,
+      "nonBlankLines": 49,
+      "decisionPoints": 15,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.78
+      "structuralRiskScore": 25.48
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiApplicationBuilderExtensions.cs",
@@ -20786,27 +20786,27 @@
     },
     {
       "path": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommand.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
+      "structuralRiskScore": 0.24
     },
     {
       "path": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
-      "nonBlankLines": 128,
-      "decisionPoints": 10,
+      "nonBlankLines": 137,
+      "decisionPoints": 11,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.56
+      "structuralRiskScore": 21.24
     },
     {
       "path": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommandValidator.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.26
+      "structuralRiskScore": 2.28
     },
     {
       "path": "Modules/Admin/Application/Commands/TestAdminAiPrompt/TestAdminAiPromptCommand.cs",
@@ -22194,11 +22194,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
-      "nonBlankLines": 72,
+      "nonBlankLines": 74,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.44
+      "structuralRiskScore": 3.48
     },
     {
       "path": "Modules/Admin/Presentation/Extensions/AdminPresentationServiceCollectionExtensions.cs",
@@ -22290,11 +22290,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Mappings/AdminHttpMappings.cs",
-      "nonBlankLines": 184,
+      "nonBlankLines": 186,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.68
+      "structuralRiskScore": 3.72
     },
     {
       "path": "Modules/Admin/Presentation/Mappings/AdminHttpQueryMappings.cs",
@@ -34858,19 +34858,19 @@
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/JwtImpersonationClaimNames.cs",
-      "nonBlankLines": 6,
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/JwtImpersonationContext.cs",
-      "nonBlankLines": 3,
+      "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/JwtTokenUseClaimNames.cs",
@@ -36138,11 +36138,11 @@
     },
     {
       "path": "Modules/Identity/Contracts/Authentication/Models/ImpersonationTokenRequest.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.22
     },
     {
       "path": "Modules/Identity/Contracts/Authentication/Models/UserLoginDeviceSummaryModel.cs",
@@ -36282,11 +36282,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs",
-      "nonBlankLines": 211,
+      "nonBlankLines": 214,
       "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 22.22
+      "structuralRiskScore": 22.28
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityAuthenticationRegistration.cs",
@@ -47178,11 +47178,11 @@
     },
     {
       "path": "Modules/Users/Contracts/Common/IUserAccessTokenSecurityReader.cs",
-      "nonBlankLines": 7,
+      "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
+      "structuralRiskScore": 0.22
     },
     {
       "path": "Modules/Users/Contracts/Common/IUserAiProfileReadService.cs",
@@ -48298,11 +48298,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserAccessTokenSecurityReader.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 4,
+      "nonBlankLines": 37,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.42
+      "structuralRiskScore": 14.24
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserAdministrationReadRepository.cs",

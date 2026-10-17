@@ -32,14 +32,18 @@ public sealed class ImpersonationTokenIssuerTests {
         IImpersonationTokenIssuer issuer = provider.GetRequiredService<IImpersonationTokenIssuer>();
         var subjectId = UserId.New();
         var actorId = UserId.New();
+        var actorSessionId = Guid.NewGuid();
         string token = issuer.IssueAccessToken(new ImpersonationTokenRequest(
-            subjectId, email, ["User", "Premium"], actorId, "Support request", 42));
+            subjectId, email, ["User", "Premium"], actorId, "Support request", 42, 7, actorSessionId));
         JwtSecurityToken parsed = new JwtSecurityTokenHandler().ReadJwtToken(token);
 
         Assert.Multiple(
             () => Assert.Same(issuer, provider.GetRequiredService<IImpersonationTokenIssuer>()),
             () => Assert.Equal(subjectId.Value.ToString(), ClaimValue(parsed, ClaimTypes.NameIdentifier)),
             () => Assert.Equal(actorId.Value.ToString(), ClaimValue(parsed, JwtImpersonationClaimNames.ActorUserId)),
+            () => Assert.Equal("7", ClaimValue(parsed, JwtImpersonationClaimNames.ActorSecurityVersion)),
+            () => Assert.Equal(actorSessionId.ToString(), ClaimValue(parsed, JwtImpersonationClaimNames.ActorSessionId)),
+            () => Assert.Null(ClaimValue(parsed, JwtSecurityClaimNames.RefreshSessionId)),
             () => Assert.Equal("Support request", ClaimValue(parsed, JwtImpersonationClaimNames.Reason)),
             () => Assert.Equal("true", ClaimValue(parsed, JwtImpersonationClaimNames.IsImpersonation)),
             () => Assert.Equal("42", ClaimValue(parsed, JwtSecurityClaimNames.SecurityVersion)),

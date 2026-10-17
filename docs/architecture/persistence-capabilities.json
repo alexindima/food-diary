@@ -1226,9 +1226,10 @@
     "Modules/Users/Infrastructure/Persistence/Users/UserAccessTokenSecurityReader.cs": {
       "module": "Users",
       "capabilities": [
+        "entity:Role",
         "entity:User"
       ],
-      "reason": "Users-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+      "reason": "Users-owned uncached no-tracking security reads check persisted account/version state and current Admin membership through Users-owned roles. The adapter only returns a boolean; it does not track aggregates, write roles, save or commit."
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserAdministrationReadRepository.cs": {
       "module": "Users",

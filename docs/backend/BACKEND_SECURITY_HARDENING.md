@@ -21,6 +21,8 @@ This document captures the current backend security baseline.
 - Telegram bot authentication requires `X-Telegram-Bot-Secret` and compares it in constant time.
 - Admin SSO start remains admin-only and exchange uses single-use cached codes with a short TTL.
 - JWT validation uses issuer, audience, signing key, lifetime validation, and zero clock skew.
+- Impersonation access tokens bind the target security version, the issuing administrator's security version, and the administrator's originating refresh session. Every bearer authentication checks persisted active account state, current Admin membership, and that session. Role removal, account or credential revocation, and session revocation reject delegated access on the next request; restoring authority does not revive older tokens.
+- Existing impersonation tokens without both administrator bindings are rejected after this change; start a new impersonation session. Ordinary session authentication retains its existing contracts. Requests already authenticated and established SignalR connections are not terminated by this bearer check.
 - Repository CORS is allowlist-based; wildcard origins are not used with credentials enabled.
 - HTTP logging avoids query-string logging, which keeps hub access tokens out of host logs.
 

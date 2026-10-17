@@ -158,13 +158,15 @@ public sealed class AdminHttpMappingsTests {
     [Fact]
     public void AdminImpersonationStartHttpRequest_ToCommand_MapsContext() {
         var actorUserId = Guid.NewGuid();
+        var actorSessionId = Guid.NewGuid();
         var targetUserId = Guid.NewGuid();
         var request = new AdminImpersonationStartHttpRequest("Support case");
 
-        StartAdminImpersonationCommand command = request.ToCommand(actorUserId, targetUserId, "203.0.113.1", "Agent/1.0");
+        StartAdminImpersonationCommand command = request.ToCommand(actorUserId, targetUserId, "203.0.113.1", "Agent/1.0", actorSessionId);
 
         Assert.Multiple(
             () => Assert.Equal(actorUserId, command.ActorUserId),
+            () => Assert.Equal(actorSessionId, command.ActorSessionId),
             () => Assert.Equal(targetUserId, command.TargetUserId),
             () => Assert.Equal("Support case", command.Reason),
             () => Assert.Equal("203.0.113.1", command.ActorIpAddress),

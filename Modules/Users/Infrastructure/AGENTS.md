@@ -10,8 +10,9 @@ Own separable Users persistence adapters and complete module DI. Use narrow pers
 Do not absorb Identity repositories or provider services. UserCleanupService coordinates ordered owner-side IUserDataPurgeParticipant extensions inside the shared coordinator's per-user transaction and only mutates Users/UserRoles itself; participants never save or commit.
 
 Own `UserAccessTokenSecurityReader`, scoped through `AddUsersPersistence`. Its
-unchanged no-tracking query reads persisted active/deleted/security-version state;
-API/Identity still owns token validation/issuance. Do not substitute an already
+no-tracking queries read persisted active/deleted/security-version state and current
+Admin membership through Users-owned roles for delegated-token revocation.
+API/Identity owns token validation/issuance. Do not substitute an already
 tracked User or cache state. The Users-owned UserRepository lookup, Google,
 and write aliases still share one instance and scoped DbContext.
 

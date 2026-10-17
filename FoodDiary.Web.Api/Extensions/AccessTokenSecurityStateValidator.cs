@@ -33,9 +33,20 @@ internal static class AccessTokenSecurityStateValidator {
             return false;
         }
 
-        if (string.Equals(principal?.FindFirstValue(JwtImpersonationClaimNames.IsImpersonation), "true", StringComparison.Ordinal)) {
-            return Guid.TryParse(principal?.FindFirstValue(JwtImpersonationClaimNames.ActorUserId), out Guid actorId) &&
-                   actorId != Guid.Empty;
+        string? impersonationClaim = principal?.FindFirstValue(JwtImpersonationClaimNames.IsImpersonation);
+        if (impersonationClaim is not null) {
+            if (!string.Equals(impersonationClaim, "true", StringComparison.Ordinal) ||
+                !Guid.TryParse(principal?.FindFirstValue(JwtImpersonationClaimNames.ActorUserId), out Guid actorId) ||
+                actorId == Guid.Empty || actorId == userId ||
+                !Guid.TryParse(principal?.FindFirstValue(JwtImpersonationClaimNames.ActorSessionId), out Guid actorSessionId) ||
+                actorSessionId == Guid.Empty ||
+                !long.TryParse(principal?.FindFirstValue(JwtImpersonationClaimNames.ActorSecurityVersion),
+                    NumberStyles.None, CultureInfo.InvariantCulture, out long actorSecurityVersion)) {
+                return false;
+            }
+
+            return await securityReader.IsCurrentAdministratorAsync(actorId, actorSecurityVersion, cancellationToken).ConfigureAwait(false) &&
+                   await sessionReader.IsActiveAsync(actorId, actorSessionId, cancellationToken).ConfigureAwait(false);
         }
 
         return Guid.TryParse(principal?.FindFirstValue(JwtSecurityClaimNames.RefreshSessionId), out Guid sessionId) &&

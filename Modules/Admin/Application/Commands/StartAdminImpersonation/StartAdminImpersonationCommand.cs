@@ -9,5 +9,6 @@ public sealed record StartAdminImpersonationCommand(
     Guid TargetUserId,
     string Reason,
     string? ActorIpAddress,
-    string? ActorUserAgent)
+    string? ActorUserAgent,
+    Guid ActorSessionId)
     : ICommand<Result<AdminImpersonationStartModel>>;

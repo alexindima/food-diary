@@ -116,13 +116,15 @@ public static class AdminHttpMappings {
                 Guid actorUserId,
                 Guid targetUserId,
                 string? actorIpAddress,
-                string? actorUserAgent) {
+                string? actorUserAgent,
+                Guid actorSessionId) {
             return new StartAdminImpersonationCommand(
                 ActorUserId: actorUserId,
                 TargetUserId: targetUserId,
                 Reason: request.Reason,
                 ActorIpAddress: actorIpAddress,
-                ActorUserAgent: actorUserAgent);
+                ActorUserAgent: actorUserAgent,
+                ActorSessionId: actorSessionId);
         }
     }
 

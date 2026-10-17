@@ -70,12 +70,14 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     public Task<IActionResult> StartImpersonation(
         Guid id,
         [FromCurrentUser] Guid actorUserId,
+        [FromCurrentRefreshSession] Guid actorSessionId,
         [FromBody] AdminImpersonationStartHttpRequest request) =>
         HandleOk(
             request.ToCommand(
                 actorUserId,
                 id,
                 HttpContext.Connection.RemoteIpAddress?.ToString(),
-                Request.Headers.UserAgent.ToString()),
+                Request.Headers.UserAgent.ToString(),
+                actorSessionId),
             static value => value.ToHttpResponse());
 }

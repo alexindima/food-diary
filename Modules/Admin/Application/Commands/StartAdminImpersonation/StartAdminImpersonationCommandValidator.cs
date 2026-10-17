@@ -5,6 +5,7 @@ namespace FoodDiary.Modules.Admin.Application.Commands.StartAdminImpersonation;
 public sealed class StartAdminImpersonationCommandValidator : AbstractValidator<StartAdminImpersonationCommand> {
     public StartAdminImpersonationCommandValidator() {
         RuleFor(x => x.ActorUserId).NotEmpty().WithErrorCode("Validation.Required");
+        RuleFor(x => x.ActorSessionId).NotEmpty().WithErrorCode("Validation.Required");
         RuleFor(x => x.TargetUserId).NotEmpty().WithErrorCode("Validation.Required");
         RuleFor(x => x.Reason)
             .NotEmpty()

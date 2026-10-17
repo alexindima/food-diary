@@ -198,6 +198,9 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
         if (impersonation is not null) {
             claims.Add(new Claim(JwtImpersonationClaimNames.IsImpersonation, "true"));
             claims.Add(new Claim(JwtImpersonationClaimNames.ActorUserId, impersonation.ActorUserId.Value.ToString()));
+            claims.Add(new Claim(JwtImpersonationClaimNames.ActorSecurityVersion,
+                impersonation.ActorSecurityVersion.ToString(System.Globalization.CultureInfo.InvariantCulture)));
+            claims.Add(new Claim(JwtImpersonationClaimNames.ActorSessionId, impersonation.ActorSessionId.ToString()));
             claims.Add(new Claim(JwtImpersonationClaimNames.Reason, impersonation.Reason));
         }
 

@@ -26925,7 +26925,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserAccessTokenSecurityReader.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "UserAdministrationReadRepository",

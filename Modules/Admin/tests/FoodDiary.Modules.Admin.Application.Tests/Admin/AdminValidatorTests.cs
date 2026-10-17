@@ -15,9 +15,17 @@ namespace FoodDiary.Modules.Admin.Application.Tests.Admin;
 [ExcludeFromCodeCoverage]
 public class AdminValidatorTests {
     [Fact]
+    public async Task StartAdminImpersonation_WithEmptyActorSession_HasError() {
+        TestValidationResult<StartAdminImpersonationCommand> result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
+            new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.NewGuid(), "Valid support reason", ActorIpAddress: null, ActorUserAgent: null, Guid.Empty));
+
+        result.ShouldHaveValidationErrorFor(command => command.ActorSessionId);
+    }
+
+    [Fact]
     public async Task StartAdminImpersonation_WithEmptyActorUserId_HasError() {
         TestValidationResult<StartAdminImpersonationCommand> result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
-            new StartAdminImpersonationCommand(Guid.Empty, Guid.NewGuid(), "Valid support reason", ActorIpAddress: null, ActorUserAgent: null));
+            new StartAdminImpersonationCommand(Guid.Empty, Guid.NewGuid(), "Valid support reason", ActorIpAddress: null, ActorUserAgent: null, ActorSessionId: Guid.NewGuid()));
 
         result.ShouldHaveValidationErrorFor(command => command.ActorUserId);
     }
@@ -25,7 +33,7 @@ public class AdminValidatorTests {
     [Fact]
     public async Task StartAdminImpersonation_WithEmptyTargetUserId_HasError() {
         TestValidationResult<StartAdminImpersonationCommand> result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
-            new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.Empty, "Valid support reason", ActorIpAddress: null, ActorUserAgent: null));
+            new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.Empty, "Valid support reason", ActorIpAddress: null, ActorUserAgent: null, ActorSessionId: Guid.NewGuid()));
 
         result.ShouldHaveValidationErrorFor(command => command.TargetUserId);
     }
@@ -35,7 +43,7 @@ public class AdminValidatorTests {
     [InlineData("short")]
     public async Task StartAdminImpersonation_WithInvalidReason_HasError(string reason) {
         TestValidationResult<StartAdminImpersonationCommand> result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
-            new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.NewGuid(), reason, ActorIpAddress: null, ActorUserAgent: null));
+            new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.NewGuid(), reason, ActorIpAddress: null, ActorUserAgent: null, ActorSessionId: Guid.NewGuid()));
 
         result.ShouldHaveValidationErrorFor(command => command.Reason);
     }
@@ -43,7 +51,7 @@ public class AdminValidatorTests {
     [Fact]
     public async Task StartAdminImpersonation_WithValidData_NoErrors() {
         TestValidationResult<StartAdminImpersonationCommand> result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
-            new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.NewGuid(), "Investigating support ticket", ActorIpAddress: null, ActorUserAgent: null));
+            new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.NewGuid(), "Investigating support ticket", ActorIpAddress: null, ActorUserAgent: null, ActorSessionId: Guid.NewGuid()));
 
         result.ShouldNotHaveAnyValidationErrors();
     }

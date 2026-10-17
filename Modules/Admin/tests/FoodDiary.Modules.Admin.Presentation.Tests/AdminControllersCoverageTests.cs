@@ -127,11 +127,13 @@ public sealed class AdminControllersCoverageTests {
         impersonationController.Request.Headers.UserAgent = "Agent/1.0";
         var actorUserId = Guid.NewGuid();
 
-        IActionResult start = await impersonationController.StartImpersonation(userId, actorUserId, new AdminImpersonationStartHttpRequest("Support"));
+        var actorSessionId = Guid.NewGuid();
+        IActionResult start = await impersonationController.StartImpersonation(userId, actorUserId, actorSessionId, new AdminImpersonationStartHttpRequest("Support"));
 
         Assert.IsType<AdminImpersonationStartHttpResponse>(Assert.IsType<OkObjectResult>(start).Value);
         StartAdminImpersonationCommand command = Assert.IsType<StartAdminImpersonationCommand>(impersonationSender.Request);
         Assert.Equal(actorUserId, command.ActorUserId);
+        Assert.Equal(actorSessionId, command.ActorSessionId);
         Assert.Equal(userId, command.TargetUserId);
         Assert.Equal("203.0.113.1", command.ActorIpAddress);
         Assert.Equal("Agent/1.0", command.ActorUserAgent);
@@ -145,7 +147,7 @@ public sealed class AdminControllersCoverageTests {
         CapturedSender sender = SubstituteSender.Capture(Result.Success(model));
         AdminUsersController controller = CreateController(new AdminUsersController(sender));
 
-        IActionResult result = await controller.StartImpersonation(targetUserId, actorUserId, new AdminImpersonationStartHttpRequest("Support"));
+        IActionResult result = await controller.StartImpersonation(targetUserId, actorUserId, Guid.NewGuid(), new AdminImpersonationStartHttpRequest("Support"));
 
         Assert.IsType<AdminImpersonationStartHttpResponse>(Assert.IsType<OkObjectResult>(result).Value);
         StartAdminImpersonationCommand command = Assert.IsType<StartAdminImpersonationCommand>(sender.Request);

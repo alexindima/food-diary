@@ -140,7 +140,7 @@ public sealed class JwtTokenGeneratorTests {
             userId,
             "impersonated@example.com",
             ["User"],
-            new JwtImpersonationContext(actorUserId, "Support request"));
+            new JwtImpersonationContext(actorUserId, "Support request", 5, Guid.NewGuid()));
         JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
 
         Assert.Contains(jwt.Claims, claim =>

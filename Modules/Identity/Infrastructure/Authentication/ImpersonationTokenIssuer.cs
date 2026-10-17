@@ -10,7 +10,7 @@ public sealed class ImpersonationTokenIssuer(IJwtTokenGenerator tokenGenerator) 
             request.SubjectId,
             request.Email,
             request.Roles,
-            new JwtImpersonationContext(request.ActorId, request.Reason),
+            new JwtImpersonationContext(request.ActorId, request.Reason, request.ActorSecurityVersion, request.ActorSessionId),
             request.SecurityVersion);
     }
 }

@@ -5,4 +5,9 @@ public interface IUserAccessTokenSecurityReader {
         Guid userId,
         long securityVersion,
         CancellationToken cancellationToken = default);
+
+    Task<bool> IsCurrentAdministratorAsync(
+        Guid userId,
+        long securityVersion,
+        CancellationToken cancellationToken = default);
 }

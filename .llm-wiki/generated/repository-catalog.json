@@ -906,6 +906,7 @@
           "Modules/Statistics/Presentation/FoodDiary.Modules.Statistics.Presentation.csproj",
           "Modules/Tdee/Presentation/FoodDiary.Modules.Tdee.Presentation.csproj",
           "Modules/Usda/Presentation/FoodDiary.Modules.Usda.Presentation.csproj",
+          "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Modules/Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj",
