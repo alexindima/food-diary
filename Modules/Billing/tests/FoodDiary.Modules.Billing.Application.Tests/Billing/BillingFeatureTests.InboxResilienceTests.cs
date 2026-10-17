@@ -115,8 +115,8 @@ public partial class BillingFeatureTests {
         var processor = new BillingWebhookEventProcessor(events, transactions, resolver,
             new BillingWebhookSubscriptionWriter(subscriptions, clock),
             new BillingWebhookPaymentRecorder(new RecordingBillingPaymentRepository()),
-            new BillingWebhookPremiumRoleSyncer(subscriptions, new BillingAccessService(users, subscriptions, clock),
-                new NoOpMarketingConversionRecorder(), clock), clock);
+            new BillingWebhookPremiumRoleSyncer(new BillingAccessService(users, subscriptions, clock),
+                new NoOpMarketingConversionRecorder()), clock);
         return new ProcessQueuedBillingWebhookCommandHandler(events, transactions, processor, clock, resolver);
     }
 }

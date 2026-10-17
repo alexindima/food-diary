@@ -113,9 +113,9 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushClientAdapterTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushResponseLimitTests.cs`
 - [presentation] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationHttpMappingsTests.cs`
 - [presentation] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationPushControllerTests.cs`
-- [presentation] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationPusherTests.cs`
 
 ## Working Rule
 

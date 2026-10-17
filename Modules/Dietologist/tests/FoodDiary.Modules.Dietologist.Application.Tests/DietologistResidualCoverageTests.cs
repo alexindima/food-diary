@@ -157,6 +157,7 @@ public sealed class DietologistResidualCoverageTests {
             .Returns(AuthenticationErrors.InvalidToken);
         var handler = new GetRecommendationCommentsQueryHandler(
             Substitute.For<IRecommendationCommentReadModelRepository>(),
+            Substitute.For<IDietologistInvitationReadModelRepository>(),
             users);
 
         Result<FoodDiary.Application.Contracts.Common.Models.PagedResponse<RecommendationCommentModel>> result = await handler.Handle(
@@ -168,7 +169,10 @@ public sealed class DietologistResidualCoverageTests {
 
     [Fact]
     public async Task RecommendationDiscussionReadService_WhenRecommendationIdIsEmpty_ReturnsFailure() {
-        var service = new GetRecommendationCommentsQueryHandler(Substitute.For<IRecommendationCommentRepository>(), Substitute.For<ICurrentUserAccessService>());
+        var service = new GetRecommendationCommentsQueryHandler(
+            Substitute.For<IRecommendationCommentRepository>(),
+            Substitute.For<IDietologistInvitationReadModelRepository>(),
+            Substitute.For<ICurrentUserAccessService>());
 
         Result<FoodDiary.Application.Contracts.Common.Models.PagedResponse<RecommendationCommentModel>> result = await service.Handle(new GetRecommendationCommentsQuery(UserId.New().Value, Guid.Empty), CancellationToken.None);
 

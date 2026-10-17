@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1352,
     "ambiguousContracts": 29,
-    "consumerEdges": 10555,
+    "consumerEdges": 10574,
     "productionConsumerEdges": 6030,
-    "testConsumerEdges": 4525,
+    "testConsumerEdges": 4544,
     "consumedContracts": 1352,
     "unconsumedContracts": 0
   },
@@ -27988,6 +27988,20 @@
         "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/SecurityAccessRegressionIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "ApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/ApiAuthorizationMiddlewareResultHandlerTests.cs",
       "isTest": true,
       "referenceCount": 5
@@ -35421,6 +35435,19 @@
         "Modules/Dietologist/Presentation/Requests/CreateRecommendationCommentHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/SecurityAccessRegressionIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "CreateRecommendationCommentHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Presentation/Requests/CreateRecommendationCommentHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistNewEndpointsCoverageTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -35461,6 +35488,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DietologistInvitationNotificationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateRecommendationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Presentation/Requests/CreateRecommendationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/SecurityAccessRegressionIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -39251,6 +39291,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PostgresDietologistInvitationNotificationIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DietologistPermissionsHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Presentation/Requests/DietologistPermissionsHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/SecurityAccessRegressionIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -46285,6 +46338,19 @@
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.OverviewAndContextTests.cs",
       "isTest": true,
       "referenceCount": 7
+    },
+    {
+      "contract": "GetBillingOverviewQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TrialIdentitySecurityTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "GetBillingOverviewQuery",
@@ -53669,6 +53735,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Presentation/Mappings/DietologistHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetRecommendationCommentsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.CommentAccessSecurityTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -61956,6 +62035,19 @@
         "Modules/Billing/Application.Abstractions/Common/IBillingRecurringProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.AccessRevocationSecurityTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IBillingRecurringProviderGateway",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingRecurringProviderGateway.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -62190,19 +62282,6 @@
         "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IBillingSubscriptionWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookSubscriptionWriter.cs",
       "isTest": false,
       "referenceCount": 1
@@ -62284,6 +62363,19 @@
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IBillingSubscriptionWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.AccessRevocation.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IBillingSubscriptionWriteRepository",
@@ -62505,6 +62597,19 @@
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IBillingTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.AccessRevocation.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IBillingTransactionRunner",
@@ -74254,6 +74359,19 @@
         "Modules/Dietologist/Application.Abstractions/Common/IDietologistInvitationReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDietologistInvitationReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application.Abstractions/Common/IDietologistInvitationReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Queries/GetRecommendationsForClient/GetRecommendationsForClientQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -74373,7 +74491,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistResidualCoverageTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 3
     },
     {
       "contract": "IDietologistInvitationReadModelRepository",
@@ -74386,7 +74504,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/RecommendationCommentHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 8
     },
     {
       "contract": "IDietologistInvitationReadModelRepository",
@@ -96925,6 +97043,19 @@
         "Modules/Dietologist/Presentation/Requests/InviteDietologistHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/SecurityAccessRegressionIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "InviteDietologistHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Presentation/Requests/InviteDietologistHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistControllerTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -107845,6 +107976,19 @@
         "Modules/Dietologist/Application.Abstractions/Common/IRecommendationCommentReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.CommentAccessSecurityTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IRecommendationCommentReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application.Abstractions/Common/IRecommendationCommentReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistResidualCoverageTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -107938,7 +108082,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/RecommendationCommentHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 11
+      "referenceCount": 12
     },
     {
       "contract": "IRecommendationCommentRepository",
@@ -118078,7 +118222,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserBillingServiceTests.cs",
       "isTest": true,
-      "referenceCount": 10
+      "referenceCount": 12
     },
     {
       "contract": "ISender",
@@ -118222,6 +118366,19 @@
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedAiContextIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.AccessRevocation.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "ISender",
@@ -130322,6 +130479,19 @@
         "Modules/Users/Contracts/Common/IUserRoleMembershipService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.AccessRevocation.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserRoleMembershipService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserRoleMembershipService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedUsersContextIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -130961,7 +131131,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserBillingServiceTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 10
     },
     {
       "contract": "IUserWriteRepository",
@@ -132444,6 +132614,19 @@
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "IWebPushClientAdapter",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Infrastructure/Services/IWebPushClientAdapter.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushResponseLimitTests.cs",
+      "isTest": true,
+      "referenceCount": 6
     },
     {
       "contract": "IWebPushClientAdapter",
@@ -139528,7 +139711,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQueryHandler.cs",
       "isTest": false,
-      "referenceCount": 6
+      "referenceCount": 7
     },
     {
       "contract": "PagedResponse",
@@ -140166,6 +140349,19 @@
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.CommentAccessSecurityTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "PagedResponse",
@@ -146335,6 +146531,19 @@
         "Modules/Identity/Presentation/Features/Auth/Requests/RegisterHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/SecurityAccessRegressionIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RegisterHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/RegisterHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/UserProfilePatchIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -147224,6 +147433,19 @@
         "Modules/Users/Contracts/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.AccessRevocation.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RemoveUserPremiumRoleCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -147383,6 +147605,19 @@
       "consumerPath": "Hosts/tests/FoodDiary.JobManager.Tests/JobsTests.cs",
       "isTest": true,
       "referenceCount": 6
+    },
+    {
+      "contract": "RenewDueSubscriptionsCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Contracts/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.AccessRevocationSecurityTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "RenewDueSubscriptionsCommand",
@@ -151464,6 +151699,19 @@
         "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TrialIdentitySecurityTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "StartPremiumTrialCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingControllerTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -151661,7 +151909,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserBillingServiceTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "StartUserPremiumTrialCommand",

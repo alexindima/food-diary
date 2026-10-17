@@ -21,6 +21,7 @@ public partial class BillingFeatureTests {
     public async Task GetBillingOverview_WithExistingSubscription_ReturnsBillingTimelineAndRenewalState() {
         var premiumRole = Role.Create(RoleNames.Premium);
         var user = User.Create("premium@example.com", "hash");
+        user.SetEmailConfirmed(isConfirmed: true);
         user.ReplaceRoles([premiumRole]);
         var subscription = BillingSubscription.CreatePending(
             user.Id,
@@ -69,6 +70,7 @@ public partial class BillingFeatureTests {
     [Fact]
     public async Task GetBillingOverview_WithExpiredProviderTrial_DoesNotGrantPremium() {
         var user = User.Create("expired-provider-trial@example.com", "hash");
+        user.SetEmailConfirmed(isConfirmed: true);
         var subscription = BillingSubscription.CreatePending(
             user.Id,
             BillingProviderNames.Paddle,
@@ -157,6 +159,7 @@ public partial class BillingFeatureTests {
     [Fact]
     public async Task GetBillingOverview_WithBlankSubscriptionStatus_DoesNotGrantPaidPremium() {
         var user = User.Create("blank-status-overview@example.com", "hash");
+        user.SetEmailConfirmed(isConfirmed: true);
         BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.Paddle,
@@ -196,6 +199,7 @@ public partial class BillingFeatureTests {
         bool expectedPremium,
         bool expectedCanStartTrial) {
         var user = User.Create(string.Create(CultureInfo.InvariantCulture, $"overview-status-{status}-{periodEndOffsetDays ?? 0}@example.com"), "hash");
+        user.SetEmailConfirmed(isConfirmed: true);
         DateTime periodEnd = periodEndOffsetDays.HasValue ? Now.AddDays(periodEndOffsetDays.Value) : Now.AddDays(1);
         BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,

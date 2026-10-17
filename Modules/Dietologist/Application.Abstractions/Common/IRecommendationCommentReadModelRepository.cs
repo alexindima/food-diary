@@ -5,6 +5,10 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 namespace FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 
 public interface IRecommendationCommentReadModelRepository {
+    Task<RecommendationParticipantsReadModel?> GetParticipantsAsync(
+        RecommendationId recommendationId,
+        CancellationToken cancellationToken = default);
+
     Task<bool> IsParticipantAsync(
         RecommendationId recommendationId,
         UserId userId,

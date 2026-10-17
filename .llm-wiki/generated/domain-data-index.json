@@ -5848,14 +5848,14 @@
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(duration), \"Premium trial duration must be positive.\")",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 620
+      "line": 619
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Premium trial has already been used.\")",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 624
+      "line": 623
     },
     {
       "area": "FoodDiary",

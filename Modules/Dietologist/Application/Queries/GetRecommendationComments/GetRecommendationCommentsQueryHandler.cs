@@ -2,6 +2,7 @@ using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
 using FoodDiary.Modules.Dietologist.Application.Common.Validation;
+using FoodDiary.Modules.Dietologist.Application.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Dietologist.Application.Models;
@@ -14,6 +15,7 @@ namespace FoodDiary.Modules.Dietologist.Application.Queries.GetRecommendationCom
 
 public sealed class GetRecommendationCommentsQueryHandler(
     IRecommendationCommentReadModelRepository commentRepository,
+    IDietologistInvitationReadModelRepository invitationRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecommendationCommentsQuery, Result<PagedResponse<RecommendationCommentModel>>> {
     public async Task<Result<PagedResponse<RecommendationCommentModel>>> Handle(
@@ -36,10 +38,19 @@ public sealed class GetRecommendationCommentsQueryHandler(
             return Result.Failure<PagedResponse<RecommendationCommentModel>>(recommendationIdResult.Error);
         }
 
-        bool isParticipant = await commentRepository.IsParticipantAsync(
-            recommendationIdResult.Value, userId, cancellationToken).ConfigureAwait(false);
-        if (!isParticipant) {
+        RecommendationParticipantsReadModel? recommendation = await commentRepository.GetParticipantsAsync(
+            recommendationIdResult.Value, cancellationToken).ConfigureAwait(false);
+        if (recommendation is null ||
+            (recommendation.ClientUserId != userId && recommendation.DietologistUserId != userId)) {
             return Result.Failure<PagedResponse<RecommendationCommentModel>>(DietologistErrors.InvitationNotFound);
+        }
+
+        if (recommendation.ClientUserId != userId) {
+            Result<DietologistPermissionsModel> access = await DietologistAccessPolicy.EnsureCanAccessClientReadModelAsync(
+                invitationRepository, userId, recommendation.ClientUserId, cancellationToken).ConfigureAwait(false);
+            if (access.IsFailure) {
+                return Result.Failure<PagedResponse<RecommendationCommentModel>>(DietologistErrors.InvitationNotFound);
+            }
         }
 
         int page = PaginationPolicy.NormalizePage(query.Page);

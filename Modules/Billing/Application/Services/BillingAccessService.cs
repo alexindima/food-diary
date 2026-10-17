@@ -38,14 +38,18 @@ public sealed class BillingAccessService(
             subscription.MarkPremiumRoleManagedByBilling(value: true, nowUtc);
             await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
         } else {
-            if (!subscription.PremiumRoleManagedByBilling) {
-                return;
-            }
-
-            await billingUserContextService.Send(new RemoveUserPremiumRoleCommand(UserId: user.UserId), cancellationToken).ConfigureAwait(false);
-            subscription.MarkPremiumRoleManagedByBilling(value: false, nowUtc);
-            await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
+            await RevokeManagedPremiumRoleAsync(subscription, cancellationToken).ConfigureAwait(false);
         }
+    }
+
+    public async Task RevokeManagedPremiumRoleAsync(BillingSubscription subscription, CancellationToken cancellationToken) {
+        if (!subscription.PremiumRoleManagedByBilling) {
+            return;
+        }
+
+        await billingUserContextService.Send(new RemoveUserPremiumRoleCommand(UserId: subscription.UserId), cancellationToken).ConfigureAwait(false);
+        subscription.MarkPremiumRoleManagedByBilling(value: false, dateTimeProvider.GetUtcNow().UtcDateTime);
+        await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
     }
 
     public bool ShouldHavePremiumAccess(string status, DateTime? currentPeriodEndUtc) =>

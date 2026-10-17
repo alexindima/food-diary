@@ -51,7 +51,8 @@ public sealed class GetBillingOverviewQueryHandler(
         BillingPublicConfigModel publicConfig = billingPublicConfigProvider.GetPublicConfig();
         bool renewalEnabled = subscription?.NextBillingAttemptUtc is not null &&
             !subscription.CancelAtPeriodEnd;
-        bool canStartTrial = !hasPaidPremium && !paidSubscriptionActive && !hasUsedTrial;
+        bool canStartTrial = !hasPaidPremium && !paidSubscriptionActive && !hasUsedTrial &&
+            (string.IsNullOrWhiteSpace(userProfile.Email) || userProfile.IsEmailConfirmed);
 
         return Result.Success(new BillingOverviewModel(
             isPremium,

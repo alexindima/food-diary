@@ -398,6 +398,95 @@
       "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
       "previousEventHash": "0e46e2c4408b4bc59843a15d1d8abbbacc86fd20c74c883dcebccdc8b4e472b2",
       "eventHash": "aa39e32f84fb3fabe2657f294031bf51a575062588fe8a0bd9cbb13fe5e6e53b"
+    },
+    {
+      "schemaVersion": 2,
+      "eventId": "5b1cd24e971a4f14ad95cdeabddfbc80",
+      "workspace": ".artifacts/llm-wiki/tasks/security-fix4-20261017",
+      "recordedAtUtc": "2026-10-17T17:37:44.9505876Z",
+      "completionFingerprint": "eb23bf420390a42ef8b90367ad5a004947bb0b07151b38ea1595778f9bc45543",
+      "retrospectiveHash": "86ba5e919f4dd3a7c4e1293d57940ffa0b9a2fdf9d061734c9daf9812c835fe0",
+      "instructionSetFingerprint": "77ba82d6cdbff24fbaf46b3842419762a81c1b9248390e7d6f8f8cd2f9b22ed6",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "fingerprint": "997762017a8b9c43002f825cb93149d0e886a415264eea23de89be5b07595e7c"
+        },
+        {
+          "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
+          "fingerprint": "45a1642c88ee7e3624fbbd2cea4eaae888d3e7afd78bd60457853b182beba059"
+        },
+        {
+          "path": "Hosts/tests/AGENTS.md",
+          "fingerprint": "3430eb639acde7b34b2a978d180d7ec3236b8322793784d6392a2d6281afda5d"
+        },
+        {
+          "path": "Modules/Billing/AGENTS.md",
+          "fingerprint": "4c273631cf11f4f61f689adf302486348a895235e9ef91f9463d8341065c9ab6"
+        },
+        {
+          "path": "Modules/Billing/Application/AGENTS.md",
+          "fingerprint": "57560f937e1b7589e7bd552a0976a6ff65ea161d9a9b7effce65476f01169ea8"
+        },
+        {
+          "path": "Modules/Dietologist/AGENTS.md",
+          "fingerprint": "726c5fa09e76079714be862c74ff2fed7dbdd57427b8eb5f3f71a0bdb748ef84"
+        },
+        {
+          "path": "Modules/Dietologist/Application.Abstractions/AGENTS.md",
+          "fingerprint": "2d6b5c8cd5e9b33ef5ae1b9d96ba0207118dcc79bf0f6c2093cd7be64ebf17db"
+        },
+        {
+          "path": "Modules/Dietologist/Application/AGENTS.md",
+          "fingerprint": "3b69448372157f161b62c9ed1686bd95276fdff75d015384b55a28f73096bd3c"
+        },
+        {
+          "path": "Modules/Notifications/AGENTS.md",
+          "fingerprint": "c71492171d20f7835ca0638c14cecd5371afddbcb250f6e9fa69740ee8f75d0e"
+        },
+        {
+          "path": "Modules/Notifications/Infrastructure/AGENTS.md",
+          "fingerprint": "69f61a066d8308a11433486dd5f58319caa2e5288694eac29c2ba7d0cb73ceda"
+        },
+        {
+          "path": "Modules/Users/Application/AGENTS.md",
+          "fingerprint": "0da845f64568763e8a7a36e266c271e7a20fc53ba54182155e504fb00cdba427"
+        },
+        {
+          "path": "Modules/Users/Domain/AGENTS.md",
+          "fingerprint": "f66e238e0a53cc720a705cdd2f7dcc378bb8055bf79a9502ba37ee0575fcf636"
+        },
+        {
+          "path": "Modules/Users/tests/AGENTS.md",
+          "fingerprint": "fae0bdd325f30947aab0897ec69cf507afd35bd1e7affcba8c1a811125253c15"
+        },
+        {
+          "path": "Platform/tests/AGENTS.md",
+          "fingerprint": "c9d02dd67975643efed7054fb7ea1a0dcca9151f09fbf33b3bf41b96bd7ad575"
+        }
+      ],
+      "taskSignals": {
+        "riskLevel": "critical",
+        "complexityScore": 100,
+        "complexityBandUpperBound": 100,
+        "cohortKey": "critical|complexity<=100",
+        "modelRouteId": "frontier-deep",
+        "contextStrategyId": "default"
+      },
+      "outcome": {
+        "score": 68.75,
+        "quality": "good",
+        "readinessScore": 100.0,
+        "confidenceScore": 90.0,
+        "critiqueScore": 85.0,
+        "verificationScore": 0.0,
+        "repairAttempts": 0,
+        "falseNegativeCount": 0
+      },
+      "success": false,
+      "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
+      "previousEventHash": "aa39e32f84fb3fabe2657f294031bf51a575062588fe8a0bd9cbb13fe5e6e53b",
+      "eventHash": "5e268bbefc4784f0088bc9252efd9e769f198be37d9d897f1b11cac7a048c12d"
     }
   ]
 }

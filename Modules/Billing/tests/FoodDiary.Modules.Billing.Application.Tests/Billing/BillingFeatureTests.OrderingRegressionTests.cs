@@ -99,7 +99,7 @@ public partial class BillingFeatureTests {
             () => Assert.Equal(1, gateway.CreatePaymentCallCount),
             () => Assert.Equal(!deleted, user.HasRole(RoleNames.Premium)),
             () => Assert.Equal(!deleted, subscription.PremiumRoleManagedByBilling),
-            () => Assert.Equal(deleted ? 0 : 1, users.RoleMembershipWriteCount),
+            () => Assert.Equal(1, users.RoleMembershipWriteCount),
             () => Assert.Equal(deleted ? "canceled" : "active", subscription.Status));
         if (deleted) {
             Assert.Null(subscription.NextBillingAttemptUtc);

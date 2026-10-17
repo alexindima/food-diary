@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Application.Common;
 using FoodDiary.Modules.Users.Domain.Entities;
@@ -22,7 +23,11 @@ public sealed class StartUserPremiumTrialCommandHandler(IUserLookupRepository us
             return Result.Failure<UserBillingProfileModel>(error);
         }
 
-        user!.StartPremiumTrial(startedAtUtc, duration);
+        if (!string.IsNullOrWhiteSpace(user!.Email) && !user.IsEmailConfirmed) {
+            return Result.Failure<UserBillingProfileModel>(UserErrors.EmailRequired);
+        }
+
+        user.StartPremiumTrial(startedAtUtc, duration);
         await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
         return Result.Success(ToModel(user));
 

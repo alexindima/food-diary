@@ -8,6 +8,11 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 namespace FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Recommendations;
 
 internal sealed class RecommendationCommentRepository(DbSet<RecommendationComment> records, IRecommendationCommentReadModelRepository readModels) : IRecommendationCommentRepository {
+    public Task<RecommendationParticipantsReadModel?> GetParticipantsAsync(
+        RecommendationId recommendationId,
+        CancellationToken cancellationToken = default) =>
+        readModels.GetParticipantsAsync(recommendationId, cancellationToken);
+
     public Task<bool> IsParticipantAsync(RecommendationId recommendationId, UserId userId, CancellationToken cancellationToken = default) =>
         readModels.IsParticipantAsync(recommendationId, userId, cancellationToken);
 

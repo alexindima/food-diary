@@ -257,7 +257,7 @@ public sealed partial class SharedBillingContextIntegrationTests {
         return new BillingWebhookEventProcessor(provider.GetRequiredService<IBillingWebhookEventWriteRepository>(),
             provider.GetRequiredService<IBillingTransactionRunner>(), new BillingWebhookContextResolver(subscriptions, users, payments),
             new BillingWebhookSubscriptionWriter(subscriptions, TimeProvider.System), new BillingWebhookPaymentRecorder(payments),
-            new BillingWebhookPremiumRoleSyncer(subscriptions, new BillingAccessService(users, subscriptions, TimeProvider.System),
-                marketing, TimeProvider.System), TimeProvider.System);
+            new BillingWebhookPremiumRoleSyncer(new BillingAccessService(users, subscriptions, TimeProvider.System),
+                marketing), TimeProvider.System);
     }
 }

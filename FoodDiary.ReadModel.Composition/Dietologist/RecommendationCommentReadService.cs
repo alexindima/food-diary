@@ -9,6 +9,14 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.ReadModel.Composition.Dietologist;
 
 internal sealed class RecommendationCommentReadService(ICompositionReadContext context) : IRecommendationCommentReadModelRepository {
+    public Task<RecommendationParticipantsReadModel?> GetParticipantsAsync(
+        RecommendationId recommendationId,
+        CancellationToken cancellationToken = default) =>
+        context.Recommendations.AsNoTracking()
+            .Where(recommendation => recommendation.Id == recommendationId)
+            .Select(recommendation => new RecommendationParticipantsReadModel(recommendation.ClientUserId, recommendation.DietologistUserId))
+            .SingleOrDefaultAsync(cancellationToken);
+
     public async Task<(IReadOnlyList<RecommendationCommentReadModel> Items, int Total)> GetPageByRecommendationAsync(
         RecommendationId recommendationId, int page, int limit, CancellationToken cancellationToken = default) {
         int normalizedPage = Math.Clamp(page, 1, 10_000);

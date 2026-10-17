@@ -102,6 +102,7 @@ public sealed class UserBillingServiceTests {
     [Fact]
     public async Task StartPremiumTrialAsync_MutatesInsideUsersBoundaryAndPersists() {
         User user = CreateUser();
+        user.SetEmailConfirmed(isConfirmed: true);
         IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
         ISender service = CreateService(CreateReader(user), writer);
 
@@ -109,6 +110,35 @@ public sealed class UserBillingServiceTests {
 
         UserBillingProfileModel profile = ResultAssert.Success(result);
         Assert.Equal(Now.AddDays(7), profile.PremiumTrialEndsAtUtc);
+        await writer.Received(1).UpdateAsync(user, CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task StartPremiumTrialAsync_WhenEmailIsUnconfirmed_RejectsWithoutWriting() {
+        User user = CreateUser();
+        IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
+        ISender service = CreateService(CreateReader(user), writer);
+
+        Result<UserBillingProfileModel> result = await service.Send(
+            new StartUserPremiumTrialCommand(user.Id, Now, TimeSpan.FromDays(7)), CancellationToken.None);
+
+        ResultAssert.Failure(result, UserErrors.EmailRequired.Code);
+        Assert.Multiple(
+            () => Assert.Null(user.PremiumTrialStartedAtUtc),
+            () => Assert.Null(user.PremiumTrialEndsAtUtc));
+        await writer.DidNotReceiveWithAnyArgs().UpdateAsync(default!, default);
+    }
+
+    [Fact]
+    public async Task StartPremiumTrialAsync_WhenTelegramUserHasNoEmail_PreservesTrialAccess() {
+        var user = User.CreateTelegram(123456789, "inaccessible-password-hash");
+        IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
+        ISender service = CreateService(CreateReader(user), writer);
+
+        Result<UserBillingProfileModel> result = await service.Send(
+            new StartUserPremiumTrialCommand(user.Id, Now, TimeSpan.FromDays(7)), CancellationToken.None);
+
+        Assert.Equal(Now.AddDays(7), ResultAssert.Success(result).PremiumTrialEndsAtUtc);
         await writer.Received(1).UpdateAsync(user, CancellationToken.None);
     }
 

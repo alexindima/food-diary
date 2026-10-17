@@ -186,11 +186,13 @@ public sealed class RecommendationCommentHandlerTests {
             new(Guid.NewGuid(), recommendation.Id.Value, recommendation.DietologistUserId.Value, "Dietologist", null, "dietologist@example.com", "Second", DateTime.UtcNow),
         };
         IRecommendationCommentRepository comments = Substitute.For<IRecommendationCommentRepository>();
-        comments.IsParticipantAsync(recommendation.Id, clientId, Arg.Any<CancellationToken>()).Returns(returnThis: true);
+        comments.GetParticipantsAsync(recommendation.Id, Arg.Any<CancellationToken>())
+            .Returns(new RecommendationParticipantsReadModel(recommendation.ClientUserId, recommendation.DietologistUserId));
         comments.GetPageByRecommendationAsync(recommendation.Id, Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<(IReadOnlyList<RecommendationCommentReadModel> Items, int Total)>((expected, expected.Count)));
         var handler = new GetRecommendationCommentsQueryHandler(
             comments,
+            Substitute.For<IDietologistInvitationReadModelRepository>(),
             CreateCurrentUserAccess());
 
         Result<FoodDiary.Application.Contracts.Common.Models.PagedResponse<FoodDiary.Modules.Dietologist.Application.Models.RecommendationCommentModel>> result =
@@ -208,8 +210,12 @@ public sealed class RecommendationCommentHandlerTests {
     [Fact]
     public async Task GetRecommendationComments_WhenUserIsNotParticipant_ReturnsFailure() {
         var recommendation = Recommendation.Create(UserId.New(), UserId.New(), "Recommendation");
+        IRecommendationCommentRepository comments = Substitute.For<IRecommendationCommentRepository>();
+        comments.GetParticipantsAsync(recommendation.Id, Arg.Any<CancellationToken>())
+            .Returns(new RecommendationParticipantsReadModel(recommendation.ClientUserId, recommendation.DietologistUserId));
         var handler = new GetRecommendationCommentsQueryHandler(
-            Substitute.For<IRecommendationCommentRepository>(),
+            comments,
+            Substitute.For<IDietologistInvitationReadModelRepository>(),
             CreateCurrentUserAccess());
 
         Result<FoodDiary.Application.Contracts.Common.Models.PagedResponse<FoodDiary.Modules.Dietologist.Application.Models.RecommendationCommentModel>> result =

@@ -593,7 +593,6 @@ public sealed partial class User : AggregateRoot<UserId> {
     }
 
     public void RecordExternalRoleMembershipChange() {
-        EnsureNotDeleted();
         AdvanceSecurityVersion();
         SetModified();
     }

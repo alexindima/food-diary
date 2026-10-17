@@ -59,7 +59,10 @@ public static class ModuleRegistration {
             .Validate(WebPushOptions.HasValidConfiguration, "WebPush configuration is invalid.")
             .ValidateOnStart();
         services.AddTransient<WebPushEndpointValidationHandler>();
-        services.AddHttpClient<IWebPushClientAdapter, WebPushClientAdapter>(client => client.Timeout = TimeSpan.FromSeconds(30))
+        services.AddHttpClient<IWebPushClientAdapter, WebPushClientAdapter>(client => {
+            client.Timeout = TimeSpan.FromSeconds(30);
+            client.MaxResponseContentBufferSize = 64 * 1024;
+        })
             .RemoveAllLoggers()
             .ConfigurePrimaryHttpMessageHandler(WebPushSocketsHttpHandlerFactory.Create)
             .AddHttpMessageHandler<WebPushEndpointValidationHandler>();

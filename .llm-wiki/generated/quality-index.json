@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6635,
+    "productionFiles": 6636,
     "wikiToolFiles": 218,
     "wikiToolsWithoutTestReferences": 5,
     "criticalSymbols": 1006,
@@ -4426,11 +4426,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Dietologist/RecommendationCommentReadService.cs",
-      "nonBlankLines": 52,
+      "nonBlankLines": 59,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.04
+      "structuralRiskScore": 4.18
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Dietologist/RecommendationReadService.cs",
@@ -24898,11 +24898,11 @@
     },
     {
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
-      "nonBlankLines": 35,
+      "nonBlankLines": 31,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.7
+      "structuralRiskScore": 6.62
     },
     {
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookProcessingContext.cs",
@@ -24994,11 +24994,11 @@
     },
     {
       "path": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
-      "nonBlankLines": 75,
-      "decisionPoints": 7,
+      "nonBlankLines": 79,
+      "decisionPoints": 9,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14
+      "structuralRiskScore": 17.08
     },
     {
       "path": "Modules/Billing/Application/Common/BillingCurrentUserAccessResolver.cs",
@@ -25042,19 +25042,19 @@
     },
     {
       "path": "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQueryHandler.cs",
-      "nonBlankLines": 112,
-      "decisionPoints": 21,
+      "nonBlankLines": 113,
+      "decisionPoints": 23,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 35.74
+      "structuralRiskScore": 38.76
     },
     {
       "path": "Modules/Billing/Application/Services/BillingAccessService.cs",
-      "nonBlankLines": 46,
+      "nonBlankLines": 49,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.92
+      "structuralRiskScore": 9.98
     },
     {
       "path": "Modules/Billing/Contracts/Commands/ProcessBillingWebhookInbox/ProcessBillingWebhookInboxCommand.cs",
@@ -28874,11 +28874,11 @@
     },
     {
       "path": "Modules/Dietologist/Application.Abstractions/Common/IRecommendationCommentReadModelRepository.cs",
-      "nonBlankLines": 18,
+      "nonBlankLines": 21,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
+      "structuralRiskScore": 0.42
     },
     {
       "path": "Modules/Dietologist/Application.Abstractions/Common/IRecommendationCommentRepository.cs",
@@ -29007,6 +29007,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application.Abstractions/Models/RecommendationParticipantsReadModel.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
     },
     {
       "path": "Modules/Dietologist/Application.Abstractions/Models/RecommendationReadModel.cs",
@@ -29850,11 +29858,11 @@
     },
     {
       "path": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQueryHandler.cs",
-      "nonBlankLines": 58,
-      "decisionPoints": 3,
+      "nonBlankLines": 68,
+      "decisionPoints": 7,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.66
+      "structuralRiskScore": 13.86
     },
     {
       "path": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQueryValidator.cs",
@@ -30170,11 +30178,11 @@
     },
     {
       "path": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationCommentRepository.cs",
-      "nonBlankLines": 21,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
+      "structuralRiskScore": 0.5
     },
     {
       "path": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationRepository.cs",
@@ -41802,11 +41810,11 @@
     },
     {
       "path": "Modules/Notifications/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 65,
+      "nonBlankLines": 68,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.3
+      "structuralRiskScore": 1.36
     },
     {
       "path": "Modules/Notifications/Infrastructure/Options/WebPushOptions.cs",
@@ -46578,11 +46586,11 @@
     },
     {
       "path": "Modules/Users/Application/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommandHandler.cs",
-      "nonBlankLines": 36,
-      "decisionPoints": 1,
+      "nonBlankLines": 40,
+      "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.22
+      "structuralRiskScore": 7.3
     },
     {
       "path": "Modules/Users/Application/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommand.cs",
@@ -47946,11 +47954,11 @@
     },
     {
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "nonBlankLines": 544,
+      "nonBlankLines": 543,
       "decisionPoints": 39,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 69.38
+      "structuralRiskScore": 69.36
     },
     {
       "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
@@ -55709,9 +55717,10 @@
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs",
       "line": 20,
-      "testReferenceCount": 6,
+      "testReferenceCount": 7,
       "testReferences": [
         "Hosts/tests/FoodDiary.JobManager.Tests/JobsTests.cs",
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.AccessRevocationSecurityTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.OrderingRegressionTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalAndAccessServiceTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalSchedulingTests.cs",
@@ -56101,10 +56110,11 @@
       "name": "StartPremiumTrialCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
-      "line": 14,
-      "testReferenceCount": 1,
+      "line": 15,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.PortalAndTrialCommandTests.cs"
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.PortalAndTrialCommandTests.cs",
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TrialIdentitySecurityTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -56137,7 +56147,7 @@
       "name": "StartUserPremiumTrialCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommandHandler.cs",
-      "line": 12,
+      "line": 13,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserBillingServiceTests.cs",
@@ -58917,9 +58927,10 @@
       "role": "QueryHandler",
       "path": "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQueryHandler.cs",
       "line": 13,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.OverviewAndContextTests.cs",
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TrialIdentitySecurityTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
@@ -60043,9 +60054,10 @@
       "name": "GetRecommendationCommentsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQueryHandler.cs",
-      "line": 14,
-      "testReferenceCount": 2,
+      "line": 15,
+      "testReferenceCount": 3,
       "testReferences": [
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.CommentAccessSecurityTests.cs",
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistResidualCoverageTests.cs",
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/RecommendationCommentHandlerTests.cs"
       ],

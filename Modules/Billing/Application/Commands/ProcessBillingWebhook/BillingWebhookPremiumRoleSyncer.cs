@@ -1,6 +1,5 @@
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Marketing.Contracts.Commands.RecordPremiumConversion;
-using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Billing.Application.Services;
@@ -9,10 +8,8 @@ using FoodDiary.Modules.Billing.Domain.Entities;
 namespace FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;
 
 public sealed class BillingWebhookPremiumRoleSyncer(
-    IBillingSubscriptionWriteRepository billingSubscriptionRepository,
     BillingAccessService billingAccessService,
-    ISender marketingConversionRecorder,
-    TimeProvider dateTimeProvider) {
+    ISender marketingConversionRecorder) {
     public async Task SyncAsync(
         UserBillingProfileModel user,
         BillingSubscription subscription,
@@ -31,9 +28,8 @@ public sealed class BillingWebhookPremiumRoleSyncer(
             return;
         }
 
-        if (subscription.PremiumRoleManagedByBilling) {
-            subscription.MarkPremiumRoleManagedByBilling(value: false, dateTimeProvider.GetUtcNow().UtcDateTime);
-            await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
+        if (!shouldHavePremium) {
+            await billingAccessService.RevokeManagedPremiumRoleAsync(subscription, cancellationToken).ConfigureAwait(false);
         }
     }
 }

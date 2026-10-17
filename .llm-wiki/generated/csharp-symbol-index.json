@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4591,
-    "symbols": 4526,
+    "sourceFiles": 4592,
+    "symbols": 4527,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
       "class": 2335,
       "enum": 71,
       "interface": 414,
-      "record": 1565,
+      "record": 1566,
       "record struct": 141
     },
     "roles": {
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1865,
+      "Other": 1866,
       "Query": 301,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
@@ -6779,7 +6779,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "BillingWebhookProcessingContext",
@@ -6863,7 +6863,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "BillingCurrentUserAccessResolver",
@@ -10338,6 +10338,13 @@
       "line": 2
     },
     {
+      "name": "RecommendationParticipantsReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dietologist/Application.Abstractions/Models/RecommendationParticipantsReadModel.cs",
+      "line": 4
+    },
+    {
       "name": "RecommendationReadModel",
       "kind": "record",
       "role": "Other",
@@ -11070,7 +11077,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQueryHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "GetRecommendationCommentsQueryValidator",
@@ -25434,7 +25441,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommandHandler.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "UpdateDesiredWaistCommand",

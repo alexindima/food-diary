@@ -3,6 +3,9 @@ using System.Net.Http.Json;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
+using FoodDiary.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +33,7 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
             })).ConfigureLogging(logging => logging.AddProvider(diagnostics))
             .ConfigureServices(TelegramRecognitionProvider.Configure));
         using HttpClient client = app.CreateClient();
+        await CompleteTelegramCutoverForScenarioAsync(app);
         using HttpResponseMessage begin = await client.PostAsJsonAsync("/api/v1/auth/telegram/mini-app/begin", new { InitData = CreateInitData() });
         Assert.True(begin.StatusCode == HttpStatusCode.OK, begin.IsSuccessStatusCode ? null : await begin.Content.ReadAsStringAsync());
         using var intent = JsonDocument.Parse(await begin.Content.ReadAsStringAsync());
@@ -58,6 +62,15 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
         using HttpResponseMessage invalidOidc = await client.PostAsJsonAsync("/api/v1/auth/telegram/oidc/exchange", new { Code = "", State = "short" });
         Assert.Equal(HttpStatusCode.BadRequest, invalidOidc.StatusCode);
         await VerifyBackupEmailAsync(client, app, body.RootElement.GetProperty("user").GetProperty("id").GetGuid());
+    }
+
+    private static async Task CompleteTelegramCutoverForScenarioAsync(WebApplicationFactory<Program> app) {
+        // This isolated happy-path fixture starts after the migration quarantine.
+        await using AsyncServiceScope scope = app.Services.CreateAsyncScope();
+        FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        int updated = await context.Database.ExecuteSqlRawAsync(
+            "UPDATE \"TelegramAssertionPolicies\" SET \"NotBeforeUtc\" = date_trunc('second', clock_timestamp()) - INTERVAL '1 second' WHERE \"Id\" = 1");
+        Assert.Equal(1, updated);
     }
 
     private async Task VerifyBackupEmailAsync(HttpClient client, WebApplicationFactory<Program> app, Guid userId) {

@@ -83,6 +83,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 
 - [behavioral-or-text-match] `Hosts/tests/FoodDiary.JobManager.Tests/BillingRecoveryJobsTests.cs`
 - [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BillingSecurityIntegrationTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.AccessRevocationSecurityTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.BaselineRegressionTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutWebhookConsistencyTests.cs`
@@ -94,6 +95,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalConsistencyTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalMetadataTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalSchedulingTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TrialIdentitySecurityTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/NoopBillingCheckoutLock.cs`
@@ -109,8 +111,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingWebhookRetryBoundaryTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/Domain/BillingInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/Domain/BillingPaymentGuardTests.cs`
-- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Integrations/BillingProviderGatewayAccessorTests.cs`
-- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Integrations/BillingPublicConfigProviderTests.cs`
 
 ## Working Rule
 

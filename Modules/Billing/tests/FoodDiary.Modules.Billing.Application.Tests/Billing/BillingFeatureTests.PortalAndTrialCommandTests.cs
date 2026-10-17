@@ -149,6 +149,7 @@ public partial class BillingFeatureTests {
     [Fact]
     public async Task StartPremiumTrial_ForEligibleUser_SetsTrialAndReturnsTrialOverview() {
         var user = User.Create("trial@example.com", "hash");
+        user.SetEmailConfirmed(isConfirmed: true);
         var userRepository = new FakeUserRepository(user);
         var handler = new StartPremiumTrialCommandHandler(
             userRepository,
@@ -246,7 +247,8 @@ public partial class BillingFeatureTests {
             IsDeleted: false,
             HasPaidPremium: false,
             PremiumTrialStartedAtUtc: null,
-            PremiumTrialEndsAtUtc: null);
+            PremiumTrialEndsAtUtc: null,
+            IsEmailConfirmed: true);
         ISender userContextService = Substitute.For<ISender>();
         userContextService.Send(new CheckUserAccessQuery(UserId: userId), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Error?>(null));
@@ -306,6 +308,7 @@ public partial class BillingFeatureTests {
     [InlineData("canceled", 1)]
     public async Task StartPremiumTrial_WithInactivePaidSubscription_AllowsTrial(string status, int? periodEndOffsetDays) {
         var user = User.Create($"trial-inactive-{status}@example.com", "hash");
+        user.SetEmailConfirmed(isConfirmed: true);
         BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.Paddle,
@@ -337,6 +340,7 @@ public partial class BillingFeatureTests {
     [Fact]
     public async Task StartPremiumTrial_WithBlankSubscriptionStatus_AllowsTrial() {
         var user = User.Create("trial-blank-status@example.com", "hash");
+        user.SetEmailConfirmed(isConfirmed: true);
         BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.Paddle,

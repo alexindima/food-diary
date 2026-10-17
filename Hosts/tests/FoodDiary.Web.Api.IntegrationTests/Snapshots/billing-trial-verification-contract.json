@@ -1,0 +1,8 @@
+{
+  "unverifiedTrialStatus": 409,
+  "unverifiedError": "User.EmailRequired",
+  "unverifiedCanStartTrial": false,
+  "unverifiedTokenHasPremium": false,
+  "verifiedTrialStatus": 200,
+  "verifiedTokenHasPremium": true
+}

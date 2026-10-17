@@ -159,9 +159,7 @@ public sealed class RenewDueSubscriptionsCommandHandler(
                 BuildRenewalSkippedEventId(subscription, skippedAtUtc),
                 skippedAtUtc,
                 SerializeReason("Renewal skipped because subscription user is not accessible."));
-            if (subscription.PremiumRoleManagedByBilling) {
-                subscription.MarkPremiumRoleManagedByBilling(value: false, skippedAtUtc);
-            }
+            await billingAccessService.RevokeManagedPremiumRoleAsync(subscription, ct).ConfigureAwait(false);
 
             await billingSubscriptionRepository.UpdateAsync(subscription, ct).ConfigureAwait(false);
         }, cancellationToken).ConfigureAwait(false);
@@ -234,7 +232,7 @@ public sealed class RenewDueSubscriptionsCommandHandler(
                     BuildRenewalSkippedEventId(subscription, renewedAtUtc),
                     renewedAtUtc,
                     SerializeReason("User became inaccessible while the renewal payment was being processed."));
-                subscription.MarkPremiumRoleManagedByBilling(value: false, renewedAtUtc);
+                await billingAccessService.RevokeManagedPremiumRoleAsync(subscription, ct).ConfigureAwait(false);
                 await billingSubscriptionRepository.UpdateAsync(subscription, ct).ConfigureAwait(false);
                 return;
             }
@@ -346,15 +344,17 @@ public sealed class RenewDueSubscriptionsCommandHandler(
             await billingSubscriptionRepository.UpdateAsync(subscription, ct).ConfigureAwait(false);
 
             UserBillingProfileModel? failedRenewalUser = await billingUserContextService.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: subscription.UserId), ct).ConfigureAwait(false);
+            bool shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
+                subscription.Status,
+                subscription.CurrentPeriodEndUtc);
             if (failedRenewalUser is { IsActive: true, IsDeleted: false }) {
-                bool shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
-                    subscription.Status,
-                    subscription.CurrentPeriodEndUtc);
                 await billingAccessService.EnsurePremiumRoleAsync(
                     failedRenewalUser,
                     subscription,
                     shouldHavePremium,
                     ct).ConfigureAwait(false);
+            } else if (!shouldHavePremium) {
+                await billingAccessService.RevokeManagedPremiumRoleAsync(subscription, ct).ConfigureAwait(false);
             }
         }, cancellationToken).ConfigureAwait(false);
     }

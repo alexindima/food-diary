@@ -127,10 +127,8 @@ public partial class BillingFeatureTests {
         var subscriptionWriter = new BillingWebhookSubscriptionWriter(subscriptionRepository, dateTimeProvider);
         var paymentRecorder = new BillingWebhookPaymentRecorder(paymentRepository);
         var premiumRoleSyncer = new BillingWebhookPremiumRoleSyncer(
-            subscriptionRepository,
             billingAccessService,
-            marketingConversionRecorder ?? new NoOpMarketingConversionRecorder(),
-            dateTimeProvider);
+            marketingConversionRecorder ?? new NoOpMarketingConversionRecorder());
         var eventProcessor = new BillingWebhookEventProcessor(
             webhookEventRepository,
             new NoOpBillingTransactionRunner(),
@@ -340,11 +338,11 @@ public partial class BillingFeatureTests {
             RoleMembershipWriteCount++;
             User user = _users.Single(candidate => candidate.Id == userId);
             if (user.HasRole(RoleNames.Premium)) {
-                user.ReplaceRoles([
-                    .. user.UserRoles
-                        .Select(userRole => userRole.Role)
-                        .Where(role => !string.Equals(role.Name, RoleNames.Premium, StringComparison.Ordinal)),
-                ]);
+                // Simulate the Users-owned membership SQL, which also supports deleted accounts.
+                var memberships = (List<UserRole>)typeof(User)
+                    .GetField("_userRoles", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(user)!;
+                memberships.RemoveAll(membership => string.Equals(membership.Role.Name, RoleNames.Premium, StringComparison.Ordinal));
+                user.RecordExternalRoleMembershipChange();
             }
 
             return Task.CompletedTask;

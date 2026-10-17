@@ -10,6 +10,7 @@ using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Infrastructure;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
@@ -164,13 +165,16 @@ public sealed partial class SharedBillingContextIntegrationTests(PostgresDatabas
             amount: 10m, currency: "USD", currentPeriodStartUtc: null, currentPeriodEndUtc: null,
             webhookEventId: null, providerMetadataJson: null);
 
-    private static ServiceProvider CreateProvider(FoodDiaryDbContext context) {
+    private static ServiceProvider CreateProvider(FoodDiaryDbContext context, bool includeUsers = false) {
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().Build()).AddOutboxProcessing(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();
         services.AddBillingModule();
+        if (includeUsers) {
+            services.AddUsersPersistence();
+        }
         return services.BuildServiceProvider();
     }
 

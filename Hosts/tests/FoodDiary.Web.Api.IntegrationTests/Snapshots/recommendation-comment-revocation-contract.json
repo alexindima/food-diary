@@ -1,0 +1,7 @@
+{
+  "connectedReadStatus": 200,
+  "disconnectStatus": 204,
+  "formerProviderReadStatus": 404,
+  "error": "Dietologist.InvitationNotFound",
+  "clientReadStatus": 200
+}

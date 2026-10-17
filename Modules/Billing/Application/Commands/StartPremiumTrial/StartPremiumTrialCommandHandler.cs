@@ -4,6 +4,7 @@ using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Results;
 using FoodDiary.Modules.Billing.Application.Common;
 using FoodDiary.Modules.Billing.Application.Models;
@@ -45,6 +46,10 @@ public sealed class StartPremiumTrialCommandHandler(
 
         if (user.PremiumTrialStartedAtUtc is not null || user.PremiumTrialEndsAtUtc is not null) {
             return Result.Failure<BillingOverviewModel>(BillingErrors.TrialAlreadyUsed);
+        }
+
+        if (!string.IsNullOrWhiteSpace(user.Email) && !user.IsEmailConfirmed) {
+            return Result.Failure<BillingOverviewModel>(UserErrors.EmailRequired);
         }
 
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;

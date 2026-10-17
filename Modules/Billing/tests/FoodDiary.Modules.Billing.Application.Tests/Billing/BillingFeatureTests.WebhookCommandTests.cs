@@ -114,10 +114,8 @@ public partial class BillingFeatureTests {
             new BillingWebhookSubscriptionWriter(subscriptionRepository, dateTimeProvider),
             new BillingWebhookPaymentRecorder(paymentRepository),
             new BillingWebhookPremiumRoleSyncer(
-                subscriptionRepository,
                 new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider),
-                new NoOpMarketingConversionRecorder(),
-                dateTimeProvider),
+                new NoOpMarketingConversionRecorder()),
             dateTimeProvider);
         ProcessQueuedBillingWebhookCommandHandler service = CreateInboxHandler(
             repository,
@@ -193,10 +191,8 @@ public partial class BillingFeatureTests {
             new BillingWebhookSubscriptionWriter(subscriptionRepository, dateTimeProvider),
             new BillingWebhookPaymentRecorder(paymentRepository),
             new BillingWebhookPremiumRoleSyncer(
-                subscriptionRepository,
                 billingAccessService,
-                new NoOpMarketingConversionRecorder(),
-                dateTimeProvider),
+                new NoOpMarketingConversionRecorder()),
             dateTimeProvider);
         ProcessQueuedBillingWebhookCommandHandler handler = CreateInboxHandler(
             webhookEventRepository,
@@ -299,10 +295,8 @@ public partial class BillingFeatureTests {
             new BillingWebhookSubscriptionWriter(subscriptionRepository, dateTimeProvider),
             new BillingWebhookPaymentRecorder(paymentRepository),
             new BillingWebhookPremiumRoleSyncer(
-                subscriptionRepository,
                 new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider),
-                new NoOpMarketingConversionRecorder(),
-                dateTimeProvider),
+                new NoOpMarketingConversionRecorder()),
             dateTimeProvider);
         ProcessQueuedBillingWebhookCommandHandler handler = CreateInboxHandler(
             webhookEventRepository,
@@ -739,10 +733,8 @@ public partial class BillingFeatureTests {
             new BillingWebhookSubscriptionWriter(subscriptionRepository, dateTimeProvider),
             new BillingWebhookPaymentRecorder(paymentRepository),
             new BillingWebhookPremiumRoleSyncer(
-                subscriptionRepository,
                 new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider),
-                new NoOpMarketingConversionRecorder(),
-                dateTimeProvider),
+                new NoOpMarketingConversionRecorder()),
             dateTimeProvider);
         BillingWebhookEventModel webhookEvent = CreateWebhookPaymentEvent(user, "evt_serialized", "sub_serialized") with {
             ExternalPaymentMethodId = "pm_stable",
@@ -895,10 +887,8 @@ public partial class BillingFeatureTests {
             new BillingWebhookSubscriptionWriter(subscriptionRepository, dateTimeProvider),
             new BillingWebhookPaymentRecorder(paymentRepository),
             new BillingWebhookPremiumRoleSyncer(
-                subscriptionRepository,
                 new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider),
-                new NoOpMarketingConversionRecorder(),
-                dateTimeProvider),
+                new NoOpMarketingConversionRecorder()),
             dateTimeProvider);
 
         Result result = await processor.ProcessAsync(

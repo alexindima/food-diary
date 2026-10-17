@@ -125,6 +125,31 @@ public sealed class UserRoleMembershipServiceTests {
             () => Assert.Equal(2, context.Roles.Count()));
     }
 
+    [Fact]
+    public async Task RemoveRoleAsync_WithDeletedUser_RemovesMembershipAndInvalidatesRestoredCredentials() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var role = Role.Create(RoleNames.Premium);
+        User user = CreateUser();
+        user.ReplaceRoles([role]);
+        user.DeleteAccount(DateTime.UtcNow);
+        context.Roles.Add(role);
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        long before = user.SecurityVersion;
+        var service = new UserRoleMembershipService(context.Database, context.Users, context.Roles, context.UserRoles);
+
+        await service.RemoveRoleAsync(user.Id, RoleNames.Premium, CancellationToken.None);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        User restored = await context.Users.Include(candidate => candidate.UserRoles).ThenInclude(membership => membership.Role)
+            .SingleAsync(candidate => candidate.Id == user.Id);
+        restored.Restore(DateTime.UtcNow);
+
+        Assert.Multiple(
+            () => Assert.False(restored.HasRole(RoleNames.Premium)),
+            () => Assert.Equal(before + 2, restored.SecurityVersion));
+    }
+
     private static FoodDiaryDbContext CreateContext() {
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
