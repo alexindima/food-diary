@@ -95,6 +95,16 @@ public sealed class TelegramBotWorker(
     }
 
     private async Task PersistOrHandleUpdateAsync(Update update, CancellationToken cancellationToken) {
+        try {
+            await PersistOrHandleUpdateCoreAsync(update, cancellationToken).ConfigureAwait(false);
+        } catch (ApiRequestException error) when (error.ErrorCode == 403) {
+            // A permanently rejected Telegram reply must not hold the shared intake offset.
+            // Backend registration failures use BotOperationApiException and still propagate.
+            logger.LogInformation("Telegram rejected an intake reply with {ErrorCode}; continuing with the next update.", error.ErrorCode);
+        }
+    }
+
+    private async Task PersistOrHandleUpdateCoreAsync(Update update, CancellationToken cancellationToken) {
         BotIncomingOperation? operation = null;
         if (update.Message is { Chat.Type: ChatType.Private, From: { IsBot: false } sender } message && message.Chat.Id == sender.Id) {
             TelegramImageSelection? image = TelegramImageSelector.Select(message, out _);
@@ -139,11 +149,7 @@ public sealed class TelegramBotWorker(
             // The durable update belongs to a different binding or payload; do not replay it under a new account.
         }
         if (operation.CallbackId is { } callbackId) {
-            try {
-                await botClient.AnswerCallbackQuery(callbackId, cancellationToken: cancellationToken).ConfigureAwait(false);
-            } catch (ApiRequestException error) when (error.ErrorCode == 400) {
-                // A durable replay may outlive Telegram's callback acknowledgement window.
-            }
+            await AnswerCallbackAsync(callbackId, message: null, cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -246,13 +252,13 @@ public sealed class TelegramBotWorker(
         if (callbackQuery.Data.StartsWith("water:", StringComparison.Ordinal)) {
             bool russian = BotMenu.IsRussian(callbackQuery.From.LanguageCode);
             if (!BotInputParser.TryParseWaterAmount(callbackQuery.Data, out int amountMl)) {
-                await AnswerCallbackAsync(callbackQuery, russian ? "Некорректный объём." : "Invalid amount.", cancellationToken).ConfigureAwait(false);
+                await AnswerCallbackAsync(callbackQuery.Id, russian ? "Некорректный объём." : "Invalid amount.", cancellationToken).ConfigureAwait(false);
                 return;
             }
 
             string? accessToken = await TryGetAccessTokenAsync(callbackQuery.From.Id, cancellationToken).ConfigureAwait(false);
             if (accessToken is null) {
-                await AnswerCallbackAsync(callbackQuery, russian ? "Откройте FoodDiary и войдите в аккаунт." : "Please open the WebApp and log in once.", cancellationToken).ConfigureAwait(false);
+                await AnswerCallbackAsync(callbackQuery.Id, russian ? "Откройте FoodDiary и войдите в аккаунт." : "Please open the WebApp and log in once.", cancellationToken).ConfigureAwait(false);
                 return;
             }
 
@@ -262,7 +268,7 @@ public sealed class TelegramBotWorker(
                 notice = russian ? string.Create(CultureInfo.InvariantCulture, $"Добавлено {amountMl} мл.")
                     : string.Create(CultureInfo.InvariantCulture, $"Added {amountMl} ml.");
             }
-            await AnswerCallbackAsync(callbackQuery, notice, cancellationToken).ConfigureAwait(false);
+            await AnswerCallbackAsync(callbackQuery.Id, notice, cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -279,14 +285,15 @@ public sealed class TelegramBotWorker(
         } else {
             await SendHelpAsync(chatId, language, cancellationToken).ConfigureAwait(false);
         }
-        await botClient.AnswerCallbackQuery(callback.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
+        await AnswerCallbackAsync(callback.Id, message: null, cancellationToken).ConfigureAwait(false);
     }
 
-    private Task AnswerCallbackAsync(CallbackQuery callbackQuery, string message, CancellationToken cancellationToken) {
-        return botClient.AnswerCallbackQuery(
-            callbackQuery.Id,
-            message,
-            cancellationToken: cancellationToken);
+    private async Task AnswerCallbackAsync(string callbackId, string? message, CancellationToken cancellationToken) {
+        try {
+            await botClient.AnswerCallbackQuery(callbackId, message, cancellationToken: cancellationToken).ConfigureAwait(false);
+        } catch (ApiRequestException error) when (error.ErrorCode == 400) {
+            // Expired callbacks are terminal for every reply path, including menus and invalid input.
+        }
     }
 
     private async Task<bool> IsLinkedAsync(long? telegramUserId, CancellationToken cancellationToken) {
