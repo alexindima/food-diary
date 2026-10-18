@@ -16,7 +16,8 @@ internal static class OutboxMessageClaimer {
         DateTime nowUtc,
         TimeSpan leaseDuration,
         IQueryable<TMessage>? claimedQuery = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        IReadOnlyCollection<Guid>? allowedMessageIds = null)
         where TMessage : class, IOutboxMessage {
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(leaseDuration, TimeSpan.Zero);
 
@@ -31,7 +32,7 @@ internal static class OutboxMessageClaimer {
 
         if (!context.Database.IsRelational()) {
             OutboxClaimBatch<TMessage> claim = await ClaimDueWithTrackedEntitiesAsync(
-                claimedQuery ?? messages,
+                allowedMessageIds is null ? claimedQuery ?? messages : (claimedQuery ?? messages).Where(message => allowedMessageIds.Contains(EF.Property<Guid>(message, "Id"))),
                 batchSize,
                 nowUtc,
                 lockedUntilUtc,
@@ -50,7 +51,7 @@ internal static class OutboxMessageClaimer {
             lockedUntilUtc,
             workerId,
             claimedQuery,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken, allowedMessageIds).ConfigureAwait(false);
     }
 
     private static void EnsureCleanEntry(DbContext context) {
@@ -75,7 +76,8 @@ internal static class OutboxMessageClaimer {
         DateTime lockedUntilUtc,
         string workerId,
         IQueryable<TMessage>? claimedQuery,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IReadOnlyCollection<Guid>? allowedMessageIds)
         where TMessage : class, IOutboxMessage {
         IExecutionStrategy strategy = context.Database.CreateExecutionStrategy();
         int reclaimedCount = await strategy.ExecuteAsync(() => ExecuteClaimTransactionAsync(
@@ -85,7 +87,7 @@ internal static class OutboxMessageClaimer {
             nowUtc,
             lockedUntilUtc,
             workerId,
-            cancellationToken)).ConfigureAwait(false);
+            cancellationToken, allowedMessageIds)).ConfigureAwait(false);
 
         if (reclaimedCount < 0) {
             return new OutboxClaimBatch<TMessage>([], ReclaimedCount: 0);
@@ -107,7 +109,8 @@ internal static class OutboxMessageClaimer {
         DateTime nowUtc,
         DateTime lockedUntilUtc,
         string workerId,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken,
+        IReadOnlyCollection<Guid>? allowedMessageIds) {
         IDbContextTransaction transaction = await context.Database
             .BeginTransactionAsync(cancellationToken)
             .ConfigureAwait(false);
@@ -122,12 +125,15 @@ internal static class OutboxMessageClaimer {
                       AND "DeadLetteredOnUtc" IS NULL
                       AND "NextAttemptOnUtc" <= @nowUtc
                       AND ("LockedUntilUtc" IS NULL OR "LockedUntilUtc" <= @nowUtc)
+                      AND (@scopeAll OR "Id" = ANY(@allowedIds))
                     ORDER BY "CreatedOnUtc"
                     LIMIT @batchSize
                     FOR UPDATE SKIP LOCKED
                     """,
                     new NpgsqlParameter<DateTime>("nowUtc", nowUtc),
-                    new NpgsqlParameter<int>("batchSize", batchSize))
+                    new NpgsqlParameter<int>("batchSize", batchSize),
+                    new NpgsqlParameter<bool>("scopeAll", allowedMessageIds is null),
+                    new NpgsqlParameter<Guid[]>("allowedIds", allowedMessageIds is null ? [] : [.. allowedMessageIds]))
                 .ToListAsync(cancellationToken)
                 .ConfigureAwait(false);
 #pragma warning restore EF1002

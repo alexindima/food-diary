@@ -13,6 +13,30 @@ namespace FoodDiary.Modules.Recipes.Application.Tests;
 [ExcludeFromCodeCoverage]
 public class UpdateRecipeCommandValidatorTests {
     [Theory]
+    [InlineData(true, false, null, 15, true)]
+    [InlineData(false, true, 0, null, true)]
+    [InlineData(true, true, null, null, true)]
+    [InlineData(false, false, null, null, true)]
+    [InlineData(true, false, 0, 15, false)]
+    [InlineData(false, true, 12, 15, false)]
+    public async Task ValidateAsync_TimingClear_RejectsOnlyConflictingValues(
+        bool clearPrep, bool clearCook, int? prep, int? cook, bool valid) {
+        UpdateRecipeCommand command = CreateCommand(Guid.NewGuid(), RecipeId.New(), [CreateStep(1, "Step")]) with {
+            PrepTime = prep,
+            CookTime = cook,
+            ClearPrepTime = clearPrep,
+            ClearCookTime = clearCook,
+        };
+
+        ValidationResult result = await new UpdateRecipeCommandValidator().ValidateAsync(command);
+
+        Assert.Equal(valid, result.IsValid);
+        if (!valid) {
+            Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Validation.Invalid", StringComparison.Ordinal));
+        }
+    }
+
+    [Theory]
     [InlineData("Salt", null, true)]
     [InlineData("Tomatoes", "2 pieces", true)]
     [InlineData("", "to taste", false)]

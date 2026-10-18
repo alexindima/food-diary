@@ -141,3 +141,15 @@ export const NutritionGroup: Story = {
         `,
     }),
 };
+
+export const NarrowNutritionGroup: Story = {
+    render: () => ({
+        template: `
+            <div style="width: 20rem; max-width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr)); gap: var(--fd-space-sm);">
+                <fd-ui-nutrient-input label="C" icon="grain" [value]="38.75" unitLabel="g" [readonly]="true" />
+                <fd-ui-nutrient-input label="Клетчатка" icon="spa" [value]="2.5" unitLabel="г" [readonly]="true" />
+                <fd-ui-nutrient-input label="Alcohol" icon="wine_bar" [value]="1234.56" unitLabel="g" />
+            </div>
+        `,
+    }),
+};

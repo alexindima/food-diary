@@ -24,6 +24,8 @@ public sealed record UpdateRecipeHttpRequest(
     double? ManualFiber,
     double? ManualAlcohol,
     IReadOnlyList<RecipeStepHttpRequest>? Steps) {
+    public bool ClearPrepTime { get; init; }
+    public bool ClearCookTime { get; init; }
     public bool LanguageConfirmed { get; init; }
     public string? Language { get; init; }
     public IReadOnlyList<Guid>? ImageAssetIds { get; init; }

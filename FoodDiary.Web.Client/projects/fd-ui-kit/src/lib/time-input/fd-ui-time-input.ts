@@ -1,3 +1,4 @@
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import {
@@ -30,7 +31,7 @@ let uniqueId = 0;
 
 @Component({
     selector: 'fd-ui-time-input',
-    imports: [CommonModule, CdkOverlayOrigin, CdkConnectedOverlay, FdUiIconComponent],
+    imports: [CommonModule, CdkOverlayOrigin, CdkConnectedOverlay, CdkTrapFocus, FdUiIconComponent],
     templateUrl: './fd-ui-time-input.html',
     styleUrls: ['./fd-ui-time-input.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -98,6 +99,11 @@ export class FdUiTimeInputComponent implements FormValueControl<string | null> {
     protected readonly placeholderAttribute = computed(() => (this.shouldShowPlaceholder() ? (this.placeholder() ?? 'HH:mm') : null));
     protected readonly selectedHour = computed(() => this.parseTime(this.internalValue())?.hours ?? 0);
     protected readonly selectedMinute = computed(() => this.parseTime(this.internalValue())?.minutes ?? 0);
+    protected readonly pickerAccessibleName = computed(
+        () =>
+            [this.pickerAriaLabel(), this.label()].find(label => label !== undefined && label.trim().length > 0)?.trim() ??
+            `${this.hoursLabel()}, ${this.minutesLabel()}`,
+    );
 
     protected onInput(value: string): void {
         if (this.disabled()) {

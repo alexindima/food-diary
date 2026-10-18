@@ -354,6 +354,55 @@ describe('CycleTrackingFacade current cycle', () => {
     });
 });
 
+describe('CycleTrackingFacade creation recovery', () => {
+    it('keeps entered preferences after a creation failure and clears the error on retry', async () => {
+        facade.startCycleModel.update(value => ({
+            ...value,
+            trackingStartDate: calendarDate('2026-04-03'),
+            cycleTrackingConsentGranted: true,
+            nutritionInsightsConsentGranted: true,
+        }));
+        const entered = facade.startCycleModel();
+        const created = createCycleResponse();
+        cyclesService.create.mockReturnValueOnce(throwError(() => new Error('unavailable'))).mockReturnValueOnce(of(created));
+
+        await submit(facade.startCycleForm);
+
+        expect(facade.createError()).toBe('CYCLE_TRACKING.CREATE_CYCLE_FAILED');
+        expect(facade.startCycleModel()).toEqual(entered);
+        expect(facade.cycle()).toBeNull();
+        expect(facade.isSavingCycle()).toBe(false);
+        expect(cyclesService.getNutritionSummary).not.toHaveBeenCalled();
+
+        await submit(facade.startCycleForm);
+
+        expect(cyclesService.create).toHaveBeenCalledTimes(2);
+        expect(cyclesService.create.mock.calls[1]).toEqual(cyclesService.create.mock.calls[0]);
+        expect(facade.createError()).toBeNull();
+        expect(facade.cycle()).toEqual(created);
+        expect(facade.isSavingCycle()).toBe(false);
+    });
+
+    it('ignores repeated creation while the first request is pending', async () => {
+        const pending = new Subject<CycleResponse>();
+        cyclesService.create.mockReturnValue(pending);
+        facade.startCycleModel.update(value => ({ ...value, cycleTrackingConsentGranted: true }));
+
+        facade.startCycle();
+        facade.startCycle();
+
+        expect(cyclesService.create).toHaveBeenCalledOnce();
+        expect(facade.isSavingCycle()).toBe(true);
+        pending.next(createCycleResponse());
+        pending.complete();
+        await vi.waitFor(() => {
+            expect(facade.isSavingCycle()).toBe(false);
+        });
+        expect(facade.createError()).toBeNull();
+        expect(facade.cycle()?.id).toBe('cycle-1');
+    });
+});
+
 describe('CycleTrackingFacade day saving', () => {
     it('upserts a day and merges it into the current profile', async () => {
         facade.initialize();

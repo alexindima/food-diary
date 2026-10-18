@@ -3,6 +3,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
+import { connectMeasurementDevelopment } from '../../../../shared/development/measurement-development';
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { WaistHistoryFormCardComponent } from '../../components/waist-history-form-card/waist-history-form-card';
 import { WaistHistoryFacade } from '../../lib/waist-history.facade';
 
@@ -23,6 +25,31 @@ export class WaistHistoryEntryDialogComponent {
     protected readonly error = this.facade.entryError;
 
     public constructor() {
+        const measurements = inject(MeasurementSystemService);
+        connectMeasurementDevelopment({
+            kind: 'waist',
+            close: () => {
+                this.close();
+            },
+            read: () => ({
+                date: this.facade.formModel().date,
+                value: this.facade.formModel().circumference,
+                unit: measurements.system() === 'metric' ? 'cm' : 'in',
+                valid: this.form().valid(),
+                loading: this.isSaving(),
+                editing: this.isEditing(),
+                error: this.error(),
+            }),
+            dirty: () => this.form().dirty(),
+            fill: (date, value) => {
+                this.facade.formModel.set({ date, circumference: value });
+                this.form().markAsDirty();
+            },
+            clear: () => {
+                this.form().reset({ date: this.facade.formModel().date, circumference: '' });
+            },
+        });
+        this.facade.entryError.set(null);
         effect(() => {
             this.dialogRef.disableClose = this.isSaving();
         });

@@ -16,6 +16,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { containedPath, repositoryRoot } from "./generate-feature.mjs";
 import { probeRenderedRuntime } from "./task-runtime-browser.mjs";
 import { recordBuildScope, requireDiskBudget } from "./resource-budget.mjs";
+import { prepareTaskFrontendWorkspace } from "./task-frontend-workspace.mjs";
 
 const images = {
     postgres:
@@ -61,6 +62,7 @@ export function sourceFingerprint(root = repositoryRoot) {
         "Shared",
         "FoodDiary.Web.Client/src/app",
         "FoodDiary.Web.Client/src/environments",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src",
         "FoodDiary.Web.Client/angular.json",
         "FoodDiary.Web.Client/package.json",
         "FoodDiary.Web.Client/package-lock.json",
@@ -68,6 +70,8 @@ export function sourceFingerprint(root = repositoryRoot) {
         "Directory.Build.targets",
         "Directory.Packages.props",
         "scripts/ai/task-runtime.mjs",
+        "scripts/ai/task-frontend-workspace.mjs",
+        "scripts/ai/task-frontend-identity.mjs",
         "scripts/ai/task-runtime-browser.mjs",
         "scripts/ai/resource-budget.mjs",
         "scripts/ai/runtime-diagnostics.mjs",
@@ -203,6 +207,7 @@ export async function listRuntimes(root = repositoryRoot, options = {}) {
                 };
                 const frontendUrl = localUrl(state.frontendUrl);
                 const apiUrl = localUrl(state.apiUrl);
+                const adminUrl = localUrl(state.adminUrl);
                 const owners = state.processes ?? [];
                 const ownedProcessesAlive =
                     owners.length > 0 &&
@@ -263,6 +268,7 @@ export async function listRuntimes(root = repositoryRoot, options = {}) {
                               : state.status,
                     frontendUrl,
                     apiUrl,
+                    adminUrl,
                     ownedProcessesAlive,
                     frontendResponding,
                     apiReady,
@@ -760,16 +766,19 @@ export async function startRuntime(name, root = repositoryRoot) {
         };
         console.log("Building frontend and starting its task-owned API proxy");
         const client = join(root, "FoodDiary.Web.Client");
+        const workspace = prepareTaskFrontendWorkspace(root, directory, { frontendUrl: configuration.frontendUrl });
+        state.frontendWorkspace = workspace;
         await loggedCommand(
             process.execPath,
             [
                 join(client, "node_modules/@angular/cli/bin/ng.js"),
                 "build",
+                "food-diary-web-client",
                 "--configuration=task",
                 "--output-path",
                 join(directory, "frontend-build"),
             ],
-            client,
+            workspace,
             env,
             join(directory, "frontend-build.log"),
         );
@@ -786,17 +795,19 @@ export async function startRuntime(name, root = repositoryRoot) {
             [
                 join(client, "node_modules/@angular/cli/bin/ng.js"),
                 "serve",
+                "food-diary-web-client",
                 "--configuration=task",
                 "--host=127.0.0.1",
                 `--port=${state.ports.frontend}`,
                 "--proxy-config",
                 join(directory, "proxy.json"),
             ],
-            client,
+            workspace,
             env,
             join(directory, "frontend.log"),
         );
         state.processes.push({ role: "frontend", ...frontend });
+        ensureFrontendIdentity(state, root, directory);
         persist();
         await waitUntil(
             "Frontend",
@@ -858,6 +869,178 @@ export async function startRuntime(name, root = repositoryRoot) {
     }
 }
 
+/** Add the admin UI to one existing owned runtime, retaining its API and data. */
+function ensureFrontendIdentity(state, root, directory) {
+    const existing = state.processes.find(owner => owner.role === "frontend-identity");
+    if (existing) {
+        if (processIdentity(existing.pid) !== existing.identity) throw new Error("Frontend identity watcher needs owned runtime recovery");
+        return;
+    }
+    state.processes.push({ role: "frontend-identity", ...background(process.execPath, [join(root, "scripts/ai/task-frontend-identity.mjs"), "watch", directory], root, process.env, join(directory, "frontend-identity.log")) });
+}
+
+export async function startAdminRuntime(name, root = repositoryRoot) {
+    root = resolve(root);
+    const directory = runtimeDirectory(name, root);
+    const statePath = join(directory, "runtime.json");
+    const state = JSON.parse(readFileSync(statePath, "utf8"));
+    if (resolve(state.checkout) !== root || state.status !== "ready")
+        throw new Error(
+            "Admin requires a ready runtime belonging to this checkout",
+        );
+    const frontend = state.processes.find((owner) => owner.role === "frontend");
+    if (!frontend || processIdentity(frontend.pid) !== frontend.identity)
+        throw new Error(
+            "Owned frontend process is unavailable or its PID was reused",
+        );
+    const admin = state.processes.find((owner) => owner.role === "admin");
+    if (
+        admin &&
+        processIdentity(admin.pid) === admin.identity &&
+        (
+            await fetch(state.adminUrl, {
+                signal: AbortSignal.timeout(3000),
+                redirect: "error",
+            })
+        ).ok
+    ) {
+        if (state.frontendWorkspace === join(directory, "frontend-workspace")) {
+            prepareTaskFrontendWorkspace(root, directory, { frontendUrl: state.frontendUrl, adminUrl: state.adminUrl });
+            ensureFrontendIdentity(state, root, directory);
+            save(statePath, state);
+        }
+        return state;
+    }
+    if (admin)
+        throw new Error("Recorded admin process needs owned runtime recovery");
+    const lockPath = join(directory, "admin-start.lock");
+    const lock = openSync(lockPath, "wx", 0o600);
+    const client = join(root, "FoodDiary.Web.Client");
+    const previousWorkspace = state.frontendWorkspace ?? client;
+    const previousOwner = { ...frontend };
+    const created = [];
+    let frontendStopped = false;
+    const serve = (project, workspace, port, logPath) =>
+        background(
+            process.execPath,
+            [
+                join(client, "node_modules/@angular/cli/bin/ng.js"),
+                "serve",
+                project,
+                "--configuration=task",
+                "--host=127.0.0.1",
+                `--port=${port}`,
+                "--proxy-config",
+                join(directory, "proxy.json"),
+            ],
+            workspace,
+            process.env,
+            logPath,
+        );
+    try {
+        const [adminPort] = await freePorts(1);
+        const adminUrl = `http://127.0.0.1:${adminPort}`;
+        const workspace = prepareTaskFrontendWorkspace(root, directory, {
+            frontendUrl: state.frontendUrl,
+            adminUrl,
+        });
+        for (const project of ["food-diary-web-client", "fooddiary-admin"]) {
+            console.log(`Building task-owned ${project}`);
+            await loggedCommand(
+                process.execPath,
+                [
+                    join(client, "node_modules/@angular/cli/bin/ng.js"),
+                    "build",
+                    project,
+                    "--configuration=task",
+                ],
+                workspace,
+                process.env,
+                join(directory, `${project}-admin-start-build.log`),
+            );
+        }
+        const adminOwner = {
+            role: "admin",
+            ...serve(
+                "fooddiary-admin",
+                workspace,
+                adminPort,
+                join(directory, "admin.log"),
+            ),
+        };
+        created.push(adminOwner);
+        state.processes.push(adminOwner);
+        state.adminUrl = adminUrl;
+        state.ports.admin = adminPort;
+        state.admin = { status: "starting", browserSso: "unverified" };
+        save(statePath, state);
+        await waitUntil(
+            "Admin frontend",
+            async () =>
+                (
+                    await fetch(adminUrl, {
+                        signal: AbortSignal.timeout(3000),
+                        redirect: "error",
+                    })
+                ).ok,
+            180_000,
+        );
+        stopOwnedProcess(previousOwner);
+        frontendStopped = true;
+        const replacement = serve(
+            "food-diary-web-client",
+            workspace,
+            state.ports.frontend,
+            frontend.logPath,
+        );
+        created.push(replacement);
+        Object.assign(frontend, replacement);
+        state.frontendWorkspace = workspace;
+        save(statePath, state);
+        await waitUntil(
+            "Client with admin launcher",
+            async () =>
+                (
+                    await fetch(state.frontendUrl, {
+                        signal: AbortSignal.timeout(3000),
+                        redirect: "error",
+                    })
+                ).ok,
+            180_000,
+        );
+        state.admin.status = "frontend-ready";
+        state.admin.readyAtUtc = new Date().toISOString();
+        ensureFrontendIdentity(state, root, directory);
+        save(statePath, state);
+        return state;
+    } catch (error) {
+        for (const owner of created.reverse()) stopOwnedProcess(owner);
+        state.processes = state.processes.filter(
+            (owner) => owner.role !== "admin",
+        );
+        if (frontendStopped)
+            Object.assign(
+                frontend,
+                serve(
+                    "food-diary-web-client",
+                    previousWorkspace,
+                    state.ports.frontend,
+                    frontend.logPath,
+                ),
+            );
+        if (previousWorkspace === client) delete state.frontendWorkspace;
+        else state.frontendWorkspace = previousWorkspace;
+        delete state.adminUrl;
+        delete state.ports.admin;
+        state.admin = { status: "failed", browserSso: "unverified" };
+        save(statePath, state);
+        throw error;
+    } finally {
+        closeSync(lock);
+        unlinkSync(lockPath);
+    }
+}
+
 if (
     process.argv[1] &&
     pathToFileURL(resolve(process.argv[1])).href === import.meta.url
@@ -870,22 +1053,24 @@ if (
             if (
                 option !== "--name" ||
                 process.argv.length !== 5 ||
-                !["start", "stop", "status"].includes(action)
+                !["start", "stop", "status", "admin"].includes(action)
             )
                 throw new Error(
-                    "Use task-runtime.mjs list or start|stop|status --name <task-name>",
+                    "Use task-runtime.mjs list or start|stop|status|admin --name <task-name>",
                 );
             const state =
                 action === "start"
                     ? await startRuntime(name)
-                    : action === "stop"
-                      ? stopRuntime(name)
-                      : JSON.parse(
-                            readFileSync(
-                                join(runtimeDirectory(name), "runtime.json"),
-                                "utf8",
-                            ),
-                        );
+                    : action === "admin"
+                      ? await startAdminRuntime(name)
+                      : action === "stop"
+                        ? stopRuntime(name)
+                        : JSON.parse(
+                              readFileSync(
+                                  join(runtimeDirectory(name), "runtime.json"),
+                                  "utf8",
+                              ),
+                          );
             console.log(JSON.stringify(state, null, 2));
         }
     } catch (error) {

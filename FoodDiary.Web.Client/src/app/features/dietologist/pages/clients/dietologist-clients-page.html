@@ -15,7 +15,7 @@
 
     <fd-ui-card>
         <section class="fd-stack fd-gap-md" aria-labelledby="attention-title">
-            <div class="fd-row fd-justify-between fd-gap-md">
+            <div class="fd-stack fd-gap-md">
                 <div>
                     <h2 id="attention-title" class="fd-ui-card-title">{{ 'ATTENTION.TITLE' | translate }}</h2>
                     <p class="fd-ui-body-sm">{{ 'ATTENTION.DESCRIPTION' | translate }}</p>
@@ -155,7 +155,12 @@
                         }
                     </div>
                     <form class="fd-stack fd-gap-sm" [formRoot]="bulkForm">
-                        <fd-ui-textarea [label]="'BULK_RECOMMENDATIONS.TEXT' | translate" [rows]="4" [formField]="bulkForm.text" />
+                        <fd-ui-textarea
+                            [label]="'BULK_RECOMMENDATIONS.TEXT' | translate"
+                            [rows]="4"
+                            [formField]="bulkForm.text"
+                            [error]="bulkTextError()"
+                        />
                         <fd-ui-button
                             type="button"
                             [disabled]="bulkForm().invalid() || selectedClientIds().size === 0"

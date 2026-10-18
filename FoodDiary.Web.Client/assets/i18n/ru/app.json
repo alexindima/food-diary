@@ -190,8 +190,8 @@
                 "PERCENT_UNIT": "%",
                 "GRAM_UNIT": " г",
                 "VS_GOAL": "Относительно вашей цели",
-                "INCOMPLETE_DATA": "Данные неполные",
-                "INCOMPLETE_DATA_HINT": "Пропущенные дни могут влиять на средние значения"
+                "INCOMPLETE_DATA": "Записи могут быть неполными",
+                "INCOMPLETE_DATA_HINT": "Дни с записями тоже могут быть неполными; средние описывают дневник."
             },
             "BALANCE": {
                 "TITLE": "Баланс нутриентов",
@@ -464,7 +464,7 @@
         "VISIBILITY_GROUP_TITLE": "Видимость",
         "VISIBILITY": "Видимость",
         "VISIBILITY_PLACEHOLDER": "Выберите видимость",
-        "SELECT_INGREDIENT": "Выберите продукт",
+        "SELECT_INGREDIENT": "Выберите ингредиент",
         "UNKNOWN_PRODUCT": "Продукт",
         "DRAGGING_STEP": "Перемещение шага",
         "DRAGGING_HINT": "Отпустите, чтобы изменить порядок",
@@ -1118,6 +1118,7 @@
         "AMOUNT_PLACEHOLDER_RECIPE": "Введите вес (г)",
         "AMOUNT_LABEL_RECIPE_SERVINGS": "Количество (порции)",
         "AMOUNT_PLACEHOLDER_RECIPE_SERVINGS": "Введите количество порций",
+        "AMOUNT_UNIT_SERVING": "порц.",
         "AMOUNT_UNIT_SERVINGS": "порц.",
         "ITEM_SOURCE_LABEL": "Продукт или рецепт",
         "ITEM_SOURCE_PLACEHOLDER": "Выберите продукт или рецепт",
@@ -1894,6 +1895,7 @@
         "AVG_LENGTH_ERROR": "Введите целое число от 18 до 60 дней.",
         "PERIOD_LENGTH_ERROR": "Введите целое число от 1 до 14 дней.",
         "LUTEAL_LENGTH_ERROR": "Введите целое число от 8 до 18 дней.",
+        "CREATE_CYCLE_FAILED": "Не удалось создать журнал цикла. Введённые значения сохранены в форме. Попробуйте ещё раз.",
         "SAVE_SETTINGS_FAILED": "Не удалось сохранить настройки цикла. Введённые значения сохранены в форме. Попробуйте ещё раз.",
         "DELETE_CYCLE": "Удалить данные цикла",
         "DELETE_CYCLE_TITLE": "Удалить все данные цикла?",
@@ -3975,7 +3977,9 @@
                 "COUNT_FEW": "{{count}} приёма",
                 "COUNT_MANY": "{{count}} приёмов",
                 "COUNT_OTHER": "{{count}} приёма",
-                "EMPTY": "За выбранный период нет доступных приёмов пищи."
+                "EMPTY": "За выбранный период нет доступных приёмов пищи.",
+                "LOAD_MORE": "Показать ещё приёмы пищи",
+                "LOAD_MORE_ERROR": "Не удалось загрузить следующие приёмы пищи. Попробуйте ещё раз."
             },
             "BODY": {
                 "DELTA": "{{delta}} к предыдущей записи"

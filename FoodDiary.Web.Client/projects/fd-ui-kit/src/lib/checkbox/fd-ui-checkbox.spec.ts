@@ -1,7 +1,19 @@
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { form, FormField } from '@angular/forms/signals';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { FdUiCheckboxComponent } from './fd-ui-checkbox';
+
+@Component({
+    imports: [FdUiCheckboxComponent, FormField],
+    template: '<fd-ui-checkbox label="Enabled" [formField]="fields.enabled" />',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class CheckboxFormHost {
+    public readonly value = signal({ enabled: true });
+    public readonly fields = form(this.value);
+}
 
 const dispatchCheckboxChange = (checked: boolean): Event => {
     const input = document.createElement('input');
@@ -57,14 +69,15 @@ describe('FdUiCheckboxComponent', () => {
         expect(requireElement('input').getAttribute('aria-describedby')).toBe(hintEl.id);
     });
 
-    it('should write checked state from model', () => {
+    it('should reflect external checked model changes in the native checkbox', () => {
+        const input = host().querySelector<HTMLInputElement>('input');
         component.checked.set(true);
         fixture.detectChanges();
-        expect(component['checkedValue']).toBe(true);
+        expect(input?.checked).toBe(true);
 
         component.checked.set(false);
         fixture.detectChanges();
-        expect(component['checkedValue']).toBe(false);
+        expect(input?.checked).toBe(false);
     });
 
     it('should update checked model when checkbox changes', () => {
@@ -139,5 +152,23 @@ describe('FdUiCheckboxComponent validation messages', () => {
         expect(host.querySelector('.fd-ui-checkbox__error')).toBeNull();
         expect(host.querySelector('input')?.getAttribute('aria-invalid')).toBeNull();
         expect(host.querySelector('input')?.getAttribute('aria-describedby')).toBeNull();
+    });
+});
+
+describe('FdUiCheckboxComponent with Signal Forms', () => {
+    it('updates the native state when a record is edited and the form is reset', async () => {
+        await TestBed.configureTestingModule({ imports: [CheckboxFormHost] }).compileComponents();
+        const fixture = TestBed.createComponent(CheckboxFormHost);
+        fixture.detectChanges();
+        const input = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('input');
+        expect(input?.checked).toBe(true);
+
+        fixture.componentInstance.value.set({ enabled: false });
+        fixture.detectChanges();
+        expect(input?.checked).toBe(false);
+
+        fixture.componentInstance.value.set({ enabled: true });
+        fixture.detectChanges();
+        expect(input?.checked).toBe(true);
     });
 });

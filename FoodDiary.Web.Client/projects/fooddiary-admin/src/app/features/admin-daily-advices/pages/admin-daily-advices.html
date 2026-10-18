@@ -1,6 +1,6 @@
 <div class="fd-grid fd-gap-md">
     <p>{{ 'ADMIN_DAILY_ADVICES.HELP' | translate }}</p>
-    <div class="fd-row fd-gap-sm fd-flex-wrap">
+    <div class="fd-row fd-gap-sm fd-wrap">
         <!-- The UI kit has no JSON file picker; a labelled native input uses the shared button trigger. -->
         <label for="advice-import" hidden>{{ 'ADMIN_DAILY_ADVICES.IMPORT' | translate }}</label>
         <input #importInput id="advice-import" type="file" accept="application/json,.json" hidden (change)="importFileAsync($event)" />

@@ -8,8 +8,9 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
-import type { Subscription } from 'rxjs';
+import { finalize, type Subscription } from 'rxjs';
 
+import { connectAdminDevelopmentScreen } from '../../../shared/development/admin-development-screen';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod } from '../../../shared/period/admin-period';
@@ -67,6 +68,29 @@ export class AdminUsersComponent {
     ];
 
     public constructor() {
+        const fields = ['page', 'search', 'status', 'role', 'emailConfirmed', 'lastLoginFrom', 'lastLoginTo'];
+        connectAdminDevelopmentScreen({
+            kind: 'admin-users',
+            filterFields: fields,
+            read: () => ({
+                filters: Object.fromEntries(fields.map(field => [field, this.route.snapshot.queryParamMap.get(field)])),
+                page: this.page(),
+                totalItems: this.totalItems(),
+                totalPages: this.totalPages(),
+                loading: this.isLoading(),
+                error: this.loadFailed(),
+                items: this.users().map(user => ({ id: user.id })),
+            }),
+            setFiltersAsync: async params => {
+                await this.router.navigate([], { relativeTo: this.route, queryParams: params });
+            },
+            openEntityAsync: async id => {
+                if (!this.users().some(user => user.id === id)) {
+                    throw new Error('ID is not in the current list.');
+                }
+                await this.router.navigate(['/users', id], { queryParamsHandling: 'preserve' });
+            },
+        });
         this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
             this.search.set(params.get('search') ?? '');
             this.status.set(params.get('status') === 'deleted' ? 'deleted' : params.get('status') === 'inactive' ? 'inactive' : 'active');
@@ -143,9 +167,15 @@ export class AdminUsersComponent {
     }
 
     protected openCreate(): void {
-        this.dialogService
-            .open<AdminUserCreateDialogComponent, never, boolean>(AdminUserCreateDialogComponent, { size: 'sm' })
+        const dialogRef = this.dialogService.open<AdminUserCreateDialogComponent, never, boolean>(AdminUserCreateDialogComponent, {
+            size: 'sm',
+        });
+        const unregisterCleanup = this.destroyRef.onDestroy(() => {
+            dialogRef.close();
+        });
+        dialogRef
             .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef), finalize(unregisterCleanup))
             .subscribe(created => {
                 if (created === true) {
                     this.page.set(1);

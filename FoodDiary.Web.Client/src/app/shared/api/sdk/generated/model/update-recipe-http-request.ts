@@ -14,9 +14,11 @@ export interface UpdateRecipeHttpRequest {
     category?: string | null;
     clearCategory?: boolean;
     clearComment?: boolean;
+    clearCookTime?: boolean;
     clearDescription?: boolean;
     clearImageAssetId?: boolean;
     clearImageUrl?: boolean;
+    clearPrepTime?: boolean;
     comment?: string | null;
     cookTime?: number | null;
     description?: string | null;

@@ -1,3 +1,4 @@
+import { calculateCycleDayNumber, resolveCycleStartDateKey } from '../../../../shared/lib/cycle-calendar.utils';
 import { formatDateInputValue, formatDateValue } from '../../../../shared/lib/local-date.utils';
 import {
     BLEEDING_TYPE_BLEEDING,
@@ -650,39 +651,6 @@ function toLocalDateKey(value: Date): string {
     return `${value.getFullYear()}-${month}-${day}`;
 }
 
-function resolveCycleStartDateKey(cycle: CycleResponse, todayDateKey: string): string | null {
-    if (
-        cycle.mode !== CYCLE_TRACKING_MODE_PERIOD_TRACKING &&
-        cycle.mode !== CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE &&
-        cycle.mode !== CYCLE_TRACKING_MODE_PERIMENOPAUSE
-    ) {
-        return null;
-    }
-    const latestEpisode = [...(cycle.menstrualEpisodes ?? [])]
-        .map(episode => toDateKey(episode.startDate))
-        .filter(dateKey => dateKey.length > 0 && dateKey <= todayDateKey)
-        .sort((left, right) => right.localeCompare(left))
-        .at(0);
-
-    return latestEpisode ?? null;
-}
-
-function calculateCycleDayNumber(startDateKey: string | null, dateKey: string, averageCycleLength: number): number | null {
-    if (startDateKey === null) {
-        return null;
-    }
-    const startTime = Date.parse(`${startDateKey}T00:00:00.000Z`);
-    const dateTime = Date.parse(`${dateKey}T00:00:00.000Z`);
-    if (Number.isNaN(startTime) || Number.isNaN(dateTime)) {
-        return null;
-    }
-
-    const elapsedDays = Math.floor((dateTime - startTime) / MS_PER_DAY);
-    const normalizedLength = Math.max(1, averageCycleLength);
-    const normalizedOffset = ((elapsedDays % normalizedLength) + normalizedLength) % normalizedLength;
-    return normalizedOffset + 1;
-}
-
 function isDateInRange(dateKey: string, from: string | null | undefined, to: string | null | undefined): boolean {
     if (from === null || from === undefined) {
         return false;
@@ -711,7 +679,7 @@ function formatCycleDate(
     value: string | null | undefined,
     locale: string,
     options: Intl.DateTimeFormatOptions,
-    timeZone?: Intl.DateTimeFormatOptions['timeZone'],
+    timeZone: Intl.DateTimeFormatOptions['timeZone'] = UTC_TIME_ZONE,
 ): string {
     return (
         formatDateValue(value, locale, {

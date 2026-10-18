@@ -364,6 +364,28 @@
         background: var(--fd-bg-border);
     }
 
+    &__sessions {
+        margin-top: var(--fd-space-sm);
+    }
+
+    &__sessions-header {
+        align-items: flex-start;
+
+        h3,
+        p {
+            margin: 0;
+        }
+
+        > .fd-stack {
+            flex: 1;
+            min-width: 0;
+        }
+
+        > fd-ui-button {
+            flex: 0 0 auto;
+        }
+    }
+
     &__login-method {
         align-items: center;
         padding: var(--fd-space-sm);
@@ -434,6 +456,22 @@
     }
 
     @media #{variables.$media-mobile} {
+        &__sessions-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        &__session {
+            display: grid;
+            grid-template-columns: var(--fd-size-control-md) minmax(0, 1fr);
+            align-items: start;
+        }
+
+        &__session-revoke {
+            grid-column: 2;
+            justify-self: start;
+        }
+
         &__gender-options {
             gap: var(--fd-space-xs);
         }

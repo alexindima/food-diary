@@ -1454,6 +1454,7 @@ public sealed class JobsTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingImageObjectDeletionOutboxProcessor(int processed) : IImageObjectDeletionOutboxProcessor {
+        public Task<int> ProcessKeysAsync(IReadOnlyList<string> objectKeys, CancellationToken cancellationToken) => throw new NotSupportedException();
         public int? BatchSize { get; private set; }
 
         public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) {
@@ -1464,6 +1465,7 @@ public sealed class JobsTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class ThrowingImageObjectDeletionOutboxProcessor : IImageObjectDeletionOutboxProcessor {
+        public Task<int> ProcessKeysAsync(IReadOnlyList<string> objectKeys, CancellationToken cancellationToken) => throw new NotSupportedException();
         public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) =>
             throw new InvalidOperationException("Image object deletion outbox processor failed.");
     }

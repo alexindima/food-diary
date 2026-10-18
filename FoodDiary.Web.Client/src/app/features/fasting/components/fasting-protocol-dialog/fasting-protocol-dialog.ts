@@ -7,6 +7,7 @@ import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-sh
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 
 import { FastingFacade } from '../../lib/fasting.facade';
+import { connectFastingDevelopmentSetup } from '../../lib/fasting-development';
 import { FastingControlsComponent } from '../fasting-controls/fasting-controls';
 
 @Component({
@@ -30,6 +31,7 @@ export class FastingProtocolDialogComponent {
     protected readonly requestError = this.facade.requestError;
 
     public constructor() {
+        connectFastingDevelopmentSetup(this.facade);
         effect(() => {
             if (this.facade.isActive()) {
                 this.dialogRef.close();

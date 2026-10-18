@@ -346,7 +346,8 @@ export class AdminBillingFacade {
     }
 
     private toUtcEnd(value: string): string | null {
-        return value.length > 0 ? new Date(`${value}T23:59:59.999Z`).toISOString() : null;
+        // Keep the inclusive .NET day bound at tick precision for persisted rows.
+        return value.length > 0 ? `${value}T23:59:59.9999999Z` : null;
     }
 
     private formatJson(value: string): string {

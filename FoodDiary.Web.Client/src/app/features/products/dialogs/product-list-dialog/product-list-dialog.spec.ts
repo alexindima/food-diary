@@ -1,5 +1,6 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideTranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of } from 'rxjs';
@@ -74,7 +75,7 @@ describe('ProductListDialogComponent', () => {
 
         component['onAddProductClick']();
 
-        expect(dialogService.open).toHaveBeenCalledWith(ProductAddDialogComponent, { preset: 'fullscreen' });
+        expect(dialogService.open).toHaveBeenCalledWith(ProductAddDialogComponent, expect.objectContaining({ preset: 'fullscreen' }));
         expect(dialogRef.close).toHaveBeenCalledWith(product);
     });
 
@@ -110,7 +111,7 @@ function setupComponent(): {
 
     TestBed.configureTestingModule({
         imports: [ProductListDialogComponent],
-        providers: [{ provide: FdUiDialogRef, useValue: dialogRef }],
+        providers: [provideTranslateService({ lang: 'en' }), { provide: FdUiDialogRef, useValue: dialogRef }],
     });
     TestBed.overrideComponent(ProductListDialogComponent, {
         set: {

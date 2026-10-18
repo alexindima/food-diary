@@ -83,6 +83,16 @@ public sealed class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecip
 
     private void ConfigureClearRules() {
         RuleFor(x => x)
+            .Must(x => !(x.ClearPrepTime && x.PrepTime.HasValue))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("PrepTime cannot be provided when ClearPrepTime is true");
+
+        RuleFor(x => x)
+            .Must(x => !(x.ClearCookTime && x.CookTime.HasValue))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("CookTime cannot be provided when ClearCookTime is true");
+
+        RuleFor(x => x)
             .Must(x => !(x.ClearDescription && !string.IsNullOrWhiteSpace(x.Description)))
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Description cannot be provided when ClearDescription is true");

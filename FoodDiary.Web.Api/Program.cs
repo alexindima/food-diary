@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Web.Api.Extensions;
+using FoodDiary.Modules.Users.Presentation.Development;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddTaskConfiguration(
@@ -16,6 +17,9 @@ if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("FOODDIARY_TAS
 }
 
 WebApplication app = builder.Build();
+if (await app.TryRunOwnedFixtureCleanupAsync(args).ConfigureAwait(false)) {
+    return;
+}
 app.UseApiPipeline();
 
 await app.RunAsync().ConfigureAwait(false);

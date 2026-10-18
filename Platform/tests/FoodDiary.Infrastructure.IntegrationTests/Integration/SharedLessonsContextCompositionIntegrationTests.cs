@@ -4,6 +4,7 @@ using FoodDiary.Audit.Infrastructure;
 using FoodDiary.Email.Infrastructure;
 using FoodDiary.Modules.Lessons.Infrastructure;
 using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
+using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
@@ -69,6 +70,42 @@ public sealed class SharedLessonsContextCompositionIntegrationTests(PostgresData
         await using FoodDiaryDbContext read = databaseFixture.CreateDbContext(central.Database.GetConnectionString()!);
         Assert.False(await read.UserLessonProgress.AnyAsync(item => item.UserId == user.Id));
         Assert.True(await read.NutritionLessons.AnyAsync(item => item.Id == lesson.Id));
+    }
+
+    [RequiresDockerFact]
+    public async Task CompletionCountsIncludeUnpublishedLessonsAndOnlyRequestedIdsAsync() {
+        await using FoodDiaryDbContext central = await databaseFixture.CreateDbContextAsync();
+        await using ServiceProvider provider = CreateProvider(central);
+        INutritionLessonRepository repository = provider.GetRequiredService<INutritionLessonRepository>();
+        IUnitOfWork unitOfWork = provider.GetRequiredService<IUnitOfWork>();
+        var firstUser = User.Create($"lesson-count-first-{Guid.NewGuid():N}@example.test", "hash");
+        var secondUser = User.Create($"lesson-count-second-{Guid.NewGuid():N}@example.test", "hash");
+        var draft = NutritionLesson.Create("Draft with reads", "Content", summary: null, "en",
+            LessonCategory.NutritionBasics, LessonDifficulty.Beginner, estimatedReadMinutes: 1);
+        var other = NutritionLesson.Create("Other lesson", "Content", summary: null, "en",
+            LessonCategory.NutritionBasics, LessonDifficulty.Beginner, estimatedReadMinutes: 1);
+        draft.SetPublication(isPublished: false);
+        central.Users.AddRange(firstUser, secondUser);
+        await repository.AddRangeAsync([draft, other]);
+        await repository.AddProgressAsync(UserLessonProgress.Create(firstUser.Id, draft.Id, DateTime.UtcNow));
+        await repository.AddProgressAsync(UserLessonProgress.Create(secondUser.Id, draft.Id, DateTime.UtcNow));
+        await repository.AddProgressAsync(UserLessonProgress.Create(firstUser.Id, other.Id, DateTime.UtcNow));
+        await unitOfWork.SaveChangesAsync();
+
+        IReadOnlyDictionary<NutritionLessonId, int> selected = await repository.GetCompletionCountsAsync([draft.Id, draft.Id]);
+        Assert.Equal(2, Assert.Single(selected).Value);
+        Assert.Equal(draft.Id, Assert.Single(selected).Key);
+        IReadOnlyDictionary<NutritionLessonId, int> both = await repository.GetCompletionCountsAsync(
+            [draft.Id, other.Id, NutritionLessonId.New()]);
+        Assert.Multiple(
+            () => Assert.Equal(2, both.Count),
+            () => Assert.Equal(2, both[draft.Id]),
+            () => Assert.Equal(1, both[other.Id]));
+        Assert.Empty(await repository.GetCompletionCountsAsync([]));
+        using var cancellation = new CancellationTokenSource();
+        await cancellation.CancelAsync();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            repository.GetCompletionCountsAsync([draft.Id], cancellation.Token));
     }
 
     [RequiresDockerFact]

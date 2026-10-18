@@ -31,10 +31,10 @@
                 <div class="fd-stack fd-gap-sm">
                     @for (task of tasks(); track task.id) {
                         <fd-ui-card>
-                            <article class="fd-stack fd-gap-sm">
+                            <article class="recommendations-page__task fd-stack fd-gap-sm">
                                 <div class="fd-row fd-justify-between fd-gap-sm">
                                     <strong>{{ task.title }}</strong>
-                                    <span class="fd-ui-pill fd-ui-caption">
+                                    <span class="fd-ui-pill fd-ui-caption fd-nowrap">
                                         {{ `CLIENT_TASKS.STATUS.${(task.status | uppercase)}` | translate }}
                                     </span>
                                 </div>

@@ -62,7 +62,7 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
-public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+public sealed partial class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task CleanupDeletedUsersAsync_CursorAdvancesPastFailuresWithEqualDeletionDates() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();

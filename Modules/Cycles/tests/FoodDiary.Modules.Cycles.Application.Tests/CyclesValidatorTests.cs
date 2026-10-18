@@ -81,6 +81,25 @@ public class CyclesValidatorTests {
     }
 
     [Fact]
+    public async Task CreateCycle_WithDefaultTrackingStartDate_HasRequiredError() {
+        TestValidationResult<CreateCycleCommand> result = await new CreateCycleCommandValidator().TestValidateAsync(
+            CreateCommand() with { TrackingStartDate = default });
+
+        result.ShouldHaveValidationErrorFor(command => command.TrackingStartDate)
+            .WithErrorCode("Validation.Required");
+    }
+
+    [Theory]
+    [InlineData(2024, 2, 29)]
+    [InlineData(2030, 1, 1)]
+    public async Task CreateCycle_WithValidTrackingStartDate_Passes(int year, int month, int day) {
+        TestValidationResult<CreateCycleCommand> result = await new CreateCycleCommandValidator().TestValidateAsync(
+            CreateCommand() with { TrackingStartDate = new DateOnly(year, month, day) });
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
     public async Task UpsertCycleDay_WithEmptyProfileId_HasError() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
             CreateDayCommand(cycleProfileId: Guid.Empty));

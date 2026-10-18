@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output } from '@angular/core';
 import { FormField, FormRoot } from '@angular/forms/signals';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
@@ -31,6 +31,7 @@ import { ProductListDialogContentComponent } from './product-list-dialog-content
     ],
 })
 export class ProductListDialogComponent extends ProductListBaseComponent {
+    private readonly translateService = inject(TranslateService);
     public readonly searchChanged = output<string>();
     public readonly embedded = input<boolean>(false);
     public readonly productSelected = output<Product>();
@@ -57,6 +58,7 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
         this.fdDialogService
             .open<ProductAddDialogComponent, Product | null, Product | null>(ProductAddDialogComponent, {
                 preset: 'fullscreen',
+                ariaLabel: String(this.translateService.instant('PRODUCT_MANAGE.ADD_TITLE')),
             })
             .afterClosed()
             .pipe(take(1))

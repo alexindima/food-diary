@@ -3,15 +3,18 @@ import { randomUUID } from "node:crypto";
 import {
     mkdirSync,
     mkdtempSync,
+    existsSync,
     readFileSync,
     rmSync,
     writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { createServer } from "node:http";
-import { join } from "node:path";
+import { isAbsolute, join, resolve } from "node:path";
 import test from "node:test";
 import { repositoryRoot } from "./generate-feature.mjs";
+import { prepareTaskFrontendWorkspace } from "./task-frontend-workspace.mjs";
+import { watchFrontendIdentity, writeFrontendIdentity } from "./task-frontend-identity.mjs";
 import {
     freePorts,
     listRuntimes,
@@ -174,4 +177,143 @@ test("cleanup refuses a runtime record belonging to another checkout", () => {
         }),
     );
     assert.throws(() => stopRuntime(name), /another checkout/u);
+});
+
+test("admin workspace keeps shared sources unchanged and uses separate local auth origins", () => {
+    const root = mkdtempSync(join(tmpdir(), "fd-admin-workspace-"));
+    try {
+        const client = join(root, "FoodDiary.Web.Client");
+        mkdirSync(join(client, "node_modules"), { recursive: true });
+        const source = readFileSync(
+            join(repositoryRoot, "FoodDiary.Web.Client/angular.json"),
+            "utf8",
+        );
+        writeFileSync(join(client, "angular.json"), source);
+        const directory = join(root, ".artifacts/task-runtime/sample");
+        const workspace = prepareTaskFrontendWorkspace(root, directory, {
+            frontendUrl: "http://127.0.0.1:51002",
+            adminUrl: "http://127.0.0.1:51007",
+        });
+        const generated = JSON.parse(
+            readFileSync(join(workspace, "angular.json"), "utf8"),
+        );
+        assert.equal(
+            readFileSync(join(client, "angular.json"), "utf8"),
+            source,
+        );
+        assert.match(
+            readFileSync(join(workspace, "environment.client.ts"), "utf8"),
+            /http:\/\/127\.0\.0\.1:51007/u,
+        );
+        const adminEnvironment = readFileSync(
+            join(workspace, "environment.admin.ts"),
+            "utf8",
+        );
+        assert.match(adminEnvironment, /http:\/\/127\.0\.0\.1:51002/u);
+        assert.match(adminEnvironment, /auth: '\/api\/v1\/auth'/u);
+        for (const project of Object.values(generated.projects)) {
+            const build = project.architect.build;
+            for (const asset of build.options.assets)
+                assert.ok(
+                    resolve(workspace, asset.input).startsWith(workspace),
+                );
+            for (const replacement of build.configurations.task
+                .fileReplacements) {
+                assert.equal(isAbsolute(replacement.with), false);
+                assert.ok(existsSync(resolve(workspace, replacement.with)));
+            }
+            assert.ok(
+                resolve(workspace, build.options.outputPath.base).startsWith(
+                    directory,
+                ),
+            );
+        }
+        assert.equal(
+            prepareTaskFrontendWorkspace(root, directory, {
+                frontendUrl: "http://127.0.0.1:51002",
+                adminUrl: "http://127.0.0.1:51007",
+            }),
+            workspace,
+        );
+    } finally {
+        assert.ok(
+            resolve(root).startsWith(resolve(tmpdir()) + "/") ||
+                resolve(root).startsWith(resolve(tmpdir()) + "\\"),
+        );
+        assert.ok(root.includes("fd-admin-workspace-"));
+        rmSync(root, { recursive: true, force: true });
+    }
+});
+
+test("admin workspace refuses external URLs, credential URLs, same-origin storage and foreign paths", () => {
+    const directory = join(
+        repositoryRoot,
+        ".artifacts/task-runtime/guard-test",
+    );
+    for (const adminUrl of [
+        "https://example.test",
+        "http://secret:sentinel@127.0.0.1:51007",
+        "http://127.0.0.1:51007/path",
+        "http://127.0.0.1:51007/?token=sentinel",
+        "http://127.0.0.1:51002",
+    ]) {
+        assert.throws(() =>
+            prepareTaskFrontendWorkspace(repositoryRoot, directory, {
+                frontendUrl: "http://127.0.0.1:51002",
+                adminUrl,
+            }),
+        );
+    }
+    assert.throws(
+        () =>
+            prepareTaskFrontendWorkspace(
+                repositoryRoot,
+                join(repositoryRoot, "FoodDiary.Web.Client"),
+                {
+                    frontendUrl: "http://127.0.0.1:51002",
+                    adminUrl: "http://127.0.0.1:51007",
+                },
+            ),
+        /one task runtime/u,
+    );
+});
+
+test("frontend source identity updates with live sources and task configuration without exposing contents", async () => {
+    const root = mkdtempSync(join(tmpdir(), "fd-frontend-identity-"));
+    let stop;
+    try {
+        const client = join(root, "FoodDiary.Web.Client");
+        mkdirSync(join(client, "node_modules"), { recursive: true });
+        mkdirSync(join(client, "src"));
+        writeFileSync(join(client, "angular.json"), readFileSync(join(repositoryRoot, "FoodDiary.Web.Client/angular.json")));
+        const source = join(client, "src/probe.ts");
+        writeFileSync(source, "export const value = 'private-sentinel';");
+        const directory = join(root, ".artifacts/task-runtime/identity");
+        const workspace = prepareTaskFrontendWorkspace(root, directory, { frontendUrl: "http://127.0.0.1:51002" });
+        const original = writeFrontendIdentity(root, workspace);
+        assert.equal(original.revision, null);
+        assert.equal(JSON.stringify(original).includes("private-sentinel"), false);
+        assert.equal(writeFrontendIdentity(root, workspace).capturedAtUtc, original.capturedAtUtc);
+        writeFileSync(join(client, "src/probe.spec.ts"), "test only");
+        assert.equal(writeFrontendIdentity(root, workspace).sourceFingerprint, original.sourceFingerprint);
+        const changed = await new Promise((resolveChanged, rejectChanged) => {
+            const timeout = setTimeout(() => rejectChanged(new Error("No source identity update was observed")), 10000);
+            stop = watchFrontendIdentity(root, workspace, metadata => {
+                if (metadata.sourceFingerprint !== original.sourceFingerprint) {
+                    clearTimeout(timeout);
+                    resolveChanged(metadata);
+                }
+            });
+            writeFileSync(source, "export const value = 'updated-private-sentinel';");
+        });
+        assert.notEqual(changed.sourceFingerprint, original.sourceFingerprint);
+        prepareTaskFrontendWorkspace(root, directory, { frontendUrl: "http://127.0.0.1:51002", adminUrl: "http://127.0.0.1:51007" });
+        assert.notEqual(writeFrontendIdentity(root, workspace).sourceFingerprint, changed.sourceFingerprint);
+        assert.equal(readFileSync(join(workspace, "frontend-build.ts"), "utf8").includes("private-sentinel"), false);
+    } finally {
+        stop?.();
+        assert.ok(resolve(root).startsWith(resolve(tmpdir()) + "/") || resolve(root).startsWith(resolve(tmpdir()) + "\\"));
+        assert.ok(root.includes("fd-frontend-identity-"));
+        rmSync(root, { recursive: true, force: true });
+    }
 });

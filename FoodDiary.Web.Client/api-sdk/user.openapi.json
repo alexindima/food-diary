@@ -7885,6 +7885,9 @@
                     "clearComment": {
                         "type": "boolean"
                     },
+                    "clearCookTime": {
+                        "type": "boolean"
+                    },
                     "clearDescription": {
                         "type": "boolean"
                     },
@@ -7892,6 +7895,9 @@
                         "type": "boolean"
                     },
                     "clearImageUrl": {
+                        "type": "boolean"
+                    },
+                    "clearPrepTime": {
                         "type": "boolean"
                     },
                     "comment": {

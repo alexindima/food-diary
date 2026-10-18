@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot } from '@angular/forms/signals';
+import { convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -25,6 +26,8 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
+import { devQuery } from '../../../../shared/development/development-input';
+import { connectDevelopmentScreen, DevelopmentToolError } from '../../../../shared/development/development-tools';
 import { resolveRecipeImageUrl } from '../../../../shared/lib/recipe-image.util';
 import type { FavoriteRecipe, Recipe, RecipeFilters } from '../../../../shared/models/recipe.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
@@ -38,6 +41,7 @@ import {
     RecipeListResultsComponent,
 } from '../../components/list/recipe-list-sections/recipe-list-results/recipe-list-results';
 import { RecipeFavoritesPickerComponent } from '../../dialogs/recipe-favorites-picker/recipe-favorites-picker';
+import { readRecipeListQuery } from '../../lib/list/recipe-list-query';
 import { RECIPE_LIST_QUERY_STATE } from '../../lib/list/recipe-list-query-state';
 import { RecipeListRouteStateFacade } from '../../lib/list/recipe-list-route-state.facade';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
@@ -153,6 +157,30 @@ export class RecipeListComponent {
     protected readonly favoriteLoadingIds = this.recipeListFacade.favoriteLoadingIds;
 
     public constructor() {
+        const router = inject(Router);
+        const fields = ['search', 'page', 'onlyMine', 'category', 'maxTotalTime', 'caloriesFrom', 'caloriesTo', 'hasImage'];
+        connectDevelopmentScreen({
+            kind: 'recipe-list',
+            read: () => ({
+                filterFields: fields,
+                filters: this.searchModel(),
+                page: this.currentPageIndex() + 1,
+                totalItems: this.recipeData.totalItems,
+                provenance: this.recipeListFacade.requestProvenance(),
+                items: this.recipeData.items().map(recipe => ({ id: recipe.id, name: recipe.name, servings: recipe.servings })),
+                loading: this.recipeData.isLoading(),
+                error: this.errorKey(),
+            }),
+            setFiltersAsync: async filters => {
+                await this.routeState.writeAsync(readRecipeListQuery(convertToParamMap(devQuery(filters, fields))));
+            },
+            openEntityAsync: async id => {
+                if (!this.recipeData.items().some(recipe => recipe.id === id)) {
+                    throw new DevelopmentToolError('ID is not in the current recipe list.');
+                }
+                await router.navigate(['/recipes', id, 'edit']);
+            },
+        });
         effect(() => {
             if (!this.isMobileView()) {
                 this.isMobileSearchOpen.set(false);

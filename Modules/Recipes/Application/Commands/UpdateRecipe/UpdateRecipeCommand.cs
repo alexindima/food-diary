@@ -31,6 +31,8 @@ public record UpdateRecipeCommand(
     double? ManualFiber,
     double? ManualAlcohol,
     IReadOnlyList<RecipeStepInput>? Steps) : ICommand<Result<RecipeModel>>, IUserRequest {
+    public bool ClearPrepTime { get; init; }
+    public bool ClearCookTime { get; init; }
     public bool LanguageConfirmed { get; init; }
     public string? Language { get; init; }
     public IReadOnlyList<Guid>? ImageAssetIds { get; init; }

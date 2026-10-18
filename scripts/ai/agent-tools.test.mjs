@@ -7,8 +7,12 @@ import {
     unlinkSync,
     readFileSync,
     existsSync,
+    mkdtempSync,
+    rmSync,
 } from "node:fs";
-import { join } from "node:path";
+import { join, resolve, sep } from "node:path";
+import { tmpdir } from "node:os";
+import { createServer } from "node:http";
 import { redactDiagnostic } from "./diagnostic-redaction.mjs";
 import { summarizeEvent, compareTrials } from "./agent-trials.mjs";
 import { isAllowedCandidatePath } from "./coding-evals.mjs";
@@ -20,7 +24,11 @@ import {
     cancelCheck,
 } from "./task-tools.mjs";
 import { repositoryRoot } from "./generate-feature.mjs";
-import { serverDiagnosticEvents } from "./runtime-diagnostics.mjs";
+import {
+    collectMailDiagnostics,
+    serverDiagnosticEvents,
+} from "./runtime-diagnostics.mjs";
+import { processIdentity } from "./task-runtime.mjs";
 import { checkAgentRegressions, promoteRegression } from "./agent-feedback.mjs";
 
 test("dead worker recovery releases only its own lock and retains unverified status", () => {
@@ -116,6 +124,104 @@ test("runtime logs distinguish failed HTTP status from bundle-size output", () =
     );
     assert.equal(events.length, 3);
     assert.ok(events[0].includes("404"));
+});
+
+test("mail diagnostics require matching task identity and do not infer delivery from provider readiness", async () => {
+    const root = mkdtempSync(join(tmpdir(), "fd-mail-diagnostics-"));
+    const id = randomUUID();
+    let health = {
+        task: id,
+        status: "ready",
+        providers: "disabled",
+        private: "secret-sentinel",
+    };
+    let requests = 0;
+    const server = createServer((request, response) => {
+        requests++;
+        assert.equal(request.method, "GET");
+        assert.equal(request.url, "/health");
+        response.setHeader("content-type", "application/json");
+        response.end(JSON.stringify(health));
+    });
+    await new Promise((ready) => server.listen(0, "127.0.0.1", ready));
+    try {
+        const directory = join(root, ".artifacts/task-runtime/mail");
+        mkdirSync(directory, { recursive: true });
+        const state = {
+            id,
+            checkout: root,
+            ports: { providers: server.address().port },
+            processes: [
+                {
+                    role: "providers",
+                    pid: process.pid,
+                    identity: processIdentity(process.pid),
+                },
+            ],
+            integrations: {
+                backgroundJobs: "not started",
+                email: "secret-sentinel",
+            },
+        };
+        const save = () =>
+            writeFileSync(
+                join(directory, "runtime.json"),
+                JSON.stringify(state),
+            );
+        save();
+        const result = await collectMailDiagnostics("mail", root);
+        assert.deepEqual(result.provider, {
+            processAlive: true,
+            health: "ready",
+            mode: "disabled-stub",
+        });
+        assert.equal(result.backgroundJobs, "not-started-at-launch");
+        assert.equal(result.applicationOutbox, "not-observed");
+        assert.equal(result.smtpDelivery, "unavailable-disabled-provider");
+        assert.equal(result.endToEndDelivery, "not-verified");
+        assert.equal(JSON.stringify(result).includes("secret-sentinel"), false);
+        health = { ...health, task: randomUUID() };
+        assert.equal(
+            (await collectMailDiagnostics("mail", root)).provider.health,
+            "identity-mismatch",
+        );
+        health = { ...health, task: id, providers: "enabled" };
+        assert.equal(
+            (await collectMailDiagnostics("mail", root)).smtpDelivery,
+            "not-observed",
+        );
+        state.processes[0].identity = "reused-pid";
+        save();
+        assert.equal(
+            (await collectMailDiagnostics("mail", root)).provider.processAlive,
+            false,
+        );
+        assert.equal(requests, 3);
+        state.processes[0].identity = null;
+        save();
+        assert.equal(
+            (await collectMailDiagnostics("mail", root)).provider.processAlive,
+            false,
+        );
+        state.id = undefined;
+        save();
+        await assert.rejects(
+            collectMailDiagnostics("mail", root),
+            /runtime identity/u,
+        );
+        assert.equal(requests, 3);
+        state.checkout = root + "-foreign";
+        save();
+        await assert.rejects(
+            collectMailDiagnostics("mail", root),
+            /another checkout/u,
+        );
+    } finally {
+        await new Promise((closed) => server.close(closed));
+        assert.ok(resolve(root).startsWith(resolve(tmpdir()) + sep));
+        assert.ok(root.includes("fd-mail-diagnostics-"));
+        rmSync(root, { recursive: true, force: true });
+    }
 });
 
 test("reviewed outcome regressions reject unchanged coding candidates", () => {

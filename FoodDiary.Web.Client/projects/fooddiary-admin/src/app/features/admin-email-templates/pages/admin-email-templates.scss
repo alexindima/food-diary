@@ -1,8 +1,12 @@
-.templates-table {
-    display: block;
-    width: 100%;
+.templates-table-scroll {
+    min-width: 0;
     max-width: 100%;
     overflow-x: auto;
+}
+
+.templates-table {
+    width: 100%;
+    min-width: 64rem;
     border-collapse: collapse;
 }
 
@@ -11,4 +15,16 @@
     padding: var(--fd-space-sm);
     border-bottom: var(--fd-border-default);
     text-align: left;
+}
+
+.templates-table th:not(:nth-child(3)),
+.templates-table td:not(:nth-child(3)) {
+    white-space: nowrap;
+}
+
+.templates-table th:nth-child(3),
+.templates-table td:nth-child(3) {
+    min-width: 15rem;
+    max-width: 28rem;
+    overflow-wrap: anywhere;
 }

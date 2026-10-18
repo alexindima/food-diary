@@ -4,6 +4,12 @@ export type AppConfig = {
     googleClientId?: string;
     telegramBotUsername?: string;
     buildVersion?: string;
+    developmentBuild?: {
+        revision: string | null;
+        sourceFingerprint: string;
+        capturedAtUtc: string;
+        fingerprintBasis: string;
+    };
     adminAppUrl?: string;
     supportEmail?: string;
     siteUrls?: AppConfigSiteUrls;

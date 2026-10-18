@@ -237,6 +237,27 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
         Assert.Equal(HttpStatusCode.Forbidden, disconnectedRead.StatusCode);
     }
 
+    [RequiresDockerFact]
+    public async Task UnconfirmedRecipient_CannotReadAcceptOrDeclineCurrentUserInvitationAsync() {
+        AuthenticatedUser clientUser = await CreateAuthenticatedClientAsync();
+        AuthenticatedUser recipient = await CreateAuthenticatedClientAsync("unconfirmed-recipient", confirmEmail: false);
+        HttpResponseMessage invite = await clientUser.Client.PostAsJsonAsync(
+            "/api/v1/dietologist/invite",
+            new InviteDietologistHttpRequest(recipient.Email, new DietologistPermissionsHttpRequest()));
+        await AssertStatusCodeAsync(HttpStatusCode.NoContent, invite);
+        DietologistRelationshipPayload relationship = await GetRelationshipAsync(clientUser.Client);
+        string invitationUrl = $"/api/v1/dietologist/invitations/{relationship.InvitationId}";
+
+        HttpResponseMessage read = await recipient.Client.GetAsync($"{invitationUrl}/current-user");
+        await AssertStatusCodeAsync(HttpStatusCode.Forbidden, read);
+        HttpResponseMessage accept = await recipient.Client.PostAsJsonAsync($"{invitationUrl}/accept-current-user", new { });
+        await AssertStatusCodeAsync(HttpStatusCode.Forbidden, accept);
+        HttpResponseMessage decline = await recipient.Client.PostAsJsonAsync($"{invitationUrl}/decline-current-user", new { });
+        await AssertStatusCodeAsync(HttpStatusCode.Forbidden, decline);
+
+        Assert.Equal("Pending", (await GetRelationshipAsync(clientUser.Client)).Status);
+    }
+
     private static async Task AssertGoalsOnlyPayloadAsync(HttpClient client, Guid clientUserId) {
         HttpResponseMessage response = await client.GetAsync($"/api/v1/dietologist/clients/{clientUserId}/goals");
         await AssertStatusCodeAsync(HttpStatusCode.OK, response);
@@ -261,7 +282,7 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
         Assert.Equal(6000, goals.GetProperty("stepGoal").GetInt32());
     }
 
-    private async Task<AuthenticatedUser> CreateAuthenticatedClientAsync(string emailPrefix = "api-tests") {
+    private async Task<AuthenticatedUser> CreateAuthenticatedClientAsync(string emailPrefix = "api-tests", bool confirmEmail = true) {
         HttpClient client = factory.CreateClient();
         string email = $"{emailPrefix}-{Guid.NewGuid():N}@example.com";
         HttpResponseMessage registerResponse = await client.PostAsJsonAsync(
@@ -274,7 +295,17 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
 
         Assert.NotNull(authPayload.User);
-        return new AuthenticatedUser(client, email, authPayload.User.Id);
+        var registeredUser = new AuthenticatedUser(client, email, authPayload.User.Id);
+        if (confirmEmail) {
+            string token = factory.EmailSender.GetRequiredEmailVerificationToken(email);
+            HttpResponseMessage verification = await client.PostAsJsonAsync(
+                "/api/v1/auth/verify-email",
+                new { registeredUser.UserId, Token = token }).ConfigureAwait(false);
+            await AssertStatusCodeAsync(HttpStatusCode.NoContent, verification).ConfigureAwait(false);
+            await RefreshAccessTokenAsync(registeredUser).ConfigureAwait(false);
+        }
+
+        return registeredUser;
     }
 
     private async Task EnsureDietologistRoleAsync() {

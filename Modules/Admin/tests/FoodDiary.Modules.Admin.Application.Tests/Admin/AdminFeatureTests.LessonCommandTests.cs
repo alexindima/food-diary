@@ -17,7 +17,7 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task UpdateAdminLessonHandler_WithEmptyLessonId_ReturnsValidationFailure() {
         var handler = new UpdateAdminLessonCommandHandler(
-            RequestTestSender.Create(new CreateLessonCommandHandler(Substitute.For<INutritionLessonWriteRepository>()), new UpdateLessonCommandHandler(Substitute.For<INutritionLessonWriteRepository>()), new DeleteLessonCommandHandler(Substitute.For<INutritionLessonWriteRepository>()), new ImportLessonsCommandHandler(Substitute.For<INutritionLessonReadRepository>(), Substitute.For<INutritionLessonWriteRepository>())));
+            RequestTestSender.Create(new CreateLessonCommandHandler(Substitute.For<INutritionLessonWriteRepository>()), new UpdateLessonCommandHandler(Substitute.For<INutritionLessonWriteRepository>(), Substitute.For<INutritionLessonReadRepository>()), new DeleteLessonCommandHandler(Substitute.For<INutritionLessonWriteRepository>()), new ImportLessonsCommandHandler(Substitute.For<INutritionLessonReadRepository>(), Substitute.For<INutritionLessonWriteRepository>())));
 
         Result<AdminLessonModel> result = await handler.Handle(
             new UpdateAdminLessonCommand(
@@ -40,7 +40,7 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task DeleteAdminLessonHandler_WithEmptyLessonId_ReturnsValidationFailure() {
         var handler = new DeleteAdminLessonCommandHandler(
-            RequestTestSender.Create(new CreateLessonCommandHandler(Substitute.For<INutritionLessonWriteRepository>()), new UpdateLessonCommandHandler(Substitute.For<INutritionLessonWriteRepository>()), new DeleteLessonCommandHandler(Substitute.For<INutritionLessonWriteRepository>()), new ImportLessonsCommandHandler(Substitute.For<INutritionLessonReadRepository>(), Substitute.For<INutritionLessonWriteRepository>())));
+            RequestTestSender.Create(new CreateLessonCommandHandler(Substitute.For<INutritionLessonWriteRepository>()), new UpdateLessonCommandHandler(Substitute.For<INutritionLessonWriteRepository>(), Substitute.For<INutritionLessonReadRepository>()), new DeleteLessonCommandHandler(Substitute.For<INutritionLessonWriteRepository>()), new ImportLessonsCommandHandler(Substitute.For<INutritionLessonReadRepository>(), Substitute.For<INutritionLessonWriteRepository>())));
 
         Result result = await handler.Handle(new DeleteAdminLessonCommand(Guid.Empty), CancellationToken.None);
 

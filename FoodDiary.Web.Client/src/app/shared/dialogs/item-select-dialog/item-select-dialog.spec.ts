@@ -1,5 +1,6 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
+import { provideTranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
@@ -66,6 +67,7 @@ function configureComponent(
     TestBed.configureTestingModule({
         imports: [ItemSelectDialogComponent],
         providers: [
+            provideTranslateService({ lang: 'en' }),
             { provide: FD_UI_DIALOG_DATA, useValue: options.dialogData ?? null },
             { provide: FdUiDialogService, useValue: options.dialogService ?? { open: vi.fn() } },
             ...(options.dialogRef !== undefined ? [{ provide: FdUiDialogRef, useValue: options.dialogRef }] : []),

@@ -15,6 +15,10 @@ import type { MarketingAttributionRange } from '../models/admin-acquisition-rang
 })
 export class AdminAcquisitionComparisonComponent {
     public readonly report = input.required<MarketingAttributionRange | null>();
+    protected readonly hasComparison = computed(() => {
+        const from = this.report()?.fromUtc;
+        return from !== undefined && Date.parse(from) !== 0;
+    });
     private readonly trend = computed(() => {
         const report = this.report();
         return report === null ? [] : acquisitionTrend(report);

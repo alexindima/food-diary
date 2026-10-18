@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
+using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
 using System.Globalization;
 using FoodDiary.Modules.Lessons.Contracts.Models;
 using FoodDiary.Application.Contracts.Common.Abstractions.Results;
@@ -62,14 +63,20 @@ public sealed class ImportLessonsCommandHandler(INutritionLessonReadRepository r
             await repository.AddRangeAsync(newLessons, cancellationToken).ConfigureAwait(false);
         }
 
-        return Result.Success<IReadOnlyList<LessonAdminReadModel>>(importedLessons.Select(ToAdminReadModel).ToArray());
+        NutritionLessonId[] importedIds = [.. importedLessons.Select(lesson => lesson.Id).Distinct()];
+        IReadOnlyDictionary<NutritionLessonId, int> completionCounts = await readRepository
+            .GetCompletionCountsAsync(importedIds, cancellationToken)
+            .ConfigureAwait(false);
+        return Result.Success<IReadOnlyList<LessonAdminReadModel>>(importedLessons
+            .Select(lesson => ToAdminReadModel(lesson, completionCounts.GetValueOrDefault(lesson.Id)))
+            .ToArray());
 
     }
 
-    private static LessonAdminReadModel ToAdminReadModel(NutritionLesson lesson) =>
+    private static LessonAdminReadModel ToAdminReadModel(NutritionLesson lesson, int completedCount) =>
         new(lesson.Id.Value, lesson.Title, lesson.Content, lesson.Summary, lesson.Locale,
             lesson.Category.ToString(), lesson.Difficulty.ToString(), lesson.EstimatedReadMinutes,
-            lesson.SortOrder, lesson.CreatedOnUtc, lesson.ModifiedOnUtc, lesson.IsPublished);
+            lesson.SortOrder, lesson.CreatedOnUtc, lesson.ModifiedOnUtc, lesson.IsPublished, completedCount);
 
     private static LessonContentIdentity ToContentIdentity(NutritionLesson lesson) =>
         new(

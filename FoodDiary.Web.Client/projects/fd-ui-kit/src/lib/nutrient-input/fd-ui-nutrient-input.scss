@@ -36,6 +36,8 @@
 
 .fd-ui-nutrient-input__label-text {
     display: inline-flex;
+    flex-wrap: wrap;
+    min-width: 0;
     align-items: center;
     gap: var(--fd-nutrient-label-text-gap);
     justify-content: center;
@@ -60,6 +62,7 @@
 
 .fd-ui-nutrient-input__label-unit {
     text-transform: lowercase;
+    white-space: nowrap;
 }
 
 .fd-ui-nutrient-input__control {

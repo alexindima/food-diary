@@ -1211,13 +1211,16 @@
         "context:CurrentTransaction",
         "context:Database",
         "entity:Recipe",
+        "entity:RecipeIngredient",
         "entity:RecipeStep",
         "tracked:Recipe",
+        "tracked:RecipeIngredient",
         "tracked:RecipeStep",
-        "write:Recipe"
+        "write:Recipe",
+        "write:RecipeIngredient"
       ],
-      "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity.",
-      "technicalSourceSha256": "72dcaefb17d38ddb1317e3eea204e53e3ec005d9f37fd9b51b57f650c6357574"
+      "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity. Own outgoing nested ingredient edges are removed before recipes; foreign incoming references remain restrictive, and PostgreSQL verifies rollback.",
+      "technicalSourceSha256": "176ac3302a385ee3a7265eb21638ec829a56d6716243c608bd5bc18e3553adaa"
     },
     "Modules/Usda/Infrastructure/Persistence/UsdaFoodRepository.cs": {
       "module": "Usda",
@@ -1267,7 +1270,7 @@
         "write:UserRole"
       ],
       "reason": "Users owner context executes eligibility SQL, profile unlink and User/UserRole deletion. The shared item coordinator owns per-account retries, unconditional successful UoW save, commit and all-owner tracker reset. Ordered owner participants never save. Scope guard rejects pending caller state; post-commit actions retain their existing untouched policy.",
-      "technicalSourceSha256": "3aefae17aab627a3d58dc46eb790d66dd717cb599db247a8072cc76fc68a313a"
+      "technicalSourceSha256": "870ef95e7d0eda11c79768c8e64f59afbb4a568f5df0ffd6b2a3d13b9bd4796a"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs": {
       "module": "Users",
@@ -1817,6 +1820,13 @@
       ],
       "reason": "Owner save interceptor locks only the account principal for pending preferences/nutrition writes, checks persisted lifecycle and original security version, and holds the read lock until the coordinated transaction ends. No save, commit, retry, foreign write or credentials materialization.",
       "technicalSourceSha256": "b7ce7e60070553a83050895cdb229908c1ee34759c5eb331d262d5e9871f9195"
+    },
+    "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs": {
+      "reason": "Reads exact owned object-key deletion IDs and passes only those IDs into the shared fenced outbox claim engine. No foreign queue message is claimed or processed.",
+      "capabilities": [
+        "entity:ImageObjectDeletionOutboxMessage"
+      ],
+      "module": "Images"
     }
   }
 }

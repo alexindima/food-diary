@@ -58,6 +58,7 @@ public sealed class ModuleAggregateIsolationTests {
         Assert.Equal(
             new[] {
                 typeof(FoodDiary.Modules.Images.Service.Contracts.Commands.CleanupOrphanImages.CleanupOrphanImagesCommand),
+                typeof(FoodDiary.Modules.Images.Service.Contracts.Commands.ProcessOwnedImageDeletions.ProcessOwnedImageDeletionsCommand),
                 typeof(FoodDiary.Modules.Images.Service.Contracts.Common.DeleteImageAssetResult),
                 typeof(FoodDiary.Modules.Images.Service.Contracts.Common.IImageAssetAccessService),
                 typeof(FoodDiary.Modules.Images.Service.Contracts.Common.IImageAssetCleanupService),

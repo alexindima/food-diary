@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { afterRenderEffect, ChangeDetectionStrategy, Component, computed, type ElementRef, input, output, signal, viewChild } from '@angular/core';
+
+import { findOverlappingXAxisLabels } from '../line-chart/fd-ui-line-chart-x-axis-layout';
 
 export type FdUiBarChartItem = {
     label: string;
@@ -65,6 +67,7 @@ const BAR_CHART_GRID_LINE_COUNT = 5;
 const PERCENTAGE_SCALE = 100;
 const DEFAULT_BAR_COLOR = 'var(--fd-color-primary-500)';
 const DEFAULT_REFERENCE_LINE_COLOR = 'var(--fd-color-text-subtle)';
+const LABEL_CLEARANCE_PX = 4;
 
 @Component({
     selector: 'fd-ui-bar-chart',
@@ -74,6 +77,9 @@ const DEFAULT_REFERENCE_LINE_COLOR = 'var(--fd-color-text-subtle)';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiBarChartComponent {
+    private readonly labelAxis = viewChild<ElementRef<HTMLElement>>('labelAxis');
+    protected readonly hiddenLabelIndexes = signal<ReadonlySet<number>>(new Set());
+
     public readonly selectable = input(false);
     public readonly categorySelected = output<number>();
     public readonly title = input<string>();
@@ -210,6 +216,42 @@ export class FdUiBarChartComponent {
             .join(', ');
         return title === undefined || title.length === 0 ? details : `${title}: ${details}`;
     });
+
+    public constructor() {
+        afterRenderEffect(onCleanup => {
+            this.categories();
+            this.horizontalEdgeInset();
+            const axis = this.labelAxis()?.nativeElement;
+            if (axis === undefined) {
+                return;
+            }
+
+            const labels = Array.from(axis.querySelectorAll('span'));
+            const updateVisibility = (): void => {
+                const bounds = labels.flatMap((label, index) => {
+                    const rect = label.getBoundingClientRect();
+                    return rect.width > 0 ? [{ index, left: rect.left, right: rect.right }] : [];
+                });
+                const hidden = findOverlappingXAxisLabels(bounds, LABEL_CLEARANCE_PX);
+                const previous = this.hiddenLabelIndexes();
+                if (previous.size !== hidden.size || [...hidden].some(index => !previous.has(index))) {
+                    this.hiddenLabelIndexes.set(hidden);
+                }
+            };
+            updateVisibility();
+
+            if (typeof ResizeObserver !== 'undefined') {
+                const observer = new ResizeObserver(updateVisibility);
+                observer.observe(axis);
+                labels.forEach(label => {
+                    observer.observe(label);
+                });
+                onCleanup(() => {
+                    observer.disconnect();
+                });
+            }
+        });
+    }
 
     protected categoryGridTemplate(valueCount: number): string | null {
         return this.layout() === 'grouped' ? `repeat(${valueCount}, minmax(0, 1fr))` : null;

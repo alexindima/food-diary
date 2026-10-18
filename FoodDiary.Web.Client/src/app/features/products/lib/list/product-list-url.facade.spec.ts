@@ -1,3 +1,4 @@
+import { HttpContext } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { convertToParamMap } from '@angular/router';
@@ -37,7 +38,7 @@ describe('Product list page recovery', () => {
             2,
             PRODUCT_LIST_PAGE_SIZE,
             expect.objectContaining({ productTypes: ['Fruit'], hasImage: false }),
-            false,
+            expect.objectContaining({ includePublic: false }),
         );
         expect(facade.currentPageIndex).toBe(1);
         expect(facade.isEmptyState()).toBe(false);
@@ -78,6 +79,7 @@ describe('Product list URL ownership', () => {
                 page: 3,
                 includePublic: false,
             }),
+            expect.any(HttpContext),
         );
         expect(products.queryOverview.mock.calls[0][0].filters).toEqual(
             expect.objectContaining({ search: 'tea', productTypes: ['Fruit'] }),
@@ -95,7 +97,12 @@ describe('Product list URL ownership', () => {
         });
         expect(facade.searchValue()).toBe('coffee');
         expect(facade.currentPageIndex).toBe(1);
-        expect(products.query).toHaveBeenCalledWith(2, expect.any(Number), expect.objectContaining({ search: 'coffee' }), false);
+        expect(products.query).toHaveBeenCalledWith(
+            2,
+            expect.any(Number),
+            expect.objectContaining({ search: 'coffee' }),
+            expect.objectContaining({ includePublic: false }),
+        );
         expect(writeAsync).not.toHaveBeenCalled();
     });
 

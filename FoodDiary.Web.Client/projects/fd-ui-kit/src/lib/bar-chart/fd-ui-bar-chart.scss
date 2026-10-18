@@ -228,6 +228,9 @@
 
 .fd-ui-bar-chart__categorical-labels span {
     min-width: 0;
+    width: max-content;
+    max-width: 8ch;
+    justify-self: center;
     overflow: hidden;
     padding-top: var(--fd-space-xs);
     color: var(--fd-color-text-muted);
@@ -290,11 +293,6 @@
 
 .fd-ui-bar-chart--edge-inset-none .fd-ui-bar-chart__category:last-child {
     justify-items: end;
-}
-
-.fd-ui-bar-chart--edge-inset-none
-    :where(.fd-ui-bar-chart__categorical-labels span:first-child, .fd-ui-bar-chart__categorical-labels span:last-child) {
-    width: var(--fd-bar-chart-edge-category-width);
 }
 
 .fd-ui-bar-chart--edge-inset-none :where(.fd-ui-bar-chart__categorical-labels span:first-child) {

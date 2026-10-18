@@ -435,6 +435,11 @@
     margin-bottom: var(--fd-space-md);
 }
 
+.meal-manage__image-description {
+    margin: 0 0 var(--fd-space-md);
+    color: var(--fd-color-text-muted);
+}
+
 .meal-manage__grid,
 .meal-manage__column,
 .meal-manage__sticky-stack {

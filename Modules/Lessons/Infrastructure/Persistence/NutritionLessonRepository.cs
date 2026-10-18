@@ -129,6 +129,23 @@ public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, 
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<IReadOnlyDictionary<NutritionLessonId, int>> GetCompletionCountsAsync(
+        IReadOnlyCollection<NutritionLessonId> lessonIds,
+        CancellationToken cancellationToken = default) {
+        if (lessonIds.Count == 0) {
+            return new Dictionary<NutritionLessonId, int>();
+        }
+
+        NutritionLessonId[] ids = [.. lessonIds];
+        return await progressSet
+            .AsNoTracking()
+            .Where(progress => Enumerable.Contains(ids, progress.LessonId))
+            .GroupBy(progress => progress.LessonId)
+            .Select(group => new { LessonId = group.Key, CompletedCount = group.Count() })
+            .ToDictionaryAsync(item => item.LessonId, item => item.CompletedCount, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     public async Task<IReadOnlyList<LessonAdminReadModel>> GetAdminReadModelsAsync(
         int page,
         int limit,

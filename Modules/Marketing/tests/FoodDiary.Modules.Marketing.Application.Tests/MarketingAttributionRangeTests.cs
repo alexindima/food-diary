@@ -93,4 +93,57 @@ public sealed class MarketingAttributionRangeTests {
         ResultAssert.Success(result);
         await repository.Received(1).GetRangeAsync(Arg.Any<MarketingAttributionRangeFilter>(), Arg.Any<CancellationToken>());
     }
+
+    [Theory]
+    [InlineData("all-time")]
+    [InlineData("long-custom")]
+    [InlineData("custom-limit")]
+    public async Task AdminReportingPeriod_ReadsTheRequestedRetainedRange(string period) {
+        TimeProvider clock = Substitute.For<TimeProvider>();
+        clock.GetUtcNow().Returns(new DateTimeOffset(2026, 10, 17, 12, 0, 0, TimeSpan.Zero));
+        var to = new DateTimeOffset(2026, 10, 18, 0, 0, 0, TimeSpan.Zero);
+        DateTimeOffset from = period switch {
+            "all-time" => DateTimeOffset.UnixEpoch,
+            "long-custom" => new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero),
+            "custom-limit" => to.AddDays(-3661),
+            _ => throw new InvalidOperationException(),
+        };
+        IMarketingAttributionRangeReadRepository repository = Substitute.For<IMarketingAttributionRangeReadRepository>();
+        repository.GetRangeAsync(Arg.Any<MarketingAttributionRangeFilter>(), Arg.Any<CancellationToken>()).Returns(EmptyRange());
+
+        Result<MarketingAttributionRangeModel> result = await new GetMarketingAttributionRangeQueryHandler(repository, clock)
+            .Handle(new GetMarketingAttributionRangeQuery(from, to), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Equal(from.UtcDateTime, result.Value.FromUtc),
+            () => Assert.Equal(to.UtcDateTime, result.Value.ToUtc));
+        await repository.Received(1).GetRangeAsync(
+            Arg.Is<MarketingAttributionRangeFilter>(filter => filter.FromUtc == from.UtcDateTime && filter.ToUtc == to.UtcDateTime),
+            CancellationToken.None);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task OverlongCustomPeriod_DoesNotReadRepository(bool almostAllTime) {
+        TimeProvider clock = Substitute.For<TimeProvider>();
+        clock.GetUtcNow().Returns(new DateTimeOffset(2026, 10, 17, 12, 0, 0, TimeSpan.Zero));
+        var to = new DateTimeOffset(2026, 10, 18, 0, 0, 0, TimeSpan.Zero);
+        DateTimeOffset from = almostAllTime ? DateTimeOffset.UnixEpoch.AddTicks(1) : to.AddDays(-3661).AddTicks(-1);
+        IMarketingAttributionRangeReadRepository repository = Substitute.For<IMarketingAttributionRangeReadRepository>();
+
+        Result<MarketingAttributionRangeModel> result = await new GetMarketingAttributionRangeQueryHandler(repository, clock)
+            .Handle(new GetMarketingAttributionRangeQuery(from, to), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Empty(repository.ReceivedCalls());
+    }
+
+    private static MarketingAttributionRangeRecord EmptyRange() => new(
+        new MarketingAttributionSummaryRecord(0, 0, 0, 0, 0, 0, 0, 0, LastEventAtUtc: null, [], [], []),
+        new MarketingAttributionSummaryRecord(0, 0, 0, 0, 0, 0, 0, 0, LastEventAtUtc: null, [], [], []),
+        [],
+        0);
 }

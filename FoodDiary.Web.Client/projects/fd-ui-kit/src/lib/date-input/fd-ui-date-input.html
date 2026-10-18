@@ -48,7 +48,7 @@
                 class="fd-ui-date-input__suffix"
                 aria-haspopup="dialog"
                 [disabled]="disabled()"
-                [attr.aria-label]="pickerAriaLabel() ?? label()"
+                [attr.aria-label]="pickerAccessibleName()"
                 [attr.aria-controls]="`${id()}-dialog`"
                 [attr.aria-expanded]="isOpen()"
                 (click)="openDatePicker()"
@@ -68,9 +68,18 @@
                 ]"
                 (backdropClick)="closeDatePicker()"
                 (detach)="closeDatePicker()"
+                (attach)="focusDatePicker()"
                 (overlayKeydown)="onOverlayKeydown($event)"
             >
-                <div class="fd-ui-date-input__panel" tabindex="-1" [id]="`${id()}-dialog`">
+                <div
+                    cdkTrapFocus
+                    class="fd-ui-date-input__panel"
+                    role="dialog"
+                    aria-modal="true"
+                    tabindex="-1"
+                    [id]="`${id()}-dialog`"
+                    [attr.aria-label]="pickerAccessibleName()"
+                >
                     <fd-ui-calendar
                         [locale]="language()"
                         [value]="internalValue()"

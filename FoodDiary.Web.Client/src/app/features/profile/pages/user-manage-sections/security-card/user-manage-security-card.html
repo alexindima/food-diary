@@ -53,7 +53,7 @@
 </div>
 
 <section class="user-manage__sessions fd-stack fd-gap-sm" aria-labelledby="active-sessions-title">
-    <div class="fd-row fd-gap-sm">
+    <div class="user-manage__sessions-header fd-row fd-gap-sm">
         <div class="fd-stack fd-gap-xxs">
             <h3 id="active-sessions-title">{{ 'USER_MANAGE.ACTIVE_SESSIONS_TITLE' | translate }}</h3>
             <p class="fd-ui-body-sm">{{ 'USER_MANAGE.ACTIVE_SESSIONS_DESCRIPTION' | translate }}</p>
@@ -92,7 +92,7 @@
         </fd-ui-button>
     }
     @for (session of activeSessions.sessions(); track session.id) {
-        <div class="user-manage__login-method fd-row fd-gap-sm">
+        <div class="user-manage__login-method user-manage__session fd-row fd-gap-sm">
             <fd-ui-icon class="user-manage__login-method-icon" name="devices" />
             <div class="user-manage__login-method-info fd-stack fd-gap-xxs">
                 <div class="user-manage__login-method-title">
@@ -111,6 +111,7 @@
             </div>
             @if (!session.isCurrent) {
                 <fd-ui-button
+                    class="user-manage__session-revoke"
                     type="button"
                     size="sm"
                     variant="secondary"

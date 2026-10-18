@@ -1,5 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
+import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -89,6 +91,27 @@ describe('RecipeStepCardComponent', () => {
 });
 
 describe('Recipe ingredient selection', () => {
+    it('keeps the committed kind while a picker is pending and permits retry after cancellation', () => {
+        const { component, fixture } = setupComponent();
+        const select = fixture.debugElement.query(By.directive(FdUiSelectComponent)).componentInstance as FdUiSelectComponent<string>;
+        const selections: Array<{ ingredientIndex: number; itemType: string }> = [];
+        component.selectProduct.subscribe(event => selections.push(event));
+
+        select.value.set('Recipe');
+        fixture.detectChanges();
+        expect(select.value()).toBe('Product');
+        expect(component['ingredientRows']()[0].itemType).toBe('Product');
+        expect(selections).toEqual([{ ingredientIndex: 0, itemType: 'Recipe' }]);
+
+        select.value.set('Recipe');
+        fixture.detectChanges();
+        expect(select.value()).toBe('Product');
+        expect(selections).toEqual([
+            { ingredientIndex: 0, itemType: 'Recipe' },
+            { ingredientIndex: 0, itemType: 'Recipe' },
+        ]);
+    });
+
     it('emits ingredient selection with requested item type', () => {
         const { component } = setupComponent();
         const selections: Array<{ ingredientIndex: number; itemType: string }> = [];

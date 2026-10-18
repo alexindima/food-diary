@@ -113,6 +113,9 @@
                 [meals]="mealItems()"
                 [total]="dashboard()?.meals?.total ?? 0"
                 [showEmptyState]="client()?.permissions?.shareMeals ?? false"
+                [loading]="detailsLoading() || loadingMoreMeals()"
+                [loadError]="moreMealsError()"
+                (loadMore)="loadMoreMeals()"
             />
             <fd-client-dashboard-summary-card titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.WEIGHT_TITLE" [summary]="weightSummary()" />
             <fd-client-dashboard-summary-card titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.WAIST_TITLE" [summary]="waistSummary()" />
@@ -144,7 +147,7 @@
                             <article class="client-dashboard__recommendation fd-stack fd-gap-sm">
                                 <div class="fd-row fd-justify-between fd-gap-sm">
                                     <strong>{{ task.title }}</strong>
-                                    <span class="fd-ui-pill fd-ui-caption">
+                                    <span class="fd-ui-pill fd-ui-caption fd-nowrap">
                                         {{ `CLIENT_TASKS.STATUS.${(task.status | uppercase)}` | translate }}
                                     </span>
                                 </div>
@@ -187,14 +190,14 @@
                         </h3>
                         <div class="fd-row fd-wrap fd-gap-xs">
                             @for (template of recommendationTemplates(); track template.id) {
-                                <div class="fd-row fd-gap-xs">
+                                <div class="client-dashboard__template fd-gap-xs">
                                     <fd-ui-button
                                         type="button"
                                         variant="secondary"
                                         fill="outline"
                                         (click)="useRecommendationTemplate(template)"
                                     >
-                                        {{ template.name }}
+                                        <span class="client-dashboard__template-name">{{ template.name }}</span>
                                     </fd-ui-button>
                                     <fd-ui-button
                                         type="button"

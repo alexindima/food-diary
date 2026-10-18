@@ -43,11 +43,12 @@
         <summary class="fd-ui-body-sm">{{ 'MEAL_MANAGE.OPTIONAL_MEDIA' | translate }}</summary>
         <div class="meal-manage__image">
             <fd-image-upload-field
-                appearance="compact"
+                appearance="tile"
                 [formField]="mealForm().imageUrl"
                 [description]="'MEAL_MANAGE.IMAGE_DESCRIPTION' | translate"
             />
         </div>
+        <p class="meal-manage__image-description fd-ui-caption">{{ 'MEAL_MANAGE.IMAGE_DESCRIPTION' | translate }}</p>
         <div class="meal-manage__field meal-manage__field--full fd-stack fd-gap-xs">
             <fd-ui-textarea
                 size="lg"

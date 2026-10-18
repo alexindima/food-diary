@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1667,
+    "productionProjectEdges": 1669,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -12,8 +12,8 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 112,
     "routedStandaloneComponents": 68,
-    "componentsWithoutDirectSpecs": 132,
-    "criticalSymbolsWithoutTestReferences": 46,
+    "componentsWithoutDirectSpecs": 130,
+    "criticalSymbolsWithoutTestReferences": 48,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -827,7 +827,7 @@
       "feature": "admin-lessons",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.html",
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.spec.ts"
     },
     {
       "class": "AdminMailMessageDialogComponent",
@@ -1728,6 +1728,27 @@
       "specPath": null
     },
     {
+      "class": "AdminAcquisitionLinkPreviewComponent",
+      "selector": "fd-admin-acquisition-link-preview",
+      "feature": "admin-acquisition",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/components/admin-acquisition-link-preview.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/components/admin-acquisition-link-preview.html",
+      "inputs": [
+        {
+          "name": "url",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "validation",
+          "type": "{ key: string; max: number } | null",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "AdminAiPromptVariablesComponent",
       "selector": "fd-admin-ai-prompt-variables",
       "feature": "admin-ai-prompts",
@@ -1873,16 +1894,6 @@
       "specPath": null
     },
     {
-      "class": "AdminCatalogComponent",
-      "selector": "fd-admin-catalog",
-      "feature": "admin-catalog",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/pages/admin-catalog.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/pages/admin-catalog.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
       "class": "AdminDashboardContentComponent",
       "selector": "fd-admin-dashboard-content",
       "feature": "admin-dashboard",
@@ -1895,16 +1906,6 @@
           "required": true
         }
       ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "AdminLessonEditDialogComponent",
-      "selector": "fd-admin-lesson-edit-dialog",
-      "feature": "admin-lessons",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.html",
-      "inputs": [],
       "outputs": [],
       "specPath": null
     },
@@ -3054,9 +3055,24 @@
           "name": "showEmptyState",
           "type": "",
           "required": false
+        },
+        {
+          "name": "loading",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "loadError",
+          "type": "",
+          "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "loadMore",
+          "type": ""
+        }
+      ],
       "specPath": null
     },
     {
@@ -5006,16 +5022,6 @@
       "specPath": null
     },
     {
-      "class": "FeaturesComponent",
-      "selector": "fd-features",
-      "feature": "public",
-      "path": "FoodDiary.Web.Client/src/app/features/public/components/features/features.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/features/features.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
       "class": "HeroComponent",
       "selector": "fd-hero",
       "feature": "public",
@@ -5599,6 +5605,26 @@
       "coveredThrough": []
     },
     {
+      "name": "ProcessOwnedImageDeletionsCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Images/Application/Commands/ProcessOwnedImageDeletions/ProcessOwnedImageDeletionsCommandHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "PurgeOwnedFixtureUsersCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/PurgeOwnedFixtureUsers/PurgeOwnedFixtureUsersCommandHandler.cs",
+      "line": 6,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "RequestTelegramBackupEmailCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/RequestTelegramBackupEmail/RequestTelegramBackupEmailCommandHandler.cs",
@@ -6067,17 +6093,17 @@
     },
     {
       "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxMessageClaimer.cs",
-      "line": 115,
+      "line": 118,
       "marker": "#pragma warning disable"
     },
     {
       "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxMessageClaimer.cs",
-      "line": 146,
+      "line": 152,
       "marker": "#pragma warning disable"
     },
     {
       "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxMessageClaimer.cs",
-      "line": 173,
+      "line": 179,
       "marker": "#pragma warning disable"
     }
   ]

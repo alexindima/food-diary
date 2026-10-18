@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -35,6 +35,7 @@ const MAX_TEXT_NAME_LENGTH = 256;
 export class ItemSelectDialogComponent {
     private readonly dialogData = inject<ItemSelectDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
     private readonly fdDialogService = inject(FdUiDialogService);
+    private readonly translateService = inject(TranslateService);
     private readonly dialogRef = inject(FdUiDialogRef<ItemSelectDialogComponent, ItemSelection | null>, { optional: true });
 
     public readonly embedded = input<boolean>(false);
@@ -98,6 +99,7 @@ export class ItemSelectDialogComponent {
             this.fdDialogService
                 .open<ProductAddDialogComponent, Product | null, Product | null>(ProductAddDialogComponent, {
                     preset: 'fullscreen',
+                    ariaLabel: String(this.translateService.instant('PRODUCT_MANAGE.ADD_TITLE')),
                 })
                 .afterClosed()
                 .subscribe(product => {

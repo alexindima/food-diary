@@ -36,6 +36,7 @@ export class WeightHistoryGoalDialogComponent {
     protected readonly goalRange = computed(() => ({ max: this.measurements.displayWeight(MAX_WEIGHT_KG, WEIGHT_INPUT_FRACTION_DIGITS) }));
 
     public constructor() {
+        this.facade.goalActionError.set(null);
         effect(() => {
             this.dialogRef.disableClose = this.isSaving();
         });

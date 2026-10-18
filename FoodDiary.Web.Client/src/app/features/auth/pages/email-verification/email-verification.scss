@@ -27,5 +27,6 @@
 
 .email-verify__actions {
     display: grid;
+    gap: var(--fd-space-md);
     margin-top: var(--fd-space-md);
 }

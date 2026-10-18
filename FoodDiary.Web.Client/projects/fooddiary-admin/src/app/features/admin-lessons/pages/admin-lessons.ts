@@ -7,8 +7,10 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
-import { filter, switchMap } from 'rxjs';
+import { filter, finalize, type Observable, switchMap, tap } from 'rxjs';
 
 import { AdminCatalogFilterComponent, matchesAdminCatalog } from '../../../shared/catalog/admin-catalog-filter';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
@@ -31,6 +33,7 @@ const EXPORT_DATE_LENGTH = 10;
         TranslatePipe,
         CommonModule,
         FdUiButtonComponent,
+        FdUiFormErrorComponent,
     ],
     templateUrl: './admin-lessons.html',
     styleUrl: './admin-lessons.scss',
@@ -48,6 +51,7 @@ export class AdminLessonsComponent {
     protected readonly isLoading = signal(false);
     protected readonly isImporting = signal(false);
     protected readonly importMessage = signal<string | null>(null);
+    protected readonly deleteError = signal<string | null>(null);
 
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
@@ -130,51 +134,49 @@ export class AdminLessonsComponent {
             isNew: true,
         };
 
-        this.dialogService
-            .open(AdminLessonEditDialogComponent, {
-                ariaLabel: String(this.translate.instant('ADMIN_LESSONS.CREATE_DIALOG_TITLE')),
-                size: 'lg',
-                panelClass: ['fd-admin-lesson-dialog', 'fd-admin-lesson-dialog--fullscreen'],
-                data: dialogData,
-            })
-            .afterClosed()
-            .subscribe(updated => {
-                if (updated === true) {
-                    this.loadLessons();
-                }
-            });
+        const dialogRef = this.dialogService.open(AdminLessonEditDialogComponent, {
+            ariaLabel: String(this.translate.instant('ADMIN_LESSONS.CREATE_DIALOG_TITLE')),
+            size: 'lg',
+            panelClass: ['fd-admin-lesson-dialog', 'fd-admin-lesson-dialog--fullscreen'],
+            data: dialogData,
+        });
+        this.afterClosedWithOwner(dialogRef).subscribe(updated => {
+            if (updated === true) {
+                this.loadLessons();
+            }
+        });
     }
 
     protected openEdit(lesson: AdminLesson): void {
-        this.dialogService
-            .open(AdminLessonEditDialogComponent, {
-                ariaLabel: String(this.translate.instant('ADMIN_LESSONS.EDIT_DIALOG_TITLE')),
-                size: 'lg',
-                panelClass: ['fd-admin-lesson-dialog', 'fd-admin-lesson-dialog--fullscreen'],
-                data: lesson,
-            })
-            .afterClosed()
-            .subscribe(updated => {
-                if (updated === true) {
-                    this.loadLessons();
-                }
-            });
+        const dialogRef = this.dialogService.open(AdminLessonEditDialogComponent, {
+            ariaLabel: String(this.translate.instant('ADMIN_LESSONS.EDIT_DIALOG_TITLE')),
+            size: 'lg',
+            panelClass: ['fd-admin-lesson-dialog', 'fd-admin-lesson-dialog--fullscreen'],
+            data: lesson,
+        });
+        this.afterClosedWithOwner(dialogRef).subscribe(updated => {
+            if (updated === true) {
+                this.loadLessons();
+            }
+        });
     }
 
     protected deleteLesson(lesson: AdminLesson): void {
-        this.dialogService
-            .open(FdUiConfirmDialogComponent, {
-                size: 'sm',
-                data: {
-                    title: 'Delete lesson',
-                    message: `Delete "${lesson.title}"?`,
-                    confirmLabel: 'Delete',
-                    danger: true,
-                },
-            })
-            .afterClosed()
+        const dialogRef = this.dialogService.open(FdUiConfirmDialogComponent, {
+            size: 'sm',
+            data: {
+                title: 'Delete lesson',
+                message: `Delete "${lesson.title}"?`,
+                confirmLabel: 'Delete',
+                danger: true,
+            },
+        });
+        this.afterClosedWithOwner(dialogRef)
             .pipe(
                 filter((confirmed): confirmed is true => confirmed === true),
+                tap(() => {
+                    this.deleteError.set(null);
+                }),
                 switchMap(() => this.lessonsFacade.delete(lesson.id)),
                 takeUntilDestroyed(this.destroyRef),
             )
@@ -182,7 +184,17 @@ export class AdminLessonsComponent {
                 next: () => {
                     this.loadLessons();
                 },
+                error: () => {
+                    this.deleteError.set('ADMIN_LESSONS.DELETE_ERROR');
+                },
             });
+    }
+
+    private afterClosedWithOwner<T, R>(dialogRef: FdUiDialogRef<T, R>): Observable<R | undefined> {
+        const unregisterCleanup = this.destroyRef.onDestroy(() => {
+            dialogRef.close();
+        });
+        return dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef), finalize(unregisterCleanup));
     }
 
     protected exportLessons(): void {

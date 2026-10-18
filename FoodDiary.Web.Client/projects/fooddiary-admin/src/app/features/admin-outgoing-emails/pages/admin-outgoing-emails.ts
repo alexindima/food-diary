@@ -6,6 +6,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiInputComponent, FdUiPaginationComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import type { Subscription } from 'rxjs';
 
+import { connectAdminDevelopmentScreen } from '../../../shared/development/admin-development-screen';
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
@@ -79,6 +80,31 @@ export class AdminOutgoingEmailsComponent {
     protected readonly statuses = ['pending', 'processing', 'retry', 'sent', 'failed', 'suppressed'];
 
     public constructor() {
+        const fields = ['page', 'purpose', 'status', 'recipient', 'period', 'from', 'to'];
+        connectAdminDevelopmentScreen({
+            kind: 'admin-outgoing-emails',
+            filterFields: fields,
+            read: () => ({
+                filters: Object.fromEntries(fields.map(field => [field, this.route.snapshot.queryParamMap.get(field)])),
+                page: this.page(),
+                totalItems: this.total(),
+                loading: this.loading(),
+                error: this.failed(),
+                statusCounts: this.statusCounts(),
+                items: this.messages().map(message => ({
+                    id: message.id,
+                    status: message.status,
+                    purpose: message.purpose,
+                    attemptCount: message.attemptCount,
+                    createdAtUtc: message.createdAtUtc,
+                    sentAtUtc: message.sentAtUtc,
+                    correlationId: message.correlationId,
+                })),
+            }),
+            setFiltersAsync: async params => {
+                await this.router.navigate([], { relativeTo: this.route, queryParams: params });
+            },
+        });
         this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
             this.purpose.set(params.get('purpose') ?? '');
             this.status.set(params.get('status') ?? '');

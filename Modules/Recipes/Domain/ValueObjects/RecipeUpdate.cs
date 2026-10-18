@@ -18,4 +18,7 @@ public readonly record struct RecipeUpdate(
     int? PrepTime = null,
     int? CookTime = null,
     int? Servings = null,
-    Visibility? Visibility = null);
+    Visibility? Visibility = null) {
+    public bool ClearPrepTime { get; init; }
+    public bool ClearCookTime { get; init; }
+}

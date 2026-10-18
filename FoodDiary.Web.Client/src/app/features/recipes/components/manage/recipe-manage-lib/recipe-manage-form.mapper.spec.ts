@@ -325,6 +325,13 @@ describe('recipe ingredient edit mapping', () => {
 });
 
 describe('recipe manage utility mapping', () => {
+    it('preserves unknown preparation and cooking times when reopening', () => {
+        const form = buildRecipeFormPatchValue({ ...RECIPE, prepTime: null, cookTime: null });
+
+        expect(form.prepTime).toBeNull();
+        expect(form.cookTime).toBeNull();
+    });
+
     it('should detect missing nutrition totals', () => {
         expect(
             hasNoRecipeNutritionTotals({

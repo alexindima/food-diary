@@ -1,3 +1,4 @@
+import { HttpContext } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -68,7 +69,7 @@ describe('Dashboard midnight rollover', () => {
         expect(facade.selectedDate()).toEqual(new Date('2026-10-03T00:00:00'));
         expect(facade.isTodaySelected()).toBe(true);
         expect(dashboardService.getSnapshot).toHaveBeenCalledTimes(2);
-        expect(dashboardService.getSnapshot).toHaveBeenLastCalledWith(expect.objectContaining({ date: new Date('2026-10-03T00:00:00Z') }));
+        expect(dashboardService.getSnapshot).toHaveBeenLastCalledWith(expect.objectContaining({ date: new Date('2026-10-03T00:00:00Z') }), expect.any(HttpContext));
     });
 
     it('keeps an explicitly selected date and removes today-only actions at midnight', () => {
@@ -110,7 +111,7 @@ describe('Dashboard live updates', () => {
         TestBed.tick();
 
         expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledExactlyOnceWith(
-            expect.objectContaining({ date: new Date(Date.UTC(TEST_YEAR, 2, SELECTED_DAY)) }),
+            expect.objectContaining({ date: new Date(Date.UTC(TEST_YEAR, 2, SELECTED_DAY)) }), expect.any(HttpContext),
         );
         expect(facade.selectedDate()).toEqual(new Date(TEST_YEAR, 2, SELECTED_DAY));
         expect(facade.isLoading()).toBe(false);
@@ -239,7 +240,7 @@ describe('DashboardFacade loading (2)', () => {
 
         facade.initialize();
 
-        expect(dashboardService.getSnapshot).toHaveBeenCalledWith(expect.objectContaining({ locale: 'ru' }));
+        expect(dashboardService.getSnapshot).toHaveBeenCalledWith(expect.objectContaining({ locale: 'ru' }), expect.any(HttpContext));
     });
 });
 
@@ -410,7 +411,7 @@ describe('DashboardFacade request lifecycle', () => {
         facade.initialize();
         translateService.getCurrentLang.mockReturnValue('ru-RU');
         translateService.onLangChange.next({ lang: 'ru-RU' });
-        expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledWith(expect.objectContaining({ locale: 'ru' }));
+        expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledWith(expect.objectContaining({ locale: 'ru' }), expect.any(HttpContext));
         expect(facade.snapshot()).toEqual(snapshot);
         expect(facade.isLoading()).toBe(false);
     });

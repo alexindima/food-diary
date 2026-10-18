@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { ExportService } from '../../../../shared/api/export.service';
+import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../../shared/development/development-tools';
 import { CyclesService } from '../../api/cycles.service';
 import { CycleDayFacade } from '../../lib/cycle-day.facade';
 import { CycleEpisodeFacade } from '../../lib/cycle-episode.facade';
@@ -17,6 +18,7 @@ const DURATION_FIELD_COUNT = 3;
 
 let fixture: ComponentFixture<CycleSettingsDrawerComponent>;
 let facade: CycleTrackingFacade;
+let publishedScreen: DevelopmentScreen;
 
 beforeEach(() => {
     TestBed.configureTestingModule({
@@ -32,6 +34,15 @@ beforeEach(() => {
             CycleExportFacade,
             { provide: CyclesService, useValue: {} },
             { provide: ExportService, useValue: {} },
+            {
+                provide: DEVELOPMENT_SCREENS,
+                useValue: {
+                    attach: (screen: DevelopmentScreen) => {
+                        publishedScreen = screen;
+                        return (): void => {};
+                    },
+                },
+            },
         ],
     });
     facade = TestBed.inject(CycleTrackingFacade);
@@ -88,5 +99,62 @@ describe('CycleSettingsDrawerComponent pending actions', () => {
         fixture.detectChanges();
         element.querySelector('.cycle-drawer')?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
         expect(closed).toHaveBeenCalledOnce();
+    });
+});
+
+describe('Cycle settings development capability', () => {
+    const draft = { averageCycleLength: 29, averagePeriodLength: 6, lutealLength: 13 };
+
+    it('fills the actual numeric form while retaining consent values and exposing only allowlisted state', () => {
+        const original = { ...facade.settingsModel() };
+        publishedScreen.fillDraft?.(draft);
+        fixture.detectChanges();
+        expect(facade.settingsModel()).toEqual({ ...original, ...draft });
+        expect(publishedScreen.isDirty?.()).toBe(true);
+        expect(publishedScreen.read()).toMatchObject({
+            values: draft,
+            valid: true,
+            fields: {
+                averageCycleLength: { min: 18, max: 60, step: 1, unit: 'days' },
+            },
+        });
+        expect(publishedScreen.read()).not.toHaveProperty('cycleTrackingConsentGranted');
+        expect(JSON.stringify(publishedScreen.read())).not.toMatch(/notes|fertilitySignals|nutritionInsights/);
+        publishedScreen.clearDraft?.();
+        expect(facade.settingsModel()).toEqual(original);
+        expect(publishedScreen.isDirty?.()).toBe(false);
+    });
+
+    it.each([
+        { ...draft, averageCycleLength: 17 },
+        { ...draft, averagePeriodLength: 0 },
+        { ...draft, lutealLength: 13.5 },
+        { ...draft, nutritionInsightsConsentGranted: true },
+    ])('refuses invalid or extra draft fields atomically: %j', invalid => {
+        const original = { ...facade.settingsModel() };
+        expect(() => publishedScreen.fillDraft?.(invalid)).toThrow();
+        expect(facade.settingsModel()).toEqual(original);
+        expect(publishedScreen.isDirty?.()).toBe(false);
+    });
+
+    it('preserves other settings edited through the interface when discard is requested', () => {
+        publishedScreen.fillDraft?.(draft);
+        facade.settingsModel.update(value => ({ ...value, nutritionInsightsConsentGranted: true }));
+        expect(() => publishedScreen.clearDraft?.()).toThrow('Other settings changed');
+        expect(facade.settingsModel()).toMatchObject({ ...draft, nutritionInsightsConsentGranted: true });
+    });
+
+    it('reports actual validation errors and refuses tools while saving', () => {
+        facade.settingsModel.update(value => ({ ...value, averageCycleLength: 61 }));
+        expect(publishedScreen.read()).toMatchObject({
+            valid: false,
+            fields: {
+                averageCycleLength: { errors: ['max'], validationMessage: 'CYCLE_TRACKING.AVG_LENGTH_ERROR' },
+            },
+        });
+        fixture.componentRef.setInput('isSaving', true);
+        fixture.detectChanges();
+        expect(() => publishedScreen.fillDraft?.(draft)).toThrow('busy');
+        expect(() => publishedScreen.clearDraft?.()).toThrow('busy');
     });
 });

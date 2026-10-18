@@ -11,6 +11,7 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 import type { Subscription } from 'rxjs';
 
+import { connectAdminDevelopmentScreen } from '../../../shared/development/admin-development-screen';
 import type { AdminId, AdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
@@ -79,6 +80,29 @@ export class AdminMailInboxComponent {
         }));
     });
     public constructor() {
+        const fields = ['page', 'search', 'recipient', 'category', 'unread', 'fromAddress', 'period', 'from', 'to'];
+        connectAdminDevelopmentScreen({
+            kind: 'admin-mail-inbox',
+            filterFields: fields,
+            read: () => ({
+                filters: Object.fromEntries(fields.map(field => [field, this.route.snapshot.queryParamMap.get(field)])),
+                page: this.page(),
+                totalItems: this.totalItems(),
+                loading: this.isLoading(),
+                error: this.loadFailed(),
+                unreadCount: this.unreadCount(),
+                readCount: this.readCount(),
+                items: this.messages().map(message => ({
+                    id: message.id,
+                    status: message.status,
+                    receivedAtUtc: message.receivedAtUtc,
+                    readAtUtc: message.readAtUtc,
+                })),
+            }),
+            setFiltersAsync: async params => {
+                await this.router.navigate([], { relativeTo: this.route, queryParams: params });
+            },
+        });
         this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
             this.page.set(adminPage(params.get('page')));
             this.recipientFilter.set(params.get('recipient') ?? '');

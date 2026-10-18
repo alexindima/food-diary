@@ -27,6 +27,7 @@ import {
 import { BarcodeScannerComponent } from '../../../../components/shared/barcode-scanner/barcode-scanner';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { NavigationService } from '../../../../services/navigation.service';
+import { developmentRequestContext } from '../../../../shared/development/development-request-context';
 import { resolveProductImageUrl } from '../../../../shared/lib/product-image.util';
 import { RequestPagedData } from '../../../../shared/lib/request-paged-data';
 import { RequestStateController } from '../../../../shared/lib/request-state';
@@ -327,7 +328,7 @@ export class ProductListFacade {
 
         this.searchOpenFoodFacts(search);
 
-        return this.productService.query(page, limit, filters, includePublic).pipe(
+        return this.productService.query(page, limit, filters, { includePublic, context: developmentRequestContext(this.productData.bindRequest(requestId)) }).pipe(
             takeUntil(this.cancelLoad),
             takeUntilDestroyed(this.destroyRef),
             tap(data => {
@@ -364,7 +365,7 @@ export class ProductListFacade {
                 ...(this.queryState === null ? {} : { filters: this.currentFilters(this.searchValue()) }),
                 recentLimit: PRODUCT_LIST_RECENT_LIMIT,
                 favoriteLimit: PRODUCT_LIST_FAVORITE_LIMIT,
-            })
+            }, developmentRequestContext(this.productData.bindRequest(requestId)))
             .pipe(
                 takeUntil(this.cancelLoad),
                 takeUntilDestroyed(this.destroyRef),

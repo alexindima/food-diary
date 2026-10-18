@@ -38,6 +38,8 @@ export class CycleTrackingStateFacade {
 
     public readonly isSavingCycle = signal(false);
 
+    public readonly createError = signal<string | null>(null);
+
     public readonly isSavingSettings = signal(false);
 
     public readonly isDeletingCycle = signal(false);

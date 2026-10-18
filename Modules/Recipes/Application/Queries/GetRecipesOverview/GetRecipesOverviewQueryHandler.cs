@@ -140,7 +140,8 @@ public sealed class GetRecipesOverviewQueryHandler(
     private static bool MatchesFilters(RecipeOverviewReadItem recipe, RecipeQueryFilters filters) =>
         (string.IsNullOrWhiteSpace(filters.Category) ||
          string.Equals(recipe.Category, filters.Category, StringComparison.Ordinal)) &&
-        (!filters.MaxTotalTime.HasValue || (recipe.PrepTime ?? 0) + (recipe.CookTime ?? 0) <= filters.MaxTotalTime.Value) &&
+        (!filters.MaxTotalTime.HasValue || ((recipe.PrepTime.HasValue || recipe.CookTime.HasValue) &&
+            (recipe.PrepTime ?? 0) + (recipe.CookTime ?? 0) <= filters.MaxTotalTime.Value)) &&
         (!filters.CaloriesFrom.HasValue || (recipe.TotalCalories ?? 0) >= filters.CaloriesFrom.Value) &&
         (!filters.CaloriesTo.HasValue || (recipe.TotalCalories ?? 0) <= filters.CaloriesTo.Value) &&
         (!filters.HasImage.HasValue || HasImage(recipe) == filters.HasImage.Value);

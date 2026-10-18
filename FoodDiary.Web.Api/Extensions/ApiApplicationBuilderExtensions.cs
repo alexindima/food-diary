@@ -26,6 +26,7 @@ public static class ApiApplicationBuilderExtensions {
                 .AddSupportedCultures("en", "ru")
                 .AddSupportedUICultures("en", "ru"));
             app.UseMiddleware<SecurityHeadersMiddleware>();
+            app.UseMiddleware<DevelopmentRuntimeHeadersMiddleware>();
 
             if (app.Environment.IsDevelopment()) {
                 app.UseSwagger();

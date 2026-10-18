@@ -6,6 +6,11 @@ namespace FoodDiary.Modules.Cycles.Application.Commands.CreateCycle;
 
 public sealed class CreateCycleCommandValidator : AbstractValidator<CreateCycleCommand> {
     public CreateCycleCommandValidator() {
+        RuleFor(x => x.TrackingStartDate)
+            .NotEmpty()
+            .WithErrorCode("Validation.Required")
+            .WithMessage("TrackingStartDate is required.");
+
         RuleFor(x => x.Notes)
             .Must(static value => value is null || value.Trim().Length <= CycleProfile.MaxNotesLength)
             .WithErrorCode("Validation.Invalid")

@@ -12,6 +12,7 @@ import { EMPTY, type Observable } from 'rxjs';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card';
+import { connectDevelopmentScreen } from '../../../../shared/development/development-tools';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import {
     CURRENT_SESSION_RECENT_CHECK_INS_LIMIT,
@@ -56,6 +57,7 @@ import {
 } from '../../components/fasting-session-details-dialog/fasting-session-details-dialog';
 import { FastingSessionManagementDialogComponent } from '../../components/fasting-session-management-dialog/fasting-session-management-dialog';
 import { FastingFacade } from '../../lib/fasting.facade';
+import { hasFastingDevelopmentDraft, readFastingDevelopmentContext } from '../../lib/fasting-development';
 import {
     FASTING_ENERGY_EMOJI_SCALE,
     FASTING_HUNGER_EMOJI_SCALE,
@@ -157,6 +159,7 @@ export class FastingPageComponent {
         return this.getSessionCheckIns(session).slice(0, CURRENT_SESSION_RECENT_CHECK_INS_LIMIT);
     });
     public constructor() {
+        connectDevelopmentScreen({ kind: 'fasting', read: () => readFastingDevelopmentContext(this.facade), isDirty: () => hasFastingDevelopmentDraft(this.facade), openDraft: () => { this.openProtocolSettings(); } });
         this.facade.initialize();
 
         ((this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY)

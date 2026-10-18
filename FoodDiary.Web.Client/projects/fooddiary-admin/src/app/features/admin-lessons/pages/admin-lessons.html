@@ -32,6 +32,9 @@
     [showState]="true"
 />
 <div class="admin-lessons fd-grid fd-gap-md">
+    @if (deleteError(); as error) {
+        <fd-ui-form-error [error]="error" />
+    }
     @if (importMessage(); as message) {
         <p class="import-message">{{ message }}</p>
     }
@@ -40,45 +43,49 @@
     } @else if (loadFailed()) {
         <fd-admin-load-error (retry)="loadLessons()" />
     } @else {
-        <table class="lessons-table" tabindex="0" [attr.aria-label]="'ADMIN_NAV.LESSONS' | translate">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Locale</th>
-                    <th>Category</th>
-                    <th>Difficulty</th>
-                    <th>Read min</th>
-                    <th>Order</th>
-                    <th>{{ 'ADMIN_LESSONS.PUBLICATION_TITLE' | translate }}</th>
-                    <th>{{ 'ADMIN_LESSONS.COMPLETED' | translate }}</th>
-                    <th>Updated</th>
-                    <th>{{ 'ADMIN_LESSONS.ACTIONS' | translate }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (lesson of pageItems(); track lesson.id) {
+        <div class="lessons-table-scroll" tabindex="0" role="region" [attr.aria-label]="'ADMIN_NAV.LESSONS' | translate">
+            <table class="lessons-table" [attr.aria-label]="'ADMIN_NAV.LESSONS' | translate">
+                <thead>
                     <tr>
-                        <td>{{ lesson.title }}</td>
-                        <td>{{ lesson.locale }}</td>
-                        <td>{{ lesson.category }}</td>
-                        <td>{{ lesson.difficulty }}</td>
-                        <td>{{ lesson.estimatedReadMinutes }}</td>
-                        <td>{{ lesson.sortOrder }}</td>
-                        <td>{{ `ADMIN_LESSONS.PUBLICATION.${lesson.isPublished ?? true}` | translate }}</td>
-                        <td>{{ lesson.completedCount ?? 0 }}</td>
-                        <td>{{ lesson.modifiedOnUtc || lesson.createdOnUtc }}</td>
-                        <td class="actions fd-row fd-gap-xs">
-                            <fd-ui-button type="button" variant="secondary" (click)="openEdit(lesson)">Edit</fd-ui-button>
-                            <fd-ui-button type="button" variant="secondary" (click)="deleteLesson(lesson)">Delete</fd-ui-button>
-                        </td>
+                        <th>Title</th>
+                        <th>Locale</th>
+                        <th>Category</th>
+                        <th>Difficulty</th>
+                        <th>Read min</th>
+                        <th>Order</th>
+                        <th>{{ 'ADMIN_LESSONS.PUBLICATION_TITLE' | translate }}</th>
+                        <th>{{ 'ADMIN_LESSONS.COMPLETED' | translate }}</th>
+                        <th>Updated</th>
+                        <th>{{ 'ADMIN_LESSONS.ACTIONS' | translate }}</th>
                     </tr>
-                } @empty {
-                    <tr>
-                        <td colspan="10">No lessons found.</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @for (lesson of pageItems(); track lesson.id) {
+                        <tr>
+                            <td>{{ lesson.title }}</td>
+                            <td>{{ lesson.locale }}</td>
+                            <td>{{ lesson.category }}</td>
+                            <td>{{ lesson.difficulty }}</td>
+                            <td>{{ lesson.estimatedReadMinutes }}</td>
+                            <td>{{ lesson.sortOrder }}</td>
+                            <td>{{ `ADMIN_LESSONS.PUBLICATION.${lesson.isPublished ?? true}` | translate }}</td>
+                            <td>{{ lesson.completedCount ?? 0 }}</td>
+                            <td class="lesson-updated">{{ lesson.modifiedOnUtc || lesson.createdOnUtc }}</td>
+                            <td>
+                                <div class="actions fd-row fd-gap-xs">
+                                    <fd-ui-button type="button" variant="secondary" (click)="openEdit(lesson)">Edit</fd-ui-button>
+                                    <fd-ui-button type="button" variant="secondary" (click)="deleteLesson(lesson)">Delete</fd-ui-button>
+                                </div>
+                            </td>
+                        </tr>
+                    } @empty {
+                        <tr>
+                            <td colspan="10">No lessons found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
         <p class="fd-ui-body-xs">
             {{ 'ADMIN_PAGINATION.RANGE' | translate: { start: rangeStart(), end: rangeEnd(), total: filteredItems().length } }}
         </p>

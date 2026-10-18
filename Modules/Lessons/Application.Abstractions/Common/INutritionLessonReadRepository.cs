@@ -6,6 +6,10 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 namespace FoodDiary.Modules.Lessons.Application.Abstractions.Common;
 
 public interface INutritionLessonReadRepository {
+    Task<IReadOnlyDictionary<NutritionLessonId, int>> GetCompletionCountsAsync(
+        IReadOnlyCollection<NutritionLessonId> lessonIds,
+        CancellationToken cancellationToken = default);
+
     Task<IReadOnlyList<NutritionLesson>> GetByLocaleAsync(
         string locale,
         LessonCategory? category = null,

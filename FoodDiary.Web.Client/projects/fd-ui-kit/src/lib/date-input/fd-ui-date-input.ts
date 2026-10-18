@@ -1,12 +1,15 @@
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     computed,
     effect,
     ElementRef,
     inject,
+    Injector,
     input,
     LOCALE_ID,
     model,
@@ -28,7 +31,7 @@ let uniqueId = 0;
 
 @Component({
     selector: 'fd-ui-date-input',
-    imports: [CommonModule, CdkOverlayOrigin, CdkConnectedOverlay, FdUiCalendarComponent, FdUiIconComponent],
+    imports: [CommonModule, CdkOverlayOrigin, CdkConnectedOverlay, CdkTrapFocus, FdUiCalendarComponent, FdUiIconComponent],
     templateUrl: './fd-ui-date-input.html',
     styleUrls: ['./fd-ui-date-input.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,6 +41,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly locale = inject(LOCALE_ID);
     private readonly document = inject(DOCUMENT);
+    private readonly injector = inject(Injector);
 
     private readonly translateService = inject(TranslateService, { optional: true });
     protected readonly language = toSignal(this.translateService?.onLangChange.pipe(map(event => event.lang)) ?? of(this.locale), {
@@ -73,6 +77,15 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
     protected readonly isOpen = signal(false);
     protected readonly displayMonth = signal(new Date());
     protected readonly isFocused = signal(false);
+    protected readonly pickerAccessibleName = computed(() => {
+        const language = this.language();
+        const explicitLabel = [this.pickerAriaLabel(), this.label()].find(label => label !== undefined && label.trim().length > 0);
+        return (
+            explicitLabel?.trim() ??
+            this.translateService?.instant('CALENDAR.CHOOSE_DATE') ??
+            new Intl.DateTimeFormat(language, { month: 'long', year: 'numeric' }).format(this.displayMonth())
+        );
+    });
 
     protected readonly sizeClass = computed(() => `fd-ui-date-input--size-${this.size()}`);
     protected readonly hasError = computed(() => {
@@ -206,6 +219,20 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         if (restoreFocus && !this.disabled()) {
             this.host.nativeElement.querySelector<HTMLInputElement>('input')?.focus();
         }
+    }
+
+    protected focusDatePicker(): void {
+        afterNextRender(
+            () => {
+                if (this.isOpen()) {
+                    this.document
+                        .getElementById(`${this.id()}-dialog`)
+                        ?.querySelector<HTMLButtonElement>('[role="gridcell"][tabindex="0"]:not([disabled])')
+                        ?.focus();
+                }
+            },
+            { injector: this.injector },
+        );
     }
 
     protected onDateSelect(value: Date | null): void {

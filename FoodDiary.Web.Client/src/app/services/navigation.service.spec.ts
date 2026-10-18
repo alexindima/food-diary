@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { AuthMode } from '../shared/auth/auth.data';
+import { LocalizationService } from '../shared/i18n/localization.service';
 import { NavigationService } from './navigation.service';
 
 type RouterMock = {
@@ -10,20 +11,31 @@ type RouterMock = {
     navigateByUrl: ReturnType<typeof vi.fn<Router['navigateByUrl']>>;
 };
 
+function createNavigationContext(): {
+    service: NavigationService;
+    routerSpy: RouterMock;
+    currentLanguage: ReturnType<typeof vi.fn<LocalizationService['getCurrentLanguage']>>;
+} {
+    const routerSpy: RouterMock = { navigate: vi.fn(), navigateByUrl: vi.fn() };
+    routerSpy.navigate.mockResolvedValue(true);
+    routerSpy.navigateByUrl.mockResolvedValue(true);
+    const currentLanguage = vi.fn<LocalizationService['getCurrentLanguage']>().mockReturnValue('en');
+    TestBed.configureTestingModule({
+        providers: [
+            NavigationService,
+            { provide: Router, useValue: routerSpy },
+            { provide: LocalizationService, useValue: { getCurrentLanguage: currentLanguage } },
+        ],
+    });
+    return { service: TestBed.inject(NavigationService), routerSpy, currentLanguage };
+}
+
 describe('NavigationService', () => {
     let service: NavigationService;
     let routerSpy: RouterMock;
 
     beforeEach(() => {
-        routerSpy = { navigate: vi.fn(), navigateByUrl: vi.fn() };
-        routerSpy.navigate.mockResolvedValue(true);
-        routerSpy.navigateByUrl.mockResolvedValue(true);
-
-        TestBed.configureTestingModule({
-            providers: [NavigationService, { provide: Router, useValue: routerSpy }],
-        });
-
-        service = TestBed.inject(NavigationService);
+        ({ service, routerSpy } = createNavigationContext());
     });
 
     it('should navigate to home', async () => {
@@ -99,5 +111,47 @@ describe('NavigationService', () => {
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/profile'], {
             queryParams: { googleLink: 'success' },
         });
+    });
+});
+
+describe('NavigationService localized public entry', () => {
+    let context: ReturnType<typeof createNavigationContext>;
+
+    beforeEach(() => {
+        context = createNavigationContext();
+    });
+
+    it.each<AuthMode>(['login', 'register'])('preserves Russian locale and the return URL for %s entry', async mode => {
+        context.currentLanguage.mockReturnValue('ru');
+        const returnUrl = '/meals?dateFrom=2026-10-18&dateTo=2026-10-18';
+
+        await context.service.navigateToAuthAsync(mode, returnUrl);
+
+        expect(context.routerSpy.navigate).toHaveBeenCalledWith(['/ru'], { queryParams: { auth: mode, returnUrl } });
+    });
+
+    it('returns to the Russian public landing after leaving the application', async () => {
+        context.currentLanguage.mockReturnValue('ru');
+
+        await context.service.navigateToLandingAsync();
+
+        expect(context.routerSpy.navigate).toHaveBeenCalledWith(['/ru']);
+    });
+
+    it('uses the current language when the preference changes after service creation', async () => {
+        await context.service.navigateToAuthAsync('login');
+        context.currentLanguage.mockReturnValue('ru');
+
+        await context.service.navigateToAuthAsync('register');
+
+        expect(context.routerSpy.navigate).toHaveBeenLastCalledWith(['/ru'], { queryParams: { auth: 'register' } });
+    });
+
+    it('keeps unsupported locale values within the configured public roots', async () => {
+        context.currentLanguage.mockReturnValue('https://outside.audit-r5.test');
+
+        await context.service.navigateToAuthAsync('login');
+
+        expect(context.routerSpy.navigate).toHaveBeenCalledWith(['/'], { queryParams: { auth: 'login' } });
     });
 });

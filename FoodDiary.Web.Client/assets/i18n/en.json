@@ -36,9 +36,14 @@
         "SAVE_ERROR": "Could not save the template. Your edits are preserved. Try again."
     },
     "ADMIN_LESSONS": {
+        "SAVING_HINT": "Wait for the lesson to finish saving.",
+        "READ_MINUTES_VALIDATION": "Enter a whole number from 1 to 2147483647.",
+        "SORT_ORDER_VALIDATION": "Enter a whole number from 0 to 2147483647.",
         "ACTIONS": "Actions",
         "CREATE_DIALOG_TITLE": "Create lesson",
         "EDIT_DIALOG_TITLE": "Edit lesson",
+        "SAVE_ERROR": "Could not save the lesson. Your changes are still in the form. Please try again.",
+        "DELETE_ERROR": "Could not delete the lesson. Please try again.",
         "PUBLISHED": "Published",
         "PUBLICATION_TITLE": "Publication",
         "PUBLICATION_HELP": "Published lessons appear in the app. Drafts remain available only in administration.",
@@ -137,6 +142,7 @@
         "NEXT": "Next"
     },
     "CALENDAR": {
+        "CHOOSE_DATE": "Choose date",
         "PREVIOUS_MONTH": "Previous month",
         "NEXT_MONTH": "Next month"
     },
@@ -1049,6 +1055,7 @@
         "AMOUNT_PLACEHOLDER_RECIPE": "Enter weight (g)",
         "AMOUNT_LABEL_RECIPE_SERVINGS": "Quantity (servings)",
         "AMOUNT_PLACEHOLDER_RECIPE_SERVINGS": "Enter number of servings",
+        "AMOUNT_UNIT_SERVING": "serving",
         "AMOUNT_UNIT_SERVINGS": "servings",
         "ITEM_SOURCE_LABEL": "Product or recipe",
         "ITEM_SOURCE_PLACEHOLDER": "Select product or recipe",
@@ -1145,6 +1152,7 @@
         "REMOVE_ITEM": "Remove item",
         "REMOVE_ITEM_NAMED": "Remove {{name}} from draft",
         "EDIT_ARIA": "Open meal draft editor",
+        "EDIT_ITEM_NAMED": "Edit item: {{name}}",
         "SAVE_ARIA": "Save meal draft"
     },
     "ADMIN_BILLING": {
@@ -1614,6 +1622,8 @@
         "DAILY_ADVICES": "Dashboard advices and JSON import"
     },
     "ADMIN_ACQUISITION": {
+        "UTM_LIMIT": "UTM values can contain at most {{max}} characters.",
+        "LINK_PATH_LIMIT": "The link path and parameters exceed {{max}} encoded characters. Shorten the path or UTM values.",
         "COMPARE": "Compared with the preceding period",
         "EXCLUSIVE_END": "exclusive end",
         "PREVIOUS": "Previous",
@@ -4670,8 +4680,8 @@
                 "PERCENT_UNIT": "%",
                 "GRAM_UNIT": " g",
                 "VS_GOAL": "Compared with your goal",
-                "INCOMPLETE_DATA": "Data is incomplete",
-                "INCOMPLETE_DATA_HINT": "Missing days may affect the period averages"
+                "INCOMPLETE_DATA": "Entries may be incomplete",
+                "INCOMPLETE_DATA_HINT": "Days with entries may still be incomplete; averages describe your diary."
             },
             "BALANCE": {
                 "TITLE": "Nutrient balance",
@@ -4862,7 +4872,7 @@
         "VISIBILITY_GROUP_TITLE": "Visibility",
         "VISIBILITY": "Visibility",
         "VISIBILITY_PLACEHOLDER": "Select visibility",
-        "SELECT_INGREDIENT": "Select product",
+        "SELECT_INGREDIENT": "Select ingredient",
         "UNKNOWN_PRODUCT": "Product",
         "DRAGGING_STEP": "Moving step",
         "DRAGGING_HINT": "Release to reorder",
@@ -6303,6 +6313,7 @@
         "AVG_LENGTH_ERROR": "Enter a whole number from 18 to 60 days.",
         "PERIOD_LENGTH_ERROR": "Enter a whole number from 1 to 14 days.",
         "LUTEAL_LENGTH_ERROR": "Enter a whole number from 8 to 18 days.",
+        "CREATE_CYCLE_FAILED": "Could not create the cycle journal. Your entries are still in the form. Please try again.",
         "SAVE_SETTINGS_FAILED": "Could not save cycle settings. Your changes are still here. Please try again.",
         "DELETE_CYCLE": "Delete cycle data",
         "DELETE_CYCLE_TITLE": "Delete all cycle data?",
@@ -7791,7 +7802,9 @@
                 "COUNT_FEW": "{{count}} meals",
                 "COUNT_MANY": "{{count}} meals",
                 "COUNT_OTHER": "{{count}} meals",
-                "EMPTY": "No meals shared for the selected period."
+                "EMPTY": "No meals shared for the selected period.",
+                "LOAD_MORE": "Show more meals",
+                "LOAD_MORE_ERROR": "Could not load more meals. Please try again."
             },
             "BODY": {
                 "DELTA": "{{delta}} since previous entry"

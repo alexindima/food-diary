@@ -28,6 +28,7 @@ import { StatisticsNutritionTrendCardComponent } from '../components/statistics-
 import { StatisticsOverviewCardComponent } from '../components/statistics-overview-card/statistics-overview-card';
 import { StatisticsFacade } from '../lib/statistics.facade';
 import { isNutritionTab, isStatisticsRange } from '../lib/statistics-data-mapper';
+import { connectStatisticsDevelopmentScreen } from '../lib/statistics-development';
 import { STATISTICS_NUTRITION_TABS, STATISTICS_RANGE_TABS } from '../lib/statistics-tabs.config';
 import { STATISTICS_TOUR } from './statistics-tour';
 
@@ -67,6 +68,7 @@ export class StatisticsComponent {
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
 
     public constructor() {
+        connectStatisticsDevelopmentScreen(this.facade);
         this.facade.initialize();
     }
 

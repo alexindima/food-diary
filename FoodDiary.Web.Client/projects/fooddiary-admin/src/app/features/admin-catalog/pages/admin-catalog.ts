@@ -37,6 +37,9 @@ export class AdminCatalogComponent {
     }));
 
     protected async exportAsync(): Promise<void> {
+        if (this.busy()) {
+            return;
+        }
         this.busy.set(true);
         this.error.set(null);
         try {

@@ -1,0 +1,6 @@
+@if (validation(); as error) {
+    <p role="alert" class="fd-ui-body-xs">{{ error.key | translate: { max: error.max } }}</p>
+} @else {
+    <div class="fd-ui-body-xs fd-ui-text-muted">Generated URL</div>
+    <div class="admin-acquisition__url fd-ui-body-sm">{{ url() }}</div>
+}

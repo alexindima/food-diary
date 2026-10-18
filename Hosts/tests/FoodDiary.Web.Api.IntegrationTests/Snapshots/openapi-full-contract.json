@@ -36491,6 +36491,12 @@
           "Nullable": false
         },
         {
+          "Name": "clearCookTime",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
           "Name": "clearDescription",
           "Required": false,
           "Type": "boolean",
@@ -36504,6 +36510,12 @@
         },
         {
           "Name": "clearImageUrl",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "clearPrepTime",
           "Required": false,
           "Type": "boolean",
           "Nullable": false

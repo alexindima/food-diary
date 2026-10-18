@@ -11,7 +11,12 @@ import { MealSourceType } from '../../../../../shared/models/meal.data';
 import { recipeDisplayToServings } from '../../../lib/recipe-serving/recipe-display-amount';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import type { MealItemFormValues, NutritionTotals } from '../meal-manage-lib/meal-manage.types';
-import { formatMealManageAmount, formatMealManageMacro, getEmptyNutritionTotals } from '../meal-manage-lib/meal-manage-view.utils';
+import {
+    formatMealManageAmount,
+    formatMealManageMacro,
+    formatMealManageNumber,
+    getEmptyNutritionTotals,
+} from '../meal-manage-lib/meal-manage-view.utils';
 
 @Component({
     selector: 'fd-meal-items-list',
@@ -81,20 +86,19 @@ export class MealItemsListComponent {
     }
 
     protected getAmountUnitLabel(index: number): string | null {
-        if (this.isProductItem(index)) {
-            const unit = this.getItem(index)?.product?.baseUnit;
+        const item = this.getItem(index);
+        if (item === undefined) {
+            return null;
+        }
+
+        if (item.sourceType === MealSourceType.Product) {
+            const unit = item.product?.baseUnit;
             return unit !== undefined ? this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${unit.toUpperCase()}`) : null;
         }
 
-        if (this.isRecipeItem(index)) {
-            return this.translateService.instant(
-                this.recipeWeight.hasServingWeight(this.getItem(index)?.recipe ?? null)
-                    ? 'PRODUCT_AMOUNT_UNITS.G'
-                    : 'MEAL_MANAGE.AMOUNT_UNIT_SERVINGS',
-            );
-        }
-
-        return null;
+        return this.recipeWeight.hasServingWeight(item.recipe)
+            ? this.translateService.instant('PRODUCT_AMOUNT_UNITS.G')
+            : this.getServingUnitLabel(item.amount);
     }
 
     protected isProductInvalid(index: number): boolean {
@@ -214,15 +218,21 @@ export class MealItemsListComponent {
         return this.items()[index];
     }
 
+    private getServingUnitLabel(amount: number | null): string {
+        const isSingleServing =
+            formatMealManageNumber(amount ?? 0, this.translateService) === formatMealManageNumber(1, this.translateService);
+        return this.translateService.instant(isSingleServing ? 'MEAL_MANAGE.AMOUNT_UNIT_SERVING' : 'MEAL_MANAGE.AMOUNT_UNIT_SERVINGS');
+    }
+
     private getAmountUnitLabelForItem(item: MealItemsListItemState): string | null {
         if (item.sourceType === MealSourceType.Product) {
             const unit = item.product?.baseUnit;
             return unit !== undefined ? this.translateService.instant(`GENERAL.UNITS.${unit.toUpperCase()}`) : null;
         }
 
-        return this.translateService.instant(
-            this.recipeWeight.hasServingWeight(item.recipe) ? 'GENERAL.UNITS.G' : 'MEAL_MANAGE.AMOUNT_UNIT_SERVINGS',
-        );
+        return this.recipeWeight.hasServingWeight(item.recipe)
+            ? this.translateService.instant('GENERAL.UNITS.G')
+            : this.getServingUnitLabel(item.amount);
     }
 }
 

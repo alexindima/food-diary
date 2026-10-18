@@ -15,6 +15,7 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { PeriodFilterComponent } from '../../../../components/shared/period-filter/period-filter';
 import { NavigationService } from '../../../../services/navigation.service';
+import { connectDevelopmentScreen } from '../../../../shared/development/development-tools';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
@@ -132,6 +133,18 @@ export class WeightHistoryPageComponent {
     protected readonly rangeTabs = WEIGHT_HISTORY_RANGE_TABS;
 
     public constructor() {
+        connectDevelopmentScreen({
+            kind: 'weight-history',
+            read: () => ({
+                range: this.facade.currentRange(),
+                loading: this.facade.isLoading(),
+                error: this.facade.pageLoadError(),
+                entries: this.facade.entries().map(entry => ({ id: entry.id, date: entry.date })),
+            }),
+            openDraft: () => {
+                this.openEntryDialog();
+            },
+        });
         this.facade.initialize();
     }
 

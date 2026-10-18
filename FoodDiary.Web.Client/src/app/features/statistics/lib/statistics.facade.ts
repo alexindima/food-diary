@@ -6,6 +6,7 @@ import { finalize } from 'rxjs';
 
 import { ExportService } from '../../../shared/api/export.service';
 import { UserService } from '../../../shared/api/user.service';
+import { developmentRequestContext } from '../../../shared/development/development-request-context';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
 import { parseLocalDateInputValue } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
@@ -41,6 +42,7 @@ export class StatisticsFacade {
 
     private dateLabelFormatterCache: { locale: string; range: StatisticsRange; formatter: Intl.DateTimeFormat } | null = null;
     private lastLoadedRangeKey: string | null = null;
+    public readonly appliedRange = signal<DateRange | null>(null);
     private readonly statisticsRequest = new RequestStateController<
         { statistics: MappedStatistics; weight: WeightEntrySummaryPoint[]; waist: WaistEntrySummaryPoint[] },
         'STATISTICS.LOAD_ERROR'
@@ -54,6 +56,7 @@ export class StatisticsFacade {
     public readonly customRangeForm = form(this.customRangeModel);
 
     public readonly isLoading = this.statisticsRequest.isLoading;
+    public readonly requestProvenance = this.statisticsRequest.provenance;
     public readonly isBodyLoading = this.statisticsRequest.isLoading;
     public readonly hasStatisticsResponse = this.statisticsRequest.hasData;
     public readonly hasLoadError = computed(() => this.statisticsRequest.error() !== null);
@@ -207,15 +210,17 @@ export class StatisticsFacade {
     private loadStatistics(range: DateRange): void {
         const requestId = this.statisticsRequest.begin();
         this.statisticsService
-            .getSummary(buildStatisticsSummaryRequest(range, new Intl.DateTimeFormat().resolvedOptions().timeZone))
+            .getSummary(buildStatisticsSummaryRequest(range, new Intl.DateTimeFormat().resolvedOptions().timeZone), developmentRequestContext(this.statisticsRequest.bindRequest(requestId)))
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: data => {
-                    this.statisticsRequest.succeed(requestId, {
+                    if (this.statisticsRequest.succeed(requestId, {
                         statistics: mapStatistics(data.nutrition),
                         weight: data.weight,
                         waist: data.waist,
-                    });
+                    })) {
+                        this.appliedRange.set(range);
+                    }
                 },
                 error: () => {
                     this.statisticsRequest.fail(requestId, 'STATISTICS.LOAD_ERROR');

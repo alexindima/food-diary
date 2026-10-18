@@ -107,6 +107,260 @@ These checks compile the real frontend SDK adapter/facade and both backend slice
 kinds, and exercise refusal of collisions and path escapes. They do not establish
 the behavior of a newly generated business feature.
 
+## Local WebMCP pilot
+
+Add the admin frontend to an existing owned runtime without changing the shared
+Angular workspace or its usual development URLs:
+
+```powershell
+node scripts/ai/task-runtime.mjs admin --name my-change
+node scripts/ai/runtime-diagnostics.mjs mail my-change
+```
+
+The admin command builds both apps in the runtime's generated workspace, starts
+admin on a separate loopback origin, and restarts only that runtime's client with
+the matching Admin panel destination. It retains the API and database. Process
+creation identities protect other sessions; the normal runtime stop also stops
+admin. `admin.status: frontend-ready` confirms HTTP readiness only;
+`admin.browserSso: unverified` requires a separate real sign-in check.
+
+Mail diagnostics issue only `GET /health` to the owned provider port after
+checking its process identity. A matching runtime ID and disabled-provider response
+confirm the local stub. They report background-job configuration from the startup
+record, keep application outbox state unobserved, and never claim SMTP or end-to-end
+delivery. No emails are enqueued or sent by this check. A dead/reused PID, unexpected
+provider response or another task's health response cannot establish readiness.
+
+Development builds on `localhost`, `127.0.0.1` and `[::1]` expose fourteen client
+WebMCP tools after sign-in when the browser provides
+`document.modelContext.registerTool`. Production mode, public hosts and
+unsupported browsers do not register tools. Normal UI operation is preserved.
+Use the built-in Codex browser's Site tools to discover and invoke them.
+
+- `fooddiary_read_screen_context`: current route and explicitly published
+  page/dialog state, role and email-verification flags, locale/timezone,
+  configured API routing, and recent request resource/status summaries. Diary state includes selected date boundaries,
+  loading/error state and visible meal count. Editor state includes local
+  date/time, type, comment, selected items, calories and validation/dirty state.
+- `fooddiary_open_diary_date`: accepts `{ "date": "2026-10-17" }`; navigates
+  to `/meals?dateFrom=2026-10-17&dateTo=2026-10-17` through the existing router.
+- `fooddiary_fill_meal_draft`: accepts the following shape, resolves exact
+  existing catalog names through the normal authenticated API, and fills the
+  actual new-meal editor. Recipe rows instead accept `{ "recipeId": "<exact accessible ID>", "servings": 0.5 }`.
+  The meal owner resolves serving mass and fills its existing display quantity;
+  unknown mass keeps servings. It never submits the meal or calls AI providers.
+
+The expanded tools reuse the current owning feature state:
+
+| Tool                            | Supported preparation or inspection                                                                                                                                                                            |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `fooddiary_open_section`        | Allowlisted user sections; normal route guards apply.                                                                                                                                                          |
+| `fooddiary_select_client`       | Existing client dashboard, using the signed-in dietologist's permissions.                                                                                                                                      |
+| `fooddiary_open_entity`         | Existing ID in the current diary, product, recipe or client list. Product/recipe/meal opens the existing editor without modifying it.                                                                          |
+| `fooddiary_set_screen_filters`  | Replace published diary/product/recipe filters through their owning URL decoders, or client dashboard calendar filters. Read `filterFields` first.                                                             |
+| `fooddiary_set_calendar_period` | Inclusive diary/client calendar range; explicit timezone must match the browser.                                                                                                                               |
+| `fooddiary_search_catalog`      | Existing products/recipes, IDs, units, basis/portion amounts and nutrition. No external provider search.                                                                                                       |
+| `fooddiary_open_draft`          | New product/recipe editor, weight/waist measurement dialog, existing cycle settings drawer, or fasting setup (`kind: "fasting"`). |
+| `fooddiary_fill_current_draft`  | Fill the current clean editor using its published `kind` and `draftSchema`. Cycle settings require the current `expectedRevision` and accept only three bounded integer durations.                                                                 |
+| `fooddiary_clear_current_draft` | Discard an unsaved draft with `confirmDiscard: true` and the current screen `revision`. Cycle settings reset the three durations only when other settings are unchanged. Saved entity editors cannot be cleared. |
+| `fooddiary_read_capabilities`   | Current available actions, draft schema and limitations. Unsupported screens publish no invented capability.                                                                                                   |
+| `fooddiary_read_push_diagnostics` | Read-only browser permission, worker activity/controller, browser subscription presence and nullable expiration, provider availability, server device count/expirations. No endpoints, keys, permission requests, subscriptions or sends. |
+
+Statistics publishes selected and applied periods, range, timezone, quantization,
+units and the owning dashboard-card aggregates, including recorded-day means.
+Aggregates become unavailable during a replacement load or error. Set its
+`range`, `dateFrom`, `dateTo` and `nutritionTab` through `set_screen_filters`;
+`set_calendar_period` also supports statistics. Dashboard publishes its selected
+date and applied period; its `date` filter uses the same router helper as the UI.
+
+Statistics, dashboard and product/recipe lists publish `provenance.queryRevision`,
+`lastAppliedQueryRevision` and `lastAppliedRequestId`. The latter binds the
+interceptor's actual HTTP record through HttpContext, only when the owner accepts
+the response. A stale HTTP 200 cannot replace that evidence; a failed refresh
+retains the previously applied ID. Missing development observations stay null.
+No correlation value is added to headers, queries or API payloads.
+
+Fasting context contains session timing, phase/occurrence and durations, excluding
+check-in notes and symptoms. `open_draft` opens the ordinary setup dialog. Use its
+current outer `expectedRevision` with `fill_current_draft`, kind `fasting-setup`.
+Its draft accepts `mode` and integer `fastHours`; cyclic mode additionally requires
+`fastDays`/`eatDays`, for example 1:2. Bounds come from the owner factories. Start,
+confirmation, session changes and completion remain UI actions.
+
+Recipe ingredients accept exactly one product source (`productId`, base-unit
+`amount`, `unit`) or nested recipe source (`recipeId`, serving `amount`,
+`unit: "servings"`). IDs resolve through normal authenticated catalog access before
+the clean form changes. Existing partial nutrition and serving rules still apply.
+
+### Owned audit fixtures and delivery observations
+
+```powershell
+node scripts/ai/owned-fixtures.mjs create --name my-change
+node scripts/ai/owned-fixtures.mjs verify --name my-change --run <run-UUID>
+node scripts/ai/owned-fixtures.mjs cleanup --name my-change --run <run-UUID>
+node scripts/ai/mail-delivery-trace.mjs --name my-change --outbox-id <UUID>
+```
+
+These commands require a current, ready owned local runtime. Fixtures create two
+synthetic accounts, a client relationship, product/image, nested recipes and 25
+recorded days (3850 kcal total, 154 kcal per recorded day). The durable manifest
+under the runtime's `fixtures/<run-UUID>/` records IDs, object keys and independent
+numeric expectations; credentials are separate and never printed. Idempotency
+keys and completed steps survive interrupted creation. Cleanup uses the existing
+Users purge participants for the complete explicit synthetic-account set, then
+drains only those image-deletion message IDs through the normal lease engine.
+The one-shot API composition requires Development, matching runtime/manifest paths,
+checkout and loopback database port; it creates no HTTP endpoint. Read-only database
+reconciliation covers UUID references, attribution and queue/receipt payloads;
+authenticated storage observations cover both buckets. Unknown storage state,
+remaining data or pending/dead-lettered deletion work prevents cleanup success.
+Processed image-deletion receipts are reported separately as retained history.
+Before deleting any account, cleanup seals the observed manifest identity set with
+an HMAC using the owned runtime's existing local credential. A changed manifest or
+an unsealed account that has already disappeared is refused. After owner purge,
+disposable-runtime maintenance removes only that sealed run's residual email,
+achievement evaluation and audit records in one locked transaction. Mixed recipients,
+foreign audit actors/subjects/targets and active queue leases are refused. This CLI
+maintenance does not change production account-deletion or audit-retention policy.
+
+Mail tracing observes the exact application outbox row and a unique correlated
+relay journal entry. Optional `--inbox-id` and `--bug-id` add bounded metadata
+observations; BugTriage's source ID is checked against the selected inbox ID.
+The report excludes bodies, subjects, recipients, credentials and links. Inbox
+presence does not establish outbound correlation, relay Sent does not establish
+independent SMTP acceptance, and unavailable stages remain `unknown`. Disabled
+providers cannot prove delivery. Real SMTP/push delivery still requires a separately
+observed receiving endpoint or visible browser notification.
+
+Client report ranges pass literal calendar labels to the existing dashboard API.
+That API uses the client's saved timezone, falling back to UTC. The context's
+`application.timeZone` identifies the browser for input validation and meal-time
+display; it does not establish the client's report timezone.
+
+The client dashboard context publishes `meals` with permission state, loaded
+IDs/UTC instants, total, loaded count/page, `hasNext`, loading and load-more errors.
+Rows are hidden when meal sharing is denied or a replacement period is loading.
+Loading another page remains the normal UI button operation, so audits can compare
+the context before and after a real click and check duplicates and ordering.
+
+`cycle-tracking` is an allowlisted section. With an existing cycle,
+`open_draft({kind:"cycle-settings"})` opens the actual settings drawer. Read its
+revision, duration bounds, dirty/busy state and field validation before calling
+`fill_current_draft({kind:"cycle-settings",expectedRevision:revision,draft:{averageCycleLength:28,averagePeriodLength:5,lutealLength:14}})`.
+Only those three integer fields are accepted. A stale revision, dirty form, busy
+operation, invalid range or extra field is refused before any change. The context
+omits observations, notes and consent values. Tools never save these settings or
+change consent; review and saving use the normal interface.
+
+Request diagnostics retain resource/status and allowlisted route
+templates such as `GET /api/v{version}/cycles/{id}`. IDs, query values, request
+bodies and arbitrary response headers are omitted. Unknown operations stay null.
+Two Development-only API response headers identify the startup binary set
+(`X-FoodDiary-Api-Build`, SHA-256 over deployed FoodDiary module identities) and
+process instance (`X-FoodDiary-Api-Instance`). They apply only to API requests from
+a loopback remote address. Production and non-loopback requests omit them.
+The frontend reports validated identities as response observations associated
+with the observed request origin; proxy upstream identity is not inferred.
+
+Owned task workspaces emit a separate `frontendBuild.sourceCapture`: checkout
+revision, source/configuration fingerprint and UTC capture time. A task-owned
+watcher refreshes the emitted module after frontend source changes so normal HMR
+also refreshes the capture. Tests and generated output are excluded. A capture
+identifies the frontend source snapshot, not the running API. Other launchers
+without emitted metadata report `not-emitted`; absent API headers remain unknown.
+Re-running `task-runtime.mjs admin --name ...` upgrades an existing owned workspace
+and starts its identity watcher without replacing its API or database.
+
+Product nutrients use 100 G/ML or 1 PCS; optional omitted macros default to zero.
+Recipe drafts resolve `productId`, `amount` and exact `unit` for each step ingredient
+through the authenticated product adapter. Nutrition is calculated by the real recipe
+form. Recipe ingredients support products and accessible nested recipes; photos remain
+normal UI operations. Measurement input uses the exact displayed `kg`/`lb` or `cm`/`in`
+unit reported by the dialog. No implicit unit conversion is performed by a tool.
+
+For example, after `open_draft({kind:"product"})`, read context and then call:
+
+```json
+{
+    "kind": "product-editor",
+    "draft": {
+        "name": "Local draft",
+        "baseUnit": "G",
+        "defaultPortionAmount": 150,
+        "caloriesPerBase": 52
+    }
+}
+```
+
+The separate admin app exposes four local tools with the `fooddiary_admin_`
+prefix: `read_screen_context`, `open_section`, `set_screen_filters`, and
+`open_entity`. They require an authenticated Admin session, use the admin app's
+own contracts, and publish list state for Users, MailInbox and Outgoing emails.
+Only Users publishes record opening. Mail tools expose IDs, delivery status,
+attempt/count/date information and filters; message bodies and confirmation links
+are excluded, and tools do not mark messages read or send mail. Admin calendar
+filters retain their existing UTC period semantics. Navigation from an admin
+screen without a published unsaved-change contract is refused; use the UI there.
+
+```json
+{
+    "date": "2026-10-17",
+    "time": "12:30",
+    "mealType": "LUNCH",
+    "comment": "Local pilot draft",
+    "items": [
+        {
+            "productName": "Exact existing product name",
+            "amount": 150,
+            "unit": "G"
+        }
+    ]
+}
+```
+
+Dates are local calendar dates and times are local wall-clock values. Invalid
+calendar days and nonexistent local times are rejected. Product amounts use
+the product's existing base unit (`G`, `ML` or `PCS`); the pilot performs no unit
+conversion for products; recipe serving conversion belongs to the existing meal owner. Missing/ambiguous names, mismatched
+units and stale sessions/screens fail before editor changes. Commands that change
+a screen are serialized; read-only inspection remains available while a command
+waits for API data. Clean published measurement dialogs close through their normal
+handler before navigation; other open dialogs must be closed through the UI.
+Both navigation and draft replacement refuse an already dirty published editor,
+including a dialog over an underlying page. Review and save through the normal interface;
+explicit revision-checked discard is also available. Existing editor
+validation, nutrition calculation and unsaved-change protection remain in use.
+Recoverable tool failures return `{ "ok": false, "error": "..." }` with a safe
+reason, because browser bridges can hide the messages of thrown exceptions.
+Navigation waits for Angular to settle before returning the screen context;
+opening the same diary date again is idempotent.
+
+Tools are removed on session cleanup. The adapter holds only the current
+page/dialog capabilities and does not persist tool context or return credentials.
+Request diagnostics omit IDs, query values, headers, bodies and auth resources;
+they report the origin actually visible to browser HTTP. A same-origin proxy does
+not reveal its upstream API. `buildRevision: null` means no revision was emitted by
+the frontend. Use the owned task runtime record for checkout/startup SHA, upstream
+ports and provider readiness. Browser list state cannot prove server outbox,
+worker, SMTP or end-to-end delivery health; the corresponding audit P0 operations
+remain runtime diagnostics, not claimed WebMCP coverage.
+Reading during a diary load reports `loading: true`; inspect the rendered result
+and read again after loading. Tools accelerate scenario preparation and state
+inspection; they do not exercise buttons, keyboard interaction or visual layout.
+
+The implementation lives under `src/app/composition/webmcp` and consumes the
+optional `features/meals/contracts/meal-development-tools` capability. It
+also consumes `shared/development` capabilities published by each live owner;
+admin keeps its separate adapter under its own `shared/development`. Browsers
+without native WebMCP need no polyfill or separate MCP server.
+
+In one local comparison at 1280 x 720, opening 16 October 2026 and preparing
+an unsaved lunch at 12:30 with a comment and 150 g of a known product took
+20 successful UI actions versus two WebMCP preparation calls. A separate
+context read verified the draft. Both paths displayed 78 kcal for the fixture's
+52 kcal per 100 g. Login, fixture creation, observations and cleanup are excluded;
+this single scenario measures interaction count, not overall speed or test coverage.
+
 ## Owned task runtime
 
 ```powershell

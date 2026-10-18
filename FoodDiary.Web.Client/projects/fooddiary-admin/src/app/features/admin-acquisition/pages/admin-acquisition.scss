@@ -147,13 +147,6 @@
         }
     }
 
-    &__url {
-        overflow-wrap: anywhere;
-        padding: var(--fd-space-sm);
-        border-radius: var(--fd-radius-sm);
-        background: var(--fd-color-surface-subtle);
-    }
-
     &__empty {
         display: flex;
         align-items: center;

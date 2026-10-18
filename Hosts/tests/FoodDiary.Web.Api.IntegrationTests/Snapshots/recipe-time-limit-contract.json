@@ -1,0 +1,7 @@
+[
+  { "MaxTotalTime": null, "Cases": ["unknown", "zero", "prep", "cook", "combined", "long"] },
+  { "MaxTotalTime": 1, "Cases": ["zero"] },
+  { "MaxTotalTime": 15, "Cases": ["zero", "prep", "cook"] },
+  { "MaxTotalTime": 30, "Cases": ["zero", "prep", "cook", "combined"] },
+  { "MaxTotalTime": 120, "Cases": ["zero", "prep", "cook", "combined", "long"] }
+]

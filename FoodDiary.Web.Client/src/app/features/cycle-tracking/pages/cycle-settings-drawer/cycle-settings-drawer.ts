@@ -1,14 +1,16 @@
 import { CdkTrapFocus } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, untracked } from '@angular/core';
 import { type FieldTree, FormField, FormRoot } from '@angular/forms/signals';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
+import { DEVELOPMENT_SCREENS } from '../../../../shared/development/development-tools';
 import type { CycleReproductiveState, CycleTrackingGoal, CycleTrackingMode } from '../../../../shared/models/cycle.data';
+import { cycleSettingsDevelopmentScreen } from '../../lib/cycle-development';
 import type { CycleSettingsFormModel } from '../../lib/cycle-tracking.facade';
 
 @Component({
@@ -29,6 +31,8 @@ import type { CycleSettingsFormModel } from '../../lib/cycle-tracking.facade';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CycleSettingsDrawerComponent {
+    private readonly developmentScreens = inject(DEVELOPMENT_SCREENS, { optional: true });
+    private readonly translate = inject(TranslateService);
     public readonly settingsForm = input.required<FieldTree<CycleSettingsFormModel>>();
     public readonly modeOptions = input.required<Array<FdUiSelectOption<CycleTrackingMode>>>();
     public readonly goalOptions = input.required<Array<FdUiSelectOption<CycleTrackingGoal>>>();
@@ -40,6 +44,26 @@ export class CycleSettingsDrawerComponent {
     public readonly deleteRequested = output();
 
     protected readonly isBusy = computed(() => this.isSaving() || this.isDeleting());
+
+    public constructor() {
+        if (this.developmentScreens !== null) {
+            const screens = this.developmentScreens;
+            effect(onCleanup => {
+                const settings = this.settingsForm();
+                const screen = untracked(() =>
+                    cycleSettingsDevelopmentScreen(settings, {
+                        busy: () => this.isBusy(),
+                        close: () => {
+                            this.close();
+                        },
+                        error: () => this.error(),
+                        translate: key => String(this.translate.instant(key)),
+                    }),
+                );
+                onCleanup(screens.attach(screen));
+            });
+        }
+    }
 
     protected close(): void {
         if (!this.isBusy()) {

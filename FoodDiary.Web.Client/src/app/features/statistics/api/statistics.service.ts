@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, type HttpContext } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { map, type Observable } from 'rxjs';
 
@@ -26,7 +26,7 @@ export class StatisticsService {
         return this.sdk.client.getStatistics(queryParams).pipe(map(values => values.map(aggregatedStatisticsFromSdk)));
     }
 
-    public getSummary(params: GetStatisticsSummaryDto): Observable<StatisticsSummary> {
+    public getSummary(params: GetStatisticsSummaryDto, context?: HttpContext): Observable<StatisticsSummary> {
         const queryParams = {
             ...params,
             version: this.sdk.version,
@@ -34,7 +34,7 @@ export class StatisticsService {
             dateTo: this.toIsoString(params.dateTo),
         };
 
-        return this.sdk.client.getStatisticsSummary(queryParams).pipe(
+        return this.sdk.client.getStatisticsSummary(queryParams, 'body', false, { context }).pipe(
             map(response => {
                 const value = requireSdkFields(response, ['nutrition', 'weight', 'waist']);
                 return {

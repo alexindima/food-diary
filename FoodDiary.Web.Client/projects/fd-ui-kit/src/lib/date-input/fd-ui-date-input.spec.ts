@@ -428,6 +428,44 @@ function registerStateTests(): void {
 
 function registerCalendarFocusTests(): void {
     describe('calendar focus', () => {
+        it.each([
+            { label: 'From', picker: undefined, expected: 'From' },
+            { label: 'From', picker: 'Choose start date', expected: 'Choose start date' },
+            { label: undefined, picker: undefined, expected: 'Choose date' },
+        ])('exposes the announced dialog with its accessible name $expected', ({ label, picker, expected }) => {
+            const translate = TestBed.inject(TranslateService);
+            translate.setTranslation('en', { CALENDAR: { CHOOSE_DATE: 'Choose date' } });
+            translate.use('en').subscribe();
+            fixture.componentRef.setInput('label', label);
+            fixture.componentRef.setInput('pickerAriaLabel', picker);
+            component['openDatePicker']();
+            fixture.detectChanges();
+            const panel = document.getElementById(`${component.id()}-dialog`);
+            expect(panel?.getAttribute('role')).toBe('dialog');
+            expect(panel?.getAttribute('aria-modal')).toBe('true');
+            expect(panel?.getAttribute('aria-label')).toBe(expected);
+        });
+
+        it('moves keyboard focus into the selected date when opening the calendar', async () => {
+            fixture.componentRef.setInput('value', MARCH_DATE_STRING);
+            fixture.detectChanges();
+            requireInputElement('input').focus();
+            requireInputElement('input').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            fixture.detectChanges();
+            await fixture.whenStable();
+            expect(document.activeElement?.getAttribute('data-date')).toBe(MARCH_DATE_STRING);
+        });
+
+        it('uses a localized fallback when no explicit picker name is supplied', () => {
+            const translate = TestBed.inject(TranslateService);
+            translate.setTranslation('ru', { CALENDAR: { CHOOSE_DATE: 'Выберите дату' } });
+            translate.use('ru').subscribe();
+            fixture.componentRef.setInput('label', ' ');
+            component['openDatePicker']();
+            fixture.detectChanges();
+            expect(document.getElementById(`${component.id()}-dialog`)?.getAttribute('aria-label')).toBe('Выберите дату');
+        });
+
         it.each(['escape', 'selection'])('returns calendar focus to the date field after %s', action => {
             component.value.set(MARCH_DATE_STRING);
             fixture.detectChanges();

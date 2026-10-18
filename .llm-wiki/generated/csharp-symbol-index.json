@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4594,
-    "symbols": 4529,
+    "sourceFiles": 4600,
+    "symbols": 4535,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2336,
+      "class": 2340,
       "enum": 71,
       "interface": 415,
-      "record": 1566,
+      "record": 1568,
       "record struct": 141
     },
     "roles": {
-      "Command": 231,
-      "CommandHandler": 225,
+      "Command": 233,
+      "CommandHandler": 227,
       "Configuration": 101,
       "Controller": 112,
       "Entity": 102,
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1868,
+      "Other": 1870,
       "Query": 301,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
@@ -2421,6 +2421,13 @@
       "line": 11
     },
     {
+      "name": "DevelopmentRuntimeHeadersMiddleware",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Web.Api/Extensions/DevelopmentRuntimeHeadersMiddleware.cs",
+      "line": 10
+    },
+    {
       "name": "ImpersonationAccessGuardMiddleware",
       "kind": "class",
       "role": "Other",
@@ -2600,7 +2607,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Program.cs",
-      "line": 24
+      "line": 28
     },
     {
       "name": "NotificationTestScheduler",
@@ -17450,6 +17457,13 @@
       "line": 2
     },
     {
+      "name": "ProcessOwnedImageDeletionsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Images/Application/Commands/ProcessOwnedImageDeletions/ProcessOwnedImageDeletionsCommandHandler.cs",
+      "line": 7
+    },
+    {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
@@ -17723,6 +17737,13 @@
       "line": 4
     },
     {
+      "name": "ProcessOwnedImageDeletionsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Images/Service.Contracts/Commands/ProcessOwnedImageDeletions/ProcessOwnedImageDeletionsCommand.cs",
+      "line": 4
+    },
+    {
       "name": "DeleteImageAssetResult",
       "kind": "record",
       "role": "Other",
@@ -17874,7 +17895,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Lessons/Application/Commands/ImportLessons/ImportLessonsCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "MarkLessonReadCommand",
@@ -18294,7 +18315,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Marketing/Application/Queries/GetMarketingAttributionRange/GetMarketingAttributionRangeQueryHandler.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "GetMarketingAttributionSummaryQueryHandler",
@@ -25402,6 +25423,13 @@
       "line": 10
     },
     {
+      "name": "PurgeOwnedFixtureUsersCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/PurgeOwnedFixtureUsers/PurgeOwnedFixtureUsersCommandHandler.cs",
+      "line": 6
+    },
+    {
       "name": "RemoveUserPremiumRoleCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
@@ -25918,6 +25946,13 @@
       "role": "Command",
       "path": "Modules/Users/Contracts/Commands/InitializePendingBodyGoals/InitializePendingBodyGoalsCommand.cs",
       "line": 8
+    },
+    {
+      "name": "PurgeOwnedFixtureUsersCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Contracts/Commands/PurgeOwnedFixtureUsers/PurgeOwnedFixtureUsersCommand.cs",
+      "line": 6
     },
     {
       "name": "RemoveUserPremiumRoleCommand",
@@ -27192,6 +27227,13 @@
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/WeightGoalsController.cs",
       "line": 16
+    },
+    {
+      "name": "OwnedFixtureCleanupExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Presentation/Development/OwnedFixtureCleanupExtensions.cs",
+      "line": 12
     },
     {
       "name": "UsersPresentationServiceCollectionExtensions",

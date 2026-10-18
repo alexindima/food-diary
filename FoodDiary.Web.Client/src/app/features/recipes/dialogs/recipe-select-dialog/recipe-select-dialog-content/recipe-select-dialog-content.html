@@ -30,15 +30,8 @@
                             {{ 'NUTRITION_COMPLETENESS.PARTIAL' | translate: { count: item.recipe.missingIngredientCount } }}
                         </div>
                     </div>
-                    <span class="recipe-select__action fd-inline-center">
-                        <fd-ui-button
-                            icon="add"
-                            variant="primary"
-                            fill="solid"
-                            size="sm"
-                            [ariaLabel]="'COMMON.ADD' | translate"
-                            [fdUiHint]="'COMMON.ADD' | translate"
-                        />
+                    <span class="recipe-select__action fd-inline-center" aria-hidden="true">
+                        <fd-ui-icon name="add" />
                     </span>
                 </button>
             }

@@ -69,6 +69,76 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
     }
 
     [RequiresDockerFact]
+    public async Task CreateCycle_RejectsMissingTrackingStartDateWithoutChangingStoredProfile() {
+        HttpClient client = factory.CreateClient();
+        string token = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var request = new Dictionary<string, object?>(StringComparer.Ordinal) {
+            ["mode"] = (int)CycleTrackingMode.PeriodTracking,
+            ["averageCycleLength"] = 28,
+            ["averagePeriodLength"] = 5,
+            ["lutealLength"] = 14,
+            ["isRegular"] = true,
+            ["isOnboardingComplete"] = true,
+            ["showFertilityEstimates"] = false,
+            ["discreetNotifications"] = true,
+            ["cycleTrackingConsentGranted"] = true,
+        };
+        using var snapshot = JsonDocument.Parse(await File.ReadAllTextAsync(
+            SnapshotPathResolver.GetPath("cycle-create-date-validation-contract.json")));
+
+        foreach (bool includeDefaultDate in new[] { false, true }) {
+            if (includeDefaultDate) {
+                request["trackingStartDate"] = DateTime.MinValue;
+            }
+
+            HttpResponseMessage invalid = await client.PostAsJsonAsync("/api/v1/cycles", request);
+            Assert.Equal(HttpStatusCode.BadRequest, invalid.StatusCode);
+            using var error = JsonDocument.Parse(await invalid.Content.ReadAsStringAsync());
+            var actual = new {
+                Status = (int)invalid.StatusCode,
+                Error = error.RootElement.GetProperty("error").GetString(),
+                Fields = error.RootElement.GetProperty("errors").EnumerateObject()
+                    .Select(static field => field.Name).Order(StringComparer.Ordinal).ToArray(),
+            };
+            Assert.Equal(JsonSerializer.Serialize(snapshot.RootElement), JsonSerializer.Serialize(actual));
+            HttpResponseMessage current = await client.GetAsync("/api/v1/cycles/current");
+            Assert.Equal(HttpStatusCode.NoContent, current.StatusCode);
+        }
+
+        var leapDay = new DateTime(2024, 2, 29, 0, 0, 0, DateTimeKind.Utc);
+        request["trackingStartDate"] = leapDay;
+        HttpResponseMessage valid = await client.PostAsJsonAsync("/api/v1/cycles", request);
+        Assert.Equal(HttpStatusCode.OK, valid.StatusCode);
+        using var created = JsonDocument.Parse(await valid.Content.ReadAsStringAsync());
+        Guid profileId = created.RootElement.GetProperty("id").GetGuid();
+        Assert.Equal(leapDay, created.RootElement.GetProperty("trackingStartDate").GetDateTime());
+
+        request.Remove("trackingStartDate");
+        request["averageCycleLength"] = 60;
+        request["notes"] = "Rejected request must not change settings.";
+        HttpResponseMessage repeated = await client.PostAsJsonAsync("/api/v1/cycles", request);
+        Assert.Equal(HttpStatusCode.BadRequest, repeated.StatusCode);
+        HttpResponseMessage persistedResponse = await client.GetAsync("/api/v1/cycles/current");
+        persistedResponse.EnsureSuccessStatusCode();
+        using var persisted = JsonDocument.Parse(await persistedResponse.Content.ReadAsStringAsync());
+        Assert.Multiple(
+            () => Assert.Equal(profileId, persisted.RootElement.GetProperty("id").GetGuid()),
+            () => Assert.Equal(leapDay, persisted.RootElement.GetProperty("trackingStartDate").GetDateTime()),
+            () => Assert.Equal(28, persisted.RootElement.GetProperty("averageCycleLength").GetInt32()),
+            () => Assert.Equal(JsonValueKind.Null, persisted.RootElement.GetProperty("notes").ValueKind));
+
+        HttpResponseMessage deleted = await client.DeleteAsync($"/api/v1/cycles/{profileId}");
+        Assert.Equal(HttpStatusCode.NoContent, deleted.StatusCode);
+        var futureDate = new DateTime(2030, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        request["trackingStartDate"] = futureDate;
+        HttpResponseMessage future = await client.PostAsJsonAsync("/api/v1/cycles", request);
+        Assert.Equal(HttpStatusCode.OK, future.StatusCode);
+        using var futureProfile = JsonDocument.Parse(await future.Content.ReadAsStringAsync());
+        Assert.Equal(futureDate, futureProfile.RootElement.GetProperty("trackingStartDate").GetDateTime());
+    }
+
+    [RequiresDockerFact]
     public async Task DeleteCycle_WithOwnedProfile_ReturnsNoContentAndClearsCurrentCycle() {
         HttpClient client = factory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);

@@ -131,7 +131,7 @@ export function buildRecipeFormPatchValue(recipeData: Recipe): Partial<RecipeFor
         comment: toNullable(recipeData.comment),
         category: recipeData.category ?? 'other',
         imageUrl: imageSelection(toNullable(recipeData.imageUrl), toNullable(recipeData.imageAssetId)),
-        prepTime: withDefault(recipeData.prepTime, 0),
+        prepTime: toNullable(recipeData.prepTime),
         cookTime: toNullable(recipeData.cookTime),
         servings: recipeData.servings,
         visibility: normalizeRecipeVisibility(recipeData.visibility),
@@ -371,8 +371,4 @@ function isMeasurementUnit(value: string | null | undefined): value is Measureme
 
 function toNullable<T>(value: T | null | undefined): T | null {
     return value ?? null;
-}
-
-function withDefault<T>(value: T | null | undefined, fallback: T): T {
-    return value ?? fallback;
 }

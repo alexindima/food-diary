@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import type { FdUiDateRangeValue } from 'fd-ui-kit';
@@ -13,6 +14,8 @@ import type { AiInputBarResult } from '../../../../components/shared/ai-input-ba
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { NavigationService } from '../../../../services/navigation.service';
+import { devQuery } from '../../../../shared/development/development-input';
+import { connectDevelopmentScreen, DevelopmentToolError } from '../../../../shared/development/development-tools';
 import { formatDateInputValue, getDateTimestamp, normalizeStartOfLocalDay } from '../../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import { normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
@@ -22,10 +25,11 @@ import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { scrollElementIntoView } from '../../../../shared/ui/scroll/scroll-element-into-view';
+import { MEAL_DEVELOPMENT_TOOLS } from '../../contracts/meal-development-tools';
 import { AiMealCreateFacade } from '../../lib/ai/ai-meal-create.facade';
 import { MealListFacade, type MealListStructuredFilters } from '../../lib/list/meal-list.facade';
 import { emptyMealFilters, mealFilterChips, removeMealFilter } from '../../lib/list/meal-list-filter-chips';
-import { mealListQueryKey } from '../../lib/list/meal-list-query';
+import { mealListQueryKey, readMealListQuery, writeMealListQuery } from '../../lib/list/meal-list-query';
 import { MealListRouteStateFacade } from '../../lib/list/meal-list-route-state.facade';
 import { MealListFiltersDialogComponent, type MealListFiltersDialogResult } from './meal-list-filters-dialog/meal-list-filters-dialog';
 import type { FavoriteMealView, MealDateGroupView } from './meal-list-lib/meal-list.types';
@@ -126,6 +130,47 @@ export class MealListComponent {
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
     public constructor() {
+        const router = inject(Router);
+        const fields = ['page', 'dateFrom', 'dateTo', 'mealTypes', 'caloriesFrom', 'caloriesTo', 'hasImage', 'hasAiSession'];
+        connectDevelopmentScreen({
+            kind: 'meal-diary',
+            read: () => ({
+                filterFields: fields,
+                filters: writeMealListQuery({ ...this.searchModel(), page: this.currentPageIndex() + 1 }),
+                page: this.currentPageIndex() + 1,
+                totalItems: this.mealData.totalItems,
+                items: this.mealData.items().map(meal => ({ id: meal.id, date: meal.date })),
+                loading: this.mealData.isLoading(),
+                error: this.errorKey(),
+            }),
+            setFiltersAsync: async filters => {
+                await this.routeState.writeAsync(readMealListQuery(convertToParamMap(devQuery(filters, fields))));
+            },
+            openEntityAsync: async id => {
+                if (!this.mealData.items().some(meal => meal.id === id)) {
+                    throw new DevelopmentToolError('ID is not in the current diary list.');
+                }
+                await router.navigate(['/meals', id, 'edit']);
+            },
+        });
+        const developmentTools = inject(MEAL_DEVELOPMENT_TOOLS, { optional: true });
+        if (developmentTools !== null) {
+            this.destroyRef.onDestroy(
+                developmentTools.attach({
+                    read: () => {
+                        const range = this.searchModel().dateRange;
+                        return {
+                            kind: 'meal-diary',
+                            dateFrom: range?.start === null || range?.start === undefined ? null : formatDateInputValue(range.start),
+                            dateTo: range?.end === null || range?.end === undefined ? null : formatDateInputValue(range.end),
+                            loading: this.mealData.isLoading(),
+                            visibleMealCount: this.mealData.items().length,
+                            errorKey: this.errorKey(),
+                        };
+                    },
+                }),
+            );
+        }
         this.mealListFacade.currentPageIndex.set(this.routeState.initial.page - 1);
         this.loadInitialOverview().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
         this.routeState.changes

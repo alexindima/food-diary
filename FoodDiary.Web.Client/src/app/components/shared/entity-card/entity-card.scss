@@ -484,6 +484,16 @@ fd-entity-card-actions {
 }
 
 @container (max-width: 420px) {
+    .entity-card__title-block:not(:has(.entity-card__title-muted)) {
+        .entity-card__name-row {
+            grid-area: 1 / 1 / auto / -1;
+        }
+
+        .entity-card__calories {
+            grid-area: 2 / 1 / auto / -1;
+        }
+    }
+
     .entity-card__title-block:has(.entity-card__title-muted) {
         .entity-card__name-row {
             display: contents;

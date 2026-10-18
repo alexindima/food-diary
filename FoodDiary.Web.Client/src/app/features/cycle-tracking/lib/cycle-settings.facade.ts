@@ -1,7 +1,7 @@
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, form, max, min, required, validate } from '@angular/forms/signals';
-import { finalize, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import {
@@ -165,17 +165,37 @@ export class CycleSettingsFacade {
     }
 
     private async startCycleAsync(): Promise<void> {
+        if (this.state.isSavingCycle()) {
+            return;
+        }
         if (this.startCycleForm().invalid()) {
             this.startCycleForm().markAsTouched();
             return;
         }
 
-        const formValue = this.startCycleModel();
-        if (formValue.trackingStartDate === null || formValue.trackingStartDate.length === 0) {
+        const payload = this.buildCreatePayload(this.startCycleModel());
+        if (payload === null) {
             return;
         }
 
-        const payload: CreateCyclePayload = {
+        this.state.createError.set(null);
+        this.state.isSavingCycle.set(true);
+        try {
+            const cycle = await firstValueFrom(this.cyclesService.create(payload).pipe(takeUntilDestroyed(this.destroyRef)));
+            this.state.cycle.set(cycle);
+            this.state.loadNutritionSummary(cycle);
+        } catch {
+            this.state.createError.set('CYCLE_TRACKING.CREATE_CYCLE_FAILED');
+        } finally {
+            this.state.isSavingCycle.set(false);
+        }
+    }
+
+    private buildCreatePayload(formValue: StartCycleFormModel): CreateCyclePayload | null {
+        if (formValue.trackingStartDate === null || formValue.trackingStartDate.length === 0) {
+            return null;
+        }
+        return {
             trackingStartDate: toCycleDateKey(formValue.trackingStartDate),
             mode: formValue.mode ?? CYCLE_TRACKING_MODE_PERIOD_TRACKING,
             averageCycleLength: formValue.averageCycleLength ?? undefined,
@@ -192,20 +212,6 @@ export class CycleSettingsFacade {
             nutritionInsightsConsentGranted: formValue.nutritionInsightsConsentGranted,
             fertilitySignalsConsentGranted: formValue.fertilitySignalsConsentGranted,
         };
-
-        this.state.isSavingCycle.set(true);
-        const cycle = await firstValueFrom(
-            this.cyclesService
-                .create(payload)
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .pipe(
-                    finalize(() => {
-                        this.state.isSavingCycle.set(false);
-                    }),
-                ),
-        );
-        this.state.cycle.set(cycle);
-        this.state.loadNutritionSummary(cycle);
     }
 
     private async saveSettingsAsync(): Promise<void> {

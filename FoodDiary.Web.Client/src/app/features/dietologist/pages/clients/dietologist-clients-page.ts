@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { disabled, form, FormField, FormRoot, maxLength, required } from '@angular/forms/signals';
+import { disabled, form, FormField, FormRoot, maxLength, required, validate } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -8,10 +8,12 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize } from 'rxjs';
 
+import { connectDevelopmentScreen, DevelopmentToolError } from '../../../../shared/development/development-tools';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import type { AttentionSignal, AttentionSignalSettings, ClientSummary } from '../../../../shared/models/dietologist.data';
 import type { AttentionSignalId, UserId } from '../../../../shared/models/semantics/entity-id';
@@ -63,6 +65,7 @@ export class DietologistClientsPageComponent {
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly toastService = inject(FdUiToastService);
+    private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
     private readonly languageVersion = signal(0);
 
     protected readonly clients = signal<ClientSummary[]>([]);
@@ -95,8 +98,16 @@ export class DietologistClientsPageComponent {
     protected readonly bulkModel = signal({ text: '' });
     protected readonly bulkForm = form(this.bulkModel, path => {
         required(path.text);
+        validate(path.text, context => {
+            const text = context.value();
+            return text.length > 0 && text.trim().length === 0 ? { kind: 'required' } : undefined;
+        });
         maxLength(path.text, BULK_RECOMMENDATION_MAX_LENGTH);
         disabled(path.text, { when: () => this.bulkSending() });
+    });
+    protected readonly bulkTextError = computed(() => {
+        this.languageVersion();
+        return resolveSignalFormFieldError(this.bulkForm.text, this.validationErrors, this.translateService);
     });
     protected readonly clientItems = computed<ClientCardViewModel[]>(() => {
         this.languageVersion();
@@ -104,6 +115,21 @@ export class DietologistClientsPageComponent {
     });
 
     public constructor() {
+        const router = inject(Router);
+        connectDevelopmentScreen({
+            kind: 'dietologist-clients',
+            read: () => ({
+                loading: this.loading(),
+                items: this.clients().map(client => ({ id: client.userId, permissions: client.permissions })),
+            }),
+            isDirty: () => this.bulkModel().text.length > 0,
+            openEntityAsync: async id => {
+                if (!this.clients().some(client => client.userId === id)) {
+                    throw new DevelopmentToolError('Client ID is not in the current list.');
+                }
+                await router.navigate(['/dietologist/clients', id]);
+            },
+        });
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });

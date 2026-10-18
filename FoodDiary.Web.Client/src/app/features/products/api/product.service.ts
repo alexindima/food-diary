@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, type HttpContext } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { catchError, map, type Observable } from 'rxjs';
 
@@ -36,9 +36,11 @@ export class ProductService {
     protected readonly baseUrl = environment.apiUrls.products;
     private readonly sdk = createProductsSdk(this.baseUrl, inject(HttpClient));
 
-    public query(page: number, limit: number, filters?: ProductFilters, includePublic = true): Observable<PageOf<Product>> {
+    public query(page: number, limit: number, filters?: ProductFilters, options: boolean | { includePublic: boolean; context: HttpContext } = true): Observable<PageOf<Product>> {
+        const includePublic = typeof options === 'boolean' ? options : options.includePublic;
+        const context = typeof options === 'boolean' ? undefined : options.context;
         return this.sdk.client
-            .queryProducts({ version: this.sdk.version, page, limit, includePublic, ...this.toProductFilters(filters) })
+            .queryProducts({ version: this.sdk.version, page, limit, includePublic, ...this.toProductFilters(filters) }, 'body', false, { context })
             .pipe(
                 map(productPageFromSdk),
                 catchError((error: unknown) => rethrowApiError('Query products error', error)),
@@ -52,7 +54,7 @@ export class ProductService {
         );
     }
 
-    public queryOverview(query: ProductOverviewQuery): Observable<ProductOverview> {
+    public queryOverview(query: ProductOverviewQuery, context?: HttpContext): Observable<ProductOverview> {
         const {
             page,
             limit,
@@ -70,7 +72,7 @@ export class ProductService {
                 recentLimit,
                 favoriteLimit,
                 ...this.toProductFilters(filters),
-            })
+            }, 'body', false, { context })
             .pipe(
                 map(productOverviewFromSdk),
                 catchError((error: unknown) => rethrowApiError('Query product overview error', error)),

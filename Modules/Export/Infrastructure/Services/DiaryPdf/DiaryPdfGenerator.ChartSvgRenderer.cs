@@ -37,7 +37,7 @@ internal sealed partial class DiaryPdfGenerator {
 
             int labelStep = Math.Max(1, (int)Math.Ceiling(labels.Count / 8d));
             for (int index = 0; index < labels.Count; index += labelStep) {
-                double x = labels.Count <= 1 ? left : left + (plotWidth * index / (labels.Count - 1));
+                double x = PlotX(labels.Count, index, left, plotWidth);
                 sb.Append(CultureInfo.InvariantCulture, $"""
                     <line x1="{x}" y1="{top}" x2="{x}" y2="{top + plotHeight}" stroke="{GridColor}" stroke-width="1"/>
                     <text x="{x}" y="{height - 10}" text-anchor="middle" fill="{MutedTextColor}" font-size="11" font-family="Arial">{Escape(labels[index])}</text>
@@ -88,7 +88,7 @@ internal sealed partial class DiaryPdfGenerator {
 
             int labelStep = Math.Max(1, (int)Math.Ceiling(labels.Count / 8d));
             for (int index = 0; index < labels.Count; index += labelStep) {
-                double x = labels.Count <= 1 ? left : left + (plotWidth * index / (labels.Count - 1));
+                double x = PlotX(labels.Count, index, left, plotWidth);
                 sb.Append(CultureInfo.InvariantCulture, $"""
                     <line x1="{x}" y1="{top}" x2="{x}" y2="{top + plotHeight}" stroke="{GridColor}" stroke-width="1"/>
                     <text x="{x}" y="{height - 10}" text-anchor="middle" fill="{MutedTextColor}" font-size="11" font-family="Arial">{Escape(labels[index])}</text>

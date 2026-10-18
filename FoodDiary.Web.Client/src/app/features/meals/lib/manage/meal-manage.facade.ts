@@ -236,6 +236,10 @@ export class MealManageFacade {
         return recipeDisplayToServings(this.recipeWeight.displayAmountFromInput(recipe, amount));
     }
 
+    public recipeDisplayUnit(recipe: Recipe): 'grams' | 'servings' {
+        return this.recipeWeight.hasServingWeight(recipe) ? 'grams' : 'servings';
+    }
+
     public recipeDisplayValueFromStoredServings(recipe: Recipe | null, servings: RecipeServings): number {
         return this.recipeWeight.displayServings(recipe, servings).value;
     }

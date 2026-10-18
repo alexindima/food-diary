@@ -47,7 +47,7 @@ const createFacade = (): {
     } as const;
 };
 
-function setup(): {
+function setup(initialError: string | null = null): {
     fixture: ComponentFixture<WeightHistoryGoalDialogComponent>;
     component: WeightHistoryGoalDialogComponent;
     facade: ReturnType<typeof createFacade>;
@@ -63,6 +63,7 @@ function setup(): {
         ],
     });
     const facade = TestBed.inject(WeightHistoryFacade) as unknown as ReturnType<typeof createFacade>;
+    facade.goalActionError.set(initialError);
     const fixture = TestBed.createComponent(WeightHistoryGoalDialogComponent);
     fixture.detectChanges();
     return { fixture, facade, component: fixture.componentInstance, close };
@@ -85,6 +86,13 @@ describe('Weight goal limit precision', () => {
 });
 
 describe('Weight goal dialog lifecycle', () => {
+    it('clears a previous dialog error without discarding the goal draft', () => {
+        const { fixture, close } = setup('Previous goal failure');
+        const root = fixture.nativeElement as HTMLElement;
+        expect(root.textContent).not.toContain('Previous goal failure');
+        expect(root.querySelector<HTMLInputElement>('fd-ui-input input')?.value).toBe('80');
+        expect(close).not.toHaveBeenCalled();
+    });
     it('does not close for an old save or loading-state changes', () => {
         const { fixture, facade, close } = setup();
         facade.isDesiredWeightSaving.set(true);

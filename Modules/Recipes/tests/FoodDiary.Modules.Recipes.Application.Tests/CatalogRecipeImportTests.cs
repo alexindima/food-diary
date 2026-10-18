@@ -14,6 +14,34 @@ namespace FoodDiary.Modules.Recipes.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class CatalogRecipeImportTests {
+    [Theory]
+    [InlineData(null)]
+    [InlineData(0)]
+    [InlineData(12)]
+    public async Task Import_PreservesOptionalPreparationTime(int? prepTime) {
+        CatalogRecipeModel item = ValidRecipe() with { PrepTime = prepTime };
+        var ownerId = Guid.NewGuid();
+        ISender sender = Substitute.For<ISender>();
+        CreateRecipeCommand? captured = null;
+        FoodDiary.Modules.Recipes.Domain.Entities.Recipe? created = null;
+        var values = new CreateRecipeValues(new UserId(ownerId), Visibility.Public, ImageAssetId: null, ImageAsset: null);
+        sender.Send(Arg.Any<CreateRecipeCommand>(), Arg.Any<CancellationToken>()).Returns(call => {
+            captured = call.Arg<CreateRecipeCommand>();
+            created = RecipeCreateFactory.Create(captured, values);
+            return Result.Success(created.ToModel(usageCount: 0, isOwnedByCurrentUser: true));
+        });
+        var handler = new ImportCatalogRecipeCommandHandler(Substitute.For<IRecipeCatalogIdReadService>(), new CreateRecipeCommandValidator(), sender);
+
+        CatalogRecipeImportResult result = ResultAssert.Success(await handler.Handle(new ImportCatalogRecipeCommand(ownerId, item, Preview: false), CancellationToken.None));
+
+        Assert.Equal("imported", result.Status);
+        Assert.NotNull(created);
+        Assert.Equal(prepTime, created.PrepTime);
+        Assert.NotNull(captured);
+        FoodDiary.Modules.Recipes.Domain.Entities.Recipe ordinary = RecipeCreateFactory.Create(captured with { CatalogImportId = null }, values);
+        Assert.Equal(prepTime, ordinary.PrepTime);
+    }
+
     [Fact]
     public async Task Import_PreservesIdLanguageAndManualNutrition() {
         CatalogRecipeModel item = ValidRecipe() with {

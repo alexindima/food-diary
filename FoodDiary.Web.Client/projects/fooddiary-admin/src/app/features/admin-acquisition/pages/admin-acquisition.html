@@ -17,6 +17,9 @@
         <p>Loading acquisition data...</p>
     } @else if (failed()) {
         <fd-admin-load-error (retry)="loadSummary()" />
+        <fd-ui-card>
+            <ng-container [ngTemplateOutlet]="eventFilters" />
+        </fd-ui-card>
     } @else if (summary(); as data) {
         <div class="admin-acquisition__meta fd-ui-body-xs fd-ui-text-muted">
             {{ formatWindow(data.windowHours) }} · updated {{ formatRelativeDate(data.generatedAtUtc) }} · last event
@@ -167,38 +170,7 @@
                             {{ 'ADMIN_ACQUISITION.EVENT_TOTAL' | translate }}: {{ report()?.eventTotal }}
                         </div>
                     </div>
-                    <div class="admin-filter-bar">
-                        <fd-ui-input
-                            [id]="'acquisition-event-search'"
-                            [label]="'ADMIN_COMMON.SEARCH' | translate"
-                            [value]="eventSearch()"
-                            (valueChange)="setEventSearch($event)"
-                        />
-                        <fd-ui-select
-                            label="Event"
-                            [id]="'admin-acquisition-event-type'"
-                            [value]="eventTypeFilter()"
-                            [options]="[
-                                { value: 'all', label: 'All events' },
-                                { value: 'page_landing', label: 'Visits' },
-                                { value: 'signup_completed', label: 'Signups' },
-                                { value: 'premium_started', label: 'Premium starts' },
-                            ]"
-                            (valueChange)="setEventTypeFilter($event)"
-                        />
-                        <fd-ui-select
-                            label="Attribution"
-                            [id]="'admin-acquisition-channel'"
-                            [value]="channelFilter()"
-                            [options]="[
-                                { value: 'all', label: 'All traffic' },
-                                { value: 'tracked', label: 'Tracked only' },
-                                { value: 'direct', label: 'Direct only' },
-                            ]"
-                            (valueChange)="setChannelFilter($event)"
-                        />
-                        <fd-ui-button (click)="applyEventFilters()">{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button>
-                    </div>
+                    <ng-container [ngTemplateOutlet]="eventFilters" />
                 </div>
 
                 <div class="fd-row fd-gap-sm">
@@ -228,7 +200,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for (event of filteredRecentEvents(); track event.occurredAtUtc + event.sessionId) {
+                            <!-- Read-only page snapshots expose no event ID; each position must retain its own row. -->
+                            @for (event of filteredRecentEvents(); track $index) {
                                 <tr>
                                     <td>{{ formatRelativeDate(event.occurredAtUtc) }}</td>
                                     <td>
@@ -280,6 +253,7 @@
                             label="Source"
                             type="text"
                             [id]="'admin-acquisition-source'"
+                            [maxLength]="utmMaxLength"
                             [value]="builder.source"
                             (valueChange)="updateBuilderField('source', $event)"
                         />
@@ -289,6 +263,7 @@
                             label="Medium"
                             type="text"
                             [id]="'admin-acquisition-medium'"
+                            [maxLength]="utmMaxLength"
                             [value]="builder.medium"
                             (valueChange)="updateBuilderField('medium', $event)"
                         />
@@ -298,6 +273,7 @@
                             label="Campaign"
                             type="text"
                             [id]="'admin-acquisition-campaign'"
+                            [maxLength]="utmMaxLength"
                             [value]="builder.campaign"
                             (valueChange)="updateBuilderField('campaign', $event)"
                         />
@@ -307,6 +283,7 @@
                             label="Content"
                             type="text"
                             [id]="'admin-acquisition-content'"
+                            [maxLength]="utmMaxLength"
                             [value]="builder.content"
                             (valueChange)="updateBuilderField('content', $event)"
                         />
@@ -316,16 +293,14 @@
                             label="Term"
                             type="text"
                             [id]="'admin-acquisition-term'"
+                            [maxLength]="utmMaxLength"
                             [value]="builder.term"
                             (valueChange)="updateBuilderField('term', $event)"
                         />
                     </div>
                 </div>
 
-                <div>
-                    <div class="fd-ui-body-xs fd-ui-text-muted">Generated URL</div>
-                    <div class="admin-acquisition__url fd-ui-body-sm">{{ campaignUrl() }}</div>
-                </div>
+                <fd-admin-acquisition-link-preview [url]="campaignUrl()" [validation]="builderValidation()" />
             </div>
         </details>
     } @else {
@@ -335,3 +310,39 @@
         </div>
     }
 </div>
+
+<ng-template #eventFilters>
+    <div class="admin-filter-bar">
+        <fd-ui-input
+            [id]="'acquisition-event-search'"
+            [label]="'ADMIN_COMMON.SEARCH' | translate"
+            [maxLength]="eventSearchMaxLength"
+            [value]="eventSearch()"
+            (valueChange)="setEventSearch($event)"
+        />
+        <fd-ui-select
+            label="Event"
+            [id]="'admin-acquisition-event-type'"
+            [value]="eventTypeFilter()"
+            [options]="[
+                { value: 'all', label: 'All events' },
+                { value: 'page_landing', label: 'Visits' },
+                { value: 'signup_completed', label: 'Signups' },
+                { value: 'premium_started', label: 'Premium starts' },
+            ]"
+            (valueChange)="setEventTypeFilter($event)"
+        />
+        <fd-ui-select
+            label="Attribution"
+            [id]="'admin-acquisition-channel'"
+            [value]="channelFilter()"
+            [options]="[
+                { value: 'all', label: 'All traffic' },
+                { value: 'tracked', label: 'Tracked only' },
+                { value: 'direct', label: 'Direct only' },
+            ]"
+            (valueChange)="setChannelFilter($event)"
+        />
+        <fd-ui-button (click)="applyEventFilters()">{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button>
+    </div>
+</ng-template>

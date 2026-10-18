@@ -12,7 +12,7 @@ export function acquisitionTrend(report: MarketingAttributionRange): MarketingAt
     const result: MarketingAttributionRange['byDay'] = [];
     for (let day = Date.parse(start); day < Date.parse(report.toUtc); day += DAY_MS) {
         const date = new Date(day).toISOString().slice(0, ADMIN_DATE_TEXT_LENGTH);
-        result.push(values.get(date) ?? { date, visits: 0, signups: 0, premiumStarts: 0 });
+        result.push({ ...(values.get(date) ?? { visits: 0, signups: 0, premiumStarts: 0 }), date });
     }
     return result;
 }

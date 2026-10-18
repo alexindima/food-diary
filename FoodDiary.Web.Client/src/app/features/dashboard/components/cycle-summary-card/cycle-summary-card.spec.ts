@@ -4,9 +4,13 @@ import { describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import {
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+    CYCLE_TRACKING_MODE_NO_PERIOD,
+    CYCLE_TRACKING_MODE_POSTPARTUM_LACTATION,
+    CYCLE_TRACKING_MODE_PREGNANCY,
     CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE,
     type CyclePredictions,
     type CycleResponse,
+    type MenstrualEpisode,
 } from '../../../../shared/models/cycle.data';
 import { calendarDate } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
@@ -14,6 +18,15 @@ import { CycleSummaryCardComponent } from './cycle-summary-card';
 
 const CYCLE_DAY = 5;
 const DAYS_TO_PERIOD = 24;
+const RECORDED_CYCLE_DAY = 3;
+const EPISODE: MenstrualEpisode = {
+    id: entityId<'menstrual-episode'>('episode-1'),
+    cycleProfileId: entityId<'cycle-profile'>('cycle-1'),
+    startDate: calendarDate('2026-05-01T00:00:00.000Z'),
+    endDate: null,
+    status: 1,
+    excludedFromPredictions: false,
+};
 const CYCLE: CycleResponse = {
     id: entityId<'cycle-profile'>('cycle-1'),
     userId: entityId<'user'>('user-1'),
@@ -43,6 +56,7 @@ const CYCLE: CycleResponse = {
         },
     ],
     fertilitySignals: [],
+    menstrualEpisodes: [EPISODE],
     predictions: null,
 };
 
@@ -91,6 +105,49 @@ describe('CycleSummaryCardComponent', () => {
 
         expect(setupSpy).toHaveBeenCalledOnce();
     });
+
+    it('counts from the recorded period instead of the observation start at local midnight', async () => {
+        const { component, fixture } = await setupComponentAsync({
+            cycle: {
+                ...CYCLE,
+                trackingStartDate: calendarDate('2026-08-01'),
+                menstrualEpisodes: [{ ...EPISODE, startDate: calendarDate('2026-10-16T00:00:00Z') }],
+            },
+            startDate: '2026-08-01',
+            referenceDate: new Date('2026-10-18T00:00:00'),
+        });
+
+        fixture.detectChanges();
+
+        expect(component['cycleDay']()).toBe(RECORDED_CYCLE_DAY);
+        expect(component['hasCycle']()).toBe(true);
+        expect((fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.cycle-summary-card__day')?.hidden).toBe(false);
+    });
+
+    it('keeps a configured journal without episodes without inventing a numeric cycle day', async () => {
+        const { component, fixture } = await setupComponentAsync({ cycle: { ...CYCLE, menstrualEpisodes: [] } });
+
+        fixture.detectChanges();
+
+        expect(component['cycleDay']()).toBeNull();
+        expect(component['hasCycle']()).toBe(true);
+        expect((fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.cycle-summary-card__day')?.hidden).toBe(true);
+        expect(getText(fixture)).toContain('CYCLE_TRACKING.MODE_TRYING_TO_CONCEIVE');
+        expect(getText(fixture)).not.toContain('CYCLE_CARD.NO_DATA_TITLE');
+    });
+
+    it.each([CYCLE_TRACKING_MODE_PREGNANCY, CYCLE_TRACKING_MODE_POSTPARTUM_LACTATION, CYCLE_TRACKING_MODE_NO_PERIOD] as const)(
+        'keeps metadata without a numeric menstrual day for mode %s',
+        async mode => {
+            const { component, fixture } = await setupComponentAsync({ cycle: { ...CYCLE, mode } });
+
+            fixture.detectChanges();
+
+            expect(component['cycleDay']()).toBeNull();
+            expect(component['hasCycle']()).toBe(true);
+            expect((fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.cycle-summary-card__day')?.hidden).toBe(true);
+        },
+    );
 });
 
 async function setupComponentAsync(

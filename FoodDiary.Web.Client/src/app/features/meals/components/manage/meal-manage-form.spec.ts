@@ -20,12 +20,14 @@ import {
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { productQuantityFromStored, recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
+import { MEAL_DEVELOPMENT_TOOLS, type MealDevelopmentScreen, type MealDevelopmentTools } from '../../contracts/meal-development-tools';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { MealManageFormComponent } from './meal-manage-form';
 import type { MealItemFormValues, MealNutritionSummaryState, NutritionTotals } from './meal-manage-lib/meal-manage.types';
 import { createMealItemValue } from './meal-manage-lib/meal-manage-form.mapper';
 
 const PRODUCT_AMOUNT = 150;
+const FRACTIONAL_RECIPE_SERVINGS = 0.5;
 const TOTAL_CALORIES = 300;
 const UPDATED_TOTAL_CALORIES = 450;
 const NORMALIZED_SATIETY_LEVEL = 5;
@@ -41,6 +43,8 @@ const EMPTY_TOTALS: NutritionTotals = {
 };
 
 type MealManageFacadeMock = {
+    resolveRecipeDisplayValueAsync: ReturnType<typeof vi.fn<MealManageFacade['resolveRecipeDisplayValueAsync']>>;
+    recipeDisplayUnit: ReturnType<typeof vi.fn<MealManageFacade['recipeDisplayUnit']>>;
     addAiSession: ReturnType<typeof vi.fn>;
     buildManualNutritionPatchFromTotals: ReturnType<typeof vi.fn>;
     buildNutritionSummaryStateFromValues: ReturnType<typeof vi.fn>;
@@ -444,7 +448,7 @@ describe('Meal editor route departure', () => {
     });
 });
 
-async function setupComponentAsync(): Promise<MealManageFormSetup> {
+async function setupComponentAsync(developmentTools?: MealDevelopmentTools): Promise<MealManageFormSetup> {
     const mealManageFacade = createMealManageFacadeMock();
     const navigationService = {
         navigateToMealListAsync: vi.fn().mockResolvedValue(true),
@@ -453,6 +457,7 @@ async function setupComponentAsync(): Promise<MealManageFormSetup> {
     await TestBed.configureTestingModule({
         imports: [MealManageFormComponent],
         providers: [
+            ...(developmentTools === undefined ? [] : [{ provide: MEAL_DEVELOPMENT_TOOLS, useValue: developmentTools }]),
             provideTranslateTesting(),
             { provide: MealManageFacade, useValue: mealManageFacade },
             { provide: NavigationService, useValue: navigationService },
@@ -493,8 +498,81 @@ async function setupComponentAsync(): Promise<MealManageFormSetup> {
     };
 }
 
+describe('Meal editor development capability', () => {
+    it('uses the owner conversion for recipe servings and aborts if the editor changes during conversion', async () => {
+        const screens: MealDevelopmentScreen[] = [];
+        const { component, mealManageFacade } = await setupComponentAsync({ attach: (screen: MealDevelopmentScreen): (() => void) => { screens.push(screen); return (): void => {}; } });
+        const recipe = createEmptyRecipeSnapshot();
+        let complete: ((value: number) => void) | undefined;
+        mealManageFacade.resolveRecipeDisplayValueAsync.mockImplementationOnce(async () => new Promise(resolve => { complete = resolve; }));
+        const pending = screens[0].fillDraft?.({ date: '2026-10-17', time: '12:00', mealType: 'LUNCH', comment: '', items: [{ recipe, servings: recipeServingsFromStored(FRACTIONAL_RECIPE_SERVINGS) }] }, vi.fn());
+        component['patchMealFormModel']({ comment: 'User typed during lookup' });
+        complete?.(PRODUCT_AMOUNT);
+        await expect(pending).rejects.toThrow('changed');
+        expect(component['mealFormModel']().comment).toBe('User typed during lookup');
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+    });
+
+    it('fills the owner display amount while retaining an explicit recipe serving meaning', async () => {
+        const screens: MealDevelopmentScreen[] = [];
+        const { component, mealManageFacade } = await setupComponentAsync({ attach: (screen: MealDevelopmentScreen): (() => void) => { screens.push(screen); return (): void => {}; } });
+        const recipe = createEmptyRecipeSnapshot();
+        await screens[0].fillDraft?.({ date: '2026-10-17', time: '12:00', mealType: 'LUNCH', comment: '', items: [{ recipe, servings: recipeServingsFromStored(FRACTIONAL_RECIPE_SERVINGS) }] }, vi.fn());
+        expect(mealManageFacade.resolveRecipeDisplayValueAsync).toHaveBeenCalledWith(recipe, FRACTIONAL_RECIPE_SERVINGS);
+        expect(component['mealFormModel']().items[0]).toMatchObject({ sourceType: MealSourceType.Recipe, recipe, product: null, amount: PRODUCT_AMOUNT });
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+    });
+    it('fills a dirty, unsaved draft and keeps the existing leave guard and submit boundary', async () => {
+        const screens: MealDevelopmentScreen[] = [];
+        const dispose = vi.fn();
+        const bridge: MealDevelopmentTools = {
+            attach: screen => {
+                screens.push(screen);
+                return dispose;
+            },
+        };
+        const { component, fixture, mealManageFacade } = await setupComponentAsync(bridge);
+        const screen = screens[0];
+        const requireSession = vi.fn();
+        await screen.fillDraft?.(
+            {
+                date: '2026-10-17',
+                time: '00:15',
+                mealType: 'OTHER',
+                comment: 'WebMCP draft',
+                items: [{ product: { ...createEmptyProductSnapshot(), name: 'Pilot apple' }, amount: 150 }],
+            },
+            requireSession,
+        );
+        fixture.detectChanges();
+        expect(requireSession).toHaveBeenCalledOnce();
+        expect(component['mealFormModel']()).toMatchObject({
+            date: '2026-10-17',
+            time: '00:15',
+            mealType: 'OTHER',
+            comment: 'WebMCP draft',
+        });
+        expect(screen.isDirty?.()).toBe(true);
+        expect(screen.read()).toMatchObject({
+            kind: 'new-meal-editor',
+            dirty: true,
+            items: [{ name: 'Pilot apple', amount: 150, unit: 'G' }],
+        });
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+        await expect(
+            screen.fillDraft?.({ date: '2026-10-18', time: '12:00', mealType: 'LUNCH', comment: '', items: [] }, requireSession),
+        ).rejects.toThrow('clean');
+        await component.canLeaveAsync();
+        expect(mealManageFacade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
+        fixture.destroy();
+        expect(dispose).toHaveBeenCalledOnce();
+    });
+});
+
 function createMealManageFacadeMock(): MealManageFacadeMock {
     const facade: MealManageFacadeMock = {
+        resolveRecipeDisplayValueAsync: vi.fn<MealManageFacade['resolveRecipeDisplayValueAsync']>().mockResolvedValue(PRODUCT_AMOUNT),
+        recipeDisplayUnit: vi.fn<MealManageFacade['recipeDisplayUnit']>().mockReturnValue('grams'),
         addAiSession: vi.fn((_sessions: MealAiSessionManageDto[], session: MealAiSessionManageDto) => [session]),
         buildManualNutritionPatchFromTotals: vi.fn((totals: NutritionTotals) => ({
             manualCalories: totals.calories,

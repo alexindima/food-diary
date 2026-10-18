@@ -14,6 +14,7 @@ import {
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { PeriodFilterComponent } from '../../../../components/shared/period-filter/period-filter';
+import { connectDevelopmentScreen } from '../../../../shared/development/development-tools';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
@@ -135,6 +136,18 @@ export class WaistHistoryPageComponent {
     protected readonly rangeTabs = WAIST_HISTORY_RANGE_TABS;
 
     public constructor() {
+        connectDevelopmentScreen({
+            kind: 'waist-history',
+            read: () => ({
+                range: this.facade.currentRange(),
+                loading: this.facade.isLoading(),
+                error: this.facade.pageLoadError(),
+                entries: this.facade.entries().map(entry => ({ id: entry.id, date: entry.date })),
+            }),
+            openDraft: () => {
+                this.openEntryDialog();
+            },
+        });
         this.facade.initialize();
     }
 

@@ -1,5 +1,8 @@
 <fd-ui-card class="statistics-nutrition-trend-card">
-    <div class="statistics-nutrition-trend-card__layout">
+    <div
+        class="statistics-nutrition-trend-card__layout"
+        [class.statistics-nutrition-trend-card__layout--without-insights]="insights().length === 0"
+    >
         <section class="statistics-nutrition-trend-card__chart">
             <div class="statistics-nutrition-trend-card__chart-header">
                 <h2 class="statistics-nutrition-trend-card__title fd-ui-card-title">
@@ -23,7 +26,7 @@
                 [selectedValue]="selectedTab()"
                 [fullWidth]="true"
                 [stackOnNarrow]="false"
-                [wrapOnNarrow]="false"
+                [wrapOnNarrow]="true"
                 (selectedValueChange)="onTabChange($event)"
             />
 
@@ -86,34 +89,36 @@
             }
         </section>
 
-        <aside
-            class="statistics-nutrition-trend-card__insights"
-            [attr.aria-label]="`${('STATISTICS.DASHBOARD.TREND.TITLE' | translate)}: ${('STATISTICS.DASHBOARD.TREND.INSIGHTS_TITLE' | translate)}`"
-        >
-            <h3 class="statistics-nutrition-trend-card__insights-title fd-ui-action-text">
-                {{ 'STATISTICS.DASHBOARD.TREND.INSIGHTS_TITLE' | translate }}
-            </h3>
-            @for (insight of insights(); track insight.key) {
-                <div class="statistics-nutrition-trend-card__insight">
-                    <fd-ui-icon [name]="getInsightIcon(insight)" />
-                    <div class="fd-stack fd-gap-xxs fd-min-w-0">
-                        <strong class="fd-ui-action-text">{{ insight.labelKey | translate }}</strong>
-                        <span class="fd-ui-caption fd-ui-text-muted">{{ insight.detailKey | translate }}</span>
+        @if (insights().length > 0) {
+            <aside
+                class="statistics-nutrition-trend-card__insights"
+                [attr.aria-label]="`${('STATISTICS.DASHBOARD.TREND.TITLE' | translate)}: ${('STATISTICS.DASHBOARD.TREND.INSIGHTS_TITLE' | translate)}`"
+            >
+                <h3 class="statistics-nutrition-trend-card__insights-title fd-ui-action-text">
+                    {{ 'STATISTICS.DASHBOARD.TREND.INSIGHTS_TITLE' | translate }}
+                </h3>
+                @for (insight of insights(); track insight.key) {
+                    <div class="statistics-nutrition-trend-card__insight">
+                        <fd-ui-icon [name]="getInsightIcon(insight)" />
+                        <div class="fd-stack fd-gap-xxs fd-min-w-0">
+                            <strong class="fd-ui-action-text">{{ insight.labelKey | translate }}</strong>
+                            <span class="fd-ui-caption fd-ui-text-muted">{{ insight.detailKey | translate }}</span>
+                        </div>
+                        @if (insight.value !== null) {
+                            <strong
+                                class="statistics-nutrition-trend-card__insight-value fd-ui-stat-value"
+                                [class.statistics-nutrition-trend-card__insight-value--positive]="insight.tone === 'positive'"
+                                [class.statistics-nutrition-trend-card__insight-value--negative]="insight.tone === 'negative'"
+                            >
+                                {{ insight.value > 0 ? '+' : '' }}{{ insight.value | localizedNumber: locale() : 0 : 1
+                                }}{{ insight.unitKey | translate }}
+                            </strong>
+                        } @else if (insight.key !== 'completeness') {
+                            <strong class="fd-ui-stat-value fd-ui-text-muted">—</strong>
+                        }
                     </div>
-                    @if (insight.value !== null) {
-                        <strong
-                            class="statistics-nutrition-trend-card__insight-value fd-ui-stat-value"
-                            [class.statistics-nutrition-trend-card__insight-value--positive]="insight.tone === 'positive'"
-                            [class.statistics-nutrition-trend-card__insight-value--negative]="insight.tone === 'negative'"
-                        >
-                            {{ insight.value > 0 ? '+' : '' }}{{ insight.value | localizedNumber: locale() : 0 : 1
-                            }}{{ insight.unitKey | translate }}
-                        </strong>
-                    } @else if (insight.key !== 'completeness') {
-                        <strong class="fd-ui-stat-value fd-ui-text-muted">—</strong>
-                    }
-                </div>
-            }
-        </aside>
+                }
+            </aside>
+        }
     </div>
 </fd-ui-card>

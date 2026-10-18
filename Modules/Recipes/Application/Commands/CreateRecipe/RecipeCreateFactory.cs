@@ -13,7 +13,7 @@ internal static class RecipeCreateFactory {
             command.Category,
             values.ImageAsset?.Url ?? command.ImageUrl,
             values.ImageAssetId,
-            command.PrepTime ?? 0,
+            command.PrepTime,
             command.CookTime,
             values.Visibility, importId: command.CatalogImportId is { } id ? new FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids.RecipeId(id) : null);
 }

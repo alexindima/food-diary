@@ -26,6 +26,7 @@ export class CycleTrackingFacade {
     public readonly isLoading = this.state.isLoading;
     public readonly loadError = this.state.loadError;
     public readonly isSavingCycle = this.state.isSavingCycle;
+    public readonly createError = this.state.createError;
     public readonly isSavingSettings = this.state.isSavingSettings;
     public readonly isDeletingCycle = this.state.isDeletingCycle;
     public readonly isSavingDay = this.state.isSavingDay;

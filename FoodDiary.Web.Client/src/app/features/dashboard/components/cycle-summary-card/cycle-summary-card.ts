@@ -4,7 +4,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
 import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner';
-import { normalizeStartOfUtcDay, parseDateValue } from '../../../../shared/lib/local-date.utils';
+import { calculateCycleDayNumber, resolveCycleStartDateKey } from '../../../../shared/lib/cycle-calendar.utils';
+import { normalizeStartOfUtcDay, parseLocalDateInputValue } from '../../../../shared/lib/local-date.utils';
 import { MS_PER_DAY } from '../../../../shared/lib/time.constants';
 import {
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
@@ -60,13 +61,13 @@ export class CycleSummaryCardComponent {
     private readonly normalizedReference = computed(() => this.normalizeDate(this.referenceDate()));
 
     protected readonly cycleDay = computed(() => {
-        const start = this.normalizedStart();
+        const cycle = this.cycle();
         const reference = this.normalizedReference();
-        if (start === null || reference === null) {
+        if (cycle === null || reference === null) {
             return null;
         }
-        const diff = Math.floor((reference.getTime() - start.getTime()) / MS_PER_DAY);
-        return Math.max(1, diff + 1);
+        const dateKey = reference.toISOString().split('T')[0];
+        return calculateCycleDayNumber(resolveCycleStartDateKey(cycle, dateKey), dateKey, cycle.averageCycleLength);
     });
 
     protected readonly statusKey = computed(() => {
@@ -163,7 +164,7 @@ export class CycleSummaryCardComponent {
     }
 
     private normalizeDate(value: Date | string | null | undefined): Date | null {
-        const date = parseDateValue(value);
+        const date = parseLocalDateInputValue(value);
         return date !== null ? normalizeStartOfUtcDay(date) : null;
     }
 

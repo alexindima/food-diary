@@ -17,9 +17,11 @@
     <ProjectReference Include="../Presentation.Contracts/FoodDiary.Modules.Users.Presentation.Contracts.csproj" />
     <ProjectReference Include="../Presentation.Mappings/FoodDiary.Modules.Users.Presentation.Mappings.csproj" />
     <ProjectReference Include="../../Dietologist/Presentation.Contracts/FoodDiary.Modules.Dietologist.Presentation.Contracts.csproj" />
+    <ProjectReference Include="../../Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj" />
     <ProjectReference Include="../../Notifications/Presentation.Contracts/FoodDiary.Modules.Notifications.Presentation.Contracts.csproj" />
     <ProjectReference Include="../../Notifications/Presentation.Mappings/FoodDiary.Modules.Notifications.Presentation.Mappings.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
   </ItemGroup>
 

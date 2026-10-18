@@ -6,7 +6,9 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { catchError, EMPTY, filter, finalize, firstValueFrom, map, type Observable, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
+import { developmentRequestContext } from '../../../shared/development/development-request-context';
 import { PagedData } from '../../../shared/lib/paged-data.data';
+import { RequestStateController } from '../../../shared/lib/request-state';
 import type { FavoriteRecipe, Recipe, RecipeFilters, RecipeOverview } from '../../../shared/models/recipe.data';
 import type { FavoriteRecipeId, RecipeId } from '../../../shared/models/semantics/entity-id';
 import { resolvePaginationPage } from '../../../shared/navigation/pagination-query.utils';
@@ -38,6 +40,8 @@ export class RecipeListFacade {
     private readonly queryState = inject(RECIPE_LIST_QUERY_STATE, { optional: true });
     private activeRouteQuery: RecipeListQuery | null = null;
     private requestId = 0;
+    private readonly appliedRequest = new RequestStateController<void>();
+    public readonly requestProvenance = this.appliedRequest.provenance;
 
     public readonly pageSize = RECIPE_LIST_PAGE_SIZE;
     public readonly recipeData = new PagedData<Recipe>();
@@ -123,7 +127,8 @@ export class RecipeListFacade {
     private readOverview(query: RecipeListQuery, limit: number, filters: RecipeFilters, initial: boolean): Observable<void> {
         this.filtersActive.set(this.hasActiveFilters(query.onlyMine, filters));
         this.cancelLoad.next();
-        const requestId = ++this.requestId;
+        const requestId = this.appliedRequest.begin({ showLoading: false });
+        this.requestId = requestId;
         let recovering = false;
         this.currentPageIndex.set(query.page - 1);
         this.recipeData.setLoading(true);
@@ -137,7 +142,7 @@ export class RecipeListFacade {
                 includePublic: !query.onlyMine,
                 recentLimit: initial ? RECIPE_LIST_OVERVIEW_RECENT_LIMIT : 1,
                 favoriteLimit: initial ? RECIPE_LIST_OVERVIEW_FAVORITE_LIMIT : 0,
-            })
+            }, developmentRequestContext(this.appliedRequest.bindRequest(requestId)))
             .pipe(
                 takeUntil(this.cancelLoad),
                 takeUntilDestroyed(this.destroyRef),
@@ -159,6 +164,7 @@ export class RecipeListFacade {
                         this.writeRouteQuery(query, true);
                     }
                     this.acceptOverview(data, initial);
+                    this.appliedRequest.succeed(requestId, undefined);
                 }),
                 map(() => void 0),
                 catchError((_error: unknown) => {

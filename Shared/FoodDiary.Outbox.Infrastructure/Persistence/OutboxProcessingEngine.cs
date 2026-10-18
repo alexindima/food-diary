@@ -22,9 +22,10 @@ public static class OutboxProcessingEngine {
         IQueryable<TMessage>? claimedQuery = null,
         CancellationToken cancellationToken = default,
         Func<TMessage, CancellationToken, Task<OutboxCompletionResult>>? tryReleaseUpdatedRevisionAsync = null,
-        Action? ensureCleanEntry = null)
+        Action? ensureCleanEntry = null,
+        IReadOnlyCollection<Guid>? allowedMessageIds = null)
         where TMessage : class, IOutboxMessage {
-        if (batchSize <= 0) {
+        if (batchSize <= 0 || allowedMessageIds is { Count: 0 }) {
             return 0;
         }
 
@@ -48,7 +49,8 @@ public static class OutboxProcessingEngine {
                         nowUtc,
                         options.LeaseDuration,
                         claimedQuery,
-                        cancellationToken)
+                        cancellationToken,
+                        allowedMessageIds)
                     .ConfigureAwait(false);
                 if (claim.Messages.Count == 0) {
                     break;

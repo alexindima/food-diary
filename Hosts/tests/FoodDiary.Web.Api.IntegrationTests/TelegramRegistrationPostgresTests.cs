@@ -5,8 +5,8 @@ using System.Text.Json;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
@@ -33,6 +33,9 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
             })).ConfigureLogging(logging => logging.AddProvider(diagnostics))
             .ConfigureServices(TelegramRecognitionProvider.Configure));
         using HttpClient client = app.CreateClient();
+        using HttpResponseMessage quarantined = await client.PostAsJsonAsync(
+            "/api/v1/auth/telegram/mini-app/begin", new { InitData = CreateInitData() });
+        Assert.Equal(HttpStatusCode.Unauthorized, quarantined.StatusCode);
         await CompleteTelegramCutoverForScenarioAsync(app);
         using HttpResponseMessage begin = await client.PostAsJsonAsync("/api/v1/auth/telegram/mini-app/begin", new { InitData = CreateInitData() });
         Assert.True(begin.StatusCode == HttpStatusCode.OK, begin.IsSuccessStatusCode ? null : await begin.Content.ReadAsStringAsync());
@@ -66,6 +69,7 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
 
     private static async Task CompleteTelegramCutoverForScenarioAsync(WebApplicationFactory<Program> app) {
         // This isolated happy-path fixture starts after the migration quarantine.
+        // The request above proves the pre-cutover restriction before advancing its test-only epoch.
         await using AsyncServiceScope scope = app.Services.CreateAsyncScope();
         FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
         int updated = await context.Database.ExecuteSqlRawAsync(

@@ -36,6 +36,21 @@ https://fooddiary.club/?utm_source=telegram&utm_medium=social&utm_campaign=2026_
    - the campaign row has `1 premium starts`.
    - recent events include `premium_started`.
 
+## Reporting periods
+
+`GET /api/v1/admin/acquisition/range` requires the Admin role and reads retained
+events in the half-open UTC interval `[fromUtc, toUtc)`. The admin date control
+includes both selected dates and sends midnight after the final day as `toUtc`.
+Custom intervals allow at most 3661 elapsed days, matching the control's maximum
+3660-day difference between calendar dates. The exact Unix epoch start is the
+All time marker and may span the complete retained history. Endpoints before the
+epoch, reversed or empty intervals, future end dates beyond the next UTC midnight,
+and invalid journal filters remain rejected.
+
+Custom periods compare with the preceding equal UTC interval. All time has no
+previous-period comparison in the UI. Wider queries do not extend retention or
+reconstruct events already removed by cleanup.
+
 ## SQL Fallback Checks
 
 Use these only when the admin UI is unavailable.

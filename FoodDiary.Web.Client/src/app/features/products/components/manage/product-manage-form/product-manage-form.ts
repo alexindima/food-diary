@@ -15,6 +15,7 @@ import type { ConfirmDeleteDialogData } from '../../../../../components/shared/c
 import { PageBodyComponent } from '../../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../../components/shared/page-header/page-header';
 import { NavigationService } from '../../../../../services/navigation.service';
+import { connectDevelopmentScreen, DevelopmentToolError } from '../../../../../shared/development/development-tools';
 import type { UnsavedEditor } from '../../../../../shared/forms/unsaved-editor';
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
 import { getRecordProperty } from '../../../../../shared/lib/unknown-value.utils';
@@ -52,6 +53,7 @@ import {
 import { ProductManageFacade } from '../../../lib/product-manage.facade';
 import type { OpenFoodFactsProduct } from '../../../models/open-food-facts.data';
 import { ProductBasicInfoComponent } from '../product-basic-info/product-basic-info';
+import { PRODUCT_DEVELOPMENT_SCHEMA, readProductDevelopmentDraft } from '../product-manage-lib/product-development-draft';
 import {
     buildAiResultPatch,
     buildConvertedNutritionPatch,
@@ -163,6 +165,49 @@ export class ProductManageFormComponent implements UnsavedEditor {
     private leaveDecision: Promise<boolean> | null = null;
 
     public constructor() {
+        const requireNewEditor = (): void => {
+            if (this.product() !== null || this.isSubmitting() || this.isDeleting() || this.photosUploading()) {
+                throw new DevelopmentToolError('A ready NEW product editor is required.');
+            }
+        };
+        connectDevelopmentScreen({
+            kind: 'product-editor',
+            read: () => ({
+                isNew: this.product() === null,
+                id: this.product()?.id ?? null,
+                values: { ...this.productFormModel(), imageUrl: undefined, images: undefined },
+                valid: this.productForm().valid(),
+                loading: this.isSubmitting() || this.photosUploading(),
+                error: this.globalError(),
+                validation: {
+                    name: this.productForm
+                        .name()
+                        .errors()
+                        .map(error => error.kind),
+                    calories: this.productForm
+                        .caloriesPerBase()
+                        .errors()
+                        .map(error => error.kind),
+                },
+            }),
+            isDirty: () => this.productForm().dirty(),
+            draftSchema: PRODUCT_DEVELOPMENT_SCHEMA,
+            fillDraft: draftInput => {
+                requireNewEditor();
+                if (this.productForm().dirty()) {
+                    throw new DevelopmentToolError('Unsaved product draft exists.');
+                }
+                const draft = readProductDevelopmentDraft(draftInput);
+                this.nutritionMode = 'base';
+                this.patchProductForm(draft);
+                this.productForm().markAsDirty();
+            },
+            clearDraft: () => {
+                requireNewEditor();
+                this.nutritionMode = 'base';
+                this.productForm().reset(createProductForm());
+            },
+        });
         this.productManageFacade.committed$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.productForm().reset(this.productFormModel());
         });

@@ -23,13 +23,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "997762017a8b9c43002f825cb93149d0e886a415264eea23de89be5b07595e7c"
+          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "76c19ff565165f5f4d46669e91393da0fb72876f18badaa2263b61d294aa3956"
         }
       ],
-      "reason": "Reviewed the six affected pages against the root transport guidance and BugTriage runbook. The service ownership, independent mail/audit lifecycle, knowledge authority and Wiki workflow are unchanged; detailed transport authority remains in the linked runbook.",
+      "reason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities.",
       "baseRef": "HEAD",
-      "gitHead": "b5ed198a65bafb47e598db79afdabfdf7e887b1a",
-      "reviewedAtUtc": "2026-10-17T12:21:21.9276268Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:02:59.7361957Z"
     },
     {
       "pageId": "module.frontend",
@@ -37,14 +41,14 @@
       "pageSha256": "56878c764cc5ff357a30b22c59daa99a2396117da578f1d71b719cb2315a8ffb",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "43b350254aa3573e5e233dc41ec651775d9034d0d9c84631390b1d3549acb193"
+          "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
+          "sha256": "6970d1d46926c0b32336492b0824594e1305d200816681af7ff3b01f921ea718"
         }
       ],
-      "reason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities.",
+      "reason": "Reviewed the local-only WebMCP/fixture capability expansion against final owners and native browser evidence. No HTTP route/schema change, production provider activation, or automatic save/start. IDs/revisions, nutrition/date meanings, fenced exact-message cleanup, sensitive-field redaction and signed manifest ownership remain explicit. Real PostgreSQL tests cover nested purge rollback and foreign references.",
       "baseRef": "HEAD",
-      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
-      "reviewedAtUtc": "2026-10-11T02:03:00.2073178Z"
+      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
+      "reviewedAtUtc": "2026-10-18T22:50:45.0264968Z"
     },
     {
       "pageId": "module.mail-services",
@@ -53,13 +57,13 @@
       "sources": [
         {
           "path": "docs/backend/BUG_TRIAGE.md",
-          "sha256": "6540cb94215c774cdb10b1c81f610c527d46dc0fdacc2db3ee89474053c9df93"
+          "sha256": "759b540d3cfd7ebb7e218037db0707c2dbf66fc3cefa36b0da2b4a1fed8b99a8"
         }
       ],
-      "reason": "Reviewed the six affected pages against the root transport guidance and BugTriage runbook. The service ownership, independent mail/audit lifecycle, knowledge authority and Wiki workflow are unchanged; detailed transport authority remains in the linked runbook.",
+      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
       "baseRef": "HEAD",
-      "gitHead": "b5ed198a65bafb47e598db79afdabfdf7e887b1a",
-      "reviewedAtUtc": "2026-10-17T12:21:22.1470195Z"
+      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
+      "reviewedAtUtc": "2026-10-13T13:03:40.7976729Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -83,13 +87,13 @@
       "sources": [
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "52f2545f07c6cbdd6348e0bb141b6cf48f569d87128179aa3a079a7dd7ee6fc9"
+          "sha256": "0f990de86a636c6277f1601b23c69822ad565d27e64d1a595c55cc1a026ed3bd"
         }
       ],
-      "reason": "The revised in-process impersonation contracts require the actor version and trusted session; all production callers are updated and the HTTP Swagger contract remains unchanged. The persisted Users reader adds an indexed, uncached boolean Admin-membership check within its own module. Independent security review traced the shared bearer gate and revocation writes; focused real HTTP regressions execute the boundary. Generated catalog, contract, quality and runtime data are refreshed; these workflows still describe their navigation and verification roles accurately. No new host, worker, external provider, transaction owner or personal-data storage is introduced.",
+      "reason": "Reviewed the local-only WebMCP/fixture capability expansion against final owners and native browser evidence. No HTTP route/schema change, production provider activation, or automatic save/start. IDs/revisions, nutrition/date meanings, fenced exact-message cleanup, sensitive-field redaction and signed manifest ownership remain explicit. Real PostgreSQL tests cover nested purge rollback and foreign references.",
       "baseRef": "HEAD",
-      "gitHead": "c8b050e39253a53c183d8076d0c19535e153151d",
-      "reviewedAtUtc": "2026-10-17T13:11:38.0416917Z"
+      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
+      "reviewedAtUtc": "2026-10-18T22:50:45.4868547Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -128,13 +132,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "997762017a8b9c43002f825cb93149d0e886a415264eea23de89be5b07595e7c"
+          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "76c19ff565165f5f4d46669e91393da0fb72876f18badaa2263b61d294aa3956"
         }
       ],
-      "reason": "Reviewed the six affected pages against the root transport guidance and BugTriage runbook. The service ownership, independent mail/audit lifecycle, knowledge authority and Wiki workflow are unchanged; detailed transport authority remains in the linked runbook.",
+      "reason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities.",
       "baseRef": "HEAD",
-      "gitHead": "b5ed198a65bafb47e598db79afdabfdf7e887b1a",
-      "reviewedAtUtc": "2026-10-17T12:21:22.3349080Z"
+      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
+      "reviewedAtUtc": "2026-10-11T02:03:01.1830676Z"
     },
     {
       "pageId": "system.quality-index",
@@ -184,17 +192,17 @@
     {
       "pageId": "workflow-adaptive-development",
       "pagePath": ".llm-wiki/workflows/adaptive-development.md",
-      "pageSha256": "89b2557c953ad63c7bcd2603c50f1a07242e726719add8eea033ebe5f40143c1",
+      "pageSha256": "36ae70fb9f94087567ee3f08430135935b4ea65135a98019a45667df5b1e08bd",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "f264a51241762bd48747286085f1937f345bb0cf8024133532e21c141e4f25b2"
+          "path": "scripts/ai/task-runtime.mjs",
+          "sha256": "882cfe622034f0115e7ebfa0406f34311b870f53f0e3854d897d3469aa61c4e0"
         }
       ],
-      "reason": "Reviewed the final brief and test-plan optimization: all risk, policy, ownership, required-check and scenario fields remain compatible. The exact scoped SQL impact is shared only within one request; standalone planner queries and cache invalidation remain intact. Test discovery uses the existing pruned source inventory with explicit legacy system/hidden exclusions, bounded escaped regex alternatives and request-local source text reuse. Full paired response parity passed across backend, frontend, Users and intent-only cases; source inventory and semantic planner checks passed. Updated brief and test-plan workflow documentation and source declarations; downstream workflow descriptions continue to apply.",
+      "reason": "Reviewed scripts/ai/task-runtime.mjs and the workflow. Owned runtime discovery/identity/cleanup semantics remain intact. Startup now uses the existing generated frontend workspace also for main-only runs and owns an additional source-identity watcher; admin reuse upgrades only its own workspace. Creation identities still gate process reuse/stop; no shared configs or peer runtime are changed. docs/ai/AI_DEVELOPMENT.md documents emitted capture versus response-observed API identities and unknown fallback. The10runtime tests pass including source/HMR identity changes.",
       "baseRef": "HEAD",
-      "gitHead": "41c23e0cf3b2b37ae68acc3e65140056ed277563",
-      "reviewedAtUtc": "2026-10-14T12:26:32.8931698Z"
+      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
+      "reviewedAtUtc": "2026-10-18T17:39:11.3662111Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -206,10 +214,10 @@
           "sha256": "6e27c672bb40fce870d648e831efb9dad55651fd6fd8af9f8c86828a0da50e84"
         }
       ],
-      "reason": "Reviewed the isolated security source set and generated backend contracts: HTTP shapes are unchanged, existing OpenAPI 23-test verification remains applicable, and the two invitation HTTP fixture files now verify email through the real route; all 7 invitation tests passed in this checkout.",
+      "reason": "Reviewed owning replay/profile/source contracts and all direct callers against the final implementation; full solution and 23 HTTP contract tests pass. CI additions apply checked dependency patches and test deploy provenance without changing API or index contracts.",
       "baseRef": "HEAD",
       "gitHead": "e8d77407540e9ec32620cd9f05fb09308b1a6be7",
-      "reviewedAtUtc": "2026-10-17T10:35:07.9798863Z"
+      "reviewedAtUtc": "2026-10-17T01:08:48.3543263Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -217,14 +225,14 @@
       "pageSha256": "20d3e15e2bb4fde9b589aafd6671e66c2285642e4cc94f00ffa9e46457598140",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "b3b7532cc91c9e82a24b6d3af3131fb9918d6c95c6b0207c9d83480a8b5c1724"
+          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "0f990de86a636c6277f1601b23c69822ad565d27e64d1a595c55cc1a026ed3bd"
         }
       ],
-      "reason": "Reviewed production boundaries and tests. MealPlanning application 127/127, architecture 2272/2272, central PostgreSQL regressions 29/29, module PostgreSQL compatibility 5/5, host DI 73/73 and strengthened privacy PostgreSQL 4/4 passed with zero skips. No project dependency edge, EF mapping or technical exception was broadened; generated discovery indexes remain navigation evidence.",
+      "reason": "Reviewed the local-only WebMCP/fixture capability expansion against final owners and native browser evidence. No HTTP route/schema change, production provider activation, or automatic save/start. IDs/revisions, nutrition/date meanings, fenced exact-message cleanup, sensitive-field redaction and signed manifest ownership remain explicit. Real PostgreSQL tests cover nested purge rollback and foreign references.",
       "baseRef": "HEAD",
-      "gitHead": "c64d7778667d31092aca5d85943d94e37664a359",
-      "reviewedAtUtc": "2026-10-18T12:31:27.0321989Z"
+      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
+      "reviewedAtUtc": "2026-10-18T22:50:46.8172786Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -233,13 +241,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "84bd18639f420a0bb2d7725458d62568cc95806d9c6720014927be12035bec84"
+          "sha256": "7744e2ea4b674e8e07ea0039541f90743b0945eb95c39ee8337e24e80ef01723"
         }
       ],
-      "reason": "Reviewed all meal-plan detail reader callers, implementers and constructor registrations. The required nullable viewer ID is supplied explicitly by user and admin handlers. HTTP routes, payloads, status codes and snapshots are unchanged; the catalog transaction port follows the scoped coordinator pattern.",
+      "reason": "Reviewed current workflow after shared backend projection refresh. This task consumes existing generated SDKs through owning frontend services and introduces no backend HTTP, message or C# contract. Published contract workflow guidance remains accurate; this receipt is documentation freshness, not verification of parallel backend work.",
       "baseRef": "HEAD",
-      "gitHead": "c64d7778667d31092aca5d85943d94e37664a359",
-      "reviewedAtUtc": "2026-10-18T12:31:28.5310794Z"
+      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
+      "reviewedAtUtc": "2026-10-18T12:57:08.5430468Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -503,10 +511,10 @@
           "sha256": "aa5e034b4185f6742a07d003e2d744a8e5b2792c5ee5768e3b7157a4669c8a1e"
         }
       ],
-      "reason": "Reviewed password state mutations and User xmin EF mapping. Explicit replacement clears three reset fields; hash migration preserves proof and forced-change state. No schema or migration change; 369 domain tests and PostgreSQL proof passed.",
+      "reason": "Read the domain-data workflow. Generated inventory refresh does not change aggregate ownership, EF review procedure or query commands. WebMCP delegates to the existing editor and catalog without schema or domain changes; unrelated pending domain edits are outside this pilot review.",
       "baseRef": "HEAD",
       "gitHead": "fd7b50f6676a645a1ab966214532e76e91d4e55f",
-      "reviewedAtUtc": "2026-10-17T19:48:06.5586146Z"
+      "reviewedAtUtc": "2026-10-17T20:15:10.0644507Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -563,10 +571,10 @@
           "sha256": "e52771a157cab3c513b2f8ed8aeb155f610b0a7f6fc0eb5526e5dfe4c973a04f"
         }
       ],
-      "reason": "Reviewed CI deploy-source guards, dependency patch execution and isolated test evidence against current workflow guidance. Guard tests passed 9/9 and dependency tests 6/6; existing full application and SQL validation is bound to the unchanged production source hashes. No UI text or rendered component changes are part of this commit.",
+      "reason": "Reviewed changed CI checks, dependency installer execution paths and refreshed indexes against workflow guidance. Owning tests and full frontend verification pass; generated indexes stay navigation and no framework workflow policy was changed.",
       "baseRef": "HEAD",
       "gitHead": "e8d77407540e9ec32620cd9f05fb09308b1a6be7",
-      "reviewedAtUtc": "2026-10-17T10:35:11.2833234Z"
+      "reviewedAtUtc": "2026-10-17T01:08:49.7104156Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -642,10 +650,10 @@
           "sha256": "6e27c672bb40fce870d648e831efb9dad55651fd6fd8af9f8c86828a0da50e84"
         }
       ],
-      "reason": "Reviewed CI deploy-source guards, dependency patch execution and isolated test evidence against current workflow guidance. Guard tests passed 9/9 and dependency tests 6/6; existing full application and SQL validation is bound to the unchanged production source hashes. No UI text or rendered component changes are part of this commit.",
+      "reason": "Reviewed changed CI checks, dependency installer execution paths and refreshed indexes against workflow guidance. Owning tests and full frontend verification pass; generated indexes stay navigation and no framework workflow policy was changed.",
       "baseRef": "HEAD",
       "gitHead": "e8d77407540e9ec32620cd9f05fb09308b1a6be7",
-      "reviewedAtUtc": "2026-10-17T10:35:12.1685997Z"
+      "reviewedAtUtc": "2026-10-17T01:08:49.9086520Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -654,13 +662,13 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "67885113ccce97e8b44911a01a4d64a3bd669c9931381835f39756258a19e6ee"
+          "sha256": "f8d88ee6b054e9d0cceeee452bda839e065d97bfcbbe74e43f5f51f04a20edf1"
         }
       ],
-      "reason": "Task finish appended exactly one fingerprint-bound completion event to the existing hash chain. Instruction versions, policy and guidance are unchanged; automatic retrospective metrics remain tooling signals, distinct from the retained CLI test results.",
-      "baseRef": "HEAD",
-      "gitHead": "fd7b50f6676a645a1ab966214532e76e91d4e55f",
-      "reviewedAtUtc": "2026-10-17T20:19:47.3051804Z"
+      "reason": "Reviewed the appended focused-closure instruction outcome: completion, retrospective, instruction fingerprints and previous-event hash are preserved. No instruction, scoring policy or adoption threshold changed. The current workflow describes this append-only integrity model and does not treat an observation as authority to rewrite AGENTS.md.",
+      "baseRef": "origin/master",
+      "gitHead": "2f849bba5fbe425f167ca90764c2fffb81b787d5",
+      "reviewedAtUtc": "2026-10-16T15:06:36.8972303Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -782,13 +790,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "b73add4c75e88f23ed50ad3a92e7866384b32986ca5cf22bcf26c694d9f0ecf5"
+          "sha256": "655025d4d1360fb5a479ced70a7b5b78a9b9170ba41e47b97cf24ed7179ff41f"
         }
       ],
-      "reason": "Sensitive index changes are bounded source fingerprints. Reset proof retention is shortened on replacement; no new logging, storage or external sharing. SSO URL origin checked before credential issuance.",
+      "reason": "Read the privacy workflow against the local WebMCP boundary: authenticated loopback development only, explicit screen fields, no credential output or persisted tool context. Data-lifecycle and candidate-confirmation guidance remains current.",
       "baseRef": "HEAD",
       "gitHead": "fd7b50f6676a645a1ab966214532e76e91d4e55f",
-      "reviewedAtUtc": "2026-10-17T19:47:34.0942145Z"
+      "reviewedAtUtc": "2026-10-17T20:15:12.9464152Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -831,13 +839,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e9dfae4430eccd5c30814d2c3cbd89be94161effb372bb8ba1d6147f76247c0f"
+          "sha256": "b84d8534cea26b98511673c22f49c9aff6d2ffb5323892024d688af7526a0d16"
         }
       ],
-      "reason": "Reviewed production boundaries and tests. MealPlanning application 127/127, architecture 2272/2272, central PostgreSQL regressions 29/29, module PostgreSQL compatibility 5/5, host DI 73/73 and strengthened privacy PostgreSQL 4/4 passed with zero skips. No project dependency edge, EF mapping or technical exception was broadened; generated discovery indexes remain navigation evidence.",
+      "reason": "Reviewed quality guidance after index regeneration. Static references remain navigation evidence; execution evidence is 48 AI tooling tests plus 21 final focused reruns, generated-workspace builds and eight native Dietologist scenarios. This receipt does not certify unrelated parallel changes.",
       "baseRef": "HEAD",
-      "gitHead": "c64d7778667d31092aca5d85943d94e37664a359",
-      "reviewedAtUtc": "2026-10-18T12:31:30.2767221Z"
+      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
+      "reviewedAtUtc": "2026-10-18T14:07:04.7286238Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -883,10 +891,10 @@
           "sha256": "6e27c672bb40fce870d648e831efb9dad55651fd6fd8af9f8c86828a0da50e84"
         }
       ],
-      "reason": "Reviewed CI deploy-source guards, dependency patch execution and isolated test evidence against current workflow guidance. Guard tests passed 9/9 and dependency tests 6/6; existing full application and SQL validation is bound to the unchanged production source hashes. No UI text or rendered component changes are part of this commit.",
+      "reason": "Reviewed changed CI checks, dependency installer execution paths and refreshed indexes against workflow guidance. Owning tests and full frontend verification pass; generated indexes stay navigation and no framework workflow policy was changed.",
       "baseRef": "HEAD",
       "gitHead": "e8d77407540e9ec32620cd9f05fb09308b1a6be7",
-      "reviewedAtUtc": "2026-10-17T10:35:15.8294306Z"
+      "reviewedAtUtc": "2026-10-17T01:08:51.0044387Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -910,13 +918,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "9e147b93cdacad821ff87cab2e6f56bd8e55ba8cb58ca25534d96beab021a7e6"
+          "sha256": "70d1f71c6149ccd7a9991b296ed21945290113c4c5678ffbe4ae3decfc3a5e7a"
         }
       ],
-      "reason": "Reviewed runtime topology and catalog inventory: one scoped module transaction adapter delegates to the existing shared Serializable coordinator. No new process, provider, job, configuration or migration. Existing cancellation, full-attempt reset, tracked-state discard and Result rollback behavior are preserved; public and owned-private controls are tested.",
+      "reason": "Reviewed current runtime guidance against the local WebMCP boundary. Tools are development-only, loopback-only and authenticated; no new backend host, worker or provider is introduced. The owned task runtime disables mail, AI and payments; server revision and SMTP delivery remain explicitly unavailable, with configured API origin distinguished from actual proxy upstream.",
       "baseRef": "HEAD",
-      "gitHead": "c64d7778667d31092aca5d85943d94e37664a359",
-      "reviewedAtUtc": "2026-10-18T12:31:31.6036880Z"
+      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
+      "reviewedAtUtc": "2026-10-18T12:57:10.1509112Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -925,17 +933,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e9dfae4430eccd5c30814d2c3cbd89be94161effb372bb8ba1d6147f76247c0f"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "9e147b93cdacad821ff87cab2e6f56bd8e55ba8cb58ca25534d96beab021a7e6"
+          "sha256": "b84d8534cea26b98511673c22f49c9aff6d2ffb5323892024d688af7526a0d16"
         }
       ],
-      "reason": "Reviewed catalog create and update, hidden templates, adopted copies, detail joins and both recipe snapshot roots. Recipes are public or owned by the requesting viewer; null viewers receive public roots only. Product redaction and own-private recipe access remain. Four real PostgreSQL tests cover both Serializable retry outcomes, legacy reads and shopping generation.",
+      "reason": "Reviewed navigation guidance for this local tooling delta. Mail diagnostics accept only owned loopback provider ports, require PID creation identity and matching task identity, omit unrecognized response fields, send no mail and keep delivery unverified. The browser navigation rejection is preserved without workaround. This is documentation freshness review, not a security scan verdict.",
       "baseRef": "HEAD",
-      "gitHead": "c64d7778667d31092aca5d85943d94e37664a359",
-      "reviewedAtUtc": "2026-10-18T12:31:32.8931248Z"
+      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
+      "reviewedAtUtc": "2026-10-18T14:07:07.4870189Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1087,14 +1091,18 @@
       "pageSha256": "4e059a263f76810db4c559e2b5599d8599571ccf48d060f6360c6d0e8ec60b48",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "9f2af6bae137104a1c1ce21bfa6b3305b099decb3f238e7e803019697519f74c"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "30a52bf122fc802bf41f690917df3adf8fca812df319310777835af0ccebe643"
+          "sha256": "2211ab49b34205655cd045836e4d5afeee5cd3733afd78d5c47ed84b186d21ae"
         }
       ],
-      "reason": "Traced AuthComponent handoff through normalizer to exact URL assignment and traced all three password replacement handlers through User.UpdatePassword plus login rehash caller. Feature tracing instructions remain accurate.",
+      "reason": "Reviewed tracing guidance against owner-published WebMCP capabilities and task runtime helpers. No trace selection, query engine or projection schema changed. Literal client calendar ranges retain existing owner semantics; browser timezone is documented separately from report timezone. Native and runtime observations remain bounded evidence.",
       "baseRef": "HEAD",
-      "gitHead": "fd7b50f6676a645a1ab966214532e76e91d4e55f",
-      "reviewedAtUtc": "2026-10-17T19:47:53.7554471Z"
+      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
+      "reviewedAtUtc": "2026-10-18T14:07:10.0487905Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1133,13 +1141,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "997762017a8b9c43002f825cb93149d0e886a415264eea23de89be5b07595e7c"
+          "sha256": "c9938033146a8553bae1c52966b83b1543123947a6260489a787a9d5b5424dc4"
         }
       ],
-      "reason": "Reviewed the six affected pages against the root transport guidance and BugTriage runbook. The service ownership, independent mail/audit lifecycle, knowledge authority and Wiki workflow are unchanged; detailed transport authority remains in the linked runbook.",
+      "reason": "Root Wiki commands moved verbatim into the linked AI_WORKFLOW guide; indexed documentation is current and regenerated for the development dependencies.",
       "baseRef": "HEAD",
-      "gitHead": "b5ed198a65bafb47e598db79afdabfdf7e887b1a",
-      "reviewedAtUtc": "2026-10-17T12:21:22.6004890Z"
+      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
+      "reviewedAtUtc": "2026-10-10T08:41:16.7242376Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1178,13 +1186,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "23761588f4e5b4df21ff679e046d9de01ac47ef2ca0de97fa8e7390c721b42a7"
+          "sha256": "9f2af6bae137104a1c1ce21bfa6b3305b099decb3f238e7e803019697519f74c"
         }
       ],
-      "reason": "Reviewed generated selector/consumer/translation changes with real route consumers. Report range errors use the existing fd-ui-date-input error input; EN/RU key parity and generated SDK checks passed in full npm verify. Chrome R4 evidence covers date error recovery, keyboard paths and responsive profile/meal/admin lesson consumers. Public contracts remain compatible; workflow already requires these checks.",
-      "baseRef": "origin/master",
-      "gitHead": "2f849bba5fbe425f167ca90764c2fffb81b787d5",
-      "reviewedAtUtc": "2026-10-16T15:06:36.6104574Z"
+      "reason": "Reviewed the current frontend contract workflow against this task: no component inputs, outputs, SDK calls or production routes changed in the continuation. Task-owned main/admin builds succeeded; eight Dietologist native scenarios passed. Positive admin native interaction remains explicitly unverified because browser navigation was rejected.",
+      "baseRef": "HEAD",
+      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
+      "reviewedAtUtc": "2026-10-18T14:07:01.6485437Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1196,10 +1204,10 @@
           "sha256": "c2015cba3c024e4d0f46a6422b3d86868edcc450771faf9ba423209057329bff"
         }
       ],
-      "reason": "The revised in-process impersonation contracts require the actor version and trusted session; all production callers are updated and the HTTP Swagger contract remains unchanged. The persisted Users reader adds an indexed, uncached boolean Admin-membership check within its own module. Independent security review traced the shared bearer gate and revocation writes; focused real HTTP regressions execute the boundary. Generated catalog, contract, quality and runtime data are refreshed; these workflows still describe their navigation and verification roles accurately. No new host, worker, external provider, transaction owner or personal-data storage is introduced.",
+      "reason": "Reviewed the regenerated repository catalog after replacing migration files and renaming the Users persistence test. Catalog entries and source hashes change; SQLite-only discovery, live freshness checks, frozen ranking thresholds and the instruction to keep sources stable during evaluation remain accurate. No query implementation or evaluation thresholds changed.",
       "baseRef": "HEAD",
-      "gitHead": "c8b050e39253a53c183d8076d0c19535e153151d",
-      "reviewedAtUtc": "2026-10-17T13:11:41.4597085Z"
+      "gitHead": "5bfed0a25f5b60f585bb720046b7ac422a0e2bee",
+      "reviewedAtUtc": "2026-10-17T13:43:21.5487388Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1207,14 +1215,14 @@
       "pageSha256": "7023047356e2bba7ad98e23c670c27159e08fbbf5d5ee242cf860fd1bbecc46e",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "997762017a8b9c43002f825cb93149d0e886a415264eea23de89be5b07595e7c"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "1fafbee70c4f9a78ec3a356bfef15c51b62ac54b9e0c23805efd96fc31495625"
         }
       ],
-      "reason": "Reviewed the six affected pages against the root transport guidance and BugTriage runbook. The service ownership, independent mail/audit lifecycle, knowledge authority and Wiki workflow are unchanged; detailed transport authority remains in the linked runbook.",
+      "reason": "Reviewed the facade diff: only Read-LlmWikiCompiledIndex dispatch now delegates direct read-only transactions and isolated recovery to its reader. Adaptive routing, diff, maintenance and dispatch commands retain their existing branches, parameters and evidence contracts; their workflow descriptions remain current.",
       "baseRef": "HEAD",
-      "gitHead": "b5ed198a65bafb47e598db79afdabfdf7e887b1a",
-      "reviewedAtUtc": "2026-10-17T12:21:23.3635989Z"
+      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
+      "reviewedAtUtc": "2026-10-14T09:10:58.8208267Z"
     },
     {
       "pageId": "workflow.self-maintenance",

@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FdUiLineChartComponent } from './fd-ui-line-chart';
 
@@ -22,6 +22,15 @@ const FLAT_VALUE = 80;
 const HIGH_CALORIE_VALUE = 7901;
 const SMALL_NUTRIENT_VALUE = 58;
 const SMALL_MULTI_SERIES_VALUE = 24;
+const X_AXIS_RECT_TOP = 100;
+const X_AXIS_RECT_WIDTH = 500;
+const X_LABEL_RECT_WIDTH = 80;
+const X_LABEL_RECT_GAP = 200;
+const LONG_X_LABEL_RECT_HEIGHT = 80;
+const SHORT_X_LABEL_RECT_HEIGHT = 40;
+const CALENDAR_DATE_LABEL_LENGTH = 10;
+const FIRST_ROTATED_LABEL_VALUE = 3;
+const LAST_ROTATED_LABEL_VALUE = 5;
 const MULTI_SERIES_COUNT = 4;
 const MULTI_SERIES_POINT_COUNT = 8;
 const GAP_SEGMENT_COUNT = 2;
@@ -65,6 +74,83 @@ describe('FdUiLineChartComponent', () => {
         expect(host().querySelectorAll('.fd-ui-line-chart__point')).toHaveLength(TREND_POINT_COUNT);
         expect(host().querySelector('.fd-ui-line-chart__point')?.getAttribute('title')).toBe('Mon: 80');
         expect(component['ariaLabel']()).toBe('Weight: Mon 80, Tue 79, Wed 81');
+    });
+
+    it('reserves the measured height of rotated labels inside the chart flow', async () => {
+        const restore = mockXAxisLabelGeometry();
+        try {
+            fixture.componentRef.setInput('showAxisLabels', true);
+            fixture.componentRef.setInput('points', [
+                { label: '2026-10-16T00:00:00Z', value: 3 },
+                { label: '2026-10-17T00:00:00Z', value: 5 },
+            ]);
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(host().querySelector<HTMLElement>('.fd-ui-line-chart__x-axis')?.style.minHeight).toContain('84px');
+            expect(component['pointViews']().map(point => point.value)).toEqual([FIRST_ROTATED_LABEL_VALUE, LAST_ROTATED_LABEL_VALUE]);
+        } finally {
+            restore();
+        }
+    });
+
+    it('releases extra axis height after long labels become shorter', async () => {
+        const restore = mockXAxisLabelGeometry();
+        try {
+            fixture.componentRef.setInput('showAxisLabels', true);
+            fixture.componentRef.setInput('points', [{ label: '2026-10-17T00:00:00Z', value: 5 }]);
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(host().querySelector<HTMLElement>('.fd-ui-line-chart__x-axis')?.style.minHeight).toContain('84px');
+
+            fixture.componentRef.setInput('points', [{ label: '2026-10-17', value: 5 }]);
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(host().querySelector<HTMLElement>('.fd-ui-line-chart__x-axis')?.style.minHeight).toContain('44px');
+        } finally {
+            restore();
+        }
+    });
+
+    it('uses the stacked baseline after an angled chart changes layout', async () => {
+        const restore = mockXAxisLabelGeometry();
+        try {
+            fixture.componentRef.setInput('showAxisLabels', true);
+            fixture.componentRef.setInput('points', [{ label: '2026-10-17T00:00:00Z', value: 5 }]);
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(host().querySelector<HTMLElement>('.fd-ui-line-chart__x-axis')?.style.minHeight).toContain('84px');
+
+            fixture.componentRef.setInput('xAxisLabelLayout', 'stacked');
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(host().querySelector<HTMLElement>('.fd-ui-line-chart__x-axis')?.style.minHeight).toContain(
+                '--fd-line-chart-stacked-axis-height',
+            );
+        } finally {
+            restore();
+        }
+    });
+
+    it('reserves additional wrapped lines in localized stacked labels', async () => {
+        const restore = mockXAxisLabelGeometry();
+        try {
+            fixture.componentRef.setInput('showAxisLabels', true);
+            fixture.componentRef.setInput('xAxisLabelLayout', 'stacked');
+            fixture.componentRef.setInput('points', [{ label: '20\nсент. – 22\nсент.', value: 5 }]);
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(host().querySelector<HTMLElement>('.fd-ui-line-chart__x-axis')?.style.minHeight).toContain('84px');
+        } finally {
+            restore();
+        }
     });
 
     it('can render an area path', () => {
@@ -516,4 +602,23 @@ function getHostText(host: HTMLElement, selector: string): string {
     }
 
     return element.textContent.trim();
+}
+
+function mockXAxisLabelGeometry(): () => void {
+    const spy = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement): DOMRect {
+        if (this.classList.contains('fd-ui-line-chart__x-axis')) {
+            return new DOMRect(0, X_AXIS_RECT_TOP, X_AXIS_RECT_WIDTH, SHORT_X_LABEL_RECT_HEIGHT);
+        }
+        const parent = this.parentElement;
+        if (this.tagName === 'SPAN' && parent?.classList.contains('fd-ui-line-chart__x-axis') === true) {
+            const index = Array.from(parent.children).indexOf(this);
+            const height =
+                this.textContent.trim().length > CALENDAR_DATE_LABEL_LENGTH ? LONG_X_LABEL_RECT_HEIGHT : SHORT_X_LABEL_RECT_HEIGHT;
+            return new DOMRect(index * X_LABEL_RECT_GAP, X_AXIS_RECT_TOP, X_LABEL_RECT_WIDTH, height);
+        }
+        return new DOMRect();
+    });
+    return () => {
+        spy.mockRestore();
+    };
 }

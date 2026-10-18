@@ -1,4 +1,8 @@
-<fd-ui-dialog size="lg" [title]="(isNew ? 'ADMIN_LESSONS.CREATE_DIALOG_TITLE' : 'ADMIN_LESSONS.EDIT_DIALOG_TITLE') | translate">
+<fd-ui-dialog
+    size="lg"
+    [title]="(isNew ? 'ADMIN_LESSONS.CREATE_DIALOG_TITLE' : 'ADMIN_LESSONS.EDIT_DIALOG_TITLE') | translate"
+    [disableClose]="isSaving()"
+>
     <div class="lesson-edit-dialog fd-grid fd-gap-md">
         <fd-ui-checkbox [formField]="form.isPublished">{{ 'ADMIN_LESSONS.PUBLISHED' | translate }}</fd-ui-checkbox>
         <p>{{ 'ADMIN_LESSONS.PUBLICATION_HELP' | translate }}</p>
@@ -13,8 +17,24 @@
         </div>
 
         <div class="form-row form-row--inline fd-row fd-gap-md">
-            <fd-ui-input label="Read minutes" type="number" [formField]="form.estimatedReadMinutes" />
-            <fd-ui-input label="Sort order" type="number" [formField]="form.sortOrder" />
+            <fd-ui-input
+                label="Read minutes"
+                type="number"
+                [formField]="form.estimatedReadMinutes"
+                [error]="
+                    form.estimatedReadMinutes().touched() && form.estimatedReadMinutes().invalid()
+                        ? ('ADMIN_LESSONS.READ_MINUTES_VALIDATION' | translate)
+                        : null
+                "
+            />
+            <fd-ui-input
+                label="Sort order"
+                type="number"
+                [formField]="form.sortOrder"
+                [error]="
+                    form.sortOrder().touched() && form.sortOrder().invalid() ? ('ADMIN_LESSONS.SORT_ORDER_VALIDATION' | translate) : null
+                "
+            />
         </div>
 
         <div class="form-row">
@@ -42,15 +62,25 @@
             <div class="preview" [innerHTML]="previewHtml()"></div>
         }
     </div>
-    <div fdUiDialogFooter class="dialog-actions fd-row fd-gap-sm">
-        <fd-ui-button type="button" variant="secondary" (click)="onCancel()">Cancel</fd-ui-button>
-        <fd-ui-button
-            type="button"
-            [disabled]="form().invalid() || isSaving()"
-            [disabledReason]="form().invalid() ? 'Complete the required fields first.' : null"
-            (click)="onSave()"
-        >
-            {{ isNew ? 'Create' : 'Save' }}
-        </fd-ui-button>
+    <div fdUiDialogFooter class="dialog-footer fd-stack fd-gap-sm">
+        <fd-ui-form-error [error]="saveError()" />
+        <div class="dialog-actions fd-row fd-justify-end fd-gap-sm">
+            <fd-ui-button
+                type="button"
+                variant="secondary"
+                [disabled]="isSaving()"
+                [disabledReason]="'ADMIN_LESSONS.SAVING_HINT' | translate"
+                (click)="onCancel()"
+                >Cancel</fd-ui-button
+            >
+            <fd-ui-button
+                type="button"
+                [disabled]="form().invalid() || isSaving()"
+                [disabledReason]="form().invalid() ? 'Complete the required fields first.' : null"
+                (click)="onSave()"
+            >
+                {{ isNew ? 'Create' : 'Save' }}
+            </fd-ui-button>
+        </div>
     </div>
 </fd-ui-dialog>

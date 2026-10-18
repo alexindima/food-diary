@@ -7,6 +7,10 @@ export class RequestPagedData<T> {
     private readonly request = new RequestStateController<PageOf<T>>();
     public readonly state = this.request.state;
     public readonly error = this.request.error;
+    public readonly provenance = this.request.provenance;
+    public bindRequest(requestId: number): (httpRequestId: number) => void {
+        return this.request.bindRequest(requestId);
+    }
     public readonly items = computed(() => this.request.data()?.data ?? []);
     public readonly isLoading: Signal<boolean>;
 

@@ -44,6 +44,7 @@ import type { NutrientData } from '../../../../shared/models/charts.data';
 import { type Meal, type MealAiSessionManageDto, type MealManageDto, MealSourceType } from '../../../../shared/models/meal.data';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
+import { MEAL_DEVELOPMENT_TOOLS, type MealDevelopmentDraft } from '../../contracts/meal-development-tools';
 import { MEAL_MANAGE_MIN_ITEM_AMOUNT } from '../../lib/manage/meal-manage.config';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { type MealGeneralFieldErrors, MealGeneralInfoComponent } from './meal-general-info/meal-general-info';
@@ -213,6 +214,7 @@ export class MealManageFormComponent implements UnsavedEditor {
     protected mealTypeSelectOptions: Array<FdUiSelectOption<string>> = [];
 
     public constructor() {
+        this.connectDevelopmentTools();
         afterNextRender(() => {
             if (this.meal() === null && this.route.snapshot.queryParamMap.get('manual') === '1') {
                 this.addMealItem();
@@ -234,6 +236,58 @@ export class MealManageFormComponent implements UnsavedEditor {
         if (presetMealType === null && this.meal() === null) {
             this.watchAutoMealTypeChanges();
         }
+    }
+
+    private connectDevelopmentTools(): void {
+        const developmentTools = inject(MEAL_DEVELOPMENT_TOOLS, { optional: true });
+        if (developmentTools === null) { return; }
+        this.destroyRef.onDestroy(developmentTools.attach({
+            isDirty: () => this.mealSignalForm().dirty(),
+            read: () => this.readDevelopmentContext(),
+            fillDraft: this.fillDevelopmentDraftAsync.bind(this),
+            clearDraft: () => {
+                if (this.meal() !== null || this.isBusy()) { throw new Error('A ready new meal editor is required.'); }
+                this.mealSignalForm().reset(createMealManageFormValue()); this.updateSummary();
+            },
+        }));
+    }
+
+    private readDevelopmentContext(): unknown {
+        return {
+            kind: this.meal() === null ? 'new-meal-editor' : 'edit-meal-editor',
+            date: this.mealFormModel().date, time: this.mealFormModel().time,
+            mealType: this.mealFormModel().mealType, comment: this.mealFormModel().comment,
+            items: this.mealFormModel().items.filter(item => item.product !== null || item.recipe !== null).map(item => this.readDevelopmentItem(item)),
+            calories: this.totalCalories(), dirty: this.mealSignalForm().dirty(),
+            valid: this.mealSignalForm().valid() && this.hasSelectedItems() && this.caloriesError() === null && this.macrosError() === null && this.items.every(item => this.getItemAmountError(item, true) === null),
+            error: this.globalError(),
+        };
+    }
+
+    private readDevelopmentItem(item: MealItemFormValues): unknown {
+        if (item.product !== null) {
+            return { name: item.product.name, productId: item.product.id, recipeId: null, servings: null, amount: item.amount, unit: item.product.baseUnit };
+        }
+        if (item.recipe === null) { return null; }
+        return { name: item.recipe.name, productId: null, recipeId: item.recipe.id,
+            servings: item.amount === null ? null : this.mealManageFacade.recipeServingsFromDisplayInput(item.recipe, item.amount),
+            amount: item.amount, unit: this.mealManageFacade.recipeDisplayUnit(item.recipe) };
+    }
+
+    private async fillDevelopmentDraftAsync(draft: MealDevelopmentDraft, requireSession: () => void): Promise<void> {
+        if (this.meal() !== null || this.mealSignalForm().dirty() || this.isBusy()) { throw new Error('A clean new meal editor is required.'); }
+        const original = this.mealFormModel();
+        const resolveItemAsync = async (item: MealDevelopmentDraft['items'][number]): Promise<MealItemFormValues> => item.recipe === undefined ? {
+            sourceType: MealSourceType.Product, product: item.product, recipe: null, amount: item.amount,
+        } : {
+            sourceType: MealSourceType.Recipe, product: null, recipe: item.recipe,
+            amount: await this.mealManageFacade.resolveRecipeDisplayValueAsync(item.recipe, item.servings),
+        };
+        const items = await Promise.all(draft.items.map(resolveItemAsync));
+        requireSession();
+        if (this.destroyRef.destroyed || this.mealFormModel() !== original || this.mealSignalForm().dirty() || this.isBusy()) { throw new Error('Meal editor changed while resolving serving quantities.'); }
+        this.mealSignalForm.mealType().markAsDirty();
+        this.patchMealFormModel({ ...draft, items }); this.selectedMealType.set(draft.mealType); this.updateSummary();
     }
 
     private watchLanguageChanges(): void {

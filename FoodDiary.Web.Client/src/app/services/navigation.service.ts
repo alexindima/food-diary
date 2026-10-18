@@ -1,23 +1,26 @@
 import { inject, Service } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { localizedPublicPath } from '../config/public-site-paths';
 import type { AuthMode } from '../shared/auth/auth.data';
+import { LocalizationService } from '../shared/i18n/localization.service';
 
 @Service()
 export class NavigationService {
     private readonly router = inject(Router);
+    private readonly localizationService = inject(LocalizationService);
 
     public async navigateToHomeAsync(): Promise<void> {
         await this.router.navigate(['/dashboard']);
     }
 
     public async navigateToLandingAsync(): Promise<void> {
-        await this.router.navigate(['/']);
+        await this.router.navigate([this.publicLandingPath()]);
     }
 
     public async navigateToAuthAsync(mode: AuthMode, returnUrl?: string): Promise<void> {
         const queryParams = returnUrl !== undefined && returnUrl.length > 0 ? { auth: mode, returnUrl } : { auth: mode };
-        await this.router.navigate(['/'], { queryParams });
+        await this.router.navigate([this.publicLandingPath()], { queryParams });
     }
 
     public async navigateToEmailVerificationPendingAsync(options?: { autoResend?: boolean }): Promise<void> {
@@ -114,5 +117,9 @@ export class NavigationService {
 
     public async navigateToCycleTrackingAsync(): Promise<void> {
         await this.router.navigate(['/cycle-tracking']);
+    }
+
+    private publicLandingPath(): string {
+        return localizedPublicPath('/', this.localizationService.getCurrentLanguage() === 'ru' ? 'ru' : 'en');
     }
 }

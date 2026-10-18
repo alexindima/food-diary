@@ -18,7 +18,9 @@ internal static class RecipeUpdateApplier {
         recipe.UpdateTimingAndServings(
             prepTime: command.PrepTime,
             cookTime: command.CookTime,
-            servings: command.Servings);
+            servings: command.Servings,
+            clearPrepTime: command.ClearPrepTime,
+            clearCookTime: command.ClearCookTime);
 
         if (command.Language is not null) { recipe.ChangeLanguage(command.Language); }
 

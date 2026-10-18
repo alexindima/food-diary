@@ -67,7 +67,13 @@ public static class RecipeHttpMappings {
                 ManualCarbs: request.ManualCarbs,
                 ManualFiber: request.ManualFiber,
                 ManualAlcohol: request.ManualAlcohol,
-                Steps: request.Steps is null ? null : MapSteps(request.Steps)) { LanguageConfirmed = request.LanguageConfirmed, Language = request.Language, ImageAssetIds = request.ImageAssetIds };
+                Steps: request.Steps is null ? null : MapSteps(request.Steps)) {
+                ClearPrepTime = request.ClearPrepTime,
+                ClearCookTime = request.ClearCookTime,
+                LanguageConfirmed = request.LanguageConfirmed,
+                Language = request.Language,
+                ImageAssetIds = request.ImageAssetIds,
+            };
         }
     }
 

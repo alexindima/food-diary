@@ -28,7 +28,7 @@ public class AdminLessonFeatureTests {
     [Fact]
     public async Task CreateAdminLessonHandler_WithValidData_ReturnsSuccess() {
         var repo = new InMemoryLessonRepository();
-        var handler = new CreateAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
+        var handler = new CreateAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo, repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
 
         Result<AdminLessonModel> result = await handler.Handle(
             new CreateAdminLessonCommand(
@@ -57,7 +57,7 @@ public class AdminLessonFeatureTests {
     [Fact]
     public async Task CreateAdminLessonHandler_WithInvalidCategory_ReturnsFailure() {
         var repo = new InMemoryLessonRepository();
-        var handler = new CreateAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
+        var handler = new CreateAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo, repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
 
         Result<AdminLessonModel> result = await handler.Handle(
             new CreateAdminLessonCommand(
@@ -79,7 +79,7 @@ public class AdminLessonFeatureTests {
     [Fact]
     public async Task CreateAdminLessonHandler_WithInvalidDifficulty_ReturnsFailure() {
         var repo = new InMemoryLessonRepository();
-        var handler = new CreateAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
+        var handler = new CreateAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo, repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
 
         Result<AdminLessonModel> result = await handler.Handle(
             new CreateAdminLessonCommand(
@@ -103,7 +103,7 @@ public class AdminLessonFeatureTests {
         var lesson = NutritionLesson.Create("Old Title", "Old Content", summary: null, "en",
             LessonCategory.NutritionBasics, LessonDifficulty.Beginner, 3);
         var repo = new InMemoryLessonRepository(lesson);
-        var handler = new UpdateAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
+        var handler = new UpdateAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo, repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
 
         Result<AdminLessonModel> result = await handler.Handle(
             new UpdateAdminLessonCommand(
@@ -132,7 +132,7 @@ public class AdminLessonFeatureTests {
     [Fact]
     public async Task UpdateAdminLessonHandler_WhenLessonNotFound_ReturnsFailure() {
         var repo = new InMemoryLessonRepository();
-        var handler = new UpdateAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
+        var handler = new UpdateAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo, repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
 
         Result<AdminLessonModel> result = await handler.Handle(
             new UpdateAdminLessonCommand(
@@ -156,7 +156,7 @@ public class AdminLessonFeatureTests {
         var lesson = NutritionLesson.Create("Title", "Content", summary: null, "en",
             LessonCategory.NutritionBasics, LessonDifficulty.Beginner, 3);
         var repo = new InMemoryLessonRepository(lesson);
-        var handler = new UpdateAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
+        var handler = new UpdateAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo, repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
 
         Result<AdminLessonModel> result = await handler.Handle(
             new UpdateAdminLessonCommand(
@@ -180,7 +180,7 @@ public class AdminLessonFeatureTests {
         var lesson = NutritionLesson.Create("Title", "Content", summary: null, "en",
             LessonCategory.NutritionBasics, LessonDifficulty.Beginner, 3);
         var repo = new InMemoryLessonRepository(lesson);
-        var handler = new UpdateAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
+        var handler = new UpdateAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo, repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
 
         Result<AdminLessonModel> result = await handler.Handle(
             new UpdateAdminLessonCommand(
@@ -205,7 +205,7 @@ public class AdminLessonFeatureTests {
         var lesson = NutritionLesson.Create("Title", "Content", summary: null, "en",
             LessonCategory.NutritionBasics, LessonDifficulty.Beginner, 3);
         var repo = new InMemoryLessonRepository(lesson);
-        var handler = new DeleteAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
+        var handler = new DeleteAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo, repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
 
         Result result = await handler.Handle(
             new DeleteAdminLessonCommand(lesson.Id.Value),
@@ -218,7 +218,7 @@ public class AdminLessonFeatureTests {
     [Fact]
     public async Task DeleteAdminLessonHandler_WhenLessonNotFound_ReturnsFailure() {
         var repo = new InMemoryLessonRepository();
-        var handler = new DeleteAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
+        var handler = new DeleteAdminLessonCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo, repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
 
         Result result = await handler.Handle(
             new DeleteAdminLessonCommand(Guid.NewGuid()),
@@ -257,7 +257,7 @@ public class AdminLessonFeatureTests {
     [Fact]
     public async Task ImportAdminLessonsHandler_WithValidLessons_AddsAllAndReturnsModels() {
         var repo = new InMemoryLessonRepository();
-        var handler = new ImportAdminLessonsCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
+        var handler = new ImportAdminLessonsCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo, repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
 
         Result<AdminLessonsImportModel> result = await handler.Handle(
             new ImportAdminLessonsCommand(
@@ -278,7 +278,7 @@ public class AdminLessonFeatureTests {
     [Fact]
     public async Task ImportAdminLessonsHandler_WhenSamePayloadIsRetried_ReturnsOriginalLessonsWithoutDuplicates() {
         var repo = new InMemoryLessonRepository();
-        var handler = new ImportAdminLessonsCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
+        var handler = new ImportAdminLessonsCommandHandler(RequestTestSender.Create(new CreateLessonCommandHandler(repo), new UpdateLessonCommandHandler(repo, repo), new DeleteLessonCommandHandler(repo), new ImportLessonsCommandHandler(repo, repo)));
         var command = new ImportAdminLessonsCommand(
             Version: 1,
             Lessons: [
@@ -415,6 +415,11 @@ public class AdminLessonFeatureTests {
     private sealed class InMemoryLessonRepository : INutritionLessonRepository {
         private readonly List<NutritionLesson> _lessons = [];
 
+        public Task<IReadOnlyDictionary<NutritionLessonId, int>> GetCompletionCountsAsync(
+            IReadOnlyCollection<NutritionLessonId> lessonIds,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<NutritionLessonId, int>>(new Dictionary<NutritionLessonId, int>());
+
         public IReadOnlyList<NutritionLesson> Lessons => _lessons;
 
         public InMemoryLessonRepository(params NutritionLesson[] lessons) {
@@ -546,7 +551,7 @@ public class AdminLessonFeatureTests {
 
     private static ISender CreateLessonAdministrationService() {
         var repository = new InMemoryLessonRepository();
-        return RequestTestSender.Create(new CreateLessonCommandHandler(repository), new UpdateLessonCommandHandler(repository), new DeleteLessonCommandHandler(repository), new ImportLessonsCommandHandler(repository, repository));
+        return RequestTestSender.Create(new CreateLessonCommandHandler(repository), new UpdateLessonCommandHandler(repository, repository), new DeleteLessonCommandHandler(repository), new ImportLessonsCommandHandler(repository, repository));
     }
 
 }

@@ -13,12 +13,14 @@ import type { ClientTask, RecommendationTemplate } from '../../../../shared/mode
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { DietologistFacade } from '../../lib/dietologist.facade';
+import type { DietologistDashboardSnapshot } from '../../lib/dietologist-dashboard.data';
 import { createClient } from '../clients/dietologist-clients-lib/dietologist-clients.test-data';
 import { ClientDashboardComponent } from './client-dashboard';
 
 let fixture: ComponentFixture<ClientDashboardComponent>;
 let component: ClientDashboardComponent;
 const EXPECTED_METRIC_TILE_COUNT = 4;
+const PAGED_MEAL_TOTAL = 3;
 const EXPECTED_DAILY_CALORIE_TARGET = 1800;
 const SELECTED_YEAR = 2026;
 const SELECTED_DAY = 22;
@@ -91,6 +93,178 @@ describe('ClientDashboardComponent', () => {
     registerDateValidationTests();
     registerActionTests();
 });
+
+describe('ClientDashboardComponent remaining meals', () => {
+    it('loads remaining rows once, deduplicates IDs and preserves the period statistics', async () => {
+        const { initial, next } = prepareMealPaging();
+        const pending = new Subject<DietologistDashboardSnapshot>();
+        dietologistService.getClientDashboard.mockReturnValueOnce(pending);
+        const host = fixture.nativeElement as HTMLElement;
+        const button = host.querySelector<HTMLButtonElement>('fd-client-dashboard-meals-card button');
+        if (button === null) {
+            throw new Error('Expected remaining meals action');
+        }
+
+        button.click();
+        button.click();
+        fixture.detectChanges();
+
+        expect(dietologistService.getClientDashboard).toHaveBeenCalledTimes(2);
+        expect(dietologistService.getClientDashboard).toHaveBeenLastCalledWith('client-1', expect.objectContaining({ page: 2 }));
+        expect(button.disabled).toBe(true);
+        expect(component['dashboard']()?.meals.items).toEqual(initial.meals.items);
+        expect(component['readDevelopmentContext']()).toMatchObject({
+            meals: {
+                available: true,
+                total: PAGED_MEAL_TOTAL,
+                loadedCount: 1,
+                loadedPage: 1,
+                hasNext: true,
+                loadingMore: true,
+            },
+        });
+
+        pending.next({ ...next(['meal-1', 'meal-2', 'meal-3']), statistics: { ...initial.statistics, totalCalories: 9999 } });
+        pending.complete();
+        await vi.waitFor(() => {
+            expect(component['loadingMoreMeals']()).toBe(false);
+        });
+        fixture.detectChanges();
+
+        expect(component['dashboard']()?.meals.items.map(meal => meal.id)).toEqual(['meal-1', 'meal-2', 'meal-3']);
+        expect(component['dashboard']()?.statistics.totalCalories).toBe(initial.statistics.totalCalories);
+        expect(host.querySelectorAll('fd-client-dashboard-meals-card article')).toHaveLength(PAGED_MEAL_TOTAL);
+        expect(host.querySelector('fd-client-dashboard-meals-card button')).toBeNull();
+        expect(component['readDevelopmentContext']()).toMatchObject({
+            meals: {
+                loadedCount: PAGED_MEAL_TOTAL,
+                loadedPage: 2,
+                hasNext: false,
+                loadingMore: false,
+                items: [{ id: 'meal-1' }, { id: 'meal-2' }, { id: 'meal-3' }],
+            },
+        });
+    });
+
+    it('keeps loaded rows after a failure and retries the same next page', async () => {
+        const { initial, next } = prepareMealPaging();
+        dietologistService.getClientDashboard
+            .mockReturnValueOnce(throwError(() => new Error('Connection failed')))
+            .mockReturnValueOnce(of(next(['meal-2', 'meal-3'])));
+
+        await component['loadMoreMealsAsync']();
+        fixture.detectChanges();
+
+        expect(component['dashboard']()).toEqual(initial);
+        expect(component['moreMealsError']()).toBe(true);
+        expect(component['readDevelopmentContext']()).toMatchObject({ meals: { loadedPage: 1, loadedCount: 1, loadMoreError: true } });
+        expect((fixture.nativeElement as HTMLElement).querySelector('fd-client-dashboard-meals-card [role="alert"]')).not.toBeNull();
+
+        await component['loadMoreMealsAsync']();
+
+        const requests = dietologistService.getClientDashboard.mock.calls as Array<Parameters<DietologistFacade['getClientDashboard']>>;
+        expect(requests.slice(1).map(([, query]) => query.page)).toEqual([2, 2]);
+        expect(component['dashboard']()?.meals.items).toHaveLength(PAGED_MEAL_TOTAL);
+        expect(component['moreMealsError']()).toBe(false);
+    });
+});
+
+describe('ClientDashboardComponent meal page transitions', () => {
+    it.each(['success', 'failure'])('ignores late page %s after changing the period', async outcome => {
+        const { next } = prepareMealPaging();
+        const pending = new Subject<DietologistDashboardSnapshot>();
+        dietologistService.getClientDashboard.mockReturnValueOnce(pending).mockReturnValueOnce(of(next(['new-period-meal'])));
+        const older = component['loadMoreMealsAsync']();
+
+        component['showPreviousPeriod']();
+        await vi.waitFor(() => {
+            expect(component['dashboard']()?.meals.items[0].id).toBe('new-period-meal');
+        });
+
+        if (outcome === 'success') {
+            pending.next(next(['old-period-meal']));
+            pending.complete();
+        } else {
+            pending.error(new Error('Late failure'));
+        }
+        await older;
+
+        expect(component['dashboard']()?.meals.items.map(meal => meal.id)).toEqual(['new-period-meal']);
+        expect(component['moreMealsError']()).toBe(false);
+        expect(component['loadingMoreMeals']()).toBe(false);
+        dietologistService.getClientDashboard.mockReturnValueOnce(of(next(['new-period-second-meal'])));
+        await component['loadMoreMealsAsync']();
+        expect(dietologistService.getClientDashboard).toHaveBeenLastCalledWith('client-1', expect.objectContaining({ page: 2 }));
+    });
+
+    it('cancels a pending page cleanly when leaving the dashboard', async () => {
+        prepareMealPaging();
+        const pending = new Subject<DietologistDashboardSnapshot>();
+        dietologistService.getClientDashboard.mockReturnValueOnce(pending);
+        const loading = component['loadMoreMealsAsync']();
+
+        fixture.destroy();
+
+        await expect(loading).resolves.toBeUndefined();
+        expect(pending.observed).toBe(false);
+    });
+
+    it('hides meal rows when sharing is disabled or the selected period is reloading', async () => {
+        const { next } = prepareMealPaging();
+        component['client'].update(client =>
+            client === null ? null : { ...client, permissions: { ...client.permissions, shareMeals: false } },
+        );
+        expect(component['readDevelopmentContext']()).toMatchObject({
+            meals: {
+                permissionGranted: false,
+                available: false,
+                items: [],
+                total: null,
+                loadedCount: 0,
+                loadedPage: null,
+            },
+        });
+        component['client'].update(client =>
+            client === null ? null : { ...client, permissions: { ...client.permissions, shareMeals: true } },
+        );
+        const pending = new Subject<DietologistDashboardSnapshot>();
+        dietologistService.getClientDashboard.mockReturnValueOnce(pending);
+        component['showPreviousPeriod']();
+        expect(component['readDevelopmentContext']()).toMatchObject({ meals: { loading: true, available: false, items: [], total: null } });
+        pending.next(next(['new-period-meal']));
+        pending.complete();
+        await vi.waitFor(() => {
+            expect(component['detailsLoading']()).toBe(false);
+        });
+        expect(component['readDevelopmentContext']()).toMatchObject({
+            meals: {
+                loading: false,
+                available: true,
+                loadedPage: 1,
+                items: [{ id: 'new-period-meal' }],
+            },
+        });
+    });
+});
+
+function prepareMealPaging(): {
+    initial: DietologistDashboardSnapshot;
+    next: (ids: string[]) => DietologistDashboardSnapshot;
+} {
+    createComponent('client-1');
+    const snapshot = component['dashboard']();
+    if (snapshot === null) {
+        throw new Error('Expected initial dashboard');
+    }
+    const meal = snapshot.meals.items[0];
+    const initial = { ...snapshot, meals: { items: [meal], total: PAGED_MEAL_TOTAL } };
+    component['dashboard'].set(initial);
+    fixture.detectChanges();
+    return {
+        initial,
+        next: ids => ({ ...snapshot, meals: { items: ids.map(id => ({ ...meal, id: entityId<'meal'>(id) })), total: PAGED_MEAL_TOTAL } }),
+    };
+}
 
 describe('ClientDashboardComponent task deadlines', () => {
     it.each(['2026-10-02', '2026-03-29', '2026-10-25'])('keeps the whole selected due day available: %s', async dueDate => {

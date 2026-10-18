@@ -54,8 +54,10 @@
                             <div class="quick-meal__info fd-grid fd-gap-xxs">
                                 <div class="quick-meal__name fd-ui-action-text">{{ itemView.name }}</div>
                                 <div class="quick-meal__meta fd-ui-body-sm">
-                                    {{ 'QUICK_MEAL.AMOUNT' | translate }}: {{ itemView.amount | localizedNumber: language() : 0 : 3 }}
-                                    {{ itemView.unitKey | translate }}
+                                    {{ 'QUICK_MEAL.AMOUNT' | translate }}:
+                                    <span class="fd-nowrap">
+                                        {{ itemView.amount | localizedNumber: language() : 0 : 3 }} {{ itemView.unitKey | translate }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="quick-meal__item-actions fd-row fd-gap-xxs">
@@ -66,8 +68,8 @@
                                     icon="edit"
                                     [disabled]="isSaving() || editingItemKey() !== null"
                                     [loading]="editingItemKey() === itemView.item.key"
-                                    [fdUiHint]="'MEAL_MANAGE.MANUAL_ITEM_EDIT' | translate"
-                                    [ariaLabel]="'MEAL_MANAGE.MANUAL_ITEM_EDIT_NAMED' | translate: { name: itemView.name }"
+                                    [fdUiHint]="'QUICK_MEAL.EDIT' | translate"
+                                    [ariaLabel]="'QUICK_MEAL.EDIT_ITEM_NAMED' | translate: { name: itemView.name }"
                                     (click)="edit(itemView.item)"
                                 />
                                 <fd-ui-button

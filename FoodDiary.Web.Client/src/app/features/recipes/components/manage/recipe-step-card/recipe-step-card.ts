@@ -1,5 +1,5 @@
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal, viewChildren } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiFocusWhenDirective, FdUiHintDirective } from 'fd-ui-kit';
@@ -60,6 +60,7 @@ export type RecipeStepIngredientState = {
 export class RecipeStepCardComponent {
     private readonly translateService = inject(TranslateService);
     private readonly currentLanguage = signal(this.getCurrentLanguage());
+    private readonly ingredientTypeControls = viewChildren(FdUiSelectComponent);
 
     public readonly step = input.required<RecipeStepCardState>();
     public readonly stepIndex = input.required<number>();
@@ -183,7 +184,15 @@ export class RecipeStepCardComponent {
     }
 
     protected onIngredientTypeChange(ingredientIndex: number, itemType: string): void {
-        this.selectProduct.emit({ ingredientIndex, itemType: itemType === 'Text' ? 'Text' : itemType === 'Recipe' ? 'Recipe' : 'Product' });
+        const nextType = itemType === 'Text' ? 'Text' : itemType === 'Recipe' ? 'Recipe' : 'Product';
+        const committedType = this.ingredientRows().find(row => row.index === ingredientIndex)?.itemType;
+        if (committedType === undefined || nextType === committedType) {
+            return;
+        }
+
+        // The picker commits the new kind only after an ingredient is selected.
+        this.ingredientTypeControls().at(ingredientIndex)?.value.set(committedType);
+        this.selectProduct.emit({ ingredientIndex, itemType: nextType });
     }
 
     protected onRemoveIngredient(ingredientIndex: number): void {

@@ -35,3 +35,10 @@
 .product-manage__ai-subtitle {
     color: var(--fd-color-text-muted);
 }
+
+@container (max-width: 22rem) {
+    .product-manage__ai {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}

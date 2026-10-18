@@ -34,6 +34,7 @@
     line-height: var(--fd-text-display-sm-line-height);
     font-weight: var(--fd-text-display-sm-weight);
     letter-spacing: -0.025em;
+    overflow-wrap: anywhere;
 }
 .recipe-author {
     margin: var(--fd-space-sm) 0 var(--fd-space-md);
@@ -72,6 +73,10 @@
     color: var(--fd-color-text-muted);
     font-size: var(--fd-text-body-sm-size);
     margin: 0 0 var(--fd-space-lg);
+}
+.recipe-fact[hidden],
+.recipe-time-breakdown[hidden] {
+    display: none;
 }
 .recipe-actions {
     display: flex;

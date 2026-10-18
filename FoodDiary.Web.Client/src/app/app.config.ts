@@ -16,6 +16,7 @@ import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { FEATURE_ACTION_PROVIDERS } from './composition/feature-action.providers';
+import { LOCAL_WEBMCP_PROVIDERS } from './composition/webmcp/local-webmcp.providers';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { FrontendObservabilityInterceptor } from './interceptor/frontend-observability.interceptor';
 import { GlobalLoadingInterceptor } from './interceptor/global-loading.interceptor';
@@ -38,6 +39,7 @@ const isMobileShellEnvironment = isBrowserEnvironment && isMobileShellWindow(win
 export const appConfig: ApplicationConfig = {
     providers: [
         ...FEATURE_ACTION_PROVIDERS,
+        ...LOCAL_WEBMCP_PROVIDERS,
         ...(isBrowserEnvironment && environment.enableGlobalErrorHandler === true
             ? [
                   provideBrowserGlobalErrorListeners(),

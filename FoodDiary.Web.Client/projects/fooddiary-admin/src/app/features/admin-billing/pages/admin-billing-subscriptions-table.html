@@ -27,19 +27,21 @@
                     }
                 </td>
                 <td>
-                    <span>{{ subscription.currentPeriodStartText }}</span>
-                    <span>{{ subscription.currentPeriodEndText }}</span>
+                    <span class="fd-nowrap">{{ subscription.currentPeriodStartText }}</span>
+                    <span class="fd-nowrap">{{ subscription.currentPeriodEndText }}</span>
                 </td>
                 <td>{{ subscription.nextBillingAttemptText }}</td>
                 <td>
                     <span>Customer: {{ subscription.externalCustomerIdText }}</span>
                     <span>Sub: {{ subscription.externalSubscriptionIdText }}</span>
-                    <a routerLink="/billing" [queryParams]="{ tab: 'subscriptions', search: subscription.id }">{{
-                        'ADMIN_BILLING.RECORD_LINK' | translate
-                    }}</a>
-                    <a routerLink="/billing" [queryParams]="{ tab: 'payments', search: subscription.id }">{{
-                        'ADMIN_BILLING.PAYMENTS_LINK' | translate
-                    }}</a>
+                    <div class="fd-grid fd-gap-xxs">
+                        <a routerLink="/billing" [queryParams]="{ tab: 'subscriptions', search: subscription.id }">{{
+                            'ADMIN_BILLING.RECORD_LINK' | translate
+                        }}</a>
+                        <a routerLink="/billing" [queryParams]="{ tab: 'payments', search: subscription.id }">{{
+                            'ADMIN_BILLING.PAYMENTS_LINK' | translate
+                        }}</a>
+                    </div>
                     <span>PM: {{ subscription.externalPaymentMethodIdText }}</span>
                 </td>
                 <td>{{ subscription.updatedText }}</td>

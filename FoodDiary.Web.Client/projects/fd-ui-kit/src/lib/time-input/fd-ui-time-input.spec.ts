@@ -1,3 +1,4 @@
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
@@ -151,6 +152,55 @@ describe('FdUiTimeInputComponent signal form control', () => {
         component['onBlur']();
 
         expect(component.touched()).toBe(true);
+    });
+});
+
+describe('FdUiTimeInputComponent picker accessibility', () => {
+    it('opens a named dialog with labelled groups of selectable buttons', async () => {
+        const { component, fixture, requireElement } = await setupTimeInputAsync();
+        fixture.componentRef.setInput('label', 'Время');
+        fixture.componentRef.setInput('hoursLabel', 'Часы');
+        fixture.componentRef.setInput('minutesLabel', 'Минуты');
+        component.value.set('21:35');
+        fixture.detectChanges();
+        requireElement('.fd-ui-time-input__suffix').click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const overlay = TestBed.inject(OverlayContainer).getContainerElement();
+        const dialog = overlay.querySelector('[role="dialog"]');
+        expect(dialog?.getAttribute('aria-label')).toBe('Время');
+        expect(dialog?.getAttribute('aria-modal')).toBe('true');
+        const groups = overlay.querySelectorAll('[role="group"]');
+        expect(Array.from(groups, group => group.getAttribute('aria-label'))).toEqual(['Часы', 'Минуты']);
+        expect(overlay.querySelector('[role="listbox"]')).toBeNull();
+        expect(Array.from(overlay.querySelectorAll('button[aria-pressed="true"]'), button => button.textContent.trim())).toEqual([
+            '21',
+            '35',
+        ]);
+    });
+
+    it('uses the dedicated picker name for the dialog', async () => {
+        const { fixture, requireElement } = await setupTimeInputAsync();
+        fixture.componentRef.setInput('label', 'Time');
+        fixture.componentRef.setInput('pickerAriaLabel', 'Choose meal time');
+        fixture.detectChanges();
+        requireElement('.fd-ui-time-input__suffix').click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const overlay = TestBed.inject(OverlayContainer).getContainerElement();
+        expect(overlay.querySelector('[role="dialog"]')?.getAttribute('aria-label')).toBe('Choose meal time');
+    });
+
+    it('keeps a meaningful name when only column labels are supplied', async () => {
+        const { fixture, requireElement } = await setupTimeInputAsync();
+        fixture.componentRef.setInput('hoursLabel', 'Часы');
+        fixture.componentRef.setInput('minutesLabel', 'Минуты');
+        fixture.detectChanges();
+
+        expect(requireElement('.fd-ui-time-input__control').getAttribute('aria-label')).toBe('Часы, Минуты');
+        expect(requireElement('.fd-ui-time-input__suffix').getAttribute('aria-label')).toBe('Часы, Минуты');
     });
 });
 

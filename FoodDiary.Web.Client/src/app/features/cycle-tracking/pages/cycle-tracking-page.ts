@@ -29,6 +29,7 @@ import { filter } from 'rxjs';
 
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header';
+import { connectDevelopmentScreen, DevelopmentToolError } from '../../../shared/development/development-tools';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import {
@@ -154,6 +155,7 @@ export class CycleTrackingPageComponent {
     protected readonly loadError = this.facade.loadError;
     protected readonly showCycleSetup = computed(() => this.cycle() === null && !this.isLoading() && this.loadError() === null);
     protected readonly isSavingCycle = this.facade.isSavingCycle;
+    protected readonly createError = this.facade.createError;
     protected readonly settingsError = this.facade.settingsError;
     protected readonly isSavingSettings = this.facade.isSavingSettings;
     protected readonly isDeletingCycle = this.facade.isDeletingCycle;
@@ -288,6 +290,32 @@ export class CycleTrackingPageComponent {
     });
 
     public constructor() {
+        connectDevelopmentScreen({
+            kind: 'cycle-tracking',
+            read: () => ({
+                loading: this.isLoading(),
+                error: this.loadError(),
+                hasCycle: this.cycle() !== null,
+                settingsOpen: this.isSettingsOpen(),
+                settings:
+                    this.cycle() === null
+                        ? null
+                        : {
+                              mode: this.cycle()?.mode,
+                              averageCycleLength: this.cycle()?.averageCycleLength,
+                              averagePeriodLength: this.cycle()?.averagePeriodLength,
+                              lutealLength: this.cycle()?.lutealLength,
+                          },
+            }),
+            isDirty: () =>
+                this.startCycleForm().dirty() || this.dayForm().dirty() || this.factorForm().dirty() || this.episodeForm().dirty(),
+            openDraft: () => {
+                this.openSettings();
+                if (!this.isSettingsOpen()) {
+                    throw new DevelopmentToolError('An idle existing cycle is required to open its settings.');
+                }
+            },
+        });
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });

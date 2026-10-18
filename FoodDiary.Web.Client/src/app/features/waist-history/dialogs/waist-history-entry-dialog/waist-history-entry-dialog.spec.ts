@@ -42,7 +42,7 @@ const createFacade = (): {
     } as const;
 };
 
-function setup(): {
+function setup(initialError: string | null = null): {
     fixture: ComponentFixture<WaistHistoryEntryDialogComponent>;
     component: WaistHistoryEntryDialogComponent;
     facade: ReturnType<typeof createFacade>;
@@ -58,11 +58,19 @@ function setup(): {
         ],
     });
     const facade = TestBed.inject(WaistHistoryFacade) as unknown as ReturnType<typeof createFacade>;
+    facade.entryError.set(initialError);
     const fixture = TestBed.createComponent(WaistHistoryEntryDialogComponent);
     fixture.detectChanges();
     return { fixture, facade, component: fixture.componentInstance, close };
 }
 describe('Waist entry dialog lifecycle', () => {
+    it('clears a previous dialog error without discarding the measurement draft', () => {
+        const { fixture, close } = setup('Previous duplicate date');
+        const root = fixture.nativeElement as HTMLElement;
+        expect(root.textContent).not.toContain('Previous duplicate date');
+        expect(root.querySelector<HTMLInputElement>('fd-ui-input input')?.value).toBe('80');
+        expect(close).not.toHaveBeenCalled();
+    });
     it('does not close for an old save or loading-state changes', () => {
         const { fixture, facade, close } = setup();
         facade.isSaving.set(true);

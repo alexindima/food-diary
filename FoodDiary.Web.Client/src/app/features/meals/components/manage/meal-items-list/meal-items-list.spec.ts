@@ -21,6 +21,12 @@ const PRODUCT_BASE_AMOUNT = 100;
 const RECIPE_AMOUNT_GRAMS = 120;
 const RECIPE_SERVING_WEIGHT = 60;
 const RECIPE_FALLBACK_SERVINGS = 1.5;
+const RECIPE_SINGLE_SERVING = 1;
+const RECIPE_TWO_SERVINGS = 2;
+const RECIPE_ROUNDED_SINGLE_SERVING = 1.001;
+const RECIPE_DECIMAL_SINGLE_SERVING = 1.01;
+const SINGLE_SERVING_UNIT = 'MEAL_MANAGE.AMOUNT_UNIT_SERVING';
+const MULTIPLE_SERVINGS_UNIT = 'MEAL_MANAGE.AMOUNT_UNIT_SERVINGS';
 const EDIT_ITEM_INDEX = 1;
 const REMOVE_ITEM_INDEX = 2;
 const OPEN_ITEM_INDEX = 3;
@@ -98,6 +104,32 @@ describe('MealItemsListComponent rows', () => {
             amountLabel: '1.5 MEAL_MANAGE.AMOUNT_UNIT_SERVINGS',
             caloriesLabel: '225 GENERAL.UNITS.KCAL',
         });
+    });
+});
+
+describe('MealItemsListComponent serving labels', () => {
+    it.each([
+        { language: 'en', amount: RECIPE_SINGLE_SERVING, number: '1', unit: SINGLE_SERVING_UNIT },
+        { language: 'en', amount: RECIPE_TWO_SERVINGS, number: '2', unit: MULTIPLE_SERVINGS_UNIT },
+        { language: 'en', amount: RECIPE_FALLBACK_SERVINGS, number: '1.5', unit: MULTIPLE_SERVINGS_UNIT },
+        { language: 'en', amount: RECIPE_ROUNDED_SINGLE_SERVING, number: '1', unit: SINGLE_SERVING_UNIT },
+        { language: 'en', amount: RECIPE_DECIMAL_SINGLE_SERVING, number: '1.0', unit: MULTIPLE_SERVINGS_UNIT },
+        { language: 'ru', amount: RECIPE_SINGLE_SERVING, number: '1', unit: SINGLE_SERVING_UNIT },
+        { language: 'ru', amount: RECIPE_FALLBACK_SERVINGS, number: '1,5', unit: MULTIPLE_SERVINGS_UNIT },
+    ])('matches the displayed serving count $number in $language', async ({ language, amount, number, unit }) => {
+        const recipeWeight = {
+            displayAmountFromInput: vi.fn().mockReturnValue(recipeDisplayFromInput(amount, UNKNOWN_SERVING_MASS)),
+            hasServingWeight: vi.fn().mockReturnValue(false),
+        };
+        const { component, fixture } = await setupComponentAsync({
+            items: [createItemState({ sourceType: MealSourceType.Recipe, recipe: createRecipe(), amount })],
+            recipeWeight,
+        });
+        TestBed.inject(TranslateService).use(language);
+        fixture.detectChanges();
+
+        expect(component['manualItemRows']()[0].amountLabel).toBe(`${number} ${unit}`);
+        expect(component['getAmountUnitLabel'](0)).toBe(unit);
     });
 });
 

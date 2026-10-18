@@ -11330,6 +11330,7 @@
         "projectReferences": [
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
           "Modules/Dietologist/Presentation.Contracts/FoodDiary.Modules.Dietologist.Presentation.Contracts.csproj",
+          "Modules/Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj",
           "Modules/Notifications/Presentation.Contracts/FoodDiary.Modules.Notifications.Presentation.Contracts.csproj",
           "Modules/Notifications/Presentation.Mappings/FoodDiary.Modules.Notifications.Presentation.Mappings.csproj",
           "Modules/Users/Application.Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj",
@@ -11339,7 +11340,8 @@
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Modules/Users/Presentation.Contracts/FoodDiary.Modules.Users.Presentation.Contracts.csproj",
           "Modules/Users/Presentation.Mappings/FoodDiary.Modules.Users.Presentation.Mappings.csproj",
-          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj"
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
+          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
         "packageReferences": [
           {

@@ -42,6 +42,28 @@ beforeEach(() => {
 });
 
 describe('Dietologist bulk recommendation recovery', () => {
+    it.each(['   ', '\t\n', '\u00A0'])('shows required validation for whitespace-only text %j', text => {
+        prepareBulkRecommendation();
+        component['bulkModel'].set({ text });
+        component['bulkForm'].text().markAsTouched();
+        fixture.detectChanges();
+
+        expect(component['bulkForm'].text().errors()).toEqual(expect.arrayContaining([expect.objectContaining({ kind: 'required' })]));
+        expect((fixture.nativeElement as HTMLElement).querySelector('textarea')?.getAttribute('aria-invalid')).toBe('true');
+        expect(
+            (fixture.nativeElement as HTMLElement).querySelector('[aria-labelledby="bulk-recommendations-title"] [role="alert"]')
+                ?.textContent,
+        ).toContain('FORM_ERRORS.REQUIRED');
+        expect(
+            (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>(
+                '[aria-labelledby="bulk-recommendations-title"] form button',
+            )?.disabled,
+        ).toBe(true);
+        component['sendBulkRecommendation']();
+        expect(dialogService.open).not.toHaveBeenCalled();
+        expect(dietologistService.bulkCreateRecommendations).not.toHaveBeenCalled();
+    });
+
     it.each([true, false])('keeps failed recipients and text after partial result (first succeeded: %s)', firstSucceeded => {
         prepareBulkRecommendation();
         const result: BulkRecommendationResult = {

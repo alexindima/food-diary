@@ -37,6 +37,7 @@ export class WaistHistoryGoalDialogComponent {
     }));
 
     public constructor() {
+        this.facade.goalActionError.set(null);
         effect(() => {
             this.dialogRef.disableClose = this.isSaving();
         });

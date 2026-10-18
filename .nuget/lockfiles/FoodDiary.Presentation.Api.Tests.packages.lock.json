@@ -1942,7 +1942,9 @@
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
           "FoodDiary.Authentication.Contracts": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Dietologist.Presentation.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Service.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Presentation.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Presentation.Mappings": "[1.0.0, )",
           "FoodDiary.Modules.Users.Application": "[1.0.0, )",

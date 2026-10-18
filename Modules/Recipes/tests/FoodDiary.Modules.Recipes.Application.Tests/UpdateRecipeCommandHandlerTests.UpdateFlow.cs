@@ -11,6 +11,41 @@ namespace FoodDiary.Modules.Recipes.Application.Tests;
 
 public partial class UpdateRecipeCommandHandlerTests {
 
+    [Theory]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
+    public async Task Handle_ExplicitTimingClear_PreservesUnselectedTimeAndRecipe(bool clearPrep, bool clearCook) {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2, prepTime: 12, cookTime: 15, visibility: Visibility.Private);
+        SetRecipeId(recipe, recipeId);
+        recipe.AddStep(1, "Initial step");
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
+            CreateRecipeRepository(recipeId, userId, recipe),
+            new NoopImageAssetCleanupService(),
+            CreateUserRepository(User.Create("timing-clear@example.test", "hash")),
+            FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            new AllowAllProductLookupService(),
+            new AllowAllRecipeLookupService());
+        UpdateRecipeCommand command = UpdateCommand(userId.Value, recipeId.Value, visibility: null) with {
+            PrepTime = null,
+            CookTime = null,
+            ClearPrepTime = clearPrep,
+            ClearCookTime = clearCook,
+        };
+
+        Result<RecipeModel> result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Equal(clearPrep ? null : (int?)12, recipe.PrepTime),
+            () => Assert.Equal(clearCook ? null : (int?)15, recipe.CookTime),
+            () => Assert.Equal(2, recipe.Servings),
+            () => Assert.Equal(Visibility.Private, recipe.Visibility),
+            () => Assert.Single(recipe.Steps));
+    }
+
     [Fact]
     public async Task Handle_WithBlankVisibility_DoesNotChangeRecipeVisibility() {
         var userId = UserId.New();

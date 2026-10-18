@@ -20,12 +20,15 @@ internal sealed partial class DiaryPdfGenerator {
 
             return values
                 .Select((value, index) => {
-                    double x = values.Count <= 1 ? left + (plotWidth / 2) : left + (plotWidth * index / (values.Count - 1));
+                    double x = PlotX(values.Count, index, left, plotWidth);
                     double y = top + plotHeight - (plotHeight * Math.Clamp(value, 0, maxValue) / maxValue);
                     return new Point(x, y);
                 })
                 .ToArray();
         }
+
+        private static double PlotX(int count, int index, double left, double plotWidth) =>
+            count <= 1 ? left + (plotWidth / 2) : left + (plotWidth * index / (count - 1));
 
         private static string BuildSmoothPath(IReadOnlyList<Point> points) {
             switch (points.Count) {

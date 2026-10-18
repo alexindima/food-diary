@@ -8,6 +8,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { NavigationService } from '../../../../../services/navigation.service';
+import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../../../shared/development/development-tools';
 import {
     MeasurementUnit,
     type Product,
@@ -803,7 +804,36 @@ describe('Product editor route departure', () => {
     });
 });
 
-async function setupComponentAsync(): Promise<ProductManageFormSetup> {
+describe('product development capability', () => {
+    it('fills the live private form, refuses replacement, clears and never saves', async () => {
+        const screens: DevelopmentScreen[] = [];
+        const dispose = vi.fn();
+        const { component, fixture, productManageFacade } = await setupComponentAsync({
+            attach: screen => {
+                screens.push(screen);
+                return dispose;
+            },
+        });
+        const screen = screens[0];
+        screen.fillDraft?.({ name: 'Draft apple', baseUnit: 'G', defaultPortionAmount: 150, caloriesPerBase: 52 });
+        fixture.detectChanges();
+        expect(component['productFormModel']().name).toBe('Draft apple');
+        expect(component['productFormModel']().baseAmount).toBe(PRODUCT.baseAmount);
+        expect(component['productFormModel']().visibility).toBe(ProductVisibility.Private);
+        expect(screen.isDirty?.()).toBe(true);
+        expect(() => screen.fillDraft?.({})).toThrow('Unsaved');
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+        screen.clearDraft?.();
+        expect(component['productFormModel']().name).toBe('');
+        expect(screen.isDirty?.()).toBe(false);
+        fixture.destroy();
+        expect(dispose).toHaveBeenCalledOnce();
+    });
+});
+
+async function setupComponentAsync(developmentScreens?: {
+    attach: (screen: DevelopmentScreen) => () => void;
+}): Promise<ProductManageFormSetup> {
     const productManageFacade = createProductManageFacadeMock();
     const externalFoodFacade = createProductExternalFoodFacadeMock();
     const navigationService = {
@@ -819,6 +849,7 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
     await TestBed.configureTestingModule({
         imports: [ProductManageFormComponent],
         providers: [
+            ...(developmentScreens === undefined ? [] : [{ provide: DEVELOPMENT_SCREENS, useValue: developmentScreens }]),
             provideRouter([]),
             provideTranslateTesting(),
             {

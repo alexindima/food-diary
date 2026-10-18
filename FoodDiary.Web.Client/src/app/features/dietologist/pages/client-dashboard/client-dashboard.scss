@@ -62,9 +62,23 @@
         align-items: center;
     }
 
+    &__template {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    &__template-name {
+        overflow-wrap: anywhere;
+    }
+
     &__recommendation {
         display: grid;
         gap: var(--fd-space-xs);
+        min-width: 0;
+        overflow-wrap: anywhere;
         padding: var(--fd-space-sm);
         border: var(--fd-border-default);
         border-radius: var(--fd-radius-sm);

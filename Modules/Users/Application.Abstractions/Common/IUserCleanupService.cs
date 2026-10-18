@@ -3,6 +3,8 @@ using FoodDiary.Modules.Users.Application.Abstractions.Models;
 namespace FoodDiary.Modules.Users.Application.Abstractions.Common;
 
 public interface IUserCleanupService {
+    Task<int> CleanupOwnedFixtureUsersAsync(Guid runId, IReadOnlyList<Guid> userIds, DateTime olderThanUtc, CancellationToken cancellationToken);
+
     Task<UserCleanupBatch> CleanupDeletedUsersAsync(
         DateTime olderThanUtc,
         int batchSize,

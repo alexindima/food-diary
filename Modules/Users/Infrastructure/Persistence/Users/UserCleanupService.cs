@@ -18,6 +18,31 @@ public sealed class UserCleanupService(
     IModuleScopeGuard scopeGuard) : IUserCleanupService {
     private readonly IReadOnlyList<IUserDataPurgeParticipant> _participants = ValidateParticipants(participants);
 
+    public async Task<int> CleanupOwnedFixtureUsersAsync(Guid runId, IReadOnlyList<Guid> userIds, DateTime olderThanUtc, CancellationToken cancellationToken) {
+        if (runId == Guid.Empty || userIds.Count is < 1 or > 20 || userIds.Any(id => id == Guid.Empty) || userIds.Distinct().Count() != userIds.Count) {
+            throw new ArgumentException("An explicit bounded fixture identity set is required.", nameof(userIds));
+        }
+        cancellationToken.ThrowIfCancellationRequested();
+        scopeGuard.EnsureCleanEntry();
+        UserId[] ids = [.. userIds.Select(id => new UserId(id))];
+        var candidates = await dbContext.Users.AsNoTracking().Where(user => Enumerable.Contains(ids, user.Id))
+            .Select(user => new { user.Id, user.Email, user.DeletedAt, user.IsActive })
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+        string[] allowedEmails = [$"webmcp-fixture-{runId:D}-client@example.test", $"webmcp-fixture-{runId:D}-dietologist@example.test"];
+        DateTime threshold = NormalizeUtc(olderThanUtc);
+        // Validate the entire set before the first independently committed deletion.
+        if (candidates.Any(user => user.Email is null || !allowedEmails.Contains(user.Email, StringComparer.Ordinal) || user.IsActive || user.DeletedAt is null || user.DeletedAt > threshold)) {
+            throw new InvalidOperationException("Fixture purge refuses foreign or active accounts.");
+        }
+        int removed = 0;
+        foreach (var candidate in candidates) {
+            if (await CleanupUserAsync(candidate.Id, reassignTarget: null, threshold, cancellationToken).ConfigureAwait(false)) {
+                removed++;
+            }
+        }
+        return removed;
+    }
+
     private static IReadOnlyList<IUserDataPurgeParticipant> ValidateParticipants(IEnumerable<IUserDataPurgeParticipant> participants) {
         IUserDataPurgeParticipant[] ordered = [.. participants.OrderBy(participant => participant.Order)];
         if (ordered.Length == 0 || ordered.Select(participant => participant.Order).Distinct().Count() != ordered.Length) {

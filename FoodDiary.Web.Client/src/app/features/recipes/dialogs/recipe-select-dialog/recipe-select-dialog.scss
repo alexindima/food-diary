@@ -79,6 +79,14 @@
         color: var(--fd-color-text-muted);
     }
 
+    &__action {
+        width: var(--fd-size-control-sm);
+        height: var(--fd-size-control-sm);
+        border-radius: var(--fd-radius-md);
+        background: var(--fd-color-primary-600);
+        color: var(--fd-color-on-primary);
+    }
+
     &__footer {
         padding-top: var(--fd-space-sm);
     }

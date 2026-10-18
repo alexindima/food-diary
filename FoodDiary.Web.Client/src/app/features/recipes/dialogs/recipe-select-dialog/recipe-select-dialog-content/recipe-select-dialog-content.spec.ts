@@ -29,6 +29,14 @@ describe('RecipeSelectDialogContentComponent', () => {
         expect(getText(fixture)).toContain('RECIPE_SELECT_DIALOG.NO_RECIPES_FOUND');
     });
 
+    it('keeps each recipe choice as one keyboard control without focusable descendants', () => {
+        const { fixture } = setupComponent([{ recipe: createRecipe(), imageUrl: undefined }]);
+        const row = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.recipe-select__item');
+
+        expect(row).not.toBeNull();
+        expect(row?.querySelector('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).toBeNull();
+    });
+
     it('renders loader while loading', () => {
         const { fixture } = setupComponent([], true);
 

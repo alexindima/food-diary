@@ -161,7 +161,8 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
             update.ClearImageUrl,
             update.ImageAssetId,
             update.ClearImageAssetId);
-        changed |= ApplyTimingAndServingsUpdates(update.PrepTime, update.CookTime, update.Servings);
+        changed |= ApplyTimingAndServingsUpdates(update.PrepTime, update.CookTime, update.Servings,
+            update.ClearPrepTime, update.ClearCookTime);
 
         if (update.Visibility.HasValue && Visibility != update.Visibility.Value) {
             Visibility = update.Visibility.Value;
@@ -187,6 +188,8 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         }
         EnsureClearConflict(update.ClearImageUrl, normalizedImageUrl, nameof(update.ClearImageUrl), nameof(update.ImageUrl));
         EnsureClearConflict(update.ClearImageAssetId, update.ImageAssetId, nameof(update.ClearImageAssetId), nameof(update.ImageAssetId));
+        EnsureClearConflict(update.ClearPrepTime, update.PrepTime, nameof(update.ClearPrepTime), nameof(update.PrepTime));
+        EnsureClearConflict(update.ClearCookTime, update.CookTime, nameof(update.ClearCookTime), nameof(update.CookTime));
 
         if (update.Name is not null) {
             NormalizeRequiredName(update.Name);
@@ -225,8 +228,13 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         }
     }
 
-    public void UpdateTimingAndServings(int? prepTime = null, int? cookTime = null, int? servings = null) {
-        if (ApplyTimingAndServingsUpdates(prepTime, cookTime, servings)) {
+    public void UpdateTimingAndServings(
+        int? prepTime = null,
+        int? cookTime = null,
+        int? servings = null,
+        bool clearPrepTime = false,
+        bool clearCookTime = false) {
+        if (ApplyTimingAndServingsUpdates(prepTime, cookTime, servings, clearPrepTime, clearCookTime)) {
             SetModified();
         }
     }
@@ -442,20 +450,27 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         return changed;
     }
 
-    private bool ApplyTimingAndServingsUpdates(int? prepTime, int? cookTime, int? servings) {
+    private bool ApplyTimingAndServingsUpdates(
+        int? prepTime,
+        int? cookTime,
+        int? servings,
+        bool clearPrepTime,
+        bool clearCookTime) {
+        EnsureClearConflict(clearPrepTime, prepTime, nameof(clearPrepTime), nameof(prepTime));
+        EnsureClearConflict(clearCookTime, cookTime, nameof(clearCookTime), nameof(cookTime));
         RecipeDetailsState state = GetDetailsState();
         bool changed = false;
 
-        if (prepTime.HasValue) {
-            int? normalizedPrepTime = NormalizeOptionalNonNegative(prepTime, nameof(prepTime));
+        if (clearPrepTime || prepTime.HasValue) {
+            int? normalizedPrepTime = clearPrepTime ? null : NormalizeOptionalNonNegative(prepTime, nameof(prepTime));
             if (state.PrepTime != normalizedPrepTime) {
                 state = state with { PrepTime = normalizedPrepTime };
                 changed = true;
             }
         }
 
-        if (cookTime.HasValue) {
-            int? normalizedCookTime = NormalizeOptionalNonNegative(cookTime, nameof(cookTime));
+        if (clearCookTime || cookTime.HasValue) {
+            int? normalizedCookTime = clearCookTime ? null : NormalizeOptionalNonNegative(cookTime, nameof(cookTime));
             if (state.CookTime != normalizedCookTime) {
                 state = state with { CookTime = normalizedCookTime };
                 changed = true;

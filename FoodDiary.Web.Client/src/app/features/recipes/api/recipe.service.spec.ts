@@ -170,7 +170,7 @@ describe('RecipeService mutations', () => {
 
         const req = httpMock.expectOne(`${BASE_URL}/r1`);
         expect(req.request.method).toBe('PATCH');
-        expect(req.request.body).toEqual(updateData);
+        expect(req.request.body).toEqual({ ...updateData, clearPrepTime: false, clearCookTime: false });
         req.flush(MOCK_RECIPE);
     });
 

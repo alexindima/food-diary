@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, type HttpContext } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { catchError, map, type Observable } from 'rxjs';
 
@@ -56,7 +56,7 @@ export class RecipeService {
             );
     }
 
-    public queryOverview(query: RecipeOverviewQuery): Observable<RecipeOverview> {
+    public queryOverview(query: RecipeOverviewQuery, context?: HttpContext): Observable<RecipeOverview> {
         const {
             page,
             limit,
@@ -66,7 +66,12 @@ export class RecipeService {
             favoriteLimit = this.defaultLimits.overviewFavorite,
         } = query;
         return this.sdk.client
-            .getRecipesOverview({ ...this.recipeFiltersToSdk(filters), page, limit, includePublic, recentLimit, favoriteLimit })
+            .getRecipesOverview(
+                { ...this.recipeFiltersToSdk(filters), page, limit, includePublic, recentLimit, favoriteLimit },
+                'body',
+                false,
+                { context },
+            )
             .pipe(
                 map(response => {
                     const value = requireSdkFields(response, ['recentItems', 'allRecipes', 'favoriteItems', 'favoriteTotalCount']);
@@ -101,7 +106,12 @@ export class RecipeService {
     }
 
     public update(id: RecipeId, data: RecipeDto): Observable<Recipe> {
-        return this.sdk.client.patchRecipesById({ version: this.sdk.version, id, updateRecipeHttpRequest: data }).pipe(
+        const request = {
+            ...data,
+            clearPrepTime: data.prepTime === null,
+            clearCookTime: data.cookTime === null,
+        };
+        return this.sdk.client.patchRecipesById({ version: this.sdk.version, id, updateRecipeHttpRequest: request }).pipe(
             map(recipeFromSdk),
             catchError((error: unknown) => rethrowApiError('Update recipe error', error)),
         );

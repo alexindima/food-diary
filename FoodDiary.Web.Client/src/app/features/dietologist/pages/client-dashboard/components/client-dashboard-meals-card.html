@@ -19,6 +19,12 @@
                         <span class="fd-ui-caption">{{ meal.macros }}</span>
                     </article>
                 }
+                @if (meals().length < total()) {
+                    <fd-ui-form-error [error]="loadError() ? ('DIETOLOGIST.CLIENT_DASHBOARD.MEALS.LOAD_MORE_ERROR' | translate) : null" />
+                    <fd-ui-button type="button" variant="secondary" fill="outline" [loading]="loading()" (click)="loadMore.emit()">
+                        {{ 'DIETOLOGIST.CLIENT_DASHBOARD.MEALS.LOAD_MORE' | translate }}
+                    </fd-ui-button>
+                }
             </div>
         </div>
     </fd-ui-card>

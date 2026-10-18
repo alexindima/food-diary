@@ -23,6 +23,7 @@
                 [disabled]="disabled()"
                 [attr.aria-describedby]="error() ? `${id()}-error` : null"
                 [attr.aria-invalid]="error() ? 'true' : null"
+                [attr.aria-label]="label() ? null : pickerAccessibleName()"
                 [attr.aria-controls]="`${id()}-dialog`"
                 [attr.aria-expanded]="isOpen()"
                 [attr.aria-haspopup]="'dialog'"
@@ -34,7 +35,7 @@
                 type="button"
                 class="fd-ui-time-input__suffix"
                 [disabled]="disabled()"
-                [attr.aria-label]="pickerAriaLabel() ?? label()"
+                [attr.aria-label]="pickerAccessibleName()"
                 (click)="openTimePicker()"
             >
                 <fd-ui-icon name="schedule" />
@@ -54,17 +55,27 @@
                 (detach)="closeTimePicker()"
                 (overlayKeydown)="onOverlayKeydown($event)"
             >
-                <div class="fd-ui-time-input__panel" role="dialog" tabindex="-1" [id]="`${id()}-dialog`">
+                <div
+                    cdkTrapFocus
+                    class="fd-ui-time-input__panel"
+                    role="dialog"
+                    aria-modal="true"
+                    tabindex="-1"
+                    [cdkTrapFocusAutoCapture]="true"
+                    [id]="`${id()}-dialog`"
+                    [attr.aria-label]="pickerAccessibleName()"
+                >
                     <div class="fd-ui-time-input__column">
                         <div class="fd-ui-time-input__column-title">{{ hoursLabel() }}</div>
-                        <div class="fd-ui-time-input__options" role="listbox" [attr.aria-label]="hoursLabel()">
+                        <div class="fd-ui-time-input__options" role="group" [attr.aria-label]="hoursLabel()">
                             @for (hour of hours; track hour) {
                                 <button
                                     #hourOption
                                     type="button"
                                     class="fd-ui-time-input__option"
                                     [class.fd-ui-time-input__option--selected]="selectedHour() === hour"
-                                    [attr.aria-selected]="selectedHour() === hour"
+                                    [attr.aria-pressed]="selectedHour() === hour"
+                                    [attr.cdkFocusInitial]="selectedHour() === hour ? '' : null"
                                     (click)="selectHour(hour)"
                                 >
                                     {{ formatPart(hour) }}
@@ -74,14 +85,14 @@
                     </div>
                     <div class="fd-ui-time-input__column">
                         <div class="fd-ui-time-input__column-title">{{ minutesLabel() }}</div>
-                        <div class="fd-ui-time-input__options" role="listbox" [attr.aria-label]="minutesLabel()">
+                        <div class="fd-ui-time-input__options" role="group" [attr.aria-label]="minutesLabel()">
                             @for (minute of minutes; track minute) {
                                 <button
                                     #minuteOption
                                     type="button"
                                     class="fd-ui-time-input__option"
                                     [class.fd-ui-time-input__option--selected]="selectedMinute() === minute"
-                                    [attr.aria-selected]="selectedMinute() === minute"
+                                    [attr.aria-pressed]="selectedMinute() === minute"
                                     (click)="selectMinute(minute)"
                                 >
                                     {{ formatPart(minute) }}

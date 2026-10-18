@@ -24,6 +24,7 @@ using FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetMealPlanBy
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
 using FoodDiary.Modules.MealPlanning.Domain.Enums;
+using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.MealPlanning.Infrastructure;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.Products.Contracts.Common;
@@ -138,6 +139,71 @@ public sealed class MealPlanRecipePrivacyIntegrationTests(PostgresDatabaseFixtur
     [RequiresDockerFact]
     public Task RecipeEditWinsAfterPublicCheck_CatalogRetriesAndRejectsPrivateRecipe() =>
         AssertRaceAsync(recipeEditWins: true);
+
+    [RequiresDockerFact]
+    public async Task TextIngredients_PreserveLiteralNotesInGeneratedShoppingAndRespectRecipeVisibility() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var author = User.Create($"text-plan-author-{Guid.NewGuid():N}@example.com", "hash");
+        var viewer = User.Create($"text-plan-viewer-{Guid.NewGuid():N}@example.com", "hash");
+        var product = Product.Create(author.Id, "Public rice", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
+        product.ChangeVisibility(Visibility.Public);
+        var published = Recipe.Create(author.Id, "Text and measured ingredients", 2, visibility: Visibility.Public);
+        RecipeStep step = published.AddStep(1, "Mix");
+        step.AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(100));
+        step.AddTextIngredient("Salt", "to taste");
+        step.AddTextIngredient("Water", "100 g");
+        step.AddTextIngredient("Garnish", amountText: null);
+        var hidden = Recipe.Create(author.Id, "Private text recipe", 1, visibility: Visibility.Private);
+        hidden.AddStep(1, "Secret").AddTextIngredient("Secret ingredient", "private quantity");
+        var plan = MealPlan.CreateForUser(viewer.Id, "Literal quantities", description: null, DietType.Balanced, 2, targetCaloriesPerDay: null);
+        MealPlanDay first = plan.AddDay(1);
+        first.AddMeal(MealType.Lunch, published.Id, 2);
+        first.AddMeal(MealType.Breakfast, hidden.Id, 1);
+        plan.AddDay(2).AddMeal(MealType.Dinner, published.Id, 1);
+        context.AddRange(author, viewer, product, published, hidden, plan);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        await using ServiceProvider provider = CreateProvider(context);
+        IMealPlanCompositionReader reader = provider.GetRequiredService<IMealPlanCompositionReader>();
+
+        IReadOnlyDictionary<RecipeId, MealPlanRecipeSnapshot> snapshots = await reader.GetRecipeSnapshotsAsync([published.Id, hidden.Id], viewer.Id);
+        MealPlanRecipeSnapshot snapshot = Assert.Single(snapshots).Value;
+        Assert.Equal(4, snapshot.Ingredients.Count);
+        Assert.Empty(context.ChangeTracker.Entries());
+        var handler = new GenerateShoppingListCommandHandler(provider.GetRequiredService<IMealPlanReadRepository>(),
+            provider.GetRequiredService<IShoppingListCreationService>(), new OwnedUserAccess(viewer.Id));
+        Result<ShoppingListModel> generated = await handler.Handle(
+            new GenerateShoppingListCommand(viewer.Id.Value, plan.Id.Value), CancellationToken.None);
+
+        ResultAssert.Success(generated);
+        Assert.Equal(7, generated.Value.Items.Count);
+        ShoppingListItemModel measured = Assert.Single(generated.Value.Items, item => item.ProductId == product.Id.Value);
+        Assert.Multiple(
+            () => Assert.Equal(150, measured.Amount),
+            () => Assert.Equal(nameof(MeasurementUnit.G), measured.Unit),
+            () => Assert.Equal(2, measured.Sources.Count));
+        foreach ((string name, string? note) in new[] { ("Salt", "to taste"), ("Water", "100 g"), ("Garnish", (string?)null) }) {
+            ShoppingListItemModel[] textItems = [.. generated.Value.Items.Where(item => string.Equals(item.Name, name, StringComparison.Ordinal))];
+            Assert.Equal(2, textItems.Length);
+            Assert.All(textItems, item => Assert.Multiple(
+                () => Assert.Null(item.ProductId),
+                () => Assert.Null(item.Amount),
+                () => Assert.Null(item.Unit),
+                () => Assert.Equal(note, item.Note),
+                () => Assert.Empty(item.Sources)));
+        }
+        Assert.DoesNotContain(generated.Value.Items, item => string.Equals(item.Name, "Secret ingredient", StringComparison.Ordinal));
+        await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var listId = new ShoppingListId(generated.Value.Id);
+        var persisted = await context.ShoppingListItems.AsNoTracking()
+            .Where(item => item.ShoppingListId == listId)
+            .Select(item => new { item.Name, item.Amount, item.Unit, item.Note })
+            .ToListAsync();
+        Assert.Equal(7, persisted.Count);
+        Assert.Equal(2, persisted.Count(item => string.Equals(item.Name, "Water", StringComparison.Ordinal) &&
+            string.Equals(item.Note, "100 g", StringComparison.Ordinal) && item.Amount is null && item.Unit is null));
+    }
 
     [RequiresDockerFact]
     public Task CatalogSaveWins_OverlappingRecipeEditRechecksUsageAndRejectsMutation() =>

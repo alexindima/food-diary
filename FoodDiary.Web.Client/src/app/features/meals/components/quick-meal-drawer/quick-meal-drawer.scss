@@ -74,6 +74,7 @@
 }
 
 .quick-meal__list {
+    container: quick-meal-list / inline-size;
     max-height: 220px;
     overflow-y: auto;
     padding-right: var(--fd-space-xxs);
@@ -175,6 +176,17 @@
 
 .quick-meal__actions {
     grid-template-columns: 1fr;
+}
+
+@container quick-meal-list (max-width: 240px) {
+    .quick-meal__item {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .quick-meal__item-actions {
+        grid-column: 2;
+        justify-self: end;
+    }
 }
 
 .quick-meal__empty {

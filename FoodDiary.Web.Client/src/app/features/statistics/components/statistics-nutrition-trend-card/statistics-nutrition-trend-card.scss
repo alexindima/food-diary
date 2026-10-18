@@ -15,6 +15,10 @@
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(230px, 280px);
         gap: var(--fd-space-lg);
+
+        &--without-insights {
+            grid-template-columns: minmax(0, 1fr);
+        }
     }
 
     &__chart {

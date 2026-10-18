@@ -26,7 +26,10 @@ import { PageBodyComponent } from '../../../components/shared/page-body/page-bod
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header';
 import { NavigationService } from '../../../services/navigation.service';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
+import { devDay, devRecord } from '../../../shared/development/development-input';
+import { connectDevelopmentScreen, DevelopmentToolError } from '../../../shared/development/development-tools';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
+import { formatDateInputValue, parseLocalDateInputValue } from '../../../shared/lib/local-date.utils';
 import { UserFacade } from '../../../shared/lib/user.facade';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import { ViewportService } from '../../../shared/platform/viewport.service';
@@ -285,6 +288,24 @@ export class DashboardComponent {
     });
 
     public constructor() {
+        const setDateAsync = async (input: unknown): Promise<void> => {
+            const date = parseLocalDateInputValue(devDay(devRecord(input, ['date'])['date']));
+            if (date === null || !(await this.navigateDashboardDateAsync(date))) {
+                throw new DevelopmentToolError('Dashboard date navigation was cancelled.');
+            }
+        };
+        connectDevelopmentScreen({
+            kind: 'dashboard',
+            isDirty: () => this.layout.hasLayoutChanges(),
+            read: () => ({
+                date: formatDateInputValue(this.facade.selectedDate()),
+                loading: this.facade.isLoading(), error: this.facade.loadError(),
+                provenance: this.facade.requestProvenance(),
+                appliedPeriod: this.facade.snapshot() === null ? null : { dateFrom: this.facade.snapshot()?.date, dateTo: this.facade.snapshot()?.dateTo },
+                calories: this.facade.todayCalories(),
+            }),
+            setFiltersAsync: setDateAsync,
+        });
         if (this.userFacade.user() === null) {
             this.userFacade.getInfoSilently().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
         }
@@ -323,7 +344,11 @@ export class DashboardComponent {
             return;
         }
 
-        void this.router.navigate([], {
+        void this.navigateDashboardDateAsync(value);
+    }
+
+    private async navigateDashboardDateAsync(value: Date): Promise<boolean> {
+        return this.router.navigate([], {
             relativeTo: this.route,
             queryParams: { date: formatDate(value, 'yyyy-MM-dd', 'en') },
             queryParamsHandling: 'merge',

@@ -153,6 +153,35 @@ describe('AdminUsersComponent dialogs', () => {
         expect(usersService.getUsers).toHaveBeenCalledTimes(SECOND_PAGE);
     });
 
+    it('closes an open create dialog when leaving the page and ignores a late result', () => {
+        const closed = new Subject<boolean>();
+        const close = vi.fn();
+        dialogService.open.mockReturnValue({ afterClosed: () => closed.asObservable(), close });
+        component['openCreate']();
+        const loadsBeforeLeaving = usersService.getUsers.mock.calls.length;
+
+        fixture.destroy();
+        closed.next(true);
+        closed.complete();
+
+        expect(close).toHaveBeenCalledOnce();
+        expect(usersService.getUsers).toHaveBeenCalledTimes(loadsBeforeLeaving);
+    });
+
+    it('releases the page cleanup after the create dialog has already closed', () => {
+        const closed = new Subject<boolean>();
+        const close = vi.fn();
+        dialogService.open.mockReturnValue({ afterClosed: () => closed.asObservable(), close });
+        component['openCreate']();
+
+        closed.next(true);
+        closed.complete();
+        fixture.destroy();
+
+        expect(usersService.getUsers).toHaveBeenCalledTimes(SECOND_PAGE);
+        expect(close).not.toHaveBeenCalled();
+    });
+
     it('navigates row click and keyboard activation to the user page with list filters', () => {
         const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
         const row = (fixture.nativeElement as HTMLElement).querySelector<HTMLTableRowElement>('tbody .users-table__row');

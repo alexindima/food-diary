@@ -16,6 +16,8 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { catchError, firstValueFrom, forkJoin, type Observable, of, switchMap, tap } from 'rxjs';
 
+import { devDay, devEnum, devRecord, devText } from '../../../../shared/development/development-input';
+import { connectDevelopmentScreen, DevelopmentToolError } from '../../../../shared/development/development-tools';
 import { LocalizedDatePipe } from '../../../../shared/i18n/localized-date.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue, normalizeEndOfLocalDay, parseLocalDateInputValue } from '../../../../shared/lib/local-date.utils';
@@ -55,6 +57,7 @@ import {
     type ClientRecommendationView,
     getClientDashboardTitle,
 } from './client-dashboard-lib/client-dashboard.mapper';
+import { appendClientMealPage } from './client-dashboard-lib/client-meal-pages';
 import { CLIENT_DASHBOARD_TOUR } from './client-dashboard-tour';
 import { ClientDashboardFastingCardComponent } from './components/client-dashboard-fasting-card';
 import { ClientDashboardHeaderComponent } from './components/client-dashboard-header';
@@ -144,6 +147,7 @@ export class ClientDashboardComponent {
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly measurements = inject(MeasurementSystemService);
     private dashboardReloadSequence = 0;
+    private loadedMealPage = 1;
 
     protected readonly periodPresetDays = PERIOD_PRESET_DAYS;
     protected readonly client = signal<ClientSummary | null>(null);
@@ -154,6 +158,8 @@ export class ClientDashboardComponent {
     protected readonly tasks = signal<ClientTask[]>([]);
     protected readonly loading = signal(true);
     protected readonly detailsLoading = signal(false);
+    protected readonly loadingMoreMeals = signal(false);
+    protected readonly moreMealsError = signal(false);
     protected readonly savingRecommendation = signal(false);
     protected readonly savingTemplate = signal(false);
     protected readonly savingTask = signal(false);
@@ -330,6 +336,7 @@ export class ClientDashboardComponent {
     protected readonly recommendationItems = computed<ClientRecommendationView[]>(() => buildRecommendationViews(this.recommendations()));
 
     public constructor() {
+        this.connectDevelopmentTools();
         const clientId = this.route.snapshot.paramMap.get('clientId');
         this.openDiscussionId.set(this.route.snapshot.queryParamMap.get('recommendationId'));
         this.dietologistFacade
@@ -405,6 +412,55 @@ export class ClientDashboardComponent {
     protected showToday(): void {
         const today = formatDateInputValue(new Date());
         this.applyPeriod(today, today);
+    }
+
+    protected loadMoreMeals(): void {
+        void this.loadMoreMealsAsync();
+    }
+
+    private async loadMoreMealsAsync(): Promise<void> {
+        const client = this.client();
+        const snapshot = this.dashboard();
+        if (client === null || snapshot === null || !this.canLoadMoreMeals(client, snapshot)) {
+            return;
+        }
+
+        const sequence = this.dashboardReloadSequence;
+        const nextPage = this.loadedMealPage + 1;
+        this.loadingMoreMeals.set(true);
+        this.moreMealsError.set(false);
+        try {
+            const result = await firstValueFrom(
+                this.loadDietologistDashboardSnapshot(client, resolveTranslateLanguage(this.translateService), nextPage).pipe(
+                    catchError(() => of(null)),
+                    takeUntilDestroyed(this.destroyRef),
+                ),
+                { defaultValue: null },
+            );
+            if (this.destroyRef.destroyed || sequence !== this.dashboardReloadSequence) {
+                return;
+            }
+            if (result === null) {
+                this.moreMealsError.set(true);
+                return;
+            }
+
+            this.dashboard.set(appendClientMealPage(snapshot, result));
+            this.loadedMealPage = nextPage;
+        } finally {
+            if (!this.destroyRef.destroyed && sequence === this.dashboardReloadSequence) {
+                this.loadingMoreMeals.set(false);
+            }
+        }
+    }
+
+    private canLoadMoreMeals(client: ClientSummary, snapshot: DietologistDashboardSnapshot): boolean {
+        return (
+            client.permissions.shareMeals &&
+            snapshot.meals.items.length < snapshot.meals.total &&
+            !this.detailsLoading() &&
+            !this.loadingMoreMeals()
+        );
     }
 
     protected submitRecommendation(): void {
@@ -639,6 +695,8 @@ export class ClientDashboardComponent {
 
     private async reloadDashboardAsync(client: ClientSummary): Promise<void> {
         const reloadSequence = ++this.dashboardReloadSequence;
+        this.loadingMoreMeals.set(false);
+        this.moreMealsError.set(false);
         if (!this.shouldLoadDietologistDashboardSnapshot(client)) {
             this.applyDashboardIfCurrent(null, reloadSequence);
             return;
@@ -658,6 +716,7 @@ export class ClientDashboardComponent {
     private applyDashboardIfCurrent(dashboard: DietologistDashboardSnapshot | null, reloadSequence: number): void {
         if (reloadSequence === this.dashboardReloadSequence) {
             this.dashboard.set(dashboard);
+            this.loadedMealPage = 1;
             this.detailsLoading.set(false);
         }
     }
@@ -667,11 +726,12 @@ export class ClientDashboardComponent {
         return [...current, ...loaded.filter(item => !currentIds.has(item.id))];
     }
 
-    private loadDietologistDashboardSnapshot(client: ClientSummary, language: string): Observable<DietologistDashboardSnapshot> {
+    private loadDietologistDashboardSnapshot(client: ClientSummary, language: string, page = 1): Observable<DietologistDashboardSnapshot> {
         const period = this.getSelectedPeriodValue();
         return this.dietologistFacade.getClientDashboard(client.userId, {
             dateFrom: period.dateFrom,
             dateTo: period.dateTo,
+            page,
             locale: language,
             trendDays: CLIENT_DASHBOARD_TREND_DAYS,
         });
@@ -762,5 +822,129 @@ export class ClientDashboardComponent {
             next.delete(taskId);
             return next;
         });
+    }
+
+    private connectDevelopmentTools(): void {
+        connectDevelopmentScreen({
+            kind: 'client-dashboard',
+            read: () => this.readDevelopmentContext(),
+            isDirty: () => this.hasDevelopmentDraft(),
+            draftSchema: {
+                type: 'object',
+                description:
+                    'Recommendation: {type:"recommendation",text:string}. Task: {type:"task",title:string,details:string,dueDate:"YYYY-MM-DD"|""}. Never sends.',
+                properties: {
+                    type: { enum: ['recommendation', 'task'] },
+                    text: { type: 'string', maxLength: RECOMMENDATION_MAX_LENGTH },
+                    title: { type: 'string', maxLength: TASK_TITLE_MAX_LENGTH },
+                    details: { type: 'string', maxLength: TASK_DETAILS_MAX_LENGTH },
+                    dueDate: { type: 'string' },
+                },
+            },
+            fillDraft: input => {
+                this.fillDevelopmentDraft(input);
+            },
+            clearDraft: () => {
+                if (this.savingRecommendation() || this.savingTask()) {
+                    throw new DevelopmentToolError('A save is running.');
+                }
+                this.recommendationForm().reset({ text: '', templateName: '' });
+                this.taskForm().reset({ title: '', details: '', dueDate: '' });
+            },
+            setFilters: input => {
+                const filters = devRecord(input, ['dateFrom', 'dateTo', 'timeZone']);
+                const dateFrom = devDay(filters['dateFrom']);
+                const dateTo = devDay(filters['dateTo']);
+                if (filters['timeZone'] !== new Intl.DateTimeFormat().resolvedOptions().timeZone || dateFrom > dateTo) {
+                    throw new DevelopmentToolError('Use the current browser timezone and an ordered calendar range.');
+                }
+                this.applyPeriod(dateFrom, dateTo);
+                return;
+            },
+        });
+    }
+
+    private fillDevelopmentDraft(input: unknown): void {
+        if (this.loading() || this.detailsLoading() || this.client() === null || this.savingRecommendation() || this.savingTask()) {
+            throw new DevelopmentToolError('Client is not ready.');
+        }
+        const draft = devRecord(input, ['type', 'text', 'title', 'details', 'dueDate']);
+        const type = devEnum(draft['type'], ['recommendation', 'task']);
+        if (type === 'recommendation') {
+            if (!this.canRecommend()) {
+                throw new DevelopmentToolError('Client permissions do not allow recommendations.');
+            }
+            this.recommendationModel.set({ text: devText(draft['text'], RECOMMENDATION_MAX_LENGTH, true), templateName: '' });
+            this.recommendationForm().markAsDirty();
+        } else {
+            const dueDate = draft['dueDate'] === '' ? '' : devDay(draft['dueDate']);
+            this.taskModel.set({
+                title: devText(draft['title'], TASK_TITLE_MAX_LENGTH, true),
+                details: devText(draft['details'], TASK_DETAILS_MAX_LENGTH, true),
+                dueDate,
+            });
+            this.taskForm().markAsDirty();
+        }
+    }
+
+    private hasDevelopmentDraft(): boolean {
+        return (
+            this.recommendationModel().text.length > 0 ||
+            this.recommendationModel().templateName.length > 0 ||
+            this.taskModel().title.length > 0 ||
+            this.taskModel().details.length > 0 ||
+            this.taskModel().dueDate.length > 0
+        );
+    }
+
+    private readDevelopmentContext(): unknown {
+        return {
+            clientId: this.client()?.userId ?? null,
+            permissions: this.client()?.permissions ?? null,
+            filterFields: ['dateFrom', 'dateTo', 'timeZone'],
+            dateFrom: this.selectedDateFrom(),
+            dateTo: this.selectedDateTo(),
+            loading: this.loading() || this.detailsLoading(),
+            error: this.error() ?? this.sectionLoadError(),
+            meals: this.readDevelopmentMeals(),
+            recommendation: {
+                ...this.recommendationModel(),
+                valid: this.recommendationForm().valid(),
+                disabledReason: this.recommendationDisabledReason(),
+            },
+            task: { ...this.taskModel(), valid: this.taskForm().valid() },
+        };
+    }
+
+    private readDevelopmentMeals(): unknown {
+        const shared = this.client()?.permissions.shareMeals === true;
+        const loading = this.loading() || this.detailsLoading();
+        const meals = shared && !loading ? this.dashboard()?.meals : undefined;
+        if (meals === undefined) {
+            return {
+                available: false,
+                permissionGranted: shared,
+                total: null,
+                loadedCount: 0,
+                loadedPage: null,
+                hasNext: false,
+                loading,
+                loadingMore: this.loadingMoreMeals(),
+                loadMoreError: this.moreMealsError(),
+                items: [],
+            };
+        }
+        return {
+            available: true,
+            permissionGranted: shared,
+            total: meals.total,
+            loadedCount: meals.items.length,
+            loadedPage: this.loadedMealPage,
+            hasNext: meals.items.length < meals.total,
+            loading,
+            loadingMore: this.loadingMoreMeals(),
+            loadMoreError: this.moreMealsError(),
+            items: meals.items.map(meal => ({ id: meal.id, dateUtc: meal.date })),
+        };
     }
 }

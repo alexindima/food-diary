@@ -9,7 +9,9 @@ using FoodDiary.Mediator;
 
 namespace FoodDiary.Modules.Lessons.Application.Commands.UpdateLesson;
 
-public sealed class UpdateLessonCommandHandler(INutritionLessonWriteRepository repository) : IRequestHandler<UpdateLessonCommand, Result<LessonAdminReadModel>> {
+public sealed class UpdateLessonCommandHandler(
+    INutritionLessonWriteRepository repository,
+    INutritionLessonReadRepository readRepository) : IRequestHandler<UpdateLessonCommand, Result<LessonAdminReadModel>> {
     public async Task<Result<LessonAdminReadModel>> Handle(UpdateLessonCommand request, CancellationToken cancellationToken) {
         NutritionLessonId lessonId = request.LessonId;
         string title = request.Title;
@@ -26,16 +28,19 @@ public sealed class UpdateLessonCommandHandler(INutritionLessonWriteRepository r
             return Result.Failure<LessonAdminReadModel>(LessonErrors.NotFound(lessonId.Value));
         }
 
+        IReadOnlyDictionary<NutritionLessonId, int> completionCounts = await readRepository
+            .GetCompletionCountsAsync([lessonId], cancellationToken)
+            .ConfigureAwait(false);
         lesson.Update(title, content, summary, locale, category, difficulty, estimatedReadMinutes, sortOrder);
         lesson.SetPublication(isPublished);
         await repository.UpdateAsync(lesson, cancellationToken).ConfigureAwait(false);
-        return Result.Success(ToAdminReadModel(lesson));
+        return Result.Success(ToAdminReadModel(lesson, completionCounts.GetValueOrDefault(lessonId)));
 
     }
 
-    private static LessonAdminReadModel ToAdminReadModel(NutritionLesson lesson) =>
+    private static LessonAdminReadModel ToAdminReadModel(NutritionLesson lesson, int completedCount) =>
         new(lesson.Id.Value, lesson.Title, lesson.Content, lesson.Summary, lesson.Locale,
             lesson.Category.ToString(), lesson.Difficulty.ToString(), lesson.EstimatedReadMinutes,
-            lesson.SortOrder, lesson.CreatedOnUtc, lesson.ModifiedOnUtc, lesson.IsPublished);
+            lesson.SortOrder, lesson.CreatedOnUtc, lesson.ModifiedOnUtc, lesson.IsPublished, completedCount);
 
 }

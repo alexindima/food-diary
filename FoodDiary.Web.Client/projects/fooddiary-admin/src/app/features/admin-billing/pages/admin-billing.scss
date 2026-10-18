@@ -113,6 +113,7 @@
     background: var(--fd-bg-status-info);
     color: var(--fd-color-primary-700);
     font-weight: var(--fd-text-section-title-weight);
+    white-space: nowrap;
 }
 
 .admin-billing__badge--warn {

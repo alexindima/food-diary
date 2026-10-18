@@ -4,7 +4,7 @@ using FoodDiary.Web.Api.Extensions;
 
 namespace FoodDiary.Web.Api.Options;
 
-public sealed class CorsOptionsSetup(IOptions<ApiCorsOptions> apiCorsOptions) : IConfigureOptions<CorsOptions> {
+public sealed class CorsOptionsSetup(IOptions<ApiCorsOptions> apiCorsOptions, IWebHostEnvironment? environment = null) : IConfigureOptions<CorsOptions> {
     public void Configure(CorsOptions options) {
         string[] origins = apiCorsOptions.Value.Origins;
         options.AddPolicy(ApiCompositionConstants.CorsPolicyName, policy => {
@@ -14,6 +14,9 @@ public sealed class CorsOptionsSetup(IOptions<ApiCorsOptions> apiCorsOptions) : 
                 .WithHeaders("Content-Type", "Authorization", "Idempotency-Key", "X-Requested-With", "X-SignalR-User-Agent")
                 .WithExposedHeaders("Location")
                 .AllowCredentials();
+            if (environment?.IsDevelopment() == true) {
+                policy.WithExposedHeaders(DevelopmentRuntimeHeadersMiddleware.BuildHeader, DevelopmentRuntimeHeadersMiddleware.InstanceHeader);
+            }
         });
     }
 }

@@ -1,4 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpContext, HttpErrorResponse } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
@@ -72,7 +72,7 @@ describe('StatisticsFacade loading', () => {
 
         expect(statisticsService.getSummary).toHaveBeenCalledOnce();
         expect(statisticsService.getSummary).toHaveBeenCalledWith(
-            expect.objectContaining({ timeZoneId: new Intl.DateTimeFormat().resolvedOptions().timeZone }),
+            expect.objectContaining({ timeZoneId: new Intl.DateTimeFormat().resolvedOptions().timeZone }), expect.any(HttpContext),
         );
         expect(facade.userProfile()).toEqual({ height: USER_HEIGHT_CM });
         expect(facade.chartStatisticsData()?.calories).toEqual([FIRST_TOTAL_CALORIES]);

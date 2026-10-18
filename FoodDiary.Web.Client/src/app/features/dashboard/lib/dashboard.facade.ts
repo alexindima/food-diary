@@ -7,6 +7,7 @@ import type { Observable, PartialObserver } from 'rxjs';
 import { finalize, firstValueFrom, map, of, switchMap } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
+import { developmentRequestContext } from '../../../shared/development/development-request-context';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { resolveMealTypeByTime } from '../../../shared/lib/meal-type.util';
@@ -164,6 +165,7 @@ export class DashboardFacade {
         return this.selectedDate().getTime() === today.getTime();
     });
     public readonly snapshot = this.snapshotRequest.data;
+    public readonly requestProvenance = this.snapshotRequest.provenance;
     public readonly isLoading = this.snapshotRequest.isLoading;
     public readonly hasSnapshot = this.snapshotRequest.hasData;
     public readonly loadError = this.snapshotRequest.error;
@@ -363,7 +365,8 @@ export class DashboardFacade {
             locale,
             trendDays: this.trendDays,
         };
-        const request$ = showLoader ? this.dashboardService.getSnapshot(query) : this.dashboardService.getSnapshotSilentlyStrict(query);
+        const context = developmentRequestContext(this.snapshotRequest.bindRequest(requestId));
+        const request$ = showLoader ? this.dashboardService.getSnapshot(query, context) : this.dashboardService.getSnapshotSilentlyStrict(query, context);
         const observer: PartialObserver<DashboardSnapshot | null> = {
             next: snapshot => {
                 if (snapshot === null) {

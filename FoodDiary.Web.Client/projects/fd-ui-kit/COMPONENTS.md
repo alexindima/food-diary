@@ -97,6 +97,8 @@ Compact four-step level indicator for difficulty, proficiency, signal strength, 
 
 #### `fd-ui-bar-chart`
 
+Categorical labels use their text width independently of bar width. Labels that would overlap are hidden and restored as the chart resizes; all bars keep their complete accessible names and keyboard focus targets.
+
 Responsive bar chart for simple comparisons and scaled categorical time series. Categorical mode supports single, grouped, and stacked bars, missing categories, Y-axis labels, units, highlighted labels, and reference lines.
 
 Categorical bars are keyboard-focusable and expose their category and values through accessible labels. Their container remains visible to assistive technology; duplicate axis and category labels are hidden.
@@ -128,7 +130,7 @@ Categorical bars are keyboard-focusable and expose their category and values thr
 
 #### `fd-ui-line-chart`
 
-Responsive line chart for compact trends and sparklines. With axes enabled, the plot starts next to the label column without extra horizontal inset. Units appear once above the Y axis by default; tooltips retain the unit. X labels become sparser in narrow containers without removing data points. With axes shown, out-of-range targets render a directional badge without a horizontal line at a false scale value.
+Responsive line chart for compact trends and sparklines. With axes enabled, the plot starts next to the label column without extra horizontal inset. Units appear once above the Y axis by default; tooltips retain the unit. X labels become sparser in narrow containers without removing data points. Their rendered bounds are checked again after resizing, text changes or font loading to keep labels from colliding, including the final date. Axes reserve the measured height of visible labels, including rotated text and additional wrapping in localized multiline captions. With axes shown, out-of-range targets render a directional badge without a horizontal line at a false scale value.
 
 `locale` controls number formatting (defaults to Angular LOCALE_ID). `axisUnit` overrides the header unit; `axisValueSuffix` explicitly opts into a suffix on every tick.
 
@@ -294,6 +296,8 @@ Escape closes an open calendar without dismissing its enclosing dialog, includin
 
 Closing the calendar restores focus to the date field when focus was inside the calendar, including after date selection and Escape.
 
+The calendar popup is a named modal dialog. It uses `pickerAriaLabel`, then `label`, then the localized “Choose date” fallback. Opening it focuses the active calendar day; Tab stays inside the popup until selection, Escape or a backdrop click closes it.
+
 **Inputs**
 
 - `label?: string`
@@ -305,11 +309,14 @@ Closing the calendar restores focus to the date field when focus was inside the 
 
 #### `fd-ui-time-input`
 
-Time input (`HH:mm`).
+Time input (`HH:mm`) with a 24-hour picker. Enter, Space or Arrow Down opens the named dialog and focuses the selected hour. Tab moves through the hour and minute buttons inside the dialog; Enter or Space selects a button. Selecting a minute or pressing Escape closes the picker and restores focus to its trigger. The labelled button groups expose the selected values through `aria-pressed`.
 
 **Inputs**
 
 - `label?: string`
+- `pickerAriaLabel?: string` (overrides the field label for the picker button and dialog; localized hour/minute labels provide a fallback)
+- `hoursLabel?: string` (default `Hours`)
+- `minutesLabel?: string` (default `Minutes`)
 - `placeholder?: string`
 - `error?: string | null`
 - `required?: boolean`
@@ -375,6 +382,8 @@ The component reuses `fd-ui-calendar` with `selectionMode="week"`. The calendar 
 #### `fd-ui-nutrient-input`
 
 Specialized numeric input for nutrition cards.
+
+In narrow cards, the label and unit may wrap onto separate lines; the unit fragment stays together. Group cards with a readable minimum width so a numeric value can fit without clipping (see `NarrowNutritionGroup`).
 
 In number mode, emits numbers or `null` for an empty field. Decimal commas are normalized; a leading minus sign is preserved for form validation. Incomplete numeric input emits `NaN` while retaining the typed text.
 
@@ -582,12 +591,17 @@ of adding a separate `fd-ui-form-error` beside the checkbox. An error replaces t
 hint and is associated with the native checkbox through `aria-describedby` and
 `aria-invalid`.
 
+The native checked state follows the `checked` model, including external form
+updates when editing another record or resetting a form.
+
 **Inputs**
 
 - `label?: string`
 - `hint?: string`
 - `error?: string | null`
-- `disabled?: boolean` (model)
+- `disabled?: boolean`
+- `checked?: boolean` (model)
+- `touched?: boolean` (model)
 
 #### `fd-ui-radio-group`
 

@@ -220,7 +220,14 @@ export class MarketingAttributionService {
     }
 
     private wasCapturedInSession(payload: MarketingAttributionPayload): boolean {
-        return this.storage.getItem('session', SESSION_CAPTURE_STORAGE_KEY) === this.getCaptureKey(payload);
+        const captured = this.storage.getItem('session', SESSION_CAPTURE_STORAGE_KEY);
+        // The unchanged metadata suffix also identifies URLs in legacy raw keys.
+        const metadata = `|${this.getCaptureMetadata(payload)}`;
+        return (
+            captured !== null &&
+            captured.endsWith(metadata) &&
+            this.captureLandingPath(captured.slice(0, -metadata.length)) === this.captureLandingPath(payload.landingPath)
+        );
     }
 
     private markCapturedInSession(payload: MarketingAttributionPayload): void {
@@ -228,8 +235,21 @@ export class MarketingAttributionService {
     }
 
     private getCaptureKey(payload: MarketingAttributionPayload): string {
+        return `${this.captureLandingPath(payload.landingPath)}|${this.getCaptureMetadata(payload)}`;
+    }
+
+    private captureLandingPath(landingPath: string): string {
+        const queryStart = landingPath.indexOf('?');
+        if (queryStart === -1) {
+            return landingPath;
+        }
+        const path = landingPath.slice(0, queryStart);
+        const query = new URLSearchParams(landingPath.slice(queryStart + 1)).toString();
+        return query.length > 0 ? `${path}?${query}` : path;
+    }
+
+    private getCaptureMetadata(payload: MarketingAttributionPayload): string {
         return [
-            payload.landingPath,
             payload.referrerHost ?? '',
             payload.utmSource ?? '',
             payload.utmMedium ?? '',

@@ -1,6 +1,7 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { form, FormField, maxLength, min, required } from '@angular/forms/signals';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { form, FormField, max, maxLength, min, required, validate } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
@@ -8,6 +9,7 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
@@ -34,6 +36,7 @@ const DEFAULT_CATEGORY = 'NutritionBasics';
 const DEFAULT_DIFFICULTY = 'Beginner';
 const DEFAULT_ESTIMATED_READ_MINUTES = 5;
 const DEFAULT_SORT_ORDER = 0;
+const INTEGER_MAX_VALUE = 2147483647;
 
 @Component({
     selector: 'fd-admin-lesson-edit-dialog',
@@ -42,6 +45,7 @@ const DEFAULT_SORT_ORDER = 0;
         FdUiCheckboxComponent,
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
+        FdUiFormErrorComponent,
         DecimalPipe,
         FormField,
         FdUiInputComponent,
@@ -57,9 +61,11 @@ export class AdminLessonEditDialogComponent {
     protected readonly data = inject<AdminLesson>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject<FdUiDialogRef<AdminLessonEditDialogComponent, boolean>>(FdUiDialogRef);
     private readonly lessonsFacade = inject(AdminLessonsFacade);
+    private readonly destroyRef = inject(DestroyRef);
 
     protected readonly isNew = (this.data as AdminLesson & { isNew?: boolean }).isNew === true;
     protected readonly isSaving = signal(false);
+    protected readonly saveError = signal<string | null>(null);
     protected readonly showPreview = signal(false);
     protected readonly previewHtml = computed(() => this.formModel().content);
     protected readonly contentLength = computed(() => this.formModel().content.length);
@@ -93,10 +99,17 @@ export class AdminLessonEditDialogComponent {
         required(path.difficulty);
         required(path.estimatedReadMinutes);
         min(path.estimatedReadMinutes, 1);
+        max(path.estimatedReadMinutes, INTEGER_MAX_VALUE);
+        validate(path.estimatedReadMinutes, ({ value }) => (Number.isInteger(value()) ? null : { kind: 'integer' }));
         min(path.sortOrder, DEFAULT_SORT_ORDER);
+        max(path.sortOrder, INTEGER_MAX_VALUE);
+        validate(path.sortOrder, ({ value }) => (Number.isInteger(value()) ? null : { kind: 'integer' }));
     });
 
     protected onCancel(): void {
+        if (this.isSaving()) {
+            return;
+        }
         this.dialogRef.close(false);
     }
 
@@ -105,6 +118,7 @@ export class AdminLessonEditDialogComponent {
             return;
         }
 
+        this.saveError.set(null);
         this.isSaving.set(true);
         const value = this.formModel();
         const request = {
@@ -121,13 +135,14 @@ export class AdminLessonEditDialogComponent {
 
         const operation = this.isNew ? this.lessonsFacade.create(request) : this.lessonsFacade.update(this.data.id, request);
 
-        operation.subscribe({
+        operation.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: () => {
                 this.isSaving.set(false);
                 this.dialogRef.close(true);
             },
             error: () => {
                 this.isSaving.set(false);
+                this.saveError.set('ADMIN_LESSONS.SAVE_ERROR');
             },
         });
     }

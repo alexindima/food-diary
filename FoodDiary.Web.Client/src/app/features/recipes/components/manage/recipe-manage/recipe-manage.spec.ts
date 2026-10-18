@@ -6,6 +6,7 @@ import { firstValueFrom, of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../../../shared/development/development-tools';
 import type { ItemSelection } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
@@ -13,6 +14,7 @@ import { type Recipe, type RecipeDto, RecipeVisibility } from '../../../../../sh
 import type { RecipeImportResult } from '../../../../../shared/models/recipe-import.data';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
+import { RecipeDevelopmentDraft } from '../../../contracts/recipe-development-draft';
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
 import type { IngredientFormValues, RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import { createRecipeIngredientValue, createRecipeStepValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
@@ -778,12 +780,62 @@ describe('Recipe editor route departure', () => {
     });
 });
 
-async function setupComponentAsync(overrides: Partial<RecipeManageFacadeMock> = {}): Promise<RecipeManageSetup> {
+describe('recipe development capability', () => {
+    it('preserves a nested recipe identity and fractional serving quantity without submitting', async () => {
+        const screens: DevelopmentScreen[] = [];
+        const { component, facade } = await setupComponentAsync({}, { attach: (screen: DevelopmentScreen): (() => void) => { screens.push(screen); return (): void => {}; } });
+        const recipe = createRecipe();
+        screens[0].fillDraft?.(new RecipeDevelopmentDraft('Nested draft', 1, [{ description: 'Combine', ingredients: [{ recipe, amount: 0.5 }] }]));
+        expect(component['recipeFormModel']().steps[0].ingredients[0]).toMatchObject({ productId: null, nestedRecipeId: recipe.id, foodName: recipe.name, amount: 0.5 });
+        expect(screens[0].read()).toMatchObject({ valid: true, validation: { stepsValid: true } });
+        expect(screens[0].isDirty?.()).toBe(true);
+        expect(facade.addRecipe).not.toHaveBeenCalled();
+    });
+    it('fills existing ingredient quantities into the live form without submitting', async () => {
+        const screens: DevelopmentScreen[] = [];
+        const { component, facade, fixture } = await setupComponentAsync(
+            {},
+            {
+                attach: (screen: DevelopmentScreen): (() => void) => {
+                    screens.push(screen);
+                    return (): void => {};
+                },
+            },
+        );
+        const product = createProduct();
+        const screen = screens[0];
+        screen.fillDraft?.(
+            new RecipeDevelopmentDraft('Draft recipe', DEFAULT_SERVINGS, [
+                { description: 'Slice', ingredients: [{ product, amount: SELECTED_PRODUCT_DEFAULT_AMOUNT }] },
+            ]),
+        );
+        fixture.detectChanges();
+        expect(component['recipeFormModel']().name).toBe('Draft recipe');
+        expect(component['recipeFormModel']().steps[0].ingredients[0].productId).toBe(product.id);
+        expect(component['recipeFormModel']().steps[0].ingredients[0].amount).toBe(SELECTED_PRODUCT_DEFAULT_AMOUNT);
+        expect(screen.isDirty?.()).toBe(true);
+        expect(facade.addRecipe).not.toHaveBeenCalled();
+        expect(() => screen.fillDraft?.({})).toThrow();
+        screen.clearDraft?.();
+        expect(component['recipeFormModel']().name).toBe('');
+        expect(screen.isDirty?.()).toBe(false);
+    });
+});
+
+async function setupComponentAsync(
+    overrides: Partial<RecipeManageFacadeMock> = {},
+    developmentScreens?: { attach: (screen: DevelopmentScreen) => () => void },
+): Promise<RecipeManageSetup> {
     const facade = createRecipeManageFacadeMock(overrides);
 
     await TestBed.configureTestingModule({
         imports: [RecipeManageComponent],
-        providers: [provideRouter([]), provideTranslateTesting(), provideHttpClient()],
+        providers: [
+            provideRouter([]),
+            provideTranslateTesting(),
+            provideHttpClient(),
+            ...(developmentScreens === undefined ? [] : [{ provide: DEVELOPMENT_SCREENS, useValue: developmentScreens }]),
+        ],
     })
         .overrideComponent(RecipeManageComponent, {
             remove: { providers: [RecipeManageFacade] },

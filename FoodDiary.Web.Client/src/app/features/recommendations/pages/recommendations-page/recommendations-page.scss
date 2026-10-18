@@ -17,6 +17,10 @@
         color: var(--fd-color-text-muted);
     }
 
+    &__task {
+        overflow-wrap: anywhere;
+    }
+
     &__state,
     &__empty {
         min-height: 280px;
@@ -97,6 +101,7 @@
         margin: 0;
         color: var(--fd-color-text);
         white-space: pre-wrap;
+        overflow-wrap: anywhere;
     }
 }
 

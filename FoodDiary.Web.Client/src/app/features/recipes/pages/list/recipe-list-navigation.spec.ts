@@ -1,4 +1,5 @@
 import { Location } from '@angular/common';
+import { HttpContext } from '@angular/common/http';
 import { provideLocationMocks } from '@angular/common/testing';
 import type { DebugElement } from '@angular/core';
 import { signal } from '@angular/core';
@@ -56,7 +57,7 @@ it('restores the full bookmarked query and keeps its page when signal form effec
             page: 2,
             includePublic: true,
             filters: { search: 'Rice', category: 'soups', maxTotalTime: 60, caloriesFrom: 100, caloriesTo: 1000, hasImage: false },
-        }),
+        }), expect.any(HttpContext),
     );
 });
 
@@ -73,14 +74,14 @@ it('keeps URL, form and query aligned across filter changes and real browser Bac
         expect.objectContaining({
             page: 1,
             includePublic: true,
-        }),
+        }), expect.any(HttpContext),
     );
     expect(queryOverview.mock.lastCall?.[0].filters).toEqual(expect.objectContaining({ search: 'missing', category: 'soups' }));
     TestBed.inject(Location).back();
     await settleAsync(harness);
     expect(state.current().search).toBe('Rice');
     expect(state.current().page).toBe(2);
-    expect(queryOverview).toHaveBeenLastCalledWith(expect.objectContaining({ page: 2 }));
+    expect(queryOverview).toHaveBeenLastCalledWith(expect.objectContaining({ page: 2 }), expect.any(HttpContext));
     expect(queryOverview.mock.lastCall?.[0].filters).toEqual(expect.objectContaining({ search: 'Rice', category: 'soups' }));
 });
 
@@ -88,7 +89,7 @@ it('replaces stale and unsupported bookmarks while preserving the query', async 
     const harness = await RouterTestingHarness.create('/recipes?page=3&onlyMine=false&hasImage=false');
     await settleAsync(harness);
     expect(TestBed.inject(Router).url).toContain('page=2');
-    expect(queryOverview).toHaveBeenLastCalledWith(expect.objectContaining({ page: 2, includePublic: true }));
+    expect(queryOverview).toHaveBeenLastCalledWith(expect.objectContaining({ page: 2, includePublic: true }), expect.any(HttpContext));
     expect(queryOverview.mock.lastCall?.[0].filters).toEqual(expect.objectContaining({ hasImage: false }));
     await harness.navigateByUrl('/recipes?page=999999&search=Rice');
     await settleAsync(harness);
@@ -107,7 +108,7 @@ it('does not let a stale result recover the page or overwrite a newer draft sear
     expect(component['recipeData'].items()).toEqual([]);
     await settleAsync(harness);
     expect(TestBed.inject(Router).url).toContain('search=new%20draft');
-    expect(queryOverview).toHaveBeenLastCalledWith(expect.objectContaining({ page: 1 }));
+    expect(queryOverview).toHaveBeenLastCalledWith(expect.objectContaining({ page: 1 }), expect.any(HttpContext));
     expect(queryOverview.mock.lastCall?.[0].filters).toEqual(expect.objectContaining({ search: 'new draft' }));
 });
 

@@ -2,12 +2,24 @@ using FoodDiary.Web.Api.Extensions;
 using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Hosting;
 using MsOptions = Microsoft.Extensions.Options.Options;
 
 namespace FoodDiary.Web.Api.Tests.Extensions;
 
 [ExcludeFromCodeCoverage]
 public sealed class CorsOptionsSetupTests {
+    [Fact]
+    public void Development_ExposesOnlyTheAdditionalRuntimeIdentityHeaders() {
+        IWebHostEnvironment environment = Substitute.For<IWebHostEnvironment>();
+        environment.EnvironmentName.Returns("Development");
+        var setup = new CorsOptionsSetup(MsOptions.Create(new ApiCorsOptions { Origins = ["http://localhost:4200"] }), environment);
+        var options = new CorsOptions();
+        setup.Configure(options);
+        CorsPolicy policy = options.GetPolicy(ApiCompositionConstants.CorsPolicyName)!;
+        Assert.Equal(["Location", DevelopmentRuntimeHeadersMiddleware.BuildHeader, DevelopmentRuntimeHeadersMiddleware.InstanceHeader], policy.ExposedHeaders);
+    }
+
     [Fact]
     public void DevelopmentConfiguration_DefinesOnlyLocalhostOrigins() {
         IConfiguration configuration = new ConfigurationBuilder()

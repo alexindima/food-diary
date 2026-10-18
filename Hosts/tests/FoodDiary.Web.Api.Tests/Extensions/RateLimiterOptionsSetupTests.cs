@@ -10,6 +10,22 @@ namespace FoodDiary.Web.Api.Tests.Extensions;
 
 [ExcludeFromCodeCoverage]
 public sealed class RateLimiterOptionsSetupTests {
+    [Fact]
+    public void TelegramConfiguration_UsesSeparatePolicy_WhileAuthenticationPostsKeepAuthPolicy() {
+        Type controller = typeof(FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers.AuthTelegramOnboardingController);
+        EnableRateLimitingAttribute? controllerPolicy = controller.GetCustomAttribute<EnableRateLimitingAttribute>();
+        MethodInfo configuration = controller.GetMethod("Configuration")!;
+        EnableRateLimitingAttribute? configurationPolicy = configuration.GetCustomAttribute<EnableRateLimitingAttribute>();
+        Assert.NotNull(controllerPolicy);
+        Assert.NotNull(configurationPolicy);
+        Assert.Equal(PresentationPolicyNames.AuthRateLimitPolicyName, controllerPolicy.PolicyName);
+        Assert.Equal(PresentationPolicyNames.AuthConfigurationRateLimitPolicyName, configurationPolicy.PolicyName);
+        MethodInfo[] posts = [.. controller.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+            .Where(method => method.GetCustomAttribute<Microsoft.AspNetCore.Mvc.HttpPostAttribute>() is not null)];
+        Assert.NotEmpty(posts);
+        Assert.All(posts, method => Assert.Null(method.GetCustomAttribute<EnableRateLimitingAttribute>()));
+    }
+
     [Theory]
     [InlineData("GetUploadUrl")]
     [InlineData("Confirm")]

@@ -136,11 +136,69 @@ describe('MarketingAttributionService identity lifetimes', () => {
     });
 });
 
+describe('MarketingAttributionService equivalent landing URLs', () => {
+    it.each([
+        ['utm_campaign=spring+sale&utm_term=x%2By+%26+z', 'utm_campaign=spring%20sale&utm_term=x%2By%20%26%20z'],
+        ['utm_campaign=launch&extra=one+two&extra=three?four', 'utm_campaign=launch&extra=one%20two&extra=three%3Ffour'],
+    ])('does not recapture equivalent query encoding after reload', (original, reencoded) => {
+        const { service, httpMock, storage, browserWindow } = setup({
+            href: `https://fooddiary.club/food-diary?${original}`,
+            search: `?${original}`,
+        });
+        service.initialize();
+        const first = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events`);
+        expect(first.request.body).toMatchObject({ landingPath: `/food-diary?${original}` });
+        first.flush(null);
+        browserWindow.href = `https://fooddiary.club/food-diary?${reencoded}`;
+        browserWindow.search = `?${reencoded}`;
+
+        service.initialize();
+
+        httpMock.expectNone(`${environment.apiUrls.marketing}/attribution-events`);
+        expect(storage.getJson('local', 'fd_marketing_first_touch')).toMatchObject({ landingPath: `/food-diary?${original}` });
+        httpMock.verify();
+    });
+
+    it('recognizes a legacy raw capture key after equivalent re-encoding', () => {
+        const { service, httpMock, storage } = setup({
+            href: 'https://fooddiary.club/food-diary?utm_campaign=spring+sale',
+            search: '?utm_campaign=spring+sale',
+        });
+        storage.setItem('session', 'fd_marketing_session_capture', '/food-diary?utm_campaign=spring%20sale|t.me|||spring sale||');
+
+        service.initialize();
+
+        httpMock.expectNone(`${environment.apiUrls.marketing}/attribution-events`);
+        httpMock.verify();
+    });
+
+    it('keeps a literal plus distinct from a query space', () => {
+        const { service, httpMock, browserWindow } = setup({
+            href: 'https://fooddiary.club/food-diary?utm_campaign=spring%2Bsale',
+            search: '?utm_campaign=spring%2Bsale',
+        });
+        service.initialize();
+        const first = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events`);
+        expect(first.request.body).toMatchObject({ utmCampaign: 'spring+sale' });
+        first.flush(null);
+        browserWindow.href = 'https://fooddiary.club/food-diary?utm_campaign=spring+sale';
+        browserWindow.search = '?utm_campaign=spring+sale';
+
+        service.initialize();
+
+        const second = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events`);
+        expect(second.request.body).toMatchObject({ utmCampaign: 'spring sale' });
+        second.flush(null);
+        httpMock.verify();
+    });
+});
+
 function setup(overrides: Partial<BrowserWindowMock> = {}): {
     service: MarketingAttributionService;
     httpMock: HttpTestingController;
     storage: BrowserStorageMock;
     session: { getSessionId: () => string };
+    browserWindow: BrowserWindowMock;
 } {
     const storage = new BrowserStorageMock();
     const browserWindow = new BrowserWindowMock(overrides);
@@ -164,6 +222,7 @@ function setup(overrides: Partial<BrowserWindowMock> = {}): {
         httpMock: TestBed.inject(HttpTestingController),
         storage,
         session,
+        browserWindow,
     };
 }
 

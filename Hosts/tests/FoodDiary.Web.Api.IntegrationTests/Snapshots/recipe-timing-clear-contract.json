@@ -1,0 +1,7 @@
+[
+  { "request": {}, "prepTime": 12, "cookTime": 15 },
+  { "request": { "clearPrepTime": true }, "prepTime": null, "cookTime": 15 },
+  { "request": { "clearCookTime": true }, "prepTime": null, "cookTime": null },
+  { "request": { "clearPrepTime": true, "clearCookTime": true }, "prepTime": null, "cookTime": null },
+  { "request": { "prepTime": 0 }, "prepTime": 0, "cookTime": null }
+]

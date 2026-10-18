@@ -33,6 +33,7 @@
 }
 
 .meal-plan-meal {
+    flex-wrap: wrap;
     padding: var(--fd-space-surface-emphasis-padding);
     border-radius: var(--fd-radius-card);
     background: var(--fd-bg-surface-brand);
@@ -45,11 +46,18 @@
 
     &__recipe {
         flex: 1;
+        min-width: min(100%, 16rem);
+        overflow-wrap: anywhere;
         color: var(--fd-color-text);
     }
 
     &__nutrition {
+        flex-wrap: wrap;
         color: var(--fd-color-text-muted);
+
+        > span {
+            white-space: nowrap;
+        }
     }
 }
 
@@ -58,9 +66,5 @@
         flex-direction: column;
         align-items: flex-start;
         gap: var(--fd-space-xxs);
-    }
-
-    .meal-plan-meal__nutrition {
-        flex-wrap: wrap;
     }
 }

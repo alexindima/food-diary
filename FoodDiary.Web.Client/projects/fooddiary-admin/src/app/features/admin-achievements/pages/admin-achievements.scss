@@ -1,6 +1,7 @@
 .achievements-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(22rem, 0.9fr);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 28rem), 1fr));
+    align-items: start;
     gap: var(--fd-space-lg);
 }
 .definition-list,
@@ -10,13 +11,16 @@
     border-radius: var(--fd-radius-lg);
     background: var(--fd-color-surface);
 }
+.editor {
+    container-type: inline-size;
+}
 h2,
 p {
     margin: 0;
 }
 .definition-card {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     gap: var(--fd-space-md);
     width: 100%;
@@ -25,8 +29,16 @@ p {
     border-radius: var(--fd-radius-md);
     background: transparent;
     color: inherit;
+    font-family: inherit;
+    font-size: var(--fd-text-body-size);
+    line-height: var(--fd-text-body-line-height);
+    font-weight: var(--fd-text-body-weight);
     text-align: left;
     cursor: pointer;
+}
+.definition-body {
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 .definition-card:hover {
     border-color: var(--fd-color-primary);
@@ -47,9 +59,15 @@ p {
 }
 .form-grid {
     display: grid;
-    grid-template-columns: minmax(8rem, auto) minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: center;
     gap: var(--fd-space-sm) var(--fd-space-md);
+}
+.form-grid > fd-ui-input,
+.form-grid > fd-ui-select,
+.form-grid > fd-ui-textarea,
+.form-grid > .active-field {
+    min-width: 0;
 }
 input,
 select,
@@ -72,10 +90,7 @@ input[type='checkbox'] {
 .error {
     color: var(--fd-color-danger);
 }
-@media (max-width: 900px) {
-    .achievements-layout {
-        grid-template-columns: 1fr;
-    }
+@container (max-width: 24rem) {
     .form-grid {
         grid-template-columns: 1fr;
     }

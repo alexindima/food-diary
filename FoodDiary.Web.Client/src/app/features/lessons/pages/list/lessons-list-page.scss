@@ -213,8 +213,10 @@
         color: var(--fd-color-text-muted);
 
         strong {
+            flex-shrink: 0;
             color: var(--fd-color-text);
             font-size: var(--fd-text-display-sm-size);
+            white-space: nowrap;
         }
     }
 
@@ -422,7 +424,11 @@
     }
     .lessons-list__recommendation .lessons-list__recommendation-actions {
         grid-column: 1 / -1;
+        flex-wrap: wrap;
         flex-direction: row;
         align-items: center;
+    }
+    .lessons-list__recommendation-meta {
+        flex-wrap: wrap;
     }
 }

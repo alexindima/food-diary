@@ -11,6 +11,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
 import { PageBodyComponent } from '../../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../../components/shared/page-header/page-header';
+import { connectDevelopmentScreen, DevelopmentToolError } from '../../../../../shared/development/development-tools';
 import type { UnsavedEditor } from '../../../../../shared/forms/unsaved-editor';
 import { createCollectionTouchedState } from '../../../../../shared/lib/collection-touched-state.utils';
 import { MANUAL_NUTRITION_MAX_CALORIES, MANUAL_NUTRITION_MAX_NUTRIENT } from '../../../../../shared/lib/nutrition.constants';
@@ -19,15 +20,18 @@ import type { Recipe, RecipeDto } from '../../../../../shared/models/recipe.data
 import type { RecipeImportResult } from '../../../../../shared/models/recipe-import.data';
 import { LocalizedTourDefinitionService } from '../../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
+import { RecipeDevelopmentDraft, type RecipeDevelopmentIngredient } from '../../../contracts/recipe-development-draft';
 import { detectRecipeLanguage, hasSubstantiallyChangedRecipeText, recipeLanguageText } from '../../../lib/recipe-language.utils';
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
 import { RecipeBasicInfoComponent } from '../recipe-basic-info/recipe-basic-info';
+import { RECIPE_DEVELOPMENT_SCHEMA } from '../recipe-manage-lib/recipe-development-schema';
 import { parseRecipeImportDraft } from '../recipe-manage-lib/recipe-import-draft.mapper';
 import type { IngredientFormValues, NutritionScaleMode, RecipeFormValues, StepFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import {
     buildRecipeDto,
     buildRecipeFormPatchValue,
     createRecipeFormValue,
+    createRecipeIngredientValue,
     hasNoRecipeNutritionTotals,
     RECIPE_MIN_INGREDIENT_AMOUNT,
     RECIPE_TEXT_AMOUNT_MAX_LENGTH,
@@ -183,6 +187,7 @@ export class RecipeManageComponent implements UnsavedEditor {
         this.updateSummaryFromCurrentForm();
         this.watchSignalFormModelChanges();
         this.nutritionFormManager.initialize();
+        this.connectDevelopmentTools();
         effect(() => {
             const recipe = this.recipe();
             untracked(() => {
@@ -776,6 +781,94 @@ export class RecipeManageComponent implements UnsavedEditor {
 
     protected get nutritionScaleMode(): NutritionScaleMode {
         return this.nutritionFormManager.nutritionScaleMode;
+    }
+
+    private connectDevelopmentTools(): void {
+        const requireNewEditor = (): void => {
+            if (this.recipe() !== null || this.isFormLocked() || this.anyPhotosUploading()) {
+                throw new DevelopmentToolError('A ready NEW recipe editor is required.');
+            }
+        };
+        connectDevelopmentScreen({
+            kind: 'recipe-editor',
+            read: () => this.readDevelopmentContext(),
+            isDirty: () => this.recipeSignalForm().dirty(),
+            draftSchema: RECIPE_DEVELOPMENT_SCHEMA,
+            fillDraft: draftInput => {
+                requireNewEditor();
+                this.fillDevelopmentDraft(draftInput);
+            },
+            clearDraft: () => {
+                requireNewEditor();
+                this.recipeSignalForm().reset(createRecipeFormValue(this.recipeManageFacade.preferredLanguage()));
+                this.stepFormManager.addStep();
+                this.updateSummaryFromCurrentForm();
+            },
+        });
+    }
+
+    private fillDevelopmentDraft(draftInput: unknown): void {
+        if (this.recipeSignalForm().dirty() || !(draftInput instanceof RecipeDevelopmentDraft)) {
+            throw new DevelopmentToolError('A clean editor and resolved product ingredients are required.');
+        }
+        this.patchRecipeFormModel({
+            name: draftInput.name,
+            servings: draftInput.servings,
+            cookTime: draftInput.cookTime,
+            steps: draftInput.steps.map(step => ({
+                title: null,
+                imageUrl: null,
+                description: step.description,
+                ingredients: step.ingredients.map(item => this.developmentIngredientValue(item)),
+            })),
+        });
+        this.recipeSignalForm().markAsDirty();
+        this.updateSummaryFromCurrentForm();
+    }
+
+    private developmentIngredientValue(item: RecipeDevelopmentIngredient): IngredientFormValues {
+        if (item.product !== undefined) {
+            return createRecipeIngredientValue({ food: item.product, productId: item.product.id, amount: item.amount });
+        }
+        return createRecipeIngredientValue({ amount: item.amount, nestedRecipe: item.recipe, nestedRecipeId: item.recipe.id, nestedRecipeName: item.recipe.name });
+    }
+
+    private readDevelopmentContext(): unknown {
+        return {
+            isNew: this.recipe() === null,
+            id: this.recipe()?.id ?? null,
+            name: this.recipeFormModel().name,
+            servings: this.recipeFormModel().servings,
+            steps: this.steps.map(step => ({
+                description: step.description,
+                ingredients: step.ingredients.map(item => ({
+                    productId: item.productId,
+                    recipeId: item.nestedRecipeId,
+                    amount: item.amount,
+                    unit: item.food?.baseUnit ?? 'servings',
+                })),
+            })),
+            nutrition: {
+                mode: this.nutritionMode(),
+                calories: this.totalCalories(),
+                fiber: this.totalFiber(),
+                alcohol: this.totalAlcohol(),
+            },
+            valid: this.recipeSignalForm().valid() && this.areStepsValid(),
+            loading: this.isFormLocked(),
+            error: this.globalError(),
+            validation: {
+                stepsValid: this.areStepsValid(),
+                name: this.recipeSignalForm
+                    .name()
+                    .errors()
+                    .map(error => error.kind),
+                cookTime: this.recipeSignalForm
+                    .cookTime()
+                    .errors()
+                    .map(error => error.kind),
+            },
+        };
     }
 }
 

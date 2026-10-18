@@ -29,6 +29,11 @@ internal sealed class RecipesUserDataPurgeParticipant(
             await context.Recipes.Where(item => item.UserId == userId)
                 .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.UserId, target), cancellationToken).ConfigureAwait(false);
         } else {
+            // Restrictive nested references are checked while rows are deleted. Remove
+            // outgoing edges of this user's recipes first, including parent -> child.
+            // Incoming references from another owner's recipes remain restrictive.
+            await context.RecipeIngredients.Where(item => item.RecipeStep.Recipe.UserId == userId)
+                .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
             await context.Recipes.Where(item => item.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
         }
     }

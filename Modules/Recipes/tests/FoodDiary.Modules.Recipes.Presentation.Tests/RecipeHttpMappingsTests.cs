@@ -274,7 +274,22 @@ public sealed class RecipeHttpMappingsTests {
             () => Assert.Equal(request.ManualCarbs, command.ManualCarbs),
             () => Assert.Equal(request.ManualFiber, command.ManualFiber),
             () => Assert.Equal(request.ManualAlcohol, command.ManualAlcohol),
-            () => Assert.Null(command.Steps));
+            () => Assert.Null(command.Steps),
+            () => Assert.False(command.ClearPrepTime),
+            () => Assert.False(command.ClearCookTime));
+
+        UpdateRecipeCommand clearCommand = (request with {
+            PrepTime = null,
+            CookTime = null,
+            ClearPrepTime = true,
+            ClearCookTime = true,
+        }).ToCommand(userId, recipeId);
+
+        Assert.Multiple(
+            () => Assert.True(clearCommand.ClearPrepTime),
+            () => Assert.True(clearCommand.ClearCookTime),
+            () => Assert.Null(clearCommand.PrepTime),
+            () => Assert.Null(clearCommand.CookTime));
     }
 
     [Fact]

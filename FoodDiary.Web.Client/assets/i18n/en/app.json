@@ -226,8 +226,8 @@
                 "PERCENT_UNIT": "%",
                 "GRAM_UNIT": " g",
                 "VS_GOAL": "Compared with your goal",
-                "INCOMPLETE_DATA": "Data is incomplete",
-                "INCOMPLETE_DATA_HINT": "Missing days may affect the period averages"
+                "INCOMPLETE_DATA": "Entries may be incomplete",
+                "INCOMPLETE_DATA_HINT": "Days with entries may still be incomplete; averages describe your diary."
             },
             "BALANCE": {
                 "TITLE": "Nutrient balance",
@@ -500,7 +500,7 @@
         "VISIBILITY_GROUP_TITLE": "Visibility",
         "VISIBILITY": "Visibility",
         "VISIBILITY_PLACEHOLDER": "Select visibility",
-        "SELECT_INGREDIENT": "Select product",
+        "SELECT_INGREDIENT": "Select ingredient",
         "UNKNOWN_PRODUCT": "Product",
         "DRAGGING_STEP": "Moving step",
         "DRAGGING_HINT": "Release to reorder",
@@ -1154,6 +1154,7 @@
         "AMOUNT_PLACEHOLDER_RECIPE": "Enter weight (g)",
         "AMOUNT_LABEL_RECIPE_SERVINGS": "Quantity (servings)",
         "AMOUNT_PLACEHOLDER_RECIPE_SERVINGS": "Enter number of servings",
+        "AMOUNT_UNIT_SERVING": "serving",
         "AMOUNT_UNIT_SERVINGS": "servings",
         "ITEM_SOURCE_LABEL": "Product or recipe",
         "ITEM_SOURCE_PLACEHOLDER": "Select product or recipe",
@@ -2456,6 +2457,7 @@
         "AVG_LENGTH_ERROR": "Enter a whole number from 18 to 60 days.",
         "PERIOD_LENGTH_ERROR": "Enter a whole number from 1 to 14 days.",
         "LUTEAL_LENGTH_ERROR": "Enter a whole number from 8 to 18 days.",
+        "CREATE_CYCLE_FAILED": "Could not create the cycle journal. Your entries are still in the form. Please try again.",
         "SAVE_SETTINGS_FAILED": "Could not save cycle settings. Your changes are still here. Please try again.",
         "DELETE_CYCLE": "Delete cycle data",
         "DELETE_CYCLE_TITLE": "Delete all cycle data?",
@@ -3975,7 +3977,9 @@
                 "COUNT_FEW": "{{count}} meals",
                 "COUNT_MANY": "{{count}} meals",
                 "COUNT_OTHER": "{{count}} meals",
-                "EMPTY": "No meals shared for the selected period."
+                "EMPTY": "No meals shared for the selected period.",
+                "LOAD_MORE": "Show more meals",
+                "LOAD_MORE_ERROR": "Could not load more meals. Please try again."
             },
             "BODY": {
                 "DELTA": "{{delta}} since previous entry"

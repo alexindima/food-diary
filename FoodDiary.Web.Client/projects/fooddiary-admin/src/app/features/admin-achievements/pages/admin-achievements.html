@@ -2,7 +2,7 @@
 <fd-admin-catalog-filter [categories]="categories()" [showLocale]="false" [showState]="true" />
 <div class="achievements-layout">
     <section class="definition-list fd-grid fd-gap-sm" [attr.aria-label]="'ADMIN_ACHIEVEMENTS.DEFINITIONS' | translate">
-        <div class="fd-row fd-justify-between fd-align-center">
+        <div class="fd-row fd-wrap fd-justify-between fd-align-center fd-gap-actions">
             <h2>{{ 'ADMIN_ACHIEVEMENTS.DEFINITIONS' | translate }}</h2>
             <fd-ui-button type="button" (click)="createNew()">{{ 'ADMIN_ACHIEVEMENTS.NEW' | translate }}</fd-ui-button>
         </div>
@@ -14,12 +14,12 @@
             @for (definition of pageItems(); track definition.id) {
                 <!-- Rich definition cards retain a semantic button; fd-ui-button is intended for action labels. -->
                 <button class="definition-card" type="button" (click)="edit(definition)">
-                    <span class="definition-icon" aria-hidden="true">{{ definition.icon }}</span>
-                    <small>{{ 'ADMIN_ACHIEVEMENTS.AWARDED_USERS' | translate }}: {{ definition.awardedUsers ?? 0 }}</small>
-                    <span
-                        ><strong>{{ definition.titleEn }}</strong
-                        ><small>{{ definition.key }} · {{ definition.metric }} ≥ {{ definition.threshold }}</small></span
-                    >
+                    <fd-ui-icon class="definition-icon" [name]="definition.icon" />
+                    <span class="definition-body">
+                        <strong>{{ definition.titleEn }}</strong>
+                        <small>{{ definition.key }} · {{ definition.metric }} ≥ {{ definition.threshold }}</small>
+                        <small>{{ 'ADMIN_ACHIEVEMENTS.AWARDED_USERS' | translate }}: {{ definition.awardedUsers ?? 0 }}</small>
+                    </span>
                     <span class="status" [class.status--active]="definition.isActive">{{
                         (definition.isActive ? 'ADMIN_ACHIEVEMENTS.ACTIVE' : 'ADMIN_ACHIEVEMENTS.DISABLED') | translate
                     }}</span>

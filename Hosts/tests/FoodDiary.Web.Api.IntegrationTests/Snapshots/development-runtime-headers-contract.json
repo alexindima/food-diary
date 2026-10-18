@@ -1,0 +1,13 @@
+{
+  "fingerprintHeader": "X-FoodDiary-Api-Build",
+  "instanceHeader": "X-FoodDiary-Api-Instance",
+  "fingerprintPattern": "^[a-f0-9]{64}$",
+  "cases": [
+    { "environment": "Development", "address": "127.0.0.1", "path": "/api/probe", "diagnostics": true },
+    { "environment": "Development", "address": "::1", "path": "/api/probe", "diagnostics": true },
+    { "environment": "Development", "address": "192.0.2.10", "path": "/api/probe", "diagnostics": false },
+    { "environment": "Development", "address": null, "path": "/api/probe", "diagnostics": false },
+    { "environment": "Production", "address": "127.0.0.1", "path": "/api/probe", "diagnostics": false },
+    { "environment": "Development", "address": "127.0.0.1", "path": "/health/probe", "diagnostics": false }
+  ]
+}

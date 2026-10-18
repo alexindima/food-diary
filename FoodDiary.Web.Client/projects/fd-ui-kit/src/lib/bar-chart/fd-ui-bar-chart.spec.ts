@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FdUiBarChartComponent } from './fd-ui-bar-chart';
 
@@ -15,6 +15,12 @@ const THREE_QUARTER_TICK = 1875;
 const HALF_TICK = 1250;
 const QUARTER_TICK = 625;
 const CATEGORICAL_TICKS = [CHART_MAXIMUM, THREE_QUARTER_TICK, HALF_TICK, QUARTER_TICK, 0] as const;
+const DENSE_LABEL_SPACING = 20;
+const ROOMY_LABEL_SPACING = 60;
+const MEASURED_LABEL_WIDTH = 30;
+const RESIZE_CATEGORY_COUNT = 7;
+const FIRST_RESIZE_DAY = 11;
+const DENSE_VISIBLE_LABELS = 4;
 
 describe('FdUiBarChartComponent', () => {
     let component: FdUiBarChartComponent;
@@ -111,6 +117,69 @@ describe('FdUiBarChartComponent', () => {
 });
 
 describe('FdUiBarChartComponent accessibility', () => {
+    it('thins overlapping labels, restores them on resize, and retains every accessible bar', async () => {
+        let spacing = DENSE_LABEL_SPACING;
+        const observers: Array<() => void> = [];
+        vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement): DOMRect {
+            if (this.parentElement?.classList.contains('fd-ui-bar-chart__categorical-labels') === true) {
+                const index = Array.from(this.parentElement.children).indexOf(this);
+                return new DOMRect(index * spacing, 0, MEASURED_LABEL_WIDTH, DENSE_LABEL_SPACING);
+            }
+            return new DOMRect();
+        });
+        vi.stubGlobal(
+            'ResizeObserver',
+            class {
+                public constructor(callback: () => void) {
+                    observers.push(callback);
+                }
+                public observe(): void {}
+                public disconnect(): void {}
+            },
+        );
+
+        try {
+            await TestBed.configureTestingModule({ imports: [FdUiBarChartComponent] }).compileComponents();
+            const fixture = TestBed.createComponent(FdUiBarChartComponent);
+            const host = fixture.nativeElement as HTMLElement;
+            fixture.componentRef.setInput(
+                'categories',
+                Array.from({ length: RESIZE_CATEGORY_COUNT }, (_, index) => ({
+                    label: `Oct ${index + FIRST_RESIZE_DAY}`,
+                    values: [{ label: 'Calories', value: index + 1 }],
+                })),
+            );
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            const labels = (): HTMLElement[] => Array.from(host.querySelectorAll('.fd-ui-bar-chart__categorical-labels span'));
+            const visible = (): HTMLElement[] => labels().filter(label => label.style.visibility !== 'hidden');
+            expect(visible()).toHaveLength(DENSE_VISIBLE_LABELS);
+            expect(visible().at(0)?.textContent.trim()).toBe('Oct 11');
+            expect(visible().at(-1)?.textContent.trim()).toBe('Oct 17');
+
+            spacing = ROOMY_LABEL_SPACING;
+            observers.at(-1)?.();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            expect(visible()).toHaveLength(RESIZE_CATEGORY_COUNT);
+
+            spacing = DENSE_LABEL_SPACING;
+            observers.at(-1)?.();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            expect(visible()).toHaveLength(DENSE_VISIBLE_LABELS);
+            expect(host.querySelectorAll('.fd-ui-bar-chart__categorical-bar[role="img"]')).toHaveLength(RESIZE_CATEGORY_COUNT);
+            expect(host.querySelector('.fd-ui-bar-chart__category:last-child [role="img"]')?.getAttribute('aria-label')).toContain(
+                'Oct 17',
+            );
+            fixture.destroy();
+        } finally {
+            vi.restoreAllMocks();
+            vi.unstubAllGlobals();
+        }
+    });
+
     it.each(['single', 'grouped', 'stacked'] as const)(
         'exposes focusable categorical bars to assistive technology in %s layout',
         async layout => {

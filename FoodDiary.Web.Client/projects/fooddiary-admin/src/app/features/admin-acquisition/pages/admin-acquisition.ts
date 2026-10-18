@@ -14,6 +14,7 @@ import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period
 import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
 import { ADMIN_DATE_TEXT_LENGTH, adminPage } from '../../../shared/period/admin-query';
 import { AdminAcquisitionComparisonComponent } from '../components/admin-acquisition-comparison';
+import { AdminAcquisitionLinkPreviewComponent } from '../components/admin-acquisition-link-preview';
 import { AdminAcquisitionFacade } from '../lib/admin-acquisition.facade';
 import type {
     MarketingAttributionBreakdown,
@@ -24,6 +25,7 @@ import type { MarketingAttributionRange } from '../models/admin-acquisition-rang
 
 const PERCENT_SCALE = 100;
 const HOURS_PER_DAY = 24;
+const MAX_LANDING_PATH_LENGTH = 512;
 
 type AttributionEventFilter = 'all' | 'page_landing' | 'signup_completed' | 'premium_started';
 type AttributionChannelFilter = 'all' | 'tracked' | 'direct';
@@ -45,6 +47,7 @@ type CampaignUrlBuilderModel = {
         AdminPeriodControlComponent,
         AdminLoadErrorComponent,
         AdminAcquisitionComparisonComponent,
+        AdminAcquisitionLinkPreviewComponent,
         TranslatePipe,
         CommonModule,
         FdUiButtonComponent,
@@ -67,6 +70,8 @@ export class AdminAcquisitionComponent {
     protected readonly report = signal<MarketingAttributionRange | null>(null);
     protected readonly page = signal(1);
     protected readonly eventSearch = signal('');
+    protected readonly eventSearchMaxLength = 320;
+    protected readonly utmMaxLength = 160;
     protected readonly eventPageSize = 50;
     protected readonly eventTypeFilter = signal<AttributionEventFilter>('all');
     protected readonly channelFilter = signal<AttributionChannelFilter>('all');
@@ -77,6 +82,17 @@ export class AdminAcquisitionComponent {
         campaign: '2026_07_launch',
         content: 'creative_a',
         term: '',
+    });
+    protected readonly builderValidation = computed(() => {
+        const model = this.builderModel();
+        const values = [model.source, model.medium, model.campaign, model.content, model.term];
+        if (values.some(value => value.trim().length > this.utmMaxLength)) {
+            return { key: 'ADMIN_ACQUISITION.UTM_LIMIT', max: this.utmMaxLength };
+        }
+        const url = new URL(this.buildCampaignUrl());
+        return url.pathname.length + url.search.length > MAX_LANDING_PATH_LENGTH
+            ? { key: 'ADMIN_ACQUISITION.LINK_PATH_LIMIT', max: MAX_LANDING_PATH_LENGTH }
+            : null;
     });
     protected readonly attributionRate = computed(() => {
         const data = this.summary();
@@ -264,6 +280,7 @@ export class AdminAcquisitionComponent {
         this.setParam(url, 'utm_campaign', model.campaign);
         this.setParam(url, 'utm_content', model.content);
         this.setParam(url, 'utm_term', model.term);
+        url.search = url.search.replaceAll('+', '%20');
         return url.toString();
     }
 

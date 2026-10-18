@@ -4,6 +4,10 @@
     grid-template-columns: minmax(0, 1fr);
 }
 
+.dialog-footer {
+    width: 100%;
+}
+
 .form-row--inline > :where(:not(template)) {
     flex: 1;
     min-width: 0;

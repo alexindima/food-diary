@@ -8,6 +8,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminAcquisitionFacade } from '../lib/admin-acquisition.facade';
 import type { MarketingAttributionSummary } from '../models/admin-acquisition.data';
+import type { MarketingAttributionRange } from '../models/admin-acquisition-range';
 import { AdminAcquisitionComponent } from './admin-acquisition';
 
 describe('AdminAcquisitionComponent', () => {
@@ -17,19 +18,7 @@ describe('AdminAcquisitionComponent', () => {
     let fixture: ComponentFixture<AdminAcquisitionComponent>;
     const summary = createSummary();
     const facade = {
-        getRange: vi.fn((params: Record<string, string | number>) => {
-            const events =
-                params['channel'] === 'tracked' ? summary.recentEvents.filter(item => item.utmSource !== null) : summary.recentEvents;
-            return of({
-                fromUtc: String(params['fromUtc']),
-                toUtc: String(params['toUtc']),
-                previousFromUtc: '2026-06-01T00:00:00Z',
-                current: { ...summary, recentEvents: events },
-                previous: summary,
-                byDay: [],
-                eventTotal: events.length,
-            });
-        }),
+        getRange: vi.fn((params: Record<string, string | number>) => of(createRange(summary, params))),
     };
 
     beforeEach(async () => {
@@ -54,6 +43,18 @@ describe('AdminAcquisitionComponent', () => {
         expect(element.textContent).toContain('Channel performance');
         expect(element.querySelectorAll('table')).toHaveLength(EXPECTED_TABLE_COUNT);
         expect(facade.getRange).toHaveBeenCalledWith(expect.objectContaining({ page: 1, limit: 50 }));
+        expect(element.querySelector('fd-admin-acquisition-comparison')?.textContent).toContain('Δ');
+    });
+
+    it('shows all-time totals without inventing a comparison with dates before the epoch', async () => {
+        await TestBed.inject(Router).navigate([], { queryParams: { period: 'all' } });
+        await fixture.whenStable();
+        fixture.detectChanges();
+        const comparison = (fixture.nativeElement as HTMLElement).querySelector('fd-admin-acquisition-comparison');
+        expect(comparison?.textContent).not.toContain('Δ');
+        expect(comparison?.querySelectorAll(':scope > p')).toHaveLength(1);
+        const values = Array.from(comparison?.querySelectorAll('fd-ui-card p') ?? []).map(element => element.textContent.trim());
+        expect(values).toEqual(['2', '1', '1']);
     });
 
     it('reloads data when the reporting period changes', async () => {
@@ -81,7 +82,52 @@ describe('AdminAcquisitionComponent', () => {
         expect(element.textContent).toContain('telegram / social / launch');
         expect(element.textContent).not.toContain('/direct-only');
     });
+
+    it('renders distinct journal events sharing a timestamp and session without duplicate tracking keys', async () => {
+        const warning = vi.spyOn(console, 'warn').mockImplementation(vi.fn());
+        facade.getRange.mockImplementationOnce(params => of(createRange(createTiedSummary(summary), params)));
+        try {
+            await TestBed.inject(Router).navigate([], { queryParams: { search: 'tied-events' } });
+            await fixture.whenStable();
+            fixture.detectChanges();
+            assertTiedJournalRows(fixture.nativeElement as HTMLElement);
+            expect(warning.mock.calls.some(call => call.some(value => /NG095[56]/u.test(String(value))))).toBe(false);
+        } finally {
+            warning.mockRestore();
+        }
+    });
 });
+
+function assertTiedJournalRows(element: HTMLElement): void {
+    const rows = element.querySelectorAll('[aria-labelledby="acquisition-events-title"] tbody tr');
+    expect(rows).toHaveLength(2);
+    expect(rows[0].textContent).toContain('/pricing');
+    expect(rows[1].textContent).toContain('/direct-only');
+}
+
+function createTiedSummary(summary: MarketingAttributionSummary): MarketingAttributionSummary {
+    return {
+        ...summary,
+        recentEvents: summary.recentEvents.map(event => ({
+            ...event,
+            occurredAtUtc: '2026-07-24T12:00:00Z',
+            sessionId: 'shared-session',
+        })),
+    };
+}
+
+function createRange(summary: MarketingAttributionSummary, params: Record<string, string | number>): MarketingAttributionRange {
+    const events = params['channel'] === 'tracked' ? summary.recentEvents.filter(item => item.utmSource !== null) : summary.recentEvents;
+    return {
+        fromUtc: String(params['fromUtc']),
+        toUtc: String(params['toUtc']),
+        previousFromUtc: '2026-06-01T00:00:00Z',
+        current: { ...summary, recentEvents: events },
+        previous: summary,
+        byDay: [],
+        eventTotal: events.length,
+    };
+}
 
 // eslint-disable-next-line max-lines-per-function -- A complete response fixture keeps all dashboard sections covered together.
 function createSummary(): MarketingAttributionSummary {

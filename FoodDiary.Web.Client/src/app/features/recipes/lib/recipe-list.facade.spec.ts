@@ -1,4 +1,4 @@
-import { HttpStatusCode } from '@angular/common/http';
+import { HttpContext, HttpStatusCode } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -217,7 +217,7 @@ describe('RecipeListFacade overview', () => {
             includePublic: true,
             recentLimit: 5,
             favoriteLimit: 0,
-        });
+        }, expect.any(HttpContext));
         expect(facade.recipeData.items()).toEqual([recipe]);
         expect(facade.recentRecipes()).toEqual([recipe]);
         expect(facade.errorKey()).toBeNull();
@@ -260,7 +260,7 @@ describe('RecipeListFacade actions', () => {
             includePublic: false,
             recentLimit: 1,
             favoriteLimit: 0,
-        });
+        }, expect.any(HttpContext));
         expect(facade.isDeleting()).toBe(false);
     });
 
@@ -406,7 +406,7 @@ describe('RecipeListFacade edge cases', () => {
         facade.loadRecipes(1, PAGE_LIMIT, {}, false).subscribe();
         expect(facade.showRecentSection()).toBe(true);
         expect(facade.allRecipesSectionItems()).toEqual([recipe]);
-        expect(recipeService.queryOverview).toHaveBeenLastCalledWith(expect.objectContaining({ recentLimit: 5 }));
+        expect(recipeService.queryOverview).toHaveBeenLastCalledWith(expect.objectContaining({ recentLimit: 5 }), expect.any(HttpContext));
     });
 
     it('clears stale results on a page error and recovers on retry', () => {

@@ -65,8 +65,8 @@ public sealed class MealPlanCompositionReader(ICompositionReadContext context) :
         var ingredients = await context.Recipes.AsNoTracking()
             .Where(recipe => Enumerable.Contains(ids, recipe.Id) && (recipe.Visibility == Visibility.Public || recipe.UserId == viewerId))
             .SelectMany(recipe => recipe.Steps.SelectMany(step => step.Ingredients)
-                .Select(ingredient => new { RecipeId = recipe.Id, ingredient.ProductId, ingredient.Amount, ingredient.PublicName, ingredient.PublicUnit, ingredient.TextName }))
-            .Where(ingredient => ingredient.ProductId.HasValue)
+                .Select(ingredient => new { RecipeId = recipe.Id, ingredient.ProductId, ingredient.Amount, ingredient.PublicName, ingredient.PublicUnit, ingredient.TextName, ingredient.AmountText }))
+            .Where(ingredient => ingredient.ProductId.HasValue || ingredient.TextName != null)
             .GroupJoin(context.Products.AsNoTracking().Where(product => product.Visibility == Visibility.Public || product.UserId == viewerId),
                 ingredient => ingredient.ProductId, product => (ProductId?)product.Id,
                 (ingredient, products) => new { Ingredient = ingredient, Products = products })
@@ -78,12 +78,17 @@ public sealed class MealPlanCompositionReader(ICompositionReadContext context) :
                 BaseUnit = product == null ? null : (MeasurementUnit?)product.BaseUnit,
                 PublicUnit = product == null ? row.Ingredient.PublicUnit : null,
                 Category = product == null ? null : product.Category,
+                IsText = !row.Ingredient.ProductId.HasValue && row.Ingredient.TextName != null,
+                row.Ingredient.AmountText,
             })
             .ToListAsync(cancellationToken).ConfigureAwait(false);
         ILookup<RecipeId, MealPlanRecipeIngredientSnapshot> byRecipe = ingredients
             .Where(item => !string.IsNullOrWhiteSpace(item.Name))
             .ToLookup(item => item.RecipeId, item => new MealPlanRecipeIngredientSnapshot(item.ProductId,
-                item.Amount, item.Name!, item.BaseUnit ?? ParsePublicUnit(item.PublicUnit), item.Category, item.PublicUnit));
+                item.Amount, item.Name!, item.BaseUnit ?? ParsePublicUnit(item.PublicUnit), item.Category, item.PublicUnit) {
+                IsText = item.IsText,
+                AmountText = item.AmountText,
+            });
         return recipes.ToDictionary(recipe => recipe.Id,
             recipe => new MealPlanRecipeSnapshot(recipe.Id, recipe.Name, recipe.Servings, byRecipe[recipe.Id].ToArray(), recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs));
     }

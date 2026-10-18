@@ -58,7 +58,7 @@ public sealed class GenerateShoppingListCommandHandler(
         new(
             userId,
             plan.Name,
-            [.. AggregateIngredients(plan).Values
+            [.. AggregateIngredients(plan)
                 .OrderBy(static item => item.SortOrder)
                 .Select(item => new ShoppingListCreationItem(
                     item.ProductId,
@@ -76,11 +76,12 @@ public sealed class GenerateShoppingListCommandHandler(
                         source.MealType,
                         Math.Round(source.Amount, 1, MidpointRounding.ToEven),
                         source.Unit))],
-                    item.Unit.HasValue || string.IsNullOrWhiteSpace(item.PublishedUnit) ? null :
-                        string.Create(CultureInfo.InvariantCulture, $"{Math.Round(item.TotalAmount, 1, MidpointRounding.ToEven)} {item.PublishedUnit}")))]);
+                    item.Note ?? (item.Unit.HasValue || string.IsNullOrWhiteSpace(item.PublishedUnit) ? null :
+                        string.Create(CultureInfo.InvariantCulture, $"{Math.Round(item.TotalAmount, 1, MidpointRounding.ToEven)} {item.PublishedUnit}"))))]);
 
-    private static Dictionary<(ProductId?, string?, string?), AggregatedIngredient> AggregateIngredients(MealPlan plan) {
+    private static IReadOnlyList<AggregatedIngredient> AggregateIngredients(MealPlan plan) {
         var aggregated = new Dictionary<(ProductId?, string?, string?), AggregatedIngredient>();
+        var textItems = new List<AggregatedIngredient>();
         int sortOrder = 0;
 
         foreach (MealPlanDay day in plan.Days.OrderBy(d => d.DayNumber)) {
@@ -95,6 +96,19 @@ public sealed class GenerateShoppingListCommandHandler(
                     : 1.0;
 
                 foreach (MealPlanRecipeIngredientSnapshot ingredient in recipe.Ingredients) {
+                    if (ingredient.IsText) {
+                        // Literal amounts have no numeric basis; preserve each use without scaling or summing it.
+                        textItems.Add(new AggregatedIngredient {
+                            ProductId = null,
+                            Name = ingredient.Name,
+                            Note = ingredient.AmountText,
+                            TotalAmount = 0,
+                            SortOrder = sortOrder++,
+                            Sources = [],
+                        });
+                        continue;
+                    }
+
                     ProductId? productId = ingredient.ProductId;
                     (ProductId?, string?, string?) key = (productId, productId.HasValue ? null : ingredient.Name, ingredient.BaseUnit?.ToString() ?? ingredient.PublishedUnit);
                     double scaledAmount = ingredient.Amount * servingsMultiplier;
@@ -128,7 +142,7 @@ public sealed class GenerateShoppingListCommandHandler(
             }
         }
 
-        return aggregated;
+        return [.. aggregated.Values, .. textItems];
     }
 
     private sealed class AggregatedIngredient {
@@ -136,6 +150,7 @@ public sealed class GenerateShoppingListCommandHandler(
         public required string Name { get; init; }
         public global::FoodDiary.Modules.Products.Domain.Contracts.Enums.MeasurementUnit? Unit { get; init; }
         public string? PublishedUnit { get; init; }
+        public string? Note { get; init; }
         public string? Category { get; init; }
         public double TotalAmount { get; set; }
         public int SortOrder { get; init; }

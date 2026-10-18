@@ -28,8 +28,8 @@ export class DashboardService {
     private readonly snapshotQueryDefaults = inject(DASHBOARD_SNAPSHOT_QUERY_DEFAULTS);
     private readonly silentLoadingContext = new HttpContext().set(SKIP_GLOBAL_LOADING, true);
 
-    public getSnapshot(query: DashboardSnapshotQuery): Observable<DashboardSnapshot | null> {
-        return this.requestSnapshot(query).pipe(
+    public getSnapshot(query: DashboardSnapshotQuery, context?: HttpContext): Observable<DashboardSnapshot | null> {
+        return this.requestSnapshot(query, context).pipe(
             catchError((error: unknown) => fallbackApiError('Dashboard snapshot fetch error', error, null)),
         );
     }
@@ -44,8 +44,8 @@ export class DashboardService {
         );
     }
 
-    public getSnapshotSilentlyStrict(query: DashboardSnapshotQuery): Observable<DashboardSnapshot> {
-        return this.requestSnapshot(query, this.silentLoadingContext).pipe(
+    public getSnapshotSilentlyStrict(query: DashboardSnapshotQuery, context?: HttpContext): Observable<DashboardSnapshot> {
+        return this.requestSnapshot(query, (context ?? new HttpContext()).set(SKIP_GLOBAL_LOADING, true)).pipe(
             catchError((error: unknown) => rethrowApiError('Dashboard snapshot fetch error', error)),
         );
     }

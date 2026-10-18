@@ -128,7 +128,8 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
 
         if (filters.MaxTotalTime.HasValue) {
             int maxTotalTime = filters.MaxTotalTime.Value;
-            query = query.AsNoTracking().Where(r => (r.PrepTime ?? 0) + (r.CookTime ?? 0) <= maxTotalTime);
+            query = query.AsNoTracking().Where(r => (r.PrepTime != null || r.CookTime != null) &&
+                (r.PrepTime ?? 0) + (r.CookTime ?? 0) <= maxTotalTime);
         }
 
         if (filters.CaloriesFrom.HasValue) {

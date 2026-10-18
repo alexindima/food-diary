@@ -9,4 +9,7 @@ public sealed record MealPlanRecipeIngredientSnapshot(
     string Name,
     MeasurementUnit? BaseUnit,
     string? Category,
-    string? PublishedUnit = null);
+    string? PublishedUnit = null) {
+    public bool IsText { get; init; }
+    public string? AmountText { get; init; }
+}

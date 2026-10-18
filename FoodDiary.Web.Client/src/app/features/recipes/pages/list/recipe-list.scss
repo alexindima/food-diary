@@ -227,15 +227,25 @@
         }
 
         &__active-filters {
-            align-items: flex-start;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
         }
 
         &__active-filters-label {
-            padding-top: var(--fd-space-micro);
+            min-width: 0;
+            white-space: normal;
         }
 
         &__active-filter-chips {
+            grid-column: 1 / -1;
+            grid-row: 2;
             gap: var(--fd-space-micro);
+        }
+
+        &__active-filters-edit {
+            grid-column: 2;
+            grid-row: 1;
         }
 
         &__section-grid {

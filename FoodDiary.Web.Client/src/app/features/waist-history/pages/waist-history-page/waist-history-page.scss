@@ -233,6 +233,7 @@
     }
 
     &__entries {
+        container-type: inline-size;
         margin-top: var(--fd-space-md);
         overflow: hidden;
         border: var(--fd-border-subtle);
@@ -263,6 +264,7 @@
     }
 
     &__entry-date {
+        flex-wrap: wrap;
         min-width: 0;
         color: var(--fd-color-text-muted);
     }
@@ -449,6 +451,9 @@
             padding: 0;
             border-right: 0;
         }
+    }
+
+    @container (max-width: 28rem) {
         &__entry {
             grid-template-columns: minmax(0, 1fr) auto auto;
             gap: var(--fd-space-sm);

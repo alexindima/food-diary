@@ -11,7 +11,7 @@
     }
 
     &__grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
 
         &--secondary {
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -39,6 +39,12 @@
 
 .nutrition-editor__plain-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@container (max-width: 18rem) {
+    .nutrition-editor__plain-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .nutrition-editor__macro-bar[hidden] {

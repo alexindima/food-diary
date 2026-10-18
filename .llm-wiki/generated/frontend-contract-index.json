@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 497,
-    "componentsWithoutDirectSpecs": 132,
-    "inputs": 1606,
-    "outputs": 554,
+    "components": 498,
+    "componentsWithoutDirectSpecs": 130,
+    "inputs": 1610,
+    "outputs": 555,
     "apiCalls": 315,
     "templatesWithTranslations": 359,
-    "translationKeys": 2156,
-    "consumerEdges": 1264,
-    "consumedComponents": 316,
+    "translationKeys": 2162,
+    "consumerEdges": 1269,
+    "consumedComponents": 317,
     "unconsumedComponents": 180
   },
   "components": [
@@ -48,6 +48,27 @@
       "inputs": [],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/pages/admin-acquisition.spec.ts"
+    },
+    {
+      "class": "AdminAcquisitionLinkPreviewComponent",
+      "selector": "fd-admin-acquisition-link-preview",
+      "feature": "admin-acquisition",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/components/admin-acquisition-link-preview.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/components/admin-acquisition-link-preview.html",
+      "inputs": [
+        {
+          "name": "url",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "validation",
+          "type": "{ key: string; max: number } | null",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
     },
     {
       "class": "AdminAiPromptContextComponent",
@@ -389,7 +410,7 @@
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/pages/admin-catalog.html",
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-catalog/pages/admin-catalog.spec.ts"
     },
     {
       "class": "AdminDailyAdvicesComponent",
@@ -476,7 +497,7 @@
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.html",
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.spec.ts"
     },
     {
       "class": "AdminLessonsComponent",
@@ -2876,9 +2897,24 @@
           "name": "showEmptyState",
           "type": "",
           "required": false
+        },
+        {
+          "name": "loading",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "loadError",
+          "type": "",
+          "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "loadMore",
+          "type": ""
+        }
+      ],
       "specPath": null
     },
     {
@@ -10601,7 +10637,7 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/features/features.html",
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/public/components/features/features.spec.ts"
     },
     {
       "class": "HeroComponent",
@@ -17829,7 +17865,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/products",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
-      "line": 40,
+      "line": 42,
       "publicMethod": "query",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.products",
@@ -17841,7 +17877,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/products/{id}",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
-      "line": 49,
+      "line": 51,
       "publicMethod": "getById",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.products",
@@ -17853,7 +17889,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/products/overview",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
-      "line": 64,
+      "line": 66,
       "publicMethod": "queryOverview",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.products",
@@ -17865,7 +17901,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/products/recent",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
-      "line": 95,
+      "line": 97,
       "publicMethod": "getRecent",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.products",
@@ -17877,7 +17913,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/products/suggestions",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
-      "line": 104,
+      "line": 106,
       "publicMethod": "searchSuggestions",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.products",
@@ -17889,7 +17925,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/products",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
-      "line": 113,
+      "line": 115,
       "publicMethod": "create",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.products",
@@ -17901,7 +17937,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/products/{id}",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
-      "line": 120,
+      "line": 122,
       "publicMethod": "update",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.products",
@@ -17913,7 +17949,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/products/{id}",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
-      "line": 127,
+      "line": 129,
       "publicMethod": "deleteById",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.products",
@@ -17925,7 +17961,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/products/{id}/duplicate",
       "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
-      "line": 134,
+      "line": 136,
       "publicMethod": "duplicate",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.products",
@@ -18153,7 +18189,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/recipes/{id}",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
-      "line": 104,
+      "line": 109,
       "publicMethod": "update",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.recipes",
@@ -18165,7 +18201,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/recipes/{id}",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
-      "line": 111,
+      "line": 116,
       "publicMethod": "deleteById",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.recipes",
@@ -18177,7 +18213,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/recipes/{id}/duplicate",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
-      "line": 117,
+      "line": 122,
       "publicMethod": "duplicate",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.recipes",
@@ -19946,7 +19982,10 @@
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.html",
       "keys": [
         "ADMIN_LESSONS.PUBLICATION_HELP",
-        "ADMIN_LESSONS.PUBLISHED"
+        "ADMIN_LESSONS.PUBLISHED",
+        "ADMIN_LESSONS.READ_MINUTES_VALIDATION",
+        "ADMIN_LESSONS.SAVING_HINT",
+        "ADMIN_LESSONS.SORT_ORDER_VALIDATION"
       ]
     },
     {
@@ -20958,6 +20997,8 @@
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-meals-card.html",
       "keys": [
         "DIETOLOGIST.CLIENT_DASHBOARD.MEALS.EMPTY",
+        "DIETOLOGIST.CLIENT_DASHBOARD.MEALS.LOAD_MORE",
+        "DIETOLOGIST.CLIENT_DASHBOARD.MEALS.LOAD_MORE_ERROR",
         "DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.MEALS_TITLE"
       ]
     },
@@ -21817,11 +21858,11 @@
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.html",
       "keys": [
         "COMMON.LOADING",
-        "MEAL_MANAGE.MANUAL_ITEM_EDIT",
-        "MEAL_MANAGE.MANUAL_ITEM_EDIT_NAMED",
         "MEAL_MANAGE.MEAL_TYPE_LABEL",
         "QUICK_MEAL.AMOUNT",
         "QUICK_MEAL.CLEAR",
+        "QUICK_MEAL.EDIT",
+        "QUICK_MEAL.EDIT_ITEM_NAMED",
         "QUICK_MEAL.PREVIEW_EMPTY",
         "QUICK_MEAL.REMOVE_ITEM",
         "QUICK_MEAL.REMOVE_ITEM_NAMED",
@@ -23052,7 +23093,6 @@
       "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog-content/recipe-select-dialog-content.html",
       "keys": [
-        "COMMON.ADD",
         "NUTRITION_COMPLETENESS.PARTIAL",
         "RECIPE_SELECT_DIALOG.NO_RECIPES_FOUND",
         "SHARED.NUTRIENTS_SUMMARY.KKAL"
@@ -24252,6 +24292,19 @@
       "outputsHandled": []
     },
     {
+      "component": "AdminAcquisitionLinkPreviewComponent",
+      "selector": "fd-admin-acquisition-link-preview",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/components/admin-acquisition-link-preview.ts",
+      "consumerFeature": "admin-acquisition",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/pages/admin-acquisition.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "url",
+        "validation"
+      ],
+      "outputsHandled": []
+    },
+    {
       "component": "AdminAiPromptContextComponent",
       "selector": "fd-admin-ai-prompt-context",
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-context.ts",
@@ -25394,11 +25447,15 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.html",
       "occurrences": 1,
       "inputsUsed": [
+        "loadError",
+        "loading",
         "meals",
         "showEmptyState",
         "total"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "loadMore"
+      ]
     },
     {
       "component": "ClientDashboardMetricListComponent",
@@ -28652,6 +28709,21 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "dietologist",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-meals-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "fill",
+        "loading",
+        "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "dietologist",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/clients/dietologist-clients-page.html",
       "occurrences": 7,
       "inputsUsed": [
@@ -30464,22 +30536,6 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "recipes",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog-content/recipe-select-dialog-content.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "ariaLabel",
-        "fill",
-        "icon",
-        "size",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog.html",
       "occurrences": 2,
       "inputsUsed": [
@@ -31161,7 +31217,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
       "consumerFeature": "admin-acquisition",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/pages/admin-acquisition.html",
-      "occurrences": 7,
+      "occurrences": 8,
       "inputsUsed": [],
       "outputsHandled": []
     },
@@ -32544,6 +32600,7 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
+        "disableClose",
         "size",
         "title"
       ],
@@ -33549,6 +33606,30 @@
       "component": "FdUiFormErrorComponent",
       "selector": "fd-ui-form-error",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
+      "consumerFeature": "admin-lessons",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "error"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiFormErrorComponent",
+      "selector": "fd-ui-form-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
+      "consumerFeature": "admin-lessons",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "error"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiFormErrorComponent",
+      "selector": "fd-ui-form-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
       "consumerFeature": "auth",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-login-form/auth-login-form.html",
       "occurrences": 1,
@@ -33648,6 +33729,18 @@
       "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
       "occurrences": 3,
+      "inputsUsed": [
+        "error"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiFormErrorComponent",
+      "selector": "fd-ui-form-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
+      "consumerFeature": "dietologist",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-meals-card.html",
+      "occurrences": 1,
       "inputsUsed": [
         "error"
       ],
@@ -33975,6 +34068,18 @@
       "inputsUsed": [
         "name",
         "size"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiIconComponent",
+      "selector": "fd-ui-icon",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+      "consumerFeature": "admin-achievements",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "name"
       ],
       "outputsHandled": []
     },
@@ -34744,7 +34849,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog-content/recipe-select-dialog-content.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
         "name",
         "size"
@@ -35046,7 +35151,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert.ts",
       "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
         "message",
         "primaryActionLabel",
@@ -35153,6 +35258,7 @@
       "inputsUsed": [
         "id",
         "label",
+        "maxLength",
         "type",
         "value"
       ],
@@ -35249,6 +35355,7 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.html",
       "occurrences": 3,
       "inputsUsed": [
+        "error",
         "label",
         "type"
       ],
@@ -38888,6 +38995,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/clients/dietologist-clients-page.html",
       "occurrences": 1,
       "inputsUsed": [
+        "error",
         "label",
         "rows"
       ],

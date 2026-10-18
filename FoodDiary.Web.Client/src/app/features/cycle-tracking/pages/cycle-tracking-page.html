@@ -74,6 +74,7 @@
                 [title]="'CYCLE_TRACKING.CREATE_CYCLE_TITLE' | translate"
             >
                 <p class="cycle-tracking__setup-copy fd-ui-body">{{ 'CYCLE_TRACKING.CREATE_CYCLE_DESCRIPTION' | translate }}</p>
+                <fd-ui-inline-alert role="alert" severity="danger" [hidden]="!createError()" [message]="createError() | translate" />
                 <form class="cycle-tracking__form fd-stack fd-gap-card-header" [formRoot]="startCycleForm">
                     <div class="cycle-tracking__form-row fd-grid fd-gap-card-header">
                         <fd-ui-date-input

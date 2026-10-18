@@ -280,8 +280,30 @@ describe('AdminBillingComponent filters', () => {
             kind: null,
             search: 'buyer@example.com',
             fromUtc: '2026-04-01T00:00:00.000Z',
-            toUtc: '2026-04-30T23:59:59.999Z',
+            toUtc: '2026-04-30T23:59:59.9999999Z',
         });
+    });
+});
+
+describe('AdminBilling inclusive calendar-day boundaries', () => {
+    const cases = [
+        { tab: 'subscriptions', method: 'getSubscriptions' },
+        { tab: 'payments', method: 'getPayments' },
+        { tab: 'webhook-events', method: 'getWebhookEvents' },
+    ] as const;
+
+    it.each(cases)('preserves sub-millisecond inclusion for $tab without changing revenue bounds', async ({ tab, method }) => {
+        const { billingApi, fixture } = await setupBillingAsync();
+        await TestBed.inject(Router).navigateByUrl(`/?tab=${tab}&period=custom&from=2024-02-29&to=2024-02-29`);
+        await fixture.whenStable();
+        expect(billingApi[method]).toHaveBeenLastCalledWith(
+            1,
+            PAGE_SIZE,
+            expect.objectContaining({ fromUtc: '2024-02-29T00:00:00.000Z', toUtc: '2024-02-29T23:59:59.9999999Z' }),
+        );
+        expect(billingApi.getRevenueSummary).toHaveBeenLastCalledWith(
+            expect.objectContaining({ fromUtc: '2024-02-29T00:00:00Z', toUtc: '2024-03-01T00:00:00Z' }),
+        );
     });
 });
 

@@ -29,6 +29,7 @@ namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
 public sealed class AuthTelegramOnboardingController(ISender mediator, TelegramBrowserBindingHttpProcessor bindings) : BaseApiController(mediator) {
     [AllowAnonymous]
     [HttpGet("configuration")]
+    [EnableRateLimiting(PresentationPolicyNames.AuthConfigurationRateLimitPolicyName)]
     [ProducesResponseType<TelegramConfigurationHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> Configuration() => HandleOk(TelegramOnboardingHttpMappings.ToConfigurationQuery(),
         static model => new TelegramConfigurationHttpResponse(model.LoginEnabled, model.RegistrationEnabled, model.OidcEnabled));
