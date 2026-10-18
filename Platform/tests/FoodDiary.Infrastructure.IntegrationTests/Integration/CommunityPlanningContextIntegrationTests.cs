@@ -70,7 +70,7 @@ public sealed class CommunityPlanningContextIntegrationTests(PostgresDatabaseFix
         Assert.Same(central.Database.GetDbConnection(), social.Database.GetDbConnection());
         Assert.Same(central.Database.GetDbConnection(), planning.Database.GetDbConnection());
         await unitOfWork.SaveChangesAsync();
-        Assert.NotNull(await provider.GetRequiredService<IMealPlanReadModelRepository>().GetReadModelByIdAsync(plan.Id));
+        Assert.NotNull(await provider.GetRequiredService<IMealPlanReadModelRepository>().GetReadModelByIdAsync(plan.Id, user.Id));
         planning.ChangeTracker.Clear();
         IShoppingListReadRepository reads = provider.GetRequiredService<IShoppingListReadRepository>();
         ShoppingList? loaded = await reads.GetByIdAsync(list.Id, user.Id, includeItems: true, asTracking: true);

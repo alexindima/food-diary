@@ -217,14 +217,14 @@
       "pageSha256": "20d3e15e2bb4fde9b589aafd6671e66c2285642e4cc94f00ffa9e46457598140",
       "sources": [
         {
-          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "52f2545f07c6cbdd6348e0bb141b6cf48f569d87128179aa3a079a7dd7ee6fc9"
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "b3b7532cc91c9e82a24b6d3af3131fb9918d6c95c6b0207c9d83480a8b5c1724"
         }
       ],
-      "reason": "The revised in-process impersonation contracts require the actor version and trusted session; all production callers are updated and the HTTP Swagger contract remains unchanged. The persisted Users reader adds an indexed, uncached boolean Admin-membership check within its own module. Independent security review traced the shared bearer gate and revocation writes; focused real HTTP regressions execute the boundary. Generated catalog, contract, quality and runtime data are refreshed; these workflows still describe their navigation and verification roles accurately. No new host, worker, external provider, transaction owner or personal-data storage is introduced.",
+      "reason": "Reviewed production boundaries and tests. MealPlanning application 127/127, architecture 2272/2272, central PostgreSQL regressions 29/29, module PostgreSQL compatibility 5/5, host DI 73/73 and strengthened privacy PostgreSQL 4/4 passed with zero skips. No project dependency edge, EF mapping or technical exception was broadened; generated discovery indexes remain navigation evidence.",
       "baseRef": "HEAD",
-      "gitHead": "c8b050e39253a53c183d8076d0c19535e153151d",
-      "reviewedAtUtc": "2026-10-17T13:11:38.7086815Z"
+      "gitHead": "c64d7778667d31092aca5d85943d94e37664a359",
+      "reviewedAtUtc": "2026-10-18T12:31:27.0321989Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -233,13 +233,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "216a89b4b70fdd2ca3a20a2f0d2e5acdc02060935a5767d6ac58394c2f8a7b35"
+          "sha256": "84bd18639f420a0bb2d7725458d62568cc95806d9c6720014927be12035bec84"
         }
       ],
-      "reason": "New tests add consumers of existing request/command contracts only. No HTTP route, DTO, status-code or Swagger change; existing mixed-version behavior remains and real API tests pass.",
+      "reason": "Reviewed all meal-plan detail reader callers, implementers and constructor registrations. The required nullable viewer ID is supplied explicitly by user and admin handlers. HTTP routes, payloads, status codes and snapshots are unchanged; the catalog transaction port follows the scoped coordinator pattern.",
       "baseRef": "HEAD",
-      "gitHead": "fd7b50f6676a645a1ab966214532e76e91d4e55f",
-      "reviewedAtUtc": "2026-10-17T19:47:49.8274494Z"
+      "gitHead": "c64d7778667d31092aca5d85943d94e37664a359",
+      "reviewedAtUtc": "2026-10-18T12:31:28.5310794Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -831,13 +831,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "429bd923501fe3a8fe16dee99f5692890131d8c3ac601655603093323ac6adad"
+          "sha256": "e9dfae4430eccd5c30814d2c3cbd89be94161effb372bb8ba1d6147f76247c0f"
         }
       ],
-      "reason": "Final lint adjustment adds an explicit fixture return type and removes an unreachable empty path branch for the configured HTTP URL. Focused lint now passes; runtime regressions are covered by tests.",
+      "reason": "Reviewed production boundaries and tests. MealPlanning application 127/127, architecture 2272/2272, central PostgreSQL regressions 29/29, module PostgreSQL compatibility 5/5, host DI 73/73 and strengthened privacy PostgreSQL 4/4 passed with zero skips. No project dependency edge, EF mapping or technical exception was broadened; generated discovery indexes remain navigation evidence.",
       "baseRef": "HEAD",
-      "gitHead": "fd7b50f6676a645a1ab966214532e76e91d4e55f",
-      "reviewedAtUtc": "2026-10-17T19:54:44.5045891Z"
+      "gitHead": "c64d7778667d31092aca5d85943d94e37664a359",
+      "reviewedAtUtc": "2026-10-18T12:31:30.2767221Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -910,13 +910,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6c7fcc09bd2f8b7321f5b61c17d91ff6328c973de17b0f6f0a8b1292a64cd803"
+          "sha256": "9e147b93cdacad821ff87cab2e6f56bd8e55ba8cb58ca25534d96beab021a7e6"
         }
       ],
-      "reason": "Runtime topology change is a source fingerprint only. No new client, service, worker, retry, scheduling or transaction marker. Checked code issuance ordering and PostgreSQL save/concurrency behavior.",
+      "reason": "Reviewed runtime topology and catalog inventory: one scoped module transaction adapter delegates to the existing shared Serializable coordinator. No new process, provider, job, configuration or migration. Existing cancellation, full-attempt reset, tracked-state discard and Result rollback behavior are preserved; public and owned-private controls are tested.",
       "baseRef": "HEAD",
-      "gitHead": "fd7b50f6676a645a1ab966214532e76e91d4e55f",
-      "reviewedAtUtc": "2026-10-17T19:47:44.8914671Z"
+      "gitHead": "c64d7778667d31092aca5d85943d94e37664a359",
+      "reviewedAtUtc": "2026-10-18T12:31:31.6036880Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -925,21 +925,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "429bd923501fe3a8fe16dee99f5692890131d8c3ac601655603093323ac6adad"
+          "sha256": "e9dfae4430eccd5c30814d2c3cbd89be94161effb372bb8ba1d6147f76247c0f"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6c7fcc09bd2f8b7321f5b61c17d91ff6328c973de17b0f6f0a8b1292a64cd803"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "b73add4c75e88f23ed50ad3a92e7866384b32986ca5cf22bcf26c694d9f0ecf5"
+          "sha256": "9e147b93cdacad821ff87cab2e6f56bd8e55ba8cb58ca25534d96beab021a7e6"
         }
       ],
-      "reason": "Fresh independent review found no bypass. Parent reviewed the final lint-only delta; every normalizer return for supported HTTP admin configuration is nonempty and code issuance remains after origin validation.",
+      "reason": "Reviewed catalog create and update, hidden templates, adopted copies, detail joins and both recipe snapshot roots. Recipes are public or owned by the requesting viewer; null viewers receive public roots only. Product redaction and own-private recipe access remain. Four real PostgreSQL tests cover both Serializable retry outcomes, legacy reads and shopping generation.",
       "baseRef": "HEAD",
-      "gitHead": "fd7b50f6676a645a1ab966214532e76e91d4e55f",
-      "reviewedAtUtc": "2026-10-17T19:54:45.2668179Z"
+      "gitHead": "c64d7778667d31092aca5d85943d94e37664a359",
+      "reviewedAtUtc": "2026-10-18T12:31:32.8931248Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

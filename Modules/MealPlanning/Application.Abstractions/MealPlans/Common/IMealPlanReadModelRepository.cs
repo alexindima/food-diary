@@ -26,5 +26,6 @@ public interface IMealPlanReadModelRepository {
 
     Task<MealPlanReadModel?> GetReadModelByIdAsync(
         MealPlanId id,
+        UserId? viewerId,
         CancellationToken cancellationToken = default);
 }

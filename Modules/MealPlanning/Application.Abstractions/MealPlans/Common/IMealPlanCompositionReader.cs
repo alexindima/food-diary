@@ -7,7 +7,7 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 namespace FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
 
 public interface IMealPlanCompositionReader {
-    Task<MealPlanReadModel?> GetReadModelByIdAsync(MealPlanId id, CancellationToken cancellationToken = default);
+    Task<MealPlanReadModel?> GetReadModelByIdAsync(MealPlanId id, UserId? viewerId, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyDictionary<RecipeId, MealPlanRecipeSnapshot>> GetRecipeSnapshotsAsync(
         IReadOnlyCollection<RecipeId> ids, UserId? viewerId, CancellationToken cancellationToken = default);

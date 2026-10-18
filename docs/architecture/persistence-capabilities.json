@@ -167,7 +167,7 @@
         "entity:Product",
         "entity:Recipe"
       ],
-      "reason": "Viewer-scoped no-tracking ingredient product joins; inaccessible sources retain only author-published descriptions. Immutable snapshots are assembled after projection. MealPlanning owns aggregate hydration and writes."
+      "reason": "Viewer-scoped no-tracking recipe roots and ingredient product joins; inaccessible recipes are excluded and inaccessible products retain only author-published descriptions. Immutable snapshots are assembled after projection. MealPlanning owns aggregate hydration and writes."
     },
     "Modules/MealPlanning/Infrastructure/ModuleRegistration.cs": {
       "module": "MealPlanning",
@@ -179,7 +179,7 @@
         "tracked:ShoppingList"
       ],
       "reason": "Owned runtime sets use shared UoW coordination; central composed reads and purge remain unchanged. ADR 0040.",
-      "technicalSourceSha256": "893de920a589c26db7bdbb9a702b5a1b36d15721ba7847cfe0509462deb462e1"
+      "technicalSourceSha256": "d67b74076b36ec3adbb0b4a3196829b3cacdb421af7e66f1d136fc717d208082"
     },
     "Modules/RecipeCommunity/Infrastructure/ModuleRegistration.cs": {
       "module": "RecipeCommunity",
@@ -976,6 +976,14 @@
       ],
       "reason": "MealPlanning deletes only the purged owner shopping lists and meal plans before Recipes removes referenced recipes. Curated and other users plans remain. Binds the live Users transaction without saving or committing; covered by linked-reference PostgreSQL cleanup regression.",
       "technicalSourceSha256": "b64f7edc59dcf3083e66dbc2f70aa493cffe3686a2bd88837fc9a8871a7c6825"
+    },
+    "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/EfMealPlanCatalogTransactionRunner.cs": {
+      "module": "MealPlanning",
+      "capabilities": [
+        "context:ExecuteSerializableAsync"
+      ],
+      "reason": "Delegate Serializable catalog composition execution, retries, reset and Result rollback to the scoped host coordinator; no direct context, independent save or transaction.",
+      "technicalSourceSha256": "cadfc26c67ba6e4429f0b50c85987b3816a4218a5091172fb1f2f335a72e213a"
     },
     "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/MealPlanRepository.cs": {
       "module": "MealPlanning",

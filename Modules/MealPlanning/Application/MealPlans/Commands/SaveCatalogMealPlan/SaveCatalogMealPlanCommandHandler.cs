@@ -16,8 +16,11 @@ namespace FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.SaveCata
 
 public sealed class SaveCatalogMealPlanCommandHandler(IMealPlanCatalogRepository catalog,
     IMealPlanWriteRepository repository, IMealPlanCatalogRecipeReader recipes,
-    IMealPlanCompositionReader composition) : ICommandHandler<SaveCatalogMealPlanCommand, Result<MealPlanModel>> {
-    public async Task<Result<MealPlanModel>> Handle(SaveCatalogMealPlanCommand command, CancellationToken cancellationToken) {
+    IMealPlanCompositionReader composition, IMealPlanCatalogTransactionRunner transactionRunner) : ICommandHandler<SaveCatalogMealPlanCommand, Result<MealPlanModel>> {
+    public Task<Result<MealPlanModel>> Handle(SaveCatalogMealPlanCommand command, CancellationToken cancellationToken) =>
+        transactionRunner.ExecuteAsync(token => HandleCoreAsync(command, token), cancellationToken);
+
+    private async Task<Result<MealPlanModel>> HandleCoreAsync(SaveCatalogMealPlanCommand command, CancellationToken cancellationToken) {
         FluentValidation.Results.ValidationResult validation = await new SaveCatalogMealPlanCommandValidator().ValidateAsync(command, cancellationToken).ConfigureAwait(false);
         if (!validation.IsValid) {
             return Result.Failure<MealPlanModel>(new Error("MealPlan.InvalidCatalogPlan",

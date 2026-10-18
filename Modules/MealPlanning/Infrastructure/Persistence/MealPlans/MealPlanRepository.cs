@@ -94,8 +94,8 @@ internal sealed class MealPlanRepository(DbSet<MealPlan> plans, IMealPlanComposi
             userId);
 
     public Task<MealPlanReadModel?> GetReadModelByIdAsync(
-        MealPlanId id, CancellationToken cancellationToken = default) =>
-        composition.GetReadModelByIdAsync(id, cancellationToken);
+        MealPlanId id, UserId? viewerId, CancellationToken cancellationToken = default) =>
+        composition.GetReadModelByIdAsync(id, viewerId, cancellationToken);
 
     public async Task<IReadOnlyList<MealPlan>> GetCuratedAsync(
         DietType? dietType = null,

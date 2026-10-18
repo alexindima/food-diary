@@ -5,12 +5,12 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6636,
+    "productionFiles": 6638,
     "wikiToolFiles": 218,
     "wikiToolsWithoutTestReferences": 5,
     "criticalSymbols": 1006,
-    "criticalSymbolsWithTestReferences": 959,
-    "criticalSymbolsWithoutTestReferences": 47,
+    "criticalSymbolsWithTestReferences": 960,
+    "criticalSymbolsWithoutTestReferences": 46,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -4498,11 +4498,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/MealPlanning/MealPlanCompositionReader.cs",
-      "nonBlankLines": 88,
-      "decisionPoints": 5,
+      "nonBlankLines": 90,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.26
+      "structuralRiskScore": 16.8
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Meals/MealItemDisplayProjection.cs",
@@ -38449,6 +38449,14 @@
       "structuralRiskScore": 0.16
     },
     {
+      "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanCatalogTransactionRunner.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
       "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanCompositionReader.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
@@ -38458,11 +38466,11 @@
     },
     {
       "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanReadModelRepository.cs",
-      "nonBlankLines": 25,
+      "nonBlankLines": 26,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5
+      "structuralRiskScore": 5.02
     },
     {
       "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanReadRepository.cs",
@@ -38754,11 +38762,11 @@
     },
     {
       "path": "Modules/MealPlanning/Application/MealPlans/Commands/SaveCatalogMealPlan/SaveCatalogMealPlanCommandHandler.cs",
-      "nonBlankLines": 52,
+      "nonBlankLines": 54,
       "decisionPoints": 7,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.54
+      "structuralRiskScore": 13.58
     },
     {
       "path": "Modules/MealPlanning/Application/MealPlans/Commands/SaveCatalogMealPlan/SaveCatalogMealPlanCommandValidator.cs",
@@ -38821,8 +38829,8 @@
       "nonBlankLines": 18,
       "decisionPoints": 1,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 8.86
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.86
     },
     {
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetCatalogMealPlans/GetCatalogMealPlansQuery.cs",
@@ -39410,11 +39418,11 @@
     },
     {
       "path": "Modules/MealPlanning/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 31,
+      "nonBlankLines": 32,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
+      "structuralRiskScore": 0.64
     },
     {
       "path": "Modules/MealPlanning/Infrastructure/Persistence/MealPlanningDbContext.cs",
@@ -39431,6 +39439,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/EfMealPlanCatalogTransactionRunner.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/MealPlanRepository.cs",
@@ -55110,11 +55126,12 @@
       "role": "CommandHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
       "line": 16,
-      "testReferenceCount": 4,
+      "testReferenceCount": 5,
       "testReferences": [
         "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/MealPlansFeatureTests.PrivateIngredientUnits.cs",
         "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/MealPlansFeatureTests.cs",
         "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests/MealPlanningPersistenceCompatibilityTests.cs",
+        "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MealPlanRecipePrivacyIntegrationTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -55903,9 +55920,10 @@
       "role": "CommandHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Commands/SaveCatalogMealPlan/SaveCatalogMealPlanCommandHandler.cs",
       "line": 16,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/SaveCatalogMealPlanTests.cs"
+        "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/SaveCatalogMealPlanTests.cs",
+        "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MealPlanRecipePrivacyIntegrationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -56562,7 +56580,7 @@
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
       "line": 17,
-      "testReferenceCount": 9,
+      "testReferenceCount": 10,
       "testReferences": [
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.UpdateCommandTests.cs",
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.cs",
@@ -56572,6 +56590,7 @@
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.UpdateFlow.cs",
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.Validation.cs",
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/UpdateRecipeCommandHandlerTests.cs",
+        "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MealPlanRecipePrivacyIntegrationTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -58945,9 +58964,11 @@
       "role": "QueryHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetCatalogMealPlan/GetCatalogMealPlanQueryHandler.cs",
       "line": 10,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MealPlanRecipePrivacyIntegrationTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -59690,9 +59711,10 @@
       "role": "QueryHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryHandler.cs",
       "line": 13,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/MealPlansFeatureTests.cs",
+        "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MealPlanRecipePrivacyIntegrationTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",

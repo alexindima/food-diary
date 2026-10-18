@@ -416,7 +416,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"meal-plans-{Guid.NewGuid():N}@example.com", "hash");
         var outsider = User.Create($"meal-plans-outsider-{Guid.NewGuid():N}@example.com", "hash");
-        var recipe = Recipe.Create(user.Id, "Plan recipe", servings: 2, description: "Description");
+        var recipe = Recipe.Create(user.Id, "Plan recipe", servings: 2, description: "Description", visibility: FoodDiary.Domain.Primitives.Visibility.Public);
         context.Users.AddRange(user, outsider);
         context.Recipes.Add(recipe);
         await context.SaveChangesAsync();
@@ -444,7 +444,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         IReadOnlyList<MealPlan> balancedCurated = await repository.GetCuratedAsync(DietType.Balanced);
         IReadOnlyList<MealPlan> allCurated = await repository.GetCuratedAsync();
         IReadOnlyList<MealPlan> userPlans = await repository.GetByUserAsync(user.Id);
-        MealPlanReadModel? readModel = await repository.GetReadModelByIdAsync(curated.Id);
+        MealPlanReadModel? readModel = await repository.GetReadModelByIdAsync(curated.Id, outsider.Id);
         IReadOnlyList<MealPlanSummaryReadModel> balancedCuratedReadModels = await repository.GetCuratedSummaryReadModelsAsync(DietType.Balanced);
         IReadOnlyList<MealPlanSummaryReadModel> userPlanReadModels = await repository.GetByUserSummaryReadModelsAsync(user.Id);
 

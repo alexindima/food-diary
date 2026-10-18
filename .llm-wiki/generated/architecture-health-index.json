@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 112,
     "routedStandaloneComponents": 68,
     "componentsWithoutDirectSpecs": 132,
-    "criticalSymbolsWithoutTestReferences": 47,
+    "criticalSymbolsWithoutTestReferences": 46,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -5702,16 +5702,6 @@
       "name": "GetAdminDailyAdvicesQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminDailyAdvices/GetAdminDailyAdvicesQueryHandler.cs",
-      "line": 10,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetCatalogMealPlanQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetCatalogMealPlan/GetCatalogMealPlanQueryHandler.cs",
       "line": 10,
       "testReferenceCount": 0,
       "testReferences": [],

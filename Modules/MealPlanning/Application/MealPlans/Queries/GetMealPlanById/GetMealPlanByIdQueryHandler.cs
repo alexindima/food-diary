@@ -49,7 +49,7 @@ public sealed class GetMealPlanByIdQueryHandler(
         UserId userId,
         CancellationToken cancellationToken) {
         MealPlanReadModel? plan = await mealPlanRepository
-            .GetReadModelByIdAsync(mealPlanId, cancellationToken)
+            .GetReadModelByIdAsync(mealPlanId, userId, cancellationToken)
             .ConfigureAwait(false);
 
         if (plan is null || (!plan.IsCurated && plan.UserId != userId.Value)) {

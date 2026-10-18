@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4592,
-    "symbols": 4527,
+    "sourceFiles": 4594,
+    "symbols": 4529,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2335,
+      "class": 2336,
       "enum": 71,
-      "interface": 414,
+      "interface": 415,
       "record": 1566,
       "record struct": 141
     },
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1866,
+      "Other": 1868,
       "Query": 301,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
@@ -18500,6 +18500,13 @@
       "line": 6
     },
     {
+      "name": "IMealPlanCatalogTransactionRunner",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanCatalogTransactionRunner.cs",
+      "line": 2
+    },
+    {
       "name": "IMealPlanCompositionReader",
       "kind": "interface",
       "role": "Other",
@@ -19338,6 +19345,13 @@
       "role": "Other",
       "path": "Modules/MealPlanning/Infrastructure/Persistence/MealPlanningUserDataPurgeParticipant.cs",
       "line": 7
+    },
+    {
+      "name": "EfMealPlanCatalogTransactionRunner",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/EfMealPlanCatalogTransactionRunner.cs",
+      "line": 5
     },
     {
       "name": "MealPlanRepository",

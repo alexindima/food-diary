@@ -15,6 +15,7 @@ namespace FoodDiary.ReadModel.Composition.MealPlanning;
 public sealed class MealPlanCompositionReader(ICompositionReadContext context) : IMealPlanCompositionReader {
     public async Task<MealPlanReadModel?> GetReadModelByIdAsync(
         MealPlanId id,
+        UserId? viewerId,
         CancellationToken cancellationToken = default) {
         return await context.MealPlans
             .AsNoTracking()
@@ -35,7 +36,8 @@ public sealed class MealPlanCompositionReader(ICompositionReadContext context) :
                         d.DayNumber,
                         d.Meals
                             .OrderBy(m => m.MealType)
-                            .Join(context.Recipes.AsNoTracking(), m => m.RecipeId, recipe => recipe.Id, (m, recipe) => new MealPlanMealReadModel(
+                            .Join(context.Recipes.AsNoTracking().Where(recipe => recipe.Visibility == Visibility.Public || recipe.UserId == viewerId),
+                                m => m.RecipeId, recipe => recipe.Id, (m, recipe) => new MealPlanMealReadModel(
                                 m.Id.Value,
                                 m.MealType.ToString(),
                                 m.RecipeId.Value,
@@ -57,11 +59,11 @@ public sealed class MealPlanCompositionReader(ICompositionReadContext context) :
         IReadOnlyCollection<RecipeId> ids, UserId? viewerId, CancellationToken cancellationToken = default) {
         if (ids.Count == 0) { return new Dictionary<RecipeId, MealPlanRecipeSnapshot>(); }
         var recipes = await context.Recipes.AsNoTracking()
-            .Where(recipe => Enumerable.Contains(ids, recipe.Id))
+            .Where(recipe => Enumerable.Contains(ids, recipe.Id) && (recipe.Visibility == Visibility.Public || recipe.UserId == viewerId))
             .Select(recipe => new { recipe.Id, recipe.Name, recipe.Servings, recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs })
             .ToListAsync(cancellationToken).ConfigureAwait(false);
         var ingredients = await context.Recipes.AsNoTracking()
-            .Where(recipe => Enumerable.Contains(ids, recipe.Id))
+            .Where(recipe => Enumerable.Contains(ids, recipe.Id) && (recipe.Visibility == Visibility.Public || recipe.UserId == viewerId))
             .SelectMany(recipe => recipe.Steps.SelectMany(step => step.Ingredients)
                 .Select(ingredient => new { RecipeId = recipe.Id, ingredient.ProductId, ingredient.Amount, ingredient.PublicName, ingredient.PublicUnit, ingredient.TextName }))
             .Where(ingredient => ingredient.ProductId.HasValue)

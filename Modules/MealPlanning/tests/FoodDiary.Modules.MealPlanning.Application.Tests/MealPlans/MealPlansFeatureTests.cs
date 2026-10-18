@@ -503,7 +503,7 @@ public partial class MealPlansFeatureTests {
         public Task<IReadOnlyList<MealPlanSummaryReadModel>> GetByUserSummaryReadModelsAsync(UserId userId, CancellationToken ct = default) =>
             Task.FromResult<IReadOnlyList<MealPlanSummaryReadModel>>([.. (userPlans ?? []).Select(ToSummaryReadModel)]);
 
-        public Task<MealPlanReadModel?> GetReadModelByIdAsync(MealPlanId id, CancellationToken ct = default) {
+        public Task<MealPlanReadModel?> GetReadModelByIdAsync(MealPlanId id, UserId? viewerId, CancellationToken ct = default) {
             MealPlan? found = FindById(id);
             return Task.FromResult(found is null ? null : ToReadModel(found));
         }

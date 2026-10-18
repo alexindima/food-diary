@@ -1,8 +1,10 @@
 using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.SaveCatalogMealPlan;
+using FoodDiary.Modules.MealPlanning.Application.MealPlans.Models;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
 using FoodDiary.Modules.MealPlanning.Domain.Enums;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
+using FoodDiary.Results;
 
 namespace FoodDiary.Modules.MealPlanning.Application.Tests.MealPlans;
 
@@ -36,11 +38,14 @@ public sealed class SaveCatalogMealPlanTests {
         IMealPlanWriteRepository repository = Substitute.For<IMealPlanWriteRepository>();
         IMealPlanCatalogRecipeReader reader = Substitute.For<IMealPlanCatalogRecipeReader>();
         IMealPlanCompositionReader composition = Substitute.For<IMealPlanCompositionReader>();
+        IMealPlanCatalogTransactionRunner transactionRunner = Substitute.For<IMealPlanCatalogTransactionRunner>();
+        transactionRunner.ExecuteAsync(Arg.Any<Func<CancellationToken, Task<Result<MealPlanModel>>>>(), Arg.Any<CancellationToken>())
+            .Returns(call => call.Arg<Func<CancellationToken, Task<Result<MealPlanModel>>>>()(call.Arg<CancellationToken>()));
         var plan = MealPlan.CreateCurated("Original", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         reader.GetPublicIdsAsync(Arg.Any<IReadOnlyCollection<Guid>>(), Arg.Any<CancellationToken>()).Returns(new HashSet<Guid>());
         var command = new SaveCatalogMealPlanCommand(plan.Id.Value, "Changed", Description: null, "Balanced", 1, TargetCaloriesPerDay: null, IsPublished: true,
             [new CatalogDayInput(1, [new CatalogMealInput("Lunch", Guid.NewGuid(), Servings: 1)])]);
-        var handler = new SaveCatalogMealPlanCommandHandler(catalog, repository, reader, composition);
+        var handler = new SaveCatalogMealPlanCommandHandler(catalog, repository, reader, composition, transactionRunner);
 
         FoodDiary.Results.Result<FoodDiary.Modules.MealPlanning.Application.MealPlans.Models.MealPlanModel> result = await handler.Handle(command, CancellationToken.None);
 
