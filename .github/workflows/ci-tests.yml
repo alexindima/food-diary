@@ -118,7 +118,7 @@ jobs:
 
       - name: Upload Wiki failure diagnostics
         if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: llm-wiki-focused-failure-logs
           include-hidden-files: true
@@ -175,7 +175,7 @@ jobs:
 
       - name: Upload Wiki audit failure diagnostics
         if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: llm-wiki-audit-${{ matrix.shard }}-failure-logs
           include-hidden-files: true
@@ -359,7 +359,7 @@ jobs:
           Get-ChildItem $logs -Filter '*.log' | Rename-Item -NewName { 'format-' + $_.Name }
       - name: Upload formatting failure logs
         if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: ci-failure-logs-backend-format
           path: ${{ runner.temp }}/backend-format-logs/
@@ -386,7 +386,7 @@ jobs:
         run: ./scripts/ci/Invoke-BackendTests.ps1 -Group fast
       - name: Upload test results and timings
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: backend-test-results-fast
           path: |
@@ -398,7 +398,7 @@ jobs:
           retention-days: 7
       - name: Upload fast test failure logs
         if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: ci-failure-logs-backend-fast
           path: .artifacts/backend-ci/fast/logs/
@@ -446,7 +446,7 @@ jobs:
         run: ./scripts/ci/Invoke-BackendTests.ps1 -Group '${{ matrix.group }}'
       - name: Upload test results and timings
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: backend-test-results-${{ matrix.group }}
           path: |
@@ -458,7 +458,7 @@ jobs:
           retention-days: 7
       - name: Upload slow test failure logs
         if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: ci-failure-logs-backend-${{ matrix.group }}
           path: .artifacts/backend-ci/${{ matrix.group }}/logs/
@@ -503,7 +503,7 @@ jobs:
           throw "Backend checks did not all pass: $($failed -join ', ')"
       - name: Upload CI failure logs
         if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: ci-failure-logs-dotnet
           path: ${{ runner.temp }}/ci-test-logs/
@@ -669,7 +669,7 @@ jobs:
 
       - name: Upload dependency audit failure logs
         if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: ci-failure-logs-dependency-audit
           path: ${{ runner.temp }}/dependency-audit-logs/
@@ -1235,7 +1235,7 @@ jobs:
 
       - name: Upload frontend failure logs
         if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: ci-failure-logs-frontend
           path: ${{ runner.temp }}/frontend-checks-logs/
@@ -1244,7 +1244,7 @@ jobs:
 
       - name: Upload frontend coverage reports
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: frontend-checks-coverage
           path: FoodDiary.Web.Client/coverage/
