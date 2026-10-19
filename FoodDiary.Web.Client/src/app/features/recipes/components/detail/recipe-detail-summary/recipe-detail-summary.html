@@ -11,7 +11,8 @@
 <p class="fd-ui-caption" [hidden]="(recipe().missingIngredientCount ?? 0) === 0">
     {{ 'NUTRITION_COMPLETENESS.PARTIAL' | translate: { count: recipe().missingIngredientCount } }}
 </p>
-@if ((recipe().totalCalories !== null && recipe().totalCalories !== undefined) || (recipe().missingIngredientCount ?? 0) === 0) {
+@let hasCalories = recipe().totalCalories !== null && recipe().totalCalories !== undefined;
+@if (hasCalories || (recipe().missingIngredientCount ?? 0) === 0) {
     <section class="recipe-detail__overview fd-stack fd-gap-sm">
         <span class="fd-ui-meta-text">{{ 'RECIPE_DETAIL.SUMMARY.CALORIES_PER_SERVING' | translate }}</span>
         <strong class="recipe-detail__hero-value"

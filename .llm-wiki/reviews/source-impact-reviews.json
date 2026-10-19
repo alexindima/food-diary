@@ -571,18 +571,14 @@
       "pageSha256": "9b95c7c4d66fa577cf2524f59e5b95847547e4c215550a4e711c5696f38938b1",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "ce7df6c2ba83faf486313b534f8cda990cf8acb56622f3c14e8df279c9bc677b"
-        },
-        {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "0a1b41e22d4f991ef5fb036bacd8998c9501089a76c2e7504c9d53513808dfcd"
+          "sha256": "1da45a56aaad3e441323ffc4ffbc4f47955c29e91d3d5517d1ddffede09c588c"
         }
       ],
-      "reason": "Only build/test scripts and guide structure change. Existing IAB native WebMCP proves rendered statistics and safe draft guards; no responsive layout, copy, template or style change.",
+      "reason": "Reviewed the guide against the current package scripts and scoped frontend instructions. This maintenance change aligns Angular ESLint versions and deduplicates its compiler; browser QA commands, rendered UI evidence requirements, routes and product source behavior remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
-      "reviewedAtUtc": "2026-10-19T08:49:15.4627246Z"
+      "gitHead": "d1711faad87ae4fcf009a63f88ce2fd152b42f7e",
+      "reviewedAtUtc": "2026-10-19T16:37:31.4007248Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",

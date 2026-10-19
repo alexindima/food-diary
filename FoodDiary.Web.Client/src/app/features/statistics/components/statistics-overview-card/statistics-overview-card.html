@@ -28,7 +28,7 @@
                 </fd-ui-progress-ring>
 
                 @let calorieChangePercent = data().calorieChangePercent;
-                @if (calorieChangePercent !== null && data().trackedDays >= 3 && data().trackedDays === data().periodDays) {
+                @if (calorieChangePercent !== null && hasEnoughData()) {
                     <div class="statistics-overview-card__comparison fd-stack fd-gap-xxs">
                         <strong class="fd-ui-metric-md">
                             {{ calorieChangePercent > 0 ? '+' : '' }}{{ calorieChangePercent | localizedNumber: locale() : 0 : 0 }}%

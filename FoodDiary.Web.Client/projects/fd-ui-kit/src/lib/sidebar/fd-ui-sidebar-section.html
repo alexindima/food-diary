@@ -16,7 +16,8 @@
             </div>
         }
     }
-    @if (collapsed() || section().collapsible !== true || section().expanded === true) {
+    @let sectionIsOpen = section().collapsible !== true || section().expanded === true;
+    @if (collapsed() || sectionIsOpen) {
         <div class="fd-ui-sidebar__nav fd-grid fd-gap-xxs" [class.fd-ui-sidebar__nav--secondary]="section().secondary === true">
             @for (item of section().items; track item.id) {
                 <fd-ui-sidebar-item

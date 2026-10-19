@@ -9,7 +9,8 @@
         @if (isLoading()) {
             <div class="loading">{{ 'COMMON.LOADING' | translate }}...</div>
         }
-        @if (!isLoading() && results().length === 0 && searchQuery().length > 0) {
+        @let hasQuery = searchQuery().length > 0;
+        @if (!isLoading() && results().length === 0 && hasQuery) {
             <div class="no-results">{{ 'USDA_SEARCH.NO_RESULTS' | translate }}</div>
         }
         @for (food of results(); track food.fdcId) {

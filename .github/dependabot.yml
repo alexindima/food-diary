@@ -12,6 +12,7 @@ updates:
           - "@angular/*"
           - "@angular-devkit/*"
           - "@angular-eslint/*"
+          - "angular-eslint"
           - "zone.js"
       testing:
         patterns:
