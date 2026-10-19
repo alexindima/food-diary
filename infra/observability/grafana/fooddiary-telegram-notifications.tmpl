@@ -1,0 +1,133 @@
+{{ define "fooddiary.telegram.alert" -}}
+{{- $name := .Labels.alertname -}}
+{{- $title := $name -}}
+{{- $problem := .Annotations.summary -}}
+{{- $recovery := "Условие этого предупреждения больше не выполняется." -}}
+{{- $metric := "" -}}
+{{- $unit := "" -}}
+{{- $format := "%.1f" -}}
+{{- if eq $name "High CPU warning" -}}
+  {{- $title = "Высокая нагрузка CPU" -}}
+  {{- $problem = "CPU выше 60% в течение 10 минут." -}}
+  {{- $recovery = "Предупреждение о CPU выше 60% снято." -}}
+  {{- $metric = "Загрузка CPU" -}}{{- $unit = "%" -}}
+{{- else if eq $name "HOSTKEY CPU risk" -}}
+  {{- $title = "CPU: риск ограничения VPS" -}}
+  {{- $problem = "CPU выше 70% в течение 10 минут. Есть риск ограничения мощности VPS провайдером." -}}
+  {{- $recovery = "Критическое предупреждение о CPU выше 70% снято. Жёлтое предупреждение выше 60% ещё может действовать." -}}
+  {{- $metric = "Загрузка CPU" -}}{{- $unit = "%" -}}
+{{- else if eq $name "High memory usage" -}}
+  {{- $title = "Мало свободной оперативной памяти" -}}
+  {{- $problem = "Занято больше 85% оперативной памяти в течение 10 минут." -}}
+  {{- $recovery = "Предупреждение о заполнении оперативной памяти снято." -}}
+  {{- $metric = "Занято памяти" -}}{{- $unit = "%" -}}
+{{- else if eq $name "Disk usage warning" -}}
+  {{- $title = "Заканчивается место на диске" -}}
+  {{- $problem = "Корневой диск заполнен больше чем на 85% в течение 5 минут." -}}
+  {{- $recovery = "Предупреждение о заполнении корневого диска снято." -}}
+  {{- $metric = "Занято на диске" -}}{{- $unit = "%" -}}
+{{- else if eq $name "Server metrics unavailable" -}}
+  {{- $title = "Не поступают метрики сервера" -}}
+  {{- $problem = "Prometheus не может получить метрики сервера в течение 2 минут. Это сбой мониторинга; доступность приложения нужно проверить отдельно." -}}
+  {{- $recovery = "Предупреждение о недоступности метрик сервера снято." -}}
+  {{- $metric = "Доступность сбора метрик (1 = доступен)" -}}{{- $format = "%.0f" -}}
+{{- else if eq $name "Outbox message dead-lettered" -}}
+  {{- $title = "Не удалось обработать сообщение очереди" -}}
+  {{- $problem = "За последние 5 минут появились сообщения с исчерпанными попытками обработки. Нужна проверка очереди ошибок." -}}
+  {{- $recovery = "Срабатывание по новым ошибкам обработки снято. Ранее отложенные сообщения всё ещё требуют проверки." -}}
+  {{- $metric = "Новых ошибок за 5 минут" -}}
+{{- else if eq $name "Outbox backlog is older than 10 minutes" -}}
+  {{- $title = "Задержка обработки очереди сообщений" -}}
+  {{- $problem = "Старейшее сообщение ждёт обработки дольше 10 минут; превышение сохраняется 5 минут." -}}
+  {{- $recovery = "Предупреждение о задержке очереди сообщений снято." -}}
+  {{- $metric = "Возраст старейшего сообщения" -}}{{- $unit = " с" -}}{{- $format = "%.0f" -}}
+{{- else if eq $name "Recurring job failed consecutively" -}}
+  {{- $title = "Повторные ошибки фонового задания" -}}
+  {{- $problem = "Фоновое задание завершилось ошибкой минимум два раза подряд; условие сохраняется 1 минуту." -}}
+  {{- $recovery = "Предупреждение о повторных ошибках фонового задания снято." -}}
+  {{- $metric = "Ошибок подряд" -}}{{- $format = "%.0f" -}}
+{{- else if eq $name "DatasourceNoData" -}}
+  {{- $title = "Нет данных для проверки состояния" -}}
+  {{- $problem = "Grafana не получила данные для проверки правила. Состояние сервиса неизвестно." -}}
+  {{- $recovery = "Уведомление об отсутствии данных закрыто. Проверьте состояние исходного правила в Grafana." -}}
+{{- else if eq $name "DatasourceError" -}}
+  {{- $title = "Ошибка проверки состояния" -}}
+  {{- $problem = "Grafana не смогла выполнить проверку правила. Состояние сервиса неизвестно." -}}
+  {{- $recovery = "Уведомление об ошибке проверки закрыто. Проверьте состояние исходного правила в Grafana." -}}
+{{- end -}}
+{{- $hasValue := false -}}
+{{- range $ref, $value := .Values -}}{{- if eq $ref "B" -}}{{- $hasValue = true -}}{{- end -}}{{- end -}}
+{{- $reason := .Annotations.grafana_state_reason -}}
+{{- $monitoring := or (eq $name "DatasourceNoData") (eq $name "DatasourceError") -}}
+{{- $unconfirmed := and (eq .Status "resolved") (or $reason $monitoring (and $metric (not $hasValue))) -}}
+{{- if $unconfirmed -}}
+ℹ️ <b>FoodDiary · Уведомление закрыто</b>
+{{ else if eq .Status "resolved" -}}
+✅ <b>FoodDiary · Предупреждение снято</b>
+{{ else if eq .Labels.severity "critical" -}}
+🔴 <b>FoodDiary · Критическая проблема</b>
+{{ else if eq .Labels.severity "warning" -}}
+🟡 <b>FoodDiary · Предупреждение</b>
+{{ else if $monitoring -}}
+🟡 <b>FoodDiary · Сбой мониторинга</b>
+{{ else -}}
+⚠️ <b>FoodDiary · Требует внимания</b>
+{{ end -}}
+<b>{{ printf "%.100s" $title | html }}</b>
+{{ if $unconfirmed -}}
+{{ if $monitoring -}}
+{{ $recovery }}
+{{ else -}}
+Восстановление не подтверждено измерением. Проверьте правило в Grafana.
+{{ end -}}
+{{ if $reason }}Причина закрытия: {{ printf "%.100s" $reason | html }}
+{{ end -}}
+{{ else if eq .Status "resolved" -}}
+{{ $recovery }}
+{{ else -}}
+{{ if $problem }}{{ printf "%.240s" $problem | html }}{{ else }}Проверьте подробности правила в Grafana.{{ end }}
+{{ end -}}
+{{ if and $metric (not $unconfirmed) -}}
+{{ range $ref, $value := .Values -}}
+{{ if eq $ref "B" -}}
+Последнее измерение: {{ $metric }} — {{ printf $format $value }}{{ $unit }}
+{{ end -}}
+{{ end -}}
+{{ if not $hasValue }}Последнее измерение: нет данных
+{{ end -}}
+{{ end -}}
+{{ if .Labels.instance }}Сервер: {{ printf "%.80s" .Labels.instance | html }}
+{{ end -}}
+{{ if and .Labels.service (ne .Labels.service "infrastructure") }}Сервис: {{ printf "%.60s" .Labels.service | html }}
+{{ end -}}
+{{ if .Labels.rulename }}Правило: {{ printf "%.100s" .Labels.rulename | html }}
+{{ end -}}
+{{ if .Labels.job_name }}Задание: {{ printf "%.80s" .Labels.job_name | html }}
+{{ end -}}
+{{- $url := "https://grafana.fooddiary.club/alerting/list" -}}
+{{- if match "^https?://[^/]+/" .GeneratorURL -}}
+{{- $url = reReplaceAll "^https?://[^/]+" "https://grafana.fooddiary.club" .GeneratorURL -}}
+{{- end -}}
+🔎 <a href="{{ $url | html }}">Подробнее в Grafana</a>
+{{- end }}
+
+{{ define "fooddiary.telegram.message" -}}
+{{- range $index, $alert := .Alerts.Firing -}}
+{{- if lt $index 3 -}}
+{{ if $index }}{{ "\n\n" }}{{ end -}}
+{{ template "fooddiary.telegram.alert" $alert }}
+{{- end -}}
+{{- end -}}
+{{- if gt (len .Alerts.Firing) 3 }}
+Показаны первые 3 активных предупреждения из {{ len .Alerts.Firing }}. Полный список — в Grafana.
+{{ end -}}
+{{- range $index, $alert := .Alerts.Resolved -}}
+{{- if lt $index 2 -}}
+{{ if or $index (len $.Alerts.Firing) }}{{ "\n\n" }}{{ end -}}
+{{ template "fooddiary.telegram.alert" $alert }}
+{{- end -}}
+{{- end -}}
+{{- if gt (len .Alerts.Resolved) 2 }}
+Показаны первые 2 закрытых предупреждения из {{ len .Alerts.Resolved }}. Полный список — в Grafana.
+{{ end -}}
+{{- end }}

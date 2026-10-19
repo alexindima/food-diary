@@ -9,6 +9,9 @@ The files in this directory are the source-controlled production baseline:
   outcomes, active work and latency, preserving the selected service/time range.
 - `grafana/fooddiary-backend-alerting.yml` contains Grafana-managed rules routed
   through the production notification policy.
+- `grafana/fooddiary-telegram-notifications.tmpl` formats production Telegram
+  notifications in Russian, with severity, the specific condition, its last
+  measurement and a public Grafana link.
 - `prometheus/fooddiary-backend-alerts.yml` contains the first backend paging rules.
 - `promtail-config.yaml` configures log shipping.
 - `observability_report.py` produces a point-in-time host report.
@@ -21,6 +24,53 @@ Prometheus datasource.
 The dashboard and alerts require the release that exports
 `fooddiary_outbox_*` and `fooddiary_job_*` metrics. Absence of these series
 before that release is expected; it must not be treated as a healthy zero.
+
+## Telegram notifications
+
+Use `{{ template "fooddiary.telegram.message" . }}` as the message of the existing
+`fooddiary-telegram-alerts` receiver, with `parse_mode: HTML` and resolved
+notifications enabled. Install the template as the `fooddiary.telegram`
+notification template group. The production contact point is file-provisioned
+in `/etc/grafana/provisioning/alerting/fooddiary-alerting.yml`; update its message
+in place, preserving its token, chat ID, policies and rule groups. Provision the
+template in a separate file in that same directory:
+
+```yaml
+apiVersion: 1
+templates:
+  - orgId: 1
+    name: fooddiary.telegram
+    template: |
+      # Indent the complete contents of fooddiary-telegram-notifications.tmpl here.
+```
+
+Keep a restricted backup outside the provisioning directory and reload alerting
+through `POST /api/admin/provisioning/alerting/reload`. A Grafana or application
+restart is unnecessary. Before reload, preview the template using Grafana's
+template test API, which renders without sending messages. After reload, verify
+the stored template, receiver message/parse mode, enabled recovery notifications,
+and unchanged rule evaluation and routing. Never export contact-point secrets
+into repository files or verification logs. Roll back by restoring only the
+receiver's prior message/parse mode and this template's prior provisioning file,
+then reloading alerting; preserve unrelated changes made since the backup.
+
+Active `warning` and `critical` alerts use 🟡 and 🔴. Confirmed resolved
+conditions use ✅; a resolved notification with a state reason, missing measured
+value, or a synthetic `DatasourceNoData`/`DatasourceError` uses ℹ️ without claiming
+measured recovery. Zero is a valid value. Measurements are labelled as the last
+measurement rather than a live reading. Clearing the CPU >70% rule does not
+assert that the >60% warning is also clear. Clearing a dead-letter notification
+does not assert that previously failed messages have been processed.
+
+The template maps the eight current production alert titles to Russian text,
+units and threshold descriptions. Keep those descriptions synchronized when
+renaming rules or changing their thresholds/pending periods. Unknown alerts
+fall back to their title and summary, with a neutral recovery description.
+Dynamic text is HTML-escaped. Public links are built from the alert's Grafana
+path, avoiding `localhost` links without changing the server's root URL.
+Grouped notifications show at most three active and two resolved alerts and
+explicitly report omitted entries to keep Telegram messages bounded. Recipients,
+evaluation, grouping and repeat intervals belong to the existing configuration.
 
 ## Module operations
 
