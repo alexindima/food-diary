@@ -147585,7 +147585,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/UserProfilePatchIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "RegisterHttpRequest",
@@ -158099,7 +158099,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UpdateUserCommandHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "UpdateUserCommand",
@@ -158125,7 +158125,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UpdateUserHttpRequestJsonTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "UpdateUserCommand",
@@ -158190,7 +158190,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UpdateUserHttpRequestJsonTests.cs",
       "isTest": true,
-      "referenceCount": 13
+      "referenceCount": 19
     },
     {
       "contract": "UpdateUserHttpRequest",

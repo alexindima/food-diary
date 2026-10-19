@@ -61,6 +61,17 @@ public sealed record UpdateUserHttpRequest(
     [JsonIgnore]
     public bool BirthDateSpecified { get; private init; } = BirthDate.HasValue;
 
+    public double? HeightCm {
+        get;
+        init {
+            field = value;
+            HeightCmSpecified = true;
+        }
+    } = HeightCm;
+
+    [JsonIgnore]
+    public bool HeightCmSpecified { get; private init; } = HeightCm.HasValue;
+
     /// <summary>Omit both image fields to preserve the avatar, or send null to clear it.</summary>
     public string? ProfileImage {
         get;

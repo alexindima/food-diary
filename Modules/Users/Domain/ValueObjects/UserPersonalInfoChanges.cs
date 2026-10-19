@@ -9,4 +9,4 @@ public sealed record UserPersonalInfoChanges(
     FieldChange<ProfileBirthDate> BirthDate,
     string? Gender,
     ProfileWeightKg? WeightKg,
-    ProfileHeightCm? HeightCm);
+    FieldChange<ProfileHeightCm> HeightCm);

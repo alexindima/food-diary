@@ -1,0 +1,18 @@
+{
+  "omitted": {
+    "request": { "firstName": "Updated" },
+    "response": { "firstName": "Updated", "heightCm": 170 }
+  },
+  "cleared": {
+    "request": { "heightCm": null },
+    "response": { "firstName": "QA", "heightCm": null }
+  },
+  "replaced": {
+    "request": { "heightCm": 181.2 },
+    "response": { "firstName": "QA", "heightCm": 181.2 }
+  },
+  "ignoredMetadata": {
+    "request": { "heightCmSpecified": true, "firstName": "Updated" },
+    "response": { "firstName": "Updated", "heightCm": 170 }
+  }
+}

@@ -4,7 +4,7 @@
     "domainTypes": 288,
     "entities": 91,
     "valueObjects": 142,
-    "invariants": 642,
+    "invariants": 643,
     "persistenceMappings": 97,
     "indexes": 177,
     "relationships": 39
@@ -5964,10 +5964,17 @@
     },
     {
       "area": "FoodDiary",
+      "type": "ArgumentNullException.ThrowIfNull",
+      "message": "ArgumentNullException.ThrowIfNull(changes.HeightCm, nameof(changes))",
+      "path": "Modules/Users/Domain/Entities/User.Profile.cs",
+      "line": 133
+    },
+    {
+      "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(surfaceStyle), \"Surface style must be one of the supported codes.\")",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 368
+      "line": 374
     },
     {
       "area": "FoodDiary",

@@ -130,11 +130,14 @@ public sealed partial class User {
         EnsureNotDeleted();
         ArgumentNullException.ThrowIfNull(changes);
         ArgumentNullException.ThrowIfNull(changes.BirthDate, nameof(changes));
-        UpdatePersonalInfo(new UserPersonalInfoUpdate(
+        ArgumentNullException.ThrowIfNull(changes.HeightCm, nameof(changes));
+        UpdatePersonalInfoCore(
             changes.Username, changes.FirstName, changes.LastName,
             changes.BirthDate.IsSet ? changes.BirthDate.Value.EncodedDateTime : null,
-            changes.Gender, changes.WeightKg, changes.HeightCm,
-            BirthDateSpecified: !changes.BirthDate.IsUnchanged));
+            changes.Gender, changes.WeightKg?.Value,
+            changes.HeightCm.IsSet ? changes.HeightCm.Value.Value : null,
+            birthDateSpecified: !changes.BirthDate.IsUnchanged,
+            heightSpecified: !changes.HeightCm.IsUnchanged);
     }
 
     public void UpdatePersonalInfo(UserPersonalInfoUpdate update) {
@@ -157,7 +160,8 @@ public sealed partial class User {
         string? nextGender,
         double? nextWeight,
         double? nextHeight,
-        bool birthDateSpecified) {
+        bool birthDateSpecified,
+        bool heightSpecified = false) {
         EnsureNotDeleted();
         (string? username, string? firstName, string? lastName) = (Username, FirstName, LastName);
         (DateTime? birthDate, string? gender, double? weight, double? height) = (BirthDate, Gender, WeightKg, HeightCm);
@@ -169,7 +173,8 @@ public sealed partial class User {
             nextGender,
             nextWeight,
             nextHeight,
-            birthDateSpecified)) {
+            birthDateSpecified,
+            heightSpecified)) {
             if (birthDate != BirthDate || !string.Equals(gender, Gender, StringComparison.Ordinal)
                 || !NullableAreClose(weight, WeightKg) || !NullableAreClose(height, HeightCm)) {
                 NutritionProfile.Touch();
@@ -232,7 +237,8 @@ public sealed partial class User {
         string? gender,
         double? weight,
         double? height,
-        bool birthDateSpecified = false) {
+        bool birthDateSpecified = false,
+        bool heightSpecified = false) {
         string? normalizedUsername = NormalizeOptionalProfileText(username);
         string? normalizedFirstName = NormalizeOptionalProfileText(firstName);
         string? normalizedLastName = NormalizeOptionalProfileText(lastName);
@@ -278,7 +284,7 @@ public sealed partial class User {
             changed = true;
         }
 
-        if (height.HasValue && !NullableAreClose(state.HeightCm, height.Value)) {
+        if ((heightSpecified || height.HasValue) && !NullableAreClose(state.HeightCm, height)) {
             state = state with { HeightCm = height };
             changed = true;
         }

@@ -6,10 +6,10 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1692,
+    "candidateFields": 1694,
     "credential": 158,
     "identity": 181,
-    "health": 795,
+    "health": 797,
     "financial": 138,
     "privateContent": 420,
     "boundaryFiles": 226,
@@ -6798,35 +6798,35 @@
       "name": "Gender",
       "type": "BirthDate,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 163
+      "line": 167
     },
     {
       "category": "health",
       "name": "HeightCm",
       "type": "WeightKg,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 163
+      "line": 167
     },
     {
       "category": "health",
       "name": "Gender",
       "type": "gender,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 173
+      "line": 178
     },
     {
       "category": "health",
       "name": "HeightCm",
       "type": "height,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 174
+      "line": 179
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "weight,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 174
+      "line": 179
     },
     {
       "category": "health",
@@ -7041,7 +7041,7 @@
     {
       "category": "health",
       "name": "HeightCm",
-      "type": "ProfileHeightCm?",
+      "type": "FieldChange<ProfileHeightCm>",
       "path": "Modules/Users/Domain/ValueObjects/UserPersonalInfoChanges.cs",
       "line": 12
     },
@@ -7478,6 +7478,20 @@
       "type": "bool",
       "path": "Modules/Users/Presentation/Requests/UpdateUserHttpRequest.cs",
       "line": 62
+    },
+    {
+      "category": "health",
+      "name": "HeightCm",
+      "type": "double?",
+      "path": "Modules/Users/Presentation/Requests/UpdateUserHttpRequest.cs",
+      "line": 64
+    },
+    {
+      "category": "health",
+      "name": "HeightCmSpecified",
+      "type": "bool",
+      "path": "Modules/Users/Presentation/Requests/UpdateUserHttpRequest.cs",
+      "line": 73
     },
     {
       "category": "health",
@@ -11859,7 +11873,7 @@
       "name": "ProfileImageAssetId",
       "type": "Guid?",
       "path": "Modules/Users/Presentation/Requests/UpdateUserHttpRequest.cs",
-      "line": 73
+      "line": 84
     }
   ],
   "boundaryFiles": [
@@ -13244,7 +13258,7 @@
         "health",
         "privateContent"
       ],
-      "fieldCount": 11
+      "fieldCount": 13
     },
     {
       "path": "Modules/Users/Presentation/Responses/ProfileOverviewHttpResponse.cs",

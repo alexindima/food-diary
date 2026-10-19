@@ -181,6 +181,12 @@ public sealed class UpdateUserCommandHandler(
         } else if (command.BirthDateSpecified) {
             birthDateChange = FieldChanges.Clear<ProfileBirthDate>();
         }
+        FieldChange<ProfileHeightCm> heightChange = FieldChanges.Unchanged<ProfileHeightCm>();
+        if (command.HeightCm is { } height) {
+            heightChange = FieldChanges.Set(ProfileHeightCm.Create(height));
+        } else if (command.HeightCmSpecified) {
+            heightChange = FieldChanges.Clear<ProfileHeightCm>();
+        }
         if (command.TimeZoneId is not null) {
             user.SetTimeZone(command.TimeZoneId);
         }
@@ -191,7 +197,7 @@ public sealed class UpdateUserCommandHandler(
             BirthDate: birthDateChange,
             Gender: values.Gender,
             WeightKg: command.WeightKg is { } weight ? ProfileWeightKg.Create(weight) : null,
-            HeightCm: command.HeightCm is { } height ? ProfileHeightCm.Create(height) : null));
+            HeightCm: heightChange));
         user.UpdateActivity(new UserActivityUpdate(
             ActivityLevel: values.ActivityLevel,
             StepGoal: command.StepGoal,

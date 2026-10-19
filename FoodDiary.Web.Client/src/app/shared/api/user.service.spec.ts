@@ -23,6 +23,7 @@ const DESIRED_WEIGHT = 75;
 const UPDATED_DESIRED_WEIGHT = 70;
 const UPDATED_THEME = 'dark';
 const UPDATED_UI_STYLE = 'compact';
+const UPDATED_PROFILE_HEIGHT_CM = 175;
 const MOCK_USER: User = {
     id: entityId<'user'>('user-1'),
     email: 'test@example.com',
@@ -178,6 +179,25 @@ describe('UserService optional profile names', () => {
 
         const req = httpMock.expectOne(`${BASE_URL}/info`);
         expect(JSON.parse(req.request.serializeBody() as string)).toEqual({ heightCm: 175 });
+        req.flush(MOCK_USER);
+    });
+});
+
+describe('UserService optional height', () => {
+    it.each([null, UPDATED_PROFILE_HEIGHT_CM])('preserves explicit height value: %s', heightCm => {
+        service.update(new UpdateUserDto({ heightCm })).subscribe();
+
+        const req = httpMock.expectOne(`${BASE_URL}/info`);
+        expect(req.request.method).toBe('PATCH');
+        expect(JSON.parse(req.request.serializeBody() as string)).toEqual({ heightCm });
+        req.flush(MOCK_USER);
+    });
+
+    it('omits height from an unrelated update', () => {
+        service.update(new UpdateUserDto({ language: 'ru' })).subscribe();
+
+        const req = httpMock.expectOne(`${BASE_URL}/info`);
+        expect(JSON.parse(req.request.serializeBody() as string)).toEqual({ language: 'ru' });
         req.flush(MOCK_USER);
     });
 });

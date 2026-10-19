@@ -18,6 +18,26 @@ public sealed class UpdateUserCommandHandlerTests {
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
+    public async Task Handle_NullHeightClearsOnlyWhenSpecified(bool specified) {
+        var user = User.Create("height@example.com", "hash");
+        user.UpdatePersonalInfo(height: 170);
+        UpdateUserCommandHandler handler = new(CreateUserRepository(user),
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+        UpdateUserCommand command = CreateCommand(user.Id.Value) with { FirstName = "Updated", HeightCmSpecified = specified };
+
+        Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        double? expectedHeight = specified ? null : 170;
+        Assert.Multiple(
+            () => Assert.Equal(expectedHeight, user.HeightCm),
+            () => Assert.Equal(expectedHeight, result.Value.HeightCm),
+            () => Assert.Equal("Updated", result.Value.FirstName));
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
     public async Task Handle_NullAvatarClearsAndCleansUpOnlyWhenSpecified(bool specified) {
         var user = User.Create("avatar@example.com", "hash");
         var assetId = ImageAssetId.New();

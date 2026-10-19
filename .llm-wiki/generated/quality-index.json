@@ -655,6 +655,14 @@
       "structuralRiskScore": 108.34
     },
     {
+      "path": "Modules/Users/Domain/Entities/User.Profile.cs",
+      "nonBlankLines": 383,
+      "decisionPoints": 67,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 108.16
+    },
+    {
       "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
       "nonBlankLines": 273,
       "decisionPoints": 68,
@@ -669,14 +677,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 107.4
-    },
-    {
-      "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "nonBlankLines": 377,
-      "decisionPoints": 66,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 106.54
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
@@ -46946,19 +46946,19 @@
     },
     {
       "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommand.cs",
-      "nonBlankLines": 30,
+      "nonBlankLines": 31,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.6
+      "structuralRiskScore": 0.62
     },
     {
       "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-      "nonBlankLines": 206,
-      "decisionPoints": 22,
+      "nonBlankLines": 212,
+      "decisionPoints": 24,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 39.12
+      "structuralRiskScore": 42.24
     },
     {
       "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandValidator.cs",
@@ -48226,11 +48226,11 @@
     },
     {
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "nonBlankLines": 377,
-      "decisionPoints": 66,
+      "nonBlankLines": 383,
+      "decisionPoints": 67,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 106.54
+      "structuralRiskScore": 108.16
     },
     {
       "path": "Modules/Users/Domain/Entities/User.Tdee.cs",
@@ -48938,11 +48938,11 @@
     },
     {
       "path": "Modules/Users/Presentation/Mappings/UserHttpMappings.cs",
-      "nonBlankLines": 103,
+      "nonBlankLines": 104,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.06
+      "structuralRiskScore": 2.08
     },
     {
       "path": "Modules/Users/Presentation/Mappings/UserHttpResponseMappings.cs",
@@ -48994,11 +48994,11 @@
     },
     {
       "path": "Modules/Users/Presentation/Requests/UpdateUserHttpRequest.cs",
-      "nonBlankLines": 76,
+      "nonBlankLines": 85,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.02
+      "structuralRiskScore": 3.2
     },
     {
       "path": "Modules/Users/Presentation/Responses/ProfileOverviewHttpResponse.cs",

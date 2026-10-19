@@ -71,7 +71,8 @@ public static class UserHttpMappings {
                 IsActive: request.IsActive,
                 TimeZoneId: request.TimeZoneId,
                 BirthDateSpecified: request.BirthDateSpecified,
-                ProfileImageSpecified: request.ProfileImageSpecified
+                ProfileImageSpecified: request.ProfileImageSpecified,
+                HeightCmSpecified: request.HeightCmSpecified
             );
         }
     }

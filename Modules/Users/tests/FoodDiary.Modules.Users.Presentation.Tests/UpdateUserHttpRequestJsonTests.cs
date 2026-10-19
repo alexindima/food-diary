@@ -12,6 +12,33 @@ public sealed class UpdateUserHttpRequestJsonTests {
     [Theory]
     [InlineData("{}", false)]
     [InlineData("{\"language\":\"ru\"}", false)]
+    [InlineData("{\"heightCm\":null}", true)]
+    [InlineData("{\"heightCmSpecified\":true}", false)]
+    public void Deserialize_DistinguishesClearedHeightFromOmittedMeasurement(string json, bool specified) {
+        UpdateUserHttpRequest request = Assert.IsType<UpdateUserHttpRequest>(JsonSerializer.Deserialize<UpdateUserHttpRequest>(json, Options));
+        UpdateUserCommand command = request.ToCommand(Guid.NewGuid());
+
+        Assert.Multiple(
+            () => Assert.Null(request.HeightCm),
+            () => Assert.Equal(specified, request.HeightCmSpecified),
+            () => Assert.Null(command.HeightCm),
+            () => Assert.Equal(specified, command.HeightCmSpecified));
+    }
+
+    [Fact]
+    public void Deserialize_SelectedHeightRetainsValueAndPresence() {
+        UpdateUserHttpRequest request = Assert.IsType<UpdateUserHttpRequest>(JsonSerializer.Deserialize<UpdateUserHttpRequest>(
+            "{\"heightCm\":181.2}", Options));
+        UpdateUserCommand command = request.ToCommand(Guid.NewGuid());
+
+        Assert.Multiple(
+            () => Assert.Equal(181.2, command.HeightCm),
+            () => Assert.True(command.HeightCmSpecified));
+    }
+
+    [Theory]
+    [InlineData("{}", false)]
+    [InlineData("{\"language\":\"ru\"}", false)]
     [InlineData("{\"profileImage\":null}", true)]
     [InlineData("{\"profileImageAssetId\":null}", true)]
     [InlineData("{\"profileImage\":null,\"profileImageAssetId\":null}", true)]
@@ -68,11 +95,13 @@ public sealed class UpdateUserHttpRequestJsonTests {
 
     [Fact]
     public void Serialize_DoesNotExposePresenceMetadata() {
-        var request = new UpdateUserHttpRequest { BirthDate = null, ProfileImage = null };
+        var request = new UpdateUserHttpRequest { BirthDate = null, HeightCm = null, ProfileImage = null };
         using var json = JsonDocument.Parse(JsonSerializer.Serialize(request, Options));
 
         Assert.Multiple(
             () => Assert.Equal(JsonValueKind.Null, json.RootElement.GetProperty("birthDate").ValueKind),
+            () => Assert.Equal(JsonValueKind.Null, json.RootElement.GetProperty("heightCm").ValueKind),
+            () => Assert.False(json.RootElement.TryGetProperty("heightCmSpecified", out _)),
             () => Assert.False(json.RootElement.TryGetProperty("birthDateSpecified", out _)),
             () => Assert.False(json.RootElement.TryGetProperty("profileImageSpecified", out _)));
     }

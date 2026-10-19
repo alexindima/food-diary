@@ -84,7 +84,7 @@ export class UpdateUserDto {
     public lastName?: string;
     public birthDate?: Date | null;
     public gender?: string;
-    public heightCm?: number;
+    public heightCm?: number | null;
     public activityLevel?: string;
     public stepGoal?: number;
     public hydrationGoal?: number;
@@ -106,7 +106,7 @@ export class UpdateUserDto {
         this.lastName = normalizeProfileName(formValues.lastName);
         this.birthDate = normalizeDate(formValues.birthDate);
         this.gender = normalizeString(formValues.gender);
-        this.heightCm = normalizeNumber(formValues.heightCm);
+        this.heightCm = formValues.heightCm === null ? null : normalizeNumber(formValues.heightCm);
         this.activityLevel = normalizeActivityLevel(formValues.activityLevel);
         this.stepGoal = normalizeInteger(formValues.stepGoal);
         this.hydrationGoal = normalizeNumber((formValues as { hydrationGoal?: number | null }).hydrationGoal);

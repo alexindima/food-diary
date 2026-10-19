@@ -45,7 +45,7 @@ internal sealed class UserTelegramAccountService(
         }
         user.SetLanguage(LanguageCode.FromPreferred(registration.Language).Value);
         user.SetTimeZone(registration.TimeZoneId);
-        user.UpdatePersonalInfoChanges(new UserPersonalInfoChanges(Username: null, registration.FirstName, registration.LastName, FieldChanges.Unchanged<ProfileBirthDate>(), Gender: null, WeightKg: null, HeightCm: null));
+        user.UpdatePersonalInfoChanges(new UserPersonalInfoChanges(Username: null, registration.FirstName, registration.LastName, FieldChanges.Unchanged<ProfileBirthDate>(), Gender: null, WeightKg: null, HeightCm: FieldChanges.Unchanged<ProfileHeightCm>()));
         user.UpdateGoals(new UserGoalUpdate(
             DailyCalorieTarget: 2000,
             ProteinTarget: 150,

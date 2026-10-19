@@ -10,6 +10,8 @@ public sealed class ProfileBirthDateSemanticBoundaryTests {
     [InlineData("new UserPersonalInfoChanges(null, null, null, FieldChanges.Set(DateTime.UtcNow), null, null, null)", "CS1503")]
     [InlineData("BmrCalculationInput.FromMeasurements(null, null, DateTime.UtcNow, \"M\")", "CS1503")]
     [InlineData("birthDate.EncodedDateTime = DateTime.UtcNow", "CS0200")]
+    [InlineData("new UserPersonalInfoChanges(null, null, null, FieldChanges.Unchanged<ProfileBirthDate>(), null, null, FieldChanges.Set(180d))", "CS1503")]
+    [InlineData("new UserPersonalInfoChanges(null, null, null, FieldChanges.Unchanged<ProfileBirthDate>(), null, null, FieldChanges.Set(ProfileWeightKg.Create(80)))", "CS1503")]
     public void SemanticInputs_RequireAnImmutableOwnerDate(string expression, string errorId) {
         Diagnostic error = Assert.Single(Compile(expression));
         Assert.Equal(errorId, error.Id);
@@ -19,6 +21,7 @@ public sealed class ProfileBirthDateSemanticBoundaryTests {
     public void CalendarMeaning_ReachesFieldChangesAndCalculation() {
         Assert.Empty(Compile("new UserPersonalInfoChanges(null, null, null, FieldChanges.Set(birthDate), null, null, null)"));
         Assert.Empty(Compile("BmrCalculationInput.FromMeasurements(null, null, birthDate, \"M\")"));
+        Assert.Empty(Compile("new UserPersonalInfoChanges(null, null, null, FieldChanges.Unchanged<ProfileBirthDate>(), null, null, FieldChanges.Set(ProfileHeightCm.Create(180)))"));
     }
 
     private static Diagnostic[] Compile(string expression) {

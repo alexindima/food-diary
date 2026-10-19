@@ -28,5 +28,6 @@ public record UpdateUserCommand(
     bool? IsActive,
     string? TimeZoneId = null,
     bool BirthDateSpecified = false,
-    bool ProfileImageSpecified = false
+    bool ProfileImageSpecified = false,
+    bool HeightCmSpecified = false
 ) : ICommand<Result<UserModel>>, IUserRequest;

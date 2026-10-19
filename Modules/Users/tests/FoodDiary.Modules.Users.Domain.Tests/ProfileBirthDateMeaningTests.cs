@@ -87,7 +87,7 @@ public sealed class ProfileBirthDateMeaningTests {
     }
 
     private static UserPersonalInfoChanges Changes(FieldChange<ProfileBirthDate> date) =>
-        new(Username: null, FirstName: null, LastName: null, date, Gender: null, WeightKg: null, HeightCm: null);
+        new(Username: null, FirstName: null, LastName: null, date, Gender: null, WeightKg: null, HeightCm: FieldChanges.Unchanged<ProfileHeightCm>());
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider(DateTimeOffset now) : TimeProvider {
