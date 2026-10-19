@@ -41890,11 +41890,11 @@
     },
     {
       "path": "Modules/Notifications/Application/Services/ProfileNotificationReadService.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 0,
+      "nonBlankLines": 29,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
+      "structuralRiskScore": 2.08
     },
     {
       "path": "Modules/Notifications/Application/Services/TestNotificationDeliveryDispatcher.cs",

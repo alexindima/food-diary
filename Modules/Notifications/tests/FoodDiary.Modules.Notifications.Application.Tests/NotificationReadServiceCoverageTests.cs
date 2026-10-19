@@ -16,6 +16,29 @@ namespace FoodDiary.Modules.Notifications.Application.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class NotificationReadServiceCoverageTests {
     [Fact]
+    public async Task ProfileNotificationReadService_GetWebPushSubscriptionsAsync_ExcludesExpiredAndRetainsUnknownExpiry() {
+        var userId = UserId.New();
+        var utcNow = new DateTime(2026, 7, 13, 8, 0, 0, DateTimeKind.Utc);
+        IReadOnlyList<WebPushSubscriptionReadModel> readModels = [
+            new(Endpoint: "https://push.example.com/expired", ExpirationTimeUtc: utcNow.AddTicks(-1), Locale: "en", UserAgent: "Chrome", CreatedAtUtc: utcNow, UpdatedAtUtc: null),
+            new(Endpoint: "https://push.example.com/unknown-expiry", ExpirationTimeUtc: null, Locale: "ru", UserAgent: "Firefox", CreatedAtUtc: utcNow, UpdatedAtUtc: null),
+            new(Endpoint: "https://push.example.com/expires-now", ExpirationTimeUtc: utcNow, Locale: "en", UserAgent: "Chrome", CreatedAtUtc: utcNow, UpdatedAtUtc: null),
+            new(Endpoint: "https://push.example.com/future", ExpirationTimeUtc: utcNow.AddDays(1), Locale: "en", UserAgent: "Safari", CreatedAtUtc: utcNow, UpdatedAtUtc: null),
+        ];
+        IWebPushSubscriptionReadModelRepository repository = Substitute.For<IWebPushSubscriptionReadModelRepository>();
+        repository.GetByUserReadModelsAsync(userId, Arg.Any<CancellationToken>()).Returns(readModels);
+        TimeProvider clock = Substitute.For<TimeProvider>();
+        clock.GetUtcNow().Returns(new DateTimeOffset(utcNow));
+        var service = new ProfileNotificationReadService(repository, clock);
+
+        IReadOnlyList<ProfileWebPushSubscriptionModel> result = await service.GetWebPushSubscriptionsAsync(userId, CancellationToken.None);
+
+        Assert.Equal([readModels[1].Endpoint, readModels[3].Endpoint], result.Select(item => item.Endpoint), StringComparer.Ordinal);
+        Assert.Null(result[0].ExpirationTimeUtc);
+        Assert.Equal(readModels[3].ExpirationTimeUtc, result[1].ExpirationTimeUtc);
+    }
+
+    [Fact]
     public async Task ProfileNotificationReadService_GetWebPushSubscriptionsAsync_MapsEveryReadModel() {
         var userId = UserId.New();
         var createdAtUtc = new DateTime(2026, 7, 13, 8, 0, 0, DateTimeKind.Utc);
@@ -30,7 +53,9 @@ public sealed class NotificationReadServiceCoverageTests {
         ];
         IWebPushSubscriptionReadModelRepository repository = Substitute.For<IWebPushSubscriptionReadModelRepository>();
         repository.GetByUserReadModelsAsync(userId, Arg.Any<CancellationToken>()).Returns(readModels);
-        var service = new ProfileNotificationReadService(repository);
+        TimeProvider clock = Substitute.For<TimeProvider>();
+        clock.GetUtcNow().Returns(new DateTimeOffset(createdAtUtc));
+        var service = new ProfileNotificationReadService(repository, clock);
 
         IReadOnlyList<ProfileWebPushSubscriptionModel> result = await service.GetWebPushSubscriptionsAsync(userId, CancellationToken.None);
 
