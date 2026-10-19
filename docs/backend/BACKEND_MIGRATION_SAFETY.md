@@ -60,6 +60,14 @@ baseline. The regular deployment command does **not** perform adoption.
    `20260208133129_SeedEmailTemplates`, which was removed from the original chain.
    PostgreSQL 18's separate NOT NULL constraint names are excluded from the catalog
    digest; column nullability is still checked directly.
+   Independently reproduced fingerprints also accept the exact historical
+   coexistence schema frozen in `LegacyCoexistingSchema.sql`: 9 Prisma tables and
+   5 retired shared-database MailRelay tables. All 1,726 EF-owned catalog objects
+   match the original chain. Adoption preserves the 201 additional catalog
+   objects, their rows and the independent `_prisma_migrations` history in place,
+   both before and after PostgreSQL dump/restore expression normalization.
+   This is an exact schema variant, not a general exception for extra objects;
+   changes to current or historical tables and unknown tables/indexes are rejected.
    A database with missing/unknown migrations or schema drift is rejected without
    changing its history. Investigate the mismatch; do not bypass the checks.
 4. Run the new Initializer `status`/`list`, then the normal deployment `update`.

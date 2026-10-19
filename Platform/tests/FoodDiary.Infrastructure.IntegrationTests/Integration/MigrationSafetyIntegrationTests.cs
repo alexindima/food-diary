@@ -98,6 +98,69 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
     }
 
     [RequiresDockerTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task LegacyCoexistingSchema_AdoptionPreservesEveryApplicationRowAndPrismaHistory(bool hasRemovedSeedMarker) {
+        await using FoodDiaryDbContext context = await CreateLegacyDatabaseAsync();
+        await ExecuteFixtureAsync(context, "LegacyCoexistingSchema.sql");
+        if (hasRemovedSeedMarker) {
+            await context.Database.ExecuteSqlRawAsync("""
+                INSERT INTO "__EFMigrationsHistory" VALUES ('20260208133129_SeedEmailTemplates', '10.0.11');
+                """);
+        }
+        context.Users.Add(User.Create("coexisting-baseline@example.com", "test-hash"));
+        await context.SaveChangesAsync();
+        await context.Database.ExecuteSqlRawAsync("""
+            INSERT INTO _prisma_migrations (id, checksum, migration_name)
+                VALUES ('00000000-0000-0000-0000-000000000001', 'legacy-test-checksum', 'preserved_legacy_history');
+            INSERT INTO mailrelay_suppressions (email, reason, source, created_at_utc, updated_at_utc)
+                VALUES ('legacy-baseline@example.com', 'test fixture', 'test', NOW(), NOW());
+            """);
+        string before = await ReadApplicationDataAsync(context);
+
+        await AdoptAsync(context);
+        await AdoptAsync(context);
+        await context.Database.MigrateAsync();
+
+        Assert.Equal(before, await ReadApplicationDataAsync(context));
+        Assert.Equal([Baseline], await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
+        Assert.Empty(await context.Database.GetPendingMigrationsAsync());
+    }
+
+    [RequiresDockerTheory]
+    [InlineData("DROP INDEX \"IX_BillingPayments_EffectiveOccurredAtUtc\";")]
+    [InlineData("ALTER TABLE \"Users\" ALTER COLUMN \"HasPassword\" DROP NOT NULL;")]
+    [InlineData("ALTER TABLE \"Food\" ALTER COLUMN name DROP NOT NULL;")]
+    [InlineData("CREATE TABLE \"UnexpectedLegacyObject\" (id integer);")]
+    [InlineData("DROP TABLE mailrelay_suppressions;")]
+    public async Task LegacyCoexistingSchema_UnexpectedDriftIsRejectedAtomically(string driftSql) {
+        await using FoodDiaryDbContext context = await CreateLegacyDatabaseAsync();
+        await ExecuteFixtureAsync(context, "LegacyCoexistingSchema.sql");
+        await context.Database.ExecuteSqlRawAsync(driftSql);
+        string[] history = [.. await context.Database.GetAppliedMigrationsAsync()];
+        string before = await ReadApplicationDataAsync(context);
+
+        PostgresException failure = await Assert.ThrowsAsync<PostgresException>(() => AdoptAsync(context));
+
+        Assert.Contains("Schema differs", failure.MessageText, StringComparison.Ordinal);
+        Assert.Equal(history, await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
+        Assert.Equal(before, await ReadApplicationDataAsync(context));
+    }
+
+    [RequiresDockerFact]
+    public async Task NativeBaseline_CoexistingSchemaRetainsItsOriginalExpressionForms() {
+        await using FoodDiaryDbContext context = await CreateBaselineDatabaseAsync();
+        await ExecuteFixtureAsync(context, "LegacyCoexistingSchema.sql");
+        string before = await ReadApplicationDataAsync(context);
+
+        await AdoptAsync(context);
+
+        Assert.Equal(before, await ReadApplicationDataAsync(context));
+        Assert.Equal([Baseline], await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
+        Assert.Empty(await context.Database.GetPendingMigrationsAsync());
+    }
+
+    [RequiresDockerTheory]
     [InlineData("DROP INDEX \"IX_BillingPayments_EffectiveOccurredAtUtc\";")]
     [InlineData("ALTER TABLE \"FastingCheckIns\" DROP CONSTRAINT \"FK_FastingCheckIns_Users_UserId\";")]
     [InlineData("ALTER TABLE \"Users\" ALTER COLUMN \"HasPassword\" DROP NOT NULL;")]
@@ -112,8 +175,10 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
         Assert.Equal(history, await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
     }
 
-    [RequiresDockerFact]
-    public async Task Postgres18_AdoptionPreservesRowsAndStillRejectsNullabilityDrift() {
+    [RequiresDockerTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Postgres18_AdoptionPreservesRowsAndStillRejectsNullabilityDrift(bool hasCoexistingSchema) {
         await using PostgreSqlContainer postgres = new PostgreSqlBuilder("postgres:18-alpine")
             .WithDatabase("fooddiary_baseline")
             .WithUsername("postgres")
@@ -123,6 +188,9 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
         await postgres.StartAsync();
         await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(postgres.GetConnectionString());
         await ExecuteFixtureAsync(context, "PreBaseline.sql");
+        if (hasCoexistingSchema) {
+            await ExecuteFixtureAsync(context, "LegacyCoexistingSchema.sql");
+        }
         string before = await ReadApplicationDataAsync(context);
 
         await AdoptAsync(context);

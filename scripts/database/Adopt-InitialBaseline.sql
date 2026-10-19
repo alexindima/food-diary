@@ -67,8 +67,16 @@ BEGIN
     )
     SELECT md5(string_agg(kind || ':' || name || ':' || definition, E'\n' ORDER BY kind COLLATE "C", name COLLATE "C")) INTO actual_schema FROM objects;
     -- pg_dump reparses two varchar-array expressions into an equivalent catalog form.
-    -- Both fingerprints are independently verified against the original chain.
-    IF actual_schema IS NULL OR actual_schema NOT IN ('ceba2ada2aca706b41d8c33782ea59db', '524aebadd95c9df5d144b2416b4880c7') THEN
+    -- The coexistence fingerprints preserve the exact 14 historical Prisma/MailRelay
+    -- tables in LegacyCoexistingSchema.sql. All 1,726 EF-owned catalog objects
+    -- match the frozen chain; the 201 additional objects remain untouched.
+    -- Every accepted fingerprint is reproduced by the migration safety tests.
+    IF actual_schema IS NULL OR actual_schema NOT IN (
+        'ceba2ada2aca706b41d8c33782ea59db',
+        '524aebadd95c9df5d144b2416b4880c7',
+        '18205d666865485affb3921c4685009b',
+        '8f7f23884a39107f4c6f8ec74267eda9'
+    ) THEN
         RAISE EXCEPTION 'Schema differs from the verified pre-baseline schema (fingerprint %). No history was changed.', actual_schema;
     END IF;
 
