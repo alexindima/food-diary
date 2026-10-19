@@ -215,13 +215,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "3876efa9249e532e1321b0c1895bd65c5b9616378518079310c16ef94a0b76c1"
+          "sha256": "fab0fa3718eb758d184353d5b3df28d93af8b624f6504269f60ec117de5f6f6e"
         }
       ],
-      "reason": "The CI diff adds only standard-library Python readiness tests next to existing deployment authorization tests. Existing Wiki, API compatibility, report, backend and frontend gates retain their commands and conditions. Reviewed the new deployment step: it runs before all server uploads and stops, using read-only EF-history queries. Nine Python tests, ten Node deployment tests and the live legacy refusal with unchanged running API passed.",
-      "baseRef": "HEAD",
-      "gitHead": "554c18fc9091c83452cca7b41c934e390bf1ab78",
-      "reviewedAtUtc": "2026-10-19T09:52:40.5624439Z"
+      "reason": "Reviewed the final workflow diff and the affected guide: Dependabot only updates pinned setup-node, setup-java and artifact action revisions. API baseline selection, index/focused/full gates, report generation, inputs and stage ordering still match the documented workflow.",
+      "baseRef": "7bf8087da8e5f4975020679f844cffe6e1f10a17",
+      "gitHead": "4676b270c1fa5505e86e31fae42c492afc819715",
+      "reviewedAtUtc": "2026-10-19T18:18:47.1962573Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -572,13 +572,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "1da45a56aaad3e441323ffc4ffbc4f47955c29e91d3d5517d1ddffede09c588c"
+          "sha256": "0b022d1be0fda58ecd1cb01689874a448befbd9ff41bdbfb6e6672f976b9dcd8"
         }
       ],
-      "reason": "Reviewed the guide against the current package scripts and scoped frontend instructions. This maintenance change aligns Angular ESLint versions and deduplicates its compiler; browser QA commands, rendered UI evidence requirements, routes and product source behavior remain unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "d1711faad87ae4fcf009a63f88ce2fd152b42f7e",
-      "reviewedAtUtc": "2026-10-19T16:37:31.4007248Z"
+      "reason": "Final Dependabot merge changes dependency versions only; verified QA script definitions and browser evidence rules still match the current frontend and its scoped guides.",
+      "baseRef": "7bf8087da8e5f4975020679f844cffe6e1f10a17",
+      "gitHead": "4676b270c1fa5505e86e31fae42c492afc819715",
+      "reviewedAtUtc": "2026-10-19T17:54:43.4548195Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -650,18 +650,14 @@
       "pageSha256": "68747a1fd21d73998b55172d7c0b5e711b8bc12862555a50ff298adda147c31c",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
-          "sha256": "3a1aa2fabdcebd616d2dfa50a74c54de54f67d20cb73a1b33f085a7bbbf10a3c"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
-          "sha256": "a5160c2463faf014596a4abf9e13b3557cef985f66e70d3a1790600045b4b262"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "fab0fa3718eb758d184353d5b3df28d93af8b624f6504269f60ec117de5f6f6e"
         }
       ],
-      "reason": "Legacy audit model outcomes now use a fresh private registry through the existing override; the previous override is restored and the canonical registry hash must remain unchanged. Core, Workspace and Orchestration passed. The assertion inventory retains all existing Core/Governed/Workspace/Orchestration hashes and intentionally adds one Common immutability assertion (2 total,714 overall); shard/CI contracts passed. No pipeline runtime or documented command changed.",
-      "baseRef": "HEAD",
-      "gitHead": "b07f5bc463fec763eac4b3f451f85d8d75dca4c6",
-      "reviewedAtUtc": "2026-10-19T11:32:17.2654602Z"
+      "reason": "Reviewed the final workflow diff and the affected guide: Dependabot only updates pinned setup-node, setup-java and artifact action revisions. API baseline selection, index/focused/full gates, report generation, inputs and stage ordering still match the documented workflow.",
+      "baseRef": "7bf8087da8e5f4975020679f844cffe6e1f10a17",
+      "gitHead": "4676b270c1fa5505e86e31fae42c492afc819715",
+      "reviewedAtUtc": "2026-10-19T18:18:48.1364367Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -896,13 +892,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "3876efa9249e532e1321b0c1895bd65c5b9616378518079310c16ef94a0b76c1"
+          "sha256": "fab0fa3718eb758d184353d5b3df28d93af8b624f6504269f60ec117de5f6f6e"
         }
       ],
-      "reason": "The CI diff adds only standard-library Python readiness tests next to existing deployment authorization tests. Existing Wiki, API compatibility, report, backend and frontend gates retain their commands and conditions. Reviewed the new deployment step: it runs before all server uploads and stops, using read-only EF-history queries. Nine Python tests, ten Node deployment tests and the live legacy refusal with unchanged running API passed.",
-      "baseRef": "HEAD",
-      "gitHead": "554c18fc9091c83452cca7b41c934e390bf1ab78",
-      "reviewedAtUtc": "2026-10-19T09:52:41.2840023Z"
+      "reason": "Reviewed the final workflow diff and the affected guide: Dependabot only updates pinned setup-node, setup-java and artifact action revisions. API baseline selection, index/focused/full gates, report generation, inputs and stage ordering still match the documented workflow.",
+      "baseRef": "7bf8087da8e5f4975020679f844cffe6e1f10a17",
+      "gitHead": "4676b270c1fa5505e86e31fae42c492afc819715",
+      "reviewedAtUtc": "2026-10-19T18:18:49.2053213Z"
     },
     {
       "pageId": "workflow-risk-calibration",
