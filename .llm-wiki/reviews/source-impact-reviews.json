@@ -38,17 +38,25 @@
     {
       "pageId": "module.frontend",
       "pagePath": ".llm-wiki/modules/frontend.md",
-      "pageSha256": "56878c764cc5ff357a30b22c59daa99a2396117da578f1d71b719cb2315a8ffb",
+      "pageSha256": "455d0bfd9a0172f3dd6e6e9c4c74aebf92d4674beab146223ef8f228d45f6adb",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
-          "sha256": "6970d1d46926c0b32336492b0824594e1305d200816681af7ff3b01f921ea718"
+          "path": "docs/frontend/FRONTEND_ARCHITECTURE.md",
+          "sha256": "9c613c24b304235400ca24ad2e07bb85de8b0275a3e6a42d8b66ed98b22eaf0f"
+        },
+        {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "ce7df6c2ba83faf486313b534f8cda990cf8acb56622f3c14e8df279c9bc677b"
+        },
+        {
+          "path": "FoodDiary.Web.Client/projects/fd-webmcp/AGENTS.md",
+          "sha256": "0969468f99b9536b354e96765cc28c0c780c3259c52e3f3c439b3f78cd69a52b"
         }
       ],
-      "reason": "Reviewed the local-only WebMCP/fixture capability expansion against final owners and native browser evidence. No HTTP route/schema change, production provider activation, or automatic save/start. IDs/revisions, nutrition/date meanings, fenced exact-message cleanup, sensitive-field redaction and signed manifest ownership remain explicit. Real PostgreSQL tests cover nested purge rollback and foreign references.",
+      "reason": "Added the new fd-webmcp library and local guide; verified its public package boundary against current Angular project configuration and dependency tests.",
       "baseRef": "HEAD",
-      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
-      "reviewedAtUtc": "2026-10-18T22:50:45.0264968Z"
+      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
+      "reviewedAtUtc": "2026-10-19T08:49:13.7118403Z"
     },
     {
       "pageId": "module.mail-services",
@@ -117,13 +125,17 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "43b350254aa3573e5e233dc41ec651775d9034d0d9c84631390b1d3549acb193"
+          "sha256": "ce7df6c2ba83faf486313b534f8cda990cf8acb56622f3c14e8df279c9bc677b"
+        },
+        {
+          "path": "FoodDiary.Web.Client/angular.json",
+          "sha256": "1ebac73a65f9a80a51083b2460e7b4a01d66fd331736e44c93a0744d41dddfc4"
         }
       ],
-      "reason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities.",
+      "reason": "The generator still discovers Git-visible Angular projects and classes. Current output includes fd-webmcp; no extraction algorithm changed.",
       "baseRef": "HEAD",
-      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
-      "reviewedAtUtc": "2026-10-11T02:03:00.7056207Z"
+      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
+      "reviewedAtUtc": "2026-10-19T08:49:10.7255013Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -165,14 +177,14 @@
       "pageSha256": "7368eca730254aab949bddc9e5d05a260ac6f0b1a97793c1a08c7fcb1a68366f",
       "sources": [
         {
-          "path": "Directory.Packages.props",
-          "sha256": "1185cfcaefd6a099e860e0a0f4abd3ce6520f4d1f8569d602126a4d7b9018bce"
+          "path": "FoodDiary.Web.Client/angular.json",
+          "sha256": "1ebac73a65f9a80a51083b2460e7b4a01d66fd331736e44c93a0744d41dddfc4"
         }
       ],
-      "reason": "Reviewed authoritative sources for this bounded dependency extension: pinned YoutubeExplode6.6.2 is confined to AI Infrastructure with HTTPS host/redirect and public-DNS gates, bounded audio/metadata and unchanged localFFmpeg, consent, quota and API shapes.306 infrastructure tests,8 app tests and both real audio downloads verify the flow. Frontend uses existing inline-alert and EN/RU copy, observed in both themes and390px. No persistence or project-graph change; transitive lockfile changes only add the pinned dependency. Affected generated navigation matches these sources.",
+      "reason": "Regenerated catalog recognizes the fifth Angular project and its scoped guide through existing Git-visible inventory; no catalog semantics changed.",
       "baseRef": "HEAD",
-      "gitHead": "7c0537f04c8007c83771813fce48c91255472da1",
-      "reviewedAtUtc": "2026-10-15T16:37:10.9104889Z"
+      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
+      "reviewedAtUtc": "2026-10-19T08:49:14.5459070Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -196,13 +208,13 @@
       "sources": [
         {
           "path": "scripts/ai/task-runtime.mjs",
-          "sha256": "882cfe622034f0115e7ebfa0406f34311b870f53f0e3854d897d3469aa61c4e0"
+          "sha256": "3b897dafc06157c228050c7b30c1f792124d46e52df299f18b6d7c020986a8bc"
         }
       ],
-      "reason": "Reviewed scripts/ai/task-runtime.mjs and the workflow. Owned runtime discovery/identity/cleanup semantics remain intact. Startup now uses the existing generated frontend workspace also for main-only runs and owns an additional source-identity watcher; admin reuse upgrades only its own workspace. Creation identities still gate process reuse/stop; no shared configs or peer runtime are changed. docs/ai/AI_DEVELOPMENT.md documents emitted capture versus response-observed API identities and unknown fallback. The10runtime tests pass including source/HMR identity changes.",
+      "reason": "Only the task-runtime source-fingerprint scope adds the extracted library; isolated regression proves edits invalidate readiness while specs do not. Workflow routing is unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
-      "reviewedAtUtc": "2026-10-18T17:39:11.3662111Z"
+      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
+      "reviewedAtUtc": "2026-10-19T08:49:12.8432271Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -210,14 +222,14 @@
       "pageSha256": "6a4fbe9e389de624f52a78cd689384c475d8a770e74e9fd1109f861f2ceda68b",
       "sources": [
         {
-          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "a422fbb32037a5fb95ae5406674ed0674b8afc13acd91614902c105f281947c5"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "38d77b35848a123db2e28eedde63114c7ccf5e6765193fc64b991c1dc64f1db0"
         }
       ],
-      "reason": "R5-077 adds an optional IANA timeZoneId query parameter to the existing own cycle nutrition summary. Omission retains the previous UTC contract. Calendar labels remain DateOnly; explicit zones use local-day UTC boundaries and existing zoned Meals statistics. Invalid zones or unrepresentable bounds return400. Actual OpenAPI export and pinned official SDK generation update both snapshots and generated client; normal OpenAPI assertions4 pass. Compatibility against4beb952de reports zero breaking and one additive change.",
+      "reason": "CI additions are dedicated fd-webmcp coverage/build steps and summary rows. OpenAPI snapshots, API comparison baselines and compatibility gates are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "4beb952de8e0da57d41d38b139724beecf208628",
-      "reviewedAtUtc": "2026-10-19T01:58:08.5199167Z"
+      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
+      "reviewedAtUtc": "2026-10-19T08:49:08.5339740Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -567,14 +579,18 @@
       "pageSha256": "9b95c7c4d66fa577cf2524f59e5b95847547e4c215550a4e711c5696f38938b1",
       "sources": [
         {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "ce7df6c2ba83faf486313b534f8cda990cf8acb56622f3c14e8df279c9bc677b"
+        },
+        {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "e52771a157cab3c513b2f8ed8aeb155f610b0a7f6fc0eb5526e5dfe4c973a04f"
+          "sha256": "0a1b41e22d4f991ef5fb036bacd8998c9501089a76c2e7504c9d53513808dfcd"
         }
       ],
-      "reason": "Reviewed changed CI checks, dependency installer execution paths and refreshed indexes against workflow guidance. Owning tests and full frontend verification pass; generated indexes stay navigation and no framework workflow policy was changed.",
+      "reason": "Only build/test scripts and guide structure change. Existing IAB native WebMCP proves rendered statistics and safe draft guards; no responsive layout, copy, template or style change.",
       "baseRef": "HEAD",
-      "gitHead": "e8d77407540e9ec32620cd9f05fb09308b1a6be7",
-      "reviewedAtUtc": "2026-10-17T01:08:49.7104156Z"
+      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
+      "reviewedAtUtc": "2026-10-19T08:49:15.4627246Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -647,13 +663,17 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "6e27c672bb40fce870d648e831efb9dad55651fd6fd8af9f8c86828a0da50e84"
+          "sha256": "38d77b35848a123db2e28eedde63114c7ccf5e6765193fc64b991c1dc64f1db0"
+        },
+        {
+          "path": "FoodDiary.Web.Client/.husky/pre-push",
+          "sha256": "3874bf2c836bc30110b372a5b5e8871f9b37495789b184dfc0d306853bb21cb2"
         }
       ],
-      "reason": "Reviewed changed CI checks, dependency installer execution paths and refreshed indexes against workflow guidance. Owning tests and full frontend verification pass; generated indexes stay navigation and no framework workflow policy was changed.",
+      "reason": "Pre-push adds the library build/tests. CI adds matching targets. Existing Wiki hooks, staged generator ordering and backend verification are retained.",
       "baseRef": "HEAD",
-      "gitHead": "e8d77407540e9ec32620cd9f05fb09308b1a6be7",
-      "reviewedAtUtc": "2026-10-17T01:08:49.9086520Z"
+      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
+      "reviewedAtUtc": "2026-10-19T08:49:11.9418443Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -839,13 +859,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b84d8534cea26b98511673c22f49c9aff6d2ffb5323892024d688af7526a0d16"
+          "sha256": "76ba2dbd53fec3abeb042fb1f408c5090119d104a725e59a2b4f34ba856ee330"
         }
       ],
-      "reason": "Reviewed quality guidance after index regeneration. Static references remain navigation evidence; execution evidence is 48 AI tooling tests plus 21 final focused reruns, generated-workspace builds and eight native Dietologist scenarios. This receipt does not certify unrelated parallel changes.",
+      "reason": "The regenerated quality index adds the explicit fd-webmcp library/tests and updated verification scripts; risk model, missing-test interpretation and commands are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
-      "reviewedAtUtc": "2026-10-18T14:07:04.7286238Z"
+      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
+      "reviewedAtUtc": "2026-10-19T08:52:46.4771142Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -888,13 +908,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "6e27c672bb40fce870d648e831efb9dad55651fd6fd8af9f8c86828a0da50e84"
+          "sha256": "38d77b35848a123db2e28eedde63114c7ccf5e6765193fc64b991c1dc64f1db0"
         }
       ],
-      "reason": "Reviewed changed CI checks, dependency installer execution paths and refreshed indexes against workflow guidance. Owning tests and full frontend verification pass; generated indexes stay navigation and no framework workflow policy was changed.",
+      "reason": "CI summary adds two fd-webmcp rows under the existing failure-log and coverage uploads. Report generation, provenance and compatibility baseline remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "e8d77407540e9ec32620cd9f05fb09308b1a6be7",
-      "reviewedAtUtc": "2026-10-17T01:08:51.0044387Z"
+      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
+      "reviewedAtUtc": "2026-10-19T08:49:09.6741596Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -933,13 +953,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b84d8534cea26b98511673c22f49c9aff6d2ffb5323892024d688af7526a0d16"
+          "sha256": "76ba2dbd53fec3abeb042fb1f408c5090119d104a725e59a2b4f34ba856ee330"
         }
       ],
-      "reason": "Reviewed navigation guidance for this local tooling delta. Mail diagnostics accept only owned loopback provider ports, require PID creation identity and matching task identity, omit unrecognized response fields, send no mail and keep delivery unverified. The browser navigation rejection is preserved without workaround. This is documentation freshness review, not a security scan verdict.",
+      "reason": "Quality navigation changes reflect the extracted library and guarded import tests. No security workflow, credential handling, network or provider boundary is changed; existing npm advisories remain explicitly reported.",
       "baseRef": "HEAD",
-      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
-      "reviewedAtUtc": "2026-10-18T14:07:07.4870189Z"
+      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
+      "reviewedAtUtc": "2026-10-19T08:52:48.9300107Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1091,18 +1111,14 @@
       "pageSha256": "4e059a263f76810db4c559e2b5599d8599571ccf48d060f6360c6d0e8ec60b48",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "9f2af6bae137104a1c1ce21bfa6b3305b099decb3f238e7e803019697519f74c"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "2211ab49b34205655cd045836e4d5afeee5cd3733afd78d5c47ed84b186d21ae"
+          "sha256": "36f1de5dd0ee3c7713fd6e9935f4129601d2699c47acdfe7ce4019002bf0c839"
         }
       ],
-      "reason": "Reviewed tracing guidance against owner-published WebMCP capabilities and task runtime helpers. No trace selection, query engine or projection schema changed. Literal client calendar ranges retain existing owner semantics; browser timezone is documented separately from report timezone. Native and runtime observations remain bounded evidence.",
+      "reason": "Frontend index now locates shared WebMCP classes and the shorter client/admin adapters. Source graph tracing and UI trace ownership are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
-      "reviewedAtUtc": "2026-10-18T14:07:10.0487905Z"
+      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
+      "reviewedAtUtc": "2026-10-19T08:52:49.8618243Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1185,14 +1201,14 @@
       "pageSha256": "31a43fb31fa630969babe869c21458771cfbe6ed2e9b0234c47cc7e1511d5725",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "9f2af6bae137104a1c1ce21bfa6b3305b099decb3f238e7e803019697519f74c"
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "ce7df6c2ba83faf486313b534f8cda990cf8acb56622f3c14e8df279c9bc677b"
         }
       ],
-      "reason": "Reviewed the current frontend contract workflow against this task: no component inputs, outputs, SDK calls or production routes changed in the continuation. Task-owned main/admin builds succeeded; eight Dietologist native scenarios passed. Positive admin native interaction remains explicitly unverified because browser navigation was rejected.",
+      "reason": "The workspace guide names fd-webmcp. Public screen types are consumed via compatibility adapters; existing client47/admin4 tests and native client guards verify owner contracts.",
       "baseRef": "HEAD",
-      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
-      "reviewedAtUtc": "2026-10-18T14:07:01.6485437Z"
+      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
+      "reviewedAtUtc": "2026-10-19T08:49:07.5443770Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1201,13 +1217,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "c2015cba3c024e4d0f46a6422b3d86868edcc450771faf9ba423209057329bff"
+          "sha256": "1dbe8a8c65d8bb9500fc7f0f8ed36c9ebf9ec51bbcbccb44d009dd84183ae372"
         }
       ],
-      "reason": "Reviewed the regenerated repository catalog after replacing migration files and renaming the Users persistence test. Catalog entries and source hashes change; SQLite-only discovery, live freshness checks, frozen ranking thresholds and the instruction to keep sources stable during evaluation remain accurate. No query implementation or evaluation thresholds changed.",
+      "reason": "The regenerated repository catalog now exposes the fifth Angular project and its guide. Query selection and exact read-only/source freshness semantics are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5bfed0a25f5b60f585bb720046b7ac422a0e2bee",
-      "reviewedAtUtc": "2026-10-17T13:43:21.5487388Z"
+      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
+      "reviewedAtUtc": "2026-10-19T08:52:47.6765924Z"
     },
     {
       "pageId": "workflow.review-diff",

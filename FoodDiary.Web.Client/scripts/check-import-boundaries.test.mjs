@@ -69,3 +69,42 @@ test('explicit capabilities and owned implementations are allowed', async () => 
     assert.ok(!rules.has('boundaries/dependencies'));
     assert.ok(!rules.has('boundaries/no-unknown-dependencies'));
 });
+
+test('WebMCP library cannot import either application or UI libraries', async () => {
+    for (const source of [
+        "import { AuthService } from '../../../../src/app/services/auth.service';\nexport const forbidden = AuthService;\n",
+        "import { AdminAuthService } from '../../../fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service';\nexport const forbidden = AdminAuthService;\n",
+        "import { FdTourService } from 'fd-tour';\nexport const forbidden = FdTourService;\n",
+    ]) {
+        const rules = await lint(source, 'projects/fd-webmcp/src/lib/webmcp-executor.ts');
+        assert.ok(rules.has('boundaries/dependencies'));
+    }
+});
+
+test('WebMCP consumers must use the public package entry point', async () => {
+    const rules = await lint(
+        "import { WebmcpExecutor } from '../../../../projects/fd-webmcp/src/lib/webmcp-executor';\nexport const forbidden = WebmcpExecutor;\n",
+        'src/app/composition/webmcp/local-webmcp-pilot.service.ts',
+    );
+    assert.ok(rules.has('scope-imports/webmcp-public-api'));
+});
+
+test('WebMCP library uses relative imports internally', async () => {
+    const rules = await lint(
+        "import { WebmcpError } from 'fd-webmcp';\nexport const forbidden = WebmcpError;\n",
+        'projects/fd-webmcp/src/lib/webmcp-executor.ts',
+    );
+    assert.ok(rules.has('scope-imports/webmcp-self-import'));
+});
+
+test('client and admin may consume the WebMCP public API', async () => {
+    for (const file of [
+        'src/app/composition/webmcp/local-webmcp-pilot.service.ts',
+        'projects/fooddiary-admin/src/app/shared/development/admin-webmcp.service.ts',
+    ]) {
+        const rules = await lint("import { WebmcpExecutor } from 'fd-webmcp';\nexport const allowed = WebmcpExecutor;\n", file);
+        assert.ok(!rules.has('boundaries/dependencies'));
+        assert.ok(!rules.has('boundaries/no-unknown-dependencies'));
+        assert.ok(!rules.has('scope-imports/webmcp-public-api'));
+    }
+});

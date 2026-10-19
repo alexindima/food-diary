@@ -31,7 +31,7 @@ module.exports = {
             name: 'not-to-dev-dep-from-production',
             severity: 'error',
             from: {
-                path: '^(src/app|projects/fooddiary-admin/src/app|projects/fd-ui-kit/src/lib|projects/fd-tour/src/lib)',
+                path: '^(src/app|projects/fooddiary-admin/src/app|projects/fd-ui-kit/src/lib|projects/fd-tour/src/lib|projects/fd-webmcp/src/lib)',
                 pathNot: '[.](?:spec|test|stories)[.](?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$',
             },
             to: {
@@ -59,6 +59,12 @@ module.exports = {
             to: {
                 path: '^src/app/',
             },
+        },
+        {
+            name: 'webmcp-must-not-import-applications-or-ui',
+            severity: 'error',
+            from: { path: '^projects/fd-webmcp/src/' },
+            to: { path: '^(src/|projects/(fooddiary-admin|fd-ui-kit|fd-tour)/)' },
         },
         {
             name: 'app-services-must-not-import-features',

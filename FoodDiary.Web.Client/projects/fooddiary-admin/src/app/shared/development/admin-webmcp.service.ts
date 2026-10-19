@@ -1,22 +1,12 @@
 import { DOCUMENT } from '@angular/common';
 import { afterNextRender, ApplicationRef, effect, inject, Injector, isDevMode, Service, untracked } from '@angular/core';
 import { Router } from '@angular/router';
+import { localWebmcpContext, registerWebmcpTools, WebmcpExecutor, WebmcpScreenRegistry, type WebmcpTool as AdminTool } from 'fd-webmcp';
 
 import { environment } from '../../../environments/environment';
 import { AdminAuthService } from '../../features/admin-auth/lib/admin-auth.service';
 import type { AdminDevelopmentScreen } from './admin-development-screen';
 
-type AdminTool = {
-    name: string;
-    description: string;
-    inputSchema: Record<string, unknown>;
-    annotations: { readOnlyHint: boolean };
-    execute: (input: unknown) => Promise<unknown>;
-};
-type AdminModelContext = {
-    registerTool: (tool: AdminTool, options: { signal: AbortSignal }) => void | Promise<void>;
-    unregisterTool?: (name: string) => void;
-};
 const MAX_FILTER_LENGTH = 200;
 const ADMIN_SECTIONS = [
     '',
@@ -45,23 +35,17 @@ export class AdminWebmcpService {
     private readonly auth = inject(AdminAuthService);
     private readonly router = inject(Router);
     private readonly injector = inject(Injector);
-    private screens: AdminDevelopmentScreen[] = [];
-    private busy = false;
+    private readonly screens = new WebmcpScreenRegistry<AdminDevelopmentScreen>();
+    private readonly executor = new WebmcpExecutor();
 
     public attach(screen: AdminDevelopmentScreen): () => void {
-        this.screens.push(screen);
-        return () => {
-            this.screens = this.screens.filter(candidate => candidate !== screen);
-        };
+        return this.screens.attach(screen);
     }
 
     public initialize(): void {
         afterNextRender(() => {
-            if (!isDevMode() || !['localhost', '127.0.0.1', '[::1]'].includes(this.document.location.hostname)) {
-                return;
-            }
-            const context = (this.document as Document & { modelContext?: AdminModelContext }).modelContext;
-            if (typeof context?.registerTool !== 'function') {
+            const context = localWebmcpContext(this.document, isDevMode());
+            if (context === undefined) {
                 return;
             }
             effect(
@@ -70,35 +54,12 @@ export class AdminWebmcpService {
                         return;
                     }
                     const session = this.auth.getToken();
-                    const controller = new AbortController();
                     const tools = untracked(() => this.tools(session));
-                    void this.registerAsync(context, tools, controller);
-                    onCleanup(() => {
-                        controller.abort();
-                        for (const tool of tools) {
-                            context.unregisterTool?.(tool.name);
-                        }
-                    });
+                    onCleanup(registerWebmcpTools(context, tools));
                 },
                 { injector: this.injector },
             );
         });
-    }
-
-    private async registerAsync(context: AdminModelContext, tools: AdminTool[], controller: AbortController): Promise<void> {
-        try {
-            for (const tool of tools) {
-                if (controller.signal.aborted) {
-                    return;
-                }
-                await context.registerTool(tool, { signal: controller.signal });
-            }
-        } catch {
-            controller.abort();
-            for (const tool of tools) {
-                context.unregisterTool?.(tool.name);
-            }
-        }
     }
 
     private tools(session: string | null): AdminTool[] {
@@ -148,7 +109,7 @@ export class AdminWebmcpService {
     private setScreenFiltersTool(session: string | null): AdminTool {
         const runAsync = async (value: Record<string, unknown>): Promise<unknown> => {
             this.requireClean();
-            const screen = this.screens.at(-1);
+            const screen = this.screens.current();
             if (screen?.setFiltersAsync === undefined) {
                 throw new Error('Unsupported filters.');
             }
@@ -179,7 +140,7 @@ export class AdminWebmcpService {
         const runAsync = async (value: Record<string, unknown>): Promise<unknown> => {
             this.requireClean();
             const id = value['id'];
-            const open = this.screens.at(-1)?.openEntityAsync;
+            const open = this.screens.current()?.openEntityAsync;
             if (typeof id !== 'string' || open === undefined) {
                 throw new Error('Unsupported record.');
             }
@@ -198,36 +159,23 @@ export class AdminWebmcpService {
         session: string | null,
         operation: Omit<AdminTool, 'execute'> & { run: (input: Record<string, unknown>) => unknown },
     ): AdminTool {
-        const executeAsync = async (input: unknown): Promise<unknown> => {
-            const changesScreen = !operation.annotations.readOnlyHint;
-            try {
-                this.requireSession(session);
-                if (changesScreen && this.busy) {
-                    return { ok: false, error: 'Another development tool is running.' };
-                }
-                if (changesScreen) {
-                    this.busy = true;
-                }
-                try {
+        return this.executor.tool(
+            {
+                ...operation,
+                run: input => {
                     const schema = operation.inputSchema['properties'];
-                    const value = this.record(input, typeof schema === 'object' && schema !== null ? Object.keys(schema) : []);
-                    const result = await operation.run(value);
+                    return operation.run(this.record(input, typeof schema === 'object' && schema !== null ? Object.keys(schema) : []));
+                },
+            },
+            {
+                requireSession: () => {
                     this.requireSession(session);
-                    return result;
-                } finally {
-                    if (changesScreen) {
-                        this.busy = false;
-                    }
-                }
-            } catch {
-                return {
-                    ok: false,
-                    error: 'Operation unavailable. Read current context; check session, supported fields, IDs and unsaved changes.',
-                };
-            }
-        };
-        const { run: _run, ...definition } = operation;
-        return { ...definition, description: `${definition.description} Errors return {ok:false,error}.`, execute: executeAsync };
+                },
+                errorMessage: () =>
+                    'Operation unavailable. Read current context; check session, supported fields, IDs and unsaved changes.',
+                failureDescription: 'Errors return {ok:false,error}.',
+            },
+        );
     }
 
     private filterValue(item: unknown): string | null {
@@ -245,7 +193,7 @@ export class AdminWebmcpService {
     }
 
     private read(): unknown {
-        const screen = this.screens.at(-1);
+        const screen = this.screens.current();
         return {
             path: this.router.url.split('?')[0].split('#')[0],
             role: 'Admin',
@@ -285,10 +233,10 @@ export class AdminWebmcpService {
         if (this.document.querySelector('[role="dialog"]') !== null) {
             throw new Error('Close the current dialog through the interface.');
         }
-        if (this.screens.length === 0 && this.router.url.split('?')[0] !== '/') {
+        if (this.screens.current() === undefined && this.router.url.split('?')[0] !== '/') {
             throw new Error('This screen does not publish unsaved-change state. Navigate through the interface.');
         }
-        if (this.screens.some(screen => screen.isDirty?.() === true)) {
+        if (this.screens.isDirty()) {
             throw new Error('Unsaved changes.');
         }
     }

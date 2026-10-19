@@ -70,6 +70,8 @@ run_frontend_checks() {
   npm run check:depcruise-baseline || return 1
   npm run stylelint || return 1
   npm run audit:design-tokens || return 1
+  npm run build:webmcp || return 1
+  npm run test:ci:webmcp || return 1
   npm run test:ci:app || return 1
   npm run check:i18n || return 1
   if printf '%s\n' "$changed_paths" | grep -Eq '^FoodDiary\.Web\.Client/(\.storybook/.*|projects/fd-ui-kit/src/.*\.stories\.(ts|mdx)|package\.json|angular\.json)$'; then

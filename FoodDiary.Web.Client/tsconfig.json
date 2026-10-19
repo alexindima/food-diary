@@ -7,6 +7,7 @@
         "strict": true,
         "noImplicitOverride": true,
         "paths": {
+            "fd-webmcp": ["./projects/fd-webmcp/src/public-api", "./dist/fd-webmcp"],
             "fd-tour": ["./projects/fd-tour/src/public-api", "./dist/fd-tour"],
             "fd-ui-kit": ["./projects/fd-ui-kit/src/public-api", "./dist/fd-ui-kit"],
             "fd-ui-kit/*": ["./projects/fd-ui-kit/src/lib/*"]
@@ -51,6 +52,8 @@
         "strictTemplates": true
     },
     "references": [
+        { "path": "./projects/fd-webmcp/tsconfig.lib.json" },
+        { "path": "./projects/fd-webmcp/tsconfig.spec.json" },
         {
             "path": "./projects/fd-ui-kit/tsconfig.lib.json"
         },

@@ -470,6 +470,40 @@
                     }
                 }
             }
+        },
+        "fd-webmcp": {
+            "projectType": "library",
+            "root": "projects/fd-webmcp",
+            "sourceRoot": "projects/fd-webmcp/src",
+            "prefix": "fd",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:ng-packagr",
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "projects/fd-webmcp/tsconfig.lib.prod.json"
+                        },
+                        "development": {
+                            "tsConfig": "projects/fd-webmcp/tsconfig.lib.json"
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "test": {
+                    "builder": "@angular/build:unit-test",
+                    "options": {
+                        "tsConfig": "projects/fd-webmcp/tsconfig.spec.json"
+                    },
+                    "configurations": {
+                        "coverage": {
+                            "coverage": true,
+                            "coverageInclude": ["projects/fd-webmcp/src/**/*.ts"],
+                            "coverageExclude": ["**/*.spec.ts", "**/*.stories.ts", "**/*.d.ts"],
+                            "runnerConfig": "vitest.config.mjs"
+                        }
+                    }
+                }
+            }
         }
     },
     "schematics": {

@@ -1,20 +1,7 @@
-import { DestroyRef, inject, InjectionToken } from '@angular/core';
+import { InjectionToken } from '@angular/core';
+import { connectWebmcpScreen, type WebmcpScreen as DevelopmentScreen } from 'fd-webmcp';
 
-/** Optional capabilities published by the live page/dialog. No persistence capability. */
-export type DevelopmentScreen = {
-    kind: string;
-    read: () => unknown;
-    isDirty?: () => boolean;
-    draftSchema?: Record<string, unknown>;
-    fillDraft?: (draft: unknown) => void;
-    clearDraft?: () => void;
-    setFiltersAsync?: (filters: unknown) => void | Promise<void>;
-    setFilters?: (filters: unknown) => void;
-    openEntityAsync?: (id: string) => void | Promise<void>;
-    openDraft?: () => void;
-    beforeNavigate?: () => void;
-};
-
+export type { WebmcpScreen as DevelopmentScreen } from 'fd-webmcp';
 export const DEVELOPMENT_SCREENS = new InjectionToken<{ attach: (screen: DevelopmentScreen) => () => void }>('DEVELOPMENT_SCREENS');
 export type DevelopmentResponseMetadata = { apiBuild: string | null; apiInstance: string | null };
 export type DevelopmentRequestCompletion = ((status?: number, metadata?: DevelopmentResponseMetadata) => void) & { requestId?: number };
@@ -24,10 +11,7 @@ export const DEVELOPMENT_REQUESTS = new InjectionToken<{
 }>('DEVELOPMENT_REQUESTS');
 
 export function connectDevelopmentScreen(screen: DevelopmentScreen): void {
-    const screens = inject(DEVELOPMENT_SCREENS, { optional: true });
-    if (screens !== null) {
-        inject(DestroyRef).onDestroy(screens.attach(screen));
-    }
+    connectWebmcpScreen(DEVELOPMENT_SCREENS, screen);
 }
 
 export class DevelopmentToolError extends Error {

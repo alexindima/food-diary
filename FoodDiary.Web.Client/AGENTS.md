@@ -10,6 +10,7 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 - App sources: `src/`
 - Shared library: `projects/fd-ui-kit/`
 - Guided tour engine: `projects/fd-tour/`
+- Local browser tool infrastructure: `projects/fd-webmcp/`; app-specific tools remain in the consuming application.
 - Admin app: `projects/fooddiary-admin/`
 
 ## Commands
@@ -43,6 +44,8 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 - UI kit build: `npx ng build fd-ui-kit`
 - Tour library build: `npm run build:tour`
 - Tour library tests: `npm run test:ci:tour`
+- WebMCP library build: `npm run build:webmcp`
+- WebMCP library tests: `npm run test:ci:webmcp`
 
 ## TypeScript + Angular
 

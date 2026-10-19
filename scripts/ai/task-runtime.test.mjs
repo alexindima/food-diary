@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import {
     mkdirSync,
     mkdtempSync,
@@ -21,9 +22,32 @@ import {
     processIdentity,
     runtimeDirectory,
     safeSettings,
+    sourceFingerprint,
     stopOwnedProcess,
     stopRuntime,
 } from "./task-runtime.mjs";
+
+test("runtime freshness includes extracted WebMCP library source", () => {
+    const root = mkdtempSync(join(tmpdir(), "fd-webmcp-fingerprint-"));
+    try {
+        const git = (...args) => execFileSync("git", ["-C", root, ...args], { encoding: "utf8", windowsHide: true });
+        git("init", "-q");
+        git("-c", "user.name=Fixture", "-c", "user.email=fixture@example.test", "commit", "--allow-empty", "-qm", "fixture");
+        const directory = join(root, "FoodDiary.Web.Client", "projects", "fd-webmcp", "src", "lib");
+        mkdirSync(directory, { recursive: true });
+        const baseline = sourceFingerprint(root);
+        writeFileSync(join(directory, "bridge.ts"), "export const revision = 1;\n");
+        const created = sourceFingerprint(root);
+        assert.notEqual(created, baseline);
+        writeFileSync(join(directory, "bridge.ts"), "export const revision = 2;\n");
+        const changed = sourceFingerprint(root);
+        assert.notEqual(changed, created);
+        writeFileSync(join(directory, "bridge.spec.ts"), "// test-only change\n");
+        assert.equal(sourceFingerprint(root), changed);
+    } finally {
+        rmSync(root, { recursive: true, force: true });
+    }
+});
 
 test("runtime discovery returns safe metadata and never claims dead or unprobed owners are ready", async () => {
     const root = mkdtempSync(join(tmpdir(), "fd-runtime-discovery-"));

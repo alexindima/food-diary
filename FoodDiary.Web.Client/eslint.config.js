@@ -582,6 +582,7 @@ const appBoundaryElements = [
     { type: 'admin-feature-other', pattern: 'projects/fooddiary-admin/src/app/features/(*)', capture: ['feature'] },
     { type: 'ui-kit', pattern: 'projects/fd-ui-kit/src' },
     { type: 'tour', pattern: 'projects/fd-tour/src' },
+    { type: 'webmcp', pattern: 'projects/fd-webmcp/src' },
     { type: 'app-shared', pattern: 'src/app/shared' },
     { type: 'app-core', pattern: 'src/app' },
     { type: 'admin-core', pattern: 'projects/fooddiary-admin/src/app' },
@@ -1571,7 +1572,13 @@ export default [
         },
         settings: {
             'import/resolver': { typescript: { project: ['tsconfig.json', 'projects/fooddiary-admin/tsconfig.app.json'] } },
-            'boundaries/include': ['src/app/**/*.ts', 'projects/fooddiary-admin/src/app/**/*.ts'],
+            'boundaries/include': [
+                'src/app/**/*.ts',
+                'projects/fooddiary-admin/src/app/**/*.ts',
+                'projects/fd-webmcp/src/**/*.ts',
+                'projects/fd-tour/src/**/*.ts',
+                'projects/fd-ui-kit/src/**/*.ts',
+            ],
             'boundaries/ignore': ['**/*.spec.ts'],
             'boundaries/elements': appBoundaryElements,
         },
@@ -1627,6 +1634,11 @@ export default [
                 {
                     default: 'allow',
                     policies: [
+                        {
+                            from: { element: { type: 'webmcp' } },
+                            disallow: { to: { element: { type: ['app-*', 'admin-*', 'ui-kit', 'tour'] } } },
+                            message: 'fd-webmcp must remain independent of application features and UI libraries.',
+                        },
                         {
                             from: { element: { type: 'app-shared-models' } },
                             disallow: {
@@ -2782,6 +2794,34 @@ export default [
             '@angular-eslint/template/cyclomatic-complexity': ['error', { maxComplexity }],
         },
     })),
+    {
+        files: ['src/**/*.ts', 'projects/fooddiary-admin/src/**/*.ts'],
+        rules: {
+            ...restrictImports('webmcp-public-api', [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: ['**/fd-webmcp/src/**', 'fd-webmcp/*'],
+                            message: 'Import fd-webmcp through its public package entry point.',
+                        },
+                    ],
+                },
+            ]),
+        },
+    },
+    {
+        files: ['projects/fd-webmcp/src/**/*.ts'],
+        rules: {
+            ...restrictImports('webmcp-self-import', [
+                'error',
+                {
+                    paths: [{ name: 'fd-webmcp', message: 'Use relative imports inside fd-webmcp.' }],
+                    patterns: [{ group: ['fd-webmcp/*'], message: 'Use relative imports inside fd-webmcp.' }],
+                },
+            ]),
+        },
+    },
     ...storybook.configs['flat/recommended'],
     {
         files: [

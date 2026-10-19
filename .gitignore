@@ -64,6 +64,7 @@ Thumbs.db
 /.artifacts/
 .playwright-cli/
 /output/playwright/
+/output/qa/
 /FoodDiary.Web.Client/test-results/
 /FoodDiary.Web.Client/playwright-report/
 /FoodDiary.TechRadar/node_modules/

@@ -1,6 +1,18 @@
 import { DOCUMENT } from '@angular/common';
-import { afterNextRender, ApplicationRef, computed, DestroyRef, effect, inject, Injector, isDevMode, Service, untracked } from '@angular/core';
+import {
+    afterNextRender,
+    ApplicationRef,
+    computed,
+    DestroyRef,
+    effect,
+    inject,
+    Injector,
+    isDevMode,
+    Service,
+    untracked,
+} from '@angular/core';
 import { Router } from '@angular/router';
+import { registerWebmcpTools, WebmcpError, WebmcpExecutor } from 'fd-webmcp';
 import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
@@ -13,7 +25,7 @@ import { AuthService } from '../../services/auth.service';
 import { DevelopmentToolError } from '../../shared/development/development-tools';
 import { entityId } from '../../shared/models/semantics/entity-id';
 import { recipeServings } from '../../shared/models/semantics/meal-quantity';
-import { type LocalModelContext, localModelContext, type LocalTool } from './local-webmcp.types';
+import { localModelContext, type LocalTool } from './local-webmcp.types';
 import { LocalWebmcpApplicationService } from './local-webmcp-application.service';
 import { LocalWebmcpError } from './local-webmcp-error';
 import { DAY_SCHEMA, DRAFT_SCHEMA, inputRecord, readDay, readDraft } from './local-webmcp-input';
@@ -35,7 +47,7 @@ export class LocalWebmcpPilotService implements MealDevelopmentTools {
     private readonly application = inject(LocalWebmcpApplicationService);
     private readonly requests = inject(LocalWebmcpRequestsService);
     private screen: MealDevelopmentScreen | null = null;
-    private busy = false;
+    private readonly executor = new WebmcpExecutor();
     private started = false;
     private hasRegisteredSession = false;
 
@@ -49,24 +61,19 @@ export class LocalWebmcpPilotService implements MealDevelopmentTools {
             if (context === undefined) {
                 return;
             }
-            const sessionUser = computed(() => this.auth.isAuthenticated() ? this.auth.getUserId() : null);
+            const sessionUser = computed(() => (this.auth.isAuthenticated() ? this.auth.getUserId() : null));
             effect(
                 onCleanup => {
                     const userId = sessionUser();
                     if (userId === null) {
                         return;
                     }
-                    const controller = new AbortController();
                     if (this.hasRegisteredSession) {
                         this.requests.clear();
                     }
                     this.hasRegisteredSession = true;
                     const tools = untracked(() => this.tools(userId));
-                    void this.registerToolsAsync(context, tools, controller);
-                    onCleanup(() => {
-                        controller.abort();
-                        this.unregister(context, tools);
-                    });
+                    onCleanup(registerWebmcpTools(context, tools));
                 },
                 { injector: this.injector },
             );
@@ -88,21 +95,6 @@ export class LocalWebmcpPilotService implements MealDevelopmentTools {
                 this.screen = null;
             }
         };
-    }
-
-    private async registerToolsAsync(context: LocalModelContext, tools: LocalTool[], controller: AbortController): Promise<void> {
-        try {
-            for (const tool of tools) {
-                if (controller.signal.aborted) {
-                    return;
-                }
-                await context.registerTool(tool, { signal: controller.signal });
-            }
-        } catch {
-            // Missing browser support must never prevent normal app use.
-            controller.abort();
-            this.unregister(context, tools);
-        }
     }
 
     private tools(userId: string): LocalTool[] {
@@ -151,39 +143,16 @@ export class LocalWebmcpPilotService implements MealDevelopmentTools {
     }
 
     private tool(userId: string, operation: ToolOperation): LocalTool {
-        const executeAsync = async (input: unknown): Promise<unknown> => {
-            const changesScreen = !operation.annotations.readOnlyHint;
-            try {
+        return this.executor.tool(operation, {
+            requireSession: () => {
                 this.requireSession(userId);
-                if (changesScreen && this.busy) {
-                    return { ok: false, error: 'Another development tool is running.' };
-                }
-                if (changesScreen) {
-                    this.busy = true;
-                }
-                try {
-                    return await operation.run(input);
-                } finally {
-                    if (changesScreen) {
-                        this.busy = false;
-                    }
-                }
-            } catch (error: unknown) {
-                return {
-                    ok: false,
-                    error:
-                        error instanceof LocalWebmcpError || error instanceof DevelopmentToolError
-                            ? error.message
-                            : 'The tool could not complete. Inspect the current screen and retry.',
-                };
-            }
-        };
-        const { run: _run, ...definition } = operation;
-        return {
-            ...definition,
-            description: `${definition.description} Failures return {ok:false,error}; inspect the result before continuing.`,
-            execute: executeAsync,
-        };
+            },
+            errorMessage: error =>
+                error instanceof LocalWebmcpError || error instanceof DevelopmentToolError || error instanceof WebmcpError
+                    ? error.message
+                    : 'The tool could not complete. Inspect the current screen and retry.',
+            failureDescription: 'Failures return {ok:false,error}; inspect the result before continuing.',
+        });
     }
 
     private async openDiaryAsync(input: unknown, userId: string): Promise<unknown> {
@@ -216,7 +185,9 @@ export class LocalWebmcpPilotService implements MealDevelopmentTools {
         if (editor?.fillDraft === undefined || editor.isDirty?.() === true) {
             throw new LocalWebmcpError('A clean new meal editor is required.');
         }
-        await editor.fillDraft({ ...draft, items }, () => { this.requireSession(userId); });
+        await editor.fillDraft({ ...draft, items }, () => {
+            this.requireSession(userId);
+        });
         this.requireSession(userId);
         return { saved: false, ...this.context() };
     }
@@ -312,12 +283,6 @@ export class LocalWebmcpPilotService implements MealDevelopmentTools {
         }
         if (this.screen?.isDirty?.() === true || this.screens.isDirty()) {
             throw new LocalWebmcpError('Unsaved draft exists. Review, save or discard it in the interface first.');
-        }
-    }
-
-    private unregister(context: LocalModelContext, tools: LocalTool[]): void {
-        for (const tool of tools) {
-            context.unregisterTool?.(tool.name);
         }
     }
 }

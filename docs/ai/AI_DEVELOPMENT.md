@@ -348,11 +348,21 @@ Reading during a diary load reports `loading: true`; inspect the rendered result
 and read again after loading. Tools accelerate scenario preparation and state
 inspection; they do not exercise buttons, keyboard interaction or visual layout.
 
-The implementation lives under `src/app/composition/webmcp` and consumes the
-optional `features/meals/contracts/meal-development-tools` capability. It
-also consumes `shared/development` capabilities published by each live owner;
-admin keeps its separate adapter under its own `shared/development`. Browsers
-without native WebMCP need no polyfill or separate MCP server.
+The shared mechanism is the `fd-webmcp` Angular library under
+`FoodDiary.Web.Client/projects/fd-webmcp`, with an explicit `src/public-api.ts`.
+It owns native-browser detection, abortable tool registration, session-checked
+execution and screen contracts/registry. It has no client/admin, UI, API SDK,
+authentication, route or domain dependencies. Build with `npm run build:webmcp`
+and test with `npm run test:ci:webmcp`; full verification, pre-push and CI include
+both targets.
+
+The client adapter remains under `src/app/composition/webmcp` and consumes the
+optional `features/meals/contracts/meal-development-tools` capability and
+`shared/development` capabilities published by each live owner. Admin keeps its
+adapter under its own `shared/development`. Both import the library through
+`fd-webmcp`; each still owns its tool names/schemas, routes, authentication checks,
+API metadata/redaction and scenarios. Existing feature capability imports remain
+compatible. Browsers without native WebMCP need no polyfill or separate MCP server.
 
 In one local comparison at 1280 x 720, opening 16 October 2026 and preparing
 an unsaved lunch at 12:30 with a comment and 150 g of a known product took

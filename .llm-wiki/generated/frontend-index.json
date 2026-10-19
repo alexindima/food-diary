@@ -8,17 +8,17 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2607,
-    "symbols": 840,
+    "typescriptFiles": 2619,
+    "symbols": 843,
     "routes": 108,
     "features": 46,
-    "specs": 757,
+    "specs": 761,
     "localeFiles": 5,
     "roles": {
       "Component": 493,
       "Directive": 15,
       "Facade": 88,
-      "Other": 37,
+      "Other": 40,
       "Pipe": 5,
       "Service": 202
     }
@@ -2143,6 +2143,27 @@
       "line": 20
     },
     {
+      "name": "WebmcpError",
+      "role": "Other",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fd-webmcp/src/lib/webmcp-error.ts",
+      "line": 2
+    },
+    {
+      "name": "WebmcpExecutor",
+      "role": "Other",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fd-webmcp/src/lib/webmcp-executor.ts",
+      "line": 10
+    },
+    {
+      "name": "WebmcpScreenRegistry",
+      "role": "Other",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fd-webmcp/src/lib/webmcp-screen-registry.ts",
+      "line": 5
+    },
+    {
       "name": "AppComponent",
       "role": "Component",
       "selector": "app-root",
@@ -3015,7 +3036,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/development/admin-webmcp.service.ts",
-      "line": 43
+      "line": 33
     },
     {
       "name": "AdminLoadErrorComponent",
@@ -3505,7 +3526,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/composition/webmcp/local-webmcp-pilot.service.ts",
-      "line": 28
+      "line": 40
     },
     {
       "name": "LocalWebmcpPushService",
@@ -3526,7 +3547,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/composition/webmcp/local-webmcp-screens.service.ts",
-      "line": 7
+      "line": 8
     },
     {
       "name": "TelegramAuthService",
@@ -7117,7 +7138,7 @@
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/development/development-tools.ts",
-      "line": 32
+      "line": 16
     },
     {
       "name": "ItemSelectDialogComponent",

@@ -8,6 +8,7 @@ Major parts:
 - `projects/fooddiary-admin` - admin Angular application.
 - `projects/fd-ui-kit` - reusable UI primitives, visual tokens, Storybook documentation.
 - `projects/fd-tour` - reusable guided-tour engine and host integration.
+- `projects/fd-webmcp` - shared local browser-tool infrastructure for the client and admin.
 
 ## Main App Structure
 
@@ -54,6 +55,23 @@ Rules:
 Use `fd-tour` for reusable guided-tour orchestration. Keep product-specific tour
 content in the consuming application and keep the library's public API,
 animation behavior, and persistence contracts covered by its dedicated tests.
+
+## WebMCP Infrastructure
+
+Use `fd-webmcp` through its public entry point for native browser detection,
+abortable tool registration, session-checked execution and published screen
+contracts/registry. Each application creates its own executor and screen host.
+The library has no application, UI-kit, tour, API SDK or authentication dependency.
+
+Tool names/schemas, route allowlists, authentication/role policies, API metadata
+redaction and domain scenarios belong to the consuming application. Existing
+feature capability files remain application-owned adapters to the library.
+Registration runs only after browser rendering in local development. The library
+does not save records, start sessions or request permissions.
+
+Dedicated `build:webmcp`, `test:ci:webmcp` and `test:coverage:webmcp` commands cover
+the public package and shared guards. Full verification, pre-push and CI include
+the library; ESLint and Dependency Cruiser enforce its dependency boundary.
 
 ## Angular Conventions
 Follow the official Angular conventions reflected in ESLint and `AGENTS.md`:

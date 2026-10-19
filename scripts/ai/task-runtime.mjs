@@ -63,6 +63,7 @@ export function sourceFingerprint(root = repositoryRoot) {
         "FoodDiary.Web.Client/src/app",
         "FoodDiary.Web.Client/src/environments",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src",
+        "FoodDiary.Web.Client/projects/fd-webmcp",
         "FoodDiary.Web.Client/angular.json",
         "FoodDiary.Web.Client/package.json",
         "FoodDiary.Web.Client/package-lock.json",

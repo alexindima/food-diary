@@ -9,6 +9,7 @@ sources:
   - FoodDiary.Web.Client/projects/fooddiary-admin/AGENTS.md
   - FoodDiary.Web.Client/projects/fd-ui-kit/AGENTS.md
   - FoodDiary.Web.Client/projects/fd-tour/AGENTS.md
+  - FoodDiary.Web.Client/projects/fd-webmcp/AGENTS.md
   - docs/frontend/FRONTEND_ARCHITECTURE.md
   - docs/frontend/API_SDK.md
   - FoodDiary.Web.Client/src/app/shared/api/sdk/products-sdk.ts
@@ -18,7 +19,10 @@ sources:
 # Frontend
 
 The frontend workspace contains the main Angular application, an admin
-application, the `fd-ui-kit` component library, and the `fd-tour` engine.
+application, the `fd-ui-kit` component library, the `fd-tour` engine and the
+`fd-webmcp` local browser-tool infrastructure. WebMCP applications own their
+scenarios, authentication, routes and API redaction; the library shares only
+browser registration/execution and screen contracts/guards.
 
 ## Boundaries
 
@@ -40,7 +44,7 @@ control flow, lazy feature routes, and SSR-safe browser access. New UI copy must
 be updated in both English and Russian locale files.
 
 Before editing, read the root frontend guide and the nearest applicable scoped
-guide. UI kit, admin, tour, application root, and feature folders have
+guide. UI kit, admin, tour, WebMCP, application root, and feature folders have
 additional local rules.
 
 ## API SDK

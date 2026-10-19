@@ -159,6 +159,7 @@ This catalog carries navigation only; architectural and operational rules remain
 - Frontend admin app: `FoodDiary.Web.Client/projects/fooddiary-admin/AGENTS.md`
 - UI kit: `FoodDiary.Web.Client/projects/fd-ui-kit/AGENTS.md`
 - Tour engine: `FoodDiary.Web.Client/projects/fd-tour/AGENTS.md`
+- Local WebMCP infrastructure: `FoodDiary.Web.Client/projects/fd-webmcp/AGENTS.md`
 - Presentation adapter: `FoodDiary.Presentation.Api/AGENTS.md`
 - API host/presentation: `FoodDiary.Web.Api/AGENTS.md`
 - Application runtime: `Shared/FoodDiary.Application.Runtime/AGENTS.md`
