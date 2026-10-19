@@ -14338,11 +14338,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/api/recipe.service.ts",
-      "nonBlankLines": 114,
+      "nonBlankLines": 119,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.78
+      "structuralRiskScore": 3.88
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-cook-mode/recipe-cook-mode.ts",
@@ -18530,11 +18530,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/model/update-recipe-http-request.ts",
-      "nonBlankLines": 38,
+      "nonBlankLines": 40,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.76
+      "structuralRiskScore": 0.8
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/model/update-shopping-list-http-request.ts",

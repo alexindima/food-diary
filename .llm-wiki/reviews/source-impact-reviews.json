@@ -210,14 +210,14 @@
       "pageSha256": "6a4fbe9e389de624f52a78cd689384c475d8a770e74e9fd1109f861f2ceda68b",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "6e27c672bb40fce870d648e831efb9dad55651fd6fd8af9f8c86828a0da50e84"
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+          "sha256": "166a4e2f5aa6689903c4ff8068bb03a2877f94e5d8e4d99f8f11e8888ec54df6"
         }
       ],
-      "reason": "Reviewed owning replay/profile/source contracts and all direct callers against the final implementation; full solution and 23 HTTP contract tests pass. CI additions apply checked dependency patches and test deploy provenance without changing API or index contracts.",
+      "reason": "R5-073 adds optional clearPrepTime and clearCookTime flags across HTTP, owning command and domain. Omission preserves existing durations; clear nulls selected durations; explicit preparation zero remains zero. Conflicting supplied value and clear flag is rejected before any mutation. No routes, authorization, schema, provider or nutrition contracts changed. Actual Swagger export regenerated full API snapshot and user SDK using the pinned official generator. API compatibility against 75872d630 reports zero breaking and four additive entries; OpenAPI normal assertion tests pass4 after snapshot regeneration.",
       "baseRef": "HEAD",
-      "gitHead": "e8d77407540e9ec32620cd9f05fb09308b1a6be7",
-      "reviewedAtUtc": "2026-10-17T01:08:48.3543263Z"
+      "gitHead": "3f1c499ef093cc6af121713da45c7d6718821087",
+      "reviewedAtUtc": "2026-10-18T23:59:43.9353869Z"
     },
     {
       "pageId": "workflow-architecture-health-review",

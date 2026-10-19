@@ -75,7 +75,8 @@ public sealed class RecipeTimingClearContractTests(TestAuthApiWebApplicationFact
             Visibility: "Private", CalculateNutritionAutomatically: true, ManualCalories: null,
             ManualProteins: null, ManualFats: null, ManualCarbs: null, ManualFiber: null, ManualAlcohol: null,
             [new RecipeStepHttpRequest(Title: null, "Synthetic timing step", [], ImageUrl: null, ImageAssetId: null)]) {
-            Language = "en", LanguageConfirmed = true,
+            Language = "en",
+            LanguageConfirmed = true,
         };
         HttpResponseMessage response = await client.PostAsJsonAsync("/api/v1/recipes", create);
         response.EnsureSuccessStatusCode();
