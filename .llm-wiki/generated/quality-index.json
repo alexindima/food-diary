@@ -66588,8 +66588,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
       "line": 1,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1",
         ".llm-wiki/tools/Test-LlmWikiUsability.ps1",
         ".llm-wiki/tools/Test-LlmWikiVerificationReceipts.ps1"

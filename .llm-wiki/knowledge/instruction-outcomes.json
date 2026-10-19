@@ -601,6 +601,43 @@
       "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
       "previousEventHash": "70fe63ccdb32a234275a0119fdfb395e2c8ed768cdeaf56e977187f7d0fc6ce7",
       "eventHash": "8e10beea154600558d0ef67916d0153fc945bdc2109c3c2da30796e62ec75915"
+    },
+    {
+      "schemaVersion": 2,
+      "eventId": "921780b48b3847308becf01f7937cd41",
+      "workspace": ".artifacts/llm-wiki/tasks/master-baseline-preflight",
+      "recordedAtUtc": "2026-10-19T10:07:41.0505298Z",
+      "completionFingerprint": "5df572ad04efc08b1f49c753d63d2d0bccb5bcc329917d9fa958418c8353464a",
+      "retrospectiveHash": "b2974ae1ba8617e301da3542c5c017961f4f95ec5eb1255a01204a21506c5123",
+      "instructionSetFingerprint": "186504ff6598ebb917b46c57feb558ac49ce5bbf24b364d491cf1b6c1830a95a",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "fingerprint": "997762017a8b9c43002f825cb93149d0e886a415264eea23de89be5b07595e7c"
+        }
+      ],
+      "taskSignals": {
+        "riskLevel": "medium",
+        "complexityScore": 44,
+        "complexityBandUpperBound": 59,
+        "cohortKey": "medium|complexity<=59",
+        "modelRouteId": "unrouted",
+        "contextStrategyId": "default"
+      },
+      "outcome": {
+        "score": 95.0,
+        "quality": "excellent",
+        "readinessScore": 100.0,
+        "confidenceScore": 90.0,
+        "critiqueScore": 90.0,
+        "verificationScore": 100.0,
+        "repairAttempts": 0,
+        "falseNegativeCount": 0
+      },
+      "success": true,
+      "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
+      "previousEventHash": "8e10beea154600558d0ef67916d0153fc945bdc2109c3c2da30796e62ec75915",
+      "eventHash": "b1613b0531dbc50b5f3a9ac07ccea66bfd1b96b3a65eebacc3b207f1742ae5a4"
     }
   ]
 }

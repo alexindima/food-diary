@@ -99,3 +99,15 @@ test("source authorization runs before checkout, credentials and source scripts"
     assert.ok(workflow.includes('"${SOURCE_COMMIT_SHA}" != "${master_sha}"'));
     assert.ok(workflow.includes("curl --fail --silent --show-error"));
 });
+
+test("database readiness runs before server uploads and writer shutdown", () => {
+    const guard = workflow.indexOf("- name: Verify primary database baseline");
+    const deployment = workflow.indexOf("- name: Deploy to server");
+    assert.ok(guard > 0 && guard < deployment);
+    const guardStep = workflow.slice(guard, workflow.indexOf("- name: Record failure step", guard));
+    assert.ok(guardStep.includes("'cd /opt/fooddiary && python3 -' < scripts/database/check_primary_baseline_readiness.py"));
+    assert.ok(!guardStep.includes("continue-on-error"));
+    assert.ok(!guardStep.includes(" stop "));
+    assert.ok(deployment < workflow.indexOf("$SCP_CMD docker-compose.yml"));
+    assert.ok(deployment < workflow.indexOf("stop --timeout 60 api telegram-bot job-manager"));
+});

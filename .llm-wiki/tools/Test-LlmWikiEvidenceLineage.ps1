@@ -144,7 +144,7 @@ foreach ($entry in @($evidence.reviews | Where-Object status -in @('completed', 
 }
 if ($evidence.PSObject.Properties['supplementalChecks']) {
     foreach ($entry in @($evidence.supplementalChecks | Where-Object status -in @('passed', 'passed-with-known-baseline-failures', 'failed', 'not-applicable'))) {
-        if ([string]$entry.id -in @($policy.requiredChecks.id)) { $issues.Add("Supplemental check '$($entry.id)' collides with a required check."); continue }
+        if ([string]$entry.id -in @(Get-LlmWikiPropertyValues @($policy.requiredChecks) 'id')) { $issues.Add("Supplemental check '$($entry.id)' collides with a required check."); continue }
         Test-Lineage 'supplemental' $entry ([pscustomobject]@{ command = [string]$entry.command; sourceRule = 'manual' })
     }
 }

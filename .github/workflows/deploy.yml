@@ -538,6 +538,22 @@ jobs:
             echo "FAILED_TARGET=Verify server env file"
           } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
 
+      - name: Verify primary database baseline
+        id: verify_primary_baseline
+        shell: bash
+        run: |
+          ssh -T -i ~/.ssh/id_rsa -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o ConnectTimeout=30 -o ServerAliveInterval=30 -o ServerAliveCountMax=6 root@${{ env.SERVER_IP }} \
+            'cd /opt/fooddiary && python3 -' < scripts/database/check_primary_baseline_readiness.py
+
+      - name: Record failure step
+        if: always() && steps.verify_primary_baseline.outcome == 'failure'
+        shell: bash
+        run: |
+          {
+            echo "FAILED_AREA=deploy"
+            echo "FAILED_TARGET=Verify primary database baseline"
+          } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
       - name: Deploy to server
         id: deploy_server
         run: |

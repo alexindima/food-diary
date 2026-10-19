@@ -87,7 +87,29 @@ try {
     $manifest = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'change-manifest.json') -Raw | ConvertFrom-Json
     Assert-Regression (@($manifest.scope.allowedPathPatterns) -contains '^FoodDiary\.Application/') 'Replan did not take allowed paths from task-contract.json.'
 
-    Write-Host 'LLM Wiki governed-delivery regression passed: generated scope isolation and contract-synchronized replan work.'
+    $manualEvidencePath = "$workspace/evidence.json"
+    & (Join-Path $toolsRoot 'Manage-LlmWikiEvidence.ps1') init `
+        -Path $manualEvidencePath `
+        -ChangedPath 'docs/backend/BACKEND_MIGRATION_SAFETY.md' | Out-Null
+    $manualEvidence = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'evidence.json') -Raw | ConvertFrom-Json
+    Assert-Regression (@($manualEvidence.checks).Count -eq 0) 'The supplemental lineage fixture must have no policy-required checks.'
+    & (Join-Path $toolsRoot 'Manage-LlmWikiEvidence.ps1') check `
+        -Path $manualEvidencePath -Id 'manual-regression' -Status passed `
+        -Command 'Write-Output fixture' -Reason 'Manual attestation fixture for supplemental lineage validation.' | Out-Null
+    $manualLineage = & (Join-Path $toolsRoot 'Test-LlmWikiEvidenceLineage.ps1') `
+        -WorkspacePath $workspace -Format Json | ConvertFrom-Json
+    Assert-Regression ($manualLineage.valid -and $manualLineage.reusableCount -eq 1) 'Supplemental lineage failed when the policy required no checks.'
+    $manualEvidence = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'evidence.json') -Raw | ConvertFrom-Json
+    $manualEvidence.supplementalChecks[0].lineage.compatibilityFingerprint = ('0' * 64)
+    [IO.File]::WriteAllText(
+        (Join-Path $absoluteWorkspace 'evidence.json'),
+        (($manualEvidence | ConvertTo-Json -Depth 20) + [Environment]::NewLine),
+        [Text.UTF8Encoding]::new($false))
+    $tamperedManualLineage = & (Join-Path $toolsRoot 'Test-LlmWikiEvidenceLineage.ps1') `
+        -WorkspacePath $workspace -Format Json | ConvertFrom-Json
+    Assert-Regression (-not $tamperedManualLineage.valid) 'Supplemental lineage accepted a tampered fingerprint without policy-required checks.'
+
+    Write-Host 'LLM Wiki governed-delivery regression passed: generated scope isolation, contract-synchronized replan and supplemental lineage work.'
 } finally {
     if (Test-Path -LiteralPath $absoluteWorkspace) { Remove-Item -LiteralPath $absoluteWorkspace -Recurse -Force }
 }

@@ -7,6 +7,13 @@ This document defines how database migrations are validated and how deployment-t
 ## Current Deployment Path
 
 - CI builds the Initializer image and pins its digest in `.github/workflows/deploy.yml`.
+- Before uploading deployment configuration or stopping writers, deployment runs
+  `scripts/database/check_primary_baseline_readiness.py` over the existing SSH
+  connection. It reads the primary EF history in a read-only transaction. Empty
+  databases and adopted histories without legacy entries pass; legacy history,
+  database access errors and invalid responses block deployment. This preflight
+  does not apply migrations or adopt history. A blocked deployment keeps the
+  running application in place while the explicit cutover is prepared.
 - Deploy stops the primary database writers, verifies a database backup, runs `docker compose --profile backend run -T --rm db-init update`, then starts the matching application images.
 - The Initializer applies migrations through EF Core's `IMigrator`. The design-time context factory in [`FoodDiaryDbContextFactory.cs`](../../FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs) also supports standalone migration tooling.
 

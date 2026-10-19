@@ -34,6 +34,9 @@ jobs:
       - name: Test deployment source authorization
         run: node --test .github/scripts/deploy-source.test.mjs
 
+      - name: Test deployment database readiness
+        run: python3 -B -m unittest discover -s scripts/database -p 'test_check_primary_baseline_readiness.py'
+
       - name: Install Wiki compiler dependencies
         working-directory: FoodDiary.Web.Client
         run: |

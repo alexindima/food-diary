@@ -223,13 +223,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "38d77b35848a123db2e28eedde63114c7ccf5e6765193fc64b991c1dc64f1db0"
+          "sha256": "3876efa9249e532e1321b0c1895bd65c5b9616378518079310c16ef94a0b76c1"
         }
       ],
-      "reason": "CI additions are dedicated fd-webmcp coverage/build steps and summary rows. OpenAPI snapshots, API comparison baselines and compatibility gates are unchanged.",
+      "reason": "The CI diff adds only standard-library Python readiness tests next to existing deployment authorization tests. Existing Wiki, API compatibility, report, backend and frontend gates retain their commands and conditions. Reviewed the new deployment step: it runs before all server uploads and stops, using read-only EF-history queries. Nine Python tests, ten Node deployment tests and the live legacy refusal with unchanged running API passed.",
       "baseRef": "HEAD",
-      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
-      "reviewedAtUtc": "2026-10-19T08:49:08.5339740Z"
+      "gitHead": "554c18fc9091c83452cca7b41c934e390bf1ab78",
+      "reviewedAtUtc": "2026-10-19T09:52:40.5624439Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -663,17 +663,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "38d77b35848a123db2e28eedde63114c7ccf5e6765193fc64b991c1dc64f1db0"
-        },
-        {
-          "path": "FoodDiary.Web.Client/.husky/pre-push",
-          "sha256": "3874bf2c836bc30110b372a5b5e8871f9b37495789b184dfc0d306853bb21cb2"
+          "sha256": "3876efa9249e532e1321b0c1895bd65c5b9616378518079310c16ef94a0b76c1"
         }
       ],
-      "reason": "Pre-push adds the library build/tests. CI adds matching targets. Existing Wiki hooks, staged generator ordering and backend verification are retained.",
+      "reason": "The CI diff adds only standard-library Python readiness tests next to existing deployment authorization tests. Existing Wiki, API compatibility, report, backend and frontend gates retain their commands and conditions. Reviewed the new deployment step: it runs before all server uploads and stops, using read-only EF-history queries. Nine Python tests, ten Node deployment tests and the live legacy refusal with unchanged running API passed.",
       "baseRef": "HEAD",
-      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
-      "reviewedAtUtc": "2026-10-19T08:49:11.9418443Z"
+      "gitHead": "554c18fc9091c83452cca7b41c934e390bf1ab78",
+      "reviewedAtUtc": "2026-10-19T09:52:40.9170751Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -859,13 +855,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "76ba2dbd53fec3abeb042fb1f408c5090119d104a725e59a2b4f34ba856ee330"
+          "sha256": "39a85415f5013f74955100a16ce066b47efed96b68a1585bc345f90af859c219"
         }
       ],
-      "reason": "The regenerated quality index adds the explicit fd-webmcp library/tests and updated verification scripts; risk model, missing-test interpretation and commands are unchanged.",
+      "reason": "The entire generated quality diff adds Test-LlmWikiGovernedDeliveryRegression.ps1 as one additional reference for Manage-LlmWikiEvidence.ps1 (3 to4). No product behavior, security verdict, coverage claim or ranking contract changes. The regression executes supplemental evidence with zero required checks and rejects fingerprint tampering; the affected governed-delivery and tool-contract smoke groups passed. Existing page statements that references are navigation rather than execution proof remain current.",
       "baseRef": "HEAD",
-      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
-      "reviewedAtUtc": "2026-10-19T08:52:46.4771142Z"
+      "gitHead": "554c18fc9091c83452cca7b41c934e390bf1ab78",
+      "reviewedAtUtc": "2026-10-19T10:03:47.8281958Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -908,13 +904,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "38d77b35848a123db2e28eedde63114c7ccf5e6765193fc64b991c1dc64f1db0"
+          "sha256": "3876efa9249e532e1321b0c1895bd65c5b9616378518079310c16ef94a0b76c1"
         }
       ],
-      "reason": "CI summary adds two fd-webmcp rows under the existing failure-log and coverage uploads. Report generation, provenance and compatibility baseline remain unchanged.",
+      "reason": "The CI diff adds only standard-library Python readiness tests next to existing deployment authorization tests. Existing Wiki, API compatibility, report, backend and frontend gates retain their commands and conditions. Reviewed the new deployment step: it runs before all server uploads and stops, using read-only EF-history queries. Nine Python tests, ten Node deployment tests and the live legacy refusal with unchanged running API passed.",
       "baseRef": "HEAD",
-      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
-      "reviewedAtUtc": "2026-10-19T08:49:09.6741596Z"
+      "gitHead": "554c18fc9091c83452cca7b41c934e390bf1ab78",
+      "reviewedAtUtc": "2026-10-19T09:52:41.2840023Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -952,14 +948,14 @@
       "pageSha256": "f935366d43c011c5187443833e00da2994b5092dff5b60dc6cbd0759390944bf",
       "sources": [
         {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "ff3d36f580dc3066a55b77112d40a2ebeff4a9ef5a1af78d9c5d3794a284d9f9"
+          "path": ".llm-wiki/generated/quality-index.json",
+          "sha256": "39a85415f5013f74955100a16ce066b47efed96b68a1585bc345f90af859c219"
         }
       ],
-      "reason": "Only explicit Database migration intent in the existing primary migration role changes. Security evidence compilation and verdict boundaries remain unchanged; the full SQL retrieval suite including the10-case security corpus and4 .NET parity corpora passed.",
+      "reason": "The entire generated quality diff adds Test-LlmWikiGovernedDeliveryRegression.ps1 as one additional reference for Manage-LlmWikiEvidence.ps1 (3 to4). No product behavior, security verdict, coverage claim or ranking contract changes. The regression executes supplemental evidence with zero required checks and rejects fingerprint tampering; the affected governed-delivery and tool-contract smoke groups passed. Existing page statements that references are navigation rather than execution proof remain current.",
       "baseRef": "HEAD",
-      "gitHead": "cf1ede7771ae6a1f905ef9ec019d69fc346bbfaa",
-      "reviewedAtUtc": "2026-10-19T09:38:26.5839663Z"
+      "gitHead": "554c18fc9091c83452cca7b41c934e390bf1ab78",
+      "reviewedAtUtc": "2026-10-19T10:03:48.3041964Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1065,30 +1061,18 @@
       "pageSha256": "e7bbcdd3bf36678ac1f01992447ea0fb84eb6b4044cf3f613edd8328576d21ba",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
-          "sha256": "c7a4f29367da34386aea7dd35300f67043a52b6573accb8cca5126d3a44fdf10"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "692dbd96db142989d75315ff687ed13cfdb8b24b500b72416ac525361eee0b23"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "c0c870c77b35daff84ece6b1d21a3d4129562fe50c02a91825727e408f57825d"
-        },
-        {
           "path": ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
-          "sha256": "bf68b05b2e1f2ed3fb50211651d4e690acd948de1cf2fb223a1f403429516314"
+          "sha256": "f008b85f7cf0bbfcf2853e73a1b7d4c94e30d0427ee8e0f6487e4380c0afb34a"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1",
+          "sha256": "606e98980d726be92ae7737e133620ef3dff45eb5c51223fee89b264a77115dd"
         }
       ],
-      "reason": "Compared task status and completion with this page governance contract. Existing conformance, proof, requirement, impact, repair, confidence and critique gates remain unchanged; report freshness is an additive view and the final report is refreshed before its hash is sealed. Governed-delivery and research-confidence regressions passed.",
+      "reason": "Reviewed supplemental lineage with zero required checks. The existing collection helper now reads IDs safely from the empty policy array. The new governed-delivery regression proves a valid manual supplemental proof remains reusable and a tampered compatibility fingerprint still fails. Required checks, cache eligibility, source hashing and policy semantics are unchanged. Focused regression passed in .artifacts/master-baseline-preflight-lineage-regression.log.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:27:03.3388319Z"
+      "gitHead": "554c18fc9091c83452cca7b41c934e390bf1ab78",
+      "reviewedAtUtc": "2026-10-19T10:01:11.1096861Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1183,17 +1167,17 @@
     {
       "pageId": "workflow.evidence-bundle",
       "pagePath": ".llm-wiki/workflows/evidence-bundle.md",
-      "pageSha256": "818e187a74b8af0724240c6cea7e86f646f70a1c7d88f8f1ffaff8376038f179",
+      "pageSha256": "0f2c3adec01aa78529e1a7a3995187983647637bec611575386f695fdf8ac9b1",
       "sources": [
         {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb"
+          "path": ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
+          "sha256": "f008b85f7cf0bbfcf2853e73a1b7d4c94e30d0427ee8e0f6487e4380c0afb34a"
         }
       ],
-      "reason": "The policy now recognizes current mail-service data access; 24 executed positive and negative persistence cases preserve the required check ID and command. Evidence schemas, lineage and receipt validation are unchanged.",
+      "reason": "Reviewed supplemental lineage with zero required checks. The existing collection helper now reads IDs safely from the empty policy array. The new governed-delivery regression proves a valid manual supplemental proof remains reusable and a tampered compatibility fingerprint still fails. Required checks, cache eligibility, source hashing and policy semantics are unchanged. Focused regression passed in .artifacts/master-baseline-preflight-lineage-regression.log.",
       "baseRef": "HEAD",
-      "gitHead": "755c4ee5bb00ea025c5ad8321db12ec48386e496",
-      "reviewedAtUtc": "2026-10-04T10:05:48.2215931Z"
+      "gitHead": "554c18fc9091c83452cca7b41c934e390bf1ab78",
+      "reviewedAtUtc": "2026-10-19T10:01:10.6801665Z"
     },
     {
       "pageId": "workflow.frontend-contract-review",
