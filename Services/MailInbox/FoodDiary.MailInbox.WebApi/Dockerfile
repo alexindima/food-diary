@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine@sha256:3cc3bbbbf93d82104892f42aa9106b6be4d120346dea0649643a97c801525256 AS restore
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine@sha256:230c3fbae0ceedc70bca04eed2bfb5694e8b248cadbb81010f41b7a993601f55 AS restore
 
 WORKDIR /src
 
@@ -17,7 +17,7 @@ COPY Services/MailInbox/FoodDiary.MailInbox.WebApi/*.csproj Services/MailInbox/F
 RUN dotnet restore Services/MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj --locked-mode
 
 # Keep restore and source-copy layers below filesystem overlay mount limits.
-FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine@sha256:3cc3bbbbf93d82104892f42aa9106b6be4d120346dea0649643a97c801525256 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine@sha256:230c3fbae0ceedc70bca04eed2bfb5694e8b248cadbb81010f41b7a993601f55 AS build
 WORKDIR /src
 COPY --from=restore /root/.nuget/packages/ /root/.nuget/packages/
 COPY --from=restore /src/ /src/
