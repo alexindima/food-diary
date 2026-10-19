@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vite
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { ImageUploadFacade } from '../../../../../shared/lib/image-upload.facade';
+import { MeasurementSystemService } from '../../../../../shared/measurements/measurement-system.service';
 import type { UserFormValues } from '../../../lib/user-manage.types';
 import { createUserManageFormModel } from '../../../lib/user-manage-form.mapper';
 import { UserManageComparisonWidgetsComponent } from './user-manage-comparison-widgets';
@@ -14,9 +15,16 @@ let fixture: ComponentFixture<UserManageComparisonWidgetsComponent>;
 let userForm: FieldTree<UserFormValues>;
 let input: HTMLInputElement;
 let patched: Mock<(patch: Partial<UserFormValues>) => void>;
+let originalMeasurementSystem: string | null;
 const originalScrollIntoView = Object.getOwnPropertyDescriptor(Element.prototype, 'scrollIntoView');
+const originalHeightCm = 170;
+const fullHeightCm = 170.2;
+const feetOnlyHeightCm = 152.4;
+const inchesOnlyHeightCm = 17.8;
+const tallerHeightCm = 180;
 
 beforeEach(() => {
+    originalMeasurementSystem = localStorage.getItem('fd_measurement_system');
     Object.defineProperty(Element.prototype, 'scrollIntoView', { configurable: true, value: vi.fn() });
     vi.spyOn(Intl, 'supportedValuesOf').mockReturnValue(['America/New_York', 'Asia/Tbilisi', 'Europe/Paris']);
     TestBed.configureTestingModule({
@@ -37,6 +45,9 @@ beforeEach(() => {
         if ('timeZoneId' in patch && patch.timeZoneId !== undefined) {
             userForm.timeZoneId().value.set(patch.timeZoneId);
         }
+        if ('heightCm' in patch && patch.heightCm !== undefined) {
+            userForm.heightCm().value.set(patch.heightCm);
+        }
     });
     fixture.detectChanges();
     const control = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('fd-ui-autocomplete input');
@@ -47,6 +58,11 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+    if (originalMeasurementSystem === null) {
+        localStorage.removeItem('fd_measurement_system');
+    } else {
+        localStorage.setItem('fd_measurement_system', originalMeasurementSystem);
+    }
     vi.restoreAllMocks();
     if (originalScrollIntoView === undefined) {
         Reflect.deleteProperty(Element.prototype, 'scrollIntoView');
@@ -149,6 +165,86 @@ describe('Profile time zone search', () => {
         expect(patched).not.toHaveBeenCalled();
     });
 });
+
+describe('Profile imperial height editing', () => {
+    beforeEach(() => {
+        userForm.heightCm().value.set(fullHeightCm);
+        TestBed.inject(MeasurementSystemService).setSystem('imperial');
+        fixture.detectChanges();
+        patched.mockClear();
+    });
+
+    it('keeps feet while clearing and retyping inches with live parent form feedback', () => {
+        editImperialPart(1, '');
+
+        expect(imperialValues()).toEqual(['5', '']);
+        expect(userForm.heightCm().value()).toBe(feetOnlyHeightCm);
+
+        editImperialPart(1, '7');
+
+        expect(imperialValues()).toEqual(['5', '7']);
+        expect(userForm.heightCm().value()).toBe(fullHeightCm);
+        expect(patched).toHaveBeenLastCalledWith({ heightCm: fullHeightCm });
+    });
+
+    it('keeps inches while clearing and retyping feet', () => {
+        editImperialPart(0, '');
+
+        expect(imperialValues()).toEqual(['', '7']);
+        expect(userForm.heightCm().value()).toBe(inchesOnlyHeightCm);
+
+        editImperialPart(0, '5');
+
+        expect(imperialValues()).toEqual(['5', '7']);
+        expect(userForm.heightCm().value()).toBe(fullHeightCm);
+    });
+
+    it('clears unknown height only when both parts are empty and accepts a parent reset', () => {
+        editImperialPart(1, '');
+        editImperialPart(0, '');
+
+        expect(imperialValues()).toEqual(['', '']);
+        expect(userForm.heightCm().value()).toBeNull();
+
+        userForm.heightCm().value.set(originalHeightCm);
+        fixture.detectChanges();
+
+        expect(imperialValues()).toEqual(['5', '6.9']);
+    });
+
+    it('replaces an old draft when authoritative metric height changes', () => {
+        editImperialPart(0, '');
+        userForm.heightCm().value.set(tallerHeightCm);
+        fixture.detectChanges();
+
+        expect(imperialValues()).toEqual(['5', '10.9']);
+
+        userForm.heightCm().value.set(inchesOnlyHeightCm);
+        fixture.detectChanges();
+
+        expect(imperialValues()).toEqual(['0', '7']);
+    });
+});
+
+function imperialInputs(): HTMLInputElement[] {
+    return Array.from(
+        (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLInputElement>('.profile-comparison__imperial-height input'),
+    );
+}
+
+function imperialValues(): string[] {
+    return imperialInputs().map(control => control.value);
+}
+
+function editImperialPart(index: number, value: string): void {
+    const control = imperialInputs().at(index);
+    if (control === undefined) {
+        throw new Error('Imperial height part is not rendered');
+    }
+    control.value = value;
+    control.dispatchEvent(new Event('input', { bubbles: true }));
+    fixture.detectChanges();
+}
 
 function search(query: string): void {
     input.focus();

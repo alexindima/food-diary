@@ -5479,7 +5479,7 @@
       "role": "Component",
       "selector": "fd-user-manage-comparison-widgets",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.ts",
-      "line": 49
+      "line": 55
     },
     {
       "name": "UserManageConnectedDevicesComponent",
@@ -5563,7 +5563,7 @@
       "role": "Component",
       "selector": "fd-user-manage",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "line": 96
+      "line": 100
     },
     {
       "name": "DietologistPromoComponent",

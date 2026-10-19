@@ -302,6 +302,12 @@
             }
         }
     }
+
+    @media #{variables.$media-xs} {
+        &__imperial-height {
+            grid-template-columns: 1fr;
+        }
+    }
 }
 
 @media #{variables.$media-mobile} {

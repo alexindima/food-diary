@@ -65,6 +65,10 @@ import { UserManageNotificationsFacade } from './user-manage-lib/user-manage-not
 import { USER_MANAGE_TOUR } from './user-manage-tour';
 
 type UserManageFormPatch = UserManageAccountFormPatch | UserManageBodyFormPatch;
+type ProfileSaveSnapshot = {
+    readonly values: UserFormValues;
+    hasNewerEdits: boolean | null;
+};
 const MAX_PROFILE_HEIGHT_CM = 300;
 
 @Component({
@@ -115,6 +119,7 @@ export class UserManageComponent {
     private readonly userFormElement = viewChild<ElementRef<HTMLFormElement>>('userFormElement');
     private lastNotificationSyncVersion = -1;
     private lastProfileSavedVersion = 0;
+    private pendingProfileSave: ProfileSaveSnapshot | null = null;
     private userFormDomListenersRegistered = false;
     private readonly pendingPasswordSetupIntent = signal(false);
 
@@ -298,17 +303,28 @@ export class UserManageComponent {
             };
             const wasProfileSaved = profileSavedVersion !== this.lastProfileSavedVersion;
             this.lastProfileSavedVersion = profileSavedVersion;
-            const shouldApplyUserData =
-                wasProfileSaved ||
-                untracked(() => {
-                    const currentFormData = this.readUserFormValues();
-                    return !this.hasUserFormChanges(currentFormData) || this.areUserFormValuesEqual(userData, currentFormData);
-                });
-            if (shouldApplyUserData) {
-                this.applyUserData(userData);
-            }
+            untracked(() => {
+                this.syncUserProfileForm(userData, wasProfileSaved);
+            });
             this.notifications.syncFromUser(user);
         });
+    }
+
+    private syncUserProfileForm(userData: UserFormValues, wasProfileSaved: boolean): void {
+        const currentFormData = this.readUserFormValues();
+        const submission = this.pendingProfileSave;
+        if (wasProfileSaved && submission !== null) {
+            this.pendingProfileSave = null;
+            submission.hasNewerEdits = !this.areUserFormValuesEqual(currentFormData, submission.values);
+            if (submission.hasNewerEdits) {
+                this.lastSyncedUserFormData.set(userData);
+                return;
+            }
+        }
+
+        if (wasProfileSaved || !this.hasUserFormChanges(currentFormData) || this.areUserFormValuesEqual(userData, currentFormData)) {
+            this.applyUserData(userData);
+        }
     }
 
     private watchPasswordSetupDialog(): void {
@@ -351,10 +367,20 @@ export class UserManageComponent {
     }
 
     protected onSubmit(): boolean | Promise<boolean> {
-        if (this.userForm().invalid()) {
+        if (this.userForm().invalid() || this.facade.isSavingProfile()) {
             return false;
         }
-        return this.facade.saveProfileAsync(buildUserUpdateDto(this.readUserFormValues()));
+        const submission: ProfileSaveSnapshot = { values: this.readUserFormValues(), hasNewerEdits: null };
+        this.pendingProfileSave = submission;
+        return this.facade.saveProfileAsync(buildUserUpdateDto(submission.values)).then(saved => {
+            if (!saved) {
+                if (this.pendingProfileSave === submission) {
+                    this.pendingProfileSave = null;
+                }
+                return false;
+            }
+            return !(submission.hasNewerEdits ?? !this.areUserFormValuesEqual(submission.values, this.readUserFormValues()));
+        });
     }
 
     protected onUserFormSubmit(event: SubmitEvent): void {

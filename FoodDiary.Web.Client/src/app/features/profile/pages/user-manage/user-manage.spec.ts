@@ -45,6 +45,8 @@ const INVALID_HEIGHT_FEET = 10;
 const CONVERTED_INVALID_HEIGHT = 332.5;
 const FUTURE_PROFILE_BIRTH_DATE = '2999-01-01';
 const VALID_PROFILE_BIRTH_DATE = '2000-10-02';
+const ORIGINAL_SAVE_HEIGHT = 170;
+const SUBMITTED_SAVE_HEIGHT = 170.2;
 
 describe('UserManageComponent dietologist invite state', () => {
     it('keeps invite mode when no dietologist relationship exists', async () => {
@@ -502,6 +504,118 @@ describe('UserManageComponent save-and-leave completion', () => {
     });
 });
 
+describe('UserManageComponent edits during profile saving', () => {
+    it('preserves newer edits and discards them to the last successful save', async () => {
+        await createComponentAsync(null, false, profileSaveUser());
+        const finishSave = deferProfileSave({ heightCm: SUBMITTED_SAVE_HEIGHT });
+        component['onUserFormPatch']({ heightCm: SUBMITTED_SAVE_HEIGHT });
+
+        const saving = TestBed.inject(UnsavedChangesService).getHandler()?.save();
+        component['onUserFormPatch']({ heightCm: INITIAL_PROFILE_HEIGHT });
+        finishSave(true);
+        const saved = await saving;
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(saved).toBe(false);
+        expect(component['userForm'].heightCm().value()).toBe(INITIAL_PROFILE_HEIGHT);
+        expect(component['hasUnsavedProfileChanges']()).toBe(true);
+        component['discardUserFormChanges']();
+        expect(component['userForm'].heightCm().value()).toBe(SUBMITTED_SAVE_HEIGHT);
+        expect(component['hasUnsavedProfileChanges']()).toBe(false);
+    });
+
+    it('rejects a duplicate submit without replacing the active save snapshot', async () => {
+        await createComponentAsync(null, false, profileSaveUser());
+        const finishSave = deferProfileSave({ firstName: 'Saved' });
+        component['onUserFormPatch']({ firstName: 'Saved' });
+
+        const saving = component['onSubmit']();
+        const duplicate = component['onSubmit']();
+        finishSave(true);
+        const saved = await saving;
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(duplicate).toBe(false);
+        expect(facade.saveProfileAsync).toHaveBeenCalledOnce();
+        expect(saved).toBe(true);
+        expect(component['hasUnsavedProfileChanges']()).toBe(false);
+    });
+
+    it('applies authoritative normalization when no newer edits exist', async () => {
+        await createComponentAsync(null, false, profileSaveUser());
+        const finishSave = deferProfileSave({ firstName: 'Saved' });
+        component['onUserFormPatch']({ firstName: '  Saved  ' });
+
+        const saving = TestBed.inject(UnsavedChangesService).getHandler()?.save();
+        finishSave(true);
+        fixture.detectChanges();
+        const saved = await saving;
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(saved).toBe(true);
+        expect(component['userForm'].firstName().value()).toBe('Saved');
+        expect(component['hasUnsavedProfileChanges']()).toBe(false);
+    });
+
+    it('keeps the newer draft and original discard baseline when saving fails', async () => {
+        await createComponentAsync(null, false, profileSaveUser());
+        const finishSave = deferProfileSave({ firstName: 'Saved' });
+        component['onUserFormPatch']({ firstName: 'Saved' });
+
+        const saving = component['onSubmit']();
+        component['onUserFormPatch']({ firstName: 'Newer draft' });
+        finishSave(false);
+        const saved = await saving;
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(saved).toBe(false);
+        expect(component['userForm'].firstName().value()).toBe('Newer draft');
+        expect(component['hasUnsavedProfileChanges']()).toBe(true);
+        component['discardUserFormChanges']();
+        expect(component['userForm'].firstName().value()).toBe('Before');
+        expect(component['hasUnsavedProfileChanges']()).toBe(false);
+    });
+});
+
+function profileSaveUser(): User {
+    return {
+        id: entityId<'user'>('u1'),
+        email: 'user@example.com',
+        hasPassword: true,
+        firstName: 'Before',
+        heightCm: ORIGINAL_SAVE_HEIGHT,
+        pushNotificationsEnabled: true,
+        fastingPushNotificationsEnabled: true,
+        socialPushNotificationsEnabled: false,
+        fastingCheckInReminderHours: DEFAULT_FASTING_CHECK_IN_REMINDER_HOURS,
+        fastingCheckInFollowUpReminderHours: DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS,
+        isActive: true,
+        isEmailConfirmed: true,
+    };
+}
+
+function deferProfileSave(savedFields: Partial<User>): (saved: boolean) => void {
+    let finishSave: ((saved: boolean) => void) | undefined;
+    const pendingSave = new Promise<boolean>(resolve => {
+        finishSave = resolve;
+    });
+    facade.saveProfileAsync.mockImplementationOnce(async () => {
+        facade.isSavingProfile.set(true);
+        const saved = await pendingSave;
+        if (saved) {
+            facade.user.update(current => (current === null ? current : { ...current, ...savedFields }));
+            facade.profileSavedVersion.update(version => version + 1);
+        }
+        facade.isSavingProfile.set(false);
+        return saved;
+    });
+    return saved => finishSave?.(saved);
+}
+
 describe('UserManageComponent explicit profile save feedback', () => {
     it('should prevent native profile form submit when saving now', async () => {
         await createComponentAsync(null);
@@ -740,7 +854,7 @@ type ProfileManageFacadeMock = {
     initialize: ReturnType<typeof vi.fn>;
     clearGlobalError: ReturnType<typeof vi.fn>;
     submitUpdate: ReturnType<typeof vi.fn>;
-    saveProfileAsync: ReturnType<typeof vi.fn>;
+    saveProfileAsync: ReturnType<typeof vi.fn<ProfileManageFacade['saveProfileAsync']>>;
     openChangePasswordDialog: ReturnType<typeof vi.fn>;
     linkGoogle: ReturnType<typeof vi.fn>;
     revokeAiConsent: ReturnType<typeof vi.fn>;
@@ -973,7 +1087,7 @@ function createFacadeMock(relationship: DietologistRelationship | null, user: Us
         initialize: vi.fn(),
         clearGlobalError: vi.fn(),
         submitUpdate: vi.fn(),
-        saveProfileAsync: vi.fn().mockResolvedValue(true),
+        saveProfileAsync: vi.fn<ProfileManageFacade['saveProfileAsync']>().mockResolvedValue(true),
         openChangePasswordDialog: vi.fn(),
         linkGoogle: vi.fn(),
         revokeAiConsent: vi.fn(),

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, output, signal } from '@angular/core';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -22,6 +22,12 @@ import type { ActivityLevelOption, Gender } from '../../../../../shared/models/u
 import type { AppThemeName, AppUiStyleName } from '../../../../../theme/app-theme.config';
 import type { UserFormValues, UserManageAccountFormPatch, UserManageBodyFormPatch } from '../../../lib/user-manage.types';
 import { calculateProfileCompleteness } from '../../user-manage/user-manage-lib/user-profile-completeness.mapper';
+
+type ImperialHeightDraft = {
+    canonicalCm: number | null;
+    feet: number | null;
+    inches: number | null;
+};
 
 @Component({
     selector: 'fd-user-manage-comparison-widgets',
@@ -107,9 +113,16 @@ export class UserManageComparisonWidgetsComponent {
         const waistCm = this.currentWaist();
         return waistCm === null ? null : this.measurements.displayLength(waistCm);
     });
-    protected readonly imperialHeight = computed(() => {
-        const heightCm = this.userForm().heightCm().value();
-        return heightCm === null ? { feet: null, inches: null } : this.measurements.displayHeight(heightCm);
+    protected readonly imperialHeight = linkedSignal<number | null, ImperialHeightDraft>({
+        source: () => this.userForm().heightCm().value(),
+        computation: (heightCm, previous) => {
+            if (previous?.value.canonicalCm === heightCm) {
+                return previous.value;
+            }
+
+            const parts = heightCm === null ? { feet: null, inches: null } : this.measurements.displayHeight(heightCm);
+            return { canonicalCm: heightCm, ...parts };
+        },
     });
 
     protected readonly completeness = computed(() => {
@@ -155,18 +168,17 @@ export class UserManageComparisonWidgetsComponent {
 
     protected onImperialHeightChange(part: 'feet' | 'inches', value: string | number | null): void {
         const parsed = this.parseImperialHeightPart(value);
-        if (parsed === null) {
-            this.userFormPatch.emit({ heightCm: null });
-            return;
-        }
         if (parsed === undefined) {
             return;
         }
 
         const current = this.imperialHeight();
-        const feet = part === 'feet' ? parsed : (current.feet ?? 0);
-        const inches = part === 'inches' ? parsed : (current.inches ?? 0);
-        this.userFormPatch.emit({ heightCm: this.measurements.canonicalHeight(feet, inches) });
+        const feet = part === 'feet' ? parsed : current.feet;
+        const inches = part === 'inches' ? parsed : current.inches;
+        const canonicalCm = feet === null && inches === null ? null : this.measurements.canonicalHeight(feet ?? 0, inches ?? 0);
+
+        this.imperialHeight.set({ canonicalCm, feet, inches });
+        this.userFormPatch.emit({ heightCm: canonicalCm });
     }
 
     private parseImperialHeightPart(value: string | number | null): number | null | undefined {
