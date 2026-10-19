@@ -33,7 +33,10 @@ async function readSubscriptionAsync(registration: ServiceWorkerRegistration | u
     }
 }
 function subscriptionMetadata(subscription: PushSubscription | null | undefined): WorkerDiagnostics['browserSubscription'] {
-    return { presence: subscription === undefined ? 'unknown' : subscription === null ? 'absent' : 'present', expirationTime: subscription?.expirationTime ?? null };
+    return {
+        presence: subscription === undefined ? 'unknown' : subscription === null ? 'absent' : 'present',
+        expirationTime: subscription?.expirationTime ?? null,
+    };
 }
 async function readWorkerAsync(browser: Window | null): Promise<WorkerDiagnostics> {
     if (browser === null || !Reflect.has(browser.navigator, 'serviceWorker')) {
@@ -44,7 +47,12 @@ async function readWorkerAsync(browser: Window | null): Promise<WorkerDiagnostic
         const registration = await worker.getRegistration();
         const subscription = await readSubscriptionAsync(registration);
         return {
-            serviceWorker: { supported: true, controlled: worker.controller !== null, registration: registration === undefined ? 'absent' : 'present', active: registration?.active?.state ?? null },
+            serviceWorker: {
+                supported: true,
+                controlled: worker.controller !== null,
+                registration: registration === undefined ? 'absent' : 'present',
+                active: registration?.active?.state ?? null,
+            },
             browserSubscription: subscriptionMetadata(subscription),
         };
     } catch {
@@ -71,7 +79,10 @@ export class LocalWebmcpPushService {
             notificationPermission: readPermission(browser),
             ...(fulfilled(worker) ?? unavailableWorker(false, 'unknown')),
             providerAvailable: fulfilled(configuration)?.enabled ?? null,
-            serverDevices: serverDevices === null ? null : { count: serverDevices.length, expirations: serverDevices.map(device => device.expirationTimeUtc) },
+            serverDevices:
+                serverDevices === null
+                    ? null
+                    : { count: serverDevices.length, expirations: serverDevices.map(device => device.expirationTimeUtc) },
             delivery: 'not-observed',
         };
     }

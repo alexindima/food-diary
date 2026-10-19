@@ -10,7 +10,10 @@ export type MealDevelopmentDraft = {
     time: string;
     mealType: string;
     comment: string;
-    items: Array<{ product: Product; amount: number; recipe?: never; servings?: never } | { recipe: Recipe; servings: RecipeServings; product?: never; amount?: never }>;
+    items: Array<
+        | { product: Product; amount: number; recipe?: never; servings?: never }
+        | { recipe: Recipe; servings: RecipeServings; product?: never; amount?: never }
+    >;
 };
 
 export type MealDevelopmentScreen = {

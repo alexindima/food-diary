@@ -72,7 +72,8 @@ describe('StatisticsFacade loading', () => {
 
         expect(statisticsService.getSummary).toHaveBeenCalledOnce();
         expect(statisticsService.getSummary).toHaveBeenCalledWith(
-            expect.objectContaining({ timeZoneId: new Intl.DateTimeFormat().resolvedOptions().timeZone }), expect.any(HttpContext),
+            expect.objectContaining({ timeZoneId: new Intl.DateTimeFormat().resolvedOptions().timeZone }),
+            expect.any(HttpContext),
         );
         expect(facade.userProfile()).toEqual({ height: USER_HEIGHT_CM });
         expect(facade.chartStatisticsData()?.calories).toEqual([FIRST_TOTAL_CALORIES]);

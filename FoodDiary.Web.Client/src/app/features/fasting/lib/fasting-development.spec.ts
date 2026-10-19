@@ -18,26 +18,41 @@ describe('unsaved fasting preparation', () => {
     const start = vi.fn();
     beforeEach(() => {
         start.mockReset();
-        TestBed.configureTestingModule({ providers: [
-            FastingFacade,
-            { provide: FastingService, useValue: { start } },
-            { provide: FrontendObservabilityService, useValue: {} },
-            { provide: UserService, useValue: { user: (): null => null } },
-            { provide: TranslateService, useValue: {} },
-            { provide: FdUiToastService, useValue: {} },
-            { provide: DEVELOPMENT_SCREENS, useValue: { attach: (value: DevelopmentScreen) => { screen = value; return (): void => {}; } } },
-        ] });
+        TestBed.configureTestingModule({
+            providers: [
+                FastingFacade,
+                { provide: FastingService, useValue: { start } },
+                { provide: FrontendObservabilityService, useValue: {} },
+                { provide: UserService, useValue: { user: (): null => null } },
+                { provide: TranslateService, useValue: {} },
+                { provide: FdUiToastService, useValue: {} },
+                {
+                    provide: DEVELOPMENT_SCREENS,
+                    useValue: {
+                        attach: (value: DevelopmentScreen) => {
+                            screen = value;
+                            return (): void => {};
+                        },
+                    },
+                },
+            ],
+        });
         facade = TestBed.inject(FastingFacade);
-        TestBed.runInInjectionContext(() => { connectFastingDevelopmentSetup(facade); });
+        TestBed.runInInjectionContext(() => {
+            connectFastingDevelopmentSetup(facade);
+        });
     });
     it('prepares cyclic 1:2 using owner selections and restores the previous setup without starting', () => {
         const baseline = screen.read();
         screen.fillDraft?.({ mode: 'cyclic', fastHours: 16, fastDays: 1, eatDays: 2 });
         expect(facade.selectedMode()).toBe('cyclic');
-        expect(facade.cyclicFastDays()).toBe(1); expect(facade.cyclicEatDays()).toBe(2);
+        expect(facade.cyclicFastDays()).toBe(1);
+        expect(facade.cyclicEatDays()).toBe(2);
         expect(screen.isDirty?.()).toBe(true);
         expect(start).not.toHaveBeenCalled();
-        screen.clearDraft?.(); expect(screen.read()).toEqual(baseline); expect(screen.isDirty?.()).toBe(false);
+        screen.clearDraft?.();
+        expect(screen.read()).toEqual(baseline);
+        expect(screen.isDirty?.()).toBe(false);
     });
     it.each([
         { mode: 'cyclic', fastHours: 16, fastDays: 1, eatDays: 0 },
@@ -47,7 +62,8 @@ describe('unsaved fasting preparation', () => {
     ])('rejects invalid setup atomically: %j', draft => {
         const baseline = screen.read();
         expect(() => screen.fillDraft?.(draft)).toThrow();
-        expect(screen.read()).toEqual(baseline); expect(start).not.toHaveBeenCalled();
+        expect(screen.read()).toEqual(baseline);
+        expect(start).not.toHaveBeenCalled();
     });
     it('refuses preparation while the ordinary start request is in flight', () => {
         facade.isStarting.set(true);
@@ -55,13 +71,38 @@ describe('unsaved fasting preparation', () => {
         expect(start).not.toHaveBeenCalled();
     });
     it('publishes active phase and duration while omitting private notes and symptoms', () => {
-        facade.currentSession.set({ id: entityId<'fasting-session'>('session-1'), startedAtUtc: utcInstant('2026-10-18T12:00:00Z'), endedAtUtc: null,
-            initialPlannedDurationHours: 24, addedDurationHours: 0, plannedDurationHours: 24, protocol: 'Cyclic', planType: 'Cyclic', occurrenceKind: 'EatDay',
-            cyclicFastDays: 1, cyclicEatDays: 2, cyclicEatDayFastHours: 16, cyclicEatDayEatingWindowHours: 8, cyclicPhaseDayNumber: 1, cyclicPhaseDayTotal: 2,
-            isCompleted: false, status: 'Active', notes: 'private-notes', checkInAtUtc: null, hungerLevel: null, energyLevel: null, moodLevel: null,
-            symptoms: ['private-symptom'], checkInNotes: 'private-check-in', checkIns: [] });
+        facade.currentSession.set({
+            id: entityId<'fasting-session'>('session-1'),
+            startedAtUtc: utcInstant('2026-10-18T12:00:00Z'),
+            endedAtUtc: null,
+            initialPlannedDurationHours: 24,
+            addedDurationHours: 0,
+            plannedDurationHours: 24,
+            protocol: 'Cyclic',
+            planType: 'Cyclic',
+            occurrenceKind: 'EatDay',
+            cyclicFastDays: 1,
+            cyclicEatDays: 2,
+            cyclicEatDayFastHours: 16,
+            cyclicEatDayEatingWindowHours: 8,
+            cyclicPhaseDayNumber: 1,
+            cyclicPhaseDayTotal: 2,
+            isCompleted: false,
+            status: 'Active',
+            notes: 'private-notes',
+            checkInAtUtc: null,
+            hungerLevel: null,
+            energyLevel: null,
+            moodLevel: null,
+            symptoms: ['private-symptom'],
+            checkInNotes: 'private-check-in',
+            checkIns: [],
+        });
         const context = readFastingDevelopmentContext(facade);
-        expect(context).toMatchObject({ active: true, session: { occurrenceKind: 'EatDay', cyclicPhaseDayNumber: 1, cyclicPhaseDayTotal: 2, plannedDurationHours: 24 } });
+        expect(context).toMatchObject({
+            active: true,
+            session: { occurrenceKind: 'EatDay', cyclicPhaseDayNumber: 1, cyclicPhaseDayTotal: 2, plannedDurationHours: 24 },
+        });
         expect(JSON.stringify(context)).not.toContain('private-');
     });
 });

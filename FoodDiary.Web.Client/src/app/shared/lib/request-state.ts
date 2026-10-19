@@ -14,7 +14,11 @@ export class RequestStateController<T, TError = string> {
     private readonly stateValue = signal<RequestState<T, TError>>({ status: 'idle', data: null, error: null });
     private requestVersion = 0;
     private activeHttpRequestId: number | null = null;
-    private readonly provenanceValue = signal<{ queryRevision: number; lastAppliedQueryRevision: number; lastAppliedRequestId: number | null }>({ queryRevision: 0, lastAppliedQueryRevision: 0, lastAppliedRequestId: null });
+    private readonly provenanceValue = signal<{
+        queryRevision: number;
+        lastAppliedQueryRevision: number;
+        lastAppliedRequestId: number | null;
+    }>({ queryRevision: 0, lastAppliedQueryRevision: 0, lastAppliedRequestId: null });
     public readonly provenance = this.provenanceValue.asReadonly();
 
     public bindRequest(requestId: number): (httpRequestId: number) => void {
@@ -46,7 +50,11 @@ export class RequestStateController<T, TError = string> {
             return false;
         }
         this.stateValue.set({ status: 'success', data, error: null });
-        this.provenanceValue.set({ queryRevision: requestId, lastAppliedQueryRevision: requestId, lastAppliedRequestId: this.activeHttpRequestId });
+        this.provenanceValue.set({
+            queryRevision: requestId,
+            lastAppliedQueryRevision: requestId,
+            lastAppliedRequestId: this.activeHttpRequestId,
+        });
         return true;
     }
 

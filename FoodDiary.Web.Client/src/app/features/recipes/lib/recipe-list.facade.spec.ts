@@ -210,14 +210,17 @@ describe('RecipeListFacade overview', () => {
     it('loads initial overview and updates derived state', () => {
         facade.loadInitialOverview(1, PAGE_LIMIT, { search: null }, false).subscribe();
 
-        expect(recipeService.queryOverview).toHaveBeenCalledWith({
-            page: 1,
-            limit: PAGE_LIMIT,
-            filters: { search: null },
-            includePublic: true,
-            recentLimit: 5,
-            favoriteLimit: 0,
-        }, expect.any(HttpContext));
+        expect(recipeService.queryOverview).toHaveBeenCalledWith(
+            {
+                page: 1,
+                limit: PAGE_LIMIT,
+                filters: { search: null },
+                includePublic: true,
+                recentLimit: 5,
+                favoriteLimit: 0,
+            },
+            expect.any(HttpContext),
+        );
         expect(facade.recipeData.items()).toEqual([recipe]);
         expect(facade.recentRecipes()).toEqual([recipe]);
         expect(facade.errorKey()).toBeNull();
@@ -253,14 +256,17 @@ describe('RecipeListFacade actions', () => {
         facade.deleteRecipe(recipe, 'soup', true).subscribe();
 
         expect(recipeService.deleteById).toHaveBeenCalledWith('recipe-1');
-        expect(recipeService.queryOverview).toHaveBeenCalledWith({
-            page: 1,
-            limit: PAGE_LIMIT,
-            filters: { search: 'soup' },
-            includePublic: false,
-            recentLimit: 1,
-            favoriteLimit: 0,
-        }, expect.any(HttpContext));
+        expect(recipeService.queryOverview).toHaveBeenCalledWith(
+            {
+                page: 1,
+                limit: PAGE_LIMIT,
+                filters: { search: 'soup' },
+                includePublic: false,
+                recentLimit: 1,
+                favoriteLimit: 0,
+            },
+            expect.any(HttpContext),
+        );
         expect(facade.isDeleting()).toBe(false);
     });
 

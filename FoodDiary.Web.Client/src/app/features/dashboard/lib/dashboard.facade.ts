@@ -366,7 +366,9 @@ export class DashboardFacade {
             trendDays: this.trendDays,
         };
         const context = developmentRequestContext(this.snapshotRequest.bindRequest(requestId));
-        const request$ = showLoader ? this.dashboardService.getSnapshot(query, context) : this.dashboardService.getSnapshotSilentlyStrict(query, context);
+        const request$ = showLoader
+            ? this.dashboardService.getSnapshot(query, context)
+            : this.dashboardService.getSnapshotSilentlyStrict(query, context);
         const observer: PartialObserver<DashboardSnapshot | null> = {
             next: snapshot => {
                 if (snapshot === null) {

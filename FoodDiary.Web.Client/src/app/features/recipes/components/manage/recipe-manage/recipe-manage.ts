@@ -830,7 +830,12 @@ export class RecipeManageComponent implements UnsavedEditor {
         if (item.product !== undefined) {
             return createRecipeIngredientValue({ food: item.product, productId: item.product.id, amount: item.amount });
         }
-        return createRecipeIngredientValue({ amount: item.amount, nestedRecipe: item.recipe, nestedRecipeId: item.recipe.id, nestedRecipeName: item.recipe.name });
+        return createRecipeIngredientValue({
+            amount: item.amount,
+            nestedRecipe: item.recipe,
+            nestedRecipeId: item.recipe.id,
+            nestedRecipeName: item.recipe.name,
+        });
     }
 
     private readDevelopmentContext(): unknown {

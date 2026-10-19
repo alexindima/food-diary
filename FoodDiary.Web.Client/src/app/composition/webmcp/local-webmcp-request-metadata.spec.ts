@@ -11,7 +11,8 @@ describe('local request provenance', () => {
         const first = service.begin('GET', new URL('http://localhost/api/v1/statistics/summary'));
         service.clear();
         const second = service.begin('GET', new URL('http://localhost/api/v1/statistics/summary'));
-        first(HttpStatusCode.Ok); second(HttpStatusCode.Ok);
+        first(HttpStatusCode.Ok);
+        second(HttpStatusCode.Ok);
         expect(second.requestId).toBe((first.requestId ?? 0) + 1);
         expect(service.read()).toHaveLength(1);
         expect(service.read()[0].id).toBe(second.requestId);

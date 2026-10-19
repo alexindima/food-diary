@@ -783,10 +783,25 @@ describe('Recipe editor route departure', () => {
 describe('recipe development capability', () => {
     it('preserves a nested recipe identity and fractional serving quantity without submitting', async () => {
         const screens: DevelopmentScreen[] = [];
-        const { component, facade } = await setupComponentAsync({}, { attach: (screen: DevelopmentScreen): (() => void) => { screens.push(screen); return (): void => {}; } });
+        const { component, facade } = await setupComponentAsync(
+            {},
+            {
+                attach: (screen: DevelopmentScreen): (() => void) => {
+                    screens.push(screen);
+                    return (): void => {};
+                },
+            },
+        );
         const recipe = createRecipe();
-        screens[0].fillDraft?.(new RecipeDevelopmentDraft('Nested draft', 1, [{ description: 'Combine', ingredients: [{ recipe, amount: 0.5 }] }]));
-        expect(component['recipeFormModel']().steps[0].ingredients[0]).toMatchObject({ productId: null, nestedRecipeId: recipe.id, foodName: recipe.name, amount: 0.5 });
+        screens[0].fillDraft?.(
+            new RecipeDevelopmentDraft('Nested draft', 1, [{ description: 'Combine', ingredients: [{ recipe, amount: 0.5 }] }]),
+        );
+        expect(component['recipeFormModel']().steps[0].ingredients[0]).toMatchObject({
+            productId: null,
+            nestedRecipeId: recipe.id,
+            foodName: recipe.name,
+            amount: 0.5,
+        });
         expect(screens[0].read()).toMatchObject({ valid: true, validation: { stepsValid: true } });
         expect(screens[0].isDirty?.()).toBe(true);
         expect(facade.addRecipe).not.toHaveBeenCalled();

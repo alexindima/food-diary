@@ -26,27 +26,34 @@ export const DRAFT_SCHEMA = {
             type: 'array',
             minItems: 1,
             maxItems: MAX_ITEMS,
-            items: { oneOf: [{
-                type: 'object',
-                additionalProperties: false,
-                required: ['productName', 'amount', 'unit'],
-                properties: {
-                    productName: {
-                        type: 'string',
-                        minLength: 1,
-                        maxLength: MAX_PRODUCT_NAME_LENGTH,
-                        description: 'Exact existing product name; ambiguous matches are rejected.',
+            items: {
+                oneOf: [
+                    {
+                        type: 'object',
+                        additionalProperties: false,
+                        required: ['productName', 'amount', 'unit'],
+                        properties: {
+                            productName: {
+                                type: 'string',
+                                minLength: 1,
+                                maxLength: MAX_PRODUCT_NAME_LENGTH,
+                                description: 'Exact existing product name; ambiguous matches are rejected.',
+                            },
+                            amount: { type: 'number', minimum: MEAL_MANAGE_MIN_ITEM_AMOUNT, maximum: MAXIMUM_CONSUMED_QUANTITY },
+                            unit: { type: 'string', description: 'Existing product baseUnit, e.g. G. No unit conversion is performed.' },
+                        },
                     },
-                    amount: { type: 'number', minimum: MEAL_MANAGE_MIN_ITEM_AMOUNT, maximum: MAXIMUM_CONSUMED_QUANTITY },
-                    unit: { type: 'string', description: 'Existing product baseUnit, e.g. G. No unit conversion is performed.' },
-                },
-            }, {
-                type: 'object', additionalProperties: false, required: ['recipeId', 'servings'],
-                properties: {
-                    recipeId: { type: 'string', description: 'Exact accessible recipe ID.' },
-                    servings: { type: 'number', minimum: MEAL_MANAGE_MIN_ITEM_AMOUNT, maximum: MAXIMUM_CONSUMED_QUANTITY },
-                },
-            }] },
+                    {
+                        type: 'object',
+                        additionalProperties: false,
+                        required: ['recipeId', 'servings'],
+                        properties: {
+                            recipeId: { type: 'string', description: 'Exact accessible recipe ID.' },
+                            servings: { type: 'number', minimum: MEAL_MANAGE_MIN_ITEM_AMOUNT, maximum: MAXIMUM_CONSUMED_QUANTITY },
+                        },
+                    },
+                ],
+            },
         },
     },
 };
@@ -104,7 +111,9 @@ function readMealDraftItem(item: unknown): MealDraftInputItem {
     if (row['recipeId'] !== undefined) {
         return readRecipeDraftItem(row);
     }
-    if (row['servings'] !== undefined) { throw new LocalWebmcpError('Servings require recipeId.'); }
+    if (row['servings'] !== undefined) {
+        throw new LocalWebmcpError('Servings require recipeId.');
+    }
     return readProductDraftItem(row);
 }
 
@@ -112,29 +121,38 @@ function readRecipeDraftItem(row: Record<string, unknown>): MealDraftInputItem {
     const id = row['recipeId'];
     const servings = row['servings'];
     const conflicting = ['productName', 'amount', 'unit'].some(key => row[key] !== undefined);
-    if (conflicting || typeof id !== 'string' || typeof servings !== 'number' || id.length === 0 || id.length > MAX_RECIPE_ID_LENGTH || !Number.isFinite(servings) || servings < MEAL_MANAGE_MIN_ITEM_AMOUNT || servings > MAXIMUM_CONSUMED_QUANTITY) {
+    if (
+        conflicting ||
+        typeof id !== 'string' ||
+        typeof servings !== 'number' ||
+        id.length === 0 ||
+        id.length > MAX_RECIPE_ID_LENGTH ||
+        !Number.isFinite(servings) ||
+        servings < MEAL_MANAGE_MIN_ITEM_AMOUNT ||
+        servings > MAXIMUM_CONSUMED_QUANTITY
+    ) {
         throw new LocalWebmcpError('Expected an exact recipe ID and a bounded serving quantity.');
     }
     return { recipeId: id, servings };
 }
 
 function readProductDraftItem(row: Record<string, unknown>): MealDraftInputItem {
-        const productName = row['productName'];
-        const amount = row['amount'];
-        const unit = row['unit'];
-        if (
-            typeof productName !== 'string' ||
-            typeof amount !== 'number' ||
-            typeof unit !== 'string' ||
-            amount < MEAL_MANAGE_MIN_ITEM_AMOUNT ||
-            amount > MAXIMUM_CONSUMED_QUANTITY ||
-            productName.length > MAX_PRODUCT_NAME_LENGTH ||
-            productName.trim().length === 0 ||
-            !Number.isFinite(amount)
-        ) {
-            throw new LocalWebmcpError('Invalid product item.');
-        }
-        return { productName: productName.trim(), amount, unit };
+    const productName = row['productName'];
+    const amount = row['amount'];
+    const unit = row['unit'];
+    if (
+        typeof productName !== 'string' ||
+        typeof amount !== 'number' ||
+        typeof unit !== 'string' ||
+        amount < MEAL_MANAGE_MIN_ITEM_AMOUNT ||
+        amount > MAXIMUM_CONSUMED_QUANTITY ||
+        productName.length > MAX_PRODUCT_NAME_LENGTH ||
+        productName.trim().length === 0 ||
+        !Number.isFinite(amount)
+    ) {
+        throw new LocalWebmcpError('Invalid product item.');
+    }
+    return { productName: productName.trim(), amount, unit };
 }
 
 function requireLocalTime(date: string, time: string): void {

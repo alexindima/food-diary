@@ -18,25 +18,36 @@ const LATE_HTTP_ID = 13;
 
 describe('HTTP response application provenance', () => {
     it('keeps the newer applied response when both HTTP requests return 200 in reverse order', () => {
-        TestBed.configureTestingModule({ providers: [
-            provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(),
-            { provide: HTTP_INTERCEPTORS, useClass: FrontendObservabilityInterceptor, multi: true },
-            { provide: FrontendObservabilityService, useValue: { recordHttpRequest: vi.fn() } },
-            { provide: DEVELOPMENT_REQUESTS, useFactory: (): { observe: (method: string, url: string) => DevelopmentRequestCompletion } => {
-                const requests = TestBed.inject(LocalWebmcpRequestsService);
-                return { observe: (method: string, url: string): DevelopmentRequestCompletion => requests.begin(method, new URL(url, 'http://localhost')) };
-            } },
-        ] });
+        TestBed.configureTestingModule({
+            providers: [
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+                { provide: HTTP_INTERCEPTORS, useClass: FrontendObservabilityInterceptor, multi: true },
+                { provide: FrontendObservabilityService, useValue: { recordHttpRequest: vi.fn() } },
+                {
+                    provide: DEVELOPMENT_REQUESTS,
+                    useFactory: (): { observe: (method: string, url: string) => DevelopmentRequestCompletion } => {
+                        const requests = TestBed.inject(LocalWebmcpRequestsService);
+                        return {
+                            observe: (method: string, url: string): DevelopmentRequestCompletion =>
+                                requests.begin(method, new URL(url, 'http://localhost')),
+                        };
+                    },
+                },
+            ],
+        });
         const owner = new RequestStateController<string>();
         const http = TestBed.inject(HttpClient);
         const testing = TestBed.inject(HttpTestingController);
         const load = (search: string): number => {
             const revision = owner.begin();
-            http.get<string>(`/api/v1/products?search=${search}`, { context: developmentRequestContext(owner.bindRequest(revision)) })
-                .subscribe(data => owner.succeed(revision, data));
+            http.get<string>(`/api/v1/products?search=${search}`, {
+                context: developmentRequestContext(owner.bindRequest(revision)),
+            }).subscribe(data => owner.succeed(revision, data));
             return revision;
         };
-        load('private-old'); const current = load('private-new');
+        load('private-old');
+        const current = load('private-new');
         const old = testing.expectOne('/api/v1/products?search=private-old');
         const latest = testing.expectOne('/api/v1/products?search=private-new');
         latest.flush('new');
@@ -54,10 +65,16 @@ describe('HTTP response application provenance', () => {
 
     it('preserves the last applied response through failure and invalidates it on reset', () => {
         const owner = new RequestStateController<string>();
-        const initial = owner.begin(); owner.bindRequest(initial)(INITIAL_HTTP_ID); owner.succeed(initial, 'cached');
-        const failed = owner.begin(); owner.bindRequest(failed)(FAILED_HTTP_ID); owner.fail(failed, 'failed');
+        const initial = owner.begin();
+        owner.bindRequest(initial)(INITIAL_HTTP_ID);
+        owner.succeed(initial, 'cached');
+        const failed = owner.begin();
+        owner.bindRequest(failed)(FAILED_HTTP_ID);
+        owner.fail(failed, 'failed');
         expect(owner.provenance().lastAppliedRequestId).toBe(INITIAL_HTTP_ID);
-        const late = owner.begin(); owner.bindRequest(late)(LATE_HTTP_ID); owner.reset();
+        const late = owner.begin();
+        owner.bindRequest(late)(LATE_HTTP_ID);
+        owner.reset();
         expect(owner.succeed(late, 'late')).toBe(false);
         expect(owner.provenance().lastAppliedRequestId).toBeNull();
         expect(owner.data()).toBeNull();

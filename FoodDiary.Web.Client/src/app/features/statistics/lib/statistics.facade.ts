@@ -210,15 +210,20 @@ export class StatisticsFacade {
     private loadStatistics(range: DateRange): void {
         const requestId = this.statisticsRequest.begin();
         this.statisticsService
-            .getSummary(buildStatisticsSummaryRequest(range, new Intl.DateTimeFormat().resolvedOptions().timeZone), developmentRequestContext(this.statisticsRequest.bindRequest(requestId)))
+            .getSummary(
+                buildStatisticsSummaryRequest(range, new Intl.DateTimeFormat().resolvedOptions().timeZone),
+                developmentRequestContext(this.statisticsRequest.bindRequest(requestId)),
+            )
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: data => {
-                    if (this.statisticsRequest.succeed(requestId, {
-                        statistics: mapStatistics(data.nutrition),
-                        weight: data.weight,
-                        waist: data.waist,
-                    })) {
+                    if (
+                        this.statisticsRequest.succeed(requestId, {
+                            statistics: mapStatistics(data.nutrition),
+                            weight: data.weight,
+                            waist: data.waist,
+                        })
+                    ) {
                         this.appliedRange.set(range);
                     }
                 },

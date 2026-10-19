@@ -1,7 +1,8 @@
 import type { Product } from '../../../shared/models/product.data';
 import type { Recipe } from '../../../shared/models/recipe.data';
 
-export type RecipeDevelopmentIngredient = { product: Product; amount: number; recipe?: never } | { recipe: Recipe; amount: number; product?: never };
+export type RecipeDevelopmentIngredient =
+    { product: Product; amount: number; recipe?: never } | { recipe: Recipe; amount: number; product?: never };
 
 /** Resolved by application composition before handing data to the live recipe form. */
 export class RecipeDevelopmentDraft {

@@ -299,9 +299,13 @@ export class DashboardComponent {
             isDirty: () => this.layout.hasLayoutChanges(),
             read: () => ({
                 date: formatDateInputValue(this.facade.selectedDate()),
-                loading: this.facade.isLoading(), error: this.facade.loadError(),
+                loading: this.facade.isLoading(),
+                error: this.facade.loadError(),
                 provenance: this.facade.requestProvenance(),
-                appliedPeriod: this.facade.snapshot() === null ? null : { dateFrom: this.facade.snapshot()?.date, dateTo: this.facade.snapshot()?.dateTo },
+                appliedPeriod:
+                    this.facade.snapshot() === null
+                        ? null
+                        : { dateFrom: this.facade.snapshot()?.date, dateTo: this.facade.snapshot()?.dateTo },
                 calories: this.facade.todayCalories(),
             }),
             setFiltersAsync: setDateAsync,

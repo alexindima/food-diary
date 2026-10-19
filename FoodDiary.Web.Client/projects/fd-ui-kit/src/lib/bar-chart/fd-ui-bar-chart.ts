@@ -1,4 +1,14 @@
-import { afterRenderEffect, ChangeDetectionStrategy, Component, computed, type ElementRef, input, output, signal, viewChild } from '@angular/core';
+import {
+    afterRenderEffect,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    type ElementRef,
+    input,
+    output,
+    signal,
+    viewChild,
+} from '@angular/core';
 
 import { findOverlappingXAxisLabels } from '../line-chart/fd-ui-line-chart-x-axis-layout';
 

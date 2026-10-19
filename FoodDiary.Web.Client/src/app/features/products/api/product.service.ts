@@ -36,11 +36,18 @@ export class ProductService {
     protected readonly baseUrl = environment.apiUrls.products;
     private readonly sdk = createProductsSdk(this.baseUrl, inject(HttpClient));
 
-    public query(page: number, limit: number, filters?: ProductFilters, options: boolean | { includePublic: boolean; context: HttpContext } = true): Observable<PageOf<Product>> {
+    public query(
+        page: number,
+        limit: number,
+        filters?: ProductFilters,
+        options: boolean | { includePublic: boolean; context: HttpContext } = true,
+    ): Observable<PageOf<Product>> {
         const includePublic = typeof options === 'boolean' ? options : options.includePublic;
         const context = typeof options === 'boolean' ? undefined : options.context;
         return this.sdk.client
-            .queryProducts({ version: this.sdk.version, page, limit, includePublic, ...this.toProductFilters(filters) }, 'body', false, { context })
+            .queryProducts({ version: this.sdk.version, page, limit, includePublic, ...this.toProductFilters(filters) }, 'body', false, {
+                context,
+            })
             .pipe(
                 map(productPageFromSdk),
                 catchError((error: unknown) => rethrowApiError('Query products error', error)),
@@ -64,15 +71,20 @@ export class ProductService {
             favoriteLimit = this.defaultLimits.favorite,
         } = query;
         return this.sdk.client
-            .getProductsOverview({
-                version: this.sdk.version,
-                page,
-                limit,
-                includePublic,
-                recentLimit,
-                favoriteLimit,
-                ...this.toProductFilters(filters),
-            }, 'body', false, { context })
+            .getProductsOverview(
+                {
+                    version: this.sdk.version,
+                    page,
+                    limit,
+                    includePublic,
+                    recentLimit,
+                    favoriteLimit,
+                    ...this.toProductFilters(filters),
+                },
+                'body',
+                false,
+                { context },
+            )
             .pipe(
                 map(productOverviewFromSdk),
                 catchError((error: unknown) => rethrowApiError('Query product overview error', error)),

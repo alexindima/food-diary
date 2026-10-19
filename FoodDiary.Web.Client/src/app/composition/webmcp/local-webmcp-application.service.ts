@@ -83,7 +83,8 @@ export class LocalWebmcpApplicationService {
             this.readCapabilitiesOperation(),
             {
                 name: 'fooddiary_' + 'read_push_diagnostics',
-                description: 'Read browser permission, service worker, subscription presence, provider availability and redacted server device metadata. Never enables push or proves delivery.',
+                description:
+                    'Read browser permission, service worker, subscription presence, provider availability and redacted server device metadata. Never enables push or proves delivery.',
                 inputSchema: DEV_EMPTY_SCHEMA,
                 annotations: { readOnlyHint: true },
                 run: readPushAsync,
@@ -204,7 +205,13 @@ export class LocalWebmcpApplicationService {
                 await this.navigateAsync(kind === 'product' ? '/products/add' : '/recipes/add');
             } else {
                 await this.navigateAsync(
-                    kind === 'fasting' ? '/fasting' : kind === 'cycle-settings' ? '/cycle-tracking' : kind === 'weight' ? '/weight-history' : '/waist-history',
+                    kind === 'fasting'
+                        ? '/fasting'
+                        : kind === 'cycle-settings'
+                          ? '/cycle-tracking'
+                          : kind === 'weight'
+                            ? '/weight-history'
+                            : '/waist-history',
                 );
                 await completeAsync();
                 const open = this.screens.current()?.openDraft;
@@ -217,7 +224,8 @@ export class LocalWebmcpApplicationService {
         };
         return {
             name: 'fooddiary_' + 'open_draft',
-            description: 'Open an unsaved product, recipe, weight, waist, existing cycle-settings or fasting setup form. Never creates, starts or saves a record.',
+            description:
+                'Open an unsaved product, recipe, weight, waist, existing cycle-settings or fasting setup form. Never creates, starts or saves a record.',
             inputSchema: {
                 type: 'object',
                 additionalProperties: false,
@@ -237,7 +245,9 @@ export class LocalWebmcpApplicationService {
             const dateTo = devDay(value['dateTo']);
             requireClean();
             if (value['timeZone'] !== new Intl.DateTimeFormat().resolvedOptions().timeZone || dateFrom > dateTo) {
-                throw new DevelopmentToolError('Use the current timezone and an ordered range on a supported diary, client or statistics screen.');
+                throw new DevelopmentToolError(
+                    'Use the current timezone and an ordered range on a supported diary, client or statistics screen.',
+                );
             }
             const screen = this.requirePeriodScreen();
             const setFilters = screen.setFiltersAsync ?? screen.setFilters;

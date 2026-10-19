@@ -328,25 +328,27 @@ export class ProductListFacade {
 
         this.searchOpenFoodFacts(search);
 
-        return this.productService.query(page, limit, filters, { includePublic, context: developmentRequestContext(this.productData.bindRequest(requestId)) }).pipe(
-            takeUntil(this.cancelLoad),
-            takeUntilDestroyed(this.destroyRef),
-            tap(data => {
-                if (!this.acceptPage(requestId, query, data)) {
-                    return;
-                }
-                this.currentPageIndex = data.page - 1;
-            }),
-            map(() => void 0),
-            catchError((_error: unknown) => {
-                if (!this.productData.fail(requestId, 'ERRORS.LOAD_FAILED_TITLE')) {
-                    return of(void 0);
-                }
-                this.recentProducts.set([]);
+        return this.productService
+            .query(page, limit, filters, { includePublic, context: developmentRequestContext(this.productData.bindRequest(requestId)) })
+            .pipe(
+                takeUntil(this.cancelLoad),
+                takeUntilDestroyed(this.destroyRef),
+                tap(data => {
+                    if (!this.acceptPage(requestId, query, data)) {
+                        return;
+                    }
+                    this.currentPageIndex = data.page - 1;
+                }),
+                map(() => void 0),
+                catchError((_error: unknown) => {
+                    if (!this.productData.fail(requestId, 'ERRORS.LOAD_FAILED_TITLE')) {
+                        return of(void 0);
+                    }
+                    this.recentProducts.set([]);
 
-                return of(void 0);
-            }),
-        );
+                    return of(void 0);
+                }),
+            );
     }
 
     public loadInitialOverview(): Observable<void> {
@@ -358,14 +360,17 @@ export class ProductListFacade {
         this.searchOpenFoodFacts(this.searchValue());
 
         return this.productService
-            .queryOverview({
-                page: this.queryState === null ? 1 : this.currentPageIndex + 1,
-                limit: this.pageSize,
-                includePublic: !this.onlyMineFilter(),
-                ...(this.queryState === null ? {} : { filters: this.currentFilters(this.searchValue()) }),
-                recentLimit: PRODUCT_LIST_RECENT_LIMIT,
-                favoriteLimit: PRODUCT_LIST_FAVORITE_LIMIT,
-            }, developmentRequestContext(this.productData.bindRequest(requestId)))
+            .queryOverview(
+                {
+                    page: this.queryState === null ? 1 : this.currentPageIndex + 1,
+                    limit: this.pageSize,
+                    includePublic: !this.onlyMineFilter(),
+                    ...(this.queryState === null ? {} : { filters: this.currentFilters(this.searchValue()) }),
+                    recentLimit: PRODUCT_LIST_RECENT_LIMIT,
+                    favoriteLimit: PRODUCT_LIST_FAVORITE_LIMIT,
+                },
+                developmentRequestContext(this.productData.bindRequest(requestId)),
+            )
             .pipe(
                 takeUntil(this.cancelLoad),
                 takeUntilDestroyed(this.destroyRef),

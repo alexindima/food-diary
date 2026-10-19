@@ -159,7 +159,14 @@ export class FastingPageComponent {
         return this.getSessionCheckIns(session).slice(0, CURRENT_SESSION_RECENT_CHECK_INS_LIMIT);
     });
     public constructor() {
-        connectDevelopmentScreen({ kind: 'fasting', read: () => readFastingDevelopmentContext(this.facade), isDirty: () => hasFastingDevelopmentDraft(this.facade), openDraft: () => { this.openProtocolSettings(); } });
+        connectDevelopmentScreen({
+            kind: 'fasting',
+            read: () => readFastingDevelopmentContext(this.facade),
+            isDirty: () => hasFastingDevelopmentDraft(this.facade),
+            openDraft: () => {
+                this.openProtocolSettings();
+            },
+        });
         this.facade.initialize();
 
         ((this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY)

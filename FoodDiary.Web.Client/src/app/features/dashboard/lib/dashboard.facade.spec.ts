@@ -69,7 +69,10 @@ describe('Dashboard midnight rollover', () => {
         expect(facade.selectedDate()).toEqual(new Date('2026-10-03T00:00:00'));
         expect(facade.isTodaySelected()).toBe(true);
         expect(dashboardService.getSnapshot).toHaveBeenCalledTimes(2);
-        expect(dashboardService.getSnapshot).toHaveBeenLastCalledWith(expect.objectContaining({ date: new Date('2026-10-03T00:00:00Z') }), expect.any(HttpContext));
+        expect(dashboardService.getSnapshot).toHaveBeenLastCalledWith(
+            expect.objectContaining({ date: new Date('2026-10-03T00:00:00Z') }),
+            expect.any(HttpContext),
+        );
     });
 
     it('keeps an explicitly selected date and removes today-only actions at midnight', () => {
@@ -111,7 +114,8 @@ describe('Dashboard live updates', () => {
         TestBed.tick();
 
         expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledExactlyOnceWith(
-            expect.objectContaining({ date: new Date(Date.UTC(TEST_YEAR, 2, SELECTED_DAY)) }), expect.any(HttpContext),
+            expect.objectContaining({ date: new Date(Date.UTC(TEST_YEAR, 2, SELECTED_DAY)) }),
+            expect.any(HttpContext),
         );
         expect(facade.selectedDate()).toEqual(new Date(TEST_YEAR, 2, SELECTED_DAY));
         expect(facade.isLoading()).toBe(false);
@@ -411,7 +415,10 @@ describe('DashboardFacade request lifecycle', () => {
         facade.initialize();
         translateService.getCurrentLang.mockReturnValue('ru-RU');
         translateService.onLangChange.next({ lang: 'ru-RU' });
-        expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledWith(expect.objectContaining({ locale: 'ru' }), expect.any(HttpContext));
+        expect(dashboardService.getSnapshotSilentlyStrict).toHaveBeenCalledWith(
+            expect.objectContaining({ locale: 'ru' }),
+            expect.any(HttpContext),
+        );
         expect(facade.snapshot()).toEqual(snapshot);
         expect(facade.isLoading()).toBe(false);
     });

@@ -99,7 +99,9 @@ export class LocalWebmcpCatalogService {
                     throw new DevelopmentToolError('A nested recipe requires only recipeId, amount and unit=servings.');
                 }
                 const { RecipeService } = await import('../../features/recipes/api/recipe.service');
-                const recipe = await firstValueFrom(this.injector.get(RecipeService).getById(entityId<'recipe'>(devText(item['recipeId'], MAX_ID_LENGTH))));
+                const recipe = await firstValueFrom(
+                    this.injector.get(RecipeService).getById(entityId<'recipe'>(devText(item['recipeId'], MAX_ID_LENGTH))),
+                );
                 const amount = devNumber(item['amount'], RECIPE_MIN_INGREDIENT_AMOUNT, MAXIMUM_CONSUMED_QUANTITY);
                 if (recipe === null || !Number.isFinite(recipe.servings) || recipe.servings <= 0) {
                     throw new DevelopmentToolError('Nested recipe missing or unavailable.');

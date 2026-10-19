@@ -57,7 +57,8 @@ it('restores the full bookmarked query and keeps its page when signal form effec
             page: 2,
             includePublic: true,
             filters: { search: 'Rice', category: 'soups', maxTotalTime: 60, caloriesFrom: 100, caloriesTo: 1000, hasImage: false },
-        }), expect.any(HttpContext),
+        }),
+        expect.any(HttpContext),
     );
 });
 
@@ -74,7 +75,8 @@ it('keeps URL, form and query aligned across filter changes and real browser Bac
         expect.objectContaining({
             page: 1,
             includePublic: true,
-        }), expect.any(HttpContext),
+        }),
+        expect.any(HttpContext),
     );
     expect(queryOverview.mock.lastCall?.[0].filters).toEqual(expect.objectContaining({ search: 'missing', category: 'soups' }));
     TestBed.inject(Location).back();

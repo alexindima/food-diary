@@ -41,22 +41,14 @@
       "pageSha256": "455d0bfd9a0172f3dd6e6e9c4c74aebf92d4674beab146223ef8f228d45f6adb",
       "sources": [
         {
-          "path": "docs/frontend/FRONTEND_ARCHITECTURE.md",
-          "sha256": "9c613c24b304235400ca24ad2e07bb85de8b0275a3e6a42d8b66ed98b22eaf0f"
-        },
-        {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "ce7df6c2ba83faf486313b534f8cda990cf8acb56622f3c14e8df279c9bc677b"
-        },
-        {
-          "path": "FoodDiary.Web.Client/projects/fd-webmcp/AGENTS.md",
-          "sha256": "0969468f99b9536b354e96765cc28c0c780c3259c52e3f3c439b3f78cd69a52b"
+          "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
+          "sha256": "8028887a50dec9aaf6bbfa1d9bc82dc4146b8a3fb0cbdca58a7e0d603ee834db"
         }
       ],
-      "reason": "Added the new fd-webmcp library and local guide; verified its public package boundary against current Angular project configuration and dependency tests.",
+      "reason": "Existing Prettier formatting only. All 32 TypeScript files have unchanged canonical AST fingerprints before/after, recorded in .artifacts/master-delivery-format-proof.json. Product service endpoints, types, authentication, routes, nutrition calculations, translations and public contracts are unchanged; source-derived indexes only track shifted line positions. Frontend module navigation remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
-      "reviewedAtUtc": "2026-10-19T08:49:13.7118403Z"
+      "gitHead": "476136f93c4173b3d19569333d07be70cd5750d7",
+      "reviewedAtUtc": "2026-10-19T10:14:02.3384074Z"
     },
     {
       "pageId": "module.mail-services",

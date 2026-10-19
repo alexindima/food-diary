@@ -135,14 +135,17 @@ export class RecipeListFacade {
         this.searchValue.set(filters.search ?? null);
 
         return this.recipeService
-            .queryOverview({
-                page: query.page,
-                limit,
-                filters,
-                includePublic: !query.onlyMine,
-                recentLimit: initial ? RECIPE_LIST_OVERVIEW_RECENT_LIMIT : 1,
-                favoriteLimit: initial ? RECIPE_LIST_OVERVIEW_FAVORITE_LIMIT : 0,
-            }, developmentRequestContext(this.appliedRequest.bindRequest(requestId)))
+            .queryOverview(
+                {
+                    page: query.page,
+                    limit,
+                    filters,
+                    includePublic: !query.onlyMine,
+                    recentLimit: initial ? RECIPE_LIST_OVERVIEW_RECENT_LIMIT : 1,
+                    favoriteLimit: initial ? RECIPE_LIST_OVERVIEW_FAVORITE_LIMIT : 0,
+                },
+                developmentRequestContext(this.appliedRequest.bindRequest(requestId)),
+            )
             .pipe(
                 takeUntil(this.cancelLoad),
                 takeUntilDestroyed(this.destroyRef),

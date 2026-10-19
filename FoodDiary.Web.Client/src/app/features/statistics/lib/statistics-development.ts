@@ -18,7 +18,8 @@ function readCustomPeriod(value: Record<string, unknown>): { start: Date; end: D
 
 export function connectStatisticsDevelopmentScreen(facade: StatisticsFacade): void {
     const period = (range: { start: Date; end: Date }): { dateFrom: string; dateTo: string } => ({
-        dateFrom: formatDateInputValue(range.start), dateTo: formatDateInputValue(range.end),
+        dateFrom: formatDateInputValue(range.start),
+        dateTo: formatDateInputValue(range.end),
     });
     connectDevelopmentScreen({
         kind: 'statistics',
@@ -29,18 +30,28 @@ export function connectStatisticsDevelopmentScreen(facade: StatisticsFacade): vo
             const available = current && !facade.isLoading() && !facade.hasLoadError();
             return {
                 filterFields: ['range', 'dateFrom', 'dateTo', 'nutritionTab'],
-                range: facade.selectedRange(), period: selected, appliedPeriod: applied === null ? null : period(applied),
+                range: facade.selectedRange(),
+                period: selected,
+                appliedPeriod: applied === null ? null : period(applied),
                 timeZone: new Intl.DateTimeFormat().resolvedOptions().timeZone,
-                quantizationDays: getQuantizationDays(normalizeStartOfDay(facade.currentRange().start), normalizeEndOfDay(facade.currentRange().end)),
-                nutritionTab: facade.selectedNutritionTab(), units: { calories: 'kcal', nutrients: 'g', weight: 'kg', waist: 'cm' },
-                loading: facade.isLoading(), error: facade.hasLoadError(), available,
+                quantizationDays: getQuantizationDays(
+                    normalizeStartOfDay(facade.currentRange().start),
+                    normalizeEndOfDay(facade.currentRange().end),
+                ),
+                nutritionTab: facade.selectedNutritionTab(),
+                units: { calories: 'kcal', nutrients: 'g', weight: 'kg', waist: 'cm' },
+                loading: facade.isLoading(),
+                error: facade.hasLoadError(),
+                available,
                 provenance: facade.requestProvenance(),
-                aggregates: available ? {
-                    ...facade.dashboardCardsView().overview,
-                    totalCalories: facade.chartStatisticsData()?.calories.reduce((sum, value) => sum + value, 0) ?? 0,
-                    nutrients: facade.chartStatisticsData()?.aggregatedNutrients ?? null,
-                    mealStructure: facade.dashboardCardsView().mealStructure,
-                } : null,
+                aggregates: available
+                    ? {
+                          ...facade.dashboardCardsView().overview,
+                          totalCalories: facade.chartStatisticsData()?.calories.reduce((sum, value) => sum + value, 0) ?? 0,
+                          nutrients: facade.chartStatisticsData()?.aggregatedNutrients ?? null,
+                          mealStructure: facade.dashboardCardsView().mealStructure,
+                      }
+                    : null,
             };
         },
         setFilters: input => {

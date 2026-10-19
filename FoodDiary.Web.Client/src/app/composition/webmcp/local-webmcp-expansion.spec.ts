@@ -136,14 +136,28 @@ describe('catalog resolution and safe request diagnostics', () => {
     it('resolves an exact accessible nested recipe and rejects mixed sources or mass units', async () => {
         const recipe = { ...createEmptyRecipeSnapshot(), id: entityId<'recipe'>('nested-recipe'), servings: 2 };
         const getById = vi.fn().mockReturnValue(of(recipe));
-        TestBed.configureTestingModule({ providers: [{ provide: ProductService, useValue: {} }, { provide: RecipeService, useValue: { getById } }] });
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: ProductService, useValue: {} },
+                { provide: RecipeService, useValue: { getById } },
+            ],
+        });
         const catalog = TestBed.inject(LocalWebmcpCatalogService);
-        const base = { name: 'Parent', servings: 1, steps: [{ description: 'Combine', ingredients: [{ recipeId: recipe.id, amount: 0.5, unit: 'servings' }] }] };
+        const base = {
+            name: 'Parent',
+            servings: 1,
+            steps: [{ description: 'Combine', ingredients: [{ recipeId: recipe.id, amount: 0.5, unit: 'servings' }] }],
+        };
         const draft = await catalog.recipeDraftAsync(base);
         expect(getById).toHaveBeenCalledWith(recipe.id);
         expect(draft.steps[0].ingredients).toEqual([{ recipe, amount: 0.5 }]);
-        for (const ingredient of [{ recipeId: recipe.id, amount: 1, unit: 'G' }, { recipeId: recipe.id, productId: 'mixed', amount: 1, unit: 'servings' }]) {
-            await expect(catalog.recipeDraftAsync({ ...base, steps: [{ description: 'Combine', ingredients: [ingredient] }] })).rejects.toThrow();
+        for (const ingredient of [
+            { recipeId: recipe.id, amount: 1, unit: 'G' },
+            { recipeId: recipe.id, productId: 'mixed', amount: 1, unit: 'servings' },
+        ]) {
+            await expect(
+                catalog.recipeDraftAsync({ ...base, steps: [{ description: 'Combine', ingredients: [ingredient] }] }),
+            ).rejects.toThrow();
         }
         getById.mockReturnValueOnce(of(null));
         await expect(catalog.recipeDraftAsync(base)).rejects.toThrow('unavailable');

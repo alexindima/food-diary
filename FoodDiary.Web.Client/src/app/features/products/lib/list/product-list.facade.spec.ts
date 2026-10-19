@@ -149,13 +149,16 @@ beforeEach(() => {
 
 describe('ProductListFacade overview', () => {
     it('loads recent shortcuts without removing products from the catalog page', () => {
-        expect(productService.queryOverview).toHaveBeenCalledWith({
-            page: 1,
-            limit: PRODUCT_LIST_PAGE_SIZE,
-            includePublic: true,
-            recentLimit: PRODUCT_LIST_RECENT_LIMIT,
-            favoriteLimit: PRODUCT_LIST_FAVORITE_LIMIT,
-        }, expect.any(HttpContext));
+        expect(productService.queryOverview).toHaveBeenCalledWith(
+            {
+                page: 1,
+                limit: PRODUCT_LIST_PAGE_SIZE,
+                includePublic: true,
+                recentLimit: PRODUCT_LIST_RECENT_LIMIT,
+                favoriteLimit: PRODUCT_LIST_FAVORITE_LIMIT,
+            },
+            expect.any(HttpContext),
+        );
         expect(facade.recentProducts().map(product => product.id)).toEqual(['recent-product']);
         expect(facade.allProductItems().map(item => item.product.id)).toEqual(['recent-product', 'all-product']);
         expect(facade.favorites()).toEqual([createFavoriteProduct()]);
@@ -263,7 +266,12 @@ describe('ProductListFacade search and filters', () => {
         await flushDebounceAsync();
 
         expect(facade.onlyMineFilter()).toBe(true);
-        expect(productService.query).toHaveBeenCalledWith(1, PRODUCT_LIST_PAGE_SIZE, expect.anything(), expect.objectContaining({ includePublic: false }));
+        expect(productService.query).toHaveBeenCalledWith(
+            1,
+            PRODUCT_LIST_PAGE_SIZE,
+            expect.anything(),
+            expect.objectContaining({ includePublic: false }),
+        );
     });
 
     it('ignores stale Open Food Facts responses from previous searches', async () => {

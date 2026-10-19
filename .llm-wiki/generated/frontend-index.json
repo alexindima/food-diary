@@ -1664,7 +1664,7 @@
       "role": "Component",
       "selector": "fd-ui-bar-chart",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/bar-chart/fd-ui-bar-chart.ts",
-      "line": 79
+      "line": 89
     },
     {
       "name": "FdUiButtonComponent",
@@ -3533,7 +3533,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/composition/webmcp/local-webmcp-push.service.ts",
-      "line": 57
+      "line": 65
     },
     {
       "name": "LocalWebmcpRequestsService",
@@ -5920,7 +5920,7 @@
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/recipes/contracts/recipe-development-draft.ts",
-      "line": 7
+      "line": 8
     },
     {
       "name": "RecipeFavoritesPickerComponent",
