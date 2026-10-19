@@ -309,8 +309,12 @@ $recipeRelations = & $manager relations -ChangedPath $recipesBoundary -RelationK
 if (@($recipeRelations.relations | Where-Object { $_.target -eq 'CreateRecipeCommand' -and $_.path -match 'CreateRecipeCommandHandler.cs$' }).Count -ne 1) {
     throw 'Typed graph did not preserve mediator handler provenance for CreateRecipeCommand.'
 }
-$migrationRelations = & $manager relations -ChangedPath 'FoodDiary.Infrastructure/Migrations/20251108210736_InitialCreate.cs' -RelationKind migration-table -Limit 100 -SkipRefresh -Format Json | ConvertFrom-Json
-if (@($migrationRelations.relations).Count -eq 0) { throw 'Typed graph did not preserve migration table provenance.' }
+$initialMigrationPath = 'FoodDiary.Infrastructure/Migrations/20261017130323_InitialBaseline.cs'
+$migrationRelations = & $manager relations -ChangedPath $initialMigrationPath -RelationKind migration-table -Limit 100 -SkipRefresh -Format Json | ConvertFrom-Json
+if (@($migrationRelations.relations | Where-Object {
+    $_.path -eq $initialMigrationPath -and $_.target -eq 'AchievementDefinitions' -and
+    $_.evidence -match 'migrationBuilder\.CreateTable'
+}).Count -ne 1) { throw 'Typed graph did not preserve baseline migration table creation provenance.' }
 $namespaceTrace = & $manager trace -Query 'FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers' -Limit 100 -SkipRefresh -Format Json | ConvertFrom-Json
 if (@($namespaceTrace.consumers | Where-Object { $_.relationKind -eq 'namespace-filter' -and $_.path -match 'ControllerConventionsTests.cs$' }).Count -eq 0 -or
     @($namespaceTrace.namespaceFilters | Where-Object { [int]$_.matchedDeclarations -gt 0 }).Count -eq 0) {

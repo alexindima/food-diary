@@ -17,7 +17,9 @@ $expected = @{
     Governed = @{ count = 376; hash = '992083313b939fab1e649bd4f61fe64e1d46bcfb017b0f580e3a41f6d2c2922f' }
     Workspace = @{ count = 279; hash = 'ba880a6e89141db9d594badfdd783734b187785ad3281d1c4cf755ae336fffd4' }
     Orchestration = @{ count = 97; hash = 'fdd52d1221307232c0a905826fd28e98c22428d303ffe571b91210a1a2c2aac4' }
-    Common = @{ count = 1; hash = '43c752083d5bd294ccf4a8efb8bdf4cd9831a14bc33acdbaa06de6659838f6bd' }
+    # Retain durable-memory preservation and add canonical model-outcome
+    # registry preservation for every shard; all earlier assertions remain.
+    Common = @{ count = 2; hash = 'd103f99207c36ec561f389a4c84d8c6250e43bf658e305f442acdb22ea0f9779' }
 }
 $groups = @{ Core = @(); Governed = @(); Workspace = @(); Orchestration = @(); Common = @() }
 foreach ($command in $ast.FindAll({ param($node)

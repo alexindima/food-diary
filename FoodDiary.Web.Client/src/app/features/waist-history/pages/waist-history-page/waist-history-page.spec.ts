@@ -10,6 +10,7 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { ConfirmDeleteDialogComponent } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import { NavigationService } from '../../../../services/navigation.service';
 import { UserService } from '../../../../shared/api/user.service';
+import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../../shared/development/development-tools';
 import { calendarDate } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
@@ -46,17 +47,20 @@ async function setupAsync(): Promise<{
     startTour: Mock;
     navigate: Mock;
     mobile: WritableSignal<boolean>;
+    attach: Mock<(screen: DevelopmentScreen) => () => void>;
 }> {
     const closed = new Subject<WaistHistoryEntriesDialogResult | undefined>();
     const open = vi.fn().mockReturnValue({ afterClosed: () => closed });
     const startTour = vi.fn();
     const navigate = vi.fn();
     const mobile = signal(false);
+    const attach = vi.fn((_screen: DevelopmentScreen) => vi.fn());
     TestBed.configureTestingModule({
         deferBlockBehavior: DeferBlockBehavior.Manual,
         imports: [WaistHistoryPageComponent],
         providers: [
             provideTranslateTesting(),
+            { provide: DEVELOPMENT_SCREENS, useValue: { attach } },
             provideRouter([]),
             {
                 provide: WaistEntriesService,
@@ -98,11 +102,35 @@ async function setupAsync(): Promise<{
         startTour,
         navigate,
         mobile,
+        attach,
     };
 }
 let context: Awaited<ReturnType<typeof setupAsync>>;
 beforeEach(async () => {
     context = await setupAsync();
+});
+
+describe('Waist history WebMCP screen', () => {
+    it('exposes entry identities without measurement values and opens the owner editor', () => {
+        const { fixture, facade, open, attach } = context;
+        const screen = attach.mock.calls[0][0];
+        expect(screen.kind).toBe('waist-history');
+        expect(screen.read()).toEqual({
+            range: facade.currentRange(),
+            loading: false,
+            error: false,
+            entries: [{ id: ENTRY.id, date: ENTRY.date }],
+        });
+        screen.openDraft?.();
+        expect(open).toHaveBeenCalledWith(
+            WaistHistoryEntryDialogComponent,
+            expect.objectContaining({
+                providers: [{ provide: WaistHistoryFacade, useValue: facade }],
+            }),
+        );
+        fixture.destroy();
+        expect(attach.mock.results[0].value).toHaveBeenCalledOnce();
+    });
 });
 describe('Waist history page retry actions', () => {
     it('recovers the failed page through its visible retry button', () => {

@@ -67,6 +67,19 @@
       "verification": [
         "Run Test-LlmWikiConcurrentIndexUpdate.ps1 on Windows and Linux, then run Invoke-LlmWikiAffectedSmoke.ps1 -Group index-selection."
       ]
+    },
+    {
+      "id": "wiki-smoke-model-outcome-registry-isolation",
+      "symptom": "CI b07f5bc46 Full Workspace audit failed model-routing degradation assertions after a real task outcome was committed.",
+      "cause": "The smoke cohort expected exactly three synthetic events but read the accumulated canonical model-routing-outcomes registry, producing four events and allowing unrelated history to influence route health.",
+      "fix": "Use the existing model-outcome registry override with a fresh fixture-local registry for the audit. Preserve strict cohort, degradation and escalation assertions; restore the previous override and assert the canonical registry hash is unchanged.",
+      "pathPatterns": [
+        "^\\.llm-wiki/tools/(Test-LlmWikiTools|Manage-LlmWikiModelRoutingOutcome)\\.ps1$"
+      ],
+      "verification": [
+        "./.llm-wiki/tools/Test-LlmWikiTools.ps1 -Profile Full -AuditShard Workspace passed in 667.92s with a nonempty canonical registry.",
+        "Canonical model-outcome registry SHA-256 preservation assertion passed; .artifacts/ci-wiki-repair-workspace.log."
+      ]
     }
   ]
 }

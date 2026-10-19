@@ -31,14 +31,23 @@ if ($Profile -eq 'Focused') {
 $errors = [System.Collections.Generic.List[string]]::new()
 $canonicalMemoryRegistryPath = Join-Path $wikiRoot 'knowledge/memories.json'
 $canonicalMemoryRegistryHash = (Get-FileHash -LiteralPath $canonicalMemoryRegistryPath -Algorithm SHA256).Hash
+$canonicalModelOutcomeRegistryPath = Join-Path $wikiRoot 'knowledge/model-routing-outcomes.json'
+$canonicalModelOutcomeRegistryHash = (Get-FileHash -LiteralPath $canonicalModelOutcomeRegistryPath -Algorithm SHA256).Hash
 $memoryRegistryPath = Join-Path $repositoryRoot '.artifacts/llm-wiki/tool-smoke-memory-registry.json'
 $previousTestMemoryRegistryPath = $env:LLM_WIKI_TEST_MEMORY_REGISTRY_PATH
+$previousModelOutcomeRegistryPath = $env:LLM_WIKI_MODEL_ROUTE_OUTCOME_REGISTRY_PATH
 $previousTestKnowledgeRoot = $env:LLM_WIKI_TEST_KNOWLEDGE_ROOT
 $previousVerificationTelemetryPath = $env:LLM_WIKI_VERIFICATION_TELEMETRY_PATH
 $verificationTelemetryPath = Join-Path $repositoryRoot ".artifacts/llm-wiki/tool-smoke-verification-telemetry-$([guid]::NewGuid().ToString('N')).json"
 $testKnowledgeRoot = Join-Path $repositoryRoot ".artifacts/llm-wiki/tool-smoke-knowledge-$([guid]::NewGuid().ToString('N'))"
 New-Item -ItemType Directory -Path (Split-Path -Parent $memoryRegistryPath) -Force | Out-Null
 New-Item -ItemType Directory -Path $testKnowledgeRoot -Force | Out-Null
+$testModelOutcomeRegistryPath = Join-Path $testKnowledgeRoot 'model-routing-outcomes.json'
+[IO.File]::WriteAllText(
+    $testModelOutcomeRegistryPath,
+    "{`n  `"schemaVersion`": 1,`n  `"events`": []`n}`n",
+    [Text.UTF8Encoding]::new($false))
+$env:LLM_WIKI_MODEL_ROUTE_OUTCOME_REGISTRY_PATH = $testModelOutcomeRegistryPath
 foreach ($registryName in @('learning-promotions.json', 'learning-experiments.json', 'eval-promotions.json', 'learning-health.json')) {
     Copy-Item -LiteralPath (Join-Path $wikiRoot "knowledge/$registryName") -Destination (Join-Path $testKnowledgeRoot $registryName)
 }
@@ -2752,7 +2761,7 @@ try {
     Write-GovernedBlockTiming 'context security and strategy'
     $contextOutcomeRegistryPath = Join-Path $wikiRoot 'knowledge/context-strategy-outcomes.json'
     $contextOutcomeRegistryRaw = Get-Content -LiteralPath $contextOutcomeRegistryPath -Raw
-    $modelOutcomeRegistryPath = Join-Path $wikiRoot 'knowledge/model-routing-outcomes.json'
+    $modelOutcomeRegistryPath = $testModelOutcomeRegistryPath
     $modelOutcomeRegistryRaw = Get-Content -LiteralPath $modelOutcomeRegistryPath -Raw
     $instructionOutcomeRegistryPath = Join-Path $wikiRoot 'knowledge/instruction-outcomes.json'
     $instructionOutcomeRegistryRaw = Get-Content -LiteralPath $instructionOutcomeRegistryPath -Raw
@@ -5297,6 +5306,9 @@ try {
 $canonicalMemoryRegistryHashAfter = (Get-FileHash -LiteralPath $canonicalMemoryRegistryPath -Algorithm SHA256).Hash
 Assert-Wiki ($canonicalMemoryRegistryHashAfter -ceq $canonicalMemoryRegistryHash) `
     'Tool smoke tests modified the canonical durable-memory registry.'
+$canonicalModelOutcomeRegistryHashAfter = (Get-FileHash -LiteralPath $canonicalModelOutcomeRegistryPath -Algorithm SHA256).Hash
+Assert-Wiki ($canonicalModelOutcomeRegistryHashAfter -ceq $canonicalModelOutcomeRegistryHash) `
+    'Tool smoke tests modified the canonical model-routing outcome registry.'
 if ([string]::IsNullOrWhiteSpace($previousTestMemoryRegistryPath)) {
     Remove-Item Env:LLM_WIKI_TEST_MEMORY_REGISTRY_PATH -ErrorAction SilentlyContinue
 } else {
@@ -5309,6 +5321,11 @@ if ([string]::IsNullOrWhiteSpace($previousTestKnowledgeRoot)) {
     Remove-Item Env:LLM_WIKI_TEST_KNOWLEDGE_ROOT -ErrorAction SilentlyContinue
 } else {
     $env:LLM_WIKI_TEST_KNOWLEDGE_ROOT = $previousTestKnowledgeRoot
+}
+if ([string]::IsNullOrWhiteSpace($previousModelOutcomeRegistryPath)) {
+    Remove-Item Env:LLM_WIKI_MODEL_ROUTE_OUTCOME_REGISTRY_PATH -ErrorAction SilentlyContinue
+} else {
+    $env:LLM_WIKI_MODEL_ROUTE_OUTCOME_REGISTRY_PATH = $previousModelOutcomeRegistryPath
 }
 if (Test-Path -LiteralPath $testKnowledgeRoot) {
     Remove-Item -LiteralPath $testKnowledgeRoot -Recurse -Force -ErrorAction SilentlyContinue

@@ -289,14 +289,14 @@
       "pageSha256": "074bf2995247983cf0a0ece843392c4731a6ce2c410db95f710f861a28c596b8",
       "sources": [
         {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "ff3d36f580dc3066a55b77112d40a2ebeff4a9ef5a1af78d9c5d3794a284d9f9"
+          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
+          "sha256": "7963d20d0723ab738869076e3e4f239cbabfc0284cdf3cce015439815e23e48b"
         }
       ],
-      "reason": "Reviewed the narrowed existing primary migration role against current InitialBaseline ownership. Query and corpus thresholds are unchanged; rule count remains 700 combined. All22 corpora and4 .NET parity corpora passed in .artifacts/webmcp-delivery-retrieval-final.log. Graph ownership, projection, cache and runtime interfaces are unchanged.",
+      "reason": "The test now uses the accepted InitialBaseline source and requires exactly one AchievementDefinitions CreateTable edge with that source path. Full isolated code-graph regression passed, including provenance, incrementality, query, corruption and dependency checks. No graph runtime or documented query contracts changed.",
       "baseRef": "HEAD",
-      "gitHead": "cf1ede7771ae6a1f905ef9ec019d69fc346bbfaa",
-      "reviewedAtUtc": "2026-10-19T09:38:25.9116371Z"
+      "gitHead": "b07f5bc463fec763eac4b3f451f85d8d75dca4c6",
+      "reviewedAtUtc": "2026-10-19T11:27:27.3904118Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -542,13 +542,13 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/failures.json",
-          "sha256": "51470bca20999266333108e8ce7747027d68f406017c1b075441bf4ac7e16d22"
+          "sha256": "a7b38cf9c1bdaf1af4c071fee0c60b775141f66a0b3720009cb9814873dd977f"
         }
       ],
-      "reason": "Verified the new failure record against CI job 115333479231, RegisterCommandHandler expiry calculation, User.EnsureFutureUtc and the fixed real-auth/frozen-calendar fixture; focused and all 280 API integration tests pass without skipped assertions.",
+      "reason": "Added one validated schema-1 failure record for contamination of a synthetic model-routing cohort by persisted real outcomes. It records the existing registry-override fix and the passing full Workspace audit with canonical-hash preservation. All prior records and the failure-knowledge CLI remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "c6f318e5d5c26757883ce86159bf527bf9763dcf",
-      "reviewedAtUtc": "2026-10-13T14:30:12.7299952Z"
+      "gitHead": "b07f5bc463fec763eac4b3f451f85d8d75dca4c6",
+      "reviewedAtUtc": "2026-10-19T11:27:28.4305994Z"
     },
     {
       "pageId": "workflow-failure-prediction",
@@ -654,14 +654,18 @@
       "pageSha256": "68747a1fd21d73998b55172d7c0b5e711b8bc12862555a50ff298adda147c31c",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "3876efa9249e532e1321b0c1895bd65c5b9616378518079310c16ef94a0b76c1"
+          "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
+          "sha256": "3a1aa2fabdcebd616d2dfa50a74c54de54f67d20cb73a1b33f085a7bbbf10a3c"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
+          "sha256": "a5160c2463faf014596a4abf9e13b3557cef985f66e70d3a1790600045b4b262"
         }
       ],
-      "reason": "The CI diff adds only standard-library Python readiness tests next to existing deployment authorization tests. Existing Wiki, API compatibility, report, backend and frontend gates retain their commands and conditions. Reviewed the new deployment step: it runs before all server uploads and stops, using read-only EF-history queries. Nine Python tests, ten Node deployment tests and the live legacy refusal with unchanged running API passed.",
+      "reason": "Legacy audit model outcomes now use a fresh private registry through the existing override; the previous override is restored and the canonical registry hash must remain unchanged. Core, Workspace and Orchestration passed. The assertion inventory retains all existing Core/Governed/Workspace/Orchestration hashes and intentionally adds one Common immutability assertion (2 total,714 overall); shard/CI contracts passed. No pipeline runtime or documented command changed.",
       "baseRef": "HEAD",
-      "gitHead": "554c18fc9091c83452cca7b41c934e390bf1ab78",
-      "reviewedAtUtc": "2026-10-19T09:52:40.9170751Z"
+      "gitHead": "b07f5bc463fec763eac4b3f451f85d8d75dca4c6",
+      "reviewedAtUtc": "2026-10-19T11:32:17.2654602Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
