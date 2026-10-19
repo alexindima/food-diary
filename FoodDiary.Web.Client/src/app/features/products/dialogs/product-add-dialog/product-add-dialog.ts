@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { FdTourHostComponent, FdTourService } from 'fd-tour';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
@@ -10,7 +11,8 @@ import { ProductManageFormComponent } from '../../components/manage/product-mana
     templateUrl: './product-add-dialog.html',
     styleUrls: ['./product-add-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ProductManageFormComponent],
+    imports: [ProductManageFormComponent, FdTourHostComponent],
+    providers: [FdTourService],
 })
 export class ProductAddDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ProductAddDialogComponent, Product | null>);

@@ -82,7 +82,7 @@
         } @else {
             <p class="fd-ui-caption">{{ 'HYDRATION_CARD.SELECTED_DAY_HINT' | translate }}</p>
         }
-        <div [hidden]="undoAmount() === null">
+        <div class="hydration-card__undo-row" [hidden]="undoAmount() === null">
             <fd-ui-button
                 class="hydration-card__undo"
                 variant="secondary"

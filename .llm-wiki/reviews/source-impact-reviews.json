@@ -843,13 +843,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "39a85415f5013f74955100a16ce066b47efed96b68a1585bc345f90af859c219"
+          "sha256": "58861515c57b03a63e69e3f560e32b588723759365f120076b42a8b8ee121ac0"
         }
       ],
-      "reason": "The entire generated quality diff adds Test-LlmWikiGovernedDeliveryRegression.ps1 as one additional reference for Manage-LlmWikiEvidence.ps1 (3 to4). No product behavior, security verdict, coverage claim or ranking contract changes. The regression executes supplemental evidence with zero required checks and rejects fingerprint tampering; the affected governed-delivery and tool-contract smoke groups passed. Existing page statements that references are navigation rather than execution proof remain current.",
+      "reason": "Reviewed the changed component and UI-kit entries in the regenerated quality projection. This patch changes presentation and dialog-local tour ownership; executed focused tests and browser regressions provide evidence independently of static test-reference counts. The documented hotspot and test-gap workflow still applies unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "554c18fc9091c83452cca7b41c934e390bf1ab78",
-      "reviewedAtUtc": "2026-10-19T10:03:47.8281958Z"
+      "gitHead": "7ed4b080e31f1b0526aba7f705b2c7a28189c284",
+      "reviewedAtUtc": "2026-10-19T20:55:10.6065383Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -937,13 +937,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "39a85415f5013f74955100a16ce066b47efed96b68a1585bc345f90af859c219"
+          "sha256": "58861515c57b03a63e69e3f560e32b588723759365f120076b42a8b8ee121ac0"
         }
       ],
-      "reason": "The entire generated quality diff adds Test-LlmWikiGovernedDeliveryRegression.ps1 as one additional reference for Manage-LlmWikiEvidence.ps1 (3 to4). No product behavior, security verdict, coverage claim or ranking contract changes. The regression executes supplemental evidence with zero required checks and rejects fingerprint tampering; the affected governed-delivery and tool-contract smoke groups passed. Existing page statements that references are navigation rather than execution proof remain current.",
+      "reason": "Compared the regenerated quality projection with the current diff. No authentication, authorization, provider, persistence, network destination, token storage or production exposure changes were introduced. Tour state is scoped to the existing product dialog and existing localized hint content remains Angular-rendered. The security navigation workflow requires no text change.",
       "baseRef": "HEAD",
-      "gitHead": "554c18fc9091c83452cca7b41c934e390bf1ab78",
-      "reviewedAtUtc": "2026-10-19T10:03:48.3041964Z"
+      "gitHead": "7ed4b080e31f1b0526aba7f705b2c7a28189c284",
+      "reviewedAtUtc": "2026-10-19T20:55:12.0309040Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1083,14 +1083,18 @@
       "pageSha256": "4e059a263f76810db4c559e2b5599d8599571ccf48d060f6360c6d0e8ec60b48",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "63876c5d584738a48b9a055ecd56cde9025bc6bb43f90536d3d3dfc593057ac8"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "36f1de5dd0ee3c7713fd6e9935f4129601d2699c47acdfe7ce4019002bf0c839"
+          "sha256": "3266aebc289df770dc4a2a7b0bea8ef8cd9222b27b43a13e017b561ee6d406da"
         }
       ],
-      "reason": "Frontend index now locates shared WebMCP classes and the shorter client/admin adapters. Source graph tracing and UI trace ownership are unchanged.",
+      "reason": "Traced the affected render chain through dashboard summary/trend components, recipe summary and ProductAddDialog to ProductManageForm and FdTourHost. Frontend indexes reflect local imports/providers and templates; routes, HTTP calls, public DTOs and backend ownership are unchanged. The documented source-navigation limitations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
-      "reviewedAtUtc": "2026-10-19T08:52:49.8618243Z"
+      "gitHead": "7ed4b080e31f1b0526aba7f705b2c7a28189c284",
+      "reviewedAtUtc": "2026-10-19T20:55:13.4433039Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1173,14 +1177,14 @@
       "pageSha256": "31a43fb31fa630969babe869c21458771cfbe6ed2e9b0234c47cc7e1511d5725",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "ce7df6c2ba83faf486313b534f8cda990cf8acb56622f3c14e8df279c9bc677b"
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "63876c5d584738a48b9a055ecd56cde9025bc6bb43f90536d3d3dfc593057ac8"
         }
       ],
-      "reason": "The workspace guide names fd-webmcp. Public screen types are consumed via compatibility adapters; existing client47/admin4 tests and native client guards verify owner contracts.",
+      "reason": "Reviewed current component templates, consumers and specs. ProductAddDialog now owns its tour service and host; shared chart and dialog controls retain their public inputs and outputs. Focused component tests, browser tour navigation and responsive contour checks passed. API adapters and generated SDK contracts are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
-      "reviewedAtUtc": "2026-10-19T08:49:07.5443770Z"
+      "gitHead": "7ed4b080e31f1b0526aba7f705b2c7a28189c284",
+      "reviewedAtUtc": "2026-10-19T20:55:09.2539394Z"
     },
     {
       "pageId": "workflow.query-context",

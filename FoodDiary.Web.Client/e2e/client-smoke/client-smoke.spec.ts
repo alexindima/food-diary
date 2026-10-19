@@ -909,6 +909,28 @@ test.describe('dashboard regression interactions', () => {
         await authenticateUserAsync(page);
         await mockAuthenticatedClientApiAsync(page);
     });
+
+    for (const width of DASHBOARD_TEST_WIDTHS) {
+        test(`nutrient labels follow their contour quadrants at ${width}px`, async ({ page }) => {
+            await page.setViewportSize({ width, height: 1000 });
+            await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route =>
+                route.fulfill(jsonResponse(createDashboardRegressionSnapshot())),
+            );
+            await page.goto('/dashboard');
+            const summary = page.locator('fd-day-nutrition-summary');
+            await summary.scrollIntoViewIfNeeded();
+            const protein = await dashboardBoundsAsync(summary.locator('.day-summary__nutrient--protein'));
+            const fats = await dashboardBoundsAsync(summary.locator('.day-summary__nutrient--fats'));
+            const carbs = await dashboardBoundsAsync(summary.locator('.day-summary__nutrient--carbs'));
+            const fiber = await dashboardBoundsAsync(summary.locator('.day-summary__nutrient--fiber'));
+            expect(fats.x).toBeGreaterThan(protein.x);
+            expect(fats.y).toBeCloseTo(protein.y, 0);
+            expect(carbs.y).toBeGreaterThan(protein.y + protein.height);
+            expect(carbs.x).toBeLessThan(fiber.x);
+            expect(fiber.y).toBeCloseTo(carbs.y, 0);
+            await expectNoHorizontalOverflowAsync(page);
+        });
+    }
     test('mobile today has one water card before meals; historical dates disable quick additions', async ({ page }) => {
         await page.setViewportSize({ width: 390, height: 844 });
         await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route =>
@@ -2144,6 +2166,14 @@ async function mockRecipeDetailAsync(page: Page, recipe: Record<string, unknown>
     );
 }
 
+async function verifyRecipeSummaryHelpAsync(page: Page, detail: Locator): Promise<void> {
+    await expect(detail.getByRole('tab')).toHaveCount(2);
+    const qualityHelp = detail.getByRole('button', { name: 'How healthiness is calculated', exact: true });
+    await qualityHelp.click();
+    await expect(page.getByRole('tooltip')).toContainText('A rough score from 0 to 100');
+    await qualityHelp.click();
+}
+
 test.describe('recipe redesign regression', () => {
     for (const width of MEAL_DIALOG_VIEWPORTS) {
         test(`recipe summary, cooking, photos and favorite undo at ${width}px`, async ({ page }, testInfo) => {
@@ -2196,7 +2226,7 @@ test.describe('recipe redesign regression', () => {
             await page.keyboard.press('Escape');
             await card.locator('.entity-card__open-button').click();
             const detail = page.locator('fd-recipe-detail');
-            await expect(detail.getByRole('tab')).toHaveCount(2);
+            await verifyRecipeSummaryHelpAsync(page, detail);
             await expect(detail.locator('.recipe-detail__macro-summary dd')).toHaveCount(MEAL_DIALOG_MACRO_COUNT);
             await expect(detail.locator('.recipe-detail__list-row')).toHaveCount(MEAL_DIALOG_PREVIEW_COUNT);
             await detail.getByRole('button', { name: /Show 2 more/ }).click();
@@ -2348,6 +2378,24 @@ test.describe('product form visual regression', () => {
 });
 
 test.describe('product creation behavior', () => {
+    test('the nested product tour stays above the meal picker and accepts navigation', async ({ page }) => {
+        await authenticateUserAsync(page);
+        await mockAuthenticatedClientApiAsync(page);
+        await page.goto('/meals/add');
+        await page.getByRole('button', { name: 'Product or recipe', exact: true }).click();
+        await page.locator('fd-item-select-dialog').getByRole('button', { name: 'Create', exact: true }).click();
+        const productDialog = page.locator('fd-product-add-dialog');
+        await productDialog.getByRole('button', { name: 'Show product form tour', exact: true }).click();
+        const tour = productDialog.locator('.fd-tour__popover--visible');
+        await expect(tour).toContainText('Product details');
+        await tour.getByRole('button', { name: 'Next', exact: true }).click();
+        await expect(tour).toContainText('Nutrition');
+        await tour.getByRole('button', { name: 'Close', exact: true }).click();
+        await expect(tour).toHaveCount(0);
+        await expect(productDialog.getByRole('combobox', { name: 'Name *', exact: true })).toBeVisible();
+        await expect(page).toHaveURL(/\/meals\/add$/u);
+    });
+
     test('saves comma decimals in portion mode as normalized base values', async ({ page }) => {
         await authenticateUserAsync(page);
         await mockAuthenticatedClientApiAsync(page);

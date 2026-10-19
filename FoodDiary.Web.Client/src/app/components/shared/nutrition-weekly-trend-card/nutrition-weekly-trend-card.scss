@@ -41,19 +41,19 @@
     }
 
     &__swatch--protein {
-        background: var(--fd-color-primary-500);
+        background: var(--fd-color-nutrition-proteins);
     }
 
     &__swatch--carbs {
-        background: var(--fd-color-sky-500);
+        background: var(--fd-color-nutrition-carbs);
     }
 
     &__swatch--fats {
-        background: var(--fd-color-orange-500);
+        background: var(--fd-color-nutrition-fats);
     }
 
     &__swatch--fiber {
-        background: var(--fd-color-rose-500);
+        background: var(--fd-color-nutrition-fiber);
     }
 
     &__legend {

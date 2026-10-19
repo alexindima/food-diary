@@ -205,16 +205,19 @@
         grid-row: 1;
     }
 
-    &__nutrient:nth-child(n + 3) {
+    &__nutrient--carbs,
+    &__nutrient--fiber {
         grid-row: 3;
     }
 
-    &__nutrient:nth-child(odd) {
+    &__nutrient--protein,
+    &__nutrient--carbs {
         grid-column: 1;
         justify-self: start;
     }
 
-    &__nutrient:nth-child(even) {
+    &__nutrient--fats,
+    &__nutrient--fiber {
         grid-column: 2;
         justify-self: end;
         text-align: right;
@@ -238,7 +241,8 @@
         flex: 0 0 auto;
     }
 
-    &__nutrient:where(:nth-child(even)) .day-summary__nutrient-label {
+    &__nutrient--fats .day-summary__nutrient-label,
+    &__nutrient--fiber .day-summary__nutrient-label {
         flex-direction: row-reverse;
     }
 
@@ -335,11 +339,13 @@
             align-self: start;
         }
 
-        &__nutrient:nth-child(even) {
+        &__nutrient--fats,
+        &__nutrient--fiber {
             grid-column: 3;
         }
 
-        &__nutrient:nth-child(n + 3) {
+        &__nutrient--carbs,
+        &__nutrient--fiber {
             grid-row: 2;
             align-self: end;
         }

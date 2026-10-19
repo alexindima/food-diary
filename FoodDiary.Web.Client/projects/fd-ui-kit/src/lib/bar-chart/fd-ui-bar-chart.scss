@@ -263,7 +263,9 @@
     width: max-content;
     max-width: calc(100% - var(--fd-space-lg));
     overflow: hidden;
-    padding-right: var(--fd-space-xxs);
+    padding-inline: var(--fd-space-xxs);
+    background: var(--fd-bg-card-surface);
+    border-radius: var(--fd-radius-xs);
     color: var(--fd-bar-chart-reference-color);
     font-style: normal;
     text-overflow: ellipsis;

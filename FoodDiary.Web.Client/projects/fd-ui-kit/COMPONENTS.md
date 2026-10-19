@@ -924,7 +924,7 @@ Standard card surfaces use the shared `--fd-bg-card-surface` token: a subtle the
 
 `fd-ui-input` supports `suffixText` for noninteractive units, `inputMode` for the mobile keyboard, and opt-in `selectOnFocus` for text inputs. Use `type="text" inputMode="decimal"` when comma decimals must remain intact; validation and canonical conversion belong to the form. The unit participates in `aria-describedby` alongside any error.
 
-Both `fd-ui-input` and `fd-ui-date-input` accept `showRequiredIndicator` (default `true`). Setting it to `false` hides only the asterisk; native required/ARIA semantics remain intact. See the Input/Measurement story. Dialog close buttons keep their keyboard focus ring and show background emphasis on hover, with no permanent filled circle.
+Both `fd-ui-input` and `fd-ui-date-input` accept `showRequiredIndicator` (default `true`). Setting it to `false` hides only the asterisk; native required/ARIA semantics remain intact. See the Input/Measurement story. Dialog close buttons use the compact control size, button radius, secondary text-button colors and shared keyboard focus ring, matching custom dialog header actions without a permanent filled circle.
 
 ## Image preview gallery
 

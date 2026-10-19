@@ -104,28 +104,27 @@
 
 .fd-ui-dialog__close-button {
     border: none;
-    background: transparent;
-    border-radius: var(--fd-radius-pill);
-    width: var(--fd-dialog-close-button-size);
-    height: var(--fd-dialog-close-button-size);
+    background: var(--fd-button-secondary-text-background-default);
+    border-radius: var(--fd-radius-button);
+    width: var(--fd-size-control-compact);
+    height: var(--fd-size-control-compact);
     padding: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--fd-color-slate-500);
+    color: var(--fd-button-secondary-text-text-default);
     cursor: pointer;
     transition:
         background-color 0.15s ease,
         color 0.15s ease;
 
     &:hover {
-        background: var(--fd-bg-brand-soft);
-        color: var(--fd-color-primary-500);
+        background: var(--fd-button-secondary-text-background-hover);
     }
 
     &:where(:focus-visible) {
         outline: none;
-        box-shadow: var(--fd-shadow-dialog-close-focus);
+        box-shadow: var(--fd-shadow-button-focus-ring);
     }
 }
 

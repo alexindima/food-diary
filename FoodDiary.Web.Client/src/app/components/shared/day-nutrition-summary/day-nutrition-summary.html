@@ -78,7 +78,7 @@
                     @for (bar of bars(); track bar.id) {
                         <div
                             #nutrientLabel
-                            class="day-summary__nutrient"
+                            [class]="`day-summary__nutrient day-summary__nutrient--${bar.id}`"
                             [style.--nutrient-color]="bar.colorEnd"
                             [attr.aria-label]="`${bar.labelText}: ${bar.comparisonText}`"
                         >

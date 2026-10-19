@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
 
 import { injectCurrentLanguage } from '../../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../../shared/i18n/localized-number.pipe';
@@ -11,7 +11,7 @@ import type { IngredientPreviewItem, MacroBlock } from '../recipe-detail-lib/rec
 
 @Component({
     selector: 'fd-recipe-detail-summary',
-    imports: [TranslatePipe, FdUiHintDirective, LocalizedNumberPipe, RecipeDetailIngredientPreviewComponent],
+    imports: [TranslatePipe, FdUiButtonComponent, FdUiHintDirective, LocalizedNumberPipe, RecipeDetailIngredientPreviewComponent],
     templateUrl: './recipe-detail-summary.html',
     styleUrl: '../recipe-detail/recipe-detail.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

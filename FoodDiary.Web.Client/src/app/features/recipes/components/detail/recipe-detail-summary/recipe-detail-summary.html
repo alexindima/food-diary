@@ -30,7 +30,19 @@
             }
         </dl>
         <div class="recipe-detail__quality-row">
-            <span class="recipe-detail__quality-label fd-ui-caption">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
+            <span class="recipe-detail__quality-label fd-inline-center fd-gap-xs fd-ui-caption">
+                {{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}
+                <fd-ui-button
+                    size="xs"
+                    variant="secondary"
+                    fill="text"
+                    icon="info_outline"
+                    iconSize="sm"
+                    [ariaLabel]="'PRODUCT_CARD.QUALITY_HELP' | translate"
+                    [fdUiHint]="'PRODUCT_CARD.QUALITY_EXPLANATION' | translate"
+                    [fdUiHintToggleOnClick]="true"
+                />
+            </span>
             <div class="recipe-detail__quality-bar fd-ui-progress-track" aria-hidden="true">
                 <span
                     [class]="`recipe-detail__quality-fill fd-ui-progress-fill recipe-detail__quality-fill--${qualityGrade()}`"

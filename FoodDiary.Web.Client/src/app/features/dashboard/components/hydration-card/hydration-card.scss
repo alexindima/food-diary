@@ -165,6 +165,10 @@
         min-width: 0;
     }
 
+    &__undo-row {
+        margin-top: var(--fd-space-sm);
+    }
+
     @media #{variables.$media-compact} {
         --hydration-vessel-width: calc(var(--fd-size-control-xl) + var(--fd-space-sm));
 

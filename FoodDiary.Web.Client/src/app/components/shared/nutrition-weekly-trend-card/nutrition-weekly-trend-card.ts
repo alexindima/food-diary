@@ -220,22 +220,22 @@ export class NutritionWeeklyTrendCardComponent {
                 {
                     label: this.translateService.instant('GENERAL.NUTRIENTS.PROTEIN'),
                     value: this.segmentCalories(point, point.proteins * PROTEIN_CALORIES_PER_GRAM),
-                    color: 'var(--fd-color-primary-500)',
+                    color: 'var(--fd-color-nutrition-proteins)',
                 },
                 {
                     label: this.translateService.instant('GENERAL.NUTRIENTS.FAT'),
                     value: this.segmentCalories(point, point.fats * FAT_CALORIES_PER_GRAM),
-                    color: 'var(--fd-color-orange-500)',
+                    color: 'var(--fd-color-nutrition-fats)',
                 },
                 {
                     label: this.translateService.instant('GENERAL.NUTRIENTS.CARB'),
                     value: this.segmentCalories(point, point.carbs * CARB_CALORIES_PER_GRAM),
-                    color: 'var(--fd-color-sky-500)',
+                    color: 'var(--fd-color-nutrition-carbs)',
                 },
                 {
                     label: this.translateService.instant('SHARED.NUTRIENTS_SUMMARY.FIBER'),
                     value: this.segmentCalories(point, point.fiber * FIBER_CALORIES_PER_GRAM),
-                    color: 'var(--fd-color-rose-500)',
+                    color: 'var(--fd-color-nutrition-fiber)',
                 },
             ],
         }));

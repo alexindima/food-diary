@@ -13570,11 +13570,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-add-dialog/product-add-dialog.ts",
-      "nonBlankLines": 22,
+      "nonBlankLines": 24,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.94
+      "structuralRiskScore": 1.98
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-action/product-ai-recognition-action.ts",

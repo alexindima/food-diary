@@ -5262,7 +5262,7 @@
       "role": "Component",
       "selector": "fd-product-add-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-add-dialog/product-add-dialog.ts",
-      "line": 15
+      "line": 17
     },
     {
       "name": "ProductAiRecognitionActionComponent",

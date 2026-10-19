@@ -8,7 +8,7 @@
     "apiCalls": 315,
     "templatesWithTranslations": 359,
     "translationKeys": 2162,
-    "consumerEdges": 1269,
+    "consumerEdges": 1271,
     "consumedComponents": 317,
     "unconsumedComponents": 180
   },
@@ -22781,6 +22781,8 @@
       "keys": [
         "GENERAL.UNITS.KCAL",
         "NUTRITION_COMPLETENESS.PARTIAL",
+        "PRODUCT_CARD.QUALITY_EXPLANATION",
+        "PRODUCT_CARD.QUALITY_HELP",
         "PRODUCT_CARD.QUALITY_SCORE",
         "RECIPE_DETAIL.MIN",
         "RECIPE_DETAIL.SUMMARY.CALORIES_PER_SERVING",
@@ -27007,6 +27009,16 @@
       "component": "FdTourHostComponent",
       "selector": "fd-tour-host",
       "componentPath": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts",
+      "consumerFeature": "products",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-add-dialog/product-add-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdTourHostComponent",
+      "selector": "fd-tour-host",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts",
       "consumerFeature": "shell",
       "consumerPath": "FoodDiary.Web.Client/src/app/shell/app.html",
       "occurrences": 1,
@@ -28000,7 +28012,9 @@
       "occurrences": 1,
       "inputsUsed": [
         "ariaLabel",
+        "fill",
         "icon",
+        "iconSize",
         "size",
         "variant"
       ],
@@ -30245,6 +30259,23 @@
         "fill",
         "icon",
         "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail-summary/recipe-detail-summary.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "ariaLabel",
+        "fill",
+        "icon",
+        "iconSize",
+        "size",
         "variant"
       ],
       "outputsHandled": []
