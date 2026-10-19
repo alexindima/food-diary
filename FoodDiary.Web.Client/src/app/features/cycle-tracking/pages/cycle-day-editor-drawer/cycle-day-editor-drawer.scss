@@ -129,7 +129,7 @@
     }
 
     &__advanced-fields {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 1fr);
     }
 
     &__symptom-picker {
@@ -174,10 +174,6 @@
     .cycle-drawer {
         &__panel {
             width: 100%;
-        }
-
-        &__advanced-fields {
-            grid-template-columns: minmax(0, 1fr);
         }
 
         &__symptom-level {
