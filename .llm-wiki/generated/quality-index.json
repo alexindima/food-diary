@@ -112,11 +112,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/cycles.service.ts",
-      "nonBlankLines": 1027,
+      "nonBlankLines": 1030,
       "decisionPoints": 139,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 229.04
+      "structuralRiskScore": 229.1
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
@@ -10514,11 +10514,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
-      "nonBlankLines": 133,
+      "nonBlankLines": 140,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.66
+      "structuralRiskScore": 2.8
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/cycle-tracking.routes.ts",
@@ -16338,11 +16338,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/cycles.service.ts",
-      "nonBlankLines": 1027,
+      "nonBlankLines": 1030,
       "decisionPoints": 139,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 229.04
+      "structuralRiskScore": 229.1
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/dashboard.service.ts",
@@ -27386,27 +27386,27 @@
     },
     {
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
-      "nonBlankLines": 187,
+      "nonBlankLines": 189,
       "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 24.74
+      "structuralRiskScore": 24.78
     },
     {
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQuery.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
-      "nonBlankLines": 54,
-      "decisionPoints": 5,
+      "nonBlankLines": 72,
+      "decisionPoints": 8,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.58
+      "structuralRiskScore": 15.44
     },
     {
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryValidator.cs",
@@ -28058,11 +28058,11 @@
     },
     {
       "path": "Modules/Cycles/Presentation/Controllers/CyclesController.cs",
-      "nonBlankLines": 61,
+      "nonBlankLines": 63,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.22
+      "structuralRiskScore": 3.26
     },
     {
       "path": "Modules/Cycles/Presentation/Controllers/MenstrualEpisodesController.cs",
@@ -57705,7 +57705,7 @@
       "name": "CyclesController",
       "role": "Controller",
       "path": "Modules/Cycles/Presentation/Controllers/CyclesController.cs",
-      "line": 16,
+      "line": 17,
       "testReferenceCount": 4,
       "testReferences": [
         "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs",
@@ -59396,9 +59396,10 @@
       "name": "GetCycleNutritionSummaryQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
-      "line": 14,
-      "testReferenceCount": 3,
+      "line": 15,
+      "testReferenceCount": 4,
       "testReferences": [
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.NutritionCalendar.cs",
         "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.NutritionSummary.cs",
         "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"

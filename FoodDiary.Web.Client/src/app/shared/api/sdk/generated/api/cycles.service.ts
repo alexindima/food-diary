@@ -63,6 +63,7 @@ export interface GetCyclesCurrentNutritionSummaryRequestParams {
     version: string;
     dateFrom?: string;
     dateTo?: string;
+    timeZoneId?: string;
 }
 
 export interface PostCyclesRequestParams {
@@ -483,12 +484,15 @@ export class CyclesSdk extends BaseService {
         }
         const dateFrom = requestParameters?.dateFrom;
         const dateTo = requestParameters?.dateTo;
+        const timeZoneId = requestParameters?.timeZoneId;
 
         let localVarQueryParameters = new OpenApiHttpParams(this.encoder);
 
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'dateFrom', <any>dateFrom, QueryParamStyle.Form, true);
 
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'dateTo', <any>dateTo, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'timeZoneId', <any>timeZoneId, QueryParamStyle.Form, true);
 
         let localVarHeaders = this.defaultHeaders;
 

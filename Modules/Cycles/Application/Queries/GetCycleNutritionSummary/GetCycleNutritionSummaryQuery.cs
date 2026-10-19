@@ -7,4 +7,5 @@ namespace FoodDiary.Modules.Cycles.Application.Queries.GetCycleNutritionSummary;
 public record GetCycleNutritionSummaryQuery(
     Guid? UserId,
     DateOnly DateFrom,
-    DateOnly DateTo) : IQuery<Result<CycleNutritionSummaryModel?>>, IUserRequest;
+    DateOnly DateTo,
+    string? TimeZoneId = null) : IQuery<Result<CycleNutritionSummaryModel?>>, IUserRequest;

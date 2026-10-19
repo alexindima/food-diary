@@ -17932,6 +17932,14 @@
                         }
                     },
                     {
+                        "in": "query",
+                        "name": "timeZoneId",
+                        "schema": {
+                            "maxLength": 100,
+                            "type": "string"
+                        }
+                    },
+                    {
                         "in": "path",
                         "name": "version",
                         "required": true,

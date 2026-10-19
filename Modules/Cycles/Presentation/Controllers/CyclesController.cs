@@ -8,6 +8,7 @@ using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace FoodDiary.Modules.Cycles.Presentation.Controllers;
 
@@ -27,8 +28,9 @@ public sealed class CyclesController(ISender mediator) : AuthorizedController(me
     public Task<IActionResult> GetNutritionSummary(
         [FromCurrentUser] Guid userId,
         [FromQuery] DateTime dateFrom,
-        [FromQuery] DateTime dateTo) =>
-        HandleOptional(userId.ToNutritionSummaryQuery(dateFrom, dateTo), static value => value?.ToHttpResponse());
+        [FromQuery] DateTime dateTo,
+        [FromQuery, MaxLength(100)] string? timeZoneId = null) =>
+        HandleOptional(userId.ToNutritionSummaryQuery(dateFrom, dateTo, timeZoneId), static value => value?.ToHttpResponse());
 
     [HttpPost]
     [ProducesResponseType<CycleHttpResponse>(StatusCodes.Status200OK)]

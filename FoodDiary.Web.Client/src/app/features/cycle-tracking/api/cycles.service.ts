@@ -35,10 +35,17 @@ export class CyclesService {
     }
 
     public getNutritionSummary(dateFrom: CalendarDate, dateTo: CalendarDate): Observable<CycleNutritionSummary | null> {
-        return this.sdk.client.getCyclesCurrentNutritionSummary({ version: this.sdk.version, dateFrom, dateTo }).pipe(
-            map(value => sdkOptional(value, cycleNutritionFromSdk)),
-            catchError((error: unknown) => fallbackApiError('Cycle nutrition summary fetch error', error, null)),
-        );
+        return this.sdk.client
+            .getCyclesCurrentNutritionSummary({
+                version: this.sdk.version,
+                dateFrom,
+                dateTo,
+                timeZoneId: new Intl.DateTimeFormat().resolvedOptions().timeZone,
+            })
+            .pipe(
+                map(value => sdkOptional(value, cycleNutritionFromSdk)),
+                catchError((error: unknown) => fallbackApiError('Cycle nutrition summary fetch error', error, null)),
+            );
     }
 
     public create(payload: CreateCyclePayload): Observable<CycleResponse> {

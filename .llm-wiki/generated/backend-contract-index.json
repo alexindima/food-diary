@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1355,
     "ambiguousContracts": 29,
-    "consumerEdges": 10649,
+    "consumerEdges": 10658,
     "productionConsumerEdges": 6046,
-    "testConsumerEdges": 4603,
+    "testConsumerEdges": 4612,
     "consumedContracts": 1355,
     "unconsumedContracts": 0
   },
@@ -32219,6 +32219,19 @@
         "Modules/Cycles/Presentation/Requests/ConfirmPeriodStartHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CycleNutritionCalendarContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ConfirmPeriodStartHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Presentation/Requests/ConfirmPeriodStartHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CycleHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -33467,6 +33480,19 @@
         "Modules/Cycles/Presentation/Requests/CreateCycleHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CycleNutritionCalendarContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateCycleHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Presentation/Requests/CreateCycleHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationPayloadContractIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -34472,6 +34498,19 @@
         "Modules/Meals/Presentation/Requests/CreateMealHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CycleNutritionCalendarContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateMealHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Presentation/Requests/CreateMealHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DurableMealIdempotencyIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -34850,6 +34889,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthAndRecipesFlowTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateProductHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Presentation/Requests/CreateProductHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CycleNutritionCalendarContractTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -47403,6 +47455,19 @@
       "consumerPath": "Modules/Cycles/Presentation/Mappings/CycleHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "GetCycleNutritionSummaryQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.NutritionCalendar.cs",
+      "isTest": true,
+      "referenceCount": 5
     },
     {
       "contract": "GetCycleNutritionSummaryQuery",
@@ -89389,6 +89454,19 @@
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 7
+    },
+    {
+      "contract": "IMealNutritionStatisticsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Contracts/Common/IMealNutritionStatisticsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.NutritionCalendar.cs",
+      "isTest": true,
+      "referenceCount": 5
     },
     {
       "contract": "IMealNutritionStatisticsReadService",
@@ -137888,6 +137966,19 @@
         "Modules/Meals/Presentation/Requests/MealItemHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CycleNutritionCalendarContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MealItemHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Presentation/Requests/MealItemHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DurableMealIdempotencyIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -147181,6 +147272,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CycleDaySymptomIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RegisterHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/RegisterHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CycleNutritionCalendarContractTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -158854,6 +158958,19 @@
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CycleDaySymptomIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 5
+    },
+    {
+      "contract": "UpsertCycleDayHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Presentation/Requests/UpsertCycleDayHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CycleNutritionCalendarContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "UpsertCycleDayHttpRequest",

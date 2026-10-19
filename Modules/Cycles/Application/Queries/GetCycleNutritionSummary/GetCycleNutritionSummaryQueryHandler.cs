@@ -9,6 +9,7 @@ using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Application.Contracts.Common.Validation;
 
 namespace FoodDiary.Modules.Cycles.Application.Queries.GetCycleNutritionSummary;
 
@@ -40,6 +41,24 @@ public sealed class GetCycleNutritionSummaryQueryHandler(
                 Errors.Validation.Invalid(nameof(query.DateTo), "Summary range must not exceed one year."));
         }
 
+        if (!LocalCalendar.TryResolve(query.TimeZoneId, offsetMinutes: null, out TimeZoneInfo zone)) {
+            return Result.Failure<CycleNutritionSummaryModel?>(
+                Errors.Validation.Invalid(nameof(query.TimeZoneId), "Provide a valid calendar time zone."));
+        }
+
+        var from = query.DateFrom.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+        var to = query.DateTo.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc);
+        TimeZoneInfo? calendarZone = query.TimeZoneId is null ? null : zone;
+        if (calendarZone is not null) {
+            try {
+                from = LocalCalendar.StartOfDayUtc(query.DateFrom, calendarZone);
+                to = LocalCalendar.StartOfDayUtc(query.DateTo.AddDays(1), calendarZone).AddTicks(-1);
+            } catch (ArgumentOutOfRangeException) {
+                return Result.Failure<CycleNutritionSummaryModel?>(
+                    Errors.Validation.Invalid(nameof(query.DateTo), "Calendar period cannot be represented as UTC instants."));
+            }
+        }
+
         CycleProfileReadModel? profile = await cycleRepository.GetCurrentReadModelAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
         if (profile is null) {
             return Result.Success<CycleNutritionSummaryModel?>(value: null);
@@ -49,12 +68,13 @@ public sealed class GetCycleNutritionSummaryQueryHandler(
         }
         Result<IReadOnlyList<MealNutritionStatisticsBucket>> nutrition = await statisticsReadService.GetStatisticsAsync(
             userIdResult.Value,
-            query.DateFrom.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc),
-            query.DateTo.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc),
+            from,
+            to,
             quantizationDays: 1,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken,
+            calendarZone).ConfigureAwait(false);
         return nutrition.IsFailure
             ? Result.Failure<CycleNutritionSummaryModel?>(nutrition.Error)
-            : Result.Success<CycleNutritionSummaryModel?>(CycleNutritionSummaryCalculator.BuildSummary(profile, nutrition.Value, query.DateFrom, query.DateTo));
+            : Result.Success<CycleNutritionSummaryModel?>(CycleNutritionSummaryCalculator.BuildSummary(profile, nutrition.Value, query.DateFrom, query.DateTo, calendarZone));
     }
 }

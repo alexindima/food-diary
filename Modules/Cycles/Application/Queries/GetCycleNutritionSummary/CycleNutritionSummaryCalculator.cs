@@ -2,6 +2,7 @@ using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
 using FoodDiary.Modules.Cycles.Contracts.Models;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
+using FoodDiary.Application.Contracts.Common.Validation;
 
 namespace FoodDiary.Modules.Cycles.Application.Queries.GetCycleNutritionSummary;
 
@@ -13,10 +14,11 @@ internal static class CycleNutritionSummaryCalculator {
         CycleProfileReadModel profile,
         IReadOnlyCollection<MealNutritionStatisticsBucket> nutritionBuckets,
         DateOnly dateFrom,
-        DateOnly dateTo) {
+        DateOnly dateTo,
+        TimeZoneInfo? timeZone = null) {
         IReadOnlyDictionary<DateOnly, MealNutritionStatisticsBucket> nutritionByDate = nutritionBuckets
             .Where(static bucket => bucket.TotalCalories > 0 || bucket.TotalFiber > 0)
-            .GroupBy(static bucket => DateOnly.FromDateTime(bucket.DateFrom))
+            .GroupBy(bucket => timeZone is null ? DateOnly.FromDateTime(bucket.DateFrom) : LocalCalendar.DateAt(bucket.DateFrom, timeZone))
             .ToDictionary(static group => group.Key, static group => group.Last());
         IReadOnlyList<CycleInterval> intervals = BuildCompletedIntervals(profile, dateFrom, dateTo);
         IReadOnlyList<CycleNutritionAggregate> aggregates = [

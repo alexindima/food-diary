@@ -6753,7 +6753,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/cycles.service.ts",
-      "line": 112
+      "line": 113
     },
     {
       "name": "DashboardSdk",

@@ -211,13 +211,13 @@
       "sources": [
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "166a4e2f5aa6689903c4ff8068bb03a2877f94e5d8e4d99f8f11e8888ec54df6"
+          "sha256": "a422fbb32037a5fb95ae5406674ed0674b8afc13acd91614902c105f281947c5"
         }
       ],
-      "reason": "R5-073 adds optional clearPrepTime and clearCookTime flags across HTTP, owning command and domain. Omission preserves existing durations; clear nulls selected durations; explicit preparation zero remains zero. Conflicting supplied value and clear flag is rejected before any mutation. No routes, authorization, schema, provider or nutrition contracts changed. Actual Swagger export regenerated full API snapshot and user SDK using the pinned official generator. API compatibility against 75872d630 reports zero breaking and four additive entries; OpenAPI normal assertion tests pass4 after snapshot regeneration.",
+      "reason": "R5-077 adds an optional IANA timeZoneId query parameter to the existing own cycle nutrition summary. Omission retains the previous UTC contract. Calendar labels remain DateOnly; explicit zones use local-day UTC boundaries and existing zoned Meals statistics. Invalid zones or unrepresentable bounds return400. Actual OpenAPI export and pinned official SDK generation update both snapshots and generated client; normal OpenAPI assertions4 pass. Compatibility against4beb952de reports zero breaking and one additive change.",
       "baseRef": "HEAD",
-      "gitHead": "3f1c499ef093cc6af121713da45c7d6718821087",
-      "reviewedAtUtc": "2026-10-18T23:59:43.9353869Z"
+      "gitHead": "4beb952de8e0da57d41d38b139724beecf208628",
+      "reviewedAtUtc": "2026-10-19T01:58:08.5199167Z"
     },
     {
       "pageId": "workflow-architecture-health-review",

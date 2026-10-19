@@ -8725,7 +8725,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "GetCycleNutritionSummaryQuery",
@@ -8739,7 +8739,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "GetCycleNutritionSummaryQueryValidator",
@@ -9313,7 +9313,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Cycles/Presentation/Controllers/CyclesController.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "MenstrualEpisodesController",

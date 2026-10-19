@@ -140,6 +140,7 @@ describe('CyclesService current cycle', () => {
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/current/nutrition-summary` && r.method === 'GET');
         expect(req.request.params.get('dateFrom')).toBe('2026-03-01T00:00:00.000Z');
         expect(req.request.params.get('dateTo')).toBe('2026-03-31T23:59:59.999Z');
+        expect(req.request.params.get('timeZoneId')).toBe(new Intl.DateTimeFormat().resolvedOptions().timeZone);
         req.flush(MOCK_NUTRITION_SUMMARY);
     });
 });

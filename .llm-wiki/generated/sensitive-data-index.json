@@ -3095,42 +3095,42 @@
       "name": "Calories",
       "type": "double",
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
-      "line": 194
+      "line": 196
     },
     {
       "category": "health",
       "name": "NutritionDays",
       "type": "IReadOnlyList<CycleNutritionDay>",
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
-      "line": 199
+      "line": 201
     },
     {
       "category": "health",
       "name": "BleedingNutritionDays",
       "type": "IReadOnlyList<CycleNutritionDay>",
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
-      "line": 200
+      "line": 202
     },
     {
       "category": "health",
       "name": "NonBleedingNutritionDays",
       "type": "IReadOnlyList<CycleNutritionDay>",
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
-      "line": 201
+      "line": 203
     },
     {
       "category": "health",
       "name": "AverageBleedingCalories",
       "type": "double",
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
-      "line": 202
+      "line": 204
     },
     {
       "category": "health",
       "name": "AverageNonBleedingCalories",
       "type": "double",
       "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/CycleNutritionSummaryCalculator.cs",
-      "line": 203
+      "line": 205
     },
     {
       "category": "health",

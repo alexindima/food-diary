@@ -18,8 +18,8 @@ public static class CycleHttpMappings {
     extension(Guid userId) {
         public GetCurrentCycleQuery ToCurrentQuery() => new(userId);
 
-        public GetCycleNutritionSummaryQuery ToNutritionSummaryQuery(DateTime dateFrom, DateTime dateTo) =>
-                new(userId, DateOnly.FromDateTime(dateFrom), DateOnly.FromDateTime(dateTo));
+        public GetCycleNutritionSummaryQuery ToNutritionSummaryQuery(DateTime dateFrom, DateTime dateTo, string? timeZoneId = null) =>
+                new(userId, DateOnly.FromDateTime(dateFrom), DateOnly.FromDateTime(dateTo), timeZoneId);
     }
 
     extension(CreateCycleHttpRequest request) {

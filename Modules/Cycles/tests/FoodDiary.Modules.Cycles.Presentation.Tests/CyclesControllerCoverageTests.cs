@@ -45,8 +45,10 @@ public sealed class CyclesControllerCoverageTests {
         Assert.IsType<NoContentResult>(result);
     }
 
-    [Fact]
-    public async Task GetNutritionSummary_ReturnsSummaryAndSendsQuery() {
+    [Theory]
+    [InlineData(null)]
+    [InlineData("Asia/Tbilisi")]
+    public async Task GetNutritionSummary_ReturnsSummaryAndSendsQuery(string? timeZoneId) {
         var userId = Guid.NewGuid();
         DateTime dateFrom = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
         DateTime dateTo = dateFrom.AddDays(7);
@@ -54,13 +56,14 @@ public sealed class CyclesControllerCoverageTests {
         ISender sender = SubstituteSender.Create(Result.Success<CycleNutritionSummaryModel?>(CreateNutritionSummary(dateFrom, dateTo)), request => sentRequest = request);
         CyclesController controller = CreateController(new CyclesController(sender));
 
-        IActionResult result = await controller.GetNutritionSummary(userId, dateFrom, dateTo);
+        IActionResult result = await controller.GetNutritionSummary(userId, dateFrom, dateTo, timeZoneId);
 
         Assert.IsType<CycleNutritionSummaryHttpResponse>(Assert.IsType<OkObjectResult>(result).Value);
         GetCycleNutritionSummaryQuery query = Assert.IsType<GetCycleNutritionSummaryQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
         Assert.Equal(DateOnly.FromDateTime(dateFrom), query.DateFrom);
         Assert.Equal(DateOnly.FromDateTime(dateTo), query.DateTo);
+        Assert.Equal(timeZoneId, query.TimeZoneId);
     }
 
     [Fact]

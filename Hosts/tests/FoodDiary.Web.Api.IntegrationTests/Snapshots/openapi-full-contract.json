@@ -8141,6 +8141,13 @@
               "Required": false,
               "Type": "string",
               "Format": "date-time"
+            },
+            {
+              "Name": "timeZoneId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 100
             }
           ],
           "PathParameters": [
