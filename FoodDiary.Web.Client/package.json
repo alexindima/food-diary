@@ -140,7 +140,7 @@
         "@eslint-community/eslint-plugin-eslint-comments": "^4.8.1",
         "@material-design-icons/font": "^0.14.15",
         "@openai/codex": "0.162.1",
-        "@playwright/test": "^1.64.0",
+        "@playwright/test": "^1.64.1",
         "@storybook/angular-vite": "^10.6.1",
         "@types/express": "^5.0.6",
         "@types/node": "^26.6.4",
