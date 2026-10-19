@@ -1821,8 +1821,9 @@ test.describe('dashboard TDEE accessibility regression', () => {
             const block = page.locator('fd-dashboard-tdee-block');
             await block.scrollIntoViewIfNeeded();
             await expect(block.locator('fd-tdee-insight-card')).toBeVisible();
-            const help = block.locator('fd-ui-button[icon="info"] button');
+            const help = block.getByRole('button', { name: /^The formula estimate uses your profile and activity\./u });
             await help.click();
+            await expect(page.getByRole('tooltip')).toContainText('The formula estimate uses your profile and activity.');
             await expect(page.locator('fd-tdee-insight-dialog')).toHaveCount(0);
             const results = await new AxeBuilder({ page }).include('fd-dashboard-tdee-block').analyze();
             expect(results.violations).toEqual([]);
