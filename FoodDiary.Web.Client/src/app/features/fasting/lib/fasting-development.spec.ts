@@ -71,33 +71,7 @@ describe('unsaved fasting preparation', () => {
         expect(start).not.toHaveBeenCalled();
     });
     it('publishes active phase and duration while omitting private notes and symptoms', () => {
-        facade.currentSession.set({
-            id: entityId<'fasting-session'>('session-1'),
-            startedAtUtc: utcInstant('2026-10-18T12:00:00Z'),
-            endedAtUtc: null,
-            initialPlannedDurationHours: 24,
-            addedDurationHours: 0,
-            plannedDurationHours: 24,
-            protocol: 'Cyclic',
-            planType: 'Cyclic',
-            occurrenceKind: 'EatDay',
-            cyclicFastDays: 1,
-            cyclicEatDays: 2,
-            cyclicEatDayFastHours: 16,
-            cyclicEatDayEatingWindowHours: 8,
-            cyclicPhaseDayNumber: 1,
-            cyclicPhaseDayTotal: 2,
-            isCompleted: false,
-            status: 'Active',
-            notes: 'private-notes',
-            checkInAtUtc: null,
-            hungerLevel: null,
-            energyLevel: null,
-            moodLevel: null,
-            symptoms: ['private-symptom'],
-            checkInNotes: 'private-check-in',
-            checkIns: [],
-        });
+        setActiveSessionWithPrivateDetails(facade);
         const context = readFastingDevelopmentContext(facade);
         expect(context).toMatchObject({
             active: true,
@@ -106,3 +80,33 @@ describe('unsaved fasting preparation', () => {
         expect(JSON.stringify(context)).not.toContain('private-');
     });
 });
+
+function setActiveSessionWithPrivateDetails(facade: FastingFacade): void {
+    facade.currentSession.set({
+        id: entityId<'fasting-session'>('session-1'),
+        startedAtUtc: utcInstant('2026-10-18T12:00:00Z'),
+        endedAtUtc: null,
+        initialPlannedDurationHours: 24,
+        addedDurationHours: 0,
+        plannedDurationHours: 24,
+        protocol: 'Cyclic',
+        planType: 'Cyclic',
+        occurrenceKind: 'EatDay',
+        cyclicFastDays: 1,
+        cyclicEatDays: 2,
+        cyclicEatDayFastHours: 16,
+        cyclicEatDayEatingWindowHours: 8,
+        cyclicPhaseDayNumber: 1,
+        cyclicPhaseDayTotal: 2,
+        isCompleted: false,
+        status: 'Active',
+        notes: 'private-notes',
+        checkInAtUtc: null,
+        hungerLevel: null,
+        energyLevel: null,
+        moodLevel: null,
+        symptoms: ['private-symptom'],
+        checkInNotes: 'private-check-in',
+        checkIns: [],
+    });
+}

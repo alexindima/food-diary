@@ -33,7 +33,8 @@ public sealed class RecipePreparationTimeContractTests(TestAuthApiWebApplication
                 Visibility: "Private", CalculateNutritionAutomatically: true, ManualCalories: null,
                 ManualProteins: null, ManualFats: null, ManualCarbs: null, ManualFiber: null, ManualAlcohol: null,
                 [new RecipeStepHttpRequest(Title: null, "Synthetic contract step", [], ImageUrl: null, ImageAssetId: null)]) {
-                Language = "en", LanguageConfirmed = true,
+                Language = "en",
+                LanguageConfirmed = true,
             };
             HttpResponseMessage created = await client.PostAsJsonAsync("/api/v1/recipes", create);
             Assert.Equal(expected.GetProperty("CreateStatus").GetInt32(), (int)created.StatusCode);

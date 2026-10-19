@@ -560,6 +560,9 @@ describe('Meal editor development capability', () => {
         });
         expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
     });
+});
+
+describe('Meal editor development draft guards', () => {
     it('fills a dirty, unsaved draft and keeps the existing leave guard and submit boundary', async () => {
         const screens: MealDevelopmentScreen[] = [];
         const dispose = vi.fn();
