@@ -208,6 +208,13 @@ are regression evidence, not a new blind evaluation. Structural ranking
 aliases preserve layer preferences for module providers and shared libraries;
 search results still name their current physical owners.
 
+The image-upload confirmation migration case now targets the consolidated
+`InitialBaseline`, which owns `ImageAssets.IsConfirmed`. Its original query and
+the corpus's 100% thresholds are unchanged. Explicit migration questions reuse
+the primary migration role with one path identity match, so a baseline needs no
+feature-specific filename. Schema-only questions retain their existing owner
+ranking. This changes no rule counts or complexity budgets.
+
 The `russian-prerender-html-tool` case now asks for Angular SSR route configuration
 and targets `app.routes.server.ts`: the Russian-only HTML rewriting script was
 retired in favor of genuine English/Russian prerendering. The generic shared-page

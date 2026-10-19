@@ -3192,11 +3192,11 @@
     },
     {
       "id": "database-migration-role",
-      "queryTerms": ["migration", "schema"],
+      "queryTerms": ["migration"],
       "minimumMatches": 1,
       "candidateTerms": ["migration"],
       "minimumCandidateMatches": 1,
-      "minimumQueryIdentityMatches": 2,
+      "minimumQueryIdentityMatches": 1,
       "score": 700,
       "scorePerQueryIdentityMatch": 100,
       "maximumQueryIdentityScore": 400,

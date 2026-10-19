@@ -294,17 +294,17 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "80ab35f01b2e06ceb9eaf25d594714294deb388f73c536ade1a9e1d6e39654c9",
+      "pageSha256": "074bf2995247983cf0a0ece843392c4731a6ce2c410db95f710f861a28c596b8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1",
-          "sha256": "00aadd6948906620278e17e9ef2172bacbdfaf1cfb78dd801819b8d61e52e51f"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "ff3d36f580dc3066a55b77112d40a2ebeff4a9ef5a1af78d9c5d3794a284d9f9"
         }
       ],
-      "reason": "Reviewed final Wiki performance sources and navigation claims: equivalent bounded Git precedent scoring; private checkout/source/ref freshness and mutation isolation; request-local test evidence and nearest-project selection; stable-graph reader scheduling with unchanged checks and SLA limits. Product code and domain contracts are unchanged.",
+      "reason": "Reviewed the narrowed existing primary migration role against current InitialBaseline ownership. Query and corpus thresholds are unchanged; rule count remains 700 combined. All22 corpora and4 .NET parity corpora passed in .artifacts/webmcp-delivery-retrieval-final.log. Graph ownership, projection, cache and runtime interfaces are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "75219c34ebce1debb85576d34507c1f55cebf958",
-      "reviewedAtUtc": "2026-10-14T13:44:41.8145926Z"
+      "gitHead": "cf1ede7771ae6a1f905ef9ec019d69fc346bbfaa",
+      "reviewedAtUtc": "2026-10-19T09:38:25.9116371Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -952,14 +952,14 @@
       "pageSha256": "f935366d43c011c5187443833e00da2994b5092dff5b60dc6cbd0759390944bf",
       "sources": [
         {
-          "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "76ba2dbd53fec3abeb042fb1f408c5090119d104a725e59a2b4f34ba856ee330"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "ff3d36f580dc3066a55b77112d40a2ebeff4a9ef5a1af78d9c5d3794a284d9f9"
         }
       ],
-      "reason": "Quality navigation changes reflect the extracted library and guarded import tests. No security workflow, credential handling, network or provider boundary is changed; existing npm advisories remain explicitly reported.",
+      "reason": "Only explicit Database migration intent in the existing primary migration role changes. Security evidence compilation and verdict boundaries remain unchanged; the full SQL retrieval suite including the10-case security corpus and4 .NET parity corpora passed.",
       "baseRef": "HEAD",
-      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
-      "reviewedAtUtc": "2026-10-19T08:52:48.9300107Z"
+      "gitHead": "cf1ede7771ae6a1f905ef9ec019d69fc346bbfaa",
+      "reviewedAtUtc": "2026-10-19T09:38:26.5839663Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1213,17 +1213,17 @@
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "3af71b64bf35f63f76cf5e8784f96c6d4b40579bd8e96f2bebd0ae99f02caffa",
+      "pageSha256": "87680b84b452fc9d63b36e861fc7dc50eb8ff75963ae1c660383d8c01e5bf599",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "1dbe8a8c65d8bb9500fc7f0f8ed36c9ebf9ec51bbcbccb44d009dd84183ae372"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "ff3d36f580dc3066a55b77112d40a2ebeff4a9ef5a1af78d9c5d3794a284d9f9"
         }
       ],
-      "reason": "The regenerated repository catalog now exposes the fifth Angular project and its guide. Query selection and exact read-only/source freshness semantics are unchanged.",
+      "reason": "Documented the image confirmation case relocation to InitialBaseline, verified IsConfirmed at line1060. Original question and100% image thresholds preserved; explicit migration intent now works with generic baseline names, schema-only owner intent retains its ranking. All22corpora/4parity corpora passed; no added ranking rules.",
       "baseRef": "HEAD",
-      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
-      "reviewedAtUtc": "2026-10-19T08:52:47.6765924Z"
+      "gitHead": "cf1ede7771ae6a1f905ef9ec019d69fc346bbfaa",
+      "reviewedAtUtc": "2026-10-19T09:38:26.2390778Z"
     },
     {
       "pageId": "workflow.review-diff",
