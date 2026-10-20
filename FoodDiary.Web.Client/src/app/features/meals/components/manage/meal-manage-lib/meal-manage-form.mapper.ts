@@ -56,7 +56,15 @@ export function createMealItemValue(
     };
 }
 
-export function buildMealDateTime(dateValue: string, timeValue: string, fallback: Date): Date {
+export function buildMealDateTime(dateValue: string, timeValue: string, fallback: Date, original?: Date): Date {
+    if (
+        original !== undefined &&
+        Number.isFinite(original.getTime()) &&
+        getDateInputValue(original) === dateValue &&
+        getTimeInputValue(original) === timeValue
+    ) {
+        return original;
+    }
     const parsed = new Date(`${dateValue}T${timeValue}`);
     return Number.isNaN(parsed.getTime()) ? fallback : parsed;
 }

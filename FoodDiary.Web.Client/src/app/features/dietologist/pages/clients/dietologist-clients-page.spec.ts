@@ -41,6 +41,30 @@ beforeEach(() => {
     dialogService = { open: vi.fn(() => ({ afterClosed: (): Observable<boolean> => of(false) })) };
 });
 
+describe('Dietologist bulk recommendation validation reset', () => {
+    it('resets touched validation after sending successfully so the cleared draft has no visible error', () => {
+        prepareBulkRecommendation();
+        component['bulkForm'].text().markAsTouched();
+        dietologistService.bulkCreateRecommendations.mockReturnValueOnce(
+            of({
+                idempotencyKey: 'sent-key',
+                recipients: [bulkRecipient('client-1', true), bulkRecipient('client-2', true)],
+            }),
+        );
+
+        component['sendBulkRecommendation']();
+        fixture.detectChanges();
+
+        expect(component['bulkModel']().text).toBe('');
+        expect(component['bulkForm'].text().touched()).toBe(false);
+        expect(component['selectedClientIds']().size).toBe(0);
+        expect(
+            (fixture.nativeElement as HTMLElement).querySelector('[aria-labelledby="bulk-recommendations-title"] [role="alert"]'),
+        ).toBeNull();
+        expect((fixture.nativeElement as HTMLElement).querySelector('textarea')?.getAttribute('aria-invalid')).not.toBe('true');
+    });
+});
+
 describe('Dietologist bulk recommendation recovery', () => {
     it.each(['   ', '\t\n', '\u00A0'])('shows required validation for whitespace-only text %j', text => {
         prepareBulkRecommendation();

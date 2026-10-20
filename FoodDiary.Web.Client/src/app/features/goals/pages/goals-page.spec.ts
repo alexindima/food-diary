@@ -194,6 +194,54 @@ describe('GoalsPageComponent numeric validation', () => {
     });
 });
 
+describe('GoalsPageComponent browser navigation', () => {
+    beforeEach(setupGoalsPageAsync);
+
+    it('warns before unloading an edited draft and releases the warning after discard', () => {
+        const fixture = createComponent();
+        const editor = getEditor(fixture);
+        expect(preventsBrowserUnload()).toBe(false);
+
+        editor['updateWater'](RETRY_WATER_TARGET);
+        fixture.detectChanges();
+        expect(preventsBrowserUnload()).toBe(true);
+
+        TestBed.inject(UnsavedChangesService).getHandler()?.discard();
+        fixture.detectChanges();
+        expect(preventsBrowserUnload()).toBe(false);
+    });
+
+    it('keeps the unload warning while a submitted save is pending even if the draft is discarded', async () => {
+        let completeSave: (saved: boolean) => void = () => {};
+        facade.saveManuallyAsync.mockReturnValueOnce(
+            new Promise<boolean>(resolve => {
+                completeSave = resolve;
+            }),
+        );
+        const fixture = createComponent();
+        getEditor(fixture)['updateWater'](RETRY_WATER_TARGET);
+        const handler = TestBed.inject(UnsavedChangesService).getHandler();
+        const save = handler?.save();
+        facade.isSavingGoals.set(true);
+        handler?.discard();
+        fixture.detectChanges();
+
+        expect(preventsBrowserUnload()).toBe(true);
+
+        completeSave(true);
+        await save;
+        facade.isSavingGoals.set(false);
+        fixture.detectChanges();
+        expect(preventsBrowserUnload()).toBe(false);
+    });
+});
+
+function preventsBrowserUnload(): boolean {
+    const event = new Event('beforeunload', { cancelable: true });
+    window.dispatchEvent(event);
+    return event.defaultPrevented;
+}
+
 async function setupGoalsPageAsync(): Promise<void> {
     facade = createFacadeMock();
 

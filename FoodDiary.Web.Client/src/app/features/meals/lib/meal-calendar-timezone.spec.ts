@@ -10,6 +10,7 @@ import {
     buildMealManageFormPatchValue,
     createMealManageFormValue,
 } from '../components/manage/meal-manage-lib/meal-manage-form.mapper';
+import { getDateInputValue, getTimeInputValue, isExistingMealLocalDateTime } from './meal-date-input.utils';
 
 const NO_NUTRIENTS = { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 };
 const DAYS = ['2026-01-01', '2026-03-08', '2026-03-29', '2026-04-05', '2026-10-04', '2026-10-25', '2026-11-01', '2026-12-31'];
@@ -19,6 +20,7 @@ describe('Meal calendar round trip in the process timezone', () => {
     it.each(DAYS.flatMap(date => TIMES.map(time => ({ date, time }))))(
         'preserves local $date $time through create, API and edit',
         ({ date, time }) => {
+            expect(isExistingMealLocalDateTime(date, time)).toBe(true);
             const instant = buildMealDateTime(date, time, new Date('2000-01-01T00:00:00Z'));
             const form = { ...createMealManageFormValue(instant), date, time };
             const payload = buildMealManageDto(form, {
@@ -48,4 +50,38 @@ describe('Meal calendar round trip in the process timezone', () => {
             expect(createMealManageFormValue(new Date(stored.date)).date).toBe(date);
         },
     );
+});
+
+describe('Meal local wall-clock validation', () => {
+    it('preserves an existing instant and its sub-minute precision when local inputs do not change', () => {
+        const original = new Date('2025-10-26T01:30:45.123Z');
+        const result = buildMealDateTime(
+            getDateInputValue(original),
+            getTimeInputValue(original),
+            new Date('2000-01-01T00:00:00Z'),
+            original,
+        );
+        expect(result.toISOString()).toBe('2025-10-26T01:30:45.123Z');
+    });
+
+    it.each([
+        ['2026-02-30', '12:30'],
+        ['2026-01-01', '24:00'],
+        ['2026-01-01', '12:99'],
+    ])('rejects normalized or invalid input %s %s', (date, time) => {
+        expect(isExistingMealLocalDateTime(date, time)).toBe(false);
+    });
+
+    const zone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const gaps: Record<string, Array<[string, string]>> = {
+        'Europe/Berlin': [['2026-03-29', '02:30']],
+        'America/Los_Angeles': [['2026-03-08', '02:30']],
+        'America/St_Johns': [['2026-03-08', '02:30']],
+        'Australia/Lord_Howe': [['2026-10-04', '02:15']],
+    };
+    for (const [date, time] of gaps[zone] ?? []) {
+        it(`rejects the missing local time ${date} ${time} in ${zone}`, () => {
+            expect(isExistingMealLocalDateTime(date, time)).toBe(false);
+        });
+    }
 });

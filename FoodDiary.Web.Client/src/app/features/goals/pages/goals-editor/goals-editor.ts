@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { UnsavedChangesBarComponent } from '../../../../components/shared/unsaved-changes-bar/unsaved-changes-bar';
@@ -24,6 +25,7 @@ import { GoalsSummaryCardComponent } from './goals-summary-card';
     selector: 'fd-goals-editor',
     imports: [
         TranslatePipe,
+        FdUiPreventUnloadDirective,
         UnsavedChangesBarComponent,
         GoalsSummaryCardComponent,
         GoalsNutritionCardComponent,

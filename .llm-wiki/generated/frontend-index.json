@@ -4590,7 +4590,7 @@
       "role": "Component",
       "selector": "fd-goals-editor",
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.ts",
-      "line": 37
+      "line": 39
     },
     {
       "name": "GoalsNutritionCardComponent",
@@ -4835,7 +4835,7 @@
       "role": "Component",
       "selector": "fd-meal-manage-form",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
-      "line": 103
+      "line": 104
     },
     {
       "name": "MealManualItemDialogComponent",
@@ -8059,8 +8059,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4137,
-      "russianProperties": 4137,
+      "englishProperties": 4138,
+      "russianProperties": 4138,
       "countsMatch": true
     },
     {

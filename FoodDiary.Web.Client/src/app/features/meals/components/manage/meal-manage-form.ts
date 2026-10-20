@@ -47,6 +47,7 @@ import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-cont
 import { MEAL_DEVELOPMENT_TOOLS, type MealDevelopmentDraft } from '../../contracts/meal-development-tools';
 import { MEAL_MANAGE_MIN_ITEM_AMOUNT } from '../../lib/manage/meal-manage.config';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
+import { isExistingMealLocalDateTime } from '../../lib/meal-date-input.utils';
 import { type MealGeneralFieldErrors, MealGeneralInfoComponent } from './meal-general-info/meal-general-info';
 import type { MealItemsListItemState } from './meal-items-list/meal-items-list';
 import { MealItemsSectionComponent } from './meal-items-section/meal-items-section';
@@ -115,7 +116,10 @@ export class MealManageFormComponent implements UnsavedEditor {
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly calorieMismatchThreshold = DEFAULT_CALORIE_MISMATCH_THRESHOLD;
-    private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
+    private readonly validationErrors = {
+        ...inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true }),
+        nonexistentLocalTime: (): string => 'MEAL_MANAGE.NONEXISTENT_TIME',
+    };
     private readonly languageVersion = signal(0);
 
     public readonly meal = input<Meal | null>(null);
@@ -161,6 +165,13 @@ export class MealManageFormComponent implements UnsavedEditor {
         path => {
             required(path.date);
             required(path.time);
+            validate(path.time, context => {
+                const date = context.valueOf(path.date);
+                const time = context.value();
+                return date.length > 0 && time.length > 0 && !isExistingMealLocalDateTime(date, time)
+                    ? { kind: 'nonexistentLocalTime' }
+                    : undefined;
+            });
             for (const field of MANUAL_NUTRITION_FIELDS) {
                 min(path[field], 0);
                 validate(path[field], ({ value }) =>
@@ -858,7 +869,8 @@ export class MealManageFormComponent implements UnsavedEditor {
 
     private buildDateTime(): Date {
         const formValue = this.mealFormModel();
-        return buildMealDateTime(formValue.date, formValue.time, new Date());
+        const original = this.meal();
+        return buildMealDateTime(formValue.date, formValue.time, new Date(), original !== null ? new Date(original.date) : undefined);
     }
 
     private getMealFormValue(): MealFormValues {

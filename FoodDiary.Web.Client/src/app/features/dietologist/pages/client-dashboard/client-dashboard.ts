@@ -708,7 +708,12 @@ export class ClientDashboardComponent {
             this.loadDietologistDashboardSnapshot(client, resolveTranslateLanguage(this.translateService))
                 .pipe(this.handleSectionLoadError<DietologistDashboardSnapshot, null>(null, reloadSequence))
                 .pipe(takeUntilDestroyed(this.destroyRef)),
+            { defaultValue: null },
         );
+
+        if (this.destroyRef.destroyed) {
+            return;
+        }
 
         this.applyDashboardIfCurrent(result, reloadSequence);
     }

@@ -949,6 +949,7 @@
         "SUBTITLE": "Добавьте продукты и рецепты",
         "CHOOSE_DATE": "Дата",
         "CHOOSE_TIME": "Время",
+        "NONEXISTENT_TIME": "В этот день такого времени нет в вашем часовом поясе. Выберите другое время.",
         "ITEMS_GROUP_TITLE": "Что было в приёме пищи",
         "ITEM_TYPE_LABEL": "Тип записи",
         "ITEM_TYPE_OPTIONS": {

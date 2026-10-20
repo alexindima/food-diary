@@ -24,7 +24,7 @@ import { MEAL_DEVELOPMENT_TOOLS, type MealDevelopmentScreen, type MealDevelopmen
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { MealManageFormComponent } from './meal-manage-form';
 import type { MealItemFormValues, MealNutritionSummaryState, NutritionTotals } from './meal-manage-lib/meal-manage.types';
-import { createMealItemValue } from './meal-manage-lib/meal-manage-form.mapper';
+import { createMealItemValue, getDateInputValue, getTimeInputValue } from './meal-manage-lib/meal-manage-form.mapper';
 
 const PRODUCT_AMOUNT = 150;
 const FRACTIONAL_RECIPE_SERVINGS = 0.5;
@@ -1089,6 +1089,40 @@ describe('Meal form detached dialog results', () => {
         await waitForAsyncTasksAsync();
         expect(mealManageFacade.replaceAiSession).not.toHaveBeenCalled();
         expect(component['aiSessions']()).toEqual([other]);
+    });
+});
+
+describe('Meal form local date and time validation', () => {
+    it('keeps the original instant when saving other fields without changing the local date or time', async () => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        const original = new Date('2025-10-26T01:30:45.123Z');
+        fixture.componentRef.setInput('meal', createMeal({ date: utcInstant(original.toISOString()) }));
+        fixture.detectChanges();
+        setValidManualMeal(component);
+        component['patchMealFormModel']({
+            date: getDateInputValue(original),
+            time: getTimeInputValue(original),
+            comment: 'Changed comment',
+        });
+
+        await component['onSubmitAsync']();
+
+        expect(mealManageFacade.submitMealAsync.mock.calls[0][1]).toMatchObject({ date: original, comment: 'Changed comment' });
+    });
+
+    it('blocks an unavailable local date/time and revalidates when only the date changes', async () => {
+        const { component, mealManageFacade } = await setupComponentAsync();
+        setValidManualMeal(component);
+        component['mealFormModel'].update(model => ({ ...model, date: '2026-02-30', time: '12:30' }));
+
+        expect(component['mealSignalForm'].time().errors()).toEqual([expect.objectContaining({ kind: 'nonexistentLocalTime' })]);
+        await component['onSubmitAsync']();
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+
+        component['mealFormModel'].update(model => ({ ...model, date: '2026-03-01' }));
+        expect(component['mealSignalForm'].time().valid()).toBe(true);
+        await component['onSubmitAsync']();
+        expect(mealManageFacade.submitMealAsync).toHaveBeenCalledOnce();
     });
 });
 

@@ -317,7 +317,7 @@ export class DietologistClientsPageComponent {
                     this.bulkRequest.set(null);
                     this.selectedClientIds.set(new Set(failedRecipients.map(recipient => recipient.clientUserId)));
                     if (failedCount === 0) {
-                        this.bulkModel.set({ text: '' });
+                        this.bulkForm().reset({ text: '' });
                         this.toastService.success(
                             this.translateService.instant('BULK_RECOMMENDATIONS.SUCCESS', { count: result.recipients.length }),
                         );

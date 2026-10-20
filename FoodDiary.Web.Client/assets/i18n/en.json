@@ -953,6 +953,7 @@
         "REMOVE_ITEM": "Remove item",
         "CHOOSE_DATE": "Date",
         "CHOOSE_TIME": "Time",
+        "NONEXISTENT_TIME": "This time does not exist on this date in your time zone. Choose another time.",
         "MEAL_TYPE_PLACEHOLDER": "Select meal type",
         "ITEMS_GROUP_TITLE": "Items",
         "ITEM_TYPE_LABEL": "Entry type",

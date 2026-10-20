@@ -843,13 +843,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "58861515c57b03a63e69e3f560e32b588723759365f120076b42a8b8ee121ac0"
+          "sha256": "55b1448806882eea43853e6e7638dbcfb54e13403057164f4e212397f3116116"
         }
       ],
-      "reason": "Reviewed the changed component and UI-kit entries in the regenerated quality projection. This patch changes presentation and dialog-local tour ownership; executed focused tests and browser regressions provide evidence independently of static test-reference counts. The documented hotspot and test-gap workflow still applies unchanged.",
+      "reason": "Reviewed final generated quality-index delta: meal local-time validation, original-instant preservation and cancellation guard only change measured frontend source metrics. Quality workflow commands and static-navigation limitations remain accurate; 6230 executed frontend tests and 715 timezone test executions are recorded separately in the audit ledger.",
       "baseRef": "HEAD",
-      "gitHead": "7ed4b080e31f1b0526aba7f705b2c7a28189c284",
-      "reviewedAtUtc": "2026-10-19T20:55:10.6065383Z"
+      "gitHead": "382caf82fc9d7f774f04c0e5511bc5ee9fc43a48",
+      "reviewedAtUtc": "2026-10-20T22:51:17.5898147Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -937,13 +937,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "58861515c57b03a63e69e3f560e32b588723759365f120076b42a8b8ee121ac0"
+          "sha256": "55b1448806882eea43853e6e7638dbcfb54e13403057164f4e212397f3116116"
         }
       ],
-      "reason": "Compared the regenerated quality projection with the current diff. No authentication, authorization, provider, persistence, network destination, token storage or production exposure changes were introduced. Tour state is scoped to the existing product dialog and existing localized hint content remains Angular-rendered. The security navigation workflow requires no text change.",
+      "reason": "Reviewed quality-index source impact. Final changes add no security-review tool, provider, authorization or privacy boundary; the workflow still describes navigation evidence rather than a security verdict. Selected permission-revocation browser results are recorded as journey evidence, not a repository security scan.",
       "baseRef": "HEAD",
-      "gitHead": "7ed4b080e31f1b0526aba7f705b2c7a28189c284",
-      "reviewedAtUtc": "2026-10-19T20:55:12.0309040Z"
+      "gitHead": "382caf82fc9d7f774f04c0e5511bc5ee9fc43a48",
+      "reviewedAtUtc": "2026-10-20T22:51:18.8537651Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1083,18 +1083,14 @@
       "pageSha256": "4e059a263f76810db4c559e2b5599d8599571ccf48d060f6360c6d0e8ec60b48",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "63876c5d584738a48b9a055ecd56cde9025bc6bb43f90536d3d3dfc593057ac8"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "3266aebc289df770dc4a2a7b0bea8ef8cd9222b27b43a13e017b561ee6d406da"
+          "sha256": "591e086613ef7d2b4f04b2d343eaddee3655b2124ff770acfcbca23abaac2ff0"
         }
       ],
-      "reason": "Traced the affected render chain through dashboard summary/trend components, recipe summary and ProductAddDialog to ProductManageForm and FdTourHost. Frontend indexes reflect local imports/providers and templates; routes, HTTP calls, public DTOs and backend ownership are unchanged. The documented source-navigation limitations remain accurate.",
+      "reason": "Reviewed frontend-index source delta for ClientDashboardComponent and MealManageFormComponent: method spans changed while selectors, inputs, routes and transport contracts remain compatible. The existing trace workflow remains accurate and still requires confirming runtime behavior in current sources.",
       "baseRef": "HEAD",
-      "gitHead": "7ed4b080e31f1b0526aba7f705b2c7a28189c284",
-      "reviewedAtUtc": "2026-10-19T20:55:13.4433039Z"
+      "gitHead": "382caf82fc9d7f774f04c0e5511bc5ee9fc43a48",
+      "reviewedAtUtc": "2026-10-20T22:51:19.9665413Z"
     },
     {
       "pageId": "workflow-verification-planner",

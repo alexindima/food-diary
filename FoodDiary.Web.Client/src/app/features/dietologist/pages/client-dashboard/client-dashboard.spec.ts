@@ -266,6 +266,26 @@ function prepareMealPaging(): {
     };
 }
 
+describe('ClientDashboardComponent period refresh cancellation', () => {
+    it('leaves the dashboard cleanly while a selected period is loading', async () => {
+        createComponent('client-1');
+        const dashboard = component['dashboard']();
+        const pending = new Subject<DietologistDashboardSnapshot>();
+        dietologistService.getClientDashboard.mockReturnValueOnce(pending);
+        component['dateFilterModel'].set({ dateFrom: '2026-05-22', dateTo: '2026-05-22' });
+
+        const refreshing = component['applyDateFilterAsync']();
+        expect(component['detailsLoading']()).toBe(true);
+        expect(pending.observed).toBe(true);
+
+        fixture.destroy();
+
+        await expect(refreshing).resolves.toBeUndefined();
+        expect(pending.observed).toBe(false);
+        expect(component['dashboard']()).toBe(dashboard);
+    });
+});
+
 describe('ClientDashboardComponent task deadlines', () => {
     it.each(['2026-10-02', '2026-03-29', '2026-10-25'])('keeps the whole selected due day available: %s', async dueDate => {
         createComponent('client-1');
