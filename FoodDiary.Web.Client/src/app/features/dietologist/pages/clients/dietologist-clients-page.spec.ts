@@ -369,6 +369,42 @@ describe('DietologistClientsPageComponent', () => {
 });
 
 describe('Dietologist attention settings validation', () => {
+    it.each(['success', 'error'] as const)('keeps the latest settings result after a stale %s', outcome => {
+        const initialRequest = new Subject<AttentionSignal[]>();
+        const latestRequest = new Subject<AttentionSignal[]>();
+        dietologistService.getAttentionSignals.mockReturnValueOnce(initialRequest).mockReturnValueOnce(latestRequest);
+        createComponent();
+        component['updateAttentionSetting']('inactivityDays', '2');
+        component['applyAttentionSettings']();
+        const latestSignal: AttentionSignal = {
+            id: entityId<'attention-signal'>('latest-signal'),
+            clientUserId: entityId<'user'>('client-1'),
+            clientDisplayName: 'Latest client signal',
+            type: 'DiaryInactivity',
+            severity: 'High',
+            reason: 'NoRecentDiaryEntries',
+            detectedAtUtc: utcInstant('2026-10-02T12:00:00Z'),
+            snoozedUntilUtc: null,
+        };
+        latestRequest.next([latestSignal]);
+        latestRequest.complete();
+
+        if (outcome === 'success') {
+            initialRequest.next([{ ...latestSignal, clientDisplayName: 'Stale client signal' }]);
+            initialRequest.complete();
+        } else {
+            initialRequest.error(new Error('Stale request failed'));
+        }
+        fixture.detectChanges();
+
+        expect(component['attentionSignals']()).toEqual([latestSignal]);
+        expect(component['attentionLoading']()).toBe(false);
+        expect(component['attentionError']()).toBe(false);
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.textContent).toContain('Latest client signal');
+        expect(host.textContent).not.toContain('Stale client signal');
+    });
+
     it.each(['', '0', '1.5', '31'])('does not request signals for invalid inactivity value %s', value => {
         createComponent();
         dietologistService.getAttentionSignals.mockClear();

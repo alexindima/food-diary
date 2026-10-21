@@ -4,6 +4,8 @@ import type { RecipeFilters } from '../../../../shared/models/recipe.data';
 import { isRecipeCategory } from '../../../../shared/models/recipe-category';
 import { readPaginationPage } from '../../../../shared/navigation/pagination-query.utils';
 
+export const RECIPE_FILTER_MAX_TOTAL_TIME = 2_147_483_647;
+
 export type RecipeListQuery = {
     page: number;
     search: string | null;
@@ -23,7 +25,7 @@ export function readRecipeListQuery(params: ParamMap): RecipeListQuery {
         search: normalizeRecipeSearch(params.get('search')),
         onlyMine: params.get('onlyMine') !== 'false',
         category: isRecipeCategory(category) ? category : null,
-        maxTotalTime: readNumber(params.get('maxTotalTime'), true),
+        maxTotalTime: readRecipeTime(params.get('maxTotalTime')),
         caloriesFrom: readNumber(params.get('caloriesFrom')),
         caloriesTo: readNumber(params.get('caloriesTo')),
         hasImage: hasImage === 'true' || hasImage === 'false' ? hasImage === 'true' : null,
@@ -82,4 +84,9 @@ function readNumber(value: string | null, integer = false): number | null {
     }
     const number = Number(value);
     return Number.isFinite(number) && number >= 0 && (!integer || Number.isSafeInteger(number)) ? number : null;
+}
+
+function readRecipeTime(value: string | null): number | null {
+    const minutes = readNumber(value, true);
+    return minutes !== null && minutes > 0 && minutes <= RECIPE_FILTER_MAX_TOTAL_TIME ? minutes : null;
 }

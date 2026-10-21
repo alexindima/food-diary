@@ -9,10 +9,14 @@ import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import type { IngredientFormValues, NutritionScaleMode, RecipeFormValues, StepFormValues } from './recipe-manage.types';
 
 export const RECIPE_TEXT_NAME_MAX_LENGTH = 256;
+export const RECIPE_NAME_MAX_LENGTH = 256;
+export const RECIPE_OPTIONAL_TEXT_MAX_LENGTH = 2048;
 export const RECIPE_TEXT_AMOUNT_MAX_LENGTH = 128;
 export const RECIPE_LONG_TEXT_MAX_LENGTH = 1_000;
-export const RECIPE_STEP_TITLE_MAX_LENGTH = 120;
-export const RECIPE_MIN_INGREDIENT_AMOUNT = 0.01;
+export const RECIPE_STEP_TITLE_MAX_LENGTH = 256;
+export const RECIPE_STEP_DESCRIPTION_MAX_LENGTH = 4000;
+export const RECIPE_MAX_INTEGER_VALUE = 2_147_483_647;
+export const RECIPE_MAX_INGREDIENT_AMOUNT = 1_000_000;
 export const RECIPE_DEFAULT_PRODUCT_QUALITY_SCORE = 50;
 
 export type RecipeIngredientMappingLabels = {

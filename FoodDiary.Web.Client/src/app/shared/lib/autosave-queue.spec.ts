@@ -72,3 +72,45 @@ describe('AutosaveQueue', () => {
         expect(persist).toHaveBeenCalledWith('restored');
     });
 });
+
+describe('AutosaveQueue cancelled debounce recovery', () => {
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it('does not let an old timer automatically retry a failed immediate flush', () => {
+        vi.useFakeTimers();
+        const persist = vi.fn();
+        const queue = new AutosaveQueue<string>(createDestroyRef(), DEBOUNCE_MS, () => false, persist);
+        persist.mockImplementationOnce(() => {
+            queue.restore('failed');
+        });
+
+        queue.schedule('draft');
+        queue.flushNow('current');
+        vi.advanceTimersByTime(DEBOUNCE_MS);
+
+        expect(persist).toHaveBeenCalledExactlyOnceWith('current');
+        expect(queue.hasPending()).toBe(true);
+        queue.flushNow('retry');
+        expect(persist).toHaveBeenLastCalledWith('retry');
+        expect(queue.hasPending()).toBe(false);
+    });
+
+    it('keeps a restored value idle after clearing until explicitly scheduled again', () => {
+        vi.useFakeTimers();
+        const persist = vi.fn();
+        const queue = new AutosaveQueue<string>(createDestroyRef(), DEBOUNCE_MS, () => false, persist);
+
+        queue.schedule('discarded');
+        queue.clearPending();
+        queue.restore('restored');
+        vi.advanceTimersByTime(DEBOUNCE_MS);
+
+        expect(persist).not.toHaveBeenCalled();
+        expect(queue.hasPending()).toBe(true);
+        queue.scheduleIfPending();
+        vi.advanceTimersByTime(DEBOUNCE_MS);
+        expect(persist).toHaveBeenCalledExactlyOnceWith('restored');
+    });
+});

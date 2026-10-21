@@ -17,6 +17,7 @@ const WEB_VITAL_LCP_INITIAL = 1000;
 const WEB_VITAL_LCP_DUPLICATE = 1200;
 const NAVIGATION_RESPONSE_START_MS = 100;
 const PREVIOUS_LOG_EVENT_CALL_INDEX = -2;
+const SERVICE_WORKER_VERSION_HASH_LENGTH = 40;
 
 let service: FrontendObservabilityService;
 let browserPerformanceSpy: {
@@ -69,6 +70,25 @@ beforeEach(() => {
 afterEach(() => {
     environment.enableClientObservability = false;
     sessionStorage.clear();
+});
+
+describe('FrontendObservabilityService PWA diagnostics', () => {
+    it('logs PWA failures with a build identifier and without raw errors or browser URLs', () => {
+        browserWindowSpy.getHref.mockReturnValue('https://fooddiary.test/profile?token=secret');
+        service.recordServiceWorkerFailure('installation', 'a'.repeat(SERVICE_WORKER_VERSION_HASH_LENGTH));
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
+        expect(payload['category']).toBe('client_error');
+        expect(payload['name']).toBe('global-error');
+        expect(payload['outcome']).toBe('pwa_installation_failed');
+        expect(payload['buildVersion']).toBe(environment.buildVersion);
+        expect(payload['details']).toEqual({ stage: 'installation', targetVersion: 'a'.repeat(SERVICE_WORKER_VERSION_HASH_LENGTH) });
+        expect(payload['location']).toBeUndefined();
+        expect(payload['stack']).toBeUndefined();
+        expect(JSON.stringify(payload)).not.toContain('secret');
+        environment.enableClientObservability = false;
+        service.recordServiceWorkerFailure('check');
+        expect(loggingSpy.logEvent).toHaveBeenCalledOnce();
+    });
 });
 
 describe('FrontendObservabilityService errors and requests', () => {

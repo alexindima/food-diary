@@ -30,6 +30,7 @@
         <fd-ui-input
             appearance="auth"
             autocomplete="current-password"
+            [maximumLength]="passwordMaximumLength"
             [type]="passwordInputType()"
             [formField]="form().password"
             [label]="'AUTH.LOGIN.PASSWORD' | translate"

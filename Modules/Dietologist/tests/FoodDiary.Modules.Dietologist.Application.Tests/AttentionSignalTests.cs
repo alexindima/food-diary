@@ -143,7 +143,7 @@ public sealed class AttentionSignalTests {
             CultureInfo.InvariantCulture,
             $"DiaryInactivity:{client.UserId:N}:{client.AcceptedAtUtc:yyyyMMdd}");
         IAuditEntryReadService audits = Substitute.For<IAuditEntryReadService>();
-        audits.GetRecentAsync(null, 500, Arg.Any<CancellationToken>())
+        audits.GetLatestForTargetsAsync(user.Id.Value, "AttentionSignal", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
             .Returns([
                 new AuditEntryReadModel(
                     Guid.NewGuid(),
@@ -167,6 +167,11 @@ public sealed class AttentionSignalTests {
 
         ResultAssert.Success(result);
         Assert.Equal(expectedVisible, result.Value.Count == 1);
+        await audits.Received(1).GetLatestForTargetsAsync(
+            user.Id.Value,
+            "AttentionSignal",
+            Arg.Is<IReadOnlyList<string>>(ids => ids.Count == 1 && ids[0] == signalId),
+            Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -403,7 +408,8 @@ public sealed class AttentionSignalTests {
 
         if (audits is null) {
             audits = Substitute.For<IAuditEntryReadService>();
-            audits.GetRecentAsync(null, 500, Arg.Any<CancellationToken>())
+            audits.GetLatestForTargetsAsync(
+                    Arg.Any<Guid>(), "AttentionSignal", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
                 .Returns([]);
         }
 

@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1355,
     "ambiguousContracts": 29,
-    "consumerEdges": 10658,
-    "productionConsumerEdges": 6046,
-    "testConsumerEdges": 4612,
+    "consumerEdges": 10661,
+    "productionConsumerEdges": 6047,
+    "testConsumerEdges": 4614,
     "consumedContracts": 1355,
     "unconsumedContracts": 0
   },
@@ -30213,7 +30213,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/ClientTaskHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 11
+      "referenceCount": 12
     },
     {
       "contract": "ChangeClientTaskStatusCommand",
@@ -34288,7 +34288,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/CreateMealCommandValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 54
+      "referenceCount": 57
     },
     {
       "contract": "CreateMealCommand",
@@ -46881,6 +46881,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/ClientTaskHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetClientTasksForDietologistQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application/Queries/GetClientTasksForDietologist/GetClientTasksForDietologistQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.ClientTaskAccessTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -63815,6 +63828,19 @@
         "Modules/Dietologist/Application.Abstractions/Common/IClientTaskReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/DietologistFeatureTests.ClientTaskAccessTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IClientTaskReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application.Abstractions/Common/IClientTaskReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/ModuleRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -74657,6 +74683,19 @@
         "Modules/Dietologist/Application.Abstractions/Common/IDietologistInvitationReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/Application/Queries/GetClientTasksForDietologist/GetClientTasksForDietologistQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDietologistInvitationReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Application.Abstractions/Common/IDietologistInvitationReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Queries/GetInvitationByToken/GetInvitationByTokenQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -74789,7 +74828,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/ClientTaskHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 10
+      "referenceCount": 11
     },
     {
       "contract": "IDietologistInvitationReadModelRepository",
@@ -96628,7 +96667,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/ClientTaskHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 14
+      "referenceCount": 16
     },
     {
       "contract": "INotificationWriter",
@@ -138995,7 +139034,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/ClientTaskHandlerTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "NotificationRequest",
@@ -156682,7 +156721,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/UpdateMealCommandValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 18
+      "referenceCount": 21
     },
     {
       "contract": "UpdateMealCommand",

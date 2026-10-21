@@ -10,7 +10,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
-import { filter, finalize, type Observable, switchMap, tap } from 'rxjs';
+import { filter, finalize, type Observable, type Subscription, switchMap, tap } from 'rxjs';
 
 import { AdminCatalogFilterComponent, matchesAdminCatalog } from '../../../shared/catalog/admin-catalog-filter';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
@@ -46,6 +46,7 @@ export class AdminLessonsComponent {
     private readonly translate = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly document = inject(DOCUMENT);
+    private loadRequest?: Subscription;
 
     protected readonly lessons = signal<AdminLesson[]>([]);
     protected readonly isLoading = signal(false);
@@ -99,9 +100,10 @@ export class AdminLessonsComponent {
     }
 
     protected loadLessons(): void {
+        this.loadRequest?.unsubscribe();
         this.loadFailed.set(false);
         this.isLoading.set(true);
-        this.lessonsFacade
+        this.loadRequest = this.lessonsFacade
             .getAll()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({

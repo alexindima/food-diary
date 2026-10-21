@@ -56,3 +56,41 @@ describe('FdTourHostComponent keyboard focus', () => {
         host.remove();
     });
 });
+
+describe('FdTourHostComponent responsive highlight', () => {
+    it('highlights the visible fallback instead of the hidden original', () => {
+        TestBed.configureTestingModule({ imports: [FdTourHostComponent] });
+        const targetHost = document.createElement('div');
+        targetHost.innerHTML = '<button class="hidden-target" hidden>Hidden</button><button class="visible-target">More actions</button>';
+        document.body.append(targetHost);
+        const fallback = targetHost.querySelector<HTMLElement>('.visible-target');
+        if (fallback === null) {
+            throw new Error('Expected a responsive tour target');
+        }
+        const targetPosition = 100;
+        const targetSize = 40;
+        const fallbackRect = new DOMRect(targetPosition, targetPosition, targetSize, targetSize);
+        vi.spyOn(fallback, 'getBoundingClientRect').mockReturnValue(fallbackRect);
+        const fixture = TestBed.createComponent(FdTourHostComponent);
+        const tour = TestBed.inject(FdTourService);
+        try {
+            tour.start(
+                {
+                    id: 'highlight-responsive',
+                    version: 1,
+                    steps: [{ id: 'help', target: '.hidden-target, .visible-target', title: 'Help' }],
+                },
+                { force: true },
+            );
+            fixture.detectChanges();
+            const highlight = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.fd-tour__highlight');
+            expect(highlight?.style.left).toBe('92px');
+            expect(highlight?.style.top).toBe('92px');
+            expect(highlight?.style.width).toBe('56px');
+        } finally {
+            tour.close();
+            fixture.destroy();
+            targetHost.remove();
+        }
+    });
+});

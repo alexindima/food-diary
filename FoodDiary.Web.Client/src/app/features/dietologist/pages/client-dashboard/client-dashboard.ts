@@ -238,6 +238,10 @@ export class ClientDashboardComponent {
         this.taskModel,
         path => {
             required(path.title);
+            validate(path.title, context => {
+                const title = context.value();
+                return title.length > 0 && title.trim().length === 0 ? { kind: 'required' } : undefined;
+            });
             maxLength(path.title, TASK_TITLE_MAX_LENGTH);
             maxLength(path.details, TASK_DETAILS_MAX_LENGTH);
         },

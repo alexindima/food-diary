@@ -4,19 +4,32 @@ import {
     Component,
     computed,
     DestroyRef,
+    effect,
     type ElementRef,
     inject,
     Injector,
     signal,
+    untracked,
     viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, NavigationEnd, RouteConfigLoadEnd, RouteConfigLoadStart, Router, RouterOutlet, Scroll } from '@angular/router';
+import {
+    ActivatedRoute,
+    ChildrenOutletContexts,
+    NavigationEnd,
+    RouteConfigLoadEnd,
+    RouteConfigLoadStart,
+    Router,
+    RouterOutlet,
+    Scroll,
+} from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdTourHostComponent } from 'fd-tour';
 import { FdUiToastHostComponent, FdUiTopLoaderComponent } from 'fd-ui-kit';
 import { filter, from, mergeMap } from 'rxjs';
 
+import { AppUpdateNoticeComponent } from '../components/shared/app-update-notice/app-update-notice';
+import { PwaInstallBannerComponent } from '../components/shared/pwa-install-banner/pwa-install-banner';
 import { isPublicMarketingPath } from '../config/public-site-paths';
 import { QuickMealDrawerComponent } from '../features/meals/contracts/quick-meal-drawer';
 import { PublicSiteFooterComponent, PublicSiteHeaderComponent } from '../features/public/contracts/public-site-chrome';
@@ -28,7 +41,9 @@ import { LocalizationService } from '../shared/i18n/localization.service';
 import { NotificationRealtimeService } from '../shared/notifications/notification-realtime.service';
 import { PushNotificationService } from '../shared/notifications/push-notification.service';
 import { BrowserWindowService } from '../shared/platform/browser-window.service';
+import { PwaInstallPromotionService } from '../shared/service-worker/pwa-install-promotion.service';
 import { ThemeService } from '../shared/theme/theme.service';
+import { confirmRoutedEditorsReloadAsync } from './app-lib/app-reload.utils';
 import { parseRouteSeoData } from './app-lib/app-seo-data.utils';
 import { SidebarComponent } from './sidebar/sidebar';
 
@@ -47,6 +62,8 @@ type AppShellMode = 'authenticated' | 'public';
         TranslatePipe,
         PublicSiteHeaderComponent,
         PublicSiteFooterComponent,
+        AppUpdateNoticeComponent,
+        PwaInstallBannerComponent,
     ],
     templateUrl: './app.html',
     styleUrl: './app.scss',
@@ -67,6 +84,8 @@ export class AppComponent {
     private readonly browserWindow = inject(BrowserWindowService);
     private readonly viewportScroller = inject(ViewportScroller);
     private readonly pageViewport = viewChild<ElementRef<HTMLElement>>('pageViewport');
+    private readonly outletContexts = inject(ChildrenOutletContexts);
+    private readonly installPromotion = inject(PwaInstallPromotionService);
     private publicScrollNavigationId: number | null = null;
 
     protected isAuthenticated = this.authService.isAuthenticated;
@@ -82,8 +101,24 @@ export class AppComponent {
         const path = this.currentPath();
         return path === '/' || path === '/dashboard';
     });
+    protected readonly confirmAppReloadAsync = async (): Promise<boolean> => {
+        return confirmRoutedEditorsReloadAsync(this.outletContexts);
+    };
+    protected readonly showInstallPromotion = computed(
+        () =>
+            this.usesAuthenticatedShell() &&
+            this.usesCompactMobileNavigation() &&
+            !this.isImpersonating() &&
+            this.installPromotion.shouldShowBanner(),
+    );
 
     public constructor() {
+        effect(() => {
+            const active = this.usesAuthenticatedShell() && !this.isImpersonating();
+            untracked(() => {
+                this.installPromotion.setActive(active);
+            });
+        });
         this.viewportScroller.setHistoryScrollRestoration('manual');
         if (this.browserWindow.isAvailable()) {
             this.injector.get(NotificationRealtimeService);

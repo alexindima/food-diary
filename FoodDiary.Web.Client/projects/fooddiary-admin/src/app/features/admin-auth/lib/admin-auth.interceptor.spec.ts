@@ -51,7 +51,7 @@ describe('adminAuthInterceptor', () => {
         req.flush({});
     });
 
-    it('should redirect to unauthorized and clear tokens on 401', () => {
+    it.each([null, { error: 'Ai.ConsentRequired' }])('should redirect to unauthorized and clear tokens on 401 (%j)', payload => {
         localStorage.setItem('authToken', 'admin-token');
         localStorage.setItem('refreshToken', 'refresh-token');
         sessionStorage.setItem('authToken', 'session-token');
@@ -63,7 +63,7 @@ describe('adminAuthInterceptor', () => {
         });
 
         const req = httpMock.expectOne('/api/admin/users');
-        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+        req.flush(payload, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
         expect(localStorage.getItem('authToken')).toBeNull();
         expect(localStorage.getItem('refreshToken')).toBeNull();
@@ -73,7 +73,7 @@ describe('adminAuthInterceptor', () => {
         });
     });
 
-    it('should redirect with forbidden reason on 403', () => {
+    it.each([null, { error: 'Access.Forbidden' }, { error: 'Ai.UnknownForbidden' }])('redirects ordinary403 (%j)', payload => {
         localStorage.setItem('authToken', 'admin-token');
 
         http.get('/api/admin/users').subscribe({
@@ -83,7 +83,7 @@ describe('adminAuthInterceptor', () => {
         });
 
         const req = httpMock.expectOne('/api/admin/users');
-        req.flush(null, { status: HttpStatusCode.Forbidden, statusText: 'Forbidden' });
+        req.flush(payload, { status: HttpStatusCode.Forbidden, statusText: 'Forbidden' });
 
         expect(localStorage.getItem('authToken')).toBe('admin-token');
         expect(router.navigate).toHaveBeenCalledWith(['/unauthorized'], {
@@ -104,5 +104,33 @@ describe('adminAuthInterceptor', () => {
         req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
         expect(router.navigate).not.toHaveBeenCalled();
+    });
+});
+
+describe('adminAuthInterceptor feature policy errors', () => {
+    it('rethrows AI consent403 to the feature without redirecting or clearing authentication', () => {
+        localStorage.setItem('authToken', 'admin-token');
+        const router = { url: '/ai-prompts', navigate: vi.fn().mockResolvedValue(true) };
+        TestBed.configureTestingModule({
+            providers: [
+                provideHttpClient(withInterceptors([adminAuthInterceptor])),
+                provideHttpClientTesting(),
+                { provide: Router, useValue: router },
+            ],
+        });
+        const http = TestBed.inject(HttpClient);
+        const controller = TestBed.inject(HttpTestingController);
+        const received = vi.fn();
+        http.post('/api/v1/admin/ai-prompts/test', {}).subscribe({ error: received });
+        const payload = { error: 'Ai.ConsentRequired', message: 'Consent required' };
+        controller.expectOne('/api/v1/admin/ai-prompts/test').flush(payload, {
+            status: HttpStatusCode.Forbidden,
+            statusText: 'Forbidden',
+        });
+        expect(received).toHaveBeenCalledWith(expect.objectContaining({ status: HttpStatusCode.Forbidden, error: payload }));
+        expect(router.navigate).not.toHaveBeenCalled();
+        expect(localStorage.getItem('authToken')).toBe('admin-token');
+        controller.verify();
+        localStorage.clear();
     });
 });

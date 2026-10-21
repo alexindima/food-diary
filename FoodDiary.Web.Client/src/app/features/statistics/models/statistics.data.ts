@@ -35,6 +35,14 @@ export type StatisticsSummary = {
     nutrition: AggregatedStatistics[];
     weight: WeightEntrySummaryPoint[];
     waist: WaistEntrySummaryPoint[];
+    weightMeasurements: StatisticsBodyMeasurements;
+    waistMeasurements: StatisticsBodyMeasurements;
+};
+
+export type StatisticsBodyMeasurements = {
+    first: number | null;
+    last: number | null;
+    count: number;
 };
 
 export type MappedStatistics = {

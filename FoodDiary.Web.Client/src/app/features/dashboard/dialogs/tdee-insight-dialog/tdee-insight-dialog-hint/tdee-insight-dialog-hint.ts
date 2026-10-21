@@ -13,6 +13,7 @@ import type { TdeeInsight } from '../../../../../shared/models/tdee-insight.data
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TdeeInsightDialogHintComponent {
+    public readonly locale = input.required<string>();
     public readonly hintKey = input.required<string | null>();
     public readonly showSuggestion = input.required<boolean>();
     public readonly insight = input.required<TdeeInsight | null>();

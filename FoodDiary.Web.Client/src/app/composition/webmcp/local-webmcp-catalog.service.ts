@@ -2,7 +2,6 @@ import { inject, Injector, Service } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import type { ProductService } from '../../features/products/api/product.service';
-import { RECIPE_MIN_INGREDIENT_AMOUNT } from '../../features/recipes/components/manage/recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeDevelopmentDraft } from '../../features/recipes/contracts/recipe-development-draft';
 import { devNumber, devRecord, devText } from '../../shared/development/development-input';
 import { DevelopmentToolError } from '../../shared/development/development-tools';
@@ -102,7 +101,7 @@ export class LocalWebmcpCatalogService {
                 const recipe = await firstValueFrom(
                     this.injector.get(RecipeService).getById(entityId<'recipe'>(devText(item['recipeId'], MAX_ID_LENGTH))),
                 );
-                const amount = devNumber(item['amount'], RECIPE_MIN_INGREDIENT_AMOUNT, MAXIMUM_CONSUMED_QUANTITY);
+                const amount = devNumber(item['amount'], Number.MIN_VALUE, MAXIMUM_CONSUMED_QUANTITY);
                 if (recipe === null || !Number.isFinite(recipe.servings) || recipe.servings <= 0) {
                     throw new DevelopmentToolError('Nested recipe missing or unavailable.');
                 }
@@ -110,7 +109,7 @@ export class LocalWebmcpCatalogService {
                 continue;
             }
             const id = devText(item['productId'], MAX_ID_LENGTH);
-            const amount = devNumber(item['amount'], RECIPE_MIN_INGREDIENT_AMOUNT, MAXIMUM_CONSUMED_QUANTITY);
+            const amount = devNumber(item['amount'], Number.MIN_VALUE, MAXIMUM_CONSUMED_QUANTITY);
             const unit = devText(item['unit'], MAX_UNIT_LENGTH);
             const product = await firstValueFrom(products.getById(entityId<'product'>(id)));
             if (product === null || String(product.baseUnit) !== unit) {

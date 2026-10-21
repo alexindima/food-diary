@@ -10,6 +10,10 @@
     gap: var(--fd-space-page-card-gap);
     padding-bottom: var(--fd-space-xl);
 
+    &--dirty {
+        padding-bottom: calc(var(--fd-size-control-md) * 2 + var(--fd-space-xl));
+    }
+
     &__content {
         display: grid;
         grid-template-columns: minmax(0, 1.65fr) minmax(280px, 0.95fr);
@@ -446,6 +450,10 @@
 }
 
 @media #{variables.$media-tablet} {
+    .goals-editor--dirty {
+        padding-bottom: calc(var(--fd-size-control-md) * 3 + var(--fd-space-xl));
+    }
+
     .goals-editor-card {
         padding: var(--fd-space-md);
     }

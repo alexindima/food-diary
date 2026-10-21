@@ -31,6 +31,11 @@ public sealed class UpdateMealCommandValidator : AbstractValidator<UpdateMealCom
     }
 
     private void ConfigureMealRules() {
+        RuleFor(c => c.Comment)
+            .Must(comment => string.IsNullOrWhiteSpace(comment) || comment.Trim().Length <= 2048)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Comment must be at most 2048 characters.");
+
         RuleFor(c => c.MealType)
             .Must(EnumValueParser.CanParseOptional<MealType>)
             .WithErrorCode("Validation.Invalid")

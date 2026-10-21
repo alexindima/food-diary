@@ -19,6 +19,7 @@ import { ShoppingListPageComponent } from './shopping-list-page';
 const FIRST_LIST_ID = 'list-1';
 const SECOND_LIST_ID = 'list-2';
 const INVALID_SHOPPING_AMOUNT_ABOVE_MAXIMUM = 1_000_001;
+const SHOPPING_ITEM_API_LIMITS = { name: 256, category: 128, note: 512 };
 
 const SHOPPING_LIST_ITEM: ShoppingListItem = {
     id: entityId<'shopping-list-item'>('item-1'),
@@ -60,6 +61,8 @@ type ShoppingListFacadeMock = {
     isLoading: ReturnType<typeof signal<boolean>>;
     isCreating: ReturnType<typeof signal<boolean>>;
     isSaving: ReturnType<typeof signal<boolean>>;
+    saveError: ReturnType<typeof signal<boolean>>;
+    retrySave: ReturnType<typeof vi.fn>;
     items: ReturnType<typeof signal<ShoppingListItem[]>>;
     list: ReturnType<typeof signal<ShoppingList | null>>;
     listName: ReturnType<typeof signal<string>>;
@@ -89,6 +92,8 @@ async function setupShoppingListPageAsync(initialUnsaved = false): Promise<Shopp
         items: signal([SHOPPING_LIST_ITEM]),
         isLoading: signal(false),
         isSaving: signal(false),
+        saveError: signal(false),
+        retrySave: vi.fn(),
         isCreating: signal(false),
         lists: signal(SHOPPING_LISTS),
         initialPage: signal(null),
@@ -232,6 +237,63 @@ describe('ShoppingListPageComponent form and item actions', () => {
 
         expect(facade.removeItem).toHaveBeenCalledWith(SHOPPING_LIST_ITEM.id);
         expect(facade.toggleItemChecked).toHaveBeenCalledWith(SHOPPING_LIST_ITEM.id, true);
+    });
+});
+
+describe('ShoppingListPageComponent API text limits', () => {
+    it.each([
+        { field: 'name' as const, limit: 256 },
+        { field: 'category' as const, limit: 128 },
+        { field: 'note' as const, limit: 512 },
+    ])('keeps oversized $field out of the autosaved list', async ({ field, limit }) => {
+        const { component, facade, fixture } = await setupShoppingListPageAsync();
+        component['itemFormModel'].set({
+            name: 'Milk',
+            amount: null,
+            unit: null,
+            category: null,
+            note: null,
+            [field]: 'A'.repeat(limit + 1),
+        });
+        fixture.detectChanges();
+
+        component['addItem']();
+
+        expect(facade.addItem).not.toHaveBeenCalled();
+        expect(component['itemForm'][field]().invalid()).toBe(true);
+        expect(component['itemFormModel']()[field]).toHaveLength(limit + 1);
+    });
+
+    it('accepts text fields at the API limits', async () => {
+        const { component, facade } = await setupShoppingListPageAsync();
+        const item = {
+            name: 'A'.repeat(SHOPPING_ITEM_API_LIMITS.name),
+            amount: null,
+            unit: null,
+            category: 'B'.repeat(SHOPPING_ITEM_API_LIMITS.category),
+            note: 'C'.repeat(SHOPPING_ITEM_API_LIMITS.note),
+        };
+        component['itemFormModel'].set(item);
+
+        component['addItem']();
+
+        expect(facade.addItem).toHaveBeenCalledWith(item);
+    });
+});
+
+describe('ShoppingListPageComponent failed autosave', () => {
+    it('keeps the list visible and exposes the retry action', async () => {
+        const { facade, fixture } = await setupShoppingListPageAsync();
+        facade.saveError.set(true);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const alert = host.querySelector('fd-ui-inline-alert[role="alert"]');
+        expect(alert?.textContent).toContain('SHOPPING_LIST.SAVE_ERROR');
+        expect(host.querySelector('.shopping-list__items')).not.toBeNull();
+
+        alert?.querySelector('button')?.click();
+
+        expect(facade.retrySave).toHaveBeenCalledOnce();
     });
 });
 

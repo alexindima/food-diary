@@ -16,6 +16,7 @@ import {
 
 import { FdTourService } from './fd-tour.service';
 import type { FdTourLabels, FdTourPlacement, FdTourStep } from './fd-tour.types';
+import { findTourTarget } from './fd-tour-target';
 
 type TourRect = {
     top: number;
@@ -272,7 +273,7 @@ export class FdTourHostComponent {
             return;
         }
 
-        const element = this.document.querySelector(step.target);
+        const element = findTourTarget(this.document, step.target);
         const rect = element?.getBoundingClientRect();
         if (rect === undefined) {
             this.targetRect.set(null);

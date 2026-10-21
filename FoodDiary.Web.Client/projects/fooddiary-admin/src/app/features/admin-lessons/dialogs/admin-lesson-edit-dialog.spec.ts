@@ -46,11 +46,16 @@ describe('AdminLessonEditDialogComponent pending save', () => {
             '.dialog-actions fd-ui-button:first-child button',
         );
         expect(cancel?.disabled).toBe(true);
+        const title = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('input[type="text"]');
+        expect(title?.disabled).toBe(true);
+        expect(fixture.componentInstance['form'].title().disabled()).toBe(true);
         fixture.componentInstance['onCancel']();
         expect(dialogRef.close).not.toHaveBeenCalled();
         pending.error(new Error('offline'));
         fixture.detectChanges();
         expect(cancel?.disabled).toBe(false);
+        expect(title?.disabled).toBe(false);
+        expect(title?.value).toBe(LESSON.title);
         fixture.componentInstance['onCancel']();
         expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(false);
     });

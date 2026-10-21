@@ -125,6 +125,8 @@ describe('StatisticsFacade stale requests', () => {
         completeStaleRangeRequests(requests);
 
         expect(facade.chartStatisticsData()?.calories).toEqual([RETRY_TOTAL_CALORIES]);
+        expect(facade.dashboardCardsView().body.weight).toMatchObject({ current: SECOND_WEIGHT_AVERAGE, measurementCount: 1 });
+        expect(facade.dashboardCardsView().body.waist).toMatchObject({ current: SECOND_WAIST_AVERAGE, measurementCount: 1 });
         expect(facade.weightSummaryPoints()).toEqual([
             {
                 startDate: calendarDate('2026-04-02T00:00:00Z'),
@@ -262,6 +264,8 @@ function createStatisticsSummary(
         nutrition: createStatisticsResponse(totalCalories),
         weight: [{ startDate: calendarDate('2026-04-01T00:00:00Z'), endDate: calendarDate('2026-04-01T23:59:59Z'), averageWeightKg }],
         waist: [{ startDate: calendarDate('2026-04-01T00:00:00Z'), endDate: calendarDate('2026-04-01T23:59:59Z'), averageCircumferenceCm }],
+        weightMeasurements: { first: averageWeightKg, last: averageWeightKg, count: 1 },
+        waistMeasurements: { first: averageCircumferenceCm, last: averageCircumferenceCm, count: 1 },
     };
 }
 

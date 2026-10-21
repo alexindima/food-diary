@@ -22,6 +22,7 @@ describe('StatisticsBodyTrendCardComponent', () => {
                 change: -3,
                 goal: 75,
                 timeframeDays: 30,
+                measurementCount: 22,
                 points: [
                     { label: '20 Jul', value: 116 },
                     { label: '4 Aug', value: 113 },
@@ -33,6 +34,7 @@ describe('StatisticsBodyTrendCardComponent', () => {
                 change: -2,
                 goal: 80,
                 timeframeDays: 30,
+                measurementCount: 21,
                 points: [
                     { label: '20 Jul', value: 101 },
                     { label: '4 Aug', value: 99 },
@@ -46,6 +48,7 @@ describe('StatisticsBodyTrendCardComponent', () => {
         expect(root.querySelector('fd-ui-button')).not.toBeNull();
         expect(root.textContent).toContain('113');
         expect(root.textContent).toContain('−3');
+        expect(root.querySelectorAll('.statistics-body-trend-card__insight')[3].textContent).toContain('22');
 
         const translateService = TestBed.inject(TranslateService);
         translateService.use('ru');

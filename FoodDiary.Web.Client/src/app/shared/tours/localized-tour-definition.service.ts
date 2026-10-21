@@ -57,5 +57,6 @@ function resolveTourTarget(target: string): string {
         return target;
     }
 
-    return `[data-tour-id="${target}"]`;
+    const selector = `[data-tour-id="${target}"]`;
+    return `${selector}, fd-header-actions-overflow:has(${selector}) .fd-header-actions-overflow__trigger`;
 }

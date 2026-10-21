@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
@@ -263,6 +264,60 @@ public sealed class DietologistPersistenceIntegrationTests(PostgresDatabaseFixtu
             () => Assert.Equal("id", filtered.TargetId),
             () => Assert.Equal("""{"value":1}""", filtered.Metadata),
             () => Assert.Equal(UtcNow, filtered.CreatedAtUtc));
+    }
+
+    [RequiresDockerFact]
+    public async Task AuditEntryService_LatestTargetsIgnoresJournalWindowAndForeignEntriesAsync() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var actor = Guid.NewGuid();
+        var subject = Guid.NewGuid();
+        var keptId = Guid.NewGuid();
+        var updatedId = Guid.NewGuid();
+        var tieLowerId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+        var tieHigherId = Guid.Parse("00000000-0000-0000-0000-000000000002");
+        context.AuditEntries.AddRange(
+            Entry(keptId, actor, "AttentionSignal", "kept", UtcNow, "acknowledged"),
+            Entry(Guid.NewGuid(), actor, "AttentionSignal", "updated", UtcNow.AddMinutes(-2), "old"),
+            Entry(updatedId, actor, "AttentionSignal", "updated", UtcNow.AddMinutes(-1), "new"),
+            Entry(tieLowerId, actor, "AttentionSignal", "tie", UtcNow, "lower-id"),
+            Entry(tieHigherId, actor, "AttentionSignal", "tie", UtcNow, "higher-id"),
+            Entry(Guid.NewGuid(), Guid.NewGuid(), "AttentionSignal", "kept", UtcNow.AddMinutes(10), "foreign-actor"),
+            Entry(Guid.NewGuid(), actor, "OtherTarget", "kept", UtcNow.AddMinutes(10), "foreign-type"));
+        context.AuditEntries.AddRange(Enumerable.Range(0, 501).Select(index =>
+            Entry(Guid.NewGuid(), actor, "AttentionSignal", string.Create(CultureInfo.InvariantCulture, $"unrelated-{index}"), UtcNow.AddMinutes(20).AddTicks(index), "noise")));
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var service = new AuditEntryService(context, FixedTime);
+
+        IReadOnlyList<AuditEntryReadModel> latest = await service.GetLatestForTargetsAsync(
+            actor, "AttentionSignal", ["kept", "updated", "tie", "missing", "kept"]);
+
+        Assert.Equal(
+            new[] { keptId, updatedId, tieHigherId }.Order(),
+            latest.Select(entry => entry.Id).Order());
+        Assert.All(latest, entry => {
+            Assert.Equal(actor, entry.ActorUserId);
+            Assert.Equal("AttentionSignal", entry.TargetType);
+            Assert.Equal(subject, entry.SubjectClientUserId);
+        });
+        Assert.Equal("new", Assert.Single(latest, entry => string.Equals(entry.TargetId, "updated", StringComparison.Ordinal)).Metadata);
+        Assert.Equal("higher-id", Assert.Single(latest, entry => string.Equals(entry.TargetId, "tie", StringComparison.Ordinal)).Metadata);
+        IReadOnlyList<AuditEntryReadModel> journalWindow = await service.GetRecentAsync(subjectClientUserId: null, limit: 500);
+        Assert.DoesNotContain(journalWindow, entry => entry.Id == keptId);
+        Assert.Empty(await service.GetLatestForTargetsAsync(actor, "AttentionSignal", []));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => service.GetLatestForTargetsAsync(
+            actor, "AttentionSignal", ["kept"], new CancellationToken(canceled: true)));
+
+        AuditEntry Entry(Guid id, Guid entryActor, string targetType, string targetId, DateTime createdAtUtc, string metadata) => new() {
+            Id = id,
+            ActorUserId = entryActor,
+            SubjectClientUserId = subject,
+            Action = "attention.state",
+            TargetType = targetType,
+            TargetId = targetId,
+            Metadata = metadata,
+            CreatedAtUtc = createdAtUtc,
+        };
     }
 
     [ExcludeFromCodeCoverage]

@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { form, required, validate } from '@angular/forms/signals';
+import { form, maxLength, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
+import { FdUiInlineAlertComponent } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 import { skip } from 'rxjs';
 
@@ -27,6 +28,7 @@ import { type ShoppingListDraftItem, ShoppingListFacade } from '../../lib/shoppi
 import { isShoppingListAmountValid } from '../../lib/shopping-list-amount.validation';
 import { planShoppingConsolidation, type ShoppingMergeGroup } from '../../lib/shopping-list-consolidation';
 import type { ShoppingListItemFormModel } from '../../lib/shopping-list-form.types';
+import { SHOPPING_ITEM_CATEGORY_LIMIT, SHOPPING_ITEM_NAME_LIMIT, SHOPPING_ITEM_NOTE_LIMIT } from '../../lib/shopping-list-input.constants';
 import { ShoppingListItemsPanelComponent } from '../shopping-list-items-panel/shopping-list-items-panel';
 import { ShoppingListManageControlsComponent } from '../shopping-list-manage-controls/shopping-list-manage-controls';
 import { SHOPPING_LIST_TOUR } from './shopping-list-tour';
@@ -42,6 +44,7 @@ import { SHOPPING_LIST_TOUR } from './shopping-list-tour';
         FdUiHintDirective,
         FdUiButtonComponent,
         FdUiIconComponent,
+        FdUiInlineAlertComponent,
         FdUiLoaderComponent,
         PageHeaderComponent,
         PageBodyComponent,
@@ -64,6 +67,7 @@ export class ShoppingListPageComponent {
     protected readonly items = this.facade.items;
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isSaving = this.facade.isSaving;
+    protected readonly saveError = this.facade.saveError;
     protected readonly isCreating = this.facade.isCreating;
     protected readonly initialPage = this.facade.initialPage;
     protected readonly lists = this.facade.navigationLists;
@@ -90,6 +94,11 @@ export class ShoppingListPageComponent {
     protected readonly itemForm = form(this.itemFormModel, path => {
         required(path.name);
         validate(path.name, ({ value }) => (value().trim().length > 0 ? undefined : { kind: 'required' }));
+        maxLength(path.name, SHOPPING_ITEM_NAME_LIMIT);
+        validate(path.category, ({ value }) =>
+            (value()?.length ?? 0) <= SHOPPING_ITEM_CATEGORY_LIMIT ? undefined : { kind: 'maxLength' },
+        );
+        validate(path.note, ({ value }) => ((value()?.length ?? 0) <= SHOPPING_ITEM_NOTE_LIMIT ? undefined : { kind: 'maxLength' }));
         validate(path.amount, ({ value }) =>
             isShoppingListAmountValid(value())
                 ? undefined
@@ -345,6 +354,10 @@ export class ShoppingListPageComponent {
 
     protected createNewList(name?: string | void): void {
         this.facade.createNewList(name);
+    }
+
+    protected retrySave(): void {
+        this.facade.retrySave();
     }
 
     protected startShoppingListTour(force = true): void {

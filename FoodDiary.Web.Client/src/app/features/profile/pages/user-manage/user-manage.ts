@@ -27,6 +27,7 @@ import { catchError, EMPTY } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
+import { PwaInstallCardComponent } from '../../../../components/shared/pwa-install-card/pwa-install-card';
 import { UnsavedChangesBarComponent } from '../../../../components/shared/unsaved-changes-bar/unsaved-changes-bar';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../../services/unsaved-changes.service';
 import { ImageUploadFacade } from '../../../../shared/lib/image-upload.facade';
@@ -81,6 +82,7 @@ const MAX_PROFILE_HEIGHT_CM = 300;
         FdUiButtonComponent,
         FdUiFormErrorComponent,
         PageHeaderComponent,
+        PwaInstallCardComponent,
         PageBodyComponent,
         UnsavedChangesBarComponent,
         FdPageContainerDirective,
@@ -389,7 +391,17 @@ export class UserManageComponent {
     }
 
     protected startUserManageTour(force = true): void {
-        this.tourService.start(this.localizedTour.build(USER_MANAGE_TOUR), { force });
+        const tour = this.localizedTour.build(USER_MANAGE_TOUR);
+        const formElement = this.userFormElement()?.nativeElement;
+        if (formElement !== undefined && this.isBrowser) {
+            for (const step of tour.steps) {
+                const section = formElement.querySelector(step.target)?.closest('details');
+                if (section !== null && section !== undefined) {
+                    this.renderer.setProperty(section, 'open', true);
+                }
+            }
+        }
+        this.tourService.start(tour, { force });
     }
 
     protected onUserFormInput(event?: Event): void {

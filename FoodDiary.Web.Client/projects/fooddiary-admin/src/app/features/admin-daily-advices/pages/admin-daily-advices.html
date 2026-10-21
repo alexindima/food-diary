@@ -26,9 +26,11 @@
     }
     @if (loading()) {
         <p role="status">{{ 'ADMIN_DAILY_ADVICES.LOADING' | translate }}</p>
-    } @else if (loadFailed()) {
+    }
+    @if (loadFailed()) {
         <fd-admin-load-error (retry)="loadAdvices()" />
-    } @else {
+    }
+    <div class="fd-grid fd-gap-md" [hidden]="!showAdvices()">
         <p>{{ 'ADMIN_DAILY_ADVICES.TOTAL' | translate: { count: advices().length } }}</p>
         @for (advice of pageItems(); track advice.id) {
             <fd-admin-daily-advice-group-card [advice]="advice" (changed)="loadAdvices()" />
@@ -36,5 +38,5 @@
             <p>{{ 'ADMIN_DAILY_ADVICES.EMPTY' | translate }}</p>
         }
         <fd-ui-pagination [length]="advices().length" [pageSize]="pageSize" [pageIndex]="page()" (pageIndexChange)="goToPage($event)" />
-    }
+    </div>
 </div>

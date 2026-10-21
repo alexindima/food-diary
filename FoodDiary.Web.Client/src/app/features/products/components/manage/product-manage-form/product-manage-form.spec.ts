@@ -454,6 +454,16 @@ describe('ProductManageFormComponent page-mode output lifecycle', () => {
 });
 
 describe('ProductManageFormComponent validation limits', () => {
+    it('keeps a whitespace-only name invalid before sending a product request', async () => {
+        const { component, productManageFacade } = await setupComponentAsync();
+        fillValidProductForm(component);
+        patchProductForm(component, { name: ' \t\n ' });
+
+        expect(component['productForm']().invalid()).toBe(true);
+        expect(await component['onSubmitAsync']()).toBeNull();
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+    });
+
     it('should not submit product values that exceed product limits', async () => {
         const { component, productManageFacade } = await setupComponentAsync();
         fillValidProductForm(component);

@@ -106,13 +106,10 @@ export class RecipeBasicInfoComponent {
 
     private getControlError(controlName: ErrorField): string | null {
         const field = this.form()[controlName]();
-        if (
-            controlName === 'servings' &&
-            field.getError('required') === undefined &&
-            field.getError('integer') !== undefined &&
-            (field.touched() || field.dirty())
-        ) {
-            return this.translateService.instant('RECIPE_MANAGE.SERVINGS_INTEGER_ERROR');
+        if (field.getError('required') === undefined && field.getError('integer') !== undefined && (field.touched() || field.dirty())) {
+            return this.translateService.instant(
+                controlName === 'servings' ? 'RECIPE_MANAGE.SERVINGS_INTEGER_ERROR' : 'FORM_ERRORS.INVALID_NUMBER',
+            );
         }
         return resolveSignalFormFieldError(this.form()[controlName], this.validationErrors, this.translateService);
     }

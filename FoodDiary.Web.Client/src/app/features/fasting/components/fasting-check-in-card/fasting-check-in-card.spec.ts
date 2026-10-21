@@ -15,6 +15,7 @@ const DEFAULT_CHECK_IN_LEVEL = 3;
 const UPDATED_HUNGER_LEVEL = 4;
 const UPDATED_ENERGY_LEVEL = 5;
 const UPDATED_MOOD_LEVEL = 2;
+const CHECK_IN_NOTES_LIMIT = 500;
 
 // eslint-disable-next-line max-lines-per-function -- the component states share one compact fixture setup and interaction contract.
 describe('FastingCheckInCardComponent', () => {
@@ -87,6 +88,21 @@ describe('FastingCheckInCardComponent', () => {
         const fixture = createComponent({ isExpanded: true, isUpdatingCycle: true });
 
         expect((fixture.componentInstance as unknown as { draftDisabled: () => boolean }).draftDisabled()).toBe(true);
+    });
+
+    it('allows a full 500-character note while limiting native input to the API boundary', () => {
+        const notes = signal('x'.repeat(CHECK_IN_NOTES_LIMIT));
+        const fixture = createComponent({ isExpanded: true, notes });
+        const save = vi.fn();
+        fixture.componentInstance.save.subscribe(save);
+        const input = fixture.debugElement.query(By.css('textarea')).nativeElement as HTMLTextAreaElement;
+
+        expect(input.maxLength).toBe(CHECK_IN_NOTES_LIMIT);
+        expect(input.value).toBe(notes());
+        getButtonByText(getElement(fixture), 'FASTING.CHECK_IN.SAVE').click();
+
+        expect(notes()).toHaveLength(CHECK_IN_NOTES_LIMIT);
+        expect(save).toHaveBeenCalledTimes(1);
     });
 
     it('provides descriptive hints for emoji scales and symptom chips', () => {

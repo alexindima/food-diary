@@ -895,3 +895,62 @@ describe('Weight goal pending draft', () => {
         expect(facade.goalActionError()).toBe('WEIGHT_HISTORY.ERROR_SAVE_GOAL');
     });
 });
+
+describe('WeightHistoryFacade stale chart responses', () => {
+    it('keeps the latest period after an older success arrives', () => {
+        facade.initialize();
+        TestBed.tick();
+        const points = [{ ...createWeightPageSummary().summary[0], averageWeightKg: UPDATED_ENTRY_WEIGHT }];
+        const older = new Subject<typeof points>();
+        const newer = new Subject<typeof points>();
+        weightEntriesService.getSummary.mockReturnValueOnce(older).mockReturnValueOnce(newer);
+        facade.changeRange('year');
+        TestBed.tick();
+        facade.changeRange('week');
+        TestBed.tick();
+        newer.next(points);
+        newer.complete();
+        older.next([]);
+        older.complete();
+        expect(facade.selectedRange()).toBe('week');
+        expect(facade.summaryPoints()).toEqual(points);
+        expect(facade.isSummaryLoading()).toBe(false);
+        expect(facade.summaryLoadError()).toBe(false);
+    });
+
+    it('ignores an older error and completion while the latest period is loading', () => {
+        facade.initialize();
+        TestBed.tick();
+        const previous = facade.summaryPoints();
+        const older = new Subject<typeof previous>();
+        const newer = new Subject<typeof previous>();
+        weightEntriesService.getSummary.mockReturnValueOnce(older).mockReturnValueOnce(newer);
+        facade.changeRange('year');
+        TestBed.tick();
+        facade.changeRange('week');
+        TestBed.tick();
+        older.error(new Error('Outdated year request'));
+        expect(facade.summaryPoints()).toEqual(previous);
+        expect(facade.summaryLoadError()).toBe(false);
+        expect(facade.isSummaryLoading()).toBe(true);
+        newer.next(previous);
+        newer.complete();
+        expect(facade.isSummaryLoading()).toBe(false);
+    });
+
+    it('retains the selected chart when the initial page response arrives late', () => {
+        const page = new Subject<WeightHistoryPageSummary>();
+        weightEntriesService.getPageSummary.mockReturnValueOnce(page);
+        facade.initialize();
+        TestBed.tick();
+        const points = [{ ...createWeightPageSummary().summary[0], averageWeightKg: UPDATED_ENTRY_WEIGHT }];
+        weightEntriesService.getSummary.mockReturnValueOnce(of(points));
+        facade.changeRange('week');
+        TestBed.tick();
+        page.next(createWeightPageSummary());
+        page.complete();
+        expect(facade.summaryPoints()).toEqual(points);
+        expect(facade.entries()).toEqual(createWeightPageSummary().entries);
+        expect(facade.rollingMonthSummaryPoints()).toEqual(createWeightPageSummary().summary);
+    });
+});

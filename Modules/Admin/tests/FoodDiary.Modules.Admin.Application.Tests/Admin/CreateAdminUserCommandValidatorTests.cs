@@ -16,12 +16,14 @@ public sealed class CreateAdminUserCommandValidatorTests {
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    [Fact]
-    public async Task Validate_WithValidExplicitPasswordAndNoEmail_HasNoErrors() {
+    [Theory]
+    [InlineData("password")]
+    [InlineData(" 123456 ")]
+    public async Task Validate_WithValidExplicitPasswordAndNoEmail_HasNoErrors(string password) {
         TestValidationResult<CreateAdminUserCommand> result =
             await _validator.TestValidateAsync(CreateValidCommand() with {
                 Language = null,
-                TemporaryPassword = "password",
+                TemporaryPassword = password,
                 GeneratePassword = false,
                 SendCredentialsEmail = false,
                 RequirePasswordChange = false,
@@ -87,6 +89,9 @@ public sealed class CreateAdminUserCommandValidatorTests {
     [InlineData(null)]
     [InlineData("")]
     [InlineData("12345")]
+    [InlineData("       ")]
+    [InlineData("   a   ")]
+    [InlineData(" 12345 ")]
     public async Task Validate_WithoutGeneratedPasswordAndInvalidTemporaryPassword_HasError(string? password) {
         TestValidationResult<CreateAdminUserCommand> result =
             await _validator.TestValidateAsync(CreateValidCommand() with {

@@ -1,3 +1,5 @@
+import { RECIPE_MAX_INGREDIENT_AMOUNT } from './recipe-manage-form.mapper';
+
 export const RECIPE_DEVELOPMENT_SCHEMA = {
     type: 'object',
     additionalProperties: false,
@@ -27,7 +29,7 @@ export const RECIPE_DEVELOPMENT_SCHEMA = {
                             properties: {
                                 productId: { type: 'string' },
                                 recipeId: { type: 'string', description: 'Exact accessible nested recipe ID; amount counts servings.' },
-                                amount: { type: 'number', minimum: 0.01 },
+                                amount: { type: 'number', exclusiveMinimum: 0, maximum: RECIPE_MAX_INGREDIENT_AMOUNT },
                                 unit: { enum: ['G', 'ML', 'PCS', 'servings'] },
                             },
                         },

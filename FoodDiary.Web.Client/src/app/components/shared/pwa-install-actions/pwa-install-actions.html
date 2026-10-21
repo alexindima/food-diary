@@ -1,0 +1,27 @@
+<div class="fd-stack fd-gap-md">
+    @if (pwa.installMode() === 'prompt' || pwa.isInstalling()) {
+        <fd-ui-button icon="download" [loading]="pwa.isInstalling()" (click)="promotion.installAsync()">
+            {{ 'PWA.INSTALL.BUTTON' | translate }}
+        </fd-ui-button>
+    }
+    @if (pwa.installMode() === 'ios') {
+        <fd-ui-button
+            icon="download"
+            [ariaControls]="instructionsId()"
+            [ariaExpanded]="showIosInstructions()"
+            (click)="showIosInstructions.set(!showIosInstructions())"
+        >
+            {{ 'PWA.INSTALL.IOS_BUTTON' | translate }}
+        </fd-ui-button>
+        @if (showIosInstructions()) {
+            <ol class="fd-stack fd-gap-sm" [id]="instructionsId()">
+                <li>{{ 'PWA.INSTALL.IOS_SAFARI' | translate }}</li>
+                <li>{{ 'PWA.INSTALL.IOS_SHARE' | translate }}</li>
+                <li>{{ 'PWA.INSTALL.IOS_ADD' | translate }}</li>
+            </ol>
+        }
+    }
+    @if (pwa.installError()) {
+        <fd-ui-inline-alert severity="warning" [message]="'PWA.INSTALL.ERROR' | translate" />
+    }
+</div>

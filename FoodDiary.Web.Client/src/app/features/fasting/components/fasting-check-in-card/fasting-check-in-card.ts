@@ -22,6 +22,7 @@ import { EMPTY, type Observable } from 'rxjs';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { FASTING_SYMPTOM_OPTIONS } from '../../../../shared/models/fasting.data';
 import {
+    FASTING_CHECK_IN_NOTES_MAX_LENGTH,
     FASTING_ENERGY_EMOJI_SCALE,
     FASTING_HUNGER_EMOJI_SCALE,
     FASTING_MOOD_EMOJI_SCALE,
@@ -70,6 +71,7 @@ export class FastingCheckInCardComponent {
     public readonly save = output();
 
     protected readonly draftDisabled = (): boolean => this.isSaving() || this.isEnding() || this.isUpdatingCycle();
+    protected readonly maxCheckInNotesLength = FASTING_CHECK_IN_NOTES_MAX_LENGTH;
     protected readonly ctaKey = computed(() =>
         this.latestCheckIn() === null ? 'FASTING.CHECK_IN.ADD_ACTION' : 'FASTING.CHECK_IN.UPDATE_ACTION',
     );

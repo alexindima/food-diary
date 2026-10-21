@@ -1,6 +1,6 @@
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
-import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
+import { parseCalendarDateUtc } from '../../../shared/lib/local-date.utils';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
 import { imageSelection } from '../../../shared/models/image-upload.data';
 import { type ActivityLevelOption, Gender, UpdateUserDto, type User } from '../../../shared/models/user.data';
@@ -173,8 +173,8 @@ function normalizeUiStyle(value: string | null | undefined): AppUiStyleName | nu
     return isAppUiStyleName(resolved) ? resolved : null;
 }
 
-function mapUserBirthDate(value: Date | string | null | undefined): string | null {
-    return value !== null && value !== undefined ? formatDateInputValue(new Date(value)) : null;
+function mapUserBirthDate(value: string | null | undefined): string | null {
+    return parseCalendarDateUtc(value)?.toISOString().split('T')[0] ?? null;
 }
 
 function mapUserActivityLevel(value: string | null | undefined): ActivityLevelOption | null {

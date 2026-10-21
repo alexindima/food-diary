@@ -6,6 +6,11 @@
                 floatLabel="always"
                 prefixIcon="add"
                 [formField]="itemForm().name"
+                [error]="
+                    itemForm().name().value().length > nameLimit
+                        ? ('FORM_ERRORS.MAX_LENGTH' | translate: { requiredLength: nameLimit })
+                        : null
+                "
                 [ariaLabel]="'SHOPPING_LIST.ADD_ITEM_NAME' | translate"
                 [placeholder]="'SHOPPING_LIST.ADD_ITEM_NAME_PLACEHOLDER' | translate"
             />
@@ -48,11 +53,15 @@
                 />
                 <fd-ui-input
                     [formField]="itemForm().category"
+                    [error]="
+                        itemForm().category().invalid() ? ('FORM_ERRORS.MAX_LENGTH' | translate: { requiredLength: categoryLimit }) : null
+                    "
                     [label]="'SHOPPING_LIST.ADD_ITEM_CATEGORY' | translate"
                     [placeholder]="'SHOPPING_LIST.ADD_ITEM_CATEGORY_PLACEHOLDER' | translate"
                 />
                 <fd-ui-input
                     [formField]="itemForm().note"
+                    [error]="itemForm().note().invalid() ? ('FORM_ERRORS.MAX_LENGTH' | translate: { requiredLength: noteLimit }) : null"
                     [label]="'SHOPPING_LIST.ADD_ITEM_NOTE' | translate"
                     [placeholder]="'SHOPPING_LIST.ADD_ITEM_NOTE_PLACEHOLDER' | translate"
                 />

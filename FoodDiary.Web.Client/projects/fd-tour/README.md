@@ -40,3 +40,7 @@ inject(FdTourService).start(tour);
 ```
 
 App-specific tour definitions and translated copy should stay in the consuming application.
+
+Targets accept CSS selector lists. The engine scrolls to and highlights the first
+visible match, so consumers can include a visible menu trigger as a fallback for
+actions hidden by a responsive layout. Steps without a visible match are skipped.

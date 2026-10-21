@@ -1,0 +1,21 @@
+@if (visible() && promotion.shouldShowBanner() && !updates.hasPendingUpdate()) {
+    <div class="pwa-install-banner">
+        <fd-ui-card>
+            <section class="fd-stack fd-gap-md" aria-labelledby="pwa-promotion-title">
+                <div class="fd-stack fd-gap-xs">
+                    <h2 id="pwa-promotion-title" class="fd-ui-card-title">{{ 'PWA.INSTALL.TITLE' | translate }}</h2>
+                    <p class="fd-ui-body-sm fd-ui-text-muted">{{ 'PWA.INSTALL.DESCRIPTION' | translate }}</p>
+                </div>
+                <fd-pwa-install-actions instructionsId="pwa-banner-ios-instructions" />
+                <div class="fd-row fd-wrap fd-gap-sm">
+                    <fd-ui-button variant="secondary" fill="outline" (click)="promotion.snooze()">
+                        {{ 'PWA.PROMOTION.NOT_NOW' | translate }}
+                    </fd-ui-button>
+                    <fd-ui-button variant="secondary" fill="text" (click)="promotion.dismissPermanently()">
+                        {{ 'PWA.PROMOTION.NEVER' | translate }}
+                    </fd-ui-button>
+                </div>
+            </section>
+        </fd-ui-card>
+    </div>
+}

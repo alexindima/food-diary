@@ -30,7 +30,10 @@ import { FoodDiaryTranslationLoader } from './shared/i18n/food-diary-translation
 import { LocalizationService } from './shared/i18n/localization.service';
 import { MarketingAttributionService } from './shared/marketing/marketing-attribution.service';
 import { isMobileShellWindow } from './shared/platform/mobile-shell-runtime';
+import { AppUpdateService } from './shared/service-worker/app-update.service';
 import { AppVersionRecoveryService } from './shared/service-worker/app-version-recovery.service';
+import { PwaInstallService } from './shared/service-worker/pwa-install.service';
+import { PwaInstallPromotionService } from './shared/service-worker/pwa-install-promotion.service';
 import { ThemeService } from './shared/theme/theme.service';
 
 const isBrowserEnvironment = typeof window !== 'undefined';
@@ -80,7 +83,9 @@ export const appConfig: ApplicationConfig = {
             inject(AppBootstrapService).initializeObservability();
         }),
         provideAppInitializer(() => {
-            inject(AppVersionRecoveryService).initialize();
+            inject(PwaInstallService).initialize();
+            inject(PwaInstallPromotionService).initialize();
+            inject(AppUpdateService).initialize();
         }),
         provideZonelessChangeDetection(),
         provideRouter(

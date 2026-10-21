@@ -8,19 +8,19 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2619,
-    "symbols": 843,
+    "typescriptFiles": 2644,
+    "symbols": 851,
     "routes": 108,
     "features": 46,
-    "specs": 761,
+    "specs": 772,
     "localeFiles": 5,
     "roles": {
-      "Component": 493,
+      "Component": 497,
       "Directive": 15,
       "Facade": 88,
       "Other": 40,
       "Pipe": 5,
-      "Service": 202
+      "Service": 206
     }
   },
   "features": [
@@ -211,6 +211,7 @@
       ],
       "tests": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/components/daily-advice-group-card.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/lib/admin-daily-advices.facade.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/lib/daily-advice-import.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.spec.ts"
       ]
@@ -322,7 +323,9 @@
       "routes": [
         ""
       ],
-      "tests": []
+      "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.spec.ts"
+      ]
     },
     {
       "area": "admin",
@@ -1615,7 +1618,7 @@
       "role": "Component",
       "selector": "fd-tour-host",
       "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts",
-      "line": 65
+      "line": 66
     },
     {
       "name": "FdTourLocalStorage",
@@ -1636,7 +1639,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour.service.ts",
-      "line": 13
+      "line": 14
     },
     {
       "name": "FdUiAccentSurfaceComponent",
@@ -2189,7 +2192,7 @@
       "role": "Component",
       "selector": "fd-admin-achievements",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.ts",
-      "line": 60
+      "line": 63
     },
     {
       "name": "AdminAcquisitionService",
@@ -2637,7 +2640,7 @@
       "role": "Component",
       "selector": "fd-admin-moderation-action-dialog",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.ts",
-      "line": 35
+      "line": 37
     },
     {
       "name": "AdminModerationFacade",
@@ -2756,7 +2759,7 @@
       "role": "Component",
       "selector": "fd-admin-user-create-dialog",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.ts",
-      "line": 46
+      "line": 47
     },
     {
       "name": "AdminUserEditDialogComponent",
@@ -3144,6 +3147,13 @@
       "line": 17
     },
     {
+      "name": "AppUpdateNoticeComponent",
+      "role": "Component",
+      "selector": "fd-app-update-notice",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/app-update-notice/app-update-notice.ts",
+      "line": 14
+    },
+    {
       "name": "AppearanceDialogComponent",
       "role": "Component",
       "selector": "fd-appearance-dialog",
@@ -3452,6 +3462,27 @@
       "line": 38
     },
     {
+      "name": "PwaInstallActionsComponent",
+      "role": "Component",
+      "selector": "fd-pwa-install-actions",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-actions/pwa-install-actions.ts",
+      "line": 14
+    },
+    {
+      "name": "PwaInstallBannerComponent",
+      "role": "Component",
+      "selector": "fd-pwa-install-banner",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-banner/pwa-install-banner.ts",
+      "line": 16
+    },
+    {
+      "name": "PwaInstallCardComponent",
+      "role": "Component",
+      "selector": "fd-pwa-install-card",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-card/pwa-install-card.ts",
+      "line": 15
+    },
+    {
       "name": "RecipeCardComponent",
       "role": "Component",
       "selector": "fd-recipe-card",
@@ -3512,7 +3543,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/composition/webmcp/local-webmcp-catalog.service.ts",
-      "line": 24
+      "line": 23
     },
     {
       "name": "LocalWebmcpError",
@@ -3589,7 +3620,7 @@
       "role": "Component",
       "selector": "fd-auth-login-form",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-login-form/auth-login-form.ts",
-      "line": 28
+      "line": 29
     },
     {
       "name": "AuthPasswordResetFormComponent",
@@ -3603,7 +3634,7 @@
       "role": "Component",
       "selector": "fd-auth-register-fields",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-fields/auth-register-fields.ts",
-      "line": 18
+      "line": 19
     },
     {
       "name": "AuthRegisterFormComponent",
@@ -3974,7 +4005,7 @@
       "role": "Component",
       "selector": "fd-tdee-insight-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.ts",
-      "line": 40
+      "line": 43
     },
     {
       "name": "DashboardLayoutService",
@@ -4296,7 +4327,7 @@
       "role": "Component",
       "selector": "fd-fasting-check-in-card",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-card/fasting-check-in-card.ts",
-      "line": 49
+      "line": 50
     },
     {
       "name": "FastingCheckInChartComponent",
@@ -4814,7 +4845,7 @@
       "role": "Component",
       "selector": "fd-meal-general-info",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-general-info/meal-general-info.ts",
-      "line": 36
+      "line": 37
     },
     {
       "name": "MealItemsListComponent",
@@ -5584,7 +5615,7 @@
       "role": "Component",
       "selector": "fd-user-manage",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "line": 100
+      "line": 102
     },
     {
       "name": "DietologistPromoComponent",
@@ -5780,7 +5811,7 @@
       "role": "Component",
       "selector": "fd-recipe-list-filters-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.ts",
-      "line": 32
+      "line": 33
     },
     {
       "name": "RecipeListFavoritesComponent",
@@ -5829,7 +5860,7 @@
       "role": "Component",
       "selector": "fd-recipe-manage",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.ts",
-      "line": 79
+      "line": 84
     },
     {
       "name": "RecipeNutritionEditorComponent",
@@ -5850,7 +5881,7 @@
       "role": "Component",
       "selector": "fd-recipe-step-card",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.ts",
-      "line": 60
+      "line": 65
     },
     {
       "name": "RecipeStepsListComponent",
@@ -6130,7 +6161,7 @@
       "role": "Component",
       "selector": "fd-shopping-item-edit",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.ts",
-      "line": 24
+      "line": 21
     },
     {
       "name": "ShoppingListBrowserDialogComponent",
@@ -6179,7 +6210,7 @@
       "role": "Component",
       "selector": "fd-shopping-list-items-panel",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.ts",
-      "line": 44
+      "line": 45
     },
     {
       "name": "ShoppingListManageControlsComponent",
@@ -6193,14 +6224,14 @@
       "role": "Component",
       "selector": "fd-shopping-list-page",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.ts",
-      "line": 54
+      "line": 57
     },
     {
       "name": "StatisticsService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/statistics/api/statistics.service.ts",
-      "line": 14
+      "line": 24
     },
     {
       "name": "StatisticsBodyTrendCardComponent",
@@ -6620,7 +6651,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/frontend-observability.service.ts",
-      "line": 21
+      "line": 22
     },
     {
       "name": "GlobalLoadingService",
@@ -7379,11 +7410,39 @@
       "line": 10
     },
     {
+      "name": "AppUpdateService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/service-worker/app-update.service.ts",
+      "line": 15
+    },
+    {
       "name": "AppVersionRecoveryService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/service-worker/app-version-recovery.service.ts",
-      "line": 7
+      "line": 9
+    },
+    {
+      "name": "PwaInstallPromotionService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/service-worker/pwa-install-promotion.service.ts",
+      "line": 21
+    },
+    {
+      "name": "PwaInstallService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/service-worker/pwa-install.service.ts",
+      "line": 16
+    },
+    {
+      "name": "ServiceWorkerDiagnosticsService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/service-worker/service-worker-diagnostics.service.ts",
+      "line": 11
     },
     {
       "name": "NutritionDataInvalidationService",
@@ -7460,7 +7519,7 @@
       "role": "Component",
       "selector": "fd-root",
       "path": "FoodDiary.Web.Client/src/app/shell/app.ts",
-      "line": 55
+      "line": 72
     },
     {
       "name": "AdminPanelLauncherService",
@@ -8059,16 +8118,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4138,
-      "russianProperties": 4138,
+      "englishProperties": 4163,
+      "russianProperties": 4163,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1244,
-      "russianProperties": 1244,
+      "englishProperties": 1249,
+      "russianProperties": 1249,
       "countsMatch": true
     },
     {

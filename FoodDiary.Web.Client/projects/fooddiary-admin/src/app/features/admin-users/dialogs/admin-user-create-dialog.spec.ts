@@ -5,6 +5,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import { AdminUserCreateDialogComponent } from './admin-user-create-dialog';
 
+const PASSWORD_MAXIMUM = 256;
+
 describe('AdminUserCreateDialogComponent credential options', () => {
     let fixture: ComponentFixture<AdminUserCreateDialogComponent>;
 
@@ -62,6 +64,16 @@ describe('AdminUserCreateDialogComponent credential options', () => {
         fixture.detectChanges();
         expect(createButton().disabled).toBe(true);
 
+        for (const password of ['       ', '   a   ', ' 12345 ']) {
+            form.temporaryPassword().value.set(password);
+            fixture.detectChanges();
+            expect(createButton().disabled).toBe(true);
+        }
+
+        form.temporaryPassword().value.set(' 123456 ');
+        fixture.detectChanges();
+        expect(createButton().disabled).toBe(false);
+
         form.temporaryPassword().value.set('QaPassword123!');
         fixture.detectChanges();
         expect(createButton().disabled).toBe(false);
@@ -70,5 +82,35 @@ describe('AdminUserCreateDialogComponent credential options', () => {
         checkbox('admin-user-create-generate-password').click();
         fixture.detectChanges();
         expect(createButton().disabled).toBe(false);
+    });
+});
+
+describe('AdminUserCreateDialogComponent manual password maximum', () => {
+    it('accepts the API maximum and blocks a longer manual password before submission', async () => {
+        const createUser = vi.fn();
+        await TestBed.configureTestingModule({
+            imports: [AdminUserCreateDialogComponent],
+            providers: [
+                { provide: FdUiDialogRef, useValue: { close: vi.fn() } },
+                { provide: AdminUsersFacade, useValue: { createUser } },
+            ],
+        }).compileComponents();
+        const fixture = TestBed.createComponent(AdminUserCreateDialogComponent);
+        const component = fixture.componentInstance;
+        component['formModel'].update(value => ({ ...value, email: 'admin-qa@example.com', generatePassword: false }));
+        component['form'].temporaryPassword().value.set('q'.repeat(PASSWORD_MAXIMUM));
+        fixture.detectChanges();
+        expect(component['form']().invalid()).toBe(false);
+        const input = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('input[type="password"]');
+        expect(input?.maxLength).toBe(PASSWORD_MAXIMUM);
+
+        component['form'].temporaryPassword().value.set('q'.repeat(PASSWORD_MAXIMUM + 1));
+        fixture.detectChanges();
+        expect(component['form']().invalid()).toBe(true);
+        component['submit']();
+        expect(createUser).not.toHaveBeenCalled();
+        component['form'].generatePassword().value.set(true);
+        fixture.detectChanges();
+        expect(component['form']().invalid()).toBe(false);
     });
 });

@@ -172,6 +172,56 @@ describe('NotificationRealtimeService connection guards', () => {
     });
 });
 
+describe('NotificationRealtimeService impersonation lifecycle', () => {
+    beforeEach(() => {
+        TestBed.resetTestingModule();
+        signalrMock.reset();
+    });
+
+    it('does not negotiate or load notifications for an impersonated session', async () => {
+        const { service, notificationService } = setup(true, AUTH_TOKEN, true);
+        await waitForAsyncTasksAsync();
+        TestBed.tick();
+        expect(signalrMock.connection.start).not.toHaveBeenCalled();
+        expect(notificationService.fetchUnreadCount).not.toHaveBeenCalled();
+        expect(service.connected()).toBe(false);
+    });
+
+    it('disconnects on impersonation and reconnects when a normal authenticated session resumes', async () => {
+        const { impersonating, service } = setup(true, AUTH_TOKEN);
+        await waitForAsync(() => service.connected());
+        const withUrlCall = signalrMock.builder.withUrl.mock.calls.at(-1) as unknown[] | undefined;
+        const options = withUrlCall?.[1] as { accessTokenFactory: () => Promise<string> };
+        impersonating.set(true);
+        TestBed.tick();
+        await waitForAsync(() => !service.connected());
+        expect(signalrMock.connection.stop).toHaveBeenCalledOnce();
+        expect(await options.accessTokenFactory()).toBe('');
+        impersonating.set(false);
+        await waitForAsync(() => service.connected());
+        expect(signalrMock.connection.start).toHaveBeenCalledTimes(2);
+    });
+
+    it('does not mark a pending start connected after impersonation begins', async () => {
+        let completeStart: (() => void) | undefined;
+        signalrMock.connection.start.mockImplementationOnce(
+            async () =>
+                new Promise<void>(resolve => {
+                    completeStart = resolve;
+                }),
+        );
+        const { impersonating, service, notificationService } = setup(true, AUTH_TOKEN);
+        await waitForAsync(() => completeStart !== undefined);
+        impersonating.set(true);
+        TestBed.tick();
+        await waitForAsync(() => signalrMock.connection.stop.mock.calls.length > 0);
+        completeStart?.();
+        await waitForAsyncTasksAsync();
+        expect(service.connected()).toBe(false);
+        expect(notificationService.fetchUnreadCount).not.toHaveBeenCalled();
+    });
+});
+
 describe('NotificationRealtimeService expired sessions', () => {
     beforeEach(() => {
         TestBed.resetTestingModule();
@@ -205,8 +255,10 @@ describe('NotificationRealtimeService expired sessions', () => {
 function setup(
     isAuthenticated: boolean,
     token: string | null,
+    isImpersonating = false,
 ): {
     authenticated: WritableSignal<boolean>;
+    impersonating: WritableSignal<boolean>;
     logger: {
         error: ReturnType<typeof vi.fn>;
         warn: ReturnType<typeof vi.fn>;
@@ -221,6 +273,7 @@ function setup(
     };
 } {
     const authenticated = signal(isAuthenticated);
+    const impersonating = signal(isImpersonating);
     const notificationService = {
         updateCount: vi.fn(),
         notifyNotificationsChanged: vi.fn(),
@@ -237,6 +290,7 @@ function setup(
                 provide: AuthService,
                 useValue: {
                     isAuthenticated: authenticated,
+                    isImpersonating: impersonating,
                     getToken: vi.fn(() => token),
                     refreshToken: vi.fn(() => of(null)),
                 },
@@ -248,6 +302,7 @@ function setup(
 
     return {
         authenticated,
+        impersonating,
         logger,
         service: TestBed.inject(NotificationRealtimeService),
         notificationService,

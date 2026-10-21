@@ -4,6 +4,8 @@ import { inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 
+import { adminApiErrorCode } from '../../../shared/api/admin-api-error';
+
 export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
     const router = inject(Router);
     const documentRef = inject(DOCUMENT);
@@ -40,7 +42,7 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
                 });
             }
 
-            if (status === HttpStatusCode.Forbidden) {
+            if (status === HttpStatusCode.Forbidden && adminApiErrorCode(error) !== 'Ai.ConsentRequired') {
                 void router.navigate(['/unauthorized'], {
                     queryParams: { reason: 'forbidden', returnUrl: router.url },
                 });

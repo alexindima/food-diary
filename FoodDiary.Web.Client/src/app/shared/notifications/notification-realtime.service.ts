@@ -1,4 +1,4 @@
-import { effect, inject, Service, signal, untracked } from '@angular/core';
+import { computed, effect, inject, Service, signal, untracked } from '@angular/core';
 import type { HubConnection } from '@microsoft/signalr';
 import { firstValueFrom } from 'rxjs';
 
@@ -23,12 +23,13 @@ export class NotificationRealtimeService {
     private disconnecting = false;
     private readonly connecting = signal(false);
     private readonly connectedSignal = signal(false);
+    private readonly canConnect = computed(() => this.authService.isAuthenticated() && !this.authService.isImpersonating());
 
     public readonly connected = this.connectedSignal.asReadonly();
 
     public constructor() {
         effect(() => {
-            if (this.authService.isAuthenticated()) {
+            if (this.canConnect()) {
                 untracked(() => {
                     void this.connectAsync();
                 });
@@ -42,7 +43,7 @@ export class NotificationRealtimeService {
     }
 
     private async connectAsync(): Promise<void> {
-        if (this.connection !== null || this.connecting()) {
+        if (!this.canStartConnection()) {
             return;
         }
 
@@ -55,7 +56,7 @@ export class NotificationRealtimeService {
 
         const { HubConnectionBuilder, LogLevel } = await import('@microsoft/signalr');
         const currentToken = this.authService.getToken();
-        if (!this.authService.isAuthenticated() || currentToken?.trim() !== token.trim()) {
+        if (!this.canConnect() || currentToken?.trim() !== token.trim()) {
             this.connecting.set(false);
             return;
         }
@@ -67,6 +68,7 @@ export class NotificationRealtimeService {
             .withAutomaticReconnect()
             .configureLogging(LogLevel.Warning)
             .build();
+        const connection = this.connection;
 
         this.connection.on('UnreadCountUpdated', (count: number) => {
             this.notificationService.updateCount(count);
@@ -84,22 +86,37 @@ export class NotificationRealtimeService {
 
         this.connection.onclose(error => {
             this.connectedSignal.set(false);
-            if (!this.disconnecting && this.authService.isAuthenticated()) {
+            if (!this.disconnecting && this.canConnect()) {
                 this.logger.warn('Notification SignalR connection closed', error, { devOnly: true });
             }
         });
 
         try {
-            await this.connection.start();
+            await connection.start();
+            if (this.connection !== connection || !this.canConnect()) {
+                return;
+            }
             this.connectedSignal.set(true);
             this.notificationService.fetchUnreadCount();
             this.notificationService.ensureNotificationsLoaded();
         } catch (error) {
             this.connectedSignal.set(false);
-            this.logger.error('Notification SignalR connection failed', error, { devOnly: true });
-            this.connection = null;
+            this.handleConnectionFailure(error, connection);
         } finally {
             this.connecting.set(false);
+        }
+    }
+
+    private canStartConnection(): boolean {
+        return this.canConnect() && this.connection === null && !this.connecting();
+    }
+
+    private handleConnectionFailure(error: unknown, connection: HubConnection): void {
+        if (this.canConnect()) {
+            this.logger.error('Notification SignalR connection failed', error, { devOnly: true });
+        }
+        if (this.connection === connection) {
+            this.connection = null;
         }
     }
 
@@ -122,6 +139,9 @@ export class NotificationRealtimeService {
     }
 
     private async getConnectionTokenAsync(): Promise<string> {
+        if (!this.canConnect()) {
+            return '';
+        }
         const token = this.authService.getToken();
         if (typeof token !== 'string') {
             return '';

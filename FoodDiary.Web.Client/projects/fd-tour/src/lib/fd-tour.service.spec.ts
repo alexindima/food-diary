@@ -153,3 +153,63 @@ function createTourButton(tourId: string, label: string): HTMLButtonElement {
     button.textContent = label;
     return button;
 }
+
+describe('FdTourService responsive targets', () => {
+    it.each(['visibility', 'display'])('scrolls to a visible fallback when the original ancestor has hidden %s', property => {
+        const host = document.createElement('div');
+        host.innerHTML = '<div><button class="original">Original</button></div><button class="fallback">More actions</button>';
+        document.body.append(host);
+        const original = host.querySelector<HTMLElement>('.original');
+        const fallback = host.querySelector<HTMLElement>('.fallback');
+        if (original === null || fallback === null) {
+            throw new Error('Expected responsive tour targets');
+        }
+        const parent = original.parentElement;
+        if (parent === null) {
+            throw new Error('Expected the original target container');
+        }
+        parent.style.setProperty(property, property === 'visibility' ? 'hidden' : 'none');
+        const originalScroll = vi.fn();
+        const fallbackScroll = vi.fn();
+        Object.defineProperty(original, 'scrollIntoView', { configurable: true, value: originalScroll });
+        Object.defineProperty(fallback, 'scrollIntoView', { configurable: true, value: fallbackScroll });
+        try {
+            const started = TestBed.inject(FdTourService).start(
+                {
+                    id: 'responsive-target',
+                    version: 1,
+                    steps: [{ id: 'help', target: '.original, .fallback', title: 'Help' }],
+                },
+                { force: true },
+            );
+            expect(started).toBe(true);
+            expect(originalScroll).not.toHaveBeenCalled();
+            expect(fallbackScroll).toHaveBeenCalledOnce();
+        } finally {
+            TestBed.inject(FdTourService).close();
+            host.remove();
+        }
+    });
+
+    it('omits a step when every matching target is hidden', () => {
+        const target = document.createElement('button');
+        target.id = 'hidden-tour-target';
+        target.hidden = true;
+        document.body.append(target);
+        try {
+            expect(
+                TestBed.inject(FdTourService).start(
+                    {
+                        id: 'hidden-target',
+                        version: 1,
+                        steps: [{ id: 'hidden', target: '#hidden-tour-target', title: 'Hidden' }],
+                    },
+                    { force: true },
+                ),
+            ).toBe(false);
+        } finally {
+            TestBed.inject(FdTourService).close();
+            target.remove();
+        }
+    });
+});

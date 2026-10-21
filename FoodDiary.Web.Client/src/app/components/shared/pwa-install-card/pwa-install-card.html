@@ -1,0 +1,19 @@
+@if (pwa.showInstallCard()) {
+    <fd-ui-card>
+        <section class="fd-stack fd-gap-md" aria-labelledby="pwa-install-title">
+            <div class="fd-stack fd-gap-xs">
+                <h2 id="pwa-install-title" class="fd-ui-card-title">{{ 'PWA.INSTALL.TITLE' | translate }}</h2>
+                <p class="fd-ui-body-sm fd-ui-text-muted">{{ 'PWA.INSTALL.DESCRIPTION' | translate }}</p>
+            </div>
+            <fd-pwa-install-actions instructionsId="pwa-ios-instructions" />
+            @if (promotion.isDismissed()) {
+                <div class="fd-stack fd-gap-xs">
+                    <p class="fd-ui-body-sm fd-ui-text-muted">{{ 'PWA.PROMOTION.MUTED' | translate }}</p>
+                    <fd-ui-button variant="secondary" fill="text" (click)="promotion.allowOffers()">
+                        {{ 'PWA.PROMOTION.ALLOW' | translate }}
+                    </fd-ui-button>
+                </div>
+            }
+        </section>
+    </fd-ui-card>
+}
