@@ -274,6 +274,36 @@ public sealed class ClientTaskHandlerTests {
         ResultAssert.Failure(result);
     }
 
+    [Theory]
+    [InlineData("Open")]
+    [InlineData("Completed")]
+    public async Task ChangeClientTaskStatus_WhenTaskWasCancelled_ReturnsValidationWithoutSideEffects(string status) {
+        var client = User.Create("client@example.com", "hash");
+        var dietologistId = UserId.New();
+        var task = ClientTask.Create(dietologistId, client.Id, "Task", null, null);
+        task.Cancel();
+        DateTime? cancelledAt = task.StatusChangedAtUtc;
+        INotificationWriter notifications = Substitute.For<INotificationWriter>();
+        var handler = new ChangeClientTaskStatusCommandHandler(
+            CreateTaskRepository(task),
+            CreateActiveInvitationRepository(dietologistId, client.Id),
+            CreateUserContext(client),
+            notifications,
+            new FixedTimeProvider(UtcNow));
+
+        Result<ClientTaskModel> result = await handler.Handle(
+            new ChangeClientTaskStatusCommand(client.Id.Value, task.Id.Value, status),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal(ErrorKind.Validation, result.Error.Kind),
+            () => Assert.Equal(ClientTaskStatus.Cancelled, task.Status),
+            () => Assert.Equal(cancelledAt, task.StatusChangedAtUtc));
+        await notifications.DidNotReceive().AddAsync(
+            Arg.Any<NotificationRequest>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
+    }
+
     [Fact]
     public async Task ChangeClientTaskStatus_RejectsMissingForeignAndInaccessibleTask() {
         var client = User.Create("client@example.com", "hash");
@@ -376,6 +406,7 @@ public sealed class ClientTaskHandlerTests {
             .Returns([CreateReadModel(dietologist.Id, clientId, ClientTaskStatus.Open, null)]);
         var handler = new GetClientTasksForDietologistQueryHandler(
             tasks,
+            CreateActiveInvitationRepository(dietologist.Id, clientId),
             CreateUserContext(dietologist),
             new FixedTimeProvider(UtcNow));
 
@@ -399,6 +430,7 @@ public sealed class ClientTaskHandlerTests {
         var dietologist = User.Create("dietologist@example.com", "hash");
         var handler = new GetClientTasksForDietologistQueryHandler(
             Substitute.For<IClientTaskRepository>(),
+            Substitute.For<IDietologistInvitationReadModelRepository>(),
             failUser ? CreateFailingUserContext() : CreateUserContext(dietologist),
             new FixedTimeProvider(UtcNow));
 

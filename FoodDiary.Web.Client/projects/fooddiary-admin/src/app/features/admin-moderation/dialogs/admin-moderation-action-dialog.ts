@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { fdUiCoerceInputTextValue, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
@@ -27,7 +29,7 @@ type AdminModerationActionDialogViewState = {
 
 @Component({
     selector: 'fd-admin-moderation-action-dialog',
-    imports: [FdUiButtonComponent, FdUiTextareaComponent, FdUiDialogComponent],
+    imports: [FdUiButtonComponent, FdUiTextareaComponent, FdUiDialogComponent, FdUiFormErrorComponent, TranslatePipe],
     templateUrl: './admin-moderation-action-dialog.html',
     styleUrls: ['./admin-moderation-action-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,6 +43,7 @@ export class AdminModerationActionDialogComponent {
 
     protected readonly adminNote = signal('');
     protected readonly isSubmitting = signal(false);
+    protected readonly actionError = signal(false);
 
     protected readonly viewState = computed((): AdminModerationActionDialogViewState =>
         this.data.action === 'review'
@@ -57,6 +60,7 @@ export class AdminModerationActionDialogComponent {
     );
 
     protected onConfirm(): void {
+        this.actionError.set(false);
         this.isSubmitting.set(true);
         const adminNote = this.adminNote().trim();
         const action = { adminNote: adminNote.length > 0 ? adminNote : null };
@@ -72,6 +76,7 @@ export class AdminModerationActionDialogComponent {
             },
             error: () => {
                 this.isSubmitting.set(false);
+                this.actionError.set(true);
             },
         });
     }

@@ -246,7 +246,7 @@
                 "WAIST": "Талия",
                 "CURRENT_WEIGHT": "Текущий вес",
                 "CURRENT_WAIST": "Текущая талия",
-                "LATEST_MEASUREMENT": "Последний замер",
+                "LATEST_MEASUREMENT": "Последний замер за период",
                 "INSIGHTS_TITLE": "Что изменилось",
                 "PERIOD_CHANGE": "Изменение за период",
                 "CHANGE": "Изменение за {{days}} дней",

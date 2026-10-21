@@ -16,6 +16,7 @@ import { LocalWebmcpScreensService } from './local-webmcp-screens.service';
 
 const APPLE_AMOUNT = 150;
 const APPLE_CALORIES = 52;
+const SMALL_VALID_INGREDIENT_AMOUNT = 0.001;
 const HTTP_OK = 200;
 
 describe('published development screen ownership', () => {
@@ -129,6 +130,40 @@ describe('audit development operations', () => {
             callAsync('set_calendar_period', { dateFrom: '2026-10-16', dateTo: '2026-10-17', timeZone: 'Invalid/Zone' }),
         ).rejects.toThrow(DevelopmentToolError);
         expect(setFiltersAsync).not.toHaveBeenCalled();
+    });
+});
+
+describe('catalog fractional compatibility', () => {
+    it('preserves small positive product and nested quantities while rejecting zero and negative amounts', async () => {
+        const product = { ...createEmptyProductSnapshot(), id: entityId<'product'>('owned-product') };
+        const recipe = { ...createEmptyRecipeSnapshot(), id: entityId<'recipe'>('owned-recipe'), servings: 1 };
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: ProductService, useValue: { getById: vi.fn().mockReturnValue(of(product)) } },
+                { provide: RecipeService, useValue: { getById: vi.fn().mockReturnValue(of(recipe)) } },
+            ],
+        });
+        const catalog = TestBed.inject(LocalWebmcpCatalogService);
+        const ingredients = [
+            { productId: product.id, amount: SMALL_VALID_INGREDIENT_AMOUNT, unit: 'G' },
+            { recipeId: recipe.id, amount: SMALL_VALID_INGREDIENT_AMOUNT, unit: 'servings' },
+        ];
+        const draft = await catalog.recipeDraftAsync({
+            name: 'Small quantities',
+            servings: 1,
+            steps: [{ description: 'Mix', ingredients }],
+        });
+        expect(draft.steps[0].ingredients.map(item => item.amount)).toEqual([SMALL_VALID_INGREDIENT_AMOUNT, SMALL_VALID_INGREDIENT_AMOUNT]);
+
+        for (const amount of [0, -1]) {
+            await expect(
+                catalog.recipeDraftAsync({
+                    name: 'Invalid',
+                    servings: 1,
+                    steps: [{ description: 'Mix', ingredients: [{ ...ingredients[0], amount }] }],
+                }),
+            ).rejects.toThrow('outside the supported range');
+        }
     });
 });
 

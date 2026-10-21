@@ -6,6 +6,7 @@ export type FastingEmojiScaleOption = {
 export const FASTING_WARNING_THRESHOLD_HOURS = 72;
 export const FASTING_HARD_STOP_THRESHOLD_HOURS = 168;
 export const FASTING_SESSION_CHECK_INS_PAGE_SIZE = 5;
+export const FASTING_CHECK_IN_NOTES_MAX_LENGTH = 500;
 
 export const FASTING_HUNGER_EMOJI_SCALE: FastingEmojiScaleOption[] = [
     { value: 1, emoji: '\u{1F62B}' },

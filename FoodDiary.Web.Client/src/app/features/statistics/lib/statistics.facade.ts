@@ -15,7 +15,7 @@ import type { ExportFormat } from '../../../shared/models/export.models';
 import type { WaistEntrySummaryPoint } from '../../../shared/models/waist-entry.data';
 import type { WeightEntrySummaryPoint } from '../../../shared/models/weight-entry.data';
 import { StatisticsService } from '../api/statistics.service';
-import type { MappedStatistics } from '../models/statistics.data';
+import type { MappedStatistics, StatisticsBodyMeasurements } from '../models/statistics.data';
 import { buildStatisticsDashboardCardsView } from './statistics-dashboard-card.mapper';
 import {
     buildBodyChartPoints,
@@ -44,7 +44,13 @@ export class StatisticsFacade {
     private lastLoadedRangeKey: string | null = null;
     public readonly appliedRange = signal<DateRange | null>(null);
     private readonly statisticsRequest = new RequestStateController<
-        { statistics: MappedStatistics; weight: WeightEntrySummaryPoint[]; waist: WaistEntrySummaryPoint[] },
+        {
+            statistics: MappedStatistics;
+            weight: WeightEntrySummaryPoint[];
+            waist: WaistEntrySummaryPoint[];
+            weightMeasurements: StatisticsBodyMeasurements;
+            waistMeasurements: StatisticsBodyMeasurements;
+        },
         'STATISTICS.LOAD_ERROR'
     >();
     private readonly initialized = signal(false);
@@ -84,6 +90,8 @@ export class StatisticsFacade {
         buildStatisticsDashboardCardsView({
             statistics: this.chartStatisticsData(),
             user: this.userProfile(),
+            weightMeasurements: this.statisticsRequest.data()?.weightMeasurements ?? { first: null, last: null, count: 0 },
+            waistMeasurements: this.statisticsRequest.data()?.waistMeasurements ?? { first: null, last: null, count: 0 },
             weightPoints: buildBodyChartPoints(
                 this.weightSummaryPoints(),
                 point => point.averageWeightKg,
@@ -222,6 +230,8 @@ export class StatisticsFacade {
                             statistics: mapStatistics(data.nutrition),
                             weight: data.weight,
                             waist: data.waist,
+                            weightMeasurements: data.weightMeasurements,
+                            waistMeasurements: data.waistMeasurements,
                         })
                     ) {
                         this.appliedRange.set(range);

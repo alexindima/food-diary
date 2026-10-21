@@ -125,6 +125,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
         this.productFormModel,
         path => {
             required(path.name);
+            validate(path.name, ({ value }) => (value().trim().length === 0 ? { kind: 'required' } : undefined));
             maxLength(path.name, PRODUCT_NAME_MAX_LENGTH);
             validate(path.barcode, ({ value }) => validateNullableMaxLength(value(), PRODUCT_BARCODE_MAX_LENGTH));
             validate(path.brand, ({ value }) => validateNullableMaxLength(value(), PRODUCT_BRAND_MAX_LENGTH));

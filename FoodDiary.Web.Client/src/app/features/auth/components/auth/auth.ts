@@ -376,6 +376,7 @@ export class AuthComponent {
             return;
         }
 
+        this.clearGlobalError();
         this.isPasswordResetting.set(true);
 
         const result = await firstValueFrom(this.authFlowFacade.requestPasswordReset(this.passwordResetModel()));

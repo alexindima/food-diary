@@ -1,5 +1,6 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, Subject } from 'rxjs';
+import { type Observable, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
@@ -79,5 +80,42 @@ describe('AdminAiPromptWorkbenchComponent', () => {
         fixture.detectChanges();
         expect(component['canTest']()).toBe(false);
         expect(component['result']()).toBe('');
+    });
+});
+
+describe('AdminAiPromptWorkbenchComponent AI consent error', () => {
+    it.each([
+        { status: HttpStatusCode.Forbidden, code: 'Ai.ConsentRequired', key: 'ADMIN_PROMPTS.CONSENT_REQUIRED' },
+        { status: HttpStatusCode.Forbidden, code: 'Access.Forbidden', key: 'ADMIN_PROMPTS.TEST_ERROR' },
+        { status: HttpStatusCode.TooManyRequests, code: 'Ai.QuotaExceeded', key: 'ADMIN_PROMPTS.TEST_LIMIT' },
+    ])('explains $code and preserves the sample and checked preview', async ({ status, code, key }) => {
+        await TestBed.configureTestingModule({
+            imports: [AdminAiPromptWorkbenchComponent],
+            providers: [
+                ...provideTranslateTesting(),
+                {
+                    provide: AdminAiPromptsFacade,
+                    useValue: {
+                        preview: (): Observable<{ text: string }> => of({ text: 'Checked request' }),
+                        test: (): Observable<never> => throwError(() => new HttpErrorResponse({ status, error: { error: code } })),
+                    },
+                },
+            ],
+        }).compileComponents();
+        const fixture = TestBed.createComponent(AdminAiPromptWorkbenchComponent);
+        fixture.componentRef.setInput('scenarioKey', 'text-parse');
+        fixture.componentRef.setInput('locale', 'en');
+        fixture.componentRef.setInput('promptText', 'Parse {{userText}}');
+        fixture.detectChanges();
+        const component = fixture.componentInstance;
+        component['text'].set('an apple');
+        fixture.detectChanges();
+        await component['inspectAsync'](false);
+        await component['inspectAsync'](true);
+        fixture.detectChanges();
+        expect(component['errorKey']()).toBe(key);
+        expect(component['text']()).toBe('an apple');
+        expect(component['preview']()).toBe('Checked request');
+        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent).toContain(key);
     });
 });

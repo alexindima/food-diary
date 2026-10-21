@@ -1,5 +1,5 @@
 @if (draft(); as model) {
-    <div class="goals-editor" [fdUiPreventUnload]="dirty() || saving()">
+    <div class="goals-editor" [class.goals-editor--dirty]="dirty()" [fdUiPreventUnload]="dirty() || saving()">
         <fd-goals-summary-card data-tour-id="goals-calories" [calories]="model.calories" [macros]="macroDrafts()" />
         <div class="goals-editor__content">
             <fd-goals-nutrition-card

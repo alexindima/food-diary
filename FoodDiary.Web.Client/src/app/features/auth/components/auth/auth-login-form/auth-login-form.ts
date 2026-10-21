@@ -6,6 +6,7 @@ import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
+import { AUTH_PASSWORD_MAX_LENGTH } from '../../../../../shared/auth/auth.constants';
 import { AuthGoogleSectionComponent } from '../auth-google-section/auth-google-section';
 import type { LoginFieldErrors, LoginFormValues } from '../auth-lib/auth.types';
 
@@ -45,6 +46,7 @@ export class AuthLoginFormComponent {
     public readonly googleButton = viewChild<ElementRef<HTMLElement>>('googleLoginButton');
 
     protected readonly isPasswordVisible = signal(false);
+    protected readonly passwordMaximumLength = AUTH_PASSWORD_MAX_LENGTH;
     protected readonly passwordInputType = computed<'password' | 'text'>(() => (this.isPasswordVisible() ? 'text' : 'password'));
     protected readonly passwordToggleIcon = computed(() => (this.isPasswordVisible() ? 'visibility_off' : 'visibility'));
     protected readonly passwordToggleLabelKey = computed(() =>

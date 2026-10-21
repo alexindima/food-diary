@@ -1,9 +1,10 @@
 import { DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, Subject } from 'rxjs';
+import { Subject, switchMap, takeUntil, timer } from 'rxjs';
 
 export class AutosaveQueue<T> {
     private readonly queue = new Subject<void>();
+    private readonly cancelPendingFlush = new Subject<void>();
     private pendingValue!: T;
     private hasPendingValue = false;
 
@@ -13,9 +14,14 @@ export class AutosaveQueue<T> {
         private readonly isBusy: () => boolean,
         private readonly persist: (value: T) => void,
     ) {
-        this.queue.pipe(debounceTime(this.debounceMs), takeUntilDestroyed(destroyRef)).subscribe(() => {
-            this.flush();
-        });
+        this.queue
+            .pipe(
+                switchMap(() => timer(this.debounceMs).pipe(takeUntil(this.cancelPendingFlush))),
+                takeUntilDestroyed(destroyRef),
+            )
+            .subscribe(() => {
+                this.flush();
+            });
     }
 
     public schedule(value: T): void {
@@ -84,6 +90,7 @@ export class AutosaveQueue<T> {
 
     private clear(): void {
         this.hasPendingValue = false;
+        this.cancelPendingFlush.next();
     }
 }
 

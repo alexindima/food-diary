@@ -12,6 +12,8 @@ import type { User } from '../../../../shared/models/user.data';
 import type { AuthResponse, ConfirmPasswordResetRequest } from '../../models/auth.data';
 import { PasswordResetComponent } from './password-reset';
 
+const PASSWORD_CONTRACT_MAX_LENGTH = 256;
+
 const USER: User = {
     id: entityId<'user'>('user-1'),
     email: 'user@example.com',
@@ -121,6 +123,30 @@ describe('PasswordResetComponent form validation', () => {
 
         component['form'].confirmPassword().value.set('validPass1');
         expect(component['form'].confirmPassword().getError('matchField')).toBeUndefined();
+    });
+
+    it('rejects a matching 257-character password without calling the API', async () => {
+        const { component, authServiceSpy } = createComponent();
+        component['formModel'].set({
+            password: 'p'.repeat(PASSWORD_CONTRACT_MAX_LENGTH + 1),
+            confirmPassword: 'p'.repeat(PASSWORD_CONTRACT_MAX_LENGTH + 1),
+        });
+
+        await component['submitAsync']();
+
+        expect(component['form'].password().getError('maxLength')).toBeDefined();
+        expect(authServiceSpy.confirmPasswordReset).not.toHaveBeenCalled();
+    });
+
+    it('submits the literal 256-character boundary without trimming', async () => {
+        const { component, authServiceSpy } = createComponent();
+        const password = ` ${'p'.repeat(PASSWORD_CONTRACT_MAX_LENGTH - 2)} `;
+        authServiceSpy.confirmPasswordReset.mockReturnValue(of(AUTH_RESPONSE));
+        component['formModel'].set({ password, confirmPassword: password });
+
+        await component['submitAsync']();
+
+        expect(authServiceSpy.confirmPasswordReset).toHaveBeenCalledWith(expect.objectContaining({ newPassword: password }));
     });
 });
 

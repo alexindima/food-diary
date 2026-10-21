@@ -3,6 +3,7 @@ import { computed, inject, PLATFORM_ID, Service, signal } from '@angular/core';
 
 import type { FdTourDefinition, FdTourSnapshot, FdTourStartOptions, FdTourStep } from './fd-tour.types';
 import { FD_TOUR_STORAGE } from './fd-tour-storage';
+import { findTourTarget } from './fd-tour-target';
 
 type ActiveTour = {
     tour: FdTourDefinition;
@@ -142,11 +143,7 @@ export class FdTourService {
             return null;
         }
 
-        try {
-            return this.document.querySelector(step.target);
-        } catch {
-            return null;
-        }
+        return findTourTarget(this.document, step.target);
     }
 
     private finish(): void {

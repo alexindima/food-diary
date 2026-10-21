@@ -66,8 +66,8 @@ function createStatisticsFacadeMock(): StatisticsFacadeMock {
             days: [],
         },
         body: {
-            weight: { key: 'weight', current: null, change: null, goal: null, timeframeDays: 7, points: [] },
-            waist: { key: 'waist', current: null, change: null, goal: null, timeframeDays: 7, points: [] },
+            weight: { key: 'weight', current: null, change: null, goal: null, timeframeDays: 7, measurementCount: 0, points: [] },
+            waist: { key: 'waist', current: null, change: null, goal: null, timeframeDays: 7, measurementCount: 0, points: [] },
         },
     };
 

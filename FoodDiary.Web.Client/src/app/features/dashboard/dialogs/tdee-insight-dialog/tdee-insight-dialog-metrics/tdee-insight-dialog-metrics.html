@@ -3,7 +3,7 @@
         <div class="tdee-dialog__metric fd-stack fd-gap-xxs">
             <span class="tdee-dialog__metric-label fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_CARD.FORMULA_ESTIMATE' | translate }}</span>
             <span class="tdee-dialog__metric-value fd-ui-stat-value"
-                >{{ insight().estimatedTdee | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span
+                >{{ insight().estimatedTdee | number: '1.0-0' : locale() }} {{ 'TDEE_CARD.KCAL' | translate }}</span
             >
         </div>
     }
@@ -11,7 +11,7 @@
         <div class="tdee-dialog__metric fd-stack fd-gap-xxs">
             <span class="tdee-dialog__metric-label fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_DIALOG.ADAPTIVE' | translate }}</span>
             <span class="tdee-dialog__metric-value fd-ui-stat-value"
-                >{{ insight().adaptiveTdee | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span
+                >{{ insight().adaptiveTdee | number: '1.0-0' : locale() }} {{ 'TDEE_CARD.KCAL' | translate }}</span
             >
         </div>
     }
@@ -19,7 +19,7 @@
         <div class="tdee-dialog__metric fd-stack fd-gap-xxs">
             <span class="tdee-dialog__metric-label fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_CARD.BMR' | translate }}</span>
             <span class="tdee-dialog__metric-value fd-ui-stat-value"
-                >{{ insight().bmr | number: '1.0-0' }} {{ 'TDEE_CARD.KCAL' | translate }}</span
+                >{{ insight().bmr | number: '1.0-0' : locale() }} {{ 'TDEE_CARD.KCAL' | translate }}</span
             >
         </div>
     }
@@ -27,7 +27,9 @@
         <div class="tdee-dialog__metric fd-stack fd-gap-xxs">
             <span class="tdee-dialog__metric-label fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_CARD.WEIGHT_TREND' | translate }}</span>
             <span class="tdee-dialog__metric-value fd-ui-stat-value"
-                >{{ displayWeightTrend() }} {{ measurements.weightUnitKey() | translate }}/{{ 'GENERAL.TIME.WEEK_SHORT' | translate }}</span
+                >{{ displayWeightTrend() | number: '1.1-1' : locale() }} {{ measurements.weightUnitKey() | translate }}/{{
+                    'GENERAL.TIME.WEEK_SHORT' | translate
+                }}</span
             >
         </div>
     }

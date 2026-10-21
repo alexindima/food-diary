@@ -3,7 +3,7 @@ import { submit } from '@angular/forms/signals';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -14,6 +14,8 @@ import { AuthComponent } from './auth';
 import { AuthFlowFacade } from './auth-lib/auth-flow.facade';
 import { AuthFormManager } from './auth-lib/auth-form.manager';
 import { AuthGoogleManager } from './auth-lib/auth-google.manager';
+
+const PASSWORD_CONTRACT_MAX_LENGTH = 256;
 
 type AuthComponentTestContext = {
     authFlowFacadeSpy: {
@@ -209,6 +211,18 @@ describe('AuthComponent login', () => {
 
         expect(authFlowFacadeSpy.login).toHaveBeenCalledOnce();
         expect(component['globalError']()).toBe('FORM_ERRORS.INVALID_CREDENTIALS');
+    });
+
+    it('blocks oversized native autofill values before the login API', async () => {
+        const { authFlowFacadeSpy, component, fixture } = createComponent('login', true);
+        const element = fixture.nativeElement as HTMLElement;
+        loginInput(element, 'email').value = 'user@example.test';
+        loginInput(element, 'password').value = 'p'.repeat(PASSWORD_CONTRACT_MAX_LENGTH + 1);
+
+        await submit(component['loginForm']);
+
+        expect(component['loginForm'].password().getError('maxLength')).toBeDefined();
+        expect(authFlowFacadeSpy.login).not.toHaveBeenCalled();
     });
 
     it('should show invalid credentials error and hide restore action', async () => {
@@ -411,6 +425,27 @@ describe('AuthComponent register results', () => {
 });
 
 describe('AuthComponent password reset', () => {
+    it('clears a failed request before retry and keeps the successful confirmation free of the old error', async () => {
+        const { authFlowFacadeSpy, component, fixture } = createComponent();
+        const retry = new Subject<'success'>();
+        authFlowFacadeSpy.requestPasswordReset.mockReturnValueOnce(of('unknown')).mockReturnValueOnce(retry.asObservable());
+        component['onPasswordResetOpen']();
+        component['passwordResetModel'].set({ email: 'user@example.test' });
+        fixture.detectChanges();
+        await component['requestPasswordResetAsync']();
+        expect(component['globalError']()).toBe('FORM_ERRORS.UNKNOWN');
+
+        const pending = component['requestPasswordResetAsync']();
+        expect(component['globalError']()).toBeNull();
+        expect(component['isPasswordResetting']()).toBe(true);
+        retry.next('success');
+        retry.complete();
+        await pending;
+
+        expect(component['passwordResetSent']()).toBe(true);
+        expect(component['globalError']()).toBeNull();
+    });
+
     it('should request password reset through the configured signal form action', async () => {
         const { authFlowFacadeSpy, component } = createComponent();
         authFlowFacadeSpy.requestPasswordReset.mockReturnValue(of('success'));

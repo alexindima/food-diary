@@ -39,7 +39,9 @@ it('uses totals and recorded days for averages instead of averaging chart bucket
         statistics,
         user: USER,
         weightPoints: [],
+        weightMeasurements: { first: null, last: null, count: 0 },
         waistPoints: [],
+        waistMeasurements: { first: null, last: null, count: 0 },
         quantizationDays: 30,
         periodDays: 365,
         formatDate: date => date.toISOString(),
@@ -56,7 +58,9 @@ describe('statistics dashboard card mapper', () => {
             statistics: null,
             user: USER,
             weightPoints: [],
+            weightMeasurements: { first: null, last: null, count: 0 },
             waistPoints: [],
+            waistMeasurements: { first: null, last: null, count: 0 },
             quantizationDays: 1,
             periodDays: 7,
             formatDate: date => date.toISOString(),
@@ -86,13 +90,15 @@ describe('statistics dashboard card mapper', () => {
             statistics,
             user: USER,
             weightPoints: [
-                { label: '2 Aug', value: 116 },
-                { label: '3 Aug', value: 113 },
+                { label: '2 Aug', value: 115.5 },
+                { label: '3 Aug', value: 113.5 },
             ],
             waistPoints: [
                 { label: '2 Aug', value: 101 },
                 { label: '3 Aug', value: 99 },
             ],
+            weightMeasurements: { first: 116, last: 113, count: 22 },
+            waistMeasurements: { first: 101, last: 99, count: 21 },
             quantizationDays: 1,
             periodDays: 7,
             formatDate: date => date.toISOString().slice(0, 10),
@@ -104,6 +110,9 @@ describe('statistics dashboard card mapper', () => {
         expect(view.overview.nutrients[0]).toEqual({ key: 'protein', current: 45, goal: 100 });
         expect(view.days[1]?.calories).toBeNull();
         expect(view.body.weight).toMatchObject({ key: 'weight', current: 113, change: -3, goal: 75, timeframeDays: 7 });
+        expect(view.body.weight.measurementCount).toBe(22);
+        expect(view.body.weight.points).toHaveLength(2);
+        expect(view.body.weight.points[1]?.value).toBe(113.5);
         expect(view.body.waist).toMatchObject({ key: 'waist', current: 99, change: -2, goal: 80, timeframeDays: 7 });
         expect(view.stability).toMatchObject({
             stableCount: 1,
@@ -147,7 +156,9 @@ describe('statistics meal structure mapper', () => {
             statistics,
             user: USER,
             weightPoints: [],
+            weightMeasurements: { first: null, last: null, count: 0 },
             waistPoints: [],
+            waistMeasurements: { first: null, last: null, count: 0 },
             quantizationDays: 1,
             periodDays: 7,
             formatDate: date => date.toISOString(),
@@ -179,7 +190,9 @@ describe('statistics meal structure mapper', () => {
             statistics,
             user: USER,
             weightPoints: [],
+            weightMeasurements: { first: null, last: null, count: 0 },
             waistPoints: [],
+            waistMeasurements: { first: null, last: null, count: 0 },
             quantizationDays: 1,
             periodDays: 1,
             formatDate: date => date.toISOString().slice(0, 10),

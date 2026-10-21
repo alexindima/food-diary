@@ -1,7 +1,7 @@
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormField, max, maxLength, min, required, validate } from '@angular/forms/signals';
+import { disabled, form, FormField, max, maxLength, min, required, validate } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
@@ -89,6 +89,7 @@ export class AdminLessonEditDialogComponent {
         isPublished: this.data.isPublished ?? !this.isNew,
     });
     protected readonly form = form(this.formModel, path => {
+        disabled(path, { when: () => this.isSaving() });
         required(path.title);
         maxLength(path.title, TITLE_MAX_LENGTH);
         required(path.content);

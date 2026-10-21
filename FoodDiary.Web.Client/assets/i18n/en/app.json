@@ -282,7 +282,7 @@
                 "WAIST": "Waist",
                 "CURRENT_WEIGHT": "Current weight",
                 "CURRENT_WAIST": "Current waist",
-                "LATEST_MEASUREMENT": "Latest measurement",
+                "LATEST_MEASUREMENT": "Latest measurement in this period",
                 "INSIGHTS_TITLE": "What changed",
                 "PERIOD_CHANGE": "Period change",
                 "CHANGE": "Change over {{days}} days",

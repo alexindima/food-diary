@@ -102,9 +102,9 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
     private static IOrderedQueryable<Recipe> ApplyOrdering(IQueryable<Recipe> query, string sortBy) => sortBy switch {
         "oldest" => query.AsNoTracking().OrderBy(r => r.CreatedOnUtc).ThenBy(r => r.Id),
         "slowest" => query.AsNoTracking().OrderBy(r => r.PrepTime == null && r.CookTime == null)
-            .ThenByDescending(r => (r.PrepTime ?? 0) + (r.CookTime ?? 0)).ThenBy(r => r.Id),
+            .ThenByDescending(r => (long)(r.PrepTime ?? 0) + (r.CookTime ?? 0)).ThenBy(r => r.Id),
         "fastest" => query.AsNoTracking().OrderBy(r => r.PrepTime == null && r.CookTime == null)
-            .ThenBy(r => (r.PrepTime ?? 0) + (r.CookTime ?? 0)).ThenBy(r => r.Id),
+            .ThenBy(r => (long)(r.PrepTime ?? 0) + (r.CookTime ?? 0)).ThenBy(r => r.Id),
 #pragma warning disable MA0011 // EF translates parameterless ToLower to PostgreSQL lower; culture overloads cannot be translated.
         "name" => query.AsNoTracking().OrderBy(r => r.Name.ToLower()).ThenBy(r => r.Id),
         "name_desc" => query.AsNoTracking().OrderByDescending(r => r.Name.ToLower()).ThenBy(r => r.Id),
@@ -129,7 +129,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
         if (filters.MaxTotalTime.HasValue) {
             int maxTotalTime = filters.MaxTotalTime.Value;
             query = query.AsNoTracking().Where(r => (r.PrepTime != null || r.CookTime != null) &&
-                (r.PrepTime ?? 0) + (r.CookTime ?? 0) <= maxTotalTime);
+                (long)(r.PrepTime ?? 0) + (r.CookTime ?? 0) <= maxTotalTime);
         }
 
         if (filters.CaloriesFrom.HasValue) {

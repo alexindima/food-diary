@@ -20,8 +20,10 @@
         <fd-ui-input
             type="number"
             size="sm"
-            min="0"
+            [minimum]="1"
             [label]="'RECIPE_LIST.FILTER_MAX_TOTAL_TIME' | translate"
+            [maximum]="maxTotalTimeMaximum"
+            [error]="maxTotalTimeError() ? ('FORM_ERRORS.INVALID_NUMBER' | translate) : null"
             [(value)]="maxTotalTimeValue"
         />
     </section>

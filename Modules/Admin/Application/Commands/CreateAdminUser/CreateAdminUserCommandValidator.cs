@@ -25,7 +25,7 @@ public sealed class CreateAdminUserCommandValidator : AbstractValidator<CreateAd
             .Must(role => !string.IsNullOrWhiteSpace(role) && AllowedRoles.Contains(role.Trim()))
             .WithMessage("Unknown role.");
         RuleFor(command => command.TemporaryPassword)
-            .MinimumLength(AuthenticationInputLimits.MinimumPasswordLength)
+            .Must(password => password is null || password.Trim().Length >= AuthenticationInputLimits.MinimumPasswordLength)
             .When(command => !command.GeneratePassword)
             .WithMessage($"Temporary password must be at least {AuthenticationInputLimits.MinimumPasswordLength} characters.")
             .MaximumLength(AuthenticationInputLimits.MaximumPasswordLength)

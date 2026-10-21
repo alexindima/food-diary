@@ -79,6 +79,7 @@ export type StatisticsBodyMetricData = {
     change: number | null;
     goal: number | null;
     timeframeDays: number;
+    measurementCount: number;
     points: readonly FdUiLineChartPoint[];
 };
 

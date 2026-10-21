@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { form, FormField, FormRoot, minLength, required, validate } from '@angular/forms/signals';
+import { form, FormField, FormRoot, maxLength, minLength, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
@@ -9,7 +9,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { AUTH_PASSWORD_MIN_LENGTH } from '../../../../shared/auth/auth.constants';
+import { AUTH_PASSWORD_MAX_LENGTH, AUTH_PASSWORD_MIN_LENGTH } from '../../../../shared/auth/auth.constants';
 import { UserFacade } from '../../../../shared/lib/user.facade';
 
 type RequiredPasswordChangeFormModel = {
@@ -32,6 +32,7 @@ export class RequiredPasswordChangeComponent {
     private readonly translateService = inject(TranslateService);
 
     private changedPassword: string | null = null;
+    protected readonly passwordMaximumLength = AUTH_PASSWORD_MAX_LENGTH;
     protected readonly isSubmitting = signal(false);
     protected readonly errorMessage = signal<string | null>(null);
     protected readonly formModel = signal<RequiredPasswordChangeFormModel>({
@@ -41,9 +42,12 @@ export class RequiredPasswordChangeComponent {
     });
     protected readonly form = form(this.formModel, path => {
         required(path.currentPassword);
+        maxLength(path.currentPassword, AUTH_PASSWORD_MAX_LENGTH);
         required(path.newPassword);
         minLength(path.newPassword, AUTH_PASSWORD_MIN_LENGTH);
+        maxLength(path.newPassword, AUTH_PASSWORD_MAX_LENGTH);
         required(path.confirmPassword);
+        maxLength(path.confirmPassword, AUTH_PASSWORD_MAX_LENGTH);
         validate(path.confirmPassword, ({ value }) => (value() === this.formModel().newPassword ? undefined : { kind: 'matchField' }));
     });
 

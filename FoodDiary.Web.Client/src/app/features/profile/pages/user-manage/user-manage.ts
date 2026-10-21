@@ -389,7 +389,17 @@ export class UserManageComponent {
     }
 
     protected startUserManageTour(force = true): void {
-        this.tourService.start(this.localizedTour.build(USER_MANAGE_TOUR), { force });
+        const tour = this.localizedTour.build(USER_MANAGE_TOUR);
+        const formElement = this.userFormElement()?.nativeElement;
+        if (formElement !== undefined && this.isBrowser) {
+            for (const step of tour.steps) {
+                const section = formElement.querySelector(step.target)?.closest('details');
+                if (section !== null && section !== undefined) {
+                    this.renderer.setProperty(section, 'open', true);
+                }
+            }
+        }
+        this.tourService.start(tour, { force });
     }
 
     protected onUserFormInput(event?: Event): void {

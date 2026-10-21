@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { disabled, form, FormField, FormRoot, min, pattern, required } from '@angular/forms/signals';
+import { disabled, form, FormField, FormRoot, max, min, pattern, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCheckboxComponent, FdUiIconComponent } from 'fd-ui-kit';
@@ -10,6 +10,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
+import type { Subscription } from 'rxjs';
 
 import { AdminCatalogFilterComponent, matchesAdminCatalog } from '../../../shared/catalog/admin-catalog-filter';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
@@ -22,6 +23,8 @@ import type {
     AdminAchievementDefinition,
     CreateAdminAchievementDefinitionRequest,
 } from '../models/admin-achievement.data';
+
+const INTEGER_MAX_VALUE = 2147483647;
 
 const EMPTY_MODEL: CreateAdminAchievementDefinitionRequest = {
     key: '',
@@ -61,6 +64,7 @@ export class AdminAchievementsComponent {
     private readonly facade = inject(AdminAchievementsFacade);
     private readonly destroyRef = inject(DestroyRef);
     private readonly translate = inject(TranslateService);
+    private loadRequest?: Subscription;
     protected readonly definitions = signal<AdminAchievementDefinition[]>([]);
     protected readonly editingId = signal<string | null>(null);
     protected readonly editingVersion = signal<number | null>(null);
@@ -78,18 +82,25 @@ export class AdminAchievementsComponent {
     ];
     protected readonly formModel = signal<CreateAdminAchievementDefinitionRequest>({ ...EMPTY_MODEL });
     protected readonly form = form(this.formModel, path => {
+        disabled(path, { when: () => this.isSaving() });
         required(path.key);
         pattern(path.key, /^[a-z0-9_-]+$/);
         disabled(path.key, { when: () => this.editingId() !== null });
         required(path.category);
         required(path.metric);
+        required(path.threshold);
         min(path.threshold, 1);
+        max(path.threshold, INTEGER_MAX_VALUE);
+        validate(path.threshold, ({ value }) => (Number.isInteger(value()) ? undefined : { kind: 'integer' }));
         required(path.titleRu);
         required(path.titleEn);
         required(path.descriptionRu);
         required(path.descriptionEn);
         required(path.icon);
+        required(path.sortOrder);
         min(path.sortOrder, 0);
+        max(path.sortOrder, INTEGER_MAX_VALUE);
+        validate(path.sortOrder, ({ value }) => (Number.isInteger(value()) ? undefined : { kind: 'integer' }));
     });
 
     private readonly route = inject(ActivatedRoute);
@@ -137,9 +148,10 @@ export class AdminAchievementsComponent {
     }
 
     protected load(): void {
+        this.loadRequest?.unsubscribe();
         this.loadFailed.set(false);
         this.isLoading.set(true);
-        this.facade
+        this.loadRequest = this.facade
             .getAll()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
@@ -155,6 +167,10 @@ export class AdminAchievementsComponent {
     }
 
     protected edit(definition: AdminAchievementDefinition): void {
+        if (this.isSaving()) {
+            return;
+        }
+        this.error.set(null);
         this.editingId.set(definition.id);
         this.editingVersion.set(definition.version);
         this.formModel.set({
@@ -173,6 +189,10 @@ export class AdminAchievementsComponent {
     }
 
     protected createNew(): void {
+        if (this.isSaving()) {
+            return;
+        }
+        this.error.set(null);
         this.editingId.set(null);
         this.editingVersion.set(null);
         this.formModel.set({ ...EMPTY_MODEL });

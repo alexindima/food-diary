@@ -9,6 +9,49 @@ import { NavigationService } from '../../../../services/navigation.service';
 import { UserFacade } from '../../../../shared/lib/user.facade';
 import { RequiredPasswordChangeComponent } from './required-password-change';
 
+const PASSWORD_CONTRACT_MAX_LENGTH = 256;
+
+function createBoundaryComponent(): { component: RequiredPasswordChangeComponent; changePassword: ReturnType<typeof vi.fn> } {
+    const changePassword = vi.fn().mockReturnValue(of(true));
+    const fixture = TestBed.configureTestingModule({
+        imports: [RequiredPasswordChangeComponent],
+        providers: [
+            { provide: UserFacade, useValue: { changePassword } },
+            { provide: AuthService, useValue: { completeRequiredPasswordChangeAsync: vi.fn().mockResolvedValue(undefined) } },
+            { provide: NavigationService, useValue: { navigateToHomeAsync: vi.fn().mockResolvedValue(void 0) } },
+            { provide: TranslateService, useValue: { instant: (key: string): string => key } },
+        ],
+    })
+        .overrideComponent(RequiredPasswordChangeComponent, { set: { template: '' } })
+        .createComponent(RequiredPasswordChangeComponent);
+    fixture.detectChanges();
+    return { component: fixture.componentInstance, changePassword };
+}
+
+describe('Required password change boundaries', () => {
+    it.each(['currentPassword', 'newPassword', 'confirmPassword'] as const)('blocks an oversized %s before the API', async field => {
+        const { component, changePassword } = createBoundaryComponent();
+        component['formModel'].set({ currentPassword: 'current-password', newPassword: 'new-password', confirmPassword: 'new-password' });
+        component['form'][field]().value.set('p'.repeat(PASSWORD_CONTRACT_MAX_LENGTH + 1));
+
+        await component['submitAsync']();
+
+        expect(component['form'][field]().getError('maxLength')).toBeDefined();
+        expect(changePassword).not.toHaveBeenCalled();
+    });
+
+    it('submits boundary passwords with literal whitespace preserved', async () => {
+        const { component, changePassword } = createBoundaryComponent();
+        const currentPassword = ` ${'p'.repeat(PASSWORD_CONTRACT_MAX_LENGTH - 2)} `;
+        const newPassword = ` ${'q'.repeat(PASSWORD_CONTRACT_MAX_LENGTH - 2)} `;
+        component['formModel'].set({ currentPassword, newPassword, confirmPassword: newPassword });
+
+        await component['submitAsync']();
+
+        expect(changePassword).toHaveBeenCalledWith({ currentPassword, newPassword });
+    });
+});
+
 describe('RequiredPasswordChangeComponent', () => {
     it('renders the required password-change route with its dependencies', () => {
         const fixture = TestBed.configureTestingModule({

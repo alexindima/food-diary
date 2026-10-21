@@ -111,6 +111,7 @@
                 id="fasting-check-in-notes"
                 [label]="'FASTING.CHECK_IN.NOTES' | translate"
                 [rows]="3"
+                [maxLength]="maxCheckInNotesLength"
                 [value]="notes()()"
                 [placeholder]="'FASTING.CHECK_IN.NOTES_PLACEHOLDER' | translate"
                 (valueChange)="setNotesValue($event)"

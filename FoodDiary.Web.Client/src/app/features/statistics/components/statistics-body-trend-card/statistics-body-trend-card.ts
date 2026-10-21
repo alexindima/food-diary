@@ -72,7 +72,7 @@ export class StatisticsBodyTrendCardComponent {
         };
     });
     protected readonly hasData = computed(() => this.metric().points.some(point => point.value !== null));
-    protected readonly measurementCount = computed(() => this.metric().points.filter(point => point.value !== null).length);
+    protected readonly measurementCount = computed(() => this.metric().measurementCount);
     protected readonly unitKey = computed(() =>
         this.selectedMetric() === 'weight' ? this.measurements.weightUnitKey() : this.measurements.lengthUnitKey(),
     );

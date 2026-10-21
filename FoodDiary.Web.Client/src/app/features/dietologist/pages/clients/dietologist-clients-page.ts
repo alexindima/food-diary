@@ -67,6 +67,7 @@ export class DietologistClientsPageComponent {
     private readonly toastService = inject(FdUiToastService);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
     private readonly languageVersion = signal(0);
+    private attentionLoadSequence = 0;
 
     protected readonly clients = signal<ClientSummary[]>([]);
     protected readonly loading = signal(true);
@@ -250,6 +251,7 @@ export class DietologistClientsPageComponent {
     }
 
     private loadAttentionSignals(): void {
+        const sequence = ++this.attentionLoadSequence;
         this.attentionLoading.set(true);
         this.attentionError.set(false);
         this.dietologistFacade
@@ -257,10 +259,16 @@ export class DietologistClientsPageComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: signals => {
+                    if (sequence !== this.attentionLoadSequence) {
+                        return;
+                    }
                     this.attentionSignals.set(signals);
                     this.attentionLoading.set(false);
                 },
                 error: () => {
+                    if (sequence !== this.attentionLoadSequence) {
+                        return;
+                    }
                     this.attentionSignals.set([]);
                     this.attentionLoading.set(false);
                     this.attentionError.set(true);

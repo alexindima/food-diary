@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "components": 498,
-    "componentsWithoutDirectSpecs": 130,
-    "inputs": 1610,
+    "componentsWithoutDirectSpecs": 129,
+    "inputs": 1614,
     "outputs": 555,
-    "apiCalls": 315,
-    "templatesWithTranslations": 359,
-    "translationKeys": 2162,
-    "consumerEdges": 1271,
+    "apiCalls": 317,
+    "templatesWithTranslations": 360,
+    "translationKeys": 2166,
+    "consumerEdges": 1273,
     "consumedComponents": 317,
     "unconsumedComponents": 180
   },
@@ -572,7 +572,7 @@
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.html",
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.spec.ts"
     },
     {
       "class": "AdminModerationComponent",
@@ -2601,6 +2601,11 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-hint/tdee-insight-dialog-hint.html",
       "inputs": [
         {
+          "name": "locale",
+          "type": "string",
+          "required": true
+        },
+        {
           "name": "hintKey",
           "type": "string | null",
           "required": true
@@ -2626,6 +2631,11 @@
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-metrics/tdee-insight-dialog-metrics.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-metrics/tdee-insight-dialog-metrics.html",
       "inputs": [
+        {
+          "name": "locale",
+          "type": "string",
+          "required": true
+        },
         {
           "name": "insight",
           "type": "TdeeInsight",
@@ -2663,6 +2673,11 @@
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-summary/tdee-insight-dialog-summary.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-summary/tdee-insight-dialog-summary.html",
       "inputs": [
+        {
+          "name": "locale",
+          "type": "string",
+          "required": true
+        },
         {
           "name": "insight",
           "type": "TdeeInsight | null",
@@ -5687,6 +5702,11 @@
         },
         {
           "name": "maximum",
+          "type": "string | number",
+          "required": false
+        },
+        {
+          "name": "minimum",
           "type": "string | number",
           "required": false
         },
@@ -19221,7 +19241,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/statistics",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/api/statistics.service.ts",
-      "line": 26,
+      "line": 38,
       "publicMethod": "getAggregatedStatistics",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.statistics",
@@ -19233,11 +19253,35 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/statistics/summary",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/api/statistics.service.ts",
-      "line": 37,
+      "line": 59,
       "publicMethod": "getSummary",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.statistics",
       "resolvedUrlExpression": "/api/v{version}/statistics/summary"
+    },
+    {
+      "feature": "statistics",
+      "method": "GET",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/weight-entries",
+      "path": "FoodDiary.Web.Client/src/app/features/statistics/api/statistics.service.ts",
+      "line": 60,
+      "publicMethod": "getSummary",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": "environment.apiUrls.statistics",
+      "resolvedUrlExpression": "/api/v{version}/weight-entries"
+    },
+    {
+      "feature": "statistics",
+      "method": "GET",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/waist-entries",
+      "path": "FoodDiary.Web.Client/src/app/features/statistics/api/statistics.service.ts",
+      "line": 61,
+      "publicMethod": "getSummary",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": "environment.apiUrls.statistics",
+      "resolvedUrlExpression": "/api/v{version}/waist-entries"
     },
     {
       "feature": "usda",
@@ -19625,7 +19669,8 @@
         "ADMIN_ACHIEVEMENTS.NEW",
         "ADMIN_ACHIEVEMENTS.RESET",
         "ADMIN_ACHIEVEMENTS.SAVE",
-        "ADMIN_PAGINATION.RANGE"
+        "ADMIN_PAGINATION.RANGE",
+        "DISABLED_HINTS.OPERATION_BUSY"
       ]
     },
     {
@@ -20086,6 +20131,13 @@
         "ADMIN_MODERATION.REPORTED_BY",
         "ADMIN_MODERATION.REVIEWED_BY",
         "ADMIN_MODERATION.TARGET_HISTORY"
+      ]
+    },
+    {
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.html",
+      "keys": [
+        "ADMIN_MODERATION.ACTION_ERROR"
       ]
     },
     {
@@ -22822,6 +22874,7 @@
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.html",
       "keys": [
         "COMMON.CANCEL",
+        "FORM_ERRORS.INVALID_NUMBER",
         "RECIPE_LIST.FILTERS_TITLE",
         "RECIPE_LIST.FILTER_APPLY_BUTTON",
         "RECIPE_LIST.FILTER_CALORIES_FROM",
@@ -23710,6 +23763,7 @@
         "COMMON.MORE_ACTIONS",
         "DISABLED_HINTS.FORM_INVALID",
         "DISABLED_HINTS.OPERATION_BUSY",
+        "FORM_ERRORS.MAX_LENGTH",
         "SHOPPING_LIST.ADD_ITEM_AMOUNT",
         "SHOPPING_LIST.ADD_ITEM_AMOUNT_PLACEHOLDER",
         "SHOPPING_LIST.ADD_ITEM_BUTTON",
@@ -23754,9 +23808,11 @@
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.html",
       "keys": [
         "DISABLED_HINTS.OPERATION_BUSY",
+        "ERRORS.RETRY",
         "SHOPPING_LIST.NEW_LIST_BUTTON",
         "SHOPPING_LIST.NO_LISTS_COPY",
         "SHOPPING_LIST.NO_LISTS_TITLE",
+        "SHOPPING_LIST.SAVE_ERROR",
         "SHOPPING_LIST.SUBTITLE",
         "SHOPPING_LIST.TITLE",
         "SHOPPING_LIST.TOUR.START_TOUR"
@@ -33661,6 +33717,18 @@
       "component": "FdUiFormErrorComponent",
       "selector": "fd-ui-form-error",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "error"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiFormErrorComponent",
+      "selector": "fd-ui-form-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
       "consumerFeature": "auth",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-login-form/auth-login-form.html",
       "occurrences": 1,
@@ -35257,6 +35325,22 @@
       "component": "FdUiInlineAlertComponent",
       "selector": "fd-ui-inline-alert",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert.ts",
+      "consumerFeature": "shopping-lists",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "message",
+        "primaryActionLabel",
+        "severity"
+      ],
+      "outputsHandled": [
+        "primaryAction"
+      ]
+    },
+    {
+      "component": "FdUiInlineAlertComponent",
+      "selector": "fd-ui-inline-alert",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert.ts",
       "consumerFeature": "statistics",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
       "occurrences": 1,
@@ -35579,6 +35663,7 @@
         "error",
         "id",
         "label",
+        "maximumLength",
         "placeholder",
         "suffixButtonAriaLabel",
         "suffixButtonIcon",
@@ -35618,6 +35703,7 @@
         "error",
         "id",
         "label",
+        "maximumLength",
         "placeholder",
         "type"
       ],
@@ -35634,6 +35720,7 @@
         "autocomplete",
         "error",
         "label",
+        "maximumLength",
         "placeholder",
         "type"
       ],
@@ -35649,6 +35736,7 @@
       "inputsUsed": [
         "floatLabel",
         "label",
+        "maximumLength",
         "type"
       ],
       "outputsHandled": []
@@ -35991,6 +36079,7 @@
       "inputsUsed": [
         "floatLabel",
         "label",
+        "maximumLength",
         "placeholder",
         "type"
       ],
@@ -36075,6 +36164,8 @@
       "inputsUsed": [
         "error",
         "label",
+        "maximum",
+        "minimum",
         "size",
         "type",
         "value"
@@ -36130,6 +36221,7 @@
         "error",
         "label",
         "maxLength",
+        "maximum",
         "placeholder",
         "prefixIcon",
         "readonly",
@@ -36264,7 +36356,6 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.html",
       "occurrences": 4,
       "inputsUsed": [
-        "ariaLabel",
         "error",
         "floatLabel",
         "label",
@@ -39069,6 +39160,7 @@
       "inputsUsed": [
         "id",
         "label",
+        "maxLength",
         "placeholder",
         "rows",
         "value"
@@ -39085,6 +39177,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-general-info/meal-general-info.html",
       "occurrences": 1,
       "inputsUsed": [
+        "error",
         "label",
         "placeholder",
         "rows",
@@ -39167,6 +39260,7 @@
       "inputsUsed": [
         "error",
         "label",
+        "maxLength",
         "placeholder",
         "required",
         "rows",
@@ -42746,6 +42840,7 @@
       "inputsUsed": [
         "hintKey",
         "insight",
+        "locale",
         "showSuggestion"
       ],
       "outputsHandled": []
@@ -42759,6 +42854,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "insight",
+        "locale",
         "weightTrendFormatted"
       ],
       "outputsHandled": []
@@ -42786,6 +42882,7 @@
         "confidenceKey",
         "effectiveTdee",
         "insight",
+        "locale",
         "stateKey",
         "summaryKey"
       ],

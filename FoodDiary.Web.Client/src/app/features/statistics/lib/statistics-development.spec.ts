@@ -39,6 +39,8 @@ const summary: StatisticsSummary = {
     ],
     weight: [],
     waist: [],
+    weightMeasurements: { first: null, last: null, count: 0 },
+    waistMeasurements: { first: null, last: null, count: 0 },
 };
 
 describe('live statistics audit context', () => {

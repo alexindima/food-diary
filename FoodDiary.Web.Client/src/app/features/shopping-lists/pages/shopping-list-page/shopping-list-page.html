@@ -23,6 +23,15 @@
         />
     </fd-page-header>
     <fd-page-body>
+        @if (saveError()) {
+            <fd-ui-inline-alert
+                role="alert"
+                severity="danger"
+                [message]="'SHOPPING_LIST.SAVE_ERROR' | translate"
+                [primaryActionLabel]="'ERRORS.RETRY' | translate"
+                (primaryAction)="retrySave()"
+            />
+        }
         @if (isLoading() && !hasLists()) {
             <fd-ui-loader class="shopping-list__loader" />
         } @else if (!hasLists()) {

@@ -6,6 +6,7 @@ import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
 import { localizedPublicPath, publicSiteLocale } from '../../../../../config/public-site-paths';
+import { AUTH_PASSWORD_MAX_LENGTH } from '../../../../../shared/auth/auth.constants';
 import type { RegisterFieldErrors, RegisterFormValues } from '../auth-lib/auth.types';
 
 @Component({
@@ -18,6 +19,7 @@ import type { RegisterFieldErrors, RegisterFormValues } from '../auth-lib/auth.t
 export class AuthRegisterFieldsComponent {
     public readonly form = input.required<FieldTree<RegisterFormValues>>();
     public readonly errors = input.required<RegisterFieldErrors>();
+    protected readonly passwordMaximumLength = AUTH_PASSWORD_MAX_LENGTH;
     private readonly router = inject(Router);
     protected readonly privacyUrl = localizedPublicPath('/privacy-policy', publicSiteLocale(this.router.url));
 }

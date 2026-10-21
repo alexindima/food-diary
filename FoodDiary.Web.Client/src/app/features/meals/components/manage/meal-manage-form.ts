@@ -45,7 +45,7 @@ import { type Meal, type MealAiSessionManageDto, type MealManageDto, MealSourceT
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { MEAL_DEVELOPMENT_TOOLS, type MealDevelopmentDraft } from '../../contracts/meal-development-tools';
-import { MEAL_MANAGE_MIN_ITEM_AMOUNT } from '../../lib/manage/meal-manage.config';
+import { MEAL_MANAGE_COMMENT_LIMIT, MEAL_MANAGE_MIN_ITEM_AMOUNT } from '../../lib/manage/meal-manage.config';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { isExistingMealLocalDateTime } from '../../lib/meal-date-input.utils';
 import { type MealGeneralFieldErrors, MealGeneralInfoComponent } from './meal-general-info/meal-general-info';
@@ -77,7 +77,7 @@ import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar/meal-nut
 import { MealSatietyCardComponent } from './meal-satiety-card/meal-satiety-card';
 
 const MANUAL_NUTRITION_FIELDS = ['manualCalories', 'manualProteins', 'manualFats', 'manualCarbs', 'manualFiber', 'manualAlcohol'] as const;
-const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType'] as const;
+const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType', 'comment'] as const;
 import type { UnsavedEditor } from '../../../../shared/forms/unsaved-editor';
 
 @Component({
@@ -165,6 +165,14 @@ export class MealManageFormComponent implements UnsavedEditor {
         path => {
             required(path.date);
             required(path.time);
+            validate(path.comment, ({ value }) =>
+                (value()?.trim().length ?? 0) <= MEAL_MANAGE_COMMENT_LIMIT
+                    ? undefined
+                    : {
+                          kind: 'maxLength',
+                          maxLength: MEAL_MANAGE_COMMENT_LIMIT,
+                      },
+            );
             validate(path.time, context => {
                 const date = context.valueOf(path.date);
                 const time = context.value();
@@ -614,6 +622,7 @@ export class MealManageFormComponent implements UnsavedEditor {
             date: null,
             time: null,
             mealType: null,
+            comment: null,
         };
     }
 

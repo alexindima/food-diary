@@ -33,6 +33,7 @@ const UPDATED_TOTAL_CALORIES = 450;
 const NORMALIZED_SATIETY_LEVEL = 5;
 const STALE_RECIPE_AMOUNT = 999;
 const EXCESS_MANUAL_NUTRIENT = 10_001;
+const MAX_COMMENT_LENGTH = 2048;
 const EMPTY_TOTALS: NutritionTotals = {
     calories: 0,
     proteins: 0,
@@ -89,6 +90,50 @@ describe('MealManageFormComponent input behavior', () => {
         expect(component['mealFormModel']().comment).toBe('Updated comment');
     });
 });
+
+describe('MealManageFormComponent comment boundary', () => {
+    it('rejects an oversized comment before saving and preserves the draft', async () => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        fixture.componentRef.setInput('meal', createMeal({ comment: 'Original' }));
+        fixture.detectChanges();
+        const comment = 'x'.repeat(MAX_COMMENT_LENGTH + 1);
+        component['patchMealFormModel']({ comment, items: [createCommentTestItem()] });
+        component['mealSignalForm'].comment().markAsTouched();
+        fixture.detectChanges();
+
+        await component['onSubmitAsync']();
+
+        expect(component['mealSignalForm']().invalid()).toBe(true);
+        expect(component['mealSignalForm'].comment().errors()).toEqual([
+            expect.objectContaining({ kind: 'maxLength', maxLength: MAX_COMMENT_LENGTH }),
+        ]);
+        expect(component['generalFieldErrors']().comment).not.toBeNull();
+        expect(component['mealFormModel']().comment).toBe(comment);
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+    });
+
+    it.each([null, '', '   ', `  ${'x'.repeat(MAX_COMMENT_LENGTH)}  `])('allows a clear or normalized boundary comment', async comment => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        fixture.componentRef.setInput('meal', createMeal());
+        fixture.detectChanges();
+        component['patchMealFormModel']({ comment, items: [createCommentTestItem()] });
+        fixture.detectChanges();
+
+        await component['onSubmitAsync']();
+
+        expect(component['mealSignalForm'].comment().invalid()).toBe(false);
+        expect(mealManageFacade.submitMealAsync).toHaveBeenCalledOnce();
+    });
+});
+
+function createCommentTestItem(): MealItemFormValues {
+    return createMealItemValue(
+        { ...createEmptyProductSnapshot(), id: entityId<'product'>('product-1'), name: 'Apple' },
+        null,
+        PRODUCT_AMOUNT,
+        MealSourceType.Product,
+    );
+}
 
 describe('MealManageFormComponent native submit behavior', () => {
     it('should prevent native form submit when saving', async () => {
