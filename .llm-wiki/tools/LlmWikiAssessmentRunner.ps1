@@ -1,4 +1,6 @@
 . (Join-Path $PSScriptRoot 'LlmWikiQueryCache.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+Enable-LlmWikiStringDateJsonParsing
 
 function Invoke-LlmWikiAssessment {
     [CmdletBinding()]
@@ -57,6 +59,13 @@ function Invoke-LlmWikiAssessment {
         $gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $repository -Arguments @('rev-parse', '--absolute-git-dir')).Lines[0].Trim()
         $telemetryPath = if ($env:LLM_WIKI_VERIFICATION_TELEMETRY_PATH) { $env:LLM_WIKI_VERIFICATION_TELEMETRY_PATH } else { Join-Path $gitDirectory 'llm-wiki/verification-telemetry.json' }
         if (-not [IO.Path]::IsPathRooted($telemetryPath)) { $telemetryPath = Join-Path $repository $telemetryPath }
+        # Telemetry readers initialize an absent registry. Establish that empty
+        # baseline before hashing, so first use is not mistaken for input drift.
+        if ($ToolName -in @('Manage-LlmWikiTaskWorkspace.ps1', 'Manage-LlmWikiFailurePrediction.ps1', 'Manage-LlmWikiVerificationCost.ps1', 'Manage-LlmWikiChangeCritique.ps1', 'Manage-LlmWikiConfidenceLedger.ps1') -and
+            -not (Test-Path -LiteralPath $telemetryPath -PathType Leaf)) {
+            $telemetry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') metrics -RegistryPath $telemetryPath -Format Json | ConvertFrom-Json
+            if (-not $telemetry.valid) { throw 'Unable to initialize the assessment telemetry baseline.' }
+        }
         $configuration = @(Get-ChildItem Env: | Where-Object Name -like 'LLM_WIKI_*' | Sort-Object Name | ForEach-Object { "$($_.Name)=$($_.Value)" }) -join "`n"
         $environment = [ordered]@{ os = [Runtime.InteropServices.RuntimeInformation]::OSDescription; architecture = [string][Runtime.InteropServices.RuntimeInformation]::OSArchitecture; dotnet = [string](& dotnet --version); npm = [string](& npm --version); node = [string](& node --version); telemetryPath = $telemetryPath; telemetryHash = Get-LlmWikiFileSha256 $telemetryPath; configurationHash = Get-LlmWikiSha256 $(if ($configuration) { $configuration } else { '<none>' }) }
         $cacheArguments = @{ tool = $ToolName; arguments = $argumentIdentity; environment = $environment }

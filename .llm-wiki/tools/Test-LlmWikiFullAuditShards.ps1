@@ -14,8 +14,10 @@ $expected = @{
     Core = @{ count = 336; hash = 'b9adb97be65d5c2c2281a60d7557cd6442fcb1a4dc04a3224103da57cd73f2d1' }
     # The lease assertion requires fresh-orphan recovery with unchanged stable
     # lock identity; its old unlink requirement is replaced. Counts remain frozen.
-    Governed = @{ count = 376; hash = '992083313b939fab1e649bd4f61fe64e1d46bcfb017b0f580e3a41f6d2c2922f' }
-    Workspace = @{ count = 279; hash = 'ba880a6e89141db9d594badfdd783734b187785ad3281d1c4cf755ae336fffd4' }
+    # CI repair retains tamper rejection and adds separate stale-metadata and
+    # genuine unexpected-module cases, increasing Workspace coverage by one.
+    Governed = @{ count = 377; hash = '1b49f8793e5a99120837e1932607a4a05e15ffd3f1e861dfe772fb8d6c73cce5' }
+    Workspace = @{ count = 280; hash = '08a9be46530b81413aa11512cf7a4a3681064181fe231d7fbb5fc4a4d471af79' }
     Orchestration = @{ count = 97; hash = 'fdd52d1221307232c0a905826fd28e98c22428d303ffe571b91210a1a2c2aac4' }
     # Retain durable-memory preservation and add canonical model-outcome
     # registry preservation for every shard; all earlier assertions remain.

@@ -1486,7 +1486,7 @@ try {
             -Format Json | ConvertFrom-Json
         Assert-Wiki (
             -not $tamperedImpactCheck.valid -and
-            @($tamperedImpactCheck.issues) -contains 'Impact actual drifted.' -and
+            -not $tamperedImpactCheck.integrityValid -and
             @($tamperedImpactCheck.issues) -contains 'Impact simulation hash is invalid.'
         ) 'Impact simulation accepted a tampered actual snapshot.'
         [IO.File]::WriteAllText($impactPath, $impactRaw, [Text.UTF8Encoding]::new($false))
@@ -1498,7 +1498,18 @@ try {
             -Format Json | ConvertFrom-Json
         Assert-Wiki (
             -not $unexpectedImpact.valid -and
-            @($unexpectedImpact.simulation.comparison.unexpected.modules) -contains 'Synthetic.UnforecastModule' -and
+            @($unexpectedImpact.simulation.findings.id) -contains 'packet-metadata-stale' -and
+            @($unexpectedImpact.simulation.comparison.unexpected.modules) -notcontains 'Synthetic.UnforecastModule'
+        ) 'Impact simulation did not distinguish stale packet metadata from current module impact.'
+        $unexpectedImpactPacket = $impactPacketRaw | ConvertFrom-Json
+        $unexpectedImpactPacket.diff.changedPaths = @($unexpectedImpactPacket.diff.changedPaths) + 'Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs'
+        [IO.File]::WriteAllText($impactPacketPath, (($unexpectedImpactPacket | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        $unexpectedImpact = & (Join-Path $toolsRoot 'Manage-LlmWikiImpactSimulation.ps1') assess `
+            -WorkspacePath $taskWorkspacePath `
+            -Format Json | ConvertFrom-Json
+        Assert-Wiki (
+            -not $unexpectedImpact.valid -and
+            @($unexpectedImpact.simulation.comparison.unexpected.modules).Count -gt 0 -and
             @($unexpectedImpact.simulation.findings.id) -contains 'unexpected-modules'
         ) 'Impact simulation did not block an unforecast downstream module.'
     } finally {

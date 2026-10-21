@@ -81,7 +81,9 @@ const TEST_IMAGE_URLS = [
 ] as const;
 const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     { path: '/open-food-facts/products', createResponse: () => [] },
+    { path: '/weight-entries', createResponse: () => [] },
     { path: '/weight-entries/latest', createResponse: () => null },
+    { path: '/waist-entries', createResponse: () => [] },
     { path: '/waist-entries/latest', createResponse: () => null },
     { path: '/products/suggestions', createResponse: () => [] },
     { path: '/favorite-meals/check/e09f5f5f-a5d9-5af4-8045-2946ea17eb0d', createResponse: () => false },

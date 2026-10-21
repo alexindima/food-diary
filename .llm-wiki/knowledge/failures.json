@@ -57,6 +57,33 @@
       ]
     },
     {
+      "id": "wiki-assessment-cold-telemetry-baseline",
+      "symptom": "On a fresh clone, the governed-delivery focused regression rejects FailurePrediction with Assessment inputs changed while running; CI d04aa2965, run 39583146487.",
+      "cause": "The cache hashes an absent telemetry registry, then the read-only prediction initializes its empty registry. The before and after input hashes differ even though no evidence or source changed.",
+      "fix": "Initialize the empty telemetry baseline before fingerprinting assessments that consume it. Continue rejecting real source, evidence, policy or telemetry drift during execution.",
+      "pathPatterns": [
+        "^\\.llm-wiki/tools/(LlmWikiAssessmentRunner|Manage-LlmWikiFailurePrediction|Test-LlmWikiFeedbackReliability)\\.ps1$"
+      ],
+      "verification": [
+        "Reproduced in Linux with Node 22.23.3, PowerShell 7.6.6 and SDK 10.0.102: .artifacts/wiki-ci-repair/linux-feedback-before.log",
+        "Linux governed-delivery passed including isolated absent telemetry and in-flight source drift: .artifacts/wiki-ci-repair/linux-governed-after.log"
+      ]
+    },
+    {
+      "id": "wiki-assessment-worker-json-date-lineage",
+      "symptom": "Workspace audit critique rejects a valid saved confidence ledger with Confidence ledger hash is invalid after crossing an assessment process boundary; CI d04aa2965, run 39583146487.",
+      "cause": "The audit preserves JSON dates as strings, while a fresh worker uses automatic timestamp parsing. Re-serializing the rehydrated CLR date changes the persisted payload hash.",
+      "fix": "Apply the existing LlmWikiJson string-date policy in the observed worker and assessment caller before reading JSON. Preserve independent hash and tamper validation.",
+      "pathPatterns": [
+        "^\\.llm-wiki/tools/(Invoke-LlmWikiObservedStage|LlmWikiAssessmentRunner|Manage-LlmWikiConfidenceLedger|Test-LlmWikiFeedbackReliability)\\.ps1$"
+      ],
+      "verification": [
+        "Original Workspace audit reproduced all three CI errors in Linux: .artifacts/wiki-ci-repair/linux-workspace-before.log",
+        "Windows Pure reliability regressions passed: .artifacts/wiki-ci-repair/windows-pure-after.log",
+        "Linux governed-delivery passed including saved confidence ledger verification in a fresh worker: .artifacts/wiki-ci-repair/linux-governed-after.log"
+      ]
+    },
+    {
       "id": "wiki-concurrent-index-scheduler-race",
       "symptom": "LLM Wiki CI intermittently fails the index-selection smoke after a successful concurrent index refresh; the waiter reruns or misses the lock overlap window.",
       "cause": "The concurrency regression used a roughly three-second domain-data generator. Under parallel Linux runner load, the parent can observe lock ownership near process completion and start the waiter after the owner releases the lock.",

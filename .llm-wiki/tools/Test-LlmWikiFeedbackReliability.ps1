@@ -40,7 +40,8 @@ $count = if (Test-Path -LiteralPath $counter) { [int][IO.File]::ReadAllText($cou
 [IO.File]::WriteAllText($counter, [string]($count + 1))
 Start-Sleep -Milliseconds 1200
 if (Test-Path -LiteralPath (Join-Path $root "$WorkspacePath/mutate.txt")) { [IO.File]::AppendAllText((Join-Path $root 'src/value.txt'), 'mutation') }
-@{ valid = [IO.File]::ReadAllText((Join-Path $root "$WorkspacePath/valid.txt")) -eq 'true'; call = $count + 1 } | ConvertTo-Json
+$timestamp = '{"value":"2026-01-01T00:04:30.0000000Z"}' | ConvertFrom-Json
+@{ valid = [IO.File]::ReadAllText((Join-Path $root "$WorkspacePath/valid.txt")) -eq 'true'; call = $count + 1; stringDate = $timestamp.value -is [string] } | ConvertTo-Json
 '@
         [IO.File]::WriteAllText((Join-Path $tools 'Manage-LlmWikiRequirementModel.ps1'), $stub)
         $null = New-Item -ItemType Directory -Path (Join-Path $fixture '.llm-wiki/reviews'),(Join-Path $fixture '.llm-wiki/workflows'),(Join-Path $fixture '.llm-wiki/generated') -Force
@@ -56,6 +57,7 @@ if (Test-Path -LiteralPath (Join-Path $root "$WorkspacePath/mutate.txt")) { [IO.
         $messages = @(Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiRequirementModel.ps1' -Arguments $arguments -HeartbeatSeconds 1 6>&1)
         Assert-Reliability (($messages -join "`n") -match 'running, .*elapsed') 'A slow stage emitted no heartbeat.'
         $first = @($messages | Where-Object { $_ -is [pscustomobject] -and $_.PSObject.Properties['valid'] })[0]
+        Assert-Reliability $first.stringDate 'An assessment worker rehydrated persisted date strings as CLR timestamps.'
         $second = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiRequirementModel.ps1' -Arguments $arguments
         Assert-Reliability ($first.valid -and $second.call -eq 1 -and [IO.File]::ReadAllText($counter) -eq '1') 'An unchanged successful assessment was executed twice.'
         [IO.File]::WriteAllText((Join-Path $fixture "$workspace/change-critique.json"), '{}')
@@ -113,9 +115,16 @@ if (Test-Path -LiteralPath (Join-Path $root "$WorkspacePath/mutate.txt")) { [IO.
 if ($Group -in @('Integration', 'All')) {
     $workspace = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repository -Name 'feedback-refresh'
     $absolute = Join-Path $repository $workspace
+    $previousTelemetryPath = $env:LLM_WIKI_VERIFICATION_TELEMETRY_PATH
+    $telemetryPath = Join-Path $repository ".artifacts/llm-wiki/feedback-telemetry-$([guid]::NewGuid().ToString('N')).json"
+    $env:LLM_WIKI_VERIFICATION_TELEMETRY_PATH = $telemetryPath
     try {
         & (Join-Path $PSScriptRoot 'Initialize-LlmWikiTaskWorkspace.ps1') -Objective 'Verify source index metadata refresh.' -Criterion 'The review packet reflects the current source metadata.' -WorkspacePath $workspace -ChangedPath 'docs/backend/BACKEND_MIGRATION_SAFETY.md' | Out-Null
+        Assert-Reliability (-not (Test-Path -LiteralPath $telemetryPath)) 'The fresh-start fixture already has verification telemetry.'
+        $confidence = & (Join-Path $PSScriptRoot 'Manage-LlmWikiConfidenceLedger.ps1') create -WorkspacePath $workspace -AsOfUtc ([DateTime]'2026-01-01T00:04:30Z') -Format Json | ConvertFrom-Json
+        Assert-Reliability ($confidence.valid -and (Test-Path -LiteralPath $telemetryPath)) 'A fresh assessment did not initialize its telemetry baseline.'
         $critique = & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeCritique.ps1') create -WorkspacePath $workspace -Format Json | ConvertFrom-Json
+        Assert-Reliability (@($critique.critique.findings.id) -notcontains 'operability-confidence-invalid') 'A child assessment rejected a valid saved confidence ledger.'
         Assert-Reliability ($critique.valid -and $critique.critique.verdict -in @('reject', 'request-changes')) 'Unresolved acceptance was approved by the optimized critique.'
         $verified = & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeCritique.ps1') verify -WorkspacePath $workspace -Format Json | ConvertFrom-Json
         Assert-Reliability $verified.valid 'Independent verification rejected an unchanged critique.'
@@ -140,6 +149,8 @@ if ($Group -in @('Integration', 'All')) {
         $newIdentity = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskWorkspace.ps1') refresh -WorkspacePath $workspace -PacketInput $packet -Format Json | ConvertFrom-Json
         Assert-Reliability ($newIdentity.reviewReportFreshness.state -eq 'current') 'Refresh returned the stale freshness state of the report it replaced.'
     } finally {
+        $env:LLM_WIKI_VERIFICATION_TELEMETRY_PATH = $previousTelemetryPath
+        if (Test-Path -LiteralPath $telemetryPath) { [IO.File]::Delete($telemetryPath) }
         $owned = [IO.Path]::GetFullPath((Join-Path $repository '.artifacts/llm-wiki/tasks'))
         if ([IO.Path]::GetDirectoryName([IO.Path]::GetFullPath($absolute)) -cne $owned -or [IO.Path]::GetFileName($absolute) -notmatch '^\.smoke-') { throw 'Task fixture cleanup escaped its owned scope.' }
         if (Test-Path -LiteralPath $absolute) { Remove-Item -LiteralPath $absolute -Recurse -Force }

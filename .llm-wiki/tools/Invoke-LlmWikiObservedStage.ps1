@@ -13,6 +13,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+Enable-LlmWikiStringDateJsonParsing
 $json = if ($ArgumentsPath) {
     [IO.File]::ReadAllText($ArgumentsPath)
 } elseif ($ArgumentsBase64) {

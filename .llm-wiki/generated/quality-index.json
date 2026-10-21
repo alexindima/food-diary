@@ -1570,11 +1570,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1",
-      "nonBlankLines": 71,
+      "nonBlankLines": 73,
       "decisionPoints": 10,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.42
+      "structuralRiskScore": 18.46
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
@@ -1634,11 +1634,11 @@
     },
     {
       "path": ".llm-wiki/tools/LlmWikiAssessmentRunner.ps1",
-      "nonBlankLines": 140,
-      "decisionPoints": 41,
+      "nonBlankLines": 149,
+      "decisionPoints": 44,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 66.3
+      "structuralRiskScore": 70.98
     },
     {
       "path": ".llm-wiki/tools/LlmWikiBehaviorSpecification.ps1",
@@ -66186,7 +66186,7 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiJson.ps1",
       "line": 1,
-      "testReferenceCount": 12,
+      "testReferenceCount": 13,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
         ".llm-wiki/tools/Test-LlmWikiBackendModuleModel.ps1",
@@ -66194,6 +66194,7 @@
         ".llm-wiki/tools/Test-LlmWikiGeneratedArtifacts.ps1",
         ".llm-wiki/tools/Test-LlmWikiIndexSelection.ps1",
         ".llm-wiki/tools/Test-LlmWikiModulePageCache.ps1",
+        ".llm-wiki/tools/Test-LlmWikiObservedStageReceipt.ps1",
         ".llm-wiki/tools/Test-LlmWikiOutcomeViews.ps1",
         ".llm-wiki/tools/Test-LlmWikiPortable.ps1",
         ".llm-wiki/tools/Test-LlmWikiQualitySelfCoverage.ps1",
@@ -66618,8 +66619,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
       "line": 1,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiFeedbackReliability.ps1",
         ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],

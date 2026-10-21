@@ -590,14 +590,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/failures.json",
-          "sha256": "a7b38cf9c1bdaf1af4c071fee0c60b775141f66a0b3720009cb9814873dd977f",
-          "reviewReason": "Added one validated schema-1 failure record for contamination of a synthetic model-routing cohort by persisted real outcomes. It records the existing registry-override fix and the passing full Workspace audit with canonical-hash preservation. All prior records and the failure-knowledge CLI remain unchanged."
+          "sha256": "9068f3f1852c22e6b33d70f7ff1256bd269aace053ebcb5041fce020743f3dfc",
+          "reviewReason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass."
         }
       ],
-      "reason": "Added one validated schema-1 failure record for contamination of a synthetic model-routing cohort by persisted real outcomes. It records the existing registry-override fix and the passing full Workspace audit with canonical-hash preservation. All prior records and the failure-knowledge CLI remain unchanged.",
+      "reason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass.",
       "baseRef": "HEAD",
-      "gitHead": "b07f5bc463fec763eac4b3f451f85d8d75dca4c6",
-      "reviewedAtUtc": "2026-10-19T11:27:28.4305994Z"
+      "gitHead": "d04aa29657cd3f0f79ad8e0030eaf3cb893205d4",
+      "reviewedAtUtc": "2026-10-21T10:35:33.6175861Z"
     },
     {
       "pageId": "workflow-failure-prediction",
@@ -686,21 +686,18 @@
     {
       "pageId": "workflow-independent-change-critique",
       "pagePath": ".llm-wiki/workflows/independent-change-critique.md",
-      "pageSha256": "d93e8bf4522a803da1d1a59bd2cd49e0d6a6b39360281f4df4f1792621027fb1",
+      "pageSha256": "8ec418b11d977d6b8bd9c4751053b37736493274bae8ba290d59a08554e3ef1a",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "c0c870c77b35daff84ece6b1d21a3d4129562fe50c02a91825727e408f57825d"
+          "path": ".llm-wiki/tools/LlmWikiAssessmentRunner.ps1",
+          "sha256": "29612ccafc232f0c9fe75f1966bde632b1a95298ba673221dfae6417a830f4f5",
+          "reviewReason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass."
         }
       ],
-      "reason": "Compared task status and completion with this page governance contract. Existing conformance, proof, requirement, impact, repair, confidence and critique gates remain unchanged; report freshness is an additive view and the final report is refreshed before its hash is sealed. Governed-delivery and research-confidence regressions passed.",
+      "reason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:26:46.9891607Z"
+      "gitHead": "d04aa29657cd3f0f79ad8e0030eaf3cb893205d4",
+      "reviewedAtUtc": "2026-10-21T10:35:33.8150797Z"
     },
     {
       "pageId": "workflow-index-pipeline",
@@ -724,8 +721,8 @@
         },
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1",
-          "sha256": "bb38c61924e46bb24d00092f039f0e18a2df7beb4dbd1e57db7ded94a3a0b32a",
-          "reviewReason": "Reviewed optional observed-worker JSON capture and facade forwarding; existing stage fingerprints, generation checks, isolation and source-impact gates remain required."
+          "sha256": "d5a49a7f77b4966048de059af55d13f94341f5e81742a30b33ceb4db2c98793f",
+          "reviewReason": "Reviewed the complete mixed CI repair explicitly, including Wiki implementation and audit assertion inventory, not only its generated provenance. Linux governed-delivery and full Workspace audit pass; Windows desktop/mobile accessibility tests pass with contract-checked history mocks."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
@@ -733,15 +730,25 @@
           "reviewReason": "Reviewed optional observed-worker JSON capture and facade forwarding; existing stage fingerprints, generation checks, isolation and source-impact gates remain required."
         },
         {
+          "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
+          "sha256": "be641090f54a934162033b06b4ed3273650a15c2917b74b4445cb1fe404bc46f",
+          "reviewReason": "Reviewed the complete mixed CI repair explicitly, including Wiki implementation and audit assertion inventory, not only its generated provenance. Linux governed-delivery and full Workspace audit pass; Windows desktop/mobile accessibility tests pass with contract-checked history mocks."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
+          "sha256": "f5e1d1286560e4b67b70967150f5faa91a84a335b8b2746b8a3c2a1c01bbf48d",
+          "reviewReason": "Reviewed the complete mixed CI repair explicitly, including Wiki implementation and audit assertion inventory, not only its generated provenance. Linux governed-delivery and full Workspace audit pass; Windows desktop/mobile accessibility tests pass with contract-checked history mocks."
+        },
+        {
           "path": ".llm-wiki/wiki.ps1",
           "sha256": "3edc96c6c09a714d1182d329d75e7e6a10d9802a7a14a7966abde7aa5ffe850e",
           "reviewReason": "Reviewed optional observed-worker JSON capture and facade forwarding; existing stage fingerprints, generation checks, isolation and source-impact gates remain required."
         }
       ],
-      "reason": "Reviewed optional observed-worker JSON capture and facade forwarding; existing stage fingerprints, generation checks, isolation and source-impact gates remain required.",
+      "reason": "Reviewed the complete mixed CI repair explicitly, including Wiki implementation and audit assertion inventory, not only its generated provenance. Linux governed-delivery and full Workspace audit pass; Windows desktop/mobile accessibility tests pass with contract-checked history mocks.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T02:50:19.239089Z"
+      "gitHead": "d04aa29657cd3f0f79ad8e0030eaf3cb893205d4",
+      "reviewedAtUtc": "2026-10-21T10:51:34.2166840Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1164,29 +1171,23 @@
     {
       "pageId": "workflow-task-workspace",
       "pagePath": ".llm-wiki/workflows/task-workspace.md",
-      "pageSha256": "e7bbcdd3bf36678ac1f01992447ea0fb84eb6b4044cf3f613edd8328576d21ba",
+      "pageSha256": "6d6c49062f2889a7efda36d7303df57f2e74e1a8685c938de9d29e78e5f4f661",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
-          "sha256": "14efea7f02c0e51ef21c05fa5c36b861e47128fac8b262192c65e4478c16fe47"
+          "path": ".llm-wiki/tools/LlmWikiAssessmentRunner.ps1",
+          "sha256": "29612ccafc232f0c9fe75f1966bde632b1a95298ba673221dfae6417a830f4f5",
+          "reviewReason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass."
         },
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "d3aee9f6a0ab8d7696a6c1f9a45fa743374980cd80990133d3e0b484ea00e36f"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "d734ef4370f3d49bf4ee1bf565b90d73bb2a3b6597891b7b24d2b6f726f0fa5d"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
-          "sha256": "d7a60509dc1f56366864f2b221ef03c74ae120e0a1b4780a916946c52ca858af"
+          "path": ".llm-wiki/tools/Test-LlmWikiFeedbackReliability.ps1",
+          "sha256": "e755743dbdefd49e1965dab97e097a257f19786c451bed9928e8bd41d0c26612",
+          "reviewReason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass."
         }
       ],
-      "reason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions.",
+      "reason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T01:55:42.6649317Z"
+      "gitHead": "d04aa29657cd3f0f79ad8e0030eaf3cb893205d4",
+      "reviewedAtUtc": "2026-10-21T10:35:34.2650443Z"
     },
     {
       "pageId": "workflow-test-plan",

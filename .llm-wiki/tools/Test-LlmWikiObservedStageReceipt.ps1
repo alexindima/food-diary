@@ -21,6 +21,7 @@ try {
     $toolsRoot = Join-Path $root '.llm-wiki/tools'
     $null = New-Item -ItemType Directory -Path $toolsRoot -Force
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Invoke-LlmWikiObservedStage.ps1') -Destination $toolsRoot
+    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'LlmWikiJson.ps1') -Destination $toolsRoot
     [IO.File]::WriteAllText((Join-Path $toolsRoot 'pass.ps1'), '# passing child')
     [IO.File]::WriteAllText((Join-Path $toolsRoot 'fail.ps1'), "throw 'fixture child failed'")
     [IO.File]::WriteAllText((Join-Path $toolsRoot 'Get-LlmWikiVerificationStageFingerprint.ps1'), "param([string]`$Stage, [hashtable]`$Arguments) 'fixture-fingerprint'")
