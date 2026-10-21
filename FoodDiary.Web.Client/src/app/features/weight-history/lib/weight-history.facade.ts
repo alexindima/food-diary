@@ -63,6 +63,7 @@ export class WeightHistoryFacade {
     private readonly editingEntryId = signal<string | null>(null);
     private readonly initialized = signal(false);
     private lastLoadedRangeKey: string | null = null;
+    private summaryRequestVersion = 0;
     private currentMeasurementSystem: MeasurementSystem = this.measurements.system();
 
     public readonly selectedRange = signal<WeightHistoryRange>(this.defaultRange);
@@ -410,6 +411,8 @@ export class WeightHistoryFacade {
         }
 
         this.lastLoadedRangeKey = rangeKey;
+        const summaryRequestVersion = ++this.summaryRequestVersion;
+        const updateRollingMonth = this.selectedRange() === 'month';
         this.pageLoadError.set(false);
         this.summaryLoadError.set(false);
         this.isLoading.set(true);
@@ -419,7 +422,9 @@ export class WeightHistoryFacade {
             .pipe(
                 finalize(() => {
                     this.isLoading.set(false);
-                    this.isSummaryLoading.set(false);
+                    if (summaryRequestVersion === this.summaryRequestVersion) {
+                        this.isSummaryLoading.set(false);
+                    }
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
@@ -428,8 +433,10 @@ export class WeightHistoryFacade {
                     const latestEntry = page.entries.at(0) ?? null;
                     this.entries.set(page.entries);
                     this.latestEntry.set(latestEntry);
-                    this.summaryPoints.set(page.summary);
-                    if (this.selectedRange() === 'month') {
+                    if (summaryRequestVersion === this.summaryRequestVersion) {
+                        this.summaryPoints.set(page.summary);
+                    }
+                    if (updateRollingMonth) {
                         this.rollingMonthSummaryPoints.set(page.summary);
                     }
                     this.userHeightCm.set(page.heightCm);
@@ -455,24 +462,33 @@ export class WeightHistoryFacade {
     }
 
     private loadSummary(filters: WeightEntrySummaryFilters, updateRollingMonth = false): void {
+        const summaryRequestVersion = ++this.summaryRequestVersion;
         this.summaryLoadError.set(false);
         this.isSummaryLoading.set(true);
         this.weightEntriesService
             .getSummary(filters)
             .pipe(
                 finalize(() => {
-                    this.isSummaryLoading.set(false);
+                    if (summaryRequestVersion === this.summaryRequestVersion) {
+                        this.isSummaryLoading.set(false);
+                    }
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe({
                 next: points => {
+                    if (summaryRequestVersion !== this.summaryRequestVersion) {
+                        return;
+                    }
                     this.summaryPoints.set(points);
                     if (updateRollingMonth) {
                         this.rollingMonthSummaryPoints.set(points);
                     }
                 },
                 error: () => {
+                    if (summaryRequestVersion !== this.summaryRequestVersion) {
+                        return;
+                    }
                     this.summaryPoints.set([]);
                     this.summaryLoadError.set(true);
                 },

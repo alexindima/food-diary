@@ -9,6 +9,8 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { UserFacade } from '../../../../shared/lib/user.facade';
 import { ChangePasswordDialogComponent, type ChangePasswordDialogData } from './change-password-dialog';
 
+const PASSWORD_CONTRACT_MAX_LENGTH = 256;
+
 let component: ChangePasswordDialogComponent;
 let fixture: ComponentFixture<ChangePasswordDialogComponent>;
 let userServiceSpy: { changePassword: ReturnType<typeof vi.fn>; setPassword: ReturnType<typeof vi.fn> };
@@ -77,6 +79,27 @@ describe('ChangePasswordDialogComponent validation', () => {
 
         component['form'].confirmPassword().value.set('validPass1');
         expect(component['form'].confirmPassword().getError('matchField')).toBeUndefined();
+    });
+
+    it.each(['currentPassword', 'newPassword', 'confirmPassword'] as const)('blocks an oversized %s before the API', async field => {
+        component['formModel'].set({ currentPassword: 'current-password', newPassword: 'new-password', confirmPassword: 'new-password' });
+        component['form'][field]().value.set('p'.repeat(PASSWORD_CONTRACT_MAX_LENGTH + 1));
+
+        await component['submitAsync']();
+
+        expect(component['form'][field]().getError('maxLength')).toBeDefined();
+        expect(userServiceSpy.changePassword).not.toHaveBeenCalled();
+    });
+
+    it('accepts literal boundary passwords without trimming whitespace', async () => {
+        const currentPassword = ` ${'p'.repeat(PASSWORD_CONTRACT_MAX_LENGTH - 2)} `;
+        const newPassword = ` ${'q'.repeat(PASSWORD_CONTRACT_MAX_LENGTH - 2)} `;
+        userServiceSpy.changePassword.mockReturnValue(of(true));
+        component['formModel'].set({ currentPassword, newPassword, confirmPassword: newPassword });
+
+        await component['submitAsync']();
+
+        expect(userServiceSpy.changePassword).toHaveBeenCalledWith({ currentPassword, newPassword });
     });
 });
 

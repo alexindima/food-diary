@@ -177,3 +177,35 @@ describe('AdminLessonsComponent dialog ownership', () => {
         expect(close).not.toHaveBeenCalled();
     });
 });
+
+describe('AdminLessonsComponent refresh ordering', () => {
+    it('retains the lesson created while an earlier list request is pending', async () => {
+        const previous = new Subject<AdminLesson[]>();
+        const refresh = new Subject<AdminLesson[]>();
+        const getAll = vi.fn().mockReturnValueOnce(previous).mockReturnValueOnce(refresh);
+        await TestBed.configureTestingModule({
+            imports: [AdminLessonsComponent],
+            providers: [
+                provideRouter([]),
+                provideTranslateTesting(),
+                { provide: AdminLessonsFacade, useValue: { getAll } },
+                {
+                    provide: FdUiDialogService,
+                    useValue: {
+                        open: (): { afterClosed: () => Observable<boolean> } => ({ afterClosed: (): Observable<boolean> => of(true) }),
+                    },
+                },
+            ],
+        }).compileComponents();
+        const fixture = TestBed.createComponent(AdminLessonsComponent);
+        fixture.detectChanges();
+        fixture.componentInstance['openCreate']();
+        refresh.next([LESSON]);
+        previous.next([]);
+        previous.error(new Error('obsolete request failed'));
+
+        expect(fixture.componentInstance['lessons']()).toEqual([LESSON]);
+        expect(fixture.componentInstance['isLoading']()).toBe(false);
+        expect(fixture.componentInstance['loadFailed']()).toBe(false);
+    });
+});

@@ -1,10 +1,10 @@
-import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiInputComponent, FdUiSelectComponent, FdUiTextareaComponent } from 'fd-ui-kit';
 import { firstValueFrom } from 'rxjs';
 
+import { adminAiPromptFailureKey } from '../lib/admin-ai-prompt-failure';
 import { AdminAiPromptsFacade } from '../lib/admin-ai-prompts.facade';
 import type { AdminAiPromptDraft, AdminAiPromptKey } from '../models/admin-ai-prompt-scenario';
 
@@ -97,19 +97,11 @@ export class AdminAiPromptWorkbenchComponent {
             }
         } catch (error: unknown) {
             if (revision === this.revision()) {
-                this.handleFailure(error, run);
+                this.errorKey.set(adminAiPromptFailureKey(error, run));
             }
         } finally {
             this.busy.set(false);
         }
-    }
-
-    private handleFailure(error: unknown, run: boolean): void {
-        if (error instanceof HttpErrorResponse && error.status === Number(HttpStatusCode.TooManyRequests)) {
-            this.errorKey.set('ADMIN_PROMPTS.TEST_LIMIT');
-            return;
-        }
-        this.errorKey.set(run ? 'ADMIN_PROMPTS.TEST_ERROR' : 'ADMIN_PROMPTS.PREVIEW_ERROR');
     }
 
     protected async uploadAsync(file: File | null | undefined): Promise<void> {

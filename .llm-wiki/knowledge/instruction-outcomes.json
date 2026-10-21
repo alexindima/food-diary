@@ -638,6 +638,115 @@
       "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
       "previousEventHash": "8e10beea154600558d0ef67916d0153fc945bdc2109c3c2da30796e62ec75915",
       "eventHash": "b1613b0531dbc50b5f3a9ac07ccea66bfd1b96b3a65eebacc3b207f1742ae5a4"
+    },
+    {
+      "schemaVersion": 2,
+      "eventId": "ede13ed5f5074914a96d3f67fafa3fc8",
+      "workspace": ".artifacts/llm-wiki/tasks/full-audit-20261021-root",
+      "recordedAtUtc": "2026-10-21T02:19:23.8345314Z",
+      "completionFingerprint": "834f997b35b2903859ab631d2c3995a8f379056da02bfbbfe8067e8ed6c2919a",
+      "retrospectiveHash": "0d9d8635ae819acb8c2bbd53c6543e8f934d9066574c6ad5ef82d90beae61d2a",
+      "instructionSetFingerprint": "2bdef4d3a2458cbc0ab65b116407de04fd7198ac3915074c9eaf72509f589863",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "fingerprint": "997762017a8b9c43002f825cb93149d0e886a415264eea23de89be5b07595e7c"
+        },
+        {
+          "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
+          "fingerprint": "347226dcd3a7a455c30528755d666b270993a0203fa82838a5e491371a5e75de"
+        },
+        {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "fingerprint": "c06c030ad320a945724128a27c81f39aaf9c1ae2156a8162df0e14de6364aaa7"
+        },
+        {
+          "path": "FoodDiary.Web.Client/projects/fd-tour/AGENTS.md",
+          "fingerprint": "6ea423d04f0645a3de4351ba2735ba3679769cdd9fab91adc60f24551bb05a33"
+        },
+        {
+          "path": "FoodDiary.Web.Client/projects/fd-ui-kit/AGENTS.md",
+          "fingerprint": "0ea7f367af008446a9119fa7e2a9b10b2a62bcd4c61569bda347d34a5ef5fd2b"
+        },
+        {
+          "path": "FoodDiary.Web.Client/projects/fooddiary-admin/AGENTS.md",
+          "fingerprint": "973d85ff39c3cf4f86a52463237a53ec84f313f3eedbfca6e9cb201a88d5da96"
+        },
+        {
+          "path": "FoodDiary.Web.Client/src/app/AGENTS.md",
+          "fingerprint": "8b6385621170cecb815d041c32d0d9581767972c153d8395fa328a707c21e865"
+        },
+        {
+          "path": "FoodDiary.Web.Client/src/app/features/AGENTS.md",
+          "fingerprint": "a6d97182073a246c9dc9fa52882726d72824b550ffdcee3c3f587716611c33b7"
+        },
+        {
+          "path": "Modules/Admin/Application/AGENTS.md",
+          "fingerprint": "5aa4db03f31a0c62f927e514e1c9366c35a94926d4423f8ab84294da9b8cf8c3"
+        },
+        {
+          "path": "Modules/Admin/tests/AGENTS.md",
+          "fingerprint": "51f2e4ce8397acae1dca8840dded656563f9edad502f54bb7a645af7c7c1cd9e"
+        },
+        {
+          "path": "Modules/Dietologist/AGENTS.md",
+          "fingerprint": "726c5fa09e76079714be862c74ff2fed7dbdd57427b8eb5f3f71a0bdb748ef84"
+        },
+        {
+          "path": "Modules/Dietologist/Application/AGENTS.md",
+          "fingerprint": "3b69448372157f161b62c9ed1686bd95276fdff75d015384b55a28f73096bd3c"
+        },
+        {
+          "path": "Modules/Meals/Application/AGENTS.md",
+          "fingerprint": "45ce38f61749718af251acae55815d7b13058f833ba807fab9fba5dd5ed1e0bd"
+        },
+        {
+          "path": "Modules/Meals/tests/AGENTS.md",
+          "fingerprint": "179f9961b1e3604eb4be161dc9f1bd98d85007155e614ac98a6963d47b410aef"
+        },
+        {
+          "path": "Modules/Recipes/Application/AGENTS.md",
+          "fingerprint": "8d907a9554d706dce648de661b013add1b328e6cb64e8483aac5a3db8403fb7f"
+        },
+        {
+          "path": "Modules/Recipes/tests/AGENTS.md",
+          "fingerprint": "11b192b27ece03ea5f38fe7fa86342efe7a20f5a28908716f534d6cf56cfc5ba"
+        },
+        {
+          "path": "Platform/tests/AGENTS.md",
+          "fingerprint": "c9d02dd67975643efed7054fb7ea1a0dcca9151f09fbf33b3bf41b96bd7ad575"
+        },
+        {
+          "path": "Shared/FoodDiary.Audit.Contracts/AGENTS.md",
+          "fingerprint": "cfde66a8d661c3c7c2963c53fddcb8ed54178c8d589f37cb3dd29aeb575dde7b"
+        },
+        {
+          "path": "Shared/FoodDiary.Audit.Infrastructure/AGENTS.md",
+          "fingerprint": "d1bbc1f709917cf46b81a08ffa627fcc4a457a75603478a61d41fa8c3831fa3e"
+        }
+      ],
+      "taskSignals": {
+        "riskLevel": "critical",
+        "complexityScore": 100,
+        "complexityBandUpperBound": 100,
+        "cohortKey": "critical|complexity<=100",
+        "modelRouteId": "unrouted",
+        "contextStrategyId": "default"
+      },
+      "outcome": {
+        "score": 71.25,
+        "quality": "good",
+        "readinessScore": 100.0,
+        "confidenceScore": 95.0,
+        "critiqueScore": 90.0,
+        "verificationScore": 0.0,
+        "repairAttempts": 0,
+        "falseNegativeCount": 0
+      },
+      "success": false,
+      "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
+      "previousEventHash": "b1613b0531dbc50b5f3a9ac07ccea66bfd1b96b3a65eebacc3b207f1742ae5a4",
+      "eventHash": "636dd547f8f5fe34787502978418bf739fe65145b1d58693231d817f06a0f202"
     }
   ]
 }

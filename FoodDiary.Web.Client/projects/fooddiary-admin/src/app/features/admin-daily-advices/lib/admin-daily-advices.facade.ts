@@ -1,6 +1,6 @@
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import type { Observable } from 'rxjs';
+import type { Observable, Subscription } from 'rxjs';
 
 import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminDailyAdvicesService } from '../api/admin-daily-advices.service';
@@ -11,6 +11,7 @@ import { isDailyAdviceImport, MAX_ADVICE_IMPORT_BYTES } from './daily-advice-imp
 export class AdminDailyAdvicesFacade {
     private readonly api = inject(AdminDailyAdvicesService);
     private readonly destroyRef = inject(DestroyRef);
+    private loadRequest?: Subscription;
     public readonly advices = signal<AdminDailyAdvice[]>([]);
     public readonly loading = signal(false);
     public readonly loadFailed = signal(false);
@@ -27,9 +28,10 @@ export class AdminDailyAdvicesFacade {
     }
 
     public loadAdvices(): void {
+        this.loadRequest?.unsubscribe();
         this.loading.set(true);
         this.loadFailed.set(false);
-        this.api
+        this.loadRequest = this.api
             .getAll()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({

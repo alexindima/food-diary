@@ -31,6 +31,7 @@ export class AdminDailyAdvicesComponent {
     protected readonly importing = this.facade.importing;
     protected readonly importError = this.facade.importError;
     protected readonly importResult = this.facade.importResult;
+    protected readonly showAdvices = computed(() => this.advices().length > 0 || (!this.loading() && !this.loadFailed()));
     protected readonly pageSize = 25;
     protected readonly page = computed(() => adminPageWithinTotal(this.requestedPage() + 1, this.advices().length, this.pageSize) - 1);
     protected readonly pageItems = computed(() => this.advices().slice(this.page() * this.pageSize, (this.page() + 1) * this.pageSize));

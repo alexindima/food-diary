@@ -1,4 +1,4 @@
-import { normalizeStartOfUtcDay, parseDateValue } from '../lib/local-date.utils';
+import { normalizeStartOfUtcDay, parseCalendarDateUtc } from '../lib/local-date.utils';
 import type { ImageSelectionFields } from './image-upload.data';
 import type { CalendarDate, UtcInstant } from './semantics/date-value';
 import type { ImageAssetId, UserId, WaistGoalId, WeightGoalId } from './semantics/entity-id';
@@ -152,8 +152,10 @@ const normalizeDate = (value: Date | string | null | undefined): Date | null | u
     if (value === null) {
         return null;
     }
-    const date = parseDateValue(value);
-    return date !== null ? normalizeStartOfUtcDay(date) : undefined;
+    if (value instanceof Date) {
+        return Number.isNaN(value.getTime()) ? undefined : normalizeStartOfUtcDay(value);
+    }
+    return parseCalendarDateUtc(value) ?? undefined;
 };
 
 const normalizeNumber = (value: number | null | undefined): number | undefined =>

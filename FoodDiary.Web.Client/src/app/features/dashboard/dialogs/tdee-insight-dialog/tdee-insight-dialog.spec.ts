@@ -1,4 +1,7 @@
+import { registerLocaleData } from '@angular/common';
+import ru from '@angular/common/locales/ru';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { firstValueFrom, Subject } from 'rxjs';
@@ -11,6 +14,31 @@ import { TdeeInsightDialogComponent } from './tdee-insight-dialog';
 const ADAPTIVE_TDEE = 2400;
 const SUGGESTED_TARGET = 2200;
 const FOOTER_ACTION_COUNT = 4;
+registerLocaleData(ru);
+
+describe('TDEE dialog number localization', () => {
+    it('uses the selected language for totals, BMR, weight trend and suggested target, including a live language change', async () => {
+        const { fixture } = await setupComponentAsync(createInsight());
+        const insight = createInsight();
+        const translate = TestBed.inject(TranslateService);
+        const host = fixture.nativeElement as HTMLElement;
+        for (const language of ['ru', 'en']) {
+            translate.setTranslation(language, { TDEE_DIALOG: { SUGGESTED_TARGET: 'Target {{value}}' } }, true);
+            translate.use(language);
+            fixture.detectChanges();
+            await fixture.whenStable();
+            const integer = (value: number): string => new Intl.NumberFormat(language).format(value);
+            expect(host.querySelector('.tdee-dialog__number')?.textContent).toBe(integer(ADAPTIVE_TDEE));
+            expect(Array.from(host.querySelectorAll('.tdee-dialog__metric-value'), element => element.textContent.trim())).toEqual([
+                `${integer(insight.estimatedTdee ?? 0)} TDEE_CARD.KCAL`,
+                `${integer(ADAPTIVE_TDEE)} TDEE_CARD.KCAL`,
+                `${integer(insight.bmr ?? 0)} TDEE_CARD.KCAL`,
+                `${new Intl.NumberFormat(language, { minimumFractionDigits: 1 }).format(insight.weightTrendPerWeek ?? 0)} GENERAL.UNITS.KG/GENERAL.TIME.WEEK_SHORT`,
+            ]);
+            expect(host.querySelector('fd-tdee-insight-dialog-hint')?.textContent).toContain(`Target ${integer(SUGGESTED_TARGET)}`);
+        }
+    });
+});
 
 describe('TdeeInsightDialogComponent', () => {
     it('builds adaptive state and complete setup items from insight', async () => {

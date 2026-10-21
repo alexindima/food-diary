@@ -54,9 +54,10 @@ public sealed class GetAttentionSignalsQueryHandler(
             }
         }
 
-        IReadOnlyList<AuditEntryReadModel> states = await auditReadService.GetRecentAsync(
-            subjectClientUserId: null,
-            limit: 500,
+        IReadOnlyList<AuditEntryReadModel> states = await auditReadService.GetLatestForTargetsAsync(
+            dietologistId.Value,
+            "AttentionSignal",
+            signals.Select(signal => signal.Id).ToArray(),
             cancellationToken).ConfigureAwait(false);
         IReadOnlyList<AttentionSignalModel> visible = [
             .. signals

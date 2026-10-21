@@ -16,6 +16,7 @@ import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 import type { ShoppingListItemId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingListItem } from '../../../../shared/models/shopping-list.data';
 import type { ShoppingListItemFormModel } from '../../lib/shopping-list-form.types';
+import { SHOPPING_ITEM_CATEGORY_LIMIT, SHOPPING_ITEM_NAME_LIMIT, SHOPPING_ITEM_NOTE_LIMIT } from '../../lib/shopping-list-input.constants';
 import { buildShoppingListItemViewModels, buildShoppingListUnitOptions } from '../../lib/shopping-list-item.mapper';
 
 const CHECKED_SETTLE_MS = 300;
@@ -42,6 +43,9 @@ const CHECKED_SETTLE_MS = 300;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShoppingListItemsPanelComponent {
+    protected readonly nameLimit = SHOPPING_ITEM_NAME_LIMIT;
+    protected readonly categoryLimit = SHOPPING_ITEM_CATEGORY_LIMIT;
+    protected readonly noteLimit = SHOPPING_ITEM_NOTE_LIMIT;
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly activeLang = signal(this.translateService.getCurrentLang());

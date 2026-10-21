@@ -49,5 +49,6 @@ function createEmptyGeneralErrors(): MealGeneralFieldErrors {
         date: null,
         time: null,
         mealType: null,
+        comment: null,
     };
 }

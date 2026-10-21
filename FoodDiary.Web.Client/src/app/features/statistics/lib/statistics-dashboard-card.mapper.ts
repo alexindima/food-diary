@@ -1,5 +1,5 @@
 import type { User } from '../../../shared/models/user.data';
-import type { MappedStatistics } from '../models/statistics.data';
+import type { MappedStatistics, StatisticsBodyMeasurements } from '../models/statistics.data';
 import type {
     StatisticsBodyTrendData,
     StatisticsDietStabilityData,
@@ -31,6 +31,8 @@ export type StatisticsDashboardCardsInput = {
     user: User | null;
     weightPoints: ReadonlyArray<{ label: string; value: number | null }>;
     waistPoints: ReadonlyArray<{ label: string; value: number | null }>;
+    weightMeasurements: StatisticsBodyMeasurements;
+    waistMeasurements: StatisticsBodyMeasurements;
     quantizationDays: number;
     periodDays: number;
     formatDate: (date: Date) => string;
@@ -65,8 +67,11 @@ export function buildStatisticsDashboardCardsView(input: StatisticsDashboardCard
         mealStructure: buildMealStructure(statistics),
         stability: buildDietStability(days, calorieGoal, quantizationDays),
         body: {
-            weight: buildBodyMetric('weight', weightPoints, user?.desiredWeightKg ?? null, periodDays),
-            waist: buildBodyMetric('waist', waistPoints, user?.desiredWaistCm ?? null, periodDays),
+            weight: buildBodyMetric('weight', weightPoints, input.weightMeasurements, {
+                goal: user?.desiredWeightKg ?? null,
+                days: periodDays,
+            }),
+            waist: buildBodyMetric('waist', waistPoints, input.waistMeasurements, { goal: user?.desiredWaistCm ?? null, days: periodDays }),
         },
     };
 }
@@ -316,14 +321,20 @@ function createInsight(input: Omit<StatisticsTrendInsight, 'tone' | 'detailKey'>
 function buildBodyMetric(
     key: 'weight' | 'waist',
     points: ReadonlyArray<{ label: string; value: number | null }>,
-    goal: number | null,
-    days: number,
+    measurements: StatisticsBodyMeasurements,
+    { goal, days }: { goal: number | null; days: number },
 ): StatisticsBodyTrendData['weight'] {
-    const values = points.filter((point): point is { label: string; value: number } => point.value !== null);
-    const current = values.at(-1)?.value ?? null;
-    const first = values[0]?.value ?? null;
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Empty body series intentionally exposes null metrics.
-    return { key, current, change: current === null || first === null ? null : current - first, goal, timeframeDays: days, points };
+    const current = measurements.last;
+    const first = measurements.first;
+    return {
+        key,
+        current,
+        change: current === null || first === null ? null : current - first,
+        goal,
+        timeframeDays: days,
+        measurementCount: measurements.count,
+        points,
+    };
 }
 
 function getDifferencePercent(current: number, goal: number): number | null {

@@ -13,6 +13,11 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { ImageGalleryEditorComponent } from '../../../../../components/shared/image-gallery-editor/image-gallery-editor';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import type { IngredientFormValues, StepFormValues } from '../recipe-manage-lib/recipe-manage.types';
+import {
+    RECIPE_MAX_INGREDIENT_AMOUNT,
+    RECIPE_STEP_DESCRIPTION_MAX_LENGTH,
+    RECIPE_STEP_TITLE_MAX_LENGTH,
+} from '../recipe-manage-lib/recipe-manage-form.mapper';
 
 export type RecipeStepCardField<T> = {
     error: string | null;
@@ -58,6 +63,9 @@ export type RecipeStepIngredientState = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeStepCardComponent {
+    protected readonly descriptionMaxLength = RECIPE_STEP_DESCRIPTION_MAX_LENGTH;
+    protected readonly titleMaxLength = RECIPE_STEP_TITLE_MAX_LENGTH;
+    protected readonly ingredientAmountMaximum = RECIPE_MAX_INGREDIENT_AMOUNT;
     private readonly translateService = inject(TranslateService);
     private readonly currentLanguage = signal(this.getCurrentLanguage());
     private readonly ingredientTypeControls = viewChildren(FdUiSelectComponent);

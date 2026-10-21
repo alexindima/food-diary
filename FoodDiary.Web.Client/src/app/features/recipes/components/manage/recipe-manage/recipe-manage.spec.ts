@@ -26,6 +26,7 @@ const DEFAULT_SERVINGS = 2;
 const DEFAULT_COOK_TIME = 20;
 const UPDATED_COOK_TIME = 35;
 const PRODUCT_DEFAULT_AMOUNT = 100;
+const SMALL_VALID_INGREDIENT_AMOUNT = 0.001;
 const REIMPORT_SECOND_INGREDIENT_AMOUNT = 50;
 const REIMPORT_ATTEMPTS = 3;
 const SELECTED_PRODUCT_DEFAULT_AMOUNT = 150;
@@ -43,6 +44,13 @@ const MANUAL_FIBER = 2;
 const PRODUCT_CALORIES = 200;
 const IMPORTED_RECIPE_CALORIES = 2525;
 const IMPORTED_SERVING_CALORIES = 505;
+const RECIPE_NAME_LIMIT = 256;
+const RECIPE_OPTIONAL_TEXT_LIMIT = 2048;
+const RECIPE_INSTRUCTION_LIMIT = 4000;
+const RECIPE_STEP_TITLE_LIMIT = 256;
+const RECIPE_INT_MAX = 2_147_483_647;
+const FRACTIONAL_RECIPE_MINUTES = 1.5;
+const RECIPE_INGREDIENT_AMOUNT_LIMIT = 1_000_000;
 
 type RecipeManageFacadeMock = {
     committed$: Subject<void>;
@@ -151,6 +159,38 @@ describe('RecipeManageComponent language checks', () => {
     });
 });
 
+describe('RecipeManageComponent text validation', () => {
+    it.each([
+        { label: 'whitespace name', patch: { name: ' \t\n ' } },
+        { label: 'overlong name', patch: { name: 'R'.repeat(RECIPE_NAME_LIMIT + 1) } },
+        { label: 'overlong description', patch: { description: 'D'.repeat(RECIPE_OPTIONAL_TEXT_LIMIT + 1) } },
+        { label: 'overlong comment', patch: { comment: 'C'.repeat(RECIPE_OPTIONAL_TEXT_LIMIT + 1) } },
+    ])('blocks $label before making a recipe request', async ({ patch }) => {
+        const { component, facade, fixture } = await setupComponentAsync();
+        patchValidManualRecipe(component);
+        component['patchRecipeFormModel'](patch);
+
+        expect(component['recipeSignalForm']().invalid()).toBe(true);
+        component['onSubmit']();
+        await fixture.whenStable();
+
+        expect(facade.addRecipe).not.toHaveBeenCalled();
+    });
+
+    it('accepts maximum-length recipe text and cleared optional fields', async () => {
+        const { component } = await setupComponentAsync();
+        patchValidManualRecipe(component);
+        component['patchRecipeFormModel']({
+            name: 'R'.repeat(RECIPE_NAME_LIMIT),
+            description: 'D'.repeat(RECIPE_OPTIONAL_TEXT_LIMIT),
+            comment: 'C'.repeat(RECIPE_OPTIONAL_TEXT_LIMIT),
+        });
+        expect(component['recipeSignalForm']().invalid()).toBe(false);
+        component['patchRecipeFormModel']({ description: null, comment: null });
+        expect(component['recipeSignalForm']().invalid()).toBe(false);
+    });
+});
+
 describe('RecipeManageComponent submission', () => {
     it('should prevent native form submit when saving', async () => {
         const { component, facade, fixture } = await setupComponentAsync();
@@ -241,6 +281,20 @@ describe('RecipeManageComponent submission', () => {
 
         expect(facade.addRecipe).not.toHaveBeenCalled();
         expect(facade.updateRecipe).not.toHaveBeenCalled();
+    });
+});
+
+describe('RecipeManageComponent integer transport fields', () => {
+    it.each(['prepTime', 'cookTime', 'servings'] as const)('rejects fractional or oversized %s before making a request', async field => {
+        const { component, facade, fixture } = await setupComponentAsync();
+        patchValidManualRecipe(component);
+        for (const value of [FRACTIONAL_RECIPE_MINUTES, RECIPE_INT_MAX + 1]) {
+            component['patchRecipeFormModel']({ [field]: value });
+            expect(component['recipeSignalForm']().invalid()).toBe(true);
+            component['onSubmit']();
+            await fixture.whenStable();
+        }
+        expect(facade.addRecipe).not.toHaveBeenCalled();
     });
 });
 
@@ -1095,6 +1149,45 @@ function createProduct(overrides: Partial<Product> = {}): Product {
     };
 }
 
+describe('Recipe ingredient amount limits', () => {
+    it.each([0, -1, RECIPE_INGREDIENT_AMOUNT_LIMIT + 1, Number.POSITIVE_INFINITY, Number.NaN])(
+        'blocks unsupported amount %s with manual nutrition',
+        async amount => {
+            const { component, facade, fixture } = await setupComponentAsync();
+            patchValidManualRecipe(component);
+            patchFirstIngredient(component, { amount });
+            expect(component['areStepsValid']()).toBe(false);
+            component['onSubmit']();
+            await fixture.whenStable();
+            expect(facade.addRecipe).not.toHaveBeenCalled();
+            expect(component['stepListItems']()[0].state.ingredients[0].amount.error).not.toBeNull();
+        },
+    );
+
+    it('accepts the domain maximum independently of manual nutrient totals', async () => {
+        const { component } = await setupComponentAsync();
+        patchValidManualRecipe(component);
+        patchFirstIngredient(component, { amount: RECIPE_INGREDIENT_AMOUNT_LIMIT });
+        expect(component['areStepsValid']()).toBe(true);
+    });
+
+    it('preserves a valid imported amount below 0.01 through submission', async () => {
+        const { component, facade, fixture } = await setupComponentAsync();
+        patchValidManualRecipe(component);
+        patchFirstIngredient(component, { amount: SMALL_VALID_INGREDIENT_AMOUNT });
+
+        component['onSubmit']();
+        await fixture.whenStable();
+
+        expect(component['areStepsValid']()).toBe(true);
+        expect(facade.addRecipe).toHaveBeenCalledWith(
+            expect.objectContaining({
+                steps: [expect.objectContaining({ ingredients: [expect.objectContaining({ amount: SMALL_VALID_INGREDIENT_AMOUNT })] })],
+            }),
+        );
+    });
+});
+
 describe('Recipe step validation timing', () => {
     it('keeps unrelated fields pristine and validates each field on blur', async () => {
         const { component } = await setupComponentAsync();
@@ -1116,6 +1209,31 @@ describe('Recipe step validation timing', () => {
 });
 
 describe('optional step ingredients', () => {
+    it('accepts the title boundary and blocks an overlong title before saving', async () => {
+        const { component, facade, fixture } = await setupComponentAsync();
+        patchValidManualRecipe(component);
+        component['onStepTitleChange']({ stepIndex: 0, value: 'T'.repeat(RECIPE_STEP_TITLE_LIMIT) });
+        expect(component['areStepsValid']()).toBe(true);
+        component['onStepTitleChange']({ stepIndex: 0, value: 'T'.repeat(RECIPE_STEP_TITLE_LIMIT + 1) });
+        expect(component['areStepsValid']()).toBe(false);
+        component['onSubmit']();
+        await fixture.whenStable();
+        expect(facade.addRecipe).not.toHaveBeenCalled();
+    });
+
+    it('accepts the instruction length limit and blocks an overlong imported instruction before saving', async () => {
+        const { component, facade, fixture } = await setupComponentAsync();
+        patchValidManualRecipe(component);
+        component['onStepDescriptionChange']({ stepIndex: 0, value: 'S'.repeat(RECIPE_INSTRUCTION_LIMIT) });
+        expect(component['areStepsValid']()).toBe(true);
+        component['onStepDescriptionChange']({ stepIndex: 0, value: 'S'.repeat(RECIPE_INSTRUCTION_LIMIT + 1) });
+        expect(component['areStepsValid']()).toBe(false);
+        expect(component['stepListItems']()[0].state.description.error).not.toBeNull();
+        component['onSubmit']();
+        await fixture.whenStable();
+        expect(facade.addRecipe).not.toHaveBeenCalled();
+    });
+
     it('accepts an instruction-only step but rejects an incomplete added ingredient', async () => {
         const { component } = await setupComponentAsync();
         component['onStepDescriptionChange']({ stepIndex: 0, value: 'Preheat oven' });

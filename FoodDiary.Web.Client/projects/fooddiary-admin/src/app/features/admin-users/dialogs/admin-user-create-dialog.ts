@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { applyWhen, email, form, FormField, FormRoot, minLength, required } from '@angular/forms/signals';
+import { applyWhen, email, form, FormField, FormRoot, maxLength, required, validate } from '@angular/forms/signals';
 import { FdUiCheckboxComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -13,6 +13,7 @@ import { AdminUsersFacade } from '../lib/admin-users.facade';
 import type { AdminUserCreate, AdminUserCreation } from '../models/admin-user.models';
 
 const MIN_PASSWORD_LENGTH = 6;
+const MAX_PASSWORD_LENGTH = 256;
 
 type AdminUserCreateFormModel = {
     email: string;
@@ -72,7 +73,10 @@ export class AdminUserCreateDialogComponent {
             ({ value }) => !value().generatePassword,
             manualPasswordPath => {
                 required(manualPasswordPath.temporaryPassword);
-                minLength(manualPasswordPath.temporaryPassword, MIN_PASSWORD_LENGTH);
+                maxLength(manualPasswordPath.temporaryPassword, MAX_PASSWORD_LENGTH);
+                validate(manualPasswordPath.temporaryPassword, ({ value }) =>
+                    value().trim().length >= MIN_PASSWORD_LENGTH ? undefined : { kind: 'minLength' },
+                );
             },
         );
     });

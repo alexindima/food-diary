@@ -3,14 +3,23 @@ import { describe, expect, it } from 'vitest';
 
 import { readRecipeListQuery, recipeQueryFilters, writeRecipeListQuery } from './recipe-list-query';
 
+const MAX_RECIPE_TIME = 2_147_483_647;
+
 describe('Recipe list bookmarks', () => {
+    it.each(['0', '1.5', String(MAX_RECIPE_TIME + 1), 'Infinity'])('normalizes unsupported cooking time %s', maxTotalTime => {
+        expect(readRecipeListQuery(convertToParamMap({ maxTotalTime })).maxTotalTime).toBeNull();
+    });
+
+    it('preserves the maximum supported integer cooking time', () => {
+        expect(readRecipeListQuery(convertToParamMap({ maxTotalTime: String(MAX_RECIPE_TIME) })).maxTotalTime).toBe(MAX_RECIPE_TIME);
+    });
     it('preserves all transport filters including false and zero', () => {
         const params = {
             page: '2',
             search: '  Rice  ',
             onlyMine: 'false',
             category: 'soups',
-            maxTotalTime: '0',
+            maxTotalTime: '1',
             caloriesFrom: '0',
             caloriesTo: '1000',
             hasImage: 'false',
@@ -21,7 +30,7 @@ describe('Recipe list bookmarks', () => {
         expect(recipeQueryFilters(query)).toEqual({
             search: 'Rice',
             category: 'soups',
-            maxTotalTime: 0,
+            maxTotalTime: 1,
             caloriesFrom: 0,
             caloriesTo: 1000,
             hasImage: false,

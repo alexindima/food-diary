@@ -287,6 +287,24 @@ describe('ClientDashboardComponent period refresh cancellation', () => {
 });
 
 describe('ClientDashboardComponent task deadlines', () => {
+    it.each(['   ', '\t\n', '\u00A0'])('rejects a whitespace-only task title %j without a request', async title => {
+        createComponent('client-1');
+        component['taskModel'].set({ title, details: 'Keep my draft', dueDate: '' });
+        fixture.detectChanges();
+
+        await component['submitTaskAsync']();
+        fixture.detectChanges();
+
+        expect(component['taskForm'].title().errors()).toContainEqual(expect.objectContaining({ kind: 'required' }));
+        expect(component['taskForm'].title().touched()).toBe(true);
+        expect(dietologistService.createTask).not.toHaveBeenCalled();
+        expect(component['taskModel']()).toEqual({ title, details: 'Keep my draft', dueDate: '' });
+        const taskButton = [...(fixture.nativeElement as HTMLElement).querySelectorAll('button')].find(button =>
+            button.textContent.includes('CLIENT_TASKS.FORM.CREATE'),
+        );
+        expect(taskButton?.disabled).toBe(true);
+    });
+
     it.each(['2026-10-02', '2026-03-29', '2026-10-25'])('keeps the whole selected due day available: %s', async dueDate => {
         createComponent('client-1');
         dietologistService.createTask.mockReturnValue(of({ id: 'task-1' }));

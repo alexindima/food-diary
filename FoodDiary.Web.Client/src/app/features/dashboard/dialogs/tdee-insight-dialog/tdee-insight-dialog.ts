@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { map } from 'rxjs';
 
+import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import {
     buildTdeeConfidenceKey,
     buildTdeeHintKey,
@@ -38,10 +41,14 @@ const MIN_FOOD_WINDOW_DAYS = 14;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TdeeInsightDialogComponent {
+    private readonly translate = inject(TranslateService);
     private readonly dialogRef = inject<FdUiDialogRef<TdeeInsightDialogComponent, TdeeInsightDialogAction | undefined>>(FdUiDialogRef);
     private readonly data = inject<TdeeInsightDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
 
     protected readonly insight = this.data?.insight ?? null;
+    protected readonly locale = toSignal(this.translate.onLangChange.pipe(map(event => event.lang)), {
+        initialValue: resolveTranslateLanguage(this.translate),
+    });
     protected readonly isApplying = signal(false);
     protected readonly applyFailed = signal(false);
     protected readonly effectiveTdee = getEffectiveTdee(this.insight);

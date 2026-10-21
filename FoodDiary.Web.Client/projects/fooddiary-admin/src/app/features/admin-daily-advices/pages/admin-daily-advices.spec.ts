@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -6,6 +7,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { adminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminDailyAdvicesService } from '../api/admin-daily-advices.service';
+import { DailyAdviceGroupCardComponent } from '../components/daily-advice-group-card';
 import { DAILY_ADVICE_IMPORT_EXAMPLE } from '../lib/daily-advice-import';
 import type { AdminDailyAdvice, AdminDailyAdvicesImportResponse } from '../models/admin-daily-advice.models';
 import { AdminDailyAdvicesComponent } from './admin-daily-advices';
@@ -115,5 +117,53 @@ describe('daily advices pagination', () => {
         fixture.detectChanges();
         expect(fixture.componentInstance['pageItems']()[0]?.id).toBe('advice-0');
         expect(new URL(router.url, 'http://localhost').searchParams.get('page')).toBe('1');
+    });
+});
+
+describe('daily advice mutation refresh', () => {
+    it.each(['success', 'error'])('preserves another card draft while the refreshed list %s settles', async outcome => {
+        const items: AdminDailyAdvice[] = ['A', 'B'].map(key => ({
+            id: adminId<'daily-advice'>(key),
+            ru: `${key} Russian`,
+            en: `${key} English`,
+            weight: 1,
+            tag: null,
+        }));
+        const mutation = new Subject<AdminDailyAdvice>();
+        const refresh = new Subject<AdminDailyAdvice[]>();
+        const getAll = vi.fn().mockReturnValueOnce(of(items)).mockReturnValueOnce(refresh);
+        await TestBed.configureTestingModule({
+            imports: [AdminDailyAdvicesComponent],
+            providers: [
+                provideRouter([]),
+                ...provideTranslateTesting(),
+                { provide: AdminDailyAdvicesService, useValue: { getAll, update: (): Subject<AdminDailyAdvice> => mutation } },
+            ],
+        }).compileComponents();
+        const fixture = TestBed.createComponent(AdminDailyAdvicesComponent);
+        fixture.detectChanges();
+        const cards = (): DailyAdviceGroupCardComponent[] =>
+            fixture.debugElement
+                .queryAll(By.directive(DailyAdviceGroupCardComponent))
+                .map(node => node.componentInstance as DailyAdviceGroupCardComponent);
+        const [first, second] = cards();
+        first['edit']();
+        const saving = first['saveAsync']();
+        second['edit']();
+        second['formModel'].update(value => ({ ...value, en: 'Newer unsaved draft' }));
+        mutation.next(items[0]);
+        await saving;
+        fixture.detectChanges();
+        expect(cards()[1]).toBe(second);
+        expect(second['formModel']().en).toBe('Newer unsaved draft');
+        if (outcome === 'error') {
+            refresh.error(new Error('offline'));
+        } else {
+            refresh.next(items.map(item => ({ ...item })));
+        }
+        fixture.detectChanges();
+        expect(cards()[1]).toBe(second);
+        expect(second['editing']()).toBe(true);
+        expect(second['formModel']().en).toBe('Newer unsaved draft');
     });
 });

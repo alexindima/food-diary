@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2637,
+    "typescriptFiles": 2644,
     "symbols": 851,
     "routes": 108,
     "features": 46,
-    "specs": 769,
+    "specs": 772,
     "localeFiles": 5,
     "roles": {
       "Component": 497,
@@ -211,6 +211,7 @@
       ],
       "tests": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/components/daily-advice-group-card.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/lib/admin-daily-advices.facade.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/lib/daily-advice-import.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.spec.ts"
       ]
@@ -322,7 +323,9 @@
       "routes": [
         ""
       ],
-      "tests": []
+      "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.spec.ts"
+      ]
     },
     {
       "area": "admin",
@@ -1615,7 +1618,7 @@
       "role": "Component",
       "selector": "fd-tour-host",
       "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts",
-      "line": 65
+      "line": 66
     },
     {
       "name": "FdTourLocalStorage",
@@ -1636,7 +1639,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour.service.ts",
-      "line": 13
+      "line": 14
     },
     {
       "name": "FdUiAccentSurfaceComponent",
@@ -2189,7 +2192,7 @@
       "role": "Component",
       "selector": "fd-admin-achievements",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.ts",
-      "line": 60
+      "line": 63
     },
     {
       "name": "AdminAcquisitionService",
@@ -2637,7 +2640,7 @@
       "role": "Component",
       "selector": "fd-admin-moderation-action-dialog",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.ts",
-      "line": 35
+      "line": 37
     },
     {
       "name": "AdminModerationFacade",
@@ -2756,7 +2759,7 @@
       "role": "Component",
       "selector": "fd-admin-user-create-dialog",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.ts",
-      "line": 46
+      "line": 47
     },
     {
       "name": "AdminUserEditDialogComponent",
@@ -3540,7 +3543,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/composition/webmcp/local-webmcp-catalog.service.ts",
-      "line": 24
+      "line": 23
     },
     {
       "name": "LocalWebmcpError",
@@ -3617,7 +3620,7 @@
       "role": "Component",
       "selector": "fd-auth-login-form",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-login-form/auth-login-form.ts",
-      "line": 28
+      "line": 29
     },
     {
       "name": "AuthPasswordResetFormComponent",
@@ -3631,7 +3634,7 @@
       "role": "Component",
       "selector": "fd-auth-register-fields",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-fields/auth-register-fields.ts",
-      "line": 18
+      "line": 19
     },
     {
       "name": "AuthRegisterFormComponent",
@@ -4002,7 +4005,7 @@
       "role": "Component",
       "selector": "fd-tdee-insight-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.ts",
-      "line": 40
+      "line": 43
     },
     {
       "name": "DashboardLayoutService",
@@ -4324,7 +4327,7 @@
       "role": "Component",
       "selector": "fd-fasting-check-in-card",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-card/fasting-check-in-card.ts",
-      "line": 49
+      "line": 50
     },
     {
       "name": "FastingCheckInChartComponent",
@@ -4842,7 +4845,7 @@
       "role": "Component",
       "selector": "fd-meal-general-info",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-general-info/meal-general-info.ts",
-      "line": 36
+      "line": 37
     },
     {
       "name": "MealItemsListComponent",
@@ -5808,7 +5811,7 @@
       "role": "Component",
       "selector": "fd-recipe-list-filters-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.ts",
-      "line": 32
+      "line": 33
     },
     {
       "name": "RecipeListFavoritesComponent",
@@ -5857,7 +5860,7 @@
       "role": "Component",
       "selector": "fd-recipe-manage",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.ts",
-      "line": 79
+      "line": 84
     },
     {
       "name": "RecipeNutritionEditorComponent",
@@ -5878,7 +5881,7 @@
       "role": "Component",
       "selector": "fd-recipe-step-card",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.ts",
-      "line": 60
+      "line": 65
     },
     {
       "name": "RecipeStepsListComponent",
@@ -6158,7 +6161,7 @@
       "role": "Component",
       "selector": "fd-shopping-item-edit",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.ts",
-      "line": 24
+      "line": 21
     },
     {
       "name": "ShoppingListBrowserDialogComponent",
@@ -6207,7 +6210,7 @@
       "role": "Component",
       "selector": "fd-shopping-list-items-panel",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.ts",
-      "line": 44
+      "line": 45
     },
     {
       "name": "ShoppingListManageControlsComponent",
@@ -6221,14 +6224,14 @@
       "role": "Component",
       "selector": "fd-shopping-list-page",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.ts",
-      "line": 54
+      "line": 57
     },
     {
       "name": "StatisticsService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/statistics/api/statistics.service.ts",
-      "line": 14
+      "line": 24
     },
     {
       "name": "StatisticsBodyTrendCardComponent",
@@ -8123,8 +8126,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1244,
-      "russianProperties": 1244,
+      "englishProperties": 1249,
+      "russianProperties": 1249,
       "countsMatch": true
     },
     {

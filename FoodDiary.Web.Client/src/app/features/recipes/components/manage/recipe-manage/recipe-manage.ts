@@ -1,7 +1,7 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormRoot, max, min, required, validate } from '@angular/forms/signals';
+import { form, FormRoot, max, maxLength, min, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
@@ -33,7 +33,12 @@ import {
     createRecipeFormValue,
     createRecipeIngredientValue,
     hasNoRecipeNutritionTotals,
-    RECIPE_MIN_INGREDIENT_AMOUNT,
+    RECIPE_MAX_INGREDIENT_AMOUNT,
+    RECIPE_MAX_INTEGER_VALUE,
+    RECIPE_NAME_MAX_LENGTH,
+    RECIPE_OPTIONAL_TEXT_MAX_LENGTH,
+    RECIPE_STEP_DESCRIPTION_MAX_LENGTH,
+    RECIPE_STEP_TITLE_MAX_LENGTH,
     RECIPE_TEXT_AMOUNT_MAX_LENGTH,
     RECIPE_TEXT_NAME_MAX_LENGTH,
 } from '../recipe-manage-lib/recipe-manage-form.mapper';
@@ -114,10 +119,27 @@ export class RecipeManageComponent implements UnsavedEditor {
     protected readonly recipeFormModel = signal<RecipeFormValues>(createRecipeFormValue(this.recipeManageFacade.preferredLanguage()));
     protected readonly recipeSignalForm = form(this.recipeFormModel, path => {
         required(path.name);
+        validate(path.name, ({ value }) => (value().trim().length === 0 ? { kind: 'required' } : undefined));
+        maxLength(path.name, RECIPE_NAME_MAX_LENGTH);
+        validate(path.description, ({ value }) =>
+            (value()?.length ?? 0) > RECIPE_OPTIONAL_TEXT_MAX_LENGTH
+                ? { kind: 'maxLength', maxLength: RECIPE_OPTIONAL_TEXT_MAX_LENGTH }
+                : undefined,
+        );
+        validate(path.comment, ({ value }) =>
+            (value()?.length ?? 0) > RECIPE_OPTIONAL_TEXT_MAX_LENGTH
+                ? { kind: 'maxLength', maxLength: RECIPE_OPTIONAL_TEXT_MAX_LENGTH }
+                : undefined,
+        );
         min(path.prepTime, 0);
+        max(path.prepTime, RECIPE_MAX_INTEGER_VALUE);
+        validate(path.prepTime, ({ value }) => (value() === null || Number.isInteger(value()) ? undefined : { kind: 'integer' }));
         min(path.cookTime, 1);
+        max(path.cookTime, RECIPE_MAX_INTEGER_VALUE);
+        validate(path.cookTime, ({ value }) => (value() === null || Number.isInteger(value()) ? undefined : { kind: 'integer' }));
         required(path.servings);
         min(path.servings, 1);
+        max(path.servings, RECIPE_MAX_INTEGER_VALUE);
         validate(path.servings, ({ value }) => (Number.isInteger(value()) ? undefined : { kind: 'integer' }));
         required(path.visibility);
         min(path.manualCalories, 0);
@@ -681,7 +703,10 @@ export class RecipeManageComponent implements UnsavedEditor {
         return {
             title: {
                 value: step.title,
-                error: null,
+                error:
+                    (step.title?.length ?? 0) > RECIPE_STEP_TITLE_MAX_LENGTH
+                        ? this.translateService.instant('FORM_ERRORS.MAX_LENGTH', { requiredLength: RECIPE_STEP_TITLE_MAX_LENGTH })
+                        : null,
             },
             images: step.images,
             imageUrl: {
@@ -691,9 +716,11 @@ export class RecipeManageComponent implements UnsavedEditor {
             description: {
                 value: step.description,
                 error:
-                    (touched || step.descriptionTouched === true) && step.description.trim().length === 0
-                        ? this.translateService.instant('RECIPE_MANAGE.STEP_DESCRIPTION_REQUIRED')
-                        : null,
+                    step.description.length > RECIPE_STEP_DESCRIPTION_MAX_LENGTH
+                        ? this.translateService.instant('FORM_ERRORS.MAX_LENGTH', { requiredLength: RECIPE_STEP_DESCRIPTION_MAX_LENGTH })
+                        : (touched || step.descriptionTouched === true) && step.description.trim().length === 0
+                          ? this.translateService.instant('RECIPE_MANAGE.STEP_DESCRIPTION_REQUIRED')
+                          : null,
             },
             ingredients: step.ingredients.map(ingredient => this.createIngredientCardState(ingredient, touched)),
         };
@@ -732,10 +759,16 @@ export class RecipeManageComponent implements UnsavedEditor {
             return this.translateService.instant('RECIPE_MANAGE.INGREDIENT_AMOUNT_REQUIRED');
         }
 
-        if (ingredient.amount < RECIPE_MIN_INGREDIENT_AMOUNT) {
-            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', {
-                min: RECIPE_MIN_INGREDIENT_AMOUNT,
-            });
+        if (!Number.isFinite(ingredient.amount)) {
+            return this.translateService.instant('FORM_ERRORS.INVALID_NUMBER');
+        }
+
+        if (ingredient.amount > RECIPE_MAX_INGREDIENT_AMOUNT) {
+            return this.translateService.instant('FORM_ERRORS.INVALID_MAX_AMOUNT', { max: RECIPE_MAX_INGREDIENT_AMOUNT });
+        }
+
+        if (ingredient.amount <= 0) {
+            return this.translateService.instant('FORM_ERRORS.MEAL.INVALID_MIN_AMOUNT');
         }
 
         return null;
@@ -746,22 +779,33 @@ export class RecipeManageComponent implements UnsavedEditor {
     }
 
     private isStepValid(step: StepFormValues): boolean {
-        return step.description.trim().length > 0 && step.ingredients.every(ingredient => this.isIngredientValid(ingredient));
+        return (
+            step.description.trim().length > 0 &&
+            step.description.length <= RECIPE_STEP_DESCRIPTION_MAX_LENGTH &&
+            (step.title?.length ?? 0) <= RECIPE_STEP_TITLE_MAX_LENGTH &&
+            step.ingredients.every(ingredient => this.isIngredientValid(ingredient))
+        );
     }
 
     private isIngredientValid(ingredient: IngredientFormValues): boolean {
         if (typeof ingredient.textName === 'string') {
-            return (
-                ingredient.textName.trim().length > 0 &&
-                ingredient.textName.length <= RECIPE_TEXT_NAME_MAX_LENGTH &&
-                (ingredient.amountText?.length ?? 0) <= RECIPE_TEXT_AMOUNT_MAX_LENGTH
-            );
+            return this.isTextIngredientValid(ingredient.textName, ingredient.amountText);
         }
         return (
             ingredient.foodName !== null &&
             ingredient.foodName.trim().length > 0 &&
             ingredient.amount !== null &&
-            ingredient.amount >= RECIPE_MIN_INGREDIENT_AMOUNT
+            Number.isFinite(ingredient.amount) &&
+            ingredient.amount > 0 &&
+            ingredient.amount <= RECIPE_MAX_INGREDIENT_AMOUNT
+        );
+    }
+
+    private isTextIngredientValid(name: string, amountText: string | null | undefined): boolean {
+        return (
+            name.trim().length > 0 &&
+            name.length <= RECIPE_TEXT_NAME_MAX_LENGTH &&
+            (amountText?.length ?? 0) <= RECIPE_TEXT_AMOUNT_MAX_LENGTH
         );
     }
 

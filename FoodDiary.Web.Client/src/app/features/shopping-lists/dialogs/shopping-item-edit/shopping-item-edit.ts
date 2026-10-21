@@ -7,11 +7,8 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 
 import type { ShoppingListDraftItem } from '../../lib/shopping-list.facade';
 import { isShoppingListAmountValid } from '../../lib/shopping-list-amount.validation';
+import { SHOPPING_ITEM_CATEGORY_LIMIT, SHOPPING_ITEM_NAME_LIMIT, SHOPPING_ITEM_NOTE_LIMIT } from '../../lib/shopping-list-input.constants';
 import { buildShoppingListUnitOptions, normalizeShoppingListUnit, shoppingListCategoryLabel } from '../../lib/shopping-list-item.mapper';
-
-const ITEM_NAME_LIMIT = 256;
-const CATEGORY_LIMIT = 128;
-const NOTE_LIMIT = 512;
 
 export type ShoppingItemEditData = ShoppingListDraftItem & { productId?: string | null };
 
@@ -37,9 +34,9 @@ export class ShoppingItemEditComponent {
     });
     protected readonly fields = form(this.draft, path => {
         required(path.name);
-        maxLength(path.name, ITEM_NAME_LIMIT);
-        maxLength(path.category, CATEGORY_LIMIT);
-        maxLength(path.note, NOTE_LIMIT);
+        maxLength(path.name, SHOPPING_ITEM_NAME_LIMIT);
+        maxLength(path.category, SHOPPING_ITEM_CATEGORY_LIMIT);
+        maxLength(path.note, SHOPPING_ITEM_NOTE_LIMIT);
         disabled(path.unit, { when: () => this.isProductLinked });
         validate(path.amount, ({ value }) =>
             isShoppingListAmountValid(value())

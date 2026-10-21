@@ -73,8 +73,10 @@ describe('StatisticsService', () => {
         expect(req.request.params.get('dateTo')).toBe(new Date('2026-05-07').toISOString());
         req.flush([]);
     });
+});
 
-    it('queries the combined statistics summary with one request', () => {
+describe('StatisticsService summaries', () => {
+    it('queries chart buckets and exact calendar measurements together', () => {
         const dateFrom = new Date('2026-05-01T00:00:00.000Z');
         const dateTo = new Date('2026-05-07T23:59:59.999Z');
         const response = { nutrition: RESPONSE, weight: [], waist: [] };
@@ -89,7 +91,11 @@ describe('StatisticsService', () => {
                 timeZoneId: 'Asia/Tbilisi',
             })
             .subscribe(result => {
-                expect(result).toEqual(response);
+                expect(result).toEqual({
+                    ...response,
+                    weightMeasurements: { first: 80, last: 79, count: 2 },
+                    waistMeasurements: { first: 90, last: 90, count: 1 },
+                });
             });
 
         const req = httpMock.expectOne(request => request.url === SUMMARY_URL);
@@ -101,5 +107,33 @@ describe('StatisticsService', () => {
         expect(req.request.params.get('bodyDateTo')).toBe('2026-05-07');
         expect(req.request.params.get('timeZoneId')).toBe('Asia/Tbilisi');
         req.flush(response);
+        const weight = httpMock.expectOne(request => request.url === environment.apiUrls.weights);
+        expect(weight.request.params.get('dateFrom')).toBe('2026-05-01');
+        expect(weight.request.params.get('dateTo')).toBe('2026-05-07');
+        expect(weight.request.params.get('limit')).toBe('500');
+        expect(weight.request.params.get('sort')).toBe('asc');
+        weight.flush([{ weightKg: 80 }, { weightKg: 79 }]);
+        const waist = httpMock.expectOne(request => request.url === environment.apiUrls.waists);
+        expect(waist.request.params.get('dateFrom')).toBe('2026-05-01');
+        expect(waist.request.params.get('dateTo')).toBe('2026-05-07');
+        waist.flush([{ circumferenceCm: 90 }]);
+    });
+
+    it('fails the complete result when an exact measurement read fails', () => {
+        let emitted = false;
+        let failed = false;
+        service.getSummary({ dateFrom: '2026-05-01', dateTo: '2026-05-07' }).subscribe({
+            next: () => {
+                emitted = true;
+            },
+            error: () => {
+                failed = true;
+            },
+        });
+        httpMock.expectOne(request => request.url === SUMMARY_URL).flush({ nutrition: [], weight: [], waist: [] });
+        httpMock.expectOne(request => request.url === environment.apiUrls.weights).flush([]);
+        httpMock.expectOne(request => request.url === environment.apiUrls.waists).flush({}, { status: 500, statusText: 'Error' });
+        expect(emitted).toBe(false);
+        expect(failed).toBe(true);
     });
 });

@@ -42,6 +42,7 @@ export class ShoppingListFacade {
     private pendingSave = false;
     private pendingSelection: ShoppingListId | null = null;
     private activeSave: Promise<boolean> | null = null;
+    private listLoadSequence = 0;
 
     public hasUnsavedChanges(): boolean {
         return this.saveQueue.hasPending() || this.isSaving();
@@ -73,6 +74,7 @@ export class ShoppingListFacade {
     public readonly items = signal<ShoppingListItem[]>([]);
     public readonly isLoading = signal(false);
     public readonly isSaving = signal(false);
+    public readonly saveError = signal(false);
     public readonly initialPage = signal<ShoppingListPage | null>(null);
     private loadingListId: ShoppingListId | null = null;
     public readonly lists = signal<ShoppingListSummary[]>([]);
@@ -125,7 +127,7 @@ export class ShoppingListFacade {
                     if (this.saveQueue.hasPending()) {
                         this.saveQueue.flushNow();
                     }
-                    if (!this.isSaving()) {
+                    if (this.pendingCreate() && !this.isSaving()) {
                         this.pendingCreate.set(false);
                         this.performCreate();
                     }
@@ -505,6 +507,7 @@ export class ShoppingListFacade {
     }
 
     private loadListById(id: ShoppingListId): void {
+        const sequence = ++this.listLoadSequence;
         this.loadingListId = id;
         this.isLoading.set(true);
         this.shoppingListService
@@ -512,6 +515,9 @@ export class ShoppingListFacade {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: list => {
+                    if (sequence !== this.listLoadSequence) {
+                        return;
+                    }
                     this.loadingListId = null;
                     this.isLoading.set(false);
                     if (list !== null) {
@@ -522,6 +528,9 @@ export class ShoppingListFacade {
                     this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
                 },
                 error: () => {
+                    if (sequence !== this.listLoadSequence) {
+                        return;
+                    }
                     this.loadingListId = null;
                     this.isLoading.set(false);
                     this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
@@ -530,6 +539,7 @@ export class ShoppingListFacade {
     }
 
     private applyEmptyListState(): void {
+        this.saveError.set(false);
         this.runWithAutosaveSuppressed(() => {
             this.lists.set([]);
             this.list.set(null);
@@ -541,6 +551,7 @@ export class ShoppingListFacade {
     }
 
     private applyList(list: ShoppingList): void {
+        this.saveError.set(false);
         if (!this.lists().some(entry => entry.id === list.id)) {
             this.upsertListSummary(list);
         }
@@ -602,6 +613,12 @@ export class ShoppingListFacade {
         this.saveQueue.schedule();
     }
 
+    public retrySave(): void {
+        if (!this.isSaving() && !this.isLoading() && this.saveQueue.hasPending()) {
+            this.saveQueue.flushNow();
+        }
+    }
+
     private persistList(): void {
         const current = this.list();
         if (current === null || this.isSaving() || this.isLoading()) {
@@ -614,6 +631,7 @@ export class ShoppingListFacade {
         }
 
         this.isSaving.set(true);
+        this.saveError.set(false);
         const submittedItems = this.items();
         let finishSave!: (success: boolean) => void;
         this.activeSave = new Promise<boolean>(resolve => {
@@ -652,8 +670,10 @@ export class ShoppingListFacade {
                     this.isSaving.set(false);
                     this.pendingSave = false;
                     this.pendingSelection = null;
-                    this.saveQueue.clearPending();
-                    this.applyList(current);
+                    this.pendingCreate.set(false);
+                    this.requestedCreateName = undefined;
+                    this.saveQueue.restore();
+                    this.saveError.set(true);
                     this.toastService.error(this.translateService.instant('SHOPPING_LIST.SAVE_ERROR'));
                     finishSave(false);
                 },

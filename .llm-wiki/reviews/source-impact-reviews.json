@@ -245,13 +245,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "7744e2ea4b674e8e07ea0039541f90743b0945eb95c39ee8337e24e80ef01723"
+          "sha256": "f96a4e17d71d8d56cf6c0f0f44291453ffb296bbf7ef2469ac762fa55e9ce8a9"
         }
       ],
-      "reason": "Reviewed current workflow after shared backend projection refresh. This task consumes existing generated SDKs through owning frontend services and introduces no backend HTTP, message or C# contract. Published contract workflow guidance remains accurate; this receipt is documentation freshness, not verification of parallel backend work.",
+      "reason": "Read current workflow and reviewed IAuditEntryReadService implementers/callers and SQL latest-per-target contract in final-independent-review.json. Full solution build0errors, PostgreSQL persistence tests green; no HTTP/message/client-package changes, no new project edges or transaction marker changes. Existing in-process versus wire guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
-      "reviewedAtUtc": "2026-10-18T12:57:08.5430468Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T01:54:06.3911367Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -922,13 +922,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "70d1f71c6149ccd7a9991b296ed21945290113c4c5678ffbe4ae3decfc3a5e7a"
+          "sha256": "9f83c10efe2824243457fc59c93ae086310fd509c3173e8578a0b5d363cde244"
         }
       ],
-      "reason": "Reviewed current runtime guidance against the local WebMCP boundary. Tools are development-only, loopback-only and authenticated; no new backend host, worker or provider is introduced. The owned task runtime disables mail, AI and payments; server revision and SMTP delivery remain explicitly unavailable, with configured API origin distinguished from actual proxy upstream.",
+      "reason": "Read current runtime-impact workflow. Runtime topology regenerated after source inventory changes; no services, jobs, providers, environment files or production configuration changed. Owned runtime/provider-options evidence distinguishes local declarations from running process readiness and external provider success.",
       "baseRef": "HEAD",
-      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
-      "reviewedAtUtc": "2026-10-18T12:57:10.1509112Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T01:54:10.6924002Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1192,14 +1192,14 @@
       "pageSha256": "87680b84b452fc9d63b36e861fc7dc50eb8ff75963ae1c660383d8c01e5bf599",
       "sources": [
         {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "ff3d36f580dc3066a55b77112d40a2ebeff4a9ef5a1af78d9c5d3794a284d9f9"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "dd49ce25ff3ba0d6e447eec3687e1b1ffaaa8e7668e8722f9bff4492aed12caa"
         }
       ],
-      "reason": "Documented the image confirmation case relocation to InitialBaseline, verified IsConfirmed at line1060. Original question and100% image thresholds preserved; explicit migration intent now works with generic baseline names, schema-only owner intent retains its ranking. All22corpora/4parity corpora passed; no added ranking rules.",
+      "reason": "Read current query-context workflow. Repository catalog was regenerated to include current tour/spec/report sources; graph lookup remains compiled navigation and source verification is still required. No query engine, CLI contract or retrieval policy changed.",
       "baseRef": "HEAD",
-      "gitHead": "cf1ede7771ae6a1f905ef9ec019d69fc346bbfaa",
-      "reviewedAtUtc": "2026-10-19T09:38:26.2390778Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T01:54:09.5476914Z"
     },
     {
       "pageId": "workflow.review-diff",

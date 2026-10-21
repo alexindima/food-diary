@@ -37,6 +37,7 @@
             [attr.aria-label]="ariaLabel() ?? label() ?? null"
             [attr.maxlength]="maximumLength() ?? maxLength() ?? null"
             [attr.max]="maximum() ?? max() ?? null"
+            [attr.min]="minimum() ?? null"
             [attr.step]="step() ?? null"
             [attr.aria-describedby]="describedBy()"
             [attr.aria-invalid]="hasError() ? 'true' : null"

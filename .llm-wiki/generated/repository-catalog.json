@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 296,
-    "documentationPages": 233
+    "documentationPages": 234
   },
   "dotnet": {
     "projects": [
@@ -16020,6 +16020,7 @@
       "docs/reports/GAMIFICATION_EXTRACTION_WIKI_EVALUATION.md",
       "docs/reports/cycles-module-extraction-wiki-findings.md",
       "docs/reports/export-module-extraction-wiki-findings.md",
+      "docs/reports/fooddiary-full-audit-20261021.md",
       "docs/reports/mailinbox-audit-20260905.md",
       "docs/reports/marketing-module-extraction-wiki-findings.md",
       "docs/reports/usda-wiki-first-extraction-report.md",

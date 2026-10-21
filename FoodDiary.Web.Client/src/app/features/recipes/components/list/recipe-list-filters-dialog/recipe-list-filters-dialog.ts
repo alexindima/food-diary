@@ -10,6 +10,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 
+import { RECIPE_FILTER_MAX_TOTAL_TIME } from '../../../lib/list/recipe-list-query';
 import { injectRecipeCategoryOptions } from '../../../lib/recipe-category-options';
 import type { RecipeListFiltersDialogData, RecipeListFiltersDialogResult } from './recipe-list-filters-dialog.types';
 
@@ -51,6 +52,8 @@ export class RecipeListFiltersDialogComponent {
     protected caloriesFromValue: string | number | null = this.data.caloriesFrom;
     protected caloriesToValue: string | number | null = this.data.caloriesTo;
     protected readonly caloriesRangeError = signal(false);
+    protected readonly maxTotalTimeError = signal(false);
+    protected readonly maxTotalTimeMaximum = RECIPE_FILTER_MAX_TOTAL_TIME;
     protected imageValue: 'any' | 'with' | 'without' =
         this.data.hasImage === true ? 'with' : this.data.hasImage === false ? 'without' : 'any';
 
@@ -65,14 +68,16 @@ export class RecipeListFiltersDialogComponent {
     protected onApply(): void {
         const from = this.toNumberOrNull(this.caloriesFromValue);
         const to = this.toNumberOrNull(this.caloriesToValue);
+        const maxTotalTime = this.toNumberOrNull(this.maxTotalTimeValue);
+        this.maxTotalTimeError.set(this.hasInvalidMaxTime(maxTotalTime));
         this.caloriesRangeError.set(from !== null && to !== null && from > to);
-        if (this.caloriesRangeError()) {
+        if (this.caloriesRangeError() || this.maxTotalTimeError()) {
             return;
         }
         this.dialogRef.close({
             onlyMine: this.visibilityValue === 'mine',
             category: this.toTextOrNull(this.categoryValue),
-            maxTotalTime: this.toNumberOrNull(this.maxTotalTimeValue),
+            maxTotalTime,
             caloriesFrom: from,
             caloriesTo: to,
             hasImage: this.imageValue === 'any' ? null : this.imageValue === 'with',
@@ -81,6 +86,14 @@ export class RecipeListFiltersDialogComponent {
 
     protected onCancel(): void {
         this.dialogRef.close(null);
+    }
+
+    private hasInvalidMaxTime(value: number | null): boolean {
+        return (
+            this.maxTotalTimeValue !== null &&
+            String(this.maxTotalTimeValue).trim().length > 0 &&
+            (value === null || value <= 0 || !Number.isInteger(value) || value > RECIPE_FILTER_MAX_TOTAL_TIME)
+        );
     }
 
     private toTextOrNull(value: string | number | null): string | null {

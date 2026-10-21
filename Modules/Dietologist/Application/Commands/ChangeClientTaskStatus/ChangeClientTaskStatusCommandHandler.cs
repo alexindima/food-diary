@@ -66,6 +66,12 @@ public sealed class ChangeClientTaskStatusCommandHandler(
                 "Task status must be Open or Completed."));
         }
 
+        if (task.Status == ClientTaskStatus.Cancelled) {
+            return Result.Failure<ClientTaskModel>(Errors.Validation.Invalid(
+                nameof(command.Status),
+                "A cancelled task cannot be changed."));
+        }
+
         ClientTaskStatus requestedStatus = statusResult.Value;
         if (requestedStatus == ClientTaskStatus.Completed) {
             task.Complete();

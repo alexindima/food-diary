@@ -18,6 +18,11 @@ public partial class RecipesFeatureTests {
     [InlineData(12, 15, 15, false)]
     [InlineData(0, 120, 15, false)]
     [InlineData(null, null, null, true)]
+    [InlineData(int.MaxValue, 1, 15, false)]
+    [InlineData(int.MaxValue, 1, int.MaxValue, false)]
+    [InlineData(int.MaxValue, int.MaxValue, int.MaxValue, false)]
+    [InlineData(int.MaxValue, 1, null, true)]
+    [InlineData(int.MaxValue - 1, 1, int.MaxValue, true)]
     public async Task GetRecipesOverviewQueryHandler_WithTimeFilter_FiltersRecentUnknownAndKnownDurations(
         int? prepTime, int? cookTime, int? maxTotalTime, bool included) {
         var user = User.Create("recent-time-filter@example.test", "hash");

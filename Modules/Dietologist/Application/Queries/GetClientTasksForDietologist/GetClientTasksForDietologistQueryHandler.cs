@@ -13,6 +13,7 @@ namespace FoodDiary.Modules.Dietologist.Application.Queries.GetClientTasksForDie
 
 public sealed class GetClientTasksForDietologistQueryHandler(
     IClientTaskReadModelRepository taskRepository,
+    IDietologistInvitationReadModelRepository invitationRepository,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider timeProvider)
     : IQueryHandler<GetClientTasksForDietologistQuery, Result<IReadOnlyList<ClientTaskModel>>> {
@@ -32,6 +33,15 @@ public sealed class GetClientTasksForDietologistQueryHandler(
             value => new UserId(value));
         if (clientIdResult.IsFailure) {
             return Result.Failure<IReadOnlyList<ClientTaskModel>>(clientIdResult.Error);
+        }
+
+        Result accessResult = await DietologistAccessPolicy.EnsureCanAccessClientReadModelAsync(
+            invitationRepository,
+            dietologistIdResult.Value,
+            clientIdResult.Value,
+            cancellationToken).ConfigureAwait(false);
+        if (accessResult.IsFailure) {
+            return Result.Failure<IReadOnlyList<ClientTaskModel>>(accessResult.Error);
         }
 
         int page = PaginationPolicy.NormalizePage(query.Page);

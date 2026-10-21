@@ -12,6 +12,10 @@
         (valueChange)="updateAdminNote($event)"
     />
 
+    @if (actionError()) {
+        <fd-ui-form-error [error]="'ADMIN_MODERATION.ACTION_ERROR' | translate" />
+    }
+
     <div class="dialog-actions fd-row fd-justify-end fd-gap-xs">
         <fd-ui-button type="button" variant="secondary" fill="text" size="sm" (click)="onCancel()"> Cancel </fd-ui-button>
         <fd-ui-button

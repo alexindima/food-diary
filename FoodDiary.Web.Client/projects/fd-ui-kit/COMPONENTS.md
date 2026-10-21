@@ -179,6 +179,7 @@ Trailing button space is reserved only when `suffixButtonIcon` is supplied. Text
 - `required?: boolean`
 - `readonly?: boolean`
 - `maxLength?: number`
+- `minimum?: string | number` (opt-in native lower bound for number/date/time inputs)
 - `numberNormalizer?: (value: number | null) => number | null` (opt-in normalization of numeric edits and autofill; keeps the visible value and emitted value consistent, including repeated edits at the same boundary)
 - `step?: string | number`
 - `size?: 'sm' | 'md' | 'lg'`

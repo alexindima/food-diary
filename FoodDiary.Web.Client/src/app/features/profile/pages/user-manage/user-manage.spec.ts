@@ -3,6 +3,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, throwError } from 'rxjs';
@@ -47,6 +48,41 @@ const FUTURE_PROFILE_BIRTH_DATE = '2999-01-01';
 const VALID_PROFILE_BIRTH_DATE = '2000-10-02';
 const ORIGINAL_SAVE_HEIGHT = 170;
 const SUBMITTED_SAVE_HEIGHT = 170.2;
+
+describe('UserManageComponent guided tour', () => {
+    it('reveals every tour section before starting without opening unrelated accordions', async () => {
+        await createComponentAsync(null);
+        const host = fixture.nativeElement as HTMLElement;
+        const targets = [
+            'user-manage-account',
+            'user-manage-billing',
+            'user-manage-body',
+            'user-manage-notifications',
+            'user-manage-dietologist',
+            'user-manage-privacy',
+            'user-manage-tour-help',
+        ];
+        const hiddenSections = targets
+            .map(target => {
+                const element = host.querySelector(`[data-tour-id="${target}"]`);
+                expect(element).not.toBeNull();
+                return element?.closest('details') ?? null;
+            })
+            .filter((section): section is HTMLDetailsElement => section !== null);
+        expect(hiddenSections.length).toBeGreaterThan(0);
+        expect(hiddenSections.every(section => !section.open)).toBe(true);
+        const unrelated = Array.from(host.querySelectorAll('details')).filter(section => !hiddenSections.includes(section));
+        const start = vi.spyOn(TestBed.inject(FdTourService), 'start').mockImplementation(() => {
+            expect(hiddenSections.every(section => section.open)).toBe(true);
+            expect(unrelated.every(section => !section.open)).toBe(true);
+            return true;
+        });
+
+        component['startUserManageTour']();
+
+        expect(start).toHaveBeenCalledWith(expect.objectContaining({ id: 'user-manage' }), { force: true });
+    });
+});
 
 describe('UserManageComponent dietologist invite state', () => {
     it('keeps invite mode when no dietologist relationship exists', async () => {

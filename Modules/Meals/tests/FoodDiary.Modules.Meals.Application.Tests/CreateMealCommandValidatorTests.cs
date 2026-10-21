@@ -9,6 +9,31 @@ namespace FoodDiary.Modules.Meals.Application.Tests;
 public class CreateMealCommandValidatorTests {
     private readonly CreateMealCommandValidator _validator = new();
 
+    [Theory]
+    [InlineData(2048, true)]
+    [InlineData(2049, false)]
+    public async Task Validate_CommentUsesNormalizedDomainLimit(int length, bool valid) {
+        CreateMealCommand command = CreateCommand() with { Comment = $"  {new string('x', length)}  " };
+
+        TestValidationResult<CreateMealCommand> result = await _validator.TestValidateAsync(command);
+
+        if (valid) {
+            result.ShouldNotHaveValidationErrorFor(c => c.Comment);
+        } else {
+            result.ShouldHaveValidationErrorFor(c => c.Comment).WithErrorCode("Validation.Invalid");
+        }
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public async Task Validate_CommentMayBeCleared(string? comment) {
+        TestValidationResult<CreateMealCommand> result = await _validator.TestValidateAsync(CreateCommand() with { Comment = comment });
+
+        result.ShouldNotHaveValidationErrorFor(c => c.Comment);
+    }
+
     [Fact]
     public async Task Validate_WhenUserIdIsNull_HasError() {
         CreateMealCommand command = CreateCommand(useNullUserId: true);

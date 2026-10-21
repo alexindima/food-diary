@@ -12,7 +12,7 @@ const zones = [
     'Australia/Lord_Howe',
 ];
 for (const zone of zones) {
-    console.log(`Measurement, dashboard and meal calendar tests: ${zone}`);
+    console.log(`Measurement, dashboard, meal and profile calendar tests: ${zone}`);
     const result = spawnSync(
         process.execPath,
         [
@@ -24,6 +24,7 @@ for (const zone of zones) {
             '--include=**/measurement-history-pager.spec.ts',
             '--include=**/dashboard-calendar-timezone.spec.ts',
             '--include=**/meal-calendar-timezone.spec.ts',
+            '--include=**/user-manage-form.mapper.spec.ts',
         ],
         { stdio: 'inherit', env: { ...process.env, TZ: zone } },
     );

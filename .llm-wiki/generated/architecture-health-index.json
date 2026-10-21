@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 112,
     "routedStandaloneComponents": 68,
-    "componentsWithoutDirectSpecs": 132,
+    "componentsWithoutDirectSpecs": 131,
     "criticalSymbolsWithoutTestReferences": 48,
     "explicitDebtMarkers": 12
   },
@@ -843,7 +843,7 @@
       "feature": "admin-moderation",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.html",
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.spec.ts"
     },
     {
       "class": "AdminUserCreateDialogComponent",
@@ -1920,16 +1920,6 @@
       "specPath": null
     },
     {
-      "class": "AdminModerationActionDialogComponent",
-      "selector": "fd-admin-moderation-action-dialog",
-      "feature": "admin-moderation",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
       "class": "AdminModerationComponent",
       "selector": "fd-admin-moderation",
       "feature": "admin-moderation",
@@ -2875,6 +2865,11 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-hint/tdee-insight-dialog-hint.html",
       "inputs": [
         {
+          "name": "locale",
+          "type": "string",
+          "required": true
+        },
+        {
           "name": "hintKey",
           "type": "string | null",
           "required": true
@@ -2900,6 +2895,11 @@
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-metrics/tdee-insight-dialog-metrics.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-metrics/tdee-insight-dialog-metrics.html",
       "inputs": [
+        {
+          "name": "locale",
+          "type": "string",
+          "required": true
+        },
         {
           "name": "insight",
           "type": "TdeeInsight",
@@ -2937,6 +2937,11 @@
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-summary/tdee-insight-dialog-summary.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-summary/tdee-insight-dialog-summary.html",
       "inputs": [
+        {
+          "name": "locale",
+          "type": "string",
+          "required": true
+        },
         {
           "name": "insight",
           "type": "TdeeInsight | null",

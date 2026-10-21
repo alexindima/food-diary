@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { calendarDate } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
-import { Gender, type User } from '../../../../../shared/models/user.data';
+import { Gender, UpdateUserDto, type User } from '../../../../../shared/models/user.data';
 import {
     buildUserManageSelectOptions,
     buildUserUpdateDto,
@@ -41,6 +41,33 @@ const USER: User = {
 };
 
 const EXPECTED_HEIGHT = 180;
+
+describe('profile birth date calendar contract', () => {
+    it.each([
+        ['1990-01-02', '1990-01-02'],
+        ['1990-01-02T00:00:00Z', '1990-01-02'],
+        ['1990-01-02T23:30:00Z', '1990-01-02'],
+        ['2000-02-29T00:00:00Z', '2000-02-29'],
+        ['2000-12-31T23:30:00Z', '2000-12-31'],
+    ])('preserves the day label from %s through an unrelated profile save', (encoded, expected) => {
+        const form = { ...createUserManageFormModel(), ...mapUserToForm({ ...USER, birthDate: calendarDate(encoded) }) };
+
+        expect(form.birthDate).toBe(expected);
+        expect(buildUserUpdateDto({ ...form, firstName: 'Changed name' }).birthDate?.toISOString()).toBe(`${expected}T00:00:00.000Z`);
+    });
+
+    it.each(['not-a-date', '2025-02-29'])('does not put an invalid calendar date %s into the editor', encoded => {
+        expect(mapUserToForm({ ...USER, birthDate: calendarDate(encoded) }).birthDate).toBeNull();
+        expect(new UpdateUserDto({ birthDate: encoded }).birthDate).toBeUndefined();
+    });
+
+    it('preserves a local Date selection and an explicit clear', () => {
+        const localSelection = new Date('1990-01-02T23:30:00');
+        expect(new UpdateUserDto({ birthDate: localSelection }).birthDate?.toISOString()).toBe('1990-01-02T00:00:00.000Z');
+        expect(new UpdateUserDto({ birthDate: null }).birthDate).toBeNull();
+        expect(new UpdateUserDto({ birthDate: undefined }).birthDate).toBeUndefined();
+    });
+});
 
 describe('user manage form mapper', () => {
     it('preserves the selected time zone in the profile update without inventing one for legacy users', () => {

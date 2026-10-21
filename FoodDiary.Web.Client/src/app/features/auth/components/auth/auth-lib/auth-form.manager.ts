@@ -1,6 +1,6 @@
 import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { email, form, minLength, required, validate } from '@angular/forms/signals';
+import { email, form, maxLength, minLength, required, validate } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
 import {
     FD_VALIDATION_ERRORS,
@@ -9,7 +9,7 @@ import {
     resolveSignalFormFieldError,
 } from 'fd-ui-kit/form-error/fd-ui-form-error';
 
-import { AUTH_PASSWORD_MIN_LENGTH } from '../../../../../shared/auth/auth.constants';
+import { AUTH_PASSWORD_MAX_LENGTH, AUTH_PASSWORD_MIN_LENGTH } from '../../../../../shared/auth/auth.constants';
 import type { LoginFieldErrors, PasswordResetFieldErrors, RegisterFieldErrors } from './auth.types';
 import { LOGIN_ERROR_FIELDS, PASSWORD_RESET_ERROR_FIELDS, REGISTER_ERROR_FIELDS } from './auth-form.config';
 import {
@@ -58,6 +58,7 @@ export class AuthFormManager {
             email(path.email);
             required(path.password);
             minLength(path.password, AUTH_PASSWORD_MIN_LENGTH);
+            maxLength(path.password, AUTH_PASSWORD_MAX_LENGTH);
         },
         {
             submission: {
@@ -74,7 +75,9 @@ export class AuthFormManager {
             validate(path.email, () => (this.registerEmailExists() ? { kind: 'userExists' } : undefined));
             required(path.password);
             minLength(path.password, AUTH_PASSWORD_MIN_LENGTH);
+            maxLength(path.password, AUTH_PASSWORD_MAX_LENGTH);
             required(path.confirmPassword);
+            maxLength(path.confirmPassword, AUTH_PASSWORD_MAX_LENGTH);
             validate(path.confirmPassword, ({ value }) => (value() === this.registerModel().password ? undefined : { kind: 'matchField' }));
             validate(path.agreeTerms, ({ value }) => (value() ? undefined : { kind: 'required' }));
         },

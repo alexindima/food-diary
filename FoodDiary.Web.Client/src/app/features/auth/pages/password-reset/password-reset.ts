@@ -2,7 +2,7 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormField, FormRoot, minLength, required, validate } from '@angular/forms/signals';
+import { form, FormField, FormRoot, maxLength, minLength, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute, type ParamMap } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -19,7 +19,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { AUTH_PASSWORD_MIN_LENGTH } from '../../../../shared/auth/auth.constants';
+import { AUTH_PASSWORD_MAX_LENGTH, AUTH_PASSWORD_MIN_LENGTH } from '../../../../shared/auth/auth.constants';
 import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import { AuthDialogComponent } from '../../dialogs/auth-dialog/auth-dialog';
 import { ConfirmPasswordResetRequest } from '../../models/auth.data';
@@ -56,6 +56,7 @@ export class PasswordResetComponent {
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
 
     protected readonly state = signal<ResetState>('ready');
+    protected readonly passwordMaximumLength = AUTH_PASSWORD_MAX_LENGTH;
     protected readonly isSubmitting = signal(false);
     protected readonly errorMessage = signal<string | null>(null);
     protected readonly token = signal<{ userId: string | null; token: string | null }>({ userId: null, token: null });
@@ -81,7 +82,9 @@ export class PasswordResetComponent {
         path => {
             required(path.password);
             minLength(path.password, AUTH_PASSWORD_MIN_LENGTH);
+            maxLength(path.password, AUTH_PASSWORD_MAX_LENGTH);
             required(path.confirmPassword);
+            maxLength(path.confirmPassword, AUTH_PASSWORD_MAX_LENGTH);
             validate(path.confirmPassword, ({ value }) => (value() === this.formModel().password ? undefined : { kind: 'matchField' }));
         },
         {

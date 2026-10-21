@@ -139,6 +139,24 @@ describe('FdUiInputComponent', () => {
 });
 
 describe('FdUiInputComponent rendering', () => {
+    it('applies an opt-in minimum to native numeric validity and removes it when unset', async () => {
+        const { fixture, input } = await setupInputAsync();
+        fixture.componentRef.setInput('type', 'number');
+        fixture.componentRef.setInput('minimum', 1);
+        fixture.detectChanges();
+        expect(input().min).toBe('1');
+        input().value = '0';
+        expect(input().validity.rangeUnderflow).toBe(true);
+        input().value = '1';
+        expect(input().validity.rangeUnderflow).toBe(false);
+
+        fixture.componentRef.setInput('minimum', undefined);
+        fixture.detectChanges();
+        input().value = '0';
+        expect(input().hasAttribute('min')).toBe(false);
+        expect(input().validity.rangeUnderflow).toBe(false);
+    });
+
     it('associates the label with the native control when an explicit id is supplied', async () => {
         await TestBed.configureTestingModule({ imports: [ExplicitIdHostComponent] }).compileComponents();
         const fixture = TestBed.createComponent(ExplicitIdHostComponent);

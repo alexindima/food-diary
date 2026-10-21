@@ -14,10 +14,11 @@ import type { TdeeInsight } from '../../../../../shared/models/tdee-insight.data
 })
 export class TdeeInsightDialogMetricsComponent {
     protected readonly measurements = inject(MeasurementSystemService);
+    public readonly locale = input.required<string>();
     public readonly insight = input.required<TdeeInsight>();
     public readonly weightTrendFormatted = input.required<string | null>();
     protected readonly displayWeightTrend = computed(() => {
         const value = Number(this.weightTrendFormatted());
-        return Number.isFinite(value) ? this.measurements.displayWeight(value).toFixed(1) : null;
+        return Number.isFinite(value) ? this.measurements.displayWeight(value) : null;
     });
 }

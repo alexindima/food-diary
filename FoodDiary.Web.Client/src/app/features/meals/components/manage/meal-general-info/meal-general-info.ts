@@ -15,6 +15,7 @@ export type MealGeneralFieldErrors = {
     date: string | null;
     time: string | null;
     mealType: string | null;
+    comment: string | null;
 };
 
 @Component({
