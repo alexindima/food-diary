@@ -8,6 +8,40 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.Cycles.Application.Tests;
 
 public partial class CyclesFeatureTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task UpsertCycleFactorCommandHandler_WithInvalidEdit_PreservesTheFactorWithoutSaving(bool oversizedNotes) {
+        var user = User.Create("factor-invalid@example.test", "hash");
+        var start = new DateOnly(2026, 4, 2);
+        var profile = CycleProfile.Create(user.Id, start.AddDays(-1));
+        CycleFactor factor = profile.UpsertFactor(CycleFactorType.HormonalContraception, start, endDate: null, notes: "original");
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new UpsertCycleFactorCommandHandler(repository, CreateCurrentUserAccessService(user));
+        DateTime? profileModified = profile.ModifiedOnUtc;
+        DateTime? factorModified = factor.ModifiedOnUtc;
+        var command = new UpsertCycleFactorCommand(user.Id.Value, profile.Id.Value,
+            (int)CycleFactorType.NonHormonalContraception, start.AddDays(1),
+            EndDate: oversizedNotes ? null : start,
+            Notes: oversizedNotes ? new string('x', CycleProfile.MaxNotesLength + 1) : "replacement",
+            ClearNotes: false, FactorId: factor.Id.Value);
+
+        Result<CycleModel> result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal("Validation.Invalid", result.Error.Code),
+            () => Assert.Equal(ErrorKind.Validation, result.Error.Kind),
+            () => Assert.False(repository.WasUpdated),
+            () => Assert.Equal(CycleFactorType.HormonalContraception, factor.Type),
+            () => Assert.Equal(start, factor.StartDate),
+            () => Assert.Null(factor.EndDate),
+            () => Assert.Equal("original", factor.Notes),
+            () => Assert.Equal(factorModified, factor.ModifiedOnUtc),
+            () => Assert.Equal(profileModified, profile.ModifiedOnUtc));
+        Assert.Single(profile.Factors);
+    }
+
     [Fact]
     public async Task UpsertCycleFactorCommandHandler_WithForeignProfile_DoesNotUpdateFactor() {
         var owner = User.Create("factor-owner@example.com", "hash");

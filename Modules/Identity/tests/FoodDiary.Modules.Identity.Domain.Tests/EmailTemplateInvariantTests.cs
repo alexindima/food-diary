@@ -8,9 +8,14 @@ public class EmailTemplateInvariantTests {
     public void Update_PreservesPreviousContentInRevisionHistory() {
         var template = EmailTemplate.Create("welcome", "en", "subject", "html", "text", isActive: true);
         Assert.Empty(template.Revisions);
+        DateTime beforeArchive = DateTime.UtcNow;
         template.Update("new subject", "new html", "new text", isActive: false);
+        DateTime afterArchive = DateTime.UtcNow;
         EmailTemplateRevision revision = Assert.Single(template.Revisions);
         Assert.Multiple(
+            () => Assert.NotEqual(Guid.Empty, revision.Id),
+            () => Assert.Equal(DateTimeKind.Utc, revision.ArchivedOnUtc.Kind),
+            () => Assert.InRange(revision.ArchivedOnUtc, beforeArchive, afterArchive),
             () => Assert.Equal("subject", revision.Subject),
             () => Assert.Equal("html", revision.HtmlBody),
             () => Assert.Equal("text", revision.TextBody),

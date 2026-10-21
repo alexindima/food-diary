@@ -1,5 +1,6 @@
 using FoodDiary.Modules.Ai.Domain.ValueObjects;
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
+using FoodDiary.Modules.Ai.PersistenceModel;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
@@ -15,6 +16,40 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     private static readonly DateTime PeriodStartUtc = new(2026, 8, 1, 0, 0, 0, DateTimeKind.Utc);
+
+    [RequiresDockerFact]
+    public async Task ReservationLedger_PersistsIdentityExpiryActualUsageAndReconciliationTime() {
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        var now = new DateTime(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc);
+        var clock = new MutableTimeProvider(now);
+        var repository = new AiQuotaRepository(options, clock);
+        AiQuotaReservationRequest request = CreateRequest(RequestIdFor(30), userId, 100, 50, 1000, 1000);
+
+        Assert.Equal(AiQuotaReservationStatus.Acquired, await repository.ReserveAsync(request));
+        clock.Advance(TimeSpan.FromMinutes(2));
+        await repository.ReconcileAsync(request.RequestId, new AiQuotaUsage("nutrition", "fixture-model", AiTokenUsage.FromCounts(40, 10, 50)));
+
+        await using var context = new AiDbContext(options);
+        AiQuotaReservation reservation = Assert.Single(await context.AiQuotaReservations.AsNoTracking().ToListAsync());
+        AiQuotaPeriod period = Assert.Single(await context.AiQuotaPeriods.AsNoTracking().ToListAsync());
+        Assert.Multiple(
+            () => Assert.Equal(request.RequestId, reservation.RequestId),
+            () => Assert.Equal(userId, reservation.UserId),
+            () => Assert.Equal(PeriodStartUtc, reservation.PeriodStartUtc),
+            () => Assert.Equal("nutrition", reservation.Operation),
+            () => Assert.Equal(AiQuotaReservationState.Completed, reservation.State),
+            () => Assert.Equal(40, reservation.ActualInputTokens),
+            () => Assert.Equal(10, reservation.ActualOutputTokens),
+            () => Assert.Equal(now, reservation.CreatedOnUtc),
+            () => Assert.Equal(request.ExpiresOnUtc, reservation.ExpiresOnUtc),
+            () => Assert.Equal(now.AddMinutes(2), reservation.UpdatedOnUtc),
+            () => Assert.Equal(now.AddMinutes(2), period.UpdatedOnUtc),
+            () => Assert.Equal(40, period.ConsumedInputTokens),
+            () => Assert.Equal(10, period.ConsumedOutputTokens),
+            () => Assert.Equal(0, period.ReservedInputTokens),
+            () => Assert.Equal(0, period.ReservedOutputTokens),
+            () => Assert.Empty(context.ChangeTracker.Entries()));
+    }
 
     [RequiresDockerFact]
     public async Task ReserveAsync_WithTwentyConcurrentRequests_NeverExceedsQuota() {

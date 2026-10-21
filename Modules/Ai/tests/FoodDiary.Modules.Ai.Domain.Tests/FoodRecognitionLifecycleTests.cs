@@ -5,6 +5,15 @@ namespace FoodDiary.Modules.Ai.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class FoodRecognitionLifecycleTests {
     [Theory]
+    [InlineData(FoodRecognitionStatus.Unknown)]
+    [InlineData((FoodRecognitionStatus)999)]
+    public void UnsupportedStatuses_CannotBeEncodedForStorage(FoodRecognitionStatus status) {
+        ArgumentOutOfRangeException error = Assert.Throws<ArgumentOutOfRangeException>(() => FoodRecognitionLifecycle.Encode(status));
+
+        Assert.Equal("status", error.ParamName);
+    }
+
+    [Theory]
     [InlineData(FoodRecognitionStatus.Queued, FoodRecognitionAction.Claim, FoodRecognitionStatus.Running)]
     [InlineData(FoodRecognitionStatus.Queued, FoodRecognitionAction.Interrupt, FoodRecognitionStatus.Failed)]
     [InlineData(FoodRecognitionStatus.Running, FoodRecognitionAction.CheckpointVision, FoodRecognitionStatus.Running)]

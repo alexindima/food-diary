@@ -7,6 +7,48 @@ namespace FoodDiary.Modules.Notifications.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class NotificationFactoryTests {
+    [Fact]
+    public void FastingWindowStarted_PreservesTheOwnerPhasePayloadAndOccurrenceReference() {
+        var userId = UserId.New();
+
+        Notification notification = NotificationFactory.CreateFastingWindowStarted(userId, "cyclic", "fasting", "occurrence-id");
+        FastingPhaseNotificationPayload? payload = NotificationPayloadSerializer.Deserialize<FastingPhaseNotificationPayload>(notification.PayloadJson);
+
+        Assert.NotNull(payload);
+        Assert.Multiple(
+            () => Assert.Equal(userId, notification.UserId),
+            () => Assert.Equal(NotificationTypes.FastingWindowStarted, notification.Type),
+            () => Assert.Equal("occurrence-id", notification.ReferenceId),
+            () => Assert.Equal("cyclic", payload.PlanType),
+            () => Assert.Equal("fasting", payload.OccurrenceKind));
+    }
+
+    [Fact]
+    public void FastingCheckInReminder_PreservesTheOccurrenceReferenceAndEmptyPayload() {
+        var userId = UserId.New();
+
+        Notification notification = NotificationFactory.CreateFastingCheckInReminder(userId, "occurrence-id");
+
+        Assert.Multiple(
+            () => Assert.Equal(userId, notification.UserId),
+            () => Assert.Equal(NotificationTypes.FastingCheckInReminder, notification.Type),
+            () => Assert.Equal("occurrence-id", notification.ReferenceId),
+            () => Assert.Equal("{}", notification.PayloadJson));
+    }
+
+    [Fact]
+    public void RecommendationCommentForRecipient_LinksDirectlyToTheRecommendation() {
+        var userId = UserId.New();
+
+        Notification notification = NotificationFactory.CreateNewRecommendationComment(userId, "recommendation-id", "client-id", forDietologist: false);
+
+        Assert.Multiple(
+            () => Assert.Equal(userId, notification.UserId),
+            () => Assert.Equal(NotificationTypes.NewRecommendationComment, notification.Type),
+            () => Assert.Equal("recommendation-id", notification.ReferenceId),
+            () => Assert.Equal("{}", notification.PayloadJson));
+    }
+
     [Theory]
     [InlineData(false, false, NotificationTypes.NewClientTask, null)]
     [InlineData(true, false, NotificationTypes.ClientTaskChangedForDietologist, "client-id")]

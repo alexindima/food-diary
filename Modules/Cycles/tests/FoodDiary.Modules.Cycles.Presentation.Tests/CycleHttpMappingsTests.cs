@@ -213,6 +213,7 @@ public sealed class CycleHttpMappingsTests {
         var activeConsentId = Guid.NewGuid();
         var revokedConsentId = Guid.NewGuid();
         var revisionId = Guid.NewGuid();
+        var noteId = Guid.NewGuid();
         var startDate = new DateOnly(2026, 4, 1);
         DateTime generatedAtUtc = new(2026, 4, 2, 12, 0, 0, DateTimeKind.Utc);
         DateTime grantedAtUtc = generatedAtUtc.AddDays(-2);
@@ -299,9 +300,18 @@ public sealed class CycleHttpMappingsTests {
                     MeanAbsoluteErrorDays: 1.25,
                     ["calibrated", "stable_pattern"],
                     "period-v2.1"),
-            ]);
+            ],
+            DayNotes: [new CycleDayNoteModel(noteId, cycleId, startDate.AddDays(1), "Quiet day")]);
 
         CycleHttpResponse response = model.ToHttpResponse();
+
+        CycleDayNoteHttpResponse note = Assert.Single(Assert.IsAssignableFrom<IReadOnlyCollection<CycleDayNoteHttpResponse>>(response.DayNotes));
+        Assert.Multiple(
+            () => Assert.Equal(noteId, note.Id),
+            () => Assert.Equal(cycleId, note.CycleProfileId),
+            () => Assert.Equal(new DateTime(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc), note.Date),
+            () => Assert.Equal(DateTimeKind.Utc, note.Date.Kind),
+            () => Assert.Equal("Quiet day", note.Notes));
 
         Assert.Equal(cycleId, response.Id);
         Assert.Equal(userId, response.UserId);

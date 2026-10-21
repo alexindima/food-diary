@@ -10,6 +10,41 @@ namespace FoodDiary.Development.Mcp.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class NodeTaskProcessBoundaryTests {
     [Fact]
+    [Trait("Category", "Slow")]
+    public async Task ToolTimeout_ReportsItsOwnDeadlineAndTerminatesTheOwnedNodeProcess() {
+        using var repository = new NodeRepository(script: null);
+        string identityPath = Path.Combine(repository.Root, "child.pid");
+        string temporaryPath = identityPath + ".tmp";
+        repository.WriteScript("import { writeFileSync, renameSync } from 'node:fs'; "
+            + "writeFileSync(" + JsonSerializer.Serialize(temporaryPath) + ", String(process.pid)); "
+            + "renameSync(" + JsonSerializer.Serialize(temporaryPath) + ", " + JsonSerializer.Serialize(identityPath) + "); "
+            + "setInterval(() => {}, 1000);");
+        using var harness = new CancellationTokenSource(TimeSpan.FromSeconds(150));
+        Task<JsonElement> execution = new NodeTaskToolExecutor().ExecuteAsync(new TaskToolRequest(TaskToolAction.Next), harness.Token);
+        Process? child = null;
+        try {
+            child = await ReadOwnedProcessAsync(identityPath);
+            child.EnableRaisingEvents = true;
+
+            DevelopmentMcpException failure = await Assert.ThrowsAsync<DevelopmentMcpException>(() => execution);
+
+            Assert.Equal(DevelopmentMcpErrorCodes.Timeout, failure.ErrorCode);
+            Assert.Contains("bounded timeout", failure.Message, StringComparison.Ordinal);
+            Assert.False(harness.IsCancellationRequested);
+            await child.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(5));
+            Assert.True(child.HasExited);
+        } finally {
+            await harness.CancelAsync();
+            if (child is { HasExited: false }) {
+                child.Kill(entireProcessTree: true);
+                await child.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(5));
+            }
+            try { await execution.WaitAsync(TimeSpan.FromSeconds(5)); } catch (OperationCanceledException) { } catch (DevelopmentMcpException) { }
+            child?.Dispose();
+        }
+    }
+
+    [Fact]
     public async Task OutputAtTheExactBound_ReturnsAJsonValueThatSurvivesDocumentDisposal() {
         using var repository = new NodeRepository("process.stdout.write(JSON.stringify('x'.repeat(131070)));");
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(15));

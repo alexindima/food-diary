@@ -16,6 +16,37 @@ namespace FoodDiary.Modules.Export.Presentation.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class ExportControllerTests {
     [Fact]
+    public async Task SensitiveCycleExport_UsesInitializedRequestValuesForTheScopedOwnerQueryAndFile() {
+        var userId = Guid.NewGuid();
+        var from = new DateTime(2026, 10, 1, 0, 0, 0, DateTimeKind.Utc);
+        var to = new DateTime(2026, 10, 21, 0, 0, 0, DateTimeKind.Utc);
+        var request = new SensitiveCycleExportHttpRequest(DateTime.MinValue, DateTime.MinValue, "constructor-value") {
+            DateFrom = from,
+            DateTo = to,
+            CurrentPassword = "fixture-password",
+            TimeZoneOffsetMinutes = 240,
+        };
+        IRequest<Result<FileExportResult>>? sent = null;
+        byte[] content = [7, 8, 9];
+        ISender sender = SubstituteSender.Create(Result.Success(new FileExportResult(content, "text/csv", "sensitive-cycle.csv")), value => sent = value);
+        ExportController controller = CreateController(sender);
+
+        FileContentResult response = Assert.IsType<FileContentResult>(await controller.ExportSensitiveCycle(userId, request));
+
+        ExportCycleQuery query = Assert.IsType<ExportCycleQuery>(sent);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(new DateOnly(2026, 10, 1), query.DateFrom),
+            () => Assert.Equal(new DateOnly(2026, 10, 21), query.DateTo),
+            () => Assert.Equal(240, query.TimeZoneOffsetMinutes),
+            () => Assert.Equal(CycleExportScope.Sensitive, query.Scope),
+            () => Assert.Equal("fixture-password", query.CurrentPassword),
+            () => Assert.Equal(content, response.FileContents),
+            () => Assert.Equal("text/csv", response.ContentType),
+            () => Assert.Equal("sensitive-cycle.csv", response.FileDownloadName));
+    }
+
+    [Fact]
     public async Task ExportDiary_SendsDiaryQueryAndReturnsFile() {
         byte[] content = [1, 2, 3];
         IRequest<Result<FileExportResult>>? sentRequest = null;

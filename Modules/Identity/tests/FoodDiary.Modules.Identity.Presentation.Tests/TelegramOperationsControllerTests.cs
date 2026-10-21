@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Modules.Identity.Presentation.Security;
 using System.Reflection;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.RegisterTelegramOperation;
+using FoodDiary.Modules.Identity.Application.Authentication.Queries.ListReadyTelegramOperations;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
@@ -15,6 +16,23 @@ namespace FoodDiary.Modules.Identity.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramOperationsControllerTests {
+    [Fact]
+    public async Task ListReady_PreservesEveryOperationIdentityAndTheOwnerOrdering() {
+        IReadOnlyList<TelegramOperationId> ids = [TelegramOperationId.New(), TelegramOperationId.New()];
+        IRequest<Result<IReadOnlyList<TelegramOperationId>>>? sent = null;
+        ISender sender = SubstituteSender.Create(Result.Success(ids), request => sent = request);
+        var controller = new TelegramOperationsController(sender) {
+            ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() },
+        };
+
+        IActionResult result = await controller.ListReady();
+
+        Assert.IsType<ListReadyTelegramOperationsQuery>(sent);
+        OkObjectResult response = Assert.IsType<OkObjectResult>(result);
+        Guid[] body = Assert.IsType<Guid[]>(response.Value);
+        Assert.Equal([ids[0].Value, ids[1].Value], body);
+    }
+
     [Fact]
     public void AllOperations_RequireBotSecretAndDisableResponseCaching() {
         Assert.NotNull(typeof(TelegramOperationsController).GetCustomAttribute<RequireTelegramBotSecretAttribute>());

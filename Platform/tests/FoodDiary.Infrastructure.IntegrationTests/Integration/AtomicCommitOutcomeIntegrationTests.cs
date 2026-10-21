@@ -10,6 +10,8 @@ using FoodDiary.Persistence.Runtime.Persistence.Shared;
 using FoodDiary.Results;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Testing.Assertions;
 
@@ -18,6 +20,79 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class AtomicCommitOutcomeIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerFact]
+    public async Task ExpiredReceipt_IsReplacedWithTheNewResultAndTheMaximumRetentionWindow() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var clock = new MutableClock(new DateTime(2026, 10, 21, 12, 0, 0, DateTimeKind.Utc));
+        var coordinator = new EfModuleTransactionCoordinator(context,
+            new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance), new RecordingActions());
+        var executor = new EfAtomicCommandExecutor(coordinator, context, clock);
+        var identity = new AtomicOperation(Guid.NewGuid(), new string('D', 64), new string('E', 64), TimeSpan.FromDays(7));
+        var originalValue = Guid.NewGuid();
+        var replacementValue = Guid.NewGuid();
+        int invocations = 0;
+
+        Result<Guid> first = await executor.ExecuteAsync(identity, _ => {
+            invocations++;
+            return Task.FromResult(Result.Success(originalValue));
+        });
+        Assert.Equal(originalValue, ResultAssert.Success(first));
+        clock.Advance(TimeSpan.FromDays(8));
+        context.ChangeTracker.Clear();
+        Result<Guid> second = await executor.ExecuteAsync(identity, _ => {
+            invocations++;
+            return Task.FromResult(Result.Success(replacementValue));
+        });
+        context.ChangeTracker.Clear();
+        Result<Guid> replay = await executor.ExecuteAsync<Result<Guid>>(identity, _ => throw new InvalidOperationException("A live receipt must not rerun its handler."));
+
+        Assert.Equal(replacementValue, ResultAssert.Success(second));
+        Assert.Equal(replacementValue, ResultAssert.Success(replay));
+        Assert.Equal(2, invocations);
+        AtomicCommandReceipt receipt = Assert.Single(await context.Set<AtomicCommandReceipt>().AsNoTracking().ToListAsync());
+        Assert.Equal(identity.Key, receipt.Key);
+        Assert.Equal(clock.GetUtcNow().UtcDateTime.AddDays(7), receipt.ExpiresOnUtc);
+    }
+
+    [RequiresDockerFact]
+    public async Task FailedOwnerResult_DoesNotReserveTheKeyAgainstASubsequentSuccessfulAttempt() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var coordinator = new EfModuleTransactionCoordinator(context,
+            new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance), new RecordingActions());
+        var executor = new EfAtomicCommandExecutor(coordinator, context, TimeProvider.System);
+        var identity = new AtomicOperation(Guid.NewGuid(), new string('F', 64), new string('A', 64), TimeSpan.FromDays(1));
+        var failure = new Error("Fixture.Rejected", "The owner rejected this attempt.", ErrorKind.Validation);
+
+        Result<Guid> rejected = await executor.ExecuteAsync(identity, _ => Task.FromResult(Result.Failure<Guid>(failure)));
+
+        Assert.Same(failure, ResultAssert.Failure(rejected));
+        Assert.Empty(await context.Set<AtomicCommandReceipt>().AsNoTracking().ToListAsync());
+        var value = Guid.NewGuid();
+        Result<Guid> accepted = await executor.ExecuteAsync(identity, _ => Task.FromResult(Result.Success(value)));
+        Assert.Equal(value, ResultAssert.Success(accepted));
+        Assert.Single(await context.Set<AtomicCommandReceipt>().AsNoTracking().ToListAsync());
+    }
+
+    [RequiresDockerFact]
+    public async Task FailedCommitAndDisposal_WithTheProviderStillInProgress_RemainsUnknown() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        await using IDbContextTransaction provider = await context.Database.BeginTransactionAsync();
+        IDbContextTransaction wrapper = Substitute.For<IDbContextTransaction, IInfrastructure<DbTransaction>>();
+        ((IInfrastructure<DbTransaction>)wrapper).Instance.Returns(provider.GetDbTransaction());
+        var commitFailure = new IOException("The commit acknowledgement is unavailable.");
+        wrapper.CommitAsync(CancellationToken.None).Returns(Task.FromException(commitFailure));
+        wrapper.DisposeAsync().Returns(ValueTask.FromException(new IOException("The transaction could not be disposed.")));
+
+        CommitOutcomeUnknownException error = await Assert.ThrowsAsync<CommitOutcomeUnknownException>(() =>
+            VerifiedTransactionCommit.CommitAsync(wrapper, CancellationToken.None));
+
+        Assert.Same(commitFailure, error.InnerException);
+        Assert.NotNull(provider.GetDbTransaction().Connection);
+        _ = wrapper.Received(1).CommitAsync(CancellationToken.None);
+        _ = wrapper.Received(1).DisposeAsync();
+        await provider.RollbackAsync();
+    }
+
     [RequiresDockerFact]
     public async Task ReceiptMaintenance_BoundsExpiryAndParticipatesInOwnerPurgeTransaction() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
@@ -103,6 +178,13 @@ public sealed class AtomicCommitOutcomeIntegrationTests(PostgresDatabaseFixture 
             Result<Guid> conflict = await executor.ExecuteAsync(identity with { RequestHash = new string('C', 64) }, CreateAsync);
             Assert.Equal("Idempotency.Conflict", ResultAssert.Failure(conflict).Code);
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class MutableClock(DateTime utcNow) : TimeProvider {
+        private DateTime _utcNow = utcNow;
+        public override DateTimeOffset GetUtcNow() => new(_utcNow);
+        public void Advance(TimeSpan duration) => _utcNow = _utcNow.Add(duration);
     }
 
     [ExcludeFromCodeCoverage]

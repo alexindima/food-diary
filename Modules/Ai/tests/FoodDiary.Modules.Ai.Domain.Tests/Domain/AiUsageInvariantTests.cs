@@ -97,8 +97,9 @@ public class AiUsageInvariantTests {
 
     [Fact]
     public void Create_WithValidValues_TrimAndStoreFields() {
+        var userId = UserId.New();
         var usage = AiUsage.Create(
-            UserId.New(),
+            userId,
             operation: "  meal_scan  ",
             model: "  gpt-4.1-mini  ",
             inputTokens: 10,
@@ -106,6 +107,7 @@ public class AiUsageInvariantTests {
             totalTokens: 20);
 
         Assert.Multiple(
+            () => Assert.Equal(userId, usage.UserId),
             () => Assert.Equal("meal_scan", usage.Operation),
             () => Assert.Equal("gpt-4.1-mini", usage.Model),
             () => Assert.Equal(10, usage.InputTokens),

@@ -11,6 +11,40 @@ using Npgsql;
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
 public sealed partial class UserCleanupServiceIntegrationTests {
+    [RequiresDockerTheory]
+    [InlineData("run")]
+    [InlineData("none")]
+    [InlineData("too-many")]
+    [InlineData("empty-id")]
+    [InlineData("duplicate")]
+    public async Task CleanupOwnedFixtures_RejectsInvalidIdentitySetsWithoutRemovingTheOwnedAccountOrContent(string invalidField) {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var runId = Guid.NewGuid();
+        var owned = User.Create($"webmcp-fixture-{runId:D}-client@example.test", "hash");
+        owned.MarkDeleted(DateTime.UtcNow.AddDays(-1));
+        var recipe = Recipe.Create(owned.Id, "Retained fixture recipe", servings: 1, visibility: Visibility.Private);
+        context.AddRange(owned, recipe);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        await using ServiceProvider provider = CreateServiceProvider(context, new RecordingImageObjectDeletionOutbox(), out UserCleanupService service);
+        Guid[] ids = invalidField switch {
+            "none" => [],
+            "too-many" => [.. Enumerable.Range(0, 21).Select(_ => Guid.NewGuid())],
+            "empty-id" => [owned.Id.Value, Guid.Empty],
+            "duplicate" => [owned.Id.Value, owned.Id.Value],
+            _ => [owned.Id.Value],
+        };
+
+        ArgumentException error = await Assert.ThrowsAsync<ArgumentException>(() => service.CleanupOwnedFixtureUsersAsync(
+            string.Equals(invalidField, "run", StringComparison.Ordinal) ? Guid.Empty : runId, ids, DateTime.UtcNow, CancellationToken.None));
+
+        Assert.Equal("userIds", error.ParamName);
+        await using FoodDiaryDbContext verification = CreateVerificationContext(context);
+        Assert.True(await verification.Users.AnyAsync(user => user.Id == owned.Id));
+        Assert.True(await verification.Recipes.AnyAsync(item => item.Id == recipe.Id));
+        Assert.Null(context.Database.CurrentTransaction);
+    }
+
     [RequiresDockerFact]
     public async Task CleanupOwnedFixtures_PurgesOnlyTheExplicitDeletedSyntheticUser() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();

@@ -11506,6 +11506,10 @@
             "version": null
           },
           {
+            "name": "Microsoft.EntityFrameworkCore.InMemory",
+            "version": null
+          },
+          {
             "name": "Microsoft.EntityFrameworkCore.Relational",
             "version": null
           },

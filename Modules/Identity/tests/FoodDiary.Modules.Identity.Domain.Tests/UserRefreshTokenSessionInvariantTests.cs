@@ -7,6 +7,28 @@ namespace FoodDiary.Modules.Identity.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class UserRefreshTokenSessionInvariantTests {
     [Fact]
+    public void Rotation_PreservesTheOriginalNormalizedClientMetadata() {
+        var id = RefreshTokenSessionId.New();
+        var userId = UserId.New();
+        var created = new DateTime(2026, 10, 21, 12, 0, 0, DateTimeKind.Utc);
+        var session = UserRefreshTokenSession.Create(id, userId, " original-hash ", rememberMe: false,
+            authProvider: " local ", ipAddress: " 2001:db8::1 ", userAgent: " fixture-client ", created);
+
+        session.Rotate("new-hash", rememberMe: true, created.AddMinutes(1), TimeSpan.FromMinutes(5));
+
+        Assert.Multiple(
+            () => Assert.Equal(id, session.Id),
+            () => Assert.Equal(userId, session.UserId),
+            () => Assert.Equal("local", session.AuthProvider),
+            () => Assert.Equal("2001:db8::1", session.IpAddress),
+            () => Assert.Equal("fixture-client", session.UserAgent),
+            () => Assert.Equal(created, session.CreatedAtUtc),
+            () => Assert.Equal("original-hash", session.PreviousRefreshTokenHash),
+            () => Assert.Equal("new-hash", session.RefreshTokenHash),
+            () => Assert.True(session.RememberMe));
+    }
+
+    [Fact]
     public void RefreshTokenSession_Create_WithEmptySessionId_Throws() {
         Assert.Throws<ArgumentException>(() => UserRefreshTokenSession.Create(
             RefreshTokenSessionId.Empty,

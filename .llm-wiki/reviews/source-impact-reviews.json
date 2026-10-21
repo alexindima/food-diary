@@ -1328,8 +1328,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "20d379bd26a5701aa1480a0c3e6c475f775c72299a744f7c5d1edf5f5f5c5cb8",
-          "reviewReason": "Reviewed test-only calendar guards, mixed nutrient provenance, metadata/configuration boundaries and offline recipe HTTP/video flows. The only additional graph edge is Ai.Presentation.Tests to the already-consumed Presentation.Api kernel, with an exact test allowlist entry. The real idempotency filter admits the fixture request before the controller; production references, authorization, public API, persistence and calculation/time rules remain unchanged. Owner suites and full architecture pass; current architecture/navigation guidance remains accurate."
+          "sha256": "e869b44fb7938d066f1ab89d70510640373071f5b6c763981e59387d66615326",
+          "reviewReason": "Reviewed the exact repository-catalog delta: one explicit Microsoft.EntityFrameworkCore.InMemory dependency in the Users integration-test project. Production query/index/cache code and all query-context claims are unchanged. Existing PostgreSQL tests remain, the owner-context bypass tests pass, and both affected retrieval smoke groups (context-search-evals and context-retrieval) passed with frozen corpora and thresholds. No page wording change is needed."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1337,10 +1337,10 @@
           "reviewReason": "Documented the image confirmation case relocation to InitialBaseline, verified IsConfirmed at line1060. Original question and100% image thresholds preserved; explicit migration intent now works with generic baseline names, schema-only owner intent retains its ranking. All22corpora/4parity corpora passed; no added ranking rules."
         }
       ],
-      "reason": "Reviewed test-only calendar guards, mixed nutrient provenance, metadata/configuration boundaries and offline recipe HTTP/video flows. The only additional graph edge is Ai.Presentation.Tests to the already-consumed Presentation.Api kernel, with an exact test allowlist entry. The real idempotency filter admits the fixture request before the controller; production references, authorization, public API, persistence and calculation/time rules remain unchanged. Owner suites and full architecture pass; current architecture/navigation guidance remains accurate.",
+      "reason": "Reviewed the exact repository-catalog delta: one explicit Microsoft.EntityFrameworkCore.InMemory dependency in the Users integration-test project. Production query/index/cache code and all query-context claims are unchanged. Existing PostgreSQL tests remain, the owner-context bypass tests pass, and both affected retrieval smoke groups (context-search-evals and context-retrieval) passed with frozen corpora and thresholds. No page wording change is needed.",
       "baseRef": "HEAD",
-      "gitHead": "4bd10b4045af6d78d51c20fa8431eea3d554ae22",
-      "reviewedAtUtc": "2026-10-21T18:40:57.3809905Z"
+      "gitHead": "6901a7292e32057ea3a5cc6c7885b8e1837ff0f6",
+      "reviewedAtUtc": "2026-10-21T19:58:55.1973732Z"
     },
     {
       "pageId": "workflow.review-diff",

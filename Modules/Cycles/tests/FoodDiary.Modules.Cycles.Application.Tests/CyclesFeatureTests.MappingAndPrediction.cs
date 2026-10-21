@@ -10,6 +10,25 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 namespace FoodDiary.Modules.Cycles.Application.Tests;
 
 public partial class CyclesFeatureTests {
+    [Fact]
+    public void CycleMappings_AggregateDayNotes_PreserveTheirIdentityCalendarDateAndNormalizedText() {
+        var day = new DateOnly(2026, 4, 2);
+        var profile = CycleProfile.Create(UserId.New(), day.AddDays(-1));
+        profile.SetDayNotes(day, "  Quiet day  ");
+        CycleDayNote note = Assert.Single(profile.DayNotes);
+
+        CycleModel response = profile.ToModel(currentDate: day);
+
+        CycleDayNoteModel mapped = Assert.Single(Assert.IsAssignableFrom<IReadOnlyCollection<CycleDayNoteModel>>(response.DayNotes));
+        Assert.Multiple(
+            () => Assert.Equal(note.Id.Value, mapped.Id),
+            () => Assert.Equal(profile.Id.Value, mapped.CycleProfileId),
+            () => Assert.Equal(day, mapped.Date),
+            () => Assert.Equal("Quiet day", mapped.Notes),
+            () => Assert.Empty(response.BleedingEntries),
+            () => Assert.Empty(response.Symptoms),
+            () => Assert.Empty(response.FertilitySignals));
+    }
 
     [Theory]
     [InlineData(1, null, false)]

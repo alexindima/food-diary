@@ -8,9 +8,14 @@ public class AiPromptTemplateInvariantTests {
     public void Update_PreservesPreviousVersionInRevisionHistory() {
         var template = AiPromptTemplate.Create("meal_scan", "en", "original");
         Assert.Empty(template.Revisions);
+        DateTime beforeArchive = DateTime.UtcNow;
         template.Update("updated", isActive: false);
+        DateTime afterArchive = DateTime.UtcNow;
         AiPromptRevision revision = Assert.Single(template.Revisions);
         Assert.Multiple(
+            () => Assert.NotEqual(Guid.Empty, revision.Id),
+            () => Assert.Equal(DateTimeKind.Utc, revision.ArchivedOnUtc.Kind),
+            () => Assert.InRange(revision.ArchivedOnUtc, beforeArchive, afterArchive),
             () => Assert.Equal("original", revision.PromptText),
             () => Assert.Equal(1, revision.Version),
             () => Assert.True(revision.IsActive),

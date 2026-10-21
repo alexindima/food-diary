@@ -54,6 +54,45 @@ namespace FoodDiary.Modules.Dashboard.Application.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class DashboardSnapshotBuilderTests {
     [Fact]
+    public async Task CreateBuildContextAsync_WithUnavailableProfile_StopsBeforeReadingAnySections() {
+        var userId = UserId.New();
+        using var cancellation = new CancellationTokenSource();
+        var error = new Error("Users.AccessDenied", "The profile is unavailable.");
+        ISender sender = Substitute.For<ISender>();
+        IDashboardReadService read = Substitute.For<IDashboardReadService>();
+        IDashboardUserContextService users = Substitute.For<IDashboardUserContextService>();
+        users.GetAccessibleDashboardUserAsync(userId, cancellation.Token).Returns(Result.Failure<DashboardUserContextModel>(error));
+        var loader = new DashboardSectionDataLoader(sender, users, read);
+        DashboardSnapshotRequest request = CreateRequest(userId.Value, Sections()) with { UseUserTimeZone = true };
+
+        Result<DashboardBuildContext> result = await loader.CreateBuildContextAsync(request, cancellation.Token);
+
+        ResultAssert.Failure(result);
+        Assert.Same(error, result.Error);
+        await users.Received(1).GetAccessibleDashboardUserAsync(userId, cancellation.Token);
+        Assert.Single(users.ReceivedCalls());
+        Assert.Empty(read.ReceivedCalls());
+        Assert.Empty(sender.ReceivedCalls());
+    }
+
+    [Fact]
+    public async Task CreateBuildContextAsync_WithUnknownZone_StopsBeforeReadingTheProfileOrSections() {
+        ISender sender = Substitute.For<ISender>();
+        IDashboardReadService read = Substitute.For<IDashboardReadService>();
+        IDashboardUserContextService users = Substitute.For<IDashboardUserContextService>();
+        var loader = new DashboardSectionDataLoader(sender, users, read);
+        DashboardSnapshotRequest request = CreateRequest(Guid.NewGuid(), Sections()) with { TimeZoneId = "FoodDiary/Unknown" };
+
+        Result<DashboardBuildContext> result = await loader.CreateBuildContextAsync(request, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Empty(users.ReceivedCalls());
+        Assert.Empty(read.ReceivedCalls());
+        Assert.Empty(sender.ReceivedCalls());
+    }
+
+    [Fact]
     public async Task CreateBuildContextAsync_RejectsPreloadedContextForAnotherUser() {
         var user = User.Create("dashboard-context@example.com", "hash");
         IDashboardUserContextService userContextService = Substitute.For<IDashboardUserContextService>();

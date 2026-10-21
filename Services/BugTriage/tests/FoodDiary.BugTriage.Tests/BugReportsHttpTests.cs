@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http.Json;
 using FoodDiary.BugTriage.Application.Abstractions;
 using FoodDiary.BugTriage.Application.Reports;
+using FoodDiary.BugTriage.Presentation.Features.Reports;
 using FoodDiary.BugTriage.Infrastructure.Workers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -18,6 +19,34 @@ namespace FoodDiary.BugTriage.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BugReportsHttpTests {
+    [Fact]
+    public async Task Claim_ReturnsTheLeasedReportIdentityContentAndFencingMetadataWithoutCaching() {
+        await using var factory = new Factory();
+        var now = new DateTimeOffset(2026, 10, 21, 12, 0, 0, TimeSpan.Zero);
+        var lease = new ReportLease(new BugReportId(Guid.NewGuid()), new SourceMessageId(Guid.NewGuid()),
+            "Fixture subject", "Fixture report text", new LeaseToken(Guid.NewGuid()), now.AddMinutes(5), 3, now.AddDays(1));
+        factory.Store.ClaimAsync(Arg.Any<DateTimeOffset>(), Arg.Any<TimeSpan>(), Arg.Any<int>(), Arg.Any<CancellationToken>()).Returns(lease);
+        using HttpClient client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add("X-BugTriage-Key", Factory.Key);
+
+        using HttpResponseMessage response = await client.PostAsync("/api/bug-reports/claim", content: null);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.True(response.Headers.CacheControl?.NoStore);
+        ReportLeaseHttpResponse? body = await response.Content.ReadFromJsonAsync<ReportLeaseHttpResponse>();
+        Assert.NotNull(body);
+        Assert.Multiple(
+            () => Assert.Equal(lease.Id.Value, body.Id),
+            () => Assert.Equal(lease.SourceMessageId.Value, body.SourceMessageId),
+            () => Assert.Equal("Fixture subject", body.Subject),
+            () => Assert.Equal("Fixture report text", body.TextBody),
+            () => Assert.Equal(lease.LeaseToken.Value, body.LeaseToken),
+            () => Assert.Equal(now.AddMinutes(5), body.LeaseExpiresAtUtc),
+            () => Assert.Equal(3, body.Attempt),
+            () => Assert.Equal(now.AddDays(1), body.ContentExpiresAtUtc));
+        await factory.Store.Received(1).ClaimAsync(Arg.Any<DateTimeOffset>(), Arg.Any<TimeSpan>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
+    }
+
     [Fact]
     public async Task Journal_UsesSeparateReadCredentialAndRejectsWorkerOperations() {
         await using var factory = new Factory();

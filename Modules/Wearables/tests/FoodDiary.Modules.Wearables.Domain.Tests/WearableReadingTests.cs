@@ -8,6 +8,22 @@ namespace FoodDiary.Modules.Wearables.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class WearableReadingTests {
     [Theory]
+    [InlineData(WearableDataType.CaloriesBurned)]
+    [InlineData(WearableDataType.ActiveMinutes)]
+    [InlineData(WearableDataType.SleepMinutes)]
+    public void NamedMetricFactories_PreserveFractionalProviderReadings(WearableDataType type) {
+        WearableReading reading = type switch {
+            WearableDataType.CaloriesBurned => WearableReading.CaloriesBurned(1000000.25),
+            WearableDataType.ActiveMinutes => WearableReading.ActiveMinutes(1000000.25),
+            _ => WearableReading.SleepMinutes(1000000.25),
+        };
+
+        Assert.Equal(type, reading.DataType);
+        Assert.Equal(1000000.25, reading.Value);
+        Assert.Equal(WearableReading.FromFields(type, 1000000.25), reading);
+    }
+
+    [Theory]
     [InlineData(WearableDataType.Steps)]
     [InlineData(WearableDataType.HeartRate)]
     [InlineData(WearableDataType.CaloriesBurned)]

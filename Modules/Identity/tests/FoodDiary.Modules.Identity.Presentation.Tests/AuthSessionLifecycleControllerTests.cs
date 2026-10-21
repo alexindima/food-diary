@@ -18,6 +18,29 @@ namespace FoodDiary.Modules.Identity.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AuthSessionLifecycleControllerTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task GetSessions_ForwardsTypedPaginationAndTheCurrentUserAndSession(bool customPage) {
+        var userId = Guid.NewGuid();
+        var sessionId = Guid.NewGuid();
+        IRequest<Result<IReadOnlyList<ActiveSessionModel>>>? sent = null;
+        IReadOnlyList<ActiveSessionModel> sessions = [];
+        ISender sender = SubstituteSender.Create(Result.Success(sessions), request => sent = request);
+        AuthSessionLifecycleController controller = CreateController(sender);
+        GetActiveSessionsHttpQuery query = customPage ? new(Page: 3, Limit: 7) : new();
+
+        OkObjectResult response = Assert.IsType<OkObjectResult>(await controller.GetSessions(userId, sessionId, query));
+
+        Assert.Empty(Assert.IsType<ActiveSessionHttpResponse[]>(response.Value));
+        GetActiveSessionsQuery request = Assert.IsType<GetActiveSessionsQuery>(sent);
+        Assert.Multiple(
+            () => Assert.Equal(userId, request.UserId.Value),
+            () => Assert.Equal(sessionId, request.CurrentSessionId.Value),
+            () => Assert.Equal(customPage ? 3 : 1, request.Page),
+            () => Assert.Equal(customPage ? 7 : 50, request.Limit));
+    }
+
     [Fact]
     public async Task GetSessions_MapsOnlySafeSessionMetadata() {
         var sessionId = Guid.NewGuid();

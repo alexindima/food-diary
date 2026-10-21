@@ -6,6 +6,18 @@ namespace FoodDiary.Modules.Notifications.Application.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class NotificationContractTests {
     [Fact]
+    public void InvitationPayloads_PreserveTheirPublishedJsonFieldNamesAndNames() {
+        string received = NotificationPayloads.DietologistInvitationReceived("Client");
+        string decision = NotificationPayloads.DietologistInvitationDecision("Dietologist");
+
+        Assert.Multiple(
+            () => Assert.Equal("{\"clientName\":\"Client\"}", received),
+            () => Assert.Equal("{\"dietologistName\":\"Dietologist\"}", decision));
+        Assert.Equal("Client", NotificationPayloadSerializer.Deserialize<DietologistInvitationReceivedNotificationPayload>(received)?.ClientName);
+        Assert.Equal("Dietologist", NotificationPayloadSerializer.Deserialize<DietologistInvitationDecisionNotificationPayload>(decision)?.DietologistName);
+    }
+
+    [Fact]
     public void NotificationPayloadSerializer_Deserialize_WithEmptyPayload_ReturnsDefault() {
         NewRecommendationNotificationPayload? payload = NotificationPayloadSerializer.Deserialize<NewRecommendationNotificationPayload>(" ");
 

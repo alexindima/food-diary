@@ -4,6 +4,47 @@ namespace FoodDiary.Development.Mcp.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class SqliteFlowScopeReaderTests : IDisposable {
+    [Fact]
+    public async Task ExpandAsync_WithAlreadyVisitedSeeds_DoesNotRepeatRelationshipLinks() {
+        DevelopmentFlowScope result = await new SqliteFlowScopeReader(_root).ExpandAsync(
+            ["Modules/Inventory/Application/Commands/ReserveStock/ReserveStockCommandHandler.cs",
+                "Modules/Inventory/Application/Services/IStockReservationService.cs",
+                "Modules/Inventory/Application/Services/StockReservationService.cs"],
+            includeTests: true, expectedFingerprint: "current", CancellationToken.None);
+
+        Assert.True(result.Ready, result.UnavailableReason);
+        Assert.NotEmpty(result.Links);
+        Assert.Equal(result.Links.Count, result.Links.Distinct().Count());
+        Assert.Contains("Modules/Inventory/Application/Services/StockReservationService.cs", result.Paths, StringComparer.Ordinal);
+    }
+
+    [Fact]
+    public async Task ExpandAsync_WithMultipleHighFanOutSeeds_StopsAtTheGlobalLinkLimit() {
+        await using (SqliteConnection connection = new($"Data Source={_databasePath};Pooling=False")) {
+            await connection.OpenAsync();
+            await using SqliteCommand command = connection.CreateCommand();
+            command.CommandText = """
+                INSERT INTO files VALUES (100,'Modules/Inventory/Application/Services/IBoundedReservationService.cs');
+                INSERT INTO symbols VALUES (100,'IBoundedReservationService','interface');
+                WITH RECURSIVE items(n) AS (VALUES(110) UNION ALL SELECT n+1 FROM items WHERE n<169)
+                INSERT INTO files SELECT n, 'Modules/Inventory/Application/Services/InventoryImplementation' || n || '.cs' FROM items;
+                INSERT INTO typed_edges SELECT id, 'type-implementation', 'IBoundedReservationService' FROM files WHERE id>=110;
+                INSERT INTO file_tokens VALUES (1,'IBoundedReservationService'),(4,'IBoundedReservationService'),(6,'IBoundedReservationService');
+                """;
+            await command.ExecuteNonQueryAsync();
+        }
+
+        DevelopmentFlowScope result = await new SqliteFlowScopeReader(_root).ExpandAsync(
+            ["Modules/Inventory/Application/Commands/ReserveStock/ReserveStockCommandHandler.cs",
+                "FoodDiary.JobManager/Services/StockReservationWorker.cs", "Other/UnrelatedHandler.cs"],
+            includeTests: true, expectedFingerprint: "current", CancellationToken.None);
+
+        Assert.True(result.Ready, result.UnavailableReason);
+        Assert.True(result.Truncated);
+        Assert.Equal(80, result.Links.Count);
+        Assert.DoesNotContain(result.Links, link => string.Equals(link.SourcePath, "Other/UnrelatedHandler.cs", StringComparison.Ordinal));
+    }
+
     [Theory]
     [InlineData("Modules/Inventory/Application/Services/IStockReservationService.cs", "contract")]
     [InlineData("Modules\\Inventory\\Application\\Services\\IStockReservationService.cs", "contract")]
