@@ -571,14 +571,14 @@
       "pageSha256": "9b95c7c4d66fa577cf2524f59e5b95847547e4c215550a4e711c5696f38938b1",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "0b022d1be0fda58ecd1cb01689874a448befbd9ff41bdbfb6e6672f976b9dcd8"
+          "path": ".agents/skills/fooddiary-browser-qa/SKILL.md",
+          "sha256": "8b12253565e650404b1a2401972727803163e757f685f6937723ebac436a8c84"
         }
       ],
-      "reason": "Final Dependabot merge changes dependency versions only; verified QA script definitions and browser evidence rules still match the current frontend and its scoped guides.",
-      "baseRef": "7bf8087da8e5f4975020679f844cffe6e1f10a17",
-      "gitHead": "4676b270c1fa5505e86e31fae42c492afc819715",
-      "reviewedAtUtc": "2026-10-19T17:54:43.4548195Z"
+      "reason": "Reviewed the final browser QA skill and WebMCP reference against the local adapters and current browser API. The workflow page still correctly delegates browser selection, session ownership and verification details to that skill; Chrome remains the default, explicit browser requests are preserved, and WebMCP preparation does not replace UI evidence.",
+      "baseRef": "HEAD",
+      "gitHead": "70ea680eaf717b33af13bb7bf294e6c4baaf3dff",
+      "reviewedAtUtc": "2026-10-21T02:35:09.2701663Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",

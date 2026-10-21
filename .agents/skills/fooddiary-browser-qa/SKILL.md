@@ -1,6 +1,6 @@
 ---
 name: fooddiary-browser-qa
-description: Choose and operate the browser for rendered FoodDiary UI fixes, visual checks, interaction regressions, and user or admin journey audits. Use Chrome by default while preserving an explicitly requested browser or existing tab.
+description: Verify rendered FoodDiary UI fixes, visual checks, interaction regressions, and user or admin journey audits with Chrome and local WebMCP. Preserve an explicitly requested browser or existing tab.
 ---
 
 # FoodDiary browser QA
@@ -46,6 +46,31 @@ Record the browser/channel, control method, session name, URL and viewport in
 the verification evidence. Keep credentials and tokens out of logs and
 screenshots. Stop only temporary browser sessions owned by this task when they
 are no longer needed.
+
+## Start local QA with WebMCP
+
+At the start of local development UI verification, check for FoodDiary WebMCP
+and use its published tools when they cover scenario preparation or state
+inspection. Read [WebMCP connection and bug example](references/webmcp.md) for
+the connection steps, tool selection and a complete example. Fetch the actual
+tool catalog, then read screen context and available capabilities before
+choosing inputs. If unavailable, record the concrete reason and continue the
+supported browser checks; do not silently omit discovery.
+
+Chrome remains the default for interactive verification. When its control
+method lacks WebMCP, use a task-owned built-in Browser helper tab against the
+same local runtime and intended test account. Preserve an explicit browser or
+existing-tab requirement. Record both browsers and their respective checks;
+unsaved forms and live screen context belong to the tab where they were opened.
+A helper's draft does not prepare the Chrome tab. When Chrome is the verification
+target, reproduce its interaction there independently.
+
+Use WebMCP to navigate to preconditions, inspect published filters/loading/errors,
+find existing catalog items or prepare clean unsaved editors. Exercise the
+specific control under test through the real UI, then compare the rendered
+result with fresh context. Saving, deletion, keyboard/focus behavior, visual
+layout and persistence checks use their normal UI or existing audit workflow.
+Running `test:ci:webmcp` alone is library verification, not use of the page tools.
 
 ## Verify the requested outcome
 
